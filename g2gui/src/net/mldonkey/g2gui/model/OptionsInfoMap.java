@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.10 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.11 2003/07/07 15:32:43 dek Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -60,21 +60,59 @@ public class OptionsInfoMap extends InfoMap {
 	}
 	
 	/**
-	 * Does nothing!
+	 * This one tells me, to which section an Option belongs. 
+	 * sectionToAppear is <b>null</b>, if the value belongs to a plugin and is not
+	 * a general Option
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	public void update( MessageBuffer messageBuffer ) {
-		// do nothing!
-	}
-	/**
-	 * When an option is updated, this is to be called
-	 * @param name optionname
-	 * @param value value
-	 */
-	public void update( String name, String value ) {
-		( ( OptionsInfo ) infoMap.get( name ) ).setValue( value );
+	public void readGeneralOptionDetails( MessageBuffer messageBuffer ) {
+		/*
+		 * String  	 Section where Option should appear 
+		 * String  	 Description 
+		 * String  	 Name of Option 
+		 * OptionType  	 The Type of the Option (to select which widget to use)
+		 */
+		 String sectionToAppear = messageBuffer.readString();
+		 String description = messageBuffer.readString();
+		 String nameOfOption = messageBuffer.readString();
+		 byte optionType = messageBuffer.readByte();
+		 
+		 /*
+		  * now get the specific Option and set the values:
+		  */
+		( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setDescription( description );
+		( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setSectionToAppear( sectionToAppear );
+		( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setOptionType( optionType );
+		 
 	}
 	
+	/**
+	 * This one tells me, to which plugin an Option belongs. 
+	 * pluginToAppear is <b>null</b>, if the value doesn't belong to a specific plugin
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	public void readPluginOptionDetails( MessageBuffer messageBuffer ) {
+		/*
+		 * 	 String  	 Plugin where Option should appear 
+		 * 	 String  	 Description 
+		 * 	 String  	 Name of Option 
+		 * 	 OptionType  	 The Type of the Option (to select which widget to use)
+		 */
+		String pluginToAppear = messageBuffer.readString();
+		String description = messageBuffer.readString();
+		String nameOfOption = messageBuffer.readString();
+		byte optionType = messageBuffer.readByte();
+		 
+		/*
+		 * now get the specific Option and set the values:
+		 */
+	   ( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setDescription( description );
+	   ( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setPluginToAppear( pluginToAppear );
+	   ( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setOptionType( optionType );	   
+		
+	}
+	
+
 	/**
 	 * String representation of this object
 	 * @return string A string representation of thi object
@@ -87,10 +125,25 @@ public class OptionsInfoMap extends InfoMap {
 		}
 		return result;
 	}
+
+	/** (non-Javadoc)
+	 * @see net.mldonkey.g2gui.model.InfoCollection#update(net.mldonkey.g2gui.helper.MessageBuffer)
+	 */
+	public void update( MessageBuffer messageBuffer ) {
+		/*
+		 * does nothing
+		 */
+		
+	}
+
+
 }
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.11  2003/07/07 15:32:43  dek
+made Option-handling more natural
+
 Revision 1.10  2003/07/06 08:49:33  lemmstercvs01
 better oo added
 

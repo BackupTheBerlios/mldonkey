@@ -26,15 +26,22 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumTagType;
 
 /**
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.6 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.7 2003/07/07 15:32:43 dek Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
+	
+	private EnumTagType optionType;
+	private String description;
+	private String sectionToAppear;
+	private String pluginToAppear;
+
 	/**
 	 * Options Name
 	 */
@@ -79,20 +86,29 @@ public class OptionsInfo extends Parent {
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.key = messageBuffer.readString();
-		this.setValue( messageBuffer.readString() );		
-	}
+		this.setValue( messageBuffer.readString() );
+		System.out.println( "Option received & created\n" + this );	
+	}	
+
 	
 	/**
 	 * return a string representation of this object
 	 * @return a string
 	 */
-	public String toString() {
-		String result = new String();
-		result += this.getKey();
-		result += ": " + this.getValue() + "\n";
-		return result;
+	public String toString() {		
+		String result = new String(  );		
+		result +=  this.getKey();
+		result += "\n  Value:\t\t " + this.getValue() ;
+		result += "\n  Description:\t " + this.getDescription();
+		result += "\n  Type:\t\t\t " + this.getOptionType();
+		result += "\n  Section:\t\t " + this.getSectionToAppear();
+		result += "\n  Plugin:\t\t " + this.getPluginToAppear();
+		return result;		
 	}
 
+
+
+ 
 	/**
 	 * Sends the optionsinfo to the core
 	 */
@@ -101,10 +117,83 @@ public class OptionsInfo extends Parent {
 		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SET_OPTION, payLoad );
 		consoleMessage.sendMessage( this.parent.getConnection() );
 	}
+
+
+	/**
+	 * @param description Some more detailed Information about this option
+	 */
+	public void setDescription( String description ) {
+		this.description = description;
+		
+	}
+
+	/**
+	 * @param sectionToAppear in which general Section this Option fits best
+	 */
+	public void setSectionToAppear( String sectionToAppear ) {
+		this.sectionToAppear = sectionToAppear;
+		
+	}
+
+	/**
+	 * @param optionType what kind of option do we have: String, Int od Boolean
+	 */
+	public void setOptionType( byte optionType ) {		
+			if ( optionType == 0 )
+				this.optionType = EnumTagType.STRING;
+			else if ( optionType == 1 )
+				this.optionType = EnumTagType.BOOL;
+			else if ( optionType == 2 )
+				this.optionType = EnumTagType.FILE;
+		
+		
+	}
+	/**
+	 * @return Some more detailed Information about this option
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @return what kind of option do we have: String, Int od Boolean
+	 */
+	public EnumTagType getOptionType() {
+		return optionType;
+	}
+
+	/**
+	 * this method returns <b>null</b> if the Option is a pluginOption and therefore doesn't
+	 * have a sectionToAppear but a pluginToAppear
+	 * @return in which general Section this Option fits best
+	 */
+	public String getSectionToAppear() {
+		return sectionToAppear;
+	}
+
+	/**
+	 * this method returns <b>null</b> if the Option is a GeneralOption and therefore doesn't
+	 * have a pluginToAppear but a sectionToAppear
+	 * @return in which plugin Section this Option fits best
+	 */
+	public String getPluginToAppear() {
+		return pluginToAppear;
+	}
+
+	/**
+	 * @param string this is an option for which plugin?
+	 */
+	public void setPluginToAppear( String string ) {
+		pluginToAppear = string;
+	}
+
 }
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.7  2003/07/07 15:32:43  dek
+made Option-handling more natural
+
 Revision 1.6  2003/07/06 08:49:33  lemmstercvs01
 better oo added
 

@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.60 2003/07/06 17:56:49 dek Exp $ 
+ * @version $Id: Core.java,v 1.61 2003/07/07 15:33:09 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -69,8 +69,6 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	private InfoCollection clientInfoList = new ClientInfoIntMap( this ),
 					 fileInfoMap          = new FileInfoIntMap( this ),
 					 serverInfoMap        = new ServerInfoIntMap( this ),
-					 addSectionOptionList = new AddSomeOptionList( this ),
-					 addPluginOptionList  = new AddSomeOptionList( this ),
 					 sharedFileInfoList   = new SharedFileInfoList( this ),	
 					 optionsInfoMap       = new OptionsInfoMap( this ),
 					 networkinfoMap       = new NetworkInfoIntMap( this ),
@@ -231,11 +229,11 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;
 			
 			case Message.R_ADD_SECTION_OPTION :
-					this.addSectionOptionList.readStream( messageBuffer );
+					( ( OptionsInfoMap )this.optionsInfoMap ).readGeneralOptionDetails( messageBuffer );
 					break;
 					
 			case Message.R_ADD_PLUGIN_OPTION :
-					this.addPluginOptionList.readStream( messageBuffer );
+					( ( OptionsInfoMap )this.optionsInfoMap ).readPluginOptionDetails( messageBuffer );
 					break;		
 					
 			case Message.R_CLIENT_STATE :
@@ -337,6 +335,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.61  2003/07/07 15:33:09  dek
+made Option-handling more natural
+
 Revision 1.60  2003/07/06 17:56:49  dek
 small change
 
