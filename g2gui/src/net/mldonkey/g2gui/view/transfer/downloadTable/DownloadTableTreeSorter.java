@@ -24,8 +24,8 @@ package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
-import net.mldonkey.g2gui.view.transfer.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
+import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableTreeViewer;
@@ -36,7 +36,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.5 2003/10/16 19:58:03 zet Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.6 2003/10/22 01:38:31 zet Exp $
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
@@ -362,6 +362,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.6  2003/10/22 01:38:31  zet
+*** empty log message ***
+
 Revision 1.5  2003/10/16 19:58:03  zet
 icons
 

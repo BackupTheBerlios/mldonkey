@@ -28,9 +28,9 @@ import net.mldonkey.g2gui.view.TransferTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
-import net.mldonkey.g2gui.view.transfer.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
+import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.12 2003/10/20 21:58:19 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.13 2003/10/22 01:38:31 zet Exp $
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListener {
@@ -447,6 +447,9 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.13  2003/10/22 01:38:31  zet
+*** empty log message ***
+
 Revision 1.12  2003/10/20 21:58:19  zet
 SWT.RIGHT labels cheap workaround..
 

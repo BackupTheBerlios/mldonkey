@@ -1,3 +1,8 @@
+2003/10/21: z
+	* Server, Search: Add column selector, save last sort
+	* Transfer, Search: Add ShareReactor Fakecheck link
+	* Preferences: Fix "Browse Filesystem" button on gcj/win32
+
 2003/10/19: z
 	* Transfer: Add column selector to clients table
 	* Center splash on primary monitor (dualhead), center dialogs on main window

@@ -33,6 +33,8 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeContentProvider;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.ColumnSelector;
+import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -50,7 +52,7 @@ import org.eclipse.swt.events.DisposeListener;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.12 2003/10/19 17:35:04 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.13 2003/10/22 01:38:04 zet Exp $
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener, DisposeListener {
@@ -372,7 +374,7 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
         }
 
         public void run() {
-            ColumnSelector c = new ColumnSelector( tableTreeViewer.getTableTree().getShell(), DownloadTableTreeViewer.COLUMN_LABELS, DownloadTableTreeViewer.ALL_COLUMNS, "downloadTableColumns" );
+            ColumnSelector c = new ColumnSelector( tableTreeViewer.getTableTree().getShell(), DownloadTableTreeViewer.COLUMN_LABELS, DownloadTableTreeViewer.ALL_COLUMNS, "download" );
 			if ( c.open() == ColumnSelector.OK ) {
 			 	c.savePrefs();
 				downloadTableTreeViewer.resetColumns();
@@ -612,6 +614,9 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.13  2003/10/22 01:38:04  zet
+*** empty log message ***
+
 Revision 1.12  2003/10/19 17:35:04  zet
 generalize columnselector
 

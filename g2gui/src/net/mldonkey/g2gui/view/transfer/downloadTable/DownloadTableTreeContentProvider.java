@@ -34,8 +34,8 @@ import java.util.Set;
 
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
-import net.mldonkey.g2gui.view.transfer.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
+import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -44,7 +44,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.5 2003/10/12 15:58:29 zet Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.6 2003/10/22 01:38:31 zet Exp $
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer  {
@@ -326,6 +326,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.6  2003/10/22 01:38:31  zet
+*** empty log message ***
+
 Revision 1.5  2003/10/12 15:58:29  zet
 rewrite downloads table & more..
 

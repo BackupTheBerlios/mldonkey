@@ -36,11 +36,11 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
-import net.mldonkey.g2gui.view.transfer.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.FileDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.transfer.UniformResourceLocator;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
+import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -84,7 +84,7 @@ import org.eclipse.swt.widgets.Text;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.18 2003/10/16 23:56:44 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.19 2003/10/22 01:38:31 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -103,6 +103,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     private final int WS_JIGLE = 1;
     private final int WS_BITZI = 2;
     private final int WS_FILEDONKEY = 3;
+    private final int WS_SHAREREACTOR = 4;
 
     public DownloadTableTreeMenuListener( DownloadTableTreeViewer downloadTableTreeViewer, ClientTableViewer clientTableViewer, CoreCommunication mldonkey ) {
         this.downloadTableTreeViewer = downloadTableTreeViewer;
@@ -319,6 +320,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			webServicesMenu.add( new WebServiceAction( WS_BITZI ) ) ;
         	webServicesMenu.add( new WebServiceAction( WS_FILEDONKEY ) ) ;
 			webServicesMenu.add( new WebServiceAction( WS_JIGLE ) ) ;
+			webServicesMenu.add( new WebServiceAction( WS_SHAREREACTOR ) );
         	menuManager.add( webServicesMenu );
         }
         
@@ -707,7 +709,11 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     			case WS_FILEDONKEY:
 					setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_FILEDONKEY_LOOKUP" ) );
 					setImageDescriptor( G2GuiResources.getImageDescriptor( "edonkey" ) );
-    				
+					break;
+				case WS_SHAREREACTOR:
+					setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_SR_FAKECHECK" ) );
+					setImageDescriptor( G2GuiResources.getImageDescriptor( "ShareReactor" ) );
+					break;
     		}
     	}
     	
@@ -721,6 +727,11 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 					break;	
 				case WS_FILEDONKEY:
 					Program.launch("http://www.filedonkey.com/file.html?md4=" + selectedFile.getMd4());	
+				    break;
+				case WS_SHAREREACTOR:
+					Program.launch("http://http://www.sharereactor.com/fakesearch.php?search=" + selectedFile.getED2K());	
+					break;   
+				    
 			}	
 		}
     }
@@ -775,6 +786,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.19  2003/10/22 01:38:31  zet
+*** empty log message ***
+
 Revision 1.18  2003/10/16 23:56:44  zet
 not much
 
