@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: NetworkInfoIntMap.java,v 1.5 2003/07/05 15:58:05 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.6 2003/07/07 20:01:35 dek Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap {
@@ -70,10 +70,27 @@ public class NetworkInfoIntMap extends InfoIntMap {
 	public void update( MessageBuffer messageBuffer ) {
 		// do nothing!
 	}
+	
+	/**
+	 * returns an array with all networks known to this networkMap
+	 * @return all known networks
+	 */
+	public NetworkInfo[] getNetworks() {
+		Object[] temp = this.infoIntMap.getValues();
+		NetworkInfo[] result = new NetworkInfo[ temp.length ];
+		for ( int i = 0; i < temp.length; i++ ) {
+			result[ i ] = ( NetworkInfo ) temp [ i ];
+		}
+		
+		return result;		
+	}
 }
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.6  2003/07/07 20:01:35  dek
+some useful method introduced: Networkitem[] getNetworks()
+
 Revision 1.5  2003/07/05 15:58:05  lemmstercvs01
 javadoc improved
 
