@@ -62,8 +62,8 @@ stops the compilation due to some JobAdapter* file, make sure that you your
 CLASSPATH is adjusted appropriately to not contain any jdk files.
 
 
-Usage Tips
-----------
+Commandline Options
+-------------------
 G2gui features a few interesting commandline-options, please try:
 $ ./g2gui --help
 to get a list.
