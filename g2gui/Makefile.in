@@ -3,14 +3,14 @@ FIND=@FIND@
 
 OBJ_DIR=@OBJ_DIR@
 
-JAR_DIR=./jar-libs
+JAR_DIR=jar
 SRC_DIR=src
 RES_DIR=resources
 
 SWT_ARGS=-fjni
 
 JAR_PATH=$(shell $(FIND) $(JAR_DIR) -name "*.jar" -printf "-I%p " )
-GCJ_ARGS=-c -w -Os $(JAR_PATH) -I$(JAR_DIR)/runtime -I$(JAR_DIR)/@SWT_DIR@ -Isrc -I.
+GCJ_ARGS=-c -w -Os $(JAR_PATH) -I$(JAR_DIR)/@RUNTIME_DIR@ -I$(JAR_DIR)/@SWT_DIR@ -Isrc -I.
 
 G2GUI_JAVA_OBJECTS= $(subst /,.,$(shell $(FIND) $(SRC_DIR) -type f  -name "*.java"  -printf "%p.o "))
 G2GUI_RES_OBJECTS = $(subst /,.,$(shell $(FIND) $(SRC_DIR) -type f  ! -name "*.java" -printf "%p.o "))
@@ -22,7 +22,7 @@ UNAME=$(word 1, $(shell uname -a))
 
 ifeq ($(UNAME),Linux)
 	SYSTYPE=gtk
-	PROGRAM=g2gui
+	PROGRAM=g2gui-bin
 	LINK_ARGS= -s -static-libgcc -Wl,-rpath,.	
 else
 	SYSTYPE=win
@@ -53,7 +53,7 @@ libs:
 
 $(G2GUI_JAVA_OBJECTS): %.o : $(subst .,/,$<)
 	$(GCJ)  $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $(file_path)
-		
+
 $(G2GUI_RES_OBJECTS): %.o : $(subst .,/,$<)
 	$(GCJ) $(GCJ_ARGS) --resource $(subst $(SRC_DIR)/,,$(file_path)) -o $(OBJ_DIR)/$@ $(file_path)
 
@@ -61,14 +61,20 @@ $(OTHER_RESOBJECTS) :%.o : $(subst .,/,$<)
 	$(GCJ) $(GCJ_ARGS) --resource $(subst $(RES_DIR)/,,$(file_path)) -o $(OBJ_DIR)/$@ $(file_path)
 
 $(PROGRAM): libs $(G2GUI_RES_OBJECTS) $(G2GUI_JAVA_OBJECTS) $(OTHER_RESOBJECTS) @PLATFORM_TARGETS@
-	$(GCJ) --main=$(MAINCLASS) $(LINK_ARGS) -o $(PROGRAM) $(JAR_DIR)/$(OBJ_DIR)/*.o $(OBJ_DIR)/*.o 
+	$(GCJ) --main=$(MAINCLASS) $(LINK_ARGS) -o $(PROGRAM) $(JAR_DIR)/$(OBJ_DIR)/*.o $(OBJ_DIR)/*.o
 
 icon.o : % : build-stuff/g2gui.rc
 	windres -o $(OBJ_DIR)/$@ build-stuff/g2gui.rc
-	
+
 mkobjdir :
 	@if [ ! -d $(OBJ_DIR) ]; then  \
 	mkdir $(OBJ_DIR) ;\
 	fi
 
 
+cleanobjs:
+	@echo "Cleaning up"
+	@find . -name "*.o" | xargs rm
+	@echo "All .o and .so files cleaned up."
+
+clean: cleanobjs
