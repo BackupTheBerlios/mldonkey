@@ -22,41 +22,32 @@
  */
 package net.mldonkey.g2gui.model;
 
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectIterator;
+import gnu.trove.THashMap;
 
 /**
  * InfoMap
  *
  * @author $user$
- * @version $Id: InfoMap.java,v 1.1 2003/06/15 16:18:41 lemmstercvs01 Exp $ 
+ * @version $Id: InfoMap.java,v 1.2 2003/06/16 21:48:38 lemmstercvs01 Exp $ 
  *
  */
 public abstract class InfoMap implements InfoCollection {
 	/**
-	 * 
+	 * Map containing option value pairs
 	 */
-	protected TIntObjectHashMap infoMap;
+	protected THashMap infoMap;
 	
 	/**
-	 * Generates a empty ServerInfoList object
-	 */
+	 * Creates a new THashMap
+	 */	
 	public InfoMap() {
-		this.infoMap = new TIntObjectHashMap();
-	}
-	
-	/**
-	 * Get an Iterator
-	 * @return an Iterator
-	 */
-	public TIntObjectIterator iterator() {
-		return this.infoMap.iterator();
+		this.infoMap = new THashMap();
 	}
 }
 
 /*
 $Log: InfoMap.java,v $
-Revision 1.1  2003/06/15 16:18:41  lemmstercvs01
-new interface introduced
+Revision 1.2  2003/06/16 21:48:38  lemmstercvs01
+class hierarchy changed
 
 */

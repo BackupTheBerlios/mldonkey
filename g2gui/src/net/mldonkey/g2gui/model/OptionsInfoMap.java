@@ -25,26 +25,20 @@ package net.mldonkey.g2gui.model;
 import java.util.Iterator;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import gnu.trove.THashMap;
 
 /**
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.2 2003/06/16 13:18:59 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.3 2003/06/16 21:48:38 lemmstercvs01 Exp $ 
  *
  */
-public class OptionsInfoMap implements InfoCollection {
-	/**
-	 * Map containing option value pairs
-	 */
-	private THashMap optionsInfoMap;
-	
+public class OptionsInfoMap extends InfoMap implements InfoCollection {
 	/**
 	 * Creates a new THashMap
 	 */	
 	public OptionsInfoMap() {
-		this.optionsInfoMap = new THashMap();
+		super();
 	}
 	
 	/**
@@ -59,7 +53,7 @@ public class OptionsInfoMap implements InfoCollection {
 		for ( int i = 0; i < ( listElem / 2 ); i++ ) {
 			OptionsInfo optionsInfo = new OptionsInfo();
 			optionsInfo.readStream( messageBuffer );
-			this.optionsInfoMap.put( optionsInfo.getKey(), optionsInfo );
+			this.infoMap.put( optionsInfo.getKey(), optionsInfo );
 		}
 	}
 	
@@ -77,7 +71,7 @@ public class OptionsInfoMap implements InfoCollection {
 	 */
 	public String toString() {
 		String result = new String();
-		Iterator itr = this.optionsInfoMap.values().iterator();
+		Iterator itr = this.infoMap.values().iterator();
 		while ( itr.hasNext() ) {
 			result += itr.next().toString();
 		}
@@ -87,6 +81,9 @@ public class OptionsInfoMap implements InfoCollection {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.3  2003/06/16 21:48:38  lemmstercvs01
+class hierarchy changed
+
 Revision 1.2  2003/06/16 13:18:59  lemmstercvs01
 checkstyle applied
 
