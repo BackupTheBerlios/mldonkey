@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.76 2003/10/20 00:13:03 zet Exp $
+ * @version $Id: TransferTab.java,v 1.77 2003/10/21 21:10:23 vnc Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -244,7 +244,7 @@ public class TransferTab extends GuiTab {
             new ViewForm( parentSash,
                           SWT.BORDER
                           | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-        CLabel clientCLabel =
+        CLabel clientCLabel = 
             CCLabel.createCL( clientViewForm, "TT_Clients", "TransfersButtonSmallTitlebar" );
 		
 		popupMenuCL = new MenuManager( "" );
@@ -362,19 +362,20 @@ public class TransferTab extends GuiTab {
             }
         }
         
-        String newText = "" + totalFiles;
+        String newText = "";
 		
         if (totalActive > 0) 
-            newText += " | " + G2GuiResources.getString( "TT_Active" ).toLowerCase() + "(" + totalActive + "): " + FileInfo.calcStringSize( activeDownloaded ) + "/" + FileInfo.calcStringSize( activeTotal );
+
+            newText += totalActive + " / " + totalFiles + " " + G2GuiResources.getString( "TT_Active" ).toLowerCase() + " (" + FileInfo.calcStringSize( activeDownloaded ) + " / " + FileInfo.calcStringSize( activeTotal ) + ")";
 		
 		if ( totalPaused > 0 ) 
-			newText += " | " + G2GuiResources.getString( "TT_Status0" ).toLowerCase() + "(" + totalPaused + "): " + FileInfo.calcStringSize( pausedDownloaded ) + "/" + FileInfo.calcStringSize( pausedTotal );
+			newText += ", " + G2GuiResources.getString( "TT_Status0" ) + ": " + totalPaused + " (" + FileInfo.calcStringSize( pausedDownloaded ) + " / " + FileInfo.calcStringSize( pausedTotal ) + ")";
         
         if ( totalQueued > 0 ) 
-			newText += " | " + G2GuiResources.getString( "TT_Queued" ).toLowerCase() + "(" + totalQueued + "): " + FileInfo.calcStringSize( queuedDownloaded ) + "/" + FileInfo.calcStringSize( queuedTotal );
+			newText += ", " + G2GuiResources.getString( "TT_Queued" ) + ": " + totalQueued + " (" + FileInfo.calcStringSize( queuedDownloaded ) + " / " + FileInfo.calcStringSize( queuedTotal ) + ")";
 		
 		if ( totalDownloaded > 0 )
-			newText += " | " + G2GuiResources.getString( "TT_Downloaded" ).toLowerCase() + "(" + totalDownloaded +  "): " + FileInfo.calcStringSize( downloadedTotal ) + "";
+			newText += ", " + G2GuiResources.getString( "TT_Downloaded" ) + ": " + totalDownloaded +  " (" + FileInfo.calcStringSize( downloadedTotal ) + ")";
 		
 		if ( !oldDLabelText.equals( newText ) ) {
 			runLabelUpdate( newText );
@@ -474,6 +475,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.77  2003/10/21 21:10:23  vnc
+improved transfertab headerbar info-layout
+
 Revision 1.76  2003/10/20 00:13:03  zet
 update header bar
 
@@ -604,7 +608,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: vnc $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression
