@@ -39,7 +39,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -48,21 +47,14 @@ import org.eclipse.swt.widgets.Display;
  * ChunkView
  *
  *
- * @version $Id: ChunkCanvas.java,v 1.16 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.17 2003/08/23 22:43:10 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
 
-	protected Point tempStore;
-
-	protected boolean moved;
-
 	private String avail;
-
 	private String chunks;
-
 	private ClientInfo clientInfo;
-
 	private FileInfo fileInfo;
 
 	private Image image;
@@ -86,8 +78,6 @@ public class ChunkCanvas extends Canvas implements Observer {
 	 * value is 2
 	 */
 	private final short isClientInfo = 2;
-	
-	
 	private final int initialHeight = 18;
 	
 	/**
@@ -233,7 +223,6 @@ public class ChunkCanvas extends Canvas implements Observer {
 	 * @param chunks
 	 */
 	private void createFileInfoImage() {
-	
 		
 		this.chunks = fileInfo.getChunks();
 		this.avail = fileInfo.getAvail();
@@ -312,7 +301,6 @@ public class ChunkCanvas extends Canvas implements Observer {
 	 * @param e
 	 */
 	protected void widgetDisposed( DisposeEvent e ) {
-	
 		if ( image != null && !image.isDisposed() ) image.dispose();
 		if ( type == isFileInfo ) {
 			fileInfo.deleteObserver( this );
@@ -327,9 +315,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 					resizedImageData = imageData.scaledTo( 
 						getClientArea().width, getClientArea().height );
 			} 
-	
 		}
-		
 	}
 
 	/**
@@ -389,10 +375,8 @@ public class ChunkCanvas extends Canvas implements Observer {
 		
 		} else { 
 
-
 			canvasGC.setBackground( getParent().getBackground() );
 			canvasGC.fillRectangle( e.x, e.y, e.width, e.height );
-					
 		}
 		
 		canvasGC.dispose();
@@ -410,16 +394,15 @@ public class ChunkCanvas extends Canvas implements Observer {
 		bufferGC.dispose();		
 	}
 	private void createProgressBar( int srcWidth, GC bufferGC ) {		
-			Color green1 = new Color( null, 15, 136, 0 );
-			Color green2 = new Color( null, 41, 187, 26 );
-			int pix =  ( int ) ( ( fileInfo.getPerc() / 100 ) * ( double ) ( srcWidth - 1 ) ) ;
-			bufferGC.setBackground( green1 );
-			bufferGC.setForeground( green2 );
-			bufferGC.fillGradientRectangle( 0, 0, pix, 4, false );
-			green1.dispose();
-			green2.dispose();		
+		Color green1 = new Color( null, 15, 136, 0 );
+		Color green2 = new Color( null, 41, 187, 26 );
+		int pix =  ( int ) ( ( fileInfo.getPerc() / 100 ) * ( double ) ( srcWidth - 1 ) ) ;
+		bufferGC.setBackground( green1 );
+		bufferGC.setForeground( green2 );
+		bufferGC.fillGradientRectangle( 0, 0, pix, 4, false );
+		green1.dispose();
+		green2.dispose();		
 	}
-
 
 	private boolean hasChanged() {
 		boolean result = false;
@@ -436,7 +419,6 @@ public class ChunkCanvas extends Canvas implements Observer {
 				result = true;
 			else if ( avail != null && tempAvail != null )				
 				 result = tempAvail.hashCode() != avail.hashCode();
-				
 		}	
 		return result;		
 	}
@@ -447,27 +429,22 @@ public class ChunkCanvas extends Canvas implements Observer {
 	 */
 	public void refresh() {	
 		if ( this.hasChanged() ) {	
-			
 			 synchronized ( this ) {
 				createImage();
 			}
 			this.redraw();
-			
 		} 
 	}
 
 	// runs in gui thread	
 	public void update( Observable o, Object obj ) {
-		
-			Display.getDefault().asyncExec( new Runnable() {
-				public void run() {
-						if ( !isDisposed() )
-							refresh();
-						}
-			} );
-	
+		Display.getDefault().asyncExec( new Runnable() {
+			public void run() {
+				if ( !isDisposed() )
+					refresh();
+				}
+		} );
 	}
-
 
 	public int getHash() {
 		if ( type == isClientInfo ) 
@@ -479,6 +456,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.17  2003/08/23 22:43:10  zet
+remove unused
+
 Revision 1.16  2003/08/23 15:21:37  zet
 remove @author
 
