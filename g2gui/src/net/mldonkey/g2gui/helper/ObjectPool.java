@@ -31,8 +31,8 @@ import java.util.List;
 /**
  * ObjectPool
  *
- * @author markus
- * @version $Id: ObjectPool.java,v 1.3 2003/08/21 10:13:14 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ObjectPool.java,v 1.4 2003/08/21 10:53:50 lemmster Exp $ 
  *
  */
 public abstract class ObjectPool {
@@ -129,6 +129,9 @@ public abstract class ObjectPool {
 
 /*
 $Log: ObjectPool.java,v $
+Revision 1.4  2003/08/21 10:53:50  lemmster
+$user$ -> $Author$
+
 Revision 1.3  2003/08/21 10:13:14  dek
 removed " malformed UTF-8 character" (only in comment)
 
