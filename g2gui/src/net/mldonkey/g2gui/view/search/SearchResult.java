@@ -80,7 +80,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.50 2003/09/22 20:07:22 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.51 2003/09/22 20:20:09 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -112,7 +112,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 								    	G2GuiResources.getString( "SR_AVAIL" ), };
 
     /* 0 sets the tablewidth dynamcliy */
-    private int[] tableWidth = { 58, 0, 65, 45, 50, 55 };
+    private int[] tableWidth = { 58, 0, 65, 45, 50, 70 };
     
     private int[] tableAlign =
     {
@@ -606,6 +606,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 }
 /*
 $Log: SearchResult.java,v $
+Revision 1.51  2003/09/22 20:20:09  lemmster
+show # sources in search result avail table
+
 Revision 1.50  2003/09/22 20:07:22  lemmster
 right column align for integers [bug #934]
 

@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.31 2003/09/22 20:20:09 lemmster Exp $
+ * @version $Id: G2GuiResources.java,v 1.32 2003/09/22 20:25:04 lemmster Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -153,7 +153,7 @@ public class G2GuiResources {
         else
 			result += G2GuiResources.getString( "RTLP_LOW" );
 
-		return ( result + " (" + new Integer( availability ).toString() + ")" );
+		return ( result + " (" + availability + ")" );
     }
 
     /**
@@ -318,6 +318,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.32  2003/09/22 20:25:04  lemmster
+show # sources in search result avail table
+
 Revision 1.31  2003/09/22 20:20:09  lemmster
 show # sources in search result avail table
 

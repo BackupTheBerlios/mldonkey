@@ -1,5 +1,6 @@
 2003/09/22: lemmy
 	* Server: Integer columns right- instead of left-aligned [bug #934]
+	* Search: Show number of sources in avail column
 	* Search: Integer columns right- instead of left-aligned [bug #934]
 2003/09/16: lemmy
 	* Statusline: Don't change the rightclick menu when switching between modes [bug #912]
