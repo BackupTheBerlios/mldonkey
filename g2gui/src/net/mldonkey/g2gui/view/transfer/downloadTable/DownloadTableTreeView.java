@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeView.java,v 1.5 2003/11/10 18:57:33 zet Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.6 2003/11/14 16:00:40 zet Exp $
  *
  */
 public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
@@ -123,9 +123,15 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
     public void createContents(Composite parent) {
         super.createContents(parent);
 
-        if (SWT.getPlatform().equals("gtk")) {
-            getTable().getColumns()[ 0 ].pack();
-        }
+        // Does this pack() hurt or help?  
+        // Header label text will disappear (SWT Bug)
+        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=26632
+        
+        // But does this affect whole columns disappearing?
+        
+//        if (SWT.getPlatform().equals("gtk")) {
+//            getTable().getColumns()[ 0 ].pack();
+//        }
 
         addMenuListener();
         tableTreeViewer.addDoubleClickListener(this);
@@ -314,6 +320,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
 /*
 $Log: DownloadTableTreeView.java,v $
+Revision 1.6  2003/11/14 16:00:40  zet
+comment
+
 Revision 1.5  2003/11/10 18:57:33  zet
 use jface dialogs
 
