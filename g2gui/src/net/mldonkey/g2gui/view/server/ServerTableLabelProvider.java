@@ -38,19 +38,19 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: ServerTableLabelProvider.java,v 1.3 2003/09/14 10:19:48 lemmster Exp $ 
+ * @version $Id: ServerTableLabelProvider.java,v 1.4 2003/09/18 11:26:07 lemmster Exp $ 
  *
  */
 public class ServerTableLabelProvider implements ITableLabelProvider, IColorProvider {
 	private Color connectColor = new Color( null, 41, 174, 57 );
-	private Color connectingColor = new Color( null, 255,165,0 );
-	private Color disconnectColor = new Color( null, 192,192,192 );
+	private Color connectingColor = new Color( null, 255, 165, 0 );
+	private Color disconnectColor = new Color( null, 192, 192, 192 );
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
 	 */
 	public Image getColumnImage( Object element, int columnIndex ) {
-		if (element instanceof ServerInfo && columnIndex == 0) {
+		if ( element instanceof ServerInfo && columnIndex == 0 ) {
 			ServerInfo server = ( ServerInfo ) element;
 			return G2GuiResources.getNetworkImage( server.getNetwork().getNetworkType() );
 		}
@@ -73,7 +73,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider, IColorProv
 		else if ( columnIndex == 2 ) // desc
 			return server.getDescOfServer();
 
-		else if ( columnIndex == 3 )  {// address
+		else if ( columnIndex == 3 )  { // address
 			try {
 				Addr addr = server.getServerAddress();
 				if ( addr.hasHostName() )
@@ -160,6 +160,9 @@ public class ServerTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ServerTableLabelProvider.java,v $
+Revision 1.4  2003/09/18 11:26:07  lemmster
+checkstyle
+
 Revision 1.3  2003/09/14 10:19:48  lemmster
 different colors for the server state (forum request)
 

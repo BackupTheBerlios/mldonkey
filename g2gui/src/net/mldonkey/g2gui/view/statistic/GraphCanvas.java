@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Composite;
  * GraphCanvas
  *
  *
- * @version $Id: GraphCanvas.java,v 1.9 2003/09/18 11:28:52 lemmster Exp $
+ * @version $Id: GraphCanvas.java,v 1.10 2003/09/18 11:30:18 lemmster Exp $
  */
 public class GraphCanvas extends Canvas {
     private Composite parent;
@@ -46,7 +46,7 @@ public class GraphCanvas extends Canvas {
         super( parent, SWT.NO_BACKGROUND );
         this.parent = parent;
         graphPainter = new GraphPainter( parent );
-        addPaintListener( new PaintListener(  ) {
+        addPaintListener( new PaintListener() {
                 public void paintControl( PaintEvent e ) {
                     GraphCanvas.this.paintControl( e );
                 }
@@ -60,7 +60,7 @@ public class GraphCanvas extends Canvas {
      */
     private void paintControl( PaintEvent e ) {
         graphPainter.setGraphicControl( e.gc );
-        graphPainter.paint(  );
+        graphPainter.paint();
     }
 
     /**
@@ -75,6 +75,9 @@ public class GraphCanvas extends Canvas {
 
 /*
 $Log: GraphCanvas.java,v $
+Revision 1.10  2003/09/18 11:30:18  lemmster
+checkstyle
+
 Revision 1.9  2003/09/18 11:28:52  lemmster
 checkstyle
 

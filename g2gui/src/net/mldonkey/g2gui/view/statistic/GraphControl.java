@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  * GraphControl
  *
  *
- * @version $Id: GraphControl.java,v 1.14 2003/09/18 11:28:51 lemmster Exp $
+ * @version $Id: GraphControl.java,v 1.15 2003/09/18 11:30:18 lemmster Exp $
  *
  */
 public class GraphControl extends Composite {
@@ -53,7 +53,7 @@ public class GraphControl extends Composite {
         super( parent, SWT.NONE );
         this.parent = parent;
         graphCanvas = new GraphCanvas( this );
-        setLayout( new FillLayout(  ) );
+        setLayout( new FillLayout() );
         graph = new Graph( name, color1, color2 );
         graphCanvas.setGraph( graph );
     }
@@ -61,12 +61,12 @@ public class GraphControl extends Composite {
     /**
      * DOCUMENT ME!
      */
-    public void redraw(  ) {
-        if ( !parent.isDisposed(  ) )
-            parent.getDisplay(  ).asyncExec( new Runnable(  ) {
-                    public void run(  ) {
-                        if ( !graphCanvas.isDisposed(  ) )
-                            graphCanvas.redraw(  );
+    public void redraw() {
+        if ( !parent.isDisposed() )
+            parent.getDisplay().asyncExec( new Runnable() {
+                    public void run() {
+                        if ( !graphCanvas.isDisposed() )
+                            graphCanvas.redraw();
                     }
                 } );
 
@@ -84,6 +84,9 @@ public class GraphControl extends Composite {
 
 /*
 $Log: GraphControl.java,v $
+Revision 1.15  2003/09/18 11:30:18  lemmster
+checkstyle
+
 Revision 1.14  2003/09/18 11:28:51  lemmster
 checkstyle
 

@@ -29,7 +29,7 @@ import org.eclipse.swt.graphics.Color;
  * a Graph also has got a Color. And knows when it was started
  *
  *
- * @version $Id: Graph.java,v 1.14 2003/09/18 11:28:51 lemmster Exp $
+ * @version $Id: Graph.java,v 1.15 2003/09/18 11:30:18 lemmster Exp $
  */
 public class Graph {
     public static final short MAX_POINTS = 1600;
@@ -64,7 +64,7 @@ public class Graph {
      *
      * @return DOCUMENT ME!
      */
-    public int getInsertAt(  ) {
+    public int getInsertAt() {
         return insertAt;
     }
 
@@ -106,7 +106,7 @@ public class Graph {
      *
      * @return DOCUMENT ME!
      */
-    public int getNewestPoint(  ) {
+    public int getNewestPoint() {
         int newestPoint = insertAt - 1;
         if ( newestPoint < 0 )
             newestPoint = MAX_POINTS - 1;
@@ -134,7 +134,7 @@ public class Graph {
      *
      * @return DOCUMENT ME!
      */
-    public int getAmount(  ) {
+    public int getAmount() {
         return amount;
     }
 
@@ -143,7 +143,7 @@ public class Graph {
      *
      * @return DOCUMENT ME!
      */
-    public Color getGraphColor1(  ) {
+    public Color getGraphColor1() {
         return graphColor1;
     }
 
@@ -152,7 +152,7 @@ public class Graph {
      *
      * @return DOCUMENT ME!
      */
-    public Color getGraphColor2(  ) {
+    public Color getGraphColor2() {
         return graphColor2;
     }
 
@@ -161,7 +161,7 @@ public class Graph {
      *
      * @return DOCUMENT ME!
      */
-    public int getMax(  ) {
+    public int getMax() {
         return maxValue;
     }
 
@@ -170,7 +170,7 @@ public class Graph {
      *
      * @return DOCUMENT ME!
      */
-    public String getName(  ) {
+    public String getName() {
         return graphName;
     }
 
@@ -179,7 +179,7 @@ public class Graph {
      *
      * @return DOCUMENT ME!
      */
-    public int getAvg(  ) {
+    public int getAvg() {
         return avgValue;
     }
 
@@ -188,7 +188,7 @@ public class Graph {
      *
      * @return DOCUMENT ME!
      */
-    public Color getColor1(  ) {
+    public Color getColor1() {
         return graphColor1;
     }
 
@@ -197,13 +197,16 @@ public class Graph {
      *
      * @return DOCUMENT ME!
      */
-    public Color getColor2(  ) {
+    public Color getColor2() {
         return graphColor2;
     }
 }
 
 /*
 $Log: Graph.java,v $
+Revision 1.15  2003/09/18 11:30:18  lemmster
+checkstyle
+
 Revision 1.14  2003/09/18 11:28:51  lemmster
 checkstyle
 

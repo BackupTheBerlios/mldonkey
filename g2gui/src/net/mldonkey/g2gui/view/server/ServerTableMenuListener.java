@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.Shell;
  * TableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.7 2003/09/18 11:26:07 lemmster Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.8 2003/09/18 11:31:03 lemmster Exp $
  *
  */
 public class ServerTableMenuListener extends TableMenuListener implements ISelectionChangedListener,
@@ -83,9 +83,9 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
      */
     public ServerTableMenuListener( TableViewer tableViewer, CoreCommunication core ) {
         super( tableViewer, core );
-        this.serverInfoMap = this.core.getServerInfoIntMap(  );
-        this.tableContentProvider = ( ServerTableContentProvider ) this.tableViewer.getContentProvider(  );
-        this.selectedServers = new ArrayList(  );
+        this.serverInfoMap = this.core.getServerInfoIntMap();
+        this.tableContentProvider = ( ServerTableContentProvider ) this.tableViewer.getContentProvider();
+        this.selectedServers = new ArrayList();
     }
 
     /* (non-Javadoc)
@@ -93,15 +93,15 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
      * selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
     public void selectionChanged( SelectionChangedEvent event ) {
-        IStructuredSelection sSel = ( IStructuredSelection ) event.getSelection(  );
-        Object o = sSel.getFirstElement(  );
+        IStructuredSelection sSel = ( IStructuredSelection ) event.getSelection();
+        Object o = sSel.getFirstElement();
         if ( o instanceof ServerInfo )
             selectedServer = ( ServerInfo ) o;
         else
             selectedServer = null;
-        selectedServers.clear(  );
-        for ( Iterator it = sSel.iterator(  ); it.hasNext(  ); ) {
-            o = it.next(  );
+        selectedServers.clear();
+        for ( Iterator it = sSel.iterator(); it.hasNext(); ) {
+            o = it.next();
             if ( o instanceof ServerInfo )
                 selectedServers.add( ( ServerInfo ) o );
         }
@@ -112,28 +112,28 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
      */
     public void menuAboutToShow( IMenuManager menuManager ) {
         /* disconnect */
-        if ( ( selectedServer != null ) && selectedServer.isConnected(  ) )
-            menuManager.add( new DisconnectAction(  ) );
+        if ( ( selectedServer != null ) && selectedServer.isConnected() )
+            menuManager.add( new DisconnectAction() );
         /* connect */
         if ( ( selectedServer != null )
-                 && ( selectedServer.getConnectionState(  ).getState(  ) == EnumState.NOT_CONNECTED ) )
-            menuManager.add( new ConnectAction(  ) );
+                 && ( selectedServer.getConnectionState().getState() == EnumState.NOT_CONNECTED ) )
+            menuManager.add( new ConnectAction() );
         /* connect more (with the network) */
         if ( selectedServer != null )
-            menuManager.add( new ConnectMoreAction(  ) );
+            menuManager.add( new ConnectMoreAction() );
         /* add server/servers */
         MenuManager addManager = new MenuManager( G2GuiResources.getString( "TML_ADD_SERVER_BY" ) );
-        addManager.add( new AddServerAction(  ) );
-        addManager.add( new AddServersAction(  ) );
+        addManager.add( new AddServerAction() );
+        addManager.add( new AddServersAction() );
         menuManager.add( addManager );
         /* remove server */
         MenuManager removeManager = new MenuManager( G2GuiResources.getString( "TML_REMOVE_SERVER_BY" ) );
-        removeManager.add( new RemoveServerAction(  ) );
-        removeManager.add( new RemoveServersAction(  ) );
+        removeManager.add( new RemoveServerAction() );
+        removeManager.add( new RemoveServersAction() );
         menuManager.add( removeManager );
         /* blacklist server */
         if ( selectedServer != null )
-            menuManager.add( new BlackListAction(  ) );
+            menuManager.add( new BlackListAction() );
 
         /* add to favorites */
         /*                if ( selectedServer != null && this.core.getProtoToUse() > 16 )
@@ -142,23 +142,23 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
         super.menuAboutToShow( menuManager );
         // filter submenu (select network to display)			
         MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TML_FILTER" ) );
-        AllFiltersAction aFA = new AllFiltersAction(  );
-        if ( tableViewer.getFilters(  ).length == 0 )
+        AllFiltersAction aFA = new AllFiltersAction();
+        if ( tableViewer.getFilters().length == 0 )
             aFA.setChecked( true );
         filterSubMenu.add( aFA );
-        filterSubMenu.add( new Separator(  ) );
-        NetworkInfo[] networks = core.getNetworkInfoMap(  ).getNetworks(  );
+        filterSubMenu.add( new Separator() );
+        NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
         for ( int i = 0; i < networks.length; i++ ) {
             NetworkInfo network = networks[ i ];
-            if ( network.isEnabled(  ) && network.hasServers(  ) ) {
+            if ( network.isEnabled() && network.hasServers() ) {
                 NetworkFilterAction nFA =
-                    new NetworkFilterAction( network.getNetworkName(  ), network.getNetworkType(  ) );
-                if ( isFiltered( network.getNetworkType(  ) ) )
+                    new NetworkFilterAction( network.getNetworkName(), network.getNetworkType() );
+                if ( isFiltered( network.getNetworkType() ) )
                     nFA.setChecked( true );
                 filterSubMenu.add( nFA );
             }
         }
-        filterSubMenu.add( new Separator(  ) );
+        filterSubMenu.add( new Separator() );
         EnumState[] states = { EnumState.BLACK_LISTED, EnumState.CONNECTED, 
         					   EnumState.CONNECTED_AND_QUEUED, EnumState.CONNECTED_DOWNLOADING,
         					   EnumState.CONNECTED_INITIATING, EnumState.CONNECTING,
@@ -166,7 +166,7 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
         					   EnumState.NOT_CONNECTED_WAS_QUEUED };
         for ( int i = 0; i < states.length; i++ ) {
             EnumState state = states[ i ];
-            EnumStateFilterAction enFA = new EnumStateFilterAction( state.toString(  ), state );
+            EnumStateFilterAction enFA = new EnumStateFilterAction( state.toString(), state );
             if ( isFiltered( state ) )
                 enFA.setChecked( true );
             filterSubMenu.add( enFA );
@@ -175,52 +175,52 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
     }
 
     private class DisconnectAction extends Action {
-        public DisconnectAction(  ) {
-            super(  );
+        public DisconnectAction() {
+            super();
             setText( G2GuiResources.getString( "TML_DISCONNECT" ) );
         }
 
         /**
          * DOCUMENT ME!
          */
-        public void run(  ) {
-            for ( int i = 0; i < selectedServers.size(  ); i++ ) {
+        public void run() {
+            for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
-                serverInfoMap.disconnect( server.getServerId(  ) );
+                serverInfoMap.disconnect( server.getServerId() );
             }
         }
     }
 
     private class ConnectAction extends Action {
-        public ConnectAction(  ) {
-            super(  );
+        public ConnectAction() {
+            super();
             setText( G2GuiResources.getString( "TML_CONNECT" ) );
         }
 
         /**
          * DOCUMENT ME!
          */
-        public void run(  ) {
-            for ( int i = 0; i < selectedServers.size(  ); i++ ) {
+        public void run() {
+            for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
-                serverInfoMap.connect( server.getServerId(  ) );
+                serverInfoMap.connect( server.getServerId() );
             }
         }
     }
 
     private class ConnectMoreAction extends Action {
-        public ConnectMoreAction(  ) {
-            super(  );
+        public ConnectMoreAction() {
+            super();
             setText( G2GuiResources.getString( "TML_CONNECT_MORE" ) );
         }
 
         /**
          * DOCUMENT ME!
          */
-        public void run(  ) {
-            for ( int i = 0; i < selectedServers.size(  ); i++ ) {
+        public void run() {
+            for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
-                serverInfoMap.connectMore( server.getNetwork(  ) );
+                serverInfoMap.connectMore( server.getNetwork() );
             }
         }
     }
@@ -228,39 +228,39 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
     private class AddServerAction extends Action {
         private MyInputDialog dialog;
 
-        public AddServerAction(  ) {
-            super(  );
+        public AddServerAction() {
+            super();
             setText( G2GuiResources.getString( "TML_ADD_SERVER" ) );
         }
 
         /**
          * DOCUMENT ME!
          */
-        public void run(  ) {
+        public void run() {
             dialog =
-                new MyInputDialog( ( ( TableViewer ) tableViewer ).getTable(  ).getShell(  ),
+                new MyInputDialog( ( ( TableViewer ) tableViewer ).getTable().getShell(),
                                    G2GuiResources.getString( "TML_ADD_SERVER" ),
                                    G2GuiResources.getString( "TML_HOSTNAME_PORT" ),
                                    G2GuiResources.getString( "TML_NETWORK" ),
-                                   G2GuiResources.getString( "TML_FOOBAR2" ), new MyInputValidator(  ) );
-            dialog.open(  );
-            if ( dialog.getReturnCode(  ) == IDialogConstants.OK_ID ) {
-                String text = dialog.getValue(  );
-                String[] strings = split( dialog.getValue(  ), ':' );
+                                   G2GuiResources.getString( "TML_FOOBAR2" ), new MyInputValidator() );
+            dialog.open();
+            if ( dialog.getReturnCode() == IDialogConstants.OK_ID ) {
+                String text = dialog.getValue();
+                String[] strings = split( dialog.getValue(), ':' );
                 InetAddress inetAddress = null;
                 try {
                     inetAddress = InetAddress.getByName( strings[ 0 ] );
                 }
                 catch ( UnknownHostException e ) {
                     MessageBox box =
-                        new MessageBox( ( ( TableViewer ) tableViewer ).getTable(  ).getShell(  ),
+                        new MessageBox( ( ( TableViewer ) tableViewer ).getTable().getShell(),
                                         SWT.ICON_WARNING | SWT.OK );
                     box.setText( G2GuiResources.getString( "TML_LOOKUP_ERROR" ) );
                     box.setMessage( G2GuiResources.getString( "TML_CANNOT_RESOLVE" ) );
-                    box.open(  );
+                    box.open();
                 }
-                core.getServerInfoIntMap(  ).add( dialog.getCombo(  ), inetAddress,
-                                                  new Short( strings[ 1 ] ).shortValue(  ) );
+                core.getServerInfoIntMap().add( dialog.getCombo(), inetAddress,
+                                                  new Short( strings[ 1 ] ).shortValue() );
             }
         }
 
@@ -279,16 +279,16 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
                 regex = new RE( expression );
             }
             catch ( REException e ) {
-                e.printStackTrace(  );
+                e.printStackTrace();
             }
-            ArrayList patterns = new ArrayList(  );
+            ArrayList patterns = new ArrayList();
             REMatch[] matches = regex.getAllMatches( searchString );
             for ( int i = 0; i < matches.length; i++ ) {
-                String match = matches[ i ].toString(  );
+                String match = matches[ i ].toString();
                 if ( !match.equals( "" ) )
                     patterns.add( match );
             }
-            Object[] temp = patterns.toArray(  );
+            Object[] temp = patterns.toArray();
             String[] result = new String[ temp.length ];
             for ( int i = 0; i < temp.length; i++ )
                 result[ i ] = ( String ) temp[ i ];
@@ -305,7 +305,7 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
                     regex = new RE( "([a-z0-9-.]*):[0-9]{1,5}" );
                 }
                 catch ( REException e ) {
-                    e.printStackTrace(  );
+                    e.printStackTrace();
                 }
                 if ( regex.isMatch( newText ) )
                     return null;
@@ -318,22 +318,22 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
     private class AddServersAction extends Action {
         private InputDialog dialog;
 
-        public AddServersAction(  ) {
-            super(  );
+        public AddServersAction() {
+            super();
             setText( G2GuiResources.getString( "TML_ADD_SERVERS" ) );
         }
 
         /**
          * DOCUMENT ME!
          */
-        public void run(  ) {
+        public void run() {
             dialog =
-                new InputDialog( ( ( TableViewer ) tableViewer ).getTable(  ).getShell(  ),
+                new InputDialog( ( ( TableViewer ) tableViewer ).getTable().getShell(),
                                  G2GuiResources.getString( "TML_ADD_SERVERS" ),
                                  G2GuiResources.getString( "TML_LINK_TO_LIST" ),
-                                 G2GuiResources.getString( "TML_FOOBAR" ), new MyInputValidator(  ) );
-            dialog.open(  );
-            String result = dialog.getValue(  );
+                                 G2GuiResources.getString( "TML_FOOBAR" ), new MyInputValidator() );
+            dialog.open();
+            String result = dialog.getValue();
             if ( result != null )
                 serverInfoMap.addServerList( result );
         }
@@ -348,7 +348,7 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
                     regex = new RE( "(http://|https://)([a-z0-9-./?=!+]*)" );
                 }
                 catch ( REException e ) {
-                    e.printStackTrace(  );
+                    e.printStackTrace();
                 }
                 if ( regex.isMatch( newText ) )
                     return null;
@@ -359,84 +359,84 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
     }
 
     private class RemoveServerAction extends Action {
-        public RemoveServerAction(  ) {
-            super(  );
+        public RemoveServerAction() {
+            super();
             setText( G2GuiResources.getString( "TML_REMOVE_SERVER" ) );
         }
 
         /**
          * DOCUMENT ME!
          */
-        public void run(  ) {
-            for ( int i = 0; i < selectedServers.size(  ); i++ ) {
+        public void run() {
+            for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
-                serverInfoMap.remove( server.getServerId(  ) );
+                serverInfoMap.remove( server.getServerId() );
             }
         }
     }
 
     private class RemoveServersAction extends Action {
-        public RemoveServersAction(  ) {
-            super(  );
+        public RemoveServersAction() {
+            super();
             setText( G2GuiResources.getString( "TML_REMOVE_SERVERS" ) );
         }
 
         /**
          * DOCUMENT ME!
          */
-        public void run(  ) {
-            serverInfoMap.cleanOld(  );
+        public void run() {
+            serverInfoMap.cleanOld();
         }
     }
 
     private class BlackListAction extends Action {
-        public BlackListAction(  ) {
-            super(  );
+        public BlackListAction() {
+            super();
             setText( G2GuiResources.getString( "TML_ADD_TO_BLACKLIST" ) );
         }
 
         /**
          * DOCUMENT ME!
          */
-        public void run(  ) {
-            for ( int i = 0; i < selectedServers.size(  ); i++ ) {
+        public void run() {
+            for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
-                serverInfoMap.addToBlackList( server.getServerId(  ) );
+                serverInfoMap.addToBlackList( server.getServerId() );
             }
         }
     }
 
     private class RefreshAction extends Action {
-        public RefreshAction(  ) {
-            super(  );
+        public RefreshAction() {
+            super();
             setText( "Manual Refresh (for developing)" );
         }
 
         /**
          * DOCUMENT ME!
          */
-        public void run(  ) {
-            ( ( TableViewer ) tableViewer ).getTable(  ).getDisplay(  ).asyncExec( new Runnable(  ) {
-                    public void run(  ) {
-                        tableViewer.refresh(  );
+        public void run() {
+            ( ( TableViewer ) tableViewer ).getTable().getDisplay().asyncExec( new Runnable() {
+                    public void run() {
+                        tableViewer.refresh();
                     }
                 } );
         }
     }
 
     private class FavoritesAction extends Action {
-        public FavoritesAction(  ) {
-            super(  );
+        public FavoritesAction() {
+            super();
             setText( G2GuiResources.getString( "TML_FAVORITES" ) );
         }
 
         /**
          * DOCUMENT ME!
          */
-        public void run(  ) {
-            for ( int i = 0; i < selectedServers.size(  ); i++ ) {
+        public void run() {
+            for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
-                server.setFavorites(  );
+                server.setFavorites();
             }
         }
     }
@@ -487,18 +487,18 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
                                   | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER );
                 data.widthHint = convertHorizontalDLUsToPixels( IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH );
                 label.setLayoutData( data );
-                label.setFont( parent.getFont(  ) );
+                label.setFont( parent.getFont() );
             }
 
             /* now our combo for the networks */
             combo = new Combo( composite, SWT.NONE );
             combo.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL ) );
-            NetworkInfo[] networks = core.getNetworkInfoMap(  ).getNetworks(  );
+            NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
             for ( int i = 0; i < networks.length; i++ ) {
                 NetworkInfo network = networks[ i ];
-                if ( network.isEnabled(  ) && network.hasServers(  ) ) {
-                    combo.add( network.getNetworkName(  ) );
-                    combo.setData( network.getNetworkName(  ), network );
+                if ( network.isEnabled() && network.hasServers() ) {
+                    combo.add( network.getNetworkName() );
+                    combo.setData( network.getNetworkName(), network );
                 }
             }
             combo.select( 0 );
@@ -511,7 +511,7 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
         protected void buttonPressed( int buttonId ) {
             if ( buttonId == IDialogConstants.OK_ID )
                 this.networkInfo =
-                    ( NetworkInfo ) combo.getData( combo.getItem( combo.getSelectionIndex(  ) ) );
+                    ( NetworkInfo ) combo.getData( combo.getItem( combo.getSelectionIndex() ) );
             else
                 this.networkInfo = null;
             super.buttonPressed( buttonId );
@@ -520,7 +520,7 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
         /**
          * @return The networkinfo to the selected combo item
          */
-        public NetworkInfo getCombo(  ) {
+        public NetworkInfo getCombo() {
             return this.networkInfo;
         }
     }
@@ -528,6 +528,9 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.8  2003/09/18 11:31:03  lemmster
+checkstyle
+
 Revision 1.7  2003/09/18 11:26:07  lemmster
 checkstyle
 

@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Display;
  * GraphPainter
  *
  *
- * @version $Id: GraphPainter.java,v 1.31 2003/09/18 11:28:52 lemmster Exp $
+ * @version $Id: GraphPainter.java,v 1.32 2003/09/18 11:30:18 lemmster Exp $
  *
  */
 public class GraphPainter {
@@ -72,30 +72,30 @@ public class GraphPainter {
     /**
      * DOCUMENT ME!
      */
-    public void paint(  ) {
+    public void paint() {
         // might help with rare: java.lang.IllegalArgumentException: Argument not valid	?
-        if ( ( parent.getBounds(  ).height < 5 ) || ( parent.getBounds(  ).width < 5 ) )
+        if ( ( parent.getBounds().height < 5 ) || ( parent.getBounds().width < 5 ) )
             return;
-        Display display = parent.getDisplay(  );
+        Display display = parent.getDisplay();
         Color black = display.getSystemColor( SWT.COLOR_BLACK );
         Color white = display.getSystemColor( SWT.COLOR_WHITE );
         Color yellow = display.getSystemColor( SWT.COLOR_YELLOW );
 
         // create a buffer
-        Image imageBuffer = new Image( null, parent.getBounds(  ) );
+        Image imageBuffer = new Image( null, parent.getBounds() );
         GC drawBoardBuffer = new GC( imageBuffer );
 
         // set canvas background color
         Color canvasBackgroundColor = new Color( null, 50, 50, 50 );
         drawBoardBuffer.setBackground( canvasBackgroundColor );
         drawBoardBuffer.setForeground( black );
-        drawBoardBuffer.fillGradientRectangle( 0, 0, parent.getClientArea(  ).width,
-                                               parent.getClientArea(  ).height, true );
+        drawBoardBuffer.fillGradientRectangle( 0, 0, parent.getClientArea().width,
+                                               parent.getClientArea().height, true );
         int startx = 1;
         int k = startx;
-        int bottomSpace = drawBoardBuffer.getFontMetrics(  ).getHeight(  ) + 2;
-        float height = ( float ) ( parent.getClientArea(  ).height - bottomSpace );
-        int width = parent.getClientArea(  ).width;
+        int bottomSpace = drawBoardBuffer.getFontMetrics().getHeight() + 2;
+        float height = ( float ) ( parent.getClientArea().height - bottomSpace );
+        int width = parent.getClientArea().width;
         int graphWidth = width - startx;
         float zoom = 0;
         float valueY = 0;
@@ -103,11 +103,11 @@ public class GraphPainter {
         zoom = ( height - 10f ) / maximum;
 
         // draw graph gradient lines
-        drawBoardBuffer.setBackground( graph.getColor1(  ) );
-        drawBoardBuffer.setForeground( graph.getColor2(  ) );
-        int positionInArray = graph.getInsertAt(  ) - 1;
+        drawBoardBuffer.setBackground( graph.getColor1() );
+        drawBoardBuffer.setForeground( graph.getColor2() );
+        int positionInArray = graph.getInsertAt() - 1;
         int validPoints =
-            ( ( Graph.MAX_POINTS > graph.getAmount(  ) ) ? graph.getAmount(  ) : Graph.MAX_POINTS );
+            ( ( Graph.MAX_POINTS > graph.getAmount() ) ? graph.getAmount() : Graph.MAX_POINTS );
         for ( k = startx; ( k < width ) && ( validPoints > 0 ); k++, validPoints-- ) {
             if ( positionInArray < 0 )
                 positionInArray = Graph.MAX_POINTS - 1;
@@ -132,15 +132,15 @@ public class GraphPainter {
         // just for temporary fun; this might overflow pretty quickly
         Color textColor = new Color( null, 250, 250, 250 );
         drawBoardBuffer.setForeground( textColor );
-        drawBoardBuffer.drawText( graph.getName(  ) + " avg: " + ( ( double ) graph.getAvg(  ) / 100 )
-                                  + " kb/s," + " max: " + ( ( double ) graph.getMax(  ) / 100 ) + " kb/s",
+        drawBoardBuffer.drawText( graph.getName() + " avg: " + ( ( double ) graph.getAvg() / 100 )
+                                  + " kb/s," + " max: " + ( ( double ) graph.getMax() / 100 ) + " kb/s",
                                   startx,
-                                  parent.getClientArea(  ).height
-                                  - drawBoardBuffer.getFontMetrics(  ).getHeight(  ), true );
+                                  parent.getClientArea().height
+                                  - drawBoardBuffer.getFontMetrics().getHeight(), true );
         // draw floating box
-        double value = ( double ) graph.getNewestPoint(  ) / 100;
+        double value = ( double ) graph.getNewestPoint() / 100;
         String boxString = String.valueOf( value ) + " kb/s";
-        int linePosition = ( int ) ( height - ( ( float ) ( graph.getNewestPoint(  ) / 10 ) * zoom ) );
+        int linePosition = ( int ) ( height - ( ( float ) ( graph.getNewestPoint() / 10 ) * zoom ) );
         int linePositionEnd = linePosition;
         int textPosition = linePosition - 6;
         if ( ( textPosition + bottomSpace ) >= ( int ) height ) {
@@ -159,16 +159,19 @@ public class GraphPainter {
 
         // output buffer to the display
         drawBoard.drawImage( imageBuffer, 0, 0 );
-        imageBuffer.dispose(  );
-        drawBoardBuffer.dispose(  );
-        canvasBackgroundColor.dispose(  );
-        gridColor.dispose(  );
-        textColor.dispose(  );
+        imageBuffer.dispose();
+        drawBoardBuffer.dispose();
+        canvasBackgroundColor.dispose();
+        gridColor.dispose();
+        textColor.dispose();
     }
 }
 
 /*
 $Log: GraphPainter.java,v $
+Revision 1.32  2003/09/18 11:30:18  lemmster
+checkstyle
+
 Revision 1.31  2003/09/18 11:28:52  lemmster
 checkstyle
 
