@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkCanvas.java,v 1.7 2003/08/04 22:21:06 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.8 2003/08/05 03:16:43 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -382,12 +382,8 @@ public class ChunkCanvas extends Canvas implements Observer {
 				e.y,
 				e.width,
 				e.height );
-		
-			
-			
-			bufferGC.dispose();
 	
-
+		
 		} else { 
 
 
@@ -458,6 +454,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.8  2003/08/05 03:16:43  zet
+remove double dispose
+
 Revision 1.7  2003/08/04 22:21:06  zet
 more synchronized blocks
 
