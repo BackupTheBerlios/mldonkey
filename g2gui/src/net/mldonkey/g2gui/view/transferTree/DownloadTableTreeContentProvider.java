@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.20 2003/09/14 03:37:43 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.21 2003/09/14 04:17:19 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, TreeListener {
@@ -210,13 +210,6 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 		else
 			return false;
 	}
-	
-	public String getClientActivity( ClientInfo clientInfo) {
-		if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
-			return "transferring";
-		else 
-			return  "rank: " + clientInfo.getState().getRank() ;
-	}		
 	
 	/*
 	 *  (non-Javadoc)
@@ -523,6 +516,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.21  2003/09/14 04:17:19  zet
+remove unneeded meth
+
 Revision 1.20  2003/09/14 03:37:43  zet
 changedProperties
 
