@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.26 2003/08/02 09:32:07 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.27 2003/08/10 23:20:41 zet Exp $ 
  *
  */
 public abstract class Message {
@@ -339,14 +339,24 @@ public abstract class Message {
 	 * @param anInt int to create a byte array with
 	 * @return a byte array of int32
 	 */
-	public static byte[] toBytes( int anInt ) {			
-			byte[] result = new byte[ 4 ];
-			for ( int j = 0; j < 4; j++ ) {
-				result[ j ] = ( byte ) ( anInt % 256 );
-				anInt = anInt / 256;
-			}
-			return result;
-		}
+//	public static byte[] toBytes( int anInt ) {			
+//			byte[] result = new byte[ 4 ];
+//			for ( int j = 0; j < 4; j++ ) {
+//				result[ j ] = ( byte ) ( anInt % 256 );
+//				anInt = anInt / 256;
+//			}
+//			return result;
+//		}
+	// does this work? (with negatives)
+	public static byte[] toBytes( int anInt ) {
+		byte[] result = new byte [ 4 ];
+		result[0] = (byte) (anInt & 0xFF);
+		result[1] = (byte) ((anInt & 0xFFFF) >> 8);
+		result[2] = (byte) ((anInt & 0xFFFFFF) >> 16);
+		result[3] = (byte) ((anInt & 0x7FFFFFFF) >> 24);
+		
+		return result;
+	}
 
 	/**
 	 * Creates a 8 byte array of int64 from a long object
@@ -405,6 +415,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.27  2003/08/10 23:20:41  zet
+signed ints
+
 Revision 1.26  2003/08/02 09:32:07  lemmstercvs01
 javadoc fixed
 

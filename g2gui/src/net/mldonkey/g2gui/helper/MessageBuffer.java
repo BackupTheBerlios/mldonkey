@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  * @author $user$
- * @version $Id: MessageBuffer.java,v 1.16 2003/08/06 16:07:51 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.17 2003/08/10 23:20:26 zet Exp $ 
  *
  */
 public class MessageBuffer {
@@ -107,6 +107,13 @@ public class MessageBuffer {
 			  * ( readInt8() ) ) ) );
 		
 	}
+	public int readSignedInt32() {
+		int result = 0;
+		for (int i = 0; i < 4; i++) 
+			result |= ((int) readByte() << (i * 8));
+		return result;
+	}
+	
 	/**
 	 * Reads a long from MessageBuffer
 	 * @return an int64
@@ -243,6 +250,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.17  2003/08/10 23:20:26  zet
+signed ints
+
 Revision 1.16  2003/08/06 16:07:51  dek
 reverted....
 
