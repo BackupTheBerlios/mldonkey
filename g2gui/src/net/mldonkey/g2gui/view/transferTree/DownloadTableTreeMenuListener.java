@@ -147,17 +147,24 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	public void fillContextMenu(IMenuManager menuManager) {
 
 		if (selectedFile != null
-			&& selectedFile.getState().getState() != EnumFileState.PAUSED)
+			&& selectedFile.getState().getState() == EnumFileState.DOWNLOADED)
+			menuManager.add(new CommitAction());
+
+		if (selectedFile != null
+			&& selectedFile.getState().getState() == EnumFileState.DOWNLOADING)
 			menuManager.add(new PauseAction());
 
 		if (selectedFile != null
-			&& selectedFile.getState().getState() != EnumFileState.DOWNLOADING)
+			&& selectedFile.getState().getState() == EnumFileState.PAUSED)
 			menuManager.add(new ResumeAction());
 
-		if (selectedFile != null)
+		if (selectedFile != null
+			&& selectedFile.getState().getState() != EnumFileState.DOWNLOADED)
 			menuManager.add(new CancelAction());
 
-		if (selectedFile != null) {
+		if (selectedFile != null
+			&& selectedFile.getState().getState() != EnumFileState.DOWNLOADED)
+		{
 			MenuManager prioritySubMenu =
 				new MenuManager(res.getString("TT_DOWNLOAD_MENU_PRIORITY"));
 			prioritySubMenu.add(new PriorityHighAction());
@@ -203,6 +210,14 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		AllFiltersAction aFA = new AllFiltersAction();
 		if (tableTreeViewer.getFilters().length == 0) aFA.setChecked(true);
 		filterSubMenu.add(aFA);
+		
+		filterSubMenu.add(new Separator());
+		
+		FileStateFilterAction fFA = new FileStateFilterAction("queued",  EnumFileState.QUEUED);
+		if (!isFiltered(EnumFileState.QUEUED)) fFA.setChecked(true);
+		filterSubMenu.add(fFA);		
+		
+		
 		filterSubMenu.add(new Separator());
 			
 		NetworkInfo[] networks = mldonkey.getNetworkInfoMap().getNetworks();
@@ -237,7 +252,16 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			if (viewerFilters [ i ] instanceof NetworkFilter)
 				if (((NetworkFilter) viewerFilters[ i ]).getNetworkType().equals(networkType))
 					return true; 
+		}
+		return false;
+	}
 	
+	public boolean isFiltered(EnumFileState fileState) {
+		ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+		for (int i = 0; i < viewerFilters.length; i++) {
+			if (viewerFilters [ i ] instanceof FileStateFilter)
+				if (((FileStateFilter) viewerFilters[ i ]).getFileStateType().equals(fileState))
+					return true; 
 		}
 		return false;
 	}
@@ -287,15 +311,30 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		}
 		
 	}	
-		
 	class PauseAction extends Action {
-		public PauseAction() {
+			public PauseAction() {
+				super();
+				setText(res.getString("TT_DOWNLOAD_MENU_PAUSE"));
+			}
+			public void run() {
+				for (int i = 0; i < selectedFiles.size(); i++)	
+					((FileInfo) selectedFiles.get(i)).setState(EnumFileState.PAUSED);
+			}
+	}
+	
+		
+	class CommitAction extends Action {
+		public CommitAction() {
 			super();
-			setText(res.getString("TT_DOWNLOAD_MENU_PAUSE"));
+			setText(res.getString("TT_DOWNLOAD_MENU_COMMIT"));
 		}
 		public void run() {
-			for (int i = 0; i < selectedFiles.size(); i++)	
-				((FileInfo) selectedFiles.get(i)).setState(EnumFileState.PAUSED);
+			for (int i = 0; i < selectedFiles.size(); i++) {
+				FileInfo selectedFileInfo = (FileInfo) selectedFiles.get(i);
+				if (selectedFileInfo.getState().getState() == EnumFileState.DOWNLOADED)
+					selectedFileInfo.saveFileAs( selectedFileInfo.getName() );
+			}
+		
 		}
 	}
 
@@ -428,6 +467,32 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 		}
 	}
+	
+	class FileStateFilterAction extends Action {
+
+		public EnumFileState fileState;
+
+		public FileStateFilterAction(String name, EnumFileState fileState) {
+			super(name, Action.AS_CHECK_BOX);
+			this.fileState = fileState;
+		}
+		public void run() {
+		
+			if (isChecked()) {
+				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+				for (int i = 0; i < viewerFilters.length; i++) {
+					if (viewerFilters[i] instanceof FileStateFilter)
+						if (((FileStateFilter) viewerFilters[i]).getFileStateType() == fileState) {
+							toggleFilter(viewerFilters[i], false);
+						}
+				}
+			} else {
+				toggleFilter(new FileStateFilter(fileState), true);
+			}
+		}
+	}
+	
+	
 	class ExtensionsFilterAction extends Action {
 
 		public String extensionsName;
@@ -541,6 +606,31 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		}
 	}
 	
+	public class FileStateFilter extends ViewerFilter {
+		
+		private EnumFileState fileState;
+	
+		public FileStateFilter(EnumFileState enum) {
+			this.fileState = enum;	
+		}	
+	
+		public EnumFileState getFileStateType () {
+			return fileState;
+		}
+	
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if (element instanceof FileInfo) {
+				FileInfo fileInfo = (FileInfo) element;
+				if ((EnumFileState) fileInfo.getState().getState() == fileState)
+					return false;
+				else 
+					return true;
+			}
+			return true;
+		}
+	}
+
+	
 	public class FileExtensionsFilter extends ViewerFilter {
 
 		private String[] fileExtensions;
@@ -573,6 +663,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.5  2003/08/11 00:30:10  zet
+show queued files
+
 Revision 1.4  2003/08/08 20:51:11  zet
 localise strings
 

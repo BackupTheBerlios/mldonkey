@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Shell;
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.24 2003/08/08 02:46:31 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.25 2003/08/11 00:30:10 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -90,7 +90,7 @@ public class TransferTab extends GuiTab  {
 				
 		// Bottom sash			
 		Composite upload = new Composite( main, SWT.BORDER );
-		main.setWeights( new int[] {11,1});
+		main.setWeights( new int[] {1441,0});
 		// old non viewer
 		// new DownloadTable ( download, mldonkey, this );
 		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, mldonkey, this );
@@ -162,6 +162,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.25  2003/08/11 00:30:10  zet
+show queued files
+
 Revision 1.24  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 

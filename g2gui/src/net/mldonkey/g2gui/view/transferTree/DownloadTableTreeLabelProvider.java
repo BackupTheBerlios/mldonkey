@@ -40,7 +40,7 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.3 2003/08/08 02:46:31 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.4 2003/08/11 00:30:10 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -98,6 +98,8 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 					return "Paused";
 				else if (fileInfo.getState().getState() == EnumFileState.QUEUED)
 					return "Queued";
+				else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
+					return "Downloaded";	
 				else 
 					return ""+fileInfo.getRate();
 			case 8: // chunks
@@ -189,6 +191,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.4  2003/08/11 00:30:10  zet
+show queued files
+
 Revision 1.3  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 

@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Table;
  * DownloadTableTreeContentProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.5 2003/08/08 23:29:36 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.6 2003/08/11 00:30:10 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -191,7 +191,10 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	public static boolean isInteresting ( FileInfo fileInfo ) {
 	
 		if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING
-			|| fileInfo.getState().getState() == EnumFileState.PAUSED )
+			|| fileInfo.getState().getState() == EnumFileState.PAUSED 
+			|| fileInfo.getState().getState() == EnumFileState.DOWNLOADED 
+			|| fileInfo.getState().getState() == EnumFileState.QUEUED 
+			)
 			return true;
 		return false;
 	
@@ -606,6 +609,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.6  2003/08/11 00:30:10  zet
+show queued files
+
 Revision 1.5  2003/08/08 23:29:36  zet
 dispose tabletreeeditor
 
