@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.regexp.RE;
+import gnu.regexp.REException;
 import gnu.trove.TIntObjectHashMap;
 
 import java.net.InetAddress;
@@ -39,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.14 2003/08/07 12:35:31 lemmstercvs01 Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.15 2003/08/09 13:45:54 dek Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -327,8 +329,16 @@ public class ServerInfoIntMap extends InfoIntMap {
 				ip = "";
 			}
 		}
-		else
-			ip = server.getServerAddress().getAddress().toString().replaceAll( "/", "" );
+		else {	
+			RE regex=null;
+			/* compare by ipaddress */
+			try {
+				 regex = new RE("/");
+			} catch (REException e) {			
+				e.printStackTrace();
+			}		
+			ip = regex.substituteAll(server.getServerAddress().getAddress().toString(),"");				
+		}
 
 		Message message = new EncodeMessage( Message.S_CONSOLEMSG, ip );
 		message.sendMessage( this.parent.getConnection() );
@@ -374,6 +384,12 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.15  2003/08/09 13:45:54  dek
+added gnu.regexp for compiling with gcj
+you can get it at:
+
+ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz
+
 Revision 1.14  2003/08/07 12:35:31  lemmstercvs01
 cleanup, more efficient
 

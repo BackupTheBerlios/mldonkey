@@ -22,6 +22,9 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.regexp.RE;
+import gnu.regexp.REException;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -31,7 +34,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  * @author ${user}
- * @version $$Id: Addr.java,v 1.8 2003/08/06 17:36:06 lemmstercvs01 Exp $$ 
+ * @version $$Id: Addr.java,v 1.9 2003/08/09 13:42:24 dek Exp $$ 
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -110,14 +113,27 @@ public class Addr implements SimpleInformation {
 		if ( this.hasHostName() && anAddress.hasHostName() )
 			return this.address.getHostName().compareToIgnoreCase( anAddress.address.getHostName() );
 	
+		RE regex=null;
 		/* compare by ipaddress */
-		Long int1 = new Long( this.address.getHostAddress().replaceAll( "\\.", "" ) );
-		Long int2 = new Long( anAddress.address.getHostAddress().replaceAll( "\\.", "" ) );
+		try {
+			 regex = new RE("\\.");
+		} catch (REException e) {			
+			e.printStackTrace();
+		}
+		
+		Long int1 = new Long( regex.substituteAll(this.address.getHostAddress(),"") );
+		Long int2 = new Long( regex.substituteAll(anAddress.address.getHostAddress(),"") );
 		return int1.compareTo( int2 );
 	}
 }
 /*
 $$Log: Addr.java,v $
+$Revision 1.9  2003/08/09 13:42:24  dek
+$added gnu.regexp for compiling with gcj
+$you can get it at:
+$
+$ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz
+$
 $Revision 1.8  2003/08/06 17:36:06  lemmstercvs01
 $save a string address as string and not as InetAddress anymore (speed!!)
 $
