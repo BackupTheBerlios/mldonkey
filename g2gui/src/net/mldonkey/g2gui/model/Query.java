@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.8 2003/07/04 14:14:34 dek Exp $ 
+ * @version $Id: Query.java,v 1.9 2003/07/04 16:53:56 dek Exp $ 
  *
  */
 public class Query implements SimpleInformation {
@@ -121,10 +121,71 @@ public class Query implements SimpleInformation {
 	 * via GUI-protocol)
 	 * @return the byte-array
 	 */
-	public byte[] writeStream() {
-		ArrayList buffer = new ArrayList();
+	public Object[] toObjectArray() {
+		ArrayList output = new ArrayList();
+		output.add( new Byte( node ) );
 		
-		return null;
+			 if ( node == 0 || node == 1 || node == 13 ) {
+			 	
+			 	/*
+			 	 * List of Queries for AND or OR or Hidden, I assume, only 1-level searches are made
+			 	 * So i don't need to implement multi-leve AND/OR (=>only comment / value pairs are read out from
+			 	 * the Query-objects)
+			 	 */			 	 
+			 	Object[] listOfQueries = new Object[queries.length];
+				 	for ( int i = 0; i < listOfQueries.length; i++ ) {	
+				 		Object[] row =  {queries[ i ].getComment(), queries[ i ].getDefaultValue() };					 
+						listOfQueries[ i ] = row;
+						
+						//[ 0 ] = queries[ i ].getComment();
+						//listOfQueries[ i ][ 1 ] = queries[ i ].getDefaultValue();
+					}
+					
+			 	output.add( listOfQueries );
+			 }
+			else if ( node == 2  ) {
+				/*
+				 * Query: First Argument of Andnot
+				 */
+					Object[] fTempArray = fAndNot.toObjectArray();
+					for ( int i = 0; i < fTempArray.length; i++ ) {
+						output.add( fTempArray [ i ] );
+					}
+				 
+				 /*
+				  * Query: Second Argument of Andnot
+				  */
+					Object[] sTempArray = sAndNot.toObjectArray();
+					for ( int i = 0; i < sTempArray.length; i++ ) {
+						output.add( sTempArray [ i ] );
+					}
+				
+			}
+			else if ( node == 3  ) {
+				/*
+				 * String: 	 Name of Module
+				 */ 
+					output.add( module );
+				/* 
+				 * Query  :	 Query inside Module
+				 */
+					Object[] tempArray = mQuery.toObjectArray();
+					for ( int i = 0; i < tempArray.length; i++ ) {
+						output.add( tempArray [ i ] );
+					}
+			}
+			else {
+				/*
+				 * String: Comment
+				 */ 
+					output.add( comment );
+				/* 
+				 * String: DefaultValue
+				 */				
+					output.add( defaultValue );
+			}
+		 
+		return output.toArray();
 	}
 	
 	/**
@@ -272,6 +333,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.9  2003/07/04 16:53:56  dek
+searching started
+
 Revision 1.8  2003/07/04 14:14:34  dek
 added todo (but not today ;-))
 
