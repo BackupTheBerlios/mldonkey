@@ -60,7 +60,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -70,7 +69,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.71 2003/10/16 20:43:14 zet Exp $
+ * @version $Id: TransferTab.java,v 1.72 2003/10/16 21:22:32 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -83,7 +82,8 @@ public class TransferTab extends GuiTab {
 	private UploadTableViewer uploadTableViewer;
 	private String oldDLabelText = "";
 	private long lastLabelUpdate = 0;
-
+	boolean advancedMode = PreferenceLoader.loadBoolean( "advancedMode" );
+	
     /**
      * @param gui where this tab belongs to
      */
@@ -100,7 +100,6 @@ public class TransferTab extends GuiTab {
      */
     protected void createContents( Composite parent ) {
         final SashForm mainSashForm = new SashForm( parent, (PreferenceLoader.loadBoolean("transferSashVertical") ? SWT.VERTICAL : SWT.HORIZONTAL) );
-		boolean advancedMode = PreferenceLoader.loadBoolean( "advancedMode" );
 		
 		mainSashForm.addDisposeListener( new DisposeListener() { 
 			public void widgetDisposed(DisposeEvent e) {
@@ -125,7 +124,7 @@ public class TransferTab extends GuiTab {
         	downloadParent = downloadViewForm;
         }
         createDownloadHeader( downloadViewForm, mainSashForm, downloadParent );
-        createDownloadToolbar( downloadViewForm );
+        createDownloadToolbar( downloadViewForm, downloadParent );
         downloadComposite = new Composite( downloadViewForm, SWT.NONE );
         downloadComposite.setLayout( new FillLayout() );
         downloadViewForm.setContent( downloadComposite );
@@ -152,9 +151,11 @@ public class TransferTab extends GuiTab {
         parentViewForm.setTopLeft( downloadCLabel );
     }
     
-    public void createDownloadToolbar ( ViewForm parentViewForm ) {
+    public void createDownloadToolbar ( ViewForm parentViewForm, final Control downloadParent ) {
 		ToolBar downloadsToolBar = new ToolBar( parentViewForm, SWT.RIGHT | SWT.FLAT );
 		ToolItem toolItem;
+		
+		
 		
 		toolItem = new ToolItem( downloadsToolBar, SWT.NONE );
 		toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_COMMIT_ALL" ) );
@@ -164,6 +165,24 @@ public class TransferTab extends GuiTab {
 					 mldonkey.getFileInfoIntMap().commitAll();
 				 }
 			 } );	
+			 
+		if ( advancedMode ) {
+	
+			toolItem = new ToolItem( downloadsToolBar, SWT.NONE );
+			toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_SHOW_CLIENTS" ) );
+			toolItem.setImage( G2GuiResources.getImage( "split-table" ) );
+			toolItem.addSelectionListener( new SelectionAdapter() {
+					 public void widgetSelected( SelectionEvent s ) {
+							SashForm sashForm = (SashForm) downloadParent;
+						if (sashForm.getWeights()[1] == 0) {
+							sashForm.setWeights( new int[] { 2, 1 } );
+						} else {
+							sashForm.setWeights( new int[] { 1, 0 } );
+							downloadTableTreeViewer.updateClientsTable( false );
+						}
+					 }
+				 } );	
+		}	 
 		
 		toolItem = new ToolItem( downloadsToolBar, SWT.NONE );
 		toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_COLLAPSE_ALL" ) );
@@ -272,16 +291,7 @@ public class TransferTab extends GuiTab {
         bottomBar.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         Label separator1 = new Label( bottomBar, SWT.SEPARATOR | SWT.HORIZONTAL );
         separator1.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        Button hideButton = new Button( bottomBar, SWT.NONE );
-        hideButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        hideButton.setText( "-" );
-        hideButton.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent s ) {
-                    parentSash.setWeights( new int[] { 10, 0 } );
-                    if ( downloadTableTreeViewer != null )
-                        downloadTableTreeViewer.updateClientsTable( false );
-                }
-        } );
+        
     }
 
     /**
@@ -406,6 +416,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.72  2003/10/16 21:22:32  zet
+toggle clients icon
+
 Revision 1.71  2003/10/16 20:43:14  zet
 remove null
 
