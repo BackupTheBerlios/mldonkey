@@ -54,13 +54,12 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 
 /**
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.9 2003/09/08 11:54:23 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.10 2003/09/08 15:43:34 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -143,7 +142,7 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 			copyManager.add( new CopyNameAsHtmlAction() );
 			menuManager.add( copyManager );
 	
-			menuManager.add( new Separator() );
+//			menuManager.add( new Separator() );
 	
 			/* webservices */
 /*			MenuManager webManager =
@@ -156,15 +155,7 @@ Yet			menuManager.add( webManager );
 */
 		}
 		
-		/* columns toogle */
-		MenuManager columnsSubMenu = new MenuManager( G2GuiResources.getString( "TML_COLUMN" ) );
-		Table table = ( ( TableViewer ) tableViewer ).getTable();
-		for ( int i = 0; i < table.getColumnCount(); i++ ) {
-			ToggleColumnsAction tCA = new ToggleColumnsAction( i );
-			if ( table.getColumn( i ).getResizable() ) tCA.setChecked( true );
-			columnsSubMenu.add( tCA );
-		}
-		menuManager.add( columnsSubMenu );
+		super.menuAboutToShow( menuManager );
 		
 		/* filter submenu (select network to display) */			
 		MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TML_FILTER" ) );
@@ -342,6 +333,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.10  2003/09/08 15:43:34  lemmster
+work in progress
+
 Revision 1.9  2003/09/08 11:54:23  lemmster
 added download button
 

@@ -60,13 +60,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 
 /**
  * TableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ServerTableMenuListener.java,v 1.3 2003/09/08 15:43:34 lemmster Exp $ 
  *
  */
 public class ServerTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -137,21 +136,11 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 		if ( selectedServer != null )
 			menuManager.add( new BlackListAction() );
 			
-		menuManager.add( new Separator() );
-
 		/* add to favorites */
 		if ( selectedServer != null && this.core.getProtoToUse() > 16 )
-			menuManager.add( new FavoritesAction() );			
-		
-		/* columns toogle */
-		MenuManager columnsSubMenu = new MenuManager( G2GuiResources.getString( "TML_COLUMN" ) );
-		Table table = ( ( TableViewer ) tableViewer ).getTable();
-		for ( int i = 0; i < table.getColumnCount(); i++ ) {
-			ToggleColumnsAction tCA = new ToggleColumnsAction( i );
-			if ( table.getColumn( i ).getResizable() ) tCA.setChecked( true );
-			columnsSubMenu.add( tCA );
-		}
-		menuManager.add( columnsSubMenu );
+			menuManager.add( new FavoritesAction() );
+
+		super.menuAboutToShow( menuManager );
 			
 		// filter submenu (select network to display)			
 		MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TML_FILTER" ) );
@@ -501,6 +490,9 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.3  2003/09/08 15:43:34  lemmster
+work in progress
+
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
