@@ -54,7 +54,7 @@ import org.eclipse.swt.SWT;
  * DownloadSubmit
  *
  * @author $user$
- * @version $Id: DownloadSubmit.java,v 1.10 2004/03/16 12:54:32 dek Exp $ 
+ * @version $Id: DownloadSubmit.java,v 1.11 2004/03/29 00:07:16 psy Exp $ 
  *
  */
 public class DownloadSubmit implements Runnable {
@@ -174,11 +174,18 @@ public class DownloadSubmit implements Runnable {
 			link = hexEncode(link);
 		}
 		if (G2Gui.debug) System.out.println("SENDING: " + link);
-		/* create a nice package and send it to the core */
-		EncodeMessage linkMessage = new EncodeMessage(Message.S_DLLINK, link );
-		linkMessage.sendMessage(core);
+		
+		if (link.toLowerCase().startsWith("http://") && !link.toLowerCase().endsWith(".torrent") ) {
 
-	    linkMessage = null;
+			/* TODO do we have an opcode for http submits, 
+			 * so we don't need this ugly console command? */
+            String[] command = new String[] { "http " + link };
+            new EncodeMessage(Message.S_CONSOLEMSG, command).sendMessage(core);
+
+		} else {
+			/* create a nice package and send it to the core */
+			new EncodeMessage(Message.S_DLLINK, link ).sendMessage(core);
+		}
     }
 
     /**
@@ -364,6 +371,9 @@ public class DownloadSubmit implements Runnable {
 
 /*
 $Log: DownloadSubmit.java,v $
+Revision 1.11  2004/03/29 00:07:16  psy
+added matching and submission for http-links for the FileTP network
+
 Revision 1.10  2004/03/16 12:54:32  dek
 win32 IP-detection using ipconfig
 

@@ -1,3 +1,7 @@
+2004/03/29: vnc
+	* Link-Submission field now also matches regular http-downloads for the FileTP network
+	  Submission via commandline is also possible, nicely combineable with G2submit
+
 2004/03/28: vnc
 	* Mozilla G2submit.xpi updated to work better with newer versions of G2Gui
 
@@ -28,7 +32,6 @@
 		all other code adapted for g2gui and SWT.
 		If you run g2gui make sure, "DesktopIndicator.dll" is reachable
 		for java/ g2gui.exe (i.e. in %PATH%)
-		
 	
 2004/03/02: vnc
 	* More hex-encoding related fixes. Using G2gui with a browser

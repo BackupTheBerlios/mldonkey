@@ -61,7 +61,7 @@ import java.util.ArrayList;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.22 2004/03/02 23:39:29 psy Exp $
+ * @version $Id: LinkEntry.java,v 1.23 2004/03/29 00:07:16 psy Exp $
  *
  */
 public class LinkEntry {
@@ -128,7 +128,8 @@ public class LinkEntry {
      * @param linkEntryText
      */
     public void enterLinks(Text linkEntryText) {
-        String input = linkEntryText.getText();
+        int matchCounter = 0;
+    	String input = linkEntryText.getText();
         List linkList = new ArrayList();
         
         RE regex = null;
@@ -151,11 +152,36 @@ public class LinkEntry {
             String link = RegExp.replaceAll(matches[ i ].toString(), "\"", "");
             link = RegExp.replaceAll(link, "\n", "");
             linkList.add(link);
+            matchCounter++;
         }
+
+        
+        /* This very powerful regex matches http-URLs, plain and from HTML. 
+         * Found at: http://www.truerwords.net/articles/ut/urlactivation.html
+         * and modified a bit for our purposes
+         */
+        RE httpRegex = null;
+        try {
+        	regex = new RE( "(http:(([A-Za-z0-9$_.+!*(),;/?:@&~=-])|%[A-Fa-f0-9]{2})+(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*))?)");
+        } catch (REException e) {
+        	e.printStackTrace();
+        }
+        
+        REMatch[] httpMatches = regex.getAllMatches(input);
+        for (int i = 0; i < httpMatches.length; i++) {
+        	String link = RegExp.replaceAll(httpMatches[ i ].toString(), "\"", "");
+            link = RegExp.replaceAll(link, "\n", "");
+        	if (!linkList.contains(link)) {
+        		linkList.add(link);
+        		matchCounter++;
+        	}
+        }
+        
+       
         /* submit those links */
         new DownloadSubmit(linkList, core);
         
-        statusLine.update(G2GuiResources.getString("LE_LINKS_SENT") + " " + matches.length);
+        statusLine.update(G2GuiResources.getString("LE_LINKS_SENT") + " " + matchCounter);
         linkEntryText.setText("");
     }
 
@@ -195,6 +221,9 @@ public class LinkEntry {
 
 /*
 $Log: LinkEntry.java,v $
+Revision 1.23  2004/03/29 00:07:16  psy
+added matching and submission for http-links for the FileTP network
+
 Revision 1.22  2004/03/02 23:39:29  psy
 replaced raw-socket link-submission
 
