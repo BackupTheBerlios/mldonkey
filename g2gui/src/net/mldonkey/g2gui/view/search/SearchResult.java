@@ -80,7 +80,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.53 2003/09/27 13:30:22 dek Exp $
+ * @version $Id: SearchResult.java,v 1.54 2003/09/29 17:44:40 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -348,11 +348,13 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			}
 			public void mouseUp( MouseEvent e ) { }
 		} );
-    
 
-        final ToolTipHandler tooltip = new ToolTipHandler( table.getTable().getShell() );
-        tooltip.activateHoverHelp( table.getTable() );
-
+		/* just show tooltip on user request */    
+		if ( PreferenceLoader.loadBoolean( "showSearchTooltip" ) ) {
+	        final ToolTipHandler tooltip = new ToolTipHandler( table.getTable().getShell() );
+	        tooltip.activateHoverHelp( table.getTable() );
+		}
+		
         /* set the this table as the new CTabItem Control */
         cTabItem.setControl( table.getTable() );
         
@@ -616,6 +618,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 }
 /*
 $Log: SearchResult.java,v $
+Revision 1.54  2003/09/29 17:44:40  lemmster
+switch for search tooltips
+
 Revision 1.53  2003/09/27 13:30:22  dek
 all tables have now show-Gridlines-behaviour as descibed in  preferences
 
@@ -708,7 +713,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

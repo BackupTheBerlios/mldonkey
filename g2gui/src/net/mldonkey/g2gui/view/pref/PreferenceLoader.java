@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.31 2003/09/28 13:10:31 dek Exp $
+ * @version $Id: PreferenceLoader.java,v 1.32 2003/09/29 17:44:40 lemmster Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -97,6 +97,7 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "password", "" );
         preferenceStore.setDefault( "port", "4001" );
         preferenceStore.setDefault( "advancedMode", false );
+        preferenceStore.setDefault( "showSearchTooltip", true );
         preferenceStore.setDefault( "searchFilterPornography", false );
         preferenceStore.setDefault( "searchFilterProfanity", false );
         preferenceStore.setDefault( "maintainSortOrder", false );
@@ -223,6 +224,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.32  2003/09/29 17:44:40  lemmster
+switch for search tooltips
+
 Revision 1.31  2003/09/28 13:10:31  dek
 Added Option, wether multiple Instances of G2Gui are allowed or not[bug #867]
 
@@ -287,7 +291,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates

@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Advanced.java,v 1.6 2003/09/27 00:36:54 zet Exp $
+ * @version $Id: G2Gui_Advanced.java,v 1.7 2003/09/29 17:44:40 lemmster Exp $
  */
 public class G2Gui_Advanced extends FieldEditorPreferencePage {
 
@@ -158,6 +158,11 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 					parent ) );
 	
 		}
+		setupEditor(
+			new BooleanFieldEditor(
+			"showSearchTooltip",
+			G2GuiResources.getString( "PREF_SEARCH_SHOW_TOOLTIP" ),
+			parent ) );
 	
 		setupEditor( 
 			new BooleanFieldEditor( 
@@ -217,6 +222,9 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Advanced.java,v $
+Revision 1.7  2003/09/29 17:44:40  lemmster
+switch for search tooltips
+
 Revision 1.6  2003/09/27 00:36:54  zet
 auto poll for upstats preference
 
