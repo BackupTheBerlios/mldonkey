@@ -37,19 +37,18 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 /**
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Advanced.java,v 1.4 2003/09/21 23:40:01 zet Exp $
+ * @version $Id: G2Gui_Advanced.java,v 1.5 2003/09/26 04:19:06 zet Exp $
  */
 public class G2Gui_Advanced extends FieldEditorPreferencePage {
 
 	private Composite parent;
 
 	/**
-	 * DOCUMENT ME!
-	 * 
 	 * @param string The name of the OptionsPage
 	 * @param i Style: SWT.XXXX
 	 */
@@ -58,8 +57,6 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 	}
 	
 	/**
-	 * DOCUMENT ME!
-	 * 
 	 * @param e DOCUMENT ME!
 	 */
 	protected void setupEditor( FieldEditor e ) {
@@ -88,6 +85,8 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 			group.setLayout( gl );
 			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 			
+		Label l = new Label(myparent, SWT.NONE );
+		l.setText(G2GuiResources.getString("PREF_RESTART"));	
 		
 		ScrolledComposite sc = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {		
 			public Point computeSize( int wHint, int hHint, boolean changed ) 
@@ -130,7 +129,14 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 					G2GuiResources.getString( "PREF_DISPLAY_MIN_CLOSE" ),
 					parent ) );
 		
-		}		
+		}	
+		
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"flatInterface",
+				G2GuiResources.getString( "PREF_DISPLAY_FLAT_INTERFACE" ),
+				parent ) );
+		
 	
 		if ( advanced ) {
 		
@@ -161,9 +167,9 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 				parent ) );
 
 		setupEditor( 
-			new BooleanFieldEditor( 
-				"flatInterface",
-				G2GuiResources.getString( "PREF_DISPLAY_FLAT_INTERFACE" ),
+				new BooleanFieldEditor( 
+				"displayTableColors",
+				G2GuiResources.getString( "PREF_DISPLAY_TABLE_COLORS" ),
 				parent ) );
 
 		if ( advanced ) setupEditor( 
@@ -183,17 +189,17 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 				"tableCellEditors",
 				G2GuiResources.getString( "PREF_DISPLAY_CELLEDITORS" ),
 				parent ) );
+		
+		setupEditor( 
+				new BooleanFieldEditor( 
+				"dragAndDrop",
+				G2GuiResources.getString( "PREF_DISPLAY_DRAG_AND_DROP" ),
+				parent ) );
 				
 		setupEditor( 
 			new BooleanFieldEditor( 
 				"maintainSortOrder",
 				G2GuiResources.getString( "PREF_DISPLAY_SORT_ORDER" ),
-				parent ) );
-				
-		setupEditor( 
-				new BooleanFieldEditor( 
-				"displayTableColors",
-				G2GuiResources.getString( "PREF_DISPLAY_TABLE_COLORS" ),
 				parent ) );
 
 		IntegerFieldEditor updateDelayEditor = new IntegerFieldEditor ( 
@@ -206,6 +212,9 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Advanced.java,v $
+Revision 1.5  2003/09/26 04:19:06  zet
+drag&drop
+
 Revision 1.4  2003/09/21 23:40:01  zet
 displayTableColors preference
 

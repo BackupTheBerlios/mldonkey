@@ -37,11 +37,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 /**
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.10 2003/09/18 10:23:48 lemmster Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.11 2003/09/26 04:19:06 zet Exp $ 
  *
  */
 public class G2GuiPref extends FieldEditorPreferencePage {
@@ -64,6 +65,10 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 			GridLayout gl = new GridLayout( 1, false );
 			group.setLayout( gl );
 			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+		
+		Label l = new Label(myparent, SWT.NONE );
+		l.setText(G2GuiResources.getString("PREF_RESTART"));
+		
 		
 		Composite sub = new Composite( group, SWT.NONE ) {		
 			public Point computeSize( int wHint, int hHint, boolean changed ) 
@@ -142,7 +147,7 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 		
 			FieldEditor booleanEditor =
 				new BooleanFieldEditor( "advancedMode",
-					"Advanced Mode (Please restart the gui to change the Mode)", parent );
+					"Advanced mode (*)", parent );
 				booleanEditor.setPreferenceStore( this.getPreferenceStore() );
 				booleanEditor.fillIntoGrid( parent, 2 );
 				addField( booleanEditor );
@@ -153,6 +158,9 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.11  2003/09/26 04:19:06  zet
+drag&drop
+
 Revision 1.10  2003/09/18 10:23:48  lemmster
 checkstyle
 
@@ -178,7 +186,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.1  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
