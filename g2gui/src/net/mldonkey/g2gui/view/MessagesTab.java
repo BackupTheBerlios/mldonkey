@@ -22,72 +22,50 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Observable;
-
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.ClientMessage;
 import net.mldonkey.g2gui.view.console.Console;
-import net.mldonkey.g2gui.view.friends.FriendsTableContentProvider;
-import net.mldonkey.g2gui.view.friends.FriendsTableLabelProvider;
-import net.mldonkey.g2gui.view.friends.FriendsTableMenuListener;
-import net.mldonkey.g2gui.view.friends.FriendsTableSorter;
-import net.mldonkey.g2gui.view.helper.WidgetFactory;
+import net.mldonkey.g2gui.view.friends.FriendsViewFrame;
+import net.mldonkey.g2gui.view.helper.SashViewFrame;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
 
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.events.MenuEvent;
-import org.eclipse.swt.events.MenuListener;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
+
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Observable;
 
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.36 2003/11/28 13:24:17 lemmster Exp $
+ * @version $Id: MessagesTab.java,v 1.37 2003/11/29 14:29:27 zet Exp $
  */
-public class MessagesTab extends GuiTab {
-    private CoreCommunication core;
+public class MessagesTab extends TableGuiTab {
     private CTabFolder cTabFolder;
     private Hashtable openTabs = new Hashtable();
-    private CustomTableViewer tableViewer;
-    private CLabel friendsCLabel;
-    private CLabel messagesCLabel;
+    private MessagesViewFrame messagesViewFrame;
 
     public MessagesTab(MainTab gui) {
         super(gui);
-
-        /* associate this tab with the corecommunication */
-        this.core = gui.getCore();
         createButton("MessagesButton");
-
-        // core.getClientInfoIntMap().addObserver(this);
         createContents(this.subContent);
     }
 
@@ -96,114 +74,51 @@ public class MessagesTab extends GuiTab {
      */
     protected void createContents(Composite parent) {
         SashForm main = new SashForm(parent, SWT.HORIZONTAL);
+
         createLeftSash(main);
         createRightSash(main);
-        core.addObserver(this);
+
         main.setWeights(new int[] { 1, 5 });
+
+        getCore().addObserver(this);
     }
 
     /**
      * @param main
      */
-    private void createLeftSash(Composite main) {
-        // what will this become on other networks?
-        // can the concept of a friend be generalized? 
-        // obviously we want to list their files, and what else?
-        // simple and for messaging only atm 
-        ViewForm friendsViewForm = WidgetFactory.createViewForm(main);
-        Composite friendsComposite = new Composite(friendsViewForm, SWT.NONE);
-        friendsComposite.setLayout(new FillLayout());
-        friendsCLabel = WidgetFactory.createCLabel(friendsViewForm, "FR_FRIENDS",
-                "MessagesButtonSmall");
-        createFriendsTable(friendsComposite);
-        friendsViewForm.setTopLeft(friendsCLabel);
-        friendsViewForm.setContent(friendsComposite);
-    }
+    private void createLeftSash(SashForm parent) {
+        gView = new FriendsViewFrame(parent, "FR_FRIENDS", "MessagesButtonSmall", this).getGView();
 
-    /**
-     * @param parent
-     */
-    public void createFriendsTable(Composite parent) {
-        tableViewer = new CustomTableViewer(parent, SWT.NONE | SWT.MULTI);
-        tableViewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
-        tableViewer.getTable().setHeaderVisible(false);
-        tableViewer.setContentProvider(new FriendsTableContentProvider(friendsCLabel));
-        tableViewer.setLabelProvider(new FriendsTableLabelProvider());
-
-        FriendsTableMenuListener tableMenuListener = new FriendsTableMenuListener(tableViewer,
-                core, this);
-        tableViewer.addSelectionChangedListener(tableMenuListener);
-
-        MenuManager popupMenu = new MenuManager("");
-        popupMenu.setRemoveAllWhenShown(true);
-        popupMenu.addMenuListener(tableMenuListener);
-
-        tableViewer.getTable().setMenu(popupMenu.createContextMenu(tableViewer.getTable()));
-        tableViewer.setSorter(new FriendsTableSorter());
-        tableViewer.setInput(core.getClientInfoIntMap().getFriendsWeakMap());
-
-        /*add default-action to menu (hack, but i didn't find this is menuManager etc.)*/
-        Menu menu = tableViewer.getTable().getMenu();
-        menu.addMenuListener(new MenuListener() {
-                public void menuHidden(MenuEvent e) {
-                }
-
-                public void menuShown(MenuEvent e) {
-                    Menu aMenu = tableViewer.getTable().getMenu();
-                    MenuItem[] items = aMenu.getItems();
-                    aMenu.setDefaultItem(items[ (items.length - 1) ]);
-                }
-            });
-
-        /*add the double-click handler to open message-window on double-click*/
-        tableViewer.getTable().addMouseListener(new MouseListener() {
+        gView.getTable().addMouseListener(new MouseAdapter() {
                 public void mouseDoubleClick(MouseEvent e) {
-                    TableItem[] currentItems = tableViewer.getTable().getSelection();
+                    TableItem[] currentItems = gView.getTable().getSelection();
 
                     for (int i = 0; i < currentItems.length; i++) {
                         ClientInfo selectedClientInfo = (ClientInfo) currentItems[ i ].getData();
                         openTab(selectedClientInfo);
                     }
                 }
-
-                public void mouseDown(MouseEvent e) {
-                }
-
-                public void mouseUp(MouseEvent e) {
-                }
             });
     }
 
     /**
      * @param main
      */
-    private void createRightSash(Composite main) {
-        ViewForm messagesViewForm = WidgetFactory.createViewForm(main);
-        messagesCLabel = WidgetFactory.createCLabel(messagesViewForm, "FR_TABS",
-                "MessagesButtonSmall");
+    private void createRightSash(SashForm parent) {
+        messagesViewFrame = new MessagesViewFrame(parent, "FR_TABS", "MessagesButtonSmall", this);
 
-        ToolBar messagesToolBar = new ToolBar(messagesViewForm, SWT.RIGHT | SWT.FLAT);
-        ToolItem sendItem = new ToolItem(messagesToolBar, SWT.NONE);
-        sendItem.setToolTipText(G2GuiResources.getString("FR_TABS_CLOSE_TOOLTIP"));
-        sendItem.setImage(G2GuiResources.getImage("X"));
-        sendItem.addSelectionListener(new SelectionAdapter() {
-                public void widgetSelected(SelectionEvent s) {
-                    closeAllTabs();
-                }
-            });
-        cTabFolder = new CTabFolder(messagesViewForm, SWT.NONE);
-        messagesViewForm.setTopLeft(messagesCLabel);
-        messagesViewForm.setTopRight(messagesToolBar);
-        messagesViewForm.setContent(cTabFolder);
+        cTabFolder = new CTabFolder(messagesViewFrame.getChildComposite(), SWT.NONE);
         cTabFolder.setBorderVisible(false);
         cTabFolder.setLayoutData(new FillLayout());
+
         if (PreferenceLoader.loadBoolean("useGradient")) {
-        	cTabFolder.setSelectionBackground(new Color[] {
-                cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-                cTabFolder.getBackground()
-            }, new int[] { 75 });
-        	cTabFolder.setSelectionForeground(cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
+            cTabFolder.setSelectionBackground(new Color[] {
+                    cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+                    cTabFolder.getBackground()
+                }, new int[] { 75 });
+            cTabFolder.setSelectionForeground(cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
         }
+
         cTabFolder.addCTabFolderListener(new CTabFolderAdapter() {
                 public void itemClosed(CTabFolderEvent event) {
                     CTabItem item = (CTabItem) event.item;
@@ -220,10 +135,7 @@ public class MessagesTab extends GuiTab {
 
         // set the focus to the input line of the console when 
         // an item is selected
-        cTabFolder.addSelectionListener(new SelectionListener() {
-                public void widgetDefaultSelected(SelectionEvent e) {
-                }
-
+        cTabFolder.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent e) {
                     CTabItem cTabItem = (CTabItem) e.item;
                     Console console = (Console) cTabItem.getData("console");
@@ -264,16 +176,14 @@ public class MessagesTab extends GuiTab {
             messageToClient((Console) arg0, (String) arg1);
     }
 
-    
-
     public void setTabsLabel() {
         String extra = "";
 
         if (cTabFolder.getSelection() != null)
             extra = " -> " + cTabFolder.getSelection().getText();
 
-        messagesCLabel.setText(G2GuiResources.getString("FR_TABS") + ": " + openTabs.size() +
-            extra);
+        messagesViewFrame.updateCLabelText(G2GuiResources.getString("FR_TABS") + ": " +
+            openTabs.size() + extra);
     }
 
     /**
@@ -282,7 +192,7 @@ public class MessagesTab extends GuiTab {
      * @param messageText
      */
     public void messageToClient(Console console, String messageText) {
-        ClientMessage.sendMessage(core, console.getClientId(), messageText);
+        ClientMessage.sendMessage(getCore(), console.getClientId(), messageText);
     }
 
     /**
@@ -303,7 +213,7 @@ public class MessagesTab extends GuiTab {
 
         if (openTabs.containsKey(new Integer(message.getId()))) {
             String textMessage;
-            ClientInfo clientInfo = core.getClientInfoIntMap().get(message.getId());
+            ClientInfo clientInfo = getCore().getClientInfoIntMap().get(message.getId());
 
             if (clientInfo == null)
                 textMessage = getTimeStamp() + message.getId() + ": <unknown>> " +
@@ -321,7 +231,7 @@ public class MessagesTab extends GuiTab {
 
             for (int i = 0;
                     (i < 6) &&
-                    ((clientInfo = core.getClientInfoIntMap().get(message.getId())) == null);
+                    ((clientInfo = getCore().getClientInfoIntMap().get(message.getId())) == null);
                     i++)
                 try {
                     Thread.sleep(1000);
@@ -390,9 +300,8 @@ public class MessagesTab extends GuiTab {
      */
     public String getTimeStamp() {
         SimpleDateFormat sdFormatter = new SimpleDateFormat("[HH:mm:ss] ");
-        Date oToday = new Date();
 
-        return sdFormatter.format(oToday);
+        return sdFormatter.format(new Date());
     }
 
     /**
@@ -405,6 +314,9 @@ public class MessagesTab extends GuiTab {
         console.setFocus();
     }
 
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.GuiTab#setActive()
+     */
     public void setActive() {
         super.setActive();
 
@@ -424,11 +336,37 @@ public class MessagesTab extends GuiTab {
         console.setInputBackground(PreferenceLoader.loadColour("consoleInputBackground"));
         console.setInputForeground(PreferenceLoader.loadColour("consoleInputForeground"));
     }
+
+    /**
+     * MessagesViewFrame
+     *
+     */
+    private class MessagesViewFrame extends SashViewFrame {
+        public MessagesViewFrame(SashForm parentSashForm, String prefString,
+            String prefImageString, GuiTab guiTab) {
+            super(parentSashForm, prefString, prefImageString, guiTab);
+            createPaneToolBar();
+        }
+
+        public void createPaneToolBar() {
+            super.createPaneToolBar();
+
+            addToolItem("FR_TABS_CLOSE_TOOLTIP", "X",
+                new SelectionAdapter() {
+                    public void widgetSelected(SelectionEvent s) {
+                        closeAllTabs();
+                    }
+                });
+        }
+    }
 }
 
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.37  2003/11/29 14:29:27  zet
+small viewframe updates
+
 Revision 1.36  2003/11/28 13:24:17  lemmster
 useGradient in headerbars
 
@@ -514,7 +452,7 @@ Revision 1.9  2003/08/23 09:47:52  lemmster
 just rename
 
 Revision 1.8  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.7  2003/08/20 22:18:56  zet
 Viewer updates

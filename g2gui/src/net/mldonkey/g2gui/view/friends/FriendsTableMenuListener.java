@@ -26,141 +26,145 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.view.MessagesTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableViewer;
+
 
 /**
  * TableMenuListener
  *
- * @version $Id: FriendsTableMenuListener.java,v 1.10 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: FriendsTableMenuListener.java,v 1.11 2003/11/29 14:29:27 zet Exp $
  *
  */
-public class FriendsTableMenuListener implements ISelectionChangedListener, IMenuListener {
-    private TableViewer tableViewer;
-    private CoreCommunication core;
+public class FriendsTableMenuListener extends GTableMenuListener implements ISelectionChangedListener {
     private List selectedClients = new ArrayList();
-    private MessagesTab messagesTab;
 
     /**
      * Creates a new TableMenuListener
      * @param tableViewer The parent TableViewer
      * @param core The CoreCommunication supporting this with data
-     * @param messagesTab The MessagesTab 
+     * @param messagesTab The MessagesTab
      */
-    public FriendsTableMenuListener( TableViewer tableViewer, CoreCommunication core, MessagesTab messagesTab ) {
-        super();
-        this.tableViewer = tableViewer;
-        this.core = core;
-        this.messagesTab = messagesTab;
+    public FriendsTableMenuListener(FriendsTableView fTableView) {
+        super(fTableView);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
-    public void selectionChanged( SelectionChangedEvent event ) {
-        IStructuredSelection sSel = ( IStructuredSelection ) event.getSelection();
+    public void selectionChanged(SelectionChangedEvent event) {
+        IStructuredSelection sSel = (IStructuredSelection) event.getSelection();
         Object o = sSel.getFirstElement();
         selectedClients.clear();
-        for ( Iterator it = sSel.iterator(); it.hasNext();) {
+
+        for (Iterator it = sSel.iterator(); it.hasNext();) {
             o = it.next();
-            if ( o instanceof ClientInfo )
-                selectedClients.add( o );
+
+            if (o instanceof ClientInfo)
+                selectedClients.add(o);
         }
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
-    public void menuAboutToShow( IMenuManager menuManager ) {
-        if ( selectedClients.size() != 0 )
-            menuManager.add( new SendMessageAction() );
-        if ( selectedClients.size() != 0 )
-            menuManager.add( new RemoveFriendAction() );
-        if ( tableViewer.getTable().getItemCount() > 0 )
-            menuManager.add( new RemoveAllFriendsAction() );
-        menuManager.add( new AddByIPAction() );
+    public void menuAboutToShow(IMenuManager menuManager) {
+        if (selectedClients.size() > 0) {
+            menuManager.add(new SendMessageAction());
+            menuManager.add(new RemoveFriendAction());
+        }
+            
+        if (gView.getTable().getItemCount() > 0)
+            menuManager.add(new RemoveAllFriendsAction());
+
+        menuManager.add(new AddByIPAction());
     }
 
-	/**
-	 * RemoveFriendAction
-	 */
+    /**
+     * RemoveFriendAction
+     */
     private class RemoveFriendAction extends Action {
         public RemoveFriendAction() {
             super();
-            String num = ( ( selectedClients.size() > 1 ) ? ( " (" + selectedClients.size() + ")" ) : "" );
-            setText( G2GuiResources.getString( "FR_MENU_REMOVE_FRIEND" ) + num );
-			setImageDescriptor( G2GuiResources.getImageDescriptor( "MessagesButtonSmallBW" ) );
+
+            String num = ((selectedClients.size() > 1) ? (" (" + selectedClients.size() + ")") : "");
+            setText(G2GuiResources.getString("FR_MENU_REMOVE_FRIEND") + num);
+            setImageDescriptor(G2GuiResources.getImageDescriptor("MessagesButtonSmallBW"));
         }
 
         public void run() {
-            for ( int i = 0; i < selectedClients.size(); i++ ) {
-                ClientInfo clientInfo = ( ClientInfo ) selectedClients.get( i );
-                ClientInfo.removeFriend( core, clientInfo.getClientid() );
+            for (int i = 0; i < selectedClients.size(); i++) {
+                ClientInfo clientInfo = (ClientInfo) selectedClients.get(i);
+                ClientInfo.removeFriend(gView.getCore(), clientInfo.getClientid());
             }
         }
     }
 
-	/**
-	 * RemoveAllFriendsAction
-	 */
+    /**
+     * RemoveAllFriendsAction
+     */
     private class RemoveAllFriendsAction extends Action {
         public RemoveAllFriendsAction() {
-            super( G2GuiResources.getString( "FR_MENU_REMOVE_ALL_FRIENDS" ) );
-			setImageDescriptor( G2GuiResources.getImageDescriptor( "MessagesButtonSmallBW" ) );
+            super(G2GuiResources.getString("FR_MENU_REMOVE_ALL_FRIENDS"));
+            setImageDescriptor(G2GuiResources.getImageDescriptor("MessagesButtonSmallBW"));
         }
 
         public void run() {
-            ClientInfo.removeAllFriends( core );
+            ClientInfo.removeAllFriends(gView.getCore());
         }
     }
-	
-	/**
-	 * SendMessageAction
-	 */
+
+    /**
+     * SendMessageAction
+     */
     private class SendMessageAction extends Action {
         public SendMessageAction() {
             super();
-            String num = ( ( selectedClients.size() > 1 ) ? ( " (" + selectedClients.size() + ")" ) : "" );
-            setText( G2GuiResources.getString( "FR_MENU_SEND_MESSAGE" ) + num );
-			setImageDescriptor( G2GuiResources.getImageDescriptor( "resume" ) );
+
+            String num = ((selectedClients.size() > 1) ? (" (" + selectedClients.size() + ")") : "");
+            setText(G2GuiResources.getString("FR_MENU_SEND_MESSAGE") + num);
+            setImageDescriptor(G2GuiResources.getImageDescriptor("resume"));
         }
 
         public void run() {
-            for ( int i = 0; i < selectedClients.size(); i++ ) {
-                ClientInfo clientInfo = ( ClientInfo ) selectedClients.get( i );
-                messagesTab.openTab( clientInfo );
+            for (int i = 0; i < selectedClients.size(); i++) {
+                ClientInfo clientInfo = (ClientInfo) selectedClients.get(i);
+                MessagesTab messagesTab = (MessagesTab) gView.getViewFrame().getGuiTab();
+                messagesTab.openTab(clientInfo);
             }
         }
     }
 
-	/**
-	 * AddByIPAction
-	 */
+    /**
+     * AddByIPAction
+     */
     private class AddByIPAction extends Action {
         public AddByIPAction() {
-            super( G2GuiResources.getString( "FR_MENU_ADD_BY_IP" ) );
-			setImageDescriptor( G2GuiResources.getImageDescriptor( "MessagesButtonSmall" ) );
+            super(G2GuiResources.getString("FR_MENU_ADD_BY_IP"));
+            setImageDescriptor(G2GuiResources.getImageDescriptor("MessagesButtonSmall"));
         }
-        
+
         public void run() {
-            AddFriend a = new AddFriend( tableViewer.getTable().getShell(), core );
+            AddFriend a = new AddFriend(gView.getShell(), gView.getCore());
             a.open();
         }
     }
 }
 
+
 /*
 $Log: FriendsTableMenuListener.java,v $
+Revision 1.11  2003/11/29 14:29:27  zet
+small viewframe updates
+
 Revision 1.10  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

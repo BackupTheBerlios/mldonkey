@@ -23,48 +23,46 @@
 package net.mldonkey.g2gui.view.friends;
 
 import net.mldonkey.g2gui.model.ClientInfo;
+import net.mldonkey.g2gui.view.viewers.GSorter;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+
 
 /**
- * TableSorter
+ * FriendsTableSorter
  *
  *
- * @version $Id: FriendsTableSorter.java,v 1.4 2003/09/20 01:20:26 zet Exp $
+ * @version $Id: FriendsTableSorter.java,v 1.5 2003/11/29 14:29:27 zet Exp $
  *
  */
-public class FriendsTableSorter extends ViewerSorter {
-    private boolean lastSort = true;
-    private int columnIndex = 0;
-
+public class FriendsTableSorter extends GSorter {
     /**
      * Creates a new viewer sorter
      */
-    public FriendsTableSorter() {
-        super();
+    public FriendsTableSorter(FriendsTableView fTableView) {
+        super(fTableView);
     }
-   
-    public int compare( Viewer viewer, Object obj1, Object obj2 ) {
-        ClientInfo clientInfo1 = ( ClientInfo ) obj1;
-        ClientInfo clientInfo2 = ( ClientInfo ) obj2;
-        switch ( columnIndex ) {
+
+    public int compare(Viewer viewer, Object obj1, Object obj2) {
+        ClientInfo clientInfo1 = (ClientInfo) obj1;
+        ClientInfo clientInfo2 = (ClientInfo) obj2;
+
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
+        case FriendsTableView.NAME:
+            return compareStrings(clientInfo1.getClientName(), clientInfo2.getClientName());
+
         default:
-            return compareStrings( clientInfo1.getClientName(), clientInfo2.getClientName() );
+            return 0;
         }
-    }
-   
-    public int compareStrings( String aString1, String aString2 ) {
-        if ( aString1.equals( "" ) )
-            return 1;
-        if ( aString2.equals( "" ) )
-            return -1;
-        return ( lastSort ? aString1.compareToIgnoreCase( aString2 ) : aString2.compareToIgnoreCase( aString1 ) );
     }
 }
 
+
 /*
 $Log: FriendsTableSorter.java,v $
+Revision 1.5  2003/11/29 14:29:27  zet
+small viewframe updates
+
 Revision 1.4  2003/09/20 01:20:26  zet
 *** empty log message ***
 

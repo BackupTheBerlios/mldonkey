@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,102 +18,66 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.friends;
 
 import net.mldonkey.g2gui.model.ClientInfo;
-import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 
-import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
+
 /**
- * TableLabelProvider
+ * FriendsTableLabelProvider
  *
  *
- * @version $Id: FriendsTableLabelProvider.java,v 1.6 2003/11/04 20:38:39 zet Exp $
+ * @version $Id: FriendsTableLabelProvider.java,v 1.7 2003/11/29 14:29:27 zet Exp $
  */
-public class FriendsTableLabelProvider implements ITableLabelProvider, IColorProvider {
+public class FriendsTableLabelProvider extends GTableLabelProvider {
+    public FriendsTableLabelProvider(FriendsTableView fTableView) {
+        super(fTableView);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
-	 */
-	public Image getColumnImage( Object element, int columnIndex ) {
-		ClientInfo clientInfo = ( ClientInfo ) element;
-		if ( clientInfo.getState().getState() == EnumState.CONNECTED
-			|| clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED
-			|| clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING
-			|| clientInfo.getState().getState() == EnumState.CONNECTED_INITIATING )
-		
-			return G2GuiResources.getImage( "MessagesButtonSmall" );
-		else 
-			return G2GuiResources.getImage( "MessagesButtonSmallBW" );
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+     */
+    public Image getColumnImage(Object element, int columnIndex) {
+        ClientInfo clientInfo = (ClientInfo) element;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
-	 *
-	 * "network", "name", "desc", "address", "serverScore", "users", "files", "state", "favorite"
-	 */
-	public String getColumnText( Object element, int columnIndex ) {
-		ClientInfo clientInfo = ( ClientInfo ) element;
-		
-		switch ( columnIndex ) {
-			case 0: // name 
-				return clientInfo.getClientName();
-			
-			default:
-				return "??";
-		}
-	}
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
+        case FriendsTableView.NAME:
+            return (G2GuiResources.getImage(clientInfo.isConnected() ? "MessagesButtonSmall"
+                                                                     : "MessagesButtonSmallBW"));
 
+        default:
+            return null;
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-	 */
-	public void addListener( ILabelProviderListener listener ) { }
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+     */
+    public String getColumnText(Object element, int columnIndex) {
+        ClientInfo clientInfo = (ClientInfo) element;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-	 */
-	public void dispose() { }
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
+        case FriendsTableView.NAME:
+            return clientInfo.getClientName();
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#
-	 * isLabelProperty(java.lang.Object, java.lang.String)
-	 */
-	public boolean isLabelProperty( Object element, String property ) {
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#
-	 * removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-	 */
-	public void removeListener( ILabelProviderListener listener ) { }
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
-	 */
-	public Color getForeground( Object arg0 ) {
-		return null;	
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
-	 */
-	public Color getBackground( Object element ) {
-		return null;
-	}
+        default:
+            return "??";
+        }
+    }
 }
+
 
 /*
 $Log: FriendsTableLabelProvider.java,v $
+Revision 1.7  2003/11/29 14:29:27  zet
+small viewframe updates
+
 Revision 1.6  2003/11/04 20:38:39  zet
 update for transparent gifs
 
