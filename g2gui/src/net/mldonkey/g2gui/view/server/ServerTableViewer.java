@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTableViewer.java,v 1.8 2003/10/31 10:42:47 lemmster Exp $ 
+ * @version $Id: ServerTableViewer.java,v 1.9 2003/10/31 11:04:40 lemmster Exp $ 
  *
  */
 public class ServerTableViewer extends GTablePage {
@@ -109,7 +109,7 @@ public class ServerTableViewer extends GTablePage {
 	public void updateDisplay() {
 	    super.updateDisplay();
 		/* only update on pref change */
-		//TODO ist dieser ganze zusammenhang fuer den user logisch?
+		//TODO does this hole thing makes sense for the users point of view?
 		boolean displayConnServers = PreferenceLoader.loadBoolean( "displayAllServers" );
 		if ( oldValue != displayConnServers ) {
 			// update the state filter
@@ -139,6 +139,9 @@ public class ServerTableViewer extends GTablePage {
 
 /*
 $Log: ServerTableViewer.java,v $
+Revision 1.9  2003/10/31 11:04:40  lemmster
+translate todo
+
 Revision 1.8  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
