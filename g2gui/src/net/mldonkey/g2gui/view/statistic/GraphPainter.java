@@ -66,6 +66,9 @@ public class GraphPainter {
 	public void paint() {
 		//setting the Canvas Background to the parents Background
 		
+	
+		if (parent.getClientArea().height < 25) return;
+		
 		Image imageBuffer = new Image(null, parent.getBounds());
 		GC drawBoardBuffer = new GC(imageBuffer);
 		drawBoardBuffer.setBackground(new Color(null,50,50,50));
@@ -100,7 +103,7 @@ public class GraphPainter {
 			int startx = 20;
 			int k = startx;
 			int valueY = 0;
-			while ( (k<=width) & (actualPoint.getPrev()!=null))
+			while ( (k<=width) && (actualPoint.getPrev()!=null))
 			{
 				//System.out.println("drawPoint");
 				valueY = (int)(actualPoint.getValue())/10;
@@ -125,8 +128,7 @@ public class GraphPainter {
 			
 			for (int i = 0; i < 10; i++) 
 				drawBoardBuffer.drawLine(startx+i*(width/20),0,startx+i*(width/20),height);
-		
-				
+					
 			for (int dummy=height/10;dummy<height;dummy=dummy+height/10)
 				drawBoardBuffer.drawLine(20,height-dummy,width/2,height-dummy);
 			
@@ -148,6 +150,7 @@ public class GraphPainter {
 			drawBoardBuffer.fillRoundRectangle(startx+10,textPosition-3,80,20,7,7);
 			drawBoardBuffer.drawRoundRectangle(startx+10,textPosition-3,80,20,7,7);
 			drawBoardBuffer.drawText(vv + " KB/s",startx+20,textPosition);
+			drawBoardBuffer.setForeground(new Color(null, 255,255,0));
 			drawBoardBuffer.drawLine(startx+10,textPosition,startx,height - graphs[which].getLast().getValue()/10*fac);
 	
 		

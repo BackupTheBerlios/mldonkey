@@ -22,38 +22,32 @@ public class GraphControl extends Composite{
 	private Graph uploadGraph,downloadGraph;
 	
 	
-	public GraphControl(Composite _parent) {
-		super(_parent,SWT.BORDER);
-		parent = _parent;
+	public GraphControl(Composite parent) {
+		super(parent,SWT.BORDER);
+		this.parent = parent;
 		graphCanvas1 = new GraphCanvas(this);
 		graphCanvas2 = new GraphCanvas(this);
 		setLayout(new FillLayout());
 		layout(true);
-		
-
-	
+			
 		System.out.println("parent widget" + parent.getBounds());
+		uploadGraph = new Graph( new Color(null,244,0,0) );
+		downloadGraph = new Graph(new Color(null,0,244,0) );
 		
-		Color uploadColor = new Color(null,244,0,0);
-		uploadGraph = new Graph(uploadColor);
-		
-		Color downloadColor = new Color(null,0,244,0);
-		downloadGraph = new Graph(downloadColor);
-		
-		this.setSize(400,200);
-		graphCanvas1.redraw();
-		graphCanvas2.redraw();
+		// this.setSize(400,200);
+		//graphCanvas1.redraw();
+		//graphCanvas2.redraw();
 		graphCanvas1.setGraph(downloadGraph);
 		graphCanvas2.setGraph(uploadGraph);
 
 		
 		
-		/*addControlListener(new ControlAdapter() {
+	/*	addControlListener(new ControlAdapter() {
 				 public void controlResized(ControlEvent e) {
 					GraphControl.this.controlResized(e);					
 				 }
 
-			 });*/
+			 }); */
 
 		 
 
@@ -62,7 +56,7 @@ public class GraphControl extends Composite{
 	/**
 	 * Resizes the Canvas everyTime the Control gets resized
 	 */
-	/*protected void controlResized(ControlEvent e) {
+	/*protected void controlResized( ) {
 		System.out.println("controlResized"+ this.getBounds());
 		graphCanvas1.setSize(this.getBounds().width,this.getBounds().height/2);
 		graphCanvas2.setSize(this.getBounds().width,this.getBounds().height/2);
