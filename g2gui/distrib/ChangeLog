@@ -4,6 +4,9 @@
 2003/11/24: z
 	* Search: Display alternative filenames in the tooltip if available
 
+2003/11/24: Dek
+	* ToolBar now keeps its state over sessions [Bug #1122]
+	
 2003/11/24: lemmy
 	* Search: fixed [Bug #1132] search combo retains duplicates
 
