@@ -40,6 +40,7 @@ import java.net.ServerSocket;
 import java.net.URLDecoder;
 import java.net.NetworkInterface;
 import java.net.InetAddress;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -51,7 +52,7 @@ import net.mldonkey.g2gui.helper.RegExp;
  * DownloadSubmit
  *
  * @author $user$
- * @version $Id: DownloadSubmit.java,v 1.2 2004/03/01 21:50:07 psy Exp $ 
+ * @version $Id: DownloadSubmit.java,v 1.3 2004/03/02 00:23:26 psy Exp $ 
  *
  */
 public class DownloadSubmit implements Runnable {
@@ -61,7 +62,7 @@ public class DownloadSubmit implements Runnable {
 	private int submitPort = 4081;
 	
 	/* how many seconds should the torrent be served? */
-	private final static int SERVETIME = 30;
+	private final static int SERVETIME = 10;
 
 	
 	/**
@@ -119,7 +120,7 @@ public class DownloadSubmit implements Runnable {
 
     		/* do a regular link-submit if its not a file */
     		if (!(new File((String) submitList.get(i)).exists())) {
-    			serveLink((String) submitList.get(i));
+    			sendLink((String) submitList.get(i));
 
 			/* it seems we have to submit a .torrent file */
     		} else {
@@ -129,21 +130,49 @@ public class DownloadSubmit implements Runnable {
 		}
     }
 
+    private String hexDecode(String string) {
+    	try {
+			return(URLDecoder.decode( string, "UTF-8" ));
+		} catch (UnsupportedEncodingException e) {
+			return(string);
+		}
+    }
+    
+    private String hexEncode(String string) {
+    	try {
+			/* decode the string completely and encode it again to prevent
+			 * multiple encoding */
+    		string = URLEncoder.encode( hexDecode(string), "UTF-8" );
+
+			/* revert some important parts of the URL */
+			string = RegExp.replaceAll(string, "%3A", ":");
+			string = RegExp.replaceAll(string, "%2F", "/");
+			string = RegExp.replaceAll(string, "%3a", ":");
+			string = RegExp.replaceAll(string, "%2f", "/");
+			string = RegExp.replaceAll(string, "\\+", "%20");
+			
+			return(string);
+
+    	} catch (UnsupportedEncodingException e) {
+			return(string);
+		}
+    }
+    
     /**
-     * This method submits a link (ed2k:// and http://*.torrent) to the core
+     * This method submits a link (ed2k://) to the core
      * @param link a single link
      */
-    private void serveLink(String link) {
-    	String decoded;
-
-    	/* simple hex-decoding of URI */
-		try {
-			decoded = URLDecoder.decode( link, "UTF-8" );
-		} catch (UnsupportedEncodingException e) {
-			decoded = link;
+    private void sendLink(String link) {
+     	/* ed2k://-links are hexDecoded for nicer filenames,
+     	 * http://-links are hexEncoded */
+		if ( link.toLowerCase().startsWith("ed2k://") ) {
+			link = hexDecode(link);
+		} else {
+			link = hexEncode(link);
 		}
-    	/* create a nice package and send it to the core */
-		EncodeMessage linkMessage = new EncodeMessage(Message.S_DLLINK, decoded );
+		if (G2Gui.debug) System.out.println("SENDING: " + link);
+		/* create a nice package and send it to the core */
+		EncodeMessage linkMessage = new EncodeMessage(Message.S_DLLINK, link );
 	    try {
 	        Message.writeStream(socket, linkMessage.getHeader(), linkMessage.getContent());
 	    } 
@@ -152,7 +181,7 @@ public class DownloadSubmit implements Runnable {
 	    }
 	    linkMessage = null;
     }
-    
+
     /**
      * This method sets up a very rudimentary HTTP-server and tells the mldonkey core
      * to download a .torrent file from it
@@ -170,7 +199,7 @@ public class DownloadSubmit implements Runnable {
 				String link = "http://" + getMyIP() + ":" + server.getLocalPort() + "/" + localfile.getName() + ".torrent";
 				if (G2Gui.debug) System.out.println("INTERNAL HTTPD: " + link + " (waiting max " + SERVETIME + " seconds)");
 				
-				serveLink(link);
+				sendLink(link);
 				/* is it dangerous to send the link before the internal httpd has been set up?
 				 * This could produce complications if the mld-core machine is really fast and
 				 * the local gui-machine is very very slow.
@@ -198,7 +227,7 @@ public class DownloadSubmit implements Runnable {
 							GETfile = GETfile.substring(0, GETfile.length() - ".torrent".length());
 							
 							/* locate our local file */
-							File file = new File(localfile.getParent() + new File(GETfile).getAbsoluteFile());
+							File file = new File(localfile.getParent() + hexDecode(new File(GETfile).getAbsoluteFile().toString()) );
 							if (G2Gui.debug) System.out.println("REQUEST: " + GETfile + ", we should have it at: " + file);
 							
 							if (file.exists()) {
@@ -225,6 +254,8 @@ public class DownloadSubmit implements Runnable {
 									contentout.write(b);
 								}
 								catch (IOException e) { }
+
+								if (G2Gui.debug) System.out.println("Torrent file served sucessfully!");
 							}
 						}
 		
@@ -241,7 +272,7 @@ public class DownloadSubmit implements Runnable {
 				if (G2Gui.debug) System.out.println("Socket-binding exception: " + e);
 			}
 		}
-		if (G2Gui.debug) System.out.println("Torrent file served sucessfully!");
+		
     }
     
     /**
@@ -287,6 +318,9 @@ public class DownloadSubmit implements Runnable {
 
 /*
 $Log: DownloadSubmit.java,v $
+Revision 1.3  2004/03/02 00:23:26  psy
+more hex-encoding related stuff
+
 Revision 1.2  2004/03/01 21:50:07  psy
 replaced java's split()-method with our own one
 

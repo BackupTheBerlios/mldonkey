@@ -1,3 +1,8 @@
+2004/03/02: vnc
+	* More hex-encoding related fixes. Using G2gui with a browser
+		to open torrents should work now even if there are a lot
+		of special characters in the filename.
+
 2004/03/01: vnc
 	* Added the ability to directly pass .torrent files to G2gui,
 		so you can simply advice your browser to open all 

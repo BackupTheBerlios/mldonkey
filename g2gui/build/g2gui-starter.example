@@ -27,7 +27,7 @@ if [ -e g2gui.jar ]; then
 ## Binary package
 elif [ -e g2gui-bin ]; then
         echo "Starting MLdonkey G2gui (native)..."
-        ./g2gui-bin $1 $2 $3 $4 $5 $6 $7 $8 $9
+        ./g2gui-bin "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
 else
         echo "ERROR: No g2gui-bin or g2gui.jar found! Are you sure they are correctly compiled and in place?"
 fi
