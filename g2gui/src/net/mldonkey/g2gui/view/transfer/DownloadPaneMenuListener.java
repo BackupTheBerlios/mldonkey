@@ -27,7 +27,6 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.PaneGuiTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.viewers.SashGPaneListener;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
@@ -39,11 +38,11 @@ import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ToggleClientsAction;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.PreferenceStore;
+
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Control;
@@ -53,7 +52,7 @@ import org.eclipse.swt.widgets.Control;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.21 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.22 2003/11/03 01:50:46 zet Exp $
  *
  */
 public class DownloadPaneMenuListener extends SashGPaneListener {
@@ -79,8 +78,8 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
         audioExtensions, videoExtensions, archiveExtensions, cdImageExtensions, pictureExtensions
     };
 
-    public DownloadPaneMenuListener(PaneGuiTab aPaneGuiTab, CoreCommunication core, SashForm aSashForm,
-        Control aControl) {
+    public DownloadPaneMenuListener(PaneGuiTab aPaneGuiTab, CoreCommunication core,
+        SashForm aSashForm, Control aControl) {
         super(aPaneGuiTab, core, aSashForm, aControl);
 
         // set defaults on startup
@@ -102,7 +101,7 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
      */
     public void menuAboutToShow(IMenuManager menuManager) {
         super.menuAboutToShow();
-        
+
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
         // columnSelector
@@ -131,15 +130,9 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
         filterSubMenu.add(new Separator());
 
         for (int i = 0; i < extensions.length; i++)
-            filterSubMenu.add(new ExtensionFilterAction(extensionNames[ i ], gView,
-                    extensions[ i ]));
+            filterSubMenu.add(new ExtensionFilterAction(extensionNames[ i ], gView, extensions[ i ]));
 
         menuManager.add(filterSubMenu);
-
-        // expand action
-        menuManager.add(new Separator());
-        menuManager.add(new ExpandCollapseAction(true));
-        menuManager.add(new ExpandCollapseAction(false));
 
         // toggle clients windows
         if (advancedMode) {
@@ -161,40 +154,14 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
         p.setValue("downloadsFilterPaused", FilterAction.isFiltered(gView, EnumFileState.PAUSED));
         p.setValue("downloadsFilterQueued", FilterAction.isFiltered(gView, EnumFileState.QUEUED));
     }
-
-    /**
-     * ExpandCollapseAction
-     */
-    private class ExpandCollapseAction extends Action {
-        private boolean expand;
-
-        public ExpandCollapseAction(boolean expand) {
-            super();
-
-            if (expand) {
-                setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_EXPANDALL"));
-                setImageDescriptor(G2GuiResources.getImageDescriptor("expandAll"));
-            } else {
-                setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_COLLAPSEALL"));
-                setImageDescriptor(G2GuiResources.getImageDescriptor("collapseAll"));
-            }
-
-            this.expand = expand;
-        }
-
-        public void run() {
-            if (expand) {
-                ((CustomTableTreeViewer) gView.getViewer()).expandAll();
-            } else {
-                ((CustomTableTreeViewer) gView.getViewer()).collapseAll();
-            }
-        }
-    }
 }
 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.22  2003/11/03 01:50:46  zet
+remove expand/collapse
+
 Revision 1.21  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
