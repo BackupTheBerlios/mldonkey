@@ -24,9 +24,11 @@ package net.mldonkey.g2gui.view;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.net.InetAddress;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.67 2004/02/29 17:36:31 psy Exp $
+ * @version $Id: G2Gui.java,v 1.68 2004/02/29 20:35:03 psy Exp $
  *
  */
 public class G2Gui {
@@ -439,8 +441,16 @@ public class G2Gui {
      * Send a link - raw socket without a core
      */
     private static void sendDownloadLink( List aLink, Socket aSocket ) {
-        for ( int i = 0; i < aLink.size(); i++ ) {
-			EncodeMessage linkMessage = new EncodeMessage(Message.S_DLLINK, aLink.get(i));
+        String decoded;
+    	for ( int i = 0; i < aLink.size(); i++ ) {
+			/* do some simple hex-decoding */
+    		try {
+				decoded = URLDecoder.decode( (String) aLink.get(i), "UTF-8" );
+			} catch (UnsupportedEncodingException e) {
+				decoded = (String) aLink.get(i);
+			}
+        	
+			EncodeMessage linkMessage = new EncodeMessage(Message.S_DLLINK, decoded );
 		    try {
 		        Message.writeStream(aSocket, linkMessage.getHeader(), linkMessage.getContent());
 		    } 
@@ -640,6 +650,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.68  2004/02/29 20:35:03  psy
+simple link hex-decoding
+
 Revision 1.67  2004/02/29 17:36:31  psy
 improved local core handling
 

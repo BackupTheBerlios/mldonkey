@@ -1,4 +1,5 @@
 2004/02/29: vnc
+	* Links are now hex-decoded before submission
 	* Improved the local core-handler:
 		G2gui now correctly starts, stops and connects
 		a local mlnet binary. Even in the event of a G2gui-crash
