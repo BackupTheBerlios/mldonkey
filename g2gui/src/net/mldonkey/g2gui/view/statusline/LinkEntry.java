@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.17 2003/10/16 20:40:49 zet Exp $
+ * @version $Id: LinkEntry.java,v 1.18 2003/10/17 03:36:43 zet Exp $
  *
  */
 public class LinkEntry {
@@ -84,7 +84,8 @@ public class LinkEntry {
                           SWT.BORDER
                           | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
         linkEntryViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        CLabel linkEntryCLabel = CCLabel.createCL( linkEntryViewForm, "LE_HEADER", "UpArrowBlue" );
+        CLabel linkEntryCLabel = CCLabel.createCL( linkEntryViewForm, "LE_HEADER", "UpArrowGreen" );
+       
         final Text linkEntryText = new Text( linkEntryViewForm, SWT.WRAP | SWT.MULTI | SWT.V_SCROLL );
         linkEntryText.setLayoutData( new FillLayout() );
         linkEntryText.setFont( PreferenceLoader.loadFont( "consoleFontData" ) );
@@ -103,7 +104,7 @@ public class LinkEntry {
         ToolBar linkEntryToolBar = new ToolBar( linkEntryViewForm, SWT.RIGHT | SWT.FLAT );
         ToolItem sendItem = new ToolItem( linkEntryToolBar, SWT.NONE );
         sendItem.setText( G2GuiResources.getString( "LE_BUTTON" ) );
-        sendItem.setImage( G2GuiResources.getImage( "UpArrowBlue" ) );
+        sendItem.setImage( G2GuiResources.getImage( "UpArrowGreen" ) );
         sendItem.addSelectionListener( new SelectionAdapter() {
                 public void widgetSelected( SelectionEvent s ) {
                     enterLinks( linkEntryText );
@@ -168,6 +169,9 @@ public class LinkEntry {
         return result;
     }
     
+    /**
+     * @param linkEntryText
+     */
     private void activateDropTarget( final Text linkEntryText ) {
     	
 		DropTarget dropTarget = new DropTarget(linkEntryText, DND.DROP_COPY | DND.DROP_DEFAULT | DND.DROP_LINK);
@@ -198,6 +202,9 @@ public class LinkEntry {
 
 /*
 $Log: LinkEntry.java,v $
+Revision 1.18  2003/10/17 03:36:43  zet
+use toolbar
+
 Revision 1.17  2003/10/16 20:40:49  zet
 cr+lf
 

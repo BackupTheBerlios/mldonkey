@@ -36,19 +36,25 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 
 /**
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.26 2003/09/18 11:37:24 lemmster Exp $ 
+ * @version $Id: NetworkItem.java,v 1.27 2003/10/17 03:36:43 zet Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -56,9 +62,8 @@ public class NetworkItem implements Observer {
 	private StatusLine statusline;
 	private Composite composite;
 	private GridLayout gridLayout;
-	private CLabel cLabel;
 	private GuiTab serverTab;
-
+	private ToolBar toolBar;
 
 	/**
 	 * @param statusline the Statusline in which this item should appear
@@ -86,35 +91,48 @@ public class NetworkItem implements Observer {
 	 * create the content
 	 */
 	private void createContent() {
+		
+		Composite aComposite = new Composite( composite, SWT.BORDER );
+		aComposite.setLayout(CGridLayout.createGL(1,0,0,0,0,false));
+		aComposite.setLayoutData( new GridData(GridData.FILL_VERTICAL));
+		toolBar = new ToolBar( aComposite, SWT.FLAT ) ;
+		
 		NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
-
-		composite = new Composite( composite, SWT.BORDER );
-		GridLayout gridLayout = CGridLayout.createGL( networks.length, 0, 0, 0, 0, false );
-		composite.setLayout( gridLayout );
+		ToolItem toolItem;
 		
 		/* sets the enabled/disabled image for each known network */
 		for ( int i = 0; i < networks.length; i++ ) {
 			NetworkInfo network = networks[ i ];
-			cLabel = new CLabel( composite, SWT.NONE );
-			cLabel.setData( network );
-			NetworkItemMenuListener manager =
-				new NetworkItemMenuListener( network, serverTab, statusline );
-			MenuManager popupMenu = new MenuManager( "" );
+			toolItem = new ToolItem( toolBar, SWT.NONE );
+			toolItem.setData( network );
+			
+			NetworkItemMenuListener manager = new NetworkItemMenuListener( network, serverTab, statusline );
+			final MenuManager popupMenu = new MenuManager( "" );
 			popupMenu.setRemoveAllWhenShown( true );
 			popupMenu.addMenuListener( manager );
-			cLabel.setMenu( popupMenu.createContextMenu( cLabel ) );
 			
-			createTooltip( network );
+			toolItem.addListener (SWT.Selection, new Listener () {
+				public void handleEvent (Event event) {
+						Rectangle rect = ((ToolItem) event.widget).getBounds ();
+						Menu menu = popupMenu.createContextMenu( toolBar );
+						Point pt = new Point (rect.x, rect.y + rect.height);
+						pt = toolBar.toDisplay (pt);
+						menu.setLocation (pt.x, pt.y);
+						menu.setVisible (true);
+				}
+			});
+
+			createTooltip( toolItem, network );
 	
 			/* on dispose() deregister on the model */			
-			cLabel.addDisposeListener( new DisposeListener () {
+			toolItem.addDisposeListener( new DisposeListener () {
 				public void widgetDisposed( DisposeEvent e ) {
 					core.getNetworkInfoMap().deleteObserver( NetworkItem.this );
 				}
 			} );
 
 			/* now create the image */
-			cLabel.setImage( network.getImage() );
+			toolItem.setImage( network.getImage() );
 		}
 	}
 	
@@ -122,23 +140,25 @@ public class NetworkItem implements Observer {
 	 * Create the tooltip help
 	 * @param network The network info with the infos
 	 */
-	private void createTooltip( NetworkInfo network ) {
+	private void createTooltip( ToolItem toolItem, NetworkInfo network ) {
 		/* set the network name and status as tooltip */
 		if ( network.isEnabled() && ( network.hasServers() || network.hasSupernodes() ) )
 			if ( network.hasServers() )
-				cLabel.setToolTipText( network.getNetworkName() + " "
+				toolItem.setToolTipText( network.getNetworkName() + " "
 						   + G2GuiResources.getString( "NI_CONNECTED_TO" )
 						   + network.getConnectedServers() +  " " + G2GuiResources.getString( "NI_SERVER" ) );
 			else
-				cLabel.setToolTipText( network.getNetworkName() + " "
+				toolItem.setToolTipText( network.getNetworkName() + " "
 						   +  G2GuiResources.getString( "NI_CONNECTED_TO" )
 						   + network.getConnectedServers() + " " +  G2GuiResources.getString( "NI_NODES" ) );
 		else
 			if ( network.isVirtual() )
-				cLabel.setToolTipText( network.getNetworkName() );
-			else
-				cLabel.setToolTipText( network.getNetworkName() + " "
-				+  G2GuiResources.getString( "NI_DISABLED" ) );
+				toolItem.setToolTipText( network.getNetworkName() );
+			else {
+				toolItem.setToolTipText( network.getNetworkName() + " " +
+				( network.isEnabled() ? G2GuiResources.getString( "NI_ENABLED" ) :
+				G2GuiResources.getString( "NI_DISABLED" ) ) );
+			}
 	}
 
 	/* (non-Javadoc)
@@ -154,32 +174,26 @@ public class NetworkItem implements Observer {
 				/* check for widget disposed */
 				if ( composite.isDisposed() ) return;
 
-				/* get all labels */
-				Control[] controls = composite.getChildren();
-
-				/* find the corresponding label */	
-				cLabel = getLabelByNetwork( controls, network );
-
 				/* set the tooltip text */
-				createTooltip( network );
+				ToolItem toolItem = getToolItemByNetwork( network );
+				
+				createTooltip( toolItem, network );
 
 				/* set the image */
-				cLabel.setImage( network.getImage() );
+				toolItem.setImage( network.getImage() );
 			}
 		} );	
 	}
 	
 	/**
-	 * find the corresponding cLabel to the networkinfo
-	 * @param controls The low level array of clabels
+	 * find the corresponding ToolItem to the networkinfo
 	 * @param network The networkinfo
-	 * @return the corresponding clabel to the networkinfo
+	 * @return the corresponding ToolItem to the networkinfo
 	 */
-	private CLabel getLabelByNetwork( Control[] controls, NetworkInfo network ) {
-		for ( int i = 0; i < controls.length; i++ ) {
-			cLabel = ( CLabel ) controls[ i ];
-			if ( cLabel.getData() == network ) {
-				return cLabel;
+	private ToolItem getToolItemByNetwork( NetworkInfo network ) {
+		for ( int i = 0; i < toolBar.getItemCount() ; i++ ) {
+			if (toolBar.getItems()[ i ].getData() == network ) {
+				return toolBar.getItems()[ i ];
 			}
 		}
 		return null;
@@ -188,6 +202,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.27  2003/10/17 03:36:43  zet
+use toolbar
+
 Revision 1.26  2003/09/18 11:37:24  lemmster
 checkstyle
 

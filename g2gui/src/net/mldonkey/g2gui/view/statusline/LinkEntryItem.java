@@ -27,17 +27,18 @@ import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * LinkEntryItem
  *
- * @version $Id: LinkEntryItem.java,v 1.5 2003/09/23 21:58:14 zet Exp $
+ * @version $Id: LinkEntryItem.java,v 1.6 2003/10/17 03:36:43 zet Exp $
  *
  */
 public class LinkEntryItem {
@@ -59,21 +60,30 @@ public class LinkEntryItem {
         createContents();
     }
     
+    /**
+     * Create contents
+     */
     public void createContents() {
         Composite linkComposite = new Composite( composite, SWT.BORDER );
-        linkComposite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
+        linkComposite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER  | GridData.FILL_VERTICAL ) );
         linkComposite.setLayout( new FillLayout() );
-        CLabel link = new CLabel( linkComposite, SWT.BORDER );
-        link.setImage( G2GuiResources.getImage( "UpArrowBlue" ) );
-        link.setToolTipText( G2GuiResources.getString( "LE_TOGGLE" ) );
-        link.addMouseListener( new MouseAdapter() {
+        
+        ToolBar toolBar = new ToolBar( linkComposite, SWT.FLAT );
+        final ToolItem toolItem = new ToolItem( toolBar, SWT.NONE );
+        
+        toolItem.setImage( G2GuiResources.getImage( "UpArrowGreen" ) );
+        toolItem.setToolTipText( G2GuiResources.getString( "LE_TOGGLE" ) );
+        toolItem.addSelectionListener( new SelectionAdapter() {
             // hide/show the linkEntry
-            public void mouseDown( MouseEvent e ) {
+            public void widgetSelected( SelectionEvent e ) {
                 GridData g = new GridData( GridData.FILL_HORIZONTAL );
-                if ( linkEntryToggle )
+                if ( linkEntryToggle ) {
+					toolItem.setImage( G2GuiResources.getImage( "UpArrowGreen" ) );
                     g.heightHint = 0;
-                else
+                } else {
+					toolItem.setImage( G2GuiResources.getImage( "DownArrowGreen" ) );
                     g.heightHint = 75;
+                }
                 linkEntryToggle = !linkEntryToggle;
                 linkEntryComposite.setLayoutData( g );
                 statusLine.getMainTab().getMainComposite().layout();
@@ -84,6 +94,9 @@ public class LinkEntryItem {
 
 /*
 $Log: LinkEntryItem.java,v $
+Revision 1.6  2003/10/17 03:36:43  zet
+use toolbar
+
 Revision 1.5  2003/09/23 21:58:14  zet
 not much..
 

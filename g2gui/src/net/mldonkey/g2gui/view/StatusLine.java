@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Composite;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.15 2003/09/18 09:44:57 lemmster Exp $
+ * @version $Id: StatusLine.java,v 1.16 2003/10/17 03:36:50 zet Exp $
  *
  */
 public class StatusLine {
@@ -99,7 +99,7 @@ public class StatusLine {
         Composite middle = new Composite( composite, SWT.BORDER );
         middle.setLayout( new FillLayout() );
         middle.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        label = new CLabel( middle, SWT.NONE );
+        label = new CLabel( middle, SWT.BORDER );
         label.setText( "" );
 
         /* the right field */
@@ -161,6 +161,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.16  2003/10/17 03:36:50  zet
+use toolbar
+
 Revision 1.15  2003/09/18 09:44:57  lemmster
 checkstyle
 
@@ -180,7 +183,7 @@ Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.9  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.8  2003/08/18 01:42:24  zet
 centralize resource bundle

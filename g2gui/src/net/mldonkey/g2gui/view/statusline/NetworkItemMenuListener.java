@@ -38,7 +38,7 @@ import org.eclipse.jface.action.Separator;
  * NetworkItemMenuListener
  *
  *
- * @version $Id: NetworkItemMenuListener.java,v 1.7 2003/09/23 05:24:04 lemmster Exp $
+ * @version $Id: NetworkItemMenuListener.java,v 1.8 2003/10/17 03:36:43 zet Exp $
  *
  */
 public class NetworkItemMenuListener implements IMenuListener {
@@ -99,9 +99,6 @@ public class NetworkItemMenuListener implements IMenuListener {
             setText( G2GuiResources.getString( "NIML_ENABLE" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
         public void run() {
             network.setEnabled();
         }
@@ -113,9 +110,6 @@ public class NetworkItemMenuListener implements IMenuListener {
             setText( G2GuiResources.getString( "NIML_DISABLE" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
         public void run() {
             network.setEnabled();
         }
@@ -130,9 +124,6 @@ public class NetworkItemMenuListener implements IMenuListener {
 	        	setText( G2GuiResources.getString( "NIML_NMANAGE" ) );    
         }
 
-        /**
-         * DOCUMENT ME!
-         */
         public void run() {
             statusline.getMainTab().setActive( serverTab );
             ( ( ServerTab ) serverTab ).setFilter( network.getNetworkType() );
@@ -145,9 +136,6 @@ public class NetworkItemMenuListener implements IMenuListener {
             setText( G2GuiResources.getString( "NIML_CONNECT" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
         public void run() {
             network.getCore().getServerInfoIntMap().connectMore( network );
         }
@@ -156,6 +144,9 @@ public class NetworkItemMenuListener implements IMenuListener {
 
 /*
 $Log: NetworkItemMenuListener.java,v $
+Revision 1.8  2003/10/17 03:36:43  zet
+use toolbar
+
 Revision 1.7  2003/09/23 05:24:04  lemmster
 display "manage nodes" for FT/Gnut/Gnut2
 
