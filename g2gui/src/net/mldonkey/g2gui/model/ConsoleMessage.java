@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ConsoleMessage
  * 
  *  * @author ${user}
- * @version $$Id: ConsoleMessage.java,v 1.8 2003/06/27 17:12:36 lemmstercvs01 Exp $$ 
+ * @version $$Id: ConsoleMessage.java,v 1.9 2003/07/04 10:26:03 lemmstercvs01 Exp $$ 
  */
 public class ConsoleMessage implements SimpleInformation {
 	
@@ -48,7 +48,7 @@ public class ConsoleMessage implements SimpleInformation {
 	 * @param string a string
 	 */
 	public void setConsoleMessage( String string ) {
-		if (consoleMessage==null) consoleMessage = string;	
+		if ( consoleMessage == null )  consoleMessage = string;	
 			else consoleMessage += string;
 	}
 	
@@ -64,7 +64,7 @@ public class ConsoleMessage implements SimpleInformation {
 	 * 
 	 */
 	public void reset() {
-		consoleMessage="";
+		consoleMessage = "";
 		
 	}
 	
@@ -72,6 +72,9 @@ public class ConsoleMessage implements SimpleInformation {
 }
 /*
 $$Log: ConsoleMessage.java,v $
+$Revision 1.9  2003/07/04 10:26:03  lemmstercvs01
+$minor: just checkstyle
+$
 $Revision 1.8  2003/06/27 17:12:36  lemmstercvs01
 $removed unneeded fields
 $

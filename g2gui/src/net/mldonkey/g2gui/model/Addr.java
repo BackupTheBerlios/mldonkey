@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  * @author ${user}
- * @version $$Id: Addr.java,v 1.4 2003/06/30 07:21:27 lemmstercvs01 Exp $$ 
+ * @version $$Id: Addr.java,v 1.5 2003/07/04 10:26:03 lemmstercvs01 Exp $$ 
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -108,13 +108,16 @@ public class Addr implements SimpleInformation {
 				this.setIpAddress( messageBuffer.readInetAddress() );
 			}
 			/* do nothing, we receive always a valid address */
-			catch ( UnknownHostException e ) {}
+			catch ( UnknownHostException e ) { }
 		else
 			this.setNameAddress( messageBuffer.readString() );
 	}
 }
 /*
 $$Log: Addr.java,v $
+$Revision 1.5  2003/07/04 10:26:03  lemmstercvs01
+$minor: just checkstyle
+$
 $Revision 1.4  2003/06/30 07:21:27  lemmstercvs01
 $changed ip from int to InetAddress
 $

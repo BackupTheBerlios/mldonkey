@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * UserInfo
  *
  * @author $user$
- * @version $Id: UserInfo.java,v 1.1 2003/06/30 07:19:47 lemmstercvs01 Exp $ 
+ * @version $Id: UserInfo.java,v 1.2 2003/07/04 10:26:03 lemmstercvs01 Exp $ 
  *
  */
 public class UserInfo implements SimpleInformation {
@@ -87,7 +87,7 @@ public class UserInfo implements SimpleInformation {
 			this.setIpAddress( messageBuffer.readInetAddress() );
 		}
 		/* do nothing, we get always a valid ip */
-		catch (UnknownHostException e) { }
+		catch ( UnknownHostException e ) { }
 		
 		this.setPort( messageBuffer.readInt16() );
 		this.setTags( messageBuffer.readTagList() );		
@@ -195,6 +195,9 @@ public class UserInfo implements SimpleInformation {
 
 /*
 $Log: UserInfo.java,v $
+Revision 1.2  2003/07/04 10:26:03  lemmstercvs01
+minor: just checkstyle
+
 Revision 1.1  2003/06/30 07:19:47  lemmstercvs01
 initial commit (untested)
 
