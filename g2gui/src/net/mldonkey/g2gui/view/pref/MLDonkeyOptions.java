@@ -48,14 +48,14 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.27 2003/08/26 09:09:44 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.28 2003/08/26 14:12:01 zet Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	private ScrolledComposite sc;
 	private Composite parent;
 	private List options = new ArrayList();
-	private final int inputFieldLength = 30;
+	private final int inputFieldLength = 20;
 	/**
 	 * @param title
 	 * @param style
@@ -215,6 +215,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 } 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.28  2003/08/26 14:12:01  zet
+decrease inputfieldlength
+
 Revision 1.27  2003/08/26 09:09:44  dek
 readded max length to input-fields, as my holy grail was not so holy as i thought..
 

@@ -31,15 +31,19 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
 
-import org.eclipse.jface.preference.*;
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IPreferenceNode;
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.preference.PreferenceManager;
+import org.eclipse.jface.preference.PreferenceNode;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.29 2003/08/26 09:21:52 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.30 2003/08/26 14:12:01 zet Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -220,6 +224,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.30  2003/08/26 14:12:01  zet
+decrease inputfieldlength
+
 Revision 1.29  2003/08/26 09:21:52  dek
 pref-dialog is now resizable again, since the problem with the huge pages is gone.
 And maybe some people don't like fixed-size dialogs ;-)
@@ -244,7 +251,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
