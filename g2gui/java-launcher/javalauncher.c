@@ -53,6 +53,9 @@ void getPath(char *result, char* lpCmdLine){
 	// Remove lpCmdLine from back
 	int lastPosition = strlen(commandLine)-strlen(lpCmdLine);
 
+	/*searches for g2gui from behind and since this is the exe, we discard
+	 *it, we are only interested in path to g2gui.exe
+	 */
 	while(commandLine[lastPosition]!='i')
 	{
 		if (commandLine[lastPosition--]=='u')
