@@ -33,9 +33,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 // rz,
-// TODO status-field
-// TODO file progress field
-
 /**
  * 
  * DownloadTab
@@ -218,7 +215,6 @@ public class DownloadTab
 	}
 
 	public void widgetDisposed(DisposeEvent arg0) {
-		// TODO store Column position
 	}
 
 	public void widgetSelected(SelectionEvent arg0) {
