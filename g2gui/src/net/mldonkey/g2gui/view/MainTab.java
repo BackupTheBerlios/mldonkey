@@ -22,36 +22,60 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
-import java.text.DecimalFormat;
+import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.ShellListener;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.30 2003/08/08 02:46:31 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.31 2003/08/09 19:53:40 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -229,10 +253,21 @@ public class MainTab implements Listener, Observer, ShellListener {
 			}
 		} );
 		item.setText( "Preferences" );
-
 		mItem.setMenu( submenu );
+	
 		mItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
 		mItem.setText ( "Help" );
+		
+		submenu = new Menu ( shell, SWT.DROP_DOWN );
+		item = new MenuItem( submenu, 0);
+		item.addListener( SWT.Selection, new Listener() {
+			public void handleEvent (Event event ) {
+				Program.launch("http://mldonkey.berlios.de/modules.php?name=Forums&file=viewtopic&t=1476");
+			}
+		} );
+		item.setText( "Feedback" );
+		mItem.setMenu(submenu );
+		
 	} 
 	
 	/**
@@ -639,6 +674,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.31  2003/08/09 19:53:40  zet
+feedback menuitem
+
 Revision 1.30  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 
