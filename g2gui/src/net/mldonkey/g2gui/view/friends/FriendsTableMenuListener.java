@@ -42,7 +42,7 @@ import org.eclipse.jface.viewers.TableViewer;
 /**
  * TableMenuListener
  *
- * @version $Id: FriendsTableMenuListener.java,v 1.6 2003/09/20 01:20:26 zet Exp $
+ * @version $Id: FriendsTableMenuListener.java,v 1.7 2003/10/15 19:39:57 zet Exp $
  *
  */
 public class FriendsTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -101,6 +101,7 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
             super();
             String num = ( ( selectedClients.size() > 1 ) ? ( " (" + selectedClients.size() + ")" ) : "" );
             setText( G2GuiResources.getString( "FR_MENU_REMOVE_FRIEND" ) + num );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "MessagesButtonSmallTransBW" ) );
         }
 
         public void run() {
@@ -116,8 +117,8 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 	 */
     private class RemoveAllFriendsAction extends Action {
         public RemoveAllFriendsAction() {
-            super();
-            setText( G2GuiResources.getString( "FR_MENU_REMOVE_ALL_FRIENDS" ) );
+            super( G2GuiResources.getString( "FR_MENU_REMOVE_ALL_FRIENDS" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "MessagesButtonSmallTransBW" ) );
         }
 
         public void run() {
@@ -133,6 +134,7 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
             super();
             String num = ( ( selectedClients.size() > 1 ) ? ( " (" + selectedClients.size() + ")" ) : "" );
             setText( G2GuiResources.getString( "FR_MENU_SEND_MESSAGE" ) + num );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "resume" ) );
         }
 
         public void run() {
@@ -148,8 +150,8 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 	 */
     private class AddByIPAction extends Action {
         public AddByIPAction() {
-            super();
-            setText( G2GuiResources.getString( "FR_MENU_ADD_BY_IP" ) );
+            super( G2GuiResources.getString( "FR_MENU_ADD_BY_IP" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "MessagesButtonSmallTrans" ) );
         }
         
         public void run() {
@@ -160,6 +162,9 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 
 /*
 $Log: FriendsTableMenuListener.java,v $
+Revision 1.7  2003/10/15 19:39:57  zet
+icons
+
 Revision 1.6  2003/09/20 01:20:26  zet
 *** empty log message ***
 

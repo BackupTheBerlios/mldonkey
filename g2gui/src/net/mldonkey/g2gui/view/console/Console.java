@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  *
- * @version $Id: Console.java,v 1.16 2003/10/07 15:46:54 dek Exp $
+ * @version $Id: Console.java,v 1.17 2003/10/15 19:39:50 zet Exp $
  *
  */
 public class Console extends Observable implements ControlListener {
@@ -85,27 +85,30 @@ public class Console extends Observable implements ControlListener {
         infoDisplay =
             new StyledText( parent, style | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
         Menu popupMenu = new Menu( infoDisplay );
-        MenuItem copyItem = new MenuItem( popupMenu, SWT.PUSH );
-        copyItem.setText( G2GuiResources.getString( "MISC_COPY" ) );
-        copyItem.addListener( SWT.Selection,
+        MenuItem menuItem = new MenuItem( popupMenu, SWT.PUSH );
+        menuItem.setText( G2GuiResources.getString( "MISC_COPY" ) );
+        menuItem.setImage( G2GuiResources.getImage( "copy" ));
+        menuItem.addListener( SWT.Selection,
                               new Listener() {
                 public void handleEvent( Event event ) {
                     infoDisplay.copy();
                 }
             } );
 
-        MenuItem selectAll = new MenuItem( popupMenu, SWT.PUSH );
-        selectAll.setText( G2GuiResources.getString( "MISC_SELECT_ALL" ) );
-        selectAll.addListener( SWT.Selection,
+        menuItem = new MenuItem( popupMenu, SWT.PUSH );
+        menuItem.setText( G2GuiResources.getString( "MISC_SELECT_ALL" ) );
+		menuItem.setImage( G2GuiResources.getImage( "plus" ));
+        menuItem.addListener( SWT.Selection,
                                new Listener() {
                 public void handleEvent( Event event ) {
                     infoDisplay.selectAll();
                 }
             } );
 
-        MenuItem clearItem = new MenuItem( popupMenu, SWT.PUSH );
-        clearItem.setText( G2GuiResources.getString( "MISC_CLEAR" ) );
-        clearItem.addListener( SWT.Selection,
+        menuItem = new MenuItem( popupMenu, SWT.PUSH );
+        menuItem.setText( G2GuiResources.getString( "MISC_CLEAR" ) );
+		menuItem.setImage( G2GuiResources.getImage( "clear" ));
+        menuItem.addListener( SWT.Selection,
                                new Listener() {
                 public void handleEvent( Event event ) {
                     infoDisplay.replaceTextRange( 0, infoDisplay.getText().length(), "" );
@@ -258,6 +261,9 @@ public class Console extends Observable implements ControlListener {
 
 /*
 $Log: Console.java,v $
+Revision 1.17  2003/10/15 19:39:50  zet
+icons
+
 Revision 1.16  2003/10/07 15:46:54  dek
 added Command-History to Console
 
@@ -286,7 +292,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.6  2003/08/18 06:00:01  zet
 fix null pointer (I'm not even sure it is real..)

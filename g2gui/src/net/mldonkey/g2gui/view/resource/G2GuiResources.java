@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.36 2003/10/15 18:24:51 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.38 2003/10/15 19:44:18 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -275,6 +275,9 @@ public class G2GuiResources {
         reg.put( "maximize", createRawMImage( "maximize.gif" ) );
         reg.put( "restore", createRawMImage( "restore.gif" ) );
         reg.put( "table", createRawMImage( "table.gif" ) );
+        reg.put( "copy", createRawMImage( "copy.gif" ) );
+        reg.put( "clear", createRawMImage( "clear.gif" ) );
+        reg.put( "graph", createRawMImage( "graph.gif" ) );
         
         
     }
@@ -422,6 +425,12 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.38  2003/10/15 19:44:18  zet
+icons
+
+Revision 1.37  2003/10/15 19:40:15  zet
+icons
+
 Revision 1.36  2003/10/15 18:24:51  zet
 icons
 

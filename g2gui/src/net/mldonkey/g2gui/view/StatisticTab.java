@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.32 2003/10/12 15:56:52 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.33 2003/10/15 19:44:24 zet Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
@@ -214,6 +214,7 @@ public class StatisticTab extends GuiTab {
 
         public GraphHistoryAction( Graph graph ) {
             super( "Hourly graph history" );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "graph" ) );
             this.graph = graph;
         }
 
@@ -230,6 +231,7 @@ public class StatisticTab extends GuiTab {
 
         public ClearGraphHistoryAction( Graph graph ) {
             super( "Clear graph history" );
+            setImageDescriptor( G2GuiResources.getImageDescriptor( "clear" ) ); 
             this.graph = graph;
         }
 
@@ -251,6 +253,9 @@ public class StatisticTab extends GuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.33  2003/10/15 19:44:24  zet
+icons
+
 Revision 1.32  2003/10/12 15:56:52  zet
 save sash orientation
 
