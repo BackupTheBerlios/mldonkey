@@ -68,7 +68,7 @@ G2gui features a few interesting commandline-options, please try:
 $ ./g2gui --help
 to get a list.
 
-The intersting feature is the link-submission tool. Simply give G2gui
+An interesting feature is the link-submission tool. Simply give G2gui
 an ed2k:// or .torrent link or file(!) and it will submit it to the core.
 
 
