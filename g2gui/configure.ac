@@ -161,7 +161,7 @@ case $host in
     host=$(echo $(uname) | tr A-Z a-z)
 	swt_dir=swt-$host-$widget_set
 	obj_dir=obj-$widget_set
-	AC_SUBST(MAGIC,[$(magic)])
+	AC_SUBST(MAGIC,["$(magic)"])
 	echo "SWT widget-set : $widget_set"
 	echo "SWT dir prefix : $swt_dir"
 	;;
