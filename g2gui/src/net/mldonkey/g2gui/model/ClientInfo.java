@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.38 2003/12/01 16:04:52 lemmster Exp $
+ * @version $Id: ClientInfo.java,v 1.39 2003/12/01 16:17:53 zet Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -89,8 +89,6 @@ public class ClientInfo extends Parent {
     private int clientChatPort;
 
     /**
-<<<<<<< ClientInfo.java
-=======
      * Client Software
      */
     private String clientSoftware = "";
@@ -444,6 +442,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.39  2003/12/01 16:17:53  zet
+*** empty log message ***
+
 Revision 1.38  2003/12/01 16:04:52  lemmster
 removed broken cvs tag
 
@@ -506,7 +507,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
