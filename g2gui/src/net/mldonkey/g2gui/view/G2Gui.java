@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.10 2003/08/16 13:52:49 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.11 2003/08/17 17:30:20 zet Exp $ 
  *
  */
 public class G2Gui {
@@ -91,7 +91,7 @@ public class G2Gui {
 		shell = new Shell( display );
 		preferenceStore = new PreferenceStore( "g2gui.pref" );
 		myPrefs = new Preferences( preferenceStore );
-		splashShell = new Shell( display, SWT.ON_TOP );	
+		splashShell = new Shell( shell, SWT.ON_TOP );	
 		box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
 		waiterObject = new Object();
 		
@@ -293,6 +293,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.11  2003/08/17 17:30:20  zet
+remove splashscreen from taskbar
+
 Revision 1.10  2003/08/16 13:52:49  dek
 ed2k-link handling-hack continued
 
