@@ -39,7 +39,7 @@ import org.eclipse.swt.graphics.Image;
  * ResultTableLabelProvider
  *
  * @author $user$
- * @version $Id: ResultTableLabelProvider.java,v 1.8 2003/08/14 12:57:03 zet Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.9 2003/08/14 14:48:11 vnc Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -97,7 +97,11 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 					Tag[] tags = resultInfo.getTags();
 					if (tags != null){					
 						Tag aTag = resultInfo.getTags()[ 0 ];
-						if ( aTag.getValue() > 20 )
+						if ( aTag.getValue() > 400 )
+							return "" + bundle.getString( "RTLP_PERFECT" );
+						else if ( aTag.getValue() > 100 )
+							return "" + bundle.getString( "RTLP_VERYHIGH" );
+						else if ( aTag.getValue() > 25 )
 							return "" + bundle.getString( "RTLP_HIGH" );
 						else if ( aTag.getValue() > 10 )
 							return "" + bundle.getString( "RTLP_NORMAL" );
@@ -162,6 +166,9 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.9  2003/08/14 14:48:11  vnc
+added finer results availability rating
+
 Revision 1.8  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 
