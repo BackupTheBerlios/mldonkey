@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Control;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.7 2003/07/13 20:12:39 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.8 2003/07/14 19:26:40 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem {
@@ -70,7 +70,7 @@ public class DownloadItem extends TableTreeItem {
 		Control oldEditor = editor.getEditor();
 			if ( oldEditor != null )
 			oldEditor.dispose();
-		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo );
+		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo,6 );
 		editor.setEditor ( chunks, this, 6 );
 		
 		updateColumns();
@@ -83,7 +83,7 @@ public class DownloadItem extends TableTreeItem {
 	//			all clientInfos are accepted
 				
 					if ( ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
-						|| ( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED )	
+						//|| ( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED )
 						 ) {				
 							if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
 								namedclients.get( clientInfo.getClientid() );
@@ -116,7 +116,7 @@ public class DownloadItem extends TableTreeItem {
 		// Here comes the question, wether we want to add this clientInfo, or not?? at the moment, 
 		// all clientInfos are accepted
 						if ( ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )	
-						|| ( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED )								 
+						//|| ( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED )								 
 						 ) {				
 							if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
 								namedclients.get( clientInfo.getClientid() );
@@ -147,6 +147,7 @@ public class DownloadItem extends TableTreeItem {
 		setText( 3, String.valueOf( fileInfo.getDownloaded() ) );
 		setText( 4, String.valueOf( fileInfo.getSize() ) );
 		setText( 5, String.valueOf( fileInfo.getPerc() ) );
+		
 		chunks.refresh();
 	}
 	
@@ -202,6 +203,9 @@ public class DownloadItem extends TableTreeItem {
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.8  2003/07/14 19:26:40  dek
+done some clean.up work, since it seems,as if this view becomes reality..
+
 Revision 1.7  2003/07/13 20:12:39  dek
 fixed Exception and applied checkstyle
 

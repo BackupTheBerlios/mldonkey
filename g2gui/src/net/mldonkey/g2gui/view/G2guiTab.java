@@ -33,18 +33,20 @@ import org.eclipse.swt.widgets.ToolItem;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: G2guiTab.java,v 1.8 2003/07/03 01:56:45 zet Exp $ 
+ * @version $Id: G2guiTab.java,v 1.9 2003/07/14 19:26:41 dek Exp $ 
  *
  */
 public abstract class G2guiTab implements Listener {	
+	private boolean active;
 	protected Composite content;
 	protected Gui mainWindow;
 	protected ToolItem toolItem;
 	
 	
 	
+	
 	/**
-	 * @param gui
+	 * @param gui the gui, to which this tab belongs
 	 */
 	public G2guiTab( Gui gui ) {
 		this.mainWindow = gui;		
@@ -61,19 +63,52 @@ public abstract class G2guiTab implements Listener {
 		
 
 	/**
-	 * @return
+	 * @return the Composite, where all the Tab is layed out onto
 	 */
 	public Composite getContent() {
 		return content;
 	}
-
-	public void handleEvent( Event event ) {
+	
+	/**
+	 * is called from the gui, when this tab is set to background 
+	 * (because another tab was activated)	
+	 */
+	public void setInActive() {			
+		active = false;
+		toolItem.setSelection(false);
+	}
+	
+	/**
+	 * is called  when this tab is set to foreground 
+	 * 	
+	 */
+	public void setActive() {		
+		active = true;		
 		mainWindow.setActive( this );
+		toolItem.setSelection(true);
+	}
+	
+	/**
+	 * @return wether this tab is actually beeing displayed or sleeping in the background..
+	 */
+	public boolean isActive() {			
+		return active;
+	}
+
+	/**
+	 * what to do, when we are selected: bring us in front of the whole thing
+	 * @param event the Button-press event from the CoolBar
+	 */
+	public void handleEvent( Event event ) {
+		setActive();
 	}
 		
 }
 /*
 $Log: G2guiTab.java,v $
+Revision 1.9  2003/07/14 19:26:41  dek
+done some clean.up work, since it seems,as if this view becomes reality..
+
 Revision 1.8  2003/07/03 01:56:45  zet
 attempt(?) to save window size/pos & table column widths between sessions
 

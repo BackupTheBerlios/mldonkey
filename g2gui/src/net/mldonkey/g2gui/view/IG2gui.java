@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Composite;
  * IG2gui
  *
  * @author $user$
- * @version $Id: IG2gui.java,v 1.3 2003/07/10 19:27:28 dek Exp $ 
+ * @version $Id: IG2gui.java,v 1.4 2003/07/14 19:26:41 dek Exp $ 
  *
  */
 public interface IG2gui {
@@ -54,12 +54,16 @@ public interface IG2gui {
 	 * @param tab I want to be active!!!!
 	 */
 	void setActive( G2guiTab tab );
+	
 }
 
 
 
 /*
 $Log: IG2gui.java,v $
+Revision 1.4  2003/07/14 19:26:41  dek
+done some clean.up work, since it seems,as if this view becomes reality..
+
 Revision 1.3  2003/07/10 19:27:28  dek
 some idle-race cleanup
 

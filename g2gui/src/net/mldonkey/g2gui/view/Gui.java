@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.31 2003/07/12 21:50:07 dek Exp $ 
+ * @version $Id: Gui.java,v 1.32 2003/07/14 19:26:41 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {
@@ -97,8 +97,8 @@ public class Gui implements IG2gui, Listener {
 		GridData gridData;	
 		Composite mainComposite = new Composite( parent, SWT.NONE );
 		
-		setTitleBar(parent, "g2gui alpha" );
-		createMenuBar(parent);					
+		setTitleBar( parent, "g2gui alpha" );
+		createMenuBar( parent );					
 				
 		GridLayout mainLayout = new GridLayout();
 			mainLayout.numColumns = 1;
@@ -135,9 +135,7 @@ public class Gui implements IG2gui, Listener {
 			pageContainer.setLayoutData( gridData );						
 		
 		statusline = new StatusLine( mainComposite, mldonkey );
-				
-			
-		layoutCoolBar(coolbar);
+		layoutCoolBar( coolbar );
 				
 
 	} 
@@ -236,7 +234,7 @@ public class Gui implements IG2gui, Listener {
 			CoolItem miscCoolItem = items [1];
 			miscCoolItem.setControl ( miscTools );		
 			miscTools.setMenu( toolmenu );
-		layoutCoolBar(coolBar);
+		layoutCoolBar( coolBar );
 		return coolBar;
 	} 
 	
@@ -342,7 +340,10 @@ public class Gui implements IG2gui, Listener {
 	 * @see net.mldonkey.g2gui.view.widgets.Gui.IG2gui#setActive( net.mldonkey.g2gui.view.widgets.Gui.G2guiTab )
 	 */
 	public void setActive( G2guiTab activatedTab ) {		
-		if ( activeTab != null ) activeTab.getContent().setVisible( false );
+		if ( activeTab != null ) {
+			activeTab.getContent().setVisible( false );
+			activeTab.setInActive();
+			} 
 		( ( StackLayout )pageContainer.getLayout() ).topControl 
 											= activatedTab.getContent();		
 		pageContainer.layout();		
@@ -425,6 +426,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.32  2003/07/14 19:26:41  dek
+done some clean.up work, since it seems,as if this view becomes reality..
+
 Revision 1.31  2003/07/12 21:50:07  dek
 transferTree is in experimantal preView-state...
 

@@ -37,10 +37,11 @@ import org.eclipse.swt.widgets.Composite;
  * Main
  *
  * @author $user$
- * @version $Id: TransferMain.java,v 1.1 2003/07/11 17:53:51 dek Exp $ 
+ * @version $Id: TransferMain.java,v 1.2 2003/07/14 19:26:40 dek Exp $ 
  *
  */
 public class TransferMain extends G2guiTab  {
+	private boolean active;
 	private CoreCommunication mldonkey;
 	/**
 	 * @param gui
@@ -60,15 +61,16 @@ public class TransferMain extends G2guiTab  {
 		Composite download = new Composite( main, SWT.BORDER );
 			download.setLayout(new FillLayout());
 		Composite upload = new Composite( main, SWT.BORDER );
-		new DownloadTable( download, mldonkey );
+		new DownloadTable( download, mldonkey, this );
 	}
-	
-
 
 }
 
 /*
 $Log: TransferMain.java,v $
+Revision 1.2  2003/07/14 19:26:40  dek
+done some clean.up work, since it seems,as if this view becomes reality..
+
 Revision 1.1  2003/07/11 17:53:51  dek
 Tree for Downloads - still unstable
 

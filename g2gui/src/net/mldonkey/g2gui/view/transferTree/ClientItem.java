@@ -23,30 +23,54 @@
 package net.mldonkey.g2gui.view.transferTree;
 
 import net.mldonkey.g2gui.model.ClientInfo;
+import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableTreeEditor;
 import org.eclipse.swt.custom.TableTreeItem;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.3 2003/07/13 12:48:28 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.4 2003/07/14 19:26:40 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem {
 	
+	private ChunkView chunks;
+
 	private DownloadItem downloadItem;
-
-
+	
+	/**
+	 * the client, this object is a viewer for
+	 */
 	private ClientInfo clientInfo;
-
+	
+	/**
+	 * for which file is this item a ClientItem
+	 */
+	private FileInfo fileInfo;
 
 	public ClientItem( DownloadItem parent, int style, ClientInfo clientInfo ){
 		super( parent, style );
 		this.clientInfo = clientInfo;
 		this.downloadItem = parent;
+		this.fileInfo = downloadItem.getFileInfo();
+		this.downloadItem = parent;
+		TableTreeEditor editor = new TableTreeEditor( this.getParent() );		
+		editor.horizontalAlignment = SWT.LEFT;
+		editor.grabHorizontal = true;
+		Control oldEditor = editor.getEditor();
+			if ( oldEditor != null )
+			oldEditor.dispose();
+		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, 6 );
+		editor.setEditor ( chunks, this, 6 );
+		
 		updateColums();	
+		
 		
 	}
 	
@@ -57,8 +81,6 @@ public class ClientItem extends TableTreeItem {
 	private void updateColums() {
 		// setText( 0, String.valueOf( clientInfo.getClientid() ) );
 		setText( 1, clientInfo.getClientName() );
-		
-		String availability = clientInfo.getFileAvailability( downloadItem.getFileInfo() );
 		
 		String state = "";
 		if ( clientInfo.getState().getState() == EnumState.CONNECTED )		
@@ -80,14 +102,12 @@ public class ClientItem extends TableTreeItem {
 		if ( clientInfo.getState().getState() == EnumState.NOT_CONNECTED_WAS_QUEUED )
 			state = "NOT_CONNECTED_WAS_QUEUED";	
 		if ( clientInfo.getState().getState() == EnumState.REMOVE_HOST )
-			state = "removeHost";				
-		if ( availability == null )	availability = "";	
+			state = "removeHost";
 		setText( 3, state );
-		setText( 6, availability );		
-		
-		//setText( 6, String.valueOf( clientInfo.getState() ) );
-		if ( !availability.equals( "" ) ) {
-		}
+		String hhhh = clientInfo.getFileAvailability(fileInfo);
+		if (hhhh == null) hhhh= "";
+		setText(5,hhhh);
+		//chunks.refresh();
 	}
 
 
@@ -98,6 +118,9 @@ public class ClientItem extends TableTreeItem {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.4  2003/07/14 19:26:40  dek
+done some clean.up work, since it seems,as if this view becomes reality..
+
 Revision 1.3  2003/07/13 12:48:28  dek
 chunk-bar begins to work
 

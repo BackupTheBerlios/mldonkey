@@ -46,10 +46,11 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.3 2003/07/13 20:12:39 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.4 2003/07/14 19:26:40 dek Exp $ 
  *
  */
 public class DownloadTable  implements Observer, Runnable {
+	private TransferMain page;
 	private FileInfoIntMap files;
 	private TableTree tableTree;
 	private TIntObjectHashMap downloads;
@@ -70,18 +71,19 @@ public class DownloadTable  implements Observer, Runnable {
 	 * @param parent here, this object will be placed
 	 * @param mldonkey this object's master, from which this object gets the data
 	 */
-	public DownloadTable( Composite parent, CoreCommunication mldonkey ) {	
+	public DownloadTable( Composite parent, CoreCommunication mldonkey,TransferMain page ) {
+		this.page = page;	
 		downloads = new TIntObjectHashMap();	
 		 tableTree = new TableTree( parent, SWT.NONE );
 			Table table = tableTree.getTable();
 			table.setLinesVisible( false );
-			table.setHeaderVisible( true );	
-					
+			table.setHeaderVisible( true );						
 			for ( int i = 0; i < columns.length; i++ ) {
 				TableColumn column = new TableColumn( table, SWT.NONE );
 							column.setText( columns[ i ] );
 			}
 			mldonkey.addObserver( this );
+			
 	}
 
 
@@ -89,11 +91,14 @@ public class DownloadTable  implements Observer, Runnable {
 	/* ( non-Javadoc )
 	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
 	 */
-	public void update( Observable o,  Object arg ) {		
-		if ( arg instanceof FileInfoIntMap ) { 		
-			files = ( FileInfoIntMap ) arg;			
-			tableTree.getDisplay().syncExec( this );	}	
+	public void update( Observable o, Object arg ) {
+		if ( arg instanceof FileInfoIntMap ) {
+			files = ( FileInfoIntMap ) arg;
+			if ( page.isActive() ) {
+				tableTree.getDisplay().syncExec( this );
+			}
 		}
+	}
 
 
 
@@ -119,15 +124,16 @@ public class DownloadTable  implements Observer, Runnable {
 				
 					for ( int i = 0; i < cols.length; i++ ) {
 						cols[i].pack();
-					}
-				
+					}				
 				}			
-		}
-		//tableTree.getTable().update();
+		}		
 	}
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.4  2003/07/14 19:26:40  dek
+done some clean.up work, since it seems,as if this view becomes reality..
+
 Revision 1.3  2003/07/13 20:12:39  dek
 fixed Exception and applied checkstyle
 
