@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Parent
  *
  * @author $user$
- * @version $Id: Parent.java,v 1.2 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: Parent.java,v 1.3 2003/08/21 13:13:10 lemmster Exp $ 
  *
  */
 public abstract class Parent extends Observable implements SimpleInformation {
@@ -51,10 +51,20 @@ public abstract class Parent extends Observable implements SimpleInformation {
 	public Parent( CoreCommunication core ) {
 		this.parent = core;
 	}
+	/**
+	 * The CoreCommunication associated with this obj
+	 * @return The <code>CoreCommunication</code>
+	 */
+	public CoreCommunication getCore() {
+		return this.parent;
+	}
 }
 
 /*
 $Log: Parent.java,v $
+Revision 1.3  2003/08/21 13:13:10  lemmster
+cleanup in networkitem
+
 Revision 1.2  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

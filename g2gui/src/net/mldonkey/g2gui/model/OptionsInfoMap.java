@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.19 2003/08/20 22:41:08 lemmster Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.20 2003/08/21 13:13:10 lemmster Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -207,6 +207,14 @@ public class OptionsInfoMap extends InfoMap {
 				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
 				return new Integer( option.getValue() ).intValue();
 			}
+			if ( network.getNetworkType() == NetworkInfo.Enum.SOULSEEK ) {
+				/* first the option-prefix */
+				option = ( OptionsInfo ) this.infoMap.get( "slsk-options_prefix" );
+				prefix = option.getValue();
+				/* now the max_connected_server/peers */
+				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
+				return new Integer( option.getValue() ).intValue();
+			}
 			if ( network.getNetworkType() == NetworkInfo.Enum.DONKEY ) {
 				/* now the max_connected_server/peers */
 				option = ( OptionsInfo ) this.infoMap.get( "max_connected_servers" );
@@ -219,6 +227,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.20  2003/08/21 13:13:10  lemmster
+cleanup in networkitem
+
 Revision 1.19  2003/08/20 22:41:08  lemmster
 bugfix for getMaxConnectedServers()
 

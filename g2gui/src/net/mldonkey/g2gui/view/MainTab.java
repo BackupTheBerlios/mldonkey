@@ -83,7 +83,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.47 2003/08/21 11:19:15 lemmster Exp $ 
+ * @version $Id: MainTab.java,v 1.48 2003/08/21 13:13:10 lemmster Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -692,9 +692,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 			reg.put(buttonNames[i] + "ButtonSmall", createTrans(buttonFiles[i] + "-16.png"));
 		}
 		
-		String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "Unknown" };
+		String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "ONP", "Unknown" };
 		String[] fileNames = { "directconnect", "edonkey2000", "gnutella", "gnutella2",
-								"kazaa", "soulseek", "unknown" };
+								"kazaa", "soulseek", "unknown", "unknown" };
 								
 		for (int i = 0; i < shortNames.length; i++) {
 			reg.put( shortNames[i] + "Connected", createTrans( fileNames[i] + "_connected.png" ) );
@@ -798,6 +798,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.48  2003/08/21 13:13:10  lemmster
+cleanup in networkitem
+
 Revision 1.47  2003/08/21 11:19:15  lemmster
 added bt and multinet image
 

@@ -30,62 +30,41 @@ import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.ServerTab;
 import net.mldonkey.g2gui.view.StatusLine;
-import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 
 
 /**
  * NetworkItem
  *
- * @author $user$
- * @version $Id: NetworkItem.java,v 1.19 2003/08/20 22:16:33 lemmster Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: NetworkItem.java,v 1.20 2003/08/21 13:13:10 lemmster Exp $ 
  *
  */
 public class NetworkItem implements Observer {
-	private boolean advancedMode = PreferenceLoader.loadBoolean( "advancedMode" );
-	private boolean connected;
 	private CoreCommunication core;
 	private StatusLine statusline;
 	private Composite composite;
 	private GridLayout gridLayout;
-	private Image image;
-	private CLabel cLabel, anotherCLabel;
-	private MenuItem item;
-	private boolean enabled;
+	private CLabel cLabel;
 	private GuiTab serverTab;
 
 
 	/**
 	 * @param statusline the Statusline in which this item should appear
-	 * @param line
-	 * @param mldonkey
+	 * @param mldonkey The core to register on
 	 */
 	public NetworkItem( StatusLine statusline, CoreCommunication mldonkey ) {
 		this.composite = statusline.getStatusline();
 		this.statusline = statusline;
 		this.core = mldonkey;
-		
-		this.createContent();
-
-		this.core.getNetworkInfoMap().addObserver( this );
 		
 		/* get the servertab */
 		GuiTab[] tabs = statusline.getMainTab().getTabs();
@@ -95,10 +74,13 @@ public class NetworkItem implements Observer {
 				this.serverTab = tab;
 			}
 		}
+		this.createContent();
+
+		this.core.getNetworkInfoMap().addObserver( this );
 	}
 
 	/**
-	 * 
+	 * create the content
 	 */
 	private void createContent() {
 		NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
@@ -115,22 +97,20 @@ public class NetworkItem implements Observer {
 			NetworkInfo network = networks[ i ];
 			cLabel = new CLabel( composite, SWT.NONE );
 			cLabel.setData( network );
-			cLabel.setMenu( this.createRightClickMenu() );
+			NetworkItemMenuListener manager =
+				new NetworkItemMenuListener( network, serverTab, statusline );
+			MenuManager popupMenu = new MenuManager( "" );
+			popupMenu.setRemoveAllWhenShown( true );
+			popupMenu.addMenuListener( manager );
+			cLabel.setMenu( popupMenu.createContextMenu( cLabel ) );
+			
 			/* set the network name and status as tooltip */
-			cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
-			/* by default, the network is not connected */
-			cLabel.setData( "CONNECTED", new Boolean( false ) );
-
-			/* get the clicked label */			
-			cLabel.addMouseListener( new MouseListener() {
-				public void mouseDown( MouseEvent e ) {
-					if ( e.button != 3 ) return;
-					anotherCLabel = ( CLabel ) e.widget;
-				}
-				public void mouseDoubleClick( MouseEvent e ) { }
-				public void mouseUp( MouseEvent e ) { }
-			} );
-
+			if ( network.isEnabled() && ( network.hasServers() || network.hasSupernodes() ) )
+				cLabel.setToolTipText( network.getNetworkName() + " connected to: "
+									   + network.getConnectedServers() + " server" );
+			else
+				cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
+	
 			/* on dispose() deregister on the model */			
 			cLabel.addDisposeListener( new DisposeListener () {
 				public void widgetDisposed(DisposeEvent e) {
@@ -138,18 +118,8 @@ public class NetworkItem implements Observer {
 				}
 			} );
 
-			if ( core.getProtoToUse() >= 18 ) {
-				/* get the servers the network is connected to */
-				int numConnected = network.getConnectedServers();
-				if ( numConnected > 0 ) { 
-					/* we are connected, the "CONNECTED" to true */
-					cLabel.setData( "CONNECTED", new Boolean( true ) );
-					/* alter the tooltip text, to reflect that we are connected */
-					cLabel.setToolTipText( network.getNetworkName() + ": connected to " + numConnected + " servers" );
-				}
-			}
 			/* now create the image */
-			cLabel.setImage( this.createNetworkImage( network ) );
+			cLabel.setImage( network.getImage() );
 		}
 	}
 
@@ -171,23 +141,26 @@ public class NetworkItem implements Observer {
 
 				/* find the corresponding label */	
 				cLabel = getLabelByNetwork( controls, network );
-				cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
 
-				if ( core.getProtoToUse() >= 18 ) {
-					/* get the servers the network is connected to */
-					int numConnected = network.getConnectedServers();
-					if ( numConnected > 0 ) { 
-						/* we are connected, the "CONNECTED" to true */
-						cLabel.setData( "CONNECTED", new Boolean( true ) );
-						/* alter the tooltip text, to reflect that we are connected */
-						cLabel.setToolTipText( network.getNetworkName() + ": connected to " + numConnected + " servers" );
-					}
-				}
-				cLabel.setImage( createNetworkImage( network ) );
+				/* set the tooltip text */
+				if ( network.isEnabled() && ( network.hasServers() || network.hasSupernodes() ) )
+				cLabel.setToolTipText( network.getNetworkName() + " connected to: "
+									   + network.getConnectedServers() + " server" );
+				else
+					cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
+
+				/* set the image */
+				cLabel.setImage( network.getImage() );
 			}
 		} );	
 	}
 	
+	/**
+	 * find the corresponding cLabel to the networkinfo
+	 * @param controls The low level array of clabels
+	 * @param network The networkinfo
+	 * @return the corresponding clabel to the networkinfo
+	 */
 	private CLabel getLabelByNetwork( Control[] controls, NetworkInfo network ) {
 		for ( int i = 0; i < controls.length; i++ ) {
 			cLabel = ( CLabel ) controls[ i ];
@@ -197,128 +170,13 @@ public class NetworkItem implements Observer {
 		}
 		return null;
 	}
-		
-	/**
-	 * set the proper image for the network
-	 * @param networkInfo The network info to create the image for
-	 * @return an image representing the network status
-	 */
-	private Image createNetworkImage( NetworkInfo networkInfo ) {
-		/* enabled or disabled image */
-		enabled = ( ( NetworkInfo ) cLabel.getData() ).isEnabled();
-	
-		// we have icons for these:
-		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.DONKEY 
-			|| networkInfo.getNetworkType() == NetworkInfo.Enum.FT
-			|| networkInfo.getNetworkType() == NetworkInfo.Enum.GNUT
-			|| networkInfo.getNetworkType() == NetworkInfo.Enum.GNUT2
-			|| networkInfo.getNetworkType() == NetworkInfo.Enum.SOULSEEK 
-			|| networkInfo.getNetworkType() == NetworkInfo.Enum.DC ) {
-
-			if ( enabled ) {
-				int maxConnnectedServers = core.getOptionsInfoMap().getMaxConnectedServers( networkInfo );	
-				int currentConnectedServers = networkInfo.getConnectedServers();
-				connected = ( ( Boolean ) cLabel.getData( "CONNECTED" ) ).booleanValue();
-				/* connect and connected servers == max_connected_servers */
-				if ( ( connected && currentConnectedServers >= maxConnnectedServers )
-				|| core.getProtoToUse() < 18 )
-					return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Connected" );
-				/* connect but connected servers < max_connected_servers */
-				else if ( connected && currentConnectedServers < maxConnnectedServers )
-					return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "BadConnected" );
-				/* not connected to servers */
-				else
-					return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Disconnected" ); 
-			}
-			else 	
-				return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Disabled" );					
-			}
-		// but not for these:
-		else if ( networkInfo.getNetworkType() == NetworkInfo.Enum.BT
-		|| networkInfo.getNetworkType() == NetworkInfo.Enum.MULTINET ) {
-			if ( enabled ) 
-				return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Connected" );
-			else	
-				return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Disabled" );
-		}
-		else {
-			if ( enabled ) { 
-				connected = ( ( Boolean ) cLabel.getData( "CONNECTED" ) ).booleanValue();
-				int maxConnnectedServers = core.getOptionsInfoMap().getMaxConnectedServers( networkInfo );	
-				int currentConnectedServers = networkInfo.getConnectedServers();
-				if ( ( connected && currentConnectedServers >= maxConnnectedServers )
-				|| core.getProtoToUse() < 18 )
-					return G2GuiResources.getImage( "UnknownConnected" );
-				/* connect but connected servers < max_connected_servers */
-				else if ( connected && currentConnectedServers < maxConnnectedServers )
-					return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "BadConnected" );
-				else 
-					return G2GuiResources.getImage( "UnknownDisconnected" );
-			}
-			else 
-				return G2GuiResources.getImage( "UnknownDisabled" );
-	
-		}		
-	}
-	
-	/**
-	 * Creates the "button 3" menu
-	 * @return The menu added to the table
-	 */
-	private Menu createRightClickMenu() {
-		Shell shell = composite.getShell();
-		Menu menu = new Menu( shell , SWT.POP_UP );
-	
-		/* change the menu for bittorrent (doesnt have servers) */
-		if ( ( ( NetworkInfo ) cLabel.getData() ).hasServers() && advancedMode ) {
-		
-			/* manage Server */
-			item = new MenuItem( menu, SWT.PUSH );
-			item.setText( "manage server" );
-			item.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent e ) {
-					statusline.getMainTab().setActive( serverTab );
-					NetworkInfo network = ( NetworkInfo ) anotherCLabel.getData();
-					( ( ServerTab ) serverTab ).setFilter( network.getNetworkType() );
-				}
-			} );
-	
-			new MenuItem( menu, SWT.SEPARATOR );
-		}
-	
-		/* disable/enable the network */
-		final MenuItem stateItem = new MenuItem( menu, SWT.PUSH );
-		stateItem.setText( "enable" );
-		stateItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent e ) {
-				NetworkInfo networkInfo = ( NetworkInfo ) anotherCLabel.getData();
-				networkInfo.setEnabled();
-			}
-		} );
-			
-		/* disable or enable? */
-		menu.addListener( SWT.Show, new Listener () {
-			private MenuItem item = NetworkItem.this.item;
-			public void handleEvent( Event event ) {
-				NetworkInfo networkInfo = ( NetworkInfo ) anotherCLabel.getData();
-				if ( networkInfo.isEnabled() ) {
-					stateItem.setText( "Disable" );
-					if ( advancedMode )
-						item.setEnabled( true );
-				}
-				else {
-					stateItem.setText( "Enable" );						
-					if ( advancedMode )
-						item.setEnabled( false );
-				}
-			}
-		} );
-		return menu;
-	}
 }
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.20  2003/08/21 13:13:10  lemmster
+cleanup in networkitem
+
 Revision 1.19  2003/08/20 22:16:33  lemmster
 badconnect is display too. added some icons
 

@@ -22,16 +22,19 @@
  */
 package net.mldonkey.g2gui.model;
 
+import org.eclipse.swt.graphics.Image;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 /**
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.21 2003/08/20 22:20:08 lemmster Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.22 2003/08/21 13:13:10 lemmster Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -451,6 +454,52 @@ public class NetworkInfo extends Parent {
 	protected void setConnectedServers( int i ) {
 		this.connectedServers = i;
 	}
+
+	/**
+	 * set the proper image for the network
+	 * @param networkInfo The network info to create the image for
+	 * @return an image representing the network status
+	 */
+	public Image getImage() {
+		/* proto < 18 just support enabled/disabled */
+		if ( parent.getProtoToUse() < 18 ) {
+			if ( this.isEnabled() )
+				return G2GuiResources.getImage( getNetworkShortName() + "Connected" );
+			else
+				return G2GuiResources.getImage( getNetworkShortName() + "Disabled" );
+		}
+
+		/* proto >= 18 is a little bit more complex */
+		
+		/* networks without servers/nodes and virutal nets have just this two images */		
+		if ( ( !this.hasServers() && !this.hasSupernodes() ) || this.isVirtual() ) {
+			if ( this.isEnabled() )
+				return G2GuiResources.getImage( getNetworkShortName() + "Connected" );
+			else
+				return G2GuiResources.getImage( getNetworkShortName() + "Disabled" );
+		}
+
+		/* enabled */
+		if ( this.isEnabled() ) {
+			/* we need the max_connected_servers from the optionsinfo */	
+			int maxConnnectedServers = parent.getOptionsInfoMap().getMaxConnectedServers( this );
+			int currentConnectedServers = getConnectedServers();
+
+			/* max_connected_servers == currentConnectedServers */
+			if ( currentConnectedServers >= maxConnnectedServers )
+				return G2GuiResources.getImage( getNetworkShortName() + "Connected" );
+			/* max_connected_servers > currentConnectedServers */
+			else if ( currentConnectedServers == 0 )
+				return G2GuiResources.getImage( getNetworkShortName() + "Disconnected" );				
+			/* connected to zero servers */
+			else
+				return G2GuiResources.getImage( getNetworkShortName() + "BadConnected" );			
+		}
+		/* disabled */
+		else {
+			return G2GuiResources.getImage( getNetworkShortName() + "Disabled" );					
+		}
+	}
 	
 	/**
 	 * Creates a new EnumNetwork obj to differ each network
@@ -508,6 +557,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.22  2003/08/21 13:13:10  lemmster
+cleanup in networkitem
+
 Revision 1.21  2003/08/20 22:20:08  lemmster
 badconnect is display too. added some icons
 
