@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.14 2003/07/26 00:51:43 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.15 2003/07/26 21:43:46 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -225,7 +225,7 @@ public class MainTab implements Listener {
 	 * @param control where is our image laid in, to check for the background-color
 	 * @return the transparent image
 	 */
-	static Image createTransparentImage( Image src, Control control ) {
+	public static Image createTransparentImage( Image src, Control control ) {
 		int width = src.getBounds().width;
 		int height = src.getBounds().height;
 		
@@ -472,6 +472,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.15  2003/07/26 21:43:46  lemmstercvs01
+createTransparentImage modifier changed to public
+
 Revision 1.14  2003/07/26 00:51:43  zet
 stats graph continues to observe when inactive
 
