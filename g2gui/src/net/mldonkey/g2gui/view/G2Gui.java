@@ -37,8 +37,10 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.ObjectPool;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.helper.SocketPool;
+import net.mldonkey.g2gui.helper.VersionInfo;
 import net.mldonkey.g2gui.view.console.ExecConsole;
 import net.mldonkey.g2gui.view.helper.Splash;
+import net.mldonkey.g2gui.view.helper.VersionCheck;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -53,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.55 2003/12/23 03:39:34 psy Exp $
+ * @version $Id: G2Gui.java,v 1.56 2003/12/23 17:22:18 psy Exp $
  *
  */
 public class G2Gui {
@@ -73,6 +75,8 @@ public class G2Gui {
     private static String username;
     private static String password;
     private static int port;
+
+    // list of links for submission
     private static List links;
     
 	private static CoreCommunication core;
@@ -95,8 +99,7 @@ public class G2Gui {
 		int optind;
 		for (optind = 0; optind < argv.length; optind++) {
 			if (argv[optind].startsWith("-h") || argv[optind].startsWith("--h")) {
-				System.out.println(
-				"Usage: g2gui [[-c path/to/pref] | [-l link] [-H host:port] [-U user] [-P passwd]]");
+				printCommandlineHelp();
 				System.exit(1);
 			} else if (argv[optind].equals("-d")) {
 				debug = true;
@@ -113,7 +116,7 @@ public class G2Gui {
 				// we got a link parameter for submission
 				} else if (argv[optind].equals("-l")) {
 					links.add( argv[++optind] );
-				// hostname
+				// hostname and port
 				} else if (argv[optind].equals("-H")) {
 					String[] strings = RegExp.split(argv[++optind], ':');
 					if ( strings.length == 2 ) {
@@ -123,7 +126,7 @@ public class G2Gui {
 				// username
 				} else if (argv[optind].equals("-U")) {
 					username = argv[++optind];
-				// port
+				// password
 				} else if (argv[optind].equals("-P")) {
 					password = argv[++optind];
 				} else if (argv[optind].equals("--")) {
@@ -151,7 +154,6 @@ public class G2Gui {
 			launch( links );
 			return;
 		}	
-
 		
         /*determine wether a new instance of G2gui is allowed: */
         if (PreferenceLoader.loadBoolean("allowMultipleInstances")
@@ -169,6 +171,22 @@ public class G2Gui {
         }
     }
 
+    /**
+     * This method prints out out commandline-help, parameters, version and examples
+     *
+     */
+    private static void printCommandlineHelp() {
+    	System.out.println(
+    		"G2gui " + VersionInfo.getVersion() + " (" + VersionCheck.getSWTPlatform() + ")\n" +
+    		"Usage: g2gui [ [-c path/to/pref] | [-H host:port] [-U user] [-P passwd] ] [-l link] [-d]\n" +
+    		"\nExample:\n" +
+    		"g2gui -l ed2k://...\n" +
+    		"g2gui -c /home/user/g2gui.pref -l ed2k://...\n" + 
+    		"g2gui -H server:4001 -U admin -p mypassword -l ed2k://...\n" + 
+    		"\nConfig-file values are overridden by -H, -U and -P.");
+    }
+    
+    
     /**
      * Launch
      */
@@ -499,6 +517,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.56  2003/12/23 17:22:18  psy
+more commandline handling stuff
+
 Revision 1.55  2003/12/23 03:39:34  psy
 commandline handling improved
 
