@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.enum.EnumTagType;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -48,7 +49,7 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.29 2003/08/26 14:55:12 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.30 2003/08/29 15:19:52 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -66,87 +67,76 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
-	protected void createFieldEditors() {
-		/*
-		 * I don't know why this method is called even before super.createContents 
-		 * returned the parent for these controls??? this is why i check for null and recall
-		 * it in this.createContents()
-		 */
-		
-			Collections.sort( options, new optionsComparator() );
-			Iterator it = options.iterator();
-			while ( it.hasNext() ) {
-				parent = getFieldEditorParent();
-				OptionsInfo temp = ( OptionsInfo ) it.next();
-				if ( temp.getOptionType() == EnumTagType.BOOL || isBoolean( temp.getValue() ) ) {
-					String description = temp.getDescription();
-						if ( description.equals( "" ) )	description = temp.getKey();
-					String optionHelp = temp.getOptionHelp();					
-						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
-						
-					/*create a boolean-editor and add to page*/
-					BooleanFieldEditor bool = new BooleanFieldEditor( temp.getKey(), description, BooleanFieldEditor.SEPARATE_LABEL, parent );
-						bool.getLabelControl( parent ).setToolTipText( optionHelp );
-						bool.setPreferenceStore( this.getPreferenceStore() );
-						bool.fillIntoGrid( parent, 2 );
-						bool.load();
-					addField( bool );
-					
-				} 
-				else if ( temp.getOptionType() == EnumTagType.INT || isInteger( temp.getValue() ) ) {
-					String description = temp.getDescription();
-						if ( description.equals( "" ) )	description = temp.getKey();
-					String optionHelp = temp.getOptionHelp();					
-						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
-							
-					/*create a IntegerFieldEditor and add to page
-					 * 
-					 * this is kind of hacky, but i don't see another way to get the stuff
-					 * with the different-sized inputs done...
-					 */
-					
-					IntegerFieldEditor integer = new IntegerFieldEditor( temp.getKey(), description, parent ) {
-							/* (non-Javadoc)
-							 * @see org.eclipse.jface.preference.StringFieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite, int)
-							 */
-							protected void doFillIntoGrid( Composite parent, int numColumns ) {
-								getLabelControl( parent );
-								Text textField = getTextControl( parent );
-								GridData gd = new GridData();
-								gd.horizontalSpan = numColumns - 1;							
-								GC gc = new GC( textField );
-									try {
-										Point extent = gc.textExtent( "X" );
-										gd.widthHint = inputFieldLength * extent.x;
-									} finally {
-										gc.dispose();
-									}						
-								textField.setLayoutData( gd );
-							}
-						};					
-						integer.getLabelControl( parent ).setToolTipText( optionHelp );
-						integer.setPreferenceStore( this.getPreferenceStore() );					
-						integer.fillIntoGrid( parent, 2 );
-						integer.load();
-					addField( integer );
-				} 
-				else {
-					String description = temp.getDescription();
-						if ( description.equals( "" ) ) description = temp.getKey();
-					String optionHelp = temp.getOptionHelp();					
-						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
-					// with a very long string, the pref pages looks bad. limit to inputFieldLength?
-					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, inputFieldLength, parent ); 
-						string.getLabelControl( parent ).setToolTipText( optionHelp );					
-						string.setPreferenceStore( this.getPreferenceStore() );
-						string.fillIntoGrid( parent, 2 );
-						string.load();
-					addField( string );
-				}
-			}
+	 
+	protected void setupEditor( FieldEditor e ) {
+		e.setPreferencePage( this );
+		e.setPreferenceStore( getPreferenceStore() );
+		e.getLabelControl(parent).setToolTipText("hallo");
+		e.load();
+		addField( e );
+	}
 	
-	// nullpointer -- why is this here? 		
-	//	( ( GridLayout )parent.getLayout() ).numColumns = 2;
+	protected void createFieldEditors() {
+		Collections.sort( options, new optionsComparator() );
+		Iterator it = options.iterator();
+		while ( it.hasNext() ) {
+			parent = getFieldEditorParent();
+			OptionsInfo temp = ( OptionsInfo ) it.next();
+			if ( temp.getOptionType() == EnumTagType.BOOL || isBoolean( temp.getValue() ) ) {
+				String description = temp.getDescription();
+				if ( description.equals( "" ) )
+					description = temp.getKey();
+				String optionHelp = temp.getOptionHelp();
+				if ( optionHelp.equals( "" ) )
+					optionHelp = temp.getKey();
+				/*create a boolean-editor and add to page*/
+				setupEditor( new BooleanFieldEditor( 
+						temp.getKey(), description, BooleanFieldEditor.SEPARATE_LABEL, parent ) );
+			} 
+			else if ( temp.getOptionType() == EnumTagType.INT || isInteger( temp.getValue() ) ) {
+				String description = temp.getDescription();
+				if ( description.equals( "" ) )
+					description = temp.getKey();
+				String optionHelp = temp.getOptionHelp();
+				if ( optionHelp.equals( "" ) )
+					optionHelp = temp.getKey();
+				/*create a IntegerFieldEditor and add to page
+				 * 
+				 * this is kind of hacky, but i don't see another way to get the stuff
+				 * with the different-sized inputs done...
+				 */
+				setupEditor( new IntegerFieldEditor( temp.getKey(), description, parent ) {
+					/* ( non-Javadoc )
+					 * @see org.eclipse.jface.preference.StringFieldEditor#doFillIntoGrid( org.eclipse.swt.widgets.Composite, int )
+					 */
+					protected void doFillIntoGrid( Composite parent, int numColumns ) {
+						getLabelControl( parent );
+						Text textField = getTextControl( parent );
+						GridData gd = new GridData();
+						gd.horizontalSpan = numColumns - 1;
+						GC gc = new GC( textField );
+						try {
+							Point extent = gc.textExtent( "X" );
+							gd.widthHint = inputFieldLength * extent.x;
+						} finally {
+							gc.dispose();
+						}
+						textField.setLayoutData( gd );
+					}
+				} );
+			} 
+			else {
+				String description = temp.getDescription();
+				if ( description.equals( "" ) )
+					description = temp.getKey();
+				String optionHelp = temp.getOptionHelp();
+				if ( optionHelp.equals( "" ) )
+					optionHelp = temp.getKey();
+				// with a very long string, the pref pages looks bad. limit to inputFieldLength?
+				setupEditor( new StringFieldEditor( temp.getKey(), description, inputFieldLength, parent ) );
+			}
+		}
+
 	}
 	/**
 	 * @param string
@@ -217,6 +207,12 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		 * @return which option is larger, 1|2, returns 0 when equal
 		 */
 		public int compare( Object o1, Object o2 ) {
+			//TODO sorting options by kind of value?? see comment for more: 
+			/* Should boolean-Options appear ontop of each other
+			 * instead of beeing scatterd all over the list? so this should happen here
+			 */
+			
+						
 			OptionsInfo optionsInfo1 = ( OptionsInfo ) o1;
 			OptionsInfo optionsInfo2 = ( OptionsInfo ) o2;
 			String optionDescription1 = ( optionsInfo1.getDescription().equals( "" ) ? optionsInfo1.getKey() : optionsInfo1.getDescription() );
@@ -228,6 +224,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 } 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.30  2003/08/29 15:19:52  dek
+some more JFace-cleaning up, i didn't even believe jface would make things sooo easy..:-)
+
 Revision 1.29  2003/08/26 14:55:12  dek
 added check for Integer-Valued Options, just because there are already
 IntFieldEditors...
