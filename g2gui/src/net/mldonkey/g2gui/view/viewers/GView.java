@@ -56,7 +56,7 @@ import java.util.Map;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.9 2003/11/24 21:13:39 zet Exp $
+ * @version $Id: GView.java,v 1.10 2003/11/27 16:30:38 zet Exp $
  *
  */
 public abstract class GView {
@@ -266,7 +266,8 @@ public abstract class GView {
             TableColumn tableColumn = new TableColumn(table, columnAlignment[ arrayItem ]);
             p.setDefault(columnLabels[ arrayItem ], columnDefaultWidths[ arrayItem ]);
             tableColumn.setText(G2GuiResources.getString(columnLabels[ arrayItem ]));
-            tableColumn.setWidth(p.getInt(columnLabels[ arrayItem ]));
+            int oldWidth = p.getInt(columnLabels[ arrayItem ]);
+            tableColumn.setWidth(oldWidth > 0 ? oldWidth : columnDefaultWidths[ arrayItem ] );
 
             tableColumn.addDisposeListener(new DisposeListener() {
                     public synchronized void widgetDisposed(DisposeEvent e) {
@@ -385,6 +386,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.10  2003/11/27 16:30:38  zet
+prevent column widths of 0
+
 Revision 1.9  2003/11/24 21:13:39  zet
 default viewer font
 
