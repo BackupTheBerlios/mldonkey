@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.14 2003/08/18 12:22:28 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.15 2003/08/18 13:55:22 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -194,7 +194,7 @@ public class Preferences extends PreferenceManager {
 		 /*
 		  * and now the Plugins:
 		  */
-		PreferenceNode pluginOptions = new PreferenceNode( "plugins", new MLDonkeyOptions( "Plugins", FieldEditorPreferencePage.GRID ) );
+		PreferenceNode pluginOptions = new PreferenceNode( "plugins", new MLDonkeyOptions( "Plugins", FieldEditorPreferencePage.FLAT ) );
 			addToRoot( pluginOptions );
 			
 			
@@ -247,6 +247,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.15  2003/08/18 13:55:22  dek
+plugins-crash fixed
+
 Revision 1.14  2003/08/18 12:22:28  dek
 g2gui-pref-page is now fully JFace-approved ;-)
 
