@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.TableItem;
  * DownloadTable
  *
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.19 2003/08/24 16:37:04 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.20 2003/08/24 19:38:31 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -153,11 +153,11 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	
 	public void createTableTreeViewer(Composite parent, final CoreCommunication mldonkey) {
 			
-		tableTreeViewer = new CustomTableTreeViewer ( parent,  SWT.MULTI | SWT.FULL_SELECTION );
+		tableTreeViewer = new CustomTableTreeViewer ( parent, SWT.MULTI | SWT.FULL_SELECTION );
 		tableTree = tableTreeViewer.getTableTree();
 		table = tableTree.getTable();
 		
-		tableTree.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
+		tableTree.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		tableTreeViewer.setColumnProperties(COLUMN_LABELS);
 		table.setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
@@ -172,7 +172,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			p.setDefault(COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ]);
 			tableColumn.setText ( G2GuiResources.getString( COLUMN_LABELS[ i ] )  );
 			tableColumn.setWidth(p.getInt(COLUMN_LABELS [ i ] ));
-			if (p.getDefaultInt(COLUMN_LABELS[ i ]) <= 1) {
+			if (p.getDefaultInt(COLUMN_LABELS[ i ]) == 0) {
 				p.setDefault(COLUMN_LABELS [ i ] + "_Resizable", false);
 			} else {
 				p.setDefault(COLUMN_LABELS [ i ] + "_Resizable", true);
@@ -343,6 +343,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.20  2003/08/24 19:38:31  zet
+minor
+
 Revision 1.19  2003/08/24 16:37:04  zet
 combine the preference stores
 
