@@ -22,13 +22,14 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.trove.TIntObjectHashMap;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoList.java,v 1.6 2003/06/16 13:18:59 lemmstercvs01 Exp $$ 
+ * @version $$Id: ClientInfoList.java,v 1.7 2003/06/16 17:46:57 dek Exp $$ 
  */
 public class ClientInfoList extends InfoMap {
 	/**
@@ -74,9 +75,28 @@ public class ClientInfoList extends InfoMap {
 		int key = messageBuffer.readInt32();
 		( ( ClientInfo ) this.infoMap.get( key ) ).update( messageBuffer );
 	}
+	
+	/**
+	 * @param messageBuffer
+	 * cleans up the used Trove-collections. Fills 'em with data the core (mldonkey) finds useful
+	 */
+	private void clean( MessageBuffer messageBuffer ) {			
+		TIntObjectHashMap tempClientInfoList = new TIntObjectHashMap();			
+		int[] usefulClients = messageBuffer.readInt32List();		
+		for ( int i = 0; i < usefulClients.length; i++ ) {
+			int clientID = usefulClients[i];
+			tempClientInfoList.put( clientID, this.get( clientID ) );			
+		}
+		this.infoMap = tempClientInfoList;		
+	}
+	
+	
 }
 /*
 $$Log: ClientInfoList.java,v $
+$Revision 1.7  2003/06/16 17:46:57  dek
+$added clean(messageBuffer);
+$
 $Revision 1.6  2003/06/16 13:18:59  lemmstercvs01
 $checkstyle applied
 $
