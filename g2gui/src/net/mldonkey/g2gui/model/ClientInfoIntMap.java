@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoIntMap.java,v 1.4 2003/07/06 09:33:50 lemmstercvs01 Exp $$ 
+ * @version $$Id: ClientInfoIntMap.java,v 1.5 2003/08/01 13:48:04 lemmstercvs01 Exp $$ 
  */
 public class ClientInfoIntMap extends InfoIntMap {
 	/**
@@ -83,10 +83,6 @@ public class ClientInfoIntMap extends InfoIntMap {
 		int key = messageBuffer.readInt32();
 		if ( this.infoIntMap.contains( key ) )
 			( ( ClientInfo ) this.infoIntMap.get( key ) ).update( messageBuffer );
-		else
-			System.out.println( "attempt to update a Client that is not in List "
-							+	"(due to cleanTable??)" );
-		
 	}
 	
 	/**
@@ -107,6 +103,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 }
 /*
 $$Log: ClientInfoIntMap.java,v $
+$Revision 1.5  2003/08/01 13:48:04  lemmstercvs01
+$removed debug
+$
 $Revision 1.4  2003/07/06 09:33:50  lemmstercvs01
 $int networkid -> networkinfo networkid
 $
