@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  * @author $user$
- * @version $Id: ResultTableSorter.java,v 1.5 2003/08/15 22:51:50 dek Exp $ 
+ * @version $Id: ResultTableSorter.java,v 1.6 2003/08/16 20:59:09 dek Exp $ 
  *
  */
 public class ResultTableSorter extends ViewerSorter {
@@ -78,13 +78,23 @@ public class ResultTableSorter extends ViewerSorter {
 		switch (columnIndex) {
 			
 			case 0: // network name
-				aString1 = result1.getNetwork().getNetworkName();
-				aString2 = result2.getNetwork().getNetworkName();
+				aString1 = ""+result1.getNetwork().getNetworkName();
+				aString2 = ""+result2.getNetwork().getNetworkName();
 				return compareStrings( aString1, aString2 );
 												
 			case 1: // filename
-				aString1 = result1.getNames()[ 0 ];
-				aString2 = result2.getNames()[ 0 ];
+			if (result1.getNames().length != 0)
+				aString1 = ""+result1.getNames()[ 0 ];
+			else {
+				aString1="";				
+			}
+			
+			if (result2.getNames().length != 0)
+				aString2 = ""+result2.getNames()[ 0 ];
+			else {
+				aString2="";				
+			}
+							
 				return compareStrings( aString1, aString2 );
 						 	
 			case 2: // filesize
@@ -94,13 +104,13 @@ public class ResultTableSorter extends ViewerSorter {
 								: aLong2.compareTo( aLong1) );
 								
 			case 3: // format 
-				aString1 = result1.getFormat();
-				aString2 = result2.getFormat();
+				aString1 = ""+result1.getFormat();
+				aString2 = ""+result2.getFormat();
 				return compareStrings( aString1, aString2 ); 
 								
 			case 4: // media
-				aString1 = result1.getType();
-				aString2 = result2.getType();
+				aString1 = ""+result1.getType();
+				aString2 = ""+result2.getType();
 				return compareStrings( aString1, aString2 );
 										
 			case 5: // availability 
@@ -170,6 +180,9 @@ public class ResultTableSorter extends ViewerSorter {
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.6  2003/08/16 20:59:09  dek
+searching works now without errors AGAIN ;-)
+
 Revision 1.5  2003/08/15 22:51:50  dek
 searching works now without errors again :-)
 

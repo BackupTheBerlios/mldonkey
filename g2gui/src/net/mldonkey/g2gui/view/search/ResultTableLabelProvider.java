@@ -39,7 +39,7 @@ import org.eclipse.swt.graphics.Image;
  * ResultTableLabelProvider
  *
  * @author $user$
- * @version $Id: ResultTableLabelProvider.java,v 1.9 2003/08/14 14:48:11 vnc Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.10 2003/08/16 20:57:57 dek Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -83,9 +83,12 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 			switch ( arg1 ) {
 						
 				case 0: // network id
-					return " " + ( ( NetworkInfo ) resultInfo.getNetwork() ).getNetworkName();
+					return "" + ( ( NetworkInfo ) resultInfo.getNetwork() ).getNetworkName();
 				case 1: // name
-					return ""+ resultInfo.getNames()[ 0 ];
+					if ( resultInfo.getNames().length != 0 )
+						return ""+ resultInfo.getNames()[ 0 ];
+					else
+						return "";
 				case 2: // size
 					return "" + resultInfo.getStringSize();
 				case 3: // format
@@ -95,10 +98,10 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 				case 5: // metadata
 				/* check if we have Tags at all (Fix for strange SWT-exception when searching)*/
 					Tag[] tags = resultInfo.getTags();
-					if (tags != null){					
+					if (tags != null) {					
 						Tag aTag = resultInfo.getTags()[ 0 ];
 						if ( aTag.getValue() > 400 )
-							return "" + bundle.getString( "RTLP_PERFECT" );
+							return "" + bundle.getString( "RTLP_EXCELLENT" );
 						else if ( aTag.getValue() > 100 )
 							return "" + bundle.getString( "RTLP_VERYHIGH" );
 						else if ( aTag.getValue() > 25 )
@@ -109,6 +112,7 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 							return "" + bundle.getString( "RTLP_LOW" );
 					}
 					else return "";
+					
 				default: 
 					return "";
 			
@@ -166,6 +170,9 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.10  2003/08/16 20:57:57  dek
+searching works now without errors AGAIN ;-)
+
 Revision 1.9  2003/08/14 14:48:11  vnc
 added finer results availability rating
 
