@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.41 2003/06/29 18:32:23 dek Exp $ 
+ * @version $Id: Core.java,v 1.42 2003/06/29 18:33:30 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -263,8 +263,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param value OptionValue
 	 */
 	public void setOption( String name, String value ) {
-		String[] content = { name, value };	
-		System.out.println("changing option: "+name+" to "+ value);	
+		String[] content = { name, value };			
 		EncodeMessage setOption = new EncodeMessage( Message.S_SET_OPTION, content );
 		setOption.sendMessage( connection );
 		//Doing some typeCast magic to update my optionsInfoMap with the given option/value pair
@@ -314,6 +313,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.42  2003/06/29 18:33:30  dek
+and removed debugging  system.out.println
+
 Revision 1.41  2003/06/29 18:32:23  dek
 updating changed option in local copy of OptionList
 
