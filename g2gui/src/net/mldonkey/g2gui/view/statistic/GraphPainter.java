@@ -62,7 +62,7 @@ public class GraphPainter {
 	public void paint() {
 		//setting the Canvas Background to the parents Background
 			
-		if (parent.getClientArea().height < 25) return;
+		if (parent.getClientArea().height < 45) return;
 		
 		Image imageBuffer = new Image(null, parent.getBounds());
 		GC drawBoardBuffer = new GC(imageBuffer);
