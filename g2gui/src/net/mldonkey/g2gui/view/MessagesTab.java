@@ -50,6 +50,7 @@ import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -59,7 +60,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -69,14 +69,14 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.14 2003/08/26 15:37:32 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.15 2003/08/28 15:37:36 zet Exp $
  */
 public class MessagesTab extends GuiTab {
 
 	private CoreCommunication core;
 	
 	private CTabFolder cTabFolder;
-	private CTabFolder friendsCTabFolder;
+	private ViewForm friendsViewForm;
 	private Hashtable openTabs = new Hashtable();
 	private Composite friendsComposite;
 	private CustomTableViewer tableViewer;
@@ -118,33 +118,24 @@ public class MessagesTab extends GuiTab {
 	// obviously we want to list their files, and what else?
 	// simple and for messaging only atm 
 	private void createLeftSash( Composite main ) {
-		friendsCTabFolder = new CTabFolder( main,  SWT.BOTTOM );
-		friendsCTabFolder.setBorderVisible( true );
-		friendsCTabFolder.setTabHeight(0);
-			
-		CTabItem friendsTabItem = new CTabItem(friendsCTabFolder, SWT.NONE);
-		friendsCTabFolder.setSelection(friendsTabItem);
 		
-		friendsComposite = new Composite( friendsCTabFolder, SWT.NONE  );
-		GridLayout g = new GridLayout();
-		g.marginHeight = 0;
-		g.marginWidth = 0;
-		g.verticalSpacing = 0;
-		g.horizontalSpacing = 0;
-		g.numColumns = 1;
-		friendsComposite.setLayout( g );
+		friendsViewForm = new ViewForm( main, SWT.BORDER );
 		
-		Display display = Display.getCurrent();
-		CLabel friendsHeaderLabel = new CLabel(friendsComposite, SWT.LEFT | SWT.SHADOW_OUT);
+		friendsComposite = new Composite( friendsViewForm, SWT.NONE  );
+		friendsComposite.setLayout( new FillLayout() );
+		
+		CLabel friendsHeaderLabel = new CLabel(friendsViewForm, SWT.LEFT | SWT.SHADOW_OUT);
 		friendsHeaderLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		friendsHeaderLabel.setBackground(new Color[]{display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-												friendsCTabFolder.getBackground()},
+		friendsHeaderLabel.setBackground(new Color[]{friendsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+												friendsViewForm.getBackground()},
 												new int[] {100});
 										
 		friendsHeaderLabel.setText(G2GuiResources.getString("FR_FRIENDS"));
 		friendsHeaderLabel.setImage(G2GuiResources.getImage("MessagesButtonSmallTrans"));
 		createFriendsTable();
-		friendsTabItem.setControl(friendsComposite);
+		
+		friendsViewForm.setTopLeft(friendsHeaderLabel);
+		friendsViewForm.setContent(friendsComposite);
 	}
 
 	/**
@@ -455,6 +446,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.15  2003/08/28 15:37:36  zet
+remove ctabfolder
+
 Revision 1.14  2003/08/26 15:37:32  zet
 dispose composite
 
