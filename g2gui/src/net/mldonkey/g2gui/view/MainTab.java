@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.92 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: MainTab.java,v 1.93 2003/11/24 08:29:11 lemmster Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -156,13 +156,18 @@ public class MainTab implements ShellListener {
                 }
             }
         } catch (Exception e) {
-            // getCause() seems always to be null unfortunately
-            StringWriter sw = new StringWriter();
-            e.printStackTrace(new PrintWriter(sw, true));
-
-            ErrorDialog errorDialog = new ErrorDialog(new Shell(display), sw.toString());
-            errorDialog.open();
-        }
+        	if ( G2Gui.debug ) {
+        		e.printStackTrace();
+        	}
+        	else {
+        		// getCause() seems always to be null unfortunately
+	            StringWriter sw = new StringWriter();
+	            e.printStackTrace(new PrintWriter(sw, true));
+	
+	            ErrorDialog errorDialog = new ErrorDialog(new Shell(display), sw.toString());
+	            errorDialog.open();
+        	}
+        }	
 
         // locks up swt-fox
         if (!SWT.getPlatform().equals("fox")) {
@@ -461,6 +466,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.93  2003/11/24 08:29:11  lemmster
+ErrorDialog shows up only when started without "-d"
+
 Revision 1.92  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
