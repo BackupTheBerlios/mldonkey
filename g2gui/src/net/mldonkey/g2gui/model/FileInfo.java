@@ -47,7 +47,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.66 2003/10/12 19:42:59 zet Exp $
+ * @version $Id: FileInfo.java,v 1.67 2003/10/12 21:17:38 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -570,11 +570,14 @@ public class FileInfo extends Parent implements Observer {
      */
     private void setPriority( int i ) {
     	priority = i;
-    	
-        if ( i < 0 )
+		if ( i < -19 )
+			priorityEnum = EnumPriority.VERY_LOW;
+        else if ( i < 0 )
             priorityEnum = EnumPriority.LOW;
+        else if ( i > 19 )
+            priorityEnum = EnumPriority.VERY_HIGH;
         else if ( i > 0 )
-            priorityEnum = EnumPriority.HIGH;
+			priorityEnum = EnumPriority.HIGH;
         else
             priorityEnum = EnumPriority.NORMAL;
     }
@@ -961,6 +964,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.67  2003/10/12 21:17:38  zet
+compat priority w/2.5.4
+
 Revision 1.66  2003/10/12 19:42:59  zet
 very high & low priorities
 

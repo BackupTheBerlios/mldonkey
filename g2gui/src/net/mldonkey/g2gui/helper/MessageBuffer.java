@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.23 2003/10/05 00:53:55 zet Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.24 2003/10/12 21:17:31 zet Exp $ 
  *
  */
 public class MessageBuffer {
@@ -115,7 +115,9 @@ public class MessageBuffer {
 	public int readSignedInt32() {
 		int result = 0;
 		for ( int i = 0; i < 4; i++ ) 
-			result |= ( ( int ) (readByte() & 0xFF) << ( i * 8 ) );
+			// TODO: for devel-6+:
+			// result |= ( ( int ) (readByte() & 0xFF) << ( i * 8 ) );
+			result |= ( ( int ) (readByte()) << ( i * 8 ) );
 		return result;
 	}
 	
@@ -253,6 +255,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.24  2003/10/12 21:17:31  zet
+compat priority w/2.5.4
+
 Revision 1.23  2003/10/05 00:53:55  zet
 read priority #s properly 
 requires latest core dev version (fixed bug in guiEncoding)
