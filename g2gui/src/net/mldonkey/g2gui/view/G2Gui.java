@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.35 2003/09/28 17:26:36 zet Exp $
+ * @version $Id: G2Gui.java,v 1.36 2003/09/28 18:04:46 zet Exp $
  *
  */
 public class G2Gui {
@@ -210,10 +210,7 @@ public class G2Gui {
             
             // Needed on GTK to dispatch paintEvent.
             // SWT is idiotic.
-			for ( int i = 0; i < 10; i++ ) {
-				 if ( !display.readAndDispatch() )
-					 display.sleep();
-			}
+            while ( display.readAndDispatch() );
             
             spawnCore();
             increaseBar( "Starting the model" );
@@ -455,6 +452,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.36  2003/09/28 18:04:46  zet
+try while loop
+
 Revision 1.35  2003/09/28 17:26:36  zet
 Yes/No check on "load if running"...
 
