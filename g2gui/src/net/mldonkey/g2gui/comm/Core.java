@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.98 2003/09/17 14:40:13 zet Exp $ 
+ * @version $Id: Core.java,v 1.99 2003/09/18 08:56:27 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -278,7 +278,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					int fileId = messageBuffer.readInt32();
 					int clientId = messageBuffer.readInt32();
 					String availability = messageBuffer.readString();
-					if (( ( ClientInfoIntMap ) this.clientInfoList ).containsKey( clientId ))
+					if ( ( ( ClientInfoIntMap ) this.clientInfoList ).containsKey( clientId ) )
 						( ( ClientInfoIntMap ) this.clientInfoList ).get( clientId )
 							.putAvail( fileId, availability );
 					break;
@@ -446,7 +446,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		coreProtocol = null;		
 	}
 	
-	private void requestUpstats(){
+	/**
+	 * request the upstats on the core
+	 */
+	private void requestUpstats() {
 		/* requesting upload-statistics */
 		Message upstats =
 					new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
@@ -483,9 +486,6 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		return ( ServerInfoIntMap ) this.serverInfoMap;
 	}
 
-	public ClientInfoIntMap getClientInfoIntMap() {
-		return (ClientInfoIntMap) this.clientInfoList;
-	}
 
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getUsingVersion()
@@ -567,10 +567,20 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public DefineSearchMap getDefineSearch() {
 		return ( DefineSearchMap ) this.defineSearchMap;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getClientInfoIntMap()
+	 */
+	public ClientInfoIntMap getClientInfoIntMap() {
+		return ( ClientInfoIntMap ) this.clientInfoList;
+	}
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.99  2003/09/18 08:56:27  lemmster
+checkstyle
+
 Revision 1.98  2003/09/17 14:40:13  zet
 notify on IOException
 
