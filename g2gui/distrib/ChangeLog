@@ -1,5 +1,6 @@
 2003/12/23: vnc
 	* Improved commandline and connection settings errorhandling
+		try "g2gui --help" for options		
 
 2003/12/20: vnc
 	* Servers: Show total server count in statusline
