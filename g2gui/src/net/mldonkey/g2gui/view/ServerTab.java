@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.35 2003/09/23 11:46:25 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.36 2003/09/27 12:33:32 dek Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -155,7 +155,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 		/* create the tab content */
 		this.createContents( this.subContent );
-			
+		updateDisplay();			
 	}
 
 	/* (non-Javadoc)
@@ -433,12 +433,17 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			table.refresh();
 			this.oldValue2 = temp2;
 		}
+		table.getTable().setLinesVisible(
+				PreferenceLoader.loadBoolean( "displayGridLines" ) );
 		super.updateDisplay();
 	}
 }
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.36  2003/09/27 12:33:32  dek
+server-Table has now same show-Gridlines-behaviour as download-Table
+
 Revision 1.35  2003/09/23 11:46:25  lemmster
 displayTableColors for servertab
 
