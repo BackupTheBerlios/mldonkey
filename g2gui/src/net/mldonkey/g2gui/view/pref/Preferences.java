@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -18,11 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.pref;
 
 import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -44,209 +45,197 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.34 2003/09/15 22:06:19 zet Exp $ 
+ * @version $Id: Preferences.java,v 1.35 2003/09/18 10:23:48 lemmster Exp $
  *
  */
-public class Preferences extends PreferenceManager {	
+public class Preferences extends PreferenceManager {
+    private boolean connected = false;
+    private PreferenceDialog prefdialog;
+    private PreferenceStore preferenceStore;
 
-	private boolean connected = false;	
-	private PreferenceDialog prefdialog;
-	private PreferenceStore preferenceStore;
-	/**
-	 * @param preferenceStore where to store the values at
-	 */
-	public Preferences( PreferenceStore preferenceStore ) {	
-		this.preferenceStore = 	preferenceStore;
-		G2GuiPref g2gui = new G2GuiPref( "G2Gui", FieldEditorPreferencePage.GRID );	
-		g2gui.setPreferenceStore( preferenceStore );		
-		PreferenceNode g2GuiRootNode = new PreferenceNode( "G2gui", g2gui );
-		
-			if ( PreferenceLoader.loadBoolean("advancedMode") ) {
-				G2Gui_Display g2gui_display = new G2Gui_Display( "Display", FieldEditorPreferencePage.GRID );
-				g2gui_display.setPreferenceStore( preferenceStore );
-				g2GuiRootNode.add( new PreferenceNode ( "Display", g2gui_display ) );
-			}
-			
-			G2Gui_Advanced g2gui_advanced = new G2Gui_Advanced( "Advanced", FieldEditorPreferencePage.GRID );
-			g2gui_advanced.setPreferenceStore( preferenceStore );
-			g2GuiRootNode.add( new PreferenceNode ( "Advanced", g2gui_advanced ) );
+    /**
+     * @param preferenceStore where to store the values at
+     */
+    public Preferences( PreferenceStore preferenceStore ) {
+        this.preferenceStore = preferenceStore;
+        G2GuiPref g2gui = new G2GuiPref( "G2Gui", FieldEditorPreferencePage.GRID );
+        g2gui.setPreferenceStore( preferenceStore );
+        PreferenceNode g2GuiRootNode = new PreferenceNode( "G2gui", g2gui );
+        if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+            G2Gui_Display g2gui_display = new G2Gui_Display( "Display", FieldEditorPreferencePage.GRID );
+            g2gui_display.setPreferenceStore( preferenceStore );
+            g2GuiRootNode.add( new PreferenceNode( "Display", g2gui_display ) );
+        }
+        G2Gui_Advanced g2gui_advanced = new G2Gui_Advanced( "Advanced", FieldEditorPreferencePage.GRID );
+        g2gui_advanced.setPreferenceStore( preferenceStore );
+        g2GuiRootNode.add( new PreferenceNode( "Advanced", g2gui_advanced ) );
+        addToRoot( g2GuiRootNode );
+    }
 
-		addToRoot( g2GuiRootNode );		
-	}
-	
-	/**
-	 * @param shell the parent shell, where this pref-window has to be opened
-	 * @param mldonkey the Core we want to configure
-	 */
-	public void open( Shell shell, CoreCommunication mldonkey ) {
-		
-		try {
-				initialize( preferenceStore );
-			} catch ( IOException e ) {
-				System.out.println( "initalizing Preferences Dialog failed due to IOException" );
-			}
-		prefdialog = new PreferenceDialog( shell, this );
-		PreferenceDialog.setDefaultImage( G2GuiResources.getImage( "ProgramIcon" ) );
-	
-		
-		
-		if ( ( mldonkey != null ) && ( mldonkey.isConnected() ) ) {
-			this.connected = true;
-			createMLDonkeyOptions( connected, mldonkey );
-		}	
-		
-		
-			
-		//myprefs.addToRoot( new PreferenceNode
-		//		( "mldonkey", new General( preferenceStore, connected, mldonkey ) ) );
-		//		
-		//myprefs.addToRoot( new PreferenceNode
-		//		( "eDonkey", new Edonkey( preferenceStore, connected ) ) );	
-					
-		prefdialog.open();
-	}
+    /**
+     * @param shell the parent shell, where this pref-window has to be opened
+     * @param mldonkey the Core we want to configure
+     */
+    public void open( Shell shell, CoreCommunication mldonkey ) {
+        try {
+            initialize( preferenceStore );
+        }
+        catch ( IOException e ) {
+            System.out.println( "initalizing Preferences Dialog failed due to IOException" );
+        }
+        prefdialog = new PreferenceDialog( shell, this );
+        PreferenceDialog.setDefaultImage( G2GuiResources.getImage( "ProgramIcon" ) );
+        if ( ( mldonkey != null ) && ( mldonkey.isConnected() ) ) {
+            this.connected = true;
+            createMLDonkeyOptions( connected, mldonkey );
+        }
 
-	/**
-	 * @param connected are we connected to the Core
-	 * @param mldonkey the Core were i get all my options from
-	 */
-	private void createMLDonkeyOptions( boolean connected, CoreCommunication mldonkey ) {
-		OptionsInfoMap options = mldonkey.getOptionsInfoMap();
-		OptionsPreferenceStore optionsStore = new OptionsPreferenceStore();
-		optionsStore.setInput( options );
-		Map sections = new HashMap();
-		Map plugins = new HashMap();
-		MLDonkeyOptions advanced =null;		
-		
-		/*now we iterate over the whole thing and create the preferencePages*/
-		Iterator it = options.keySet().iterator();
-		while ( it.hasNext() ) {					
-			OptionsInfo option = ( OptionsInfo ) options.get( it.next() );
-			
-			String section = option.getSectionToAppear();			
-			String plugin = option.getPluginToAppear();						
-			
-			if ( ( section == null ) && ( plugin == null ) && showOption( option ) ) {
-				if ( preferenceStore.getBoolean( "advancedMode" ) ) {
-					if ( advanced == null ){
-						advanced = new MLDonkeyOptions ( "Advanced ", FieldEditorPreferencePage.GRID );
-						advanced.setPreferenceStore( optionsStore );
-					}
-					advanced.addOption( option );
-				}
-			}
-			else if ( section != null && section.equalsIgnoreCase( "other" ) && showOption( option ) ) {
-				if ( preferenceStore.getBoolean( "advancedMode" ) ) {
-					if ( advanced == null ){
-						advanced = new MLDonkeyOptions ( "Advanced ", FieldEditorPreferencePage.GRID );
-						advanced.setPreferenceStore( optionsStore );
-					}
-					advanced.addOption( option );
-				}
-			}		
-			
-			else if ( ( section != null ) && showOption(option ) ) {								
-				/* create the section, or if already done, only add the option */
-				if ( !sections.containsKey( section ) ) {					
-					MLDonkeyOptions temp = new MLDonkeyOptions( section, FieldEditorPreferencePage.GRID );
-					//myprefs.addToRoot( new PreferenceNode ( section, temp ) );
-					sections.put( section, temp );
-					temp.setPreferenceStore( optionsStore );
-					}
-				( ( MLDonkeyOptions )sections.get( section ) ).addOption( option );
-			}
+        //myprefs.addToRoot( new PreferenceNode
+        //		( "mldonkey", new General( preferenceStore, connected, mldonkey ) ) );
+        //		
+        //myprefs.addToRoot( new PreferenceNode
+        //		( "eDonkey", new Edonkey( preferenceStore, connected ) ) );	
+        prefdialog.open();
+    }
 
-			else if ( ( plugin != null ) && showOption(option ) ) {				
-				/* create the pluginSection, or if already done, only add the option */
-				if ( !plugins.containsKey( plugin ) ) {					
-					/*only create the plugin, if it is possible at all...*/					
-					MLDonkeyOptions temp = new MLDonkeyOptions( plugin, FieldEditorPreferencePage.GRID );					
-					plugins.put( plugin, temp );
-					temp.setPreferenceStore( optionsStore );					
-					}
-				( ( MLDonkeyOptions )plugins.get( plugin ) ).addOption( option );				
-			}
-		}
-		/*Now we create the tree-structure, since we received all options*/
-		
-	
-	 /*
-	  * first the sections:
-	  */		
-		it = sections.keySet().iterator();		
-		while ( it.hasNext() ) {			
-			String key = ( String ) it.next();			
-			MLDonkeyOptions page = ( MLDonkeyOptions )sections.get( key );
-			addToRoot( ( new PreferenceNode ( key, page ) ) );			
-		}
-		 
-		 /*
-		  * and now the Plugins: first try to get the PrefPage "Networks", where all the "enabled"
-		  * options are, if this doesn't exist, create it. And then put all the plugins below this one
-		  */
-		if ( plugins.size() != 0 ) {		 
-			IPreferenceNode pluginOptions = find( "Networks" );
-			if ( pluginOptions == null ){
-				MLDonkeyOptions emptyItem = new MLDonkeyOptions( "Networks", FieldEditorPreferencePage.FLAT );
-				pluginOptions = new PreferenceNode( "Networks", emptyItem );
-				emptyItem.isEmpty( true );
-				addToRoot( pluginOptions );	
-			}
-				
-			it = plugins.keySet().iterator();
-			while ( it.hasNext() ) {
-				String key = (String) it.next();		
-				MLDonkeyOptions page = ( MLDonkeyOptions )plugins.get( key );
-				pluginOptions.add( ( new PreferenceNode ( key, page ) ) );			
-			}
-					
-			
-		}	
-		/*and now add the advanced-field at the very bottom of the list*/
-		if ( advanced != null )	
-		addToRoot( ( new PreferenceNode ( "Advanced", advanced ) ) );	
-	}
+    /**
+     * @param connected are we connected to the Core
+     * @param mldonkey the Core were i get all my options from
+     */
+    private void createMLDonkeyOptions( boolean connected, CoreCommunication mldonkey ) {
+        OptionsInfoMap options = mldonkey.getOptionsInfoMap();
+        OptionsPreferenceStore optionsStore = new OptionsPreferenceStore();
+        optionsStore.setInput( options );
+        Map sections = new HashMap();
+        Map plugins = new HashMap();
+        MLDonkeyOptions advanced = null;
+        /*now we iterate over the whole thing and create the preferencePages*/
+        Iterator it = options.keySet().iterator();
+        while ( it.hasNext() ) {
+            OptionsInfo option = ( OptionsInfo ) options.get( it.next() );
+            String section = option.getSectionToAppear();
+            String plugin = option.getPluginToAppear();
+            if ( ( section == null ) && ( plugin == null ) && showOption( option ) ) {
+                if ( preferenceStore.getBoolean( "advancedMode" ) ) {
+                    if ( advanced == null ) {
+                        advanced = new MLDonkeyOptions( "Advanced ", FieldEditorPreferencePage.GRID );
+                        advanced.setPreferenceStore( optionsStore );
+                    }
+                    advanced.addOption( option );
+                }
+            }
+            else if ( ( section != null ) && section.equalsIgnoreCase( "other" ) && showOption( option ) ) {
+                if ( preferenceStore.getBoolean( "advancedMode" ) ) {
+                    if ( advanced == null ) {
+                        advanced = new MLDonkeyOptions( "Advanced ", FieldEditorPreferencePage.GRID );
+                        advanced.setPreferenceStore( optionsStore );
+                    }
+                    advanced.addOption( option );
+                }
+            }
+            else if ( ( section != null ) && showOption( option ) ) {
+                /* create the section, or if already done, only add the option */
+                if ( !sections.containsKey( section ) ) {
+                    MLDonkeyOptions temp = new MLDonkeyOptions( section, FieldEditorPreferencePage.GRID );
 
-	private boolean showOption( OptionsInfo option ) {
-		if ( preferenceStore.getBoolean( "advancedMode" ) ) {
-			return true;
-			}
-		else if ( option.isAdvanced() ) {			
-			return false;
-		}	
-		return true;		
-	}
-		
-		
-	
+                    //myprefs.addToRoot( new PreferenceNode ( section, temp ) );
+                    sections.put( section, temp );
+                    temp.setPreferenceStore( optionsStore );
+                }
+                ( ( MLDonkeyOptions ) sections.get( section ) ).addOption( option );
+            }
+            else if ( ( plugin != null ) && showOption( option ) ) {
+                /* create the pluginSection, or if already done, only add the option */
+                if ( !plugins.containsKey( plugin ) ) {
+                    /*only create the plugin, if it is possible at all...*/
+                    MLDonkeyOptions temp = new MLDonkeyOptions( plugin, FieldEditorPreferencePage.GRID );
+                    plugins.put( plugin, temp );
+                    temp.setPreferenceStore( optionsStore );
+                }
+                ( ( MLDonkeyOptions ) plugins.get( plugin ) ).addOption( option );
+            }
+        }
 
-	/**
-	 * Initializes a preference Store. It creates the corresponding file , so that we can write and
-	 * read from it without throwing wild exceptions around.
-	 * @param preferenceStore the preferneceStore we want to initialize
-	 * @throws IOException some nice IO-Exception if the initialization failed
-	 */
-	public void initialize( PreferenceStore preferenceStore ) throws IOException {
-		try {			
-			preferenceStore.load();
-		} catch ( IOException e ) {
-			preferenceStore.save();
-			preferenceStore.load();
-		}
-	}
+        /*Now we create the tree-structure, since we received all options*/
+        /*
+         * first the sections:
+         */
+        it = sections.keySet().iterator();
+        while ( it.hasNext() ) {
+            String key = ( String ) it.next();
+            MLDonkeyOptions page = ( MLDonkeyOptions ) sections.get( key );
+            addToRoot( ( new PreferenceNode( key, page ) ) );
+        }
+        /*
+         * and now the Plugins: first try to get the PrefPage "Networks", where all the "enabled"
+         * options are, if this doesn't exist, create it. And then put all the plugins below this one
+         */
+        if ( plugins.size() != 0 ) {
+            IPreferenceNode pluginOptions = find( "Networks" );
+            if ( pluginOptions == null ) {
+                MLDonkeyOptions emptyItem = new MLDonkeyOptions( "Networks", FieldEditorPreferencePage.FLAT );
+                pluginOptions = new PreferenceNode( "Networks", emptyItem );
+                emptyItem.isEmpty( true );
+                addToRoot( pluginOptions );
+            }
+            it = plugins.keySet().iterator();
+            while ( it.hasNext() ) {
+                String key = ( String ) it.next();
+                MLDonkeyOptions page = ( MLDonkeyOptions ) plugins.get( key );
+                pluginOptions.add( ( new PreferenceNode( key, page ) ) );
+            }
+        }
 
+        /*and now add the advanced-field at the very bottom of the list*/
+        if ( advanced != null )
+            addToRoot( ( new PreferenceNode( "Advanced", advanced ) ) );
+    }
 
-	/**
-	 * @return is our nice gui connected to a remot mldonkey, so that we can get remote-options?
-	 */
-	public boolean isConnected() {
-		return connected;
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param option DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    private boolean showOption( OptionsInfo option ) {
+        if ( preferenceStore.getBoolean( "advancedMode" ) )
+            return true;
+        else if ( option.isAdvanced() )
+            return false;
+        return true;
+    }
 
+    /**
+     * Initializes a preference Store. It creates the corresponding file , so that we can write and
+     * read from it without throwing wild exceptions around.
+     * @param preferenceStore the preferneceStore we want to initialize
+     * @throws IOException some nice IO-Exception if the initialization failed
+     */
+    public void initialize( PreferenceStore preferenceStore )
+        throws IOException {
+        try {
+            preferenceStore.load();
+        }
+        catch ( IOException e ) {
+            preferenceStore.save();
+            preferenceStore.load();
+        }
+    }
+
+    /**
+     * @return is our nice gui connected to a remot mldonkey, so that we can get remote-options?
+     */
+    public boolean isConnected() {
+        return connected;
+    }
 }
 
 /*
 $Log: Preferences.java,v $
+Revision 1.35  2003/09/18 10:23:48  lemmster
+checkstyle
+
 Revision 1.34  2003/09/15 22:06:19  zet
 split preferences
 
@@ -286,7 +275,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name

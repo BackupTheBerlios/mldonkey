@@ -39,11 +39,13 @@ import org.eclipse.swt.widgets.Group;
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Display.java,v 1.28 2003/09/15 22:06:19 zet Exp $
+ * @version $Id: G2Gui_Display.java,v 1.29 2003/09/18 10:23:48 lemmster Exp $
  */
 public class G2Gui_Display extends FieldEditorPreferencePage {
 	private Composite parent;
+
 	/**
+	 * DOCUMENT ME!
 	 * 
 	 * @param string The name of the OptionsPage
 	 * @param i Style: SWT.XXXX
@@ -51,6 +53,12 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 	public G2Gui_Display( String string, int i ) {
 		super( string, i );
 	}
+	
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param e DOCUMENT ME!
+	 */
 	protected void setupEditor( FieldEditor e ) {
 		e.setPreferencePage( this );
 		e.setPreferenceStore( getPreferenceStore() );
@@ -58,14 +66,16 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 		addField( e );
 	}
 	/* (  non-Javadoc  )
-	 * @see org.eclipse.jface.preference.PreferencePage#setPreferenceStore(  org.eclipse.jface.preference.IPreferenceStore  )
+	 * @see org.eclipse.jface.preference.PreferencePage#
+	 * setPreferenceStore(  org.eclipse.jface.preference.IPreferenceStore  )
 	 */
 	public void setPreferenceStore( IPreferenceStore store ) {
 		super.setPreferenceStore( PreferenceLoader.setDefaults( store ) );
 	}
 	
 	/* ( non-Javadoc )
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#
+	 * createContents( org.eclipse.swt.widgets.Composite )
 	 */
 	protected Control createContents( Composite myparent ) {
 		
@@ -142,12 +152,13 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 				G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_FONT" ),
 				"Sample",
 				parent ) );
-
 	}
-	
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.29  2003/09/18 10:23:48  lemmster
+checkstyle
+
 Revision 1.28  2003/09/15 22:06:19  zet
 split preferences
 
@@ -186,7 +197,7 @@ Revision 1.17  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.16  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.15  2003/08/19 22:02:15  zet
 localise

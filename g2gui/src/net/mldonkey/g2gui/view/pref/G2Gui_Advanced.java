@@ -41,11 +41,14 @@ import org.eclipse.swt.widgets.Group;
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Advanced.java,v 1.1 2003/09/15 22:06:19 zet Exp $
+ * @version $Id: G2Gui_Advanced.java,v 1.2 2003/09/18 10:23:48 lemmster Exp $
  */
 public class G2Gui_Advanced extends FieldEditorPreferencePage {
+
 	private Composite parent;
+
 	/**
+	 * DOCUMENT ME!
 	 * 
 	 * @param string The name of the OptionsPage
 	 * @param i Style: SWT.XXXX
@@ -53,21 +56,30 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 	public G2Gui_Advanced( String string, int i ) {
 		super( string, i );
 	}
+	
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param e DOCUMENT ME!
+	 */
 	protected void setupEditor( FieldEditor e ) {
 		e.setPreferencePage( this );
 		e.setPreferenceStore( getPreferenceStore() );
 		e.load();
 		addField( e );
 	}
+
 	/* (  non-Javadoc  )
-	 * @see org.eclipse.jface.preference.PreferencePage#setPreferenceStore(  org.eclipse.jface.preference.IPreferenceStore  )
+	 * @see org.eclipse.jface.preference.PreferencePage#
+	 * setPreferenceStore(  org.eclipse.jface.preference.IPreferenceStore  )
 	 */
 	public void setPreferenceStore( IPreferenceStore store ) {
 		super.setPreferenceStore( PreferenceLoader.setDefaults( store ) );
 	}
 	
 	/* ( non-Javadoc )
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#
+	 * createContents( org.eclipse.swt.widgets.Composite )
 	 */
 	protected Control createContents( Composite myparent ) {
 		
@@ -102,6 +114,7 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 		
 		return parent; 
 	}
+
 	/* (   non-Javadoc   )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
@@ -110,7 +123,7 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 
 		parent = getFieldEditorParent();
 	
-		if (advanced) {
+		if ( advanced ) {
 		
 			setupEditor( 
 				new BooleanFieldEditor( 
@@ -172,13 +185,15 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 				"updateDelay",
 				G2GuiResources.getString( "PREF_DISPLAY_UPDATE_DELAY" ),
 				parent ) ;
-		updateDelayEditor.setValidRange(0,600);
+		updateDelayEditor.setValidRange( 0, 600 );
 		setupEditor( updateDelayEditor );
-		
 	}
 }
 /*
 $Log: G2Gui_Advanced.java,v $
+Revision 1.2  2003/09/18 10:23:48  lemmster
+checkstyle
+
 Revision 1.1  2003/09/15 22:06:19  zet
 split preferences
 

@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.9 2003/09/03 18:22:45 dek Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.10 2003/09/18 10:23:48 lemmster Exp $ 
  *
  */
 public class G2GuiPref extends FieldEditorPreferencePage {
@@ -55,7 +55,8 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 	}
 
 	/* ( non-Javadoc )
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#
+	 * createContents( org.eclipse.swt.widgets.Composite )
 	 */
 	protected Control createContents( Composite myparent ) {
 		
@@ -86,12 +87,13 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 		return parent; 
 	}
 	
-	/** ( non-Javadoc )
-	 * @see org.eclipse.jface.preference.PreferencePage#setPreferenceStore( org.eclipse.jface.preference.IPreferenceStore )
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.PreferencePage#
+	 * setPreferenceStore( org.eclipse.jface.preference.IPreferenceStore )
 	 */
 	public void setPreferenceStore( IPreferenceStore store ) {
 		super.setPreferenceStore( store );
-		store = PreferenceLoader.setDefaults(store);
+		store = PreferenceLoader.setDefaults( store );
 	}
 	
 	/* ( non-Javadoc )
@@ -129,16 +131,18 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 				passwordField.load();
 		
 			FileFieldEditor executableField =
-					new FileFieldEditor( "coreExecutable", G2GuiResources.getString("PREF_CORE_EXEC"), true, parent );
+					new FileFieldEditor( "coreExecutable", 
+						G2GuiResources.getString( "PREF_CORE_EXEC" ), true, parent );
 					executableField.setPreferenceStore( this.getPreferenceStore() );
 					addField( executableField );
 					executableField.load();	
 			
 			String[] winExtensions = { "*.exe;*.bat" };
-			if (SWT.getPlatform().equals("win32")) executableField.setFileExtensions(winExtensions);
+			if ( SWT.getPlatform().equals( "win32" ) ) executableField.setFileExtensions( winExtensions );
 		
 			FieldEditor booleanEditor =
-				new BooleanFieldEditor( "advancedMode", "Advanced Mode (Please restart the gui to change the Mode)", parent );
+				new BooleanFieldEditor( "advancedMode",
+					"Advanced Mode (Please restart the gui to change the Mode)", parent );
 				booleanEditor.setPreferenceStore( this.getPreferenceStore() );
 				booleanEditor.fillIntoGrid( parent, 2 );
 				addField( booleanEditor );
@@ -149,6 +153,9 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.10  2003/09/18 10:23:48  lemmster
+checkstyle
+
 Revision 1.9  2003/09/03 18:22:45  dek
 removed unused import
 
@@ -171,7 +178,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name

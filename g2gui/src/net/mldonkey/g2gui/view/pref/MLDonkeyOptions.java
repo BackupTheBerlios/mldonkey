@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -18,9 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.pref;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,213 +49,237 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+
 /**
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.38 2003/09/11 16:12:27 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.39 2003/09/18 10:23:48 lemmster Exp $
  *
  */
-public class MLDonkeyOptions extends FieldEditorPreferencePage {	
-	private boolean isEmpty = false;
-	private Composite parent;
-	private List options = new ArrayList();
-	private final int inputFieldLength = 20;
-	/**
-	 * @param title
-	 * @param style
-	 */
-	protected MLDonkeyOptions( String title, int style ) {
-		super( title, style );		
-	}
-	/* ( non-Javadoc )
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
-	 */
-	 
-	private void setupEditor( FieldEditor e , String optionHelp ) {
-		e.setPreferencePage( this );
-		e.setPreferenceStore( getPreferenceStore() );
-		e.getLabelControl( parent ).setToolTipText( optionHelp );
-		
-		e.load();
-		addField( e );
-	}
-	
-	protected void createFieldEditors() {
-		Collections.sort( options, new optionsComparator() );
-		Iterator it = options.iterator();
-		while ( it.hasNext() ) {
-			parent = getFieldEditorParent();
-			OptionsInfo temp = ( OptionsInfo ) it.next();
-			if ( temp.getOptionType() == EnumTagType.BOOL || isBoolean( temp.getValue() ) ) {
-				String description = temp.getDescription();
-				if ( description.equals( "" ) )
-					description = temp.getKey();
-				String optionHelp = temp.getOptionHelp();
-				if ( optionHelp.equals( "" ) )
-					optionHelp = temp.getKey();
-				/*create a boolean-editor and add to page*/
-				setupEditor( new BooleanFieldEditor( 
-						temp.getKey(), description, BooleanFieldEditor.SEPARATE_LABEL, parent ), optionHelp );
-			} 
-			else if ( temp.getOptionType() == EnumTagType.INT || isInteger( temp.getValue() ) ) {
-				String description = temp.getDescription();
-				if ( description.equals( "" ) )
-					description = temp.getKey();
-				String optionHelp = temp.getOptionHelp();
-				if ( optionHelp.equals( "" ) )
-					optionHelp = temp.getKey();
-				/*create a IntegerFieldEditor and add to page
-				 * 
-				 * this is kind of hacky, but i don't see another way to get the stuff
-				 * with the different-sized inputs done...
-				 */
-				setupEditor( new IntegerFieldEditor( temp.getKey(), description, parent ) {
-					/* ( non-Javadoc )
-					 * @see org.eclipse.jface.preference.StringFieldEditor#doFillIntoGrid( org.eclipse.swt.widgets.Composite, int )
-					 */
-					protected void doFillIntoGrid( Composite parent, int numColumns ) {
-						getLabelControl( parent );
-						Text textField = getTextControl( parent );
-						GridData gd = new GridData();
-						gd.horizontalSpan = numColumns - 1;
-						GC gc = new GC( textField );
-						try {
-							Point extent = gc.textExtent( "X" );
-							gd.widthHint = inputFieldLength * extent.x;
-						} finally {
-							gc.dispose();
-						}
-						textField.setLayoutData( gd );
-					}
-				}, optionHelp );
-			} 
-			else {
-				String description = temp.getDescription();
-				if ( description.equals( "" ) )
-					description = temp.getKey();
-				String optionHelp = temp.getOptionHelp();
-				if ( optionHelp.equals( "" ) )
-					optionHelp = temp.getKey();
-				// with a very long string, the pref pages looks bad. limit to inputFieldLength?
-				setupEditor( new StringFieldEditor( temp.getKey(), description, inputFieldLength, parent ), optionHelp );
-			}
-		}
+public class MLDonkeyOptions extends FieldEditorPreferencePage {
+    private boolean isEmpty = false;
+    private Composite parent;
+    private List options = new ArrayList();
+    private final int inputFieldLength = 20;
 
-	}
+    /**
+     * @param title
+     * @param style
+     */
+    protected MLDonkeyOptions( String title, int style ) {
+        super( title, style );
+    }
+
+    /* ( non-Javadoc )
+     * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
+     */
+    private void setupEditor( FieldEditor e, String optionHelp ) {
+        e.setPreferencePage( this );
+        e.setPreferenceStore( getPreferenceStore() );
+        e.getLabelControl( parent ).setToolTipText( optionHelp );
+        e.load();
+        addField( e );
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    protected void createFieldEditors() {
+        Collections.sort( options, new OptionsComparator() );
+        Iterator it = options.iterator();
+        while ( it.hasNext() ) {
+            parent = getFieldEditorParent();
+            OptionsInfo temp = ( OptionsInfo ) it.next();
+            if ( ( temp.getOptionType() == EnumTagType.BOOL ) || isBoolean( temp.getValue() ) ) {
+                String description = temp.getDescription();
+                if ( description.equals( "" ) )
+                    description = temp.getKey();
+                String optionHelp = temp.getOptionHelp();
+                if ( optionHelp.equals( "" ) )
+                    optionHelp = temp.getKey();
+
+                /*create a boolean-editor and add to page*/
+                setupEditor( new BooleanFieldEditor( temp.getKey(), description,
+                                                     BooleanFieldEditor.SEPARATE_LABEL, parent ), optionHelp );
+            }
+            else if ( ( temp.getOptionType() == EnumTagType.INT ) || isInteger( temp.getValue() ) ) {
+                String description = temp.getDescription();
+                if ( description.equals( "" ) )
+                    description = temp.getKey();
+                String optionHelp = temp.getOptionHelp();
+                if ( optionHelp.equals( "" ) )
+                    optionHelp = temp.getKey();
+
+                /*create a IntegerFieldEditor and add to page
+                 *
+                 * this is kind of hacky, but i don't see another way to get the stuff
+                 * with the different-sized inputs done...
+                 */
+                setupEditor( new IntegerFieldEditor( temp.getKey(), description, parent ) {
+                        /* ( non-Javadoc )
+                         * @see org.eclipse.jface.preference.StringFieldEditor#
+                         * doFillIntoGrid( org.eclipse.swt.widgets.Composite, int )
+                         */
+                        protected void doFillIntoGrid( Composite parent, int numColumns ) {
+                            getLabelControl( parent );
+                            Text textField = getTextControl( parent );
+                            GridData gd = new GridData();
+                            gd.horizontalSpan = numColumns - 1;
+                            GC gc = new GC( textField );
+                            try {
+                                Point extent = gc.textExtent( "X" );
+                                gd.widthHint = inputFieldLength * extent.x;
+                            }
+                            finally {
+                                gc.dispose();
+                            }
+                            textField.setLayoutData( gd );
+                        }
+                    }, optionHelp );
+            }
+            else {
+                String description = temp.getDescription();
+                if ( description.equals( "" ) )
+                    description = temp.getKey();
+                String optionHelp = temp.getOptionHelp();
+                if ( optionHelp.equals( "" ) )
+                    optionHelp = temp.getKey();
+
+                // with a very long string, the pref pages looks bad. limit to inputFieldLength?
+                setupEditor( new StringFieldEditor( temp.getKey(), description, inputFieldLength, parent ),
+                             optionHelp );
+            }
+        }
+    }
+
+    /**
+     * @param string
+     * @return
+     */
+    private boolean isBoolean( String string ) {
+        if ( string.equalsIgnoreCase( "true" ) || string.equalsIgnoreCase( "false" ) )
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param string DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    private boolean isInteger( String string ) {
+        try {
+            int value = Integer.valueOf( string ).intValue();
+            if ( ( value >= 0 ) && ( value <= Integer.MAX_VALUE ) )
+                return true;
+            else
+                return false;
+        }
+        catch ( NumberFormatException e ) {
+            return false;
+        }
+    }
+
+    /* ( non-Javadoc )
+     * @see org.eclipse.jface.preference.FieldEditorPreferencePage#
+     * createContents( org.eclipse.swt.widgets.Composite )
+     */
+    protected Control createContents( Composite myparent ) {
+        if ( this.isEmpty ) {
+            Composite parent = ( Composite ) super.createContents( myparent );
+            parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+            Label emptyLabel = new Label( parent, SWT.NONE );
+            emptyLabel.setText( G2GuiResources.getString( "PREF_EMPTY" ) );
+            GridData gd = new GridData();
+            gd.verticalAlignment = GridData.CENTER;
+            gd.horizontalAlignment = GridData.CENTER;
+            gd.grabExcessHorizontalSpace = true;
+            gd.grabExcessVerticalSpace = true;
+            emptyLabel.setLayoutData( gd );
+            parent.layout();
+        }
+        else {
+            Group group = new Group( myparent, SWT.NONE );
+            GridLayout gl = new GridLayout( 1, false );
+            group.setLayout( gl );
+            group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+            ScrolledComposite sc =
+                new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {
+                    public Point computeSize( int wHint, int hHint, boolean changed )
+                    /* This method prevents the window from becoming huge (as in hight and width)
+                     * when reopening "General" (or equivalents)
+                     */
+                     {
+                        return new Point( SWT.DEFAULT, SWT.DEFAULT );
+                    }
+                };
+            sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+            sc.setLayout( new FillLayout() );
+            Composite parent = ( Composite ) super.createContents( sc );
+            parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+            sc.setExpandHorizontal( true );
+            sc.setExpandVertical( true );
+            sc.setContent( parent );
+            GridLayout layout = new GridLayout();
+            layout.numColumns = 1;
+            sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+            parent.layout();
+        }
+        return parent;
+    }
+
+    /**
+     * @param option this option should appear on this preference-page
+     */
+    public void addOption( OptionsInfo option ) {
+        options.add( option );
+    }
 
 	/**
-	 * @param string
-	 * @return
+	 * OptionsComparator DOCUMENT ME!
 	 */
-	private boolean isBoolean( String string ) {
-		if ( string.equalsIgnoreCase( "true" ) || string.equalsIgnoreCase( "false" ) )
-			return true;
-		else return false;
-	}
-	
-	private boolean isInteger( String string ) {
-		try {
-			int value = Integer.valueOf( string ).intValue();
-			if ( value >= 0 && value <= Integer.MAX_VALUE ) {				
-				return true;
-			} else {				
-				return false;
-			}
-		} catch ( NumberFormatException e ) {
-				return false;
-		}	
-	}
-	/* ( non-Javadoc )
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
-	 */
-	protected Control createContents( Composite myparent ) {
-		if ( this.isEmpty ){
-			Composite parent = ( Composite ) super.createContents( myparent );
-			parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-			Label emptyLabel = new Label( parent,SWT.NONE );
-			emptyLabel.setText( G2GuiResources.getString( "PREF_EMPTY" ) ); 
-			GridData gd = new GridData();
-			gd.verticalAlignment = GridData.CENTER;
-			gd.horizontalAlignment = GridData.CENTER;
-			gd.grabExcessHorizontalSpace = true;
-			gd.grabExcessVerticalSpace = true;
-			emptyLabel.setLayoutData(gd);
-			parent.layout();
-			
-			
-		}
-		else {		
-			Group group = new Group( myparent, SWT.NONE );
-				GridLayout gl = new GridLayout( 1, false );
-				group.setLayout( gl );
-				group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-				
-			
-			ScrolledComposite sc = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {		
-				public Point computeSize( int wHint, int hHint, boolean changed ) 
-				/* This method prevents the window from becoming huge (as in hight and width) 
-				 * when reopening "General" (or equivalents)
-				 */ 
-					{ return new Point( SWT.DEFAULT, SWT.DEFAULT ); }
-			};
-			
-			sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-				sc.setLayout( new FillLayout() );
-			
-			Composite parent = ( Composite ) super.createContents( sc );
-			parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );		
-			
-			sc.setExpandHorizontal( true );
-			sc.setExpandVertical( true );
-			sc.setContent( parent );
-			GridLayout layout = new GridLayout();
-			layout.numColumns = 1;		
-			
-			sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
-			parent.layout();
-		}
-		return parent; 
-	}
-	/**
-	 * @param option this option should appear on this preference-page
-	 */
-	public void addOption( OptionsInfo option ) {
-		options.add( option );
-	}
-	
-	public class optionsComparator implements Comparator {
-		/**
-		 * returns wich option is larger than the other one
-		 * @param o1 first Option to compare
-		 * @param o2 second Option to compare
-		 * @return which option is larger, 1|2, returns 0 when equal
-		 */
-		public int compare( Object o1, Object o2 ) {
-			//TODO sorting options by kind of value?? see comment for more: 
-			/* Should boolean-Options appear ontop of each other
-			 * instead of beeing scatterd all over the list? so this should happen here
-			 */
-			
-						
-			OptionsInfo optionsInfo1 = ( OptionsInfo ) o1;
-			OptionsInfo optionsInfo2 = ( OptionsInfo ) o2;
-			String optionDescription1 = ( optionsInfo1.getDescription().equals( "" ) ? optionsInfo1.getKey() : optionsInfo1.getDescription() );
-			String optionDescription2 = ( optionsInfo2.getDescription().equals( "" ) ? optionsInfo2.getKey() : optionsInfo2.getDescription() );
-			return optionDescription1.compareToIgnoreCase( optionDescription2 );
-		}
-		
-	}
-	/**
-	 * @param b
-	 */
-	public void isEmpty(boolean empty) {
-		isEmpty = empty;
-		
-	}
-} 
+    public class OptionsComparator implements Comparator {
+        /**
+         * returns wich option is larger than the other one
+         * @param o1 first Option to compare
+         * @param o2 second Option to compare
+         * @return which option is larger, 1|2, returns 0 when equal
+         */
+        public int compare( Object o1, Object o2 ) {
+            //TODO sorting options by kind of value?? see comment for more: 
+
+            /* Should boolean-Options appear ontop of each other
+             * instead of beeing scatterd all over the list? so this should happen here
+             */
+            OptionsInfo optionsInfo1 = ( OptionsInfo ) o1;
+            OptionsInfo optionsInfo2 = ( OptionsInfo ) o2;
+            String optionDescription1 =
+                ( optionsInfo1.getDescription().equals( "" ) ? optionsInfo1.getKey()
+                                                               : optionsInfo1.getDescription() );
+            String optionDescription2 =
+                ( optionsInfo2.getDescription().equals( "" ) ? optionsInfo2.getKey()
+                                                               : optionsInfo2.getDescription() );
+            return optionDescription1.compareToIgnoreCase( optionDescription2 );
+        }
+    }
+
+    /**
+     * @param empty DOCUMENT ME!
+     */
+    public void isEmpty( boolean empty ) {
+        isEmpty = empty;
+    }
+}
+
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.39  2003/09/18 10:23:48  lemmster
+checkstyle
+
 Revision 1.38  2003/09/11 16:12:27  dek
 removed debbuging-output (forgot to do this weeks ago ;-))
 

@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.22 2003/09/15 22:06:19 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.23 2003/09/18 10:23:48 lemmster Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
@@ -111,10 +111,12 @@ public class PreferenceLoader {
         return preferenceStore;
     }
 
-    /**
-     * @param preferenceString
-     * @return
-     */
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param preferenceString DOCUMENT ME!
+	 * @return DOCUMENT ME!
+	 */
 	public static Font loadFont( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) ) {
             Font newFont =
@@ -138,8 +140,10 @@ public class PreferenceLoader {
     }
 
     /**
-     * @param preferenceString
-     * @return
+     * DOCUMENT ME!
+     * 
+     * @param preferenceString DOCUMENT ME!
+     * @return DOCUMENT ME!
      */
 	public static Color loadColour( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) ) {
@@ -163,8 +167,10 @@ public class PreferenceLoader {
     }
 
     /**
-     * @param preferenceString
-     * @return
+     * DOCUMENT ME!
+     * 
+     * @param preferenceString DOCUMENT ME!
+     * @return DOCUMENT ME!
      */
 	public static Rectangle loadRectangle( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) )
@@ -173,8 +179,10 @@ public class PreferenceLoader {
     }
 
     /**
-     * @param preferenceString
-     * @return
+     * DOCUMENT ME!
+     * 
+     * @param preferenceString DOCUMENT ME!
+     * @return DOCUMENT ME!
      */
 	public static boolean loadBoolean( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) )
@@ -183,8 +191,10 @@ public class PreferenceLoader {
     }
 
     /**
-     * @param preferenceString
-     * @return
+     * DOCUMENT ME!
+     * 
+     * @param preferenceString DOCUMENT ME!
+     * @return DOCUMENT ME!
      */
 	public static int loadInteger( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) )
@@ -239,14 +249,14 @@ public class PreferenceLoader {
     /**
      * DOCUMENT ME!
      */
-    static public void initialize() {
+    public static void initialize() {
         loadStore();
     }
 
     /**
      * DOCUMENT ME!
      */
-    static public void cleanUp() {
+	public static void cleanUp() {
         Iterator fonts = fontArray.iterator();
         while ( fonts.hasNext() )
             ( ( Font ) fonts.next() ).dispose();
@@ -258,6 +268,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.23  2003/09/18 10:23:48  lemmster
+checkstyle
+
 Revision 1.22  2003/09/15 22:06:19  zet
 split preferences
 
@@ -295,7 +308,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates

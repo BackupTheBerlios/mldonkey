@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.pref;
 
@@ -35,147 +35,135 @@ import org.eclipse.swt.widgets.*;
  * ExtendedFontFieldEditor
  *
  *
- * @version $Id: ExtendedFontFieldEditor2.java,v 1.8 2003/09/08 18:32:39 zet Exp $ 
+ * @version $Id: ExtendedFontFieldEditor2.java,v 1.9 2003/09/18 10:23:48 lemmster Exp $
  *
  */
 public class ExtendedFontFieldEditor2 extends FontFieldEditor {
-	
-	private FontDialog fontDialog;
-	private Label fontLabel, fontSample;
-	private Button fontButton;
-	private Font font;
-	private boolean hasChanged = false;
-	private FontData[] chosenFont;
-	
-	/**
-	 * Creates a new FontEditor
-	 * @param name ???
-	 * @param labelText What is shown in preferences page
-	 * @param sampleText The text, where the font is applyed 
-	 * @param composite where the whole thing takes place
-	 */
-	public ExtendedFontFieldEditor2( String name, String labelText, String sampleText, Composite composite ) {
-		init(name, labelText);
-		fontDialog = new FontDialog( composite.getShell() );
-		this.fontLabel = new Label( composite, SWT.NONE );
-			fontLabel.setText( labelText );
-		this.fontButton = new Button( composite, SWT.NONE );
-			fontButton.setText( "select font" );
-			fontButton.addSelectionListener(
-					new SelectionListener() {
-						public void widgetSelected( SelectionEvent e ) {
-							fontDialog.setFontList(chosenFont);
-							fontDialog.open();
-							if (fontDialog.getFontList()[0] != null ) {
-								font = new Font( null, fontDialog.getFontList() );	
-								chosenFont = font.getFontData();						
-								fontSample.setFont( font );
-								fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
-								hasChanged = true; 
-							}
-						}
-						public void widgetDefaultSelected( SelectionEvent e ) {							
-						} } );
-		this.fontSample = new Label( composite, SWT.SHADOW_NONE );
-			fontSample.setText( sampleText );			
-			GridData gridData = new GridData();
-			gridData.horizontalSpan = 1;
-			gridData.grabExcessHorizontalSpace = true;
-		fontSample.setLayoutData( gridData );
-	}
+    private FontDialog fontDialog;
+    private Label fontLabel;
+    private Label fontSample;
+    private Button fontButton;
+    private Font font;
+    private boolean hasChanged = false;
+    private FontData[] chosenFont;
 
-	/**
-	 * Has the font in this Control has been changed?
-	 * @return changing status
-	 */
-	public boolean hasChanged() {
-		return hasChanged;
-	}
-	
-	/**
-	 * Give me your font ;-)
-	 * @return current font
-	 */
-	public Font getFont() {
-		return font;
-	}
+    /**
+     * Creates a new FontEditor
+     * @param name ???
+     * @param labelText What is shown in preferences page
+     * @param sampleText The text, where the font is applyed
+     * @param composite where the whole thing takes place
+     */
+    public ExtendedFontFieldEditor2( String name, String labelText, String sampleText, Composite composite ) {
+        init( name, labelText );
+        fontDialog = new FontDialog( composite.getShell() );
+        this.fontLabel = new Label( composite, SWT.NONE );
+        fontLabel.setText( labelText );
+        this.fontButton = new Button( composite, SWT.NONE );
+        fontButton.setText( "select font" );
+        fontButton.addSelectionListener( new SelectionListener() {
+                public void widgetSelected( SelectionEvent e ) {
+                    fontDialog.setFontList( chosenFont );
+                    fontDialog.open();
+                    if ( fontDialog.getFontList()[ 0 ] != null ) {
+                        font = new Font( null, fontDialog.getFontList() );
+                        chosenFont = font.getFontData();
+                        fontSample.setFont( font );
+                        fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+                        hasChanged = true;
+                    }
+                }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
-	 */
-	protected void adjustForNumColumns( int arg0 ) {
-		( ( GridData )fontSample.getLayoutData() ).horizontalSpan = ( arg0 - 2 );
-		//super.adjustForNumColumns(arg0);
-	}
+                public void widgetDefaultSelected( SelectionEvent e ) {
+                }
+            } );
+        this.fontSample = new Label( composite, SWT.SHADOW_NONE );
+        fontSample.setText( sampleText );
+        GridData gridData = new GridData();
+        gridData.horizontalSpan = 1;
+        gridData.grabExcessHorizontalSpace = true;
+        fontSample.setLayoutData( gridData );
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite, int)
-	 */
-	protected void doFillIntoGrid( Composite arg0, int arg1 ) {
-		super.doFillIntoGrid(arg0, arg1);
+    /**
+     * Has the font in this Control has been changed?
+     * @return changing status
+     */
+    public boolean hasChanged() {
+        return hasChanged;
+    }
 
-	}
+    /**
+     * Give me your font ;-)
+     * @return current font
+     */
+    public Font getFont() {
+        return font;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditor#doLoad()
-	 */
-	protected void doLoad() {
-		chosenFont = PreferenceConverter.getFontDataArray(
-						getPreferenceStore(),
-						getPreferenceName());
-		
-		this.font = new Font(null, chosenFont);
-		fontSample.setFont(font);
-		fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
-		super.doLoad();
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
+     */
+    protected void adjustForNumColumns( int arg0 ) {
+        ( ( GridData ) fontSample.getLayoutData() ).horizontalSpan = ( arg0 - 2 );
 
-	}
+        //super.adjustForNumColumns(arg0);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditor#doLoadDefault()
-	 */
-	protected void doLoadDefault() {
-		super.doLoadDefault();
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite, int)
+     */
+    protected void doFillIntoGrid( Composite arg0, int arg1 ) {
+        super.doFillIntoGrid( arg0, arg1 );
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.preference.FieldEditor#doLoad()
+     */
+    protected void doLoad() {
+        chosenFont = PreferenceConverter.getFontDataArray( getPreferenceStore(), getPreferenceName() );
+        this.font = new Font( null, chosenFont );
+        fontSample.setFont( font );
+        fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+        super.doLoad();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditor#doStore()
-	 */
-	protected void doStore() {
-		if (chosenFont != null)
-			PreferenceConverter.setValue(
-				getPreferenceStore(),
-				getPreferenceName(),
-				chosenFont);
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.preference.FieldEditor#doLoadDefault()
+     */
+    protected void doLoadDefault() {
+        super.doLoadDefault();
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.preference.FieldEditor#doStore()
+     */
+    protected void doStore() {
+        if ( chosenFont != null )
+            PreferenceConverter.setValue( getPreferenceStore(), getPreferenceName(), chosenFont );
+    }
 
-	/** (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditor#getNumberOfControls()
-	 */
-	public int getNumberOfControls() {		
-		return super.getNumberOfControls();
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.preference.FieldEditor#getNumberOfControls()
+     */
+    public int getNumberOfControls() {
+        return super.getNumberOfControls();
+    }
 
-	/**
-	 * a Value, that we can save in a preferenceStore
-	 * @return the selected font
-	 */
-	public String toString() {
-		
-		return super.toString();
-	}
-
-	/**
-	 * @param font
-	 */
-	
-
+    /**
+     * a Value, that we can save in a preferenceStore
+     * @return the selected font
+     */
+    public String toString() {
+        return super.toString();
+    }
 }
 
 /*
 $Log: ExtendedFontFieldEditor2.java,v $
+Revision 1.9  2003/09/18 10:23:48  lemmster
+checkstyle
+
 Revision 1.8  2003/09/08 18:32:39  zet
 remove fontData
 
@@ -183,7 +171,7 @@ Revision 1.7  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.6  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.5  2003/07/26 17:54:14  zet
 fix pref's illegal setParent, redo graphs, other

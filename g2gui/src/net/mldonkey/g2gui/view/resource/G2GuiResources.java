@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.28 2003/09/17 14:40:31 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.29 2003/09/18 10:26:28 lemmster Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -194,7 +194,7 @@ public class G2GuiResources {
 
 		ImageRegistry reg = G2GuiResources.getImageRegistry();
 
-		reg.put( "splashScreen" , createRawImage( "splash.png") );
+		reg.put( "splashScreen" , createRawImage( "splash.png" ) );
         reg.put( "ProgramIcon", createRawImage( "mld_logo_48x48.gif" ) );
         reg.put( "G2GuiLogo", createTrans( "mld_logo_48x48.png" ) );
 		reg.put( "G2GuiLogoSmall", createTrans( "mld_logo_12x12.png" ) );
@@ -216,8 +216,8 @@ public class G2GuiResources {
                                createTrans( buttonFiles[ i ] + "-16.png", titlebar ) );
         }
         String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "ONP", "Unknown" };
-        String[] fileNames =
-        { "directconnect", "edonkey2000", "gnutella", "gnutella2", "kazaa", "soulseek", "opennap", "unknown" };
+        String[] fileNames = { "directconnect", "edonkey2000", "gnutella", "gnutella2",
+        					   "kazaa", "soulseek", "opennap", "unknown" };
         for ( int i = 0; i < shortNames.length; i++ ) {
             reg.put( shortNames[ i ] + "Connected", createTrans( fileNames[ i ] + "_connected.png" ) );
             reg.put( shortNames[ i ] + "Disconnected",
@@ -236,7 +236,7 @@ public class G2GuiResources {
         reg.put( "MULTIConnected", createTrans( "multinet_connected.png" ) );
         reg.put( "MULTIConnectedWhite", createTrans( "multinet_connected.png", white ) );
         reg.put( "MULTIDisabled", createTrans( "multinet_disabled.png" ) );
-        reg.put( "MessagesButtonSmallTrans", createRawImage( "messages-16.gif") );
+        reg.put( "MessagesButtonSmallTrans", createRawImage( "messages-16.gif" ) );
         reg.put( "MessagesButtonSmallTransBW", createRawImage( "messages-16-bw.gif" ) );
         reg.put( "DownArrow", createTrans( "down.png" ) );
         reg.put( "UpArrow", createTrans( "up.png" ) );
@@ -334,8 +334,9 @@ public class G2GuiResources {
      * @return DOCUMENT ME!
      */
     private static Image createTrans( String filename, Color color ) {
-        return createTransparentImage( ImageDescriptor.createFromFile( MainTab.class, imagesDirectory + filename )
-                                                      .createImage(), color );
+        return createTransparentImage( 
+        	ImageDescriptor.createFromFile(
+        		MainTab.class, imagesDirectory + filename ).createImage(), color );
     }
 
     /**
@@ -364,6 +365,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.29  2003/09/18 10:26:28  lemmster
+checkstyle
+
 Revision 1.28  2003/09/17 14:40:31  zet
 redcross
 
@@ -428,7 +432,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
