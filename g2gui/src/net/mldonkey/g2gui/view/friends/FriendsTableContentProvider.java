@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.friends;
 
@@ -40,77 +40,76 @@ import org.eclipse.jface.viewers.Viewer;
  * TableContentProvider
  *
  *
- * @version $Id: FriendsTableContentProvider.java,v 1.5 2003/09/13 22:23:10 zet Exp $
+ * @version $Id: FriendsTableContentProvider.java,v 1.6 2003/09/18 09:54:45 lemmster Exp $
  */
 public class FriendsTableContentProvider implements IStructuredContentProvider, Observer {
-	
-	private static Object[] EMPTY_ARRAY = new Object[0];	
-	public TableViewer viewer;
-	public List observedClients = Collections.synchronizedList(new ArrayList());
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-	 */
-	public Object[] getElements( Object inputElement ) {
-		if (inputElement instanceof Map) {
-			Map elementsMap = (Map) inputElement;
-		
-			// Don't observe clients we are dumping
-			for (int i = 0; i < observedClients.size(); i++) {
-				ClientInfo clientInfo = (ClientInfo) observedClients.get(i);
-				if (clientInfo != null) {
-					clientInfo.deleteObserver( this );
-				}
-			}
-			observedClients.clear();
-			
-			// Keep a list of clients we are observing
-			Iterator i = elementsMap.keySet().iterator();
-			while (i.hasNext()) {
-				ClientInfo clientInfo = (ClientInfo) i.next();
- 				clientInfo.addObserver(this);
-				observedClients.add(clientInfo);
-			}
-					
-			return elementsMap.keySet().toArray();
-		
-		} else {
-			return EMPTY_ARRAY;	
-		} 
-	}
+    private static Object[] EMPTY_ARRAY = new Object[ 0 ];
+    private TableViewer viewer;
+    private List observedClients = Collections.synchronizedList( new ArrayList() );
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-	 */
-	public void dispose() { }
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+     */
+    public Object[] getElements( Object inputElement ) {
+        if ( inputElement instanceof Map ) {
+            Map elementsMap = ( Map ) inputElement;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IContentProvider#
-	 * inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-	 */
-	public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) { 
-		this.viewer = (TableViewer) viewer;
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update (final Observable o, Object obj) {
-		if (o instanceof ClientInfo && viewer != null) {
-			if (viewer.getTable().isDisposed()) return;
-			viewer.getTable().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (viewer != null)
-						viewer.update((ClientInfo) o, null);
-				}
-			});
-		}
-	}
-	
+            // Don't observe clients we are dumping
+            for ( int i = 0; i < observedClients.size(); i++ ) {
+                ClientInfo clientInfo = ( ClientInfo ) observedClients.get( i );
+                if ( clientInfo != null )
+                    clientInfo.deleteObserver( this );
+            }
+            observedClients.clear();
+            // Keep a list of clients we are observing
+            Iterator i = elementsMap.keySet().iterator();
+            while ( i.hasNext() ) {
+                ClientInfo clientInfo = ( ClientInfo ) i.next();
+                clientInfo.addObserver( this );
+                observedClients.add( clientInfo );
+            }
+            return elementsMap.keySet().toArray();
+        }
+        else
+            return EMPTY_ARRAY;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+     */
+    public void dispose() {
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IContentProvider#
+     * inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
+    public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) {
+        this.viewer = ( TableViewer ) viewer;
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update( final Observable o, Object obj ) {
+        if ( o instanceof ClientInfo && ( viewer != null ) ) {
+            if ( viewer.getTable().isDisposed() )
+                return;
+            viewer.getTable().getDisplay().asyncExec( new Runnable() {
+                    public void run() {
+                        if ( viewer != null )
+                            viewer.update( ( ClientInfo ) o, null );
+                    }
+                } );
+        }
+    }
 }
 
 /*
 $Log: FriendsTableContentProvider.java,v $
+Revision 1.6  2003/09/18 09:54:45  lemmster
+checkstyle
+
 Revision 1.5  2003/09/13 22:23:10  zet
 weak sets
 
@@ -127,7 +126,7 @@ Revision 1.1  2003/08/23 09:47:46  lemmster
 just rename
 
 Revision 1.2  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging

@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -10,7 +10,7 @@
  * the Free Software Foundation; either version 2 of the License, or
  * ( at your option ) any later version.
  *
- * G2GUI is distributed in the hope that it will be useful, 
+ * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.console;
 
@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -56,193 +57,223 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ExecConsole : to spawn and watch an executable in a shell/console
  *
- * @version $Id: ExecConsole.java,v 1.1 2003/09/03 14:49:07 zet Exp $ 
+ * @version $Id: ExecConsole.java,v 1.2 2003/09/18 09:54:45 lemmster Exp $
  *
  */
 public class ExecConsole implements Observer {
+    private Shell shell;
+    private StyledText outputConsole;
+    private Process execProcess;
+    private StreamMonitor stdoutMonitor;
+    private StreamMonitor stderrMonitor;
+    private Color highlightColor;
+    private final int MAX_LINES = 5000;
+    private final int STDOUT = 1;
+    private final int STDERR = 2;
+    private RE errorRE;
 
-	private Shell shell;
-	private StyledText outputConsole;
-	private Process execProcess;
-	private StreamMonitor stdoutMonitor, stderrMonitor;
-	private Color highlightColor;
-	private final int MAX_LINES = 5000;
-	private final int STDOUT = 1;
-	private final int STDERR = 2;
-	private RE errorRE;
+	/**
+	 * Creates a new ExecConsole to launch the mldonkey core
+	 */
+    public ExecConsole() {
+        createContents();
+        runExec();
+    }
 
-	public ExecConsole() {
-		createContents();
-		runExec();		
-	}
-	
-	public void createContents() {
-		shell = new Shell( SWT.CLOSE | SWT.TITLE | SWT.RESIZE | SWT.BORDER );
-		shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
-		shell.setText( "Core" );
-		
-		shell.setLayout(CGridLayout.createGL(1,0,0,0,0,false));
-		
-		shell.addDisposeListener( new DisposeListener() {
-			public synchronized void widgetDisposed( DisposeEvent e ) {
-				PreferenceStore p = PreferenceLoader.getPreferenceStore();
-				PreferenceConverter.setValue(p, "coreExecutableWindowBounds", shell.getBounds());
-			}
-		});
-		
-		shell.addListener (SWT.Close, new Listener () {
-			public void handleEvent (Event event) {
-				event.doit = false;
-				shell.setVisible( false );
-			}
-		});
-		
-		if (PreferenceLoader.contains( "coreExecutableWindowBounds" ) ) {
-			shell.setBounds( PreferenceLoader.loadRectangle("coreExecutableWindowBounds") );
-		} 
-		
-		outputConsole = new StyledText( shell, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
-		outputConsole.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
-		outputConsole.setFont( PreferenceLoader.loadFont( "consoleFontData" ) );
-		outputConsole.setBackground( PreferenceLoader.loadColour( "consoleBackground" ) );
-		outputConsole.setForeground( PreferenceLoader.loadColour( "consoleForeground" ) );
-		highlightColor = PreferenceLoader.loadColour( "consoleHighlight" );
-		
-		outputConsole.append("availableProcessors: " + Runtime.getRuntime().availableProcessors() + outputConsole.getLineDelimiter());
-		outputConsole.append("maximumMem: " + Runtime.getRuntime().maxMemory() + outputConsole.getLineDelimiter());
-		outputConsole.append("totalMem: " + Runtime.getRuntime().totalMemory() + outputConsole.getLineDelimiter());
-		outputConsole.append("freeMem: " + Runtime.getRuntime().freeMemory() + outputConsole.getLineDelimiter() + outputConsole.getLineDelimiter());
-	
-		Menu popupMenu = new Menu(outputConsole);
-		MenuItem copyItem = new MenuItem(popupMenu, SWT.PUSH);
-		copyItem.setText("Copy");
-		copyItem.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				outputConsole.copy();
-			}
-		});
-	
-		try {
-			errorRE = new RE( 
-				"error" 
-				, RE.REG_ICASE );
-		}
-		catch ( REException e ) {
-			errorRE = null;
-		}
-	
-	}
+    /**
+     * DOCUMENT ME!
+     */
+    public void createContents() {
+        shell = new Shell( SWT.CLOSE | SWT.TITLE | SWT.RESIZE | SWT.BORDER );
+        shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
+        shell.setText( "Core" );
+        shell.setLayout( CGridLayout.createGL( 1, 0, 0, 0, 0, false ) );
+        shell.addDisposeListener( new DisposeListener() {
+                public synchronized void widgetDisposed( DisposeEvent e ) {
+                    PreferenceStore p = PreferenceLoader.getPreferenceStore();
+                    PreferenceConverter.setValue( p, "coreExecutableWindowBounds", shell.getBounds() );
+                }
+            } );
+        shell.addListener( SWT.Close,
+                           new Listener() {
+                public void handleEvent( Event event ) {
+                    event.doit = false;
+                    shell.setVisible( false );
+                }
+            } );
+        if ( PreferenceLoader.contains( "coreExecutableWindowBounds" ) )
+            shell.setBounds( PreferenceLoader.loadRectangle( "coreExecutableWindowBounds" ) );
+        outputConsole =
+            new StyledText( shell, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
+        outputConsole.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        outputConsole.setFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+        outputConsole.setBackground( PreferenceLoader.loadColour( "consoleBackground" ) );
+        outputConsole.setForeground( PreferenceLoader.loadColour( "consoleForeground" ) );
+        highlightColor = PreferenceLoader.loadColour( "consoleHighlight" );
+        outputConsole.append( "availableProcessors: " + Runtime.getRuntime().availableProcessors()
+                              + outputConsole.getLineDelimiter() );
+        outputConsole.append( "maximumMem: " + Runtime.getRuntime().maxMemory()
+                              + outputConsole.getLineDelimiter() );
+        outputConsole.append( "totalMem: " + Runtime.getRuntime().totalMemory()
+                              + outputConsole.getLineDelimiter() );
+        outputConsole.append( "freeMem: " + Runtime.getRuntime().freeMemory()
+                              + outputConsole.getLineDelimiter() + outputConsole.getLineDelimiter() );
+        Menu popupMenu = new Menu( outputConsole );
+        MenuItem copyItem = new MenuItem( popupMenu, SWT.PUSH );
+        copyItem.setText( "Copy" );
+        copyItem.addListener( SWT.Selection,
+                              new Listener() {
+                public void handleEvent( Event event ) {
+                    outputConsole.copy();
+                }
+            } );
+        try {
+            errorRE = new RE( "error", RE.REG_ICASE );
+        }
+        catch ( REException e ) {
+            errorRE = null;
+        }
+    }
 
-	public void runExec() {
-		
-		try {
-			
-			File executable = new File(PreferenceLoader.loadString( "coreExecutable" ));
-			String workingDirectory = executable.getParent();
-					
-			execProcess = Runtime.getRuntime().exec( executable.toString() , null, new File(workingDirectory) );
-			
-			stdoutMonitor = new StreamMonitor(execProcess.getInputStream(), STDOUT);
-			stdoutMonitor.addObserver(this);
-			Thread stdoutThread = new Thread(stdoutMonitor);
-			stdoutThread.start();
-			
-			stderrMonitor = new StreamMonitor(execProcess.getErrorStream(), STDERR);
-			stderrMonitor.addObserver(this);
-			Thread stderrThread = new Thread(stderrMonitor);
-			stderrThread.start();
-			
-		} catch (IOException e) {
-			System.out.println("exec:" + e);
-		}
-	}
+    /**
+     * DOCUMENT ME!
+     */
+    public void runExec() {
+        try {
+            File executable = new File( PreferenceLoader.loadString( "coreExecutable" ) );
+            String workingDirectory = executable.getParent();
+            execProcess =
+                Runtime.getRuntime().exec( executable.toString(), null, new File( workingDirectory ) );
+            stdoutMonitor = new StreamMonitor( execProcess.getInputStream(), STDOUT );
+            stdoutMonitor.addObserver( this );
+            Thread stdoutThread = new Thread( stdoutMonitor );
+            stdoutThread.start();
+            stderrMonitor = new StreamMonitor( execProcess.getErrorStream(), STDERR );
+            stderrMonitor.addObserver( this );
+            Thread stderrThread = new Thread( stderrMonitor );
+            stderrThread.start();
+        }
+        catch ( IOException e ) {
+            System.out.println( "exec:" + e );
+        }
+    }
 
-	public void update(final Observable o, Object obj) {
-		if (obj instanceof String) {
-			final String newLine = (String) obj;
-			if (!outputConsole.isDisposed()) {
-				outputConsole.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (outputConsole.isDisposed()) return;
-						appendLine((StreamMonitor) o, newLine);
-					}
-				});
-			}
-		}
-	}
-	
-	public void appendLine(StreamMonitor streamMonitor, String newLine) {
-		
-		if (outputConsole.getLineCount() > MAX_LINES) {
-			outputConsole.replaceTextRange(0, outputConsole.getOffsetAtLine(5), "");
-		}
-		int start = outputConsole.getCharCount();
-		outputConsole.append(newLine + outputConsole.getLineDelimiter());
-		
-		if (streamMonitor.getType() == STDERR) {
-			outputConsole.setStyleRange(new StyleRange(start, newLine.length(), outputConsole.getDisplay().getSystemColor(SWT.COLOR_RED), outputConsole.getBackground()));
-		} else if (errorRE.getMatch(newLine) != null) {
-			outputConsole.setStyleRange(new StyleRange(start, newLine.length(), highlightColor, outputConsole.getBackground()));
-		}
-		
-		outputConsole.update();
-		// workaround for GTK2 bug, to focus the bottom
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=40800
-		outputConsole.setSelection(outputConsole.getCharCount());
-		outputConsole.showSelection();
-		
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param o DOCUMENT ME!
+     * @param obj DOCUMENT ME!
+     */
+    public void update( final Observable o, Object obj ) {
+        if ( obj instanceof String ) {
+            final String newLine = ( String ) obj;
+            if ( !outputConsole.isDisposed() )
+                outputConsole.getDisplay().asyncExec( new Runnable() {
+                        public void run() {
+                            if ( outputConsole.isDisposed() )
+                                return;
+                            appendLine( ( StreamMonitor ) o, newLine );
+                        }
+                    } );
+        }
+    }
 
-	public Shell getShell() {
-		return shell;
-	}
-	
-	public void dispose() {
-		stdoutMonitor.stop();
-		stderrMonitor.stop();
-		outputConsole.dispose();
-		shell.dispose();
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param streamMonitor DOCUMENT ME!
+     * @param newLine DOCUMENT ME!
+     */
+    public void appendLine( StreamMonitor streamMonitor, String newLine ) {
+        if ( outputConsole.getLineCount() > MAX_LINES )
+            outputConsole.replaceTextRange( 0, outputConsole.getOffsetAtLine( 5 ), "" );
+        int start = outputConsole.getCharCount();
+        outputConsole.append( newLine + outputConsole.getLineDelimiter() );
+        if ( streamMonitor.getType() == STDERR )
+            outputConsole.setStyleRange( 
+            	new StyleRange( start, newLine.length(),
+                                outputConsole.getDisplay().getSystemColor( SWT.COLOR_RED ),
+                                outputConsole.getBackground() ) );
+        else if ( errorRE.getMatch( newLine ) != null )
+            outputConsole.setStyleRange( new StyleRange( start, newLine.length(), highlightColor,
+                                                         outputConsole.getBackground() ) );
+        outputConsole.update();
 
-	class StreamMonitor extends Observable implements Runnable {
+        // workaround for GTK2 bug, to focus the bottom
+        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=40800
+        outputConsole.setSelection( outputConsole.getCharCount() );
+        outputConsole.showSelection();
+    }
 
-		private boolean keepAlive = true;
-		private InputStream inputStream;
-		private int type;
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public Shell getShell() {
+        return shell;
+    }
 
-		public StreamMonitor(InputStream inputStream, int type) {
-			this.inputStream = inputStream;
-			this.type = type;
-		}
+    /**
+     * DOCUMENT ME!
+     */
+    public void dispose() {
+        stdoutMonitor.stop();
+        stderrMonitor.stop();
+        outputConsole.dispose();
+        shell.dispose();
+    }
 
-		public void stop() {
-			keepAlive = false;
-		}
-		public int getType() {
-			return type;
-		}
+    class StreamMonitor extends Observable implements Runnable {
+        private boolean keepAlive = true;
+        private InputStream inputStream;
+        private int type;
 
-		public void run() {
-			try {
-				String line;
-				BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+        public StreamMonitor( InputStream inputStream, int type ) {
+            this.inputStream = inputStream;
+            this.type = type;
+        }
 
-				while (keepAlive && ((line = in.readLine()) != null)) {
-					setChanged();
-					notifyObservers(line);
-				}
+        /**
+         * DOCUMENT ME!
+         */
+        public void stop() {
+            keepAlive = false;
+        }
 
-			} catch (IOException e) {
-				System.out.println("streamMonitor:" + e);
-			}
-		}
+        /**
+         * DOCUMENT ME!
+         *
+         * @return DOCUMENT ME!
+         */
+        public int getType() {
+            return type;
+        }
 
-	}
-
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            try {
+                String line;
+                BufferedReader in = new BufferedReader( new InputStreamReader( inputStream ) );
+                while ( keepAlive && ( ( line = in.readLine() ) != null ) ) {
+                    setChanged();
+                    notifyObservers( line );
+                }
+            }
+            catch ( IOException e ) {
+                System.out.println( "streamMonitor:" + e );
+            }
+        }
+    }
 }
+
 /*
 $Log: ExecConsole.java,v $
+Revision 1.2  2003/09/18 09:54:45  lemmster
+checkstyle
+
 Revision 1.1  2003/09/03 14:49:07  zet
 optionally spawn core from gui
 

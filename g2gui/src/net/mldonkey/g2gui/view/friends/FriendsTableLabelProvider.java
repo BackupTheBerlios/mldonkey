@@ -36,26 +36,23 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: FriendsTableLabelProvider.java,v 1.4 2003/08/31 15:37:30 zet Exp $
+ * @version $Id: FriendsTableLabelProvider.java,v 1.5 2003/09/18 09:54:45 lemmster Exp $
  */
 public class FriendsTableLabelProvider implements ITableLabelProvider, IColorProvider {
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
 	 */
-	 
-	 // Will transparent .pngs ever work?
 	public Image getColumnImage( Object element, int columnIndex ) {
 		ClientInfo clientInfo = ( ClientInfo ) element;
-		if (clientInfo.getState().getState() == EnumState.CONNECTED
+		if ( clientInfo.getState().getState() == EnumState.CONNECTED
 			|| clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED
 			|| clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING
-			|| clientInfo.getState().getState() == EnumState.CONNECTED_INITIATING)
+			|| clientInfo.getState().getState() == EnumState.CONNECTED_INITIATING )
 		
-			return G2GuiResources.getImage("MessagesButtonSmallTrans");
+			return G2GuiResources.getImage( "MessagesButtonSmallTrans" );
 		else 
-			return G2GuiResources.getImage("MessagesButtonSmallTransBW");
-			
+			return G2GuiResources.getImage( "MessagesButtonSmallTransBW" );
 	}
 
 	/* (non-Javadoc)
@@ -66,14 +63,12 @@ public class FriendsTableLabelProvider implements ITableLabelProvider, IColorPro
 	public String getColumnText( Object element, int columnIndex ) {
 		ClientInfo clientInfo = ( ClientInfo ) element;
 		
-		switch (columnIndex) {
-			
+		switch ( columnIndex ) {
 			case 0: // name 
 				return clientInfo.getClientName();
 			
 			default:
 				return "??";
-			
 		}
 	}
 
@@ -86,8 +81,7 @@ public class FriendsTableLabelProvider implements ITableLabelProvider, IColorPro
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 	 */
-	public void dispose() {
-	}
+	public void dispose() { }
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#
@@ -120,6 +114,9 @@ public class FriendsTableLabelProvider implements ITableLabelProvider, IColorPro
 
 /*
 $Log: FriendsTableLabelProvider.java,v $
+Revision 1.5  2003/09/18 09:54:45  lemmster
+checkstyle
+
 Revision 1.4  2003/08/31 15:37:30  zet
 friend icons
 
@@ -133,7 +130,7 @@ Revision 1.1  2003/08/23 09:47:46  lemmster
 just rename
 
 Revision 1.4  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.3  2003/08/17 23:13:42  zet
 centralize resources, move images

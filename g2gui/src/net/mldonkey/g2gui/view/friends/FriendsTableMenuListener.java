@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.friends;
 
@@ -42,115 +42,139 @@ import org.eclipse.jface.viewers.TableViewer;
 /**
  * TableMenuListener
  *
- * @version $Id: FriendsTableMenuListener.java,v 1.4 2003/08/30 14:25:57 zet Exp $ 
+ * @version $Id: FriendsTableMenuListener.java,v 1.5 2003/09/18 09:54:45 lemmster Exp $
  *
  */
 public class FriendsTableMenuListener implements ISelectionChangedListener, IMenuListener {
+    private FriendsTableContentProvider tableContentProvider;
+    private TableViewer tableViewer;
+    private CoreCommunication core;
+    private List selectedClients = new ArrayList();
+    private MessagesTab messagesTab;
 
-	private FriendsTableContentProvider tableContentProvider;
-	private TableViewer tableViewer;
-	private CoreCommunication core;
-	private List selectedClients = new ArrayList();
-	private MessagesTab messagesTab;
+    /**
+     * Creates a new TableMenuListener
+     * @param tableViewer The parent TableViewer
+     * @param core The CoreCommunication supporting this with data
+     * @param messagesTab The MessagesTab 
+     */
+    public FriendsTableMenuListener( TableViewer tableViewer, CoreCommunication core, MessagesTab messagesTab ) {
+        super();
+        this.tableViewer = tableViewer;
+        this.core = core;
+        this.messagesTab = messagesTab;
+        this.tableContentProvider = ( FriendsTableContentProvider ) this.tableViewer.getContentProvider();
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+     */
+    public void selectionChanged( SelectionChangedEvent event ) {
+        IStructuredSelection sSel = ( IStructuredSelection ) event.getSelection();
+        Object o = sSel.getFirstElement();
+        selectedClients.clear();
+        for ( Iterator it = sSel.iterator(); it.hasNext();) {
+            o = it.next();
+            if ( o instanceof ClientInfo )
+                selectedClients.add( ( ClientInfo ) o );
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
+     */
+    public void menuAboutToShow( IMenuManager menuManager ) {
+        if ( selectedClients.size() != 0 )
+            menuManager.add( new SendMessageAction() );
+        if ( selectedClients.size() != 0 )
+            menuManager.add( new RemoveFriendAction() );
+        if ( tableViewer.getTable().getItemCount() > 0 )
+            menuManager.add( new RemoveAllFriendsAction() );
+        menuManager.add( new AddByIPAction() );
+    }
 
 	/**
-	 * Creates a new TableMenuListener
-	 * @param The parent TableViewer
-	 * @param The CoreCommunication supporting this with data
+	 * RemoveFriendAction
 	 */
-	public FriendsTableMenuListener( TableViewer tableViewer, CoreCommunication core, MessagesTab messagesTab ) {
-		super();
-		this.tableViewer = tableViewer;
-		this.core = core;
-		this.messagesTab = messagesTab;
-		this.tableContentProvider = ( FriendsTableContentProvider ) this.tableViewer.getContentProvider();
-	}
+    private class RemoveFriendAction extends Action {
+        public RemoveFriendAction() {
+            super();
+            String num = ( ( selectedClients.size() > 1 ) ? ( " (" + selectedClients.size() + ")" ) : "" );
+            setText( G2GuiResources.getString( "FR_MENU_REMOVE_FRIEND" ) + num );
+        }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            for ( int i = 0; i < selectedClients.size(); i++ ) {
+                ClientInfo clientInfo = ( ClientInfo ) selectedClients.get( i );
+                ClientInfo.removeFriend( core, clientInfo.getClientid() );
+            }
+        }
+    }
+
+	/**
+	 * RemoveAllFriendsAction
 	 */
-	public void selectionChanged( SelectionChangedEvent event ) {
-		IStructuredSelection sSel = ( IStructuredSelection ) event.getSelection();
-		Object o = sSel.getFirstElement();
+    private class RemoveAllFriendsAction extends Action {
+        public RemoveAllFriendsAction() {
+            super();
+            setText( G2GuiResources.getString( "FR_MENU_REMOVE_ALL_FRIENDS" ) );
+        }
 
-		selectedClients.clear();
-		for (Iterator it = sSel.iterator(); it.hasNext(); ) {
-			o = it.next();
-			if (o instanceof ClientInfo) 
-				selectedClients.add((ClientInfo) o);	
-		}
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            ClientInfo.removeAllFriends( core );
+        }
+    }
+	
+	/**
+	 * SendMessageAction
 	 */
-	public void menuAboutToShow( IMenuManager menuManager ) {
+    private class SendMessageAction extends Action {
+        public SendMessageAction() {
+            super();
+            String num = ( ( selectedClients.size() > 1 ) ? ( " (" + selectedClients.size() + ")" ) : "" );
+            setText( G2GuiResources.getString( "FR_MENU_SEND_MESSAGE" ) + num );
+        }
 
-		if (selectedClients.size() != 0)
-			menuManager.add( new SendMessageAction() );
-		
-		if ( selectedClients.size() != 0 )
-			menuManager.add( new RemoveFriendAction() );
-			
-		if (tableViewer.getTable().getItemCount() > 0)		
-			menuManager.add( new RemoveAllFriendsAction() );
-			
-		menuManager.add( new AddByIPAction() );	
-		
-	}
-	private class RemoveFriendAction extends Action {
-		public RemoveFriendAction() {
-			super();
-			String num = (selectedClients.size() > 1 ? " (" + selectedClients.size() + ")" : "");
-			setText( G2GuiResources.getString( "FR_MENU_REMOVE_FRIEND" ) + num);
-		}
-		public void run() {
-			for (int i = 0; i < selectedClients.size(); i++) {
-				 ClientInfo clientInfo = (ClientInfo) selectedClients.get(i);
-				ClientInfo.removeFriend(core, clientInfo.getClientid());
-			}
-		}
-	}
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            for ( int i = 0; i < selectedClients.size(); i++ ) {
+                ClientInfo clientInfo = ( ClientInfo ) selectedClients.get( i );
+                messagesTab.openTab( clientInfo );
+            }
+        }
+    }
 
-	private class RemoveAllFriendsAction extends Action {
-		public RemoveAllFriendsAction() {
-			super();
-			setText( G2GuiResources.getString( "FR_MENU_REMOVE_ALL_FRIENDS" ) );
-		}
-		public void run() {
-			ClientInfo.removeAllFriends(core);
-		}
-	}
+	/**
+	 * AddByIPAction
+	 */
+    private class AddByIPAction extends Action {
+        public AddByIPAction() {
+            super();
+            setText( G2GuiResources.getString( "FR_MENU_ADD_BY_IP" ) );
+        }
 
-	private class SendMessageAction extends Action {
-		public SendMessageAction() {
-			super();
-			String num = (selectedClients.size() > 1 ? " (" + selectedClients.size() + ")" : "");
-			setText( G2GuiResources.getString( "FR_MENU_SEND_MESSAGE" ) + num);
-		}
-		public void run() {
-			for (int i = 0; i < selectedClients.size(); i++) {
-				 ClientInfo clientInfo = (ClientInfo) selectedClients.get(i);
-				messagesTab.openTab(clientInfo);
-			}
-		}
-	}
-
-	private class AddByIPAction extends Action {
-		public AddByIPAction() {
-			super();
-			setText( G2GuiResources.getString( "FR_MENU_ADD_BY_IP" ) );
-		}
-		public void run() {
-			new AddFriend(core);
-		}
-	}
-
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            new AddFriend( core );
+        }
+    }
 }
 
 /*
 $Log: FriendsTableMenuListener.java,v $
+Revision 1.5  2003/09/18 09:54:45  lemmster
+checkstyle
+
 Revision 1.4  2003/08/30 14:25:57  zet
 multi select
 
