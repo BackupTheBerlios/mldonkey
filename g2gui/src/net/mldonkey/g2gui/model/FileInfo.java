@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.22 2003/07/07 15:09:28 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.23 2003/07/11 08:39:46 dek Exp $ 
  *
  */
 public class FileInfo extends Parent {
@@ -349,7 +349,7 @@ public class FileInfo extends Parent {
 	 * @return true if they are identical, otherwise false
 	 */
 	public boolean equals( FileInfo fileInfo ) {
-		if ( this.getMd4() == fileInfo.getMd4() )
+		if ( this.getMd4().equalsIgnoreCase( fileInfo.getMd4() ) )
 			return true;
 		else
 			return false;
@@ -427,6 +427,10 @@ public class FileInfo extends Parent {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.23  2003/07/11 08:39:46  dek
+String should be compared with .equals, not with ==
+(in this.equals())
+
 Revision 1.22  2003/07/07 15:09:28  lemmstercvs01
 HashSet() instead of ArrayList()
 
