@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
  * with setter(). When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.5 2003/07/05 13:25:43 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.6 2003/07/05 14:04:12 dek Exp $ 
  *
  */
 public class SearchQuery {
@@ -151,10 +151,9 @@ public class SearchQuery {
 		String[] patterns = searchString.split( " " );
 		/* now we have to generate a query-Object for each search pattern */
 		Query newQuery;
-		for ( int i = 0; i < patterns.length; i++ ) {			
+		for ( int i = 0; i < patterns.length; i++ ) {				
 			newQuery = new Query();
-			String pattern = patterns[i];
-			newQuery = new Query();
+			String pattern = patterns[i];			
 			newQuery.setNode( ( byte )4 );
 			newQuery.setComment( "Search-pattern:" );
 			newQuery.setDefaultValue( pattern );
@@ -240,7 +239,7 @@ public class SearchQuery {
 		
 		/* now we need to get the Query sorted out in kind of Objects[] */
 			Object[] tempArray = this.mainQuery.toObjectArray();
-			for ( int i = 0; i < tempArray.length; i++ ) {
+			for ( int i = 0; i < tempArray.length; i++ ) {				
 				content.add( tempArray [ i ] );
 			}
 		
@@ -269,6 +268,9 @@ public class SearchQuery {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.6  2003/07/05 14:04:12  dek
+all in order for searching
+
 Revision 1.5  2003/07/05 13:25:43  dek
 removed old comments
 

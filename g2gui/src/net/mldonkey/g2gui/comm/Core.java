@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.51 2003/07/04 17:46:28 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.52 2003/07/05 14:04:12 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -185,6 +185,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					ResultInfo result = new ResultInfo();
 					result.readStream( messageBuffer );
 					this.resultInfo.put( result.getResultID(), result );
+					this.setChanged();	
+					this.notifyObservers( result );
 					break;
 					
 			case Message.R_SEARCH_RESULT :
@@ -315,6 +317,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.52  2003/07/05 14:04:12  dek
+all in order for searching
+
 Revision 1.51  2003/07/04 17:46:28  lemmstercvs01
 removed obsolet methods
 

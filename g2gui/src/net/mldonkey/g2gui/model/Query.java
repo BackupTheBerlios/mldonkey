@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.11 2003/07/05 09:52:49 dek Exp $ 
+ * @version $Id: Query.java,v 1.12 2003/07/05 14:04:12 dek Exp $ 
  *
  */
 public class Query implements SimpleInformation {
@@ -138,8 +138,7 @@ public class Query implements SimpleInformation {
 			 	 */	
 			 	 
 			 	/* setting List header */
-				output.add( new Short( ( short )queries.size() ) );	 
-					
+				output.add( new Short( ( short )queries.size() ) );	 					
 				/*now setting an entry for each Query in queries[]*/			 	
 				 	for ( int i = 0; i < queries.size(); i++ ) {	
 						Object[] querieArray = ( ( Query )queries.get( i ) ).toObjectArray();
@@ -338,6 +337,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.12  2003/07/05 14:04:12  dek
+all in order for searching
+
 Revision 1.11  2003/07/05 09:52:49  dek
 searching rocks ;-)
 
