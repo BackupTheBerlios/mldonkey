@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.24 2003/07/26 17:15:04 vnc Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.25 2003/07/26 20:21:48 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -90,7 +90,12 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 		//Send command to core
 		input.addKeyListener( new KeyAdapter() {
 			public void keyPressed( KeyEvent e ) {
-				if ( e.character == SWT.CR ) {
+				if (e.keyCode == SWT.PAGE_DOWN || e.keyCode == SWT.PAGE_UP) {
+					// awkward?
+					int approxNumLinesDisplayed = infoDisplay.getClientArea().height / (infoDisplay.getFont().getFontData()[0].getHeight() + 4);
+					if (e.keyCode == SWT.PAGE_UP) approxNumLinesDisplayed = -approxNumLinesDisplayed;
+					infoDisplay.setTopIndex(infoDisplay.getTopIndex() + approxNumLinesDisplayed);
+				} else if ( e.character == SWT.CR ) {
 					infoDisplay.append( input.getText() );
 					String[] command = new String[ 1 ] ;
 					command[ 0 ] = input.getText();
@@ -194,6 +199,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.25  2003/07/26 20:21:48  zet
+pgup/pgdn from input
+
 Revision 1.24  2003/07/26 17:15:04  vnc
 optimized console display appendings
 
