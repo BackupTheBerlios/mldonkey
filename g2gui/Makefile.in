@@ -1,6 +1,7 @@
 GCJ=@GCJ@
 FIND=@FIND@
 
+SED=@SED@
 OBJ_DIR=@OBJ_DIR@
 
 JAR_DIR=jar
@@ -37,6 +38,11 @@ endif
 
 JAROBJECTS = $(subst .jar,.o, $(notdir $(wildcard $(JAR_DIR)/*.jar)))
 
+define magic
+$(shell $(SED) -e '/.*NO_LINUX_START.*/,/.*NO_LINUX_END.*/d' $< >sed.tmp)
+$(shell mv sed.tmp $<)
+endef
+
 
 define file_path
 $(subst .,/,$(basename $*))$(suffix $*)
@@ -56,6 +62,7 @@ libs:
 	@$(MAKE) -C $(JAR_DIR)
 
 $(G2GUI_O_OBJECTS): %.o :%.java
+	@MAGIC@
 	@if [ ! -d $(OBJ_DIR)/$(dir $@) ]; then  \
 	mkdir -p $(OBJ_DIR)/$(dir $@) ;\
 	fi
