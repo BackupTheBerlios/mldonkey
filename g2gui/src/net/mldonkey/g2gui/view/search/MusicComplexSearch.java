@@ -38,17 +38,16 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.17 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.18 2003/11/23 19:22:35 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
-    private Text artistText;
-    private Text albumText;
+    private Combo artistText;
+    private Combo albumText;
     private Combo bitrateCombo;
 
 	/**
@@ -180,6 +179,10 @@ public class MusicComplexSearch extends ComplexSearch {
              && artistText.getText().equals( "" )
              && albumText.getText().equals( "" ) ) return;
 
+		this.inputText.add( this.inputText.getText(), 0 );
+		this.albumText.add( this.albumText.getText(), 0 );
+		this.artistText.add( this.artistText.getText(), 0 );
+		
 		/* create an empty query */
         query = new SearchQuery( core );
 
@@ -207,6 +210,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.18  2003/11/23 19:22:35  lemmster
+fixed: [ Bug #1119] Search field a combo holding previous searches
+
 Revision 1.17  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

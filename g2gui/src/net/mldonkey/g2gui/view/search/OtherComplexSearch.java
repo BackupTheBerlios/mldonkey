@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * OtherComplexSearch
  *
- * @version $Id: OtherComplexSearch.java,v 1.7 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: OtherComplexSearch.java,v 1.8 2003/11/23 19:22:35 lemmster Exp $ 
  *
  */
 public class OtherComplexSearch extends ComplexSearch {
@@ -120,6 +120,8 @@ public class OtherComplexSearch extends ComplexSearch {
 		String aText = this.inputText.getText();
 		if ( aText.equals( "" ) ) return;
 
+		this.inputText.add( aText, 0 );
+
 		/* create an empty query */
 		query = new SearchQuery( core );
 
@@ -141,6 +143,9 @@ public class OtherComplexSearch extends ComplexSearch {
 
 /*
 $Log: OtherComplexSearch.java,v $
+Revision 1.8  2003/11/23 19:22:35  lemmster
+fixed: [ Bug #1119] Search field a combo holding previous searches
+
 Revision 1.7  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

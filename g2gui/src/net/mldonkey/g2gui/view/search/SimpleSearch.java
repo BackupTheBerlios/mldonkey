@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.23 2003/09/24 05:53:00 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.24 2003/11/23 19:22:35 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -94,7 +94,10 @@ public class SimpleSearch extends Search {
 	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
 	 */
 	public void performSearch() {
+		
 		if ( ! inputText.getText().equals( "" ) ) {
+			this.inputText.add( this.inputText.getText(), 0 );
+
 			query = new SearchQuery( core );
 			/* the query string */
 			query.setSearchString( inputText.getText() );
@@ -125,6 +128,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.24  2003/11/23 19:22:35  lemmster
+fixed: [ Bug #1119] Search field a combo holding previous searches
+
 Revision 1.23  2003/09/24 05:53:00  lemmster
 CTabFolder -> Composite
 

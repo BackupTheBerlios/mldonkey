@@ -46,13 +46,12 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * Search
  *
  *
- * @version $Id: Search.java,v 1.32 2003/11/16 10:26:25 lemmster Exp $
+ * @version $Id: Search.java,v 1.33 2003/11/23 19:22:35 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -60,7 +59,7 @@ public abstract class Search implements Observer {
     protected SearchTab tab;
     protected SearchQuery query;
 	protected Combo networkCombo;
-	protected Text inputText;
+	protected Combo inputText;
 	protected String selectedMedia;
 
     /**
@@ -96,7 +95,7 @@ public abstract class Search implements Observer {
      * @param group The Group to display the box in
      * @param aString The Box header
      */
-    protected Text createInputBox( Composite group, String aString ) {
+    protected Combo createInputBox( Composite group, String aString ) {
         /* the box label */
         GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
         Label label = new Label( group, SWT.NONE );
@@ -105,21 +104,22 @@ public abstract class Search implements Observer {
 
         /* the box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        Text aText = new Text( group, SWT.SINGLE | SWT.BORDER );
-        aText.setLayoutData( gridData );
-        aText.setFont( JFaceResources.getTextFont() );
-        aText.addKeyListener( new KeyAdapter() {
+	    Combo combo = new Combo( group, SWT.SINGLE | SWT.BORDER );
+        combo.setLayoutData( gridData );
+        combo.setFont( JFaceResources.getTextFont() );
+        combo.addKeyListener( new KeyAdapter() {
             public void keyPressed( KeyEvent e ) {
             	tab.setSearchButton();
-                if ( e.character == SWT.CR )
-            		performSearch();
+                if ( e.character == SWT.CR ) {
+					performSearch();
+                }	
             }
         } );
         if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
-            aText.setText( G2GuiResources.getString( "S_UNAVAILABLE" ) );
-            aText.setEnabled( false );
+            combo.setText( G2GuiResources.getString( "S_UNAVAILABLE" ) );
+            combo.setEnabled( false );
         }
-		return aText;        
+		return combo;        
     }
     
     protected void createMediaControl( Composite group, String title, int style ) {
@@ -317,6 +317,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.33  2003/11/23 19:22:35  lemmster
+fixed: [ Bug #1119] Search field a combo holding previous searches
+
 Revision 1.32  2003/11/16 10:26:25  lemmster
 fix: [Bug #1080] Searchbox should get focused when switching to servertab
 
