@@ -32,6 +32,7 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.ObjectPool;
 import net.mldonkey.g2gui.helper.SocketPool;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -53,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.18 2003/08/19 15:39:40 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.19 2003/08/19 21:44:35 zet Exp $ 
  *
  */
 public class G2Gui {
@@ -88,6 +89,7 @@ public class G2Gui {
 		display = new Display();
 		ImageRegistry reg = G2GuiResources.getImageRegistry();
 		reg.put("splashScreen", ImageDescriptor.createFromFile(G2Gui.class, "images/splash.png") );	
+		preferenceStore = PreferenceLoader.getPreferenceStore();
 		launch( args );
 	}
 	
@@ -97,10 +99,8 @@ public class G2Gui {
 			notProcessingLink = false;
 			processingLink = true;
 		} 
-		
 		shell = new Shell( display );
 				
-		preferenceStore = new PreferenceStore( "g2gui.pref" );	
 		myPrefs = new Preferences( preferenceStore );
 		splashShell = new Shell( shell, SWT.ON_TOP );	
 		box = new MessageBox( shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
@@ -140,11 +140,18 @@ public class G2Gui {
 		catch ( IOException e ) {System.out.println("failed"); }		
 	
 		/* if the gui isnt set up yet launch the preference window */
-		if ( !( preferenceStore.getBoolean( "initialized" ) ) ) {					
+		if ( !( preferenceStore.getBoolean( "initialized" ) ) ) {
+			preferenceStore.setValue("initialized", true);	
 			if (notProcessingLink) splashShell.setVisible( false );
 			myPrefs.open( shell, null );
+			// crashes if you call myPrefs.open again 
+			// if you don't create a new Preferenes() - Why?
+			// a jface.Wizard would be better
+			// temporary hack
+			myPrefs = new Preferences( preferenceStore );
 			if (notProcessingLink) splashShell.setVisible( true );
 		}
+		
 		port = preferenceStore.getInt( "port" );		
 		hostname = preferenceStore.getString( "hostname" );			
 		username = preferenceStore.getString( "username" );			
@@ -188,11 +195,7 @@ public class G2Gui {
 		}
 		
 		/* launch the model */
-		preferenceStore.setValue("initialized", true);
-		try {
-			preferenceStore.save();
-		} catch (IOException e2) { }
-		
+		PreferenceLoader.saveStore();
 		
 		boolean pushmode = ! notProcessingLink;
 		/* wait as long as the core tells us to continue */
@@ -311,6 +314,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.19  2003/08/19 21:44:35  zet
+PreferenceLoader updates
+
 Revision 1.18  2003/08/19 15:39:40  dek
 changed some statements for build-in link-handling
 

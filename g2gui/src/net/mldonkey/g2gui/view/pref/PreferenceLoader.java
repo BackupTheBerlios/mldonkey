@@ -40,23 +40,26 @@ import org.eclipse.swt.widgets.Display;
  */
 public class PreferenceLoader {
 
+	private static PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
+	// prevent instantiation
+	private PreferenceLoader() {
+	}
+	
 	/**
 	 * @return
 	 */
-	static PreferenceStore loadStore() {
-		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
+	static void loadStore() {
 		try { preferenceStore.load(); } catch ( IOException e ) { }
-		
-		preferenceStore =  ( PreferenceStore ) setDefaults(preferenceStore);
-		return preferenceStore;
+		preferenceStore =  ( PreferenceStore ) setDefaults( preferenceStore );
 	}
-	
 	/**
 	 * @param preferenceStore
 	 * @return
 	 */
 	static IPreferenceStore setDefaults(IPreferenceStore preferenceStore) {
 		Display display = Display.getDefault();
+	
+		preferenceStore.setDefault( "initialized", false );
 	
 		PreferenceConverter.setDefault(preferenceStore, "consoleBackground", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );
 		PreferenceConverter.setDefault(preferenceStore, "consoleForeground", display.getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB() );
@@ -85,8 +88,7 @@ public class PreferenceLoader {
 	 * @return
 	 */
 	static public Font loadFont( String preferenceString ) {
-		PreferenceStore preferenceStore = loadStore();
-		
+		loadStore();
 		if (preferenceStore.contains( preferenceString )) 	
 			return new Font (null, PreferenceConverter.getFontDataArray( preferenceStore, preferenceString ) ); 
 		return null;
@@ -96,8 +98,7 @@ public class PreferenceLoader {
 	 * @return
 	 */
 	static public Color loadColour (String preferenceString ) {
-		PreferenceStore preferenceStore =  loadStore();
-		
+		loadStore();
 		if (preferenceStore.contains( preferenceString ))
 			return new Color( null, PreferenceConverter.getColor(preferenceStore, preferenceString ) );
 		return null;
@@ -107,8 +108,7 @@ public class PreferenceLoader {
 	 * @return
 	 */
 	static public boolean loadBoolean (String preferenceString ) {
-		PreferenceStore preferenceStore = loadStore();
-				
+		loadStore();
 		if (preferenceStore.contains( preferenceString ))
 			return preferenceStore.getBoolean( preferenceString );
 		return true;
@@ -119,15 +119,27 @@ public class PreferenceLoader {
 	 * @return
 	 */
 	static public int  loadInteger(String preferenceString ) {
-		PreferenceStore preferenceStore = loadStore();
-		
+		loadStore();
 		if (preferenceStore.contains( preferenceString ))
 			return preferenceStore.getInt( preferenceString );
 		return 0;
 	}
+	
+	static public PreferenceStore getPreferenceStore() {
+		loadStore();
+		return preferenceStore;
+	}
+	static public void saveStore() {
+		try { preferenceStore.save(); }
+		catch ( IOException e2 ) {  }
+	}
+	
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.9  2003/08/19 21:44:35  zet
+PreferenceLoader updates
+
 Revision 1.8  2003/08/19 17:12:56  zet
 set defaults
 
