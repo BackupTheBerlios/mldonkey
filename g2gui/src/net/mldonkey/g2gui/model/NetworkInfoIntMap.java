@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.trove.TIntObjectIterator;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
@@ -29,7 +30,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: NetworkInfoIntMap.java,v 1.6 2003/07/07 20:01:35 dek Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.7 2003/07/28 08:17:41 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap {
@@ -84,10 +85,31 @@ public class NetworkInfoIntMap extends InfoIntMap {
 		
 		return result;		
 	}
+	
+	/**
+	 * Get a network by the NetworkInfo.Enum or null i network is not presented
+	 * @param enum The NetworkInfo.Enum to search for
+	 * @return The corresponding NetworkInfo
+	 */
+	public NetworkInfo getByEnum( NetworkInfo.Enum enum ) {
+		TIntObjectIterator itr = this.infoIntMap.iterator();
+		int size = this.infoIntMap.size();
+		for ( ; size > 0; size-- ) {
+			itr.advance();
+			NetworkInfo elem = ( NetworkInfo ) itr.value();
+			if ( elem.getNetworkType() == enum ) {
+				return elem;
+			}
+		}
+		return null;
+	}
 }
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.7  2003/07/28 08:17:41  lemmstercvs01
+added getByEnum()
+
 Revision 1.6  2003/07/07 20:01:35  dek
 some useful method introduced: Networkitem[] getNetworks()
 
