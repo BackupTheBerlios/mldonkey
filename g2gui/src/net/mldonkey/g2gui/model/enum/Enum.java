@@ -27,7 +27,7 @@ package net.mldonkey.g2gui.model.enum;
  * Enum
  *
  *
- * @version $Id: Enum.java,v 1.6 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: Enum.java,v 1.7 2003/10/31 11:01:16 lemmster Exp $
  *
  */
 public abstract class Enum {
@@ -60,22 +60,26 @@ public abstract class Enum {
          * Adds an new <code>Enum</code> to the EnumMask
            * @param enum
          */
-        public void add(Enum enum) {
+        public boolean add(Enum enum) {
             if (!matches(enum)) {
                 this.enumMask += enum.field;
                 this.enumCounter++;
+                return true;
             }
+            return false;
         }
 
         /**
          * Removes an <code>Enum</code> from the EnumMask
           * @param enum
          */
-        public void remove(Enum enum) {
+        public boolean remove(Enum enum) {
             if (matches(enum)) {
                 this.enumMask -= enum.field;
                 this.enumCounter--;
+                return true;
             }
+            return false;
         }
 
         /**
@@ -101,6 +105,9 @@ public abstract class Enum {
 
 /*
 $Log: Enum.java,v $
+Revision 1.7  2003/10/31 11:01:16  lemmster
+TestCase for EnumMaskMatcher
+
 Revision 1.6  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
@@ -123,7 +130,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
 Enum more improved
