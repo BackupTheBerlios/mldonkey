@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.45 2003/10/31 13:17:10 lemmster Exp $
+ * @version $Id: G2GuiResources.java,v 1.46 2003/10/31 16:35:08 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -286,7 +286,7 @@ public class G2GuiResources {
         reg.put( "copy", createRawMImage( "copy.gif" ) );
         reg.put( "clear", createRawMImage( "clear.gif" ) );
         reg.put( "graph", createRawMImage( "graph.gif" ) );
-        reg.put( "dropdown", createRawImage( "dropdown.gif" ) );
+        reg.put( "dropdown", createRawMImage( "dropdown.gif" ) );
     }
 
     /**
@@ -432,6 +432,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.46  2003/10/31 16:35:08  zet
+typo
+
 Revision 1.45  2003/10/31 13:17:10  lemmster
 dropdown.gif added
 
@@ -548,7 +551,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
