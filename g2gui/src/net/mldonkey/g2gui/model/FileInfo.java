@@ -48,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.90 2004/03/22 19:17:58 dek Exp $
+ * @version $Id: FileInfo.java,v 1.91 2004/03/24 20:41:19 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -433,7 +433,7 @@ public class FileInfo extends Parent implements Observer {
     		if ( rate == 0 )
     			return "-";
     		else
-    			return df.format( rate / 1000f );
+    			return RegExp.getDecimalFormat(rate / 1000f );
     	} else {
     		return state.getState().toString();
     	}
@@ -1131,6 +1131,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.91  2004/03/24 20:41:19  dek
+removed absolutely unnescessaray DecimalFormat instance from parent (this was created for every!! single ClientInfo etc, even if it was never used..)
+
 Revision 1.90  2004/03/22 19:17:58  dek
 identified mysterious state-id as fileID currently beeing x-ferred
 

@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -33,12 +32,12 @@ import net.mldonkey.g2gui.model.enum.EnumExtension;
  * Parent
  *
  *
- * @version $Id: Parent.java,v 1.9 2003/12/07 19:38:09 lemmy Exp $ 
+ * @version $Id: Parent.java,v 1.10 2004/03/24 20:41:19 dek Exp $ 
  *
  */
 public abstract class Parent extends SimpleInformation {
 	// helper class for "rounding"
-	protected final DecimalFormat df = new DecimalFormat( "0.0" );
+	//protected final DecimalFormat df = new DecimalFormat( "0.0" );
 	/**
 	 * The CoreCommunication parent
 	 */
@@ -112,6 +111,9 @@ public abstract class Parent extends SimpleInformation {
 
 /*
 $Log: Parent.java,v $
+Revision 1.10  2004/03/24 20:41:19  dek
+removed absolutely unnescessaray DecimalFormat instance from parent (this was created for every!! single ClientInfo etc, even if it was never used..)
+
 Revision 1.9  2003/12/07 19:38:09  lemmy
 refactoring
 
@@ -128,7 +130,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.3  2003/08/21 13:13:10  lemmy
 cleanup in networkitem

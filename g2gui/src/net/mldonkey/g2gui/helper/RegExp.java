@@ -34,14 +34,15 @@ import java.util.List;
 /**
  * RegExp
  *
- * @version $Id: RegExp.java,v 1.5 2003/12/17 13:06:03 lemmy Exp $
+ * @version $Id: RegExp.java,v 1.6 2004/03/24 20:41:19 dek Exp $
  *
  */
 public class RegExp {
 	/**
 	 * Decimal format for calcStringSize
 	 */
-	private static final DecimalFormat df = new DecimalFormat("0.#");
+	private static final DecimalFormat df1 = new DecimalFormat("0.#");
+	private static final  DecimalFormat df2 = new DecimalFormat( "0.0" );
 
     /**
      * @param aString
@@ -106,13 +107,13 @@ public class RegExp {
 		float fsize = size;
 
 		if (fsize >= t) {
-			return new String(df.format(fsize / t) + " TB");
+			return new String(df1.format(fsize / t) + " TB");
 		} else if (fsize >= g) {
-			return new String(df.format(fsize / g) + " GB");
+			return new String(df1.format(fsize / g) + " GB");
 		} else if (fsize >= m) {
-			return new String(df.format(fsize / m) + " MB");
+			return new String(df1.format(fsize / m) + " MB");
 		} else if (fsize >= k) {
-			return new String(df.format(fsize / k) + " KB");
+			return new String(df1.format(fsize / k) + " KB");
 		} else {
 			return new String(size + "");
 		}
@@ -145,11 +146,19 @@ public class RegExp {
 		String objString = aClass.getName();
 		return objString.substring(objString.lastIndexOf( "." ) + 1, objString.length());
 	}
+	
+	public static String getDecimalFormat(float afloat){
+		
+		return df2.format( afloat );
+	}
 }
 
 
 /*
 $Log: RegExp.java,v $
+Revision 1.6  2004/03/24 20:41:19  dek
+removed absolutely unnescessaray DecimalFormat instance from parent (this was created for every!! single ClientInfo etc, even if it was never used..)
+
 Revision 1.5  2003/12/17 13:06:03  lemmy
 save all panelistener states correctly to the prefstore
 
