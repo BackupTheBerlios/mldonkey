@@ -21,5 +21,6 @@
 	* Transfer: Add FileDetail chunk graphs for all active networks	
 	* Transfer: Fix FileDetail buttons [#897], move header menu
 	* Transfer: Fix display of files >2gb [#916]
+	* Transfer: Add menuItem: Commit as (filename selection)
 	* Statistics: Add header doubleClick to maximize a graph [#916]
 	* Win TrayIcon: continue updating toolTip UL/DL rates while gui is visible
