@@ -72,7 +72,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.13 2004/03/09 19:16:27 dek Exp $
+ * @version $Id: MainWindow.java,v 1.14 2004/03/14 20:59:40 dek Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText;
@@ -156,7 +156,8 @@ public class MainWindow implements ShellListener {
                     PreferenceLoader.cleanUp(); */ 
                 }
             });
-         trayMenu = new SystemTray(this);
+        if ( SWT.getPlatform().equals("win32") )
+        	trayMenu = new SystemTray(this);
 
 
         try {
@@ -510,6 +511,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.14  2004/03/14 20:59:40  dek
+no tray if != win
+
 Revision 1.13  2004/03/09 19:16:27  dek
 Now the Systray-Menu becomes usable, now featuring" tooltip"
 
