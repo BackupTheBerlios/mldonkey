@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.66 2003/07/22 16:03:24 zet Exp $ 
+ * @version $Id: Core.java,v 1.67 2003/07/23 17:04:26 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -75,13 +75,14 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 					 sharedFileInfoList   = new SharedFileInfoList( this ),	
 					 optionsInfoMap       = new OptionsInfoMap( this ),
 					 networkinfoMap       = new NetworkInfoIntMap( this ),
-					 defineSearchMap      = new DefineSearchMap( this );
+					 defineSearchMap      = new DefineSearchMap( this ),
+					 resultInfoMap		  = new ResultInfoIntMap( this );
 
 	/**
 	 * 
 	 */
-	private TIntObjectHashMap resultInfo = new TIntObjectHashMap(),
-							   userInfo = new TIntObjectHashMap();
+	private TIntObjectHashMap userInfo = new TIntObjectHashMap(),
+							   resultInfo = new TIntObjectHashMap();
 
 	/**
 	 * 
@@ -187,14 +188,12 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 					ResultInfo result = new ResultInfo( this );
 					result.readStream( messageBuffer );
 					this.resultInfo.put( result.getResultID(), result );
-					this.setChanged();	
-					this.notifyObservers( result );
 					break;
 					
 			case Message.R_SEARCH_RESULT :
-					this.searchResult.readStream( messageBuffer );		
+					this.resultInfoMap.readStream( messageBuffer );		
 					this.setChanged();	
-					this.notifyObservers( searchResult );
+					this.notifyObservers( resultInfoMap );
 					break;
 					
 			case Message.R_OPTIONS_INFO :
@@ -347,10 +346,27 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 		disconnect();
 		
 	}
+	/**
+	 * @return A Map with all the resultInfos
+	 */
+	public TIntObjectHashMap getResultInfo() {
+		return resultInfo;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getFileInfoIntMap()
+	 */
+	public FileInfoIntMap getFileInfoIntMap() {
+		return ( FileInfoIntMap ) this.fileInfoMap;
+	}
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.67  2003/07/23 17:04:26  lemmstercvs01
+modified SEARCH_RESULT and RESULT_INFO
+
 Revision 1.66  2003/07/22 16:03:24  zet
 There is no IOException if core is not open
 
