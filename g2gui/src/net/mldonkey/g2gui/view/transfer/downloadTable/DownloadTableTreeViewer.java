@@ -39,6 +39,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableTreeItem;
@@ -49,7 +50,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.21 2003/10/31 22:34:58 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.22 2003/10/31 22:36:18 zet Exp $
  *
  */
 public class DownloadTableTreeViewer extends GTableTreeView implements ICellModifier,
@@ -116,20 +117,26 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
         createContents(parent);
     }
 
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeView#createContents(org.eclipse.swt.widgets.Composite)
+     */
     public void createContents(Composite parent) {
         super.createContents(parent);
-        
+
         if (SWT.getPlatform().equals("gtk")) {
             getTable().getColumns()[ 0 ].pack();
         }
 
         addMenuListener();
-		tableTreeViewer.addDoubleClickListener(this);
-		tableTreeViewer.addSelectionChangedListener((DownloadTableTreeMenuListener) tableTreeMenuListener);
-		tableTreeViewer.setInput(core.getFileInfoIntMap());
+        tableTreeViewer.addDoubleClickListener(this);
+        tableTreeViewer.addSelectionChangedListener((DownloadTableTreeMenuListener) tableTreeMenuListener);
+        tableTreeViewer.setInput(core.getFileInfoIntMap());
         core.getFileInfoIntMap().addObserver((DownloadTableTreeContentProvider) tableTreeContentProvider);
     }
 
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.viewers.GView#loadColumnIDs()
+     */
     public void loadColumnIDs() {
         if (advancedMode) {
             super.loadColumnIDs();
@@ -138,12 +145,12 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
         }
     }
 
-    /**
-     * Create columns
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.viewers.GView#createColumns()
      */
     public void createColumns() {
         super.createColumns();
-		tableTreeViewer = getTableTreeViewer();
+        tableTreeViewer = getTableTreeViewer();
         tableTreeViewer.setColumnProperties(columnLabels);
 
         if (cellEditors != null) {
@@ -216,30 +223,30 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
         table.setLinesVisible(PreferenceLoader.loadBoolean("displayGridLines"));
 
         if (PreferenceLoader.loadBoolean("tableCellEditors")) {
-			tableTreeViewer.setCellEditors(cellEditors);
-			tableTreeViewer.setCellModifier(this);
+            tableTreeViewer.setCellEditors(cellEditors);
+            tableTreeViewer.setCellModifier(this);
         } else {
-			tableTreeViewer.setCellEditors(null);
-			tableTreeViewer.setCellModifier(null);
+            tableTreeViewer.setCellEditors(null);
+            tableTreeViewer.setCellModifier(null);
         }
 
         if (advancedMode) {
             boolean b = PreferenceLoader.loadBoolean("displayChunkGraphs");
 
             if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
-				tableTreeViewer.setChunksColumn(columnIDs.indexOf(CHUNK_COLUMN));
+                tableTreeViewer.setChunksColumn(columnIDs.indexOf(CHUNK_COLUMN));
             }
 
             if ((b == false) && tableTreeViewer.getEditors()) {
-				tableTreeViewer.closeAllTTE();
+                tableTreeViewer.closeAllTTE();
 
                 if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
-					tableTreeViewer.setEditors(b);
+                    tableTreeViewer.setEditors(b);
                 }
             } else if ((b == true) && !tableTreeViewer.getEditors()) {
                 if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
-					tableTreeViewer.setEditors(true);
-					tableTreeViewer.openAllTTE();
+                    tableTreeViewer.setEditors(true);
+                    tableTreeViewer.openAllTTE();
                 }
             }
         }
@@ -265,6 +272,9 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
         }
     }
 
+    /**
+     * toggle Clients table
+     */
     public void toggleClientsTable() {
         if (clientView != null) {
             SashForm sashForm = (SashForm) parent.getParent().getParent();
@@ -289,9 +299,9 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
             FileInfo fileInfo = (FileInfo) o;
 
             if (tableTreeViewer.getExpandedState(fileInfo)) {
-				tableTreeViewer.collapseToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
+                tableTreeViewer.collapseToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
             } else {
-				tableTreeViewer.expandToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
+                tableTreeViewer.expandToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
             }
         } else if (o instanceof TreeClientInfo) {
             TreeClientInfo treeClientInfo = (TreeClientInfo) o;
@@ -304,6 +314,9 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.22  2003/10/31 22:36:18  zet
+minor
+
 Revision 1.21  2003/10/31 22:34:58  zet
 minor
 
