@@ -56,7 +56,7 @@ import java.util.Map;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.5 2003/11/07 02:24:03 zet Exp $
+ * @version $Id: GView.java,v 1.6 2003/11/09 22:31:51 lemmster Exp $
  *
  */
 public abstract class GView {
@@ -340,7 +340,9 @@ public abstract class GView {
      * of the elements.
      */
     public void resetFilters() {
-        getViewer().resetFilters();
+        this.sViewer.resetFilters();
+		Map aMap = (Map) getViewer().getData(GViewerFilter.class.getName());
+		aMap.clear();
     }
 
     /**
@@ -375,6 +377,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.6  2003/11/09 22:31:51  lemmster
+fixed 'show all' bug
+
 Revision 1.5  2003/11/07 02:24:03  zet
 push sViewer into GView
 
