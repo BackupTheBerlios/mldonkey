@@ -40,8 +40,6 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumState;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.ITreeViewerListener;
-import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTreeEditor;
@@ -55,11 +53,10 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeContentProvider
  *
- *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.17 2003/08/23 19:44:12 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.18 2003/08/30 00:44:01 zet Exp $ 
  *
  */
-public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
+public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, TreeListener {
 		
 	private static Object[] EMPTY_ARRAY = new Object[0];	
 	public CustomTableTreeViewer tableTreeViewer = null;
@@ -318,24 +315,6 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	{
 		updateAllEditors();
 	}
-	
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse.jface.viewers.TreeExpansionEvent)
-	 * (data)
-	 */
-	public void treeCollapsed(TreeExpansionEvent event) 
-	{
-	}
-	
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse.jface.viewers.TreeExpansionEvent)
-	 */
-	public void treeExpanded(TreeExpansionEvent event)
-	{
-	}
-
 
 // Hack to update TableTreeEditors
 // A viewer can keep TableTreeItems in place while moving the associated data,
@@ -545,6 +524,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.18  2003/08/30 00:44:01  zet
+move tabletree menu
+
 Revision 1.17  2003/08/23 19:44:12  zet
 split transfer table to basic/advanced modes
 

@@ -37,6 +37,7 @@ import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
+import net.mldonkey.g2gui.view.transferTree.DownloadPaneMenuListener;
 import net.mldonkey.g2gui.view.transferTree.DownloadTableTreeContentProvider;
 import net.mldonkey.g2gui.view.transferTree.DownloadTableTreeViewer;
 import net.mldonkey.g2gui.view.transferTree.clientTable.TableContentProvider;
@@ -64,13 +65,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.48 2003/08/29 22:11:47 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.49 2003/08/30 00:44:01 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -80,6 +84,7 @@ public class TransferTab extends GuiTab  {
 	private CustomTableViewer clientTableViewer = null;
 	private CLabel downloadCLabel;
 	private Composite downloadComposite;
+	private MenuManager popupMenu;
 		
 	/**
 	 * @param gui where this tab belongs to
@@ -104,8 +109,6 @@ public class TransferTab extends GuiTab  {
 
 		downloadCLabel = CCLabel.createCL(downloadViewForm, "TT_Downloads", "TransfersButtonSmallTitlebar");	
 		
-		downloadViewForm.setTopLeft(downloadCLabel);
-		
 		if (PreferenceLoader.loadBoolean("advancedMode")) {
 			SashForm sashForm = createClientSash(downloadViewForm);
 			downloadViewForm.setContent(sashForm);
@@ -117,9 +120,26 @@ public class TransferTab extends GuiTab  {
 		
 		createUploads(mainSashForm);
 		
+		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, clientTableViewer, mldonkey, this );		
+		
+		popupMenu = new MenuManager("");
+		popupMenu.setRemoveAllWhenShown(true);
+		popupMenu.addMenuListener(new DownloadPaneMenuListener(downloadTableTreeViewer.getTableTreeViewer(), mldonkey));
+		
+		ToolBar downloadToolBar = new ToolBar(downloadViewForm, SWT.NONE);
+		ToolItem sendItem = new ToolItem(downloadToolBar, SWT.FLAT );
+		sendItem.setImage(G2GuiResources.getImage("DropDown"));
+		sendItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected (SelectionEvent s) {
+				Menu menu = popupMenu.createContextMenu(downloadComposite);
+				menu.setVisible(true);
+			}	
+		});
+		
+		downloadViewForm.setTopLeft(downloadCLabel);
+		downloadViewForm.setTopRight(downloadToolBar);
 		mainSashForm.setWeights( new int[] {10,0});
 		
-		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, clientTableViewer, mldonkey, this );		
 		mldonkey.getFileInfoIntMap().addObserver( this );
 		
 	}
@@ -319,10 +339,18 @@ public class TransferTab extends GuiTab  {
 			clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
 		super.updateDisplay();
 	}
+	
+	public void dispose() {
+		super.dispose();
+		popupMenu.dispose();
+	}
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.49  2003/08/30 00:44:01  zet
+move tabletree menu
+
 Revision 1.48  2003/08/29 22:11:47  zet
 add CCLabel helper class
 

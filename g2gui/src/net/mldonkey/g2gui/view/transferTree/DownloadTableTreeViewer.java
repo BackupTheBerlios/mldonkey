@@ -43,9 +43,6 @@ import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -53,13 +50,12 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 
 /**
  * DownloadTable
  *
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.20 2003/08/24 19:38:31 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.21 2003/08/30 00:44:01 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -200,18 +196,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 								 
 		}
 		
-		/*this is to delete the selection, if one clicks in an empty row of the table*/
-		tableTreeViewer.getTableTree().getTable().addMouseListener( new MouseListener() {
-			public void mouseDoubleClick( MouseEvent e ) { }
-			
-			public void mouseDown( MouseEvent e ) {
-				Table table = ( Table ) e.widget;
-				TableItem item = table.getItem( new Point( e.x, e.y ) );	
-				if ( item == null )
-					table.setSelection( new int[ 0 ] );		
-			}
-			public void mouseUp( MouseEvent e ) { }
-		} );
 		/*this is to expand/collapse the selected item on double-click*/
 		tableTreeViewer.addDoubleClickListener(new IDoubleClickListener(){
 			public void doubleClick(DoubleClickEvent e) {
@@ -253,8 +237,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		
 		tableTreeViewer.addSelectionChangedListener(tableTreeMenuListener);
 	
-	// tableTreeViewer.addTreeListener(tableTreeContentProvider);
-		
 		popupMenu = new MenuManager("");
 		popupMenu.setRemoveAllWhenShown(true);
 		popupMenu.addMenuListener(tableTreeMenuListener);
@@ -277,6 +259,10 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			tableTreeViewer.setCellEditors(cellEditors);
 			tableTreeViewer.setCellModifier(this);
 		}		
+	}
+	public CustomTableTreeViewer getTableTreeViewer() {
+		return tableTreeViewer;
+		
 	}
 	
 	/* (non-Javadoc)
@@ -343,6 +329,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.21  2003/08/30 00:44:01  zet
+move tabletree menu
+
 Revision 1.20  2003/08/24 19:38:31  zet
 minor
 
