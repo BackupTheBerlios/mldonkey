@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.7 2003/07/04 11:04:14 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.8 2003/07/04 12:15:17 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -157,18 +157,19 @@ public class FileInfoIntMap extends InfoIntMap {
 	}
 	
 	/**
-	 * Removes all compelte downloads from this map
-	 * (EnumFileState == DOWNLOADED)
+	 * Removes all compelte and canceled downloads from this map
+	 * (EnumFileState == DOWNLOADED || EnumFileState == CANCELED )
 	 * Needs manual refresh() of the tableviewer.
 	 */
-	public void removeComplete() {
+	public void removeObsolete() {
 		TIntObjectIterator itr = this.iterator();
 		int collsize = this.size();
 		for ( ; collsize-- > 0;) {
 			itr.advance();
 			FileInfo aFileInfo = ( FileInfo ) itr.value();
 			/* if EnumFileState.DOWNLOADED, remove the fileinfo from this */
-			if ( aFileInfo.getState().getState() == EnumFileState.DOWNLOADED ) {
+			if ( aFileInfo.getState().getState() == EnumFileState.DOWNLOADED
+				|| aFileInfo.getState().getState() == EnumFileState.CANCELLED ) {
 				this.infoIntMap.remove( itr.key() );
 			}
 		}
@@ -177,6 +178,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.8  2003/07/04 12:15:17  lemmstercvs01
+removeObsolete renamed/modified
+
 Revision 1.7  2003/07/04 11:04:14  lemmstercvs01
 add some opcodes
 
