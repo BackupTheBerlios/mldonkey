@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.22 2003/07/03 01:56:45 zet Exp $ 
+ * @version $Id: Gui.java,v 1.23 2003/07/03 17:45:36 mitch Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -331,7 +331,8 @@ public class Gui implements IG2gui, Listener {
 	 * for the content and their button.
 	 */
 	private void addTabs() {
-		new TransferTab( this );
+		// new TransferTab( this );
+		new DownloadTab(this);
 		new ConsoleTab( this );
 		/*setting TransferTab active if registered*/
 		Iterator tabIterator = registeredTabs.iterator();
@@ -456,6 +457,10 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.23  2003/07/03 17:45:36  mitch
+exchanged TransferTab by DownloadTab
+experimental!!!
+
 Revision 1.22  2003/07/03 01:56:45  zet
 attempt(?) to save window size/pos & table column widths between sessions
 
