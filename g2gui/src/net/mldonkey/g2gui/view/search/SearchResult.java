@@ -47,6 +47,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MenuEvent;
+import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -64,6 +66,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -74,10 +77,9 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  * @author $Author: lemmster $
- * @version $Id: SearchResult.java,v 1.23 2003/08/22 21:10:57 lemmster Exp $ 
+ * @version $Id: SearchResult.java,v 1.24 2003/08/23 08:30:07 lemmster Exp $ 
  *
  */
-//TODO fake search, real links depending on network								   
 public class SearchResult implements Observer, Runnable, DisposeListener {	
 	private MainTab mainTab;
 	private CTabFolder cTabFolder;
@@ -274,7 +276,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			}
 		} );
 		
-		/*add a mouse-listener to catch double-clicks */
+		/* add a mouse-listener to catch double-clicks */
 		table.getTable().addMouseListener( new MouseListener() {
 			public void mouseDoubleClick( MouseEvent e ) {
 				downloadSelected();
@@ -282,6 +284,22 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			public void mouseDown( MouseEvent e ) { }
 			public void mouseUp( MouseEvent e ) { }
 		} );
+		
+		/*
+		 * add a menulistener to set the first item to default
+		 * sadly not possible with the MenuManager Class
+		 * (Feature Request on eclipse?)
+		 */
+		Menu menu = table.getTable().getMenu();
+		menu.addMenuListener( new MenuListener(){
+			public void menuShown( MenuEvent e ) {
+				Menu menu = table.getTable().getMenu();
+				if ( !table.getSelection().isEmpty() )
+					menu.setDefaultItem( menu.getItem( 0 ) );
+			}
+			public void menuHidden( MenuEvent e ) { }
+		} );
+
 		
 		final ToolTipHandler tooltip = new ToolTipHandler( table.getTable().getShell() );
 		tooltip.activateHoverHelp( table.getTable() );
@@ -293,15 +311,15 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	
 	private void downloadSelected() {				
 		TableItem[] currentItems = table.getTable().getSelection();
+		Download download = new Download( core );
 		for ( int i = 0; i < currentItems.length;	 i ++ ) {
 			ResultInfo result = ( ResultInfo ) currentItems[ i ].getData();
-			Download download = new Download( core );
 			download.setPossibleNames( result.getNames() );	
 			download.setResultID( result.getResultID() );
 			download.setForce( false );
 			download.send();
-			download = null;
 		}
+		download = null;
 	}
 	
 	/**
@@ -536,8 +554,11 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.24  2003/08/23 08:30:07  lemmster
+added defaultItem to the table
+
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

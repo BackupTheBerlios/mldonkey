@@ -45,6 +45,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MenuEvent;
+import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -54,14 +56,15 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
  * ServerTab
  *
- * @author $Author: zet $
- * @version $Id: ServerTab.java,v 1.12 2003/08/20 22:18:56 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ServerTab.java,v 1.13 2003/08/23 08:30:07 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -203,6 +206,21 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			}
 		} );
 		
+		/*
+		 * add a menulistener to set the first item to default
+		 * sadly not possible with the MenuManager Class
+		 * (Feature Request on eclipse?)
+		 */
+		Menu menu = table.getTable().getMenu();
+		menu.addMenuListener( new MenuListener(){
+			public void menuShown( MenuEvent e ) {
+				Menu menu = table.getTable().getMenu();
+				if ( !table.getSelection().isEmpty() )
+					menu.setDefaultItem( menu.getItem( 0 ) );
+			}
+			public void menuHidden( MenuEvent e ) { }
+		} );
+
 		/* fill the table with content */
 		servers = this.core.getServerInfoIntMap();
 		this.table.setInput( servers );
@@ -383,6 +401,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.13  2003/08/23 08:30:07  lemmster
+added defaultItem to the table
+
 Revision 1.12  2003/08/20 22:18:56  zet
 Viewer updates
 
