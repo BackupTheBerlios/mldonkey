@@ -30,6 +30,7 @@ import java.util.ResourceBundle;
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.ObjectPool;
 import net.mldonkey.g2gui.helper.SocketPool;
 import net.mldonkey.g2gui.view.pref.Preferences;
@@ -51,10 +52,11 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.9 2003/08/15 22:39:53 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.10 2003/08/16 13:52:49 dek Exp $ 
  *
  */
 public class G2Gui {
+	private static Socket socket;
 	private static boolean notProcessingLink = true;
 	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private static Process p;
@@ -140,7 +142,7 @@ public class G2Gui {
 		password = preferenceStore.getString( "password" );
 		
 		/* create the socket connection to the core */
-		Socket socket = null;
+		socket = null;
 		try {
 			socketPool = new SocketPool( hostname, port );
 			socket = ( Socket ) socketPool.checkOut();
@@ -194,7 +196,9 @@ public class G2Gui {
 			MainTab g2gui = new MainTab( core, shell );
 		}
 		else {
-			sendEd2kLink();
+			shell.dispose();
+			display.dispose();			
+			sendDownloadLink(args);
 		}
 		core.disconnect();
 	}
@@ -206,15 +210,21 @@ public class G2Gui {
 	private static boolean containsLink(String[] args) {
 		/*TODO: regex-check wether the args[] contains an ed2k-link
 		 * this is for the handling of platform independent link-handling-hack
+		 * but this seems not to be important, as core ignores malformed links
 		 */
-		return false;
+		if ( args.length!= 0) return true;
+		else return false;
 	}
 
 	/**
 	 * 
 	 */
-	private static void sendEd2kLink() {
-		//TODO creating message and send it out
+	private static void sendDownloadLink(String[] args) {
+		
+		//TODO creating message and send it out		
+		Object[] content = args;		
+		EncodeMessage link = new EncodeMessage(Message.S_DLLINK,content);		
+		link.sendMessage(socket);
 		shell.dispose();
 		display.dispose();
 		
@@ -283,6 +293,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.10  2003/08/16 13:52:49  dek
+ed2k-link handling-hack continued
+
 Revision 1.9  2003/08/15 22:39:53  dek
 ed2k-link handling-hack started
 

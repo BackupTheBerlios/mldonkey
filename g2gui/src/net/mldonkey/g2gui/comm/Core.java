@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
@@ -37,7 +39,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.81 2003/08/15 22:39:44 dek Exp $ 
+ * @version $Id: Core.java,v 1.82 2003/08/16 13:51:09 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -202,9 +204,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 						this.usingVersion = coreProtocol;
 					else
 						this.usingVersion = protocolVersion;
-					
-					this.sendPassword( this.username, this.password );	
 					this.sendPushmode(pushmodeEnabled);
+					this.sendPassword( this.username, this.password );	
+					
 					break;
 					
 			case Message.R_DEFINE_SEARCH :
@@ -350,7 +352,17 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 */
 	private void sendPushmode( boolean pushmodeEnabled ) {
 		if ( pushmodeEnabled ){	
-			//TODO creating message and send it out			
+			
+		ArrayList output = new ArrayList();
+		/*Header: We have only one entry*/
+		output.add( new Short( ( short )1 ) );
+		
+		/*Content: We have 2 columns:*/
+		output.add( new Integer(1) );
+		output.add( new Byte( ( byte )1 ) ); 
+		
+		EncodeMessage pushmode = new EncodeMessage(Message.S_GUIEXTENSION,output.toArray());
+					
 		}
 		
 	}
@@ -465,6 +477,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.82  2003/08/16 13:51:09  dek
+ed2k-link handling-hack continued
+
 Revision 1.81  2003/08/15 22:39:44  dek
 ed2k-link handling-hack started
 
