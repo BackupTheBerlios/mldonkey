@@ -25,15 +25,19 @@ package net.mldonkey.g2gui.comm;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.*;
+import net.mldonkey.g2gui.view.InterFaceUI;
 
 /**
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.21 2003/06/17 12:11:02 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.22 2003/06/17 13:27:32 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -49,6 +53,10 @@ public class Core extends Thread implements CoreCommunication {
 	 * 
 	 */
 	private int coreProtocol = 0;
+	/**
+	 * 
+	 */
+	private List registeredListeners = new ArrayList();
 	/**
 	 * 
 	 */
@@ -149,7 +157,6 @@ public class Core extends Thread implements CoreCommunication {
 			case Message.R_COREPROTOCOL :				
 					coreProtocol = messageBuffer.readInt32();
 					/* send a request for FileInfoList */					
-					this.requestFileInfoList();
 					break;
 					
 			case Message.R_DEFINE_SEARCH :
@@ -206,6 +213,7 @@ public class Core extends Thread implements CoreCommunication {
 					
 			case Message.R_DOWNLOAD :
 					( ( FileInfoIntMap )this.fileInfoMap ).add( messageBuffer );
+					this.notifyListeners( fileInfoMap );
 					break;					
 
 			case Message.R_CONSOLE :				
@@ -238,22 +246,33 @@ public class Core extends Thread implements CoreCommunication {
 		}
 	}
 	
-
-
 	/**
-	 * Sends a FileInfoList request to the core
+	 * 
+	 * @param anInterfaceUi
+	 * @return
 	 */
-	public void requestFileInfoList() {
-		Message downloadingFiles = new EncodeMessage( Message.S_GETDOWNLOADING_FILES );
-		downloadingFiles.sendMessage( connection );
-		downloadingFiles = null;
+	public boolean registerListener( InterFaceUI anInterFaceUI ) {
+		if ( this.registeredListeners.contains( anInterFaceUI ) ) {
+			return false;
+		}
+		else {
+			this.registeredListeners.add( anInterFaceUI );
+			return true;
+		}
 	}
 	
-/*	public void requestFileDownloadUpdate() {
-		Message downloadUpdate = new EncodeMessage( Message.S_FILE_DOWNLOAD_UPDATE );
-		downloadUpdate.sendMessage( connection );
-		downloadUpdate = null;
-	}*/
+	/**
+	 * 
+	 * @param anInformation
+	 */
+	public void notifyListeners( InfoCollection anInfoCollection ) {
+		Iterator itr = this.registeredListeners.iterator();
+		while ( itr.hasNext() ) {
+			InterFaceUI anInterFaceUI = ( InterFaceUI ) itr.next();
+			anInterFaceUI.notify( anInfoCollection );
+		}
+	}
+
 	/**
 	 * @return
 	 */
@@ -265,6 +284,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.22  2003/06/17 13:27:32  lemmstercvs01
+added listener managment for the view
+
 Revision 1.21  2003/06/17 12:11:02  lemmstercvs01
 this.run() in constructor removed, getter method for fileInfoList added
 
