@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.SharedFileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
@@ -41,7 +43,7 @@ import org.eclipse.swt.dnd.Transfer;
 /**
  * UploadTableMenuListener
  *
- * @version $Id: UploadTableMenuListener.java,v 1.1 2003/09/26 11:55:48 dek Exp $ 
+ * @version $Id: UploadTableMenuListener.java,v 1.2 2003/09/27 00:02:37 dek Exp $ 
  *
  */
 class UploadTableMenuListener
@@ -50,7 +52,7 @@ class UploadTableMenuListener
 	/**
 	 * CopyEd2kLinkAction
 	 *
-	 * @version $Id: UploadTableMenuListener.java,v 1.1 2003/09/26 11:55:48 dek Exp $ 
+	 * @version $Id: UploadTableMenuListener.java,v 1.2 2003/09/27 00:02:37 dek Exp $ 
 	 *
 	 */
 	private SharedFileInfoIntMap sharedFileInfoMap;
@@ -85,6 +87,7 @@ class UploadTableMenuListener
 		/*copy ED2K-Link*/
 		if ( ( selectedFile != null ) )
 			menuManager.add( new CopyEd2kLinkAction() );
+		menuManager.add( new RefreshUploadsAction( ) );
 	}
 	
 	private class CopyEd2kLinkAction extends Action {
@@ -102,9 +105,25 @@ class UploadTableMenuListener
 			clipboard.dispose();
 		}
 	}
+	/**
+	 * RefreshUploadsAction
+	 */
+	private class RefreshUploadsAction extends Action {
+	   public RefreshUploadsAction( ) {
+		   super( "Refresh" );
+	   }
+
+	   public void run(  ) {
+			Message refresh = new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
+			refresh.sendMessage( core );
+	   }
+   }
 }
 /*
 $Log: UploadTableMenuListener.java,v $
+Revision 1.2  2003/09/27 00:02:37  dek
+bugfixes, merged right-mouse-click menues (nothing is uglier than one-item-menues)
+
 Revision 1.1  2003/09/26 11:55:48  dek
 right-mouse menue for upload-Table
 

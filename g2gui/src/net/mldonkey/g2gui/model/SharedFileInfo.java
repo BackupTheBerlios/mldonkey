@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.14 2003/09/26 18:01:46 zet Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.15 2003/09/27 00:02:37 dek Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -50,15 +50,15 @@ public class SharedFileInfo implements SimpleInformation {
 	/**
 	 * Shared File Name
 	 */
-	private String sharedFileName;
+	private String sharedFileName = "";
 	/**
 	 * Shared File Size
 	 */
-	private long shareFileSize;
+	private long shareFileSize = 0;
 	/**
 	 * Number of bytes uploaded
 	 */
-	private long numOfBytesUploaded;
+	private long numOfBytesUploaded = 0;
 	/**
 	 * String representation of bytes uploaded
 	 */
@@ -67,7 +67,7 @@ public class SharedFileInfo implements SimpleInformation {
 	/**
 	 * Number of Queries for this File
 	 */
-	private int numOfQueriesForFile;
+	private int numOfQueriesForFile = 0;
 	/**
 	 * MD4
 	 */
@@ -220,6 +220,9 @@ public class SharedFileInfo implements SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.15  2003/09/27 00:02:37  dek
+bugfixes, merged right-mouse-click menues (nothing is uglier than one-item-menues)
+
 Revision 1.14  2003/09/26 18:01:46  zet
 update string
 
@@ -252,7 +255,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved

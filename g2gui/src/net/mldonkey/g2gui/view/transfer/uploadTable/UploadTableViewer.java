@@ -49,14 +49,14 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.8 2003/09/26 17:03:26 zet Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.9 2003/09/27 00:02:37 dek Exp $ 
  *
  */
 public class UploadTableViewer {
 	/**
 	 * MyTableSorter
 	 *
-	 * @version $Id: UploadTableViewer.java,v 1.8 2003/09/26 17:03:26 zet Exp $ 
+	 * @version $Id: UploadTableViewer.java,v 1.9 2003/09/27 00:02:37 dek Exp $ 
 	 *
 	 */
 	
@@ -123,6 +123,7 @@ public class UploadTableViewer {
 		tableviewer.setContentProvider( new MyContentProvider() );
 		tableviewer.setLabelProvider( new MyLabelProvider() );
 		tableviewer.setInput( this.sharedFileInfoIntMap );
+		this.sharedFileInfoIntMap.clearAdded();
 		tableviewer.setSorter( new MyTableSorter() );
 		
 		UploadTableMenuListener tableMenuListener = 
@@ -211,21 +212,19 @@ public class UploadTableViewer {
 
 		public String getColumnText( Object element, int columnIndex ) {
 			SharedFileInfo info = ( SharedFileInfo ) element;
-			/*
-			 * { "TT_Download_Network", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES","TT_Download_Name" };
-			 */
+			
 			switch ( columnIndex ) {
 				case 0 :
-					return "" + info.getNetwork().getNetworkName();
+					return "" + info.getNetwork().getNetworkName();					
 				case 1 :
-					return "" + info.getUploadedString();
+					return "" + info.getUploadedString();			
 				case 2 :
-					return "" + String.valueOf( info.getNumOfQueriesForFile() );
+					return "" + String.valueOf( info.getNumOfQueriesForFile() );			
 				case 3 :
-					return "" + info.getName();
+					return "" + info.getName();			
 				default :
-					return "";
-			}
+					return "";			
+			}			
 		}
 	}
 	class MyTableSorter extends ViewerSorter {
@@ -290,8 +289,8 @@ public class UploadTableViewer {
 						result = aLong2.compareTo( aLong1 );			
 					break;
 				case 3 : /*filename*/	
-					aString1 = sharedFile1.getNetwork().getNetworkName();
-					aString2 = sharedFile2.getNetwork().getNetworkName();
+					aString1 = sharedFile1.getName();
+					aString2 = sharedFile2.getName();
 					if ( lastSort )
 						result = aString1.compareToIgnoreCase( aString2 );
 					else
@@ -323,6 +322,9 @@ public class UploadTableViewer {
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.9  2003/09/27 00:02:37  dek
+bugfixes, merged right-mouse-click menues (nothing is uglier than one-item-menues)
+
 Revision 1.8  2003/09/26 17:03:26  zet
 remove unneeded String result
 
