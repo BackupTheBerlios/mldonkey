@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.10 2003/07/02 19:25:41 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.11 2003/07/02 19:26:55 dek Exp $ 
  *
  */
 public class ConsoleTab extends G2guiTab implements Observer, ControlListener, Runnable {	
@@ -92,7 +92,7 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 	}
 	
 	public void handleEvent( Event event ) {
-	//	mainWindow.setActive( this );
+		mainWindow.setActive( this );
 		
 		infoDisplay.append( core.getConsoleMessage().getConsoleMessage() );
 		core.getConsoleMessage().reset();
@@ -146,6 +146,9 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.11  2003/07/02 19:26:55  dek
+fixed:< no i don't ever want to become active> bug
+
 Revision 1.10  2003/07/02 19:25:41  dek
 transferTab is now default ;-)
 
