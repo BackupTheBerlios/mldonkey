@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.29 2003/09/14 13:24:30 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.30 2003/09/14 13:44:22 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -304,7 +304,6 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			this.servers.clearModified();
 		}
 		int itemCount = table.getTable().getItemCount();	
-		//setRightLabel( "Total: " + itemCount );
 		this.setStatusLine();
 		
 		/* refresh the table if "show connected servers only" is true and the filter is activated */
@@ -346,6 +345,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * Sets the statusline to the current value
 	 */
 	private void setStatusLine() {
+		if ( !this.isActive() ) return;
 		this.statusText = G2GuiResources.getString( "SVT_SERVERS" ) + servers.getConnected();
 		this.mainWindow.getStatusline().update( this.statusText );
 		this.mainWindow.getStatusline().updateToolTip( "" );
@@ -426,6 +426,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.30  2003/09/14 13:44:22  lemmster
+set statusline only on active
+
 Revision 1.29  2003/09/14 13:24:30  lemmster
 add header button to servertab
 
