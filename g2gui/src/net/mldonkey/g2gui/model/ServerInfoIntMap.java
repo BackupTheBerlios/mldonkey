@@ -22,7 +22,12 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectIterator;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
@@ -30,10 +35,14 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.6 2003/07/06 20:09:21 dek Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.7 2003/07/30 19:28:42 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
+	/**
+	 * last serverinfos changed
+	 */
+	private List changed = new ArrayList();
 	
 	/**
 	 * @param communication my parent
@@ -55,7 +64,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 * @param value The FileInfo object
 	 */
 	public void put( int key, ServerInfo value ) {
-		this.infoIntMap.put( key, value );
+		synchronized ( this ) {
+			this.infoIntMap.put( key, value );
+		}
 	}
 
 	/**
@@ -71,7 +82,18 @@ public class ServerInfoIntMap extends InfoIntMap {
 		else {
 			ServerInfo serverInfo = new ServerInfo( this.parent );
 			serverInfo.readStream( messageBuffer );
-			this.put( serverInfo.getServerId(), serverInfo );
+			synchronized ( this.changed ) {
+				this.put( serverInfo.getServerId(), serverInfo );
+			}
+		}
+	}
+	
+	/**
+	 * Removes all entries in ids
+	 */
+	public void clearChanged() {
+		synchronized ( this.changed ) {
+			this.changed.clear();
 		}
 	}
 	
@@ -90,8 +112,11 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 */
 	public void update( MessageBuffer messageBuffer ) {
 		int id = messageBuffer.readInt32();
-		if ( this.infoIntMap.contains( id ) )
-			this.get( id ).update( messageBuffer );
+		if ( this.infoIntMap.contains( id ) ) {
+			ServerInfo server = ( ServerInfo ) this.get( id );
+			server.update( messageBuffer );
+			this.changed.add( server );
+		}
 	}
 
 	/**
@@ -107,10 +132,56 @@ public class ServerInfoIntMap extends InfoIntMap {
 		}
 		this.infoIntMap = tempServerInfoList;		
 	}
+	
+	/**
+	 * returns an array with all networks known to this networkMap
+	 * @return all known networks
+	 */
+	public ServerInfo[] getServers() {
+		Object[] temp = this.infoIntMap.getValues();
+		ServerInfo[] result = new ServerInfo[ temp.length ];
+		for ( int i = 0; i < temp.length; i++ ) {
+			result[ i ] = ( ServerInfo ) temp [ i ];
+		}
+		return result;		
+	}
+	/**
+	 * @return The serverinfos who have changed
+	 * clear this list, after update of the view
+	 */
+	public List getChanged() {
+		return changed;
+	}
+	
+	/**
+	 * Get a submap of this with just the server of the specific Networkinfo.Enum
+	 * @param networkInfo The network the servers should belong to or null to receive all
+	 * @return a new ServerInfoIntMap with from the selected network
+	 */
+	public ServerInfoIntMap getByNetwork( NetworkInfo.Enum enum ) {
+		/* if null return all */
+		if ( enum == null ) return this;
+		
+		ServerInfoIntMap result = new ServerInfoIntMap();
+		int size = this.infoIntMap.size();
+		TIntObjectIterator itr = this.infoIntMap.iterator();
+		synchronized ( this ) {
+			for ( ; size > 0; size-- ) {
+				itr.advance();
+				ServerInfo server = ( ServerInfo ) itr.value();
+				if ( server.getNetwork().getNetworkType() == enum )
+					result.put( server.getServerId(), server );
+			}
+		}
+		return result;
+	}
 }
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.7  2003/07/30 19:28:42  lemmstercvs01
+several changes
+
 Revision 1.6  2003/07/06 20:09:21  dek
 NPE fixed
 
