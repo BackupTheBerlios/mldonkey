@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.12 2004/03/29 14:51:44 dek Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.13 2004/03/31 18:23:54 dek Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -220,14 +220,20 @@ public class G2GuiWinReg extends PreferencePage {
      */
     private void registerExtension(PrintStream p, String name, String exeFile, String prefFile){
     	
-    	p.println("[HKEY_CLASSES_ROOT\\" + name + "]");
-    	p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell]");
-    	p.println("[HKEY_CLASSES_ROOT\\" + name + "\\DefaultIcon]");
-    	p.println("@=\"\\\"" + exeFile + "\"");
     	
-    	p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell\\open]");
-    	p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell\\open\\command]");
-    	p.println("@=\"\\\"" + exeFile + "\\\" \\\"-c\\\" \\\"" + prefFile + "\\\"  \\\"%1\\\"\"");
+    	p.println("[HKEY_CLASSES_ROOT\\"+name+"]");
+    	p.println("@=\"g2guiTorrent\"");
+    	
+    	p.println("[HKEY_CLASSES_ROOT\\g2guiTorrent]");
+    	p.println("\"EditFlags\"=dword:00000000");
+    	p.println("\"BrowserFlags\"=dword:00000008");
+    	p.println("@=\"BitTorrent File\"");
+    	
+    	p.println("[HKEY_CLASSES_ROOT\\g2guiTorrent\\DefaultIcon]");
+    	p.println("@=\"" + exeFile + ",0\"");
+    	
+    	p.println("[HKEY_CLASSES_ROOT\\g2guiTorrent\\shell\\open\\command]");
+    	p.println("@=\""+ exeFile + "\" \"-c\" \"" + prefFile + "\"  \"%1\"" );
     	
     }
     
@@ -350,6 +356,9 @@ public class G2GuiWinReg extends PreferencePage {
 
 /*
 $Log: G2GuiWinReg.java,v $
+Revision 1.13  2004/03/31 18:23:54  dek
+torrent-handling works now better
+
 Revision 1.12  2004/03/29 14:51:44  dek
 some mem-improvements
 
