@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.19 2003/09/04 12:35:57 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.20 2003/09/04 16:59:55 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -206,7 +206,7 @@ public class SearchQuery implements Sendable {
 	 */
 	public void setMp3Album( String album ) {
 		Query albumQuery = new Query();
-		albumQuery.setNode( EnumQuery.MP3_TITLE );
+		albumQuery.setNode( EnumQuery.MP3_ALBUM );
 		albumQuery.setComment( "MP3-Album" );
 		albumQuery.setDefaultValue( album );
 		/*
@@ -380,6 +380,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.20  2003/09/04 16:59:55  dek
+bugfix Album != title !!!
+
 Revision 1.19  2003/09/04 12:35:57  dek
 added setter
 
