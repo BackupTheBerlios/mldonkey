@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.12 2003/08/25 21:18:43 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.13 2003/08/25 23:04:02 zet Exp $
  */
 public class MessagesTab extends GuiTab {
 
@@ -336,6 +336,7 @@ public class MessagesTab extends GuiTab {
 	 * @param message
 	 */
 	public void messageFromClient(ClientMessage message) {
+		mainWindow.getStatusline().update( "New message!" );
 		
 		if (openTabs.containsKey(new Integer(message.getId()))) {
 			String textMessage;
@@ -454,6 +455,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.13  2003/08/25 23:04:02  zet
+update statusline on incoming msg
+
 Revision 1.12  2003/08/25 21:18:43  zet
 localise/update friendstab
 
