@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.9 2003/11/27 20:45:51 zet Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.10 2003/11/29 13:03:54 lemmster Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -84,12 +84,6 @@ public class G2GuiAdvanced extends PreferencePage {
 					composite ) );
 	
 		}
-		setupEditor(
-			new BooleanFieldEditor(
-			"showSearchTooltip",
-			G2GuiResources.getString( "PREF_SEARCH_SHOW_TOOLTIP" ),
-			composite ) );
-	
 		setupEditor( 
 			new BooleanFieldEditor( 
 				"searchFilterPornography",
@@ -155,6 +149,9 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.10  2003/11/29 13:03:54  lemmster
+ToolTip complete reworked (to be continued)
+
 Revision 1.9  2003/11/27 20:45:51  zet
 alwaysValid option
 

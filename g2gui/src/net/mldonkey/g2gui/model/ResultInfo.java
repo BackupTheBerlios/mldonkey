@@ -24,20 +24,28 @@ package net.mldonkey.g2gui.model;
 
 import gnu.regexp.RE;
 import gnu.regexp.REException;
+
+import java.util.Set;
+import java.util.TreeSet;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumExtension;
+import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumRating;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.program.Program;
 
 /**
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.28 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: ResultInfo.java,v 1.29 2003/11/29 13:03:54 lemmster Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -280,7 +288,15 @@ public class ResultInfo extends Parent {
      * @return The format
      */
     public String getFormat() {
-        return format;
+        if ( format != null && !format.equals("") )
+        	return format;
+        else {
+        	int index = this.getName().lastIndexOf( "." );
+        	if ( index != -1 )
+        		return this.getName().substring( index + 1 ).toLowerCase();
+        	else
+        		return "";
+        }
     }
 
     /**
@@ -301,18 +317,64 @@ public class ResultInfo extends Parent {
      * @return The first possible Name
      */
     public String getName() {
-        if ( this.getNames().length != 0 )
-            return this.names[ 0 ];
-        return "";
+    	return this.getName( 0 );
     }
 
+    private String getName( int index ) {
+    	// is the index vaild?
+    	if ( names.length < index - 1 )
+    		return "";
+
+    	String result = names[ index ]; 
+    	if ( result == null )
+    		return "";
+    	return result;
+    }
+    
     /**
      * @return Possible Names
      */
     public String[] getNames() {
-        return names;
+        if ( names == null )
+        	return new String[ 0 ];
+       	return names;
     }
-
+    
+    /**
+     * 
+     * @return The alternative names alphabetic ordered
+     */
+    public String[] getSortedNames() {
+    	Set set = new TreeSet();
+    	for ( int i = 0; i < getNames().length; i++ ) {
+    		set.add( getNames()[ i ] );
+    	}
+    	Object[] obj = set.toArray();
+    	String[] result = new String[ obj.length ];
+    	for ( int j = 0; j < obj.length; j++ ) {
+    		result[ j ] = (String) obj[ j ];
+    	}
+    	return result;
+    }
+    
+    /**
+     * @return A preview of the alternative names (sorted)
+     */
+    public String getSortedNamesPreview() {
+    	StringBuffer result = new StringBuffer();
+    	String[] strings = getSortedNames();
+    	for ( int i = 0; i < strings.length; i++ ) {
+    		if ( i == 3 ) {
+    			result.append( "\n" );
+    			result.append( "..." );
+    			break;
+    		}
+    		result.append( "\n" );
+    		result.append( strings[ i ] );
+    	}
+    	return result.toString();
+    }
+    
     /**
      * @return The Network id
      */
@@ -393,9 +455,17 @@ public class ResultInfo extends Parent {
      * @return The Type
      */
     public String getType() {
-        return type;
+        if ( type != null && !type.equals( "" ) )
+        	return type;
+        else {
+        	Enum aEnum = (Enum) FILE_TYPES.get( getFormat() );
+        	if ( aEnum != null )
+        		return ( (EnumExtension) aEnum ).getName();
+        	else
+        		return EnumExtension.UNKNOWN.getName();
+        }
     }
-
+    
     /**
      * @return The Comment
      */
@@ -498,6 +568,81 @@ public class ResultInfo extends Parent {
     }
     
     /**
+     * @return The detailed infos about this searchresult
+     */
+    public String getToolTipString() {
+    	StringBuffer result = new StringBuffer();
+
+    	if (this.getNetwork().getNetworkType() == EnumNetwork.DONKEY) {
+    		result.append(G2GuiResources.getString("ST_TT_MD4"));
+    		result.append(this.getMd4().toUpperCase());
+    		result.append("\n");
+    	}	
+
+    	if (!this.getFormat().equals("")) {
+    		result.append(G2GuiResources.getString("ST_TT_FORMAT"));
+    		result.append(this.getFormat());
+    		result.append("\n");
+    	}	
+
+    	result.append(G2GuiResources.getString("ST_TT_NETWORK"));
+    	result.append(this.getNetwork().getNetworkName());
+    	result.append("\n");
+
+    	result.append(G2GuiResources.getString("ST_TT_SIZE"));
+    	result.append(this.getStringSize());
+    	result.append("\n");
+    			
+    	result.append(G2GuiResources.getString("ST_TT_AVAIL"));
+    	result.append(this.getAvail());
+    	result.append(" ");
+    	result.append(G2GuiResources.getString("ST_TT_SOURCES"));
+    	
+    	if (this.getType().equals("Audio")) {
+    		if (!this.getBitrate().equals("")) {
+    			result.append("\n");
+    			result.append(G2GuiResources.getString("ST_TT_BITRATE"));
+    			result.append(this.getBitrate());
+    		}
+    		if (!this.getLength().equals("")) {
+    			result.append("\n");
+    			result.append(G2GuiResources.getString("ST_TT_LENGTH"));
+    			result.append(this.getLength());
+    		}
+   		}
+
+    	if (!this.getHistory()) {
+    		result.append("\n");
+    		result.append(G2GuiResources.getString("ST_TT_DOWNLOADED"));
+    	}
+    	
+    	return result.toString();
+    }
+    
+    /**
+     * @return Create the image of the associated program
+     */
+    public Image getToolTipImage() {
+    	Image image = null;
+    	
+    	// Find the associated program
+   		Program p = Program.findProgram( this.getFormat() );
+
+    	if ( p != null ) {
+    		// if the G2GuiResources didnt already contains the image
+    		image = G2GuiResources.getImage( p.getName() );
+    		if ( image == null ) {
+    			ImageData data = p.getImageData();
+    			if ( data != null ) {
+    				image = new Image( null, data );
+    				G2GuiResources.getImageRegistry().put( p.getName(), image );
+    			}
+    		}
+    	}
+    	return image;
+    }
+    
+    /**
      * The rating for this resultinfo
      * @return
      */
@@ -517,7 +662,7 @@ public class ResultInfo extends Parent {
 		else
 			this.rating = EnumRating.LOW;
     }
-
+    
     /**
      * Compares this resultInfo to the specified object.
      * The result is <code>true</code> if and only if the argument is not
@@ -542,6 +687,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.29  2003/11/29 13:03:54  lemmster
+ToolTip complete reworked (to be continued)
+
 Revision 1.28  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

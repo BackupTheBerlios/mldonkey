@@ -50,7 +50,7 @@ import java.util.Set;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.80 2003/11/29 12:49:22 zet Exp $
+ * @version $Id: FileInfo.java,v 1.81 2003/11/29 13:05:25 lemmster Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -68,49 +68,6 @@ public class FileInfo extends Parent implements Observer {
         CHANGED_RATE, CHANGED_DOWNLOADED, CHANGED_PERCENT, CHANGED_AVAIL, CHANGED_ETA, CHANGED_LAST,
         CHANGED_ACTIVE
     };
-    private static Map FILE_TYPES;
-
-    // on the first instantiation of this obj we create our filetype map (just once and for all)
-    static {
-        FILE_TYPES = new HashMap();
-
-        // audio types
-        String[] audio = {
-            "aac", "ape", "au", "flac", "mpc", "mp2", "mp3", "mp4", "wav", "ogg", "wma"
-        };
-
-        for (int i = 0; i < audio.length; i++)
-            FILE_TYPES.put(audio[ i ], EnumExtension.AUDIO);
-
-        // video types
-        String[] video = {
-            "avi", "mpg", "mpeg", "ram", "rm", "asf", "vob", "divx", "vivo", "ogm", "mov", "wmv"
-        };
-
-        for (int i = 0; i < video.length; i++)
-            FILE_TYPES.put(video[ i ], EnumExtension.VIDEO);
-
-        //archive types
-        String[] archive = { "gz", "zip", "ace", "rar", "tar", "tgz", "bz2" };
-
-        for (int i = 0; i < archive.length; i++)
-            FILE_TYPES.put(archive[ i ], EnumExtension.ARCHIVE);
-
-        // cdImage types
-        String[] cdImage = {
-            "ccd", "sub", "cue", "bin", "iso", "nrg", "img", "bwa", "bwi", "bws", "bwt", "mds",
-            "mdf"
-        };
-
-        for (int i = 0; i < cdImage.length; i++)
-            FILE_TYPES.put(cdImage[ i ], EnumExtension.CDIMAGE);
-
-        // picture types
-        String[] picture = { "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "png" };
-
-        for (int i = 0; i < picture.length; i++)
-            FILE_TYPES.put(picture[ i ], EnumExtension.PICTURE);
-    }
 
     /**
      * A set (no duplicates) of changed properties
@@ -514,7 +471,7 @@ public class FileInfo extends Parent implements Observer {
     public Enum getFileType() {
         int index = name.lastIndexOf(".");
         String extension = name.substring(index + 1, name.length());
-        Enum aEnum = (Enum) FILE_TYPES.get(extension);
+        Enum aEnum = (Enum) Parent.FILE_TYPES.get(extension);
 
         if (aEnum != null)
             return aEnum;
@@ -1098,6 +1055,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.81  2003/11/29 13:05:25  lemmster
+ToolTip complete reworked (to be continued)
+
 Revision 1.80  2003/11/29 12:49:22  zet
 update this.avail properly
 
@@ -1221,7 +1181,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)

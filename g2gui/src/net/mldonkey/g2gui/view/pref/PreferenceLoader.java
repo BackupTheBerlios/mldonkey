@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.50 2003/11/27 15:33:24 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.51 2003/11/29 13:03:54 lemmster Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -136,7 +136,6 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "password", "" );
         preferenceStore.setDefault( "port", "4001" );
         preferenceStore.setDefault( "advancedMode", false );
-        preferenceStore.setDefault( "showSearchTooltip", true );
         preferenceStore.setDefault( "searchFilterPornography", false );
         preferenceStore.setDefault( "searchFilterProfanity", false );
         preferenceStore.setDefault( "maintainSortOrder", false );
@@ -290,6 +289,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.51  2003/11/29 13:03:54  lemmster
+ToolTip complete reworked (to be continued)
+
 Revision 1.50  2003/11/27 15:33:24  zet
 defWebBrowser
 
@@ -412,7 +414,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates
