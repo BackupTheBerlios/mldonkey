@@ -13,7 +13,7 @@ import org.eclipse.jface.preference.ColorFieldEditor;
  * ExtendedColorFieldEditor
  *
  * @author $Author: lemmster $
- * @version $Id: ExtendedColorFieldEditor.java,v 1.2 2003/08/22 21:10:57 lemmster Exp $
+ * @version $Id: ExtendedColorFieldEditor.java,v 1.3 2003/08/22 21:22:58 lemmster Exp $
  */
 public class ExtendedColorFieldEditor extends ColorFieldEditor {
 	
@@ -31,3 +31,9 @@ public class ExtendedColorFieldEditor extends ColorFieldEditor {
 		return super.getChangeControl(parent);
 	}
 }
+/*
+$Log: ExtendedColorFieldEditor.java,v $
+Revision 1.3  2003/08/22 21:22:58  lemmster
+fix $Log$
+
+*/

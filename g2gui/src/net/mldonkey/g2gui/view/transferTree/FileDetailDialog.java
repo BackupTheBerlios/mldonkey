@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  * @author $Author: lemmster $
- * @version $Id: FileDetailDialog.java,v 1.9 2003/08/22 21:16:36 lemmster Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.10 2003/08/22 21:22:58 lemmster Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -316,5 +316,8 @@ public class FileDetailDialog implements Observer {
 
 }
 /*
-$Log
+$Log: FileDetailDialog.java,v $
+Revision 1.10  2003/08/22 21:22:58  lemmster
+fix $Log$
+
 */

@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * TreeClientInfo
  *
  * @author $Author: lemmster $
- * @version $Id: TreeClientInfo.java,v 1.2 2003/08/22 21:16:36 lemmster Exp $ 
+ * @version $Id: TreeClientInfo.java,v 1.3 2003/08/22 21:22:58 lemmster Exp $ 
  *
  */
 public class TreeClientInfo {
@@ -51,5 +51,8 @@ public class TreeClientInfo {
 
 }
 /*
-$Log
+$Log: TreeClientInfo.java,v $
+Revision 1.3  2003/08/22 21:22:58  lemmster
+fix $Log$
+
 */

@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Text;
  * ClientDetailDialog
  *
  * @author $Author: lemmster $
- * @version $Id: ClientDetailDialog.java,v 1.7 2003/08/22 21:16:36 lemmster Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.8 2003/08/22 21:22:58 lemmster Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -251,5 +251,8 @@ public class ClientDetailDialog implements Observer {
 
 }
 /*
-$Log
+$Log: ClientDetailDialog.java,v $
+Revision 1.8  2003/08/22 21:22:58  lemmster
+fix $Log$
+
 */
