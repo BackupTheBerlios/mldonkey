@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkCanvas.java,v 1.1 2003/08/04 19:22:08 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.2 2003/08/04 19:30:56 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -220,7 +220,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 		darkGray.dispose();
 		
 		imageData = image.getImageData();
-
+		resizedImageData = imageData;
 	}
 
 	/**
@@ -295,7 +295,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 		imageGC.dispose();	
 		
 		imageData = image.getImageData();
-
+		resizedImageData = imageData;
 	}
 
 	/**
@@ -436,6 +436,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.2  2003/08/04 19:30:56  zet
+null?
+
 Revision 1.1  2003/08/04 19:22:08  zet
 trial tabletreeviewer
 
