@@ -22,8 +22,8 @@
  */
 package net.mldonkey.g2gui.view.viewers.table;
 
+import net.mldonkey.g2gui.view.viewers.GPage;
 import net.mldonkey.g2gui.view.viewers.ICustomViewer;
-import net.mldonkey.g2gui.view.viewers.IGViewer;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -33,14 +33,14 @@ import org.eclipse.swt.graphics.Image;
 /**
  * GenericTableLabelProvider
  *
- * @version $Id: GTableLabelProvider.java,v 1.1 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: GTableLabelProvider.java,v 1.2 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public class GTableLabelProvider implements ITableLabelProvider {
-    protected IGViewer gViewer;
+    protected GPage gViewer;
     protected ICustomViewer cViewer;
 
-    public GTableLabelProvider(IGViewer gViewer) {
+    public GTableLabelProvider(GPage gViewer) {
         this.gViewer = gViewer;
     }
 
@@ -102,6 +102,11 @@ public class GTableLabelProvider implements ITableLabelProvider {
 
 /*
 $Log: GTableLabelProvider.java,v $
+Revision 1.2  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.1  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

@@ -28,19 +28,28 @@ import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.33 2003/09/18 09:44:57 lemmster Exp $
+ * @version $Id: GuiTab.java,v 1.34 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public abstract class GuiTab implements Listener, Observer {
@@ -202,10 +211,41 @@ public abstract class GuiTab implements Listener, Observer {
         toolButton.resetImage();
         this.mainWindow.getCoolBar().getMainToolButtons().add( toolButton );
     }
+    
+    /**
+     * @param aToolBar
+     */
+	public void createPaneToolBar( final ToolBar aToolBar, IMenuListener aMenuManager ) {
+		ToolItem toolItem;
+
+		final MenuManager popupMenu = new MenuManager( "" );
+		popupMenu.setRemoveAllWhenShown( true );
+		popupMenu.addMenuListener( aMenuManager );
+
+
+		toolItem = new ToolItem( aToolBar, SWT.NONE );
+		toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_EXPAND_ALL" ) );
+		toolItem.setImage( G2GuiResources.getImage( "expandAll" ) );
+		toolItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent s ) {
+				Rectangle rect = ( (ToolItem) s.widget ).getBounds();
+				Menu menu = popupMenu.createContextMenu( aToolBar );
+				Point pt = new Point( rect.x, rect.y + rect.height );
+				pt = aToolBar.toDisplay( pt );
+				menu.setLocation( pt.x, pt.y );
+				menu.setVisible( true );
+			}
+		} );
+	}
 }
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.34  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.33  2003/09/18 09:44:57  lemmster
 checkstyle
 

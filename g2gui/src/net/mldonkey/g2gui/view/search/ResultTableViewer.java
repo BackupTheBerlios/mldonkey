@@ -51,15 +51,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
-import net.mldonkey.g2gui.view.viewers.table.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.table.GTablePage;
 
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableViewer.java,v 1.5 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ResultTableViewer.java,v 1.6 2003/10/31 10:42:47 lemmster Exp $
  *
  */
-public class ResultTableViewer extends GTableViewer {
+public class ResultTableViewer extends GTablePage {
     private CTabItem cTabItem;
     private MouseListener aMouseListener;
     
@@ -94,7 +94,7 @@ public class ResultTableViewer extends GTableViewer {
 
     public void setInput( Object object ) {
         
-        tableViewer.setInput( object );
+        sViewer.setInput( object );
     }
     
     public CTabItem getCTabItem() {
@@ -106,24 +106,24 @@ public class ResultTableViewer extends GTableViewer {
      */
     protected void createContents(Composite parent) {
         super.createContents(parent);
-		tableViewer.addSelectionChangedListener((ResultTableMenuListener) tableMenuListener);
+		sViewer.addSelectionChangedListener((ResultTableMenuListener) tableMenuListener);
 		
         // add optional filters
         if (PreferenceLoader.loadBoolean("searchFilterPornography")) {
-            tableViewer.addFilter(new WordFilter(WordFilter.PORNOGRAPHY_FILTER_TYPE));
+            sViewer.addFilter(new WordFilter(WordFilter.PORNOGRAPHY_FILTER_TYPE));
         } else if (PreferenceLoader.loadBoolean("searchFilterProfanity")) {
-            tableViewer.addFilter(new WordFilter(WordFilter.PROFANITY_FILTER_TYPE));
+            sViewer.addFilter(new WordFilter(WordFilter.PROFANITY_FILTER_TYPE));
         }
 
         /* add a menuListener to make the first menu item bold */
         addMenuListener();
         /* add a mouse-listener to catch double-clicks */
-        tableViewer.getTable().addMouseListener(aMouseListener);
+		getTableViewer().getTable().addMouseListener(aMouseListener);
 
         /* just show tooltip on user request */
         if (PreferenceLoader.loadBoolean("showSearchTooltip")) {
-            final ToolTipHandler tooltip = new ToolTipHandler(tableViewer.getTable().getShell());
-            tooltip.activateHoverHelp(tableViewer.getTable());
+            final ToolTipHandler tooltip = new ToolTipHandler(getTableViewer().getTable().getShell());
+            tooltip.activateHoverHelp(getTableViewer().getTable());
         }
     }
 
@@ -324,6 +324,11 @@ public class ResultTableViewer extends GTableViewer {
 
 /*
 $Log: ResultTableViewer.java,v $
+Revision 1.6  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.5  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

@@ -41,6 +41,8 @@ import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadPaneListener;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableViewer;
+import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.GPage;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -65,14 +67,13 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.82 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: TransferTab.java,v 1.83 2003/10/31 10:42:47 lemmster Exp $
  *
  */
-public class TransferTab extends GuiTab {
+public class TransferTab extends TableGuiTab {
     private CLabel downloadCLabel;
     private CoreCommunication mldonkey;
-    private DownloadTableTreeViewer downloadTableTreeViewer = null;
-    private ClientTableViewer clientTableViewer = null;
+    private GPage clientTableViewer = null;
     private Composite downloadComposite;
     private MenuManager popupMenuDL;
     private MenuManager popupMenuUL;
@@ -105,10 +106,12 @@ public class TransferTab extends GuiTab {
                 }
             });
 
-        Control downloadParent = mainSashForm;
-
+        Control downloadParent;
         if (advancedMode) {
             downloadParent = new SashForm(mainSashForm, (PreferenceLoader.loadBoolean("clientSashHorizontal") ? SWT.HORIZONTAL : SWT.VERTICAL));
+        }
+        else {
+        	downloadParent = mainSashForm;
         }
 
         ViewForm downloadViewForm = new ViewForm((SashForm) downloadParent,
@@ -116,20 +119,28 @@ public class TransferTab extends GuiTab {
 
         if (advancedMode) {
             createClientViewForm((SashForm) downloadParent);
-        } else {
+        } 
+        else {
             downloadParent = downloadViewForm;
         }
 
         createDownloadHeader(downloadViewForm, mainSashForm, downloadParent);
-        createDownloadToolbar(downloadViewForm, downloadParent);
+
+        createPaneToolBar(downloadViewForm, downloadParent);
+
         downloadComposite = new Composite(downloadViewForm, SWT.NONE);
         downloadComposite.setLayout(new FillLayout());
         downloadViewForm.setContent(downloadComposite);
+
         createUploads(mainSashForm);
-        downloadTableTreeViewer = new DownloadTableTreeViewer(downloadComposite, clientTableViewer, mldonkey, this);
-        popupMenuDL.addMenuListener(new DownloadPaneMenuListener(downloadTableTreeViewer, mldonkey, mainSashForm, downloadParent ) );
+
+        gPage = new DownloadTableTreeViewer(downloadComposite, clientTableViewer, mldonkey, this);
+
+        popupMenuDL.addMenuListener(new DownloadPaneMenuListener(gPage, mldonkey, mainSashForm, downloadParent ) );
+
         mainSashForm.setWeights(new int[] { 1, 1 });
         mainSashForm.setMaximizedControl(downloadParent);
+
         mldonkey.getFileInfoIntMap().addObserver(this);
     }
 
@@ -146,7 +157,7 @@ public class TransferTab extends GuiTab {
         parentViewForm.setTopLeft(downloadCLabel);
     }
 
-    public void createDownloadToolbar(ViewForm parentViewForm, final Control downloadParent) {
+    public void createPaneToolBar(ViewForm parentViewForm, final Control downloadParent) {
         ToolBar downloadsToolBar = new ToolBar(parentViewForm, SWT.RIGHT | SWT.FLAT);
         ToolItem toolItem;
 
@@ -165,7 +176,7 @@ public class TransferTab extends GuiTab {
             toolItem.setImage(G2GuiResources.getImage("split-table"));
             toolItem.addSelectionListener(new SelectionAdapter() {
                     public void widgetSelected(SelectionEvent s) {
-                        downloadTableTreeViewer.toggleClientsTable();
+                        ( (DownloadTableTreeViewer) gPage ).toggleClientsTable();
                     }
                 });
         }
@@ -175,7 +186,7 @@ public class TransferTab extends GuiTab {
         toolItem.setImage(G2GuiResources.getImage("collapseAll"));
         toolItem.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent s) {
-                    downloadTableTreeViewer.getTableTreeViewer().collapseAll();
+                    ( (CustomTableTreeViewer) gPage.getViewer() ).collapseAll();
                 }
             });
 
@@ -184,7 +195,7 @@ public class TransferTab extends GuiTab {
         toolItem.setImage(G2GuiResources.getImage("expandAll"));
         toolItem.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent s) {
-                    downloadTableTreeViewer.getTableTreeViewer().expandAll();
+                    ( (CustomTableTreeViewer) gPage.getViewer() ).expandAll();
                 }
             });
 
@@ -244,10 +255,10 @@ public class TransferTab extends GuiTab {
                     int width = c.getBounds().width;
                     int height = c.getBounds().height;
 
-                    if ((width > 0) && (height > 0) && (downloadTableTreeViewer != null)) {
-                        downloadTableTreeViewer.updateClientsTable(true);
+                    if ((width > 0) && (height > 0) && (gPage != null)) {
+						( (DownloadTableTreeViewer) gPage ).updateClientsTable(true);
                     } else {
-                        downloadTableTreeViewer.updateClientsTable(false);
+						( (DownloadTableTreeViewer) gPage ).updateClientsTable(false);
                     }
                 }
             });
@@ -378,7 +389,7 @@ public class TransferTab extends GuiTab {
      * @see net.mldonkey.g2gui.view.GuiTab#updateDisplay()
      */
     public void updateDisplay() {
-        downloadTableTreeViewer.updateDisplay();
+        gPage.updateDisplay();
         uploadTableViewer.updateDisplay();
 
         if (clientTableViewer != null) {
@@ -405,6 +416,11 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.83  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.82  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
@@ -558,7 +574,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

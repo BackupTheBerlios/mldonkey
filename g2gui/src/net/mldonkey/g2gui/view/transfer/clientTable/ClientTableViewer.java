@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.viewers.table.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.table.GTablePage;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -34,10 +34,10 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableViewer.java,v 1.7 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ClientTableViewer.java,v 1.8 2003/10/31 10:42:47 lemmster Exp $
  *
  */
-public class ClientTableViewer extends GTableViewer {
+public class ClientTableViewer extends GTablePage {
     public static final int STATE = 0;
     public static final int NAME = 1;
     public static final int NETWORK = 2;
@@ -64,7 +64,7 @@ public class ClientTableViewer extends GTableViewer {
      */
     protected void createContents(Composite parent) {
         super.createContents(parent);
-        tableViewer.addSelectionChangedListener((ClientTableMenuListener) tableMenuListener);
+        sViewer.addSelectionChangedListener((ClientTableMenuListener) tableMenuListener);
     }
 
     /* (non-Javadoc)
@@ -73,7 +73,7 @@ public class ClientTableViewer extends GTableViewer {
     public void updateDisplay() {
         super.updateDisplay();
 
-        Table table = tableViewer.getTable();
+        Table table = getTableViewer().getTable();
         table.setBackground(PreferenceLoader.loadColour("downloadsBackgroundColor"));
         table.setForeground(PreferenceLoader.loadColour("downloadsAvailableColor"));
         table.setFont(PreferenceLoader.loadFont("downloadsFontData"));
@@ -83,6 +83,11 @@ public class ClientTableViewer extends GTableViewer {
 
 /*
 $Log: ClientTableViewer.java,v $
+Revision 1.8  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.7  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.view.transfer.uploadTable;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.IGViewer;
+import net.mldonkey.g2gui.view.viewers.GPage;
 import net.mldonkey.g2gui.view.viewers.SashGPaneListener;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
@@ -36,7 +36,6 @@ import net.mldonkey.g2gui.view.viewers.actions.RefreshUploadsAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Control;
 
@@ -44,7 +43,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadPaneListener.java,v 1.1 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: UploadPaneListener.java,v 1.2 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public class UploadPaneListener extends SashGPaneListener {
@@ -54,7 +53,7 @@ public class UploadPaneListener extends SashGPaneListener {
      * @param aSashForm
      * @param aControl
      */
-    public UploadPaneListener(IGViewer gViewer, CoreCommunication core, SashForm aSashForm,
+    public UploadPaneListener(GPage gViewer, CoreCommunication core, SashForm aSashForm,
         Control aControl) {
         super(gViewer, core, aSashForm, aControl);
     }
@@ -94,6 +93,11 @@ public class UploadPaneListener extends SashGPaneListener {
 
 /*
 $Log: UploadPaneListener.java,v $
+Revision 1.2  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.1  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

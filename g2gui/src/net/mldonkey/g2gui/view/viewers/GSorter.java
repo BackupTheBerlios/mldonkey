@@ -27,7 +27,6 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
@@ -35,7 +34,7 @@ import org.eclipse.swt.events.DisposeListener;
 /**
  * GSorter - Generic sorter
  *
- * @version $Id: GSorter.java,v 1.1 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: GSorter.java,v 1.2 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public class GSorter extends ViewerSorter implements DisposeListener {
@@ -43,10 +42,10 @@ public class GSorter extends ViewerSorter implements DisposeListener {
     protected int columnIndex;
     protected boolean lastSort;
     protected PreferenceStore preferenceStore = PreferenceLoader.getPreferenceStore();
-    protected IGViewer gViewer;
+    protected GPage gViewer;
     protected ICustomViewer cViewer;
 
-    public GSorter(IGViewer gViewer) {
+    public GSorter(GPage gViewer) {
         this.gViewer = gViewer;
     }
 
@@ -203,6 +202,11 @@ public class GSorter extends ViewerSorter implements DisposeListener {
 
 /*
 $Log: GSorter.java,v $
+Revision 1.2  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.1  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

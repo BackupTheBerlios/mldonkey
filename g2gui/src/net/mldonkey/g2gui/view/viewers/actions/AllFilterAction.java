@@ -24,21 +24,21 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.IGViewer;
+import net.mldonkey.g2gui.view.viewers.GPage;
 
 import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * AllFilterAction
  *
- * @version $Id: AllFilterAction.java,v 1.2 2003/10/31 07:24:01 zet Exp $ 
+ * @version $Id: AllFilterAction.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $ 
  *
  */
 public class AllFilterAction extends FilterAction {
 	/**
 	 * Creates a new AllFiltersAction
 	 */
-	public AllFilterAction( IGViewer gViewer ) {
+	public AllFilterAction( GPage gViewer ) {
 		super( G2GuiResources.getString( "TML_NO_FILTERS" ), 0, gViewer );
 		if ( gViewer != null && gViewer.getFilters().length == 0 )
 			this.setChecked( true );
@@ -55,6 +55,11 @@ public class AllFilterAction extends FilterAction {
 
 /*
 $Log: AllFilterAction.java,v $
+Revision 1.3  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.2  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

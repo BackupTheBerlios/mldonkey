@@ -28,7 +28,6 @@ import net.mldonkey.g2gui.view.viewers.actions.NetworkFilterAction;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
-
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
@@ -36,14 +35,14 @@ import org.eclipse.swt.events.DisposeListener;
 /**
  * GPaneListener
  *
- * @version $Id: GPaneListener.java,v 1.2 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: GPaneListener.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public abstract class GPaneListener implements IMenuListener, DisposeListener {
-    protected IGViewer gViewer;
+    protected GPage gViewer;
     protected CoreCommunication core;
 
-    public GPaneListener(IGViewer gViewer, CoreCommunication core) {
+    public GPaneListener(GPage gViewer, CoreCommunication core) {
         this.gViewer = gViewer;
         this.core = core;
 
@@ -75,6 +74,11 @@ public abstract class GPaneListener implements IMenuListener, DisposeListener {
 
 /*
 $Log: GPaneListener.java,v $
+Revision 1.3  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.2  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

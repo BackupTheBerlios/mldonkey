@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.CTabFolderColumnSelectorAction;
-import net.mldonkey.g2gui.view.viewers.table.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.table.GTablePage;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -41,7 +41,7 @@ import org.eclipse.swt.custom.CTabItem;
 /**
  * SearchPaneListener
  *
- * @version $Id: ResultPaneListener.java,v 1.2 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ResultPaneListener.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public class ResultPaneListener extends GPaneListener {
@@ -76,7 +76,7 @@ public class ResultPaneListener extends GPaneListener {
 
             // filters available if currentTab has a table
             if (cTabFolder.getSelection() != null && cTabFolder.getSelection().getData("gTableViewer") != null) {
-                gViewer = (GTableViewer) cTabFolder.getSelection().getData("gTableViewer");
+                gViewer = (GTablePage) cTabFolder.getSelection().getData("gTableViewer");
 
                 // filter submenu			
                 MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
@@ -98,6 +98,11 @@ public class ResultPaneListener extends GPaneListener {
 
 /*
 $Log: ResultPaneListener.java,v $
+Revision 1.3  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.2  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

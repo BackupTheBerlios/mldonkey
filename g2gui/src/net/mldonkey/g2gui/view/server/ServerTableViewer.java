@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
 import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
-import net.mldonkey.g2gui.view.viewers.table.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.table.GTablePage;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -37,10 +37,10 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTableViewer.java,v 1.7 2003/10/31 07:24:01 zet Exp $ 
+ * @version $Id: ServerTableViewer.java,v 1.8 2003/10/31 10:42:47 lemmster Exp $ 
  *
  */
-public class ServerTableViewer extends GTableViewer {
+public class ServerTableViewer extends GTablePage {
 	private boolean oldValue = PreferenceLoader.loadBoolean( "displayAllServers" );
 	private boolean oldValue2 = PreferenceLoader.loadBoolean( "displayTableColors" );
 	
@@ -93,7 +93,7 @@ public class ServerTableViewer extends GTableViewer {
 
 	protected void createContents( Composite parent ) {
 		super.createContents( parent );
-		tableViewer.addSelectionChangedListener((ServerTableMenuListener) tableMenuListener);
+		sViewer.addSelectionChangedListener((ServerTableMenuListener) tableMenuListener);
 		
 		// add a menulistener to make the first menu item bold
 	    addMenuListener();
@@ -101,7 +101,7 @@ public class ServerTableViewer extends GTableViewer {
 	
 	//wtf
 	public void setInput( Object object ) {
-	    tableViewer.setInput( object );
+	    sViewer.setInput( object );
 	}
 	/**
 	 * Updates this table on preference close
@@ -139,6 +139,11 @@ public class ServerTableViewer extends GTableViewer {
 
 /*
 $Log: ServerTableViewer.java,v $
+Revision 1.8  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.7  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

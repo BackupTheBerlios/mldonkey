@@ -28,8 +28,8 @@ import net.mldonkey.g2gui.view.TransferTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
-import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
-import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreePage;
 
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CellEditor;
@@ -38,7 +38,6 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableTreeItem;
@@ -49,10 +48,10 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.17 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.18 2003/10/31 10:42:47 lemmster Exp $
  *
  */
-public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellModifier,
+public class DownloadTableTreeViewer extends GTableTreePage implements ICellModifier,
     IDoubleClickListener {
     public static final String ALL_COLUMNS = "ABCDEFGHIJKLMN";
     public static final String BASIC_COLUMNS = "ABCDFIK";
@@ -75,7 +74,7 @@ public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellMo
     public static final int AGE = 13;
     private boolean advancedMode = false;
     private CellEditor[] cellEditors = null;
-    private ClientTableViewer clientTableViewer;
+    private GPage gPage;
     private Composite parent;
 
     /**
@@ -84,10 +83,10 @@ public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellMo
      * @param mldonkey
      * @param page
      */
-    public DownloadTableTreeViewer(Composite parent, ClientTableViewer clientTableViewer,
+    public DownloadTableTreeViewer(Composite parent, GPage clientTableViewer,
         final CoreCommunication core, TransferTab page) {
         super(parent, core);
-        this.clientTableViewer = clientTableViewer;
+        this.gPage = clientTableViewer;
         this.parent = parent;
 
         preferenceString = "download";
@@ -124,9 +123,9 @@ public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellMo
         }
 
         addMenuListener();
-        tableTreeViewer.addDoubleClickListener(this);
-        tableTreeViewer.addSelectionChangedListener((DownloadTableTreeMenuListener) tableTreeMenuListener);
-        tableTreeViewer.setInput(core.getFileInfoIntMap());
+		getTableTreeViewer().addDoubleClickListener(this);
+		getTableTreeViewer().addSelectionChangedListener((DownloadTableTreeMenuListener) tableTreeMenuListener);
+		getTableTreeViewer().setInput(core.getFileInfoIntMap());
         core.getFileInfoIntMap().addObserver((DownloadTableTreeContentProvider) tableTreeContentProvider);
     }
 
@@ -148,7 +147,7 @@ public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellMo
             columnIDs = BASIC_COLUMNS;
         }
         
-        tableTreeViewer.setColumnProperties(columnLabels);
+        getTableTreeViewer().setColumnProperties(columnLabels);
 
         if (cellEditors != null) {
             for (int i = 0; i < cellEditors.length; i++) {
@@ -209,7 +208,7 @@ public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellMo
         tableLabelProvider.updateDisplay();
         tableTreeContentProvider.updateDisplay();
         gSorter.updateDisplay();
-        tableTreeViewer.refresh();
+        getTableTreeViewer().refresh();
     }
 
     /**
@@ -222,30 +221,30 @@ public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellMo
         table.setLinesVisible(PreferenceLoader.loadBoolean("displayGridLines"));
 
         if (PreferenceLoader.loadBoolean("tableCellEditors")) {
-            tableTreeViewer.setCellEditors(cellEditors);
-            tableTreeViewer.setCellModifier(this);
+			getTableTreeViewer().setCellEditors(cellEditors);
+			getTableTreeViewer().setCellModifier(this);
         } else {
-            tableTreeViewer.setCellEditors(null);
-            tableTreeViewer.setCellModifier(null);
+			getTableTreeViewer().setCellEditors(null);
+			getTableTreeViewer().setCellModifier(null);
         }
 
         if (advancedMode) {
             boolean b = PreferenceLoader.loadBoolean("displayChunkGraphs");
 
             if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
-                tableTreeViewer.setChunksColumn(columnIDs.indexOf(CHUNK_COLUMN));
+				getTableTreeViewer().setChunksColumn(columnIDs.indexOf(CHUNK_COLUMN));
             }
 
-            if ((b == false) && tableTreeViewer.getEditors()) {
-                tableTreeViewer.closeAllTTE();
+            if ((b == false) && getTableTreeViewer().getEditors()) {
+				getTableTreeViewer().closeAllTTE();
 
                 if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
-                    tableTreeViewer.setEditors(b);
+					getTableTreeViewer().setEditors(b);
                 }
-            } else if ((b == true) && !tableTreeViewer.getEditors()) {
+            } else if ((b == true) && !getTableTreeViewer().getEditors()) {
                 if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
-                    tableTreeViewer.setEditors(true);
-                    tableTreeViewer.openAllTTE();
+					getTableTreeViewer().setEditors(true);
+					getTableTreeViewer().openAllTTE();
                 }
             }
         }
@@ -262,7 +261,7 @@ public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellMo
      * @return boolean
      */
     public boolean clientsDisplayed() {
-        if (clientTableViewer != null) {
+        if (gPage != null) {
             SashForm sashForm = (SashForm) parent.getParent().getParent();
 
             return sashForm.getWeights()[ 1 ] != 0;
@@ -272,7 +271,7 @@ public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellMo
     }
 
     public void toggleClientsTable() {
-        if (clientTableViewer != null) {
+        if (gPage != null) {
             SashForm sashForm = (SashForm) parent.getParent().getParent();
 
             if (clientsDisplayed()) {
@@ -294,10 +293,10 @@ public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellMo
         if (o instanceof FileInfo) {
             FileInfo fileInfo = (FileInfo) o;
 
-            if (tableTreeViewer.getExpandedState(fileInfo)) {
-                tableTreeViewer.collapseToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
+            if (getTableTreeViewer().getExpandedState(fileInfo)) {
+				getTableTreeViewer().collapseToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
             } else {
-                tableTreeViewer.expandToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
+				getTableTreeViewer().expandToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
             }
         } else if (o instanceof TreeClientInfo) {
             TreeClientInfo treeClientInfo = (TreeClientInfo) o;
@@ -310,6 +309,11 @@ public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellMo
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.18  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.17  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
@@ -406,7 +410,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/22 13:47:56  dek
 selection is removed with click on empty-row

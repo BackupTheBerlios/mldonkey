@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * SashGPaneListener
  *
- * @version $Id: SashGPaneListener.java,v 1.2 2003/10/31 07:24:01 zet Exp $ 
+ * @version $Id: SashGPaneListener.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $ 
  *
  */
 public abstract class SashGPaneListener extends GPaneListener {
@@ -41,7 +41,7 @@ public abstract class SashGPaneListener extends GPaneListener {
 	 * @param gViewer
 	 * @param core
 	 */
-	public SashGPaneListener( IGViewer gViewer, CoreCommunication core, SashForm aSashForm, Control aControl ) {
+	public SashGPaneListener( GPage gViewer, CoreCommunication core, SashForm aSashForm, Control aControl ) {
 		super( gViewer, core );
 		this.sashForm = aSashForm;
 		this.control = aControl;
@@ -50,6 +50,11 @@ public abstract class SashGPaneListener extends GPaneListener {
 
 /*
 $Log: SashGPaneListener.java,v $
+Revision 1.3  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.2  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

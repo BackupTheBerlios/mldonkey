@@ -27,7 +27,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.viewers.GSorter;
-import net.mldonkey.g2gui.view.viewers.IGViewer;
+import net.mldonkey.g2gui.view.viewers.GPage;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableTreeViewer;
@@ -37,7 +37,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.7 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.8 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public class DownloadTableTreeSorter extends GSorter {
@@ -47,7 +47,7 @@ public class DownloadTableTreeSorter extends GSorter {
     /**
      * Creates a new viewer sorter
      */
-    public DownloadTableTreeSorter(IGViewer gViewer) {
+    public DownloadTableTreeSorter(GPage gViewer) {
         super(gViewer);
     }
 
@@ -258,6 +258,11 @@ public class DownloadTableTreeSorter extends GSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.8  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.7  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
@@ -306,7 +311,7 @@ Revision 1.9  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.8  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.7  2003/08/16 20:03:34  zet
 downloaded at top

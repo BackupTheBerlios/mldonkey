@@ -26,7 +26,7 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.enum.Enum;
-import net.mldonkey.g2gui.view.viewers.IGViewer;
+import net.mldonkey.g2gui.view.viewers.GPage;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * StateGViewerFilter
  *
- * @version $Id: StateGViewerFilter.java,v 1.2 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: StateGViewerFilter.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public class StateGViewerFilter extends GViewerFilter {
@@ -105,7 +105,7 @@ public class StateGViewerFilter extends GViewerFilter {
      * @param enum
      * @return boolean
      */
-    public static boolean matches(IGViewer gViewer, Enum enum) {
+    public static boolean matches(GPage gViewer, Enum enum) {
         ViewerFilter[] filters = gViewer.getFilters();
 
         for (int i = 0; i < filters.length; i++) {
@@ -125,6 +125,11 @@ public class StateGViewerFilter extends GViewerFilter {
 
 /*
 $Log: StateGViewerFilter.java,v $
+Revision 1.3  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.2  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

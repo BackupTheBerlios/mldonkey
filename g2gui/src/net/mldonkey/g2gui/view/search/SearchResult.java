@@ -32,6 +32,7 @@ import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -51,7 +52,7 @@ import java.util.Observer;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.60 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: SearchResult.java,v 1.61 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -119,7 +120,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         if (arg instanceof ResultInfo) {
             cTabFolder.getDisplay().asyncExec(new Runnable() {
                     public void run() {
-                        ourTableViewer.getTableViewer().update(arg, null);
+                        ourTableViewer.getViewer().update(arg, null);
                     }
                 });
 
@@ -157,7 +158,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
              * look at API for refresh(false)
              */
             if ((list != null) &&
-                    (list.size() != ourTableViewer.getTableViewer().getTable().getItemCount())) {
+                    (list.size() != ( ( CustomTableViewer ) ourTableViewer.getViewer() ).getTable().getItemCount())) {
                 mustRefresh = true;
                 delayedRefresh();
             }
@@ -166,7 +167,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         /* are we active? set the statusline text */
         if (cTabFolder.getSelection() == cTabItem) {
             SearchTab parent = (SearchTab) cTabFolder.getData();
-            int itemCount = ourTableViewer.getTableViewer().getTable().getItemCount();
+            int itemCount = ( (CustomTableViewer) ourTableViewer.getViewer() ).getTable().getItemCount();
             this.statusline = "Results: " + itemCount;
             parent.getMainTab().getStatusline().update(this.statusline);
         }
@@ -178,7 +179,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
     private void delayedRefresh() {
         if (System.currentTimeMillis() > (lastRefreshTime + 2000)) {
             lastRefreshTime = System.currentTimeMillis();
-            ourTableViewer.getTableViewer().refresh(true);
+            ourTableViewer.getViewer().refresh(true);
             mustRefresh = false;
         } else { // schedule an update so we don't miss one
 
@@ -235,7 +236,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
                 new MyMouseListener());
 
         /* set the this table as the new CTabItem Control */
-        cTabItem.setControl(ourTableViewer.getTableViewer().getTable());
+        cTabItem.setControl( ( (CustomTableViewer) ourTableViewer.getViewer() ).getTable());
 
         /*load behaviour from preference-Store*/
         updateDisplay();
@@ -248,7 +249,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      */
     public void updateDisplay() {
         if (ourTableViewer != null) {
-            ourTableViewer.getTableViewer().getTable().setLinesVisible(PreferenceLoader.loadBoolean(
+            ( (CustomTableViewer) ourTableViewer.getViewer() ).getTable().setLinesVisible(PreferenceLoader.loadBoolean(
                     "displayGridLines"));
         }
     }
@@ -317,6 +318,11 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.61  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.60  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
@@ -438,7 +444,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view.viewers.table;
 
 import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
-import net.mldonkey.g2gui.view.viewers.IGViewer;
+import net.mldonkey.g2gui.view.viewers.GPage;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -32,15 +32,15 @@ import org.eclipse.jface.viewers.Viewer;
  *
  * GenericContentProvider
  *
- * @version $Id: GTableContentProvider.java,v 1.1 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: GTableContentProvider.java,v 1.2 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public class GTableContentProvider implements IStructuredContentProvider {
     protected final static Object[] EMPTY_ARRAY = new Object[ 0 ];
     protected CustomTableViewer tableViewer;
-    protected IGViewer gViewer;
+    protected GPage gViewer;
 
-    public GTableContentProvider(IGViewer gViewer) {
+    public GTableContentProvider(GPage gViewer) {
         this.gViewer = gViewer;
     }
 
@@ -48,7 +48,7 @@ public class GTableContentProvider implements IStructuredContentProvider {
      * initialize after tableViewer creation
      */
     public void initialize() {
-        tableViewer = ((GTableViewer) gViewer).getTableViewer();
+        tableViewer = ((GTablePage) gViewer).getTableViewer();
     }
 
     /* (non-Javadoc)
@@ -84,6 +84,11 @@ public class GTableContentProvider implements IStructuredContentProvider {
 
 /*
 $Log: GTableContentProvider.java,v $
+Revision 1.2  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.1  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

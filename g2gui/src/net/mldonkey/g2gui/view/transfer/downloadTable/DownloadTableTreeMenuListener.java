@@ -37,12 +37,13 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.FileDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.transfer.UniformResourceLocator;
-import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
+import net.mldonkey.g2gui.view.viewers.GPage;
 import net.mldonkey.g2gui.view.viewers.actions.AddClientAsFriendAction;
 import net.mldonkey.g2gui.view.viewers.actions.ClientDetailAction;
 import net.mldonkey.g2gui.view.viewers.actions.CopyED2KLinkToClipboardAction;
 import net.mldonkey.g2gui.view.viewers.actions.ToggleClientsAction;
 import net.mldonkey.g2gui.view.viewers.actions.WebServicesAction;
+import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
 
 import org.eclipse.jface.action.Action;
@@ -84,7 +85,7 @@ import org.eclipse.swt.widgets.Text;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.24 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.25 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -94,15 +95,15 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
     private TreeClientInfo selectedClient;
     private List selectedClients = new ArrayList();
     private List selectedFiles = new ArrayList();
-    private ClientTableViewer clientTableViewer;
-    private DownloadTableTreeContentProvider tableTreeContentProvider;
+    private GPage gPage;
+    private GTableContentProvider tableTreeContentProvider;
     private boolean createClientTable = false;
     private boolean myDrag = false;
 
     public DownloadTableTreeMenuListener(DownloadTableTreeViewer downloadTableTreeViewer,
-        ClientTableViewer clientTableViewer) {
+        GPage clientTableViewer) {
         super(downloadTableTreeViewer);
-        this.clientTableViewer = clientTableViewer;
+        this.gPage = clientTableViewer;
     }
 
     public void initialize() {
@@ -198,7 +199,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
             if (createClientTable &&
                     ((lastSelectedFile == null) || (lastSelectedFile != selectedFile))) {
-                clientTableViewer.getTableViewer().setInput(fileInfo);
+                gPage.getViewer().setInput(fileInfo);
             }
 
             lastSelectedFile = selectedFile;
@@ -229,10 +230,10 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
     public void updateClientsTable(boolean b) {
         if (b) {
             if (createClientTable != b) {
-                clientTableViewer.getTableViewer().setInput(lastSelectedFile);
+                gPage.getViewer().setInput(lastSelectedFile);
             }
         } else {
-            clientTableViewer.getTableViewer().setInput(null);
+            gPage.getViewer().setInput(null);
         }
 
         createClientTable = b;
@@ -678,6 +679,11 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.25  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.24  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
@@ -813,7 +819,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/22 14:30:45  lemmster
 verify chunks added

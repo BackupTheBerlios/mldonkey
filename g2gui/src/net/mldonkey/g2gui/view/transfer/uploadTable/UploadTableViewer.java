@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.view.viewers.actions.RefreshUploadsAction;
 import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
-import net.mldonkey.g2gui.view.viewers.table.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.table.GTablePage;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -58,10 +58,10 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.16 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: UploadTableViewer.java,v 1.17 2003/10/31 10:42:47 lemmster Exp $
  *
  */
-public class UploadTableViewer extends GTableViewer {
+public class UploadTableViewer extends GTablePage {
     private static final int NETWORK = 0;
     private static final int BYTES = 1;
     private static final int REQUESTS = 2;
@@ -97,8 +97,8 @@ public class UploadTableViewer extends GTableViewer {
      */
     protected void createContents(Composite parent) {
         super.createContents(parent);
-        tableViewer.setInput(this.sharedFileInfoIntMap);
-        tableViewer.addSelectionChangedListener((UploadTableMenuListener) tableMenuListener);
+        sViewer.setInput(this.sharedFileInfoIntMap);
+        sViewer.addSelectionChangedListener((UploadTableMenuListener) tableMenuListener);
     }
 
     /**
@@ -192,7 +192,7 @@ public class UploadTableViewer extends GTableViewer {
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
          */
         public Image getColumnImage(Object element, int columnIndex) {
-            switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+            switch (getTableViewer().getColumnIDs()[ columnIndex ]) {
             case UploadTableViewer.NETWORK:
 
                 SharedFileInfo file = (SharedFileInfo) element;
@@ -210,7 +210,7 @@ public class UploadTableViewer extends GTableViewer {
         public String getColumnText(Object element, int columnIndex) {
             SharedFileInfo info = (SharedFileInfo) element;
 
-            switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+            switch (getTableViewer().getColumnIDs()[ columnIndex ]) {
             case UploadTableViewer.NETWORK:
                 return info.getNetwork().getNetworkName();
 
@@ -278,7 +278,7 @@ public class UploadTableViewer extends GTableViewer {
         /**
          * @param gTableViewer
          */
-        public UploadTableMenuListener(GTableViewer gTableViewer) {
+        public UploadTableMenuListener(GTablePage gTableViewer) {
             super(gTableViewer);
         }
 
@@ -327,6 +327,11 @@ public class UploadTableViewer extends GTableViewer {
 
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.17  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.16  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

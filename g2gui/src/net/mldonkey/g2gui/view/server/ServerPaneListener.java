@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
-import net.mldonkey.g2gui.view.viewers.IGViewer;
+import net.mldonkey.g2gui.view.viewers.GPage;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
@@ -45,7 +45,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.2 2003/10/31 07:24:01 zet Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $ 
  *
  */
 public class ServerPaneListener extends GPaneListener {
@@ -54,7 +54,7 @@ public class ServerPaneListener extends GPaneListener {
 	 * @param gViewer
 	 * @param core
 	 */
-	public ServerPaneListener(IGViewer gViewer, CoreCommunication core) {
+	public ServerPaneListener(GPage gViewer, CoreCommunication core) {
 		super(gViewer, core);
 		this.states = new Enum[] { EnumState.BLACK_LISTED, EnumState.CONNECTED, 
 									EnumState.CONNECTED_INITIATING, EnumState.CONNECTING,
@@ -120,6 +120,11 @@ public class ServerPaneListener extends GPaneListener {
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.3  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.2  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

@@ -27,7 +27,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
-import net.mldonkey.g2gui.view.viewers.IGViewer;
+import net.mldonkey.g2gui.view.viewers.GPage;
 import net.mldonkey.g2gui.view.viewers.SashGPaneListener;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Control;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.18 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.19 2003/10/31 10:42:47 lemmster Exp $
  *
  */
 public class DownloadPaneMenuListener extends SashGPaneListener {
@@ -80,7 +80,7 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
         audioExtensions, videoExtensions, archiveExtensions, cdImageExtensions, pictureExtensions
     };
 
-    public DownloadPaneMenuListener(IGViewer gViewer, CoreCommunication core, SashForm aSashForm,
+    public DownloadPaneMenuListener(GPage gViewer, CoreCommunication core, SashForm aSashForm,
         Control aControl) {
         super(gViewer, core, aSashForm, aControl);
 
@@ -194,6 +194,11 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.19  2003/10/31 10:42:47  lemmster
+Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class GPage do the job
+Use supertype/interface where possible to keep the design flexible!
+
 Revision 1.18  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
