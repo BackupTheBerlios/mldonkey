@@ -38,7 +38,7 @@ import org.eclipse.jface.viewers.Viewer;
  * TableContentProvider
  *
  *
- * @version $Id: FriendsTableContentProvider.java,v 1.3 2003/08/31 15:37:30 zet Exp $
+ * @version $Id: FriendsTableContentProvider.java,v 1.4 2003/09/04 02:35:06 zet Exp $
  */
 public class FriendsTableContentProvider implements IStructuredContentProvider, Observer {
 	
@@ -85,6 +85,7 @@ public class FriendsTableContentProvider implements IStructuredContentProvider, 
 	 */
 	public void update (final Observable o, Object obj) {
 		if (o instanceof ClientInfo && viewer != null) {
+			if (viewer.getTable().isDisposed()) return;
 			viewer.getTable().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (viewer != null)
@@ -98,6 +99,9 @@ public class FriendsTableContentProvider implements IStructuredContentProvider, 
 
 /*
 $Log: FriendsTableContentProvider.java,v $
+Revision 1.4  2003/09/04 02:35:06  zet
+check disposed
+
 Revision 1.3  2003/08/31 15:37:30  zet
 friend icons
 
