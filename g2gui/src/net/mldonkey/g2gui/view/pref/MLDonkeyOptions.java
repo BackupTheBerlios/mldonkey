@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Control;
  * MLDonkeyOptions
  *
  * @author  $Author: zet $ 
- * @version $Id: MLDonkeyOptions.java,v 1.13 2003/08/18 15:48:13 zet Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.14 2003/08/18 22:28:58 zet Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -120,7 +120,11 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		computeSize();
 		
 		sc = new ScrolledComposite( myparent, SWT.H_SCROLL | SWT.V_SCROLL );
-		sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+		
+		// cheating...
+		GridData gd = new GridData( GridData.FILL_HORIZONTAL);
+		gd.heightHint = 350;
+		sc.setLayoutData( gd );
 			sc.setLayout( new FillLayout() );
 		
 		Composite parent = ( Composite ) super.createContents( sc );
@@ -146,6 +150,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.14  2003/08/18 22:28:58  zet
+scrolledcomposite height
+
 Revision 1.13  2003/08/18 15:48:13  zet
 computeSize
 
