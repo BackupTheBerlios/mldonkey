@@ -37,8 +37,8 @@ import org.eclipse.swt.graphics.Image;
 /**
  * TableLabelProvider
  *
- * @author $user$
- * @version $Id: TableLabelProvider.java,v 1.5 2003/08/07 13:25:37 lemmstercvs01 Exp $ 
+ * @author $Author: lemmstercvs01 $
+ * @version $Id: TableLabelProvider.java,v 1.6 2003/08/11 19:25:04 lemmstercvs01 Exp $ 
  *
  */
 public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -151,6 +151,9 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 
 /*
 $Log: TableLabelProvider.java,v $
+Revision 1.6  2003/08/11 19:25:04  lemmstercvs01
+bugfix at CleanTable
+
 Revision 1.5  2003/08/07 13:25:37  lemmstercvs01
 ResourceBundle added
 

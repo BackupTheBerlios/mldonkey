@@ -68,8 +68,8 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * TableMenuListener
  *
- * @author $user$
- * @version $Id: TableMenuListener.java,v 1.9 2003/08/10 12:59:12 lemmstercvs01 Exp $ 
+ * @author $Author: lemmstercvs01 $
+ * @version $Id: TableMenuListener.java,v 1.10 2003/08/11 19:25:04 lemmstercvs01 Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -552,7 +552,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		}
 	}
 	
-	private class EnumStateFilter extends ViewerFilter {
+	public static  class EnumStateFilter extends ViewerFilter {
 		private EnumState state;
 		
 		public EnumStateFilter( EnumState state ) {
@@ -576,7 +576,11 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 					return false;
 			}
 			return true;
-		}		
+		}
+		
+		public EnumState getState() {
+			return this.state;
+		}			
 	}
 	
 	private class MyInputDialog extends InputDialog {
@@ -665,6 +669,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.10  2003/08/11 19:25:04  lemmstercvs01
+bugfix at CleanTable
+
 Revision 1.9  2003/08/10 12:59:12  lemmstercvs01
 "manage servers" in NetworkItem implemented
 

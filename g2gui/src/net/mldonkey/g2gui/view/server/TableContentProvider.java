@@ -30,8 +30,8 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * TableContentProvider
  *
- * @author $user$
- * @version $Id: TableContentProvider.java,v 1.1 2003/08/05 13:50:10 lemmstercvs01 Exp $ 
+ * @author $Author: lemmstercvs01 $
+ * @version $Id: TableContentProvider.java,v 1.2 2003/08/11 19:25:04 lemmstercvs01 Exp $ 
  *
  */
 public class TableContentProvider implements IStructuredContentProvider {
@@ -57,6 +57,9 @@ public class TableContentProvider implements IStructuredContentProvider {
 
 /*
 $Log: TableContentProvider.java,v $
+Revision 1.2  2003/08/11 19:25:04  lemmstercvs01
+bugfix at CleanTable
+
 Revision 1.1  2003/08/05 13:50:10  lemmstercvs01
 initial commit
 

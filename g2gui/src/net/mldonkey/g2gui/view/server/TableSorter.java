@@ -32,13 +32,13 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * TableSorter
  *
- * @author $user$
- * @version $Id: TableSorter.java,v 1.3 2003/08/07 12:35:31 lemmstercvs01 Exp $ 
+ * @author $Author: lemmstercvs01 $
+ * @version $Id: TableSorter.java,v 1.4 2003/08/11 19:25:04 lemmstercvs01 Exp $ 
  *
  */
 public class TableSorter extends ViewerSorter {
-	/* set the default column to sort to name */
-	private int columnIndex = 1;
+	/* set the default sort column to state */
+	private int columnIndex = 8;
 	/* set the default way to descending */
 	private boolean lastSort = true;
 	
@@ -73,10 +73,6 @@ public class TableSorter extends ViewerSorter {
 	public int compare( Viewer viewer, Object obj1, Object obj2 ) {
 		ServerInfo server1 = ( ServerInfo ) obj1;
 		ServerInfo server2 = ( ServerInfo ) obj2;
-		
-		/* avoid null pointer exceptions */
-		if ( server1 == null || server2 == null )
-			return 0;
 		
 		/* network */
 		if ( columnIndex == 0 ) {
@@ -205,6 +201,9 @@ public class TableSorter extends ViewerSorter {
 
 /*
 $Log: TableSorter.java,v $
+Revision 1.4  2003/08/11 19:25:04  lemmstercvs01
+bugfix at CleanTable
+
 Revision 1.3  2003/08/07 12:35:31  lemmstercvs01
 cleanup, more efficient
 

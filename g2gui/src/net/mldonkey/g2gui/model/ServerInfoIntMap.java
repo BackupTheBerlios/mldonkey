@@ -24,7 +24,8 @@ package net.mldonkey.g2gui.model;
 
 import gnu.regexp.RE;
 import gnu.regexp.REException;
-import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntArrayList;
+import gnu.trove.TIntObjectIterator;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -40,8 +41,8 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 /**
  * ServerInfoList
  *
- * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.16 2003/08/09 13:51:42 dek Exp $ 
+ * @author $Author: lemmstercvs01 $
+ * @version $Id: ServerInfoIntMap.java,v 1.17 2003/08/11 19:25:04 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -65,6 +66,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 * @param value The FileInfo object
 	 */
 	private void put( int key, ServerInfo value ) {
+		/* skip empty values */
+		if ( value == null ) return;
+		
 		synchronized ( this ) {
 			this.infoIntMap.put( key, value );
 		}
@@ -79,9 +83,19 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		int id = messageBuffer.readInt32();
+
+		/* workaround for proto < 17 to ignore fastrack and gnutella clients */
+		if ( this.parent.getProtoToUse() <= 16 ) {
+			NetworkInfo network = this.parent.getNetworkInfoMap().get( messageBuffer.readInt32() );
+			messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
+			/* ignore fasttrack and gnutella servers */
+			if ( !network.hasServers() )
+				return;
+		}
+
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
-		if ( this.containsKey( id ) ) {
-			ServerInfo server = this.get( id );
+		ServerInfo server = this.get( id );
+		if ( server != null ) {
 			server.readStream( messageBuffer );
 			/* ignore removed servers */
 			if ( server.getConnectionState().getState() != EnumState.REMOVE_HOST ) 
@@ -97,7 +111,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 			}
 		}
 		this.setChanged();
-		this.notifyObservers( this );
+		this.notifyObservers();
 	}
 	
 	/**
@@ -115,8 +129,8 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 */
 	public void update( MessageBuffer messageBuffer ) {
 		int id = messageBuffer.readInt32();
-		if ( this.infoIntMap.contains( id ) ) {
-			ServerInfo server = ( ServerInfo ) this.get( id );
+		ServerInfo server = ( ServerInfo ) this.get( id );
+		if ( server != null ) {
 			server.update( messageBuffer );
 			/* ignore removed servers */
 			if ( server.getConnectionState().getState() != EnumState.REMOVE_HOST )
@@ -124,7 +138,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 					this.modified.add( server );
 				}
 			this.setChanged();
-			this.notifyObservers( this );
+			this.notifyObservers();
 		}
 	}
 
@@ -133,17 +147,29 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 * cleans up the used Trove-collections. Fills 'em with data the core (mldonkey) finds useful
 	 */
 	public void clean( MessageBuffer messageBuffer ) {
-		TIntObjectHashMap tempServerInfoList = new TIntObjectHashMap();			
-		int[] usefulServers = messageBuffer.readInt32List();		
-		for ( int i = 0; i < usefulServers.length; i++ ) {
-			int clientID = usefulServers[ i ];
-			tempServerInfoList.put( clientID, this.get( clientID ) );			
-		}
+		TIntArrayList usefulServers = new TIntArrayList( messageBuffer.readInt32List() );
+		TIntArrayList oldServers = new TIntArrayList();
+		/* find the old servers */
 		synchronized ( this ) {
-			this.infoIntMap = tempServerInfoList;		
+			TIntObjectIterator itr = this.infoIntMap.iterator();
+			int size = this.infoIntMap.size();
+			for ( ; size-- > 0; ) {
+				itr.advance();
+				int key = itr.key();
+				if ( !usefulServers.contains( key ) )
+					oldServers.add( key );
+			}
+			/* remove the oldServers from the infointmap */
+			for ( int i = 0; i < oldServers.size(); i++ ) {
+				int key = oldServers.get( i );
+				this.removed.add( this.infoIntMap.get( key ) );
+				this.infoIntMap.remove( key );
+			}
 		}
+		usefulServers = null;
+		oldServers = null;
 		this.setChanged();
-		this.notifyObservers( this );
+		this.notifyObservers();
 	}
 	
 	/**
@@ -204,6 +230,24 @@ public class ServerInfoIntMap extends InfoIntMap {
 	}
 	
 	/**
+	 * @return The number of connected servers in this serverinfointmap
+	 */	
+	public int getConnected() {
+		int result = 0;
+		synchronized ( this ) {
+			TIntObjectIterator itr = this.infoIntMap.iterator();
+			int size = this.infoIntMap.size();
+			for ( ; size-- > 0; ) {
+				itr.advance();
+				ServerInfo server = ( ServerInfo ) itr.value();
+				if ( server != null && server.isConnected() )
+					result++;
+			}
+		}
+		return result;
+	}
+	
+	/**
 	 * Sends Message.S_CONNECT_MORE to the core.
 	 */
 	public void connectMore() {
@@ -244,7 +288,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 			this.removed.add( server );
 		}
 		this.setChanged();
-		this.notifyObservers( this );
+		this.notifyObservers();
 	}
 	
 	/**
@@ -267,7 +311,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 			}
 		}
 		this.setChanged();
-		this.notifyObservers( this );
+		this.notifyObservers();
 	}
 	
 	/**
@@ -383,6 +427,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.17  2003/08/11 19:25:04  lemmstercvs01
+bugfix at CleanTable
+
 Revision 1.16  2003/08/09 13:51:42  dek
 removed wrong comment (from cut'n paste)
 

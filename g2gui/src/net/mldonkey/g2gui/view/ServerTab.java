@@ -29,10 +29,13 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
+import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.server.TableContentProvider;
 import net.mldonkey.g2gui.view.server.TableLabelProvider;
 import net.mldonkey.g2gui.view.server.TableMenuListener;
 import net.mldonkey.g2gui.view.server.TableSorter;
+import net.mldonkey.g2gui.view.server.TableMenuListener.EnumStateFilter;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TableViewer;
@@ -57,8 +60,8 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * ServerTab
  *
- * @author $user$
- * @version $Id: ServerTab.java,v 1.8 2003/08/10 12:59:01 lemmstercvs01 Exp $ 
+ * @author $Author: lemmstercvs01 $
+ * @version $Id: ServerTab.java,v 1.9 2003/08/11 19:25:04 lemmstercvs01 Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -189,12 +192,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 					ascending = ascending ? false : true;
 
 					table.getSorter().sort( table, temp );
-					try {
-						table.refresh();
-					}
-					catch ( Exception e1 ) {
-						e1.printStackTrace();
-					}
+					table.refresh();
 				}	
 			} );
 		}
@@ -207,9 +205,13 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		} );
 		
 		/* fill the table with content */
-		ServerInfoIntMap servers = this.core.getServerInfoIntMap();
+		servers = this.core.getServerInfoIntMap();
 		this.table.setInput( servers );
 		servers.clearAdded();
+		
+		/* set the state filter if preference says so */
+		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) )
+			table.addFilter( new TableMenuListener.EnumStateFilter( EnumState.CONNECTED ) );
 		
 		int itemCount = table.getTable().getItemCount();
 		setRightLabel("Total: " + itemCount);
@@ -241,7 +243,6 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, Object arg ) {
-		this.servers = ( ServerInfoIntMap ) arg;
 		if ( table.getTable().isDisposed() ) return;
 		this.content.getDisplay().asyncExec( this );
 	}		
@@ -250,30 +251,32 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		int itemCount = table.getTable().getItemCount();
-		/* servers were removed */
-		if ( itemCount > this.servers.size() ) {
-			synchronized ( this.servers.getRemoved() ) {
-				table.remove( this.servers.getRemoved().toArray() );
-				this.servers.clearRemoved();
-			}
+		synchronized ( this.servers.getRemoved() ) {
+			table.remove( this.servers.getRemoved().toArray() );
+			this.servers.clearRemoved();
 		}
-		/* new servers were received */
-		else if ( itemCount < this.servers.size() ) {
-			synchronized ( this.servers.getAdded() ) {
-				table.add( this.servers.getAdded().toArray() );
-				this.servers.clearAdded();
-			}
+		synchronized ( this.servers.getAdded() ) {
+			table.add( this.servers.getAdded().toArray() );
+			this.servers.clearAdded();
 		}
-		/* only the obj has changed */
-		if ( this.servers.getModified().size() > 0 ) {
-			synchronized ( this.servers.getModified() ) {
-				table.update( this.servers.getModified().toArray(), null );
-				this.servers.clearModified();
-			}	
+		synchronized ( this.servers.getModified() ) {
+			table.update( this.servers.getModified().toArray(), null );
+			this.servers.clearModified();
 		}
-		setRightLabel("Total: " + itemCount);
+		int itemCount = table.getTable().getItemCount();	
+		setRightLabel( "Total: " + itemCount );
 		this.setStatusLine();
+		
+		/* refresh the table if "show connected servers only" is true and the filter is activated */
+		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) && this.servers.getConnected() != itemCount ) {
+			ViewerFilter[] filters = table.getFilters();
+			for ( int i = 0; i < filters.length; i++ )
+				if ( filters[ i ] instanceof TableMenuListener.EnumStateFilter ) {
+					TableMenuListener.EnumStateFilter filter = ( EnumStateFilter ) filters[ i ];
+					if ( filter.getState() == EnumState.CONNECTED )
+						table.refresh();
+				}
+		}
 	}
 	
 	/**
@@ -301,7 +304,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * Sets the statusline to the current value
 	 */
 	private void setStatusLine() {
-		this.statusText = res.getString( "SVT_SERVERS" ) + table.getTable().getItemCount();
+		this.statusText = res.getString( "SVT_SERVERS" ) + servers.getConnected();
 		this.mainWindow.statusline.update( this.statusText );
 		this.mainWindow.statusline.updateToolTip( "" );
 	}
@@ -335,10 +338,32 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		}
 		table.addFilter( new TableMenuListener.NetworkFilter( enum ) );
 	}
+	
+	/**
+	 * Updates this tab on preference close
+	 */
+	public void updateDisplay() {
+		/* update the state filter */
+		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) )
+			table.addFilter( new TableMenuListener.EnumStateFilter( EnumState.CONNECTED ) );
+		else {
+			ViewerFilter[] filters = table.getFilters();
+			for ( int i = 0; i < filters.length; i++ ) {
+				TableMenuListener.EnumStateFilter filter = ( EnumStateFilter ) filters[ i ];
+				if ( filter instanceof TableMenuListener.EnumStateFilter
+				&& filter.getState() == EnumState.CONNECTED )
+					table.removeFilter( filter ); 				
+			}
+		}
+		super.updateDisplay();
+	}
 }
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.9  2003/08/11 19:25:04  lemmstercvs01
+bugfix at CleanTable
+
 Revision 1.8  2003/08/10 12:59:01  lemmstercvs01
 "manage servers" in NetworkItem implemented
 
