@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.74 2003/08/02 09:58:34 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.75 2003/08/02 10:07:57 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -207,7 +207,7 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private void decodeMessage( 
+	private synchronized void decodeMessage( 
 				short opcode, 
 				MessageBuffer 
 				messageBuffer ) throws IOException 
@@ -435,6 +435,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.75  2003/08/02 10:07:57  lemmstercvs01
+synchronized readded
+
 Revision 1.74  2003/08/02 09:58:34  lemmstercvs01
 synchronized on decodeMessage() removed
 
