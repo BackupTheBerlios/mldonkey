@@ -63,7 +63,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.28 2003/09/19 15:19:14 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.29 2003/09/19 17:51:39 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -217,6 +217,7 @@ public class SearchTab extends GuiTab {
 					SearchResult nResult = ( SearchResult ) cTabFolder.getSelection().getData();
 					mainWindow.getStatusline().update( nResult.getStatusLine() );
 					mainWindow.getStatusline().updateToolTip( "" );
+					setSearchButton();
 				}
 				else {
 					mainWindow.getStatusline().update( "" );
@@ -291,6 +292,9 @@ public class SearchTab extends GuiTab {
 		return result;
 	}
 	
+	/**
+	 * @return The search masks
+	 */
 	private Search getSearch() {
 		CTabItem item = tabFolder.getSelection();
 		Search result = ( Search ) item.getData();
@@ -332,9 +336,9 @@ public class SearchTab extends GuiTab {
 	}
 
 	/**
-	 * DOCUMENT ME!
+	 * Creates a <code>StackLayout</code> with three buttons. Search/Stop/Continue
 	 *
-	 * @param group DOCUMENT ME!
+	 * @param group The <code>Composite</code> to draw the buttons in
 	 */
 	private void createSearchButton( Composite group ) {
 		this.stackLayout = new StackLayout();
@@ -383,6 +387,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.29  2003/09/19 17:51:39  lemmster
+minor bugfix
+
 Revision 1.28  2003/09/19 15:19:14  lemmster
 reworked
 

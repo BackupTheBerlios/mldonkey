@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  *
- * @version $Id: NetworkInfoIntMap.java,v 1.14 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.15 2003/09/19 17:51:39 lemmster Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
@@ -57,6 +57,8 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 			//update existing NetworkInfo-Object
 			networkInfo = ( NetworkInfo ) this.infoIntMap.get( id );
 			networkInfo.readStream( messageBuffer );
+			this.setChanged();
+			this.notifyObservers( networkInfo );
 		}
 		else {
 			//add a new NetworkInfo-Object to the Map
@@ -66,8 +68,6 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 				this.infoIntMap.put( id, networkInfo );
 			}
 		}
-		this.setChanged();
-		this.notifyObservers( networkInfo );
 	}
 	
 	/**
@@ -160,6 +160,9 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.15  2003/09/19 17:51:39  lemmster
+minor bugfix
+
 Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 

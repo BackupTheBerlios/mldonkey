@@ -80,7 +80,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.47 2003/09/19 15:19:14 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.48 2003/09/19 17:51:39 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -99,8 +99,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
     private TableColumn tableColumn;
     private String statusline;
     private ResultTableSorter resultTableSorter = new ResultTableSorter();
+	private boolean mustRefresh = false;
     private long lastRefreshTime = 0;
-    private int mustRefresh = 0;
     private int count = 0;
 
     /* if you modify this, change the LayoutProvider and tableWidth */
@@ -195,7 +195,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
              * look at API for refresh(false)
              */
             if ( list.size() != table.getTable().getItemCount() ) {
-                mustRefresh++;
+                mustRefresh = true;
                 delayedRefresh();
             }
         }
@@ -216,10 +216,10 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         if ( System.currentTimeMillis() > ( lastRefreshTime + 2000 ) ) {
             lastRefreshTime = System.currentTimeMillis();
             table.refresh( true );
-            mustRefresh = 0;
+            mustRefresh = false;
         }
         else { // schedule an update so we don't miss one
-            if ( mustRefresh == 1 )
+            if ( mustRefresh )
                 cTabItem.getDisplay().timerExec( 2500, this );
         }
     }
@@ -410,8 +410,6 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         Message message = new EncodeMessage( Message.S_CLOSE_SEARCH, temp );
         message.sendMessage( core );
         message = null;
-		
-		( ( SearchTab ) search ).setSearchButton();
     }
     
     /**
@@ -602,6 +600,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 }
 /*
 $Log: SearchResult.java,v $
+Revision 1.48  2003/09/19 17:51:39  lemmster
+minor bugfix
+
 Revision 1.47  2003/09/19 15:19:14  lemmster
 reworked
 
