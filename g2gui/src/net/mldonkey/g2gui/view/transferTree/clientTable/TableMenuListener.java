@@ -27,7 +27,9 @@ import java.util.Iterator;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
+import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transferTree.ClientDetailDialog;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -41,7 +43,7 @@ import org.eclipse.jface.viewers.TableViewer;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.3 2003/08/28 22:53:22 zet Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -93,6 +95,10 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		/* disconnect */
 		if ( selectedClientInfo != null )
 			menuManager.add( new AddFriendAction() );
+			
+		if ( selectedClientInfo != null )
+			menuManager.add( new ClientDetailAction() );	
+			
 		
 	}
 	class AddFriendAction extends Action {
@@ -107,10 +113,25 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			}
 		}
 	}
+	
+	class ClientDetailAction extends Action {
+		public ClientDetailAction() {
+			super();
+			setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_CLIENT_DETAILS"));
+		}
+		public void run() {
+			new ClientDetailDialog((FileInfo) tableViewer.getInput(), selectedClientInfo);
+		}
+		
+	}	
+	
 }
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.3  2003/08/28 22:53:22  zet
+add client details action
+
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
