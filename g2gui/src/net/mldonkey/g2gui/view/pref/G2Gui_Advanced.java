@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Advanced.java,v 1.2 2003/09/18 10:23:48 lemmster Exp $
+ * @version $Id: G2Gui_Advanced.java,v 1.3 2003/09/19 14:25:55 zet Exp $
  */
 public class G2Gui_Advanced extends FieldEditorPreferencePage {
 
@@ -122,6 +122,15 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 		boolean advanced = getPreferenceStore().getBoolean( "advancedMode" );
 
 		parent = getFieldEditorParent();
+		
+		if ( SWT.getPlatform().equals("win32") ) {
+			setupEditor( 
+				new BooleanFieldEditor( 
+					"minimizeOnClose",
+					G2GuiResources.getString( "PREF_DISPLAY_MIN_CLOSE" ),
+					parent ) );
+		
+		}		
 	
 		if ( advanced ) {
 		
@@ -191,6 +200,9 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Advanced.java,v $
+Revision 1.3  2003/09/19 14:25:55  zet
+min to systray option
+
 Revision 1.2  2003/09/18 10:23:48  lemmster
 checkstyle
 

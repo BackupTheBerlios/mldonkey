@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.23 2003/09/18 10:23:48 lemmster Exp $
+ * @version $Id: PreferenceLoader.java,v 1.24 2003/09/19 14:25:55 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
@@ -108,6 +108,8 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "tableCellEditors", false );
         preferenceStore.setDefault( "coreExecutable", "" );
         preferenceStore.setDefault( "useCombo", false );
+        preferenceStore.setDefault( "minimizeOnClose", true );
+        
         return preferenceStore;
     }
 
@@ -268,6 +270,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.24  2003/09/19 14:25:55  zet
+min to systray option
+
 Revision 1.23  2003/09/18 10:23:48  lemmster
 checkstyle
 
@@ -308,7 +313,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates
