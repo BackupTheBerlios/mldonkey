@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.28 2003/08/28 22:44:30 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.29 2003/08/29 15:43:43 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -233,35 +233,33 @@ public abstract class GuiTab implements Listener, Observer {
 	public void createHeader(Composite thisContent, boolean createMe) {
 
 		if (createMe) {
-		
+			// if I use white as a foreground colour, I can't read it anymore..
 			Color backgroundColor = this.mainWindow.getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
-			Color foregroundColor = this.mainWindow.getShell().getDisplay().getSystemColor(SWT.COLOR_WHITE);
 			
 			separator1 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
 			separator1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			
 			pageHeader = new Composite(thisContent, SWT.NONE);
-			pageHeader.setBackground(backgroundColor);
 			
 			separator2 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
 			separator2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	
-			GridLayout gridLayout = CGridLayout.createGL(2,10,0,0,0,false);
+			GridLayout gridLayout = CGridLayout.createGL(2,0,0,0,0,false);
 			pageHeader.setLayout(gridLayout);
 			pageHeader.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			
-			leftLabel = new CLabel(pageHeader, SWT.NONE);
+			leftLabel = new CLabel(pageHeader, SWT.LEFT);
 			leftLabel.setFont(JFaceResources.getHeaderFont());
-			leftLabel.setBackground(backgroundColor);
-			leftLabel.setForeground(foregroundColor);
+			leftLabel.setBackground(new Color[]{pageHeader.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+									pageHeader.getBackground()},
+									new int[] {100});	
+			leftLabel.setForeground(pageHeader.getBackground());
 			leftLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	
-			rightLabel = new CLabel(pageHeader, SWT.NONE);
+			rightLabel = new CLabel(pageHeader, SWT.RIGHT);
 			rightLabel.setText("");
 			rightLabel.setFont(JFaceResources.getHeaderFont());
-			rightLabel.setForeground(foregroundColor);
-			rightLabel.setBackground(backgroundColor);
-			
+			rightLabel.setForeground(pageHeader.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
 			rightLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		
 			headerBar = true;
@@ -288,6 +286,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.29  2003/08/29 15:43:43  zet
+try gradient headerbar
+
 Revision 1.28  2003/08/28 22:44:30  zet
 GridLayout helper class
 

@@ -73,7 +73,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Main
  *
  *
- * @version $Id: TransferTab.java,v 1.39 2003/08/28 22:44:30 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.40 2003/08/29 15:43:43 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -272,7 +272,7 @@ public class TransferTab extends GuiTab  {
 				extra += ")";
 			}
 						
-			runLabelUpdate(totalFiles + " files, " + decimalFormat.format(totalRate / 1000f) + " KB/s" + extra);
+			runLabelUpdate("Files: " + totalFiles + ", " + decimalFormat.format(totalRate / 1000f) + " KB/s" + extra);
 		}
 	
 	}
@@ -307,6 +307,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.40  2003/08/29 15:43:43  zet
+try gradient headerbar
+
 Revision 1.39  2003/08/28 22:44:30  zet
 GridLayout helper class
 
