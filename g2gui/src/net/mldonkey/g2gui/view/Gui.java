@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.view.statusline.*;
 
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
@@ -40,7 +41,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.9 2003/06/27 11:34:56 lemmstercvs01 Exp $ 
+ * @version $Id: Gui.java,v 1.10 2003/06/27 13:40:50 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {
@@ -105,6 +106,10 @@ public class Gui implements IG2gui, Listener {
 		createContents(shell);
 		shell.pack ();
 		shell.open ();
+		shell.addDisposeListener(new DisposeListener(){
+			public synchronized void widgetDisposed(DisposeEvent e) {
+				mldonkey.disconnect();				
+			}});
 		while (!shell.isDisposed ()) {
 			if (!display.readAndDispatch ()) display.sleep ();
 		}
@@ -150,9 +155,7 @@ public class Gui implements IG2gui, Listener {
 			miscButtonRowLayout.justify = true;
 			miscButtonRowLayout.pack = true;
 			miscButtonRowLayout.spacing = 5;		
-			miscButtonRow.setLayout( miscButtonRowLayout );		
-			
-			
+			miscButtonRow.setLayout( miscButtonRowLayout );				
 			
 		
 		Label spacer = new Label(miscButtonRow,SWT.SEPARATOR|SWT.VERTICAL|SWT.SHADOW_OUT);
@@ -239,6 +242,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.10  2003/06/27 13:40:50  dek
+*** empty log message ***
+
 Revision 1.9  2003/06/27 11:34:56  lemmstercvs01
 unnecessary importer removed
 
