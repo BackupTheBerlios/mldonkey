@@ -27,15 +27,25 @@ import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.model.NetworkInfo.Enum;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.G2Gui;
+import net.mldonkey.g2gui.view.MainTab;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.6 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.7 2003/08/23 15:49:28 lemmster Exp $
  */
 public class G2GuiResources {
 	
@@ -44,6 +54,10 @@ public class G2GuiResources {
 	
 	// prevent instantiation
 	private G2GuiResources() {
+	}
+	
+	public static void initialize() {
+		createImageRegistry();
 	}
 	
 	public static Image getImage(String key) {
@@ -122,15 +136,121 @@ public class G2GuiResources {
 			return G2GuiResources.getImage( "epRatingPoor" );
 	}
 
+	private static void createImageRegistry () {
+		Color white = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
+		
+		// hack to use transparent .gif in titlebar
+		ImageData source = ImageDescriptor.createFromFile(G2Gui.class, "images/mld_logo_48x48.gif").getImageData();
+		ImageData mask = source.getTransparencyMask();
+		Image icon = new Image( Display.getCurrent(), source,mask);		
+		imageRegistry.put("ProgramIcon",icon);	
+		
+		//reg.put("ProgramIcon", createTrans("mld_logo_48x48.png"));	
+		
+		String[] buttonNames = { "Preferences", "Statistics", "Console",
+									"Transfers", "Search", "Server", "Messages" };
+		String[] buttonFiles = { "preferences", "statistics", "console",
+									"transfer3a", "search", "server", "messages" };							
+									
+		for (int i=0; i < buttonNames.length; i++) {
+			imageRegistry.put(buttonNames[i] + "Button", createTrans(buttonFiles[i] + ".png"));
+			imageRegistry.put(buttonNames[i] + "ButtonSmall", createTrans(buttonFiles[i] + "-16.png"));
+		}
+		
+		String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "ONP", "Unknown" };
+		String[] fileNames = { "directconnect", "edonkey2000", "gnutella", "gnutella2",
+								"kazaa", "soulseek", "unknown", "unknown" };
+								
+		for ( int i = 0; i < shortNames.length; i++ ) {
+			imageRegistry.put( shortNames[i] + "Connected", createTrans( fileNames[i] + "_connected.png" ) );
+			imageRegistry.put( shortNames[i] + "Disconnected", createTrans( fileNames[i] + "_disconnected.png" ) );
+			imageRegistry.put( shortNames[i] + "Disabled", createTrans( fileNames[i] + "_disabled.png" ) );
+			imageRegistry.put( shortNames[i] + "BadConnected", createTrans( fileNames[i] + "_badconnected.png" ) );
+			imageRegistry.put( shortNames[i] + "ConnectedWhite", createTrans( fileNames[i] + "_connected.png", white ) );
+		}
+		/* some icons for networks without all states */
+		imageRegistry.put( "BTConnected", createTrans( "bt_connected.png" ) );
+		imageRegistry.put( "BTConnectedWhite", createTrans( "bt_connected.png", white ) );
+		imageRegistry.put( "BTDisabled", createTrans( "bt_disabled.png" ) );
+		imageRegistry.put( "MULTIConnected", createTrans( "multinet_connected.png" ) );
+		imageRegistry.put( "MULTIConnectedWhite", createTrans( "multinet_connected.png", white ) );
+		imageRegistry.put( "MULTIDisabled", createTrans( "multinet_disabled.png" ) );
+			
+		imageRegistry.put( "MessagesButtonSmallWhite", createTrans( "messages-16.png", white ) );
+		
+		imageRegistry.put( "DownArrow", createTrans( "down.png" ) );
+		imageRegistry.put( "UpArrow", createTrans( "up.png" ) );
+		
+		imageRegistry.put( "SearchSmall", createTrans( "search_small.png" )) ;
+		imageRegistry.put( "SearchComplete", createTrans( "search_complete.png" )) ;
+		
+		imageRegistry.put( "epUnknown", createImageDescriptor("ep_unknown.gif") );
+		imageRegistry.put( "epTransferring", createImageDescriptor("ep_transferring.gif") );
+		imageRegistry.put( "epNoNeeded", createImageDescriptor("ep_noneeded.gif") );
+		imageRegistry.put( "epConnecting", createImageDescriptor("ep_connecting.gif") );
+		imageRegistry.put( "epAsking", createImageDescriptor("ep_asking.gif") );
+		
+		imageRegistry.put( "epRatingPoor", createImageDescriptor("ep_rating_poor.gif") );
+		imageRegistry.put( "epRatingFair", createImageDescriptor("ep_rating_fair.gif") );
+		imageRegistry.put( "epRatingGood", createImageDescriptor("ep_rating_good.gif") );
+		imageRegistry.put( "epRatingExcellent", createImageDescriptor("ep_rating_excellent.gif") );
+	}
+	
+	/**
+	 * Creates a Transparent imageobject with a given .png|.gif Image-Object
+	 * be aware, the the scr-image is disposed, so dont' use it any further
+	 * 
+	 * @param src the non-transparent image we want to process
+	 * @param control where is our image laid in, to check for the background-color
+	 * @return the transparent image
+	 */
+	public static Image createTransparentImage( Image src, Color color ) {
+		int width = src.getBounds().width;
+		int height = src.getBounds().height;
+		
+		Image result = new Image( null, new Rectangle( 0, 0, width, height ) );		
+		GC gc = new GC( result );
+		gc.setBackground( color );
+		gc.fillRectangle( 0, 0, width, height );							
+		gc.drawImage( src, 0, 0 );
+			
+		src.dispose();		
+		gc.dispose();		
+
+		return result;
+	}
+	 
+	/**
+	 * @param src
+	 * @param control
+	 * @return
+	 */
+	public static Image createTransparentImage( Image src, Control control) {
+		return createTransparentImage(src, control.getBackground() );
+	}
+
+	// transparent pngs just don't work with swt 
+	private static Image createTrans(String filename) {
+		return createTrans( filename, Display.getCurrent().getShells()[1].getBackground());
+	}
+	private static Image createTrans(String filename, Color color) {
+		return createTransparentImage( ImageDescriptor.createFromFile(MainTab.class, "images/" + filename).createImage(), color);
+	}
+	private static ImageDescriptor createImageDescriptor(String filename) {
+		return ImageDescriptor.createFromFile(MainTab.class, "images/" + filename);
+	}
 }
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.7  2003/08/23 15:49:28  lemmster
+fix for prefs and refactoring
+
 Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image

@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: MainCoolBar.java,v 1.3 2003/08/23 15:49:28 lemmster Exp $ 
  *
  */
 public class MainCoolBar {
@@ -85,19 +85,8 @@ public class MainCoolBar {
 		this.shell = mainTab.getShell();
 		this.mainToolButtons = new ArrayList();
 		this.miscToolButtons = new ArrayList();
-		this.createInternalPrefStore();
 		this.getInternalPrefStoreSettings();
 		this.createContent( mainTab.getMainComposite() );
-	}
-	
-	/**
-	 * Reads the preference store file from disk
-	 */
-	private void createInternalPrefStore() {
-		try {			
-			internalPrefStore.load();
-		}
-		catch ( IOException e ) { }
 	}
 	
 	/**
@@ -374,6 +363,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.3  2003/08/23 15:49:28  lemmster
+fix for prefs and refactoring
+
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
