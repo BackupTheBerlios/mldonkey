@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.46 2003/11/20 17:51:53 dek Exp $
+ * @version $Id: G2Gui.java,v 1.47 2003/11/24 17:56:58 vnc Exp $
  *
  */
 public class G2Gui {
@@ -112,7 +112,7 @@ public class G2Gui {
 			} else if (args[optind].equals("--")) {
 				optind++;
 				break;
-			} else if (args[optind].startsWith("-h")) {
+			} else if (args[optind].startsWith("-h") || args[optind].startsWith("--h")) {
 				System.out.println(
 					"Usage: g2gui [[-c path/to/pref] | [-l link] [-h host] [-p port] [-U user] [-P passwd]]");
 				System.exit(1);
@@ -419,6 +419,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.47  2003/11/24 17:56:58  vnc
+added --h[elp] param
+
 Revision 1.46  2003/11/20 17:51:53  dek
 moved disconnect-listener out of core
 
