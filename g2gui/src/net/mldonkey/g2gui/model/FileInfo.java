@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.49 2003/09/14 03:37:24 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.50 2003/09/14 16:23:23 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -166,11 +166,19 @@ public class FileInfo extends Parent implements Observer {
 		return age;
 	}
 	/**
-	 * @return The file availibility
+	 * @return The file availability
 	 */
 	public String getAvail() {
 		return avail;
 	}
+	
+	/**
+	 * @return The file availability map
+	 */
+	public Map getAvails() {
+		return avails;
+	}
+	
 	/**
 	 * @return last time each chunk has been seen
 	 */
@@ -752,6 +760,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.50  2003/09/14 16:23:23  zet
+getAvails
+
 Revision 1.49  2003/09/14 03:37:24  zet
 changedProperties in model
 
