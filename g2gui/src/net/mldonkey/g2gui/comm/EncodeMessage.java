@@ -32,7 +32,7 @@ import java.nio.ByteOrder;
 /**
  * EncodeMessage
  *
- * @version $Id: EncodeMessage.java,v 1.8 2003/09/18 03:59:37 zet Exp $ 
+ * @version $Id: EncodeMessage.java,v 1.9 2003/09/18 04:41:19 zet Exp $ 
  *
  */
 public class EncodeMessage extends Message {
@@ -150,12 +150,8 @@ public class EncodeMessage extends Message {
 		if ( object instanceof Byte ) {
 			this.content.write( ( ( Byte ) object ).byteValue() );
 		}
-		else if ( object instanceof Short 
-				|| object instanceof Integer
-				|| object instanceof Long ) {
-		
-			appendNumber( object );
-		
+		else if ( object instanceof Number ) {
+			appendNumber( ( Number ) object );
 		}
 		else if ( object instanceof String ) {
 			String string = (String) object;
@@ -172,22 +168,22 @@ public class EncodeMessage extends Message {
 	 * Append a number to the content in LITTLE_ENDIAN 
 	 * must be one of: Short, Integer, or Long
 	 */
-	public void appendNumber( Object object ) { 
+	public void appendNumber( Number number ) { 
 		
 		ByteBuffer byteBuffer;
 		
-		if ( object instanceof Short ) {
+		if ( number instanceof Short ) {
 				byteBuffer = ByteBuffer.allocate( 2 );
 				byteBuffer.order( ByteOrder.LITTLE_ENDIAN ); 
-			 	byteBuffer.putShort( (( Short ) object).shortValue() );
-		} else if ( object instanceof Integer ) {
+			 	byteBuffer.putShort( (( Short ) number).shortValue() );
+		} else if ( number instanceof Integer ) {
 				byteBuffer = ByteBuffer.allocate( 4 );
 				byteBuffer.order( ByteOrder.LITTLE_ENDIAN ); 
-				byteBuffer.putInt( (( Integer ) object).intValue() );
+				byteBuffer.putInt( (( Integer ) number).intValue() );
 		} else {
 				byteBuffer = ByteBuffer.allocate( 8 );
 				byteBuffer.order( ByteOrder.LITTLE_ENDIAN ); 
-				byteBuffer.putLong( (( Long ) object).longValue() );
+				byteBuffer.putLong( (( Long ) number).longValue() );
 		}
 		
 		this.content.write( byteBuffer.array(), 0, byteBuffer.capacity() );
@@ -210,6 +206,9 @@ public class EncodeMessage extends Message {
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.9  2003/09/18 04:41:19  zet
+use Number
+
 Revision 1.8  2003/09/18 03:59:37  zet
 rewrite to use ByteBuffer -- easier to read, and fixes sending of StringLists
 
