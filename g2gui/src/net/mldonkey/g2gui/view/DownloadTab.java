@@ -137,7 +137,7 @@ public class DownloadTab
 			FileInfo file = (FileInfo)popupItem.getData();
 			if(item==pauseItem) file.setState(EnumFileState.PAUSED);
 			if(item==resumeItem) file.setState(EnumFileState.DOWNLOADING);
-//			if(item==cancelItem) file.setState(EnumFileState.CANCELLED);
+			if(item==cancelItem) file.setState(EnumFileState.CANCELLED);
 			if(item==linkItem) {
 				Clipboard clipBoard = new Clipboard(item.getDisplay());
 				String link = "ed2k://|file|"+file.getName()+"|"+file.getSize()+"|"+file.getMd4()+"|/";
@@ -146,7 +146,7 @@ public class DownloadTab
 			}
 			if(item==fakeItem) {
 				String link = "ed2k://|file|"+file.getName()+"|"+file.getSize()+"|"+file.getMd4()+"|/";
-				Program.findProgram(".htm").execute("http://edonkeyfakes.ath.cx/fakecheck/update/fakecheck.php?ed2k="+link);
+				Program.findProgram(".htm").execute("http:///edonkeyfakes.ath.cx/fakecheck/update/fakecheck.php?ed2k="+link);
 			}
 		}
 	}
