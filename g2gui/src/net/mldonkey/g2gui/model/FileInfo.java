@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.6 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: FileInfo.java,v 1.7 2003/06/25 00:57:49 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements SimpleInformation {
@@ -406,10 +406,24 @@ public class FileInfo implements SimpleInformation {
 		this.setOffset( messageBuffer.readInt32() );
 	}
 
+	/**
+	 * Compares two FileInfo objects by their md4
+	 * @param fileInfo
+	 * @return
+	 */
+	public boolean equals( FileInfo fileInfo ) {
+		if ( this.getMd4() == fileInfo.getMd4() )
+			return true;
+		else
+			return false;
+	}
 }
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.7  2003/06/25 00:57:49  lemmstercvs01
+equals methode added
+
 Revision 1.6  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
