@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.40 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: MLDonkeyOptions.java,v 1.41 2003/12/23 03:40:05 psy Exp $
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -165,11 +165,12 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
     }
 
     /**
-     * DOCUMENT ME!
+     * This method checks if the parameter is a "clean" integer
+     * consisting only of digits and not letters. 
      *
-     * @param string DOCUMENT ME!
+     * @param string A string which should be checked for containing an integer
      *
-     * @return DOCUMENT ME!
+     * @return boolean is true if its an integer
      */
     private boolean isInteger( String string ) {
         try {
@@ -277,6 +278,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.41  2003/12/23 03:40:05  psy
+a little javadoc
+
 Revision 1.40  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
