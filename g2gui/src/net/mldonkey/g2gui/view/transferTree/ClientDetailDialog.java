@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.20 2003/08/31 02:35:32 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.21 2003/08/31 15:37:45 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -146,6 +146,13 @@ public class ClientDetailDialog implements Observer {
 		final Button addFriendButton = new Button( buttonComposite, SWT.NONE );
 		addFriendButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));
 		addFriendButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ));
+		for (int i = 0; i < core.getClientInfoIntMap().getFriendsList().size(); i++) {
+			ClientInfo friendClientInfo = (ClientInfo) core.getClientInfoIntMap().getFriendsList().get(i);
+			if (friendClientInfo == clientInfo) {
+				addFriendButton.setEnabled(false);
+				break;
+			}
+		}
 		addFriendButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 				ClientInfo.addFriend(core, clientInfo.getClientid());
@@ -265,6 +272,9 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.21  2003/08/31 15:37:45  zet
+check if already a friend
+
 Revision 1.20  2003/08/31 02:35:32  zet
 setFocus
 
