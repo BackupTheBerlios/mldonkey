@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.view.G2Gui;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.33 2004/04/19 17:34:40 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.34 2004/05/10 18:12:21 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -282,9 +282,11 @@ public class MessageBuffer {
 				if (buffer.length != iterator) {
 					System.out.println("MessageBuffer not empty after decoding OpCode:" + opCode);
 					System.out.println("\tbytes left: " + (buffer.length - iterator));
-					for (int i = buffer.length; i > iterator; --i) {
+					System.out.print("\t\t");
+					for (int i = iterator; i < buffer.length; i++) {
 						System.out.print(buffer[i] + " ");
 					}
+					System.out.print("\n");
 				}
 			}
 		}
@@ -304,6 +306,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.34  2004/05/10 18:12:21  dek
+What is really new in Gui Proto 26 i didn't find out, so i just increased proto number...
+
 Revision 1.33  2004/04/19 17:34:40  dek
 New EnumTagType: Int64 and some debugging info for wrong opcode-interpretation
 

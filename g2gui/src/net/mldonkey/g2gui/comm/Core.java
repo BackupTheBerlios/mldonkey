@@ -58,7 +58,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.126 2004/03/20 01:34:02 dek Exp $ 
+ * @version $Id: Core.java,v 1.127 2004/05/10 18:12:21 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -100,7 +100,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * The protocol version we maximal speak
 	 */
-	private static final int PROTOCOL_VERSION = 25;
+	private static final int PROTOCOL_VERSION = 26;
 	/**
 	 * The protocol the core speaks
 	 */
@@ -129,7 +129,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * Username and Password to work with
 	 */
-	private String username, password;	
+	private String username, password;
+	private int maxOpCodeToGui;
+	private int maxOpCodeFromGui;	
 	
 	/**
 	 * Connects the Core to mldonkey @remote
@@ -314,6 +316,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					this.sendPullmode( pollModeEnabled );
 					this.sendPassword();
 					this.modelFactory = ModelFactory.getFactory( this.usingVersion, this );
+					this.maxOpCodeToGui = messageBuffer.readInt32();
+					this.maxOpCodeFromGui = messageBuffer.readInt32();
 					if (G2Gui.debug){
 						System.out.println("core/gui "+coreProtocol+"/"+PROTOCOL_VERSION);
 						System.out.println("GUI Protocol-Version: "+this.usingVersion);
@@ -672,6 +676,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.127  2004/05/10 18:12:21  dek
+What is really new in Gui Proto 26 i didn't find out, so i just increased proto number...
+
 Revision 1.126  2004/03/20 01:34:02  dek
 implemented gui-Proto 25 !!!!!
 
