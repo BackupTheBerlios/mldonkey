@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.16 2003/08/18 14:51:58 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.17 2003/08/18 14:54:01 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -64,7 +64,7 @@ public class Preferences extends PreferenceManager {
 	 */
 	public Preferences( PreferenceStore preferenceStore ) {	
 		this.preferenceStore = 	preferenceStore;
-		G2Gui g2gui = new G2Gui( "General", FieldEditorPreferencePage.FLAT );	
+		G2Gui g2gui = new G2Gui( "G2Gui", FieldEditorPreferencePage.FLAT );	
 		g2gui.setPreferenceStore( preferenceStore );		
 		PreferenceNode G2GuiRootNode = new PreferenceNode( "G2gui", g2gui );
 		
@@ -251,6 +251,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.17  2003/08/18 14:54:01  dek
+*** empty log message ***
+
 Revision 1.16  2003/08/18 14:51:58  dek
 some more jface-work
 
