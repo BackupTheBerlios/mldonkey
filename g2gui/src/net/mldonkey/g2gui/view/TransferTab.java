@@ -22,7 +22,11 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 import gnu.trove.TIntObjectIterator;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
@@ -35,7 +39,13 @@ import net.mldonkey.g2gui.view.download.FileInfoTableViewerSorter;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -46,12 +56,13 @@ import org.eclipse.swt.widgets.TableItem;
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.4 2003/06/26 09:11:04 lemmstercvs01 Exp $ 
+ * @version $Id: TransferTab.java,v 1.5 2003/06/26 21:54:53 lemmstercvs01 Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements InterFaceUI {
-
 	private TableViewer table;
+	private TableViewer table2;
+	private int lastSortColumn = -1;
 
 	/**
 	 * @param gui gui the parent Gui
@@ -69,8 +80,11 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 	 * @param content The Composite to display in
 	 */
 	protected void createContents( Composite content ) {
-		table = new TableViewer( content, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
+		/* create a SashFrom containing the two tables */
+		SashForm sashForm = new SashForm(content, SWT.NULL | SWT.VERTICAL);
 		
+		/* create the first table */
+		table = new TableViewer( sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
 		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		table.getTable().setLinesVisible( false );
 		table.getTable().setHeaderVisible( true );
@@ -78,7 +92,8 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 		table.setContentProvider( new FileInfoTableContentProvider() );
 		table.setLabelProvider( new FileInfoTableLabelProvider() );
 		table.setSorter( new FileInfoTableViewerSorter() );
-		
+
+		/* create the headers and set the width */		
 		String[] aString = { "ID", "Name", "Rate", "Downloaded", "Size", "%" };
 		int[] anInt = { 25, 300, 40, 70, 70, 40 };
 		TableColumn column = null;
@@ -86,7 +101,35 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 			column = new TableColumn(table.getTable(), SWT.LEFT);
 			column.setText( aString[ i ] );
 			column.setWidth( anInt[ i ] );
+			
+			/* listen for table sorting */
+			final int columnIndex = i;
+			column.addSelectionListener( new SelectionAdapter() {		
+				public void widgetSelected( SelectionEvent e ) {
+					sort( columnIndex );
+				}
+			});
 		}
+		/* listen for right mouse click on item */
+		table.getTable().addMouseListener( new MouseListener () {
+			public void mouseDown( MouseEvent e ) {
+				if ( e.button == 3 ) {
+					Point pt = new Point( e.x, e.y );
+					TableItem item = table.getTable().getItem( pt );
+					//TODO popup
+				}
+			}
+			public void mouseDoubleClick(MouseEvent e) {}
+			public void mouseUp(MouseEvent e) {}
+		});
+	}
+
+	/**
+	 * Register this object at a CoreCommunication
+	 * @param mldonkey The CoreCommunication where to register
+	 */
+	public void registerListener( CoreCommunication mldonkey ) {
+		mldonkey.registerListener( this );
 	}
 	
 	/**
@@ -198,16 +241,81 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 	}
 	
 	/**
-	 * Register this object at a CoreCommunication
-	 * @param mldonkey The CoreCommunication where to register
+	 * 
+	 * @param column
 	 */
-	public void registerListener( CoreCommunication mldonkey ) {
-		mldonkey.registerListener( this );
+	private void sort(int column) {
+		if( table.getTable().getItemCount() <= 1 ) return;
+
+		TableItem[] items = table.getTable().getItems();
+		String[][] data = new String[ items.length ][ table.getTable().getColumnCount() ];
+		for ( int i = 0; i < items.length; i++ )
+			for ( int j = 0; j < table.getTable().getColumnCount(); j++ )
+				data[ i ][ j ] = items[ i ].getText(j);
+	
+		Arrays.sort( data, new RowComparator( column ) );
+	
+		if ( lastSortColumn != column ) {
+			for ( int i = 0; i < data.length; i++ )
+				items[ i ].setText( data[ i ] );
+			lastSortColumn = column;
+		} else {
+			// reverse order if the current column is selected again
+			int j = data.length -1;
+			for ( int i = 0; i < data.length; i++ )
+				items[ i ].setText( data[ j-- ] );
+			lastSortColumn = -1;
+		}
+	}
+	
+	/**
+	 * To compare entries (rows) by the given column
+	 */
+	private class RowComparator implements Comparator {
+		private int column;
+	
+		/**
+		 * Constructs a RowComparator given the column index
+		 * @param col The index (starting at zero) of the column
+		 */
+		public RowComparator( int col ) {
+			column = col;
+		}
+	
+		/**
+		 * Compares two rows (type String[]) using the specified
+		 * column entry.
+		 * @param obj1 First row to compare
+		 * @param obj2 Second row to compare
+		 * @return negative if obj1 less than obj2, positive if
+		 * 			obj1 greater than obj2, and zero if equal.
+		 */
+		public int compare( Object obj1, Object obj2 ) {
+			String[] row1 = ( String[] ) obj1;
+			String[] row2 = ( String[] ) obj2;
+			if ( column == 0 || column == 3 || column == 4 ) {
+				Integer r1 = new Integer( row1[ column ] );
+				Integer r2 = new Integer( row2[ column ] );
+				return r1.compareTo( r2 );				
+			}
+			else if ( column == 2 || column == 5 ) {
+				Float r1 = new Float( row1[ column ] );
+				Float r2 = new Float( row2[ column ] );
+				return r1.compareTo( r2 );
+			}
+			else {
+				int result = row1[ column ].compareToIgnoreCase( row2[ column ] );		
+				return result;
+			}
+		}
 	}
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.5  2003/06/26 21:54:53  lemmstercvs01
+sorting by columns works, but inteference with updateItem()
+
 Revision 1.4  2003/06/26 09:11:04  lemmstercvs01
 added percent
 
