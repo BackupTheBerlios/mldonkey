@@ -21,22 +21,43 @@
  * 
  */
 package net.mldonkey.g2gui.view.main;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.3 2003/08/26 09:46:41 dek Exp $ 
+ * @version $Id: About.java,v 1.4 2003/08/30 17:29:31 dek Exp $ 
  *
  */
 public class About {
+	private Link activeLink;		
+
+	private final Cursor handCursor = new Cursor( Display.getDefault(), SWT.CURSOR_HAND );
+
+	private List linklist = new ArrayList();
+
+
 	//TODO filling about-Dialog with content
 	private Shell myShell;
 	
@@ -49,22 +70,37 @@ public class About {
 		Composite parent = new Composite( myShell, SWT.NONE );
 		myShell.setLayout( new FillLayout() );
 		myShell.setText( "About" );
-		parent.setLayout( new GridLayout( 1, false ) );
+		GridLayout layout = new GridLayout( 1, false );
+			layout.marginHeight = 0;
+			layout.marginWidth = 0;
+		parent.setLayout( layout );		
 		createContent( parent );
 		parent.layout();
-
 	}
 
 	/**
 	 * @param parent
 	 */
 	private void createContent( Composite parent ) {
-		CLabel icon = new CLabel( parent, SWT.NONE );
-		icon.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
-		icon.setText( "About G2gui" );
+		
+		Composite upperPart = new Composite ( parent, SWT.NONE );
+			upperPart.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+			upperPart.setLayout( new GridLayout() );		
+		createUpperPart( upperPart );
+		upperPart.layout();
+		
 		Label bar = new Label( parent, SWT.SEPARATOR | SWT.HORIZONTAL );
-		GridData gd = new GridData( GridData.FILL_HORIZONTAL );
-		bar.setLayoutData( gd );
+			bar.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+			
+		Composite lowerPart = new Composite ( parent, SWT.NONE );
+			lowerPart.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+			lowerPart.setLayout( new GridLayout() );		
+		createLowerPart( lowerPart );
+		lowerPart.layout();
+		
+	}
+
+	private void createLowerPart( Composite parent ) {
 		Label textToAdd = new Label( parent, SWT.NONE );
 		textToAdd.setText( 
 			" Here is place for info to add about us\n"
@@ -72,16 +108,145 @@ public class About {
 				+ "feel free to extend ;- )" );		
 	}
 
+	private void createUpperPart( Composite parent ) {
+		( ( GridLayout ) parent.getLayout() ).numColumns = 2;
+		Color background = 	Display.getCurrent().getShells()[1].getBackground();		
+		
+		CLabel icon = new CLabel( parent, SWT.NONE );
+			icon.setImage( G2GuiResources.getImage( "G2GuiLogo" ) );
+		icon.setLayoutData( new GridData( GridData.BEGINNING ) );
+		
+		StyledText info = new StyledText( parent, SWT.MULTI | SWT.READ_ONLY );
+		info.setCaret( null );
+		
+		info.setBackground( background );
+		GridData gd = new GridData( GridData.FILL_BOTH );
+			gd.grabExcessHorizontalSpace = true;
+			gd.verticalAlignment = GridData.CENTER;
+			gd.horizontalAlignment = GridData.BEGINNING;
+			info.setLayoutData( gd );
+		parent.layout();
+		info.setText(  "G2gui is (c) 2003 by G2gui team, \n" 
+					 + "all of our own java code is released under \n" 
+					 + "the  " );	
+					 	
+		Link link = new Link( "General Public License v2" );		
+		link.addToStyledText( info );	
+		link.setURL( "http://www.opensource.org/licenses/gpl-license.php" );
+
+		this.linklist.add( link );
+		
+		info.addMouseMoveListener( new MouseMoveListener() {
+
+			public void mouseMove( MouseEvent e ) {
+				if ( isLink( ( StyledText ) e.widget, e.x, e.y ) ) 
+					( ( StyledText )e.widget ).setCursor( handCursor );
+				else
+					( ( StyledText )e.widget ).setCursor( null );
+			}
+			
+			 } );
+		info.addMouseListener( new MouseListener() {
+
+			public void mouseDoubleClick( MouseEvent e ) { }
+
+			public void mouseDown( MouseEvent e ) {
+				if ( activeLink != null )
+					Program.launch( activeLink.url );
+			}
+
+			public void mouseUp( MouseEvent e ) { }
+		} );
+
+	}
+
 	/**
-	 * 
+	 * open the dialog
 	 */
 	protected void open() {
 		myShell.pack();
 		myShell.open();		
 	}
+	
+	private boolean isLink( StyledText parent, int x, int y ) {
+		this.activeLink = null;
+		int offset;
+		try {
+			offset = parent.getOffsetAtLocation( new Point( x, y ) );
+		} catch ( RuntimeException e ) {
+			return false;			
+		}
+		Iterator it = linklist.iterator();
+		while ( it.hasNext() ) {
+			Link temp = ( Link ) it.next();
+			if ( ( temp.offset < offset ) && ( offset  < temp.offset + temp.length ) ) {
+				this.activeLink = temp;
+				return true	;	
+			}	 
+		}		
+		return false;
+	}
+	
+	
+	/**
+	 * Link
+	 *
+	 * @author $user$
+	 * @version $Id: About.java,v 1.4 2003/08/30 17:29:31 dek Exp $ 
+	 *
+	 */
+	public class Link {
+
+		private String url;
+		private int length = 0;
+		private int offset = 0;
+		private String linkText;
+		private StyledText parent = null;
+		private Color blue = Display.getCurrent().getSystemColor( SWT.COLOR_BLUE );
+
+		/**
+		 * @param parent the StyledText, in which the link is.
+		 * @param link the text of the link
+		 * @param offset the start of the link relative to the beginning
+		 *  		of the text in the widget
+		 * @param length the length of the text
+		 */
+		public Link( StyledText parent, String link, int offset, int length ) {
+				this.parent = parent;
+				this.linkText = link;
+				this.offset = offset;
+				this.length = length;			
+		}
+		/**
+		 * @param url the url this link points at
+		 */
+		public void setURL( String url ) {
+			this.url = url;
+			
+		}
+		/**
+		 * @param parent where to add the link (at the end of the text)
+		 */
+		public void addToStyledText( StyledText parent ) {
+			this.offset = parent.getText().length();
+			this.parent = parent;
+			parent.setText( parent.getText() + linkText );	
+			parent.setStyleRange( new StyleRange( offset, length, blue, parent.getBackground() ) );		
+		}
+		/**
+		 * @param link the Link-Text
+		 */
+		public Link( String link ) {
+			this.linkText = link;
+			this.length = link.length();
+		}
+	}
 }
 /*
 $Log: About.java,v $
+Revision 1.4  2003/08/30 17:29:31  dek
+added link to GPL in about-dialog
+
 Revision 1.3  2003/08/26 09:46:41  dek
 about-dialog is now child of mainShell, instead of creating its own..
 
