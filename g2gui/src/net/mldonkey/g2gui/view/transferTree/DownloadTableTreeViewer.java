@@ -35,7 +35,9 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -43,6 +45,9 @@ import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -50,12 +55,13 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 /**
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.11 2003/08/21 00:59:57 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.12 2003/08/22 13:47:56 dek Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -181,7 +187,20 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			} ); 
 								 
 		}
-
+		
+		/*this is to delete the selection, if one clicks in an empty row of the table*/
+		tableTreeViewer.getTableTree().getTable().addMouseListener( new MouseListener() {
+			public void mouseDoubleClick( MouseEvent e ) { }
+			
+			public void mouseDown( MouseEvent e ) {
+				Table table = ( Table ) e.widget;
+				TableItem item = table.getItem( new Point( e.x, e.y ) );	
+				if ( item == null )
+					table.setSelection( new int[ 0 ] );		
+			}
+			public void mouseUp( MouseEvent e ) { }
+		} );
+		/*this is to expand/collapse the selected item on double-click*/
 		tableTreeViewer.addDoubleClickListener(new IDoubleClickListener(){
 			public void doubleClick(DoubleClickEvent e) {
 			
@@ -301,6 +320,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.12  2003/08/22 13:47:56  dek
+selection is removed with click on empty-row
+
 Revision 1.11  2003/08/21 00:59:57  zet
 doubleclick expand
 
