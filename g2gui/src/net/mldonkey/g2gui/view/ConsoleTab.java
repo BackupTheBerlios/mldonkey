@@ -28,6 +28,7 @@ import java.util.Observer;
 
 import net.mldonkey.g2gui.comm.*;
 import net.mldonkey.g2gui.model.*;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
@@ -38,14 +39,14 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.4 2003/06/27 10:36:17 lemmstercvs01 Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.5 2003/06/27 11:12:53 dek Exp $ 
  *
  */
-public class ConsoleTab extends G2guiTab implements Observer, ControlListener {	
+public class ConsoleTab extends G2guiTab implements Observer, ControlListener, Runnable {	
+	private ConsoleMessage consoleMessage;
 	private CoreCommunication core;
 	private Composite parent;
-	private Text infoDisplay;
-	private String consoleMessage;
+	private Text infoDisplay;	
 	private Text input;
 
 	/**
@@ -53,9 +54,10 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener {
 	 */
 	public ConsoleTab(IG2gui gui) {
 		super(gui);
+		this.core = gui.getCore();
 		this.button.setText("Console");
 		createContents( this.content );
-		( ( Core ) gui.getCore() ).addObserver( this );
+		( ( Core ) core ).addObserver( this );
 	}
 	
 	/* (non-Javadoc)
@@ -119,23 +121,30 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener {
 	 */
 	public void update(Observable o, Object arg) {
 		if (arg instanceof ConsoleMessage )
-		{
-			ConsoleMessage aConsoleMessage = (ConsoleMessage)arg;
-			consoleMessage = aConsoleMessage.getConsoleMessage();	
-			aConsoleMessage.reset();		
-			content.getDisplay().syncExec( new Runnable () {
-				public void run() {	
-					infoDisplay.append(consoleMessage);
-					infoDisplay.update();			
-				}
-			});
+		{	
+			this.consoleMessage = (ConsoleMessage)arg;
+			content.getDisplay().syncExec(this);
 		}
 		/* else: we are not responsible for this Information to be displayed*/
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
+	public void run() {
+				
+				String message = consoleMessage.getConsoleMessage();	
+				consoleMessage.reset();	
+					infoDisplay.append(message);
+					infoDisplay.update();			
+				}
 }
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.5  2003/06/27 11:12:53  dek
+works now
+
 Revision 1.4  2003/06/27 10:36:17  lemmstercvs01
 changed notify to observer/observable
 
