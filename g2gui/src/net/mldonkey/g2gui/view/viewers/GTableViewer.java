@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * Generic Table Viewer
  *
- * @version $Id: GTableViewer.java,v 1.1 2003/10/22 01:36:59 zet Exp $
+ * @version $Id: GTableViewer.java,v 1.2 2003/10/22 16:39:27 zet Exp $
  *
  */
 public class GTableViewer {
@@ -90,7 +90,7 @@ public class GTableViewer {
         tableLabelProvider.initialize();
         tableSorter.initialize();
         tableMenuListener.initialize();
-        
+
         tableViewer.setContentProvider(tableContentProvider);
         tableViewer.setLabelProvider(tableLabelProvider);
 
@@ -118,7 +118,7 @@ public class GTableViewer {
         manualDispose = false;
 
         String prefCols = PreferenceLoader.loadString(preferenceString + "TableColumns");
-        columnIDs = ((!prefCols.equals("") && (prefCols.length() <= allColumns.length())) ? prefCols : allColumns);
+        columnIDs = (validColumnIDs(prefCols) ? prefCols : allColumns);
 
         final PreferenceStore p = PreferenceLoader.getPreferenceStore();
         tableViewer.setColumnIDs(columnIDs);
@@ -148,6 +148,24 @@ public class GTableViewer {
                     }
                 });
         }
+    }
+
+    /**
+     * @param string
+     * @return true if String contains valid columnIDs, else false
+     */
+    public boolean validColumnIDs(String string) {
+        if (string.equals("") || (string.length() > allColumns.length())) {
+            return false;
+        }
+
+        for (int i = 0; i < string.length(); i++) {
+            if (allColumns.indexOf(string.charAt(i)) == -1) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -241,6 +259,9 @@ public class GTableViewer {
 
 /*
 $Log: GTableViewer.java,v $
+Revision 1.2  2003/10/22 16:39:27  zet
+validate columnIds
+
 Revision 1.1  2003/10/22 01:36:59  zet
 add column selector to server/search (might not be finished yet..)
 
