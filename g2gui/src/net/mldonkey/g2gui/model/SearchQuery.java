@@ -22,10 +22,6 @@
  */
 package net.mldonkey.g2gui.model;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
-import gnu.regexp.REMatch;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +29,7 @@ import java.util.List;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.OurTools;
 import net.mldonkey.g2gui.model.enum.EnumQuery;
 
 /**
@@ -41,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.29 2003/09/25 16:15:58 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.30 2003/09/27 10:43:13 lemmster Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -141,7 +138,7 @@ public class SearchQuery implements Sendable {
 	 */
 	public void setSearchString( String searchString ) {
 		this.searchString = searchString;
-		String[] patterns = split( searchString, ' ' );
+		String[] patterns = OurTools.split( searchString, ' ' );
 		/* now we have to generate a query-Object for each search pattern */
 		Query newQuery;
 		
@@ -530,34 +527,13 @@ public class SearchQuery implements Sendable {
 	public int getSearchIdentifier() {
 		return searchIdentifier;
 	}
-	
-	private String[] split( String searchString, char delimiter ) {
-			RE regex = null;
-			String expression = "([^" + delimiter + "])*";		
-			try {
-				regex = new RE( expression );
-			} catch ( REException e ) {
-				e.printStackTrace();
-			}
-			ArrayList patterns = new ArrayList();		
-			REMatch[] matches = regex.getAllMatches( searchString );
-			for ( int i = 0; i < matches.length; i++ ) {
-				String match = matches[ i ].toString();			
-				if ( !match.equals( "" ) )
-					patterns.add( match );
-			}
-			Object[] temp = patterns.toArray();
-			String[] result = new String[ temp.length ];
-			for ( int i = 0; i < temp.length; i++ ) {
-				result[ i ] = ( String ) temp[ i ];
-			}
-			return result;
-		}
-	
 }
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.30  2003/09/27 10:43:13  lemmster
+OurTools added for static helper methods
+
 Revision 1.29  2003/09/25 16:15:58  dek
 removed System.out
 
@@ -608,7 +584,7 @@ Revision 1.17  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.16  2003/08/22 21:03:14  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.15  2003/08/09 15:32:45  dek
 removed unused import
