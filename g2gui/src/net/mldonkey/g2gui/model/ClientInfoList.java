@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoList.java,v 1.9 2003/06/16 18:21:41 dek Exp $$ 
+ * @version $$Id: ClientInfoList.java,v 1.10 2003/06/16 20:13:06 dek Exp $$ 
  */
 public class ClientInfoList extends InfoMap {
 	/**
@@ -84,8 +84,7 @@ public class ClientInfoList extends InfoMap {
 	 * @param messageBuffer
 	 * cleans up the used Trove-collections. Fills 'em with data the core (mldonkey) finds useful
 	 */
-	public void clean( MessageBuffer messageBuffer ) {	
-		System.out.println( "cleaning up ClientInfoList" );		
+	public void clean( MessageBuffer messageBuffer ) {			
 		TIntObjectHashMap tempClientInfoList = new TIntObjectHashMap();			
 		int[] usefulClients = messageBuffer.readInt32List();		
 		for ( int i = 0; i < usefulClients.length; i++ ) {
@@ -99,6 +98,9 @@ public class ClientInfoList extends InfoMap {
 }
 /*
 $$Log: ClientInfoList.java,v $
+$Revision 1.10  2003/06/16 20:13:06  dek
+$debugging code removed
+$
 $Revision 1.9  2003/06/16 18:21:41  dek
 $NPE fix
 $
