@@ -39,7 +39,7 @@ import org.eclipse.swt.custom.TableTreeItem;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.2 2003/07/12 13:50:01 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.3 2003/07/12 16:20:36 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem {
@@ -65,13 +65,13 @@ public class DownloadItem extends TableTreeItem {
 		setText( 4, String.valueOf( fileInfo.getSize() ) );
 		setText( 5, String.valueOf( fileInfo.getPerc() ) );
 		setText( 6, String.valueOf( fileInfo.getState() ) );
-		
+		try {
 		Iterator it = fileInfo.getClientInfos().iterator();
 			while ( it.hasNext() ) {		
 				ClientInfo clientInfo = ( ClientInfo ) it.next();
 	//			Here comes the question, wether we want to add this clientInfo, or not?? at the moment,
 	//			all clientInfos are accepted
-				try {
+				
 					if (( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
 					
 							 
@@ -92,14 +92,12 @@ public class DownloadItem extends TableTreeItem {
 						toBeRemovedItem.dispose();
 						namedclients.remove( clientInfo.getClientid() );
 						
-					}
-				} catch (RuntimeException e) {
-					// TODO Auto-generated catch block
-					System.out.println("da ging was schief, im konstruktor");
-				}
-				
-							
+					}		
 			}
+		} catch (RuntimeException e) {
+						// TODO Auto-generated catch block
+						//System.out.println("da ging was schief, im konstruktor");
+					}
 		
 	}
 	
@@ -137,7 +135,7 @@ public class DownloadItem extends TableTreeItem {
 					
 					}
 				} catch (RuntimeException e) {
-					System.out.println("da ging was schief");
+					//System.out.println("da ging was schief");
 				}
 			}
 		
@@ -182,6 +180,9 @@ public class DownloadItem extends TableTreeItem {
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.3  2003/07/12 16:20:36  dek
+*** empty log message ***
+
 Revision 1.2  2003/07/12 13:50:01  dek
 nothing to do, so i do senseless idle-working
 
