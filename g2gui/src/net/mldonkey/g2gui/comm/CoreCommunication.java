@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.16 2003/07/02 15:53:41 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.17 2003/07/02 16:22:05 dek Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -51,6 +51,9 @@ public interface CoreCommunication {
 	 */
 	ConsoleMessage getConsoleMessage();
 	
+	/**
+	 * @return Infos about all the nice networks we know about
+	 */
 	public NetworkInfoIntMap getNetworkinfoMap();
 	
 	/**
@@ -58,27 +61,33 @@ public interface CoreCommunication {
 	 * @param obj The Observer to add
 	 */
 	void addObserver( Observer obj );
+	
+	
 	/**
-	 * @param string
+	 * @param command the ConsoleCommand to send
 	 */
 	void sendConsoleMessage( String command );
+
 	/**
+	 * disables receiving messages from core, and should also disconnect tcp-connection
+	 * in future, not done yet
 	 * 
 	 */
 	void disconnect();
 	/**
-	 * @return
+	 * @return returns wether we are connected to a mldonkey or not
 	 */
 	boolean isConnected();
-	/**
-	 * 
+
+	 /**
+	 * @return all mldonkey-options
 	 */
-	 OptionsInfoMap getOptions();
+	OptionsInfoMap getOptions();
 	 
 	 /**
 	  * Sets the option <b> name</b> to the <b>value</b>
 	  * @param name name of the option
 	  * @param value the value
 	  */
-	public void setOption( String name, String value );
+	void setOption( String name, String value );
 }

@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.47 2003/07/01 17:09:33 dek Exp $ 
+ * @version $Id: Core.java,v 1.48 2003/07/02 16:18:15 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -290,48 +290,48 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		setOption.sendMessage( connection );		
 	}
 
-	/* returns the actual Console-message Buffer
+	/** returns the actual Console-message Buffer
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getConsoleMessage()
 	 */
 	public ConsoleMessage getConsoleMessage() {
-		return (ConsoleMessage) this.consoleMessage;
+		return ( ConsoleMessage ) this.consoleMessage;
 	}
 
-	/* sends a ConsoleCommand to mldonkey
+	/** sends a ConsoleCommand to mldonkey
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#sendConsoleMessage(java.lang.String)
 	 */
-	public void sendConsoleMessage(String command) {
+	public void sendConsoleMessage( String command ) {
 		String[] content = {command};		
 		EncodeMessage sendConsoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, content );
 		sendConsoleMessage.sendMessage( connection );	
 		
 	}
 	/**
-	 * @return
+	 * @return the Infos about all the nice networks we have 
 	 */
 	public NetworkInfoIntMap getNetworkinfoMap() {
-		return (NetworkInfoIntMap) networkinfoMap;
+		return ( NetworkInfoIntMap ) networkinfoMap;
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#isConnected()
 	 */
 	public boolean isConnected() {		
 		return connected;
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getOptions()
 	 */
 	public OptionsInfoMap getOptions() {
-		return (OptionsInfoMap) optionsInfoMap;
+		return ( OptionsInfoMap ) optionsInfoMap;
 		
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#search(java.lang.String)
 	 */
-	public void search(String searchstring) {
+	public void search( String searchstring ) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -340,6 +340,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.48  2003/07/02 16:18:15  dek
+Checkstyle
+
 Revision 1.47  2003/07/01 17:09:33  dek
 search(String) was added, without any function yet
 

@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  * @author $user$
- * @version $Id: MessageBuffer.java,v 1.12 2003/07/02 15:54:03 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.13 2003/07/02 16:23:30 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -170,7 +170,7 @@ public class MessageBuffer {
 		int listElem = readInt16();
 			//check, if this is a big unsigned int, and fix it:
 			if ( listElem < 0 )
-				listElem = ( int )( Short.MAX_VALUE*2 + listElem )+2;
+				listElem = ( int )( Short.MAX_VALUE * 2 + listElem ) + 2;
 		int[] result = new int[ listElem ];
 		for ( int i = 0; i < listElem; i++ ) {
 			result[ i ] = readInt32(); 
@@ -197,7 +197,7 @@ public class MessageBuffer {
 	/**
 	 * Reads an IP Address from the MessageBuffer
 	 * @return an InetAddress
-	 * @throws UnknownHostException
+	 * @throws UnknownHostException we dont't know you...
 	 */
 	public InetAddress readInetAddress() throws UnknownHostException {
 		byte[] temp = new byte[ 4 ];
@@ -239,6 +239,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.13  2003/07/02 16:23:30  dek
+Checkstyle
+
 Revision 1.12  2003/07/02 15:54:03  dek
 checkstyle
 

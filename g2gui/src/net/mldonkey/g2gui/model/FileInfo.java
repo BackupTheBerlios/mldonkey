@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.9 2003/06/29 17:51:44 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.10 2003/07/02 16:25:30 dek Exp $ 
  *
  */
 public class FileInfo implements SimpleInformation {
@@ -435,7 +435,7 @@ public class FileInfo implements SimpleInformation {
 		this.setName( messageBuffer.readString() );
 		this.setOffset( messageBuffer.readInt32() );
 		this.setPriority( messageBuffer.readInt32() );
-		double d2 = round( ( (double)this.getDownloaded() / (double)this.getSize() ) * 100 );
+		double d2 = round( ( ( double )this.getDownloaded() / ( double )this.getSize() ) * 100 );
 		this.setPerc( d2 );
 	}
 	
@@ -449,7 +449,7 @@ public class FileInfo implements SimpleInformation {
 		double d = new Double( messageBuffer.readString() ).doubleValue() / 1024;
 		this.setRate( ( float ) round( d ) );
 		this.setOffset( messageBuffer.readInt32() );
-		double d2 = round( ( (double)this.getDownloaded() / (double)this.getSize() ) * 100 );
+		double d2 = round( ( ( double )this.getDownloaded() / ( double )this.getSize() ) * 100 );
 		this.setPerc( d2 );
 	}
 	
@@ -465,8 +465,8 @@ public class FileInfo implements SimpleInformation {
 
 	/**
 	 * Compares two FileInfo objects by their md4
-	 * @param fileInfo
-	 * @return
+	 * @param fileInfo the fileinfo to compare with
+	 * @return if they are identical
 	 */
 	public boolean equals( FileInfo fileInfo ) {
 		if ( this.getMd4() == fileInfo.getMd4() )
@@ -479,6 +479,9 @@ public class FileInfo implements SimpleInformation {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.10  2003/07/02 16:25:30  dek
+Checkstyle
+
 Revision 1.9  2003/06/29 17:51:44  lemmstercvs01
 added some doku
 

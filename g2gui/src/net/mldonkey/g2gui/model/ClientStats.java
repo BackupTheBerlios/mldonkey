@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientStats
  *
  * @author markus
- * @version $Id: ClientStats.java,v 1.10 2003/06/27 17:12:36 lemmstercvs01 Exp $ 
+ * @version $Id: ClientStats.java,v 1.11 2003/07/02 16:24:14 dek Exp $ 
  *
  */
 public class ClientStats implements SimpleInformation {
@@ -229,10 +229,10 @@ public class ClientStats implements SimpleInformation {
 		this.setTotalDown( messageBuffer.readInt64() );
 		this.setTotalShared( messageBuffer.readInt64() );
 		this.setNumOfShare( messageBuffer.readInt32() );
-		this.setTcpUpRate( round( messageBuffer.readInt32()/(float)1024 ) );		
-		this.setTcpDownRate( round( messageBuffer.readInt32()/(float)1024 ) );
-		this.setUdpUpRate( round( messageBuffer.readInt32()/(float)1024 ) );
-		this.setUdpDownRate( round( messageBuffer.readInt32()/(float)1024 ) );
+		this.setTcpUpRate( round( messageBuffer.readInt32() / ( float )1024 ) );		
+		this.setTcpDownRate( round( messageBuffer.readInt32() / ( float )1024 ) );
+		this.setUdpUpRate( round( messageBuffer.readInt32() / ( float )1024 ) );
+		this.setUdpDownRate( round( messageBuffer.readInt32() / ( float )1024 ) );
 		this.setNumCurrDownload( messageBuffer.readInt32() );
 		this.setNumDownloadFinished( messageBuffer.readInt32() );
 		this.setConnectedNetworks( messageBuffer.readInt32List() );		
@@ -252,6 +252,9 @@ public class ClientStats implements SimpleInformation {
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.11  2003/07/02 16:24:14  dek
+Checkstyle
+
 Revision 1.10  2003/06/27 17:12:36  lemmstercvs01
 removed unneeded fields
 
