@@ -27,7 +27,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -35,7 +34,7 @@ import org.eclipse.swt.widgets.Display;
  * GraphPainter
  *
  *
- * @version $Id: GraphPainter.java,v 1.27 2003/08/29 21:42:11 zet Exp $ 
+ * @version $Id: GraphPainter.java,v 1.28 2003/09/13 22:23:55 zet Exp $ 
  *
  */
 public class GraphPainter {
@@ -81,8 +80,6 @@ public class GraphPainter {
 		drawBoardBuffer.setForeground(black);
 		drawBoardBuffer.fillGradientRectangle(0,0,parent.getClientArea().width,parent.getClientArea().height, true);
 		
-		//g2d.setColor(green);
-		
 		int startx = 1;
 		int k = startx;
 		
@@ -94,35 +91,27 @@ public class GraphPainter {
 		int graphWidth = width - startx;
 		float zoom = 0, valueY = 0;
 		
-		StatisticPoint lastPoint = graph.getLast();
-		StatisticPoint actualPoint = lastPoint;
+		drawBoardBuffer.setBackground(graph.getColor1());
+		drawBoardBuffer.setForeground(graph.getColor2());
 		
-		drawBoardBuffer.setBackground(graph.graphColor1);
-		drawBoardBuffer.setForeground(graph.graphColor2);
-				
-		// find highest	onscreen point
-		for ( ; (k<=width) && (actualPoint.getPrev()!=null); k++, actualPoint = actualPoint.getPrev() )
-		{
-			valueY = (float) (actualPoint.getValue()/10);
-			if (valueY > maximum) maximum = valueY; 
-			
-		}	
-			
-		// calculate zoom
+		maximum = (float) (graph.findMax( width ) / 10);		
 	
 		zoom = (height-10f) / maximum ;  
-		actualPoint = lastPoint;	
-
-	//	zoom = height / maximum ;
-	//	if ( ((float) (actualPoint.getValue()/10) * zoom)  >  ((height / 5f)*4f)) 
-	//		zoom = (zoom / 5f)*4f;
 				
 		// draw graph gradient lines
-		for ( k=startx ; (k<=width) && (actualPoint.getPrev() != null) ; k++, actualPoint = actualPoint.getPrev())
-		{
-			valueY = (float) (actualPoint.getValue()/10);	
+		int position = graph.getInsertAt() - 1;
+		for (k=startx; k < width; k++) {
+			if (position < 0) {
+				if (graph.getAmount() > k) {
+					position = Graph.MAX_POINTS - 1;
+				} else {
+					break;
+				}
+			}
+			valueY = (float) (graph.getPointAt(position)/10);
 			valueY = height - (valueY * zoom);
 			drawBoardBuffer.fillGradientRectangle(k,(int)height+1,1,(int)(valueY-height),true);
+			position--;
 		}
 					
 		// draw grid
@@ -136,15 +125,8 @@ public class GraphPainter {
 		// horizontal lines					
 		for (int i = (int)height + 1; i > 0; i-=20)		
 			drawBoardBuffer.drawLine(startx,i,startx+graphWidth,i);
-				
-		// old grid scale
-		// for (int dummy=0; dummy<1; dummy++) {
-		//	int value=dummy*2;
-		//	drawBoardBuffer.drawText("  " + value,0,height-8-(int)zoom*value*10, true);
-		// }
 			
 		// just for temporary fun; this might overflow pretty quickly
-						
 		Color textColor = new Color(null, 250, 250, 250);
 		drawBoardBuffer.setForeground(textColor);
 		drawBoardBuffer.drawText(graph.getName() + 
@@ -153,10 +135,10 @@ public class GraphPainter {
 		 startx, parent.getClientArea().height-drawBoardBuffer.getFontMetrics().getHeight() ,true);
 				
 		// draw floating box
-		double value = (double)graph.getLast().getValue()/100;
+		double value = (double)graph.getNewestPoint()/100;
 		String boxString = String.valueOf(value) + " kb/s";
 			
-		int linePosition =  (int) (height - (float) (graph.getLast().getValue()/10) * zoom);
+		int linePosition =  (int) (height - (float) (graph.getNewestPoint()/10) * zoom);
 		int linePositionEnd = linePosition;
 		int textPosition = linePosition - 6;
 		if (textPosition + bottomSpace >= (int) height) {
@@ -184,18 +166,12 @@ public class GraphPainter {
 		textColor.dispose();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.holongate.eclipse.j2d.IPaintable#redraw(org.eclipse.swt.widgets.Control, org.eclipse.swt.graphics.GC)
-	 */
-	public void redraw(Control arg0, GC arg1) {
-		// TOD Auto-generated method stub
-	}
-
-	
-
 }
 /*
 $Log: GraphPainter.java,v $
+Revision 1.28  2003/09/13 22:23:55  zet
+use int array instead of creating stat point objects
+
 Revision 1.27  2003/08/29 21:42:11  zet
 add shadow
 

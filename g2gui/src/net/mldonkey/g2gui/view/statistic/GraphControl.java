@@ -33,7 +33,7 @@ import org.eclipse.swt.*;
  * GraphControl
  *
  *
- * @version $Id: GraphControl.java,v 1.12 2003/08/29 21:42:11 zet Exp $ 
+ * @version $Id: GraphControl.java,v 1.13 2003/09/13 22:23:55 zet Exp $ 
  *
  */
 public class GraphControl extends Composite{
@@ -49,46 +49,20 @@ public class GraphControl extends Composite{
 		this.parent = parent;
 		graphCanvas = new GraphCanvas(this);
 		setLayout(new FillLayout());
-		layout(true);
 			
 		graph = new Graph(name, color1, color2);
-		
-		// this.setSize(400,200);
-		//graphCanvas1.redraw();
-		//graphCanvas2.redraw();
 		graphCanvas.setGraph(graph);
-		
-	/*	addControlListener(new ControlAdapter() {
-				 public void controlResized(ControlEvent e) {
-					GraphControl.this.controlResized(e);					
-				 }
-
-			 }); */
-
-		 
 
 	}
-	
-	/**
-	 * Resizes the Canvas everyTime the Control gets resized
-	 */
-	/*protected void controlResized( ) {
-		System.out.println("controlResized"+ this.getBounds());
-		graphCanvas1.setSize(this.getBounds().width,this.getBounds().height/2);
-		graphCanvas2.setSize(this.getBounds().width,this.getBounds().height/2);
-		
-		
-	}*/
 
 	public void redraw()
 	{
 		if ( !parent.isDisposed() )				
-					parent.getDisplay().asyncExec( new Runnable () {
-						public void run() {
-							if (!graphCanvas.isDisposed()) graphCanvas.redraw();
-						//	if (!graphCanvas2.isDisposed()) graphCanvas2.redraw();
-						}
-					});
+			parent.getDisplay().asyncExec( new Runnable () {
+				public void run() {
+					if (!graphCanvas.isDisposed()) graphCanvas.redraw();
+				}
+			});
 	}
 	
 	public void addPointToGraph(float value)
@@ -99,6 +73,9 @@ public class GraphControl extends Composite{
 
 /*
 $Log: GraphControl.java,v $
+Revision 1.13  2003/09/13 22:23:55  zet
+use int array instead of creating stat point objects
+
 Revision 1.12  2003/08/29 21:42:11  zet
 add shadow
 

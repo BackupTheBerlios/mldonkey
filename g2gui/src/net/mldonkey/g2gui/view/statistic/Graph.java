@@ -29,57 +29,66 @@ import org.eclipse.swt.graphics.Color;
  * knows when it was started
  * 
  *
- * @version $Id: Graph.java,v 1.10 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: Graph.java,v 1.11 2003/09/13 22:23:55 zet Exp $
  */
 public class Graph {
 	
-	StatisticPoint firstPoint;
-	StatisticPoint lastPoint;
-
-	int amount, maxValue, avgValue;
-	long createTime, totalPoints, sumValue;
-	
 	static final short MAX_POINTS = 1600;
 
-	String graphName;
-	Color graphColor1, graphColor2;
+	private int[] iPoints = new int[MAX_POINTS];
+	private int insertAt = 0; 
+	
+	private String graphName;
+	private Color graphColor1, graphColor2;
+	
+	int amount, maxValue, avgValue;
+	long createTime, sumValue;
 	
 	public Graph(String name, Color color1, Color color2)
 	{
+	
 		graphName = name;
 		graphColor1 = color1;
 		graphColor2 = color2;
 		
-		sumValue = totalPoints = avgValue = maxValue = 0;
-		// System.out.println("Graph created");
+		sumValue = avgValue = maxValue = 0;
 		createTime = System.currentTimeMillis();
+	}
+	
+	public int getInsertAt() {
+		return insertAt;
+	}
+
+	public int getPointAt(int i) {
+		return iPoints[i];
+	}
+	
+	public int findMax( int width ) {
+		int max = 0;
+		int searchPoint = insertAt - 1;
+		
+		if (insertAt == 0) searchPoint = MAX_POINTS - 1;
+		
+		for (int i = 0; i < width ; i++) {
+			if (searchPoint < 0) searchPoint = MAX_POINTS - 1;
+			if (iPoints[searchPoint] > max) max = iPoints[searchPoint];
+			searchPoint--;
+		}
+		return max;
+	}
+	
+	public int getNewestPoint() {
+		int newestPoint = insertAt - 1;
+		if (newestPoint < 0) newestPoint = MAX_POINTS - 1;
+		return iPoints[newestPoint];
 	}
 	
 	public void addPoint(int value)
 	{
-		//System.out.println("pointAdded");
-		if (firstPoint == null)
-		{
-			firstPoint = new StatisticPoint(value);
-			lastPoint = firstPoint;
-			
-		}
-		else
-		{
-			StatisticPoint nextPoint = new StatisticPoint(value);
-			nextPoint.setPrev(lastPoint);
-			lastPoint.setNext(nextPoint);
-			lastPoint = nextPoint;
-						
-			if (amount >= Graph.MAX_POINTS) {
-				StatisticPoint tmpPoint = firstPoint;
-				firstPoint = firstPoint.getNext();
-				firstPoint.setPrev(null);
-				tmpPoint.setNext(null);
-				tmpPoint.setPrev(null);
-			}
-			
-		}
+		if (insertAt > MAX_POINTS - 1)
+			insertAt = 0;
+		
+		iPoints[insertAt++] = value;
 		
 		if (value > maxValue) maxValue = value;
 		sumValue += value;
@@ -91,10 +100,6 @@ public class Graph {
 	public int getAmount()
 	{
 		return amount;
-	}
-	public StatisticPoint getLast()
-	{
-		return lastPoint;
 	}
 	public Color getGraphColor1()
 	{
@@ -116,15 +121,20 @@ public class Graph {
 	{
 		return avgValue;
 	}
-
-	public void dispose() {
-		graphColor1.dispose();
-		graphColor2.dispose();
+	
+	public Color getColor1() {
+		return graphColor1;
 	}
-
+	public Color getColor2() {
+		return graphColor2;
+	}
+		
 }
 /*
 $Log: Graph.java,v $
+Revision 1.11  2003/09/13 22:23:55  zet
+use int array instead of creating stat point objects
+
 Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 
