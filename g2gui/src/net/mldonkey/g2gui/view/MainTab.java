@@ -57,12 +57,12 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.62 2003/08/24 18:26:03 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.63 2003/08/25 23:38:26 zet Exp $ 
  *
  */
 public class MainTab implements Observer, ShellListener {
 
-	private static final DecimalFormat decimalFormat = new DecimalFormat( "#.#" );
+	private static final DecimalFormat decimalFormat = new DecimalFormat( "0.#" );
 
 	private String titleBarText = "g2gui alpha";
 	private StatusLine statusline;
@@ -386,6 +386,9 @@ public class MainTab implements Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.63  2003/08/25 23:38:26  zet
+decimalformat
+
 Revision 1.62  2003/08/24 18:26:03  zet
 save prefs after disposal of tabs
 
