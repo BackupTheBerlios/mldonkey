@@ -27,6 +27,7 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumExtension;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
@@ -50,7 +51,7 @@ import java.util.WeakHashMap;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.70 2003/10/28 11:07:32 lemmster Exp $
+ * @version $Id: FileInfo.java,v 1.71 2003/11/06 13:52:33 lemmster Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -72,6 +73,8 @@ public class FileInfo extends Parent implements Observer {
     public static final String[] ALL_PROPERTIES = {
         CHANGED_RATE, CHANGED_DOWNLOADED, CHANGED_PERCENT, CHANGED_AVAIL, CHANGED_ETA, CHANGED_LAST, CHANGED_ACTIVE
     };
+    
+    private static Map FILE_TYPES;
 
     /**
      * A set (no duplicates) of changed properties
@@ -218,6 +221,40 @@ public class FileInfo extends Parent implements Observer {
      * ETA seconds
      */
     private long etaSeconds;
+    
+    // on the first instantiation of this obj we create our filetype map (just once and for all)
+    static {
+    	FILE_TYPES = new HashMap();
+
+		// audio types
+		String[] audio = {"aac","ape","au","flac","mpc","mp2",
+							"mp3","mp4","wav","ogg","wma"};
+		for ( int i = 0; i < audio.length; i++ )
+			FILE_TYPES.put( audio[ i ], EnumExtension.AUDIO );
+							
+		// video types
+		String[] video = {"avi","mpg","mpeg","ram","rm","asf", 
+							"vob","divx","vivo","ogm","mov","wmv"};
+		for ( int i = 0; i < video.length; i++ )
+			FILE_TYPES.put( video[ i ], EnumExtension.VIDEO );
+
+		//archive types
+		String[] archive = {"gz","zip","ace","rar","tar","tgz","bz2"};
+		for ( int i = 0; i < archive.length; i++ )
+			FILE_TYPES.put( archive[ i ], EnumExtension.ARCHIVE );
+
+
+		// cdImage types
+		String[] cdImage = {"ccd","sub","cue","bin","iso","nrg","img",
+							"bwa","bwi","bws","bwt","mds","mdf"};
+		for ( int i = 0; i < cdImage.length; i++ )
+			FILE_TYPES.put( cdImage[ i ], EnumExtension.CDIMAGE );
+
+		// picture types
+		String[] picture = 	{"jpg","jpeg","bmp","gif","tif","tiff","png"};
+		for ( int i = 0; i < picture.length; i++ )
+			FILE_TYPES.put( picture[ i ], EnumExtension.PICTURE );
+    }
 
     /**
      * Creates a new fileinfo object
@@ -473,6 +510,16 @@ public class FileInfo extends Parent implements Observer {
      */
     public Set getTreeClientInfoSet() {
         return treeClientInfoSet;
+    }
+    
+    public Enum getFileType() {
+    	int index = name.lastIndexOf( "." );
+    	String extension = name.substring( index + 1, name.length() );
+		Enum aEnum = (Enum) FILE_TYPES.get( extension );
+		if ( aEnum != null )
+			return aEnum;
+		else
+			return EnumExtension.UNKNOWN;	
     }
 
     /**
@@ -1070,6 +1117,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.71  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.70  2003/10/28 11:07:32  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"

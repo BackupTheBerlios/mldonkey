@@ -27,28 +27,35 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 /**
  * GViewerFilter
  *
- * @version $Id: GViewerFilter.java,v 1.2 2003/11/04 21:06:35 lemmster Exp $ 
+ * @version $Id: GViewerFilter.java,v 1.3 2003/11/06 13:52:33 lemmster Exp $ 
  *
  */
 public abstract class GViewerFilter extends ViewerFilter {
 	protected Enum.MaskMatcher aMatcher;
+	protected GView gView;
 	/**
 	 * Creates a new EnumStateFilter
 	 */
-	public GViewerFilter() {
+	public GViewerFilter( GView gView ) {
+		this.gView = gView;
 		this.aMatcher = new Enum.MaskMatcher();
 	}
 
 	public void add( Enum enum ) {
 		this.aMatcher.add( enum );
+		if ( aMatcher.count() > 1 )
+			gView.refresh();
 	}
 
 	public void remove( Enum state ) {
 		this.aMatcher.remove( state );
+		if ( aMatcher.count() > 1 )
+			gView.refresh();
 	}
         
 	public boolean matches( Enum enum ) {
@@ -62,7 +69,7 @@ public abstract class GViewerFilter extends ViewerFilter {
 	public int count() {
 		return this.aMatcher.count();
 	}
-	public boolean isReal() {
+	public boolean isNotAlwaysFalse() {
 		return true;
 	}
 		
@@ -71,6 +78,9 @@ public abstract class GViewerFilter extends ViewerFilter {
 
 /*
 $Log: GViewerFilter.java,v $
+Revision 1.3  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.2  2003/11/04 21:06:35  lemmster
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 

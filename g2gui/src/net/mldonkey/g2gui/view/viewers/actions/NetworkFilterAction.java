@@ -34,7 +34,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * NetworkFilterAction
  *
- * @version $Id: NetworkFilterAction.java,v 1.5 2003/11/04 21:06:35 lemmster Exp $ 
+ * @version $Id: NetworkFilterAction.java,v 1.6 2003/11/06 13:52:33 lemmster Exp $ 
  *
  */
 public class NetworkFilterAction extends FilterAction {
@@ -56,23 +56,13 @@ public class NetworkFilterAction extends FilterAction {
 		GViewerFilter filter = gViewer.getFilter( NetworkGViewerFilter.class );
 		if ( !isChecked() ) {
 			if ( filter.matches( networkType ) )
-				if ( filter.count() == 1 )
-					toggleFilter( filter, false );
-				else {
-					filter.remove( networkType );
-					gViewer.refresh();
-				}
+				removeFilter( filter, networkType );
 		}
 		else {
-			if (filter.isReal()) {
-				filter.add(networkType);
-				gViewer.refresh();
-			}
-			else {
-				NetworkGViewerFilter nFilter = new NetworkGViewerFilter();
-				nFilter.add(networkType);
-				toggleFilter(nFilter, true);
-			}
+			if (filter.isNotAlwaysFalse())
+				addFilter( filter, networkType );
+			else
+				addFilter(new NetworkGViewerFilter(gViewer), networkType);
 		}	
 	}
 	
@@ -86,6 +76,9 @@ public class NetworkFilterAction extends FilterAction {
 
 /*
 $Log: NetworkFilterAction.java,v $
+Revision 1.6  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.5  2003/11/04 21:06:35  lemmster
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 

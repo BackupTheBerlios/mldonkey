@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * Generic Table Viewer
  *
- * @version $Id: GTableView.java,v 1.2 2003/11/04 21:06:35 lemmster Exp $
+ * @version $Id: GTableView.java,v 1.3 2003/11/06 13:52:33 lemmster Exp $
  *
  */
 public class GTableView extends GView {
@@ -99,6 +99,7 @@ public class GTableView extends GView {
      * @see net.mldonkey.g2gui.view.viewers.GViewer#addFilter(org.eclipse.jface.viewers.ViewerFilter)
      */
     public void addFilter(ViewerFilter viewerFilter) {
+    	super.addFilter( viewerFilter );
         this.sViewer.addFilter(viewerFilter);
     }
 
@@ -106,6 +107,7 @@ public class GTableView extends GView {
      * @see net.mldonkey.g2gui.view.viewers.GViewer#removeFilter(org.eclipse.jface.viewers.ViewerFilter)
      */
     public void removeFilter(ViewerFilter viewerFilter) {
+		super.removeFilter( viewerFilter );
         this.sViewer.removeFilter(viewerFilter);
     }
 
@@ -142,6 +144,9 @@ public class GTableView extends GView {
 
 /*
 $Log: GTableView.java,v $
+Revision 1.3  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.2  2003/11/04 21:06:35  lemmster
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 

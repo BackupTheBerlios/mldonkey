@@ -33,7 +33,7 @@ import org.eclipse.jface.action.Action;
 /**
  * StateFilterAction
  *
- * @version $Id: StateFilterAction.java,v 1.5 2003/11/04 21:06:35 lemmster Exp $
+ * @version $Id: StateFilterAction.java,v 1.6 2003/11/06 13:52:33 lemmster Exp $
  *
  */
 public class StateFilterAction extends FilterAction {
@@ -64,29 +64,22 @@ public class StateFilterAction extends FilterAction {
 
     public void run() {
 		GViewerFilter filter = gViewer.getFilter( StateGViewerFilter.class );
-        if (isChecked() == exclusion)
-            if (filter.matches(state))
-	            if (filter.count() == 1)
-    	            toggleFilter(filter, false);
-                else {
-                    filter.remove(state);
-                    gViewer.refresh();
-                }
-        else
-	        if (filter.isReal()) {
-	            filter.add(state);
-                gViewer.refresh();
-            }
-            else {
-				GViewerFilter nFilter = new StateGViewerFilter(exclusion);
-				nFilter.add(state);
-				toggleFilter(nFilter, true);
-            }
+		if ( isChecked() == exclusion ) {
+			if ( filter.matches( state ) )
+				removeFilter( filter, state );
+		}
+		else {
+			if (filter.isNotAlwaysFalse())
+				addFilter( filter, state );
+			else
+				addFilter(new StateGViewerFilter(gViewer, exclusion), state);
+		}	
+
     }
 
     public static void removeFilters(GView gViewer) {
         GViewerFilter filter = gViewer.getFilter( StateGViewerFilter.class );
-        if (filter.isReal())
+        if (filter.isNotAlwaysFalse())
         	gViewer.removeFilter(filter);
     }
 }
@@ -94,6 +87,9 @@ public class StateFilterAction extends FilterAction {
 
 /*
 $Log: StateFilterAction.java,v $
+Revision 1.6  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.5  2003/11/04 21:06:35  lemmster
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 

@@ -24,33 +24,45 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumExtension;
 import net.mldonkey.g2gui.view.viewers.GView;
-import net.mldonkey.g2gui.view.viewers.filters.FileExtensionFilter;
+import net.mldonkey.g2gui.view.viewers.filters.FileExtensionGViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.NetworkGViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * GAction
  *
- * @version $Id: FilterAction.java,v 1.5 2003/11/04 21:06:35 lemmster Exp $ 
+ * @version $Id: FilterAction.java,v 1.6 2003/11/06 13:52:33 lemmster Exp $ 
  *
  */
 public abstract class FilterAction extends Action {
 	protected GView gViewer;
+
 	public FilterAction( String aString, int anInt, GView gViewer ) {
 		super( aString, anInt );
 		this.gViewer = gViewer;
 	}
 
-	protected void toggleFilter( ViewerFilter viewerFilter, boolean toggle ) {
-		if ( toggle )
-			gViewer.addFilter( viewerFilter );
+	protected void removeFilter( GViewerFilter filter, Enum enum ) {
+		filter.remove( enum );
+		if ( filter.count() == 0 )
+			gViewer.removeFilter( filter );
+		else {
+			gViewer.refresh();
+		}
+	}
+	
+	protected void addFilter( GViewerFilter filter, Enum enum ) {
+		filter.add( enum );
+		// if the filter contains just one enum he is just created
+		if ( filter.count() == 1 )
+			gViewer.addFilter( filter );
 		else
-			gViewer.removeFilter( viewerFilter );
+			gViewer.refresh();
 	}
 	
 	public static boolean isFiltered( GView aGViewer, NetworkInfo aNetworkInfo ) {
@@ -69,53 +81,36 @@ public abstract class FilterAction extends Action {
 
 	public static boolean isFiltered( GView aGViewer, Enum state ) {
 		GViewerFilter filter = ( GViewerFilter ) aGViewer.getFilter( StateGViewerFilter.class );
-		if ( filter.matches( state ) )
-			return true;
-		return false;
+		return isFiltered( state, filter );
 	}
 
 	protected boolean isFiltered( Enum state ) {
 		GViewerFilter filter = ( GViewerFilter ) gViewer.getFilter( StateGViewerFilter.class );
-		if ( filter.matches( state ) )
+		return isFiltered( state, filter );
+	}
+	
+	protected static boolean isFiltered( GView aGViewer, EnumExtension extension ) {
+		GViewerFilter filter = ( GViewerFilter ) aGViewer.getFilter( FileExtensionGViewerFilter.class );
+		return isFiltered( extension, filter );
+	}
+
+	protected boolean isFiltered( EnumExtension extension ) {
+		GViewerFilter filter = ( GViewerFilter ) gViewer.getFilter( FileExtensionGViewerFilter.class );
+		return isFiltered( extension, filter );
+	}
+	
+	private static boolean isFiltered( Enum enum, GViewerFilter filter ) {
+		if ( filter.matches( enum ) )
 			return true;
-		return false;
-	}
-	
-	protected boolean isFiltered( String[] extensions ) {
-		ViewerFilter[] viewerFilters = gViewer.getFilters();
-		for ( int i = 0; i < viewerFilters.length; i++ ) {
-			if ( viewerFilters[ i ] instanceof FileExtensionFilter ) {
-				FileExtensionFilter filter = (FileExtensionFilter) viewerFilters[ i ];
-				for ( int j = 0; j < filter.getFileExtensionList().size(); j++ ) {
-					String[] fileExtensions = (String[]) filter.getFileExtensionList().get( j );
-					if ( fileExtensions.equals( extensions ) ) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
-	private static boolean isFiltered( GView gViewer, String[] extensions ) {
-		ViewerFilter[] viewerFilters = gViewer.getFilters();
-		for ( int i = 0; i < viewerFilters.length; i++ ) {
-			if ( viewerFilters[ i ] instanceof FileExtensionFilter ) {
-				FileExtensionFilter filter = (FileExtensionFilter) viewerFilters[ i ];
-				for ( int j = 0; j < filter.getFileExtensionList().size(); j++ ) {
-					String[] fileExtensions = (String[]) filter.getFileExtensionList().get( j );
-					if ( fileExtensions.equals( extensions ) ) {
-						return true;
-					}
-				}
-			}
-		}
 		return false;
 	}
 }
 
 /*
 $Log: FilterAction.java,v $
+Revision 1.6  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.5  2003/11/04 21:06:35  lemmster
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 

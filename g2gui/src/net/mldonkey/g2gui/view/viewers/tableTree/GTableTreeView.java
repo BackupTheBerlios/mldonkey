@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * GTableTreeViewer
  *
- * @version $Id: GTableTreeView.java,v 1.3 2003/11/04 21:06:35 lemmster Exp $
+ * @version $Id: GTableTreeView.java,v 1.4 2003/11/06 13:52:33 lemmster Exp $
  *
  */
 public class GTableTreeView extends GView {
@@ -58,13 +58,15 @@ public class GTableTreeView extends GView {
      * @see net.mldonkey.g2gui.view.viewers.IGViewer#addFilter(org.eclipse.jface.viewers.ViewerFilter)
      */
     public void addFilter(ViewerFilter viewerFilter) {
-        sViewer.addFilter(viewerFilter);
+		super.addFilter( viewerFilter );
+    	sViewer.addFilter(viewerFilter);
     }
 
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.viewers.IGViewer#removeFilter(org.eclipse.jface.viewers.ViewerFilter)
      */
     public void removeFilter(ViewerFilter viewerFilter) {
+		super.removeFilter( viewerFilter );
         sViewer.removeFilter(viewerFilter);
     }
 
@@ -145,6 +147,9 @@ public class GTableTreeView extends GView {
 
 /*
 $Log: GTableTreeView.java,v $
+Revision 1.4  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.3  2003/11/04 21:06:35  lemmster
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 

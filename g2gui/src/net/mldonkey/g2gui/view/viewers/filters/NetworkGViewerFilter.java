@@ -27,6 +27,7 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.viewers.Viewer;
 
@@ -34,11 +35,18 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * NetworkGViewerFilter
  *
- * @version $Id: NetworkGViewerFilter.java,v 1.2 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: NetworkGViewerFilter.java,v 1.3 2003/11/06 13:52:32 lemmster Exp $
  *
  */
 public class NetworkGViewerFilter extends GViewerFilter {
-    public boolean matches(NetworkInfo networkInfo) {
+    /**
+	 * @param gView
+	 */
+	public NetworkGViewerFilter(GView gView) {
+		super(gView);
+	}
+
+	public boolean matches(NetworkInfo networkInfo) {
         return super.matches(networkInfo.getNetworkType());
     }
 
@@ -88,6 +96,9 @@ public class NetworkGViewerFilter extends GViewerFilter {
 
 /*
 $Log: NetworkGViewerFilter.java,v $
+Revision 1.3  2003/11/06 13:52:32  lemmster
+filters back working
+
 Revision 1.2  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

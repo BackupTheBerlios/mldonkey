@@ -22,26 +22,27 @@
  */
 package net.mldonkey.g2gui.view.viewers.actions;
 
+import net.mldonkey.g2gui.model.enum.EnumExtension;
 import net.mldonkey.g2gui.view.viewers.GView;
-import net.mldonkey.g2gui.view.viewers.filters.FileExtensionFilter;
+import net.mldonkey.g2gui.view.viewers.filters.FileExtensionGViewerFilter;
+import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * ExtensionFilterAction
  *
- * @version $Id: ExtensionFilterAction.java,v 1.4 2003/10/31 16:02:57 zet Exp $ 
+ * @version $Id: ExtensionFilterAction.java,v 1.5 2003/11/06 13:52:33 lemmster Exp $ 
  *
  */
 public class ExtensionFilterAction extends FilterAction {
-	public String[] extensions;
+	public EnumExtension extensions;
 	/**
 	 * @param aString
 	 * @param anInt
 	 * @param gViewer
 	 */
-	public ExtensionFilterAction(String name, GView gViewer, String[] extensions ) {
+	public ExtensionFilterAction(String name, GView gViewer, EnumExtension extensions ) {
 		super( name, Action.AS_CHECK_BOX, gViewer );
 		this.extensions = extensions;
 		if ( this.isFiltered( this.extensions ) )
@@ -49,46 +50,25 @@ public class ExtensionFilterAction extends FilterAction {
 	 }
 
 	public void run() {
+		GViewerFilter filter = gViewer.getFilter( FileExtensionGViewerFilter.class );
 		if ( !isChecked() ) {
-			ViewerFilter[] viewerFilters = gViewer.getFilters();
-			for ( int i = 0; i < viewerFilters.length; i++ ) {
-				if ( viewerFilters[ i ] instanceof FileExtensionFilter ) {
-					FileExtensionFilter filter = (FileExtensionFilter) viewerFilters[ i ];
-
-					for ( int j = 0; j < filter.getFileExtensionList().size(); j++ ) {
-						String[] fileExtensions = (String[]) filter.getFileExtensionList().get( j );
-						if ( fileExtensions.equals( extensions ) ) {
-							if ( filter.getFileExtensionList().size() == 1 ) {
-								toggleFilter( viewerFilters[ i ], false );
-							} 
-							else {
-								filter.remove( fileExtensions );
-								gViewer.refresh();
-							}
-						}
-					}
-				}
-			}
+			if ( filter.matches( extensions ) )
+				removeFilter( filter, extensions );
 		}
 		else {
-			ViewerFilter[] viewerFilters = gViewer.getFilters();
-			for ( int i = 0; i < viewerFilters.length; i++ ) {
-				if ( viewerFilters[ i ] instanceof FileExtensionFilter ) {
-					FileExtensionFilter filter = (FileExtensionFilter) viewerFilters[ i ];
-					filter.add( extensions );
-					gViewer.refresh();
-					return;
-				}
-			}
-			FileExtensionFilter filter = new FileExtensionFilter();
-			filter.add( extensions );
-			toggleFilter( filter, true );
-		}
+			if (filter.isNotAlwaysFalse())
+				addFilter( filter, extensions );
+			else
+				addFilter(new FileExtensionGViewerFilter(gViewer), extensions);
+		}	
 	}
 }
 
 /*
 $Log: ExtensionFilterAction.java,v $
+Revision 1.5  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.4  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

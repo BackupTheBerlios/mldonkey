@@ -22,6 +22,9 @@
  */
 package net.mldonkey.g2gui.view.viewers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -52,7 +55,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.2 2003/11/04 21:06:35 lemmster Exp $
+ * @version $Id: GView.java,v 1.3 2003/11/06 13:52:33 lemmster Exp $
  *
  */
 public abstract class GView {
@@ -113,10 +116,6 @@ public abstract class GView {
 	
 	public abstract void refresh();
 	
-	public abstract void addFilter( ViewerFilter aViewerFilter );
-	
-	public abstract void removeFilter( ViewerFilter aViewerFilter );
-	
 	public abstract Shell getShell();
 	
 	public abstract ViewerFilter[] getFilters();
@@ -130,8 +129,10 @@ public abstract class GView {
     
     /**
      * @param aClassName
-     * @return The GViewerFilter to this ClassName or FalseGViewerFilter on null
+     * @return The GViewerFilter to this Class or AlwaysFalseGViewerFilter on null
      */
+//TODO messure performance. 
+//if this is faster remove the map thing in GTableView and GTableTreeView addFilter(...), removeFilter(...) and createContents(...)
     public GViewerFilter getFilter( Class aClassName ) {
 		ViewerFilter[] filters = this.getFilters();
 		for ( int i = 0; i < filters.length; i++ ) {
@@ -139,9 +140,41 @@ public abstract class GView {
 				return (GViewerFilter) filters[ i ];
 		}
 		// we return a filter which retuns false for all methods. avoid null pointer checks
-		return new AlwaysFalseGViewerFilter();
+		return new AlwaysFalseGViewerFilter( this );
     }
 
+
+/*	public GViewerFilter getFilter( Class aClass ) {
+		Map aMap = (Map) this.getViewer().getData( GViewerFilter.class.getName() );
+		if ( aMap.containsKey( aClass.getName() ) ) {
+			return (GViewerFilter) aMap.get( aClass.getName() );
+		}
+		return new AlwaysFalseGViewerFilter();
+	}
+*/	
+	public void removeFilter( ViewerFilter aViewerFilter ) {
+		//check if the ViewerFilter is our AlwaysFalseFilter
+		if ( aViewerFilter instanceof GViewerFilter ) {
+			GViewerFilter filter = (GViewerFilter) aViewerFilter;
+			if ( !filter.isNotAlwaysFalse() )
+				return;
+		}
+		Map aMap = (Map) getViewer().getData( GViewerFilter.class.getName() );
+		aMap.remove( aViewerFilter );    	
+	}
+		
+	public void addFilter( ViewerFilter aViewerFilter ) {
+		//TODO subclass GViewerFilter with FileExtensionFilter to avoid "instanceof"
+		//check if the ViewerFilter is our AlwaysFalseFilter
+		if ( aViewerFilter instanceof GViewerFilter ) {
+			GViewerFilter filter = (GViewerFilter) aViewerFilter;
+			if ( !filter.isNotAlwaysFalse() )
+				return;
+		}
+		Map aMap = (Map) getViewer().getData( GViewerFilter.class.getName() );
+		aMap.put( aViewerFilter.getClass().getName(), aViewerFilter );
+	}
+	
     /**
      * updateDisplay (after preference changes)
      */
@@ -257,6 +290,8 @@ public abstract class GView {
      * createContents
      */
     protected void createContents() {
+		getViewer().setData( GViewerFilter.class.getName(), new HashMap() );
+
         for (int i = 0; i < columnLabels.length; i++) {
             allColumns += String.valueOf((char) (ColumnSelector.MAGIC_NUMBER + i));
         }
@@ -300,11 +335,22 @@ public abstract class GView {
         cViewer.setInput(o);
         updateDisplay();
     }
+
+	/**
+	 * Discards this viewer's filters and triggers refiltering and resorting
+	 * of the elements.
+	 */
+	public void resetFilters() {
+		getViewer().resetFilters();
+	}
 }
 
 
 /*
 $Log: GView.java,v $
+Revision 1.3  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.2  2003/11/04 21:06:35  lemmster
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 

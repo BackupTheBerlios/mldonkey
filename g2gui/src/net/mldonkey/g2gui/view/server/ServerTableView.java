@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTableView.java,v 1.1 2003/10/31 16:02:57 zet Exp $ 
+ * @version $Id: ServerTableView.java,v 1.2 2003/11/06 13:52:33 lemmster Exp $ 
  *
  */
 public class ServerTableView extends GTableView {
@@ -117,7 +117,7 @@ public class ServerTableView extends GTableView {
 				// first remove all EnumState filters
 				StateFilterAction.removeFilters( this );
 				// now add the new one
-				GViewerFilter filter = new StateGViewerFilter();
+				GViewerFilter filter = new StateGViewerFilter(this);
 				filter.add( EnumState.CONNECTED );
 				getTableViewer().addFilter( filter );
 			}
@@ -139,6 +139,9 @@ public class ServerTableView extends GTableView {
 
 /*
 $Log: ServerTableView.java,v $
+Revision 1.2  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.1  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

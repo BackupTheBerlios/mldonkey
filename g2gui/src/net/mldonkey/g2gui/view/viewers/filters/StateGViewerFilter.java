@@ -34,17 +34,18 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * StateGViewerFilter
  *
- * @version $Id: StateGViewerFilter.java,v 1.6 2003/11/04 21:06:35 lemmster Exp $
+ * @version $Id: StateGViewerFilter.java,v 1.7 2003/11/06 13:52:32 lemmster Exp $
  *
  */
 public class StateGViewerFilter extends GViewerFilter {
     private boolean exclusion;
 
-    public StateGViewerFilter() {
-        this(false);
+    public StateGViewerFilter(GView gView) {
+        this(gView, false);
     }
 
-    public StateGViewerFilter(boolean exclusion) {
+    public StateGViewerFilter(GView gView, boolean exclusion) {
+        super(gView);
         this.exclusion = exclusion;
     }
 
@@ -116,6 +117,9 @@ public class StateGViewerFilter extends GViewerFilter {
 
 /*
 $Log: StateGViewerFilter.java,v $
+Revision 1.7  2003/11/06 13:52:32  lemmster
+filters back working
+
 Revision 1.6  2003/11/04 21:06:35  lemmster
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 

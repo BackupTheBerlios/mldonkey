@@ -20,47 +20,43 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.viewers.actions;
+package net.mldonkey.g2gui.view.viewers.filters;
 
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.viewers.GView;
+
+import org.eclipse.jface.viewers.Viewer;
+
 /**
- * AllFilterAction
+ * FileExtensionFilter
  *
- * @version $Id: AllFilterAction.java,v 1.6 2003/11/06 13:52:33 lemmster Exp $ 
+ * @version $Id: FileExtensionGViewerFilter.java,v 1.1 2003/11/06 13:52:32 lemmster Exp $ 
  *
  */
-public class AllFilterAction extends FilterAction {
-	/**
-	 * Creates a new AllFiltersAction
+public class FileExtensionGViewerFilter extends GViewerFilter {
+
+	public FileExtensionGViewerFilter(GView gView) {
+		super(gView);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
-	public AllFilterAction( GView gViewer ) {
-		super( G2GuiResources.getString( "TML_NO_FILTERS" ), 0, gViewer );
-		if ( gViewer != null && gViewer.getFilters().length == 0 )
-			this.setChecked( true );
+	public boolean select( Viewer viewer, Object parentElement, Object element ) {
+		if (element instanceof FileInfo) {
+			FileInfo fileInfo = (FileInfo) element;
+			if (aMatcher.matches(fileInfo.getFileType()))
+				return true;
+			return false;
+		}
+		return true;
 	}
-
-	public void run() {
-		gViewer.resetFilters();
-	}
-
 }
 
 /*
-$Log: AllFilterAction.java,v $
-Revision 1.6  2003/11/06 13:52:33  lemmster
+$Log: FileExtensionGViewerFilter.java,v $
+Revision 1.1  2003/11/06 13:52:32  lemmster
 filters back working
-
-Revision 1.5  2003/11/04 21:06:35  lemmster
-enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
-
-Revision 1.4  2003/10/31 16:02:57  zet
-use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
-
-Revision 1.3  2003/10/31 10:42:47  lemmster
-Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
-Removed IGViewer because our abstract class GPage do the job
-Use supertype/interface where possible to keep the design flexible!
 
 Revision 1.2  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check

@@ -23,6 +23,8 @@
 package net.mldonkey.g2gui.view.transfer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumExtension;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.PaneGuiTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -36,6 +38,7 @@ import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
 import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
 import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ToggleClientsAction;
+import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
 import org.eclipse.jface.action.IMenuManager;
@@ -52,45 +55,28 @@ import org.eclipse.swt.widgets.Control;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.22 2003/11/03 01:50:46 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.23 2003/11/06 13:52:33 lemmster Exp $
  *
  */
 public class DownloadPaneMenuListener extends SashGPaneListener {
-    private static String[] extensionNames = {
-        G2GuiResources.getString("TT_DOWNLOAD_FILTER_AUDIO"),
-        G2GuiResources.getString("TT_DOWNLOAD_FILTER_VIDEO"),
-        G2GuiResources.getString("TT_DOWNLOAD_FILTER_ARCHIVE"),
-        G2GuiResources.getString("TT_DOWNLOAD_FILTER_CDIMAGE"),
-        G2GuiResources.getString("TT_DOWNLOAD_FILTER_PICTURE")
-    };
-    private static String[] audioExtensions = {
-        "aac", "ape", "au", "flac", "mpc", "mp2", "mp3", "mp4", "wav", "ogg", "wma"
-    };
-    private static String[] videoExtensions = {
-        "avi", "mpg", "mpeg", "ram", "rm", "asf", "vob", "divx", "vivo", "ogm", "mov", "wmv"
-    };
-    private static String[] archiveExtensions = { "gz", "zip", "ace", "rar", "tar", "tgz", "bz2" };
-    private static String[] cdImageExtensions = {
-        "ccd", "sub", "cue", "bin", "iso", "nrg", "img", "bwa", "bwi", "bws", "bwt", "mds", "mdf"
-    };
-    private static String[] pictureExtensions = { "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "png" };
-    private static String[][] extensions = {
-        audioExtensions, videoExtensions, archiveExtensions, cdImageExtensions, pictureExtensions
-    };
+	private Enum[] states;
 
     public DownloadPaneMenuListener(PaneGuiTab aPaneGuiTab, CoreCommunication core,
         SashForm aSashForm, Control aControl) {
         super(aPaneGuiTab, core, aSashForm, aControl);
 
+		this.states = new Enum[]  { EnumExtension.AUDIO, EnumExtension.VIDEO, EnumExtension.ARCHIVE,
+									 EnumExtension.CDIMAGE, EnumExtension.PICTURE };
+
         // set defaults on startup
         if (PreferenceLoader.loadBoolean("downloadsFilterQueued")) {
-            StateGViewerFilter aFilter = new StateGViewerFilter(true);
+            GViewerFilter aFilter = new StateGViewerFilter(gView, true);
             aFilter.add(EnumFileState.QUEUED);
             gView.addFilter(aFilter);
         }
 
         if (PreferenceLoader.loadBoolean("downloadsFilterPaused")) {
-            StateGViewerFilter aFilter = new StateGViewerFilter(true);
+            GViewerFilter aFilter = new StateGViewerFilter(gView, true);
             aFilter.add(EnumFileState.PAUSED);
             gView.addFilter(aFilter);
         }
@@ -129,8 +115,10 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
 
         filterSubMenu.add(new Separator());
 
-        for (int i = 0; i < extensions.length; i++)
-            filterSubMenu.add(new ExtensionFilterAction(extensionNames[ i ], gView, extensions[ i ]));
+        for (int i = 0; i < states.length; i++) {
+			EnumExtension extension = (EnumExtension) states[ i ];        	
+            filterSubMenu.add(new ExtensionFilterAction(extension.getName(), gView, extension));
+        }
 
         menuManager.add(filterSubMenu);
 
@@ -159,6 +147,9 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.23  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.22  2003/11/03 01:50:46  zet
 remove expand/collapse
 

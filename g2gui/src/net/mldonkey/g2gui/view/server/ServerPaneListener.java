@@ -45,7 +45,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.5 2003/10/31 16:02:57 zet Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.6 2003/11/06 13:52:33 lemmster Exp $ 
  *
  */
 public class ServerPaneListener extends GPaneListener {
@@ -66,7 +66,7 @@ public class ServerPaneListener extends GPaneListener {
 
 		// set the last state from preferences
 		boolean temp = false;
-		GViewerFilter aFilter = new StateGViewerFilter();
+		GViewerFilter aFilter = new StateGViewerFilter(gView);
 		for ( int i = 0; i < this.states.length; i++ ) {
 			if ( PreferenceLoader.loadBoolean( states[ i ].toString() ) ) {
 				aFilter.add( states[ i ] );
@@ -79,7 +79,7 @@ public class ServerPaneListener extends GPaneListener {
 		// everything is default, so pay attention to displayAllServers
 		else
 			if ( PreferenceLoader.loadBoolean( "displayAllServers" ) ) {
-				StateGViewerFilter filter = new StateGViewerFilter();
+				GViewerFilter filter = new StateGViewerFilter(gView);
 				filter.add( EnumState.CONNECTED );
 				gView.addFilter( filter );
 			}
@@ -126,6 +126,9 @@ public class ServerPaneListener extends GPaneListener {
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.6  2003/11/06 13:52:33  lemmster
+filters back working
+
 Revision 1.5  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

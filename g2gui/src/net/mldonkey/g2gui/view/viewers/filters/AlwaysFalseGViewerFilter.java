@@ -24,16 +24,24 @@ package net.mldonkey.g2gui.view.viewers.filters;
 
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.viewers.Viewer;
 
 /**
  * FalseGViewerFilter this filter returns always null for all methods
  *
- * @version $Id: AlwaysFalseGViewerFilter.java,v 1.1 2003/11/04 21:06:35 lemmster Exp $ 
+ * @version $Id: AlwaysFalseGViewerFilter.java,v 1.2 2003/11/06 13:52:32 lemmster Exp $ 
  *
  */
 public class AlwaysFalseGViewerFilter extends GViewerFilter {
+	/**
+	 * @param gView
+	 */
+	public AlwaysFalseGViewerFilter(GView gView) {
+		super(gView);
+	}
+
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.viewers.filters.GViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
@@ -53,13 +61,16 @@ public class AlwaysFalseGViewerFilter extends GViewerFilter {
 		return false;
 	}
 	
-	public boolean isReal() {
+	public boolean isNotAlwaysFalse() {
 		return false;
 	}
 }
 
 /*
 $Log: AlwaysFalseGViewerFilter.java,v $
+Revision 1.2  2003/11/06 13:52:32  lemmster
+filters back working
+
 Revision 1.1  2003/11/04 21:06:35  lemmster
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 
