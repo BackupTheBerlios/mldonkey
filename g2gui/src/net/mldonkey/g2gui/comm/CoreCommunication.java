@@ -31,13 +31,14 @@ import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.NetworkInfoIntMap;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
+import net.mldonkey.g2gui.model.RoomInfoIntMap;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 
 /**
  * CoreCommunication
  *
  *
- * @version $Id: CoreCommunication.java,v 1.35 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.36 2003/08/24 16:54:07 dek Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -76,6 +77,7 @@ public interface CoreCommunication extends Runnable {
 	/**
 	 * @return Infos about all the nice networks we know about
 	 */
+	
 	NetworkInfoIntMap getNetworkInfoMap();
 	/**
 	 * @return all mldonkey-options
@@ -97,7 +99,10 @@ public interface CoreCommunication extends Runnable {
 	 * @return The map containing the clientinfo objs
 	 */
 	ClientInfoIntMap getClientInfoIntMap();
-	
+	/**
+	 * @return The map containing the RoomInfo objs
+	 */
+	RoomInfoIntMap getRoomInfoIntMap();	
 	/**
 	 * @return The clientstats of the core
 	 */
@@ -138,6 +143,10 @@ public interface CoreCommunication extends Runnable {
 }
 /*
 $Log: CoreCommunication.java,v $
+Revision 1.36  2003/08/24 16:54:07  dek
+RoomInfo is now read from stream to Map, ready for use to implement
+all the room-stuff
+
 Revision 1.35  2003/08/23 15:21:37  zet
 remove @author
 

@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  *
- * @version $Id: Message.java,v 1.30 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: Message.java,v 1.31 2003/08/24 16:54:38 dek Exp $ 
  *
  */
 public abstract class Message {
@@ -248,7 +248,11 @@ public abstract class Message {
 	/**
 	 * Receive Message From Client (value is 27)
 	 */
-	public static final short R_MESSAGE_FROM_CLIENT = 27;
+	public static final short R_MESSAGE_FROM_CLIENT = 27;	
+	/**
+	 * Receive RoomInfo (value is 31)
+	 */
+	public static final short R_ROOM_INFO  = 31;	
 	/**
 	 * Receive Add Section Option (value is 36)
 	 */
@@ -439,11 +443,15 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.31  2003/08/24 16:54:38  dek
+RoomInfo is now read from stream to Map, ready for use to implement
+all the room-stuff
+
 Revision 1.30  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.29  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.28  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging

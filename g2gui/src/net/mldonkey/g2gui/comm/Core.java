@@ -43,6 +43,7 @@ import net.mldonkey.g2gui.model.NetworkInfoIntMap;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
+import net.mldonkey.g2gui.model.RoomInfoIntMap;
 import net.mldonkey.g2gui.model.SearchResult;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.SharedFileInfoList;
@@ -53,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.89 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: Core.java,v 1.90 2003/08/24 16:54:07 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -87,7 +88,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * The protocol version we maximal speak
 	 */
-	private static final int protocolVersion = 18;
+	private static final int PROTOCOL_VERSION = 18;
 	/**
 	 * The protocol the core speaks
 	 */
@@ -120,7 +121,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					 optionsInfoMap       = new OptionsInfoMap( this ),
 					 networkinfoMap       = new NetworkInfoIntMap( this ),
 					 defineSearchMap      = new DefineSearchMap( this ),
-					 resultInfoMap		  = new ResultInfoIntMap( this );
+					 resultInfoMap		  = new ResultInfoIntMap( this ),
+					 roomInfoIntMap       = new RoomInfoIntMap( this );
 
 	/**
 	 * Some helper maps
@@ -160,6 +162,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param username The username for the core
 	 * @param password The password for the core
 	 * @param waiterObj The waiterobj to notify if we reach a specific stage
+	 * @param pollModeEnabled does this core uses pull or push?
+	 * @param advancedMode simple or advanced mode of gui?
 	 */
 	public Core( Socket socket, String username, String password, Object waiterObj, boolean pollModeEnabled, boolean advancedMode ) {
 		this.connection = socket;
@@ -231,12 +235,12 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			case Message.R_COREPROTOCOL :				
 					coreProtocol = messageBuffer.readInt32();
 					/* can we speak the coreprotocol? */
-					int i = coreProtocol - protocolVersion;
+					int i = coreProtocol - PROTOCOL_VERSION;
 					if ( i <= 0 )
 						this.usingVersion = coreProtocol;
 					else
-						this.usingVersion = protocolVersion;
-					this.sendPullmode(pollModeEnabled);
+						this.usingVersion = PROTOCOL_VERSION;
+					this.sendPullmode( pollModeEnabled );
 					this.sendPassword( this.username, this.password );	
 					break;
 					
@@ -300,7 +304,11 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					
 			case Message.R_CLIENT_STATE :
 					this.clientInfoList.update( messageBuffer );
-					break;		
+					break;	
+					
+			case Message.R_ROOM_INFO :
+					this.roomInfoIntMap.readStream( messageBuffer );			
+					break;				
 					
 			case Message.R_BAD_PASSWORD :
 					/* tell the master thread to continue */
@@ -378,7 +386,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;
 
 			default :				
-					System.out.println( "unknown opcode: " + opcode + " length: " + messageLength);
+					System.out.println( "unknown opcode: " + opcode + " length: " + messageLength );
 					break;				
 		}
 	}
@@ -387,18 +395,17 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param pushmodeEnabled
 	 */
 	private void sendPullmode( boolean pollmodeEnabled ) {
-		if ( pollmodeEnabled ){	
-		System.out.println("enabling poll-mode");
-		ArrayList output = new ArrayList();
-		/*Header: We have only one entry*/
-		output.add( new Short( ( short )1 ) );
-		
-		/*Content: We have 2 columns:*/
-		output.add( new Integer(1) );
-		output.add( new Byte( ( byte )1 ) ); 
-		
-		Message pushmode = new EncodeMessage(Message.S_GUIEXTENSION,output.toArray());
-		pushmode.sendMessage(getConnection());			
+		if ( pollmodeEnabled ) {			
+			ArrayList output = new ArrayList();
+			/*Header: We have only one entry*/
+			output.add( new Short( ( short )1 ) );
+			
+			/*Content: We have 2 columns:*/
+			output.add( new Integer( 1 ) );
+			output.add( new Byte( ( byte )1 ) ); 
+			
+			Message pushmode = new EncodeMessage( Message.S_GUIEXTENSION, output.toArray() );
+			pushmode.sendMessage( getConnection() );			
 		}
 		
 	}
@@ -409,7 +416,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	private void sendProtocolVersion() {
 		/* send the core protocol version */
 		Object[] temp = new Object[ 1 ];
-		temp[ 0 ] = new Integer( protocolVersion );
+		temp[ 0 ] = new Integer( PROTOCOL_VERSION );
 		Message coreProtocol =
 					new EncodeMessage( Message.S_COREPROTOCOL, temp );
 		coreProtocol.sendMessage( connection );
@@ -516,10 +523,21 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public Socket getConnection() {
 		return connection;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getRoomInfoIntMap()
+	 */
+	public RoomInfoIntMap getRoomInfoIntMap() {		
+		return ( RoomInfoIntMap ) roomInfoIntMap;
+	}
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.90  2003/08/24 16:54:07  dek
+RoomInfo is now read from stream to Map, ready for use to implement
+all the room-stuff
+
 Revision 1.89  2003/08/23 15:21:37  zet
 remove @author
 
