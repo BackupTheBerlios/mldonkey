@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.15 2004/03/16 19:27:00 dek Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.16 2004/03/22 15:12:50 dek Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
@@ -82,29 +82,31 @@ public class ClientDetailDialog extends DetailDialog {
             " " + G2GuiResources.getString("TT_Details").toLowerCase());
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-     */
-    protected Control createDialogArea(Composite parent) {
-        Composite composite = (Composite) super.createDialogArea(parent);
-        composite.setLayout(WidgetFactory.createGridLayout(1, 5, 5, 0, 5, false));
+    /*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+	 */
+	protected Control createDialogArea(Composite parent) {
+		Composite composite = (Composite) super.createDialogArea(parent);
+		composite.setLayout(WidgetFactory.createGridLayout(1, 5, 5, 0, 5, false));
 
-        createGeneralGroup(composite);
+		createGeneralGroup(composite);
 
-        if (fileInfo != null) {
-            createChunkGroup(composite, "TT_DOWNLOAD_CD_LOCAL_CHUNKS", null);
-            createChunkGroup(composite, "TT_DOWNLOAD_CD_CLIENT_CHUNKS", clientInfo);
-        }
+		if (fileInfo != null) {
+			createChunkGroup(composite, "TT_DOWNLOAD_CD_LOCAL_CHUNKS", null);
+			createChunkGroup(composite, "TT_DOWNLOAD_CD_CLIENT_CHUNKS", clientInfo);
+		}
 
-        updateLabels();
+		updateLabels();
 
-        if (fileInfo != null)
-            fileInfo.addObserver(this);
+		if (fileInfo != null)
+			fileInfo.addObserver(this);
 
-        clientInfo.addObserver(this);
+		clientInfo.addObserver(this);
 
-        return composite;
-    }
+		return composite;
+	}
 
     /**
      * @param parent
@@ -217,6 +219,9 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.16  2004/03/22 15:12:50  dek
+changed selection behaviour in detail-dialog
+
 Revision 1.15  2004/03/16 19:27:00  dek
 Infos in Detail-Dialogs are now "copy-and-paste" enabled [TM]
 

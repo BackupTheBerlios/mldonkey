@@ -22,8 +22,10 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
+
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -36,6 +38,8 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -48,15 +52,16 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * DetailDialog
  *
- * @version $Id: DetailDialog.java,v 1.5 2004/03/16 19:27:00 dek Exp $
+ * @version $Id: DetailDialog.java,v 1.6 2004/03/22 15:11:09 dek Exp $
  *
  */
-public abstract class DetailDialog extends Dialog implements Observer {
-    protected ArrayList chunkCanvases = new ArrayList();
+public abstract class DetailDialog extends Dialog implements Observer, SelectionListener {
+    protected List chunkCanvases = new ArrayList();
     private int leftColumn = 100;
     private int rightColumn = leftColumn * 3;
     protected Color background = Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND );
-
+    private List createdLines = new ArrayList();
+    
     protected DetailDialog(Shell parentShell) {
         super(parentShell);
     }
@@ -97,8 +102,10 @@ public abstract class DetailDialog extends Dialog implements Observer {
         } else {
             gridData.widthHint = leftColumn;
         }
-
+        
         sText.setLayoutData(gridData);
+        createdLines.add(sText);
+        sText.addSelectionListener(this);
         
         return sText;
     }
@@ -184,11 +191,36 @@ public abstract class DetailDialog extends Dialog implements Observer {
                 });
         }
     }
+
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	 */
+	public void widgetSelected(SelectionEvent e) {	
+		StyledText source = (StyledText) e.getSource();
+		Iterator it = createdLines.iterator();
+		while (it.hasNext()){
+			StyledText temp = (StyledText) it.next();
+			if ( source!= temp ){
+			temp.setSelectionRange(0,0);
+			}
+		}
+	}
+
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+	 */
+	public void widgetDefaultSelected(SelectionEvent e) {
+	}
 }
 
 
 /*
 $Log: DetailDialog.java,v $
+Revision 1.6  2004/03/22 15:11:09  dek
+changed selection behaviour in detail-dialog
+
 Revision 1.5  2004/03/16 19:27:00  dek
 Infos in Detail-Dialogs are now "copy-and-paste" enabled [TM]
 

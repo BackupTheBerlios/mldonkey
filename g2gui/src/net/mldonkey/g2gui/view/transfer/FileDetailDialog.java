@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.13 2004/03/16 19:27:00 dek Exp $
+ * @version $Id: FileDetailDialog.java,v 1.14 2004/03/22 15:12:50 dek Exp $
  *
  */
 public class FileDetailDialog extends DetailDialog {
@@ -340,14 +340,14 @@ public class FileDetailDialog extends DetailDialog {
             });
 
         Button closeButton = new Button(buttonComposite, SWT.NONE);
-        closeButton.setFocus();
-        closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-        closeButton.setText(G2GuiResources.getString("BTN_CLOSE"));
-        closeButton.addSelectionListener(new SelectionAdapter() {
-                public void widgetSelected(SelectionEvent s) {
-                    close();
-                }
-            });
+		closeButton.setFocus();
+		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		closeButton.setText(G2GuiResources.getString("BTN_CLOSE"));
+		closeButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent s) {
+				close();
+			}
+		});
 
         return buttonComposite;
     }
@@ -385,6 +385,9 @@ public class FileDetailDialog extends DetailDialog {
 
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.14  2004/03/22 15:12:50  dek
+changed selection behaviour in detail-dialog
+
 Revision 1.13  2004/03/16 19:27:00  dek
 Infos in Detail-Dialogs are now "copy-and-paste" enabled [TM]
 
