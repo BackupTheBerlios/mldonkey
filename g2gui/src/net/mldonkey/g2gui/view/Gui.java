@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.1 2003/06/24 20:44:54 lemmstercvs01 Exp $ 
+ * @version $Id: Gui.java,v 1.2 2003/06/24 20:58:36 dek Exp $ 
  *
  */
 public class Gui extends ApplicationWindow implements IG2gui, Listener {
@@ -123,7 +123,7 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 				gridData.horizontalAlignment = GridData.CENTER;
 			buttonRow.setLayoutData( gridData );
 		
-		pageContainer = new Composite( mainComposite, SWT.BORDER );
+		pageContainer = new Composite( mainComposite, SWT.NONE);
 		pageContainer.setLayout( new PageLayout() );						
 		gridData = new GridData( GridData.FILL_BOTH );			
 			pageContainer.setLayoutData( gridData );
@@ -189,6 +189,9 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.2  2003/06/24 20:58:36  dek
+removed border from Content-Composite
+
 Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
 refactored
 
