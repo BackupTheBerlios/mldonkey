@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.TableItem;
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.1 2003/06/24 20:44:54 lemmstercvs01 Exp $ 
+ * @version $Id: TransferTab.java,v 1.2 2003/06/25 00:58:23 lemmstercvs01 Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements InterFaceUI {
@@ -69,7 +69,7 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 		table.setLinesVisible( false );
 		table.setHeaderVisible( true );
 		
-		String[] titles = { "Network", "Filename", "Rate", "Downloaded", "Size", };
+		String[] titles = { "ID", "Filename", "Rate", "Downloaded", "Size", };
 		for ( int i = 0; i < titles.length; i++ ) {
 			TableColumn column = new TableColumn( table, SWT.NULL );
 			column.setText( titles [ i ] );
@@ -85,7 +85,7 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 	
 	/**
 	 * Receive a notification about a change
-	 * @param anInformation The Information which have changed
+	 * @param anInformation The Information which has changed
 	 */
 	public void notify( final Information anInformation ) {
 		if ( anInformation instanceof FileInfoIntMap ) {
@@ -93,22 +93,53 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 				public void run() {
 					if ( table.isDisposed () ) return;
 
+					int tablesize = table.getItemCount();
+					TableItem[] items = table.getItems();
+
 					TIntObjectIterator itr = ( ( InfoIntMap ) anInformation ).iterator();
 					int collsize = ( ( InfoIntMap ) anInformation ).size();
-					table.removeAll();
+
 					for ( ; collsize-- > 0;) {
 						itr.advance();     
 						FileInfo elem = ( FileInfo ) itr.value();
-						TableItem item = new TableItem ( table, SWT.NULL );
-						item.setText( 0, new Integer( elem.getNetwork() ).toString() );
-						item.setText( 1, elem.getName() );
-						item.setText( 2, new Float( Math.round( elem.getRate() / 1024 ) ).toString() );
-						item.setText( 3, new Integer( elem.getDownloaded() ).toString() );
-						item.setText( 4, new Integer( elem.getSize() ).toString() );
+						
+						TableItem anItem = getItemByFileInfo( table, elem );
+						
+						/* FileInfo not yet in the table */
+						if ( anItem == null ) {
+							TableItem item = new TableItem ( table, SWT.NULL );
+							item.setText( 0, new Integer( itr.key() ).toString() );
+							item.setText( 1, elem.getName() );
+							item.setText( 2, new Float( Math.round( elem.getRate() / 1024 ) ).toString() );
+							item.setText( 3, new Integer( elem.getDownloaded() ).toString() );
+							item.setText( 4, new Integer( elem.getSize() ).toString() );
+							item.setData( elem );
+						}
+						/* FileInfo already in the table, check for updates */
+						else {
+							if ( ! ( anItem.getText( 2 ).equals( new Float( Math.round( elem.getRate() / 1024 ) ).toString() ) ) ) {
+								anItem.setText( 2, new Float( elem.getRate() / 1024 ).toString() );
+							}
+						}
 					}
 				}
 			});
 		}
+	}
+	
+	/**
+	 * Checks if the table contains an id
+	 * @param id
+	 * @return
+	 */
+	private static TableItem getItemByFileInfo( Table table, FileInfo fileInfo ) {
+		TableItem[] items = table.getItems();
+		
+		for ( int i = 0; i < items.length; i++ ) {
+			if ( ( ( FileInfo ) items[ i ].getData() ).equals( fileInfo ) )
+				return items[ i ];				
+		}
+		return null;
 	}
 
 	
@@ -124,6 +155,9 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.2  2003/06/25 00:58:23  lemmstercvs01
+no flickering anymore, next step jface TableViewer
+
 Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
 refactored
 
