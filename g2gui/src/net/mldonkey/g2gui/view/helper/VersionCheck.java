@@ -28,7 +28,7 @@ import org.eclipse.swt.SWT;
 /**
  * VersionCheck - Since fox returns "fox" to the getPlatform() method on all platforms
  *
- * @version $Id: VersionCheck.java,v 1.2 2004/01/08 21:42:12 psy Exp $
+ * @version $Id: VersionCheck.java,v 1.3 2004/01/08 21:48:33 psy Exp $
  *
  */
 public class VersionCheck {
@@ -53,19 +53,29 @@ public class VersionCheck {
     }
     
     /**
-     * This method is used to check if a ms windows operating system is being used
+     * This method is used to check if a ms-windows operating system is being used
      * @return Returns true if its a windows platform and false if not.
      */
 	public static boolean isWin32 () {
     	if (getSWTPlatform().startsWith("win")) return true;
     	return false;
     }
-   
+	
+	/**
+	 * This method is used to check if a NON-ms-windows operating system is being used 
+	 * @return Returns true if its a NON-windows platform and false if not.
+	 */
+	public static boolean isLinux() { 
+		return !isWin32(); 
+	}
 }
 
 
 /*
 $Log: VersionCheck.java,v $
+Revision 1.3  2004/01/08 21:48:33  psy
+minor
+
 Revision 1.2  2004/01/08 21:42:12  psy
 introducing boolean isWin32()
 

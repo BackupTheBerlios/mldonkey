@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiDisplay.java,v 1.10 2004/01/08 21:42:12 psy Exp $
+ * @version $Id: G2GuiDisplay.java,v 1.11 2004/01/08 21:48:33 psy Exp $
  */
 public class G2GuiDisplay extends PreferencePage {
 	/**
@@ -71,7 +71,7 @@ public class G2GuiDisplay extends PreferencePage {
 				G2GuiResources.getString( "PREF_DISPLAY_TABLE_COLORS" ),
 				composite ) );	
 
-		if ( !VersionCheck.isWin32() ) {
+		if ( VersionCheck.isLinux() ) {
 			setupEditor( 
 				new BooleanFieldEditor( 
 					"displayFontAA",
@@ -98,6 +98,9 @@ public class G2GuiDisplay extends PreferencePage {
 }
 /*
 $Log: G2GuiDisplay.java,v $
+Revision 1.11  2004/01/08 21:48:33  psy
+minor
+
 Revision 1.10  2004/01/08 21:42:12  psy
 introducing boolean isWin32()
 
