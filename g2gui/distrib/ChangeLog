@@ -39,6 +39,8 @@
 	* Comm: Handle disconnection from core more cleanly & update statusLine
 	* Main: Add menuItem: File>Kill core 
 	* Console: Add rightClick menuItems: SelectAll & Clear
+	* LinkEntry: Add drop support (text/URL) (win32)
+	* Transfer: Add drag&drop support (text/URL) (win32)
 	* Transfer: Add relative availability % column [#866]
 	* Transfer: Add number of active sources column
 	* Transfer: Add table update delay option ( larger delay == lower CPU )
