@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientStats
  *
  * @author markus
- * @version $Id: ClientStats.java,v 1.7 2003/06/26 21:11:35 dek Exp $ 
+ * @version $Id: ClientStats.java,v 1.8 2003/06/27 10:43:11 dek Exp $ 
  *
  */
 public class ClientStats implements SimpleInformation {
@@ -239,8 +239,8 @@ public class ClientStats implements SimpleInformation {
 		this.setTotalDown( messageBuffer.readInt64() );
 		this.setTotalShared( messageBuffer.readInt64() );
 		this.setNumOfShare( messageBuffer.readInt32() );
-		this.setTcpUpRate( round( messageBuffer.readInt32()/1023 ) );		
-		this.setTcpDownRate( round( messageBuffer.readInt32()/1023 ) );
+		this.setTcpUpRate( round( messageBuffer.readInt32()/(float)1024 ) );		
+		this.setTcpDownRate( round( messageBuffer.readInt32()/(float)1024 ) );
 		this.setUdpUpRate( messageBuffer.readInt32() );
 		this.setUdpDownRate( messageBuffer.readInt32() );
 		this.setNumCurrDownload( messageBuffer.readInt32() );
@@ -262,6 +262,9 @@ public class ClientStats implements SimpleInformation {
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.8  2003/06/27 10:43:11  dek
+TCP UP/DOWN finally rounded to 2 decimals !!!!
+
 Revision 1.7  2003/06/26 21:11:35  dek
 TCP UP/DOWN rounded to 2 decimals
 
