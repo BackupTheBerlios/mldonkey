@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  *
- * @version $Id: Console.java,v 1.19 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: Console.java,v 1.20 2003/12/30 16:35:11 psy Exp $
  *
  */
 public class Console extends Observable implements ControlListener {
@@ -147,12 +147,11 @@ public class Console extends Observable implements ControlListener {
                          */
 						numOfCommands++;
 						recentCommand = numOfCommands - 1;
-                        
                         input.setText( "" );
                     }
                     /*next two cases are for brwosing through command-history*/                     
                    else if ( e.keyCode == SWT.ARROW_UP ) {
-					if ( numOfCommands != 0 ) {												
+                   	if ( numOfCommands != 0 ) {												
 						input.setText( ( String ) commandHistory.get( recentCommand ));
 						/*set the cursor at the end of the line*/
 						input.setSelection( input.getText().length() );
@@ -162,10 +161,13 @@ public class Console extends Observable implements ControlListener {
                    }
 				   else if ( e.keyCode == SWT.ARROW_DOWN ) {				   
 				   	if ( recentCommand < commandHistory.size() - 1 ) {						
-						recentCommand++;
+				   		recentCommand++;
 						input.setText( ( String ) commandHistory.get( recentCommand ) );
 						/*set the cursor at the end of the line*/
 						input.setSelection( input.getText().length() );
+				   	} else {
+				   		/* clear the line when no command left */
+				   		input.setText( "" );
 				   	}
 				   }
 				   
@@ -260,6 +262,9 @@ public class Console extends Observable implements ControlListener {
 
 /*
 $Log: Console.java,v $
+Revision 1.20  2003/12/30 16:35:11  psy
+clear input when no command in history left
+
 Revision 1.19  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -297,7 +302,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.6  2003/08/18 06:00:01  zet
 fix null pointer (I'm not even sure it is real..)
