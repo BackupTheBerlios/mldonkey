@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.Shell;
  * TableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.5 2003/09/14 13:24:30 lemmster Exp $ 
+ * @version $Id: ServerTableMenuListener.java,v 1.6 2003/09/16 10:17:07 lemmster Exp $ 
  *
  */
 public class ServerTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -141,9 +141,9 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 			menuManager.add( new BlackListAction() );
 			
 		/* add to favorites */
-		if ( selectedServer != null && this.core.getProtoToUse() > 16 )
-			menuManager.add( new FavoritesAction() );
-
+/*		if ( selectedServer != null && this.core.getProtoToUse() > 16 )
+not yet		menuManager.add( new FavoritesAction() );
+*/
 		super.menuAboutToShow( menuManager );
 			
 		// filter submenu (select network to display)			
@@ -494,6 +494,9 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.6  2003/09/16 10:17:07  lemmster
+add server to favorites disabled
+
 Revision 1.5  2003/09/14 13:24:30  lemmster
 add header button to servertab
 
