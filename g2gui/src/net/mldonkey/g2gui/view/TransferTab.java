@@ -25,29 +25,40 @@ package net.mldonkey.g2gui.view;
 import java.util.Observable;
 import java.util.Observer;
 
+import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.view.download.FileInfoTableContentProvider;
 import net.mldonkey.g2gui.view.download.FileInfoTableLabelProvider;
-import net.mldonkey.g2gui.view.download.FileInfoTableViewerSorter;
+
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 
 /**
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.8 2003/06/27 17:40:19 lemmstercvs01 Exp $ 
+ * @version $Id: TransferTab.java,v 1.9 2003/06/27 21:45:54 lemmstercvs01 Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements Observer {
 	private TableViewer table;
-	private TableViewer table2;
-	private int lastSortColumn = -1;
+	private TableItem item;
 
 	/**
 	 * @param gui gui the parent Gui
@@ -73,20 +84,32 @@ public class TransferTab extends G2guiTab implements Observer {
 		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		table.getTable().setLinesVisible( false );
 		table.getTable().setHeaderVisible( true );
+		table.getTable().setMenu( createRightMouse() );
 
 		table.setContentProvider( new FileInfoTableContentProvider() );
 		table.setLabelProvider( new FileInfoTableLabelProvider() );
-		table.setSorter( new FileInfoTableViewerSorter() );
 
 		/* create the headers and set the width */		
-		String[] aString = { "ID", "Name", "Rate", "Downloaded", "Size", "%" };
-		int[] anInt = { 25, 300, 40, 70, 70, 40 };
+		String[] aString = { "ID", "Name", "Rate", "Downloaded", "Size", "%", "Status" };
+		int[] anInt = { 25, 300, 40, 70, 70, 40, 70 };
 		TableColumn column = null;
 		for ( int i = 0; i < aString.length; i++ ) {
-			column = new TableColumn(table.getTable(), SWT.LEFT);
+			column = new TableColumn( table.getTable(), SWT.LEFT );
 			column.setText( aString[ i ] );
 			column.setWidth( anInt[ i ] );
 		}
+		
+		/* listen for right mouse click on item */
+		table.getTable().addMouseListener( new MouseListener () {
+			public void mouseDown( MouseEvent e ) {
+				if ( e.button == 3 ) {
+					Point pt = new Point( e.x, e.y );
+					item = table.getTable().getItem( pt );
+				}
+			}
+			public void mouseDoubleClick(MouseEvent e) {}
+			public void mouseUp(MouseEvent e) {}
+		});
 	}
 
 	/* (non-Javadoc)
@@ -109,10 +132,90 @@ public class TransferTab extends G2guiTab implements Observer {
 				}
 			});			
 	}
+	
+	/**
+	 * Creates a right mouse click menu
+	 * @return Menu
+	 */
+	private Menu createRightMouse() {
+		Shell shell = table.getTable().getShell();
+		Menu menu = new Menu( shell , SWT.POP_UP );
+		
+		MenuItem menuItem;
+
+		/* Pause */
+		menuItem = new MenuItem( menu, SWT.PUSH );
+		menuItem.setText( "Pause" );
+		menuItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent e ) {
+			}
+		});
+
+		/* Resume */
+		menuItem = new MenuItem( menu, SWT.PUSH );
+		menuItem.setText( "Resume" );
+		menuItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent e ) {
+			}
+		});
+
+		/* Cancel */
+		menuItem = new MenuItem( menu, SWT.PUSH );
+		menuItem.setText("Cancel");
+		menuItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent e ) {
+			}
+		});
+
+		new MenuItem( menu, SWT.SEPARATOR );	
+
+		/* Rename to */
+		menuItem = new MenuItem( menu, SWT.CASCADE );
+		menuItem.setText( "Rename to..." );
+			final Menu rename = new Menu( menu );
+		menuItem.setMenu( rename );				
+
+		/* Copy to */
+		menuItem = new MenuItem( menu, SWT.CASCADE );
+		menuItem.setText( "Copy Link to Clipboard" );
+			Menu copy = new Menu( menu );
+			MenuItem copyItem = new MenuItem( copy, SWT.PUSH );
+			copyItem.setText( "TODO" );
+			copyItem.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent e ) {
+				}
+			});
+		menuItem.setMenu( copy );	
+
+		/* modify the menu when selected */
+		menu.addListener( SWT.Show, new Listener () {
+			/* create submenu for "Rename to" */
+			public void handleEvent( Event event ) {
+				MenuItem renameItem = null;
+				/* create a menuItem for all names in fileinfo */
+				FileInfo fileInfo = ( ( FileInfo ) item.getData() );
+				String[] names = fileInfo.getNames();
+				for ( int i = 0; i < names.length; i++ ) {
+					renameItem = new MenuItem( rename, SWT.PUSH );
+					renameItem.setText( names[ i ] );
+					/* add listener to name choice */
+					renameItem.addSelectionListener( new SelectionAdapter() {
+						public void widgetSelected( SelectionEvent e ) {
+						}
+					});
+				}
+			}
+		});
+		// TODO add events
+		return menu;
+	}
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.9  2003/06/27 21:45:54  lemmstercvs01
+added right click menu
+
 Revision 1.8  2003/06/27 17:40:19  lemmstercvs01
 foobar
 
