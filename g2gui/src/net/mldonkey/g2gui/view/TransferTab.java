@@ -74,7 +74,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.50 2003/08/30 11:44:29 dek Exp $ 
+ * @version $Id: TransferTab.java,v 1.51 2003/08/30 13:55:10 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -108,7 +108,7 @@ public class TransferTab extends GuiTab  {
 		ViewForm downloadViewForm;
 		
 		if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-			downloadViewForm = createClientViewform( mainSashForm );
+			downloadViewForm = createClientViewForm( mainSashForm );
 		} else {
 			downloadViewForm = new ViewForm( mainSashForm, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
 			downloadCLabel = CCLabel.createCL( downloadViewForm, "TT_Downloads", "TransfersButtonSmallTitlebar" );	
@@ -151,7 +151,6 @@ public class TransferTab extends GuiTab  {
 		ViewForm uploadsViewForm = new ViewForm( mainSashForm, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
 		uploadsViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );	
 	
-	
 		CLabel uploadsCLabel = CCLabel.createCL( uploadsViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar" );
 
 		Composite uploadersComposite = new Composite( uploadsViewForm, SWT.NONE );
@@ -173,7 +172,7 @@ public class TransferTab extends GuiTab  {
 	 * @param downloadViewForm
 	 * @return
 	 */
-	public ViewForm createClientViewform( Composite parent ) {
+	public ViewForm createClientViewForm( Composite parent ) {
 		
 		SashForm downloadSashForm = new SashForm( parent, SWT.HORIZONTAL );		
 		
@@ -185,7 +184,6 @@ public class TransferTab extends GuiTab  {
 		downloadComposite.setLayout( gridLayout );
 		downloadViewForm.setContent( downloadComposite );
 		downloadViewForm.setTopLeft( downloadCLabel );
-		
 		
 		ViewForm clientViewForm = new ViewForm( downloadSashForm, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
 		CLabel clientCLabel = CCLabel.createCL( clientViewForm, "TT_Clients", "TransfersButtonSmallTitlebar" );	
@@ -356,6 +354,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.51  2003/08/30 13:55:10  zet
+*** empty log message ***
+
 Revision 1.50  2003/08/30 11:44:29  dek
 client-Table is now own ViewForm, and some checkstyle work
 
@@ -411,7 +412,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression
