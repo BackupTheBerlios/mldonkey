@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: NetworkInfoIntMap.java,v 1.10 2003/08/02 09:55:16 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.11 2003/08/05 13:53:46 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
@@ -127,6 +127,8 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 	 * @param network The network
 	 */
 	protected void setConnectedServers( int i, NetworkInfo aNetwork ) {
+		/* null isnt a valid input */
+		if ( aNetwork == null ) return;
 		NetworkInfo network = ( NetworkInfo ) this.get( aNetwork.getNetwork() );
 		network.setConnectedServers( i );
 		this.setChanged();
@@ -136,6 +138,9 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.11  2003/08/05 13:53:46  lemmstercvs01
+setConnectedServer() accepts null
+
 Revision 1.10  2003/08/02 09:55:16  lemmstercvs01
 observers changed
 
