@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.17 2003/08/19 12:45:17 lemmster Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.18 2003/08/19 12:46:02 lemmster Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -316,7 +316,7 @@ public class OptionsInfo extends Parent {
 	 * Proto < 18 return value
 	 * @return the default value for this option
 	 */
-	public String defaultValue() {
+	public String getDefaultValue() {
 		if ( parent.getProtoToUse() >= 18 )
 			return this.defaultValue;
 		return this.value;	
@@ -325,6 +325,9 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.18  2003/08/19 12:46:02  lemmster
+typo fixed
+
 Revision 1.17  2003/08/19 12:45:17  lemmster
 support proto >=18
 
