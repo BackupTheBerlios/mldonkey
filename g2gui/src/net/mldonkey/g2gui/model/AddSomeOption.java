@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * AddSectionOption
  *
  * @author $user$
- * @version $Id: AddSomeOption.java,v 1.1 2003/06/15 09:58:04 lemmstercvs01 Exp $ 
+ * @version $Id: AddSomeOption.java,v 1.2 2003/06/15 16:16:51 lemmstercvs01 Exp $ 
  *
  */
 public class AddSomeOption implements Information {
@@ -117,11 +117,23 @@ public class AddSomeOption implements Information {
 		 this.setNameOfOption( messageBuffer.readString() );
 		 this.getOptionType().readStream( messageBuffer );
 	}
+	
+	public String toString() {
+		String result = new String( "\n" );
+		result += "\t" + this.getNameOfOption();
+		result += ": " + this.getDescription();
+		result += ": " + this.getOptionType().toString();
+		result += ": " + this.getSectionToAppear();
+		return result;
+	}
 
 }
 
 /*
 $Log: AddSomeOption.java,v $
+Revision 1.2  2003/06/15 16:16:51  lemmstercvs01
+toString() added, just for debugging
+
 Revision 1.1  2003/06/15 09:58:04  lemmstercvs01
 initial commit
 
