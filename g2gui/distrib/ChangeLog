@@ -1,5 +1,11 @@
+2003/11/24: lemmy
+	* Search: fixed [Bug #1132] search combo retains duplicates
+
 2003/11/23: vnc
 	* Configure/Makefile process now supports --with-fox and --with-motif
+
+2003/11/23: lemmy
+	* Search: fixed [Bug #1119] Search field a combo holding previous searches
 
 2003/11/22: z
 	* Search: Fix columnSelector option on search tab 
