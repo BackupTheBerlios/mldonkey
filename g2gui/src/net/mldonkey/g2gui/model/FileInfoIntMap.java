@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  *
- * @version $Id: FileInfoIntMap.java,v 1.27 2003/09/18 15:29:25 zet Exp $
+ * @version $Id: FileInfoIntMap.java,v 1.28 2003/09/25 00:51:03 zet Exp $
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -180,10 +180,26 @@ public class FileInfoIntMap extends InfoIntMap {
         this.setChanged();
         this.notifyObservers();
     }
+    
+    
+    /**
+     * Recalculate each fileInfo's active sources after a CLEAN_TABLE
+     */
+    public void clean() {
+		for (TIntObjectIterator it = this.iterator(); it.hasNext();) {
+			it.advance();
+			FileInfo fileInfo = ( FileInfo ) it.value();
+			fileInfo.setActiveSources( 0 );
+		}
+    }
+    
 }
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.28  2003/09/25 00:51:03  zet
+reset active sources on clean_tables
+
 Revision 1.27  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away

@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.101 2003/09/18 23:24:07 zet Exp $ 
+ * @version $Id: Core.java,v 1.102 2003/09/25 00:51:03 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -410,6 +410,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			case Message.R_CLEAN_TABLE :
 					( ( ClientInfoIntMap )this.clientInfoList ).clean( messageBuffer );
 					( ( ServerInfoIntMap )this.serverInfoMap ).clean( messageBuffer );
+					( ( FileInfoIntMap )this.fileInfoMap ).clean( );
 					break;
 					
 			case Message.R_MESSAGE_FROM_CLIENT :
@@ -591,6 +592,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.102  2003/09/25 00:51:03  zet
+reset active sources on clean_tables
+
 Revision 1.101  2003/09/18 23:24:07  zet
 use bufferedinputstream 
 & mods for the annoying gcj project

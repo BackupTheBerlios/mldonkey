@@ -48,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.61 2003/09/24 03:09:57 zet Exp $
+ * @version $Id: FileInfo.java,v 1.62 2003/09/25 00:51:03 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -625,7 +625,7 @@ public class FileInfo extends Parent implements Observer {
     /**
      * Calculate # of active sources
      */
-    private void setActiveSources( int i ) {
+    public void setActiveSources( int i ) {
 		
 		int oldActiveSources = activeSources;
 		
@@ -821,6 +821,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.62  2003/09/25 00:51:03  zet
+reset active sources on clean_tables
+
 Revision 1.61  2003/09/24 03:09:57  zet
 add # of active sources column
 
