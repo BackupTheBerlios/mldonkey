@@ -40,15 +40,14 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- *
- * @version $Id: MainMenuBar.java,v 1.7 2003/09/16 14:02:52 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.8 2003/09/16 15:11:01 zet Exp $ 
  *
  */
 public class MainMenuBar {
 	private MainTab mainTab;
 	private Shell shell;
-	private Menu mainMenuBar, submenu;
-	private MenuItem mItem, item;
+	private Menu mainMenuBar, subMenu;
+	private MenuItem menuItem;
 
 	public MainMenuBar( MainTab mainTab ) {
 		this.mainTab = mainTab;
@@ -60,90 +59,98 @@ public class MainMenuBar {
 		mainMenuBar = new Menu( shell, SWT.BAR );
 		shell.setMenuBar( mainMenuBar );
 		
-		mItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
-		mItem.setText ( "File" );
-		submenu = new Menu ( shell, SWT.DROP_DOWN );
-		mItem.setMenu ( submenu );
-		
-		final MenuItem killItem = new MenuItem ( submenu, 0 );
-		killItem.addListener ( SWT.Selection, new Listener () {
-			public void handleEvent ( Event e ) {
-				Message killCore = new EncodeMessage( Message.S_KILL_CORE );
-				killCore.sendMessage( mainTab.getCore().getConnection() );
-			} 
-		} );
-		killItem.setText ( "&Kill core" );
-		
-		mItem.setMenu ( submenu );
-		item = new MenuItem ( submenu, 0 );
-		item.addListener ( SWT.Selection, new Listener () {
-			public void handleEvent ( Event e ) {
-				shell.dispose();
-			} 
-		} );
-		item.setText ( "E&xit\tCtrl+W" );
-		item.setAccelerator ( SWT.CTRL + 'W' );
-		
-		submenu.addMenuListener(new MenuListener() {
+		menuItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
+		menuItem.setText ( "File" );
+		final Menu fileMenu = new Menu ( shell, SWT.DROP_DOWN );
+		menuItem.setMenu ( fileMenu );
+
+		// Build the fileMenu dynamically 
+		fileMenu.addMenuListener(new MenuListener() {
 			public void menuHidden(MenuEvent e) {}
 			public void menuShown(MenuEvent e) {
-				if ( !mainTab.getCore().isConnected() 
-					|| G2Gui.getCoreConsole() != null) {
-						killItem.setEnabled(false);
-					} else {
-						killItem.setEnabled(true);
-					}
+				MenuItem [] menuItems = fileMenu.getItems ();
+				for (int i=0; i<menuItems.length; i++) {
+					menuItems [i].dispose ();
+				}
+				
+				// File>Kill core if connected && gui has not spawned the core
+				if (mainTab.getCore().isConnected()
+					&& G2Gui.getCoreConsole() == null) {
+				
+					menuItem = new MenuItem ( fileMenu, SWT.PUSH );
+					menuItem.addListener ( SWT.Selection, new Listener () {
+						public void handleEvent ( Event e ) {
+							Message killCore = new EncodeMessage( Message.S_KILL_CORE );
+							killCore.sendMessage( mainTab.getCore().getConnection() );
+						} 
+					} );
+					menuItem.setText ( "&Kill core" );
+				}
+				
+				// File>Exit
+				menuItem = new MenuItem ( fileMenu, SWT.PUSH );
+				menuItem.addListener ( SWT.Selection, new Listener () {
+					public void handleEvent ( Event e ) {
+						shell.dispose();
+					} 
+				} );
+				menuItem.setText ( "E&xit\tCtrl+W" );
+				menuItem.setAccelerator ( SWT.CTRL + 'W' );
+				
 			}
 		});
-			
-		mItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
-		mItem.setText ( "Tools" );
-		
-		submenu = new Menu( shell, SWT.DROP_DOWN );
-		item = new MenuItem( submenu, 0 );
-		item.addListener( SWT.Selection, new Listener() {
-			public void handleEvent( Event event ) {	
-				mainTab.openPreferences();
-			}
-		} );
-		
-		item.setText( "Preferences" );
-		mItem.setMenu( submenu );
-	
-		mItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
-		mItem.setText ( "Help" );
-		submenu = new Menu ( shell, SWT.DROP_DOWN );
-		
-		mItem.setMenu( submenu );
-		item = new MenuItem( submenu, 0 );
-		item.addListener( SWT.Selection, 
-			new URLListener( "http://mldonkey.berlios.de/modules.php?name=Forums&file=viewforum&f=9" )
-		);
-		item.setText( "Feedback Forum" );
-		
-		item = new MenuItem( submenu, 0 );
-		item.addListener( SWT.Selection, 
-			new URLListener( "http://openfacts.berlios.de/index-en.phtml?title=MLdonkey-World,_home_of_G2gui" )
-		);
-		item.setText( "FAQ" );
-		
-		mItem.setMenu( submenu );
-		item = new MenuItem( submenu, 0 );
-		item.addListener( SWT.Selection, 
-			new URLListener( "http://developer.berlios.de/bugs/?group_id=610" )
-		);
-		item.setText( "Bugs" );
 
-		item = new MenuItem( submenu, 0 );
-		item.addListener( SWT.Selection, new Listener() {
-			public void handleEvent( Event event ) {	
-				About about = new About(shell);
-				about.open();
-			}
-		} );
+		// Tools			
+		menuItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
+		menuItem.setText ( "Tools" );
+		subMenu = new Menu( shell, SWT.DROP_DOWN );
+		menuItem.setMenu( subMenu );
 		
-		item.setText( "About" );
-		mItem.setMenu( submenu );
+			// Tools>Preferences
+			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.addListener( SWT.Selection, new Listener() {
+				public void handleEvent( Event event ) {	
+					mainTab.openPreferences();
+				}
+			} );
+			menuItem.setText( "Preferences" );
+	
+		// Help
+		menuItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
+		menuItem.setText ( "Help" );
+		subMenu = new Menu ( shell, SWT.DROP_DOWN );
+		menuItem.setMenu( subMenu );
+		
+			// Help>Feedback
+			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.addListener( SWT.Selection, 
+				new URLListener( "http://mldonkey.berlios.de/modules.php?name=Forums&file=viewforum&f=9" )
+			);
+			menuItem.setText( "Feedback Forum" );
+			
+			// Help>FAQ
+			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.addListener( SWT.Selection, 
+				new URLListener( "http://openfacts.berlios.de/index-en.phtml?title=MLdonkey-World,_home_of_G2gui" )
+			);
+			menuItem.setText( "FAQ" );
+			
+			// Help>Bugs
+			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.addListener( SWT.Selection, 
+				new URLListener( "http://developer.berlios.de/bugs/?group_id=610" )
+			);
+			menuItem.setText( "Bugs" );
+	
+			// Help>About
+			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.addListener( SWT.Selection, new Listener() {
+				public void handleEvent( Event event ) {	
+					About about = new About(shell);
+					about.open();
+				}
+			} );
+			menuItem.setText( "About" );
 	}	
 	
 	/**
@@ -159,11 +166,13 @@ public class MainMenuBar {
 		}
 	}
 	
-	
 }
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.8  2003/09/16 15:11:01  zet
+build filemenu dynamically
+
 Revision 1.7  2003/09/16 14:02:52  zet
 revert
 
