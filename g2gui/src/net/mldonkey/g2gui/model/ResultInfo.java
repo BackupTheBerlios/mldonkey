@@ -31,7 +31,7 @@ import java.text.DecimalFormat;
  * ResultInfo
  *
  * @author $user$
- * @version $Id: ResultInfo.java,v 1.11 2003/07/31 04:07:43 zet Exp $ 
+ * @version $Id: ResultInfo.java,v 1.12 2003/08/14 12:45:46 dek Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -229,7 +229,10 @@ public class ResultInfo extends Parent {
 	 * @return The Metadata
 	 */
 	public Tag[] getTags() {
-		return tags;
+		if (tags.length == 0){
+			return null;
+		}
+		else return tags;
 	}
 
 	/**
@@ -295,6 +298,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.12  2003/08/14 12:45:46  dek
+searching works now without errors
+
 Revision 1.11  2003/07/31 04:07:43  zet
 size is now a long
 

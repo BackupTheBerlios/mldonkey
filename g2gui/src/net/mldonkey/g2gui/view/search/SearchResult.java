@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.search;
 
+
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -78,11 +79,11 @@ import org.eclipse.swt.custom.CLabel;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.16 2003/08/11 12:16:10 dek Exp $ 
+ * @version $Id: SearchResult.java,v 1.17 2003/08/14 12:44:45 dek Exp $ 
  *
  */
 //TODO add image handle, fake search, real links depending on network								   
-public class SearchResult implements Observer, Runnable, DisposeListener {
+public class SearchResult implements Observer, Runnable, DisposeListener {	
 	private MainTab mainTab;
 	private CTabFolder cTabFolder;
 	private String searchString;
@@ -140,9 +141,10 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		/* if the tab is already disposed, dont update */
 		if ( cTabItem.isDisposed() ) return;
 		
-		/* are we responsible for this update */
-		if ( ( ( ResultInfoIntMap ) arg ).containsKey( searchId ) ) {
-			 	this.results = ( ResultInfoIntMap ) arg;
+		/* are we responsible for this update */		
+		
+		if ( ( ( ResultInfoIntMap )arg ).containsKey( searchId ) ) {
+			 	this.results = ( ResultInfoIntMap )arg;			 	
 				cTabFolder.getDisplay().asyncExec( this );
 		}
 	}
@@ -154,33 +156,24 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		/* if the tab is already disposed, dont update */
 		if ( cTabItem.isDisposed() ) return;
 		
-		List list = ( List ) results.get( searchId );
-		if ( table == null ) {
-			/* remove the old label "searching..." */
-			label.dispose();
-			this.createTable();
-			
-			
-			/* fill the table with content */			
-			try {
-				table.add( list.toArray() );				
-			} catch (RuntimeException e) {
-				System.out.println("search-result choking on too fast input: trying again");
-			}			
-			//this.modifyItems();
-			this.setColumnWidth();
-		} 
-		else {
-			/* has our result changed */
-				try {
-					table.add( list.toArray() );
-				} catch (RuntimeException e) {
-					System.out.println("search-result choking on too fast input: trying again");
-				}
-			/* clearing the list */
-			list.clear();
-				
-		}
+			List list = ( List ) results.get( searchId );
+			if ( table == null ) {
+				/* remove the old label "searching..." */
+				label.dispose();
+				this.createTable();
+				table.setInput(list);				
+				//this.modifyItems();
+				this.setColumnWidth();
+			} 
+			else {
+				/* has our result changed: 				
+					only refresh the changed items, 
+					look at API for	 refresh(false) */		
+				if (list.size() != table.getTable().getItemCount()) {									
+					table.refresh(true);
+					} 					
+					
+			}
 		/* are we active? set the statusline text */
 		if ( cTabFolder.getSelection() == cTabItem ) {
 			SearchTab parent = ( SearchTab ) cTabFolder.getData();
@@ -203,7 +196,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 * we are waiting for the resultinfo
 	 */
 	private void createContent() {
-		/* first we need a CTabFolder item for the search result */
+		/* first we need a CTabFolder item for the search result */		
 		cTabItem = new CTabItem( cTabFolder, SWT.FLAT );
 		cTabItem.setText( searchString );
 		cTabItem.setToolTipText( bundle.getString( "SR_SEARCHINGFOR" ) + searchString );
@@ -430,20 +423,26 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 * Sets the size for the columns
 	 */
 	private void setColumnWidth() {
-		/* the total width of the table */
-		int totalWidth = table.getTable().getSize().x - 25; //why is it 25 to width?
-		/* our tablecolumns */
-		TableColumn[] columns = table.getTable().getColumns();
-		for ( int i = 0; i < tableWidth.length; i++ ) {
-			TableColumn column = columns[ i ];
-			int width = tableWidth[ i ];
-			if ( width != 0 ) {
-				column.setWidth( tableWidth[ i ] );
-				totalWidth -= tableWidth[ i ];
+		/* only do this, if this table has not been disposed, because strangely 
+		 * this is also called if this searchresult has been disposed further 
+		 * investigation needed??
+		 */
+		if ( !table.getTable().isDisposed() ) {
+			/* the total width of the table */
+			int totalWidth = table.getTable().getSize().x - 25; //why is it 25 to width?			
+			/* our tablecolumns */
+			TableColumn[] columns = table.getTable().getColumns();
+			for ( int i = 0; i < tableWidth.length; i++ ) {
+				TableColumn column = columns[ i ];
+				int width = tableWidth[ i ];
+				if ( width != 0 ) {
+					column.setWidth( tableWidth[ i ] );
+					totalWidth -= tableWidth[ i ];
+				}
 			}
+			/* sets the size of the name (add each column you want to set dynamicly) */
+			columns[ 1 ].setWidth( totalWidth );
 		}
-		/* sets the size of the name (add each column you want to set dynamicly) */
-		columns[ 1 ].setWidth( totalWidth );
 	}
 	
 	/**
@@ -458,9 +457,10 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 * widgetDisposed(org.eclipse.swt.events.DisposeEvent)
 	 */
 	public void widgetDisposed( DisposeEvent e ) {
-		/* dispose the table */
+		/* dispose the table */		
 		if ( table != null )
 			table.getTable().dispose();
+			
 		
 		/* tell the core to forget the search */
 		Object[] temp = { new Integer( searchId ), new Byte( ( byte ) 1 ) };
@@ -469,7 +469,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		message = null;
 					
 		/* no longer receive results for this search */
-		this.unregister();
+		this.unregister();		
 	}
 	
 	/**
@@ -650,6 +650,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.17  2003/08/14 12:44:45  dek
+searching works now without errors
+
 Revision 1.16  2003/08/11 12:16:10  dek
 hopefully solved crash at fast input
 

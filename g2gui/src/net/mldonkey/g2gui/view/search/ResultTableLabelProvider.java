@@ -38,7 +38,7 @@ import org.eclipse.swt.graphics.Color;
  * ResultTableLabelProvider
  *
  * @author $user$
- * @version $Id: ResultTableLabelProvider.java,v 1.6 2003/08/12 07:26:03 lemmstercvs01 Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.7 2003/08/14 12:44:44 dek Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -80,21 +80,26 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 				case 0: // network id
 					return "" + ( ( NetworkInfo ) resultInfo.getNetwork() ).getNetworkName();
 				case 1: // name
-					return resultInfo.getNames()[ 0 ];
+					return "" +resultInfo.getNames()[ 0 ];
 				case 2: // size
-					return resultInfo.getStringSize();
+					return "" +resultInfo.getStringSize();
 				case 3: // format
-					return resultInfo.getFormat();
+					return "" +resultInfo.getFormat();
 				case 4: // type
-					return resultInfo.getType();
+					return "" +resultInfo.getType();
 				case 5: // metadata
-					Tag aTag = resultInfo.getTags()[ 0 ];
-					if ( aTag.getValue() > 20 )
-						return "" + bundle.getString( "RTLP_HIGH" );
-					else if ( aTag.getValue() > 10 )
-						return "" + bundle.getString( "RTLP_NORMAL" );
-					else
-						return "" + bundle.getString( "RTLP_LOW" );
+				/* check if we have Tags at all (Fix for strange SWT-exception when searching)*/
+					Tag[] tags = resultInfo.getTags();
+					if (tags != null){					
+						Tag aTag = resultInfo.getTags()[ 0 ];
+						if ( aTag.getValue() > 20 )
+							return "" + bundle.getString( "RTLP_HIGH" );
+						else if ( aTag.getValue() > 10 )
+							return "" + bundle.getString( "RTLP_NORMAL" );
+						else
+							return "" + bundle.getString( "RTLP_LOW" );
+					}
+					else return "";
 				default: 
 					return "";
 			
@@ -152,6 +157,9 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.7  2003/08/14 12:44:44  dek
+searching works now without errors
+
 Revision 1.6  2003/08/12 07:26:03  lemmstercvs01
 checkstyle applied
 
