@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.21 2003/09/14 09:01:15 lemmster Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.22 2003/09/14 09:59:02 lemmster Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -249,6 +249,25 @@ public class ServerInfoIntMap extends InfoIntMap {
 	}
 	
 	/**
+	 * @param network The network for which we want the num of connected servers
+	 * @return The number of connected server in this serverinfointmap
+	 */
+	public int getConnected( NetworkInfo network ) {
+		int result = 0;
+		synchronized ( this ) {
+			TIntObjectIterator itr = this.infoIntMap.iterator();
+			int size = this.infoIntMap.size();
+			for ( ; size-- > 0; ) {
+				itr.advance();
+				ServerInfo server = ( ServerInfo ) itr.value();
+				if ( server != null && server.isConnected() && server.getNetwork() == network )
+					result++;
+			}
+		}
+		return result;
+	}
+	
+	/**
 	 * Sends Message.S_CONNECT_MORE to the core.
 	 */
 	public void connectMore( NetworkInfo network ) {
@@ -436,6 +455,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.22  2003/09/14 09:59:02  lemmster
+fix  0 server in mouse-popup [bug #869]
+
 Revision 1.21  2003/09/14 09:01:15  lemmster
 show nodes on request
 

@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * NetworkInfo
  *
  *
- * @version $Id: NetworkInfo.java,v 1.26 2003/08/24 16:55:37 dek Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.27 2003/09/14 09:59:02 lemmster Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -379,7 +379,10 @@ public class NetworkInfo extends Parent {
 	 * @return The number of connected Servers
 	 */
 	public int getConnectedServers() {
-		return connectedServers;
+		if ( parent.getProtoToUse() >= 18 )
+			return connectedServers;
+		else
+			return parent.getServerInfoIntMap().getConnected( this );	
 	}
 
 	/**
@@ -566,6 +569,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.27  2003/09/14 09:59:02  lemmster
+fix  0 server in mouse-popup [bug #869]
+
 Revision 1.26  2003/08/24 16:55:37  dek
 toString added, returns network Name
 
@@ -576,7 +582,7 @@ Revision 1.24  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.23  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/21 13:13:10  lemmster
 cleanup in networkitem
