@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableViewer.java,v 1.3 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: ClientTableViewer.java,v 1.4 2003/10/16 16:09:56 zet Exp $
  *
  */
 public class ClientTableViewer {
@@ -63,6 +63,7 @@ public class ClientTableViewer {
         clientTableViewer = new CustomTableViewer( parent, SWT.FULL_SELECTION | SWT.MULTI );
 
         Table table = clientTableViewer.getTable();
+        updateDisplay();
         table.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
         clientTableViewer.getTable().setHeaderVisible( true );
@@ -108,11 +109,24 @@ public class ClientTableViewer {
     public CustomTableViewer getTableViewer() {
         return clientTableViewer;
     }
+    
+    public void updateDisplay() {
+    	Table table = clientTableViewer.getTable();
+		table.setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
+		table.setBackground( PreferenceLoader.loadColour( "downloadsBackgroundColor" ) );
+		table.setForeground( PreferenceLoader.loadColour( "downloadsAvailableColor" ) );
+		table.setFont( PreferenceLoader.loadFont( "downloadsFontData" ) );
+		
+    }
+    
 }
 
 
 /*
 $Log: ClientTableViewer.java,v $
+Revision 1.4  2003/10/16 16:09:56  zet
+updateDisplay
+
 Revision 1.3  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 

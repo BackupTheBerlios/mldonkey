@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.7 2003/10/15 22:06:32 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.8 2003/10/16 16:09:56 zet Exp $
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListener {
@@ -157,6 +157,7 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
         tableTree = tableTreeViewer.getTableTree();
         table = tableTree.getTable();
         tableTree.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+		
 
 		createColumns();
         
@@ -348,6 +349,8 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
      * Set Preferneces
      */
     public void setPreferences() {
+    	table.setBackground( PreferenceLoader.loadColour( "downloadsBackgroundColor" ) );
+    	table.setFont( PreferenceLoader.loadFont( "downloadsFontData" ) );
         table.setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
         tableTreeLabelProvider.displayColors( PreferenceLoader.loadBoolean( "displayTableColors" ) );
         tableTreeContentProvider.setUpdateDelay( PreferenceLoader.loadInteger( "updateDelay" ) );
@@ -420,6 +423,9 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.8  2003/10/16 16:09:56  zet
+updateDisplay
+
 Revision 1.7  2003/10/15 22:06:32  zet
 colours
 
