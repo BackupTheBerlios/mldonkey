@@ -46,10 +46,11 @@ import gnu.trove.TIntArrayList;
 /**
  * GraphHistory
  *
- * @version $Id: GraphHistory.java,v 1.2 2003/10/17 15:47:14 zet Exp $
+ * @version $Id: GraphHistory.java,v 1.3 2003/11/06 14:59:06 lemmster Exp $
  *
  */
 public class GraphHistory implements PaintListener {
+	//TODO move strings into resource bundle
     private Shell shell;
     private Graph graph;
     private Canvas canvas;
@@ -62,21 +63,21 @@ public class GraphHistory implements PaintListener {
    
     public GraphHistory( Graph graph ) {
         this.graph = graph;
-        this.maxList = graph.getMaxList(  );
-        this.avgList = graph.getAvgList(  );
+        this.maxList = graph.getMaxList();
+        this.avgList = graph.getAvgList();
 
-        createContents(  );
+        createContents();
     }
 
-    public void createContents(  ) {
+    public void createContents() {
         shell = new Shell( SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.RESIZE | SWT.BORDER | SWT.APPLICATION_MODAL );
         shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
-        shell.setText( graph.getName(  ) );
-        shell.setLayout( new FillLayout(  ) );
-        shell.addDisposeListener( new DisposeListener(  ) {
+        shell.setText( graph.getName() );
+        shell.setLayout( new FillLayout() );
+        shell.addDisposeListener( new DisposeListener() {
                 public synchronized void widgetDisposed( DisposeEvent e ) {
-                    PreferenceStore p = PreferenceLoader.getPreferenceStore(  );
-                    PreferenceConverter.setValue( p, "graphHistoryWindowBounds", shell.getBounds(  ) );
+                    PreferenceStore p = PreferenceLoader.getPreferenceStore();
+                    PreferenceConverter.setValue( p, "graphHistoryWindowBounds", shell.getBounds() );
                 }
             } );
 
@@ -86,22 +87,22 @@ public class GraphHistory implements PaintListener {
             shell.setBounds( PreferenceLoader.loadRectangle( "graphHistoryWindowBounds" ) );
         }
 
-        shell.open(  );
+        shell.open();
     }
 
     public void paintControl( PaintEvent e ) {
-        if ( ( shell.getClientArea(  ).width < 5 ) || ( shell.getClientArea(  ).height < 5 ) ) {
+        if ( ( shell.getClientArea().width < 5 ) || ( shell.getClientArea().height < 5 ) ) {
             return;
         }
 
-        int height = shell.getClientArea(  ).height;
-        int width = shell.getClientArea(  ).width;
+        int height = shell.getClientArea().height;
+        int width = shell.getClientArea().width;
 
-        Image imageBuffer = new Image( shell.getDisplay(  ), shell.getClientArea(  ) );
+        Image imageBuffer = new Image( shell.getDisplay(), shell.getClientArea() );
         GC gc = new GC( imageBuffer );
 
         gc.setBackground( backgroundColor );
-        gc.fillRectangle( 0, 0, shell.getClientArea(  ).width, shell.getClientArea(  ).height );
+        gc.fillRectangle( 0, 0, shell.getClientArea().width, shell.getClientArea().height );
 
         // draw grid
         gc.setForeground( gridColor );
@@ -118,23 +119,23 @@ public class GraphHistory implements PaintListener {
         drawGraph( gc );
 
         e.gc.drawImage( imageBuffer, 0, 0 );
-        gc.dispose(  );
-        imageBuffer.dispose(  );
+        gc.dispose();
+        imageBuffer.dispose();
     }
 
     private void drawGraph( GC gc ) {
-        if ( maxList.size(  ) == 0 ) {
+        if ( maxList.size() == 0 ) {
             gc.setForeground( textColor );
             gc.drawText( "No hourly history available yet...", 0, 0 );
 
             return;
         }
 
-        int lineHeight = gc.getFontMetrics(  ).getHeight(  ) + 2;
+        int lineHeight = gc.getFontMetrics().getHeight() + 2;
 
-        int width = shell.getClientArea(  ).width;
-        int barWidth = width / maxList.size(  );
-        float height = (float) shell.getClientArea(  ).height - ( lineHeight * 3 );
+        int width = shell.getClientArea().width;
+        int barWidth = width / maxList.size();
+        float height = (float) shell.getClientArea().height - ( lineHeight * 3 );
 
         float maxValueY;
         float avgValueY;
@@ -144,7 +145,7 @@ public class GraphHistory implements PaintListener {
         float maximum = 2;
 
         // maxList.max() crashes.. 
-        for ( int i = 0; i < maxList.size(  ); i++ ) {
+        for ( int i = 0; i < maxList.size(); i++ ) {
             if ( ( maxList.getQuick( i ) / 10 ) > maximum ) {
                 maximum = (float) maxList.getQuick( i ) / 10;
             }
@@ -155,7 +156,7 @@ public class GraphHistory implements PaintListener {
 
         gc.setForeground( textColor );
 
-        for ( int i = 0; i < maxList.size(  ); i++ ) {
+        for ( int i = 0; i < maxList.size(); i++ ) {
             maxValue = maxList.getQuick( i );
             avgValue = avgList.getQuick( i );
 
@@ -167,11 +168,11 @@ public class GraphHistory implements PaintListener {
             maxValueY = maxValueY * zoom;
             avgValueY = avgValueY * zoom;
 
-            gc.setBackground( graph.getColor2(  ) );
-            gc.fillRectangle( xCoord, shell.getClientArea(  ).height + 1, barWidth - 2, -(int) maxValueY );
+            gc.setBackground( graph.getColor2() );
+            gc.fillRectangle( xCoord, shell.getClientArea().height + 1, barWidth - 2, -(int) maxValueY );
 
-            gc.setBackground( graph.getColor1(  ) );
-            gc.fillRectangle( xCoord, shell.getClientArea(  ).height + 1, barWidth - 2, -(int) avgValueY );
+            gc.setBackground( graph.getColor1() );
+            gc.fillRectangle( xCoord, shell.getClientArea().height + 1, barWidth - 2, -(int) avgValueY );
 
             gc.drawText( "Hour: " + ( i + 1 ), xCoord, 0, true );
             gc.drawText( "Avg: " + ( (double) avgValue / 100 ) + "kb/s", xCoord, lineHeight, true );
@@ -183,6 +184,9 @@ public class GraphHistory implements PaintListener {
 
 /*
 $Log: GraphHistory.java,v $
+Revision 1.3  2003/11/06 14:59:06  lemmster
+clean up
+
 Revision 1.2  2003/10/17 15:47:14  zet
 graph colour prefs
 

@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.3 2003/11/06 13:52:33 lemmster Exp $
+ * @version $Id: GView.java,v 1.4 2003/11/06 14:59:06 lemmster Exp $
  *
  */
 public abstract class GView {
@@ -127,31 +127,14 @@ public abstract class GView {
         getTable().addDisposeListener(listener);
     }
     
-    /**
-     * @param aClassName
-     * @return The GViewerFilter to this Class or AlwaysFalseGViewerFilter on null
-     */
-//TODO messure performance. 
-//if this is faster remove the map thing in GTableView and GTableTreeView addFilter(...), removeFilter(...) and createContents(...)
-    public GViewerFilter getFilter( Class aClassName ) {
-		ViewerFilter[] filters = this.getFilters();
-		for ( int i = 0; i < filters.length; i++ ) {
-			if ( aClassName.isInstance( filters[ i ] ) )
-				return (GViewerFilter) filters[ i ];
-		}
-		// we return a filter which retuns false for all methods. avoid null pointer checks
-		return new AlwaysFalseGViewerFilter( this );
-    }
-
-
-/*	public GViewerFilter getFilter( Class aClass ) {
+	public GViewerFilter getFilter( Class aClass ) {
 		Map aMap = (Map) this.getViewer().getData( GViewerFilter.class.getName() );
 		if ( aMap.containsKey( aClass.getName() ) ) {
 			return (GViewerFilter) aMap.get( aClass.getName() );
 		}
-		return new AlwaysFalseGViewerFilter();
+		return new AlwaysFalseGViewerFilter( this );
 	}
-*/	
+	
 	public void removeFilter( ViewerFilter aViewerFilter ) {
 		//check if the ViewerFilter is our AlwaysFalseFilter
 		if ( aViewerFilter instanceof GViewerFilter ) {
@@ -164,8 +147,6 @@ public abstract class GView {
 	}
 		
 	public void addFilter( ViewerFilter aViewerFilter ) {
-		//TODO subclass GViewerFilter with FileExtensionFilter to avoid "instanceof"
-		//check if the ViewerFilter is our AlwaysFalseFilter
 		if ( aViewerFilter instanceof GViewerFilter ) {
 			GViewerFilter filter = (GViewerFilter) aViewerFilter;
 			if ( !filter.isNotAlwaysFalse() )
@@ -348,6 +329,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.4  2003/11/06 14:59:06  lemmster
+clean up
+
 Revision 1.3  2003/11/06 13:52:33  lemmster
 filters back working
 

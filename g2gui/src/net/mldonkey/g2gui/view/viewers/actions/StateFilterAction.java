@@ -33,11 +33,10 @@ import org.eclipse.jface.action.Action;
 /**
  * StateFilterAction
  *
- * @version $Id: StateFilterAction.java,v 1.6 2003/11/06 13:52:33 lemmster Exp $
+ * @version $Id: StateFilterAction.java,v 1.7 2003/11/06 14:59:06 lemmster Exp $
  *
  */
 public class StateFilterAction extends FilterAction {
-    //TODO check for slowness
     private Enum state;
     private boolean exclusion;
 
@@ -87,6 +86,9 @@ public class StateFilterAction extends FilterAction {
 
 /*
 $Log: StateFilterAction.java,v $
+Revision 1.7  2003/11/06 14:59:06  lemmster
+clean up
+
 Revision 1.6  2003/11/06 13:52:33  lemmster
 filters back working
 
