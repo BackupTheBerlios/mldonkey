@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.29 2003/09/18 10:26:28 lemmster Exp $
+ * @version $Id: G2GuiResources.java,v 1.30 2003/09/18 23:09:48 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -51,7 +51,6 @@ public class G2GuiResources {
 
     private G2GuiResources() {
     }
-
   
 	/**
      * Initialize G2GuiResources
@@ -61,20 +60,17 @@ public class G2GuiResources {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param key DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Get resource image
+     * @param key 
+     * @return Image
      */
     public static Image getImage( String key ) {
         return getImageRegistry().get( key );
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Get ImageRegistry
+     * @return ImageRegistry
      */
     public static ImageRegistry getImageRegistry() {
         if ( imageRegistry == null )
@@ -83,11 +79,9 @@ public class G2GuiResources {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param key DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Get resource string
+     * @param key 
+     * @return String
      */
     public static String getString( String key ) {
         try {
@@ -99,11 +93,9 @@ public class G2GuiResources {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param networkType DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Get network image
+     * @param networkType 
+     * @return Image
      */
     public static Image getNetworkImage( Enum networkType ) {
         if ( networkType == Enum.DONKEY )
@@ -126,11 +118,9 @@ public class G2GuiResources {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param clientState DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Get Client Image
+     * @param clientState 
+     * @return Image
      */
     public static Image getClientImage( EnumState clientState ) {
         if ( clientState == EnumState.CONNECTED_DOWNLOADING )
@@ -146,11 +136,9 @@ public class G2GuiResources {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param availability DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Get rating string
+     * @param availability int
+     * @return string 
      */
     public static String getRatingString( int availability ) {
         if ( availability > 100 )
@@ -166,11 +154,10 @@ public class G2GuiResources {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param availability DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Get rating image
+     * @param availability int
+     * @return Image
+     * 
      */
 	public static Image getRatingImage( int availability ) {
 		if ( availability > 100 )
@@ -186,7 +173,7 @@ public class G2GuiResources {
 	}
 
     /**
-     * DOCUMENT ME!
+     * Create the image registry
      */
     private static void createImageRegistry() {
         Color white = Display.getCurrent().getSystemColor( SWT.COLOR_WHITE );
@@ -266,7 +253,7 @@ public class G2GuiResources {
      * @param color the background-color
      * @return the transparent image
      */
-    public static Image createTransparentImage( Image src, Color color ) {
+   	private static Image createTransparentImage( Image src, Color color ) {
         int width = src.getBounds().width;
         int height = src.getBounds().height;
         Image result = new Image( null, width, height );
@@ -279,15 +266,7 @@ public class G2GuiResources {
         return result;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param src DOCUMENT ME!
-     * @param color DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public static Image createActiveImage( Image src, Color color ) {
+   private static Image createActiveImage( Image src, Color color ) {
         int width = src.getBounds().width;
         int height = src.getBounds().height;
         Image result = new Image( null, width, height );
@@ -304,16 +283,8 @@ public class G2GuiResources {
         gc.dispose();
         return result;
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param src DOCUMENT ME!
-     * @param control DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public static Image createTransparentImage( Image src, Control control ) {
+   
+    private static Image createTransparentImage( Image src, Control control ) {
         return createTransparentImage( src, control.getBackground() );
     }
 
@@ -325,38 +296,17 @@ public class G2GuiResources {
     	
     	return ImageDescriptor.createFromFile( MainTab.class, imagesDirectory + filename );
     }
-    /**
-     * DOCUMENT ME!
-     *
-     * @param filename DOCUMENT ME!
-     * @param color DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+  
     private static Image createTrans( String filename, Color color ) {
         return createTransparentImage( 
         	ImageDescriptor.createFromFile(
         		MainTab.class, imagesDirectory + filename ).createImage(), color );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param filename DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     private static ImageDescriptor createImageDescriptor( String filename ) {
         return ImageDescriptor.createFromFile( MainTab.class, imagesDirectory + filename );
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param filename DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+ 
     private static Image createActive( String filename ) {
         return createActiveImage( createTrans( filename ),
                                   Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND ) );
@@ -365,6 +315,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.30  2003/09/18 23:09:48  zet
+*** empty log message ***
+
 Revision 1.29  2003/09/18 10:26:28  lemmster
 checkstyle
 
@@ -432,7 +385,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
