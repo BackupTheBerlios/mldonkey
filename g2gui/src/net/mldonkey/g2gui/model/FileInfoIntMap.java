@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.3 2003/06/27 17:15:16 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.4 2003/07/02 16:26:51 dek Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -123,7 +123,7 @@ public class FileInfoIntMap extends InfoIntMap {
 	}
 	
 	/**
-	 * @return
+	 * @return this objects id
 	 */
 	public int getId() {
 		return id;
@@ -133,6 +133,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.4  2003/07/02 16:26:51  dek
+minor checkstyle
+
 Revision 1.3  2003/06/27 17:15:16  lemmstercvs01
 added private int id for easier table update
 
