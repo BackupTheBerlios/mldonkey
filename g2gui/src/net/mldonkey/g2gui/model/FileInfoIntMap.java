@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.12 2003/07/05 11:33:08 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.13 2003/07/05 15:38:20 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -127,7 +127,6 @@ public class FileInfoIntMap extends InfoIntMap {
 				fileInfo.readStream( messageBuffer );
 				this.put( fileInfo.getId(), fileInfo );
 			}
-			System.out.println( "changed: " + id );
 		}
 	}
 	
@@ -201,6 +200,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.13  2003/07/05 15:38:20  lemmstercvs01
+debug removed
+
 Revision 1.12  2003/07/05 11:33:08  lemmstercvs01
 id -> List ids
 
