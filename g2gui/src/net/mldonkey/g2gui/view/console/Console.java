@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  *
- * @version $Id: Console.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: Console.java,v 1.9 2003/08/25 22:11:53 zet Exp $ 
  *
  */
 public class Console extends Observable implements ControlListener  {	
@@ -68,7 +68,7 @@ public class Console extends Observable implements ControlListener  {
 		parent.setLayout( null );
 		parent.addControlListener( this );		
 		/* Adding the Console-Display Text-field */
-		infoDisplay = new StyledText( parent, style | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
+		infoDisplay = new StyledText( parent, style | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
 		input = new Text( parent, SWT.SINGLE | SWT.BORDER );					
 		
 		//Send command 
@@ -168,6 +168,9 @@ public class Console extends Observable implements ControlListener  {
 
 /*
 $Log: Console.java,v $
+Revision 1.9  2003/08/25 22:11:53  zet
+update style bits
+
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 

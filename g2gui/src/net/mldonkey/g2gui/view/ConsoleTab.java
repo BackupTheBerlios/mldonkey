@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.39 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.40 2003/08/25 22:11:53 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -72,7 +72,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 	protected void createContents( Composite parent ) {	
 		this.parent = parent;		
 		
-		console = new Console ( parent, SWT.NONE );
+		console = new Console ( parent, SWT.BORDER );
 		console.addObserver( this );
 		
 		parent.setLayout( null );
@@ -170,6 +170,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.40  2003/08/25 22:11:53  zet
+update style bits
+
 Revision 1.39  2003/08/23 15:21:37  zet
 remove @author
 
