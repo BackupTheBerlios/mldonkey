@@ -72,7 +72,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.14 2004/03/14 20:59:40 dek Exp $
+ * @version $Id: MainWindow.java,v 1.15 2004/03/19 18:31:27 dek Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText;
@@ -188,8 +188,7 @@ public class MainWindow implements ShellListener {
      * @see org.eclipse.jface.window.Window#createContents( org.eclipse.swt.widgets.Composite )
      */
     private void createContents(Shell parent) {
-        mainComposite = new Composite(parent, SWT.NONE);
-        parent.setImage(G2GuiResources.getImage("ProgramIcon"));
+        mainComposite = new Composite(parent, SWT.NONE);        
         new MainMenuBar(this);
 
         // try a margin of 1 ?
@@ -511,6 +510,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.15  2004/03/19 18:31:27  dek
+Shell has same icon as Tray
+
 Revision 1.14  2004/03/14 20:59:40  dek
 no tray if != win
 

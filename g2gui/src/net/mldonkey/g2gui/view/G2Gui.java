@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.72 2004/03/14 17:37:59 dek Exp $
+ * @version $Id: G2Gui.java,v 1.73 2004/03/19 18:31:27 dek Exp $
  *
  */
 public class G2Gui {
@@ -247,6 +247,7 @@ public class G2Gui {
     private static void launch() {
         // create our main shell for displaying stuff
     	shell = new Shell(display);
+    	shell.setImage(G2GuiResources.getImage("TrayIcon"));
     	//if (getCoreConsole() != null) getCoreConsole().setShell(shell);
     	
     	/* we are running, so we make this available to other instances */
@@ -653,6 +654,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.73  2004/03/19 18:31:27  dek
+Shell has same icon as Tray
+
 Revision 1.72  2004/03/14 17:37:59  dek
 Systray reloaded
 

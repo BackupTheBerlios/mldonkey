@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * SplashShell
  *
- * @version $Id: Splash.java,v 1.2 2003/12/04 08:47:31 lemmy Exp $ 
+ * @version $Id: Splash.java,v 1.3 2004/03/19 18:31:27 dek Exp $ 
  *
  */
 public class Splash {
@@ -53,7 +53,7 @@ public class Splash {
 		
 		shell = new Shell( display, SWT.NO_TRIM | SWT.NO_BACKGROUND | SWT.ON_TOP );
 		shell.setLayout( new FormLayout() );
-
+		shell.setImage(G2GuiResources.getImage("TrayIcon"));
 		final Image image = G2GuiResources.getImage("splashScreen");
 		shell.addPaintListener( new PaintListener() {
 				public void paintControl( PaintEvent e ) {
@@ -135,6 +135,9 @@ public class Splash {
 
 /*
 $Log: Splash.java,v $
+Revision 1.3  2004/03/19 18:31:27  dek
+Shell has same icon as Tray
+
 Revision 1.2  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
