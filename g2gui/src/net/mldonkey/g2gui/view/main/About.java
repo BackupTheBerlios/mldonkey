@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.22 2003/10/19 03:55:37 zet Exp $ 
+ * @version $Id: About.java,v 1.23 2003/10/27 00:17:26 zet Exp $ 
  *
  */
 public class About extends Dialog {
@@ -69,7 +69,14 @@ public class About extends Dialog {
 		super( shell );
 		setDefaultImage( G2GuiResources.getImage( "ProgramIcon" ) );
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+	 */
+	protected void configureShell(Shell newShell) {
+	    super.configureShell( newShell );
+	    newShell.setText( "G2gui " + VersionInfo.getVersion() );
+	}
 	/**
 	 * @param parent the Control on which the contents should be created
 	 * @return The Control on which the contents are created
@@ -250,7 +257,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.22 2003/10/19 03:55:37 zet Exp $ 
+	 * @version $Id: About.java,v 1.23 2003/10/27 00:17:26 zet Exp $ 
 	 *
 	 */
 	public class Link {
@@ -302,6 +309,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.23  2003/10/27 00:17:26  zet
+set titlebar text
+
 Revision 1.22  2003/10/19 03:55:37  zet
 add swt info
 
