@@ -59,7 +59,7 @@ import java.util.Set;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.3 2003/09/24 03:07:43 zet Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.4 2003/09/28 18:55:41 zet Exp $
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, TreeListener {
@@ -283,7 +283,8 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 
                 if ( isInteresting( fileInfo ) ) {
                     if ( updateDelay == 0 ) {
-                        tableTreeViewer.update( fileInfo, (String[]) arg );
+                    	String[] args = (String[]) arg;
+                        tableTreeViewer.update( fileInfo, args.length > 0 ? args : null );
                         updateAllEditors(  );
                     } else {
                         delayedUpdate( fileInfo, (String[]) arg );
@@ -590,6 +591,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.4  2003/09/28 18:55:41  zet
+minor
+
 Revision 1.3  2003/09/24 03:07:43  zet
 add # of active sources column
 
