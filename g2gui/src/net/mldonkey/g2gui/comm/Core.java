@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.71 2003/07/28 17:16:51 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.72 2003/07/31 14:09:39 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -287,6 +287,8 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 				
 			case Message.R_NETWORK_INFO :
 					this.networkinfoMap.readStream( messageBuffer );
+					this.setChanged();
+					this.notifyObservers( networkinfoMap );
 					break;
 					
 			case Message.R_USER_INFO :
@@ -380,6 +382,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.72  2003/07/31 14:09:39  lemmstercvs01
+notify observers on networkinfo
+
 Revision 1.71  2003/07/28 17:16:51  lemmstercvs01
 getServerInfoIntMap() added
 
