@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.14 2003/07/01 14:06:06 dek Exp $ 
+ * @version $Id: Gui.java,v 1.15 2003/07/01 18:09:51 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -140,14 +140,17 @@ public class Gui implements IG2gui, Listener {
 			
 		coolbar = createCoolBar(mainComposite);				
 			
-		ToolItem pref = new ToolItem(miscTools,SWT.NONE);		
-			pref.setText("Preferences");
-			pref.setImage(new Image(pref.getParent().getDisplay(),"src/icons/preferences.gif"));
+		ToolItem pref = new ToolItem( miscTools,SWT.NONE );				
+			pref.setText( "Preferences" );	
+			pref.setImage(createTransparentImage( 
+					new Image(pref.getParent().getDisplay(),
+							"src/icons/preferences.png" ),
+							  pref.getParent() ) );
 			pref.addListener(SWT.Selection, new Listener(){
-				public void handleEvent(Event event) {	
+				public void handleEvent( Event event ) {	
 					Shell prefshell = new Shell();
-					Preferences myprefs = new Preferences(new PreferenceStore("g2gui.pref"));					
-					myprefs.open(prefshell,mldonkey);
+					Preferences myprefs = new Preferences( new PreferenceStore("g2gui.pref" ));					
+					myprefs.open( prefshell,mldonkey );
 			}});
 		
 		pageContainer = new Composite( mainComposite, SWT.NONE);
@@ -163,6 +166,27 @@ public class Gui implements IG2gui, Listener {
 		layoutCoolBar(coolbar);				
 
 	}
+	
+	/**
+	 * Creates a Transparent imageobject with a given .png|.gif Image-Object
+	 * @param src the non-transparent image we want to process
+	 * @param control where is our image laid in, to check for the background-color
+	 * @return
+	 */
+	public Image createTransparentImage( Image src, Control control ){
+		int width = src.getBounds().width;
+		int height = src.getBounds().height;
+		
+		Image result = new Image( control.getDisplay(),new Rectangle(0,0,width,height ) );		
+		GC gc = new GC( result );
+				gc.setBackground(control.getBackground( ));
+				gc.fillRectangle( 0, 0, width, height );							
+				gc.drawImage( src, 0, 0 );			
+				gc.dispose();		
+		return result;
+			
+	}
+	
 	 private CoolBar createCoolBar(Composite parent) {
 		GridData gridData;
 		
@@ -184,6 +208,7 @@ public class Gui implements IG2gui, Listener {
 		this.mainTools = new ToolBar(coolBar,SWT.FLAT);			
 			mainCoolItem = items [0];
 			mainCoolItem.setControl (mainTools);
+			
 			
 		this.miscTools = new ToolBar(coolBar,SWT.FLAT);
 			miscCoolItem = items [1];
@@ -280,6 +305,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.15  2003/07/01 18:09:51  dek
+transparent ToolItems
+
 Revision 1.14  2003/07/01 14:06:06  dek
 now takes all Buttons in account for calculating height for CoolBar
 
