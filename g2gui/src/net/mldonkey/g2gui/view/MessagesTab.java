@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.20 2003/08/29 19:30:50 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.21 2003/08/29 19:33:24 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
 
@@ -200,6 +200,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 		cTabFolder.setSelectionBackground(new Color[]{display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 											cTabFolder.getBackground() },
 							 			 	new int[] {75});
+		cTabFolder.setSelectionForeground(cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
 		
 		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
 		public void itemClosed( CTabFolderEvent event ) {
@@ -425,6 +426,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.21  2003/08/29 19:33:24  zet
+color
+
 Revision 1.20  2003/08/29 19:30:50  zet
 font colour
 
