@@ -11,7 +11,7 @@ import java.awt.Color;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Control;
-import org.holongate.eclipse.j2d.IPaintable;
+import net.mldonkey.g2gui.view.statistic.j2d.IPaintable;
 
 /**
  * @author achim

@@ -6,10 +6,12 @@
  */
 package net.mldonkey.g2gui.view.statistic;
 
+
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.holongate.eclipse.j2d.IPaintable;
-import org.holongate.eclipse.j2d.J2DCanvas;
+import net.mldonkey.g2gui.view.statistic.j2d.J2DCanvas;
+
+
 
 /**
  * @author achim
@@ -18,17 +20,17 @@ import org.holongate.eclipse.j2d.J2DCanvas;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class GraphCanvas extends J2DCanvas implements Runnable {
-	Composite parent;
 
-	public GraphCanvas(Composite parent_, IPaintable graphpainter) {
-		
-		super(parent_, graphpainter);
+	Composite parent;
+	
+	public GraphCanvas(Composite parent_, GraphPainter graphPainter)
+	 {
+	super(parent_,graphPainter);
 		parent = parent_;
-		//this.setSize(parent.getBounds().width, parent.getBounds().height);
-		
-		
-		
 	}
+
+
+
 
 	public void doRedrawStrategy(PaintEvent evt) {
 
