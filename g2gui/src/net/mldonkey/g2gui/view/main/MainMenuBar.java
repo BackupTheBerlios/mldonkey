@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.17 2003/10/15 18:24:44 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.18 2003/11/07 17:47:46 zet Exp $ 
  *
  */
 public class MainMenuBar {
@@ -132,7 +132,7 @@ public class MainMenuBar {
 		
 			// Tools>Preferences
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
-			menuItem.setImage( G2GuiResources.getImage( "preferences" ) );
+			menuItem.setImage( G2GuiResources.getImage( "PreferencesButtonSmall" ) );
 			menuItem.setText( "Preferences" );
 			menuItem.addListener( SWT.Selection, new Listener() {
 				public void handleEvent( Event event ) {	
@@ -217,6 +217,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.18  2003/11/07 17:47:46  zet
+remove duplicate pref images
+
 Revision 1.17  2003/10/15 18:24:44  zet
 icons
 
