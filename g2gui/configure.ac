@@ -3,6 +3,16 @@
 
 AC_PREREQ(2.57)
 AC_INIT(FULL-PACKAGE-NAME, VERSION, BUG-REPORT-ADDRESS)
+AC_ARG_ENABLE(batch,
+        AC_HELP_STRING([--enable-batch],
+		       [downloads nescessary files from Internet, if they are not found at the right place (default is disabled)]),
+		        [ac_cv_enable_batch=yes
+			AC_PATH_PROG([WGET],[wget])
+			   if test -z $ac_cv_path_WGET; then
+			   	AC_MSG_ERROR([**** Could not find wget needed for enable-batch! ****])
+			   fi
+			], 
+			ac_cv_enable_batch=no)
 
 # Checks for programs.
 
@@ -20,16 +30,59 @@ fi
 
 
 # Checks for libraries.
-# AC_CHECK_FILE(Datei_mit_Pfad,[Aktion_falls_gefunden],[Aktion_falls_nicht_gefunden])
+# define URLS for libs
+ac_lib_url="http://download.berlios.de/pub/mldonkey/g2gui-libs"
 
-AC_CHECK_FILE(jars/boot.jar,,[AC_MSG_ERROR([boot.jar not found])])
-AC_CHECK_FILE(jars/jface.jar,,[AC_MSG_ERROR([jface.jar not found ])])
-AC_CHECK_FILE(jars/regexp.jar,,[AC_MSG_ERROR([regexp.jar not found ])])
-AC_CHECK_FILE(jars/rss4j.jar,,[AC_MSG_ERROR([rss4j.jar not found])])
-AC_CHECK_FILE(jars/runtime.jar,,[AC_MSG_ERROR([runtime.jar not found])])
-AC_CHECK_FILE(jars/trove.jar,,[AC_MSG_ERROR([trove.jar not found])])
-AC_CHECK_FILE(jars/xercesImpl.jar,,[AC_MSG_ERROR([xercesImpl.jar not found])])
-AC_CHECK_FILE(jars/xmlParserAPIs.jar,, [AC_MSG_ERROR([xmlParserAPIs.jar not found])])
+#define function, that checks for jars, and downloads them if nescerssary:
+
+define([NEEDED_JAR_PRESENT],[
+	AC_CHECK_FILE(jars/$1,,	[
+		if test $ac_cv_enable_batch = yes; then
+			echo downloading $1
+			$ac_cv_path_WGET $ac_lib_url/$1 -Pjars
+		else 
+		AC_MSG_ERROR([$1 not found, use --enable-batch to auto-download])
+		fi
+	])
+])
+
+NEEDED_JAR_PRESENT([[boot.jar]])
+NEEDED_JAR_PRESENT([[jface.jar]])
+NEEDED_JAR_PRESENT([[gnu-regexp-1.1.4.jar]])
+NEEDED_JAR_PRESENT([[rss4j.jar]])
+NEEDED_JAR_PRESENT([[runtime.jar]])
+NEEDED_JAR_PRESENT([[trove.jar]])
+NEEDED_JAR_PRESENT([[xercesImpl.jar]])
+NEEDED_JAR_PRESENT([[xmlParserAPIs.jar]])
+
+#checks for swt:
+ac_system_type=`uname -s`
+define([SWT_FILE_PRESENT],[
+	AC_CHECK_FILE(swt/$1,, [
+		if test $ac_cv_enable_batch = yes; then
+			echo downloading $1
+			if test $ac_system_type = Linux; then
+				$ac_cv_path_WGET $ac_lib_url/swt-gtk/$1 -Pswt
+			else
+				AC_MSG_ERROR([You are not using Linux, auto-downloading of SWT-files only implemented for \
+								linux-gtk yet, contavt g2-gui-team for more information])
+			fi
+		else
+		AC_MSG_ERROR([$1 not found, use --enable-batch to auto-download])
+		fi
+	])
+])
+if test $ac_system_type = Linux; then
+	SWT_FILE_PRESENT([swt.jar])
+	SWT_FILE_PRESENT([swt-pi.jar])
+	SWT_FILE_PRESENT([libswt-gnome-gtk-2135.so])
+	SWT_FILE_PRESENT([libswt-gtk-2135.so])
+	SWT_FILE_PRESENT([libswt-pi-gtk-2135.so])
+else
+	AC_MSG_WARN([TODO: add chekcs for win32 and !=Linux])
+fi
+
+
 
 # Checks for header files.
 
