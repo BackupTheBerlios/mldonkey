@@ -22,8 +22,6 @@
  */
 package net.mldonkey.g2gui.view.search;
 
-import java.util.ResourceBundle;
-
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.Tag;
@@ -39,12 +37,11 @@ import org.eclipse.swt.graphics.Image;
  * ResultTableLabelProvider
  *
  * @author $user$
- * @version $Id: ResultTableLabelProvider.java,v 1.11 2003/08/17 23:13:42 zet Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.12 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
 	
-	private ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
 	private Color alreadyDownloadedColor = new Color(null, 41, 174, 57);
 	
 
@@ -101,15 +98,15 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 					if (tags != null) {					
 						Tag aTag = resultInfo.getTags()[ 0 ];
 						if ( aTag.getValue() > 400 )
-							return "" + bundle.getString( "RTLP_EXCELLENT" );
+							return "" + G2GuiResources.getString( "RTLP_EXCELLENT" );
 						else if ( aTag.getValue() > 100 )
-							return "" + bundle.getString( "RTLP_VERYHIGH" );
+							return "" + G2GuiResources.getString( "RTLP_VERYHIGH" );
 						else if ( aTag.getValue() > 25 )
-							return "" + bundle.getString( "RTLP_HIGH" );
+							return "" + G2GuiResources.getString( "RTLP_HIGH" );
 						else if ( aTag.getValue() > 10 )
-							return "" + bundle.getString( "RTLP_NORMAL" );
+							return "" + G2GuiResources.getString( "RTLP_NORMAL" );
 						else
-							return "" + bundle.getString( "RTLP_LOW" );
+							return "" + G2GuiResources.getString( "RTLP_LOW" );
 					}
 					else return "";
 					
@@ -170,6 +167,9 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.12  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.11  2003/08/17 23:13:42  zet
 centralize resources, move images
 

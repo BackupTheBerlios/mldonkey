@@ -24,7 +24,6 @@ package net.mldonkey.g2gui.view.statusline;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
@@ -56,12 +55,11 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.15 2003/08/17 23:13:42 zet Exp $ 
+ * @version $Id: NetworkItem.java,v 1.16 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class NetworkItem implements Observer {
 	private boolean connected;
-	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private CoreCommunication core;
 	private StatusLine statusline;
 	private Composite composite;
@@ -299,6 +297,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.16  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.15  2003/08/17 23:13:42  zet
 centralize resources, move images
 

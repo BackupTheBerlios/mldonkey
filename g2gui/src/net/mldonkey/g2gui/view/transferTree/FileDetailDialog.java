@@ -25,7 +25,6 @@ package net.mldonkey.g2gui.view.transferTree;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.MainTab;
@@ -60,7 +59,6 @@ public class FileDetailDialog implements Observer {
 	private Display desktop = MainTab.getShell().getDisplay();
 	private FileInfo fileInfo;
 	private ChunkCanvas chunkCanvas;
-	public static ResourceBundle res = ResourceBundle.getBundle("g2gui");
 	
 	private CLabel clFileName, clHash, clSize, clAge,
 				clSources, clChunks, clTransferred, clPercent,
@@ -98,7 +96,7 @@ public class FileDetailDialog implements Observer {
 		
 		// General
 		Group fileGeneral = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		fileGeneral.setText(res.getString("TT_DOWNLOAD_FD_FILE_INFO"));
+		fileGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_FILE_INFO"));
 		GridLayout generalGridLayout = new GridLayout();
 		generalGridLayout.numColumns = 4;
 		generalGridLayout.marginWidth = 5;
@@ -108,16 +106,16 @@ public class FileDetailDialog implements Observer {
 		
 		fileGeneral.setLayout(generalGridLayout);
 		
-		clFileName = createLine(fileGeneral, res.getString("TT_DOWNLOAD_FD_FILENAME"), true);
-		clHash = createLine(fileGeneral, res.getString("TT_DOWNLOAD_FD_HASH"), true);
-		clSize = createLine(fileGeneral, res.getString("TT_DOWNLOAD_FD_SIZE"), false);
-	 	clAge = createLine(fileGeneral, res.getString("TT_DOWNLOAD_FD_AGE"), false);
+		clFileName = createLine(fileGeneral, G2GuiResources.getString("TT_DOWNLOAD_FD_FILENAME"), true);
+		clHash = createLine(fileGeneral, G2GuiResources.getString("TT_DOWNLOAD_FD_HASH"), true);
+		clSize = createLine(fileGeneral, G2GuiResources.getString("TT_DOWNLOAD_FD_SIZE"), false);
+	 	clAge = createLine(fileGeneral, G2GuiResources.getString("TT_DOWNLOAD_FD_AGE"), false);
 	
 		fileGeneral.setLayoutData( new GridData(GridData.FILL_HORIZONTAL ) );
 
 		// Transfer		
 		Group fileTransfer = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		fileTransfer.setText(res.getString("TT_DOWNLOAD_FD_TRANSFER_INFO"));
+		fileTransfer.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_TRANSFER_INFO"));
 		GridLayout transferGridLayout = new GridLayout();
 		transferGridLayout.numColumns = 4;
 		transferGridLayout.marginWidth = 5;
@@ -127,20 +125,20 @@ public class FileDetailDialog implements Observer {
 	
 		fileTransfer.setLayout(transferGridLayout);
  
-		clSources = createLine(fileTransfer, res.getString("TT_DOWNLOAD_FD_SOURCES"), false);
-		clChunks = createLine(fileTransfer, res.getString("TT_DOWNLOAD_FD_CHUNKS"), false);
-		clTransferred = createLine(fileTransfer, res.getString("TT_DOWNLOAD_FD_TRANSFERRED"), false);
-		clPercent = createLine(fileTransfer, res.getString("TT_DOWNLOAD_FD_PERCENT"), false);
-		clLast = createLine(fileTransfer, res.getString("TT_DOWNLOAD_FD_LAST"), false);
-		clPriority = createLine(fileTransfer, res.getString("TT_DOWNLOAD_FD_PRIORITY"), false);
-		clRate = createLine(fileTransfer, res.getString("TT_DOWNLOAD_FD_RATE"), false);
-		clETA = createLine(fileTransfer, res.getString("TT_DOWNLOAD_FD_ETA"), false);
+		clSources = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_SOURCES"), false);
+		clChunks = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS"), false);
+		clTransferred = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_TRANSFERRED"), false);
+		clPercent = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_PERCENT"), false);
+		clLast = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_LAST"), false);
+		clPriority = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_PRIORITY"), false);
+		clRate = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_RATE"), false);
+		clETA = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_ETA"), false);
 		
 		fileTransfer.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
 		
 		// Chunk	
 		Group chunkGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		chunkGroup.setText(res.getString("TT_DOWNLOAD_FD_CHUNKS_INFO"));
+		chunkGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS_INFO"));
 		GridLayout chunkGridLayout = new GridLayout();
 		chunkGridLayout.numColumns = 1;
 		chunkGridLayout.marginWidth = 5;
@@ -156,7 +154,7 @@ public class FileDetailDialog implements Observer {
 		
 		// Rename
 		Group renameGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		renameGroup.setText(res.getString("TT_DOWNLOAD_FD_ALTERNATE_FILENAMES"));
+		renameGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_ALTERNATE_FILENAMES"));
 		
 		GridLayout renameGridLayout = new GridLayout();
 		renameGridLayout.numColumns = 1;
@@ -200,7 +198,7 @@ public class FileDetailDialog implements Observer {
 		renameText.setLayoutData(data);
 		
 		Button renameButton = new Button(rename, SWT.NONE);
-		renameButton.setText(res.getString("TT_DOWNLOAD_FD_RENAME_BUTTON"));
+		renameButton.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_RENAME_BUTTON"));
 		
 		renameText.addKeyListener( new KeyAdapter() {
 			public void keyPressed( KeyEvent e ) {

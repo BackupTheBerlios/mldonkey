@@ -37,6 +37,7 @@ import net.mldonkey.g2gui.view.friends.TableLabelProvider;
 import net.mldonkey.g2gui.view.friends.TableMenuListener;
 import net.mldonkey.g2gui.view.friends.TableSorter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TableViewer;
@@ -85,8 +86,8 @@ public class MessagesTab extends GuiTab {
 		this.core = gui.getCore();
 		
 		createButton("MessagesButton", 
-			bundle.getString("TT_MessagesButton"),
-			bundle.getString("TT_MessagesButtonToolTip"));
+			G2GuiResources.getString("TT_MessagesButton"),
+			G2GuiResources.getString("TT_MessagesButtonToolTip"));
 		
 		core.getClientInfoIntMap().addObserver(this);
 		createContents(this.subContent);
@@ -394,6 +395,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.4  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.3  2003/08/17 10:11:03  dek
 double-click on friend opens window for friend
 

@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.search.AlbumSearch;
 import net.mldonkey.g2gui.view.search.Search;
 import net.mldonkey.g2gui.view.search.SearchResult;
@@ -48,7 +49,7 @@ import org.eclipse.swt.widgets.TabItem;
  * SearchTab
  *
  * @author $user$
- * @version $Id: SearchTab.java,v 1.10 2003/08/10 10:27:38 lemmstercvs01 Exp $ 
+ * @version $Id: SearchTab.java,v 1.11 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -69,8 +70,8 @@ public class SearchTab extends GuiTab {
 		this.core = gui.getCore();
 		/* Set our name on the coolbar */
 		createButton( "SearchButton", 
-							bundle.getString( "TT_SearchButton" ),
-							bundle.getString( "TT_SearchButtonToolTip" ) );
+							G2GuiResources.getString( "TT_SearchButton" ),
+							G2GuiResources.getString( "TT_SearchButtonToolTip" ) );
 		/* create the tab content */
 		this.createContents( this.subContent );
 	}
@@ -207,6 +208,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.11  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.10  2003/08/10 10:27:38  lemmstercvs01
 bugfix and new image on table create
 

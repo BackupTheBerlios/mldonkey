@@ -23,7 +23,6 @@
 package net.mldonkey.g2gui.view;
 
 import java.util.Observable;
-import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
@@ -31,6 +30,7 @@ import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.server.TableContentProvider;
 import net.mldonkey.g2gui.view.server.TableLabelProvider;
 import net.mldonkey.g2gui.view.server.TableMenuListener;
@@ -60,12 +60,11 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * ServerTab
  *
- * @author $Author: lemmstercvs01 $
- * @version $Id: ServerTab.java,v 1.9 2003/08/11 19:25:04 lemmstercvs01 Exp $ 
+ * @author $Author: zet $
+ * @version $Id: ServerTab.java,v 1.10 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
-	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private boolean ascending = false;;
 	private TableColumn tableColumn;
 	private Combo combo;
@@ -82,16 +81,16 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	/* if you modify this, change the LayoutProvider and tableWidth */
 	private String[] tableColumns =
 	{ 
-		res.getString( "SVT_NETWORK" ),
-		res.getString( "SVT_NAME" ),
-		res.getString( "SVT_DESC" ),
-		res.getString( "SVT_ADDRESS" ),
-		res.getString( "SVT_PORT" ),
-		res.getString( "SVT_SERVERSCORE" ),
-		res.getString( "SVT_USERS" ),
-		res.getString( "SVT_FILES" ),
-		res.getString( "SVT_STATE" ),
-		res.getString( "SVT_FAVORITES" )
+		G2GuiResources.getString( "SVT_NETWORK" ),
+		G2GuiResources.getString( "SVT_NAME" ),
+		G2GuiResources.getString( "SVT_DESC" ),
+		G2GuiResources.getString( "SVT_ADDRESS" ),
+		G2GuiResources.getString( "SVT_PORT" ),
+		G2GuiResources.getString( "SVT_SERVERSCORE" ),
+		G2GuiResources.getString( "SVT_USERS" ),
+		G2GuiResources.getString( "SVT_FILES" ),
+		G2GuiResources.getString( "SVT_STATE" ),
+		G2GuiResources.getString( "SVT_FAVORITES" )
 	};
 	/* 0 sets the tablewidth dynamcliy */
 	private int[] tableWidth =
@@ -115,15 +114,15 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		if ( this.core.getProtoToUse() <= 16 ) {
 			this.tableColumns = new String[]
 			{
-				res.getString( "SVT_NETWORK" ),
-				res.getString( "SVT_NAME" ),
-				res.getString( "SVT_DESC" ),
-				res.getString( "SVT_ADDRESS" ),
-				res.getString( "SVT_PORT" ),
-				res.getString( "SVT_SERVERSCORE" ),
-				res.getString( "SVT_USERS" ),
-				res.getString( "SVT_FILES" ),
-				res.getString( "SVT_STATE" ),
+				G2GuiResources.getString( "SVT_NETWORK" ),
+				G2GuiResources.getString( "SVT_NAME" ),
+				G2GuiResources.getString( "SVT_DESC" ),
+				G2GuiResources.getString( "SVT_ADDRESS" ),
+				G2GuiResources.getString( "SVT_PORT" ),
+				G2GuiResources.getString( "SVT_SERVERSCORE" ),
+				G2GuiResources.getString( "SVT_USERS" ),
+				G2GuiResources.getString( "SVT_FILES" ),
+				G2GuiResources.getString( "SVT_STATE" ),
 			};	
 			this.tableWidth = new int[]
 			{
@@ -216,7 +215,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		int itemCount = table.getTable().getItemCount();
 		setRightLabel("Total: " + itemCount);
 		/* dont update the statusline, still null */
-		this.statusText = res.getString( "SVT_SERVERS" ) + itemCount;
+		this.statusText = G2GuiResources.getString( "SVT_SERVERS" ) + itemCount;
 	}
 
 	/**
@@ -304,7 +303,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * Sets the statusline to the current value
 	 */
 	private void setStatusLine() {
-		this.statusText = res.getString( "SVT_SERVERS" ) + servers.getConnected();
+		this.statusText = G2GuiResources.getString( "SVT_SERVERS" ) + servers.getConnected();
 		this.mainWindow.statusline.update( this.statusText );
 		this.mainWindow.statusline.updateToolTip( "" );
 	}
@@ -361,6 +360,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.10  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.9  2003/08/11 19:25:04  lemmstercvs01
 bugfix at CleanTable
 

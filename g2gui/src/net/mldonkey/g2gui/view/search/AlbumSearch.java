@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.search;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -34,7 +35,7 @@ import org.eclipse.swt.widgets.TabFolder;
  * AlbumSearch
  *
  * @author $user$
- * @version $Id: AlbumSearch.java,v 1.3 2003/08/11 19:03:53 lemmstercvs01 Exp $ 
+ * @version $Id: AlbumSearch.java,v 1.4 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class AlbumSearch extends Search {
@@ -60,7 +61,7 @@ public class AlbumSearch extends Search {
 	 */
 	public Control createTabFolderPage( TabFolder tabFolder ) {
 		// create a invisible networkbox to avoid a npe in update(Observable o, Object arg);
-		this.createNetworkBox( new Group( tabFolder, SWT.NONE ), bundle.getString( "SS_NETWORK" ) );
+		this.createNetworkBox( new Group( tabFolder, SWT.NONE ), G2GuiResources.getString( "SS_NETWORK" ) );
 		return null;
 	}
 
@@ -73,6 +74,9 @@ public class AlbumSearch extends Search {
 
 /*
 $Log: AlbumSearch.java,v $
+Revision 1.4  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.3  2003/08/11 19:03:53  lemmstercvs01
 update networkcombo when a networkinfo status changes
 

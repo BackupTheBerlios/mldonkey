@@ -26,7 +26,6 @@ package net.mldonkey.g2gui.view.search;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -81,7 +80,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.19 2003/08/17 23:13:42 zet Exp $ 
+ * @version $Id: SearchResult.java,v 1.20 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 //TODO add image handle, fake search, real links depending on network								   
@@ -101,15 +100,13 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	
 	private int count = 0;
 	
-	private static ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
-
 	/* if you modify this, change the LayoutProvider and tableWidth */
-	private String[] tableColumns = { bundle.getString( "SR_NETWORK" ), 
-									   bundle.getString( "SR_NAME" ),
-									   bundle.getString( "SR_SIZE" ),
-									   bundle.getString( "SR_FORMAT" ),
-									   bundle.getString( "SR_MEDIA" ),
-									   bundle.getString( "SR_AVAIL" ), };
+	private String[] tableColumns = { G2GuiResources.getString( "SR_NETWORK" ), 
+									   G2GuiResources.getString( "SR_NAME" ),
+									   G2GuiResources.getString( "SR_SIZE" ),
+									   G2GuiResources.getString( "SR_FORMAT" ),
+									   G2GuiResources.getString( "SR_MEDIA" ),
+									   G2GuiResources.getString( "SR_AVAIL" ), };
 	/* 0 sets the tablewidth dynamcliy */
 	private int[] tableWidth = { 45, 0, 65, 45, 50, 45 };
 		
@@ -200,13 +197,13 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		/* first we need a CTabFolder item for the search result */		
 		cTabItem = new CTabItem( cTabFolder, SWT.FLAT );
 		cTabItem.setText( searchString );
-		cTabItem.setToolTipText( bundle.getString( "SR_SEARCHINGFOR" ) + searchString );
+		cTabItem.setToolTipText( G2GuiResources.getString( "SR_SEARCHINGFOR" ) + searchString );
 		cTabItem.setImage( G2GuiResources.getImage("SearchSmall") );
 		cTabItem.setData( this );
 
 		/* for the search delay, just draw a label */ 
 		label = new Label( cTabFolder, SWT.NONE );
-		label.setText( bundle.getString( "SR_SEARCHING" ) );
+		label.setText( G2GuiResources.getString( "SR_SEARCHING" ) );
 		cTabItem.setControl( label );
 		
 		/* sets the tabitem on focus */
@@ -318,7 +315,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 		/* Download */
 		dlItem = new MenuItem( menu, SWT.PUSH );
-		dlItem.setText( bundle.getString( "ST_DOWNLOAD" ) );
+		dlItem.setText( G2GuiResources.getString( "ST_DOWNLOAD" ) );
 		//make it the default-item (bold):
 		menu.setDefaultItem( dlItem );
 		
@@ -332,7 +329,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		
 		/* copy filename */
 		cpFileItem = new MenuItem( menu, SWT.PUSH );
-		cpFileItem.setText( bundle.getString( "ST_COPYNAME" ) );
+		cpFileItem.setText( G2GuiResources.getString( "ST_COPYNAME" ) );
 		cpFileItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
 				TableItem[] currentItems = table.getTable().getSelection();
@@ -345,10 +342,10 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 				
 		/* Copy link as */
 		cpLinkItem = new MenuItem( menu, SWT.CASCADE );
-		cpLinkItem.setText( bundle.getString( "ST_COPYLINK" ) );
+		cpLinkItem.setText( G2GuiResources.getString( "ST_COPYLINK" ) );
 		Menu copy = new Menu( menu );
 			MenuItem copyItem = new MenuItem( copy, SWT.PUSH );
-			copyItem.setText( bundle.getString( "ST_ASPLAIN" ) );
+			copyItem.setText( G2GuiResources.getString( "ST_ASPLAIN" ) );
 			copyItem.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent e ) {
 					TableItem[] currentItems = table.getTable().getSelection();
@@ -359,7 +356,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 				}
 			} );
 			copyItem = new MenuItem( copy, SWT.PUSH );
-			copyItem.setText( bundle.getString( "ST_ASHTML" ) );
+			copyItem.setText( G2GuiResources.getString( "ST_ASHTML" ) );
 			copyItem.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent e ) {	
 					TableItem[] currentItems = table.getTable().getSelection();
@@ -377,17 +374,17 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 		/* Webservices */
 		webItem = new MenuItem( menu, SWT.CASCADE );
-		webItem.setText( bundle.getString( "ST_WEBSERVICES" ) );
+		webItem.setText( G2GuiResources.getString( "ST_WEBSERVICES" ) );
 		Menu web = new Menu( menu );
 			MenuItem webSItem = new MenuItem( web, SWT.PUSH );
-			webSItem.setText( bundle.getString( "ST_WEBSERVICE1" ) );
+			webSItem.setText( G2GuiResources.getString( "ST_WEBSERVICE1" ) );
 			webSItem.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent e ) {
 					//TODO add fake search
 				}
 			} );
 			webSItem = new MenuItem( web, SWT.PUSH );
-			webSItem.setText( bundle.getString( "ST_WEBSERVICE1" ) );
+			webSItem.setText( G2GuiResources.getString( "ST_WEBSERVICE1" ) );
 			webSItem.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent e ) {
 					//TODO add fake search
@@ -399,7 +396,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 		/* remove this item */
 		rmItem = new MenuItem( menu, SWT.PUSH );
-		rmItem.setText( bundle.getString( "ST_REMOVE" ) );
+		rmItem.setText( G2GuiResources.getString( "ST_REMOVE" ) );
 		rmItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
 				table.getTable().remove( table.getTable().getSelectionIndices() );
@@ -408,7 +405,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 		/* close this search */
 		closeItem = new MenuItem( menu, SWT.PUSH );
-		closeItem.setText( bundle.getString( "ST_CLOSE" ) );
+		closeItem.setText( G2GuiResources.getString( "ST_CLOSE" ) );
 		closeItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
 				cTabItem.dispose();
@@ -606,18 +603,18 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 						String imageText = aResult.getNames()[ 0 ];
 						String aString = "";
 						if ( !aResult.getFormat().equals( "" ) )
-							aString += bundle.getString( "ST_TT_FORMAT" )
+							aString += G2GuiResources.getString( "ST_TT_FORMAT" )
 										+ aResult.getFormat() + "\n";
-							aString += bundle.getString( "ST_TT_LINK" )
+							aString += G2GuiResources.getString( "ST_TT_LINK" )
 										+ aResult.getLink() + "\n";
-							aString += bundle.getString( "ST_TT_NETWORK" )
+							aString += G2GuiResources.getString( "ST_TT_NETWORK" )
 										+ aResult.getNetwork().getNetworkName() + "\n";
-							aString += bundle.getString( "ST_TT_SIZE" )
+							aString += G2GuiResources.getString( "ST_TT_SIZE" )
 										+ aResult.getStringSize() + "\n";
-							aString += bundle.getString( "ST_TT_SOURCES" )
+							aString += G2GuiResources.getString( "ST_TT_SOURCES" )
 										+ aResult.getTags()[ 0 ].getValue();
 						if ( !aResult.getHistory() )
-							aString = aString + "\n" + bundle.getString( "ST_TT_DOWNLOADED" );
+							aString = aString + "\n" + G2GuiResources.getString( "ST_TT_DOWNLOADED" );
 						
 					
 					// set the text/image for the tooltip 
@@ -665,6 +662,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.20  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.19  2003/08/17 23:13:42  zet
 centralize resources, move images
 

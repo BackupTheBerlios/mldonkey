@@ -31,14 +31,13 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
-
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -68,12 +67,11 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * TableMenuListener
  *
- * @author $Author: lemmstercvs01 $
- * @version $Id: TableMenuListener.java,v 1.10 2003/08/11 19:25:04 lemmstercvs01 Exp $ 
+ * @author $Author: zet $
+ * @version $Id: TableMenuListener.java,v 1.11 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
-	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private ServerInfo selectedServer;
 	private List selectedServers;
 	private ServerInfoIntMap serverInfoMap;
@@ -130,13 +128,13 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			menuManager.add( new ConnectAction() );
 
 		/* add server/servers */
-		MenuManager addManager = new MenuManager( res.getString( "TML_ADD_SERVER_BY" ) );
+		MenuManager addManager = new MenuManager( G2GuiResources.getString( "TML_ADD_SERVER_BY" ) );
 		addManager.add( new AddServerAction() );
 		addManager.add( new AddServersAction() );
 		menuManager.add( addManager );
 
 		/* remove server */
-		MenuManager removeManager = new MenuManager( res.getString( "TML_REMOVE_SERVER_BY" ) );
+		MenuManager removeManager = new MenuManager( G2GuiResources.getString( "TML_REMOVE_SERVER_BY" ) );
 		removeManager.add( new RemoveServerAction() );
 		removeManager.add( new RemoveServersAction() );
 		menuManager.add( removeManager );
@@ -152,7 +150,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			menuManager.add( new FavoritesAction() );			
 		
 		/* columns toogle */
-		MenuManager columnsSubMenu = new MenuManager( res.getString( "TML_COLUMN" ) );
+		MenuManager columnsSubMenu = new MenuManager( G2GuiResources.getString( "TML_COLUMN" ) );
 		Table table = tableViewer.getTable();
 		for ( int i = 0; i < table.getColumnCount(); i++ ) {
 			ToggleColumnsAction tCA = new ToggleColumnsAction( i );
@@ -162,7 +160,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		menuManager.add( columnsSubMenu );
 			
 		// filter submenu (select network to display)			
-		MenuManager filterSubMenu = new MenuManager( res.getString( "TML_FILTER" ) );
+		MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TML_FILTER" ) );
 		AllFiltersAction aFA = new AllFiltersAction();
 		if ( tableViewer.getFilters().length == 0 ) aFA.setChecked( true );
 		filterSubMenu.add( aFA );
@@ -235,7 +233,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class DisconnectAction extends Action {
 		public DisconnectAction() {
 			super();
-			setText( res.getString( "TML_DISCONNECT" ) );
+			setText( G2GuiResources.getString( "TML_DISCONNECT" ) );
 		}
 		public void run() {
 			for ( int i = 0; i < selectedServers.size(); i++ ) {
@@ -248,7 +246,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class ConnectAction extends Action {
 		public ConnectAction() {
 			super();
-			setText( res.getString( "TML_CONNECT" ) );
+			setText( G2GuiResources.getString( "TML_CONNECT" ) );
 		}
 		public void run() {
 			for ( int i = 0; i < selectedServers.size(); i++ ) {
@@ -261,7 +259,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class ConnectMoreAction extends Action {
 		public ConnectMoreAction() {
 			super();
-			setText( res.getString( "TML_CONNECT_MORE" ) );
+			setText( G2GuiResources.getString( "TML_CONNECT_MORE" ) );
 		}
 		public void run() {
 			serverInfoMap.connectMore();
@@ -272,14 +270,14 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		private MyInputDialog dialog;
 		public AddServerAction() {
 			super();
-			setText( res.getString( "TML_ADD_SERVER" ) );
+			setText( G2GuiResources.getString( "TML_ADD_SERVER" ) );
 		}
 		public void run() {
 			dialog = new MyInputDialog( tableViewer.getTable().getShell(),
-										res.getString( "TML_ADD_SERVER" ),
-										res.getString( "TML_HOSTNAME_PORT" ),
-										res.getString( "TML_NETWORK" ),
-										res.getString( "TML_FOOBAR2" ),
+										G2GuiResources.getString( "TML_ADD_SERVER" ),
+										G2GuiResources.getString( "TML_HOSTNAME_PORT" ),
+										G2GuiResources.getString( "TML_NETWORK" ),
+										G2GuiResources.getString( "TML_FOOBAR2" ),
 										new MyInputValidator() );
 			dialog.open();
 			if ( dialog.getReturnCode() == IDialogConstants.OK_ID ) {
@@ -293,8 +291,8 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 				catch ( UnknownHostException e ) {
 					MessageBox box = new MessageBox( tableViewer.getTable().getShell(),
 														 SWT.ICON_WARNING | SWT.OK );
-					box.setText( res.getString( "TML_LOOKUP_ERROR" ) );
-					box.setMessage( res.getString( "TML_CANNOT_RESOLVE" ) );
+					box.setText( G2GuiResources.getString( "TML_LOOKUP_ERROR" ) );
+					box.setMessage( G2GuiResources.getString( "TML_CANNOT_RESOLVE" ) );
 					box.open();
 				}
 				core.getServerInfoIntMap().add( dialog.getCombo(), inetAddress, new Short( strings[ 1 ] ).shortValue() );							
@@ -340,7 +338,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 				if ( regex.isMatch( newText ) )				
 					return null;
 				else
-					return res.getString( "TML_INVALID_INPUT" );
+					return G2GuiResources.getString( "TML_INVALID_INPUT" );
 			}
 			
 		}
@@ -350,13 +348,13 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		private InputDialog dialog;
 		public AddServersAction() {
 			super();
-			setText( res.getString( "TML_ADD_SERVERS" ) );
+			setText( G2GuiResources.getString( "TML_ADD_SERVERS" ) );
 		}
 		public void run() {
 			dialog = new InputDialog( tableViewer.getTable().getShell(),
-										res.getString( "TML_ADD_SERVERS" ),
-										res.getString( "TML_LINK_TO_LIST" ),
-										res.getString( "TML_FOOBAR" ),
+										G2GuiResources.getString( "TML_ADD_SERVERS" ),
+										G2GuiResources.getString( "TML_LINK_TO_LIST" ),
+										G2GuiResources.getString( "TML_FOOBAR" ),
 										new MyInputValidator() );
 			dialog.open();
 			String result = dialog.getValue();
@@ -378,7 +376,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 				if ( regex.isMatch( newText ) )
 					return null;
 				else
-					return res.getString( "TML_INVALID_INPUT" );
+					return G2GuiResources.getString( "TML_INVALID_INPUT" );
 			}
 		}
 	}
@@ -386,7 +384,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class RemoveServerAction extends Action {
 		public RemoveServerAction() {
 			super();
-			setText( res.getString( "TML_REMOVE_SERVER" ) );
+			setText( G2GuiResources.getString( "TML_REMOVE_SERVER" ) );
 		}
 		public void run() {
 			for ( int i = 0; i < selectedServers.size(); i++ ) {
@@ -399,7 +397,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class RemoveServersAction extends Action {
 		public RemoveServersAction() {
 			super();
-			setText( res.getString( "TML_REMOVE_SERVERS" ) );
+			setText( G2GuiResources.getString( "TML_REMOVE_SERVERS" ) );
 		}
 		public void run() {
 			serverInfoMap.cleanOld();
@@ -409,7 +407,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class BlackListAction extends Action {
 		public BlackListAction() {
 			super();
-			setText( res.getString( "TML_ADD_TO_BLACKLIST" ) );
+			setText( G2GuiResources.getString( "TML_ADD_TO_BLACKLIST" ) );
 		}
 		public void run() {
 			for ( int i = 0; i < selectedServers.size(); i++ ) {
@@ -445,7 +443,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class AllFiltersAction extends Action {
 		public AllFiltersAction() {
 			super();
-			setText( res.getString( "TML_NO_FILTERS" ) );
+			setText( G2GuiResources.getString( "TML_NO_FILTERS" ) );
 		}
 		public void run() {
 			ViewerFilter[] viewerFilters = tableViewer.getFilters();
@@ -516,7 +514,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class FavoritesAction extends Action {
 		public FavoritesAction() {
 			super();
-			setText( res.getString( "TML_FAVORITES" ) );
+			setText( G2GuiResources.getString( "TML_FAVORITES" ) );
 		}
 		public void run() {
 			for ( int i = 0; i < selectedServers.size(); i++ ) {
@@ -669,6 +667,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.11  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.10  2003/08/11 19:25:04  lemmstercvs01
 bugfix at CleanTable
 

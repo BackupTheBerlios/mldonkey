@@ -22,8 +22,6 @@
  */
 package net.mldonkey.g2gui.view.server;
 
-import java.util.ResourceBundle;
-
 import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
@@ -39,11 +37,10 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  * @author $Author: zet $
- * @version $Id: TableLabelProvider.java,v 1.8 2003/08/17 23:13:42 zet Exp $ 
+ * @version $Id: TableLabelProvider.java,v 1.9 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
-	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private Color connectColor = new Color( null, 41, 174, 57 );
 
 	/* (non-Javadoc)
@@ -102,9 +99,9 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 
 		else if ( columnIndex == 9 ) {
 			if ( server.isFavorite() ) 
-				return res.getString( "TLP_TRUE" );
+				return G2GuiResources.getString( "TLP_TRUE" );
 			else 
-				return res.getString( "TLP_FALSE" );		
+				return G2GuiResources.getString( "TLP_FALSE" );		
 		}
 		return "";
 	}
@@ -156,6 +153,9 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 
 /*
 $Log: TableLabelProvider.java,v $
+Revision 1.9  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.8  2003/08/17 23:13:42  zet
 centralize resources, move images
 

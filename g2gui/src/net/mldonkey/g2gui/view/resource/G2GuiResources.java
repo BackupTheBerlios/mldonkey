@@ -22,6 +22,9 @@
  */
 package net.mldonkey.g2gui.view.resource;
 
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 import net.mldonkey.g2gui.model.NetworkInfo.Enum;
 
 import org.eclipse.jface.resource.ImageRegistry;
@@ -36,6 +39,7 @@ import org.eclipse.swt.graphics.Image;
 public class G2GuiResources {
 	
 	private static ImageRegistry imageRegistry = null;
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
 	
 	// prevent instantiation
 	private G2GuiResources() {
@@ -49,7 +53,13 @@ public class G2GuiResources {
 			imageRegistry = new ImageRegistry();
 		return imageRegistry;
 	}
-	
+	public static String getString(String key) {
+		try {
+			return bundle.getString(key);
+		} catch (MissingResourceException e) {
+			return key;
+		}
+	}
 	// helper method
 	public static Image getNetworkImage(Enum networkType) {
 			if (networkType == Enum.DONKEY)
@@ -71,6 +81,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.2  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.1  2003/08/17 23:13:41  zet
 centralize resources, move images
 

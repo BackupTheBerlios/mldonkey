@@ -23,7 +23,6 @@
 package net.mldonkey.g2gui.view;
 
 import java.util.Observer;
-import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -46,7 +45,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.21 2003/08/17 23:13:42 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.22 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -75,8 +74,6 @@ public abstract class GuiTab implements Listener, Observer {
 	
 	protected Composite pageHeaderPlaceHolder, pageHeader, subContent;
 	protected boolean headerBar;
-	
-	protected ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
 	
 	private Font font = new Font(null, "Helvetica", 12, SWT.BOLD); // fix later
 	protected CLabel leftLabel, rightLabel;
@@ -304,6 +301,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.22  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.21  2003/08/17 23:13:42  zet
 centralize resources, move images
 

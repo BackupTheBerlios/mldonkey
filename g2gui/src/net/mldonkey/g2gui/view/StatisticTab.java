@@ -24,16 +24,19 @@
 package net.mldonkey.g2gui.view;
 
 import java.util.Observable;
+
 import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.graphics.Color;
 
 // rz,
 // TODO status-field
@@ -65,8 +68,8 @@ public class StatisticTab extends GuiTab {
 		super( gui );
 			
 		createButton( "StatisticsButton", 
-					bundle.getString( "TT_StatisticsButton" ),
-					bundle.getString( "TT_StatisticsButtonToolTip" ) );
+					G2GuiResources.getString( "TT_StatisticsButton" ),
+					G2GuiResources.getString( "TT_StatisticsButtonToolTip" ) );
 				
 		createContents( this.subContent );
 		gui.getCore().getClientStats().addObserver( this );
@@ -127,6 +130,9 @@ public class StatisticTab extends GuiTab {
 }
 /*
 $Log: StatisticTab.java,v $
+Revision 1.16  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.15  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 

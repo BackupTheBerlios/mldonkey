@@ -25,7 +25,6 @@ package net.mldonkey.g2gui.view;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -54,13 +53,12 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.12 2003/08/17 23:13:42 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.13 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class G2Gui {
 	private static Socket socket;
 	private static boolean notProcessingLink = true;
-	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private static Process p;
 	private static Thread mldonkey;
 	private static Object waiterObject;
@@ -153,16 +151,16 @@ public class G2Gui {
 		}
 		catch ( UnknownHostException e ) {
 			splashShell.dispose();
-			box.setText( res.getString( "G2_INVALID_ADDRESS") );
-			box.setMessage( res.getString( "G2_ILLEGAL_ADDRESS" ) );
+			box.setText( G2GuiResources.getString( "G2_INVALID_ADDRESS") );
+			box.setMessage( G2GuiResources.getString( "G2_ILLEGAL_ADDRESS" ) );
 			box.open();
 			myPrefs.open( shell, null );
 			relaunchSelf(args);
 		}
 		catch ( IOException e ) {
 			splashShell.dispose();
-			box.setText( res.getString( "G2_IOEXCEPTION") );
-			box.setMessage( res.getString( "G2_CORE_NOT_RUNNING" ) );
+			box.setText( G2GuiResources.getString( "G2_IOEXCEPTION") );
+			box.setMessage( G2GuiResources.getString( "G2_CORE_NOT_RUNNING" ) );
 			box.open();
 			myPrefs.open( shell, null );
 			relaunchSelf(args);
@@ -250,8 +248,8 @@ public class G2Gui {
 		splashShell.dispose();
 		/* raise a warning msg */
 		box = new MessageBox( shell, SWT.ICON_WARNING | SWT.OK );
-		box.setText( res.getString( "G2_LOGIN_INVALID" ) );
-		box.setMessage( res.getString( "G2_USER_PASS" ) );
+		box.setText( G2GuiResources.getString( "G2_LOGIN_INVALID" ) );
+		box.setMessage( G2GuiResources.getString( "G2_USER_PASS" ) );
 		box.open();
 		/* dont launch the gui but launch the password box */
 		myPrefs.open( shell, null );
@@ -288,6 +286,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.13  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.12  2003/08/17 23:13:42  zet
 centralize resources, move images
 

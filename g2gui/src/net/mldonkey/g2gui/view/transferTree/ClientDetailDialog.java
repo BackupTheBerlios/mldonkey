@@ -24,7 +24,6 @@ package net.mldonkey.g2gui.view.transferTree;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
@@ -58,7 +57,6 @@ public class ClientDetailDialog implements Observer {
 	private FileInfo fileInfo;
 	private ClientInfo clientInfo;
 	private ChunkCanvas chunkCanvas, chunkCanvas2;
-	public static ResourceBundle res = ResourceBundle.getBundle("g2gui");
 	private CLabel clName, clRating, clActivity, clKind, clNetwork;
 	
 	int leftColumn = 100;
@@ -96,7 +94,7 @@ public class ClientDetailDialog implements Observer {
 		
 		// General
 		Group clientGeneral = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		clientGeneral.setText(res.getString("TT_DOWNLOAD_CD_CLIENT_INFO"));
+		clientGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_INFO"));
 		GridLayout generalGridLayout = new GridLayout();
 		generalGridLayout.numColumns = 4;
 		generalGridLayout.marginWidth = 5;
@@ -106,17 +104,17 @@ public class ClientDetailDialog implements Observer {
 		
 		clientGeneral.setLayout(generalGridLayout);
 		
-		clName = createLine(clientGeneral, res.getString("TT_DOWNLOAD_CD_NAME"), true);
-		clNetwork = createLine(clientGeneral, res.getString("TT_DOWNLOAD_CD_NETWORK"), false);
-		clRating = createLine(clientGeneral, res.getString("TT_DOWNLOAD_CD_RATING"), false);
-		clActivity = createLine(clientGeneral, res.getString("TT_DOWNLOAD_CD_ACTIVITY"), false);
-		clKind = createLine(clientGeneral, res.getString("TT_DOWNLOAD_CD_KIND"), false);
+		clName = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NAME"), true);
+		clNetwork = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NETWORK"), false);
+		clRating = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_RATING"), false);
+		clActivity = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_ACTIVITY"), false);
+		clKind = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_KIND"), false);
 	
 		clientGeneral.setLayoutData( new GridData(GridData.FILL_HORIZONTAL ) );
 
 		// Chunk	
 		Group chunkGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		chunkGroup.setText(res.getString("TT_DOWNLOAD_CD_LOCAL_CHUNKS"));
+		chunkGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_LOCAL_CHUNKS"));
 		GridLayout chunkGridLayout = new GridLayout();
 		chunkGridLayout.numColumns = 1;
 		chunkGridLayout.marginWidth = 5;
@@ -132,7 +130,7 @@ public class ClientDetailDialog implements Observer {
 		
 		// Client Chunk	
 		Group chunkGroup2 = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		chunkGroup2.setText(res.getString("TT_DOWNLOAD_CD_CLIENT_CHUNKS"));
+		chunkGroup2.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_CHUNKS"));
 		GridLayout chunkGridLayout2 = new GridLayout();
 		chunkGridLayout2.numColumns = 1;
 		chunkGridLayout2.marginWidth = 5;

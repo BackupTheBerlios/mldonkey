@@ -24,14 +24,16 @@ package net.mldonkey.g2gui.view.search;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
@@ -39,14 +41,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 
 /**
  * Search
  *
  * @author $user$
- * @version $Id: Search.java,v 1.8 2003/08/11 19:03:53 lemmstercvs01 Exp $ 
+ * @version $Id: Search.java,v 1.9 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public abstract class Search implements Observer {
@@ -58,8 +58,6 @@ public abstract class Search implements Observer {
 	private Label label;
 	protected Text text;
 	protected Combo combo;
-	
-	protected ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
 
 	/**
 	 * 
@@ -144,9 +142,9 @@ public abstract class Search implements Observer {
 			}	
 		}
 		if ( combo.getItemCount() > 1 ) {
-			combo.add( bundle.getString( "S_ALL" ) );
-			combo.setData( bundle.getString( "S_ALL" ), null );
-			combo.select( combo.indexOf( bundle.getString( "S_ALL" ) ) );
+			combo.add( G2GuiResources.getString( "S_ALL" ) );
+			combo.setData( G2GuiResources.getString( "S_ALL" ), null );
+			combo.select( combo.indexOf( G2GuiResources.getString( "S_ALL" ) ) );
 			combo.setEnabled( true );
 		}
 		else {
@@ -172,15 +170,15 @@ public abstract class Search implements Observer {
 					combo.remove( network.getNetworkName() );
 				}
 				try {
-					combo.remove( bundle.getString( "S_ALL" ) );
+					combo.remove( G2GuiResources.getString( "S_ALL" ) );
 				}
 				catch ( IllegalArgumentException e ) { }
 				
 				
 				if ( combo.getItemCount() > 1 ) {
-					combo.add( bundle.getString( "S_ALL" ) );
-					combo.setData( bundle.getString( "S_ALL" ), null );
-					combo.select( combo.indexOf( bundle.getString( "S_ALL" ) ) );
+					combo.add( G2GuiResources.getString( "S_ALL" ) );
+					combo.setData( G2GuiResources.getString( "S_ALL" ), null );
+					combo.select( combo.indexOf( G2GuiResources.getString( "S_ALL" ) ) );
 					combo.setEnabled( true );
 				}
 				else {
@@ -194,6 +192,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.9  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.8  2003/08/11 19:03:53  lemmstercvs01
 update networkcombo when a networkinfo status changes
 

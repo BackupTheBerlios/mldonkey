@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -79,7 +78,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.39 2003/08/17 23:52:09 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.40 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -87,7 +86,6 @@ public class MainTab implements Listener, Observer, ShellListener {
 	private static Shell thisShell = null;
 	private static PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
 	private static ImageRegistry imageRegistry = new ImageRegistry();
-	private static ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
 	public static List miscToolButtons = new ArrayList();
 	public static List mainToolButtons = new ArrayList();
 	public static boolean toolbarSmallButtons = false;
@@ -437,8 +435,8 @@ public class MainTab implements Listener, Observer, ShellListener {
 	private void createMiscTools() {
 	
 		ToolButton prefButton = new ToolButton ( miscTools, SWT.NONE );
-		prefButton.setText(bundle.getString("TT_PreferencesButton"));
-		prefButton.setToolTipText(bundle.getString("TT_PreferencesButtonToolTip"));
+		prefButton.setText(G2GuiResources.getString("TT_PreferencesButton"));
+		prefButton.setToolTipText(G2GuiResources.getString("TT_PreferencesButtonToolTip"));
 		
 		Image bigImage = G2GuiResources.getImage("PreferencesButton");
 		Image smallImage = G2GuiResources.getImage("PreferencesButtonSmall");
@@ -710,6 +708,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.40  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.39  2003/08/17 23:52:09  zet
 minor
 

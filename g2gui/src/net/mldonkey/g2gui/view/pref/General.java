@@ -22,14 +22,18 @@
  */
 package net.mldonkey.g2gui.view.pref;
 
-import java.util.ResourceBundle;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
-import org.eclipse.jface.preference.*;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
+import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 
 
@@ -37,14 +41,13 @@ import org.eclipse.swt.widgets.*;
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.12 2003/07/06 15:38:56 dek Exp $ 
+ * @version $Id: General.java,v 1.13 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class General extends PreferencePage {	
 	private ExtendedBooleanFieldEditor autoCommitField;
 	private IntegerFieldEditor maxHardDownloadRateField;
 	private StringFieldEditor maxHardUploadRateField;
-	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private OptionsInfoMap options;
 	private String 	clientName,
 			maxHardUploadRate,
@@ -95,9 +98,9 @@ public class General extends PreferencePage {
 										 ).booleanValue();			
 		}
 		else {
-			clientName = res.getString( "OPTIONS_NOT_CONNECTED" );
-			maxHardUploadRate = res.getString( "OPTIONS_NOT_CONNECTED" );
-			maxHardDownloadRate = res.getString( "OPTIONS_NOT_CONNECTED" );
+			clientName = G2GuiResources.getString( "OPTIONS_NOT_CONNECTED" );
+			maxHardUploadRate = G2GuiResources.getString( "OPTIONS_NOT_CONNECTED" );
+			maxHardDownloadRate = G2GuiResources.getString( "OPTIONS_NOT_CONNECTED" );
 		}
 	}		
 
@@ -214,6 +217,9 @@ public class General extends PreferencePage {
 
 /*
 $Log: General.java,v $
+Revision 1.13  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.12  2003/07/06 15:38:56  dek
 worked changes in
 

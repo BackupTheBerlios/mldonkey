@@ -26,6 +26,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -41,7 +42,7 @@ import org.eclipse.swt.widgets.TabFolder;
  * SimpleSearch
  *
  * @author $user$
- * @version $Id: SimpleSearch.java,v 1.6 2003/08/11 19:03:53 lemmstercvs01 Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.7 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -63,7 +64,7 @@ public class SimpleSearch extends Search {
 	 * @see net.mldonkey.g2gui.view.search.Search#getTabName()
 	 */
 	public String getTabName() {
-		return bundle.getString( "SS_TITLE" );
+		return G2GuiResources.getString( "SS_TITLE" );
 	}
 
 	/* (non-Javadoc)
@@ -82,15 +83,15 @@ public class SimpleSearch extends Search {
 		group.setLayout( gridLayout );
 		group.setLayoutData( gridData );
 			
-			this.createInputBox( group, bundle.getString( "SS_STRING" ) );
-			this.createNetworkBox( group, bundle.getString( "SS_NETWORK" ) );
+			this.createInputBox( group, G2GuiResources.getString( "SS_STRING" ) );
+			this.createNetworkBox( group, G2GuiResources.getString( "SS_NETWORK" ) );
 			
 			/* media select */
 			gridData = new GridData();
 			gridData.horizontalSpan = 2;
 			all = new Button( group, SWT.RADIO );
 			all.setLayoutData( gridData );
-			all.setText( bundle.getString( "SS_ALL" ) );
+			all.setText( G2GuiResources.getString( "SS_ALL" ) );
 			/* we want a default selection */
 			all.setSelection( true );
 			all.addSelectionListener( new SelectionAdapter() {
@@ -103,7 +104,7 @@ public class SimpleSearch extends Search {
 			gridData.horizontalSpan = 2;
 			audio = new Button( group, SWT.RADIO );
 			audio.setLayoutData( gridData );
-			audio.setText( bundle.getString( "SS_AUDIO" ) );
+			audio.setText( G2GuiResources.getString( "SS_AUDIO" ) );
 			audio.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Audio";
@@ -114,7 +115,7 @@ public class SimpleSearch extends Search {
 			gridData.horizontalSpan = 2;
 			video = new Button( group, SWT.RADIO );
 			video.setLayoutData( gridData );
-			video.setText( bundle.getString( "SS_VIDEO" ) );
+			video.setText( G2GuiResources.getString( "SS_VIDEO" ) );
 			video.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Video";
@@ -125,7 +126,7 @@ public class SimpleSearch extends Search {
 			gridData.horizontalSpan = 2;
 			image = new Button( group, SWT.RADIO );
 			image.setLayoutData( gridData );
-			image.setText( bundle.getString( "SS_IMAGE" ) );
+			image.setText( G2GuiResources.getString( "SS_IMAGE" ) );
 			image.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Image";
@@ -136,7 +137,7 @@ public class SimpleSearch extends Search {
 			gridData.horizontalSpan = 2;
 			software = new Button( group, SWT.RADIO );
 			software.setLayoutData( gridData );
-			software.setText( bundle.getString( "SS_Software" ) );
+			software.setText( G2GuiResources.getString( "SS_Software" ) );
 			software.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Software";
@@ -146,7 +147,7 @@ public class SimpleSearch extends Search {
 			/* search button */
 			ok = new Button( group, SWT.PUSH );
 			ok.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-			ok.setText( bundle.getString( "SS_SEARCH" ) );
+			ok.setText( G2GuiResources.getString( "SS_SEARCH" ) );
 			ok.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					performSearch();
@@ -191,6 +192,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.7  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.6  2003/08/11 19:03:53  lemmstercvs01
 update networkcombo when a networkinfo status changes
 

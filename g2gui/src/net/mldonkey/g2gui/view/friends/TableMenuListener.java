@@ -22,11 +22,10 @@
  */
 package net.mldonkey.g2gui.view.friends;
 
-import java.util.ResourceBundle;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.view.MessagesTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -40,12 +39,11 @@ import org.eclipse.jface.viewers.TableViewer;
  * TableMenuListener
  *
  * @author $Author: zet $
- * @version $Id: TableMenuListener.java,v 1.1 2003/08/12 04:10:29 zet Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.2 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
-	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
-	
+
 	private TableContentProvider tableContentProvider;
 	private TableViewer tableViewer;
 	private CoreCommunication core;
@@ -95,7 +93,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class RemoveFriendAction extends Action {
 		public RemoveFriendAction() {
 			super();
-			setText( res.getString( "FR_MENU_REMOVE_FRIEND" ) );
+			setText( G2GuiResources.getString( "FR_MENU_REMOVE_FRIEND" ) );
 		}
 		public void run() {
 			ClientInfo.removeFriend(core, selectedClientInfo.getClientid());
@@ -105,7 +103,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class RemoveAllFriendsAction extends Action {
 		public RemoveAllFriendsAction() {
 			super();
-			setText( res.getString( "FR_MENU_REMOVE_ALL_FRIENDS" ) );
+			setText( G2GuiResources.getString( "FR_MENU_REMOVE_ALL_FRIENDS" ) );
 		}
 		public void run() {
 			ClientInfo.removeAllFriends(core);
@@ -115,7 +113,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class SendMessageAction extends Action {
 			public SendMessageAction() {
 				super();
-				setText( res.getString( "FR_MENU_SEND_MESSAGE" ) );
+				setText( G2GuiResources.getString( "FR_MENU_SEND_MESSAGE" ) );
 			}
 			public void run() {
 				messagesTab.openTab(selectedClientInfo);
@@ -126,6 +124,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.2  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.1  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 

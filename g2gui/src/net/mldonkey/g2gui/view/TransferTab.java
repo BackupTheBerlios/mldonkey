@@ -27,12 +27,12 @@ import gnu.trove.TIntObjectIterator;
 
 import java.text.DecimalFormat;
 import java.util.Observable;
-import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transferTree.DownloadTableTreeContentProvider;
 import net.mldonkey.g2gui.view.transferTree.DownloadTableTreeViewer;
 
@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Shell;
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.26 2003/08/15 22:05:58 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.27 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -57,7 +57,6 @@ public class TransferTab extends GuiTab  {
 	private Label label;
 	private long timestamp = 0;
 	private Font font = new Font(null, "Helvetica", 12, SWT.BOLD); // fix later
-	public static ResourceBundle res = ResourceBundle.getBundle("g2gui");
 	public static DecimalFormat decimalFormat = new DecimalFormat( "0.0" );
 	private DownloadTableTreeViewer downloadTableTreeViewer;
 		
@@ -69,8 +68,8 @@ public class TransferTab extends GuiTab  {
 		this.mldonkey = gui.getCore();		
 		
 		createButton("TransfersButton", 
-						bundle.getString("TT_TransfersButton"),
-						bundle.getString("TT_TransfersButtonToolTip"));
+						G2GuiResources.getString("TT_TransfersButton"),
+						G2GuiResources.getString("TT_TransfersButtonToolTip"));
 		createContents(this.subContent);
 		
 	}
@@ -158,6 +157,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.27  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.26  2003/08/15 22:05:58  zet
 *** empty log message ***
 

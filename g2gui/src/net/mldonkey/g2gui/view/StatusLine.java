@@ -22,16 +22,14 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.util.ResourceBundle;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.statusline.NetworkItem;
 import net.mldonkey.g2gui.view.statusline.SpeedItem;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
@@ -42,11 +40,10 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.7 2003/08/10 12:59:01 lemmstercvs01 Exp $ 
+ * @version $Id: StatusLine.java,v 1.8 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class StatusLine {
-	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private CoreCommunication core;
 	private Composite composite;
 	private Label label;
@@ -122,6 +119,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.8  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.7  2003/08/10 12:59:01  lemmstercvs01
 "manage servers" in NetworkItem implemented
 

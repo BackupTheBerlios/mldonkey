@@ -35,6 +35,7 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.ConsoleMessage;
 import net.mldonkey.g2gui.view.console.Console;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -44,7 +45,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.35 2003/08/14 12:57:03 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.36 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -61,8 +62,8 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 		super( gui );
 		this.core = gui.getCore();		
 		createButton( "ConsoleButton", 
-						bundle.getString( "TT_ConsoleButton" ),
-						bundle.getString( "TT_ConsoleButtonToolTip" ) );
+						G2GuiResources.getString( "TT_ConsoleButton" ),
+						G2GuiResources.getString( "TT_ConsoleButtonToolTip" ) );
 		createContents( this.subContent );
 	} 
 	
@@ -167,6 +168,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.36  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.35  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 

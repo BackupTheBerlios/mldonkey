@@ -22,13 +22,12 @@
  */
 package net.mldonkey.g2gui.view.transferTree;
 
-import java.util.ResourceBundle;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.TransferTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
@@ -54,7 +53,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.8 2003/08/17 16:48:08 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.9 2003/08/18 01:42:24 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -63,7 +62,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	private TableTree tableTree;
 	private Table table;
 	private Shell shell;
-	public static ResourceBundle res = ResourceBundle.getBundle("g2gui");
 	private DownloadTableTreeSorter downloadTableTreeSorter = new DownloadTableTreeSorter();
 	private DownloadTableTreeContentProvider tableTreeContentProvider;
 	private FileInfo selectedFile = null;
@@ -148,7 +146,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 				
 		for (int i = 0; i < COLUMN_LABELS.length; i++) {
 			TableColumn tableColumn = new TableColumn(table, COLUMN_ALIGNMENT[ i ]);
-			tableColumn.setText ( res.getString( COLUMN_LABELS[ i ] )  );
+			tableColumn.setText ( G2GuiResources.getString( COLUMN_LABELS[ i ] )  );
 			tableColumn.setWidth(MainTab.getStore().getInt(COLUMN_LABELS [ i ] ));
 			MainTab.getStore().setDefault(COLUMN_LABELS [ i ] + "_Resizable", true);
 			tableColumn.setResizable(MainTab.getStore().getBoolean(COLUMN_LABELS [ i ] + "_Resizable" ));
@@ -297,6 +295,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.9  2003/08/18 01:42:24  zet
+centralize resource bundle
+
 Revision 1.8  2003/08/17 16:48:08  zet
 prevent rapid tree expansion from triggering double click
 
