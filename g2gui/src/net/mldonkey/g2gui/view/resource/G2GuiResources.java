@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.9 2003/08/25 21:18:43 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.10 2003/08/28 17:07:03 zet Exp $
  */
 public class G2GuiResources {
 	
@@ -180,7 +180,7 @@ public class G2GuiResources {
 		
 		imageRegistry.put( "DownArrow", createTrans( "down.png" ) );
 		imageRegistry.put( "UpArrow", createTrans( "up.png" ) );
-		imageRegistry.put( "UpArrowBlue", createTrans( "up_blue.png" ) );
+		imageRegistry.put( "UpArrowBlue", ImageDescriptor.createFromFile(MainTab.class, "images/up_blue.gif") );
 		
 		imageRegistry.put( "SearchSmall", createTrans( "search_small.png" )) ;
 		imageRegistry.put( "SearchComplete", createTrans( "search_complete.png" )) ;
@@ -244,6 +244,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.10  2003/08/28 17:07:03  zet
+gif not png
+
 Revision 1.9  2003/08/25 21:18:43  zet
 localise/update friendstab
 
