@@ -1,3 +1,6 @@
+2003/11/27: z
+	* Web services spawn a browser on linux/macos
+
 2003/11/25: z
 	* Core: Add support for protocol 19
 	* Transfers: Add uploaders table
