@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $Author: lemmster $
- * @version $Id: OptionsInfo.java,v 1.19 2003/08/19 12:47:57 lemmster Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.20 2003/08/19 21:02:16 lemmster Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -291,7 +291,7 @@ public class OptionsInfo extends Parent {
 	
 	/**
 	 * The help string for this option.
-	 * Proto < 18 return the description
+	 * Proto < 18 returns the description
 	 * @return The option help text
 	 */
 	public String getOptionHelp() {
@@ -302,18 +302,18 @@ public class OptionsInfo extends Parent {
 	
 	/**
 	 * is this option advanced
-	 * Proto < 18 return always true
+	 * Proto < 18 returns always true
 	 * @return true if this option is advanced
 	 */
 	public boolean isAdvanced() {
 		if ( parent.getProtoToUse() >= 18 )
 			return this.advanced;
-		return true;
+		return false;
 	}
 	
 	/**
 	 * The default value for this option
-	 * Proto < 18 return value
+	 * Proto < 18 returns value
 	 * @return the default value for this option
 	 */
 	public String getDefaultValue() {
@@ -325,8 +325,11 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.20  2003/08/19 21:02:16  lemmster
+show all options in simple mode proto < 18
+
 Revision 1.19  2003/08/19 12:47:57  lemmster
-$user$ -> $Author$
+$user$ -> $Author: lemmster $
 
 Revision 1.18  2003/08/19 12:46:02  lemmster
 typo fixed
