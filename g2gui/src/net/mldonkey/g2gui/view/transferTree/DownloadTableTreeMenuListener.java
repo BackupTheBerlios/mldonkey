@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTableTreeMenuListener
  *
  * @author $Author: zet $
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.20 2003/08/24 16:11:24 zet Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.21 2003/08/24 16:16:26 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -176,35 +176,34 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	public void fillContextMenu(IMenuManager menuManager) {
 
 		if (selectedFile != null
-			&& selectedFile.getState().getState() == EnumFileState.DOWNLOADED)
-			menuManager.add(new CommitAction());
+		 && selectedFileListContains(EnumFileState.DOWNLOADED))
+		 menuManager.add(new CommitAction());
 
 		if (selectedFile != null)
-			menuManager.add(new FileDetailAction());
-
+			 menuManager.add(new FileDetailAction());
+	
 		if (selectedFile != null
-			&& selectedFile.getState().getState() == EnumFileState.DOWNLOADING)
-			menuManager.add(new PauseAction());
-
+			 && selectedFileListContains(EnumFileState.DOWNLOADING))
+			 menuManager.add(new PauseAction());
+	
 		if (selectedFile != null
-			&& selectedFile.getState().getState() == EnumFileState.PAUSED)
-			menuManager.add(new ResumeAction());
-
+			 && selectedFileListContains(EnumFileState.PAUSED))
+			 menuManager.add(new ResumeAction());
+	
 		if (selectedFile != null
-			&& selectedFile.getState().getState() != EnumFileState.DOWNLOADED)
-			menuManager.add(new CancelAction());
-
+			 && selectedFileListContainsOtherThan(EnumFileState.DOWNLOADED))
+			 menuManager.add(new CancelAction());
+	
 		if (selectedFile != null
-			&& selectedFile.getState().getState() != EnumFileState.DOWNLOADED)
+			 && selectedFileListContainsOtherThan(EnumFileState.DOWNLOADED))
 		{
-			MenuManager prioritySubMenu =
-				new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY"));
-			prioritySubMenu.add(new PriorityAction(EnumPriority.HIGH));
-			prioritySubMenu.add(new PriorityAction(EnumPriority.NORMAL));
-			prioritySubMenu.add(new PriorityAction(EnumPriority.LOW));
-			menuManager.add(prioritySubMenu);
+			 MenuManager prioritySubMenu =
+				  new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY"));
+			 prioritySubMenu.add(new PriorityAction(EnumPriority.HIGH));
+			 prioritySubMenu.add(new PriorityAction(EnumPriority.NORMAL));
+			 prioritySubMenu.add(new PriorityAction(EnumPriority.LOW));
+			 menuManager.add(prioritySubMenu);
 		}
-		
 		if ( selectedFile != null && PreferenceLoader.loadBoolean( "advancedMode") )
 			menuManager.add( new VerifyChunksAction() );
 		
@@ -280,6 +279,22 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	}
 		
 	// Helpers
+
+
+	public boolean selectedFileListContains(EnumFileState e) {
+		 for (int i = 0; i < selectedFiles.size(); i++)
+			  if ( ((FileInfo)selectedFiles.get(i)).getState().getState() == e)
+				   return true;
+		 return false;
+	}
+
+	public boolean selectedFileListContainsOtherThan(EnumFileState e) {
+		 for (int i = 0; i < selectedFiles.size(); i++)
+			  if ( ((FileInfo)selectedFiles.get(i)).getState().getState() != e)
+				   return true;
+		 return false;
+	}
+
 			
 	public boolean isFiltered( NetworkInfo.Enum networkType ) {
 			ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
@@ -323,8 +338,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		}
 			
 	public void toggleFilter(ViewerFilter viewerFilter, boolean toggle) {
-	//	tableTreeContentProvider.closeAllEditors();
-	
 		if (toggle) 
 			tableTreeViewer.addFilter(viewerFilter);
 		else 
@@ -779,6 +792,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.21  2003/08/24 16:16:26  zet
+more fixing....
+
 Revision 1.20  2003/08/24 16:11:24  zet
 do not superclass this if you are going to break it...
 
