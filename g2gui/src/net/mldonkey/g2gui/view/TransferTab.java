@@ -68,7 +68,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.28 2003/08/20 14:58:43 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.29 2003/08/20 18:35:16 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -146,6 +146,10 @@ public class TransferTab extends GuiTab  {
 				
 		// When we have uploaders:		
 		Composite upload = new Composite( mainSashForm, SWT.BORDER );
+		upload.setLayout(new FillLayout());
+		Label l = new Label(upload, SWT.CENTER);
+		l.setText("Try \"uploaders\" or \"upstats\" command in console until gui protocol sends upload information.");
+		
 		mainSashForm.setWeights( new int[] {1441,0});
 		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, clientTableViewer, mldonkey, this );
 		
@@ -284,6 +288,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.29  2003/08/20 18:35:16  zet
+uploaders label
+
 Revision 1.28  2003/08/20 14:58:43  zet
 sources clientinfo viewer
 
