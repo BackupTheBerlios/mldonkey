@@ -9,7 +9,6 @@ package net.mldonkey.g2gui.view.systray;
 import net.mldonkey.g2gui.view.MainWindow;
 
 
-import org.eclipse.swt.widgets.Shell;
 
 
 /**
@@ -21,18 +20,19 @@ import org.eclipse.swt.widgets.Shell;
 class ToggleAction extends SystrayAction {
 	
 	private MainWindow parent;
+	private boolean isVisible=true;
 	
 	public ToggleAction(SystemTray tray) {
 		super(tray);
-		parent = tray.getParent();
+		isVisible=shell.isVisible();		
 		setText("toggle visibility");
-		setChecked(parent.getShell().isVisible());
+		setChecked(isVisible);
 	}
-	public void run() {
-		Shell shell = parent.getShell();
-		shell.setVisible(!shell.isVisible());
-		setChecked(parent.getShell().isVisible());
+	public void run() {		
+		shell.setVisible(!isVisible);		
 		shell.setFocus();
+		shell.forceActive();
+		shell.setMinimized(false);
 	}
 
 }

@@ -43,18 +43,17 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 	/**
 	 * SystemTrayIconListener implementation
 	 */
-	public void mouseClickedLeftButton(
-		final int x,
-		final int y,
-		SystemTrayIconManager source) {
+	public void mouseClickedLeftButton( final int x, final int y, SystemTrayIconManager source) {
 		parent.getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = parent.getShell();
 				/* check for widget disposed */
 				if (parent.getShell().isDisposed())
 					return;
-				shell.setVisible(!shell.isVisible());
+				shell.setVisible(!shell.isVisible());		
 				shell.setFocus();
+				shell.forceActive();
+				shell.setMinimized(false);
 			}
 		});
 
