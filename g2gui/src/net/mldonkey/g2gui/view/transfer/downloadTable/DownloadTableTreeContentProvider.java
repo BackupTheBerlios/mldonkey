@@ -31,6 +31,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
@@ -46,7 +47,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.15 2003/12/07 19:38:09 lemmy Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.16 2004/04/05 22:41:22 psy Exp $
  *
  */
 public class DownloadTableTreeContentProvider extends GTableTreeContentProvider implements Observer {
@@ -150,7 +151,7 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update(final Observable o, final Object object) {
-        if ((tableTreeViewer == null) || tableTreeViewer.getTableTree().isDisposed())
+    	if ((tableTreeViewer == null) || tableTreeViewer.getTableTree().isDisposed())
             return;
 
         tableTreeViewer.getTableTree().getDisplay().asyncExec(new Runnable() {
@@ -165,7 +166,8 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
      * @param arg
      */
     public void sendUpdate(Observable o, Object arg) {
-        if ((tableTreeViewer == null) || tableTreeViewer.getTableTree().isDisposed())
+        if ((tableTreeViewer == null) || tableTreeViewer.getTableTree().isDisposed() ||
+        		!this.gView.getShell().isVisible())
             return;
 
         if (o instanceof FileInfoIntMap) {
@@ -373,6 +375,9 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.16  2004/04/05 22:41:22  psy
+only update if we are actually visible
+
 Revision 1.15  2003/12/07 19:38:09  lemmy
 refactoring
 
@@ -466,7 +471,7 @@ Revision 1.13  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.12  2003/08/22 21:16:36  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.11  2003/08/21 00:59:57  zet
 doubleclick expand
