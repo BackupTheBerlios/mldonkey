@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.helper.CCLabel;
+import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
 import net.mldonkey.g2gui.view.helper.PaneMenuListener;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -50,8 +51,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -63,14 +62,12 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.30 2003/09/14 13:44:22 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.31 2003/09/16 02:12:30 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -169,17 +166,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		popupMenu.setRemoveAllWhenShown( true );
 		popupMenu.addMenuListener( new PaneMenuListener( table, core ) );
 		
-		ToolBar toolBar = new ToolBar( viewForm, SWT.FLAT );
-		ToolItem anItem = new ToolItem( toolBar, SWT.FLAT );
-		anItem.setImage( G2GuiResources.getImage( "DropDown" ) );
-		anItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected ( SelectionEvent s ) {
-				Menu menu = popupMenu.createContextMenu( composite );
-				menu.setVisible( true );
-			}	
-		} );		
-		
-		viewForm.setTopRight( toolBar );
+		ccLabel.addMouseListener(new HeaderBarMouseAdapter(ccLabel, popupMenu));
 	}
 
 	/**
@@ -426,6 +413,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.31  2003/09/16 02:12:30  zet
+match the menus with transfertab
+
 Revision 1.30  2003/09/14 13:44:22  lemmster
 set statusline only on active
 
