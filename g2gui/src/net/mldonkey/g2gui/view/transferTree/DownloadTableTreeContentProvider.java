@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTableTreeContentProvider
  *
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.15 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.16 2003/08/23 15:24:03 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -227,7 +227,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(final Observable o, final Object object) {
-		if (tableTreeViewer.getTableTree().isDisposed()) return;
+		if (tableTreeViewer == null || tableTreeViewer.getTableTree().isDisposed()) return;
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					sendUpdate(o, object);
@@ -544,6 +544,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.16  2003/08/23 15:24:03  zet
+*** empty log message ***
+
 Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 
