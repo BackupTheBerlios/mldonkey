@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.10 2003/06/13 11:23:24 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.11 2003/06/14 12:48:57 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -84,6 +84,10 @@ public abstract class Message {
 	 */
 	public static final short R_BAD_PASSWORD = 45;
 	/**
+	 * Receive FileDownloadUpdate (value is 46)
+	 */
+	public static final short R_FILE_DOWNLOAD_UPDATE = 46;
+	/**
 	 * Receive ClientStats (value is 49)
 	 */
 	public static final short R_CLIENT_STATS = 49;
@@ -110,10 +114,10 @@ public abstract class Message {
 		byte[] b = new byte[ 4 ]; 
 		inputStream.read( b );
 		
-		return (((int) b[0]) & 0xFF) +
-			   ((((int) b[1]) & 0xFF) << 8) +
-			   ((((int) b[2]) & 0xFF) << 16) +
-			   ((((int) b[3]) & 0xFF) << 24);
+		return ( ( ( int ) b[ 0 ] ) & 0xFF ) 
+			+  ( ( ( ( int ) b[ 1 ] ) & 0xFF ) << 8 )
+			+  ( ( ( ( int ) b[ 2 ] ) & 0xFF ) << 16 )
+			+  ( ( ( ( int ) b[ 3 ] ) & 0xFF ) << 24 );
 	}
 	/**
 	 * Creates a 2 byte array of int16 from a short
@@ -226,14 +230,13 @@ public abstract class Message {
 	 */
 	public abstract boolean sendMessage( Socket connection );
 	
-	public abstract void setMessage( short opCode, Object[] content);
-	
-	public abstract void setMessage( short opCode );
-
 }
 
 /*
 $Log: Message.java,v $
+Revision 1.11  2003/06/14 12:48:57  lemmstercvs01
+checkstyle applied, added a opcode, removed abstract methods
+
 Revision 1.10  2003/06/13 11:23:24  lemmstercvs01
 modified readInt32, deleted all other readXX()
 
