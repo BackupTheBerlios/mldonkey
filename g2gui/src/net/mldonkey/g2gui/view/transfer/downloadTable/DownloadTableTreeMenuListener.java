@@ -22,6 +22,10 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -37,6 +41,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.transfer.UniformResourceLocator;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.actions.ToggleClientsAction;
 import net.mldonkey.g2gui.view.viewers.actions.WebServicesAction;
 
 import org.eclipse.jface.action.Action;
@@ -49,7 +54,6 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
@@ -76,16 +80,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 
 /**
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.20 2003/10/22 16:28:52 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.21 2003/10/22 17:17:30 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -295,7 +295,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         if ((selectedFile != null) && advancedMode) {
             menuManager.add(new PreviewAction());
             menuManager.add(new VerifyChunksAction());
-            menuManager.add(new ToggleClientsAction());
+            menuManager.add(new ToggleClientsAction( downloadTableTreeViewer ));
         }
 
         if ((selectedClient != null) && advancedMode) {
@@ -665,27 +665,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     }
 
     /**
-     * ToggleClientsAction
-     */
-    private class ToggleClientsAction extends Action {
-        public ToggleClientsAction() {
-            super();
-
-            if (downloadTableTreeViewer.clientsDisplayed()) {
-                setText(G2GuiResources.getString("MISC_HIDE") + G2GuiResources.getString("TT_Clients"));
-                setImageDescriptor(G2GuiResources.getImageDescriptor("minus"));
-            } else {
-                setText(G2GuiResources.getString("MISC_SHOW") + G2GuiResources.getString("TT_Clients"));
-                setImageDescriptor(G2GuiResources.getImageDescriptor("plus"));
-            }
-        }
-
-        public void run() {
-            downloadTableTreeViewer.toggleClientsTable();
-        }
-    }
-
-    /**
      * PriorityInputDialog
      */
     private class PriorityInputDialog extends InputDialog {
@@ -734,6 +713,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.21  2003/10/22 17:17:30  zet
+common actions
+
 Revision 1.20  2003/10/22 16:28:52  zet
 common actions
 

@@ -21,12 +21,11 @@
  * 
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
-import net.mldonkey.g2gui.comm.EncodeMessage;
-import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.SharedFileInfo;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GTableMenuListener;
 import net.mldonkey.g2gui.view.viewers.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.actions.RefreshUploadsAction;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -41,7 +40,7 @@ import org.eclipse.swt.dnd.Transfer;
 /**
  * UploadTableMenuListener
  *
- * @version $Id: UploadTableMenuListener.java,v 1.5 2003/10/22 01:38:45 zet Exp $ 
+ * @version $Id: UploadTableMenuListener.java,v 1.6 2003/10/22 17:17:30 zet Exp $ 
  *
  */
 class UploadTableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -74,7 +73,7 @@ class UploadTableMenuListener extends GTableMenuListener implements ISelectionCh
 		/*copy ED2K-Link*/
 		if ( ( selectedFile != null ) )
 			menuManager.add( new CopyEd2kLinkAction() );
-		menuManager.add( new RefreshUploadsAction( ) );
+		menuManager.add( new RefreshUploadsAction( gTableViewer ) );
 	}
 	
 	private class CopyEd2kLinkAction extends Action {
@@ -93,23 +92,12 @@ class UploadTableMenuListener extends GTableMenuListener implements ISelectionCh
 			clipboard.dispose();
 		}
 	}
-
-	/**
-	 * RefreshUploadsAction
-	 */
-	private class RefreshUploadsAction extends Action {
-	   public RefreshUploadsAction( ) {
-		   super( "Refresh" );
-	   }
-
-	   public void run(  ) {
-			Message refresh = new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
-			refresh.sendMessage( gTableViewer.getCore() );
-	   }
-   }
 }
 /*
 $Log: UploadTableMenuListener.java,v $
+Revision 1.6  2003/10/22 17:17:30  zet
+common actions
+
 Revision 1.5  2003/10/22 01:38:45  zet
 add column selector
 

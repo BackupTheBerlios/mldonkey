@@ -22,9 +22,11 @@
  */
 package net.mldonkey.g2gui.view;
 
+import gnu.trove.TIntObjectIterator;
+
+import java.util.Observable;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.comm.EncodeMessage;
-import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
@@ -39,12 +41,11 @@ import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableViewer;
 import net.mldonkey.g2gui.view.viewers.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.actions.RefreshUploadsAction;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
@@ -62,15 +63,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import gnu.trove.TIntObjectIterator;
-
-import java.util.Observable;
-
 
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.79 2003/10/22 01:58:32 zet Exp $
+ * @version $Id: TransferTab.java,v 1.80 2003/10/22 17:17:30 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -352,23 +349,23 @@ public class TransferTab extends GuiTab {
         String newText = "";
 
         if (totalActive > 0) {
-			newText += totalActive + " / " + totalFiles + " " + G2GuiResources.getString( "TT_Active" ).toLowerCase() 
-			+ " (" + FileInfo.calcStringSize( activeDownloaded ) + " / " + FileInfo.calcStringSize( activeTotal ) + ")";
+            newText += (totalActive + " / " + totalFiles + " " + G2GuiResources.getString("TT_Active").toLowerCase() + " (" +
+            FileInfo.calcStringSize(activeDownloaded) + " / " + FileInfo.calcStringSize(activeTotal) + ")");
         }
 
         if (totalPaused > 0) {
-			newText += ", " + G2GuiResources.getString( "TT_Status0" ) + ": " + totalPaused 
-			+ " (" + FileInfo.calcStringSize( pausedDownloaded ) + " / " + FileInfo.calcStringSize( pausedTotal ) + ")";
+            newText += (", " + G2GuiResources.getString("TT_Status0") + ": " + totalPaused + " (" + FileInfo.calcStringSize(pausedDownloaded) +
+            " / " + FileInfo.calcStringSize(pausedTotal) + ")");
         }
 
         if (totalQueued > 0) {
-			newText += ", " + G2GuiResources.getString( "TT_Queued" ) + ": " + totalQueued 
-			+ " (" + FileInfo.calcStringSize( queuedDownloaded ) + " / " + FileInfo.calcStringSize( queuedTotal ) + ")";
+            newText += (", " + G2GuiResources.getString("TT_Queued") + ": " + totalQueued + " (" + FileInfo.calcStringSize(queuedDownloaded) + " / " +
+            FileInfo.calcStringSize(queuedTotal) + ")");
         }
 
         if (totalDownloaded > 0) {
-			newText += ", " + G2GuiResources.getString( "TT_Downloaded" ) + ": " + totalDownloaded 
-			+  " (" + FileInfo.calcStringSize( downloadedTotal ) + ")";
+            newText += (", " + G2GuiResources.getString("TT_Downloaded") + ": " + totalDownloaded + " (" + FileInfo.calcStringSize(downloadedTotal) +
+            ")");
         }
 
         if (!oldDLabelText.equals(newText)) {
@@ -415,22 +412,8 @@ public class TransferTab extends GuiTab {
         }
 
         public void menuAboutToShow(IMenuManager menuManager) {
-            menuManager.add(new RefreshUploadsAction());
+            menuManager.add(new RefreshUploadsAction(uploadTableViewer));
             super.menuAboutToShow(menuManager);
-        }
-    }
-
-    /**
-    * RefreshUploadsAction
-    */
-    public class RefreshUploadsAction extends Action {
-        public RefreshUploadsAction() {
-            super("Refresh");
-        }
-
-        public void run() {
-            Message refresh = new EncodeMessage(Message.S_REFRESH_UPLOAD_STATS);
-            refresh.sendMessage(mldonkey);
         }
     }
 }
@@ -438,6 +421,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.80  2003/10/22 17:17:30  zet
+common actions
+
 Revision 1.79  2003/10/22 01:58:32  zet
 comma delimited
 

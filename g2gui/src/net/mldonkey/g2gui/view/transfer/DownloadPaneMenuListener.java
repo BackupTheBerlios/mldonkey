@@ -35,6 +35,7 @@ import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeContentPr
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
 import net.mldonkey.g2gui.view.viewers.ColumnSelector;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.actions.ToggleClientsAction;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -52,7 +53,7 @@ import org.eclipse.swt.events.DisposeListener;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.13 2003/10/22 01:38:04 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.14 2003/10/22 17:17:30 zet Exp $
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener, DisposeListener {
@@ -194,7 +195,7 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
         
         if ( advancedMode ) {
         	menuManager.add( new Separator() );
-        	menuManager.add( new ToggleClientsAction() );
+        	menuManager.add( new ToggleClientsAction( downloadTableTreeViewer ) );
         }
         
         
@@ -381,27 +382,7 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 			}
         }
     }
-    
-    /**
-     * ToggleClientsAction
-     */
-	private class ToggleClientsAction extends Action {
-		
-	   public ToggleClientsAction( ) {
-			super();
-			if (downloadTableTreeViewer.clientsDisplayed() ) {
-				setText( G2GuiResources.getString( "MISC_HIDE" ) + G2GuiResources.getString( "TT_Clients") );
-				setImageDescriptor( G2GuiResources.getImageDescriptor( "minus" ) );
-			} else {
-				setText( G2GuiResources.getString( "MISC_SHOW" ) + G2GuiResources.getString( "TT_Clients") );
-				setImageDescriptor( G2GuiResources.getImageDescriptor( "plus" ) );
-			}
-	   }
-
-	   public void run() {
-			downloadTableTreeViewer.toggleClientsTable();
-	   }
-	}
+   
     /**
      * FileStateFilterAction
      */
@@ -614,6 +595,9 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.14  2003/10/22 17:17:30  zet
+common actions
+
 Revision 1.13  2003/10/22 01:38:04  zet
 *** empty log message ***
 
