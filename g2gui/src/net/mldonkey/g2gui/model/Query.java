@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.9 2003/07/04 16:53:56 dek Exp $ 
+ * @version $Id: Query.java,v 1.10 2003/07/04 22:59:15 dek Exp $ 
  *
  */
 public class Query implements SimpleInformation {
@@ -128,20 +128,19 @@ public class Query implements SimpleInformation {
 			 if ( node == 0 || node == 1 || node == 13 ) {
 			 	
 			 	/*
-			 	 * List of Queries for AND or OR or Hidden, I assume, only 1-level searches are made
-			 	 * So i don't need to implement multi-leve AND/OR (=>only comment / value pairs are read out from
-			 	 * the Query-objects)
-			 	 */			 	 
-			 	Object[] listOfQueries = new Object[queries.length];
-				 	for ( int i = 0; i < listOfQueries.length; i++ ) {	
-				 		Object[] row =  {queries[ i ].getComment(), queries[ i ].getDefaultValue() };					 
-						listOfQueries[ i ] = row;
-						
-						//[ 0 ] = queries[ i ].getComment();
-						//listOfQueries[ i ][ 1 ] = queries[ i ].getDefaultValue();
-					}
+			 	 * List of Queries for AND or OR or Hidden.
+			 	 */	
+			 	 
+			 	/* setting List header */
+				output.add( new Short( ( short )queries.length ) );	 
 					
-			 	output.add( listOfQueries );
+				/*now setting an entry for each Query in queries[]*/			 	
+				 	for ( int i = 0; i < queries.length; i++ ) {	
+						Object[] querieArray = queries[ i ].toObjectArray();
+							for ( int j = 0; j < querieArray.length; j++ ) {
+								output.add( querieArray [ j ] );
+							}
+					}
 			 }
 			else if ( node == 2  ) {
 				/*
@@ -333,6 +332,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.10  2003/07/04 22:59:15  dek
+now works without work-around
+
 Revision 1.9  2003/07/04 16:53:56  dek
 searching started
 

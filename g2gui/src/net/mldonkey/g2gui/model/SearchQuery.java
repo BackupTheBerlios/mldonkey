@@ -26,14 +26,13 @@ import java.util.ArrayList;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
-import net.mldonkey.g2gui.comm.Message;
 
 /**
  * SearchQuery is needed to transmit a search to the mldonkey. It needs to be created, and then filled
  * with setter(). When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.2 2003/07/04 16:54:30 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.3 2003/07/04 22:59:15 dek Exp $ 
  *
  */
 public class SearchQuery {
@@ -210,11 +209,11 @@ public class SearchQuery {
 		ArrayList content = new ArrayList();
 		content.add( new Integer( searchIdentifier ) );
 		
-//		/* now we need to get the Query sorted out in kind of Objects[] */
-//			Object[] tempArray = this.searchQuery.toObjectArray();
-//			for ( int i = 0; i < tempArray.length; i++ ) {
-//				content.add( tempArray [ i ] );
-//			}
+		/* now we need to get the Query sorted out in kind of Objects[] */
+			Object[] tempArray = this.searchQuery.toObjectArray();
+			for ( int i = 0; i < tempArray.length; i++ ) {
+				content.add( tempArray [ i ] );
+			}
 
 		/* did we succeed, don't know yet, must doing some testing,
 		 * something must be wrong, as mldonkey says: 
@@ -224,9 +223,9 @@ public class SearchQuery {
 		 *
 		 *So i do it the most simple way, which works indeed ;-)
 		*/
-		content.add( new Byte( ( byte )4 ) );
-		content.add( "Comment" );
-		content.add( this.searchString );
+		//content.add( new Byte( ( byte )4 ) );
+		//content.add( "Comment" );
+		//content.add( this.searchString );
 		
 		
 		content.add( new Integer( maxSearchResults ) );
@@ -254,6 +253,9 @@ public class SearchQuery {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.3  2003/07/04 22:59:15  dek
+now works without work-around
+
 Revision 1.2  2003/07/04 16:54:30  dek
 searching works ( with workaround)
 
