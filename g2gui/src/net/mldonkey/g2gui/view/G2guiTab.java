@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -33,10 +34,12 @@ import org.eclipse.swt.widgets.ToolItem;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: G2guiTab.java,v 1.10 2003/07/15 13:26:57 dek Exp $ 
+ * @version $Id: G2guiTab.java,v 1.11 2003/07/15 14:43:30 dek Exp $ 
  *
  */
 public abstract class G2guiTab implements Listener {	
+	protected Image inActiveIm;
+	protected Image activeIm;
 	private boolean active;
 	protected Composite content;
 	protected Gui mainWindow;
@@ -55,7 +58,7 @@ public abstract class G2guiTab implements Listener {
 		this.content.setVisible( false );
 		toolItem = new ToolItem( ( ( Gui )gui ).getMainTools(), SWT.PUSH );		
 		this.toolItem.addListener( SWT.Selection, this );
-		gui.registerTab( this );
+		gui.registerTab( this );		
 		
 	}
 		
@@ -75,7 +78,7 @@ public abstract class G2guiTab implements Listener {
 	 */
 	public void setInActive() {			
 		active = false;
-		toolItem.setSelection( false );
+		toolItem.setImage(inActiveIm);		
 	}
 	
 	/**
@@ -84,7 +87,8 @@ public abstract class G2guiTab implements Listener {
 	 */
 	public void setActive() {		
 		active = true;		
-		mainWindow.setActive( this );		
+		mainWindow.setActive( this );
+		toolItem.setImage(activeIm);
 	}
 	
 	/**
@@ -99,12 +103,15 @@ public abstract class G2guiTab implements Listener {
 	 * @param event the Button-press event from the CoolBar
 	 */
 	public void handleEvent( Event event ) {
-		setActive();
+		setActive();		
 	}
 		
 }
 /*
 $Log: G2guiTab.java,v $
+Revision 1.11  2003/07/15 14:43:30  dek
+*** empty log message ***
+
 Revision 1.10  2003/07/15 13:26:57  dek
 checkstyle
 

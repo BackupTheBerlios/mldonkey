@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.5 2003/07/15 13:25:41 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.6 2003/07/15 14:43:30 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -73,7 +73,8 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 			if ( oldEditor != null )
 			oldEditor.dispose();
 		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, 6 );
-		editor.setEditor ( chunks, this, 6 );		
+		editor.setEditor ( chunks, this, 6 );	
+		setText( 1, clientInfo.getClientName() );	
 		updateColums();	
 		
 		
@@ -85,7 +86,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 	 */
 	private void updateColums() {
 		// setText( 0, String.valueOf( clientInfo.getClientid() ) );
-		setText( 1, clientInfo.getClientName() );
+		
 		
 		String state = "";
 		if ( clientInfo.getState().getState() == EnumState.CONNECTED )		
@@ -108,11 +109,8 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 			state = "NOT_CONNECTED_WAS_QUEUED";	
 		if ( clientInfo.getState().getState() == EnumState.REMOVE_HOST )
 			state = "removeHost";
-		setText( 3, state );
-		String hhhh = clientInfo.getFileAvailability(fileInfo);
-		if (hhhh == null) hhhh= "";
-		setText(5,hhhh);
-		//chunks.refresh();
+		
+		chunks.refresh();
 	}
 
 
@@ -131,6 +129,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.6  2003/07/15 14:43:30  dek
+*** empty log message ***
+
 Revision 1.5  2003/07/15 13:25:41  dek
 right-mouse menu and some action to hopefully avoid flickering table
 

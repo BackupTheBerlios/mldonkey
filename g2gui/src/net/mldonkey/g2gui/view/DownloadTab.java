@@ -66,12 +66,18 @@ public class DownloadTab
 	public DownloadTab(Gui gui) {
 		super(gui);
 		toolItem.setText(bundle.getString("TT_Button"));
-		toolItem.setImage(
-			Gui.createTransparentImage(
-				new Image(
-					toolItem.getParent().getDisplay(),
-					"src/icons/transfer2.png"),
-				toolItem.getParent()));
+		
+		activeIm = Gui.createTransparentImage( 
+							new Image(toolItem.getParent().getDisplay(),
+									"src/icons/transfer2.png" ),
+									toolItem.getParent() ) ;
+		inActiveIm = Gui.createTransparentImage( 
+				new Image(toolItem.getParent().getDisplay(),
+						"src/icons/transfer2.png" ),
+						toolItem.getParent() ) ;
+		toolItem.setImage(inActiveIm);
+		
+
 		createContents(this.content);
 
 		gui.getCore().addObserver(this);

@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.14 2003/07/04 12:30:53 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.15 2003/07/15 14:43:30 dek Exp $ 
  *
  */
 public class ConsoleTab extends G2guiTab implements Observer, ControlListener, Runnable {	
@@ -62,6 +62,7 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 		this.toolItem.setText( "Console" );		
 		createContents( this.content );
 		( ( Core ) core ).addObserver( this );
+		toolItem.setImage(inActiveIm);
 		//this.consoleFont = preferenceStore.getString( "consoleFont" ).split( "|" );
 		//System.out.println("loaded: "+preferenceStore.getString( "consoleFont" ));
 		
@@ -117,8 +118,7 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 	 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
 	 */
 	public void handleEvent( Event event ) {
-		mainWindow.setActive( this );
-		
+		super.handleEvent(event);		
 		infoDisplay.append( core.getConsoleMessage().getConsoleMessage() );
 		core.getConsoleMessage().reset();
 		infoDisplay.setFont( loadFont() );
@@ -172,6 +172,9 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.15  2003/07/15 14:43:30  dek
+*** empty log message ***
+
 Revision 1.14  2003/07/04 12:30:53  dek
 checkstyle
 
