@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  * @author markus
- * @version $Id: FileState.java,v 1.10 2003/07/04 11:04:14 lemmstercvs01 Exp $ 
+ * @version $Id: FileState.java,v 1.11 2003/07/04 11:52:40 lemmstercvs01 Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -126,6 +126,11 @@ public class FileState implements SimpleInformation {
 			content = new Object[ 1 ];
 			content[ 0 ] = new Integer( id );
 		}
+		/* unvalid input */
+		else {
+			content = null;
+			return;			
+		}
 		/* generate and send the message */
 		sendState = new EncodeMessage( opcode, content );
 		sendState.sendMessage( core.getConnection() );
@@ -137,6 +142,9 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.11  2003/07/04 11:52:40  lemmstercvs01
+bugfix
+
 Revision 1.10  2003/07/04 11:04:14  lemmstercvs01
 add some opcodes
 
