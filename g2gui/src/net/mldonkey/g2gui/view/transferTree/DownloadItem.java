@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.11 2003/07/15 20:13:56 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.12 2003/07/15 20:52:05 dek Exp $ 
  *
  */
 public class DownloadItem 
@@ -136,8 +136,7 @@ public class DownloadItem
 			}
 
 		addDisposeListener(new DisposeListener(){
-			public void widgetDisposed(DisposeEvent e) {
-				editor.dispose();
+			public void widgetDisposed(DisposeEvent e) {				
 				chunks.dispose();	
 				
 			}});
@@ -357,6 +356,9 @@ public class DownloadItem
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.12  2003/07/15 20:52:05  dek
+exit-exceptions are gone...
+
 Revision 1.11  2003/07/15 20:13:56  dek
 sorting works now, chunk-display is kind of broken, when sorting with expanded tree-items...
 

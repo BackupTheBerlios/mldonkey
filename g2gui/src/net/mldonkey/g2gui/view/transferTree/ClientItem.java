@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.9 2003/07/15 20:42:48 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.10 2003/07/15 20:52:05 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -85,8 +85,6 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		addDisposeListener(new DisposeListener(){
 			public void widgetDisposed(DisposeEvent e) {				
 				chunks.dispose();
-				editor.dispose();
-				
 			}});
 		
 		
@@ -151,6 +149,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.10  2003/07/15 20:52:05  dek
+exit-exceptions are gone...
+
 Revision 1.9  2003/07/15 20:42:48  dek
 *** empty log message ***
 
