@@ -22,10 +22,11 @@
  */
 package net.mldonkey.g2gui.view.toolbar;
 
-import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 /**
  * @author z
  *
@@ -52,14 +53,12 @@ public class ToolButton {
 	
 	public ToolButton (ToolBar parent, int style, int index) {
 		this.toolbar = parent;
-		this.toolItemStyle = style;
-		toolItem = new ToolItem(parent, style, index);
+		this.toolItemStyle = SWT.RADIO;
+		if (index < 0) toolItem = new ToolItem(parent,  toolItemStyle);
+		else toolItem = new ToolItem(parent,  style, toolItemStyle);
 	}
 	public ToolButton (ToolBar parent, int style) {
-		// this(parent, style, ?)
-		this.toolbar = parent;
-		this.toolItemStyle = style;
-		toolItem = new ToolItem(parent, style);
+		 this(parent, style, -1);
 	}
 	public void setText(String text) {
 		this.text = text;
@@ -71,7 +70,6 @@ public class ToolButton {
 	}
 	public void setImage(Image image) {
 		toolItem.setImage(image);
-		toolItem.setDisabledImage(image); // for now..
 	}
 	public ToolBar getParent() {
 		return toolItem.getParent();
@@ -92,12 +90,7 @@ public class ToolButton {
 		bigInactiveImage = image;
 	}
 	public void setActive(boolean toggle) {
-		
-		if (toggle) {
-			toolItem.setEnabled(false);
-		} else {
-			toolItem.setEnabled(true);
-		}
+		toolItem.setSelection(toggle);
 		active = toggle;
 		resetImage();
 	}
@@ -113,7 +106,7 @@ public class ToolButton {
 		toolItem = new ToolItem(newtoolbar, toolItemStyle);
 		setText(text);
 		setToolTipText(toolTipText);
-		// setActive(active); // Last toolItem gets cut short
+		setActive(active); 
 		addListener(eventType, listener);
 		resetImage();
 	}
@@ -126,6 +119,9 @@ public class ToolButton {
 
 /*
 $Log: ToolButton.java,v $
+Revision 1.3  2003/08/21 16:04:24  zet
+try setSelection..
+
 Revision 1.2  2003/08/21 15:45:09  zet
 set disabled state
 
