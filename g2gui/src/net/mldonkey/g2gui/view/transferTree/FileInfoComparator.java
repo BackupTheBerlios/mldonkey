@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * DownloadItemComparator
  *
  * @author $user$
- * @version $Id: FileInfoComparator.java,v 1.3 2003/07/15 20:42:48 dek Exp $ 
+ * @version $Id: FileInfoComparator.java,v 1.4 2003/07/15 20:48:09 dek Exp $ 
  *
  */
 public class FileInfoComparator implements Comparator {
@@ -86,8 +86,8 @@ public class FileInfoComparator implements Comparator {
 				result = 0;
 				break;
 			case 5 :
-				Float r1_5 = new Float( row1.getRate() );
-				Float r2_5 = new Float( row2.getRate() );
+				Float r1_5 = new Float( row1.getPerc() );
+				Float r2_5 = new Float( row2.getPerc() );
 				result = r1_5.compareTo( r2_5 );
 				break;
 			case 6 :
@@ -110,8 +110,8 @@ public class FileInfoComparator implements Comparator {
 
 /*
 $Log: FileInfoComparator.java,v $
-Revision 1.3  2003/07/15 20:42:48  dek
-*** empty log message ***
+Revision 1.4  2003/07/15 20:48:09  dek
+now even the %-values are sorted right...
 
 Revision 1.1  2003/07/15 20:13:56  dek
 sorting works now, chunk-display is kind of broken, when sorting with expanded tree-items...
