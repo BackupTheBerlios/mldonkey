@@ -29,6 +29,8 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.model.enum.EnumNetwork;
+import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeContentProvider;
@@ -53,7 +55,7 @@ import org.eclipse.swt.events.DisposeListener;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.15 2003/10/28 03:51:25 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.16 2003/10/28 12:35:12 lemmster Exp $
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener, DisposeListener {
@@ -197,9 +199,6 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
         	menuManager.add( new Separator() );
         	menuManager.add( new ToggleClientsAction( downloadTableTreeViewer ) );
         }
-        
-        
-        
     }
 
     private void addFileStateFilter( MenuManager menuManager, String resString, EnumFileState enumFileState ) {
@@ -212,21 +211,17 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
         menuManager.add( action );
     }
 
-    private boolean isFiltered( NetworkInfo.Enum networkType ) {
+    private boolean isFiltered( EnumNetwork networkType ) {
         ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
 
         for ( int i = 0; i < viewerFilters.length; i++ ) {
-            if ( viewerFilters[ i ] instanceof NetworkFilter ) {
-                NetworkFilter filter = (NetworkFilter) viewerFilters[ i ];
-
-                for ( int j = 0; j < filter.getNetworkType().size(); j++ ) {
-                    if ( filter.getNetworkType().get( j ).equals( networkType ) ) {
-                        return true;
-                    }
+            if ( viewerFilters[ i ] instanceof TableMenuListener.NetworkViewerFilter ) {
+                TableMenuListener.NetworkViewerFilter filter = (TableMenuListener.NetworkViewerFilter) viewerFilters[ i ];
+                if ( filter.matches( networkType ) ) {
+                    return true;
                 }
             }
         }
-
         return false;
     }
 
@@ -318,9 +313,9 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
      * NetworkFilterAction
      */
     private class NetworkFilterAction extends Action {
-        private NetworkInfo.Enum networkType;
+        private EnumNetwork networkType;
 
-        public NetworkFilterAction( String name, NetworkInfo.Enum networkType ) {
+        public NetworkFilterAction( String name, EnumNetwork networkType ) {
             super( name, Action.AS_CHECK_BOX );
             this.networkType = networkType;
         }
@@ -330,17 +325,15 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
                 ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
 
                 for ( int i = 0; i < viewerFilters.length; i++ ) {
-                    if ( viewerFilters[ i ] instanceof NetworkFilter ) {
-                        NetworkFilter filter = (NetworkFilter) viewerFilters[ i ];
-
-                        for ( int j = 0; j < filter.getNetworkType().size(); j++ ) {
-                            if ( filter.getNetworkType().get( j ) == networkType ) {
-                                if ( filter.getNetworkType().size() == 1 ) {
-                                    toggleFilter( viewerFilters[ i ], false );
-                                } else {
-                                    filter.remove( networkType );
-                                    tableTreeViewer.refresh();
-                                }
+                    if ( viewerFilters[ i ] instanceof TableMenuListener.NetworkViewerFilter ) {
+						TableMenuListener.NetworkViewerFilter filter = (TableMenuListener.NetworkViewerFilter) viewerFilters[ i ];
+                        if ( filter.matches( networkType ) ) {
+                            if ( filter.count() == 1 ) {
+                                toggleFilter( viewerFilters[ i ], false );
+                            } 
+                            else {
+                                filter.remove( networkType );
+                                tableTreeViewer.refresh();
                             }
                         }
                     }
@@ -349,8 +342,8 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
                 ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
 
                 for ( int i = 0; i < viewerFilters.length; i++ ) {
-                    if ( viewerFilters[ i ] instanceof NetworkFilter ) {
-                        NetworkFilter filter = (NetworkFilter) viewerFilters[ i ];
+                    if ( viewerFilters[ i ] instanceof TableMenuListener.NetworkViewerFilter ) {
+						TableMenuListener.NetworkViewerFilter filter = (TableMenuListener.NetworkViewerFilter) viewerFilters[ i ];
                         filter.add( networkType );
                         tableTreeViewer.refresh();
 
@@ -358,7 +351,7 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
                     }
                 }
 
-                NetworkFilter filter = new NetworkFilter();
+				TableMenuListener.NetworkViewerFilter filter = new TableMenuListener.NetworkViewerFilter();
                 filter.add( networkType );
                 toggleFilter( filter, true );
             }
@@ -467,48 +460,6 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
     // Filters
 
     /**
-     * NetworkFilter
-     */
-    private static class NetworkFilter extends ViewerFilter {
-        private List networkType;
-
-        public NetworkFilter() {
-            this.networkType = new ArrayList();
-        }
-
-        public List getNetworkType() {
-            return networkType;
-        }
-
-        public boolean add( NetworkInfo.Enum enum ) {
-            return this.networkType.add( enum );
-        }
-
-        public boolean remove( NetworkInfo.Enum enum ) {
-            return this.networkType.remove( enum );
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        public boolean select( Viewer viewer, Object parentElement, Object element ) {
-            if ( element instanceof FileInfo ) {
-                FileInfo fileInfo = (FileInfo) element;
-
-                for ( int i = 0; i < this.networkType.size(); i++ ) {
-                    if ( fileInfo.getNetwork().getNetworkType() == networkType.get( i ) ) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-    /**
      * FileStateFilter
      */
     private class FileStateFilter extends ViewerFilter {
@@ -595,6 +546,10 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.16  2003/10/28 12:35:12  lemmster
+moved NetworkInfo.Enum -> enum.EnumNetwork;
+added Enum.MaskMatcher
+
 Revision 1.15  2003/10/28 03:51:25  zet
 *** empty log message ***
 

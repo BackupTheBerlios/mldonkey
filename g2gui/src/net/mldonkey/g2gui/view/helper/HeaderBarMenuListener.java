@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view.helper;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.ColumnSelectorPaneListener;
+import net.mldonkey.g2gui.view.viewers.TablePaneListener;
 import net.mldonkey.g2gui.view.viewers.GTableViewer;
 
 import org.eclipse.jface.action.Action;
@@ -33,83 +33,85 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Control;
 
-
 /**
  * HeaderBarMenusListener - helper for HeaderBar Menus
  *
- * @version $Id: HeaderBarMenuListener.java,v 1.4 2003/10/22 01:37:10 zet Exp $
+ * @version $Id: HeaderBarMenuListener.java,v 1.5 2003/10/28 12:31:35 lemmster Exp $
  *
  */
-public class HeaderBarMenuListener extends ColumnSelectorPaneListener  {
+public class HeaderBarMenuListener extends TablePaneListener {
     private SashForm sashForm;
     private Control control;
 
     public HeaderBarMenuListener( SashForm sashForm, Control control, GTableViewer gTableViewer ) {
-        super(gTableViewer);
+        super( gTableViewer );
         this.sashForm = sashForm;
         this.control = control;
     }
 
-    protected void maximize(  ) {
-        if ( sashForm.getMaximizedControl(  ) == null ) {
+    protected void maximize() {
+        if ( sashForm.getMaximizedControl() == null )
             sashForm.setMaximizedControl( control );
-        } else {
+        else
             sashForm.setMaximizedControl( null );
-        }
     }
 
-	protected void flipSash(  ) {
-		sashForm.setOrientation( sashForm.getOrientation() == SWT.HORIZONTAL ? SWT.VERTICAL : SWT.HORIZONTAL );
-	}
+    protected void flipSash() {
+        sashForm.setOrientation( ( sashForm.getOrientation() == SWT.HORIZONTAL ) ? SWT.VERTICAL : SWT.HORIZONTAL );
+    }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
     public void menuAboutToShow( IMenuManager menuManager ) {
-        super.menuAboutToShow(menuManager);
-        menuManager.add( new Separator(  ) );
-        menuManager.add( new FlipSashAction( ) );
-        menuManager.add( new MaximizeAction(  ) );
+        super.menuAboutToShow( menuManager );
+        menuManager.add( new Separator() );
+        menuManager.add( new FlipSashAction() );
+        menuManager.add( new MaximizeAction() );
     }
 
     /**
      * MaximizeAction
      */
     public class MaximizeAction extends Action {
-        public MaximizeAction(  ) {
-            super(  );
-
-            if ( sashForm.getMaximizedControl(  ) == null ) {
+        public MaximizeAction() {
+            super();
+            if ( sashForm.getMaximizedControl() == null ) {
                 setText( G2GuiResources.getString( "MISC_MAXIMIZE" ) );
-				setImageDescriptor( G2GuiResources.getImageDescriptor( "maximize" ) );
-            } else {
+                setImageDescriptor( G2GuiResources.getImageDescriptor( "maximize" ) );
+            }
+            else {
                 setText( G2GuiResources.getString( "MISC_RESTORE" ) );
-				setImageDescriptor( G2GuiResources.getImageDescriptor( "restore" ) );
+                setImageDescriptor( G2GuiResources.getImageDescriptor( "restore" ) );
             }
         }
-        public void run(  ) {
-            maximize(  );
+
+        public void run() {
+            maximize();
         }
     }
-    
-	/**
-     * FlipSashAction
-     */
-    public class FlipSashAction extends Action {
-		public FlipSashAction(  ) {
-			super( G2GuiResources.getString( "MISC_FLIP_SASH" ) );
-			setImageDescriptor( G2GuiResources.getImageDescriptor( "rotate" ) );
-		}
-		public void run(  ) {
-			flipSash( );
-		}
-	}
-    
-}
 
+    /**
+    * FlipSashAction
+    */
+    public class FlipSashAction extends Action {
+        public FlipSashAction() {
+            super( G2GuiResources.getString( "MISC_FLIP_SASH" ) );
+            setImageDescriptor( G2GuiResources.getImageDescriptor( "rotate" ) );
+        }
+
+        public void run() {
+            flipSash();
+        }
+    }
+}
 
 /*
 $Log: HeaderBarMenuListener.java,v $
+Revision 1.5  2003/10/28 12:31:35  lemmster
+moved NetworkInfo.Enum -> enum.EnumNetwork;
+added Enum.MaskMatcher
+
 Revision 1.4  2003/10/22 01:37:10  zet
 add column selector to server/search (might not be finished yet..)
 

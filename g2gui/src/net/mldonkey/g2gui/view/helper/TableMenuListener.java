@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.15 2003/10/28 11:07:32 lemmster Exp $
+ * @version $Id: TableMenuListener.java,v 1.16 2003/10/28 12:33:31 lemmster Exp $
  *
  */
 public abstract class TableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -216,7 +216,7 @@ public abstract class TableMenuListener extends GTableMenuListener implements IS
     /**
      * MyFilter Superclass for EnumStateFilter and NetworkFilter
      */
-    private static abstract class MyViewerFilter extends ViewerFilter {
+    public static abstract class MyViewerFilter extends ViewerFilter {
 		protected Enum.MaskMatcher aMatcher;
 		/**
 		 * Creates a new EnumStateFilter
@@ -470,6 +470,10 @@ public abstract class TableMenuListener extends GTableMenuListener implements IS
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.16  2003/10/28 12:33:31  lemmster
+moved NetworkInfo.Enum -> enum.EnumNetwork;
+added Enum.MaskMatcher
+
 Revision 1.15  2003/10/28 11:07:32  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
