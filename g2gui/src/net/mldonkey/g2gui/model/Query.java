@@ -28,29 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.3 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: Query.java,v 1.4 2003/06/24 09:16:48 lemmstercvs01 Exp $ 
  *
  */
 public class Query implements SimpleInformation {
-	public static final byte AND = 0;
-	public static final byte OR = 1; 
-	public static final byte ANDNOT = 2;
-	public static final byte MODULE = 3;
-	public static final byte KEYWORD = 4;
-	public static final byte MINSIZE = 5;
-	public static final byte MAXSIZE = 6;
-	public static final byte FORMAT = 7;
-	public static final byte MEDIA = 8;
-	public static final byte MP3ARTIST = 9;
-	public static final byte MP3TITLE = 10;
-	public static final byte MP3ALBUM = 11;
-	public static final byte MP3BITRATE = 12;
-	public static final byte HIDDEN = 13;
-	
-	/**
-	 * The Type of this tree node 
-	 */
-	private byte treenode;
 	/**
 	 * Queries for AND or OR or Hidden
 	 */
@@ -97,7 +78,7 @@ public class Query implements SimpleInformation {
 		 */
 		byte node = messageBuffer.readByte();
 
-		if ( node == AND || node == OR || node == HIDDEN ) {
+		if ( node == 0 || node == 1 || node == 11 ) {
 			short listElem = messageBuffer.readInt16();
 			for ( int i = 0; i < listElem; i++ ) {
 				this.queries = new Query[ listElem ];
@@ -106,7 +87,7 @@ public class Query implements SimpleInformation {
 				queries[ i ] = aQuery;
 			}
 		}
-		else if ( node == ANDNOT ) {
+		else if ( node == 2 ) {
 			Query fQuery = new Query();
 			fQuery.readStream( messageBuffer );
 			Query sQuery = new Query();
@@ -114,7 +95,7 @@ public class Query implements SimpleInformation {
 			this.setFAndNot( fQuery );
 			this.setSAndNot( sQuery );
 		}
-		else if ( node == MODULE ) {
+		else if ( node == 3 ) {
 			this.setModule( messageBuffer.readString() );
 			Query aQuery = new Query();
 			aQuery.readStream( messageBuffer );
@@ -124,8 +105,6 @@ public class Query implements SimpleInformation {
 			this.setComment( messageBuffer.readString() );
 			this.setDefaultValue( messageBuffer.readString() );
 		}
-	
-		
 	}
 	
 	/**
@@ -150,13 +129,6 @@ public class Query implements SimpleInformation {
 	}
 
 	/**
-	 * @return a byte
-	 */
-	public byte getTreenode() {
-		return treenode;
-	}
-
-	/**
 	 * @param query a Query
 	 */
 	public void setFAndNot( Query query ) {
@@ -175,13 +147,6 @@ public class Query implements SimpleInformation {
 	 */
 	public void setSAndNot( Query query ) {
 		sAndNot = query;
-	}
-
-	/**
-	 * @param b a byte
-	 */
-	public void setTreenode( byte b ) {
-		treenode = b;
 	}
 
 	/**
@@ -244,6 +209,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.4  2003/06/24 09:16:48  lemmstercvs01
+better Enum added
+
 Revision 1.3  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 

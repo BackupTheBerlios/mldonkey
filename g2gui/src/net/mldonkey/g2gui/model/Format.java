@@ -28,17 +28,11 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Format
  *
  * @author markus
- * @version $Id: Format.java,v 1.6 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: Format.java,v 1.7 2003/06/24 09:16:48 lemmstercvs01 Exp $ 
  *
  */
 public class Format implements SimpleInformation {
-	
-	public static final byte UNKNOWN_FORMAT = 0;
-	public static final byte GENERIC_FORMAT = 1;
-	public static final byte AVI_FILE = 2;
-	public static final byte MP3_FILE = 3;
-
-	private byte format;
+	private EnumFormat format;
 
 	private String extension = null;
 
@@ -106,7 +100,7 @@ public class Format implements SimpleInformation {
 	/**
 	 * @return a byte
 	 */
-	public byte getFormat() {
+	public EnumFormat getFormat() {
 		return format;
 	}
 
@@ -212,14 +206,14 @@ public class Format implements SimpleInformation {
 	 * @param b a byte
 	 */
 	public void setFormat( byte b ) {
-		if ( b == UNKNOWN_FORMAT )
-			format = UNKNOWN_FORMAT;
-		else if ( b == GENERIC_FORMAT )
-			format = GENERIC_FORMAT;
-		else if ( b == AVI_FILE )
-			format = AVI_FILE;
-		else if ( b == MP3_FILE )
-			format = MP3_FILE;	
+		if ( b == 0 )
+			format = EnumFormat.UNKNOWN_FORMAT;
+		else if ( b == 1 )
+			format = EnumFormat.GENERIC_FORMAT;
+		else if ( b == 2 )
+			format = EnumFormat.AVI_FILE;
+		else if ( b == 3 )
+			format = EnumFormat.MP3_FILE;	
 	}
 
 	/**
@@ -291,18 +285,18 @@ public class Format implements SimpleInformation {
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setFormat( ( byte ) messageBuffer.readByte() );
-		if ( this.getFormat() == 1 ) {
+		if ( this.getFormat() == EnumFormat.GENERIC_FORMAT ) {
 			this.setExtension( messageBuffer.readString() );
 			this.setKind( messageBuffer.readString() );
 		}
-		else if ( this.getFormat() == 2 ) {
+		else if ( this.getFormat() == EnumFormat.AVI_FILE ) {
 			this.setCodec( messageBuffer.readString() );
 			this.setVwidth( messageBuffer.readInt32() );
 			this.setVheight( messageBuffer.readInt32() );
 			this.setVfps( messageBuffer.readInt32() );
 			this.setVrate( messageBuffer.readInt32() );
 		}
-		else if ( this.getFormat() == 3 ) {
+		else if ( this.getFormat() == EnumFormat.MP3_FILE ) {
 			this.setTitle( messageBuffer.readString() );
 			this.setArtist( messageBuffer.readString() );
 			this.setAlbum( messageBuffer.readString() );	
@@ -316,6 +310,9 @@ public class Format implements SimpleInformation {
 
 /*
 $Log: Format.java,v $
+Revision 1.7  2003/06/24 09:16:48  lemmstercvs01
+better Enum added
+
 Revision 1.6  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 

@@ -28,15 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Tag
  *
  * @author markus
- * @version $Id: Tag.java,v 1.3 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: Tag.java,v 1.4 2003/06/24 09:16:48 lemmstercvs01 Exp $ 
  *
  */
 public class Tag implements SimpleInformation {
-	
-	public static final short UNSIGNED_INT = 0;
-	public static final short SIGNED_INT = 1;
-	public static final short STRING = 2;
-	public static final short IPADDRESS = 3;
 	
 	/**
 	 * Tag Name
@@ -45,7 +40,7 @@ public class Tag implements SimpleInformation {
 	/**
 	 * Tag Type
 	 */
-	private byte type;
+	private EnumType type;
 	/**
 	 * Tag Value
 	 */
@@ -72,7 +67,7 @@ public class Tag implements SimpleInformation {
 	/**
 	 * @return a byte
 	 */
-	public byte getType() {
+	public EnumType getType() {
 		return type;
 	}
 
@@ -102,13 +97,13 @@ public class Tag implements SimpleInformation {
 	 */
 	public void setType( byte b ) {
 		if ( b == 0 )
-			type = UNSIGNED_INT;
+			type = EnumType.UNSIGNED_INT;
 		else if ( b == 1 )
-			type = SIGNED_INT;
+			type = EnumType.SIGNED_INT;
 		else if ( b == 2 )
-			type = STRING;
+			type = EnumType.STRING;
 		else if ( b == 3 )
-			type = IPADDRESS;
+			type = EnumType.IPADDRESS;
 	}
 
 	/**
@@ -125,7 +120,7 @@ public class Tag implements SimpleInformation {
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setName( messageBuffer.readString() );
 		this.setType( messageBuffer.readByte() );
-		if ( this.getType() != STRING ) {
+		if ( this.getType() != EnumType.STRING ) {
 			this.setValue( messageBuffer.readInt32() );
 		}
 		else {
@@ -137,6 +132,9 @@ public class Tag implements SimpleInformation {
 
 /*
 $Log: Tag.java,v $
+Revision 1.4  2003/06/24 09:16:48  lemmstercvs01
+better Enum added
+
 Revision 1.3  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
