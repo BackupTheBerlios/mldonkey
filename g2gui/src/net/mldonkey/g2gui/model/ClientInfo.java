@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.12 2003/07/15 18:17:27 dek Exp $ 
+ * @version $Id: ClientInfo.java,v 1.13 2003/08/03 17:34:45 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -198,6 +198,8 @@ public class ClientInfo extends Parent {
 	 */
 	public void update( MessageBuffer messageBuffer ) {
 		this.getState().update( messageBuffer );
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -207,11 +209,17 @@ public class ClientInfo extends Parent {
 	 */
 	public void putAvail( int fileId, String avail ) {
 		( ( TIntObjectHashMap ) this.avail ).put( fileId, avail );
+		this.setChanged();
+		this.notifyObservers( this );
+	
 	}
 }
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.13  2003/08/03 17:34:45  zet
+notify observers
+
 Revision 1.12  2003/07/15 18:17:27  dek
 checkstyle & javadoc
 
