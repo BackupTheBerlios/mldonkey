@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.8 2003/09/05 23:49:07 zet Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.9 2003/09/07 08:21:50 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -62,7 +62,7 @@ public class MusicComplexSearch extends ComplexSearch {
      * @see net.mldonkey.g2gui.view.search.ComplexSearch#getTabName()
      */
     protected String getName() {
-        return "Music";
+        return G2GuiResources.getString( "MCS_NAME" );
     }
 
     /* (non-Javadoc)
@@ -77,21 +77,20 @@ public class MusicComplexSearch extends ComplexSearch {
 		aComposite.setLayout( gridLayout );
  		
  		/* the input boxes */
- 		
  		Composite aSubComposite = new Composite( aComposite, SWT.NONE );
- 		aSubComposite.setLayout(CGridLayout.createGL(2,0,0,2,2,false));
+ 		aSubComposite.setLayout( CGridLayout.createGL( 2, 0, 0, 2, 2, false ) );
 		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
- 		aSubComposite.setLayoutData(gridData);
+ 		aSubComposite.setLayoutData( gridData );
  		
-        this.inputText = this.createInputBox( aSubComposite, "Title:" );
-        this.artistText = this.createInputBox( aSubComposite, "Artist:"  );
-        this.albumText = this.createInputBox( aSubComposite, "Album:"  );
+        this.inputText = this.createInputBox( aSubComposite, G2GuiResources.getString( "MCS_TITLE" ) );
+        this.artistText = this.createInputBox( aSubComposite, G2GuiResources.getString( "MCS_ARTIST" )  );
+        this.albumText = this.createInputBox( aSubComposite, G2GuiResources.getString( "MCS_ALBUM" )  );
  
- 		Label s = new Label(aComposite, SWT.SEPARATOR|SWT.HORIZONTAL);
+ 		Label s = new Label( aComposite, SWT.SEPARATOR|SWT.HORIZONTAL );
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
-		s.setLayoutData(gridData);
+		s.setLayoutData( gridData );
  
 		Composite aSubComposite2 = new Composite( aComposite, SWT.NONE );
 		aSubComposite2.setLayout(CGridLayout.createGL(2,0,0,2,2,false));
@@ -102,11 +101,11 @@ public class MusicComplexSearch extends ComplexSearch {
         gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
         Label label = new Label( aSubComposite2, SWT.NONE );
         label.setLayoutData( gridData );
-        label.setText( "Bitrate:" );
+        label.setText( G2GuiResources.getString( "MCS_BITRATE" ) );
 
         /* the bitrate combo */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        String[] bitrateItems = { "", "96kb", "128kb", "196kb" };
+        String[] bitrateItems = { "", "96kb", "128kb", "196kb", "265" };
         this.bitrateCombo = new Combo( aSubComposite2, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
 		this.bitrateCombo.setLayoutData( gridData );
 		this.bitrateCombo.setItems( bitrateItems );
@@ -123,17 +122,17 @@ public class MusicComplexSearch extends ComplexSearch {
 		s = new Label(aComposite, SWT.SEPARATOR|SWT.HORIZONTAL);
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
-		s.setLayoutData(gridData);
+		s.setLayoutData( gridData );
 		
 		Composite aSubComposite3 = new Composite( aComposite, SWT.NONE );
-		aSubComposite3.setLayout(CGridLayout.createGL(2,0,0,2,2,false));
+		aSubComposite3.setLayout( CGridLayout.createGL( 2, 0, 0, 2, 2, false ) );
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
-		aSubComposite3.setLayoutData(gridData);
+		aSubComposite3.setLayoutData( gridData );
 		
         /* the min and max size text fields */
-        this.createMinMaxSizeText( aSubComposite3 );
-      //  this.createMaxMinSizeText( aComposite );
+        //this.createMinMaxSizeText( aSubComposite3 );
+        this.createMaxMinSizeText( aComposite );
 		
 		this.createResultCombo( aSubComposite3 );
 		this.createSearchButton( aComposite );
@@ -192,6 +191,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.9  2003/09/07 08:21:50  lemmster
+resourcebundle added
+
 Revision 1.8  2003/09/05 23:49:07  zet
 1 line per search option
 

@@ -27,6 +27,7 @@ import java.util.Observable;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -48,7 +49,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.7 2003/09/05 23:49:07 zet Exp $
+ * @version $Id: ComplexSearch.java,v 1.8 2003/09/07 08:21:50 lemmster Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -136,7 +137,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
         GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
         Label label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
-        label.setText( "File .ext:" );
+        label.setText( G2GuiResources.getString( "CS_EXTENSION" ) );
         
 		/* the extension box */
 	  gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -148,12 +149,11 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
     }
       
 	protected void createResultCombo( Composite group ) {
-
 		/* the extension label */
 	  GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
 	  Label label = new Label( group, SWT.NONE );
 	  label.setLayoutData( gridData );
-	  label.setText( "Max Results:" );
+	  label.setText( G2GuiResources.getString( "CS_MAXRESULTS" ) );
 
         /* the max result box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -192,13 +192,13 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
         GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
         Label label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
-        label.setText( "Max Size" );
+        label.setText( G2GuiResources.getString( "CS_MAXSIZE" ) );
 
 		/* the min size label */
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		label = new Label( group, SWT.NONE );
 		label.setLayoutData( gridData );
-		label.setText( "Min Size" );
+		label.setText( G2GuiResources.getString( "CS_MINSIZE" ) );
 
 		/* a new composite with numColumns = 4 */
    		GridLayout gridLayout = new GridLayout();
@@ -249,8 +249,8 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
     }
     
     protected void createMinMaxSizeText( Composite group ) {
-			createSizeText( group, "Min Size:", this.minCombo );
-			createSizeText( group, "Max Size:", this.maxCombo );
+			createSizeText( group, G2GuiResources.getString( "CS_MINSIZE" ), this.minCombo );
+			createSizeText( group, G2GuiResources.getString( "CS_MAXSIZE" ), this.maxCombo );
     }
     
     protected void createSizeText ( Composite group, String labelText, Combo aCombo ) {
@@ -337,6 +337,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 }
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.8  2003/09/07 08:21:50  lemmster
+resourcebundle added
+
 Revision 1.7  2003/09/05 23:49:07  zet
 1 line per search option
 

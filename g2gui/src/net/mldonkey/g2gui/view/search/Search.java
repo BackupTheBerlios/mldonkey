@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.23 2003/09/05 23:49:07 zet Exp $
+ * @version $Id: Search.java,v 1.24 2003/09/07 08:21:50 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -198,7 +198,7 @@ public abstract class Search implements Observer {
             }
         } );
         if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
-            aText.setText( "no searchable network enabled" );
+            aText.setText( G2GuiResources.getString( "S_UNAVAILABLE" ) );
             aText.setEnabled( false );
         }
 		return aText;        
@@ -265,7 +265,7 @@ public abstract class Search implements Observer {
 				
                 /* update the text */
 				if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
-					inputText.setText( "no searchable network enabled" );
+					inputText.setText( G2GuiResources.getString( "S_UNAVAILABLE" ) );
 					inputText.setEnabled( false );
 				}
 				else {
@@ -279,6 +279,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.24  2003/09/07 08:21:50  lemmster
+resourcebundle added
+
 Revision 1.23  2003/09/05 23:49:07  zet
 1 line per search option
 
