@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.53 2003/09/16 15:54:15 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.54 2003/09/16 15:56:13 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -341,7 +341,7 @@ public class FileInfo extends Parent implements Observer {
 	/**
 	 * @return The percent this file is complete
 	 */
-	public double getPerc() {
+	public int getPerc() {
 		return perc;
 	}
 	/**
@@ -786,6 +786,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.54  2003/09/16 15:56:13  zet
+(int) perc
+
 Revision 1.53  2003/09/16 15:54:15  zet
 (int) perc
 
