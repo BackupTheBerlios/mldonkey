@@ -117,7 +117,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		this.clientTableViewer = clientTableViewer;
 		this.mldonkey = mldonkey;
 		tableTreeContentProvider = (DownloadTableTreeContentProvider) tableTreeViewer.getContentProvider();
-		
+
 	}
 	
 	// Interface implementers
@@ -708,6 +708,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.11  2003/08/21 00:59:57  zet
+doubleclick expand
+
 Revision 1.10  2003/08/20 22:18:56  zet
 Viewer updates
 

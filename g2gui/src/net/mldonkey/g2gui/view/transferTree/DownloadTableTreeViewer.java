@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
@@ -54,7 +55,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.10 2003/08/20 14:58:43 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.11 2003/08/21 00:59:57 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -71,7 +72,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	private static boolean displayChunkGraphs;
 	private CoreCommunication mldonkey;
 	private CellEditor[] cellEditors;
-	private long lastTreeEvent = 0;
 	private TableViewer clientTableViewer;
 	
 	private final String[] COLUMN_LABELS =
@@ -181,14 +181,19 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			} ); 
 								 
 		}
+
 		tableTreeViewer.addDoubleClickListener(new IDoubleClickListener(){
 			public void doubleClick(DoubleClickEvent e) {
-				// hack
-				if (System.currentTimeMillis() < lastTreeEvent + 333) return; 
+			
 				IStructuredSelection sSel = (IStructuredSelection) e.getSelection();
 				Object o = sSel.getFirstElement();
 				if (o instanceof FileInfo) {
-					new FileDetailDialog((FileInfo) o);
+					FileInfo fileInfo = (FileInfo) o;
+					if (tableTreeViewer.getExpandedState(fileInfo)) 
+						tableTreeViewer.collapseToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
+					else 
+						tableTreeViewer.expandToLevel(fileInfo,AbstractTreeViewer.ALL_LEVELS);			
+				
 				} else if (o instanceof TreeClientInfo) {
 					TreeClientInfo treeClientInfo = (TreeClientInfo) o;
 					new ClientDetailDialog(treeClientInfo.getFileInfo(), treeClientInfo.getClientInfo());
@@ -260,10 +265,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		if (newName.length() > 0) fileInfo.setName(newName);
 			
 	}
-	public void setLastTreeEvent (long l) {
-		lastTreeEvent = l;
-	}
-	
 	public static boolean displayChunkGraphs() {
 		return displayChunkGraphs;
 	}
@@ -300,6 +301,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.11  2003/08/21 00:59:57  zet
+doubleclick expand
+
 Revision 1.10  2003/08/20 14:58:43  zet
 sources clientinfo viewer
 

@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Table;
  * DownloadTableTreeContentProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.10 2003/08/20 22:18:56 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.11 2003/08/21 00:59:57 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -392,7 +392,6 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 */
 	public void treeCollapsed (TreeEvent event) 
 	{
-		downloadTableTreeViewer.setLastTreeEvent(System.currentTimeMillis());
 		TableTreeItem item = (TableTreeItem) event.item;
 		closeChildEditors(item);
 	}
@@ -403,7 +402,6 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 */
 	public void treeExpanded (TreeEvent event) 
 	{
-		downloadTableTreeViewer.setLastTreeEvent(System.currentTimeMillis());
 		TableTreeItem item = (TableTreeItem) event.item;
 		updateChildEditors(item);
 	}
@@ -620,6 +618,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.11  2003/08/21 00:59:57  zet
+doubleclick expand
+
 Revision 1.10  2003/08/20 22:18:56  zet
 Viewer updates
 
