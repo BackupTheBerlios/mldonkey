@@ -1,13 +1,10 @@
-G2gui's TODO-list (last update: 01.03.04)
+G2gui's TODO-list (last update: 2004-03-26)
 =================
 Things with "!" will be implemented/fixed next
 
  ------------------
 | Important things |
  ------------------
-
-* Fix memleak when relaunching g2gui after a pref-change. MainWindow or the core
-  does not seem to be disposed properly
 
 * Get the subsearch right and put it to another place
 

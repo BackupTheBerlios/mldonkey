@@ -1,3 +1,6 @@
+2004/03/26: vnc
+	* Preferences: Fixed re-launching memleak
+
 2004/03/25: vnc
 	* TransferTable: 
 		- Download-Cancel dialog now list the files before canceling
