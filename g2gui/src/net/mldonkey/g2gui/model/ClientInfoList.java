@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoList.java,v 1.8 2003/06/16 18:05:20 dek Exp $$ 
+ * @version $$Id: ClientInfoList.java,v 1.9 2003/06/16 18:21:41 dek Exp $$ 
  */
 public class ClientInfoList extends InfoMap {
 	/**
@@ -71,9 +71,13 @@ public class ClientInfoList extends InfoMap {
 	 * Update a specific element in the List
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	public void update( MessageBuffer messageBuffer ) {
+	public void update( MessageBuffer messageBuffer ) {		
 		int key = messageBuffer.readInt32();
-		( ( ClientInfo ) this.infoMap.get( key ) ).update( messageBuffer );
+		if ( this.infoMap.contains( key ) )
+			( ( ClientInfo ) this.infoMap.get( key ) ).update( messageBuffer );
+		else
+			System.out.println( "attempt to update a Client that is not in List (due to cleanTable??)" );
+		
 	}
 	
 	/**
@@ -95,6 +99,9 @@ public class ClientInfoList extends InfoMap {
 }
 /*
 $$Log: ClientInfoList.java,v $
+$Revision 1.9  2003/06/16 18:21:41  dek
+$NPE fix
+$
 $Revision 1.8  2003/06/16 18:05:20  dek
 $refactored cleanTable
 $
