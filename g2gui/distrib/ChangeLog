@@ -1,5 +1,5 @@
 2003/10/13: z
-	* Transfer: Add WebServices Bitzi & Jigle hash lookup (rt-click menu)
+	* Transfer: Add WebServices Bitzi, FileDonkey & Jigle hash lookup (rt-click menu)
 	* Win TrayIcon: Fix File->Exit bug  (when minimize to systray is active)
 
 2003/10/10: z
