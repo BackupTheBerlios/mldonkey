@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.11 2003/07/16 18:16:53 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.12 2003/07/16 19:39:46 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -60,6 +60,8 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 	 * for which file is this item a ClientItem
 	 */
 	private FileInfo fileInfo;
+	
+	private TableTreeEditor editor;
 
 	/**
 	 * @param parent for wich downloaditem this object delivers detailed infos
@@ -72,7 +74,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		this.downloadItem = parent;
 		this.fileInfo = downloadItem.getFileInfo();
 		this.downloadItem = parent;
-		final TableTreeEditor editor = new TableTreeEditor( this.getParent() );		
+		editor = new TableTreeEditor( this.getParent() );		
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
 		Control oldEditor = editor.getEditor();
@@ -85,6 +87,8 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		addDisposeListener( new DisposeListener() {
 			public void widgetDisposed( DisposeEvent e ) {				
 				chunks.dispose();
+				// resetting the chunk-bar editor is a must 
+				editor.setEditor( null );	
 			} } );
 		
 		
@@ -149,6 +153,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.12  2003/07/16 19:39:46  dek
+fixed exception when items were expanded after a sort()
+
 Revision 1.11  2003/07/16 18:16:53  dek
 another flickering-test
 

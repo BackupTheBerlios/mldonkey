@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.13 2003/07/16 18:16:53 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.14 2003/07/16 19:39:46 dek Exp $ 
  *
  */
 public class DownloadItem 
@@ -81,6 +81,8 @@ public class DownloadItem
 	private TIntObjectHashMap namedclients = new TIntObjectHashMap();
 
 	private FileInfo fileInfo;
+	
+	private TableTreeEditor editor;
 
 	/**
 	 * @param parent where this Item should appear
@@ -91,7 +93,7 @@ public class DownloadItem
 		super( parent, style );		
 		this.tableTree = parent;
 		this.fileInfo = fileInfo;		
-		final TableTreeEditor editor = new TableTreeEditor( this.getParent() );		
+		editor = new TableTreeEditor( this.getParent() );		
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
 		
@@ -105,7 +107,7 @@ public class DownloadItem
 				if ( oldEditor != null )
 					oldEditor.dispose();
 				this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo, 4 );
-		editor.setEditor ( chunks, this, 4 );					
+		editor.setEditor ( chunks, this, 4 );				
 		setText( 7, String.valueOf( fileInfo.getSize() ) );
 		
 		updateColumns();
@@ -145,7 +147,9 @@ public class DownloadItem
 					while ( it.hasNext() ) {
 						it.advance();
 						ClientItem clientItem = ( ClientItem ) it.value();
-						clientItem.dispose();
+						clientItem.dispose();	
+						// resetting the chunk-bar editor is a must 
+						editor.setEditor( null );					
 					}
 				}				
 			}
@@ -211,6 +215,7 @@ public class DownloadItem
 		setText( 6, String.valueOf( fileInfo.getDownloaded() ) );		
 		//setText( 7, String.valueOf( fileInfo.getSize() ) );		
 		chunks.refresh();
+		
 	}
 	
 
@@ -366,6 +371,9 @@ public class DownloadItem
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.14  2003/07/16 19:39:46  dek
+fixed exception when items were expanded after a sort()
+
 Revision 1.13  2003/07/16 18:16:53  dek
 another flickering-test
 
