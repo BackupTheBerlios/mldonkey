@@ -64,20 +64,17 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.40 2003/11/04 20:38:27 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.41 2003/11/16 10:26:25 lemmster Exp $ 
  *
  */
 public class SearchTab extends PaneGuiTab {
 	private SashForm mainSash;
-	private GridLayout gridLayout;
-	private Group group;
 	private CTabFolder tabFolder;
 	private CTabFolder cTabFolder;
 	private CoreCommunication core;
@@ -180,8 +177,8 @@ public class SearchTab extends PaneGuiTab {
         tabFolder.addSelectionListener( new SelectionListener() {
             public void widgetDefaultSelected( SelectionEvent e ) { }
             public void widgetSelected( SelectionEvent e ) {
-				CTabItem cTabItem = ( CTabItem ) e.item;
-				cTabItem.setControl( ( Control ) cTabItem.getData( "myControl" ) );
+				CTabItem cTabItem = (CTabItem) e.item;
+				cTabItem.setControl( (Control) cTabItem.getData( "myControl" ) );
 
                 for ( int i = 0; i < tabFolder.getItems().length; i++ ) {
                 	if ( tabFolder.getItems()[ i ] != e.item ) 
@@ -241,12 +238,12 @@ public class SearchTab extends PaneGuiTab {
 		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
 			public void itemClosed( CTabFolderEvent event ) {
 				/* dispose the items control (to avoid arrayindexoutofbound?) */
-				CTabItem item = ( CTabItem ) event.item;
+				CTabItem item = (CTabItem) event.item;
 				item.getControl().dispose();
 				
 				/* set the new statusline */
 				if ( cTabFolder.getItemCount() != 0 ) {
-					SearchResult nResult = ( SearchResult ) cTabFolder.getSelection().getData();
+					SearchResult nResult = (SearchResult) cTabFolder.getSelection().getData();
 					mainWindow.getStatusline().update( nResult.getStatusLine() );
 					mainWindow.getStatusline().updateToolTip( "" );
 					setSearchButton();
@@ -264,9 +261,9 @@ public class SearchTab extends PaneGuiTab {
 
 			public void focusLost( FocusEvent e ) { 
 				/* we are in focus, set our result count */
-				CTabFolder item = ( CTabFolder ) e.widget;
+				CTabFolder item = (CTabFolder) e.widget;
 				if ( item.getSelection() != null ) {
-					SearchResult result = ( SearchResult ) item.getSelection().getData();
+					SearchResult result = (SearchResult) item.getSelection().getData();
 					mainWindow.getStatusline().update( result.getStatusLine() );
 					mainWindow.getStatusline().updateToolTip( "" );
 				}
@@ -278,9 +275,9 @@ public class SearchTab extends PaneGuiTab {
 			public void mouseDoubleClick( MouseEvent e ) { }
 
 			public void mouseDown( MouseEvent e ) {
-				CTabFolder item = ( CTabFolder ) e.widget;
+				CTabFolder item = (CTabFolder) e.widget;
 				if ( item.getSelection() != null ) {
-					SearchResult result = ( SearchResult ) item.getSelection().getData();
+					SearchResult result = (SearchResult) item.getSelection().getData();
 					if ( result.isStopped() )
 						setContinueButton();
 					else
@@ -311,7 +308,7 @@ public class SearchTab extends PaneGuiTab {
 		/* we have items */
 		if ( cTabFolder.getItemCount() != 0 ) {
 			CTabItem item = cTabFolder.getSelection();
-			SearchResult result = ( SearchResult ) item.getData();
+			SearchResult result = (SearchResult) item.getData();
 			return result.getStatusLine();
 		}
 		return "";
@@ -329,7 +326,7 @@ public class SearchTab extends PaneGuiTab {
 	 */
 	private SearchResult getSearchResult() {
 		CTabItem item = cTabFolder.getSelection();
-		SearchResult result = ( SearchResult ) item.getData();
+		SearchResult result = (SearchResult) item.getData();
 		return result;
 	}
 	
@@ -338,7 +335,7 @@ public class SearchTab extends PaneGuiTab {
 	 */
 	private Search getSearch() {
 		CTabItem item = tabFolder.getSelection();
-		Search result = ( Search ) item.getData();
+		Search result = (Search) item.getData();
 		return result;
 	}
 	
@@ -437,7 +434,7 @@ public class SearchTab extends PaneGuiTab {
 		CTabItem[] items = cTabFolder.getItems();
 		for ( int i = 0; i < items.length; i++ ) {
 			if ( items[ i ].getData() instanceof SearchResult ) {
-				SearchResult temp = ( SearchResult ) items[ i ].getData();
+				SearchResult temp = (SearchResult) items[ i ].getData();
 				temp.updateDisplay();				
 			}			
 		}
@@ -451,10 +448,24 @@ public class SearchTab extends PaneGuiTab {
 		SearchResult searchResult = (SearchResult) item.getData();
 		return searchResult.getGView();
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.GuiTab#setActive()
+	 */
+	public void setActive() {
+		super.setActive();
+		
+		// The the current selected Search inputText to focus
+		this.getSearch().setFocus();
+	}
 }
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.41  2003/11/16 10:26:25  lemmster
+fix: [Bug #1080] Searchbox should get focused when switching to servertab
+
 Revision 1.40  2003/11/04 20:38:27  zet
 update for transparent gifs
 
@@ -538,7 +549,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

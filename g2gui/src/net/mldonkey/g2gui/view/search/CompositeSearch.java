@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * CompositeSearch
  *
- * @version $Id: CompositeSearch.java,v 1.8 2003/09/24 05:53:00 lemmster Exp $
+ * @version $Id: CompositeSearch.java,v 1.9 2003/11/16 10:26:25 lemmster Exp $
  *
  */
 public class CompositeSearch extends Search {
@@ -157,12 +157,23 @@ public class CompositeSearch extends Search {
 	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
 	 */
 	public void performSearch() {
-		( ( Search ) aStackLayout.topControl.getData() ).performSearch();
+		( (Search) aStackLayout.topControl.getData() ).performSearch();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.search.Search#setFocus()
+	 */
+	public boolean setFocus() {
+		return ( (Search) aStackLayout.topControl.getData() ).setFocus();
 	}
 }
 
 /*
 $Log: CompositeSearch.java,v $
+Revision 1.9  2003/11/16 10:26:25  lemmster
+fix: [Bug #1080] Searchbox should get focused when switching to servertab
+
 Revision 1.8  2003/09/24 05:53:00  lemmster
 CTabFolder -> Composite
 

@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.31 2003/10/20 16:23:30 zet Exp $
+ * @version $Id: Search.java,v 1.32 2003/11/16 10:26:25 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -302,10 +302,24 @@ public abstract class Search implements Observer {
             }
         } );
     }
+    
+	/**
+	 * Causes the text to have the <em>keyboard focus</em>, 
+	 * such that all keyboard events will be delivered to it.  Focus
+	 * reassignment will respect applicable platform constraints.
+	 *
+	 * @return <code>true</code> if the text got focus, and <code>false</code> if it was unable to.
+	 */
+    public boolean setFocus() {
+    	return this.inputText.setFocus();
+    }
 }
 
 /*
 $Log: Search.java,v $
+Revision 1.32  2003/11/16 10:26:25  lemmster
+fix: [Bug #1080] Searchbox should get focused when switching to servertab
+
 Revision 1.31  2003/10/20 16:23:30  zet
 fix npe
 
