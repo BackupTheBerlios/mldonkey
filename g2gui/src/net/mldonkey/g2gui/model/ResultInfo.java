@@ -22,16 +22,26 @@
  */
 package net.mldonkey.g2gui.model;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.helper.MessageBuffer;
+import gnu.regexp.RE;
+import gnu.regexp.REException;
 
 import java.text.DecimalFormat;
+
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ResultInfo
  *
+ * @author $Author: zet $
+ * @version $Id: ResultInfo.java,v 1.15 2003/08/26 22:44:03 zet Exp $ 
  *
- * @version $Id: ResultInfo.java,v 1.14 2003/08/23 15:21:37 zet Exp $ 
+ */
+/**
+ * ResultInfo
+ *
+ *
+ * @version $Id: ResultInfo.java,v 1.15 2003/08/26 22:44:03 zet Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -76,6 +86,31 @@ public class ResultInfo extends Parent {
 	 * true = Normal, false = Already Downloaded 
 	 */
 	private boolean history;
+
+
+	// basic filtering
+	public boolean containsProfanity = false;
+	public boolean containsPornography = false;
+
+	private static RE profanityFilterRE;
+	private static RE pornographyFilterRE;
+	
+	static {
+		// who knows how to filter this garbage properly...
+		try {
+			profanityFilterRE = new RE( 
+				"fuck|shit" 
+				, RE.REG_ICASE );
+		}  catch ( REException e ) { }
+		try {
+			pornographyFilterRE = new RE( 
+				"fuck|shit|porn|pr0n|pussy|xxx|sex|erotic|anal|lolita|sluts|fetish"
+				+ "|naked|incest|bondage|masturbat|blow.*job|barely.*legal" 
+				, RE.REG_ICASE );
+		} catch ( REException e ) {	}
+		
+	}
+	
 	
 	/**
 	 * Creates a new ResultInfo
@@ -138,6 +173,17 @@ public class ResultInfo extends Parent {
 		this.setHistory( messageBuffer.readByte() ); 
 
 		this.stringSize = this.calcStringSize( this.getSize() );
+		
+		for ( int i = 0; i < names.length; i++ ) {
+			if (profanityFilterRE.getMatch(names[ i ]) != null) {
+				containsProfanity = true;
+				if (containsPornography) break;
+			}
+			if (pornographyFilterRE.getMatch(names[ i ]) != null) {
+				containsPornography = true;
+				if (containsProfanity) break;
+			}
+		}
 	}
 
 	/**
@@ -298,6 +344,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.15  2003/08/26 22:44:03  zet
+basic filtering
+
 Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 

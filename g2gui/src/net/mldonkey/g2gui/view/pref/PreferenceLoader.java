@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.14 2003/08/24 18:05:01 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.15 2003/08/26 22:44:03 zet Exp $
  */
 public class PreferenceLoader {
 
@@ -89,6 +89,9 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( "port", "4001" );
 		preferenceStore.setDefault( "advancedMode", false);
 
+		preferenceStore.setDefault( "searchFilterPornography", false );
+		preferenceStore.setDefault( "searchFilterProfanity", false );
+		
 		preferenceStore.setDefault( "maintainSortOrder", false );
 		preferenceStore.setDefault( "displayAllServers", true );
 		preferenceStore.setDefault( "displayChunkGraphs", false );
@@ -200,6 +203,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.15  2003/08/26 22:44:03  zet
+basic filtering
+
 Revision 1.14  2003/08/24 18:05:01  zet
 handle cleanup of colors/fonts
 

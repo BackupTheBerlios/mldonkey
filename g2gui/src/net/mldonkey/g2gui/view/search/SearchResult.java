@@ -34,10 +34,13 @@ import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
@@ -75,7 +78,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.29 2003/08/25 16:02:50 zet Exp $ 
+ * @version $Id: SearchResult.java,v 1.30 2003/08/26 22:44:03 zet Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -91,6 +94,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	private TableColumn tableColumn;
 	private String statusline;
 	private ResultTableSorter resultTableSorter = new ResultTableSorter();
+	private static final int PROFANITY_FILTER_TYPE = 1;
+	private static final int PORNOGRAPHY_FILTER_TYPE = 2;
 	
 	private int count = 0;
 	
@@ -124,6 +129,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		this.createContent();
 		/* register ourself to the core */
 		core.getResultInfoIntMap().addObserver( this );
+			
 	}
 	
 	/* (non-Javadoc)
@@ -243,6 +249,15 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		popupMenu.setRemoveAllWhenShown( true );
 		popupMenu.addMenuListener( tableMenuListener );
 		table.getTable().setMenu( popupMenu.createContextMenu( table.getTable() ) );
+		
+		
+		// add optional filters
+		if (PreferenceLoader.loadBoolean("searchFilterPornography")) {
+			table.addFilter(new WordFilter(PORNOGRAPHY_FILTER_TYPE));
+			
+		} else if (PreferenceLoader.loadBoolean("searchFilterProfanity")) {
+			table.addFilter(new WordFilter(PROFANITY_FILTER_TYPE));
+		}
 
 			
 		/* create the columns */
@@ -345,6 +360,26 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 					
 		/* no longer receive results for this search */
 		this.unregister();		
+	}
+	
+	public class WordFilter extends ViewerFilter {
+		
+		private int wordFilterType = 0;
+		
+		public WordFilter(int type) {
+			wordFilterType = type;
+		}
+		
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if (element instanceof ResultInfo) {
+				ResultInfo resultInfo = ( ResultInfo ) element;
+				if ( (wordFilterType == PROFANITY_FILTER_TYPE && resultInfo.containsProfanity)
+					|| (wordFilterType == PORNOGRAPHY_FILTER_TYPE && resultInfo.containsPornography) )
+						return false;
+				return true;
+			}
+			return true;
+		}
 	}
 	
 	/**
@@ -526,6 +561,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.30  2003/08/26 22:44:03  zet
+basic filtering
+
 Revision 1.29  2003/08/25 16:02:50  zet
 remove duplicate code, move dblclick to menulistener
 

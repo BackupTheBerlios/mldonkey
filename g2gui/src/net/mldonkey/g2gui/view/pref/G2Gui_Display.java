@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Display.java,v 1.18 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: G2Gui_Display.java,v 1.19 2003/08/26 22:44:03 zet Exp $
  */
 public class G2Gui_Display extends FieldEditorPreferencePage {
 	private Composite parent;
@@ -121,6 +121,10 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 			setupEditor( new ExtendedFontFieldEditor2( "consoleFontData", G2GuiResources.getString("PREF_DISPLAY_CONSOLE_FONT"), "Sample", parent ) );
 			setupEditor( new BooleanFieldEditor( "displayAllServers", G2GuiResources.getString("PREF_DISPLAY_CONN_SERV"), parent ) );
 		}			
+			
+		setupEditor( new BooleanFieldEditor( "searchFilterPornography", G2GuiResources.getString("PREF_SEARCH_FILTER_PORNOGRAPHY"), parent ) );
+		
+		setupEditor( new BooleanFieldEditor( "searchFilterProfanity", G2GuiResources.getString("PREF_SEARCH_FILTER_PROFANITY"), parent ) );	
 																								
 		setupEditor( new BooleanFieldEditor( "displayHeaderBar", G2GuiResources.getString("PREF_DISPLAY_HEADER"), parent ) );
 				
@@ -142,6 +146,9 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.19  2003/08/26 22:44:03  zet
+basic filtering
+
 Revision 1.18  2003/08/23 15:21:37  zet
 remove @author
 
