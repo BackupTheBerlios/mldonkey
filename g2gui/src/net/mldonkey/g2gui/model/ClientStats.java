@@ -22,16 +22,17 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ClientStats
  *
  * @author markus
- * @version $Id: ClientStats.java,v 1.11 2003/07/02 16:24:14 dek Exp $ 
+ * @version $Id: ClientStats.java,v 1.12 2003/07/06 10:05:17 lemmstercvs01 Exp $ 
  *
  */
-public class ClientStats implements SimpleInformation {
+public class ClientStats extends Parent {
 
 	private long totalUp;
 	private long totalDown;
@@ -43,7 +44,15 @@ public class ClientStats implements SimpleInformation {
 	private float udpDownRate;
 	private int numCurrDownload;
 	private int numDownloadFinished;
-	private int[] connectedNetworks;
+	private NetworkInfo[] connectedNetworks;
+	
+	/**
+	 * Creates a new ClientStats object
+	 * @param core The parent corecommunication
+	 */
+	public ClientStats( CoreCommunication core ) {
+		super( core );
+	}
 	
 	/**
 	 * A string representation of this object
@@ -67,157 +76,84 @@ public class ClientStats implements SimpleInformation {
 	}
 
 	/**
-	 * @return an int[]
+	 * @return The connected networks
 	 */
-	public int[] getConnectedNetworks() {
+	public NetworkInfo[] getConnectedNetworks() {
 		return connectedNetworks;
 	}
 
 	/**
-	 * @return an int
+	 * @return The number of current downloads
 	 */
 	public int getNumCurrDownload() {
 		return numCurrDownload;
 	}
 
 	/**
-	 * @return an int
+	 * @return The number of shares
 	 */
 	public int getNumOfShare() {
 		return numOfShare;
 	}
 
 	/**
-	 * @return an int
+	 * @return The tcp download rate
+	 * (rounded to two decimal places)
 	 */
 	public float getTcpDownRate() {
 		return tcpDownRate;
 	}
 
 	/**
-	 * @return an int
+	 * @return The tcp upload rate
+	 * (rounded to two decimal places)
 	 */
 	public float getTcpUpRate() {
 		return tcpUpRate;
 	}
 
 	/**
-	 * @return a long
+	 * @return The traffic total downloaded
 	 */
 	public long getTotalDown() {
 		return totalDown;
 	}
 
 	/**
-	 * @return a long
+	 * @return The traffic total shared
 	 */
 	public long getTotalShared() {
 		return totalShared;
 	}
 
 	/**
-	 * @return a long
+	 * @return The total traffic uploaded
 	 */
 	public long getTotalUp() {
 		return totalUp;
 	}
 
 	/**
-	 * @return an int
+	 * @return The udp download rate
+	 * (rounded to two decimal places)
 	 */
 	public float getUdpDownRate() {
 		return udpDownRate;
 	}
 
 	/**
-	 * @return an int
+	 * @return The udp upload rate
+	 * (rounded to two decimal places)
 	 */
 	public float getUdpUpRate() {
 		return udpUpRate;
 	}
 
 	/**
-	 * @param is an int[]
-	 */
-	public void setConnectedNetworks( int[] is ) {
-		connectedNetworks = is;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setNumCurrDownload( int i ) {
-		numCurrDownload = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setNumOfShare( int i ) {
-		numOfShare = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setTcpDownRate( float i ) {
-		tcpDownRate = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setTcpUpRate( float i ) {
-		tcpUpRate = i;
-	}
-
-	/**
-	 * @param l a long
-	 */
-	public void setTotalDown( long l ) {
-		totalDown = l;
-	}
-
-	/**
-	 * @param l a long
-	 */
-	public void setTotalShared( long l ) {
-		totalShared = l;
-	}
-
-	/**
-	 * @param l a long
-	 */
-	public void setTotalUp( long l ) {
-		totalUp = l;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setUdpDownRate( float i ) {
-		udpDownRate = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setUdpUpRate( float i ) {
-		udpUpRate = i;
-	}
-
-	/**
-	 * @return an int
+	 * @return Number of finished downloads
 	 */
 	public int getNumDownloadFinished() {
 		return numDownloadFinished;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setNumDownloadFinished( int i ) {
-		numDownloadFinished = i;
 	}
 
 	/**
@@ -225,17 +161,29 @@ public class ClientStats implements SimpleInformation {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {		
-		this.setTotalUp( messageBuffer.readInt64() );
-		this.setTotalDown( messageBuffer.readInt64() );
-		this.setTotalShared( messageBuffer.readInt64() );
-		this.setNumOfShare( messageBuffer.readInt32() );
-		this.setTcpUpRate( round( messageBuffer.readInt32() / ( float )1024 ) );		
-		this.setTcpDownRate( round( messageBuffer.readInt32() / ( float )1024 ) );
-		this.setUdpUpRate( round( messageBuffer.readInt32() / ( float )1024 ) );
-		this.setUdpDownRate( round( messageBuffer.readInt32() / ( float )1024 ) );
-		this.setNumCurrDownload( messageBuffer.readInt32() );
-		this.setNumDownloadFinished( messageBuffer.readInt32() );
-		this.setConnectedNetworks( messageBuffer.readInt32List() );		
+		this.totalUp = messageBuffer.readInt64();
+		this.totalDown = messageBuffer.readInt64();
+		this.totalShared = messageBuffer.readInt64();
+		this.numOfShare = messageBuffer.readInt32();
+		this.tcpUpRate = round( messageBuffer.readInt32() / ( float )1024 );		
+		this.tcpDownRate = round( messageBuffer.readInt32() / ( float )1024 );
+		this.udpUpRate = round( messageBuffer.readInt32() / ( float )1024 );
+		this.udpDownRate = round( messageBuffer.readInt32() / ( float )1024 );
+		this.numCurrDownload = messageBuffer.readInt32();
+		this.numDownloadFinished = messageBuffer.readInt32();
+
+		/* create the ConnectedNetworks[] */
+		int listElem = messageBuffer.readInt16();
+
+		if ( listElem < 0 ) //check, if this is a big unsigned int, and fix it:
+			listElem = ( int )( Short.MAX_VALUE * 2 + listElem ) + 2;
+
+		NetworkInfo[] temp = new NetworkInfo[ listElem ];
+		for ( int i = 0; i < listElem; i++ ) {
+			temp[ i ] = ( NetworkInfo ) this.parent.getNetworkInfoMap()
+							.infoIntMap.get( messageBuffer.readInt32() );		
+		}
+		this.connectedNetworks = temp;
 	}
 	
 	/**
@@ -247,11 +195,13 @@ public class ClientStats implements SimpleInformation {
 		d = ( float )( Math.round( d * 100 ) ) / 100;
 		return d;
 	}
-
 }
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.12  2003/07/06 10:05:17  lemmstercvs01
+int[] connectedNetworks -> NetworkInfo[] connectedNetworks
+
 Revision 1.11  2003/07/02 16:24:14  dek
 Checkstyle
 
