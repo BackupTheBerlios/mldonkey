@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.90 2003/08/24 16:54:07 dek Exp $ 
+ * @version $Id: Core.java,v 1.91 2003/08/26 19:28:40 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -258,7 +258,19 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					this.resultInfoMap.readStream( messageBuffer );		
 					break;
 					
-			case Message.R_OPTIONS_INFO :		
+			case Message.R_OPTIONS_INFO :
+					/*
+					 * when we first receive this msg in push-mode,
+					 * we passed the badPassword msg so release the waiterobj 
+					 * that the G2Gui.main() can continue
+					 */
+					if ( !initialized ) {
+						badPassword = false;
+						synchronized ( waiterObj ) {
+							waiterObj.notify();
+						}
+						initialized = true;
+					}	
 					this.optionsInfoMap.readStream( messageBuffer );			
 					break;
 				
@@ -327,8 +339,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					
 			case Message.R_CLIENT_STATS :
 					/*
-					 * when we first receive this msg,we passed the badPassword msg
-					 * so release the waiterobj that the G2Gui.main() can continue
+					 * when we first receive this msg in poll-mode,
+					 * we passed the badPassword msg so release the waiterobj 
+					 * that the G2Gui.main() can continue
 					 */
 					if ( !initialized ) {
 						badPassword = false;
@@ -534,6 +547,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.91  2003/08/26 19:28:40  dek
+different first messages for push / pull-mode, so the gui starts faster in each case
+
 Revision 1.90  2003/08/24 16:54:07  dek
 RoomInfo is now read from stream to Map, ready for use to implement
 all the room-stuff
