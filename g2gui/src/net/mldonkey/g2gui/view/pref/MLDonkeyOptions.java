@@ -35,7 +35,6 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,7 +44,7 @@ import org.eclipse.swt.widgets.Control;
  * MLDonkeyOptions
  *
  * @author  $Author: zet $ 
- * @version $Id: MLDonkeyOptions.java,v 1.17 2003/08/19 16:39:50 zet Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.18 2003/08/19 16:54:29 zet Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -91,15 +90,17 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 						if ( description.equals( "" ) ) description = temp.getKey();
 					String optionHelp = temp.getOptionHelp();					
 						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
-					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, parent );
+					// with a very long string, the pref pages looks bad. limit to 25?
+					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, 25, parent ); 
 						string.getLabelControl( parent ).setToolTipText( optionHelp );					
 						string.setPreferenceStore( this.getPreferenceStore() );
 						
-					Point inputSize = string.getTextControl( parent ).getSize();
+					//Point inputSize = string.getTextControl( parent ).getSize();
 					addField( string );
 					string.fillIntoGrid( parent, 2 );
 					string.load();
-					string.getTextControl( parent ).setSize( 50, inputSize.y );
+					// this doesn't do anything since you fillIntoGrid ?
+					// string.getTextControl( parent ).setSize( 50, inputSize.y );
 				}
 			}
 	
@@ -165,6 +166,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.18  2003/08/19 16:54:29  zet
+limit string length so long option strings fit on screen
+
 Revision 1.17  2003/08/19 16:39:50  zet
 fix null pointer
 
