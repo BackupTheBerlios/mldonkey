@@ -93,8 +93,11 @@ public class Spinner extends Composite {
                 e.doit = false;
         }
     }
-
-    void traverse(Event e) {
+	/*
+	 * even if eclipse says something here, 
+	 * return-value 'boolean' is needed for gcj( yet another gcj workaround
+	 */   
+    boolean traverse(Event e) {
         switch (e.detail) {
         case SWT.TRAVERSE_ARROW_PREVIOUS:
 
@@ -120,6 +123,7 @@ public class Spinner extends Composite {
 
             break;
         }
+		return false;
     }
 
     void up() {
