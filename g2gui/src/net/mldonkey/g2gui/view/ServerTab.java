@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.37 2003/10/11 20:19:18 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.38 2003/10/12 14:56:19 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -206,6 +206,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		
 		/* create the columns */
 		int w;
+		boolean isGTK = SWT.getPlatform().equals("gtk");
 		for ( int i = 0; i < tableColumns.length; i++ ) {
 			final PreferenceStore prefStore = PreferenceLoader.getPreferenceStore();
 			prefStore.setDefault( tableColumns[ i ], tableWidth[ i ] );
@@ -214,7 +215,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			
 			// gtk renders an error when setWidth == 0
 			w = prefStore.getInt( tableColumns[ i ] );
-			tableColumn.setWidth( ( ( w == 0 && SWT.getPlatform().equals("gtk") ) ? tableWidth[ i ] : w ) );
+			tableColumn.setWidth( ( ( w == 0 && isGTK ) ? ( tableWidth[ i ] == 0 ? 50 : tableWidth [ i ] ) : w ) );
 			
 			/* read the new tablewidth to the prefstore */
 			final int j = i;
@@ -445,6 +446,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.38  2003/10/12 14:56:19  zet
+*** empty log message ***
+
 Revision 1.37  2003/10/11 20:19:18  zet
 Don't TableColumn.setWidth(0) on gtk
 
