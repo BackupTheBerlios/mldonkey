@@ -36,6 +36,7 @@ import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
+import net.mldonkey.g2gui.view.viewers.actions.CopyED2KLinkToClipboardAction;
 import net.mldonkey.g2gui.view.viewers.actions.WebServicesAction;
 
 import org.eclipse.jface.action.Action;
@@ -59,7 +60,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.20 2003/10/22 16:28:52 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.21 2003/10/22 20:38:35 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -124,11 +125,26 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 			menuManager.add( new CopyNameAction() );
 
 			/* copy filename as plain/html */
-			MenuManager copyManager =
-					new MenuManager( G2GuiResources.getString( "ST_COPYLINK" ) );
-			copyManager.add( new CopyED2KAction( false ) );
-			copyManager.add( new CopyED2KAction( true ) );
-			menuManager.add( copyManager );
+//			MenuManager copyManager =
+//					new MenuManager( G2GuiResources.getString( "ST_COPYLINK" ) );
+//			copyManager.add( new CopyED2KAction( false ) );
+//			copyManager.add( new CopyED2KAction( true ) );
+//			menuManager.add( copyManager );
+			
+			if (selectedResult != null) {
+				String[] linkList = new String[ selectedResults.size() ];
+
+				for (int i = 0; i < selectedResults.size(); i++) {
+					linkList[ i ] = new String(((ResultInfo) selectedResults.get(i)).getLink());
+				}
+
+				MenuManager clipboardMenu = new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_COPYTO"));
+				clipboardMenu.add(new CopyED2KLinkToClipboardAction(false, linkList));
+				clipboardMenu.add(new CopyED2KLinkToClipboardAction(true, linkList));
+				menuManager.add(clipboardMenu);
+			}
+
+			
 	
 //			menuManager.add( new Separator() );
 	
@@ -286,41 +302,6 @@ Yet			menuManager.add( webManager );
 			clipboard.dispose();						
 		}
 	}
-
-
-	private class CopyED2KAction extends Action {
-	    boolean useHTML;
-		public CopyED2KAction(boolean useHTML) {
-			super();
-			if (useHTML) 
-			    setText( G2GuiResources.getString( "ST_ASHTML" ) );
-			else
-			    setText( G2GuiResources.getString( "ST_ASPLAIN" ) );
-			
-			setImageDescriptor( G2GuiResources.getImageDescriptor( "edonkey" ));
-			this.useHTML = useHTML;
-		}
-		public void run() {
-			Clipboard clipboard =
-				new Clipboard( ( ( TableViewer ) tableViewer ).getTable().getDisplay() );
-			String aString = "";
-			for ( int i = 0; i < selectedResults.size(); i++ ) {
-				ResultInfo result = ( ResultInfo ) selectedResults.get( i );
-				if ( aString.length() > 0 )
-					aString += ( SWT.getPlatform().equals( "win32" ) ? "\r\n" : "\n" );
-				
-				if (useHTML)
-				    aString += "<a href=\"" + result.getLink() + "\">"
-								 + result.getName() + "</a>";
-				else 
-				    aString += result.getLink();
-				
-			}
-			clipboard.setContents( new Object[] { aString }, 
-							new Transfer[] { TextTransfer.getInstance() } );
-			clipboard.dispose();						
-		}
-	}
 	
 	private class FakeSearchAction extends Action {
 		public FakeSearchAction() {
@@ -357,6 +338,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.21  2003/10/22 20:38:35  zet
+common actions
+
 Revision 1.20  2003/10/22 16:28:52  zet
 common actions
 

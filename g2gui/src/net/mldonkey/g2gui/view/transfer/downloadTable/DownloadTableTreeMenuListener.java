@@ -41,6 +41,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.transfer.UniformResourceLocator;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.actions.CopyED2KLinkToClipboardAction;
 import net.mldonkey.g2gui.view.viewers.actions.ToggleClientsAction;
 import net.mldonkey.g2gui.view.viewers.actions.WebServicesAction;
 
@@ -55,7 +56,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceAdapter;
@@ -85,7 +85,7 @@ import org.eclipse.swt.widgets.Text;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.21 2003/10/22 17:17:30 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.22 2003/10/22 20:38:35 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -307,9 +307,15 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
 
         if (selectedFile != null) {
+            String[] linkList = new String[selectedFiles.size()];
+            
+            for (int i = 0; i < selectedFiles.size(); i++) {
+                linkList[i] = new String( ((FileInfo) selectedFiles.get(i)).getED2K() );
+            }
+            
             MenuManager clipboardMenu = new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_COPYTO"));
-            clipboardMenu.add(new LinkToClipboardAction(false));
-            clipboardMenu.add(new LinkToClipboardAction(true));
+            clipboardMenu.add(new CopyED2KLinkToClipboardAction(false, linkList));
+            clipboardMenu.add(new CopyED2KLinkToClipboardAction(true, linkList));
             menuManager.add(clipboardMenu);
         }
 
@@ -633,38 +639,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     }
 
     /**
-     * LinkToClipboardAction
-     */
-    private class LinkToClipboardAction extends Action {
-        private boolean useHTML = false;
-
-        public LinkToClipboardAction(boolean useHTML) {
-            super();
-            this.useHTML = useHTML;
-            setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_ED2K_COPY") + (useHTML ? " (html)" : ""));
-            setImageDescriptor(G2GuiResources.getImageDescriptor("edonkey"));
-        }
-
-        public void run() {
-            Clipboard clipBoard = new Clipboard(tableTreeViewer.getTableTree().getDisplay());
-            String link = "";
-
-            for (int i = 0; i < selectedFiles.size(); i++) {
-                FileInfo aFileInfo = (FileInfo) selectedFiles.get(i);
-
-                if (link.length() > 0) {
-                    link += (SWT.getPlatform().equals("win32") ? "\r\n" : "\n");
-                }
-
-                link += ((useHTML ? "<a href=\"" : "") + aFileInfo.getED2K() + (useHTML ? ("\">" + aFileInfo.getName() + "</a>") : ""));
-            }
-
-            clipBoard.setContents(new Object[] { link }, new Transfer[] { TextTransfer.getInstance() });
-            clipBoard.dispose();
-        }
-    }
-
-    /**
      * PriorityInputDialog
      */
     private class PriorityInputDialog extends InputDialog {
@@ -713,6 +687,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.22  2003/10/22 20:38:35  zet
+common actions
+
 Revision 1.21  2003/10/22 17:17:30  zet
 common actions
 
