@@ -181,8 +181,8 @@ public class DownloadTab
 			} 
 			if(item==cancelItem) {
 				file.setState(EnumFileState.CANCELLED);
-				fileInfoMap.removeComplete();
-				table.refresh();
+//				fileInfoMap.removeObsolete();
+				table.update(file,null);
 			}
 			if(item==linkItem) {
 				Clipboard clipBoard = new Clipboard(item.getDisplay());
