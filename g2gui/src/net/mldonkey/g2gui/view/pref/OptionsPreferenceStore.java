@@ -36,7 +36,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
  * as mldonkey itself cares for wrong values... 
  *
  * @author $user$
- * @version $Id: OptionsPreferenceStore.java,v 1.2 2003/08/17 21:29:51 dek Exp $ 
+ * @version $Id: OptionsPreferenceStore.java,v 1.3 2003/08/18 12:22:28 dek Exp $ 
  *
  */
 public class OptionsPreferenceStore implements IPreferenceStore {
@@ -293,7 +293,11 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue(java.lang.String, java.lang.String)
 	 */
 	public void setValue(String name, String value) {
-		( ( OptionsInfo )input.get( name ) ).setValue( value );
+		String oldValue = getString(name);
+		if (oldValue == null || !oldValue.equals(value)) {
+			( ( OptionsInfo )input.get( name ) ).setValue( value );
+			System.out.println("setting string-value");
+		}
 		
 	}
 
@@ -302,9 +306,12 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 */
 	public void setValue(String name, boolean value) {
 		String temp;
-		if ( value ) temp = "true";
-		else temp = "false";
-		( ( OptionsInfo )input.get( name ) ).setValue( temp );
+		boolean oldValue = getBoolean( name );
+		if ( oldValue != value ) {
+			if ( value ) temp = "true";
+			else temp = "false";
+			( ( OptionsInfo )input.get( name ) ).setValue( temp );
+		}
 		
 	}
 
@@ -319,6 +326,9 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 
 /*
 $Log: OptionsPreferenceStore.java,v $
+Revision 1.3  2003/08/18 12:22:28  dek
+g2gui-pref-page is now fully JFace-approved ;-)
+
 Revision 1.2  2003/08/17 21:29:51  dek
 removed TODO's, as we don't really have to do them, look at top javadoc-comment
 

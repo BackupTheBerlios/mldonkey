@@ -21,7 +21,6 @@
  * 
  */
 package net.mldonkey.g2gui.view.pref;
-import java.io.IOException;
 import org.eclipse.jface.preference.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -30,142 +29,77 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.19 2003/08/17 23:13:42 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.20 2003/08/18 12:22:28 dek Exp $ 
  *
  */
-public class G2Gui extends PreferencePage  {	
-	private Composite controlshell;
-
-	private int columns = 0;
-	private ExtendedFontFieldEditor consoleTabFontField;	
-	private boolean connected;
-	private StringFieldEditor hostNameField,
-					 	userNameField,
-					 	passwordField,
-					 	portField;
-					 	
-	private PreferenceStore preferenceStore;
-
+public class G2Gui extends FieldEditorPreferencePage  {	
+	private Composite parent;
+	
 	/**
-	 * @param preferenceStore_ where to store the values at...
-	 * @param connected are we connected to remote-mldonkey?
+	 * @param string
+	 * @param i
 	 */
-	public G2Gui( PreferenceStore preferenceStore_, boolean connected ) {
-		super( "G2gui" );
-		this.connected = connected;		
-		this.preferenceStore = preferenceStore_;
-		preferenceStore.setDefault( "hostname", "localhost" );
-		preferenceStore.setDefault( "username", "admin" );
-		preferenceStore.setDefault( "password", "" );
-		preferenceStore.setDefault( "port", "4001" );
-
+	public G2Gui(String string, int i) {
+		super(string,i);		
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createContents( Composite shell ) {	
-		this.controlshell = shell;
-		hostNameField = new StringFieldEditor( "hostname", "Hostname", shell );	
-			hostNameField.setStringValue( preferenceStore.getDefaultString( "hostname" ) );
-			hostNameField.setStringValue( preferenceStore.getString( "hostname" ) );
-			computeColumn( hostNameField.getNumberOfControls() );					
-			
-		portField = new StringFieldEditor( "port", "Port", shell );
-			portField.setStringValue( preferenceStore.getDefaultString( "port" ) );
-			portField.setStringValue( preferenceStore.getString( "port" ) );			
-			computeColumn( portField.getNumberOfControls() );
-
-		userNameField = new StringFieldEditor( "username", "Username", shell );
-			userNameField.setStringValue( preferenceStore.getDefaultString( "username" ) );
-			userNameField.setStringValue( preferenceStore.getString( "username" ) );			
-			computeColumn( userNameField.getNumberOfControls() );
-
-		passwordField = new StringFieldEditor( "password", "Password", shell );
-			passwordField.getTextControl( shell ).setEchoChar ( '*' );			
-			passwordField.setStringValue( preferenceStore.getString( "password" ) );
-			computeColumn( passwordField.getNumberOfControls() );
-
-		arrangeFields();
-		return null;
+	protected Control createContents( Composite myparent ) {		
+		this.parent = ( Composite ) super.createContents(myparent);			
+		getPreferenceStore().setDefault( "hostname", "192.168.1.100" );
+		getPreferenceStore().setDefault( "username", "admin" );
+		getPreferenceStore().setDefault( "password", "" );
+		getPreferenceStore().setDefault( "port", "4001" );	
+		
+		createFieldEditors();
+		
+		return parent;
 	}
+
 	
-	/**
-	 * 
-	 */
-	private void arrangeFields() {
-		setHorizontalSpan( hostNameField );
-		setHorizontalSpan( portField );
-		setHorizontalSpan( userNameField );
-		setHorizontalSpan( passwordField );
-	}
-
-	/**
-	 * @param i
-	 */
-	private void computeColumn( int i ) {
-		if ( columns < i ) columns = i;		
-	}
-
-	/**
-	 * @param hostNameField
-	 */
-	private void setHorizontalSpan( StringFieldEditor editor ) {
-		( ( org.eclipse.swt.layout.GridData )
-			editor.getTextControl( controlshell ).getLayoutData()
-			      ).horizontalSpan = columns - 1;
-		( ( org.eclipse.swt.layout.GridLayout )controlshell.getLayout() ).numColumns = columns;
-		
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
-	 */
-	public boolean performOk() {	
-		/* only perform, if this tab has been 
-		 * initialized (checked by the existance of the hostnamefield)
-		 */ 	
-		if ( hostNameField != null ) {	
-		preferenceStore.setValue( "initialized", true );
-		preferenceStore.setValue( "hostname", hostNameField.getStringValue() );
-		preferenceStore.setValue( "username", userNameField.getStringValue() );
-		preferenceStore.setValue( "port", portField.getStringValue() );
-		preferenceStore.setValue( "password", passwordField.getStringValue() );
-		
-		/* any more options go in here, you got the syntax??*/
-		
-			try {
-				preferenceStore.save();
-			} catch ( IOException e ) {
-				System.out.println( "Saving Preferences failed" );
-			}	
-		}		
-		return super.performOk();		
-		
-	}
-
-	protected void performApply() {		
-		super.performApply();
-		
-	}
 
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
-	protected void performDefaults() {	
-		
-		hostNameField.setStringValue( preferenceStore.getDefaultString( "hostname" ) );
-		portField.setStringValue( preferenceStore.getDefaultString( "port" ) );
-		userNameField.setStringValue( preferenceStore.getDefaultString( "username" ) );
-						
-		super.performDefaults();
-	}
+	protected void createFieldEditors() {
+		if (parent != null){
+			StringFieldEditor hostNameField = new StringFieldEditor( "hostname", "Hostname", parent );	
+				hostNameField.setPreferenceStore(this.getPreferenceStore());
+				hostNameField.fillIntoGrid( parent, 2 );
+				addField( hostNameField );								
+				hostNameField.load();
+			
+			StringFieldEditor portField = new StringFieldEditor( "port", "Port", parent );
+				portField.setPreferenceStore(this.getPreferenceStore());	
+				portField.fillIntoGrid( parent, 2 );
+				addField( portField );
+				portField.load();
 
+			StringFieldEditor userNameField = new StringFieldEditor( "username", "Username", parent );
+				userNameField.setPreferenceStore(this.getPreferenceStore());
+				userNameField.fillIntoGrid( parent, 2 );
+				addField( userNameField );
+				userNameField.load();
+
+			StringFieldEditor passwordField = new StringFieldEditor( "password", "Password", parent );
+				passwordField.getTextControl( parent ).setEchoChar ( '*' );	
+				passwordField.fillIntoGrid( parent, 2 );		
+				passwordField.setPreferenceStore(this.getPreferenceStore());	
+				addField( passwordField );		
+				passwordField.load();		
+		}
+	}
 }
 
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.20  2003/08/18 12:22:28  dek
+g2gui-pref-page is now fully JFace-approved ;-)
+
 Revision 1.19  2003/08/17 23:13:42  zet
 centralize resources, move images
 

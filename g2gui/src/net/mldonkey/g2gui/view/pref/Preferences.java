@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.13 2003/08/17 21:22:34 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.14 2003/08/18 12:22:28 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -63,8 +63,10 @@ public class Preferences extends PreferenceManager {
 	 * @param preferenceStore where to store the values at
 	 */
 	public Preferences( PreferenceStore preferenceStore ) {	
-		this.preferenceStore = 	preferenceStore;		
-		PreferenceNode G2GuiRootNode = new PreferenceNode( "G2gui", new G2Gui( preferenceStore, connected ));
+		this.preferenceStore = 	preferenceStore;
+		G2Gui temp = new G2Gui( "General", FieldEditorPreferencePage.FLAT );	
+		temp.setPreferenceStore( preferenceStore );		
+		PreferenceNode G2GuiRootNode = new PreferenceNode( "G2gui", temp );
 		G2GuiRootNode.add(new PreferenceNode ("Display", new G2Gui_Display(preferenceStore, connected)));
 		addToRoot( G2GuiRootNode );		
 	}
@@ -245,6 +247,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.14  2003/08/18 12:22:28  dek
+g2gui-pref-page is now fully JFace-approved ;-)
+
 Revision 1.13  2003/08/17 21:22:34  dek
 reworked options, finally, it makes full use of the jFace framework ;-)
 

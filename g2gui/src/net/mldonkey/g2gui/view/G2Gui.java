@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.13 2003/08/18 01:42:24 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.14 2003/08/18 12:22:53 dek Exp $ 
  *
  */
 public class G2Gui {
@@ -92,7 +92,7 @@ public class G2Gui {
 		ImageRegistry reg = G2GuiResources.getImageRegistry();
 		reg.put("splashScreen", ImageDescriptor.createFromFile(G2Gui.class, "images/splash.png") );	
 		
-		preferenceStore = new PreferenceStore( "g2gui.pref" );
+		preferenceStore = new PreferenceStore( "g2gui.pref" );	
 		myPrefs = new Preferences( preferenceStore );
 		splashShell = new Shell( shell, SWT.ON_TOP );	
 		box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
@@ -138,10 +138,10 @@ public class G2Gui {
 			splashShell.setVisible( true );
 		}
 		
-		port = preferenceStore.getInt( "port" );
-		hostname = preferenceStore.getString( "hostname" );
-		username = preferenceStore.getString( "username" );
-		password = preferenceStore.getString( "password" );
+		port = preferenceStore.getInt( "port" );		
+		hostname = preferenceStore.getString( "hostname" );		
+		username = preferenceStore.getString( "username" );			
+		password = preferenceStore.getString( "password" );		
 		
 		/* create the socket connection to the core */
 		socket = null;
@@ -286,6 +286,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.14  2003/08/18 12:22:53  dek
+g2gui-pref-page is now fully JFace-approved ;-)
+
 Revision 1.13  2003/08/18 01:42:24  zet
 centralize resource bundle
 
