@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.11 2003/07/21 16:25:10 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.12 2003/07/23 17:01:40 lemmstercvs01 Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -210,21 +210,15 @@ public class SearchQuery implements Sendable {
 	 * <br>Video (type = 2) all other values are ignored: nothing happens
 	 * @param type  Audio (1) or Video (2)
 	 */
-	public void setMedia( int type ) {
+	public void setMedia( String aString ) {
 		Query format = new Query();
 		format.setNode( EnumQuery.MEDIA );
 		format.setComment( "Media: " );		
 		/*
 		 * add this query to the list in searchOptions
 		 */		
-		if ( type == 1 ) {		
-			format.setDefaultValue( "Audio" );
-			searchOptions.addQuery( format );
-		}
-		else if ( type == 2 ) {		
-			format.setDefaultValue( "Video" );
-			searchOptions.addQuery( format );
-			}
+		format.setDefaultValue( aString );
+		searchOptions.addQuery( format );
 	}
 	
 	/**
@@ -254,8 +248,9 @@ public class SearchQuery implements Sendable {
 		
 		/* now we do know, what our search exactly looks like, 
 		 * we can build the whole thing correct
+		 *
+		 * This is the wrapper for options & search-query
 		 */
-		/*This is the wrapper for options & search-query*/
 		mainQuery = new Query();
 		mainQuery.setNode( EnumQuery.AND );	
 		mainQuery.addQuery( searchOptions );			
@@ -286,10 +281,20 @@ public class SearchQuery implements Sendable {
 	private CoreCommunication getParent() {
 		return parent;
 	}
+	
+	/**
+	 * @return The identifier for this searchquery
+	 */
+	public int getSearchIdentifier() {
+		return searchIdentifier;
+	}
 }
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.12  2003/07/23 17:01:40  lemmstercvs01
+modified setMedia()
+
 Revision 1.11  2003/07/21 16:25:10  dek
 setMedia(AUDIO | VIDEO) added
 
