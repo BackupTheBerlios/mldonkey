@@ -64,6 +64,7 @@ public class PreferenceLoader {
 		PreferenceConverter.setDefault(preferenceStore, "consoleInputBackground", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );
 		PreferenceConverter.setDefault(preferenceStore, "consoleInputForeground", display.getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB() );
 		
+		preferenceStore.setDefault( "advancedMode", false);
 		preferenceStore.setDefault( "displayAllServers", true );
 		preferenceStore.setDefault( "displayChunkGraphs", false );
 		preferenceStore.setDefault( "displayGridLines", true );
@@ -122,6 +123,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.7  2003/08/19 15:41:09  zet
+fix crash when no advancedMode is set. (set a default)
+
 Revision 1.6  2003/08/18 14:51:58  dek
 some more jface-work
 
