@@ -42,7 +42,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.19 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.20 2003/09/12 16:29:02 lemmster Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -84,14 +84,11 @@ public class ServerInfoIntMap extends InfoIntMap {
 	public void readStream( MessageBuffer messageBuffer ) {
 		int id = messageBuffer.readInt32();
 
-		/* workaround for proto < 17 to ignore fastrack and gnutella clients */
-		if ( this.parent.getProtoToUse() <= 16 ) {
-			NetworkInfo network = this.parent.getNetworkInfoMap().get( messageBuffer.readInt32() );
-			messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
-			/* ignore fasttrack and gnutella servers */
-			if ( !network.hasServers() )
-				return;
-		}
+		NetworkInfo network = this.parent.getNetworkInfoMap().get( messageBuffer.readInt32() );
+		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
+		/* ignore fasttrack and gnutella servers */
+		if ( !network.hasServers() )
+			return; //TODO change gui proto to not send ft and gnut* nodes on startup
 
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 		ServerInfo server = this.get( id );
@@ -435,6 +432,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.20  2003/09/12 16:29:02  lemmster
+ignore FT/GNU/GNUT2 servers in proto >=18 as long as the core sends them
+
 Revision 1.19  2003/08/23 15:21:37  zet
 remove @author
 
