@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.24 2003/09/06 11:50:34 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.25 2003/09/06 16:44:12 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -406,25 +406,24 @@ public class SearchQuery implements Sendable {
 			   baseQuery.addQuery( andQuery );
 		 		
 		   }
-		}
-		
+		}		
 		/*if basequery as only one entry, than this entry is basequery.*/
 		if ( baseQuery.getQueries().length == 1 )
 			baseQuery = baseQuery.getQueries()[ 0 ];		 
 		 
-		 if ( andNotQuerys.size() > 0 ){
+		 if ( andNotQuerys.size() > 0 ) {
 		 	/*we hav at least one AND_NOT entry, so we have to create
 		 	 * a and_not-node and fill it
 		 	 */		 		 
-		 	searchQuery.setNode(EnumQuery.AND_NOT);
-		 	if ( andNotQuerys.size() == 1) {
+		 	searchQuery.setNode( EnumQuery.AND_NOT );
+		 	if ( andNotQuerys.size() == 1 ) {
 		 		/*only one entry, no need for tree*/
 		 		searchQuery.setSAndNot( ( Query ) andNotQuerys.get( 0 ) );
 		 	}
 		 	else {
 		 		/*multiple entrys, we need a tree*/
 		 		Query andNotQuery = new Query();
-		 		andNotQuery.setNode( EnumQuery.AND );
+		 		andNotQuery.setNode( EnumQuery.OR );
 		 		Iterator it = andNotQuerys.iterator();
 		 		while ( it.hasNext() ) {
 		 			 Query temp = ( Query ) it.next();
@@ -439,7 +438,7 @@ public class SearchQuery implements Sendable {
 		 
 		
 		if ( searchOptions.getQueries().length == 1 )
-			searchOptions = searchOptions.getQueries()[ 0 ];
+			searchOptions = searchOptions.getQueries()[ 0 ];			
 		
 		/* now we do know, what our search exactly looks like, 
 		 * we can build the whole thing correct
@@ -511,6 +510,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.25  2003/09/06 16:44:12  dek
+boolean algebra is no so easy ;-)  All entry in ANDNOT should be OR'ed together...
+
 Revision 1.24  2003/09/06 11:50:34  dek
 NPE-fix (removed to much ;-))
 
