@@ -55,7 +55,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.105 2003/09/27 00:36:54 zet Exp $ 
+ * @version $Id: Core.java,v 1.106 2003/10/12 15:55:18 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -417,7 +417,6 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			case Message.R_CLEAN_TABLE :
 					( ( ClientInfoIntMap )this.clientInfoList ).clean( messageBuffer );
 					( ( ServerInfoIntMap )this.serverInfoMap ).clean( messageBuffer );
-					( ( FileInfoIntMap )this.fileInfoMap ).clean( );
 					break;
 					
 			case Message.R_MESSAGE_FROM_CLIENT :
@@ -606,6 +605,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.106  2003/10/12 15:55:18  zet
+remove clean
+
 Revision 1.105  2003/09/27 00:36:54  zet
 auto poll for upstats preference
 
