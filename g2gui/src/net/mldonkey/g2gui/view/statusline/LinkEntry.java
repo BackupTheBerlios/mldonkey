@@ -33,7 +33,6 @@ import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ViewForm;
@@ -49,7 +48,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.10 2003/08/29 22:11:47 zet Exp $ 
+ * @version $Id: LinkEntry.java,v 1.11 2003/08/30 23:37:51 zet Exp $ 
  *
  */
 public class LinkEntry {
@@ -72,8 +71,10 @@ public class LinkEntry {
 			
 		final Text linkEntryText = new Text(linkEntryViewForm, SWT.WRAP | SWT.MULTI | SWT.V_SCROLL );
 		linkEntryText.setLayoutData(new FillLayout());
-		linkEntryText.setFont(JFaceResources.getTextFont());
-
+		
+		linkEntryText.setFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+		linkEntryText.setForeground( PreferenceLoader.loadColour( "consoleInputForeground" ) );
+		linkEntryText.setBackground( PreferenceLoader.loadColour( "consoleInputBackground" ) );
 		
 		ToolBar linkEntryToolBar = new ToolBar(linkEntryViewForm, SWT.RIGHT | SWT.FLAT );
 		ToolItem sendItem = new ToolItem(linkEntryToolBar, SWT.NONE);
@@ -136,6 +137,9 @@ public class LinkEntry {
 }
 /*
 $Log: LinkEntry.java,v $
+Revision 1.11  2003/08/30 23:37:51  zet
+use preference colors/fonts
+
 Revision 1.10  2003/08/29 22:11:47  zet
 add CCLabel helper class
 
