@@ -2,6 +2,13 @@
 	* FileInfo: fix chunks availability
 	* SharedFileInfo: fix ArrayIndexOutOfBounds
 
+2003/11/28: lemmy
+	* Transfer: Use real InetAddr in Uploaders instead of just String (fixed sorting)
+	* Search/Frieds: Make gradients in headerbars toogle "Use gradients in header bars" (patch from andred)
+
+2003/11/27: lemmy
+	* Statusline: Don't show "virtual" networks in statusline anymore
+
 2003/11/27: z
 	* Web services spawn a browser on linux/macos
 		- linux browser attempt order: mozilla>konq>netscape (or set in preferences) 
