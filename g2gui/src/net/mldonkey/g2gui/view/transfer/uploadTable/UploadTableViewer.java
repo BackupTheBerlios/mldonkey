@@ -21,9 +21,11 @@
  *
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
+import gnu.trove.TIntObjectIterator;
+
 import java.util.Observable;
 import java.util.Observer;
-import gnu.trove.TIntObjectIterator;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.SharedFileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
@@ -32,6 +34,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -39,6 +42,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -50,14 +55,14 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.11 2003/09/27 13:30:22 dek Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.12 2003/10/16 20:56:50 zet Exp $ 
  *
  */
 public class UploadTableViewer {
 	/**
 	 * MyTableSorter
 	 *
-	 * @version $Id: UploadTableViewer.java,v 1.11 2003/09/27 13:30:22 dek Exp $ 
+	 * @version $Id: UploadTableViewer.java,v 1.12 2003/10/16 20:56:50 zet Exp $ 
 	 *
 	 */
 	
@@ -65,7 +70,7 @@ public class UploadTableViewer {
 	private CoreCommunication mldonkey;
 	private Table table;
 	private final String[] COLUMN_LABELS =
-		{ "TT_Download_Network", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES","TT_Download_Name" };
+		{ "TT_UPLOAD_NETWORK", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES","TT_UPLOAD_NAME" };
 	private final int[] COLUMN_ALIGNEMENT =
 		{ SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT };
 	private TableViewer tableviewer;
@@ -92,12 +97,24 @@ public class UploadTableViewer {
 		table = tableviewer.getTable();
 		table.setHeaderVisible( true );
 		table.setLinesVisible( true );
+		
+		final PreferenceStore p = PreferenceLoader.getPreferenceStore();
+		
 		for ( int i = 0; i < COLUMN_LABELS.length; i++ ) {
 			TableColumn tableColumn = new TableColumn( table, COLUMN_ALIGNEMENT[ i ] );
 			tableColumn.setText( G2GuiResources.getString( COLUMN_LABELS[ i ] ) );			
-			tableColumn.setWidth( 80 );
 			
 			final int columnIndex = i;
+			int w = PreferenceLoader.loadInteger( COLUMN_LABELS[ columnIndex ] );
+			tableColumn.setWidth( w > 0 ? w : 80 );
+			
+			tableColumn.addDisposeListener( new DisposeListener() {
+				public synchronized void widgetDisposed( DisposeEvent e ) {
+					TableColumn thisColumn = (TableColumn) e.widget;
+					p.setValue( COLUMN_LABELS[ columnIndex ], thisColumn.getWidth() );
+				}
+			} );
+			
 			tableColumn.addListener( SWT.Selection, new Listener() {
 				public void handleEvent( Event e ) {
 					/* set the column to sort */
@@ -334,6 +351,9 @@ public class UploadTableViewer {
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.12  2003/10/16 20:56:50  zet
+save column widths
+
 Revision 1.11  2003/09/27 13:30:22  dek
 all tables have now show-Gridlines-behaviour as descibed in  preferences
 
