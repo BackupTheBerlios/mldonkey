@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkCanvas.java,v 1.4 2003/08/04 20:37:07 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.5 2003/08/04 20:46:08 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -317,9 +317,11 @@ public class ChunkCanvas extends Canvas implements Observer {
 		if ( image != null && imageData != null ) {
 						
 			if (getClientArea().width > minWidth && getClientArea().height > 0) {
+				synchronized(resizedImageData) {
 			
 				resizedImageData = imageData.scaledTo(
 					getClientArea().width, getClientArea().height);
+				}
 				
 			} 
 	
@@ -334,6 +336,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 		GC canvasGC = e.gc;
 				
 		if ( image != null ) {
+			
+			synchronized(resizedImageData) {
+			
 			
 			if (resizedImageData == null) resizedImageData = imageData;
 			
@@ -383,8 +388,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 			
 			
 			bufferGC.dispose();
-
-			
+			}
 
 		} else { 
 			
@@ -451,6 +455,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.5  2003/08/04 20:46:08  zet
+synchronized
+
 Revision 1.4  2003/08/04 20:37:07  zet
 try syncexec
 
