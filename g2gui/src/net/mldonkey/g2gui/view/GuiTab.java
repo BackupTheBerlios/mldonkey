@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.17 2003/08/09 14:41:26 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.18 2003/08/10 22:13:51 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -79,6 +79,7 @@ public abstract class GuiTab implements Listener, Observer {
 	
 	private Font font = new Font(null, "Helvetica", 12, SWT.BOLD); // fix later
 	protected CLabel leftLabel, rightLabel;
+	protected Label separator1, separator2;
 	protected String tabName;
 	
 	/**
@@ -104,8 +105,8 @@ public abstract class GuiTab implements Listener, Observer {
 		contentGD.marginWidth = 0;
 		contentGD.verticalSpacing = 0;
 		contentGD.horizontalSpacing = 0;
+		contentGD.numColumns = 1;
 		this.pageHeaderPlaceHolder.setLayout( contentGD );
-		
 		this.pageHeaderPlaceHolder.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		createHeader( pageHeaderPlaceHolder, PreferenceLoader.loadBoolean("displayHeaderBar") );
@@ -200,10 +201,23 @@ public abstract class GuiTab implements Listener, Observer {
 
 	public void updateDisplay() {
 		if (headerBar != PreferenceLoader.loadBoolean("displayHeaderBar")) {
-			pageHeader.dispose();
+			if (pageHeader != null
+				&& !pageHeader.isDisposed()) { 
+					separator1.dispose();
+					separator2.dispose();
+					pageHeader.dispose();
+				} 
 			headerBar = !headerBar;
-			createHeader( pageHeaderPlaceHolder, headerBar );
+			GridData GD = new GridData(GridData.FILL_HORIZONTAL);
+			if (!headerBar) {
+				GD.heightHint = 0;
+			} else {
+				createHeader( pageHeaderPlaceHolder, headerBar );
+				GD.heightHint = pageHeader.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+			}
+			this.pageHeaderPlaceHolder.setLayoutData(GD);
 		}
+		
 		setLeftLabel(tabName);
 		setRightLabel("");
 		content.layout();
@@ -231,57 +245,47 @@ public abstract class GuiTab implements Listener, Observer {
 	
 	public void createHeader(Composite thisContent, boolean createMe) {
 
-	if (createMe) {
+		if (createMe) {
+		
+			Color backgroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
+			Color foregroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_WHITE);
+			
+			separator1 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
+			separator1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			
+			pageHeader = new Composite(thisContent, SWT.NONE);
+			pageHeader.setBackground(backgroundColor);
+			
+			separator2 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
+			separator2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	
-		Color backgroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
-		Color foregroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_WHITE);
-		
-		// what do these labels do? is this different than marginheight? 
-		// I see no difference on my display.
-		
-		Label row1 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
-			row1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-		pageHeader = new Composite(thisContent, SWT.NONE);
-		pageHeader.setBackground(backgroundColor);
-		
-		Label row2 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
-			row2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.marginWidth = 10;
-		pageHeader.setLayout(layout);
-		pageHeader.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-		// fix font/color later
-		leftLabel = new CLabel(pageHeader, SWT.NONE);
-		leftLabel.setFont(font);
-		leftLabel.setBackground(backgroundColor);
-		leftLabel.setForeground(foregroundColor);
-		leftLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		rightLabel = new CLabel(pageHeader, SWT.NONE);
-		rightLabel.setText("");
-		rightLabel.setFont(font);
-		rightLabel.setForeground(foregroundColor);
-		rightLabel.setBackground(backgroundColor);
-		
-		rightLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+			GridLayout layout = new GridLayout();
+			layout.numColumns = 2;
+			layout.marginWidth = 10;
+			pageHeader.setLayout(layout);
+			pageHeader.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			
+			// fix font/color later
+			leftLabel = new CLabel(pageHeader, SWT.NONE);
+			leftLabel.setFont(font);
+			leftLabel.setBackground(backgroundColor);
+			leftLabel.setForeground(foregroundColor);
+			leftLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	
-		headerBar = true;
-	} else {
-		// hack -- what is the right way to do this? 
-		pageHeader = new Composite(thisContent, SWT.NONE);
-		GridData x = new GridData();
-		x.widthHint = 1;
-		x.heightHint = 1;
-		pageHeader.setLayoutData(x);
-		headerBar = false;
-	}
-	
-	
+			rightLabel = new CLabel(pageHeader, SWT.NONE);
+			rightLabel.setText("");
+			rightLabel.setFont(font);
+			rightLabel.setForeground(foregroundColor);
+			rightLabel.setBackground(backgroundColor);
+			
+			rightLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		
+			headerBar = true;
+		} else {
+			GridData x = new GridData(GridData.FILL_HORIZONTAL);
+			x.heightHint = 0;
+			pageHeaderPlaceHolder.setLayoutData(x);
+		}
 	}
 	public void setLeftLabel(String text) {
 		if (headerBar && leftLabel != null && !leftLabel.isDisposed())
@@ -299,6 +303,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.18  2003/08/10 22:13:51  zet
+pageheader separator fixes
+
 Revision 1.17  2003/08/09 14:41:26  zet
 dispose font
 
