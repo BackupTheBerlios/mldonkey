@@ -43,11 +43,10 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.3 2003/10/19 17:35:04 zet Exp $
+ * @version $Id: ColumnSelector.java,v 1.4 2003/10/19 18:03:48 zet Exp $
  *
  */
 public class ColumnSelector extends Dialog {
-    private Shell shell;
     private String[] columnLegend;
     private String allColumnIDs;
     private String leftColumnIDs;
@@ -234,6 +233,9 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.4  2003/10/19 18:03:48  zet
+remove shell
+
 Revision 1.3  2003/10/19 17:35:04  zet
 generalize columnselector
 
