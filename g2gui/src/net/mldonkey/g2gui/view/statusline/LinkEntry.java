@@ -29,6 +29,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.view.StatusLine;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.resource.JFaceResources;
@@ -49,7 +50,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.6 2003/08/28 18:05:28 zet Exp $ 
+ * @version $Id: LinkEntry.java,v 1.7 2003/08/28 18:27:32 zet Exp $ 
  *
  */
 public class LinkEntry {
@@ -67,7 +68,7 @@ public class LinkEntry {
 	
 	public void createContents(Composite parent) {
 		
-		ViewForm linkEntryViewForm = new ViewForm( parent, SWT.BORDER );
+		ViewForm linkEntryViewForm = new ViewForm( parent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		linkEntryViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));	
 			
 		CLabel linkEntryCLabel = new CLabel(linkEntryViewForm, SWT.LEFT );	
@@ -79,7 +80,7 @@ public class LinkEntry {
 										new int[] {100});	
 			
 			
-		linkEntryText = new Text(linkEntryViewForm, SWT.WRAP | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
+		linkEntryText = new Text(linkEntryViewForm, SWT.WRAP | SWT.MULTI | SWT.V_SCROLL );
 		linkEntryText.setLayoutData(new FillLayout());
 		linkEntryText.setFont(JFaceResources.getTextFont());
 
@@ -144,6 +145,9 @@ public class LinkEntry {
 }
 /*
 $Log: LinkEntry.java,v $
+Revision 1.7  2003/08/28 18:27:32  zet
+configurable flat interface
+
 Revision 1.6  2003/08/28 18:05:28  zet
 remove unused parent
 

@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.15 2003/08/28 15:37:36 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.16 2003/08/28 18:27:32 zet Exp $
  */
 public class MessagesTab extends GuiTab {
 
@@ -119,12 +119,12 @@ public class MessagesTab extends GuiTab {
 	// simple and for messaging only atm 
 	private void createLeftSash( Composite main ) {
 		
-		friendsViewForm = new ViewForm( main, SWT.BORDER );
+		friendsViewForm = new ViewForm( main, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		
-		friendsComposite = new Composite( friendsViewForm, SWT.NONE  );
+		friendsComposite = new Composite( friendsViewForm, SWT.NONE );
 		friendsComposite.setLayout( new FillLayout() );
 		
-		CLabel friendsHeaderLabel = new CLabel(friendsViewForm, SWT.LEFT | SWT.SHADOW_OUT);
+		CLabel friendsHeaderLabel = new CLabel(friendsViewForm, SWT.LEFT );
 		friendsHeaderLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		friendsHeaderLabel.setBackground(new Color[]{friendsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 												friendsViewForm.getBackground()},
@@ -196,7 +196,7 @@ public class MessagesTab extends GuiTab {
 		SashForm messagesSash = new SashForm ( main, SWT.HORIZONTAL );
 		messagesSash.setLayout( new FillLayout() );
 			
-		cTabFolder = new CTabFolder( messagesSash, SWT.NONE );
+		cTabFolder = new CTabFolder( messagesSash, (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		cTabFolder.setBorderVisible(true);
 		cTabFolder.setLayoutData( new FillLayout() );
 		Display display = cTabFolder.getDisplay();
@@ -446,6 +446,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.16  2003/08/28 18:27:32  zet
+configurable flat interface
+
 Revision 1.15  2003/08/28 15:37:36  zet
 remove ctabfolder
 

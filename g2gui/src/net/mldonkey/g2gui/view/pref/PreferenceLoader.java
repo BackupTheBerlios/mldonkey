@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.15 2003/08/26 22:44:03 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.16 2003/08/28 18:27:32 zet Exp $
  */
 public class PreferenceLoader {
 
@@ -75,6 +75,7 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( "windowMaximized", false );
 		preferenceStore.setDefault( "coolbarLocked", true );
 		preferenceStore.setDefault( "toolbarSmallButtons", false );
+		preferenceStore.setDefault( "flatInterface", false );
 	
 		PreferenceConverter.setDefault(preferenceStore, "consoleBackground", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );
 		PreferenceConverter.setDefault(preferenceStore, "consoleForeground", display.getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB() );
@@ -203,6 +204,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.16  2003/08/28 18:27:32  zet
+configurable flat interface
+
 Revision 1.15  2003/08/26 22:44:03  zet
 basic filtering
 
