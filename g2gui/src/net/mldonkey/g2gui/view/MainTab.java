@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.94 2003/11/24 15:24:30 zet Exp $
+ * @version $Id: MainTab.java,v 1.95 2003/11/24 19:01:00 dek Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -203,6 +203,7 @@ public class MainTab implements ShellListener {
 
         /* layout the coolbar, because we added icons */
         this.coolBar.layoutCoolBar();
+        this.coolBar.restoreLayout();
         statusline = new StatusLine(this);
     }
 
@@ -298,8 +299,6 @@ public class MainTab implements ShellListener {
      */
     public void saveSizeLocation(Shell shell) {
         PreferenceStore p = PreferenceLoader.getPreferenceStore();
-        p.setValue("coolbarLocked", coolBar.isCoolbarLocked());
-        p.setValue("toolbarSmallButtons", coolBar.isToolbarSmallButtons());
 
         if (shell.getMaximized()) {
             p.setValue("windowMaximized", shell.getMaximized());
@@ -466,6 +465,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.95  2003/11/24 19:01:00  dek
+coolBar-Layout is now saved and restored
+
 Revision 1.94  2003/11/24 15:24:30  zet
 remove unneeded typecast
 

@@ -26,14 +26,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
+
+
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -53,7 +60,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.12 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: MainCoolBar.java,v 1.13 2003/11/24 19:01:00 dek Exp $
  *
  */
 public class MainCoolBar {
@@ -67,13 +74,14 @@ public class MainCoolBar {
     private ToolBar mainTools;
     private List miscToolButtons;
     private List mainToolButtons;
+	protected int[] order;
 
 	/**
 	 * @param mainTab 
 	 * @param size 
 	 * @param locked 
 	 */
-    public MainCoolBar( MainTab mainTab, boolean size, boolean locked ) {
+    public MainCoolBar( MainTab mainTab, boolean size, boolean locked ) {    	
         this.toolbarSmallButtons = size;
         this.coolbarLocked = locked;
         this.mainTab = mainTab;
@@ -94,10 +102,10 @@ public class MainCoolBar {
         createCoolBar();
         createToolBars();
         createCoolItems();
-        createMiscTools();
+        createMiscTools();       
     }
 
-    /**
+	/**
      * Creates a new Coolbar obj
      * @param parent The parent Composite to display in
      * @return a new CoolBar obj
@@ -105,7 +113,8 @@ public class MainCoolBar {
     private void createCoolBar() {
         coolbar = new CoolBar( this.composite, SWT.FLAT );
         coolbar.addControlListener( new ControlListener() {
-                public void controlMoved( ControlEvent e ) {
+
+				public void controlMoved( ControlEvent e ) {
                     composite.getParent().layout();
                 }
 
@@ -116,6 +125,11 @@ public class MainCoolBar {
 
         GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
         coolbar.setLayoutData( gridData );
+        
+        coolbar.addDisposeListener(new DisposeListener(){
+			public void widgetDisposed(DisposeEvent e) {
+				saveLayout();				
+			}});
     }
 
 	/**
@@ -269,11 +283,66 @@ public class MainCoolBar {
         toolbarSmallButtons = b;
     }
 
+    
+    /**
+     * resores the saved Layout and applies it to the coolBar
+     */
+    public void restoreLayout() {
+    	PreferenceStore p = PreferenceLoader.getPreferenceStore();
+    	p.setDefault("coolBarSizes","0-0|0-0|");
+    	String sizesString = p.getString("coolBarSizes");
+    	
+    	String[] sizes = RegExp.split(sizesString,'|');
+    	Point[] itemSizes = new Point[ sizes.length ];
+
+    	int[] order = new int[sizes.length];
+    	
+    	/*
+    	 * we have sizes.length coolBarItems, and sizes are stored in Points
+    	 * recreating Point[] from String[]:
+    	 */
+    	
+    	for (int i = 0; i < sizes.length; i++) {
+    		String[] coordinates = RegExp.split(sizes[ i ],'-');
+    		int x = Integer.parseInt(coordinates[ 0 ]);
+    		int y = Integer.parseInt(coordinates[ 1 ]);
+    		itemSizes[ i ] = new Point( x, y );     		
+		}
+    	//we don't store the order yet
+    	for (int i = 0; i < sizes.length; i++) {
+    		order[ i ] = i;			
+		}    
+    	
+    	coolbar.setItemLayout(order,null,itemSizes);
+
+    }
+    
+	/**
+	 *  saves the Layout of the coolbar when beein disposed
+	 */
+	public void saveLayout() {
+		PreferenceStore p = PreferenceLoader.getPreferenceStore();
+		p.setValue("coolbarLocked", isCoolbarLocked());
+		p.setValue("toolbarSmallButtons", isToolbarSmallButtons());
+		
+		StringBuffer sizesBuffer = new StringBuffer();
+		Point[] itemsizes = coolbar.getItemSizes();
+		for (int i = 0; i < itemsizes.length; i++) {
+			sizesBuffer.append( itemsizes[ i ].x+"-"+itemsizes[ i ].y+"|");			
+		}				
+		
+		p.setValue("coolBarSizes",sizesBuffer.toString());	
+		
+	}
+
 
 }
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.13  2003/11/24 19:01:00  dek
+coolBar-Layout is now saved and restored
+
 Revision 1.12  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
