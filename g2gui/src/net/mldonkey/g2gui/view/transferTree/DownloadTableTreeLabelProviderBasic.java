@@ -33,7 +33,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProviderBasic
  *
- * @version $Id: DownloadTableTreeLabelProviderBasic.java,v 1.1 2003/08/23 19:44:12 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProviderBasic.java,v 1.2 2003/08/31 01:46:33 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProviderBasic
@@ -73,11 +73,11 @@ public class DownloadTableTreeLabelProviderBasic
 				return ""+dfp.format(fileInfo.getPerc()) + "%";
 			case 5: // rate
 				if (fileInfo.getState().getState() == EnumFileState.PAUSED)
-					return "Paused";
+					return G2GuiResources.getString( "TT_Paused" );
 				else if (fileInfo.getState().getState() == EnumFileState.QUEUED)
-					return "Queued";
+					return G2GuiResources.getString( "TT_Queued" );
 				else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
-					return "Downloaded";	
+					return G2GuiResources.getString( "TT_Downloaded" );	
 				else 
 					return "" + df.format(fileInfo.getRawRate() / 1000f);
 			case 6: // eta
@@ -111,6 +111,9 @@ public class DownloadTableTreeLabelProviderBasic
 
 /*
 $Log: DownloadTableTreeLabelProviderBasic.java,v $
+Revision 1.2  2003/08/31 01:46:33  zet
+localise
+
 Revision 1.1  2003/08/23 19:44:12  zet
 split transfer table to basic/advanced modes
 

@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -40,7 +41,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.18 2003/08/23 19:44:12 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.19 2003/08/31 01:46:33 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -107,16 +108,16 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 	public String getClientConnection(ClientInfo clientInfo) {
 		if ( clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) 
-			return "firewalled";			
+			return G2GuiResources.getString( "TT_Firewalled" ).toLowerCase();			
 		else
-			return "direct";	
+			return G2GuiResources.getString( "TT_Direct" ).toLowerCase();	
 	}
 	
 	public String getClientActivity( ClientInfo clientInfo) {
 		if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
-			return "transferring";
+			return G2GuiResources.getString( "TT_Transferring" ).toLowerCase();
 		else 
-			return  "rank: " + clientInfo.getState().getRank() ;
+			return G2GuiResources.getString( "TT_Rank" ).toLowerCase() + ": " + clientInfo.getState().getRank() ;
 	}	
 
 	public void addListener(ILabelProviderListener arg0) {
@@ -149,6 +150,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.19  2003/08/31 01:46:33  zet
+localise
+
 Revision 1.18  2003/08/23 19:44:12  zet
 split transfer table to basic/advanced modes
 

@@ -52,8 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * ClientDetailDialog
  *
- *
- * @version $Id: ClientDetailDialog.java,v 1.16 2003/08/31 01:33:22 vaste Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.17 2003/08/31 01:46:33 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -86,7 +85,8 @@ public class ClientDetailDialog implements Observer {
 								  
 		shell.setImage(G2GuiResources.getImage("ProgramIcon"));
 		
-		shell.setText( "Client " + clientInfo.getClientid() + " details");						  
+		shell.setText( G2GuiResources.getString("TT_Client") + " " + clientInfo.getClientid() 
+						+ " " + G2GuiResources.getString("TT_Details").toLowerCase());						  
 		
 		GridLayout gridLayout = CGridLayout.createGL(1,5,5,0,5,false);
 		
@@ -143,7 +143,7 @@ public class ClientDetailDialog implements Observer {
 		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		buttonComposite.setLayout(CGridLayout.createGL(2,0,0,5,0,false));
 
-		final Button addFriendButton = new Button( buttonComposite, SWT.NONE );
+		final Button addFriendButton = new Button( buttonComposite, SWT.FLAT );
 		addFriendButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));
 		addFriendButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ));
 		addFriendButton.addSelectionListener( new SelectionAdapter() {
@@ -154,10 +154,10 @@ public class ClientDetailDialog implements Observer {
 			}	
 		});
 
-		Button closeButton = new Button( buttonComposite, SWT.NONE );
-		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		closeButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
-		closeButton.addSelectionListener( new SelectionAdapter() {
+		Button cButton = new Button( buttonComposite, SWT.NONE );
+		cButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		cButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
+		cButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 						shell.dispose();
 			}	
@@ -232,13 +232,11 @@ public class ClientDetailDialog implements Observer {
 	public void update(Observable o, Object arg) {
 		if (o instanceof FileInfo) {
 			if (clName.isDisposed()) return;
-
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						updateLabels();
-					}
-				});
-			
+			clName.getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					updateLabels();
+				}
+			});
 		}
 	}
 	
@@ -249,30 +247,25 @@ public class ClientDetailDialog implements Observer {
 	}
 
 	public String getClientConnection(ClientInfo clientInfo) {
-		if (clientInfo.getClientKind().getClientMode()
-			== EnumClientMode.FIREWALLED)
-			return "firewalled";
+		if ( clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) 
+			return G2GuiResources.getString( "TT_Firewalled" ).toLowerCase();			
 		else
-			return "direct";
+			return G2GuiResources.getString( "TT_Direct" ).toLowerCase();	
 	}
-
-	public String getClientActivity(ClientInfo clientInfo) {
-		if (clientInfo.getState().getState()
-			== EnumState.CONNECTED_DOWNLOADING)
-			return "transferring";
-		else
-			return "rank: " + clientInfo.getState().getRank();
-	}
+	
+	public String getClientActivity( ClientInfo clientInfo) {
+		if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
+			return G2GuiResources.getString( "TT_Transferring" ).toLowerCase();
+		else 
+			return G2GuiResources.getString( "TT_Rank" ).toLowerCase() + ": " + clientInfo.getState().getRank() ;
+	}	
 
 
 }
 /*
 $Log: ClientDetailDialog.java,v $
-Revision 1.16  2003/08/31 01:33:22  vaste
-cosmetic (cButton -> closeButton)
-
-Revision 1.15  2003/08/31 01:31:17  vaste
-flat buttons look strange in win
+Revision 1.17  2003/08/31 01:46:33  zet
+localise
 
 Revision 1.14  2003/08/31 00:08:59  zet
 add buttons
@@ -293,30 +286,5 @@ Revision 1.9  2003/08/22 22:54:04  vaste
 new todo (close button)
 
 Revision 1.8  2003/08/22 21:22:58  lemmster
-fix $Log: ClientDetailDialog.java,v $
-fix Revision 1.16  2003/08/31 01:33:22  vaste
-fix cosmetic (cButton -> closeButton)
-fix
-fix Revision 1.15  2003/08/31 01:31:17  vaste
-fix flat buttons look strange in win
-fix
-fix Revision 1.14  2003/08/31 00:08:59  zet
-fix add buttons
-fix
-fix Revision 1.13  2003/08/28 22:44:30  zet
-fix GridLayout helper class
-fix
-fix Revision 1.12  2003/08/23 15:21:37  zet
-fix remove @author
-fix
-fix Revision 1.11  2003/08/23 15:13:00  zet
-fix remove reference to static MainTab methods
-fix
-fix Revision 1.10  2003/08/23 01:00:10  zet
-fix *** empty log message ***
-fix
-fix Revision 1.9  2003/08/22 22:54:04  vaste
-fix new todo (close button)
-fix
 
 */

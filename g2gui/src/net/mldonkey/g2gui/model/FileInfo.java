@@ -38,13 +38,14 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
 
 /**
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.44 2003/08/24 20:37:51 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.45 2003/08/31 01:46:33 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -238,14 +239,13 @@ public class FileInfo extends Parent implements Observer {
 		return priority;
 	}
 	
-	// localise ..
 	public String getStringPriority() {
 		if (priority == EnumPriority.HIGH)
-			return "High";
+			return G2GuiResources.getString("TT_PRIO_High");
 		else if (priority == EnumPriority.LOW)
-			return "Low";
+			return G2GuiResources.getString("TT_PRIO_Low");
 		else if (priority == EnumPriority.NORMAL)
-			return "Normal";
+			return G2GuiResources.getString("TT_PRIO_Normal");
 		else 
 			return "???";
 	}
@@ -700,6 +700,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.45  2003/08/31 01:46:33  zet
+localise
+
 Revision 1.44  2003/08/24 20:37:51  zet
 minor
 

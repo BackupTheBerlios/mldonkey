@@ -27,6 +27,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -52,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.18 2003/08/31 01:31:02 vaste Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.19 2003/08/31 01:46:33 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -74,7 +75,7 @@ public class FileDetailDialog implements Observer {
 	private List renameList;
 	private Text renameText;
 	
-	public FileDetailDialog (FileInfo fileInfo) 
+	public FileDetailDialog (final FileInfo fileInfo) 
 	{
 		this.fileInfo = fileInfo;
 		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
@@ -84,7 +85,8 @@ public class FileDetailDialog implements Observer {
 								  width, height);
 								  
 		shell.setImage(G2GuiResources.getImage("ProgramIcon"));
-		shell.setText( "File " + fileInfo.getId() + " details");						  
+		shell.setText( G2GuiResources.getString("TT_File") + " " + fileInfo.getId() 
+						+ " " + G2GuiResources.getString("TT_Details").toLowerCase());						  
 				
 		GridLayout gridLayout = CGridLayout.createGL(1,5,5,0,5,false);
 		shell.setLayout( gridLayout );
@@ -164,7 +166,7 @@ public class FileDetailDialog implements Observer {
 	
 		Composite rename = new Composite(shell, SWT.NONE);
 		
-		gridLayout = CGridLayout.createGL(3,0,0,4,0,false);
+		gridLayout = CGridLayout.createGL(2,0,0,4,0,false);
 		rename.setLayout( gridLayout );
 		rename.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
 				
@@ -197,15 +199,50 @@ public class FileDetailDialog implements Observer {
 		});
 
 
-		Button closeButton = new Button( rename, SWT.NONE );
-		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		closeButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
-		closeButton.addSelectionListener( new SelectionAdapter() {
+		Label s = new Label(shell, SWT.SEPARATOR|SWT.HORIZONTAL);
+		s.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Composite buttonComposite = new Composite(shell, SWT.NONE);
+		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		buttonComposite.setLayout(CGridLayout.createGL(2,0,0,5,0,false));
+
+		final Button fileActionButton = new Button( buttonComposite, SWT.FLAT );
+		fileActionButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));
+		
+		if (fileInfo.getState().getState() == EnumFileState.PAUSED)
+			fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ));
+		else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADING)
+			fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ));
+		else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
+			fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT" ));
+	
+		fileActionButton.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected (SelectionEvent s) {
+				if (fileInfo.getState().getState() == EnumFileState.PAUSED) {
+					fileInfo.setState(EnumFileState.DOWNLOADING);
+					fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ));
+				}
+				else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADING) {
+					fileInfo.setState(EnumFileState.PAUSED);
+					fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ));
+				}
+				else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED) {
+					fileInfo.saveFileAs( fileInfo.getName() );
+					fileActionButton.setText(G2GuiResources.getString( "BTN_OK" ));
+					fileActionButton.setEnabled(false);
+				}
+			}	
+		});
+
+		Button cButton = new Button( buttonComposite, SWT.NONE );
+		cButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		cButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
+		cButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 						shell.dispose();
 			}	
 		});
-
+	
 		updateLabels();
 		fileInfo.addObserver(this);
 		shell.pack();
@@ -259,12 +296,15 @@ public class FileDetailDialog implements Observer {
 	
 		updateLabel(clSources, Integer.toString(fileInfo.getSources()));
 		updateLabel(clChunks, Integer.toString(fileInfo.getNumChunks())
-							+ " of " + Integer.toString(fileInfo.getChunks().length()));
+							+ " / " + Integer.toString(fileInfo.getChunks().length()));
 		updateLabel(clTransferred, fileInfo.getStringDownloaded());
 		updateLabel(clPercent, Double.toString(fileInfo.getPerc()) + "%");
 		updateLabel(clLast, fileInfo.getStringOffset());
 		updateLabel(clPriority, fileInfo.getStringPriority());
-		updateLabel(clRate, String.valueOf(fileInfo.getRate()) + " KB/s");
+		if (fileInfo.getState().getState() == EnumFileState.PAUSED)
+			updateLabel(clRate, G2GuiResources.getString( "TT_Paused" ));
+		else 
+			updateLabel(clRate, String.valueOf(fileInfo.getRate()) + " KB/s");
 		updateLabel(clETA, fileInfo.getStringETA());
 		
 		
@@ -301,8 +341,8 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
-Revision 1.18  2003/08/31 01:31:02  vaste
-flat buttons look strange in win; moved close button (that's the way to do it btw?)
+Revision 1.19  2003/08/31 01:46:33  zet
+localise
 
 Revision 1.17  2003/08/31 00:08:59  zet
 add buttons
@@ -327,8 +367,8 @@ new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
-fix Revision 1.18  2003/08/31 01:31:02  vaste
-fix flat buttons look strange in win; moved close button (that's the way to do it btw?)
+fix Revision 1.19  2003/08/31 01:46:33  zet
+fix localise
 fix
 fix Revision 1.17  2003/08/31 00:08:59  zet
 fix add buttons

@@ -25,7 +25,6 @@ package net.mldonkey.g2gui.view.transferTree;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
-import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -34,7 +33,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadtableTreeLabelProviderAdvanced
  *
- * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.1 2003/08/23 19:44:12 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.2 2003/08/31 01:46:33 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLabelProvider {
@@ -77,11 +76,11 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 				return ""+fileInfo.getClientInfos().size();		
 			case 7: // rate
 				if (fileInfo.getState().getState() == EnumFileState.PAUSED)
-					return "Paused";
+					return G2GuiResources.getString( "TT_Paused" );
 				else if (fileInfo.getState().getState() == EnumFileState.QUEUED)
-					return "Queued";
+					return G2GuiResources.getString( "TT_Queued" );
 				else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
-					return "Downloaded";	
+					return G2GuiResources.getString( "TT_Downloaded" );	
 				else 
 					return "" + df.format(fileInfo.getRawRate() / 1000f);
 			case 8: // chunks
@@ -89,14 +88,7 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 			case 9: // eta
 				return ""+getFileETA(fileInfo);
 			case 10: // priority
-				if (fileInfo.getPriority() == EnumPriority.HIGH) 
-					return "High";
-				else if (fileInfo.getPriority() == EnumPriority.NORMAL)
-					return "Normal";
-				else if (fileInfo.getPriority() == EnumPriority.LOW)
-					return "Low";
-				else 
-					return "???";
+				return fileInfo.getStringPriority();
 			case 11: // last
 				return fileInfo.getStringOffset();
 			case 12: // age
@@ -132,6 +124,9 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 }
 /*
 $Log: DownloadTableTreeLabelProviderAdvanced.java,v $
+Revision 1.2  2003/08/31 01:46:33  zet
+localise
+
 Revision 1.1  2003/08/23 19:44:12  zet
 split transfer table to basic/advanced modes
 

@@ -74,7 +74,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.51 2003/08/30 13:55:10 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.52 2003/08/31 01:46:33 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -311,9 +311,9 @@ public class TransferTab extends GuiTab  {
 			
 			if ( totalQueued > 0 || totalDownloaded > 0 ) {
 				extra = " ( ";
-				if ( totalQueued > 0 ) extra += G2GuiResources.getString( "TT_Queued" ) + ": " + totalQueued;
+				if ( totalQueued > 0 ) extra += G2GuiResources.getString( "TT_Queued" ).toLowerCase() + ": " + totalQueued;
 				if ( totalQueued > 0 && totalDownloaded > 0 ) extra += ", ";
-				if ( totalDownloaded > 0 ) extra += G2GuiResources.getString( "TT_Downloaded" ) + ": " + totalDownloaded;
+				if ( totalDownloaded > 0 ) extra += G2GuiResources.getString( "TT_Downloaded" ).toLowerCase() + ": " + totalDownloaded;
 				extra += " )";
 			}
 						
@@ -354,6 +354,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.52  2003/08/31 01:46:33  zet
+localise
+
 Revision 1.51  2003/08/30 13:55:10  zet
 *** empty log message ***
 
