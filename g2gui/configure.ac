@@ -43,7 +43,8 @@ AC_ARG_WITH(motif,
 
 # Checks for programs.
 
-
+#take gcj from commandline ./configure (...) gcj=/path/to/gcj (...)
+ac_cv_path_GCJ=$gcj
 
 AC_PATH_PROG([GCJ],[gcj])
 if test -z $ac_cv_path_GCJ; then

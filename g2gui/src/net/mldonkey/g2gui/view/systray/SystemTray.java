@@ -45,7 +45,7 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
 /**
- * @version $Id: SystemTray.java,v 1.16 2004/03/14 17:37:59 dek Exp $
+ * @version $Id: SystemTray.java,v 1.17 2004/03/14 19:43:56 dek Exp $
  *  
  */
 public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
@@ -157,8 +157,7 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 		parent.getCore().getClientStats().addObserver(this);
 
 		icon = G2GuiResources.getImageDescriptor("TrayIcon").createImage().handle;
-		System.out.println(icon);
-		
+				
 		systemTrayManager = new SystemTrayIconManager(icon, titleBarText);
 		systemTrayManager.addSystemTrayIconListener(this);
 		systemTrayManager.setVisible(true);
@@ -198,13 +197,28 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 		popupMenu = new MenuManager("");
 		popupMenu.setRemoveAllWhenShown(true);
 		popupMenu.addMenuListener(manager);
-
-		parent.getShell().addDisposeListener(new DisposeListener() {
-
-			public void widgetDisposed(DisposeEvent e) {
-				systemTrayManager.finalize();
+		
+		
+		parent.getShell().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				Shell shell = parent.getShell();
+				
+				/* check for widget disposed */
+				if (shell.isDisposed()) {
+					/*if we are already disposed, kill tray*/					
+					systemTrayManager.finalize();
+					return;
+				}
+				/* add dispose-listener to Tray*/
+				shell.addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent e) {
+						systemTrayManager.finalize();
+					}
+				});
 			}
 		});
+
+
 
 	}
 	/**
@@ -269,6 +283,9 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.17  2004/03/14 19:43:56  dek
+ *** empty log message ***
+
  Revision 1.16  2004/03/14 17:37:59  dek
  Systray reloaded
 
