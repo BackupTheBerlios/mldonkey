@@ -108,10 +108,15 @@ public class GraphPainter {
 		}	
 			
 		// calculate zoom
-		zoom = height / maximum ;
+	
+		// this will still jump around when going from high rates to low ones & back
+		// find a better solution...	
+		zoom = (height-10f) / maximum ;  
 		actualPoint = lastPoint;	
-		if ( ((float) (actualPoint.getValue()/10) * zoom)  >  ((height / 5f)*4f)) 
-			zoom = (zoom / 5f)*4f;
+
+	//	zoom = height / maximum ;
+	//	if ( ((float) (actualPoint.getValue()/10) * zoom)  >  ((height / 5f)*4f)) 
+	//		zoom = (zoom / 5f)*4f;
 				
 		// draw graph gradient lines
 		for ( k=startx ; (k<=width) && (actualPoint.getPrev() != null) ; k++, actualPoint = actualPoint.getPrev())
@@ -192,6 +197,9 @@ public class GraphPainter {
 }
 /*
 $Log: GraphPainter.java,v $
+Revision 1.24  2003/08/18 13:42:43  zet
+*** empty log message ***
+
 Revision 1.23  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 
