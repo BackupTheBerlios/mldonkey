@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.26 2003/07/27 01:01:51 vnc Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.27 2003/07/27 22:39:36 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -61,15 +61,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 	public ConsoleTab( MainTab gui ) {
 		super( gui );
 		this.core = gui.getCore();		
-		activeIm = 
-		inActiveIm = MainTab.createTransparentImage ( 
-							new Image(toolItem.getParent().getDisplay(), 
-							"src/icons/console.png"),
-						toolItem.getParent());
-				
-		toolItem.setText(bundle.getString("TT_ConsoleButton"));
-		toolItem.setToolTipText(bundle.getString("TT_ConsoleButtonToolTip"));
-		toolItem.setImage(inActiveIm); 
+		createButton("ConsoleButton", 
+						bundle.getString("TT_ConsoleButton"),
+						bundle.getString("TT_ConsoleButtonToolTip"));
 		createContents(this.content);
 		
 		
@@ -201,6 +195,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.27  2003/07/27 22:39:36  zet
+small buttons toggle (in popup) for main cool menu
+
 Revision 1.26  2003/07/27 01:01:51  vnc
 added better scrolling features
 

@@ -25,36 +25,27 @@ package net.mldonkey.g2gui.view;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.graphics.Font;
+import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
 import java.io.IOException;
 import org.eclipse.jface.preference.*;
 
 import org.eclipse.swt.graphics.Color;
-
+import org.eclipse.swt.graphics.Image;
 
 /**
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.8 2003/07/26 17:54:14 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.9 2003/07/27 22:39:36 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
-	/**
-	 * The inactive Item
-	 */
-	protected Image inActiveIm;
-	/**
-	 * The active Item
-	 */
-	protected Image activeIm;
 	/**
 	 * whether this tab is active
 	 */
@@ -70,7 +61,7 @@ public abstract class GuiTab implements Listener, Observer {
 	/**
 	 * The ToolItem
 	 */
-	protected ToolItem toolItem;
+	protected ToolButton toolButton;
 	/**
 	 * The master Gui
 	 */
@@ -89,8 +80,8 @@ public abstract class GuiTab implements Listener, Observer {
 		this.content.setLayout( new FillLayout() );
 		this.content.setVisible( false );
 		
-		toolItem = new ToolItem( ( ( MainTab )gui ).getMainTools(), SWT.PUSH );		
-		this.toolItem.addListener( SWT.Selection, this );
+		toolButton = new ToolButton( ( ( MainTab )gui ).getMainTools(), SWT.PUSH );		
+		toolButton.addListener( SWT.Selection, this );
 		
 		this.gui = gui;
 		this.gui.registerTab( this );		
@@ -119,7 +110,7 @@ public abstract class GuiTab implements Listener, Observer {
 			hasObserver = false;
 		}
 		this.active = false;
-		this.toolItem.setImage( inActiveIm );		
+		this.toolButton.setActive ( false );		
 	}
 	
 	/**
@@ -132,7 +123,7 @@ public abstract class GuiTab implements Listener, Observer {
 		}
 		this.active = true;		
 		this.mainWindow.setActive( this );
-		this.toolItem.setImage( activeIm );
+		this.toolButton.setActive( true );
 	}
 	
 	/**
@@ -175,11 +166,34 @@ public abstract class GuiTab implements Listener, Observer {
 
 	public void updateDisplay() {
 	}
-
+	
+	public void createButton(String buttonName, String buttonText, String buttonToolTip) {
+		
+		Image big = MainTab.createTransparentImage ( 
+									MainTab.getImageFromRegistry(buttonName),
+									toolButton.getParent());
+									
+		Image small = MainTab.createTransparentImage ( 
+									MainTab.getImageFromRegistry(buttonName + "Small"),
+									toolButton.getParent());						
+									
+		toolButton.setText(buttonText);
+		toolButton.setToolTipText(buttonToolTip);
+		toolButton.setBigActiveImage(big);
+		toolButton.setBigInactiveImage(big);
+		toolButton.setSmallActiveImage(small);
+		toolButton.setSmallInactiveImage(small);		
+		toolButton.useSmallButtons(MainTab.toolbarSmallButtons);
+		toolButton.setActive(false);
+		MainTab.mainToolButtons.add( toolButton );			
+	}
 }
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.9  2003/07/27 22:39:36  zet
+small buttons toggle (in popup) for main cool menu
+
 Revision 1.8  2003/07/26 17:54:14  zet
 fix pref's illegal setParent, redo graphs, other
 

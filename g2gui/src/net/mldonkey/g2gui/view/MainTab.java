@@ -34,8 +34,10 @@ import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.*;
@@ -47,19 +49,25 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.17 2003/07/27 00:12:29 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.18 2003/07/27 22:39:36 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer {
+	private CoolBar coolbar;
 	private ToolBar miscTools;
 	private ToolBar mainTools;
+	public static List miscToolButtons = new ArrayList();
+	public static List mainToolButtons = new ArrayList();
+	public static boolean toolbarSmallButtons = false;
+	private static boolean toolbarLocked = false;
 	private StatusLine statusline;
 	private CoreCommunication mldonkey;
-	private Composite pageContainer;
+	private Composite mainComposite, coolbarComposite, pageContainer;
 	private List registeredTabs;
 	private GuiTab activeTab;
 	private Menu mainMenuBar;	
 	private PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
+	private static ImageRegistry imageRegistry = new ImageRegistry();
 	private ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
 	private Shell thisShell = null;
 	private final String titleBarText = "g2gui alpha";
@@ -77,7 +85,8 @@ public class MainTab implements Listener, Observer {
 		shell.setLayout( new FillLayout() );
 
 		createInternalPrefStore();
-	
+		createImageRegistry();
+		getInternalPrefStoreSettings();
 		createContents( shell );
 					
 		shell.pack ();
@@ -115,14 +124,10 @@ public class MainTab implements Listener, Observer {
 	 */
 	private void createContents( Shell parent ) {
 		GridData gridData;	
-		Composite mainComposite = new Composite( parent, SWT.NONE );
+		mainComposite = new Composite( parent, SWT.NONE );
 				
-		parent.setImage (createTransparentImage ( 
-								new Image(parent.getDisplay(), 
-								"src/icons/mld_logo_48x48.png"),
-							parent));
-		
-		
+		parent.setImage (getImageFromRegistry("ProgramIcon"));
+				
 		createMenuBar( parent );					
 				
 		GridLayout mainLayout = new GridLayout();
@@ -136,23 +141,15 @@ public class MainTab implements Listener, Observer {
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		horLine.setLayoutData( gridData );
 		
-		CoolBar coolbar = createCoolBar( mainComposite );				
-			
-		ToolItem pref = new ToolItem( miscTools, SWT.NONE );				
-		pref.setText(bundle.getString("TT_PreferencesButton"));
-		pref.setToolTipText(bundle.getString("TT_PreferencesButtonToolTip"));
-		pref.setImage( MainTab.createTransparentImage( 
-							new Image( pref.getParent().getDisplay(),
-								 "src/icons/preferences.png" ), 
-							pref.getParent() 
-						)
-		);
-		pref.addListener( SWT.Selection, new Listener() {
-			public void handleEvent( Event event ) {
-				openPreferences();	
-			}
-		} );
+		coolbarComposite = new Composite (mainComposite, SWT.NONE);
+		coolbarComposite.setLayout (new GridLayout ());
+		coolbarComposite.setLayoutData (new GridData (GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
 		
+		coolbar = createCoolBar( coolbarComposite );
+		createToolBars();
+		createCoolItems();
+		createMiscTools();				
+			
 		pageContainer = new Composite( mainComposite, SWT.NONE );			
 		pageContainer.setLayout( new StackLayout() );
 
@@ -163,7 +160,7 @@ public class MainTab implements Listener, Observer {
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;			
 		pageContainer.setLayoutData( gridData );						
-		
+
 		statusline = new StatusLine( mainComposite, mldonkey );
 		layoutCoolBar( coolbar );
 	} 
@@ -267,27 +264,34 @@ public class MainTab implements Listener, Observer {
 		} );
 			
 		coolBar.setLayoutData( gridData );
-		Menu toolmenu = createToolBarRMMenu( coolBar );
+		return coolBar;
+	}
+	// Create the CoolItems
+	public void createCoolItems () {
+		
 		for ( int i = 0; i < 2; i++ ) { 			
-			CoolItem item = new CoolItem ( coolBar, SWT.NONE );
+			CoolItem item = new CoolItem ( coolbar, SWT.NONE );
 		} 
 					
-		CoolItem[] items = coolBar.getItems ();
-					
-		this.mainTools = new ToolBar( coolBar, SWT.FLAT );			
+		CoolItem[] items = coolbar.getItems ();
+						
 		CoolItem mainCoolItem = items [0];
 		mainCoolItem.setControl ( mainTools );
-		mainTools.setMenu( toolmenu );
-			
-			
-		this.miscTools = new ToolBar( coolBar, SWT.FLAT );
+				
 		CoolItem miscCoolItem = items [1];
 		miscCoolItem.setControl ( miscTools );		
-		miscTools.setMenu( toolmenu );
-		layoutCoolBar( coolBar );
-		
-		return coolBar;
 	} 
+	// create the Tool Bars
+	protected void createToolBars() {
+		Menu toolmenu = createToolBarRMMenu( coolbar );
+		
+		mainTools = new ToolBar( coolbar, (toolbarSmallButtons ? SWT.RIGHT : 0) | SWT.FLAT) ;	
+		mainTools.setMenu(toolmenu);
+			
+		miscTools = new ToolBar( coolbar, (toolbarSmallButtons ? SWT.RIGHT : 0) | SWT.FLAT) ;	
+		miscTools.setMenu(toolmenu);
+				
+	}
 	
 	/**
 	 * creates a right-mouse-menue
@@ -307,6 +311,17 @@ public class MainTab implements Listener, Observer {
 				thiscoolBar.setLocked( lockItem.getSelection() );
 			}
 		} );
+		
+		/* toggle small buttons */
+		final MenuItem toggleButtonsItem = new MenuItem( menu, SWT.CHECK );
+		toggleButtonsItem.setText( "Small buttons" );
+		toggleButtonsItem.setSelection(toolbarSmallButtons);
+		toggleButtonsItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent e ) {
+				toggleSmallButtons( toggleButtonsItem.getSelection() );
+			}
+		} );
+		
 		return menu;
 	}
 
@@ -318,13 +333,76 @@ public class MainTab implements Listener, Observer {
 		// This seems to work in xp/gtk - z			
 		for ( int j = 0; j < coolBar.getItemCount(); j++ ) {	
 			CoolItem tempCoolItem = coolBar.getItem( j );		
-			ToolBar tempToolBar =  ( ToolBar ) tempCoolItem.getControl();			
+			ToolBar tempToolBar =  ( ToolBar ) tempCoolItem.getControl();
 			Point pSize = tempToolBar.computeSize( SWT.DEFAULT, SWT.DEFAULT );
 			pSize = tempCoolItem.computeSize( pSize.x, pSize.y );
 			tempCoolItem.setSize( pSize );
 			tempCoolItem.setMinimumSize( pSize );
 		}
 	} 
+	
+	private void toggleSmallButtons(boolean toggle) {
+		
+		toolbarSmallButtons = !toolbarSmallButtons;
+		
+		coolbar.dispose();
+		mainTools.dispose();
+		miscTools.dispose();
+		
+		coolbar = createCoolBar (coolbarComposite);
+		createToolBars();
+		createCoolItems();
+					
+		Iterator toolButtonIterator = mainToolButtons.iterator();	
+		while ( toolButtonIterator.hasNext() ) {
+			ToolButton tmp = ( ToolButton )  toolButtonIterator.next();
+			if ( tmp instanceof ToolButton )									
+				 tmp.useSmallButtons(toolbarSmallButtons);
+				 tmp.resetItem(mainTools);
+		 
+		}	
+		toolButtonIterator = miscToolButtons.iterator();	
+		while ( toolButtonIterator.hasNext() ) {
+			ToolButton tmp = ( ToolButton )  toolButtonIterator.next();
+			if ( tmp instanceof ToolButton )									
+				 tmp.useSmallButtons(toolbarSmallButtons);
+				 tmp.resetItem(miscTools);
+						 
+		}	
+					
+		layoutCoolBar (coolbar);
+		
+	}
+		
+	private void createMiscTools() {
+	
+		ToolButton prefButton = new ToolButton ( miscTools, SWT.NONE );
+		prefButton.setText(bundle.getString("TT_PreferencesButton"));
+		prefButton.setToolTipText(bundle.getString("TT_PreferencesButtonToolTip"));
+		
+		Image bigImage = MainTab.createTransparentImage( 
+						MainTab.getImageFromRegistry("PreferencesButton"),
+						prefButton.getParent());
+						
+		Image smallImage = MainTab.createTransparentImage( 
+						MainTab.getImageFromRegistry("PreferencesButtonSmall"),
+						prefButton.getParent());					
+					
+		prefButton.setBigActiveImage(bigImage);
+		prefButton.setBigInactiveImage(bigImage);
+		prefButton.setSmallActiveImage(smallImage);
+		prefButton.setSmallInactiveImage(smallImage);
+		prefButton.useSmallButtons(toolbarSmallButtons);		
+		prefButton.setActive(false);
+		MainTab.miscToolButtons.add( prefButton );	
+		
+		prefButton.addListener( SWT.Selection, new Listener() {
+			public void handleEvent( Event event ) {
+				openPreferences();	
+			}
+		} );
+	
+	}
 
 	/**
 	 * Here do we add the tabs, they must extend G2GuiTab. They are responsible 
@@ -398,6 +476,9 @@ public class MainTab implements Listener, Observer {
 	public ToolBar getMainTools() {
 		return mainTools;
 	} 
+	public ToolBar getMiscTools() {
+		return miscTools;
+	}
 
 	/**
 	 * The Gui's Title
@@ -407,6 +488,7 @@ public class MainTab implements Listener, Observer {
 	public void update(Observable arg0, Object receivedInfo) {
 				if (receivedInfo instanceof ClientStats){
 					final ClientStats clientInfo = (ClientStats) receivedInfo;
+					if (!thisShell.isDisposed())
 					thisShell.getDisplay().asyncExec(new Runnable() {
 						   public void run() {
 								if (!thisShell.isDisposed()) thisShell.setText(
@@ -456,6 +538,7 @@ public class MainTab implements Listener, Observer {
 				
 		if (internalPrefStore.contains( "windowX" ) ) {
 			
+			
 			if( internalPrefStore.getBoolean( "windowMaximized" ) ) 
 				shell.setMaximized( true );   
 			else 
@@ -466,12 +549,17 @@ public class MainTab implements Listener, Observer {
 								);
 		} 
 	}
+	public void getInternalPrefStoreSettings() {
+		toolbarSmallButtons = internalPrefStore.getBoolean("toolbarSmallButtons");
+	}
+	
 	/**
 	 * Saves the size of the shell to a file
 	 * @param shell The shell to save the size from
 	 */
 	public void saveSizeLocation( Shell shell ) {
 		Rectangle shellBounds = shell.getBounds();
+		internalPrefStore.setValue( "toolbarSmallButtons", toolbarSmallButtons );
 		if ( shell.getMaximized() )
 			internalPrefStore.setValue( "windowMaximized", shell.getMaximized() );
 		else {
@@ -482,10 +570,44 @@ public class MainTab implements Listener, Observer {
 			internalPrefStore.setValue( "windowMaximized", shell.getMaximized() );
 		}
 	}
+	
+	// find something better
+	private void createImageRegistry () {
+		String imagePath = "src/icons/";
+		
+		imageRegistry.put("ProgramIcon", createTrans("mld_logo_48x48.png"));
+	
+		imageRegistry.put("PreferencesButton", createTrans("preferences.png"));
+		imageRegistry.put("PreferencesButtonSmall", createTrans("preferences-16.png"));
+		
+		imageRegistry.put("StatisticsButton", createTrans("statistics.png"));
+		imageRegistry.put("StatisticsButtonSmall", createTrans("statistics-16.png"));
+	
+		imageRegistry.put("ConsoleButton", createTrans("console.png"));
+		imageRegistry.put("ConsoleButtonSmall", createTrans("console-16.png"));
+	
+		imageRegistry.put("TransfersButton", createTrans("transfer2.png"));
+		imageRegistry.put("TransfersButtonSmall", createTrans("transfer2-16.png"));
+		
+		imageRegistry.put("SearchButton", createTrans("search.png"));
+		imageRegistry.put("SearchButtonSmall", createTrans("search-16.png")); 
+			
+	}
+	// transparent pngs on gtk still require this, but it is noticable on win :(
+	private Image createTrans(String filename) {
+		String imagePath = "src/icons/";
+		return createTransparentImage(new Image(null, imagePath + filename), thisShell);
+	}
+	public static Image getImageFromRegistry (String key) {
+		return imageRegistry.get(key);
+	}
 } 
 
 /*
 $Log: MainTab.java,v $
+Revision 1.18  2003/07/27 22:39:36  zet
+small buttons toggle (in popup) for main cool menu
+
 Revision 1.17  2003/07/27 00:12:29  zet
 check isDisposed
 

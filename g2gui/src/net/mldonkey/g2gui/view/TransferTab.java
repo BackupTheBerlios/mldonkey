@@ -33,13 +33,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.graphics.Image;
+
 
 /**
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.20 2003/07/24 02:22:46 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.21 2003/07/27 22:39:36 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -51,17 +51,10 @@ public class TransferTab extends GuiTab  {
 	public TransferTab( MainTab gui ) {
 		super( gui );
 		this.mldonkey = gui.getCore();		
-		this.toolItem.setText( "testTab" );		
 		
-		activeIm = 
-		inActiveIm = MainTab.createTransparentImage ( 
-							new Image(toolItem.getParent().getDisplay(), 
-							"src/icons/transfer2.png"),
-						toolItem.getParent());
-				
-		toolItem.setText(bundle.getString("TT_TransferButton"));
-		toolItem.setToolTipText(bundle.getString("TT_TransferButtonToolTip"));
-		toolItem.setImage(inActiveIm); 
+		createButton("TransfersButton", 
+						bundle.getString("TT_TransfersButton"),
+						bundle.getString("TT_TransfersButtonToolTip"));
 		createContents(this.content);
 		
 	}
@@ -88,6 +81,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.21  2003/07/27 22:39:36  zet
+small buttons toggle (in popup) for main cool menu
+
 Revision 1.20  2003/07/24 02:22:46  zet
 doesn't crash if no core is running
 

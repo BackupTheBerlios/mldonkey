@@ -7,7 +7,6 @@ import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.custom.SashForm;
@@ -45,15 +44,11 @@ public class StatisticTab
 	 */
 	public StatisticTab(MainTab gui) {
 		super(gui);
-		activeIm = 
-		inActiveIm = MainTab.createTransparentImage ( 
-						new Image(toolItem.getParent().getDisplay(), 
-						"src/icons/statistics.png"),
-					toolItem.getParent());
+			
+		createButton("StatisticsButton", 
+					bundle.getString("TT_StatisticsButton"),
+					bundle.getString("TT_StatisticsButtonToolTip"));
 				
-		toolItem.setText(bundle.getString("TT_StatisticsButton"));
-		toolItem.setToolTipText(bundle.getString("TT_StatisticsButtonToolTip"));
-		toolItem.setImage(inActiveIm); 
 		createContents(this.content);
 		gui.getCore().addObserver(this);
 	}

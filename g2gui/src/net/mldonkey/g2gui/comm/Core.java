@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.69 2003/07/24 02:22:46 zet Exp $ 
+ * @version $Id: Core.java,v 1.70 2003/07/27 22:39:36 zet Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -161,6 +161,7 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 			}			
 		} catch ( Exception e ) {
 			connected = false;
+			e.printStackTrace();
 			System.out.println( "No Connection to mldonkey" );
 		}			
 	}
@@ -366,6 +367,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.70  2003/07/27 22:39:36  zet
+small buttons toggle (in popup) for main cool menu
+
 Revision 1.69  2003/07/24 02:22:46  zet
 doesn't crash if no core is running
 

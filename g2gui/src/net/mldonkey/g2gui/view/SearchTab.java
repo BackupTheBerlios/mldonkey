@@ -44,7 +44,7 @@ import net.mldonkey.g2gui.view.search.*;
  * SearchTab
  *
  * @author $user$
- * @version $Id: SearchTab.java,v 1.3 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
+ * @version $Id: SearchTab.java,v 1.4 2003/07/27 22:39:36 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -64,15 +64,9 @@ public class SearchTab extends GuiTab {
 		/* associate this tab with the corecommunication */
 		this.core = gui.getCore();
 		/* Set our name on the coolbar */
-		this.toolItem.setText( bundle.getString( "ST_TITLE" ) );
-		/* Set the toolitem image */		
-		inActiveIm = MainTab.createTransparentImage(
-				new Image( toolItem.getParent().getDisplay(),
-					"src/icons/search.png" ),
-						toolItem.getParent() );
-		this.toolItem.setImage( inActiveIm );
-		activeIm = inActiveIm;
-
+		createButton("SearchButton", 
+							bundle.getString("TT_SearchButton"),
+							bundle.getString("TT_SearchButtonToolTip"));
 		/* create the tab content */
 		this.createContents( this.content );
 	}
@@ -170,6 +164,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.4  2003/07/27 22:39:36  zet
+small buttons toggle (in popup) for main cool menu
+
 Revision 1.3  2003/07/27 18:45:47  lemmstercvs01
 lots of changes
 
