@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * TreeClientInfo
  *
  *
- * @version $Id: TreeClientInfo.java,v 1.5 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: TreeClientInfo.java,v 1.6 2003/09/08 19:49:16 lemmster Exp $ 
  *
  */
 public class TreeClientInfo {
@@ -65,6 +65,9 @@ public class TreeClientInfo {
 }
 /*
 $Log: TreeClientInfo.java,v $
+Revision 1.6  2003/09/08 19:49:16  lemmster
+just repaired the log
+
 Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
@@ -72,12 +75,5 @@ Revision 1.4  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.3  2003/08/22 21:22:58  lemmster
-fix $Log: TreeClientInfo.java,v $
-fix Revision 1.5  2003/08/23 15:21:37  zet
-fix remove @author
-fix
-fix Revision 1.4  2003/08/22 23:25:15  zet
-fix downloadtabletreeviewer: new update methods
-fix
 
 */

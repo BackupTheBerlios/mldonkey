@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.25 2003/09/04 18:14:56 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.26 2003/09/08 19:48:00 lemmster Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -380,6 +380,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.26  2003/09/08 19:48:00  lemmster
+just repaired the log
+
 Revision 1.25  2003/09/04 18:14:56  zet
 cancel messagebox
 
@@ -423,48 +426,5 @@ Revision 1.11  2003/08/22 22:49:22  vaste
 new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
-fix $Log: FileDetailDialog.java,v $
-fix Revision 1.25  2003/09/04 18:14:56  zet
-fix cancel messagebox
-fix
-fix Revision 1.24  2003/08/31 02:35:32  zet
-fix setFocus
-fix
-fix Revision 1.23  2003/08/31 02:21:33  zet
-fix commit
-fix
-fix Revision 1.22  2003/08/31 02:16:50  zet
-fix cancel button
-fix
-fix Revision 1.21  2003/08/31 01:54:25  zet
-fix add spaces
-fix
-fix Revision 1.20  2003/08/31 01:48:25  zet
-fix *** empty log message ***
-fix
-fix Revision 1.19  2003/08/31 01:46:33  zet
-fix localise
-fix
-fix Revision 1.17  2003/08/31 00:08:59  zet
-fix add buttons
-fix
-fix Revision 1.16  2003/08/28 22:44:30  zet
-fix GridLayout helper class
-fix
-fix Revision 1.15  2003/08/23 15:21:37  zet
-fix remove @author
-fix
-fix Revision 1.14  2003/08/23 15:13:00  zet
-fix remove reference to static MainTab methods
-fix
-fix Revision 1.13  2003/08/23 01:08:17  zet
-fix *** empty log message ***
-fix
-fix Revision 1.12  2003/08/23 01:00:02  zet
-fix *** empty log message ***
-fix
-fix Revision 1.11  2003/08/22 22:49:22  vaste
-fix new todos (name + close button)
-fix
 
 */
