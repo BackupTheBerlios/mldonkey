@@ -37,7 +37,7 @@ import org.eclipse.jface.action.Separator;
  * NetworkItemMenuListener
  *
  * @author $Author: lemmster $
- * @version $Id: NetworkItemMenuListener.java,v 1.1 2003/08/21 13:13:10 lemmster Exp $ 
+ * @version $Id: NetworkItemMenuListener.java,v 1.2 2003/08/22 19:00:25 lemmster Exp $ 
  *
  */
 public class NetworkItemMenuListener implements IMenuListener {
@@ -126,13 +126,16 @@ public class NetworkItemMenuListener implements IMenuListener {
 			setText( "connect more" );
 		}
 		public void run() {
-			network.getCore().getServerInfoIntMap().connectMore();
+			network.getCore().getServerInfoIntMap().connectMore( network );
 		}
 	}
 }
 
 /*
 $Log: NetworkItemMenuListener.java,v $
+Revision 1.2  2003/08/22 19:00:25  lemmster
+support for connectMore with network id
+
 Revision 1.1  2003/08/21 13:13:10  lemmster
 cleanup in networkitem
 

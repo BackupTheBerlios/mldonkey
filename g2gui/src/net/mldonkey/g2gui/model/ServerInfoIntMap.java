@@ -41,8 +41,8 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 /**
  * ServerInfoList
  *
- * @author $Author: lemmstercvs01 $
- * @version $Id: ServerInfoIntMap.java,v 1.17 2003/08/11 19:25:04 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ServerInfoIntMap.java,v 1.18 2003/08/22 19:00:25 lemmster Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -250,10 +250,18 @@ public class ServerInfoIntMap extends InfoIntMap {
 	/**
 	 * Sends Message.S_CONNECT_MORE to the core.
 	 */
-	public void connectMore() {
-		Message message = new EncodeMessage( Message.S_CONNECT_MORE );
-		message.sendMessage( this.parent.getConnection() );
-		message = null;
+	public void connectMore( NetworkInfo network ) {
+		if ( parent.getProtoToUse() < 18 ) {
+			Message message = new EncodeMessage( Message.S_CONNECT_MORE );
+			message.sendMessage( this.parent.getConnection() );	
+			message = null;
+		}
+		//TODO we are waiting for the new opcode to send connectMore with the networkid
+		else {
+			Message message = new EncodeMessage( Message.S_CONNECT_MORE );
+			message.sendMessage( this.parent.getConnection() );	
+			message = null;
+		}
 	}
 
 	/**
@@ -427,6 +435,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.18  2003/08/22 19:00:25  lemmster
+support for connectMore with network id
+
 Revision 1.17  2003/08/11 19:25:04  lemmstercvs01
 bugfix at CleanTable
 

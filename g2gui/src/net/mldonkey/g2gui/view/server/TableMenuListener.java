@@ -68,7 +68,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * TableMenuListener
  *
  * @author $Author: lemmster $
- * @version $Id: TableMenuListener.java,v 1.13 2003/08/22 00:11:07 lemmster Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.14 2003/08/22 19:00:25 lemmster Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -268,7 +268,10 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			setText( G2GuiResources.getString( "TML_CONNECT_MORE" ) );
 		}
 		public void run() {
-			serverInfoMap.connectMore();
+			for ( int i = 0; i < selectedServers.size(); i++ ) {
+				ServerInfo server = ( ServerInfo ) selectedServers.get( i );
+				serverInfoMap.connectMore( server.getNetwork() );
+			}
 		}
 	}
 	
@@ -731,6 +734,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.14  2003/08/22 19:00:25  lemmster
+support for connectMore with network id
+
 Revision 1.13  2003/08/22 00:11:07  lemmster
 filter: display only networks with server
 
