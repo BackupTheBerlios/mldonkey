@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.44 2003/07/01 13:13:27 dek Exp $ 
+ * @version $Id: Core.java,v 1.45 2003/07/01 13:33:16 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -184,7 +184,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;
 					
 			case Message.R_OPTIONS_INFO :
-					this.optionsInfoMap.readStream( messageBuffer );				
+					this.optionsInfoMap.readStream( messageBuffer );
+					this.setChanged();	
+					this.notifyObservers( optionsInfoMap );
 					break;
 				
 			case Message.R_FILE_UPDATE_AVAILABILITY :				
@@ -333,6 +335,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.45  2003/07/01 13:33:16  dek
+sending optionslist to observers when changed
+
 Revision 1.44  2003/07/01 13:13:27  dek
 decode Message is synchronized to prevent it from sending notify()s to disposed gui
 
