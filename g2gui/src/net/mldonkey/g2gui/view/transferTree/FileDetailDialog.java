@@ -22,11 +22,14 @@
  */
 package net.mldonkey.g2gui.view.transferTree;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -54,7 +57,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.27 2003/09/12 15:08:06 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.28 2003/09/14 16:23:56 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -62,7 +65,7 @@ public class FileDetailDialog implements Observer {
 	private Shell shell;
 	private Display desktop = Display.getCurrent();
 	private FileInfo fileInfo;
-	private ChunkCanvas chunkCanvas;
+	private ArrayList chunkCanvases = new ArrayList();
 	
 	private Button fileActionButton, fileCancelButton;
 	
@@ -99,7 +102,7 @@ public class FileDetailDialog implements Observer {
 		Group fileGeneral = new Group(shell, SWT.SHADOW_ETCHED_OUT );
 		fileGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_FILE_INFO"));
 		
-		gridLayout = CGridLayout.createGL(4,5,2,0,0,false);
+		gridLayout = CGridLayout.createGL(4,5,0,0,0,false);
 		fileGeneral.setLayout(gridLayout);
 		
 		clFileName = createLine(fileGeneral, G2GuiResources.getString("TT_DOWNLOAD_FD_FILENAME"), true);
@@ -113,10 +116,10 @@ public class FileDetailDialog implements Observer {
 		Group fileTransfer = new Group(shell, SWT.SHADOW_ETCHED_OUT );
 		fileTransfer.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_TRANSFER_INFO"));
 		
-		gridLayout = CGridLayout.createGL(4,5,2,0,0,false);
+		gridLayout = CGridLayout.createGL(4,5,0,0,0,false);
 		fileTransfer.setLayout(gridLayout);
  
-		clSources = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_SOURCES"), false);
+ 		clSources = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_SOURCES"), false);
 		clChunks = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS"), false);
 		clTransferred = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_TRANSFERRED"), false);
 		clPercent = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_PERCENT"), false);
@@ -127,20 +130,17 @@ public class FileDetailDialog implements Observer {
 		
 		fileTransfer.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
 		
-		// Chunk	
-		Group chunkGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		chunkGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS_INFO"));
+		// Chunks
+		createChunkGroup(shell, G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS_INFO"), null);
 		
-		gridLayout = CGridLayout.createGL(1,5,5,0,0,false);
-		chunkGroup.setLayout(gridLayout);
-			
-		chunkGroup.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) ) ;
-					
-		chunkCanvas = new ChunkCanvas( chunkGroup, SWT.NO_BACKGROUND, null, fileInfo );
-		fileInfo.addObserver( chunkCanvas );
-		GridData canvasGD = new GridData(GridData.FILL_HORIZONTAL);
-		canvasGD.heightHint = 28;
-		chunkCanvas.setLayoutData(canvasGD);
+		if (fileInfo.getAvails() != null) {
+			Iterator i = fileInfo.getAvails().keySet().iterator();
+			while (i.hasNext()) {
+				NetworkInfo networkInfo = (NetworkInfo) i.next();
+				if (networkInfo.isEnabled())
+					createChunkGroup(shell, networkInfo.getNetworkName(), networkInfo);
+			}
+		}
 		
 		// Rename
 		Group renameGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
@@ -183,7 +183,6 @@ public class FileDetailDialog implements Observer {
 		Button renameButton = new Button(rename, SWT.NONE);
 		renameButton.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_RENAME_BUTTON"));
 		
-		
 		renameText.addKeyListener( new KeyAdapter() {
 			public void keyPressed( KeyEvent e ) {
 				if ( e.character == SWT.CR ) {
@@ -200,7 +199,6 @@ public class FileDetailDialog implements Observer {
 				renameFile();
 			}
 		});
-
 
 		Label s = new Label(shell, SWT.SEPARATOR|SWT.HORIZONTAL);
 		s.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -310,6 +308,26 @@ public class FileDetailDialog implements Observer {
 		}
 		
 	}
+	
+	private void createChunkGroup(Shell parent, String text, NetworkInfo networkInfo) {
+		
+		Group chunkGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT );
+		chunkGroup.setText(text);
+
+		GridLayout gridLayout = CGridLayout.createGL(1,5,2,0,0,false);
+		chunkGroup.setLayout(gridLayout);
+	
+		chunkGroup.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) ) ;
+			
+		ChunkCanvas chunkCanvas = new ChunkCanvas( chunkGroup, SWT.NO_BACKGROUND, null, fileInfo, networkInfo );
+		fileInfo.addObserver( chunkCanvas );
+		GridData canvasGD = new GridData(GridData.FILL_HORIZONTAL);
+		canvasGD.heightHint = 18;
+		chunkCanvas.setLayoutData(canvasGD);
+
+		chunkCanvases.add(chunkCanvas);
+	}
+	
 
 	private CLabel createLine(Composite composite, String label, boolean longlabel) {
 		
@@ -379,7 +397,11 @@ public class FileDetailDialog implements Observer {
 	}
 	
 	public void dispose() {
-		chunkCanvas.dispose();
+
+		Iterator i = chunkCanvases.iterator();
+		while ( i.hasNext() )
+			( ( ChunkCanvas ) i.next() ).dispose();
+
 		fileInfo.deleteObserver(this);
 		
 	}
@@ -387,6 +409,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.28  2003/09/14 16:23:56  zet
+multi network avails
+
 Revision 1.27  2003/09/12 15:08:06  zet
 fix: [ Bug #897 ]
 

@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.23 2003/09/14 03:37:43 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.24 2003/09/14 16:23:56 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -117,7 +117,7 @@ public class ClientDetailDialog implements Observer {
 			
 		chunkGroup.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) ) ;
 					
-		chunkCanvas = new ChunkCanvas( chunkGroup, SWT.NO_BACKGROUND, null, fileInfo );
+		chunkCanvas = new ChunkCanvas( chunkGroup, SWT.NO_BACKGROUND, null, fileInfo, null );
 		fileInfo.addObserver( chunkCanvas );
 		GridData canvasGD = new GridData(GridData.FILL_HORIZONTAL);
 		canvasGD.heightHint = 28;
@@ -132,7 +132,7 @@ public class ClientDetailDialog implements Observer {
 		
 		chunkGroup2.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) ) ;
 				
-		chunkCanvas2 = new ChunkCanvas( chunkGroup2, SWT.NO_BACKGROUND, clientInfo, fileInfo );
+		chunkCanvas2 = new ChunkCanvas( chunkGroup2, SWT.NO_BACKGROUND, clientInfo, fileInfo, null );
 		clientInfo.addObserver( chunkCanvas );
 		GridData canvasGD2 = new GridData(GridData.FILL_HORIZONTAL);
 		canvasGD2.heightHint = 28;
@@ -260,6 +260,9 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.24  2003/09/14 16:23:56  zet
+multi network avails
+
 Revision 1.23  2003/09/14 03:37:43  zet
 changedProperties
 

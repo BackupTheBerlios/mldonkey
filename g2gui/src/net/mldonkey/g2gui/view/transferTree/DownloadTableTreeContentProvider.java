@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.22 2003/09/14 04:23:25 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.23 2003/09/14 16:23:56 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, TreeListener {
@@ -401,7 +401,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 			tableTreeItem.setData("oldHash", new Integer(tableTreeItem.getData().hashCode()));
 		}
 			
-		chunkCanvas = new ChunkCanvas( tableTreeViewer.getTableTree().getTable(), SWT.NO_BACKGROUND, clientInfo, fileInfo );
+		chunkCanvas = new ChunkCanvas( tableTreeViewer.getTableTree().getTable(), SWT.NO_BACKGROUND, clientInfo, fileInfo, null );
 		TableTreeEditor tableTreeEditor = new TableTreeEditor(tableTreeViewer.getTableTree());
 		
 		tableTreeEditorList.add(tableTreeEditor);
@@ -515,6 +515,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.23  2003/09/14 16:23:56  zet
+multi network avails
+
 Revision 1.22  2003/09/14 04:23:25  zet
 remove unneeded
 
