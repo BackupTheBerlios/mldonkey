@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.16 2003/08/04 15:06:24 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.17 2003/08/06 09:45:52 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -112,6 +112,10 @@ public class NetworkInfo extends Parent {
 		
 		/* set the networktype by networkname */
 		this.setNetworkType( this.networkName );
+
+		/* remove the servers from the serverlist if the network is disabled */
+		if ( !this.isEnabled() )
+			this.parent.getServerInfoIntMap().remove( this.getNetworkType() );
 	}
 	
 	/**
@@ -316,6 +320,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.17  2003/08/06 09:45:52  lemmstercvs01
+remove servers from serverinfointmap if network switches to off
+
 Revision 1.16  2003/08/04 15:06:24  lemmstercvs01
 bugfix
 
