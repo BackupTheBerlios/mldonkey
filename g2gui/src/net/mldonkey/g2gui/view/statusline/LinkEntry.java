@@ -41,7 +41,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
@@ -50,13 +49,11 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.7 2003/08/28 18:27:32 zet Exp $ 
+ * @version $Id: LinkEntry.java,v 1.8 2003/08/28 18:41:51 zet Exp $ 
  *
  */
 public class LinkEntry {
 
-	private Text linkEntryText;
-	private Button linkEntryButton;
 	private CoreCommunication core;
 	private StatusLine statusLine;
 
@@ -80,7 +77,7 @@ public class LinkEntry {
 										new int[] {100});	
 			
 			
-		linkEntryText = new Text(linkEntryViewForm, SWT.WRAP | SWT.MULTI | SWT.V_SCROLL );
+		final Text linkEntryText = new Text(linkEntryViewForm, SWT.WRAP | SWT.MULTI | SWT.V_SCROLL );
 		linkEntryText.setLayoutData(new FillLayout());
 		linkEntryText.setFont(JFaceResources.getTextFont());
 
@@ -91,7 +88,7 @@ public class LinkEntry {
 		sendItem.setImage(G2GuiResources.getImage("UpArrowBlue"));
 		sendItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
-				enterLinks(linkEntryText.getText());
+				enterLinks(linkEntryText);
 			}	
 		});
 		
@@ -102,7 +99,8 @@ public class LinkEntry {
 	}
 
 	// bleah. When do magnet links terminate? or ".torrent?value=x..."?  I don't know..
-	public void enterLinks(String input) {
+	public void enterLinks(Text linkEntryText) {
+		String input = linkEntryText.getText();
 		RE regex = null;	
 		try {
 			 regex = new RE( "(ed2k://\\|file\\|[^\\|]+\\|(\\d+)\\|([\\dabcdef]+)\\|)" 
@@ -145,6 +143,9 @@ public class LinkEntry {
 }
 /*
 $Log: LinkEntry.java,v $
+Revision 1.8  2003/08/28 18:41:51  zet
+cleanup
+
 Revision 1.7  2003/08/28 18:27:32  zet
 configurable flat interface
 
