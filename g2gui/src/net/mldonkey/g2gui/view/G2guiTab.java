@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: G2guiTab.java,v 1.9 2003/07/14 19:26:41 dek Exp $ 
+ * @version $Id: G2guiTab.java,v 1.10 2003/07/15 13:26:57 dek Exp $ 
  *
  */
 public abstract class G2guiTab implements Listener {	
@@ -75,7 +75,7 @@ public abstract class G2guiTab implements Listener {
 	 */
 	public void setInActive() {			
 		active = false;
-		toolItem.setSelection(false);
+		toolItem.setSelection( false );
 	}
 	
 	/**
@@ -84,8 +84,7 @@ public abstract class G2guiTab implements Listener {
 	 */
 	public void setActive() {		
 		active = true;		
-		mainWindow.setActive( this );
-		toolItem.setSelection(true);
+		mainWindow.setActive( this );		
 	}
 	
 	/**
@@ -106,6 +105,9 @@ public abstract class G2guiTab implements Listener {
 }
 /*
 $Log: G2guiTab.java,v $
+Revision 1.10  2003/07/15 13:26:57  dek
+checkstyle
+
 Revision 1.9  2003/07/14 19:26:41  dek
 done some clean.up work, since it seems,as if this view becomes reality..
 
