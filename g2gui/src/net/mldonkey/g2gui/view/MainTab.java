@@ -40,13 +40,11 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
-
-
 /**
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.1 2003/07/17 14:58:37 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.2 2003/07/17 15:02:28 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -73,6 +71,7 @@ public class MainTab implements Listener {
 		shell.setLayout( new FillLayout() );
 
 		createInternalPrefStore();
+	
 		createContents( shell );
 		
 		/* set the old size of this window */
@@ -211,7 +210,7 @@ public class MainTab implements Listener {
 	 * @param control where is our image laid in, to check for the background-color
 	 * @return the transparent image
 	 */
-	private static Image createTransparentImage( Image src, Control control ) {
+	static Image createTransparentImage( Image src, Control control ) {
 		int width = src.getBounds().width;
 		int height = src.getBounds().height;
 		
@@ -315,6 +314,7 @@ public class MainTab implements Listener {
 	private void addTabs() {
 		new TransferTab(this);
 		new ConsoleTab( this );
+		new StatisticTab( this );
 		/*setting TransferTab active if registered*/
 		Iterator tabIterator = registeredTabs.iterator();
 		while ( tabIterator.hasNext() ) {
@@ -454,6 +454,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.2  2003/07/17 15:02:28  lemmstercvs01
+changed visibility of createTransparentImage()
+
 Revision 1.1  2003/07/17 14:58:37  lemmstercvs01
 refactored
 
