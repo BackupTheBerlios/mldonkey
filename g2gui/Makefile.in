@@ -6,7 +6,8 @@ SRC_DIR=@SRC_DIR@
 OBJ_DIR=@OBJ_DIR@
 RES_DIR=@RES_DIR@
 SWT_DIR=@SWT_DIR@
-
+JAR=@JAR@
+PACKAGE_DIR=@PACKAGE_DIR@
 GCJ_ARGS=-c -w -O2
 SWT_ARGS=-fjni
 
@@ -14,7 +15,8 @@ INSTALLPREFIX=@prefix@/g2gui
 
 PROPERTIES=$(SRC_DIR)/g2gui.properties
 
-G2GUI_CLASSPATH:=@CLASSPATH@
+MYCLASSPATH=@CLASSPATH@
+export CLASSPATH=$(MYCLASSPATH)
 
 MAINCLASS=net.mldonkey.g2gui.view.G2Gui
 
@@ -23,34 +25,24 @@ UNAME=$(word 1, $(shell uname -a))
 ifeq ($(UNAME),Linux)
 	SYSTYPE=gtk
 	PROGRAM=g2gui
-	LINK_ARGS= -s -static-libgcc -Wl,-rpath,.
-	G2GUI_CLASSPATH:=$(subst .jar ,.jar:,$(G2GUI_CLASSPATH))
+	LINK_ARGS= -s -static-libgcc -Wl,-rpath,.	
+	SWTOBJECTS = $(notdir $(wildcard $(SWT_DIR)/*.jar))
 else
 	SYSTYPE=win
 	PROGRAM=g2gui.exe
 	LINK_ARGS=-s -mwindows \
 	-Dgnu.gcj.runtime.NameFinder.demangle=false \
 	-Dgnu.gcj.runtime.NameFinder.use_addr2line=false
-	LIBGCJ=$(SWT_DIR)/libswt.a
-	G2GUI_CLASSPATH:=$(subst .jar ,.jar\;,$(G2GUI_CLASSPATH))
+	LIBSWT=$(SWT_DIR)/libswt.a
+	SWTOBJECTS = swt.o
 endif
 
 JAROBJECTS = $(subst .jar,.o, $(notdir $(wildcard $(JAR_DIR)/*.jar)))
 SWTOBJECTS = $(subst .jar,.o, $(notdir $(wildcard $(SWT_DIR)/*.jar)))
 
-#G2GUI_RESOBJECTS =@G2GUI_RESOBJECTS@ 
-#SWT_RESOBJECTS =@SWT_RESOBJECTS@ 
-
-
 G2GUI_RESOBJECTS=$(subst /,.,$(shell $(FIND) $(SRC_DIR) -type f  ! -name "*.java" -printf "%p.o "))
 OTHER_RESOBJECTS=$(subst /,.,$(shell $(FIND) $(RES_DIR) -type f  ! -name "*.java" -printf "%p.o "))
-
 SRCOBJECTS = $(subst /,.,$(shell $(FIND) $(SRC_DIR) -type f  -name "*.java" -printf "%p.o "))
-
-#vpath %.jar $(JAR_DIR) $(SWT_DIR)
-#vpath %.java $(shell $(FIND) $(SRC_DIR) -type d)
-#vpath %.o $(OBJ_DIR)
-#vpath % $(shell $(FIND) -type d)
 
 vpath % $(shell $(FIND) $(JAR_DIR) $(SWT_DIR) $(SRC_DIR) $(OBJ_DIR) $(RES_DIR) -type d)
 
@@ -58,17 +50,23 @@ define file_path
 $(subst .,/,$(basename $*))$(suffix $*)
 endef
 
-#.SUFFIXES:
-
-all : mkobjdir $(G2GUI_RESOBJECTS) $(OTHER_RESOBJECTS) $(SWTOBJECTS) $(JAROBJECTS) $(SRCOBJECTS) link
+all : mkobjdir $(PROGRAM) 
 	@echo --- DONE ---
 
+$(SWTOBJECTS) : %.o : %.jar 
+ifeq ($(SYSTYPE),gtk)
+	$(GCJ) $(SWT_ARGS) $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $<
+else
+	$(build_swt_win)
+	cp $(SWT_DIR)/SWTMessages.o $(OBJ_DIR)/SWTMessages.o
+	build-stuff/build-win-swt $(SWT_DIR) $(JAR) $(FIND) $(GCJ)
+endif
 
-$(SWTOBJECTS) : %.o : %.jar
-	 $(GCJ) --CLASSPATH=$(G2GUI_CLASSPATH) $(SWT_ARGS) $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $<			
-	
+icon.o : % : build-stuff/g2gui.rc
+	windres -o $(OBJ_DIR)/$@ build-stuff/g2gui.rc
+
 $(JAROBJECTS) : %.o : %.jar
-	$(GCJ) --CLASSPATH=$(G2GUI_CLASSPATH) $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $<
+	$(GCJ) --CLASSPATH=$(MYCLASSPATH) $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $<
 
 
 $(G2GUI_RESOBJECTS) : %.o : $(subst .,/,$<)
@@ -78,12 +76,16 @@ $(OTHER_RESOBJECTS) :%.o : $(subst .,/,$<)
 	$(GCJ) $(GCJ_ARGS) --resource $(subst $(RES_DIR)/,,$(file_path)) -o $(OBJ_DIR)/$@ $(file_path)
 		
 $(SRCOBJECTS) : %.o : $(subst .,/,$<)
-	$(GCJ) --CLASSPATH=$(G2GUI_CLASSPATH) $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $(file_path)
+	$(GCJ)  $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $(file_path)
 		
 
-link :
+$(PROGRAM) : $(G2GUI_RESOBJECTS) $(OTHER_RESOBJECTS) $(SWTOBJECTS) $(JAROBJECTS) $(SRCOBJECTS) @PLATFORM_TARGET@ 
 	$(GCJ) --main=$(MAINCLASS) $(LINK_ARGS) -o $(PROGRAM) $(OBJ_DIR)/*.o $(LIBSWT)
+ifeq ($(SYSTYPE),gtk)
 	cp $(SWT_DIR)/libswt* .
+else
+	cp $(SWT_DIR)/*.dll .
+endif
 
 mkobjdir :
 	@if [ ! -d $(OBJ_DIR) ]; then  \
