@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.54 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: G2Gui.java,v 1.55 2003/12/23 03:39:34 psy Exp $
  *
  */
 public class G2Gui {
@@ -73,7 +73,8 @@ public class G2Gui {
     private static String username;
     private static String password;
     private static int port;
-
+    private static List links;
+    
 	private static CoreCommunication core;
 
     private static Display display;
@@ -86,8 +87,9 @@ public class G2Gui {
      */
     public static void main(String[] argv) {
     	String fileNotFound = "preference file not found on disk";
+    	String configfile = null;
     	display = new Display();
-        List links = new ArrayList();
+        links = new ArrayList();
         
 		// parse args
 		int optind;
@@ -99,23 +101,29 @@ public class G2Gui {
 			} else if (argv[optind].equals("-d")) {
 				debug = true;
 			} else if ( argv.length > optind + 1 )	{
+				// we got a configfile-parameter
 				if (argv[optind].equals("-c")) {
 					try {
-						PreferenceLoader.initialize((String) argv[optind]);
+						configfile = (String) argv[++optind];
+						PreferenceLoader.initialize( configfile );
 					}
 					catch (IOException e) {
-						System.err.println(fileNotFound);
+						System.err.println(fileNotFound + ": " + configfile);
 					} 
+				// we got a link parameter for submission
 				} else if (argv[optind].equals("-l")) {
 					links.add( argv[++optind] );
+				// hostname
 				} else if (argv[optind].equals("-H")) {
 					String[] strings = RegExp.split(argv[++optind], ':');
 					if ( strings.length == 2 ) {
 						hostname = strings[0];
 						port = port = new Integer( strings[1] ).intValue();
 					}
+				// username
 				} else if (argv[optind].equals("-U")) {
 					username = argv[++optind];
+				// port
 				} else if (argv[optind].equals("-P")) {
 					password = argv[++optind];
 				} else if (argv[optind].equals("--")) {
@@ -126,21 +134,25 @@ public class G2Gui {
 				break;
 			}
 		}
-		
+
+		// if there has not been specified a config-file, use default
+		if (configfile == null) {
+			G2GuiResources.initialize();
+			try {
+				PreferenceLoader.initialize();
+			}
+			catch (IOException e) {
+				System.err.println(fileNotFound);
+			}
+		}
+	
 		// we received links? -> send them
 		if ( links.size() > 0 ) {
 			launch( links );
 			return;
 		}	
-			
-		G2GuiResources.initialize();
-		try {
-			PreferenceLoader.initialize();
-		}
-		catch (IOException e) {
-			System.err.println(fileNotFound);
-		}
 
+		
         /*determine wether a new instance of G2gui is allowed: */
         if (PreferenceLoader.loadBoolean("allowMultipleInstances")
 	      || !PreferenceLoader.loadBoolean("running") || debug) {
@@ -161,7 +173,7 @@ public class G2Gui {
      * Launch
      */
     private static void launch() {
-        /* we are running, so we make this available to other instances */
+    	/* we are running, so we make this available to other instances */
         PreferenceLoader.setValue("running", true);
         PreferenceLoader.saveStore();
 
@@ -210,6 +222,7 @@ public class G2Gui {
         }
 
         readParams();
+        if (debug) System.out.println("Host: " + hostname + " User: " + username);
 
         Socket socket = initializeSocket( false );
 		if (socket == null ) return;
@@ -221,7 +234,8 @@ public class G2Gui {
 		// handle some errors the core can cause
 		// connection denied
         if (core.getConnectionDenied()) {
-            connectDeniedHandling();
+        	core.disconnect();
+        	connectDeniedHandling();
  		// bad password
         } else if (core.getBadPassword()) {
             core.disconnect();
@@ -248,24 +262,32 @@ public class G2Gui {
      * @param aLink The link that should be send to the core
      */
     private static void launch( List aLink ) {
+    	
     	Object waiterObject = new Object();
+    	myPrefs = new Preferences(PreferenceLoader.getPreferenceStore());
+    	shell = new Shell(display);
     	
     	readParams();
-
-    	Socket socket = initializeSocket( true );
-    	if (socket == null ) return;
+    	if (debug) System.out.println("Links for launch: " + links.toString());
+    	if (debug) System.out.println("Host: " + hostname + " User: " + username);
+    	
+    	Socket socket = initializeSocket( false );
+    	if ( socket == null ) return;
 
     	core = startCore( waiterObject, socket, true );
     	
     	// handle some errors the core can cause
     	// connection denied
     	if (core.getConnectionDenied()) {
+    		core.disconnect();
     		connectDeniedHandling();
    		// bad password
     	} else if (core.getBadPassword()) {
     		core.disconnect();
+    		badPasswordHandling();
     	// connection is setup successfully
     	} else {
+    		System.out.println("Connection fine, sending links!");
     		sendDownloadLink( aLink, socket );
     	}
     }
@@ -280,12 +302,13 @@ public class G2Gui {
             ObjectPool socketPool = new SocketPool(hostname, port);
             aSocket = (Socket) socketPool.checkOut();
         } catch (UnknownHostException e) {
-        	errorHandling(G2GuiResources.getString("G2_INVALID_ADDRESS"),G2GuiResources.getString("G2_ILLEGAL_ADDRESS"), mode);			
+        	errorHandling(G2GuiResources.getString("G2_INVALID_ADDRESS"), 
+        		G2GuiResources.getString("G2_ILLEGAL_ADDRESS"), mode, true);			
             return null;
         } catch (IOException e) {
 			errorHandling(G2GuiResources.getString("G2_IOEXCEPTION"),
-        			G2GuiResources.getString("G2_CORE_NOT_RUNNING") + hostname + ":" + port + 
-        			G2GuiResources.getString("G2_CORE_NOT_RUNNING2"), mode);
+        		G2GuiResources.getString("G2_CORE_NOT_RUNNING") + hostname + ":" + port + 
+        		G2GuiResources.getString("G2_CORE_NOT_RUNNING2"), mode, true);
 			return null;
         }  
         return aSocket;  
@@ -355,7 +378,18 @@ public class G2Gui {
      */
     private static void relaunchSelf() {
         closeApp();
-        launch();
+        hostname = null;
+        username = null;
+        password = null;
+        port = 0;
+
+        // when we wanted to submit a link, do not forget it
+        if ( links.size() > 0 ) {
+        	launch( links );
+        } else {
+        	launch();
+        }
+       
     }
 
     /**
@@ -365,21 +399,13 @@ public class G2Gui {
      * @param args nothing to put inside
      */
     private static void badPasswordHandling() {
-		Splash.dispose();
+    	Splash.dispose();
+    	if (debug) System.out.println("Error: Bad password!");
 
-        /* raise a warning msg */
-        MessageBox box = new MessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
-        box.setText(G2GuiResources.getString("G2_LOGIN_INVALID"));
-        box.setMessage(G2GuiResources.getString("G2_USER_PASS"));
-
-        int rc = box.open();
-
-        if (rc == SWT.NO) {
-            closeApp();
-        } else {
-            myPrefs.open(shell, null);
-            relaunchSelf();
-        }
+    	// raise a warning message
+     	errorHandling(G2GuiResources.getString("G2_LOGIN_INVALID"),
+    			G2GuiResources.getString("G2_USER_PASS"),
+    			false, false);
     }
 
     /**
@@ -387,30 +413,37 @@ public class G2Gui {
      */
     private static void connectDeniedHandling() {
         Splash.dispose();
-
-        /* raise a warning msg */
-        MessageBox box = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-        box.setText(G2GuiResources.getString("G2_CONNECTION_DENIED"));
-        box.setMessage(G2GuiResources.getString("G2_CONNECTION_ATTEMPT_DENIED"));
-        box.open();
-        closeApp();
+        if (debug) System.out.println("Error: Connection to core has been denied!");
+        
+        // raise a warning message
+        errorHandling(G2GuiResources.getString("G2_CONNECTION_DENIED"), 
+        		G2GuiResources.getString("G2_CONNECTION_ATTEMPT_DENIED"),
+        		false, false);
     }
     
     /**
+     * This Method pops up a small message-window containing an error-message.
      * 
-     * @param errorText
-     * @param errorMsg
+     * @param errorText little text which appears in the error-window headerbar
+     * @param errorMsg text which gives more detailed information to the problem
+     * @param mode
+     * @param severe When set to true, SWT.ICON_WARNING will be used instead of SWT.ICON_ERROR,
+     * resulting in a more intentensive "warning experience".
+     * 
      */
-    private static void errorHandling(String errorText, String errorMsg, boolean mode) {
+    private static void errorHandling(String errorText, String errorMsg, boolean mode, boolean severe) {
 		if (!mode) {
 			Splash.dispose();
-			MessageBox box = new MessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
+			int icon = SWT.ICON_WARNING;
+			if (severe) icon = SWT.ICON_ERROR;
+			MessageBox box = new MessageBox(shell, icon | SWT.OK | SWT.CANCEL);
 			box.setText(errorText);
-			box.setMessage(errorMsg);
+			box.setMessage(G2GuiResources.getString("G2_CONNECTION_ERROR_HEADER") + " \"" +
+				username + "@" + hostname + ":" + port + "\":\n\n" + errorMsg);
 	
 			int rc = box.open();
 	
-			if (rc == SWT.NO) {
+			if (rc == SWT.CANCEL) {
 				closeApp();
 			} else {
 				myPrefs.open(shell, null);
@@ -466,6 +499,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.55  2003/12/23 03:39:34  psy
+commandline handling improved
+
 Revision 1.54  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
