@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiDisplay.java,v 1.5 2003/10/16 22:02:45 zet Exp $
+ * @version $Id: G2GuiDisplay.java,v 1.6 2003/11/07 00:31:39 zet Exp $
  */
 public class G2GuiDisplay extends PreferencePage {
 	/**
@@ -45,6 +45,12 @@ public class G2GuiDisplay extends PreferencePage {
 	 */
 	protected void createFieldEditors() {
 		Composite composite = getFieldEditorParent();
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"splashScreen",
+				G2GuiResources.getString( "PREF_DISPLAY_SPLASH" ),
+				composite ) );		
+		
 		
 		setupEditor( 
 			new BooleanFieldEditor( 
@@ -75,6 +81,9 @@ public class G2GuiDisplay extends PreferencePage {
 }
 /*
 $Log: G2GuiDisplay.java,v $
+Revision 1.6  2003/11/07 00:31:39  zet
+option to disable splash screen  #1064
+
 Revision 1.5  2003/10/16 22:02:45  zet
 move some options
 

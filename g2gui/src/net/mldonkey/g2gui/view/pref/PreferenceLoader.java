@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.39 2003/10/17 15:35:48 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.40 2003/11/07 00:31:39 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -81,6 +81,7 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "toolbarSmallButtons", false );
         preferenceStore.setDefault( "flatInterface", false );
         preferenceStore.setDefault( "useGraident", true );
+        preferenceStore.setDefault( "splashScreen", true );
         
         PreferenceConverter.setDefault( preferenceStore, "consoleBackground",
                                         display.getSystemColor( SWT.COLOR_LIST_BACKGROUND ).getRGB() );
@@ -260,6 +261,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.40  2003/11/07 00:31:39  zet
+option to disable splash screen  #1064
+
 Revision 1.39  2003/10/17 15:35:48  zet
 graph prefs
 
