@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.33 2003/10/08 01:12:15 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.34 2003/10/12 15:57:27 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -118,6 +118,10 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( "allowMultipleInstances", false );
 		preferenceStore.setDefault( "downloadsFilterQueued", false );
 		preferenceStore.setDefault( "downloadsFilterPaused", false );
+		
+		preferenceStore.setDefault( "graphSashHorizontal", true );
+		preferenceStore.setDefault( "clientSashHorizontal", true );
+		preferenceStore.setDefault( "transferSashVertical", true );
         
         return preferenceStore;
     }
@@ -227,6 +231,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.34  2003/10/12 15:57:27  zet
+sashes
+
 Revision 1.33  2003/10/08 01:12:15  zet
 useGradient preference
 
