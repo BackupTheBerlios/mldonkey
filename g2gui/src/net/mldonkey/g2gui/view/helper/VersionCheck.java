@@ -28,7 +28,7 @@ import org.eclipse.swt.SWT;
 /**
  * VersionCheck - Since fox returns "fox" to the getPlatform() method on all platforms
  *
- * @version $Id: VersionCheck.java,v 1.5 2004/02/17 22:49:58 psy Exp $
+ * @version $Id: VersionCheck.java,v 1.6 2004/02/18 13:23:25 psy Exp $
  *
  */
 public class VersionCheck {
@@ -81,6 +81,15 @@ public class VersionCheck {
 	}
 
 	/**
+	 * This method is used to check if the currently used widget-set is motif
+	 * @return Returns true if motif is currently used, false if not
+	 */
+	public static boolean isMotif() {
+		if (getSWTPlatform().startsWith("motif")) return true;
+		return false;
+	}
+	
+	/**
 	 * This method gives us java.vendor, java.vm.name and java.version
 	 * @return a combined String with java information
 	 */
@@ -112,6 +121,9 @@ public class VersionCheck {
 
 /*
 $Log: VersionCheck.java,v $
+Revision 1.6  2004/02/18 13:23:25  psy
+added check for motif
+
 Revision 1.5  2004/02/17 22:49:58  psy
 added more VM/OS/Version debug- and crash-info
 
