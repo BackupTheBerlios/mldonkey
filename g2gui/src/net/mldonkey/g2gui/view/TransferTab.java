@@ -38,6 +38,7 @@ import net.mldonkey.g2gui.view.helper.HeaderBarMenuListener;
 import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transfer.ColumnSelector;
 import net.mldonkey.g2gui.view.transfer.DownloadPaneMenuListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
@@ -69,7 +70,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.74 2003/10/19 17:07:08 zet Exp $
+ * @version $Id: TransferTab.java,v 1.75 2003/10/19 21:39:03 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -248,7 +249,7 @@ public class TransferTab extends GuiTab {
 		
 		popupMenuCL = new MenuManager( "" );
 		popupMenuCL.setRemoveAllWhenShown( true );
-		popupMenuCL.addMenuListener( new HeaderBarMenuListener( parentSash, clientViewForm ) );
+		popupMenuCL.addMenuListener( new ClientsMenuListener( parentSash, clientViewForm ) );
 		clientCLabel.addMouseListener( new MaximizeSashMouseAdapter( clientCLabel, popupMenuCL, parentSash, clientViewForm  ) );
         Composite downloadClients = new Composite( clientViewForm, SWT.NONE );
         downloadClients.setLayout( CGridLayout.createGL( 1, 0, 0, 0, 0, false ) );
@@ -380,6 +381,21 @@ public class TransferTab extends GuiTab {
         if (popupMenuCL != null) popupMenuCL.dispose();
     }
     
+    /**
+     * ClientsMenuListener
+     */
+    public class ClientsMenuListener extends HeaderBarMenuListener {
+    
+        public ClientsMenuListener(SashForm sashForm, Control control) {
+			super(sashForm, control);
+		}
+
+		public void menuAboutToShow( IMenuManager menuManager ) {
+			menuManager.add( new ColumnSelectorAction( ) );
+			super.menuAboutToShow(menuManager);
+		}
+	}
+    
 	/**
      * UploadsMenuListener
      */
@@ -406,12 +422,34 @@ public class TransferTab extends GuiTab {
 			Message refresh = new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
 			refresh.sendMessage( mldonkey );
 	   }
-   }
+    }
+
+    /**
+     * ColumnSelectorAction
+     */
+    private class ColumnSelectorAction extends Action {
+        public ColumnSelectorAction() {
+            super( G2GuiResources.getString("TT_ColumnSelector") );
+            setImageDescriptor( G2GuiResources.getImageDescriptor("table") );
+        }
+
+        public void run() {
+            ColumnSelector c = new ColumnSelector(clientTableViewer.getTableViewer().getTable().getShell(), ClientTableViewer.COLUMN_LABELS,
+                    ClientTableViewer.ALL_COLUMNS, "clientTableColumns");
+            if (c.open() == ColumnSelector.OK) {
+                c.savePrefs();
+                clientTableViewer.resetColumns();
+            }
+        }
+    } 
     
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.75  2003/10/19 21:39:03  zet
+columnselector support
+
 Revision 1.74  2003/10/19 17:07:08  zet
 check height
 

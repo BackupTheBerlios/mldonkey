@@ -37,15 +37,29 @@ import org.eclipse.swt.widgets.Widget;
  * CustomTableViewer
  *
  *
- * @version $Id: CustomTableViewer.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
+ * @version $Id: CustomTableViewer.java,v 1.2 2003/10/19 21:38:45 zet Exp $ 
  *
  */
 public class CustomTableViewer extends TableViewer {
+	private int[] columnIDs;
 	
 	public CustomTableViewer(Composite parent, int style) {
 	  super(parent, style);
 	}
 
+	public void setColumnIDs (String string) {
+		columnIDs = new int[string.length()];
+		
+		for (int i = 0; i < string.length(); i ++) {
+			columnIDs[i] = string.charAt(i) - 65;
+		}
+		
+	}
+
+	public int[] getColumnIDs() {
+		return columnIDs;
+	}
+	
 	protected void doUpdateItem(
 		Widget widget,
 		Object element,
@@ -117,6 +131,9 @@ public class CustomTableViewer extends TableViewer {
 }
 /*
 $Log: CustomTableViewer.java,v $
+Revision 1.2  2003/10/19 21:38:45  zet
+columnselector support
+
 Revision 1.1  2003/09/20 14:39:21  zet
 move transfer package
 

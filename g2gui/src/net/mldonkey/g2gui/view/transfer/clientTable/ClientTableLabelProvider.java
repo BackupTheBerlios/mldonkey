@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -38,23 +39,29 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.5 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.6 2003/10/19 21:38:54 zet Exp $
  *
  */
 public class ClientTableLabelProvider implements ITableLabelProvider, IColorProvider {
+
+    private CustomTableViewer tableViewer;
+    
+    public ClientTableLabelProvider( CustomTableViewer tableViewer ) {
+        this.tableViewer = tableViewer;
+    }
+    
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      */
-
-    // Will transparent .pngs ever work?
     public Image getColumnImage( Object element, int columnIndex ) {
         ClientInfo clientInfo = (ClientInfo) element;
 
-        switch ( columnIndex ) {
-        case 0:
+		switch ( tableViewer.getColumnIDs()[ columnIndex ] ) {
+		
+		case ClientTableViewer.STATE:
             return G2GuiResources.getClientImage( (EnumState) clientInfo.getState().getState() );
 
-        case 2:
+		case ClientTableViewer.NETWORK:
             return G2GuiResources.getNetworkImage( clientInfo.getClientnetworkid().getNetworkType() );
 
         default:
@@ -70,17 +77,18 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
     public String getColumnText( Object element, int columnIndex ) {
         ClientInfo clientInfo = (ClientInfo) element;
 
-        switch ( columnIndex ) {
-        case 0:
+		switch ( tableViewer.getColumnIDs()[ columnIndex ] ) {
+		    
+        case ClientTableViewer.STATE:
             return "" + clientInfo.getDetailedClientActivity( );
 
-        case 1:
+        case ClientTableViewer.NAME:
             return "" + clientInfo.getClientName();
 
-        case 2:
+        case ClientTableViewer.NETWORK:
             return "" + clientInfo.getClientnetworkid().getNetworkName();
 
-        case 3:
+        case ClientTableViewer.KIND:
             return "" + clientInfo.getClientConnection( );
 
         default:
@@ -133,6 +141,9 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.6  2003/10/19 21:38:54  zet
+columnselector support
+
 Revision 1.5  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 

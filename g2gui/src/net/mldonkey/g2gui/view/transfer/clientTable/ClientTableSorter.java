@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
 
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -36,24 +37,27 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * TableSorter
  *
  *
- * @version $Id: ClientTableSorter.java,v 1.3 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: ClientTableSorter.java,v 1.4 2003/10/19 21:38:54 zet Exp $
  *
  */
 public class ClientTableSorter extends ViewerSorter {
     private boolean lastSort = true;
     private int lastColumnIndex = 0;
     private int columnIndex = 0;
+    private CustomTableViewer tableViewer;
 
     /**
      * Creates a new viewer sorter
      */
-    public ClientTableSorter() {
-        super();
+    public ClientTableSorter(CustomTableViewer tableViewer) {
+		this.tableViewer = tableViewer;
     }
 
     public int compare( Viewer viewer, Object obj1, Object obj2 ) {
-        switch ( columnIndex ) {
-        case 0:
+        
+		switch ( tableViewer.getColumnIDs()[ columnIndex ] ) {
+        
+        case ClientTableViewer.STATE:
 
             ClientInfo clientInfo1 = (ClientInfo) obj1;
             ClientInfo clientInfo2 = (ClientInfo) obj2;
@@ -149,6 +153,9 @@ public class ClientTableSorter extends ViewerSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.4  2003/10/19 21:38:54  zet
+columnselector support
+
 Revision 1.3  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 

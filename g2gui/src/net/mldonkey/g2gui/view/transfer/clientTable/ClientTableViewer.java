@@ -29,7 +29,6 @@ import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -44,15 +43,24 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableViewer.java,v 1.4 2003/10/16 16:09:56 zet Exp $
+ * @version $Id: ClientTableViewer.java,v 1.5 2003/10/19 21:38:54 zet Exp $
  *
  */
 public class ClientTableViewer {
-    final String[] COLUMN_LABELS = { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
+	public static final String ALL_COLUMNS = "ABCD";
+	
+	public static final int STATE = 0;
+	public static final int NAME = 1;
+	public static final int NETWORK = 2;
+	public static final int KIND = 3;
+	
+	public boolean manualDispose;
+    public static final String[] COLUMN_LABELS = { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
     final int[] COLUMN_ALIGNMENT = { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
     final int[] COLUMN_DEFAULT_WIDTHS = { 200, 100, 75, 75 };
-    private CustomTableViewer clientTableViewer;
+    private CustomTableViewer tableViewer;
     private CoreCommunication core;
+	private String columnIDs;
 
     public ClientTableViewer( Composite parent, CoreCommunication core ) {
         this.core = core;
@@ -60,63 +68,93 @@ public class ClientTableViewer {
     }
 
     public void createContents( Composite parent ) {
-        clientTableViewer = new CustomTableViewer( parent, SWT.FULL_SELECTION | SWT.MULTI );
+        tableViewer = new CustomTableViewer( parent, SWT.FULL_SELECTION | SWT.MULTI );
 
-        Table table = clientTableViewer.getTable();
+		Table table = tableViewer.getTable();
         updateDisplay();
         table.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
-        clientTableViewer.getTable().setHeaderVisible( true );
+        tableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
+        tableViewer.getTable().setHeaderVisible( true );
 
-        for ( int i = 0; i < COLUMN_LABELS.length; i++ ) {
-            PreferenceStore p = PreferenceLoader.getPreferenceStore();
-            p.setDefault( COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ] );
+        createColumns();
 
-            TableColumn tableColumn = new TableColumn( table, COLUMN_ALIGNMENT[ i ] );
-            tableColumn.setText( G2GuiResources.getString( COLUMN_LABELS[ i ] ) );
-            tableColumn.setWidth( p.getInt( COLUMN_LABELS[ i ] ) );
+        tableViewer.setContentProvider( new ClientTableContentProvider() );
+        tableViewer.setLabelProvider( new ClientTableLabelProvider( tableViewer ) );
 
-            final int columnIndex = i;
-            tableColumn.addDisposeListener( new DisposeListener() {
-                    public synchronized void widgetDisposed( DisposeEvent e ) {
-                        PreferenceStore p = PreferenceLoader.getPreferenceStore();
-                        TableColumn thisColumn = (TableColumn) e.widget;
-                        p.setValue( COLUMN_LABELS[ columnIndex ], thisColumn.getWidth() );
-                    }
-                } );
-            tableColumn.addListener( SWT.Selection,
-                new Listener() {
-                    public void handleEvent( Event e ) {
-                        ( (ClientTableSorter) clientTableViewer.getSorter() ).setColumnIndex( columnIndex );
-                        clientTableViewer.refresh();
-                    }
-                } );
-        }
-
-        clientTableViewer.setContentProvider( new ClientTableContentProvider() );
-        clientTableViewer.setLabelProvider( new ClientTableLabelProvider() );
-
-        ClientTableMenuListener tableMenuListener = new ClientTableMenuListener( clientTableViewer, core );
-        clientTableViewer.addSelectionChangedListener( tableMenuListener );
+        ClientTableMenuListener tableMenuListener = new ClientTableMenuListener( tableViewer, core );
+        tableViewer.addSelectionChangedListener( tableMenuListener );
 
         MenuManager popupMenu = new MenuManager( "" );
         popupMenu.setRemoveAllWhenShown( true );
         popupMenu.addMenuListener( tableMenuListener );
-        clientTableViewer.getTable().setMenu( popupMenu.createContextMenu( clientTableViewer.getTable() ) );
-        clientTableViewer.setSorter( new ClientTableSorter() );
+        tableViewer.getTable().setMenu( popupMenu.createContextMenu( tableViewer.getTable() ) );
+        tableViewer.setSorter( new ClientTableSorter( tableViewer ) );
     }
 
     public CustomTableViewer getTableViewer() {
-        return clientTableViewer;
+        return tableViewer;
     }
     
+    public void createColumns() {
+		Table table = tableViewer.getTable();
+		TableColumn[] tableColumns = table.getColumns();
+		
+		manualDispose = true;
+		for (int i = tableColumns.length - 1; i > -1; i--) {
+			tableColumns[i].dispose();
+		}
+		manualDispose = false;
+
+		String prefCols = PreferenceLoader.loadString( "clientTableColumns" );
+		columnIDs = ( ( !prefCols.equals( "" )  && prefCols.length() <= ALL_COLUMNS.length() ) ? prefCols : ALL_COLUMNS );
+		final PreferenceStore p = PreferenceLoader.getPreferenceStore();
+		
+		tableViewer.setColumnIDs( columnIDs );
+		
+		for ( int i = 0; i < columnIDs.length(); i++ ) {
+		    
+			final int arrayItem = columnIDs.charAt( i ) - 65;
+			final int columnIndex = i;
+			 
+			TableColumn tableColumn = new TableColumn( table, COLUMN_ALIGNMENT[ arrayItem ] );
+			p.setDefault( COLUMN_LABELS[ arrayItem ], COLUMN_DEFAULT_WIDTHS[ arrayItem ] );
+			tableColumn.setText( G2GuiResources.getString( COLUMN_LABELS[ arrayItem ] ) );
+			tableColumn.setWidth( p.getInt( COLUMN_LABELS[ arrayItem ] ) );
+			
+			 tableColumn.addDisposeListener( new DisposeListener() {
+					 public synchronized void widgetDisposed( DisposeEvent e ) {
+						 TableColumn thisColumn = (TableColumn) e.widget;
+						 if (!manualDispose)
+						 p.setValue( COLUMN_LABELS[ arrayItem ], thisColumn.getWidth() );
+					 }
+				 } );
+			 tableColumn.addListener( SWT.Selection,
+				 new Listener() {
+					 public void handleEvent( Event e ) {
+						 ( (ClientTableSorter) tableViewer.getSorter() ).setColumnIndex( columnIndex );
+						 tableViewer.refresh();
+					 }
+				 } );
+		 }
+    }
+	/**
+	 * Reset columns
+	 */
+	public void resetColumns() {
+		Object oldInput = tableViewer.getInput();
+		tableViewer.setInput( null );
+		( (ClientTableSorter) tableViewer.getSorter()).setColumnIndex( 0 );
+		createColumns();
+		tableViewer.setInput(oldInput);
+		updateDisplay();
+	}
+    
     public void updateDisplay() {
-    	Table table = clientTableViewer.getTable();
+    	Table table = tableViewer.getTable();
 		table.setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
 		table.setBackground( PreferenceLoader.loadColour( "downloadsBackgroundColor" ) );
 		table.setForeground( PreferenceLoader.loadColour( "downloadsAvailableColor" ) );
 		table.setFont( PreferenceLoader.loadFont( "downloadsFontData" ) );
-		
     }
     
 }
@@ -124,6 +162,9 @@ public class ClientTableViewer {
 
 /*
 $Log: ClientTableViewer.java,v $
+Revision 1.5  2003/10/19 21:38:54  zet
+columnselector support
+
 Revision 1.4  2003/10/16 16:09:56  zet
 updateDisplay
 
