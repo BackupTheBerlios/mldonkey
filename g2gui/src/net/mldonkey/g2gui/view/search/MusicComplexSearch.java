@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.13 2003/09/08 12:37:39 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.14 2003/09/08 13:00:20 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -107,12 +107,13 @@ public class MusicComplexSearch extends ComplexSearch {
 
         /* the bitrate combo */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        String[] bitrateItems = { "", "32kb", "64kb", "96kb", "128kb", "196kb", "265kb" };
+        String[] bitrateItems = { "", "32kb", "64kb", "96kb", "128kb", "160kb", "192kb", "265kb" };
         this.bitrateCombo = new Combo( aSubComposite2, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
 		this.bitrateCombo.setLayoutData( gridData );
 		this.bitrateCombo.setItems( bitrateItems );
 		this.bitrateCombo.select( 0 );
 		this.bitrateCombo.addMouseListener( this );
+		this.bitrateCombo.setToolTipText( G2GuiResources.getString( "MCS_TOOLHELP" ) );
 
         /* the network combo */
         this.createNetworkCombo( aSubComposite2, G2GuiResources.getString( "SS_NETWORK" ) );
@@ -189,7 +190,7 @@ public class MusicComplexSearch extends ComplexSearch {
         String bitRateString = bitrateCombo.getText();
 		if ( !bitRateString.equals( "" ) ) {
 			int rate = new Integer( bitRateString.substring( 0, bitRateString.length() - 2 ) ).intValue();
-			query.setMp3Bitrate( new Integer( rate * 1000 ).toString() );
+			query.setMp3Bitrate( new Integer( rate ).toString() );
 		}
 
 		/* set the remaining input fields and send the query */
@@ -204,6 +205,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.14  2003/09/08 13:00:20  lemmster
+added tooltip
+
 Revision 1.13  2003/09/08 12:37:39  lemmster
 fix typo
 
