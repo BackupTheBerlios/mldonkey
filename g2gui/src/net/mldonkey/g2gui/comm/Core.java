@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.97 2003/09/17 13:49:09 dek Exp $ 
+ * @version $Id: Core.java,v 1.98 2003/09/17 14:40:13 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -218,6 +218,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		catch ( IOException e ) {
 			// we disconnect.. now what?
 			connected = false;
+			this.setChanged();
+			this.notifyObservers( e );
 			//e.printStackTrace();
 		}		
 	}
@@ -569,6 +571,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.98  2003/09/17 14:40:13  zet
+notify on IOException
+
 Revision 1.97  2003/09/17 13:49:09  dek
 now the gui refreshes the upload-stats, add and observer to SharedFileInfoIntMap
 to get notice of changes in # of requests and # of uploaded bytes
