@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.89 2003/11/08 12:04:05 vnc Exp $
+ * @version $Id: TransferTab.java,v 1.90 2003/11/08 22:47:15 zet Exp $
  *
  */
 public class TransferTab extends TableGuiTab {
@@ -267,7 +267,7 @@ public class TransferTab extends TableGuiTab {
                     }
                 }
             });
-        createClientTableViewer(downloadClients, aSashForm);
+        createClientTableViewer(downloadClients, aSashForm, clientCLabel);
         aSashForm.setWeights(new int[] { 100, 0 });
         popupMenuCL = new MenuManager("");
 
@@ -284,8 +284,8 @@ public class TransferTab extends TableGuiTab {
      * @param parent
      * @param parentSash
      */
-    public void createClientTableViewer(Composite aComposite, final SashForm aSashForm) {
-        clientTableView = new ClientTableView(aComposite, mldonkey);
+    public void createClientTableViewer(Composite aComposite, final SashForm aSashForm, CLabel headerCLabel) {
+        clientTableView = new ClientTableView(aComposite, mldonkey, headerCLabel);
     }
 
     /**
@@ -431,6 +431,9 @@ public class TransferTab extends TableGuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.90  2003/11/08 22:47:15  zet
+update client table header
+
 Revision 1.89  2003/11/08 12:04:05  vnc
 minor TT-header info adjustments
 
@@ -608,7 +611,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: vnc $
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

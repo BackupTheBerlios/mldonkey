@@ -27,6 +27,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
@@ -34,7 +35,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableView.java,v 1.1 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ClientTableView.java,v 1.2 2003/11/08 22:47:15 zet Exp $
  *
  */
 public class ClientTableView extends GTableView {
@@ -43,7 +44,7 @@ public class ClientTableView extends GTableView {
     public static final int NETWORK = 2;
     public static final int KIND = 3;
 
-    public ClientTableView(Composite parent, CoreCommunication core) {
+    public ClientTableView(Composite parent, CoreCommunication core, CLabel headerCLabel) {
         super(parent, core);
 
         preferenceString = "client";
@@ -52,7 +53,7 @@ public class ClientTableView extends GTableView {
         columnDefaultWidths = new int[] { 200, 100, 75, 75 };
 
         gSorter = new ClientTableSorter(this);
-        tableContentProvider = new ClientTableContentProvider(this);
+        tableContentProvider = new ClientTableContentProvider(this, headerCLabel);
         tableLabelProvider = new ClientTableLabelProvider(this);
         tableMenuListener = new ClientTableMenuListener(this);
 
@@ -83,6 +84,9 @@ public class ClientTableView extends GTableView {
 
 /*
 $Log: ClientTableView.java,v $
+Revision 1.2  2003/11/08 22:47:15  zet
+update client table header
+
 Revision 1.1  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

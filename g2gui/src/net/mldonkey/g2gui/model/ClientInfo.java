@@ -40,7 +40,7 @@ import gnu.trove.TIntObjectHashMap;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.30 2003/10/23 05:11:56 zet Exp $
+ * @version $Id: ClientInfo.java,v 1.31 2003/11/08 22:47:06 zet Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -212,8 +212,17 @@ public class ClientInfo extends Parent {
         if (this.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
             return G2GuiResources.getString("TT_Transferring").toLowerCase();
         } else {
-            return G2GuiResources.getString("TT_Rank").toLowerCase() + ": " + this.getState().getRank();
+            return G2GuiResources.getString("TT_Rank").toLowerCase() + ": " +
+            this.getState().getRank();
         }
+    }
+
+    public boolean isConnected() {
+        Enum enumState = this.getState().getState();
+
+        return ((enumState == EnumState.CONNECTED_DOWNLOADING) ||
+        (enumState == EnumState.CONNECTED_INITIATING) ||
+        (enumState == EnumState.CONNECTED_AND_QUEUED) || (enumState == EnumState.CONNECTED));
     }
 
     /**
@@ -221,10 +230,12 @@ public class ClientInfo extends Parent {
     * @return String clientDetailedActivity
     */
     public String getDetailedClientActivity() {
-        if ((this.getState().getState() == EnumState.CONNECTED_DOWNLOADING) || (this.getState().getRank() == 0)) {
+        if ((this.getState().getState() == EnumState.CONNECTED_DOWNLOADING) ||
+                (this.getState().getRank() == 0)) {
             return "" + this.getState().getState().toString();
         } else {
-            return "" + this.getState().getState().toString() + " (Q: " + this.getState().getRank() + ")";
+            return "" + this.getState().getState().toString() + " (Q: " +
+            this.getState().getRank() + ")";
         }
     }
 
@@ -350,6 +361,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.31  2003/11/08 22:47:06  zet
+update client table header
+
 Revision 1.30  2003/10/23 05:11:56  zet
 try to fix rare duplicate treeclientinfos
 

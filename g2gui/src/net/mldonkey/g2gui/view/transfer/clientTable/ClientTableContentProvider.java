@@ -24,14 +24,17 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
 import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 
 import org.eclipse.jface.viewers.Viewer;
 
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Display;
 
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -40,14 +43,16 @@ import java.util.Observer;
  *
  * ClientTableContentProvider
  *
- * @version $Id: ClientTableContentProvider.java,v 1.7 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ClientTableContentProvider.java,v 1.8 2003/11/08 22:47:15 zet Exp $
  *
  */
 public class ClientTableContentProvider extends GTableContentProvider implements Observer {
     private long lastUpdateTime;
+    private CLabel headerCLabel;
 
-    public ClientTableContentProvider(ClientTableView cTableViewer) {
+    public ClientTableContentProvider(ClientTableView cTableViewer, CLabel headerCLabel) {
         super(cTableViewer);
+        this.headerCLabel = headerCLabel;
     }
 
     /* (non-Javadoc)
@@ -74,6 +79,7 @@ public class ClientTableContentProvider extends GTableContentProvider implements
         if (newInput != null) {
             FileInfo newFileInfo = (FileInfo) newInput;
             newFileInfo.addObserver(this);
+            updateHeader(newInput);
         }
     }
 
@@ -104,16 +110,39 @@ public class ClientTableContentProvider extends GTableContentProvider implements
             if (System.currentTimeMillis() > (lastUpdateTime + 5000)) {
                 tableViewer.refresh();
                 lastUpdateTime = System.currentTimeMillis();
+                updateHeader(tableViewer.getInput());
             } else {
                 tableViewer.update(clientInfo, new String[] { "z" }); // requires a property string
             }
         }
+    }
+
+    public void updateHeader(Object input) {
+        FileInfo fileInfo = (FileInfo) input;
+        int totalClients = 0;
+        int totalConnected = 0;
+
+        for (Iterator i = fileInfo.getClientInfos().keySet().iterator(); i.hasNext();) {
+            ClientInfo clientInfo = (ClientInfo) i.next();
+
+            if (clientInfo.isConnected()) {
+                totalConnected++;
+            }
+
+            totalClients++;
+        }
+
+        headerCLabel.setText(G2GuiResources.getString("TT_Clients") + ": " + totalConnected +
+            " / " + totalClients + " " + G2GuiResources.getString("ENS_CONNECTED").toLowerCase());
     }
 }
 
 
 /*
 $Log: ClientTableContentProvider.java,v $
+Revision 1.8  2003/11/08 22:47:15  zet
+update client table header
+
 Revision 1.7  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
