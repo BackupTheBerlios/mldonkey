@@ -26,6 +26,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyleRange;
@@ -33,33 +36,31 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.12 2003/09/01 12:42:32 dek Exp $ 
+ * @version $Id: About.java,v 1.13 2003/09/01 14:31:12 dek Exp $ 
  *
  */
-public class About {
+public class About extends Dialog {
 //	TODO filling about-Dialog with content
 
 	private Link activeLink;
 	private final Cursor handCursor = new Cursor( Display.getDefault(), SWT.CURSOR_HAND );
 	private List linklist = new ArrayList();	
-	private Shell myShell;
+	private Composite myShell;
 	private Color background = Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND );
 	
 
@@ -67,69 +68,50 @@ public class About {
 	 * @param shell were this dialog lives
 	 */
 	public About( Shell shell ) {
-		this.myShell = new Shell( shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL );
-		Composite parent = new Composite( myShell, SWT.NONE );
-		myShell.setLayout( new FillLayout() );
-		myShell.setText( "About" );
-		GridLayout layout = new GridLayout( 1, false );
-			layout.marginHeight = 0;
-			layout.marginWidth = 0;
-		parent.setLayout( layout );		
-		createContent( parent );
-		parent.layout();
+		super( shell );
 	}
 
 	/**
-	 * @param parent
+	 * @param parent the Control on which the contents should be created
+	 * @return The Control on which the contents are created
 	 */
-	private void createContent( Composite parent ) {
+	public Control createContents( Composite parent ) {
+		GridLayout layout;
 		
-		Composite upperPart = new Composite ( parent, SWT.NONE );
+		initializeDialogUnits( parent );		
+		
+		layout = new GridLayout( 1, false );
+			layout.marginHeight = 0;
+			layout.marginWidth = 0;
+		parent.setLayout( layout );
+		
+		Composite dialogArea = ( Composite )createDialogArea( parent );
+		layout = new GridLayout( 1, false );
+			layout.marginHeight = 0;
+			layout.marginWidth = 0;
+		dialogArea.setLayout( layout );			
+		
+		Composite upperPart = new Composite ( dialogArea, SWT.NONE );
 			upperPart.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 			upperPart.setLayout( new GridLayout() );		
 		createUpperPart( upperPart );
 		upperPart.layout();
 		
-		Label bar1 = new Label( parent, SWT.SEPARATOR | SWT.HORIZONTAL );
+		Label bar1 = new Label( dialogArea, SWT.SEPARATOR | SWT.HORIZONTAL );
 			bar1.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 			
-		Composite lowerPart = new Composite ( parent, SWT.NONE );
+		Composite lowerPart = new Composite ( dialogArea, SWT.NONE );
 			lowerPart.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 			lowerPart.setLayout( new GridLayout() );		
 		createLowerPart( lowerPart );
 		lowerPart.layout();
 		
-		Label bar2 = new Label( parent, SWT.SEPARATOR | SWT.HORIZONTAL );
+		Label bar2 = new Label( dialogArea, SWT.SEPARATOR | SWT.HORIZONTAL );
 			bar2.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+			
 		
-		Composite buttonRow = new Composite ( parent, SWT.NONE );		
-			buttonRow.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-			buttonRow.setLayout( new GridLayout() );
-		createButtons(buttonRow);
-		
-		
-	}
-
-	/**
-	 * @param buttonRow
-	 */
-	private void createButtons(Composite parent) {
-		Button ok = new Button(parent,SWT.CENTER);
-		GridData gd = new GridData();
-		gd.horizontalAlignment = GridData.END;
-		gd.grabExcessHorizontalSpace = true;
-		ok.setLayoutData(gd);
-		ok.setText("     OK     ");
-		
-		ok.addSelectionListener(new SelectionListener(){
-
-			public void widgetSelected(SelectionEvent e) {
-				myShell.dispose();			
-				
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) { }
-		} );
+		createButtonBar( parent );	
+		return parent;	
 		
 	}
 
@@ -178,9 +160,7 @@ public class About {
 		about.setText(  develHeader + devels  
 						+ contributorHeader + contributors  
 						+ thankHeader + thank  
-						+ moreThanksHeader + moreThanks );	
-
-		
+						+ moreThanksHeader + moreThanks );
 		about.setStyleRanges( ranges );
 	}
 
@@ -230,19 +210,12 @@ public class About {
 			public void mouseUp( MouseEvent e ) { }
 		} );
 	}
-
-	/**
-	 * open the dialog
-	 */
-	protected void open() {
-		myShell.pack();
-		/*set the about-Dialog right in the middle of the Application*/
-		int positionX = myShell.getParent().getLocation().x + myShell.getParent().getSize().x / 2 - myShell.getSize().x / 2;
-		int positionY = myShell.getParent().getLocation().y + myShell.getParent().getSize().y / 2 - myShell.getSize().y / 2;
-		myShell.setLocation( positionX, positionY );
-		
-		myShell.open();		
+	
+	
+	protected void createButtonsForButtonBar( Composite parent ) {
+		createButton( parent, IDialogConstants.OK_ID, "Back to GUI", true );
 	}
+
 	
 	private boolean isLink( StyledText parent, int x, int y ) {
 		this.activeLink = null;
@@ -264,11 +237,12 @@ public class About {
 	}
 	
 	
+	
 	/**
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.12 2003/09/01 12:42:32 dek Exp $ 
+	 * @version $Id: About.java,v 1.13 2003/09/01 14:31:12 dek Exp $ 
 	 *
 	 */
 	public class Link {
@@ -320,6 +294,9 @@ public class About {
 }
 /*
 $Log: About.java,v $
+Revision 1.13  2003/09/01 14:31:12  dek
+no change in look / function, but converted to JFace Dialog..
+
 Revision 1.12  2003/09/01 12:42:32  dek
 lemmy now in lowercase ;-)
 
