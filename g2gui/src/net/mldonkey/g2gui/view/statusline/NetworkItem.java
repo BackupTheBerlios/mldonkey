@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.13 2003/08/10 12:59:01 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkItem.java,v 1.14 2003/08/11 11:26:20 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -345,7 +345,7 @@ public class NetworkItem implements Observer {
 		}
 
 		/* soulseek */
-		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.GNUT ) {
+		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.SOULSEEK ) {
 			if ( enabled ) { // enabled
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
 				if ( connected || core.getProtoToUse() < 18 ) {
@@ -370,7 +370,7 @@ public class NetworkItem implements Observer {
 		/* bittorrent */
 /*		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.BT ) {
 			if ( enabled ) { // enabled
-				connected = ( ( Boolean ) label.getData( "CONNECTED") ).booleanValue();
+				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
 				if ( connected || core.getProtoToUse() < 18 ) {
 					image = new Image( composite.getDisplay(),
 									"icons/bittorrent_connected.png" );
@@ -391,25 +391,25 @@ public class NetworkItem implements Observer {
 		}
 
 		/* direct connect */
-/*		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.DC ) {
+		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.DC ) {
 			if ( enabled ) { // enabled
-				connected = ( ( Boolean ) label.getData( "CONNECTED") ).booleanValue();
+				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
 				if ( connected || core.getProtoToUse() < 18 ) {
 					image = new Image( composite.getDisplay(),
-									"icons/directConnect_connected.png" );
+									"icons/directconnect_connected.png" );
 				}
 				else {
 					image = new Image( composite.getDisplay(),
-									"icons/directConnect_disconnected.png" );
+									"icons/directconnect_disconnected.png" );
 				}
 			}
 			else { // disabled
 				image = new Image( composite.getDisplay(),
-								"icons/directConnect_disabled.png" );
+								"icons/directconnect_disabled.png" );
 			}
 			
 			/* generate the image transparent and return the image */
-/*			image = this.createTransparentImage( image, composite );
+			image = this.createTransparentImage( image, composite );
 			return image;
 		}
 
@@ -515,6 +515,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.14  2003/08/11 11:26:20  lemmstercvs01
+added some images
+
 Revision 1.13  2003/08/10 12:59:01  lemmstercvs01
 "manage servers" in NetworkItem implemented
 
