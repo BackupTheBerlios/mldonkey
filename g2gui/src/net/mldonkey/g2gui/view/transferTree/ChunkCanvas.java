@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Display;
  * ChunkView
  *
  *
- * @version $Id: ChunkCanvas.java,v 1.17 2003/08/23 22:43:10 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.18 2003/08/30 01:21:05 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -118,19 +118,8 @@ public class ChunkCanvas extends Canvas implements Observer {
 			} 
 			public void controlMoved( ControlEvent e ) { }
 		} );
-
+	}
 	
-	}
-	/**
-	 * creates a chunkview-Object for the given FileInfo
-	 * @param parent here does the object live
-	 * @param style this style do we prefer ( not used atm )
-	 * @param fileInfo  and the source of all the information	
-	 */
-	public ChunkCanvas( Composite parent, int style, final FileInfo fileInfo ) {	
-		this( parent, style, null, fileInfo );
-	}
-
 	private void createImage() {
 		switch ( type ) {
 			case isClientInfo :	
@@ -456,6 +445,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.18  2003/08/30 01:21:05  zet
+remove unused
+
 Revision 1.17  2003/08/23 22:43:10  zet
 remove unused
 
