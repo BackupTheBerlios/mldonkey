@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.10 2003/08/02 19:47:54 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkItem.java,v 1.11 2003/08/03 17:38:54 zet Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -146,6 +146,9 @@ public class NetworkItem implements Observer {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, Object arg ) {
+		// ClassCastException without this
+		if (!(arg instanceof NetworkInfo)) return;
+		
 		final NetworkInfo network = ( NetworkInfo ) arg;
 		composite.getDisplay().asyncExec( new Runnable () {
 			public void run() {
@@ -495,6 +498,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.11  2003/08/03 17:38:54  zet
+check instanceof
+
 Revision 1.10  2003/08/02 19:47:54  lemmstercvs01
 finally working
 
