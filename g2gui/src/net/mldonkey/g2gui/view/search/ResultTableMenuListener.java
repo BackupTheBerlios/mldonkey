@@ -26,10 +26,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.Download;
 import net.mldonkey.g2gui.model.ResultInfo;
-import net.mldonkey.g2gui.model.ResultInfoIntMap;
+import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -57,15 +56,14 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.29 2003/10/31 16:30:49 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.30 2003/11/15 11:44:04 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
 	private CTabItem cTabItem;
 	private ResultInfo selectedResult;
-	private ResultInfoIntMap resultInfoMap;
 	private List selectedResults;
-	private CoreCommunication core;
+	private GuiTab searchTab;
 
 	/**
 	 * Creates a new TableMenuListener
@@ -73,19 +71,13 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	 * @param core The CoreCommunication supporting this with data
 	 * @param cTabItem The CTabItem in which the table res
 	 */
-	public ResultTableMenuListener( ResultTableView rTableViewer ) {
+	public ResultTableMenuListener( ResultTableView rTableViewer, CTabItem aCTabItem, GuiTab searchTab ) {
 		super( rTableViewer );
+		this.cTabItem = aCTabItem;
+		this.searchTab = searchTab;
 		this.selectedResults = new ArrayList();
 	}
 	
-	public void initialize() {
-	    super.initialize();
-	    this.cTabItem = ((ResultTableView) gView).getCTabItem();
-	    this.core = gView.getCore();
-		this.resultInfoMap = this.core.getResultInfoIntMap();
-	}
-	
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#
 	 * selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
@@ -143,10 +135,10 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 
 			
 	
-//			menuManager.add( new Separator() );
+/*			menuManager.add( new Separator() );
 	
-			/* webservices */
-/*			MenuManager webManager =
+			// webservices
+			MenuManager webManager =
 No				new MenuManager( G2GuiResources.getString( "ST_WEBSERVICES" ) );
 Fake		webManager.add( new FakeSearchAction() );
 Search		webManager.add( new FakeSearchAction() );
@@ -184,7 +176,7 @@ Yet			menuManager.add( webManager );
 	 * downloads the selected files and creates error msgs if needed
 	 */
 	void downloadSelected() {				
-		Download download = new Download( core );
+		Download download = new Download( gView.getCore() );
 		String anErrorString = new String();
 		int counter = 0;
 		
@@ -299,12 +291,16 @@ Yet			menuManager.add( webManager );
 		public void run() {
 			( ( TableViewer ) tableViewer ).getTable().dispose();
 			cTabItem.dispose();
+			( (SearchTab) searchTab ).setSearchButton();
 		}
 	}
 }
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.30  2003/11/15 11:44:04  lemmster
+fix: [Bug #1089] 0.2 similair stop search crash
+
 Revision 1.29  2003/10/31 16:30:49  zet
 minor renames
 

@@ -24,10 +24,12 @@ package net.mldonkey.g2gui.view.search;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ResultInfo;
+import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.filters.WordViewerFilter;
+import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
 import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.swt.SWT;
@@ -56,11 +58,10 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableView.java,v 1.3 2003/11/08 18:25:54 zet Exp $
+ * @version $Id: ResultTableView.java,v 1.4 2003/11/15 11:44:04 lemmster Exp $
  *
  */
 public class ResultTableView extends GTableView {
-    private CTabItem cTabItem;
     private MouseListener aMouseListener;
     
     public static final int NETWORK = 0;
@@ -70,11 +71,10 @@ public class ResultTableView extends GTableView {
     public static final int MEDIA = 4;
     public static final int AVAILABILITY = 5;
 
-    public ResultTableView(Composite parent, CoreCommunication aCore, CTabItem aCTabItem, MouseListener aMouseListener) {
+    public ResultTableView(Composite parent, CoreCommunication aCore, CTabItem aCTabItem, MouseListener aMouseListener, GuiTab searchTab) {
         super(parent, aCore);
-        this.cTabItem = aCTabItem;
         this.aMouseListener = aMouseListener;
-        this.cTabItem.setData("gView", this);
+        aCTabItem.setData("gView", this);
         
         preferenceString = "result";
         columnLabels = new String[] { "SR_NETWORK", "SR_NAME", "SR_SIZE", "SR_FORMAT", "SR_MEDIA", "SR_AVAIL" };
@@ -83,23 +83,29 @@ public class ResultTableView extends GTableView {
 
         columnAlignment = new int[] { SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
 
-        //	this.swtLayout = SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI;
+		// content provider
         tableContentProvider =  new ResultTableContentProvider( this );
+		// label provider
         tableLabelProvider = new ResultTableLabelProvider( this );
+		// table sorter
         gSorter = new ResultTableSorter( this );
-        tableMenuListener = new ResultTableMenuListener( this );
+		// table menu listener
+        tableMenuListener = new ResultTableMenuListener( this, aCTabItem, searchTab );
 
         this.createContents(parent);
     }
 
+	/* (non-Javadoc)
+	 * Method declared in Viewer.
+	 * This implementatation additionaly unmaps all the elements.
+	 */
     public void setInput( Object object ) {
-        
         sViewer.setInput( object );
     }
-    
-    public CTabItem getCTabItem() {
-        return cTabItem;
-    }
+
+	public GTableMenuListener getMenuListener() {
+		return this.tableMenuListener;
+	}
     
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.helper.OurTableViewer#create()
@@ -111,7 +117,8 @@ public class ResultTableView extends GTableView {
         // add optional filters
         if (PreferenceLoader.loadBoolean("searchFilterPornography")) {
             sViewer.addFilter(new WordViewerFilter(WordViewerFilter.PORNOGRAPHY_FILTER_TYPE));
-        } else if (PreferenceLoader.loadBoolean("searchFilterProfanity")) {
+        } 
+        else if (PreferenceLoader.loadBoolean("searchFilterProfanity")) {
             sViewer.addFilter(new WordViewerFilter(WordViewerFilter.PROFANITY_FILTER_TYPE));
         }
 
@@ -125,10 +132,6 @@ public class ResultTableView extends GTableView {
             final ToolTipHandler tooltip = new ToolTipHandler(getTableViewer().getTable().getShell());
             tooltip.activateHoverHelp(getTableViewer().getTable());
         }
-    }
-
-    public ResultTableMenuListener getMenuListener() {
-        return (ResultTableMenuListener) tableMenuListener;
     }
 
     /**
@@ -324,6 +327,9 @@ public class ResultTableView extends GTableView {
 
 /*
 $Log: ResultTableView.java,v $
+Revision 1.4  2003/11/15 11:44:04  lemmster
+fix: [Bug #1089] 0.2 similair stop search crash
+
 Revision 1.3  2003/11/08 18:25:54  zet
 use GView instead of GTableViewer
 

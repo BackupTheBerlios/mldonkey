@@ -53,11 +53,11 @@ import org.eclipse.swt.widgets.Label;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.63 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: SearchResult.java,v 1.64 2003/11/15 11:44:04 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
-    private GuiTab search;
+    private GuiTab searchTab;
     private MainTab mainTab;
     private CTabFolder cTabFolder;
     private String searchString;
@@ -85,7 +85,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         this.cTabFolder = parent;
         this.searchId = searchId;
         this.core = aCore;
-        this.search = aSearch;
+        this.searchTab = aSearch;
 
         /* draw the display */
         this.createContent();
@@ -234,7 +234,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
         /* create the result table */
         this.gView = new ResultTableView(cTabFolder, core, cTabItem,
-                new MyMouseListener());
+                new MyMouseListener(), searchTab);
 
         /* set the this table as the new CTabItem Control */
         cTabItem.setControl( ( (CustomTableViewer) gView.getViewer() ).getTable());
@@ -294,7 +294,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
          * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
          */
         public void mouseDoubleClick(MouseEvent e) {
-            ((ResultTableView) gView).getMenuListener().downloadSelected();
+            ((ResultTableMenuListener)((ResultTableView) gView).getMenuListener()).downloadSelected();
         }
 
         /* (non-Javadoc)
@@ -302,9 +302,10 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
          */
         public void mouseDown(MouseEvent e) {
             if (stopped) {
-                ((SearchTab) search).setContinueButton();
-            } else {
-                ((SearchTab) search).setStopButton();
+                ((SearchTab) searchTab).setContinueButton();
+            } 
+			else {
+                ((SearchTab) searchTab).setStopButton();
             }
         }
 
@@ -323,6 +324,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.64  2003/11/15 11:44:04  lemmster
+fix: [Bug #1089] 0.2 similair stop search crash
+
 Revision 1.63  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
@@ -456,7 +460,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates
