@@ -28,7 +28,6 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
-import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
 import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
 import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
 import net.mldonkey.g2gui.view.viewers.actions.RefreshUploadsAction;
@@ -42,7 +41,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadPaneListener.java,v 1.12 2003/12/07 19:40:19 lemmy Exp $
+ * @version $Id: UploadPaneListener.java,v 1.13 2003/12/17 13:06:03 lemmy Exp $
  *
  */
 public class UploadPaneListener extends SashViewFrameListener {
@@ -54,9 +53,8 @@ public class UploadPaneListener extends SashViewFrameListener {
      */
     public UploadPaneListener(SashViewFrame sashViewFrame) {
         super(sashViewFrame);
-        int i = PreferenceLoader.getInt( "UploadPaneListenerBestFit" );
-        if ( i != -1 )
-        	new BestFitColumnAction( gView, i ).run();
+        setBestFit();
+        setNetworkFilterState();
     }
 
     public void menuAboutToShow(IMenuManager menuManager) {
@@ -99,14 +97,17 @@ public class UploadPaneListener extends SashViewFrameListener {
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
     public void widgetDisposed(DisposeEvent arg0) {
-    	if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
-    		PreferenceLoader.setValue( "UploadPaneListenerBestFit", gView.getColumnControlListenerIsOn() );
+    	saveBestFit();
+    	saveNetworkFilterState();
     }
 }
 
 
 /*
 $Log: UploadPaneListener.java,v $
+Revision 1.13  2003/12/17 13:06:03  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.12  2003/12/07 19:40:19  lemmy
 [Bug #1156] Allow a certain column to be 100% by pref
 

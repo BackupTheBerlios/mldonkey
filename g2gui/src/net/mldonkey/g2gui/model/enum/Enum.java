@@ -22,12 +22,14 @@
  */
 package net.mldonkey.g2gui.model.enum;
 
+import net.mldonkey.g2gui.helper.RegExp;
+
 
 /**
  * Enum
  *
  *
- * @version $Id: Enum.java,v 1.10 2003/12/04 08:47:29 lemmy Exp $
+ * @version $Id: Enum.java,v 1.11 2003/12/17 13:06:04 lemmy Exp $
  *
  */
 public abstract class Enum {
@@ -47,10 +49,7 @@ public abstract class Enum {
      * @return a String
      */
     public String getPrefName( Object obj ) {
-    	String objString = obj.getClass().getName();
-		objString = objString.substring(objString.lastIndexOf( "." ) + 1, objString.length());
-		
-    	return objString + "_" + this.toString();
+    	return RegExp.getClassName( obj.getClass() ) + "_" + this.toString();
     }
     
     /**
@@ -60,9 +59,7 @@ public abstract class Enum {
      * @return a String
      */
     public static String getPrefName( Enum enum, Class aClass ) {
-		String objString = aClass.getName();
-		objString = objString.substring(objString.lastIndexOf( "." ) + 1, objString.length());
-	   	return objString + "_" + enum.toString();
+	   	return RegExp.getClassName( aClass ) + "_" + enum.toString();
     }
 
     /**
@@ -129,6 +126,9 @@ public abstract class Enum {
 
 /*
 $Log: Enum.java,v $
+Revision 1.11  2003/12/17 13:06:04  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.10  2003/12/04 08:47:29  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

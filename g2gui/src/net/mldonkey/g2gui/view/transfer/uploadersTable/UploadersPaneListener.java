@@ -28,7 +28,6 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
-import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
 import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
 import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
 
@@ -41,7 +40,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadersPaneListener.java,v 1.4 2003/12/07 19:40:20 lemmy Exp $
+ * @version $Id: UploadersPaneListener.java,v 1.5 2003/12/17 13:06:05 lemmy Exp $
  *
  */
 public class UploadersPaneListener extends SashViewFrameListener {
@@ -54,9 +53,8 @@ public class UploadersPaneListener extends SashViewFrameListener {
     public UploadersPaneListener(SashViewFrame sashViewFrame) {
         super(sashViewFrame);
         
-        int i = PreferenceLoader.getInt( "UploadersPaneListenerBestFit" );
-        if ( i != -1 )
-        	new BestFitColumnAction( gView, i ).run();
+        setBestFit();
+        setNetworkFilterState();
     }
 
     public void menuAboutToShow(IMenuManager menuManager) {
@@ -95,14 +93,17 @@ public class UploadersPaneListener extends SashViewFrameListener {
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
     public void widgetDisposed(DisposeEvent arg0) {
-    	if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
-    		PreferenceLoader.setValue( "UploadersPaneListenerBestFit", gView.getColumnControlListenerIsOn() );
+    	saveBestFit();
+    	saveNetworkFilterState();
     }
 }
 
 
 /*
 $Log: UploadersPaneListener.java,v $
+Revision 1.5  2003/12/17 13:06:05  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.4  2003/12/07 19:40:20  lemmy
 [Bug #1156] Allow a certain column to be 100% by pref
 

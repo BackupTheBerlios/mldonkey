@@ -25,61 +25,74 @@ package net.mldonkey.g2gui.model.enum;
 /**
  * EnumNetwork
  *
- * @version $Id: EnumNetwork.java,v 1.2 2003/12/04 08:47:29 lemmy Exp $ 
+ * @version $Id: EnumNetwork.java,v 1.3 2003/12/17 13:06:04 lemmy Exp $ 
  *
  */
 public class EnumNetwork extends Enum {
+	private String string;
 	/**
 	 * eDonkey2000
 	 */
-	public static EnumNetwork DONKEY = new EnumNetwork( 1 );
+	public static EnumNetwork DONKEY = new EnumNetwork( 1, "Donkey" );
 	/**
 	 * SoulSeek
 	 */
-	public static EnumNetwork SOULSEEK = new EnumNetwork( 2 );
+	public static EnumNetwork SOULSEEK = new EnumNetwork( 2, "SoulSeek" );
 	/**
 	 * Gnutella 1
 	 */
-	public static EnumNetwork GNUT = new EnumNetwork( 4 );
+	public static EnumNetwork GNUT = new EnumNetwork( 4, "Gnutella" );
 	/**
 	 * Gnutella 2
 	 */
-	public static EnumNetwork GNUT2 = new EnumNetwork( 8 );
+	public static EnumNetwork GNUT2 = new EnumNetwork( 8, "Gnutella2" );
 	/**
 	 * Overnet
 	 */
-	public static EnumNetwork OV = new EnumNetwork( 16 );
+	public static EnumNetwork OV = new EnumNetwork( 16, "Overnet" );
 	/**
 	 * Bittorrent
 	 */
-	public static EnumNetwork BT = new EnumNetwork( 32 );
+	public static EnumNetwork BT = new EnumNetwork( 32, "Bittorrent" );
 	/**
 	 * Fasttrack
 	 */
-	public static EnumNetwork FT = new EnumNetwork( 64 );
+	public static EnumNetwork FT = new EnumNetwork( 64, "Fasttrack" );
 	/**
 	 * OpenNapster
 	 */
-	public static EnumNetwork OPENNP = new EnumNetwork( 128 );
+	public static EnumNetwork OPENNP = new EnumNetwork( 128, "OpenNapster" );
 	/**
 	 * DirectConnect
 	 */
-	public static EnumNetwork DC  = new EnumNetwork( 256 );
+	public static EnumNetwork DC  = new EnumNetwork( 256, "DirectConnect" );
 	/**
 	 * MultiNet
 	 */
-	public static EnumNetwork MULTINET = new EnumNetwork( 512 );
+	public static EnumNetwork MULTINET = new EnumNetwork( 512, "MultiNet" );
 	
 	/**
 	 * Creates a new EnumNetworkNetwork
 	 */
-	private EnumNetwork( int anInt ) {
+	private EnumNetwork( int anInt, String aString ) {
 		super( anInt );
+		this.string = aString;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return this.string;
 	}
 }
 
 /*
 $Log: EnumNetwork.java,v $
+Revision 1.3  2003/12/17 13:06:04  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.2  2003/12/04 08:47:29  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

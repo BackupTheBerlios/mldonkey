@@ -36,7 +36,7 @@ import org.eclipse.jface.action.Action;
 /**
  * GAction
  *
- * @version $Id: FilterAction.java,v 1.8 2003/12/04 08:47:30 lemmy Exp $ 
+ * @version $Id: FilterAction.java,v 1.9 2003/12/17 13:06:03 lemmy Exp $ 
  *
  */
 public abstract class FilterAction extends Action {
@@ -66,7 +66,7 @@ public abstract class FilterAction extends Action {
 	}
 	
 	public static boolean isFiltered( GView aGViewer, NetworkInfo aNetworkInfo ) {
-		NetworkGViewerFilter filter = (NetworkGViewerFilter) aGViewer.getFilter( NetworkGViewerFilter.class );
+		GViewerFilter filter = aGViewer.getFilter( NetworkGViewerFilter.class );
 		if ( filter.matches( aNetworkInfo ) )
 			return true;
 		return false;
@@ -108,6 +108,9 @@ public abstract class FilterAction extends Action {
 
 /*
 $Log: FilterAction.java,v $
+Revision 1.9  2003/12/17 13:06:03  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.8  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

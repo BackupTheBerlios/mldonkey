@@ -32,7 +32,6 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 import net.mldonkey.g2gui.view.viewers.actions.ExtensionFilterAction;
-import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
 import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
 import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
@@ -51,7 +50,7 @@ import org.eclipse.swt.events.DisposeEvent;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.5 2003/12/07 19:40:20 lemmy Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.6 2003/12/17 13:06:05 lemmy Exp $
  *
  */
 public class DownloadPaneMenuListener extends SashViewFrameListener {
@@ -77,9 +76,9 @@ public class DownloadPaneMenuListener extends SashViewFrameListener {
             aFilter.add(EnumFileState.PAUSED);
             gView.addFilter(aFilter);
         }
-        int i = PreferenceLoader.getInt( "DownloadPaneListenerBestFit" );
-        if ( i != -1 )
-        	new BestFitColumnAction( gView, i ).run();
+        setFilterState( this.states );
+        setBestFit();
+        setNetworkFilterState();
     }
 
     /* (non-Javadoc)
@@ -121,7 +120,7 @@ public class DownloadPaneMenuListener extends SashViewFrameListener {
 
         for (int i = 0; i < states.length; i++) {
             EnumExtension extension = (EnumExtension) states[ i ];
-            filterSubMenu.add(new ExtensionFilterAction(extension.getName(), gView, extension));
+            filterSubMenu.add(new ExtensionFilterAction(extension.toString(), gView, extension));
         }
 
         menuManager.add(filterSubMenu);
@@ -144,14 +143,18 @@ public class DownloadPaneMenuListener extends SashViewFrameListener {
     public void widgetDisposed(DisposeEvent arg0) {
     	PreferenceLoader.setValue("downloadsFilterPaused", FilterAction.isFiltered(gView, EnumFileState.PAUSED));
     	PreferenceLoader.setValue("downloadsFilterQueued", FilterAction.isFiltered(gView, EnumFileState.QUEUED));
-   		if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
-   			PreferenceLoader.setValue( "DownloadPaneListenerBestFit", gView.getColumnControlListenerIsOn() );
+    	saveFilterState( this.states );
+    	saveBestFit();
+    	saveNetworkFilterState();
     }
 }
 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.6  2003/12/17 13:06:05  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.5  2003/12/07 19:40:20  lemmy
 [Bug #1156] Allow a certain column to be 100% by pref
 

@@ -23,11 +23,17 @@
 package net.mldonkey.g2gui.view.helper;
 
 import net.mldonkey.g2gui.model.NetworkInfo;
+import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
+import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.NetworkFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.SortByColumnAction;
+import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
+import net.mldonkey.g2gui.view.viewers.filters.NetworkGViewerFilter;
+import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -40,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ViewFrameListener
  *
- * @version $Id: ViewFrameListener.java,v 1.6 2003/12/07 19:40:19 lemmy Exp $
+ * @version $Id: ViewFrameListener.java,v 1.7 2003/12/17 13:06:03 lemmy Exp $
  *
  */
 public abstract class ViewFrameListener implements IMenuListener, DisposeListener {
@@ -95,11 +101,86 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
 
     public void widgetDisposed(DisposeEvent arg0) {
     }
+
+    /**
+     * Sets the state of the table filters from the pref file
+     * @param states
+     */
+    protected void setFilterState( Enum[] states ) {
+    	// set the last state from preferences
+    	boolean temp = false;
+    	GViewerFilter aFilter = new StateGViewerFilter(gView);
+    	for ( int i = 0; i < states.length; i++ ) {
+    		if ( PreferenceLoader.loadBoolean( states[ i ].getPrefName(this) ) ) {
+    			aFilter.add( states[ i ] );
+    			temp = true;
+    		}
+    	}
+    	// just add the filter if we really added enums to it
+    	if ( temp ) gView.addFilter( aFilter );
+    }
+    
+    /**
+     * Saves the state of the table filters to the pref file
+     * @param states
+     */
+    protected void saveFilterState( Enum[] states ) {
+    	for ( int i = 0; i < states.length; i++ )
+    		PreferenceLoader.setValue( states[ i ].getPrefName(this), FilterAction.isFiltered( gView, states[ i ] ) ); 
+    }
+    
+    /**
+     * Saves the bestfit column to the pref file
+     */
+    protected void saveBestFit() {
+    	if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
+    		PreferenceLoader.setValue( this.getClass().getName() + "BestFit", gView.getColumnControlListenerIsOn() );
+    }
+
+    /**
+     * reads the bestfit column from the pref file and sets them on the table
+     */
+    protected void setBestFit() {
+    	int i = PreferenceLoader.getInt( this.getClass().getName() + "BestFit" );
+    	if ( i != -1 )
+    		new BestFitColumnAction( gView, i ).run();
+    }
+
+    /**
+     * Saves the state of the networkfilters to the pref store
+     */
+    protected void saveNetworkFilterState() {
+    	NetworkInfo[] networks = viewFrame.getGView().getCore().getNetworkInfoMap().getNetworks();
+    	for ( int i = 0; i < networks.length; i++ )
+    		PreferenceLoader.setValue( networks[ i ].getNetworkType().getPrefName(this),
+    									FilterAction.isFiltered( gView, networks[ i ] ) ); 
+    }
+    
+    /**
+     * Reads the state of the networkfilters from the pref store and sets it on the table
+     */
+    protected void setNetworkFilterState() {
+    	// set the last state from preferences
+    	boolean temp = false;
+    	GViewerFilter aFilter = new NetworkGViewerFilter(gView);
+    	NetworkInfo[] networks = viewFrame.getGView().getCore().getNetworkInfoMap().getNetworks();
+    	for ( int i = 0; i < networks.length; i++ ) {
+    		if ( PreferenceLoader.loadBoolean( networks[ i ].getNetworkType().getPrefName(this) ) ) {
+    			aFilter.add( networks[ i ].getNetworkType() );
+    			temp = true;
+    		}
+    	}
+    	// just add the filter if we really added enums to it
+    	if ( temp ) gView.addFilter( aFilter );
+    }
 }
 
 
 /*
 $Log: ViewFrameListener.java,v $
+Revision 1.7  2003/12/17 13:06:03  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.6  2003/12/07 19:40:19  lemmy
 [Bug #1156] Allow a certain column to be 100% by pref
 

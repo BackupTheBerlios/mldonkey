@@ -45,7 +45,7 @@ import org.eclipse.swt.program.Program;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.32 2003/12/04 08:47:25 lemmy Exp $
+ * @version $Id: ResultInfo.java,v 1.33 2003/12/17 13:06:05 lemmy Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -477,9 +477,9 @@ public class ResultInfo extends Parent {
         else {
         	Enum aEnum = (Enum) FILE_TYPES.get( getFormat() );
         	if ( aEnum != null )
-        		return ( (EnumExtension) aEnum ).getName();
+        		return ( (EnumExtension) aEnum ).toString();
         	else
-        		return EnumExtension.UNKNOWN.getName();
+        		return EnumExtension.UNKNOWN.toString();
         }
     }
     
@@ -704,6 +704,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.33  2003/12/17 13:06:05  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.32  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

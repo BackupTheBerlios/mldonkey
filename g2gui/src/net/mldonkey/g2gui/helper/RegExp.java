@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * RegExp
  *
- * @version $Id: RegExp.java,v 1.4 2003/12/04 08:47:28 lemmy Exp $
+ * @version $Id: RegExp.java,v 1.5 2003/12/17 13:06:03 lemmy Exp $
  *
  */
 public class RegExp {
@@ -141,12 +141,18 @@ public class RegExp {
 			return "" + minutes + "m";
 		}
 	
-	
+	public static String getClassName( Class aClass ) {
+		String objString = aClass.getName();
+		return objString.substring(objString.lastIndexOf( "." ) + 1, objString.length());
+	}
 }
 
 
 /*
 $Log: RegExp.java,v $
+Revision 1.5  2003/12/17 13:06:03  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.4  2003/12/04 08:47:28  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

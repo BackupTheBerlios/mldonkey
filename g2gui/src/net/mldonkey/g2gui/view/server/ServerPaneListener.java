@@ -30,11 +30,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
-import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
-import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
-import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
-import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -44,7 +40,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.14 2003/12/07 19:40:19 lemmy Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.15 2003/12/17 13:06:04 lemmy Exp $ 
  *
  */
 public class ServerPaneListener extends ViewFrameListener {
@@ -63,21 +59,9 @@ public class ServerPaneListener extends ViewFrameListener {
 									EnumState.CONNECTED_INITIATING, EnumState.CONNECTING,
 									EnumState.NOT_CONNECTED };
 
-		// set the last state from preferences
-		boolean temp = false;
-		GViewerFilter aFilter = new StateGViewerFilter(gView);
-		for ( int i = 0; i < this.states.length; i++ ) {
-			if ( PreferenceLoader.loadBoolean( states[ i ].getPrefName(this) ) ) {
-				aFilter.add( states[ i ] );
-				temp = true;
-			}
-		}
-		// just add the filter if we really added enums to it
-		if ( temp ) gView.addFilter( aFilter );
-
-		int i = PreferenceLoader.getInt( "ServerPaneListenerBestFit" );
-		if ( i != -1 )
-			new BestFitColumnAction( gView, i ).run();
+		setFilterState( this.states );
+		setBestFit();
+		setNetworkFilterState();
 	}
 
 	/* (non-Javadoc)
@@ -117,16 +101,17 @@ public class ServerPaneListener extends ViewFrameListener {
 	 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
 	 */
 	public void widgetDisposed(DisposeEvent arg0) {
-		if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
-			PreferenceLoader.setValue( "ServerPaneListenerBestFit", gView.getColumnControlListenerIsOn() );
-		
-		for ( int i = 0; i < this.states.length; i++ )
-			PreferenceLoader.setValue( states[ i ].getPrefName(this), FilterAction.isFiltered( gView, states[ i ] ) ); 
+		saveBestFit();
+		saveFilterState( this.states );
+		saveNetworkFilterState();
 	}
 }
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.15  2003/12/17 13:06:04  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.14  2003/12/07 19:40:19  lemmy
 [Bug #1156] Allow a certain column to be 100% by pref
 

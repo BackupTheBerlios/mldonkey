@@ -27,7 +27,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 /**
  * EnumExtension
  *
- * @version $Id: EnumExtension.java,v 1.2 2003/12/04 08:47:29 lemmy Exp $ 
+ * @version $Id: EnumExtension.java,v 1.3 2003/12/17 13:06:04 lemmy Exp $ 
  *
  */
 public class EnumExtension extends Enum {
@@ -57,13 +57,16 @@ public class EnumExtension extends Enum {
 		this.name = name;
 	}
 	
-	public String getName() {
+	public String toString() {
 		return this.name;
 	}
 }
 
 /*
 $Log: EnumExtension.java,v $
+Revision 1.3  2003/12/17 13:06:04  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.2  2003/12/04 08:47:29  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

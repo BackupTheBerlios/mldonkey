@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.16 2003/12/07 19:40:45 lemmy Exp $
+ * @version $Id: GView.java,v 1.17 2003/12/17 13:06:04 lemmy Exp $
  *
  */
 public abstract class GView {
@@ -315,6 +315,7 @@ public abstract class GView {
    				if ( i != columnId )
    					totalWidth -= columns[ i ].getWidth();
     		}
+    		//TODO find reason for IllegalArgumentException
     		table.getColumn( columnId ).setWidth( totalWidth );
     	}
     }
@@ -424,6 +425,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.17  2003/12/17 13:06:04  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.16  2003/12/07 19:40:45  lemmy
 [Bug #1156] Allow a certain column to be 100% by pref
 

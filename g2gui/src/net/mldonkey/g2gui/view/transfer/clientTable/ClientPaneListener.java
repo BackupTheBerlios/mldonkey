@@ -30,7 +30,6 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
-import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
 import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
 import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
 import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
@@ -44,7 +43,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ClientPaneListener
  *
- * @version $Id: ClientPaneListener.java,v 1.12 2003/12/07 19:40:19 lemmy Exp $
+ * @version $Id: ClientPaneListener.java,v 1.13 2003/12/17 13:06:04 lemmy Exp $
  *
  */
 public class ClientPaneListener extends SashViewFrameListener {
@@ -65,9 +64,9 @@ public class ClientPaneListener extends SashViewFrameListener {
                 EnumState.NOT_CONNECTED_WAS_QUEUED
             };
 
-        int i = PreferenceLoader.getInt( "ClientPaneListenerBestFit" );
-        if ( i != -1 )
-        	new BestFitColumnAction( gView, i ).run();
+        setFilterState( this.states );
+        setBestFit();
+        setNetworkFilterState();
     }
 
     /* (non-Javadoc)
@@ -114,8 +113,9 @@ public class ClientPaneListener extends SashViewFrameListener {
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
     public void widgetDisposed(DisposeEvent arg0) {
-    	if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
-    		PreferenceLoader.setValue( "ClientPaneListenerBestFit", gView.getColumnControlListenerIsOn() );
+    	saveFilterState( this.states );
+    	saveBestFit();
+    	saveNetworkFilterState();
     }
     
 }
@@ -123,6 +123,9 @@ public class ClientPaneListener extends SashViewFrameListener {
 
 /*
 $Log: ClientPaneListener.java,v $
+Revision 1.13  2003/12/17 13:06:04  lemmy
+save all panelistener states correctly to the prefstore
+
 Revision 1.12  2003/12/07 19:40:19  lemmy
 [Bug #1156] Allow a certain column to be 100% by pref
 
