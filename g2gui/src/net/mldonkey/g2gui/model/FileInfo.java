@@ -48,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.87 2004/03/21 21:00:50 dek Exp $
+ * @version $Id: FileInfo.java,v 1.88 2004/03/21 21:11:08 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -824,7 +824,7 @@ public class FileInfo extends Parent implements Observer {
      *
      * @param double
      */
-    private void setRate(double d) {
+    protected void setRate(double d) {
         if (this.rate != (float) d)
             changedProperties.add(CHANGED_RATE);
 
@@ -836,7 +836,7 @@ public class FileInfo extends Parent implements Observer {
      *
      * @param int
      */
-    private void setOffset(int i) {
+    protected void setOffset(int i) {
         this.offset = i;
 
         String oldStringOffset = stringOffset;
@@ -875,7 +875,7 @@ public class FileInfo extends Parent implements Observer {
     /**
      * update ETA
      */
-    private void updateETA() {
+    protected void updateETA() {
         if (this.rate == 0)
             this.etaSeconds = Long.MAX_VALUE;
         else
@@ -1126,6 +1126,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.88  2004/03/21 21:11:08  dek
+fixed buggy thing
+
 Revision 1.87  2004/03/21 21:00:50  dek
 implemented gui-Proto 21-25 !!!!!
 

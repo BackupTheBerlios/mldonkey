@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * FileInfo25.java
  *
- * @version $Id: FileInfo25.java,v 1.3 2004/03/21 21:08:58 dek Exp $ 
+ * @version $Id: FileInfo25.java,v 1.4 2004/03/21 21:11:08 dek Exp $ 
  *
  */
 public class FileInfo25 extends FileInfo24 {
@@ -54,12 +54,32 @@ public class FileInfo25 extends FileInfo24 {
 	protected void setDownloaded(MessageBuffer messageBuffer) {		
 		setDownloaded(messageBuffer.readInt64());
 	}
+	
+	/**
+	 * Update a FileInfo object
+	 *
+	 * int64        Downloaded (new in proto 25)
+	 * Float        Rate
+	 * int32        Number of seconds since last seen
+	 *
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	public void update(MessageBuffer messageBuffer) {
+		setDownloaded(messageBuffer.readInt64());
+		setRate(new Double(messageBuffer.readString()).doubleValue());
+		setOffset(messageBuffer.readInt32());
+		updateETA();
+		notifyChangedProperties();
+	}
 
 }
 
 
 /*
  $Log: FileInfo25.java,v $
+ Revision 1.4  2004/03/21 21:11:08  dek
+ fixed buggy thing
+
  Revision 1.3  2004/03/21 21:08:58  dek
  removed stubs
 
