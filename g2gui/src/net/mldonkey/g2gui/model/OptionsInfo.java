@@ -22,8 +22,7 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.net.Socket;
-
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
@@ -32,10 +31,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.5 2003/07/04 18:03:13 dek Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.6 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
  *
  */
-public class OptionsInfo implements SimpleInformation {
+public class OptionsInfo extends Parent {
 	/**
 	 * Options Name
 	 */
@@ -46,24 +45,25 @@ public class OptionsInfo implements SimpleInformation {
 	private String value;
 	
 	/**
-	 * @return a string
+	 * Creates a new optionsinfo
+	 * @param core The corecommunication
+	 */
+	public OptionsInfo( CoreCommunication core ) {
+		super( core );
+	}
+	
+	/**
+	 * @return The key to this optionsinfo value
 	 */
 	public String getKey() {
 		return key;
 	}
 
 	/**
-	 * @return a string
+	 * @return The value of this optionsinfo
 	 */
 	public String getValue() {
 		return value;
-	}
-
-	/**
-	 * @param string the OptionName
-	 */
-	public void setKey( String string ) {
-		key = string;
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class OptionsInfo implements SimpleInformation {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
-		this.setKey( messageBuffer.readString() );
+		this.key = messageBuffer.readString();
 		this.setValue( messageBuffer.readString() );		
 	}
 	
@@ -94,17 +94,20 @@ public class OptionsInfo implements SimpleInformation {
 	}
 
 	/**
-	 * @param socket the connection to our remote mldonkey
+	 * Sends the optionsinfo to the core
 	 */
-	public void send( Socket socket ) {
-		String[] payLoad = { key, value };
+	public void send() {
+		String[] payLoad = { this.getKey(), this.getValue() };
 		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SET_OPTION, payLoad );
-		consoleMessage.sendMessage( socket );
+		consoleMessage.sendMessage( this.parent.getConnection() );
 	}
 }
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.6  2003/07/06 08:49:33  lemmstercvs01
+better oo added
+
 Revision 1.5  2003/07/04 18:03:13  dek
 now has a send()-method
 

@@ -34,14 +34,10 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.16 2003/07/05 15:46:52 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.17 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
  *
  */
-public class FileInfo implements SimpleInformation {
-	/**
-	 * The CoreCommunication
-	 */
-	private CoreCommunication parent;
+public class FileInfo extends Parent {
 	/**
 	 * File identifier
 	 */
@@ -245,7 +241,7 @@ public class FileInfo implements SimpleInformation {
 	 * @param core The CoreCommunication parent
 	 */
 	public FileInfo( CoreCommunication core ) {
-		this.parent = core;
+		super( core );
 	}
 
 	/**
@@ -411,6 +407,9 @@ public class FileInfo implements SimpleInformation {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.17  2003/07/06 08:49:33  lemmstercvs01
+better oo added
+
 Revision 1.16  2003/07/05 15:46:52  lemmstercvs01
 javadoc improved
 

@@ -31,10 +31,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.9 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.10 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
  *
  */
-public class NetworkInfo implements SimpleInformation {
+public class NetworkInfo extends Parent {
 	/**
 	 * File network identifier
 	 */
@@ -60,10 +60,6 @@ public class NetworkInfo implements SimpleInformation {
 	 */
 	private long downloaded;
 	/**
-	 * Thsi parent
-	 */
-	private CoreCommunication parent;
-	/**
 	 * disable
 	 */
 	private static Byte disable = new Byte( ( byte ) 0 );
@@ -74,10 +70,10 @@ public class NetworkInfo implements SimpleInformation {
 	
 	/**
 	 * Creates a new NetworkInfo
-	 * @param parent The parent
+	 * @param core The parent
 	 */
-	public NetworkInfo( CoreCommunication parent ) {
-		this.parent = parent; 
+	public NetworkInfo( CoreCommunication core ) {
+		super( core );
 	}
 	
 	
@@ -176,6 +172,9 @@ public class NetworkInfo implements SimpleInformation {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.10  2003/07/06 08:49:33  lemmstercvs01
+better oo added
+
 Revision 1.9  2003/07/06 07:45:26  lemmstercvs01
 checkstyle applied
 

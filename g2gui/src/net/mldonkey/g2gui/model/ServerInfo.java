@@ -32,13 +32,9 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.7 2003/07/06 07:45:26 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.8 2003/07/06 08:49:33 lemmstercvs01 Exp $$ 
  */
-public class ServerInfo implements SimpleInformation {
-	/**
-	 * CoreCommunication parent
-	 */
-	private CoreCommunication parent;
+public class ServerInfo extends Parent {
 	/**
 	 * Server Identifier
 	 */
@@ -165,10 +161,10 @@ public class ServerInfo implements SimpleInformation {
 	
 	/**
 	 * Creates a new serverinfo object 
-	 * @param parent The parent objct
+	 * @param core The parent objct
 	 */
-	public ServerInfo( CoreCommunication parent ) {
-		this.parent = parent;
+	public ServerInfo( CoreCommunication core ) {
+		super( core );
 	}
 
 	/**
@@ -246,6 +242,9 @@ public class ServerInfo implements SimpleInformation {
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.8  2003/07/06 08:49:33  lemmstercvs01
+$better oo added
+$
 $Revision 1.7  2003/07/06 07:45:26  lemmstercvs01
 $checkstyle applied
 $

@@ -29,11 +29,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  * @author $user$
- * @version $Id: ResultInfo.java,v 1.5 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfo.java,v 1.6 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
  *
  */
-public class ResultInfo implements SimpleInformation {
-	private CoreCommunication parent;
+public class ResultInfo extends Parent {
 	private String comment;
 	/**
 	 * Result ID
@@ -77,7 +76,7 @@ public class ResultInfo implements SimpleInformation {
 	 * @param core The parent
 	 */
 	public ResultInfo( CoreCommunication core ) {
-		this.parent = core;
+		super( core );
 	}
 	
 	/** (non-Javadoc)
@@ -229,6 +228,9 @@ public class ResultInfo implements SimpleInformation {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.6  2003/07/06 08:49:33  lemmstercvs01
+better oo added
+
 Revision 1.5  2003/07/06 07:45:26  lemmstercvs01
 checkstyle applied
 

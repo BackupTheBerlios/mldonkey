@@ -36,10 +36,10 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.8 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
+ * @version $Id: SearchQuery.java,v 1.9 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
  *
  */
-public class SearchQuery {
+public class SearchQuery implements Sendable {
 	/**
 	 * some options for the search : minFileSize, maxFileSize, etc...
 	 */
@@ -250,6 +250,9 @@ public class SearchQuery {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.9  2003/07/06 08:49:33  lemmstercvs01
+better oo added
+
 Revision 1.8  2003/07/06 07:45:26  lemmstercvs01
 checkstyle applied
 
