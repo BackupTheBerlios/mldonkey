@@ -21,14 +21,13 @@
  * 
  */
 package net.mldonkey.g2gui.model;
-
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * Information
  *
  * @author $user$
- * @version $Id: Information.java,v 1.4 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: Information.java,v 1.5 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public interface Information {
@@ -42,6 +41,9 @@ public interface Information {
 
 /*
 $Log: Information.java,v $
+Revision 1.5  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.4  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 

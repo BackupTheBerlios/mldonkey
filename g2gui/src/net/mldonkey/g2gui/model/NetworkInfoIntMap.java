@@ -22,16 +22,25 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: NetworkInfoIntMap.java,v 1.2 2003/06/17 12:06:51 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.3 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap {
+	/**
+	 * @param communication my parent
+	 */
+	public NetworkInfoIntMap( CoreCommunication communication ) {
+		
+		super( communication );
+	}
+
 	/**
 	 * Creates a new THashMap
 	 */	
@@ -72,6 +81,9 @@ public class NetworkInfoIntMap extends InfoIntMap {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.3  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.2  2003/06/17 12:06:51  lemmstercvs01
 wrong implementers removed
 

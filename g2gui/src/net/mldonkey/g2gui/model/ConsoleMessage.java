@@ -22,15 +22,25 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ConsoleMessage
  * 
  *  * @author ${user}
- * @version $$Id: ConsoleMessage.java,v 1.4 2003/06/19 08:40:20 lemmstercvs01 Exp $$ 
+ * @version $$Id: ConsoleMessage.java,v 1.5 2003/06/20 15:15:22 dek Exp $$ 
  */
 public class ConsoleMessage implements SimpleInformation {
+	
+	private CoreCommunication parent;
+	/**
+	 * @param core my parent, to send messages to
+	 */
+	public ConsoleMessage( CoreCommunication core ) {		
+		this.parent = core;
+	}
+	
 	/**
 	 * String the core wants to display on the console
 	 */
@@ -47,7 +57,11 @@ public class ConsoleMessage implements SimpleInformation {
 	 * @param string a string
 	 */
 	public void setConsoleMessage( String string ) {
-		consoleMessage = string;		
+		consoleMessage = string;
+		/* tell our parent, that we have changed, and that this should be
+		 * said to all the listeners
+		 */		
+		parent.notifyListeners( this );
 	}
 	
 	/**
@@ -57,9 +71,14 @@ public class ConsoleMessage implements SimpleInformation {
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setConsoleMessage( messageBuffer.readString() );
 	}
+	
+
 }
 /*
 $$Log: ConsoleMessage.java,v $
+$Revision 1.5  2003/06/20 15:15:22  dek
+$humm, some interface-changes, hope, it didn't break anything ;-)
+$
 $Revision 1.4  2003/06/19 08:40:20  lemmstercvs01
 $checkstyle applied
 $

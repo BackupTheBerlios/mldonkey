@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.3 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.4 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public class OptionsInfo implements SimpleInformation {
@@ -75,7 +75,7 @@ public class OptionsInfo implements SimpleInformation {
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setKey( messageBuffer.readString() );
-		this.setValue( messageBuffer.readString() );
+		this.setValue( messageBuffer.readString() );		
 	}
 	
 	/**
@@ -92,6 +92,9 @@ public class OptionsInfo implements SimpleInformation {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.4  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.3  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 

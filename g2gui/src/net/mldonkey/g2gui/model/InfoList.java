@@ -26,14 +26,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+
 /**
  * InfoList
  *
  * @author $user$
- * @version $Id: InfoList.java,v 1.7 2003/06/17 12:10:17 lemmstercvs01 Exp $ 
+ * @version $Id: InfoList.java,v 1.8 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public abstract class InfoList implements InfoCollection {
+	
+	protected CoreCommunication parent;
+
 	/**
 	 * the addsomeoptionlist 
 	 */
@@ -44,6 +49,14 @@ public abstract class InfoList implements InfoCollection {
 	 */
 	public InfoList() {
 		this.infoList = new ArrayList();
+	}
+	/**
+	 * Creates an empty AddSomeOptionList object and registers parent
+	 * @param core This lists parent, which can be notified on changes
+	 */
+	public InfoList( CoreCommunication core ) {
+		this.infoList = new ArrayList();
+		this.parent = core;
 	}
 	
 	/**
@@ -66,6 +79,9 @@ public abstract class InfoList implements InfoCollection {
 
 /*
 $Log: InfoList.java,v $
+Revision 1.8  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.7  2003/06/17 12:10:17  lemmstercvs01
 some methods added
 

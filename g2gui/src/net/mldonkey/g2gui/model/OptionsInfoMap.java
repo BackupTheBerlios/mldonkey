@@ -24,16 +24,24 @@ package net.mldonkey.g2gui.model;
 
 import java.util.Iterator;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.4 2003/06/17 12:06:51 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.5 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
+	/**
+	 * @param communication my parent
+	 */
+	public OptionsInfoMap( CoreCommunication communication ) {
+		super( communication );
+	}
+
 	/**
 	 * Creates a new THashMap
 	 */	
@@ -54,7 +62,9 @@ public class OptionsInfoMap extends InfoMap {
 			OptionsInfo optionsInfo = new OptionsInfo();
 			optionsInfo.readStream( messageBuffer );
 			this.infoMap.put( optionsInfo.getKey(), optionsInfo );
+			parent.notifyListeners( this );
 		}
+		
 	}
 	
 	/**
@@ -81,6 +91,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.5  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.4  2003/06/17 12:06:51  lemmstercvs01
 wrong implementers removed
 

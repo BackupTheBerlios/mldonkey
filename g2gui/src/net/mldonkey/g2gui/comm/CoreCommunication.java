@@ -21,13 +21,15 @@
 package net.mldonkey.g2gui.comm;
 
 import java.io.IOException;
+
+import net.mldonkey.g2gui.model.Information;
 import net.mldonkey.g2gui.view.widgets.InterFaceUI;
 
 /**
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.5 2003/06/19 08:44:00 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.6 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -48,4 +50,9 @@ public interface CoreCommunication {
 	 * @param anInterFaceUI The InterFaceUI to add
 	 */
 	void registerListener( InterFaceUI anInterFaceUI );
+	/**
+	 * Tell all registered Listeners what has happened with:
+	 * @param info this info
+	 */
+	void notifyListeners( Information info );
 }

@@ -22,17 +22,27 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ClientStats
  *
  * @author markus
- * @version $Id: ClientStats.java,v 1.5 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: ClientStats.java,v 1.6 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public class ClientStats implements SimpleInformation {
 	
+	private CoreCommunication parent;
+	/**
+	 * @param core my parent, to send messages to
+	 */
+	public ClientStats( CoreCommunication core ) {
+		
+		this.parent = core;
+	}
+
 	private long totalUp;
 	private long totalDown;
 	private long totalShared;
@@ -243,6 +253,9 @@ public class ClientStats implements SimpleInformation {
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.6  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.5  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 

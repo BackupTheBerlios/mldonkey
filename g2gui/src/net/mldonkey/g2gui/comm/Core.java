@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.widgets.InterFaceUI;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.27 2003/06/19 08:40:00 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.28 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -63,21 +63,21 @@ public class Core extends Thread implements CoreCommunication {
 	 * 
 	 */
 	
-	private SimpleInformation fileAddSources = new FileAddSource(),
-						clientStats = new ClientStats(),
-						consoleMessage = new ConsoleMessage();
+	private SimpleInformation fileAddSources = new FileAddSource( this ),
+						clientStats          = new ClientStats( this ),
+						consoleMessage       = new ConsoleMessage( this );
 	/**
 	 * 
 	 */
-	private InfoCollection clientInfoList = new ClientInfoIntMap(),
-					 fileInfoMap = new FileInfoIntMap(),
-					 serverInfoMap = new ServerInfoIntMap(),
-					 addSectionOptionList = new AddSomeOptionList(),
-					 addPluginOptionList = new AddSomeOptionList(),
-					 sharedFileInfoList = new SharedFileInfoList(),	
-					 optionsInfoMap = new OptionsInfoMap(),
-					 networkinfoMap = new NetworkInfoIntMap(),
-					 defineSearchMap = new DefineSearchMap();
+	private InfoCollection clientInfoList = new ClientInfoIntMap( ( CoreCommunication )this ),
+					 fileInfoMap          = new FileInfoIntMap( ( CoreCommunication )this ),
+					 serverInfoMap        = new ServerInfoIntMap( ( CoreCommunication )this ),
+					 addSectionOptionList = new AddSomeOptionList( ( CoreCommunication )this ),
+					 addPluginOptionList  = new AddSomeOptionList( ( CoreCommunication )this ),
+					 sharedFileInfoList   = new SharedFileInfoList( ( CoreCommunication )this ),	
+					 optionsInfoMap       = new OptionsInfoMap( ( CoreCommunication )this ),
+					 networkinfoMap       = new NetworkInfoIntMap( ( CoreCommunication )this ),
+					 defineSearchMap      = new DefineSearchMap( ( CoreCommunication )this );
 
 	/**
 	 * 
@@ -220,9 +220,7 @@ public class Core extends Thread implements CoreCommunication {
 					break;					
 
 			case Message.R_CONSOLE :	
-					this.consoleMessage.readStream( messageBuffer );	
-					notifyListeners( consoleMessage );	
-								
+					this.consoleMessage.readStream( messageBuffer );								
 					break;
 				
 			case Message.R_NETWORK_INFO :
@@ -282,6 +280,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.28  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.27  2003/06/19 08:40:00  lemmstercvs01
 checkstyle applied
 

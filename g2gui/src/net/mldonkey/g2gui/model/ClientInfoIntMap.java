@@ -23,15 +23,23 @@
 package net.mldonkey.g2gui.model;
 
 import gnu.trove.TIntObjectHashMap;
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoIntMap.java,v 1.2 2003/06/19 08:40:47 lemmstercvs01 Exp $$ 
+ * @version $$Id: ClientInfoIntMap.java,v 1.3 2003/06/20 15:15:22 dek Exp $$ 
  */
 public class ClientInfoIntMap extends InfoIntMap {
+	/**
+	 * @param communication my parent
+	 */
+	public ClientInfoIntMap( CoreCommunication communication ) {
+		super( communication );
+	}
+
 	/**
 	 * Creates a new ClientInfoList
 	 */
@@ -99,6 +107,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 }
 /*
 $$Log: ClientInfoIntMap.java,v $
+$Revision 1.3  2003/06/20 15:15:22  dek
+$humm, some interface-changes, hope, it didn't break anything ;-)
+$
 $Revision 1.2  2003/06/19 08:40:47  lemmstercvs01
 $checkstyle applied
 $

@@ -24,16 +24,25 @@ package net.mldonkey.g2gui.model;
 
 import java.util.Iterator;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * AddSomeOptionList
  *
  * @author $user$
- * @version $Id: AddSomeOptionList.java,v 1.3 2003/06/16 13:18:59 lemmstercvs01 Exp $ 
+ * @version $Id: AddSomeOptionList.java,v 1.4 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public class AddSomeOptionList extends InfoList {
+	/**
+	 * @param communication my parent
+	 */
+	public AddSomeOptionList( CoreCommunication communication ) {
+		super( communication );
+		
+	}
+
 	/**
 	 * 
 	 */
@@ -49,6 +58,7 @@ public class AddSomeOptionList extends InfoList {
 		AddSomeOption someOption = new AddSomeOption();
 		someOption.readStream( messageBuffer );
 		this.infoList.add( someOption );
+		parent.notifyListeners( this );
 	}
 	
 	/**
@@ -75,6 +85,9 @@ public class AddSomeOptionList extends InfoList {
 
 /*
 $Log: AddSomeOptionList.java,v $
+Revision 1.4  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.3  2003/06/16 13:18:59  lemmstercvs01
 checkstyle applied
 

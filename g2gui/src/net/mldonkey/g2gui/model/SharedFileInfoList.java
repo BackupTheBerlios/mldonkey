@@ -22,17 +22,25 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * SharedFileInfoList
  *
  * @author $user$
- * @version $Id: SharedFileInfoList.java,v 1.1 2003/06/15 16:17:26 lemmstercvs01 Exp $ 
+ * @version $Id: SharedFileInfoList.java,v 1.2 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public class SharedFileInfoList extends InfoList {
 	
+	/**
+	 * @param communication my parent
+	 */
+	public SharedFileInfoList( CoreCommunication communication ) {
+		super( communication );		
+	}
+
 	/**
 	 * Creates a emptry SharedFileInfoList
 	 *
@@ -62,6 +70,9 @@ public class SharedFileInfoList extends InfoList {
 
 /*
 $Log: SharedFileInfoList.java,v $
+Revision 1.2  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.1  2003/06/15 16:17:26  lemmstercvs01
 opcode 48 added
 

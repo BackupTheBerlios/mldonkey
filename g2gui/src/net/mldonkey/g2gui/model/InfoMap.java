@@ -25,13 +25,15 @@ package net.mldonkey.g2gui.model;
 import java.util.Collection;
 import java.util.Set;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+
 import gnu.trove.THashMap;
 
 /**
  * InfoMap
  *
  * @author $user$
- * @version $Id: InfoMap.java,v 1.4 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: InfoMap.java,v 1.5 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public abstract class InfoMap implements InfoCollection {
@@ -39,12 +41,23 @@ public abstract class InfoMap implements InfoCollection {
 	 * Map containing option value pairs
 	 */
 	protected THashMap infoMap;
+	protected CoreCommunication parent;
 	
 	/**
 	 * Creates a new THashMap
 	 */	
 	public InfoMap() {
 		this.infoMap = new THashMap();
+	}
+	
+	/**
+	 * Creates a new THashMap
+	 * @param core This lists parent, which can be notified on changes
+	 */
+	
+	public InfoMap( CoreCommunication core ) {
+		this.infoMap = new THashMap();
+		this.parent = core;
 	}
 	
 	/**
@@ -92,6 +105,9 @@ public abstract class InfoMap implements InfoCollection {
 
 /*
 $Log: InfoMap.java,v $
+Revision 1.5  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.4  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 

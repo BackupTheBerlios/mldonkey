@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
 
@@ -29,10 +30,16 @@ import gnu.trove.TIntObjectIterator;
  * InfoMap
  *
  * @author $user$
- * @version $Id: InfoIntMap.java,v 1.2 2003/06/17 12:10:17 lemmstercvs01 Exp $ 
+ * @version $Id: InfoIntMap.java,v 1.3 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public abstract class InfoIntMap implements InfoCollection {
+	
+	/**
+	 * 
+	 */
+	protected CoreCommunication parent;
+	
 	/**
 	 * 
 	 */
@@ -42,6 +49,15 @@ public abstract class InfoIntMap implements InfoCollection {
 	 * Generates a empty ServerInfoList object
 	 */
 	public InfoIntMap() {
+		this.infoIntMap = new TIntObjectHashMap();
+	}
+	
+	
+	/**
+	 * @param communication my parent
+	 */	
+	public InfoIntMap( CoreCommunication communication ) {		
+		this.parent = communication;
 		this.infoIntMap = new TIntObjectHashMap();
 	}
 	
@@ -64,6 +80,9 @@ public abstract class InfoIntMap implements InfoCollection {
 
 /*
 $Log: InfoIntMap.java,v $
+Revision 1.3  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.2  2003/06/17 12:10:17  lemmstercvs01
 some methods added
 

@@ -22,17 +22,25 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * DefineSearchMap
  *
  * @author $user$
- * @version $Id: DefineSearchMap.java,v 1.2 2003/06/17 12:07:37 lemmstercvs01 Exp $ 
+ * @version $Id: DefineSearchMap.java,v 1.3 2003/06/20 15:15:22 dek Exp $ 
  *
  */
 public class DefineSearchMap extends InfoMap {
 	
+	/**
+	 * @param communication my parent
+	 */
+	public DefineSearchMap( CoreCommunication communication ) {
+		super( communication );
+	}
+
 	/**
 	 * Creates a new empty DefineSearchMap object
 	 *
@@ -66,6 +74,9 @@ public class DefineSearchMap extends InfoMap {
 
 /*
 $Log: DefineSearchMap.java,v $
+Revision 1.3  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
 Revision 1.2  2003/06/17 12:07:37  lemmstercvs01
 checkstyle applied
 
