@@ -22,14 +22,19 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import net.mldonkey.g2gui.comm.Message;
+
 /**
  * FileAddSource
  *
  * @author markus
- * @version $Id: FileAddSource.java,v 1.1 2003/06/12 10:36:20 lemmstercvs01 Exp $ 
+ * @version $Id: FileAddSource.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
  *
  */
-public class FileAddSource {
+public class FileAddSource implements Information {
 	
 	/**
 	 * The File Identifier 
@@ -78,10 +83,24 @@ public class FileAddSource {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param inputStream
+	 * @return
+	 * @throws IOException
+	 */
+	public void readStream( InputStream inputStream ) throws IOException {
+		this.setId( Message.readInt32( inputStream ) );
+		this.setSourceid( Message.readInt32( inputStream ) );
+	}
+
 }
 
 /*
 $Log: FileAddSource.java,v $
+Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
+lots of changes
+
 Revision 1.1  2003/06/12 10:36:20  lemmstercvs01
 new Class for FileAddSources
 

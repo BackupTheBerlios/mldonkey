@@ -22,14 +22,19 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import net.mldonkey.g2gui.comm.Message;
+
 /**
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.1 2003/06/12 18:14:04 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
  *
  */
-public class FileInfo {
+public class FileInfo implements Information {
 	/**
 	 * File identifier
 	 */
@@ -67,7 +72,7 @@ public class FileInfo {
 	 */
 	private String chunks;
 	/**
-	 * 
+	 * Availibility
 	 */
 	private String avail;
 	/**
@@ -97,11 +102,11 @@ public class FileInfo {
 	/**
 	 * File Format object
 	 */
-	private Format format;
+	private Format format = new Format();
 	/**
 	 * File State object
 	 */
-	private State state;
+	private State state = new State();
 
 	/**
 	 * @return a String
@@ -363,10 +368,46 @@ public class FileInfo {
 		return result;
 	}
 
+	/**
+	 * Reads a Download from an InputStream
+	 * @param inputStream Stream to read from
+	 * @return Download
+	 * @throws IOException Error if read on stream failed
+	 */
+	public void readStream( InputStream inputStream ) throws IOException {
+		this.setId( Message.readInt32( inputStream ) );
+		this.setNetwork( Message.readInt32( inputStream ) );
+		this.setNames( Message.readStringList( inputStream ) );
+		this.setMd4( Message.readBinary( inputStream, 16 ) );
+		this.setSize( Message.readInt32( inputStream ) );
+		this.setDownloaded( Message.readInt32( inputStream ) );
+		this.setSources( Message.readInt32( inputStream ) );
+		this.setClients( Message.readInt32( inputStream ) );
+		
+		/* File State */
+		this.getState().readStream( inputStream );
+		
+		this.setChunks( Message.readString( inputStream ) );
+		this.setAvail( Message.readString( inputStream ) );
+		this.setRate( new Float( Message.readString( inputStream ) ).floatValue() );
+		this.setChunkage( Message.readStringList( inputStream ) );
+		this.setAge( Message.readString( inputStream ) );
+		
+		/* File Format */
+		this.getFormat().readStream( inputStream );
+		
+		this.setName( Message.readString( inputStream ) );
+		this.setOffset( Message.readInt32( inputStream ) );
+		this.setPriority( Message.readInt32( inputStream ) );
+	}
+
 }
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
+lots of changes
+
 Revision 1.1  2003/06/12 18:14:04  lemmstercvs01
 initial commit
 

@@ -25,24 +25,15 @@ package net.mldonkey.g2gui.helper;
 import java.io.IOException;
 import java.net.Socket;
 
-import net.mldonkey.g2gui.comm.GuiMessage;
-import net.mldonkey.g2gui.comm.Message;
-
 /**
  * SocketPool
  *
  * @author ${user}
- * @version $Id: SocketPool.java,v 1.5 2003/06/12 18:19:29 dek Exp $ 
+ * @version $Id: SocketPool.java,v 1.6 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
  *
  */
 public class SocketPool extends ObjectPool {
 	
-	private int protocolVersion;
-
-	private String password;
-
-	private String username;
-
 	/**
 	 * Address of sockets in the pool
 	 */
@@ -73,14 +64,11 @@ public class SocketPool extends ObjectPool {
 	 * @param address The address to connect to
 	 * @param port The port to connect to
 	 */
-	public SocketPool( String address, int port, String username , String password, int protocolVersion ) {
+	public SocketPool( String address, int port ) {
 		super();
 
 		this.address = address;
 		this.port = port;
-		this.username = username;
-		this.password = password;
-		this.protocolVersion = protocolVersion;
 		
 		/* spawn Sockets for min */
 		for ( int i = 0; i < initial; i++ ) {
@@ -97,21 +85,6 @@ public class SocketPool extends ObjectPool {
 		Socket socket = null;
 		try {
 			socket = new Socket( this.address, this.port );
-			//initialize the connections with username/password/GUI-extensions
-			Object[] temp = new Object[ 1 ];
-					temp[ 0 ] = new Integer( 16 );		
-					Message coreProtocolMessage =
-						new GuiMessage( Message.S_COREPROTOCOL, temp );			
-			coreProtocolMessage.sendMessage( socket );
-			
-				Object[] extension = { new Integer( 1 ), new Byte( ( byte ) 1 )};
-				Object[][] a = { extension };
-			Message guiExtension = new GuiMessage( Message.S_GUIEXTENSION, a );
-			guiExtension.sendMessage( socket );
-
-				String[] aString = { this.password, this.username };
-			Message password = new GuiMessage( Message.S_PASSWORD, aString );
-			password.sendMessage( socket );
 		}
 		catch ( IOException e ) {
 		}
@@ -145,6 +118,9 @@ public class SocketPool extends ObjectPool {
 
 /*
 $Log: SocketPool.java,v $
+Revision 1.6  2003/06/12 22:23:06  lemmstercvs01
+lots of changes
+
 Revision 1.5  2003/06/12 18:19:29  dek
 *** empty log message ***
 

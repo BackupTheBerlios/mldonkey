@@ -20,48 +20,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.helper;
+package net.mldonkey.g2gui.model;
 
-import net.mldonkey.g2gui.model.FileInfo;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * DownloadPool
+ * Information
  *
  * @author markus
- * @version $Id: FileInfoPool.java,v 1.1 2003/06/12 18:13:30 lemmstercvs01 Exp $ 
+ * @version $Id: Information.java,v 1.1 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
  *
  */
-public class FileInfoPool extends ObjectPool {
-
-	/**
-	 * 
-	 */
-	public FileInfoPool() {
-		super();
-		/* spawn Downloads for min */
-		for ( int i = 0; i < initial; i++ ) {
-			this.unused.add( create() );
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.helper.ObjectPool#create()
-	 */
-	protected Object create() {
-		FileInfo download = null;
-		download = new FileInfo();
-		return download;
-	}
-
+public interface Information {
+	public void readStream( InputStream inputStream ) throws IOException;
 }
 
 /*
-$Log: FileInfoPool.java,v $
-Revision 1.1  2003/06/12 18:13:30  lemmstercvs01
-initial commit
-
-Revision 1.1  2003/06/12 13:09:52  lemmstercvs01
-ObjectPool, DownloadPool, GuiMessagePool added;
-class hierarchy under ObjectPool created
+$Log: Information.java,v $
+Revision 1.1  2003/06/12 22:23:06  lemmstercvs01
+lots of changes
 
 */

@@ -22,16 +22,16 @@
  */
 package net.mldonkey.g2gui.helper;
 
-import net.mldonkey.g2gui.comm.GuiMessage;
+import net.mldonkey.g2gui.comm.EncodeMessage;
 
 /**
  * GuiMessagePool
  *
  * @author markus
- * @version $Id: GuiMessagePool.java,v 1.1 2003/06/12 13:09:52 lemmstercvs01 Exp $ 
+ * @version $Id: MessagePool.java,v 1.1 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
  *
  */
-public class GuiMessagePool extends ObjectPool {
+public class MessagePool extends ObjectPool {
 	
 	/**
 	 * Number of Objects to create
@@ -49,7 +49,7 @@ public class GuiMessagePool extends ObjectPool {
 	/**
 	 * Generates a new GuiMessagePool
 	 */
-	public GuiMessagePool() {
+	public MessagePool() {
 		super();
 				
 		/* spawn Messages for min */
@@ -63,14 +63,17 @@ public class GuiMessagePool extends ObjectPool {
 	 * @return a GuiMessage
 	 */
 	protected Object create() {
-		GuiMessage message = null;
-		message = new GuiMessage();
+		EncodeMessage message = null;
+		message = new EncodeMessage();
 		return message;
 	}
 }
 
 /*
-$Log: GuiMessagePool.java,v $
+$Log: MessagePool.java,v $
+Revision 1.1  2003/06/12 22:23:06  lemmstercvs01
+lots of changes
+
 Revision 1.1  2003/06/12 13:09:52  lemmstercvs01
 ObjectPool, DownloadPool, GuiMessagePool added;
 class hierarchy under ObjectPool created

@@ -22,14 +22,19 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import net.mldonkey.g2gui.comm.Message;
+
 /**
  * ClientStats
  *
  * @author markus
- * @version $Id: ClientStats.java,v 1.1 2003/06/11 12:54:44 lemmstercvs01 Exp $ 
+ * @version $Id: ClientStats.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
  *
  */
-public class ClientStats {
+public class ClientStats implements Information {
 	
 	private long totalUp;
 	private long totalDown;
@@ -218,10 +223,34 @@ public class ClientStats {
 		numDownloadFinished = i;
 	}
 
+	/**
+	 * Reads a ClientState object from an InputStream
+	 * @param inputStream Stream to read from
+	 * @return a ClientState object
+	 * @throws IOException Error if read from stream failed
+	 */
+	public void readStream( InputStream inputStream ) throws IOException {
+		
+		this.setTotalUp( Message.readInt64( inputStream ) );
+		this.setTotalDown( Message.readInt64( inputStream ) );
+		this.setTotalShared( Message.readInt64( inputStream ) );
+		this.setNumOfShare( Message.readInt32( inputStream ) );
+		this.setTcpUpRate( Message.readInt32( inputStream ) );
+		this.setTcpDownRate( Message.readInt32( inputStream ) );
+		this.setUdpUpRate( Message.readInt32( inputStream ) );
+		this.setUdpDownRate( Message.readInt32( inputStream ) );
+		this.setNumCurrDownload( Message.readInt32( inputStream ) );
+		this.setNumDownloadFinished(  Message.readInt32( inputStream ) );
+		this.setConnectedNetworks( Message.readInt32List( inputStream ) );
+	}
+
 }
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
+lots of changes
+
 Revision 1.1  2003/06/11 12:54:44  lemmstercvs01
 initial commit
 

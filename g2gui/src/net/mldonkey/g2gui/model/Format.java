@@ -22,14 +22,19 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import net.mldonkey.g2gui.comm.Message;
+
 /**
  * Format
  *
  * @author markus
- * @version $Id: Format.java,v 1.1 2003/06/11 12:54:44 lemmstercvs01 Exp $ 
+ * @version $Id: Format.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
  *
  */
-public class Format {
+public class Format implements Information {
 
 	private byte format;
 
@@ -270,11 +275,42 @@ public class Format {
 	public void setYear( String string ) {
 		year = string;
 	}
-
+	
+	/**
+	 * Read a Format from a stream
+	 * @param inputStream Stream to read from
+	 * @throws IOException Error if read on stream failed
+	 */
+	public void readStream( InputStream inputStream ) throws IOException {
+		this.setFormat( (  byte ) Message.readByte( inputStream ) );
+		if ( this.getFormat() == 1 ) {
+			this.setExtension( Message.readString( inputStream ) );
+			this.setKind( Message.readString( inputStream ) );
+		}
+		else if ( this.getFormat() == 2 ) {
+			this.setCodec( Message.readString( inputStream ) );
+			this.setVwidth( Message.readInt32( inputStream ) );
+			this.setVheight( Message.readInt32( inputStream ) );
+			this.setVfps( Message.readInt32( inputStream ) );
+			this.setVrate( Message.readInt32( inputStream ) );
+		}
+		else if ( this.getFormat() == 3 ) {
+			this.setTitle( Message.readString( inputStream ) );
+			this.setArtist( Message.readString( inputStream ) );
+			this.setAlbum( Message.readString( inputStream ) );	
+			this.setYear( Message.readString( inputStream ) );
+			this.setComment( Message.readString( inputStream ) );
+			this.setTracknum( Message.readInt32( inputStream ) );
+			this.setGenre( Message.readInt32( inputStream ) );
+		}
+	}
 }
 
 /*
 $Log: Format.java,v $
+Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
+lots of changes
+
 Revision 1.1  2003/06/11 12:54:44  lemmstercvs01
 initial commit
 

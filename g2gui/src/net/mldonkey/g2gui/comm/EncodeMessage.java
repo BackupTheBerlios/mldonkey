@@ -30,10 +30,10 @@ import java.net.Socket;
  * Message
  *
  * @author ${user}
- * @version $Id: GuiMessage.java,v 1.3 2003/06/12 13:20:26 lemmstercvs01 Exp $ 
+ * @version $Id: EncodeMessage.java,v 1.1 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
  *
  */
-public class GuiMessage extends Message {
+public class EncodeMessage extends Message {
 	/**
 	 * The message opcode
 	 */
@@ -52,7 +52,7 @@ public class GuiMessage extends Message {
 	/**
 	 * Generates a new and empty message opject
 	 */
-	public GuiMessage() {
+	public EncodeMessage() {
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class GuiMessage extends Message {
 	 * @param opCode the opcode for the message
 	 * @param content an object array with the message content
 	 */
-	public GuiMessage( short opCode, Object[] content ) {
+	public EncodeMessage( short opCode, Object[] content ) {
 		this.opCode = opCode;
 		this.content = createContent( content );
 		/* message length = content length + opcode length */
@@ -71,7 +71,7 @@ public class GuiMessage extends Message {
 	 * Generates a new message object without content
 	 * @param opCode the opcode for the message
 	 */
-	public GuiMessage( short opCode ) {
+	public EncodeMessage( short opCode ) {
 		this.opCode = opCode;
 		this.content = null;
 		this.length = 2;
@@ -288,7 +288,10 @@ public class GuiMessage extends Message {
 }
 
 /*
-$Log: GuiMessage.java,v $
+$Log: EncodeMessage.java,v $
+Revision 1.1  2003/06/12 22:23:06  lemmstercvs01
+lots of changes
+
 Revision 1.3  2003/06/12 13:20:26  lemmstercvs01
 minor changes to provide GuiMessagePool
 

@@ -22,14 +22,19 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import net.mldonkey.g2gui.comm.Message;
+
 /**
  * State
  *
  * @author markus
- * @version $Id: State.java,v 1.1 2003/06/11 12:54:43 lemmstercvs01 Exp $ 
+ * @version $Id: State.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
  *
  */
-public class State {
+public class State implements Information {
 
 	private byte state;
 
@@ -62,11 +67,24 @@ public class State {
 	public void setState( byte b ) {
 		state = b;
 	}
-
+	
+	/**
+	 * Reads a State from a stream
+	 * @param inputStream Stream to read from
+	 * @throws IOException Error if read on stream failed
+	 */
+	public void readStream( InputStream inputStream ) throws IOException {
+		this.setState( ( byte ) Message.readByte( inputStream ) );
+		if ( this.getState() == 6 )
+			this.setReason( Message.readString( inputStream ) );			
+	}
 }
 
 /*
 $Log: State.java,v $
+Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
+lots of changes
+
 Revision 1.1  2003/06/11 12:54:43  lemmstercvs01
 initial commit
 

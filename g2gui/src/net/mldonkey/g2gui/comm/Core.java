@@ -26,7 +26,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.Iterator;
+import java.util.Observable;
+
 import net.mldonkey.g2gui.helper.*;
 import net.mldonkey.g2gui.model.*;
 
@@ -34,34 +35,58 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.5 2003/06/12 18:22:56 dek Exp $ 
+ * @version $Id: Core.java,v 1.6 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
  *
  */
-public class Core extends Thread implements CoreCommunication {
-
+public class Core extends Observable {
+	/**
+	 * 
+	 */
 	private Socket connection;
+	/**
+	 * 
+	 */
 	private boolean connected = false;
-	private String username;
-	private String password;
-	private String host;
-	private int port;
+	/**
+	 * 
+	 */
 	private int coreProtocol = 0;
+	/**
+	 * 
+	 */
 	private ObjectPool messagePool;
-	private ObjectPool downloadPool;
-
+	/**
+	 * 
+	 */
+	private String username;
+	/**
+	 * 
+	 */
+	private String password;
+	/**
+	 * 
+	 */
+	private FileInfoList fileInfoList = new FileInfoList();
+	/**
+	 * 
+	 */
+	private ClientStats clientStats = new ClientStats();
+	/**
+	 * 
+	 */
+	private FileAddSource fileAddSources = new FileAddSource();
+	
 	/**
 	 * Core()
 	 * 
-	 * @param username_ Username for authentification with mldonkey-core
-	 * @param password_ Passwort for authentification with mldonkey-core
 	 * @param connection_ the socket, where the whole thing takes place
 	 */
-	public Core( String username_, String password_, Socket connection_ ) {
-		this.username = username_;
-		this.password = password_;
-		this.connection = connection_;
-		this.messagePool =  new GuiMessagePool();
-		this.downloadPool = new FileInfoPool();
+	public Core( Socket connection, String username, String password ) throws IOException {
+		this.connection = connection;
+		this.username = username;
+		this.password = password;
+		this.messagePool =  new MessagePool();
+		this.initialize();
 	}
 
 	/**
@@ -72,9 +97,9 @@ public class Core extends Thread implements CoreCommunication {
 		this.connected = true;
 	}
 	/**
-		 * disconnect()
-		 * disConnects the Core from mldonkey @remote	 * 
-		 */
+	 * disconnect()
+	 * disConnects the Core from mldonkey @remote	 * 
+	 */
 	public void disconnect() {
 		this.connected = false;
 	}
@@ -83,25 +108,24 @@ public class Core extends Thread implements CoreCommunication {
 	 * run()
 	 * starts the Core and begin receiving messages	 * 
 	 */
-	public void run() {
-		connect();
-		InputStream i;
+	public void initialize() throws IOException {
+		this.connect();
+		
 		int messageLength;
 		short opCode;
+
+		InputStream i;
 		BufferedInputStream bufferStream;
-		try {
-			i = connection.getInputStream();
-			//getting length of message (No use for this so far??):				
-			while ( connected ) {
-				//getting length of message:
-				messageLength = Message.readInt32( i );
-				bufferStream = new BufferedInputStream( i, messageLength );
-				opCode = Message.readInt16( bufferStream );
-				this.decodeMessage( opCode, messageLength, bufferStream );
-			}
-		} catch ( IOException e ) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		i = connection.getInputStream();
+		/* getting length of message */				
+		while ( connected ) {
+			/* getting length of message */
+			messageLength = Message.readInt32( i );
+			bufferStream = new BufferedInputStream( i, messageLength );
+			opCode = Message.readInt16( bufferStream );
+			/* decode the message content */
+			this.decodeMessage( opCode, messageLength, bufferStream );
 		}
 	}
 
@@ -121,7 +145,22 @@ public class Core extends Thread implements CoreCommunication {
 					 */
 					coreProtocol = Message.readInt32( inputStream );					
 					
-					Message downloadingFiles = ( GuiMessage ) messagePool.checkOut();
+					Object[] temp = new Object[ 1 ];
+					temp[ 0 ] = new Integer( 16 );		
+					Message coreProtocolMessage =
+						new EncodeMessage( Message.S_COREPROTOCOL, temp );			
+					coreProtocolMessage.sendMessage( connection );
+			
+					Object[] extension = { new Integer( 1 ), new Byte( ( byte ) 1 )};
+					Object[][] a = { extension };
+					Message guiExtension = new EncodeMessage( Message.S_GUIEXTENSION, a );
+					guiExtension.sendMessage( connection );
+
+					String[] aString = { this.password, this.username };
+					Message password = new EncodeMessage( Message.S_PASSWORD, aString );
+					password.sendMessage( connection );
+					
+					Message downloadingFiles = ( EncodeMessage ) messagePool.checkOut();
 					downloadingFiles.setMessage( Message.S_GETDOWNLOADING_FILES );
 					downloadingFiles.sendMessage( connection );
 					messagePool.checkIn( downloadingFiles );
@@ -150,9 +189,7 @@ public class Core extends Thread implements CoreCommunication {
 					 *	int32	The File Identifier 
 					 *	int32	The Source/Client Identifier 
 					 */
-					FileAddSource fileAddSource = CoreMessage.readFileAddSource( inputStream ); 
-					System.out.println(fileAddSource.toString());
-					fileAddSource = null; 
+					this.fileAddSources.readStream( inputStream );
 					break;
 			
 			case Message.R_BAD_PASSWORD :
@@ -163,6 +200,7 @@ public class Core extends Thread implements CoreCommunication {
 					System.out.println("Bad Password");						
 					this.disconnect();
 					break;
+					
 			case Message.R_CLIENT_STATS :				
 					/*
 					 *	PayLoad:
@@ -178,9 +216,8 @@ public class Core extends Thread implements CoreCommunication {
 					 *	int32	Number of downloads finished 
 					 *	List of int32  	 Connected Networks 
 					 */
-					ClientStats clientStats = CoreMessage.readClientStats( inputStream );
-					System.out.println( clientStats.toString() );
-					clientStats = null;
+					clientStats.readStream( inputStream );
+					System.out.println(clientStats.toString() );
 					break;				
 
 			case Message.R_CONSOLE :				
@@ -190,7 +227,6 @@ public class Core extends Thread implements CoreCommunication {
 					 */
 					String payloadText = Message.readString( inputStream );
 					System.out.println( payloadText );
-					//receiving = false;
 					break;
 				
 
@@ -235,25 +271,17 @@ public class Core extends Thread implements CoreCommunication {
 			case Message.R_DOWNLOADING_LIST :
 					/*
 					 * Payload:
-					 * a List of running Downloads
+					 * a List of running Downloads (FileInfo)
 					 */
-					 FileInfoList aList = CoreMessage.readDownloadingList( inputStream, downloadPool );
-					 Iterator itr = aList.fileInfoList.iterator();
-					 while ( itr.hasNext() ) {
-					 	FileInfo elem = ( FileInfo ) itr.next();
-					 	System.out.println( elem.toString() );
-					 	downloadPool.checkIn( elem );
-					 }
-					 aList = null;
+					 this.fileInfoList.readStream( inputStream );
+					 this.requestFileInfoList();
 					 break;
 					 
 			case Message.R_DOWNLOADED_LIST :
 					/*
 					 * Payload:
-					 * a List of complete Downloads
+					 * a List of complete Downloads (FileInfo)
 					 */
-					 FileInfoList aList2 = CoreMessage.readDownloadedList( inputStream, downloadPool );
-					 aList2 = null;
 					 break;
 		 
 
@@ -262,46 +290,20 @@ public class Core extends Thread implements CoreCommunication {
 					break;				
 		}
 	}
-
-	/**
-	* @return password
-	*/
-	public String getPassword() {
-		return password;
+	
+	public void requestFileInfoList() {
+		Message downloadingFiles = ( EncodeMessage ) messagePool.checkOut();
+		downloadingFiles.setMessage( Message.S_GETDOWNLOADING_FILES );
+		downloadingFiles.sendMessage( connection );
+		messagePool.checkIn( downloadingFiles );
 	}
-
-	/**
-	 * @return username hallo
-	 */
-	public String getUsername() {
-		return username;
-	}
-
-	/**
-	 * @param string Password for Core-Connection 
-	 */
-	public void setPassword( String string ) {
-		password = string;
-	}
-
-	/**
-	 * @param string Username for Core-Connection 
-	 */
-	public void setUsername( String string ) {
-		username = string;
-	}
-
-	/**
-	 * @return Connection
-	 */
-	public Socket getConnection() {
-		return connection;
-	}
-
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.6  2003/06/12 22:23:06  lemmstercvs01
+lots of changes
+
 Revision 1.5  2003/06/12 18:22:56  dek
 *** empty log message ***
 
