@@ -43,7 +43,7 @@ import java.util.Observer;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.52 2003/11/28 01:06:21 zet Exp $
+ * @version $Id: ConsoleTab.java,v 1.53 2003/11/29 17:01:00 zet Exp $
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {
@@ -54,7 +54,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
     /**
      * @param gui the main gui, which takes care of all our tabs
      */
-    public ConsoleTab(MainTab gui) {
+    public ConsoleTab(MainWindow gui) {
         super(gui);
         this.core = gui.getCore();
         createButton("ConsoleButton");
@@ -150,6 +150,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.53  2003/11/29 17:01:00  zet
+update for mainWindow
+
 Revision 1.52  2003/11/28 01:06:21  zet
 not much- slowly expanding viewframe - will continue later
 

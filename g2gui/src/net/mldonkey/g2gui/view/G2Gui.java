@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.48 2003/11/24 19:16:42 dek Exp $
+ * @version $Id: G2Gui.java,v 1.49 2003/11/29 17:01:00 zet Exp $
  *
  */
 public class G2Gui {
@@ -257,7 +257,7 @@ public class G2Gui {
             if (!processingLink) {
 				// launch the view
 				Splash.increaseSplashBar("connection to core successfully created");
-                new MainTab(core, shell);
+                new MainWindow(core, shell);
             } else {
 				// send just the link
                 sendDownloadLink();
@@ -423,6 +423,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.49  2003/11/29 17:01:00  zet
+update for mainWindow
+
 Revision 1.48  2003/11/24 19:16:42  dek
 fast-link processing enabled
 

@@ -40,10 +40,10 @@ import java.util.Observable;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.50 2003/11/29 01:51:53 zet Exp $
+ * @version $Id: ServerTab.java,v 1.51 2003/11/29 17:01:00 zet Exp $
  *
  */
-public class ServerTab extends TableGuiTab implements Runnable {
+public class ServerTab extends GViewGuiTab implements Runnable {
     private String statusText = "";
     private ServerInfoIntMap servers;
 
@@ -52,7 +52,7 @@ public class ServerTab extends TableGuiTab implements Runnable {
     /**
      * @param gui The main gui tab
      */
-    public ServerTab(MainTab gui) {
+    public ServerTab(MainWindow gui) {
         super(gui);
 
         /* Set our name on the coolbar */
@@ -151,8 +151,8 @@ public class ServerTab extends TableGuiTab implements Runnable {
             return;
 
         this.statusText = G2GuiResources.getString("SVT_SERVERS") + servers.getConnected();
-        this.mainWindow.getStatusline().update(this.statusText);
-        this.mainWindow.getStatusline().updateToolTip("");
+        this.getMainWindow().getStatusline().update(this.statusText);
+        this.getMainWindow().getStatusline().updateToolTip("");
     }
 
     /**
@@ -174,6 +174,9 @@ public class ServerTab extends TableGuiTab implements Runnable {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.51  2003/11/29 17:01:00  zet
+update for mainWindow
+
 Revision 1.50  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 

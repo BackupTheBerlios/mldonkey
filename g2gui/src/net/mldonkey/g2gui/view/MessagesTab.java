@@ -22,6 +22,12 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Observable;
+
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.ClientMessage;
 import net.mldonkey.g2gui.view.console.Console;
@@ -46,24 +52,17 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableItem;
 
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Observable;
-
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.37 2003/11/29 14:29:27 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.38 2003/11/29 17:01:00 zet Exp $
  */
-public class MessagesTab extends TableGuiTab {
+public class MessagesTab extends GViewGuiTab {
     private CTabFolder cTabFolder;
     private Hashtable openTabs = new Hashtable();
     private MessagesViewFrame messagesViewFrame;
 
-    public MessagesTab(MainTab gui) {
+    public MessagesTab(MainWindow gui) {
         super(gui);
         createButton("MessagesButton");
         createContents(this.subContent);
@@ -209,7 +208,7 @@ public class MessagesTab extends TableGuiTab {
      * @param message
      */
     public void messageFromClient(ClientMessage message) {
-        mainWindow.getStatusline().update("New message!");
+        getMainWindow().getStatusline().update("New message!");
 
         if (openTabs.containsKey(new Integer(message.getId()))) {
             String textMessage;
@@ -364,6 +363,9 @@ public class MessagesTab extends TableGuiTab {
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.38  2003/11/29 17:01:00  zet
+update for mainWindow
+
 Revision 1.37  2003/11/29 14:29:27  zet
 small viewframe updates
 

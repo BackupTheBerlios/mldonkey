@@ -46,12 +46,12 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.21 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: StatusLine.java,v 1.22 2003/11/29 17:01:00 zet Exp $
  *
  */
 public class StatusLine {
     private CLabel cLabel;
-    private MainTab mainTab;
+    private MainWindow mainTab;
     private CoreCommunication core;
     private Composite statusLineComposite;
     private Composite linkEntryComposite;
@@ -60,7 +60,7 @@ public class StatusLine {
      * Creates a new StatusLine obj
      * @param mainTab The <code>MainTab></code> we display our content in
      */
-    public StatusLine(MainTab mainTab) {
+    public StatusLine(MainWindow mainTab) {
         this.mainTab = mainTab;
         this.core = mainTab.getCore();
         createContents();
@@ -182,7 +182,7 @@ public class StatusLine {
     /**
      * @return The maintab we are started from
      */
-    public MainTab getMainTab() {
+    public MainWindow getMainTab() {
         return mainTab;
     }
 }
@@ -190,6 +190,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.22  2003/11/29 17:01:00  zet
+update for mainWindow
+
 Revision 1.21  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
@@ -227,7 +230,7 @@ Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.9  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.8  2003/08/18 01:42:24  zet
 centralize resource bundle

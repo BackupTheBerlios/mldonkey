@@ -40,9 +40,9 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.45 2003/11/29 01:51:53 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.46 2003/11/29 17:01:00 zet Exp $
  */
-public class StatisticTab extends PaneGuiTab {
+public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
     private GraphControl downloadsGraphControl;
     private CLabel uploadsHeaderCLabel;
@@ -53,7 +53,7 @@ public class StatisticTab extends PaneGuiTab {
      * default constructor
      * @param gui object representing the top level gui layer
      */
-    public StatisticTab(MainTab gui) {
+    public StatisticTab(MainWindow gui) {
         super(gui);
         createButton("StatisticsButton");
         createContents(this.subContent);
@@ -162,6 +162,9 @@ public class StatisticTab extends PaneGuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.46  2003/11/29 17:01:00  zet
+update for mainWindow
+
 Revision 1.45  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 

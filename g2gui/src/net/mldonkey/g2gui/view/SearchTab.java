@@ -27,30 +27,27 @@ import java.util.List;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
+import net.mldonkey.g2gui.view.helper.SashViewFrame;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.search.CompositeSearch;
 import net.mldonkey.g2gui.view.search.MusicComplexSearch;
 import net.mldonkey.g2gui.view.search.OtherComplexSearch;
-import net.mldonkey.g2gui.view.search.ResultPaneListener;
+import net.mldonkey.g2gui.view.search.ResultViewFrame;
 import net.mldonkey.g2gui.view.search.Search;
 import net.mldonkey.g2gui.view.search.SearchResult;
 import net.mldonkey.g2gui.view.search.SimpleSearch;
 import net.mldonkey.g2gui.view.viewers.GView;
 
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -60,21 +57,18 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.44 2003/11/28 13:36:17 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.45 2003/11/29 17:01:00 zet Exp $ 
  *
  */
-public class SearchTab extends PaneGuiTab {
-	private SashForm mainSash;
+public class SearchTab extends GuiTab {
 	private CTabFolder tabFolder;
 	private CTabFolder cTabFolder;
 	private CoreCommunication core;
@@ -87,7 +81,7 @@ public class SearchTab extends PaneGuiTab {
 	 * Create a new Search Tab
 	 * @param gui The parent Tab Page
 	 */
-	public SearchTab( MainTab gui ) {
+	public SearchTab( MainWindow gui ) {
 		super( gui );
 		/* associate this tab with the corecommunication */
 		this.core = gui.getCore();
@@ -121,11 +115,11 @@ public class SearchTab extends PaneGuiTab {
 	 */
 	protected void createContents( Composite parent ) {
 		/* Create a sashForm */	
-		mainSash = new SashForm( parent, SWT.HORIZONTAL );
+		SashForm mainSash = new SashForm( parent, SWT.HORIZONTAL );
 		
 		/* Create the "Left" and "Right" columns */
-		this.createLeftGroup ();
-		this.createRightGroup ();
+		this.createLeftGroup (mainSash);
+		this.createRightGroup (mainSash);
 		
 		mainSash.setWeights( new int[] { 1, 5 } );
 	}
@@ -133,19 +127,12 @@ public class SearchTab extends PaneGuiTab {
 	/**
 	 * The search mask
 	 */
-	private void createLeftGroup() {
-		ViewForm viewForm = WidgetFactory.createViewForm(mainSash);
-		GridData gd = new GridData( GridData.FILL_VERTICAL );
-		gd.widthHint = 150;
-		viewForm.setLayoutData( gd );
-		CLabel searchCLabel = 
-			WidgetFactory.createCLabel( viewForm, "TT_SearchButton", "SearchButtonSmall" );
+	private void createLeftGroup(SashForm mainSash) {
+	    
+	    SashViewFrame searchViewFrame = new SashViewFrame( mainSash, "TT_SearchButton", "SearchButtonSmall", this);
 
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
-		Composite aComposite = new Composite( viewForm, SWT.NONE );
-		aComposite.setLayout( gridLayout );
+		Composite aComposite = searchViewFrame.getChildComposite();
+		aComposite.setLayout( WidgetFactory.createGridLayout(1,0,0,0,0,false));
 
 		tabFolder = new CTabFolder( aComposite, SWT.NONE );
 		tabFolder.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
@@ -187,38 +174,21 @@ public class SearchTab extends PaneGuiTab {
         } );
 		tabFolder.setSelection( 0 );
 
-		gridLayout = new GridLayout();
-		gridLayout.marginHeight = 0;
 		Composite anotherComposite = new Composite( aComposite, SWT.NONE );
-		anotherComposite.setLayout( gridLayout );
+		anotherComposite.setLayout( WidgetFactory.createGridLayout(1,0,0,0,0,false) );
 		anotherComposite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 		createSearchButton( anotherComposite );
-		
-		viewForm.setContent( aComposite );
-		viewForm.setTopLeft( searchCLabel );
 	}
 	
 
 	/**
 	 * The result mask
 	 */
-	private void createRightGroup() {
+	private void createRightGroup(SashForm mainSash) {
 		/* right group */
-		ViewForm searchResultsViewForm = WidgetFactory.createViewForm(mainSash);
-		searchResultsViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-		
-		CLabel searchResultsCLabel = 
-			WidgetFactory.createCLabel( searchResultsViewForm, "ST_RESULTS" , "SearchButtonSmall" );
-		
-		cTabFolder = new CTabFolder( searchResultsViewForm, SWT.NONE );
-		
-		resultsPopupMenu = new MenuManager( "" );
-		resultsPopupMenu.setRemoveAllWhenShown( true );
-		resultsPopupMenu.addMenuListener(new ResultPaneListener(cTabFolder, core));
-		searchResultsCLabel.addMouseListener( new HeaderBarMouseAdapter( searchResultsCLabel, resultsPopupMenu ) );
-		
-		searchResultsViewForm.setContent( cTabFolder );
-		searchResultsViewForm.setTopLeft( searchResultsCLabel );
+	    
+	    ResultViewFrame resultViewFrame = new ResultViewFrame( mainSash, "ST_RESULTS", "SearchButtonSmall", this );
+		cTabFolder = resultViewFrame.getCTabFolder();
 		
 		cTabFolder.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		/* set this as data, so our children in the ctabfolder know whos their dad ;) */
@@ -240,13 +210,13 @@ public class SearchTab extends PaneGuiTab {
 				/* set the new statusline */
 				if ( cTabFolder.getItemCount() != 0 ) {
 					SearchResult nResult = (SearchResult) cTabFolder.getSelection().getData();
-					mainWindow.getStatusline().update( nResult.getStatusLine() );
-					mainWindow.getStatusline().updateToolTip( "" );
+					getMainWindow().getStatusline().update( nResult.getStatusLine() );
+					getMainWindow().getStatusline().updateToolTip( "" );
 					setSearchButton();
 				}
 				else {
-					mainWindow.getStatusline().update( "" );
-					mainWindow.getStatusline().updateToolTip( "" );
+					getMainWindow().getStatusline().update( "" );
+					getMainWindow().getStatusline().updateToolTip( "" );
 				}
 			}
 		} );
@@ -260,8 +230,8 @@ public class SearchTab extends PaneGuiTab {
 				CTabFolder item = (CTabFolder) e.widget;
 				if ( item.getSelection() != null ) {
 					SearchResult result = (SearchResult) item.getSelection().getData();
-					mainWindow.getStatusline().update( result.getStatusLine() );
-					mainWindow.getStatusline().updateToolTip( "" );
+					getMainWindow().getStatusline().update( result.getStatusLine() );
+					getMainWindow().getStatusline().updateToolTip( "" );
 				}
 			}
 		} );
@@ -282,14 +252,6 @@ public class SearchTab extends PaneGuiTab {
 			}
 			public void mouseUp( MouseEvent e ) { }
 		} );
-	}
-
-	private void createPaneToolBar( ViewForm aViewForm, IMenuListener menuListener ) {
-		ToolBar toolBar = new ToolBar(aViewForm, SWT.RIGHT | SWT.FLAT);
-
-		super.createPaneToolBar( toolBar, menuListener );   
-
-		aViewForm.setTopRight( toolBar );
 	}
 
 	/* (non-Javadoc)
@@ -333,13 +295,6 @@ public class SearchTab extends PaneGuiTab {
 		CTabItem item = tabFolder.getSelection();
 		Search result = (Search) item.getData();
 		return result;
-	}
-	
-	/**
-	 * @return The parent maintab window
-	 */
-	public MainTab getMainTab() {
-		return this.mainWindow;
 	}
 
 	/**
@@ -459,6 +414,9 @@ public class SearchTab extends PaneGuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.45  2003/11/29 17:01:00  zet
+update for mainWindow
+
 Revision 1.44  2003/11/28 13:36:17  lemmster
 useGradient in headerbars
 
@@ -554,7 +512,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

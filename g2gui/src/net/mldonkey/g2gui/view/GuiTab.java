@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.39 2003/11/29 01:51:53 zet Exp $
+ * @version $Id: GuiTab.java,v 1.40 2003/11/29 17:01:00 zet Exp $
  *
  */
 public abstract class GuiTab implements Listener, Observer {
@@ -58,7 +58,7 @@ public abstract class GuiTab implements Listener, Observer {
     /**
      * The main Window
      */
-    protected MainTab mainWindow;
+    protected MainWindow mainWindow;
 
     /**
      * The ToolItem
@@ -68,16 +68,16 @@ public abstract class GuiTab implements Listener, Observer {
     /**
      * The master Gui
      */
-    private MainTab gui;
+   // private mainWindow gui;
     protected Composite subContent;
 
     /**
      * @param gui the gui, to which this tab belongs
      */
-    public GuiTab( MainTab gui ) {
-        this.mainWindow = gui;
+    public GuiTab( MainWindow mainWindow ) {
+        this.mainWindow = mainWindow;
 
-        this.content = new Composite( gui.getPageContainer(), SWT.NONE );
+        this.content = new Composite( mainWindow.getPageContainer(), SWT.NONE );
         GridLayout gridLayout = WidgetFactory.createGridLayout( 1, 0, 0, 0, 0, false );
         this.content.setLayout( gridLayout );
         this.content.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -87,11 +87,10 @@ public abstract class GuiTab implements Listener, Observer {
         this.subContent.setLayout( new FillLayout() );
         subContent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-        toolButton = new ToolButton( ( ( MainTab ) gui ).getCoolBar().getMainTools(), SWT.PUSH );
+        toolButton = new ToolButton( mainWindow.getCoolBar().getMainTools(), SWT.PUSH );
         toolButton.addListener( SWT.Selection, this );
 
-        this.gui = gui;
-        this.gui.registerTab( this );
+        this.mainWindow.registerTab( this );
     }
 
     /**
@@ -118,7 +117,7 @@ public abstract class GuiTab implements Listener, Observer {
      * To call if the MainWindow dispose
      */
     public void dispose() {
-        this.gui.getCore().deleteObserver( this );
+        this.mainWindow.getCore().deleteObserver( this );
     }
 
     /**
@@ -193,17 +192,26 @@ public abstract class GuiTab implements Listener, Observer {
         this.mainWindow.getCoolBar().getMainToolButtons().add( toolButton );
     }
     
-    public MainTab getMainTab() {
-        return gui;
+    /**
+     * @return mainWindow
+     */
+    public MainWindow getMainWindow() {
+        return mainWindow;
     }
     
+    /**
+     * @return CoreCommunication
+     */
     public CoreCommunication getCore() {
-        return gui.getCore();
+        return mainWindow.getCore();
     }
 }
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.40  2003/11/29 17:01:00  zet
+update for mainWindow
+
 Revision 1.39  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 
@@ -250,7 +258,7 @@ Revision 1.26  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.25  2003/08/23 14:58:38  lemmster
-cleanup of MainTab, transferTree.* broken
+cleanup of mainWindow, transferTree.* broken
 
 Revision 1.24  2003/08/23 01:57:36  zet
 use JFace headerfont

@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.view.main;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.view.G2Gui;
-import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.MainWindow;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -42,11 +42,11 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.18 2003/11/07 17:47:46 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.19 2003/11/29 17:01:09 zet Exp $ 
  *
  */
 public class MainMenuBar {
-	private MainTab mainTab;
+	private MainWindow mainTab;
 	private Shell shell;
 	private Menu mainMenuBar, subMenu;
 	private MenuItem menuItem;
@@ -54,7 +54,7 @@ public class MainMenuBar {
 	/**
 	 * @param mainTab 
 	 */
-	public MainMenuBar( MainTab mainTab ) {
+	public MainMenuBar( MainWindow mainTab ) {
 		this.mainTab = mainTab;
 		this.shell = mainTab.getShell();
 		this.createContent();
@@ -217,6 +217,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.19  2003/11/29 17:01:09  zet
+update for mainWindow
+
 Revision 1.18  2003/11/07 17:47:46  zet
 remove duplicate pref images
 

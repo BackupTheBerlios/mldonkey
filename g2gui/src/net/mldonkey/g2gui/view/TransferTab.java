@@ -41,10 +41,10 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.97 2003/11/29 01:51:53 zet Exp $
+ * @version $Id: TransferTab.java,v 1.98 2003/11/29 17:01:00 zet Exp $
  *
  */
-public class TransferTab extends TableGuiTab {
+public class TransferTab extends GViewGuiTab {
     private GView clientTableView = null;
     private GView uploadTableView = null;
     private GView uploadersTableView = null;
@@ -52,7 +52,7 @@ public class TransferTab extends TableGuiTab {
     /**
      * @param gui where this tab belongs to
      */
-    public TransferTab(MainTab gui) {
+    public TransferTab(MainWindow gui) {
         super(gui);
         createButton("TransfersButton");
         createContents(this.subContent);
@@ -174,6 +174,9 @@ public class TransferTab extends TableGuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.98  2003/11/29 17:01:00  zet
+update for mainWindow
+
 Revision 1.97  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 

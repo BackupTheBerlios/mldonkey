@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.MainWindow;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.RGB;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.60 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.61 2003/11/29 17:01:52 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -308,7 +308,7 @@ public class G2GuiResources {
      * @return ImageDescriptor
      */
     private static ImageDescriptor createRawImage(String filename) {
-        return ImageDescriptor.createFromFile(MainTab.class, imagesDirectory + filename);
+        return ImageDescriptor.createFromFile(MainWindow.class, imagesDirectory + filename);
     }
 
     /**
@@ -332,6 +332,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.61  2003/11/29 17:01:52  zet
+update for mainWindow
+
 Revision 1.60  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

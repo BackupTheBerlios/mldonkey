@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.mldonkey.g2gui.helper.RegExp;
-import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.MainWindow;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -61,14 +61,14 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.22 2003/11/25 17:24:30 dek Exp $
+ * @version $Id: MainCoolBar.java,v 1.23 2003/11/29 17:01:09 zet Exp $
  *
  */
 public class MainCoolBar {
     private boolean toolbarSmallButtons;
     private boolean coolbarLocked = true;
     private Shell shell;
-    private MainTab mainTab;
+    private MainWindow mainTab;
     private Composite composite;
     private CoolBar coolbar;
     private ToolBar miscTools;
@@ -84,7 +84,7 @@ public class MainCoolBar {
 	 * @param size 
 	 * @param locked 
 	 */
-    public MainCoolBar( MainTab mainTab, boolean size, boolean locked ) {
+    public MainCoolBar( MainWindow mainTab, boolean size, boolean locked ) {
         this.toolbarSmallButtons = size;
         this.coolbarLocked = locked;
         this.mainTab = mainTab;
@@ -397,6 +397,9 @@ public class MainCoolBar {
 
 
 $Log: MainCoolBar.java,v $
+Revision 1.23  2003/11/29 17:01:09  zet
+update for mainWindow
+
 Revision 1.22  2003/11/25 17:24:30  dek
 some refactoring and minor checkstyle
 
