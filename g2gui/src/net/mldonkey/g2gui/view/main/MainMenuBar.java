@@ -26,7 +26,6 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.MainTab;
-import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuEvent;
@@ -42,7 +41,7 @@ import org.eclipse.swt.widgets.Shell;
  * MenuBar
  *
  *
- * @version $Id: MainMenuBar.java,v 1.6 2003/09/16 09:15:14 lemmster Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.7 2003/09/16 14:02:52 zet Exp $ 
  *
  */
 public class MainMenuBar {
@@ -66,28 +65,14 @@ public class MainMenuBar {
 		submenu = new Menu ( shell, SWT.DROP_DOWN );
 		mItem.setMenu ( submenu );
 		
-		if ( PreferenceLoader.loadString( "coreExecutable" ).equals( "" ) ) {
-			final MenuItem killItem = new MenuItem ( submenu, 0 );
-			killItem.addListener ( SWT.Selection, new Listener () {
-				public void handleEvent ( Event e ) {
-					Message killCore = new EncodeMessage( Message.S_KILL_CORE );
-					killCore.sendMessage( mainTab.getCore().getConnection() );
-					killCore = null;
-				} 
-			} );
-			killItem.setText ( "&Kill core" );
-
-			submenu.addMenuListener( new MenuListener() {
-				public void menuHidden( MenuEvent e ) { }
-				public void menuShown( MenuEvent e ) {
-					if ( !mainTab.getCore().isConnected() 
-					|| G2Gui.getCoreConsole() != null )
-							killItem.setEnabled( false );
-						else
-							killItem.setEnabled( true );
-				}
-			} );
-		}
+		final MenuItem killItem = new MenuItem ( submenu, 0 );
+		killItem.addListener ( SWT.Selection, new Listener () {
+			public void handleEvent ( Event e ) {
+				Message killCore = new EncodeMessage( Message.S_KILL_CORE );
+				killCore.sendMessage( mainTab.getCore().getConnection() );
+			} 
+		} );
+		killItem.setText ( "&Kill core" );
 		
 		mItem.setMenu ( submenu );
 		item = new MenuItem ( submenu, 0 );
@@ -99,6 +84,17 @@ public class MainMenuBar {
 		item.setText ( "E&xit\tCtrl+W" );
 		item.setAccelerator ( SWT.CTRL + 'W' );
 		
+		submenu.addMenuListener(new MenuListener() {
+			public void menuHidden(MenuEvent e) {}
+			public void menuShown(MenuEvent e) {
+				if ( !mainTab.getCore().isConnected() 
+					|| G2Gui.getCoreConsole() != null) {
+						killItem.setEnabled(false);
+					} else {
+						killItem.setEnabled(true);
+					}
+			}
+		});
 			
 		mItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
 		mItem.setText ( "Tools" );
@@ -168,8 +164,8 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
-Revision 1.6  2003/09/16 09:15:14  lemmster
-display "Kill Core" only when corepath == null
+Revision 1.7  2003/09/16 14:02:52  zet
+revert
 
 Revision 1.5  2003/09/16 01:15:43  zet
 kill core command
