@@ -1,4 +1,4 @@
-G2gui's TODO-list (last update: 03.02.04)
+G2gui's TODO-list (last update: 23.02.04)
 =================
 Things with "!" will be implemented/fixed next
 
@@ -11,10 +11,7 @@ Things with "!" will be implemented/fixed next
   * PreferenceLoader.*Relaunching() is a bit sub-optimal
   
 * Fix big memleak when relaunching g2gui after a pref-change. MainWindow does not seem to 
-  be disposed properly (important!)
-
-* Disable "boog ditekted" when using native version
-  Maybe do a relaunch() (also after displaying the stracktrace) if the user wishes to do so?
+  be disposed properly
 
 * Get the subsearch right
 
