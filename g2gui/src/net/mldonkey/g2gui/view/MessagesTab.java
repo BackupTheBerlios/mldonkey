@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.31 2003/10/22 01:36:59 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.32 2003/11/04 20:38:27 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
     private CoreCommunication core;
@@ -118,7 +118,7 @@ public class MessagesTab extends GuiTab implements Runnable {
                           | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
         Composite friendsComposite = new Composite( friendsViewForm, SWT.NONE );
         friendsComposite.setLayout( new FillLayout() );
-        friendsCLabel = CCLabel.createCL( friendsViewForm, "FR_FRIENDS", "MessagesButtonSmallTrans" );
+        friendsCLabel = CCLabel.createCL( friendsViewForm, "FR_FRIENDS", "MessagesButtonSmall" );
         createFriendsTable( friendsComposite );
         friendsViewForm.setTopLeft( friendsCLabel );
         friendsViewForm.setContent( friendsComposite );
@@ -186,7 +186,7 @@ public class MessagesTab extends GuiTab implements Runnable {
             new ViewForm( main,
                           SWT.BORDER
                           | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-        messagesCLabel = CCLabel.createCL( messagesViewForm, "FR_TABS", "MessagesButtonSmallTrans" );
+        messagesCLabel = CCLabel.createCL( messagesViewForm, "FR_TABS", "MessagesButtonSmall" );
         ToolBar messagesToolBar = new ToolBar( messagesViewForm, SWT.RIGHT | SWT.FLAT );
         ToolItem sendItem = new ToolItem( messagesToolBar, SWT.NONE );
         sendItem.setToolTipText( G2GuiResources.getString( "FR_TABS_CLOSE_TOOLTIP" ) );
@@ -443,6 +443,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.32  2003/11/04 20:38:27  zet
+update for transparent gifs
+
 Revision 1.31  2003/10/22 01:36:59  zet
 add column selector to server/search (might not be finished yet..)
 

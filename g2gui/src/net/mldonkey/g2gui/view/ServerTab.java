@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.46 2003/10/31 16:02:17 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.47 2003/11/04 20:38:27 zet Exp $ 
  *
  */
 public class ServerTab extends TableGuiTab implements Runnable, DisposeListener {
@@ -84,7 +84,7 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 			new ViewForm( parent, SWT.BORDER
 				| ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
 		
-		CLabel ccLabel = CCLabel.createCL( viewForm, "TT_ServersButton", "ServersButtonSmallTitlebar" );
+		CLabel ccLabel = CCLabel.createCL( viewForm, "TT_ServersButton", "ServersButtonSmall" );
 			
 		Composite composite = new Composite( viewForm, SWT.NONE );
 		composite.setLayout( new FillLayout() );
@@ -215,6 +215,9 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.47  2003/11/04 20:38:27  zet
+update for transparent gifs
+
 Revision 1.46  2003/10/31 16:02:17  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.86 2003/10/31 22:41:59 zet Exp $
+ * @version $Id: TransferTab.java,v 1.87 2003/11/04 20:38:27 zet Exp $
  *
  */
 public class TransferTab extends TableGuiTab {
@@ -155,7 +155,7 @@ public class TransferTab extends TableGuiTab {
     public void createDownloadHeader(ViewForm aViewForm, final SashForm aSashForm, final Control downloadParent) {
         popupMenuDL = new MenuManager("");
         popupMenuDL.setRemoveAllWhenShown(true);
-        downloadCLabel = CCLabel.createCL(aViewForm, "TT_Downloads", "TransfersButtonSmallTitlebar");
+        downloadCLabel = CCLabel.createCL(aViewForm, "TT_Downloads", "TransfersButtonSmall");
         downloadCLabel.addMouseListener(new MaximizeSashMouseAdapter(downloadCLabel, popupMenuDL, aSashForm, downloadParent));
         ( (ViewForm) aViewForm ).setTopLeft(downloadCLabel);
     }
@@ -228,7 +228,7 @@ public class TransferTab extends TableGuiTab {
         popupMenuUL.setRemoveAllWhenShown(true);
         popupMenuUL.addMenuListener(new UploadPaneListener(this, mldonkey, mainSashForm, parentViewForm));
 
-        CLabel uploadsCLabel = CCLabel.createCL(parentViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar");
+        CLabel uploadsCLabel = CCLabel.createCL(parentViewForm, "TT_Uploads", "TransfersButtonSmall");
         uploadsCLabel.addMouseListener(new MaximizeSashMouseAdapter(uploadsCLabel, popupMenuUL, mainSashForm, uploadParent));
         parentViewForm.setTopLeft(uploadsCLabel);
     }
@@ -248,7 +248,7 @@ public class TransferTab extends TableGuiTab {
 
         ViewForm clientViewForm = new ViewForm(aSashForm, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE));
 
-        CLabel clientCLabel = CCLabel.createCL(clientViewForm, "TT_Clients", "TransfersButtonSmallTitlebar");
+        CLabel clientCLabel = CCLabel.createCL(clientViewForm, "TT_Clients", "TransfersButtonSmallT");
 
         Composite downloadClients = new Composite(clientViewForm, SWT.NONE);
         downloadClients.setLayout(CGridLayout.createGL(1, 0, 0, 0, 0, false));
@@ -429,6 +429,9 @@ public class TransferTab extends TableGuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.87  2003/11/04 20:38:27  zet
+update for transparent gifs
+
 Revision 1.86  2003/10/31 22:41:59  zet
 rename to View
 

@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.ToolBar;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.38 2003/10/31 16:02:17 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.39 2003/11/04 20:38:27 zet Exp $
  */
 public class StatisticTab extends PaneGuiTab {
     private GraphControl uploadsGraphControl;
@@ -112,7 +112,7 @@ public class StatisticTab extends PaneGuiTab {
                           | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
         statsViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         CLabel statsCLabel =
-            CCLabel.createCL( statsViewForm, "TT_StatisticsButton", "StatisticsButtonSmallTitlebar" );
+            CCLabel.createCL( statsViewForm, "TT_StatisticsButton", "StatisticsButtonSmall" );
         Composite statsComposite = new Composite( statsViewForm, SWT.NONE );
         statsComposite.setLayout( new FillLayout() );
         Button b = new Button( statsComposite, SWT.NONE );
@@ -144,7 +144,7 @@ public class StatisticTab extends PaneGuiTab {
             new ViewForm( graphSash,
                           SWT.BORDER
                           | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-        CLabel cLabel = CCLabel.createCL( graphViewForm, titleResString, "StatisticsButtonSmallTitlebar" );
+        CLabel cLabel = CCLabel.createCL( graphViewForm, titleResString, "StatisticsButtonSmall" );
 
 		GraphControl graphControl = new GraphControl( graphViewForm, graphName );
    		GPaneListener aListener = new GraphPaneListener( graphSash, graphViewForm, graphControl );
@@ -205,6 +205,9 @@ public class StatisticTab extends PaneGuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.39  2003/11/04 20:38:27  zet
+update for transparent gifs
+
 Revision 1.38  2003/10/31 16:02:17  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * NewsTab
  *
- * @version $Id: NewsTab.java,v 1.1 2003/09/27 12:09:32 lemmster Exp $
+ * @version $Id: NewsTab.java,v 1.2 2003/11/04 20:38:27 zet Exp $
  *
  */
 public class NewsTab extends GuiTab {
@@ -63,7 +63,7 @@ public class NewsTab extends GuiTab {
 
 		NewsManager newsManager = new NewsManager( viewForm );
 
-		CLabel cLabel = CCLabel.createCL( viewForm, "TT_NewsButton", "NewsButtonSmallTitlebar" );
+		CLabel cLabel = CCLabel.createCL( viewForm, "TT_NewsButton", "NewsButtonSmall" );
 
 		viewForm.setTopLeft( cLabel );
 		viewForm.setContent( newsManager.getContent() );
@@ -77,6 +77,9 @@ public class NewsTab extends GuiTab {
 
 /*
 $Log: NewsTab.java,v $
+Revision 1.2  2003/11/04 20:38:27  zet
+update for transparent gifs
+
 Revision 1.1  2003/09/27 12:09:32  lemmster
 initial commit
 

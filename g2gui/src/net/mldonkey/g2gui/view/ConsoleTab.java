@@ -47,7 +47,7 @@ import java.util.Observer;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.48 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ConsoleTab.java,v 1.49 2003/11/04 20:38:27 zet Exp $
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {
@@ -80,7 +80,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
         consoleComposite.setLayout(new FillLayout());
 
         CLabel consoleCLabel = CCLabel.createCL(consoleViewForm, "TT_ConsoleButton",
-                "ConsoleButtonSmallTitlebar");
+                "ConsoleButtonSmall");
         console = new Console(consoleComposite, SWT.NONE);
         console.addObserver(this);
 
@@ -164,6 +164,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.49  2003/11/04 20:38:27  zet
+update for transparent gifs
+
 Revision 1.48  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

@@ -71,7 +71,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.39 2003/10/31 16:02:17 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.40 2003/11/04 20:38:27 zet Exp $ 
  *
  */
 public class SearchTab extends PaneGuiTab {
@@ -146,7 +146,7 @@ public class SearchTab extends PaneGuiTab {
 		gd.widthHint = 150;
 		viewForm.setLayoutData( gd );
 		CLabel searchCLabel = 
-			CCLabel.createCL( viewForm, "TT_SearchButton", "SearchButtonSmallTitlebar" );
+			CCLabel.createCL( viewForm, "TT_SearchButton", "SearchButtonSmall" );
 
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.marginHeight = 0;
@@ -216,7 +216,7 @@ public class SearchTab extends PaneGuiTab {
 		
 		CLabel searchResultsCLabel = 
 			CCLabel.createCL( searchResultsViewForm,
-								 G2GuiResources.getString( "ST_RESULTS" ), "SearchButtonSmallTitlebar" );
+								 G2GuiResources.getString( "ST_RESULTS" ), "SearchButtonSmall" );
 		
 		cTabFolder = new CTabFolder( searchResultsViewForm, SWT.NONE );
 		
@@ -455,6 +455,9 @@ public class SearchTab extends PaneGuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.40  2003/11/04 20:38:27  zet
+update for transparent gifs
+
 Revision 1.39  2003/10/31 16:02:17  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

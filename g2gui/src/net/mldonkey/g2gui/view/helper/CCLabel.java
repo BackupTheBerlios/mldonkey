@@ -34,7 +34,7 @@ import org.eclipse.swt.layout.GridData;
 /**
  * CClabel - static class to return new CLabels
  *
- * @version $Id: CCLabel.java,v 1.6 2003/10/22 01:37:10 zet Exp $
+ * @version $Id: CCLabel.java,v 1.7 2003/11/04 20:38:56 zet Exp $
  *
  */
 public class CCLabel {
@@ -55,27 +55,23 @@ public class CCLabel {
         cLabel.setText( G2GuiResources.getString( text ) );
         
         cLabel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        
+		cLabel.setImage( G2GuiResources.getImage( image ) );
+		
         if (PreferenceLoader.loadBoolean( "useGradient" )) {
-			cLabel.setImage( G2GuiResources.getImage( image ) );
 			cLabel.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
         	cLabel.setBackground( 
         		new Color[] { parent.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
         			parent.getBackground() }, new int[] { 100 } );
-        } else {
-        	if (image.endsWith("Titlebar")) {
-        		image = image.substring( 0, image.length() - 8 ); 
-        		cLabel.setImage( G2GuiResources.getImage( image ) );
-        	
-        	} else  
-				cLabel.setImage( G2GuiResources.getImage( image ) );
-        }
+        } 
         return cLabel;
     }
 }
 
 /*
 $Log: CCLabel.java,v $
+Revision 1.7  2003/11/04 20:38:56  zet
+update for transparent gifs
+
 Revision 1.6  2003/10/22 01:37:10  zet
 add column selector to server/search (might not be finished yet..)
 

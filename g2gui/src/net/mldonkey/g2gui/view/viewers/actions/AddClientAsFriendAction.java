@@ -32,7 +32,7 @@ import org.eclipse.jface.action.Action;
 /**
  * AddClientAsFriendAction
  *
- * @version $Id: AddClientAsFriendAction.java,v 1.1 2003/10/24 21:26:47 zet Exp $
+ * @version $Id: AddClientAsFriendAction.java,v 1.2 2003/11/04 20:39:11 zet Exp $
  *
  */
 public class AddClientAsFriendAction extends Action {
@@ -41,7 +41,7 @@ public class AddClientAsFriendAction extends Action {
 
     public AddClientAsFriendAction(CoreCommunication core, ClientInfo[] clientInfoArray) {
         super(G2GuiResources.getString("TT_DOWNLOAD_MENU_ADD_FRIEND"));
-        setImageDescriptor(G2GuiResources.getImageDescriptor("MessagesButtonSmallTrans"));
+        setImageDescriptor(G2GuiResources.getImageDescriptor("MessagesButtonSmall"));
 
         this.core = core;
         this.clientInfoArray = clientInfoArray;
@@ -57,6 +57,9 @@ public class AddClientAsFriendAction extends Action {
 
 /*
 $Log: AddClientAsFriendAction.java,v $
+Revision 1.2  2003/11/04 20:39:11  zet
+update for transparent gifs
+
 Revision 1.1  2003/10/24 21:26:47  zet
 common actions
 
