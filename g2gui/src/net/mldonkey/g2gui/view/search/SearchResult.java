@@ -78,7 +78,7 @@ import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.43 2003/09/17 20:07:44 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.44 2003/09/18 07:45:09 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -400,6 +400,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
         /* no longer receive results for this search */
         this.unregister();
+        
+        /* change the left button */
+        this.search.setSearchButton();
     }
     
     public ResultTableMenuListener getMenuListener() {
@@ -595,6 +598,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.44  2003/09/18 07:45:09  lemmster
+fix [bug # 933]
+
 Revision 1.43  2003/09/17 20:07:44  lemmster
 avoid NPE´s in search
 
