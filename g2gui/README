@@ -34,7 +34,7 @@ To run it, simply untar the archive and type ./g2gui.
 
 Java Packages
 -------------
-g2gui-jar packages contain all end everyting, except for a java VM, 
+g2gui-jar packages contain all and everything, except for a java VM, 
 to run MLdonkey G2gui in its byteform. They should run without problems
 with any Sun j2re version 1.4x and higher. We've also reports of people
 successfully using the "Blackdown" kit with G2gui. "Kaffee" seems to 
