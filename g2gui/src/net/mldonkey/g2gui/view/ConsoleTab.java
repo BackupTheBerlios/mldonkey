@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.2 2003/06/25 18:04:53 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.3 2003/06/25 21:28:16 dek Exp $ 
  *
  */
 public class ConsoleTab extends G2guiTab implements InterFaceUI,ControlListener {	
@@ -67,7 +67,7 @@ public class ConsoleTab extends G2guiTab implements InterFaceUI,ControlListener 
 				/*
 				 * Adding the Console-Display Text-field
 				 */			
-				infoDisplay = new Text(parent,SWT.MULTI|SWT.H_SCROLL|SWT.V_SCROLL);
+				infoDisplay = new Text(parent,SWT.BORDER|SWT.MULTI|SWT.H_SCROLL|SWT.V_SCROLL |SWT.READ_ONLY);
 				input = new Text(parent, SWT.SINGLE | SWT.BORDER);					
 					//Send command to core
 					input.addKeyListener(new KeyAdapter() {
@@ -154,6 +154,9 @@ public class ConsoleTab extends G2guiTab implements InterFaceUI,ControlListener 
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.3  2003/06/25 21:28:16  dek
+cosmetic change, made console-output read-only
+
 Revision 1.2  2003/06/25 18:04:53  dek
 Console-Tab reworked
 
