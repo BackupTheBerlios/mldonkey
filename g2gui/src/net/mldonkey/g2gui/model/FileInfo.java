@@ -48,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.63 2003/09/26 04:18:53 zet Exp $
+ * @version $Id: FileInfo.java,v 1.64 2003/10/05 00:55:13 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -136,7 +136,8 @@ public class FileInfo extends Parent implements Observer {
     /**
      * File priority inside mldonkey
      */
-    private Enum priority;
+    private Enum priorityEnum;
+    private int priority;
     /**
      * File last seen
      */
@@ -304,24 +305,31 @@ public class FileInfo extends Parent implements Observer {
     }
 
     /**
-     * @return File priority
+     * @return File priorityEnum
      */
-    public Enum getPriority() {
-        return priority;
+    public Enum getPriorityEnum() {
+        return priorityEnum;
     }
+
+	/**
+     * @return File Priority
+     */
+    public int getPriority() {
+		return priority;
+	}
 
     /**
      * @return Priority as a string
      */
     public String getStringPriority() {
-        if ( priority == EnumPriority.HIGH )
-            return G2GuiResources.getString( "TT_PRIO_High" );
-        else if ( priority == EnumPriority.LOW )
-            return G2GuiResources.getString( "TT_PRIO_Low" );
-        else if ( priority == EnumPriority.NORMAL )
+        if ( priority > 0 )
+            return G2GuiResources.getString( "TT_PRIO_High" ) + "(" + priority + ")" ;
+        else if ( priority < 0 )
+            return G2GuiResources.getString( "TT_PRIO_Low" ) + "(" + priority + ")" ;
+        else if ( priority == 0 )
             return G2GuiResources.getString( "TT_PRIO_Normal" );
         else
-            return "???";
+            return "?" + priority;
     }
 
     /**
@@ -522,12 +530,14 @@ public class FileInfo extends Parent implements Observer {
      * @param i the int
      */
     private void setPriority( int i ) {
+    	priority = i;
+    	
         if ( i < 0 )
-            priority = EnumPriority.LOW;
+            priorityEnum = EnumPriority.LOW;
         else if ( i > 0 )
-            priority = EnumPriority.HIGH;
+            priorityEnum = EnumPriority.HIGH;
         else
-            priority = EnumPriority.NORMAL;
+            priorityEnum = EnumPriority.NORMAL;
     }
 
     /**
@@ -676,28 +686,34 @@ public class FileInfo extends Parent implements Observer {
     /**
      * @param enum The new priority for this file (LOW/NORMAL/HIGH)
      */
-    public void setPriority( EnumPriority enum ) {
-        /* first the fileid */
-        Object[] obj = new Object[ 2 ];
-        obj[ 0 ] = new Integer( this.getId() );
-
-        /* now the new prio */
-        Integer content;
+    public void sendPriority( EnumPriority enum ) {
+       
+        int newPriority;
         if ( enum == EnumPriority.LOW )
-            content = new Integer( -10 );
+            newPriority = -10;
         else if ( enum == EnumPriority.HIGH )
-            content = new Integer( 10 );
+            newPriority = 10;
         else
-            content = new Integer( 0 );
-        obj[ 1 ] = content;
+            newPriority = 0;
+            
+        sendPriority( false, newPriority );    
 
-        /* create and send the message */
-        Message consoleMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, obj );
-        consoleMessage.sendMessage( this.parent );
-        content = null;
-        obj = null;
-        consoleMessage = null;
     }
+    
+    /**
+     * Send new priority
+     * @param relative
+     * @param i
+     */
+    public void sendPriority( boolean relative, int i ) {
+		Object[] obj = new Object[ 2 ];
+		obj[ 0 ] = new Integer( this.getId() );
+		if (relative) i+= priority;
+    	obj[ 1 ] = new Integer( i );
+		
+		Message priorityMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, obj );
+		priorityMessage.sendMessage( this.parent );
+    }	
 
     /**
      * @param enum The new state of this file
@@ -828,6 +844,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.64  2003/10/05 00:55:13  zet
+set priority as any #
+
 Revision 1.63  2003/09/26 04:18:53  zet
 getEd2k
 

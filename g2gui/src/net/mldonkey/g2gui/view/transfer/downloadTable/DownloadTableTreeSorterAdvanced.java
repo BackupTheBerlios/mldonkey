@@ -24,7 +24,6 @@ package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
-import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -35,7 +34,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * DownloadTableTreeSorterAdvanced
  *
- * @version $Id: DownloadTableTreeSorterAdvanced.java,v 1.4 2003/09/24 03:07:43 zet Exp $
+ * @version $Id: DownloadTableTreeSorterAdvanced.java,v 1.5 2003/10/05 00:55:29 zet Exp $
  *
  */
 public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
@@ -152,18 +151,7 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
                 }
 
             case 12: // priority
-
-                if ( fileInfo1.getPriority(  ) == EnumPriority.LOW ) {
-                    return ( lastSort ? ( -1 ) : 1 );
-                } else if ( fileInfo1.getPriority(  ) == EnumPriority.HIGH ) {
-                    return ( lastSort ? 1 : ( -1 ) );
-                } else {
-                    if ( fileInfo2.getPriority(  ) == EnumPriority.LOW ) {
-                        return ( lastSort ? 1 : ( -1 ) );
-                    } else {
-                        return ( lastSort ? ( -1 ) : 1 );
-                    }
-                }
+				return compareIntegers( fileInfo1.getPriority( ), fileInfo2.getPriority( ) );
 
             case 13: // last
                 return compareIntegers( fileInfo1.getOffset(  ), fileInfo2.getOffset(  ) );
@@ -208,6 +196,9 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
 
 /*
 $Log: DownloadTableTreeSorterAdvanced.java,v $
+Revision 1.5  2003/10/05 00:55:29  zet
+set priority as any #
+
 Revision 1.4  2003/09/24 03:07:43  zet
 add # of active sources column
 

@@ -74,7 +74,7 @@ import java.util.List;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.8 2003/09/28 17:47:45 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.9 2003/10/05 00:55:29 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -227,6 +227,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
     public void menuAboutToShow( IMenuManager menuManager ) {
+        boolean advancedMode = PreferenceLoader.loadBoolean( "advancedMode" );
+
         if ( ( selectedFile != null ) && selectedFileListContains( EnumFileState.DOWNLOADED ) ) {
             menuManager.add( new CommitAction(  ) );
         }
@@ -264,15 +266,23 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
             prioritySubMenu.add( new PriorityAction( EnumPriority.HIGH ) );
             prioritySubMenu.add( new PriorityAction( EnumPriority.NORMAL ) );
             prioritySubMenu.add( new PriorityAction( EnumPriority.LOW ) );
+
+            if ( advancedMode ) {
+                MenuManager customPrioritySubMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_CUSTOM" ) );
+                customPrioritySubMenu.add( new CustomPriorityAction( false ) );
+                customPrioritySubMenu.add( new CustomPriorityAction( true ) );
+                prioritySubMenu.add( customPrioritySubMenu );
+            }
+
             menuManager.add( prioritySubMenu );
         }
 
-        if ( ( selectedFile != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+        if ( ( selectedFile != null ) && advancedMode ) {
             menuManager.add( new PreviewAction(  ) );
             menuManager.add( new VerifyChunksAction(  ) );
         }
 
-        if ( ( selectedClient != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+        if ( ( selectedClient != null ) && advancedMode ) {
             menuManager.add( new AddFriendAction(  ) );
         }
 
@@ -527,13 +537,60 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
                 FileInfo fileInfo = (FileInfo) selectedFiles.get( i );
 
                 if ( fileInfo.getState(  ).getState(  ) != EnumFileState.DOWNLOADED ) {
-                    fileInfo.setPriority( enumPriority );
+                    fileInfo.sendPriority( enumPriority );
                 }
             }
         }
 
         public boolean isChecked(  ) {
-            return ( selectedFile.getPriority(  ) == enumPriority );
+            return ( selectedFile.getPriorityEnum(  ) == enumPriority );
+        }
+    }
+
+    /**
+     * CustomPriorityAction
+     *
+     */
+    private class CustomPriorityAction extends Action {
+        private boolean relative;
+
+        public CustomPriorityAction( boolean relative ) {
+            super( "", Action.AS_CHECK_BOX );
+            this.relative = relative;
+
+            if ( relative ) {
+                setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_CUSTOM_RELATIVE" ) );
+            } else {
+                setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_CUSTOM_ABSOLUTE" ) );
+            }
+        }
+
+        public void run(  ) {
+            InputDialog inputDialog = new InputDialog( tableTreeViewer.getTableTree(  ).getShell(  ),
+                    G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY" ), G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY" ),
+                    "" + selectedFile.getPriority(  ), null );
+
+            if ( inputDialog.open(  ) == InputDialog.OK ) {
+                int newPriority;
+
+                try {
+                    newPriority = Integer.parseInt( inputDialog.getValue(  ).trim(  ) );
+                } catch ( NumberFormatException e ) {
+                    newPriority = 0;
+                }
+
+                for ( int i = 0; i < selectedFiles.size(  ); i++ ) {
+                    FileInfo fileInfo = (FileInfo) selectedFiles.get( i );
+
+                    if ( fileInfo.getState(  ).getState(  ) != EnumFileState.DOWNLOADED ) {
+                        fileInfo.sendPriority( relative, newPriority );
+                    }
+                }
+            }
+        }
+
+        public boolean isChecked(  ) {
+            return false;
         }
     }
 
@@ -572,6 +629,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.9  2003/10/05 00:55:29  zet
+set priority as any #
+
 Revision 1.8  2003/09/28 17:47:45  zet
 prevent local drags (since all hashes are 0 atm)
 
