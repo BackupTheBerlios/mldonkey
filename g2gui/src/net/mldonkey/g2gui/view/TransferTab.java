@@ -43,6 +43,7 @@ import net.mldonkey.g2gui.view.transferTree.clientTable.TableMenuListener;
 import net.mldonkey.g2gui.view.transferTree.clientTable.TableSorter;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
@@ -68,7 +69,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Main
  *
  *
- * @version $Id: TransferTab.java,v 1.36 2003/08/24 02:34:16 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.37 2003/08/24 16:37:04 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -169,15 +170,18 @@ public class TransferTab extends GuiTab  {
 		clientTableViewer.getTable().setHeaderVisible( true );
 		
 		for (int i = 0; i < COLUMN_LABELS.length; i++) {
-			MainTab.getStore().setDefault(COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ]);
+			PreferenceStore p = PreferenceLoader.getPreferenceStore();
+			
+			p.setDefault(COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ]);
 			TableColumn tableColumn = new TableColumn(table, COLUMN_ALIGNMENT[ i ]);
 			tableColumn.setText ( G2GuiResources.getString( COLUMN_LABELS[ i ] )  );
-			tableColumn.setWidth(MainTab.getStore().getInt( COLUMN_LABELS[ i ] ));
+			tableColumn.setWidth(p.getInt( COLUMN_LABELS[ i ] ));
 			final int columnIndex = i;
 			tableColumn.addDisposeListener(new DisposeListener() {
 				public synchronized void widgetDisposed( DisposeEvent e ) {
+					PreferenceStore p = PreferenceLoader.getPreferenceStore();
 					TableColumn thisColumn = ( TableColumn ) e.widget;
-					MainTab.getStore().setValue(COLUMN_LABELS [ columnIndex ] , thisColumn.getWidth() );
+					p.setValue(COLUMN_LABELS [ columnIndex ] , thisColumn.getWidth() );
 				}
 			} );
 			tableColumn.addListener( SWT.Selection, new Listener() {
@@ -296,6 +300,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.37  2003/08/24 16:37:04  zet
+combine the preference stores
+
 Revision 1.36  2003/08/24 02:34:16  zet
 update sorter properly
 

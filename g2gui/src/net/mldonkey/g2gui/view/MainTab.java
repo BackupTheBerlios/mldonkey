@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,14 +57,12 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.58 2003/08/23 23:50:26 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.59 2003/08/24 16:37:04 zet Exp $ 
  *
  */
 public class MainTab implements Observer, ShellListener {
 
 	private static final DecimalFormat decimalFormat = new DecimalFormat( "#.#" );
-	private static PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
-
 
 	private String titleBarText = "g2gui alpha";
 	private StatusLine statusline;
@@ -95,7 +92,6 @@ public class MainTab implements Observer, ShellListener {
 		setTitleBarText( shell ); 
 		shell.setLayout( new FillLayout() );
 		
-		createInternalPrefStore();
 		createContents( shell );
 					
 		shell.pack ();
@@ -113,7 +109,7 @@ public class MainTab implements Observer, ShellListener {
 				saveSizeLocation( mainShell );
 				
 				/* save the preferences */
-				saveInternalPrefStore();
+				PreferenceLoader.saveStore();
 				
 				/* set all tabs to inactive */
 				Iterator itr = registeredTabs.iterator();
@@ -155,8 +151,8 @@ public class MainTab implements Observer, ShellListener {
 		horLine.setLayoutData( gridData );
 		
 		this.coolBar = new MainCoolBar( this, 
-			internalPrefStore.getBoolean( "toolbarSmallButtons" ),
-			internalPrefStore.getBoolean( "coolbarLocked" ) );
+			PreferenceLoader.loadBoolean( "toolbarSmallButtons" ),
+			PreferenceLoader.loadBoolean( "coolbarLocked" ) );
 			
 		pageContainer = new Composite( mainComposite, SWT.NONE );			
 		pageContainer.setLayout( new StackLayout() );
@@ -267,40 +263,17 @@ public class MainTab implements Observer, ShellListener {
 	}
 
 	/**
-	 * Reads the preference store file from disk
-	 */
-	private void createInternalPrefStore() {
-		try {			
-			internalPrefStore.load();
-		}
-		catch ( IOException e ) { }
-	}
-
-	/**
-	 * Reads the preference store file to disk
-	 */
-	public void saveInternalPrefStore() {
-		try {
-			internalPrefStore.save();
-		}
-		catch ( IOException e ) {
-			System.out.println( "Saving g2gui-internal preferences failed" );
-		}	
-	}
-	
-
-	/**
 	 * Sets the size to the old value of the given shell obj
 	 * @param shell The shell to set the size from
 	 */
 	public void setSizeLocation( Shell shell ) {
 				
-		if (internalPrefStore.contains( "windowBounds" ) ) {
+		if (PreferenceLoader.contains( "windowBounds" ) ) {
 			
-			if( internalPrefStore.getBoolean( "windowMaximized" ) ) 
+			if( PreferenceLoader.loadBoolean( "windowMaximized" ) ) 
 				shell.setMaximized( true );   
 			else 
-				shell.setBounds( PreferenceConverter.getRectangle(internalPrefStore, "windowBounds") );
+				shell.setBounds( PreferenceLoader.loadRectangle("windowBounds") );
 		} 
 	}
 
@@ -309,15 +282,16 @@ public class MainTab implements Observer, ShellListener {
 	 * @param shell The shell to save the size from
 	 */
 	public void saveSizeLocation( Shell shell ) {
+		PreferenceStore p = PreferenceLoader.getPreferenceStore();
 		
-		internalPrefStore.setValue( "coolbarLocked", coolBar.isCoolbarLocked() );
-		internalPrefStore.setValue( "toolbarSmallButtons", coolBar.isToolbarSmallButtons() );
+		p.setValue( "coolbarLocked", coolBar.isCoolbarLocked() );
+		p.setValue( "toolbarSmallButtons", coolBar.isToolbarSmallButtons() );
 	
 		if ( shell.getMaximized() )
-			internalPrefStore.setValue( "windowMaximized", shell.getMaximized() );
+			p.setValue( "windowMaximized", shell.getMaximized() );
 		else {
-			PreferenceConverter.setValue(internalPrefStore, "windowBounds", shell.getBounds());
-			internalPrefStore.setValue( "windowMaximized", shell.getMaximized() );
+			PreferenceConverter.setValue(p, "windowBounds", shell.getBounds());
+			p.setValue( "windowMaximized", shell.getMaximized() );
 		}
 	}
 	
@@ -355,14 +329,6 @@ public class MainTab implements Observer, ShellListener {
 	public CoreCommunication getCore() {		
 		return mldonkey;
 	} 
-	
-	/**
-	 * The preference store file
-	 * @return A PreferenceStore file with our Information
-	 */
-	public static PreferenceStore getStore() {
-		return internalPrefStore;
-	}
 
 	/**
 	 * @return
@@ -419,6 +385,9 @@ public class MainTab implements Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.59  2003/08/24 16:37:04  zet
+combine the preference stores
+
 Revision 1.58  2003/08/23 23:50:26  zet
 add build # to titlebar
 

@@ -24,12 +24,12 @@ package net.mldonkey.g2gui.view.transferTree;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.TransferTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.TableItem;
  * DownloadTable
  *
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.18 2003/08/24 02:34:16 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.19 2003/08/24 16:37:04 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -167,24 +167,26 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		cellEditors[2] = new TextCellEditor(table);
 				
 		for (int i = 0; i < COLUMN_LABELS.length; i++) {
+			PreferenceStore p = PreferenceLoader.getPreferenceStore();
 			TableColumn tableColumn = new TableColumn(table, COLUMN_ALIGNMENT[ i ]);
-			MainTab.getStore().setDefault(COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ]);
+			p.setDefault(COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ]);
 			tableColumn.setText ( G2GuiResources.getString( COLUMN_LABELS[ i ] )  );
-			tableColumn.setWidth(MainTab.getStore().getInt(COLUMN_LABELS [ i ] ));
-			if (MainTab.getStore().getDefaultInt(COLUMN_LABELS[ i ]) <= 1) {
-				MainTab.getStore().setDefault(COLUMN_LABELS [ i ] + "_Resizable", false);
+			tableColumn.setWidth(p.getInt(COLUMN_LABELS [ i ] ));
+			if (p.getDefaultInt(COLUMN_LABELS[ i ]) <= 1) {
+				p.setDefault(COLUMN_LABELS [ i ] + "_Resizable", false);
 			} else {
-				MainTab.getStore().setDefault(COLUMN_LABELS [ i ] + "_Resizable", true);
+				p.setDefault(COLUMN_LABELS [ i ] + "_Resizable", true);
 			}
 			tableColumn.setData(COLUMN_LABELS[ i ]);
-			tableColumn.setResizable(MainTab.getStore().getBoolean(COLUMN_LABELS [ i ] + "_Resizable"));
+			tableColumn.setResizable(p.getBoolean(COLUMN_LABELS [ i ] + "_Resizable"));
 						
 			final int columnIndex = i;
 			tableColumn.addDisposeListener(new DisposeListener() {
 				public synchronized void widgetDisposed( DisposeEvent e ) {
+					PreferenceStore p = PreferenceLoader.getPreferenceStore();
 					TableColumn thisColumn = ( TableColumn ) e.widget;
-					MainTab.getStore().setValue(COLUMN_LABELS [ columnIndex ] , thisColumn.getWidth() );
-					MainTab.getStore().setValue(COLUMN_LABELS [ columnIndex ] + "_Resizable" , thisColumn.getResizable() );
+					p.setValue(COLUMN_LABELS [ columnIndex ] , thisColumn.getWidth() );
+					p.setValue(COLUMN_LABELS [ columnIndex ] + "_Resizable" , thisColumn.getResizable() );
 				}
 			} );
 		
@@ -341,6 +343,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.19  2003/08/24 16:37:04  zet
+combine the preference stores
+
 Revision 1.18  2003/08/24 02:34:16  zet
 update sorter properly
 

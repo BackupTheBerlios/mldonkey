@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.24 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.25 2003/08/24 16:37:04 zet Exp $ 
  *
  */
 public class G2Gui {
@@ -89,6 +89,7 @@ public class G2Gui {
 		display = new Display();
 		ImageRegistry reg = G2GuiResources.getImageRegistry();
 		reg.put("splashScreen", ImageDescriptor.createFromFile(G2Gui.class, "images/splash.png") );	
+		PreferenceLoader.initialize();
 		preferenceStore = PreferenceLoader.getPreferenceStore();
 		launch( args );
 	}
@@ -345,6 +346,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.25  2003/08/24 16:37:04  zet
+combine the preference stores
+
 Revision 1.24  2003/08/23 15:21:37  zet
 remove @author
 

@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTableTreeMenuListener
  *
  * @author $Author: zet $
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.21 2003/08/24 16:16:26 zet Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.22 2003/08/24 16:37:04 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -113,12 +113,10 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	};
 		
 	public DownloadTableTreeMenuListener (TableTreeViewer tableTreeViewer, TableViewer clientTableViewer, CoreCommunication mldonkey) {
-
 		this.tableTreeViewer = tableTreeViewer;
 		this.clientTableViewer = clientTableViewer;
 		this.mldonkey = mldonkey;
 		tableTreeContentProvider = (DownloadTableTreeContentProvider) tableTreeViewer.getContentProvider();
-
 	}
 	
 	// Interface implementers
@@ -222,7 +220,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		
 		menuManager.add(new ExpandCollapseAction(true));
 		menuManager.add(new ExpandCollapseAction(false));
-		
 		
 		// columns submenu
 		
@@ -792,6 +789,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.22  2003/08/24 16:37:04  zet
+combine the preference stores
+
 Revision 1.21  2003/08/24 16:16:26  zet
 more fixing....
 
