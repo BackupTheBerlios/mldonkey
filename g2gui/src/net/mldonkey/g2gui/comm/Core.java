@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.52 2003/07/05 14:04:12 dek Exp $ 
+ * @version $Id: Core.java,v 1.53 2003/07/05 15:37:48 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -80,7 +80,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * 
 	 */
-	private TIntObjectHashMap resultInfo = new TIntObjectHashMap();
+	private TIntObjectHashMap resultInfo = new TIntObjectHashMap(),
+							   userInfo = new TIntObjectHashMap();
 
 	/**
 	 * 
@@ -263,6 +264,12 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					this.networkinfoMap.readStream( messageBuffer );
 					break;
 					
+			case Message.R_USER_INFO :
+					UserInfo user = new UserInfo();
+					user.readStream( messageBuffer );
+					this.userInfo.put( user.getUserId(), user );
+					break;		
+					
 			case Message.R_SERVER_INFO :
 					this.serverInfoMap.readStream( messageBuffer );
 					break;
@@ -317,6 +324,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.53  2003/07/05 15:37:48  lemmstercvs01
+UserInfo added
+
 Revision 1.52  2003/07/05 14:04:12  dek
 all in order for searching
 
