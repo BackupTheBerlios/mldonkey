@@ -27,7 +27,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 /**
  * ProtocolVersionFactory
  *
- * @version $Id: ModelFactory.java,v 1.5 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: ModelFactory.java,v 1.6 2004/03/25 18:07:24 dek Exp $ 
  *
  */
 public class ModelFactory {
@@ -129,7 +129,7 @@ public class ModelFactory {
 		return new SharedFileInfo();
 	}
 	public State getState() {
-		return new State();
+		return new State( core );
 	}
 	public Tag getTag() {
 		return new Tag();
@@ -205,6 +205,9 @@ public class ModelFactory {
 
 /*
 $Log: ModelFactory.java,v $
+Revision 1.6  2004/03/25 18:07:24  dek
+profiling
+
 Revision 1.5  2004/03/21 21:00:50  dek
 implemented gui-Proto 21-25 !!!!!
 

@@ -28,12 +28,13 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.G2Gui;
 
 /**
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.28 2004/03/21 21:00:50 dek Exp $
+ * @version $Id: ServerInfo.java,v 1.29 2004/03/25 18:07:24 dek Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -76,11 +77,11 @@ public class ServerInfo extends Parent {
 	/**
 	 * Name of Server
 	 */
-	private String nameOfServer = "";
+	private String nameOfServer = G2Gui.emptyString;
 	/**
 	 * Description of Server
 	 */
-	private String descOfServer = "";
+	private String descOfServer = G2Gui.emptyString;
 	/**
 	 * Is this server a favorite
 	 */
@@ -332,6 +333,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.29  2004/03/25 18:07:24  dek
+profiling
+
 Revision 1.28  2004/03/21 21:00:50  dek
 implemented gui-Proto 21-25 !!!!!
 

@@ -22,6 +22,9 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.trove.TIntArrayList;
+
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.*;
 
@@ -29,10 +32,10 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  *
- * @version $Id: State.java,v 1.16 2004/03/22 19:17:58 dek Exp $ 
+ * @version $Id: State.java,v 1.17 2004/03/25 18:07:24 dek Exp $ 
  *
  */
-public class State extends SimpleInformation {
+public class State implements Information{
 	
 	/**
 	 * Connections State
@@ -42,8 +45,11 @@ public class State extends SimpleInformation {
 	 * Client Rank
 	 */
 	private int rank;
+	private TIntArrayList fileInfosTobeNotified;
+	private CoreCommunication parent;
 	
-	State() {
+	State(CoreCommunication core) {
+		this.parent = core;
 		//prevent outer package instanciation
 	}
 	
@@ -115,10 +121,14 @@ public class State extends SimpleInformation {
 	public void update( MessageBuffer messageBuffer ) {
 		this.readStream( messageBuffer );
 	}
+	
 }
 
 /*
 $Log: State.java,v $
+Revision 1.17  2004/03/25 18:07:24  dek
+profiling
+
 Revision 1.16  2004/03/22 19:17:58  dek
 identified mysterious state-id as fileID currently beeing x-ferred
 

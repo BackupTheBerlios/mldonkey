@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.helper.ViewFrameListener;
 import net.mldonkey.g2gui.view.helper.VersionCheck;
@@ -58,7 +59,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.20 2004/02/18 13:25:30 psy Exp $
+ * @version $Id: GView.java,v 1.21 2004/03/25 18:07:25 dek Exp $
  *
  */
 public abstract class GView {
@@ -70,7 +71,7 @@ public abstract class GView {
     protected String[] columnLabels;
     protected int[] columnAlignment;
     protected int[] columnDefaultWidths;
-    protected String allColumns = "";
+    protected String allColumns = G2Gui.emptyString;
     protected String columnIDs;
     protected String preferenceString;
     protected GSorter gSorter;
@@ -534,6 +535,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.21  2004/03/25 18:07:25  dek
+profiling
+
 Revision 1.20  2004/02/18 13:25:30  psy
 hardened code for motif and chunksdisplay
 

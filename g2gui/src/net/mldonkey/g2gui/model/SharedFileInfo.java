@@ -26,12 +26,13 @@ import gnu.regexp.RE;
 import gnu.regexp.REException;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.helper.RegExp;
+import net.mldonkey.g2gui.view.G2Gui;
 
 /**
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.20 2004/03/20 01:34:02 dek Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.21 2004/03/25 18:07:24 dek Exp $ 
  *
  */
 public class SharedFileInfo extends SimpleInformation {
@@ -46,7 +47,7 @@ public class SharedFileInfo extends SimpleInformation {
 	/**
 	 * Shared File Name
 	 */
-	private String sharedFileName = "";
+	private String sharedFileName = G2Gui.emptyString;
 	/**
 	 * Shared File Size
 	 */
@@ -58,7 +59,7 @@ public class SharedFileInfo extends SimpleInformation {
 	/**
 	 * String representation of bytes uploaded
 	 */
-	private String stringOfBytesUploaded = "";
+	private String stringOfBytesUploaded = G2Gui.emptyString;
 
 	/**
 	 * Number of Queries for this File
@@ -251,6 +252,9 @@ public class SharedFileInfo extends SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.21  2004/03/25 18:07:24  dek
+profiling
+
 Revision 1.20  2004/03/20 01:34:02  dek
 implemented gui-Proto 25 !!!!!
 

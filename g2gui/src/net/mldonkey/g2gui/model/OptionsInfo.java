@@ -27,12 +27,13 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.EnumTagType;
+import net.mldonkey.g2gui.view.G2Gui;
 
 /**
  * OptionsInfo
  *
  *
- * @version $Id: OptionsInfo.java,v 1.26 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.27 2004/03/25 18:07:24 dek Exp $ 
  *
  */
 public abstract class OptionsInfo extends Parent {
@@ -43,7 +44,7 @@ public abstract class OptionsInfo extends Parent {
 	/**
 	 * The optino description
 	 */
-	protected String description = "";
+	protected String description = G2Gui.emptyString;
 	/**
 	 * The section to appear
 	 */
@@ -208,6 +209,9 @@ public abstract class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.27  2004/03/25 18:07:24  dek
+profiling
+
 Revision 1.26  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -231,7 +235,7 @@ Revision 1.20  2003/08/19 21:02:16  lemmy
 show all options in simple mode proto < 18
 
 Revision 1.19  2003/08/19 12:47:57  lemmy
-$user$ -> $Author: lemmy $
+$user$ -> $Author: dek $
 
 Revision 1.18  2003/08/19 12:46:02  lemmy
 typo fixed

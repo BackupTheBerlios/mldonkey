@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.view.G2Gui;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -32,9 +33,9 @@ import java.net.UnknownHostException;
  * Addr
  *
  *
- * @version $Id: Addr.java,v 1.23 2004/03/15 17:31:54 dek Exp $
+ * @version $Id: Addr.java,v 1.24 2004/03/25 18:07:24 dek Exp $
  */
-public class Addr extends SimpleInformation {
+public class Addr {
 	/**
 	 * Address Type
 	 */
@@ -46,7 +47,7 @@ public class Addr extends SimpleInformation {
 	/**
 	 * Host Name
 	 */
-	private String hostName = "";
+	private String hostName = null;
 
 	Addr() {
 		// prevent outer package instanciation
@@ -56,7 +57,7 @@ public class Addr extends SimpleInformation {
 	 * @return direct/true or indirekt/false address
 	 */
 	public boolean hasHostName() {
-		return addressType;
+		return (hostName != null);
 	}
 
 	/**
@@ -69,7 +70,9 @@ public class Addr extends SimpleInformation {
 	 * @return The HostName
 	 */
 	private String getHostName() {
-		return this.hostName;
+		if ( hasHostName() )
+			return this.hostName;
+		else return G2Gui.emptyString;
 	}
 	
 	/**
@@ -80,7 +83,7 @@ public class Addr extends SimpleInformation {
 	        return getHostName();
 	    else {
 	        if (getAddress().hashCode() == 0) 
-	            return "";
+	            return G2Gui.emptyString;
 	         else
 	            return getAddress().getHostAddress();
 	    }
@@ -193,6 +196,9 @@ public class Addr extends SimpleInformation {
 
 /*
 $Log: Addr.java,v $
+Revision 1.24  2004/03/25 18:07:24  dek
+profiling
+
 Revision 1.23  2004/03/15 17:31:54  dek
 gcj throws exception in win98 environment, stacktrace not printed anymore
 

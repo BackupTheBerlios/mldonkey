@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.model;
 /**
  * ModelFactory21.java
  *
- * @version $Id: ModelFactory21.java,v 1.1 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: ModelFactory21.java,v 1.2 2004/03/25 18:07:24 dek Exp $ 
  *
  */
 public class ModelFactory21 extends ModelFactory20 {
@@ -38,7 +38,7 @@ public class ModelFactory21 extends ModelFactory20 {
 	 * @see net.mldonkey.g2gui.model.ModelFactory#getState()
 	 */
 	public State getState() {		
-		return new State21();
+		return new State21(core);
 	}
 
 }
@@ -46,6 +46,9 @@ public class ModelFactory21 extends ModelFactory20 {
 
 /*
  $Log: ModelFactory21.java,v $
+ Revision 1.2  2004/03/25 18:07:24  dek
+ profiling
+
  Revision 1.1  2004/03/21 21:00:50  dek
  implemented gui-Proto 21-25 !!!!!
 

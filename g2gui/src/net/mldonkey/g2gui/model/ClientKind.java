@@ -30,10 +30,10 @@ import net.mldonkey.g2gui.model.enum.EnumClientMode;
  * ClientKind
  *
  *
- * @version $Id: ClientKind.java,v 1.12 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: ClientKind.java,v 1.13 2004/03/25 18:07:24 dek Exp $ 
  *
  */
-public class ClientKind extends SimpleInformation {
+public class ClientKind {
 	/**
 	 * Client Type (direct/firewalled)
 	 */
@@ -132,6 +132,9 @@ public class ClientKind extends SimpleInformation {
 
 /*
 $Log: ClientKind.java,v $
+Revision 1.13  2004/03/25 18:07:24  dek
+profiling
+
 Revision 1.12  2004/03/21 21:00:50  dek
 implemented gui-Proto 21-25 !!!!!
 

@@ -26,32 +26,33 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.view.G2Gui;
 
 /**
  * ClientInfo19
  *
- * @version $Id: ClientInfo19.java,v 1.3 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: ClientInfo19.java,v 1.4 2004/03/25 18:07:24 dek Exp $ 
  *
  */
 public class ClientInfo19 extends ClientInfo {
 	/**
 	 * Client Software
 	 */
-	protected String clientSoftware = "";
+	protected String clientSoftware = G2Gui.emptyString;
 	/**
 	 * Client downloaded bytes
 	 */
 	protected long clientDownloaded = 0;
-	protected String clientDownloadedString = "";
+	protected String clientDownloadedString = G2Gui.emptyString;
 	/**
 	 * Client uploaded bytes
 	 */
 	protected long clientUploaded = 0;
-	protected String clientUploadedString = "";
+	protected String clientUploadedString = G2Gui.emptyString;
 	/**
 	 * Filename being uploaded to client
 	 */
-	protected String clientUploadFilename = "";
+	protected String clientUploadFilename = G2Gui.emptyString;
 	/**
 	 * true if clientUploadFileName != ""
 	 */
@@ -142,6 +143,9 @@ public class ClientInfo19 extends ClientInfo {
 
 /*
 $Log: ClientInfo19.java,v $
+Revision 1.4  2004/03/25 18:07:24  dek
+profiling
+
 Revision 1.3  2004/03/21 21:00:50  dek
 implemented gui-Proto 21-25 !!!!!
 

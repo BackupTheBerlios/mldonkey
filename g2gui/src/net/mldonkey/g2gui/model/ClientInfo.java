@@ -22,7 +22,10 @@
  */
 package net.mldonkey.g2gui.model;
 
+
+
 import gnu.trove.THash;
+import gnu.trove.TIntArrayList;
 import gnu.trove.TIntObjectHashMap;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -32,6 +35,7 @@ import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 
@@ -39,7 +43,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.43 2004/03/21 21:00:50 dek Exp $
+ * @version $Id: ClientInfo.java,v 1.44 2004/03/25 18:07:24 dek Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -91,30 +95,30 @@ public class ClientInfo extends Parent {
     /**
      * Client Software
      */
-    private String clientSoftware = "";   
+    private String clientSoftware = G2Gui.emptyString;   
 
     /**
      * Client downloaded bytes
      */
     private long clientDownloaded = 0;
-    private String clientDownloadedString = "";
+    private String clientDownloadedString = G2Gui.emptyString;
 
     /**
      * Client uploaded bytes
      */
     private long clientUploaded = 0;
-    private String clientUploadedString = "";
+    private String clientUploadedString = G2Gui.emptyString;
    
     /**
      * Filename being uploaded to client
      */
-    private String clientUploadFilename = "";
+    private String clientUploadFilename = G2Gui.emptyString;
 
     /**
      * clientConnectTime
      */
     private int clientConnectTime;
-    private String clientConnectTimeString = "";
+    private String clientConnectTimeString = G2Gui.emptyString;
 
     /**
      * true if clientUploadFileName != ""
@@ -126,6 +130,8 @@ public class ClientInfo extends Parent {
      * small initial capacity
      */
     private THash avail = new TIntObjectHashMap(1);
+
+	private TIntArrayList fileInfosTobeNotified;
 
     /**
      * @param core with this object, we make our main cimmunication (the main-Layer)
@@ -441,12 +447,72 @@ public class ClientInfo extends Parent {
         Message removeAllFriends = new EncodeMessage(Message.S_REMOVE_ALL_FRIENDS);
         removeAllFriends.sendMessage(core);
         removeAllFriends = null;
-    }
+    }    
+    
+//	public synchronized void addObserver(Observer arg0) {
+//		//System.out.println("added Observer: "+arg0);
+//		if (arg0 instanceof FileInfo) {
+//			if (fileInfosTobeNotified== null)
+//				fileInfosTobeNotified = new TIntArrayList(5);
+//			FileInfo file = (FileInfo) arg0;
+//			fileInfosTobeNotified.add(file.getId());			
+//		}
+//		else super.addObserver(arg0);
+//		
+//		//super.addObserver(arg0);
+//		
+//	}
+//	public void notifyObservers() {
+//		if (fileInfosTobeNotified != null) {
+//			fileInfosTobeNotified.forEach(new TIntProcedure() {
+//				public boolean execute(int id) {
+//					FileInfo temp = parent.getFileInfoIntMap().get(id);
+//					temp.update(ClientInfo.this, null);
+//					return true;
+//				}
+//			});
+//		}
+//		super.notifyObservers();
+//	}
+//	
+//	public void notifyObservers(final Object arg0) {
+//		if (fileInfosTobeNotified != null) {
+//			fileInfosTobeNotified.forEach(new TIntProcedure() {
+//				public boolean execute(int id) {
+//					FileInfo temp = parent.getFileInfoIntMap().get(id);
+//						temp.update(ClientInfo.this, arg0);
+//						return true;
+//						}
+//			});
+//		}
+//		super.notifyObservers(arg0);
+//
+//	}	
+//	public synchronized void deleteObserver(Observer arg0) {
+//		if (arg0 instanceof FileInfo){
+//			FileInfo temp = (FileInfo) arg0;
+//			if (fileInfosTobeNotified != null){
+//				int index = fileInfosTobeNotified.indexOf(temp.getId());
+//				if (index != -1)
+//					fileInfosTobeNotified.remove( index );
+//			}
+//		}
+//		else
+//			super.deleteObserver(arg0);
+//	}
+//	public synchronized void deleteObservers() {
+//		fileInfosTobeNotified.clear();
+//		super.deleteObservers();
+//	}
+	
 }
 
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.44  2004/03/25 18:07:24  dek
+profiling
+
 Revision 1.43  2004/03/21 21:00:50  dek
 implemented gui-Proto 21-25 !!!!!
 

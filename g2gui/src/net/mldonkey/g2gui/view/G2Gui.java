@@ -56,11 +56,13 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.73 2004/03/19 18:31:27 dek Exp $
+ * @version $Id: G2Gui.java,v 1.74 2004/03/25 18:07:25 dek Exp $
  *
  */
 public class G2Gui {
 	//TODO externalize strigns
+
+	public static final String emptyString = "";
 
 	// this flag switches debugging output on/off
     public static boolean debug = false;
@@ -654,6 +656,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.74  2004/03/25 18:07:25  dek
+profiling
+
 Revision 1.73  2004/03/19 18:31:27  dek
 Shell has same icon as Tray
 

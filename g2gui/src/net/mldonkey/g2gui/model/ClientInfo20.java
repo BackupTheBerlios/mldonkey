@@ -28,11 +28,12 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.view.G2Gui;
 
 /**
  * ClientInfo20
  *
- * @version $Id: ClientInfo20.java,v 1.6 2004/03/22 18:47:39 dek Exp $ 
+ * @version $Id: ClientInfo20.java,v 1.7 2004/03/25 18:07:24 dek Exp $ 
  *
  */
 public class ClientInfo20 extends ClientInfo19 {
@@ -40,8 +41,8 @@ public class ClientInfo20 extends ClientInfo19 {
 	 * clientConnectTime
 	 */
 	private int clientConnectTime;
-	private String clientConnectTimeString = "";
-	private String clientConnectTimePassedString = "";
+	private String clientConnectTimeString = G2Gui.emptyString;
+	private String clientConnectTimePassedString = G2Gui.emptyString;
 	/**
 	 * @param core
 	 */
@@ -140,6 +141,9 @@ public class ClientInfo20 extends ClientInfo19 {
 
 /*
 $Log: ClientInfo20.java,v $
+Revision 1.7  2004/03/25 18:07:24  dek
+profiling
+
 Revision 1.6  2004/03/22 18:47:39  dek
 Still some Gui-Protocoll enhancements
 

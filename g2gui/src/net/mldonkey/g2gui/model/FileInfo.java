@@ -41,6 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumExtension;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
@@ -48,7 +49,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.91 2004/03/24 20:41:19 dek Exp $
+ * @version $Id: FileInfo.java,v 1.92 2004/03/25 18:07:24 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -149,7 +150,7 @@ public class FileInfo extends Parent implements Observer {
      * File last seen
      */
     private int offset;
-    private String stringOffset = "";
+    private String stringOffset = G2Gui.emptyString;
 
     /**
      * last time each chunk has been seen
@@ -190,17 +191,17 @@ public class FileInfo extends Parent implements Observer {
     /**
      * String size
      */
-    private String stringSize = "";
+    private String stringSize = G2Gui.emptyString;
 
     /**
      * String downloaded
      */
-    private String stringDownloaded = "";
+    private String stringDownloaded = G2Gui.emptyString;
 
     /**
      * String ETA
      */
-    private String stringETA = "";
+    private String stringETA = G2Gui.emptyString;
 
     /**
      * ETA seconds
@@ -1131,6 +1132,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.92  2004/03/25 18:07:24  dek
+profiling
+
 Revision 1.91  2004/03/24 20:41:19  dek
 removed absolutely unnescessaray DecimalFormat instance from parent (this was created for every!! single ClientInfo etc, even if it was never used..)
 

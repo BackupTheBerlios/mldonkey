@@ -19,16 +19,24 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.EnumState;
 
 /**
  * State21.java
  * 
- * @version $Id: State21.java,v 1.3 2004/03/22 19:17:58 dek Exp $
+ * @version $Id: State21.java,v 1.4 2004/03/25 18:07:24 dek Exp $
  *  
  */
 public class State21 extends State {
+
+	/**
+	 * @param core
+	 */
+	State21(CoreCommunication core) {
+		super(core);		
+	}
 
 	private int fileNumber = -2;
 
@@ -52,6 +60,9 @@ public class State21 extends State {
 
 /*
  * $Log: State21.java,v $
+ * Revision 1.4  2004/03/25 18:07:24  dek
+ * profiling
+ *
  * Revision 1.3  2004/03/22 19:17:58  dek
  * identified mysterious state-id as fileID currently beeing x-ferred
  *

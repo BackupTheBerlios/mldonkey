@@ -40,11 +40,11 @@ import org.eclipse.swt.widgets.Composite;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.56 2003/12/20 18:32:10 psy Exp $
+ * @version $Id: ServerTab.java,v 1.57 2004/03/25 18:07:25 dek Exp $
  *
  */
 public class ServerTab extends GuiTab implements Runnable {
-    private String statusText = "";
+    private String statusText = G2Gui.emptyString;
     private ServerInfoIntMap servers;
     private GView gView;
 	// TODO: Move view's content to its content provider, reg d
@@ -177,6 +177,9 @@ public class ServerTab extends GuiTab implements Runnable {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.57  2004/03/25 18:07:25  dek
+profiling
+
 Revision 1.56  2003/12/20 18:32:10  psy
 increased verbosiveness of servertab statusline a little
 
