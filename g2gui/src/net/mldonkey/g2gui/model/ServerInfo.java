@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.16 2003/08/07 12:35:31 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.17 2003/08/11 11:22:53 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo extends Parent {
 	/**
@@ -74,11 +74,11 @@ public class ServerInfo extends Parent {
 	/**
 	 * Name of Server
 	 */
-	private String nameOfServer;
+	private String nameOfServer = "";
 	/**
 	 * Description of Server
 	 */
-	private String descOfServer;
+	private String descOfServer = "";
 	/**
 	 * Is this server a favorite
 	 */
@@ -314,6 +314,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.17  2003/08/11 11:22:53  lemmstercvs01
+$avoid npes
+$
 $Revision 1.16  2003/08/07 12:35:31  lemmstercvs01
 $cleanup, more efficient
 $
