@@ -38,14 +38,10 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-// rz,
-// TODO status-field
-// TODO file progress field
-
 /**
  * Statistic Tab
- * @author $Author: lemmster $
- * @version $Id: StatisticTab.java,v 1.17 2003/08/22 21:06:48 lemmster Exp $
+ * @author $Author: zet $
+ * @version $Id: StatisticTab.java,v 1.18 2003/08/23 01:12:43 zet Exp $
  */
 
 public class StatisticTab extends GuiTab {
@@ -125,14 +121,17 @@ public class StatisticTab extends GuiTab {
 	}
 	
 	public void widgetDisposed( DisposeEvent arg0 ) {
-		// TODO store Column position
+		
 	}
 
 }
 /*
 $Log: StatisticTab.java,v $
+Revision 1.18  2003/08/23 01:12:43  zet
+remove todos
+
 Revision 1.17  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle
