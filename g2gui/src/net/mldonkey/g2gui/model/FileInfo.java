@@ -22,6 +22,9 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -34,7 +37,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.18 2003/07/06 08:57:09 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.19 2003/07/06 11:56:36 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo extends Parent {
@@ -114,6 +117,10 @@ public class FileInfo extends Parent {
 	 * Percent (Downloaded/Size)*100
 	 */
 	private double perc;
+	/**
+	 * Which clients this file have
+	 */
+	private List clientInfos = new ArrayList();
 
 	/**
 	 * @return time when download started
@@ -231,6 +238,13 @@ public class FileInfo extends Parent {
 		return perc;
 	}
 	/**
+	 * @return The clients serving this file
+	 */
+	public List getClientInfos() {
+		return clientInfos;
+	}
+
+	/**
 	 * Creates a new fileinfo object
 	 * @param core The CoreCommunication parent
 	 */
@@ -305,6 +319,15 @@ public class FileInfo extends Parent {
 		this.offset = messageBuffer.readInt32();
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
+	}
+	
+	/**
+	 * Adds a clientinfo into the clientinfo list of this file
+	 * (The clients serving this file)
+	 * @param messageBuffer
+	 */
+	public void addClientInfo( ClientInfo clientInfo ) {
+		this.clientInfos.add( clientInfo );
 	}
 	
 	/**
@@ -401,6 +424,9 @@ public class FileInfo extends Parent {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.19  2003/07/06 11:56:36  lemmstercvs01
+fileAddSource added
+
 Revision 1.18  2003/07/06 08:57:09  lemmstercvs01
 getParent() removed
 
