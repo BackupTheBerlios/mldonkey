@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.34 2003/08/06 17:45:18 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.35 2003/08/10 23:20:15 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -337,7 +337,6 @@ public class FileInfo extends Parent implements Observer {
 		
 		/* File State */
 		this.getState().readStream( messageBuffer );
-		
 		this.chunks = messageBuffer.readString();
 		
 		int cnt = 0;
@@ -374,7 +373,7 @@ public class FileInfo extends Parent implements Observer {
 		String oldname = this.name;
 		this.name = messageBuffer.readString();
 		this.offset = messageBuffer.readInt32();
-		this.setPriority( messageBuffer.readInt32() );
+		this.setPriority( messageBuffer.readSignedInt32() );
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
 	
@@ -535,6 +534,21 @@ public class FileInfo extends Parent implements Observer {
 	}
 	
 	/**
+	 * @param name Save file as (name)
+	 */
+	public void saveFileAs(String name) {
+		Object[] obj = new Object[ 2 ];
+		obj[ 0 ] = new Integer( this.getId() );
+		obj[ 1 ] = name;
+					
+		EncodeMessage saveAs =
+			new EncodeMessage( Message.S_SAVE_FILE_AS, obj );
+		saveAs.sendMessage( this.parent.getConnection() );
+		obj = null;
+		saveAs = null;	
+			
+	}
+	/**
 	 * creates a String from the size
 	 * @param size The size
 	 * @return a string represantation of this size
@@ -612,6 +626,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.35  2003/08/10 23:20:15  zet
+signed int
+
 Revision 1.34  2003/08/06 17:45:18  zet
 fix rename
 
