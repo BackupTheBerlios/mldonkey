@@ -22,23 +22,21 @@
  */
 package net.mldonkey.g2gui.view.search;
 
+import net.mldonkey.g2gui.model.NetworkInfo;
+import net.mldonkey.g2gui.model.ResultInfo;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-
-import net.mldonkey.g2gui.model.NetworkInfo;
-import net.mldonkey.g2gui.model.ResultInfo;
-import net.mldonkey.g2gui.model.Tag;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 /**
  * ResultTableLabelProvider
  *
  *
- * @version $Id: ResultTableLabelProvider.java,v 1.17 2003/09/01 11:09:43 lemmster Exp $
+ * @version $Id: ResultTableLabelProvider.java,v 1.18 2003/09/17 20:07:44 lemmster Exp $
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -58,11 +56,7 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
                     return G2GuiResources.getImage( "downloaded" );
             }
             else if ( arg1 == 5 ) {
-                Tag[] tags = resultInfo.getTags();
-                if ( tags != null ) {
-                    Tag aTag = resultInfo.getTags()[ 0 ];
-                    return G2GuiResources.getRatingImage( aTag.getValue() );
-                }
+                 return G2GuiResources.getRatingImage( resultInfo.getAvail() );
             }
         }
         return null;
@@ -90,10 +84,7 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
             case 0: // network id
                 return "" + ( ( NetworkInfo ) resultInfo.getNetwork() ).getNetworkName();
             case 1: // name
-                if ( resultInfo.getNames().length != 0 )
-                    return "" + resultInfo.getNames()[ 0 ];
-                else
-                    return "";
+                return "" + resultInfo.getName();
             case 2: // size
                 return "" + resultInfo.getStringSize();
             case 3: // format
@@ -101,14 +92,7 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
             case 4: // type
                 return "" + resultInfo.getType();
             case 5: // metadata
-                /* check if we have Tags at all (Fix for strange SWT-exception when searching)*/
-                Tag[] tags = resultInfo.getTags();
-                if ( tags != null ) {
-                    Tag aTag = resultInfo.getTags()[ 0 ];
-                    return G2GuiResources.getRatingString( aTag.getValue() );
-                }
-                else
-                    return "";
+                return G2GuiResources.getRatingString( resultInfo.getAvail() );
             default:
                 return "";
             }
@@ -167,6 +151,9 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.18  2003/09/17 20:07:44  lemmster
+avoid NPE´s in search
+
 Revision 1.17  2003/09/01 11:09:43  lemmster
 show downloading files
 

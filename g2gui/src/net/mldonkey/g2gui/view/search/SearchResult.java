@@ -78,7 +78,7 @@ import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.42 2003/09/16 09:24:11 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.43 2003/09/17 20:07:44 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -496,7 +496,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
                             if ( !aResult.getFormat().equals( "" ) )
                                 p = Program.findProgram( aResult.getFormat() );
                             else {
-                                String temp = aResult.getNames()[ 0 ];
+                                String temp = aResult.getName();
                                 int index = temp.lastIndexOf( "." );
                                 try {
                                     temp = temp.substring( index );
@@ -514,7 +514,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
                                                                                  p.getName(),
                                                                                  new Image( null, data ) );
                             }
-                            String imageText = aResult.getNames()[ 0 ];
+                            String imageText = aResult.getName();
                             String aString = "";
                             if ( !aResult.getFormat().equals( "" ) )
                                 aString += ( 
@@ -535,7 +535,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
                                             );
                             aString += ( 
                                                G2GuiResources.getString( "ST_TT_AVAIL" )
-                                               + aResult.getTags()[ 0 ].getValue() + " "
+                                               + aResult.getAvail() + " "
 											   + G2GuiResources.getString( "ST_TT_SOURCES" ) + "\n"
                                             );
                             if ( aResult.getType().equals( "Audio" ) ) {
@@ -595,6 +595,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.43  2003/09/17 20:07:44  lemmster
+avoid NPE´s in search
+
 Revision 1.42  2003/09/16 09:24:11  lemmster
 adjust source rating
 

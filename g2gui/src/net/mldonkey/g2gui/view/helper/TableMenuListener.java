@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.8 2003/09/14 13:24:30 lemmster Exp $
+ * @version $Id: TableMenuListener.java,v 1.9 2003/09/17 20:07:44 lemmster Exp $
  *
  */
 public abstract class TableMenuListener extends MenuListener {
@@ -149,7 +149,7 @@ public abstract class TableMenuListener extends MenuListener {
             if ( element instanceof ServerInfo )
 				aString = ( ( ServerInfo ) element ).getNameOfServer();
             else if ( element instanceof ResultInfo )
-            	aString = ( ( ResultInfo ) element ).getNames()[ 0 ];
+            	aString = ( ( ResultInfo ) element ).getName();
 
 			if ( this.caseInSensitive ) {
 				aString = aString.toLowerCase();
@@ -543,6 +543,9 @@ public abstract class TableMenuListener extends MenuListener {
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.9  2003/09/17 20:07:44  lemmster
+avoid NPE´s in search
+
 Revision 1.8  2003/09/14 13:24:30  lemmster
 add header button to servertab
 

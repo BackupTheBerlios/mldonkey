@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  *
- * @version $Id: ResultTableSorter.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ResultTableSorter.java,v 1.9 2003/09/17 20:07:44 lemmster Exp $ 
  *
  */
 public class ResultTableSorter extends ViewerSorter {
@@ -83,18 +83,8 @@ public class ResultTableSorter extends ViewerSorter {
 				return compareStrings( aString1, aString2 );
 												
 			case 1: // filename
-			if (result1.getNames().length != 0)
-				aString1 = ""+result1.getNames()[ 0 ];
-			else {
-				aString1="";				
-			}
-			
-			if (result2.getNames().length != 0)
-				aString2 = ""+result2.getNames()[ 0 ];
-			else {
-				aString2="";				
-			}
-							
+				aString1 = ""+result1.getName();
+				aString2 = ""+result2.getName();
 				return compareStrings( aString1, aString2 );
 						 	
 			case 2: // filesize
@@ -114,24 +104,11 @@ public class ResultTableSorter extends ViewerSorter {
 				return compareStrings( aString1, aString2 );
 										
 			case 5: // availability 
-			Integer anInt1;
-			Integer anInt2;
-			/* null-checks important to avoid crashes because of accessing non-existant
-			 * array[0]
-			 */			
-				if ( result1.getTags() != null )				
-					anInt1 = new Integer ( result1.getTags()[ 0 ].getValue() );				
-				else 
-					anInt1 = new Integer(0);
-									
-				if ( result2.getTags() != null )			
-					anInt2 = new Integer ( result2.getTags()[ 0 ].getValue() );				
-				else 
-					anInt2 = new Integer(0);
+				Integer anInt1 = new Integer ( result1.getAvail() );				
+				Integer	anInt2 = new Integer ( result2.getAvail() );				
 				
 				return ( lastSort ? anInt1.compareTo( anInt2 ) 
 								: anInt2.compareTo( anInt1 ) );	
-		
 			default:
 				return 0;
 		}
@@ -180,11 +157,14 @@ public class ResultTableSorter extends ViewerSorter {
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.9  2003/09/17 20:07:44  lemmster
+avoid NPE´s in search
+
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.6  2003/08/16 20:59:09  dek
 searching works now without errors AGAIN ;-)

@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.12 2003/09/16 10:29:40 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.13 2003/09/17 20:07:44 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -209,7 +209,7 @@ Yet			menuManager.add( webManager );
 			download.setForce( false );
 
 			if ( result.isDownloading() && result.getHistory() ) {
-				anErrorString += result.getNames()[ 0 ] + "\n";
+				anErrorString += result.getName() + "\n";
 			}
 			else if ( !result.getHistory() ) {
 				Shell shell = ( ( TableViewer ) tableViewer ).getTable().getShell();
@@ -271,7 +271,7 @@ Yet			menuManager.add( webManager );
 			for ( int i = 0; i < selectedResults.size(); i++ ) {
 				ResultInfo result = ( ResultInfo ) selectedResults.get( i );
 				TextTransfer textTransfer = TextTransfer.getInstance();
-				clipboard.setContents( new Object[] { result.getNames()[ 0 ] },
+				clipboard.setContents( new Object[] { result.getName() },
 								new Transfer[] { textTransfer } );
 			}
 		}
@@ -301,7 +301,7 @@ Yet			menuManager.add( webManager );
 			for ( int i = 0; i < selectedResults.size(); i++ ) {
 				ResultInfo result = ( ResultInfo ) selectedResults.get( i );
 				String aString = "<a href=\"" + result.getLink() + "\">"
-								 + result.getNames()[ 0 ] + "</a>";
+								 + result.getName() + "</a>";
 				TextTransfer textTransfer = TextTransfer.getInstance();
 				clipboard.setContents( new Object[] { aString }, 
 								new Transfer[] { textTransfer } );
@@ -344,6 +344,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.13  2003/09/17 20:07:44  lemmster
+avoid NPE´s in search
+
 Revision 1.12  2003/09/16 10:29:40  lemmster
 open msgbox just once [bug #909]
 

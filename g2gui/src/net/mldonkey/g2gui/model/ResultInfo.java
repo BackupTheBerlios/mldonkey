@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.21 2003/09/15 15:32:09 lemmster Exp $ 
+ * @version $Id: ResultInfo.java,v 1.22 2003/09/17 20:07:44 lemmster Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -272,6 +272,15 @@ public class ResultInfo extends Parent {
 	public String getMd4() {
 		return md4;
 	}
+	
+	/**
+	 * @return The first possible Name
+	 */
+	public String getName() {
+		if ( this.getNames().length != 0 )
+			return this.names[ 0 ];
+		return "";	
+	}
 
 	/**
 	 * @return Possible Names
@@ -311,6 +320,19 @@ public class ResultInfo extends Parent {
 			return null;
 		else 
 			return tags;
+	}
+	
+	/**
+	 * @return The Availibility
+	 */
+	public int getAvail() {
+		if ( this.getTags() != null && this.getTags().length > 0 )
+			for ( int i = 0; i < this.tags.length; i++ ) {
+				String aString = this.tags[ i ].getName();
+				if ( aString.equals( "availability" ) )
+					return this.tags[ i ].getValue();
+			}
+		return 0;
 	}
 
 	/**
@@ -439,6 +461,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.22  2003/09/17 20:07:44  lemmster
+avoid NPE´s in search
+
 Revision 1.21  2003/09/15 15:32:09  lemmster
 reset state of canceled downloads from search [bug #908]
 
