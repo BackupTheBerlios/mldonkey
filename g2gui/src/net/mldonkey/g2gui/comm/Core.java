@@ -58,7 +58,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.127 2004/05/10 18:12:21 dek Exp $ 
+ * @version $Id: Core.java,v 1.128 2004/09/10 17:59:09 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -206,7 +206,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * run()
 	 * starts the Core and begin receiving messages	 * 
 	 */
-	public void  run() {
+	public void  run() {		
 
 		/* send the initial protocol version */
 		this.sendProtocolVersion();
@@ -219,7 +219,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			i = new BufferedInputStream( connection.getInputStream() );		
 			byte[] messageContent;
 			
-			while ( connected ) {	
+			while ( connected ) {				
 				/* getting length of message */
 				messageLength = Message.readInt32( i );
 
@@ -304,9 +304,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * decodes the Message and fills the core-stuff with data
 	 */
 	private void decodeMessage( short opcode, int messageLength, MessageBuffer messageBuffer, boolean pollModeEnabled ) {
-		switch ( opcode ) {
+		switch ( opcode ) {			
 			case Message.R_COREPROTOCOL :				
-					coreProtocol = messageBuffer.readInt32();
+					coreProtocol = messageBuffer.readInt32();					
 					/* can we speak the coreprotocol? */
 					int i = coreProtocol - PROTOCOL_VERSION;
 					if ( i <= 0 )
@@ -316,8 +316,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					this.sendPullmode( pollModeEnabled );
 					this.sendPassword();
 					this.modelFactory = ModelFactory.getFactory( this.usingVersion, this );
-					this.maxOpCodeToGui = messageBuffer.readInt32();
-					this.maxOpCodeFromGui = messageBuffer.readInt32();
+					//this.maxOpCodeToGui = messageBuffer.readInt32();
+					//this.maxOpCodeFromGui = messageBuffer.readInt32();
 					if (G2Gui.debug){
 						System.out.println("core/gui "+coreProtocol+"/"+PROTOCOL_VERSION);
 						System.out.println("GUI Protocol-Version: "+this.usingVersion);
@@ -415,7 +415,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					}
 					break;
 										
-			case Message.R_SHARED_FILE_INFO :
+			case Message.R_SHARED_FILE_INFO :				
 					this.getModelFactory().getSharedFileInfoIntMap().readStream( messageBuffer );
 					break;		
 
@@ -676,6 +676,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.128  2004/09/10 17:59:09  dek
+Work-around for core-bug
+
 Revision 1.127  2004/05/10 18:12:21  dek
 What is really new in Gui Proto 26 i didn't find out, so i just increased proto number...
 

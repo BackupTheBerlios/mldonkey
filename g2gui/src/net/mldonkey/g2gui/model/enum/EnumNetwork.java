@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.model.enum;
 /**
  * EnumNetwork
  *
- * @version $Id: EnumNetwork.java,v 1.4 2004/02/17 21:23:53 psy Exp $ 
+ * @version $Id: EnumNetwork.java,v 1.5 2004/09/10 17:59:09 dek Exp $ 
  *
  */
 public class EnumNetwork extends Enum {
@@ -76,6 +76,11 @@ public class EnumNetwork extends Enum {
 	 */
 	public static EnumNetwork FILETP = new EnumNetwork( 1024, "FileTP" );
 	
+	/**
+	 * NO Network for core-bug workaround
+	 */
+	public static EnumNetwork NONE = new EnumNetwork( 2048, "NONE" );
+	
 	
 	/**
 	 * Creates a new EnumNetworkNetwork
@@ -96,6 +101,9 @@ public class EnumNetwork extends Enum {
 
 /*
 $Log: EnumNetwork.java,v $
+Revision 1.5  2004/09/10 17:59:09  dek
+Work-around for core-bug
+
 Revision 1.4  2004/02/17 21:23:53  psy
 added FileTP as a new network
 

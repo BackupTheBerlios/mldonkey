@@ -46,7 +46,7 @@ import org.eclipse.swt.program.Program;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.36 2004/03/29 14:51:44 dek Exp $
+ * @version $Id: ResultInfo.java,v 1.37 2004/09/10 17:59:09 dek Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -514,7 +514,7 @@ public class ResultInfo extends Parent {
      * @param i the int
      */
     private void setNetworkID( int i ) {
-        this.network = ( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
+    	        this.network = ( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
     }
 
     /**
@@ -713,6 +713,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.37  2004/09/10 17:59:09  dek
+Work-around for core-bug
+
 Revision 1.36  2004/03/29 14:51:44  dek
 some mem-improvements
 

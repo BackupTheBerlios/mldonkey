@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.79 2004/04/05 00:08:16 psy Exp $
+ * @version $Id: G2Gui.java,v 1.80 2004/09/10 17:59:08 dek Exp $
  *
  */
 public class G2Gui {
@@ -272,6 +272,8 @@ public class G2Gui {
 			runLocalCore = true;
 			PreferenceLoader.setValue("hostname", "localhost");
 		}
+	
+		
         
         // create the splash
         if (PreferenceLoader.loadBoolean("splashScreen"))
@@ -658,6 +660,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.80  2004/09/10 17:59:08  dek
+Work-around for core-bug
+
 Revision 1.79  2004/04/05 00:08:16  psy
 improved relaunching mechanism a bit
 

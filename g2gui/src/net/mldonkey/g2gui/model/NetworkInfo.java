@@ -35,7 +35,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * NetworkInfo
  *
  *
- * @version $Id: NetworkInfo.java,v 1.34 2004/02/17 21:23:53 psy Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.35 2004/09/10 17:59:09 dek Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -346,6 +346,7 @@ public class NetworkInfo extends Parent {
 			networkType = EnumNetwork.FILETP;
 		else if ( string.equals( "Global Shares" ) )
 			networkType = EnumNetwork.MULTINET;
+		else networkType = EnumNetwork.NONE;
 	}
 	
 	/**
@@ -431,6 +432,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.35  2004/09/10 17:59:09  dek
+Work-around for core-bug
+
 Revision 1.34  2004/02/17 21:23:53  psy
 added FileTP as a new network
 
@@ -467,7 +471,7 @@ Revision 1.24  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
 Revision 1.23  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: psy $
+replace $user$ with $Author: dek $
 
 Revision 1.22  2003/08/21 13:13:10  lemmy
 cleanup in networkitem

@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * SplashShell
  *
- * @version $Id: Splash.java,v 1.3 2004/03/19 18:31:27 dek Exp $ 
+ * @version $Id: Splash.java,v 1.4 2004/09/10 17:59:10 dek Exp $ 
  *
  */
 public class Splash {
@@ -51,7 +51,7 @@ public class Splash {
 	public Splash( Display aDisplay, int barSize ) {
 		display = aDisplay;
 		
-		shell = new Shell( display, SWT.NO_TRIM | SWT.NO_BACKGROUND | SWT.ON_TOP );
+		shell = new Shell( display, SWT.NO_TRIM | SWT.NO_BACKGROUND );
 		shell.setLayout( new FormLayout() );
 		shell.setImage(G2GuiResources.getImage("TrayIcon"));
 		final Image image = G2GuiResources.getImage("splashScreen");
@@ -135,6 +135,9 @@ public class Splash {
 
 /*
 $Log: Splash.java,v $
+Revision 1.4  2004/09/10 17:59:10  dek
+Work-around for core-bug
+
 Revision 1.3  2004/03/19 18:31:27  dek
 Shell has same icon as Tray
 

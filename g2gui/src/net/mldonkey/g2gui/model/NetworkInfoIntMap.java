@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.enum.EnumNetwork;
  * OptionsInfo
  *
  *
- * @version $Id: NetworkInfoIntMap.java,v 1.19 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.20 2004/09/10 17:59:09 dek Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
@@ -41,6 +41,22 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 	 */
 	NetworkInfoIntMap( CoreCommunication communication ) {
 		super( communication );
+		
+		/* the following is to work around a core-bug sending alway network-identifier 0 on searches*/
+		NetworkInfo networkZERO = parent.getModelFactory().getNetworkInfo();		
+		networkZERO.network = 0;
+		networkZERO.networkName = "Core-bug";
+		networkZERO.configFile = "none";
+		networkZERO.uploaded = 0;
+		networkZERO.downloaded = 0;
+		networkZERO.setNetworkType("NONE");
+		synchronized ( this ) {
+			this.infoIntMap.put( 0, networkZERO );
+		}
+		
+	
+		
+			
 	}
 	
 	/**
@@ -161,6 +177,9 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.20  2004/09/10 17:59:09  dek
+Work-around for core-bug
+
 Revision 1.19  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

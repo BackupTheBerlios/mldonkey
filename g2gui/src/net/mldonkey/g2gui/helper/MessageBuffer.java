@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.view.G2Gui;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.34 2004/05/10 18:12:21 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.35 2004/09/10 17:59:09 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -88,12 +88,11 @@ public class MessageBuffer {
 	 * Reads an Int8 from MessageBuffer
 	 * @return an int8
 	 */
-	public short readInt8() {
-		
+	public short readInt8() {		
 		short result = ( short ) this.buffer[iterator];
 		if ( result < 0 ) {
 			result += 256;
-		}
+		}		
 		iterator++;
 		return result;
 	}
@@ -306,6 +305,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.35  2004/09/10 17:59:09  dek
+Work-around for core-bug
+
 Revision 1.34  2004/05/10 18:12:21  dek
 What is really new in Gui Proto 26 i didn't find out, so i just increased proto number...
 

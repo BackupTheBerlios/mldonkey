@@ -28,7 +28,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * EncodeMessage
  *
- * @version $Id: EncodeMessage.java,v 1.15 2003/12/04 08:47:31 lemmy Exp $
+ * @version $Id: EncodeMessage.java,v 1.16 2004/09/10 17:59:09 dek Exp $
  *
  */
 public class EncodeMessage extends Message {
@@ -96,7 +96,7 @@ public class EncodeMessage extends Message {
      * Reads the message into the socket
      * @param connection a socket connection
      */
-    public void sendMessage(CoreCommunication core) {
+    public void sendMessage(CoreCommunication core) {    	
         core.sendMessage(this.header, this.content);
         this.byteArray.reset();
     }
@@ -242,6 +242,9 @@ public class EncodeMessage extends Message {
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.16  2004/09/10 17:59:09  dek
+Work-around for core-bug
+
 Revision 1.15  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -272,7 +275,7 @@ Revision 1.7  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.6  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.5  2003/08/04 19:22:21  zet
 trial tabletreeviewer
