@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfoIntMap
  *
  *
- * @version $Id: ResultInfoIntMap.java,v 1.7 2003/09/15 15:32:09 lemmster Exp $ 
+ * @version $Id: ResultInfoIntMap.java,v 1.8 2003/09/18 09:16:47 lemmster Exp $ 
  *
  */
 public class ResultInfoIntMap extends InfoIntMap {
@@ -62,7 +62,7 @@ public class ResultInfoIntMap extends InfoIntMap {
 			/* firts iterate over all map entries */
 			TIntObjectIterator itr = this.infoIntMap.iterator();
 			int size = this.infoIntMap.size();
-			for ( ; size-- > 0; ) {
+			for ( ; size-- > 0;) {
 				itr.advance();
 				/* the values of this map are Lists */
 				List temp = ( List ) itr.value();
@@ -104,7 +104,7 @@ public class ResultInfoIntMap extends InfoIntMap {
 	 * @return The obj to the given key
 	 */
 	public Object get( int key ) {
-		synchronized( this ) {
+		synchronized ( this ) {
 			return this.infoIntMap.get( key );
 		}
 	}
@@ -118,14 +118,14 @@ public class ResultInfoIntMap extends InfoIntMap {
 	 * or null if none was found.
 	 */
 	public Object put( int key, Object value ) {
-		synchronized( this ) {
+		synchronized ( this ) {
 			return this.infoIntMap.put( key, value );
 		}
 	}
 
 	/**
 	 * Changes the state of a resultinfo
-	 * @param md4 The resultinfo we are looking for
+	 * @param aFileInfo The FileInfo we are looking for
 	 * @param bool The new downloading state
 	 */
 	public void setDownloading( FileInfo aFileInfo, boolean bool ) {
@@ -144,11 +144,13 @@ public class ResultInfoIntMap extends InfoIntMap {
 			}
 		}
 	}
-
 }
 
 /*
 $Log: ResultInfoIntMap.java,v $
+Revision 1.8  2003/09/18 09:16:47  lemmster
+checkstyle
+
 Revision 1.7  2003/09/15 15:32:09  lemmster
 reset state of canceled downloads from search [bug #908]
 

@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.model;
 
@@ -34,433 +34,442 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.22 2003/09/17 20:07:44 lemmster Exp $ 
+ * @version $Id: ResultInfo.java,v 1.23 2003/09/18 09:16:47 lemmster Exp $
  *
  */
 public class ResultInfo extends Parent {
-	/**
-	 * The Result Comment
-	 */
-	private String comment;
-	/**
-	 * Result ID
-	 */
-	private int resultID;
-	/**
-	 * The Network this result comes from
-	 */
-	private NetworkInfo networkID;
-	/**
-	 * Possible names
-	 */
-	private String[] names;
-	/**
-	 * MD4
-	 */
-	private String md4;
-	/**
-	 * Size
-	 */
-	private int size;
-	/**
-	 * The size rounded with metric unit
-	 */
-	private String stringSize;
-	/**
-	 * Format
-	 */
-	private String format;
-	/**
-	 * Type
-	 */
-	private String type;
-	/**
-	 * Metatags
-	 */
-	private Tag[] tags;
-	/**
-	 * true = Normal, false = Already Downloaded 
-	 */
-	private boolean history;
-	/**
-	 * have we downloaded this file already
-	 * (just for the gui, core not involved)
-	 */	
-	private boolean downloading;
-	/**
-	 * true if this obj contains profanity
-	 */
-	private boolean containsProfanity = false;
-	/**
-	 * true if this obj contains pronography
-	 */
-	private boolean containsPornography = false;
-	/**
-	 * The Profanity Filter
-	 */
-	private static RE profanityFilterRE;
-	/**
-	 * The Pornography Filter
-	 */
-	private static RE pornographyFilterRE;
-	
-	/**
-	 * Create ones this Filters
-	 */
-	static {
-		// who knows how to filter this garbage properly...
-		try {
-			profanityFilterRE = new RE( 
-				"fuck|shit" 
-				, RE.REG_ICASE );
-		}
-		catch ( REException e ) {
-			profanityFilterRE = null;
-		}
-		try {
-			pornographyFilterRE = new RE( 
-				"fuck|shit|porn|pr0n|pussy|xxx|sex|erotic|anal|lolita|sluts|fetish"
-				+ "|naked|incest|bondage|masturbat|blow.*job|barely.*legal" 
-				, RE.REG_ICASE );
-		}
-		catch ( REException e ) {
-			pornographyFilterRE = null;		
-		}
-	}
-	
-	/**
-	 * @return does this obj contains pornography
-	 */
-	public boolean containsPornography() {
-		return containsPornography;
-	}
+    /**
+     * The Result Comment
+     */
+    private String comment;
 
-	/**
-	 * @return does this obj contains profanity
-	 */
-	public boolean containsProfanity() {
-		return containsProfanity;
-	}
+    /**
+     * Result ID
+     */
+    private int resultID;
 
-	/**
-	 * Creates a new ResultInfo
-	 * @param core The parent
-	 */
-	public ResultInfo( CoreCommunication core ) {
-		super( core );
-	}
-	
-	/** (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		String result = new String();
-		result += "ID: " + resultID;
-		result += "\n Network: " + networkID;		
-		result += "\n filenames: ";
-			for ( int i = 0; i < names.length; i++ ) {
-				result += names[ i ] + " ";
-			}
-		result += "\n Md4: " + md4;
-		result += "\n FileSize: " + size;
-		result += "\n File-Format: " + format;
-		result += "\n File-Typ: " + type;		
-		result += "\n MetaData: ";
-		for ( int i = 0; i < tags.length; i++ ) {
-			result += tags[ i ].getName() + " - " + tags[ i ].getValue();
-					}
-		result += "\n comment: " + comment;
-		result += "\n status: " + history;		
-		return result;
-	}
+    /**
+     * The Network this result comes from
+     */
+    private NetworkInfo network;
 
-	/**
-	 * Reads a ResulfInfo from a MessageBuffer
-	 * @param messageBuffer The MessageBuffer to read from
-	 */
-	public void readStream( MessageBuffer messageBuffer ) {
-		/*
-		 * int32		Result Identifier 
-		 * int32		Result Network Identifier 
-		 * List of 	String	Possible File Names 
-		 * char[16]	File Md4 (binary) 
-		 * int32		File Size 
-		 * String		File Format 
-		 * String		File Type 
-		 * List of Tag	File Metadata 
-		 * String		Comment 
-		 * int8			0 = Normal, 1 = Already Downloaded
-		 */
-		this.resultID = messageBuffer.readInt32();
-		this.setNetworkID( messageBuffer.readInt32() );
-		this.names = messageBuffer.readStringList();
-		this.md4 = messageBuffer.readBinary( 16 );
-		this.size = messageBuffer.readInt32();
-		this.format = messageBuffer.readString();
-		this.type = messageBuffer.readString();
-		this.tags = messageBuffer.readTagList();		
-		this.comment = messageBuffer.readString();		
-		this.setHistory( messageBuffer.readByte() ); 
+    /**
+     * Possible names
+     */
+    private String[] names;
 
-		this.stringSize = this.calcStringSize( this.getSize() );
-		
-		for ( int i = 0; i < names.length; i++ ) {
-			if (profanityFilterRE != null 
-				&& profanityFilterRE.getMatch(names[ i ]) != null) {
-				containsProfanity = true;
-				if (containsPornography) break;
-			}
-			if (pornographyFilterRE != null 
-				&& pornographyFilterRE.getMatch(names[ i ]) != null) {
-				containsPornography = true;
-				if (containsProfanity) break;
-			}
-		}
-	}
+    /**
+     * MD4
+     */
+    private String md4;
 
-	/**
-	 * creates a String from the size
-	 * @param size The size
-	 * @return a string represantation of this size
-	 */	
-	private String calcStringSize( long size ) {
-		float k = 1024f;
-		float m = k * k;
-		float g = m * k;
-		float t = g * k;
-		
-		float fsize = (float) size;
-		
-		DecimalFormat df = new DecimalFormat( "0.##" );
-			
-		if ( fsize > t ) 
-			return new String ( df.format(fsize / t) + " TB" );
-		else if ( fsize > g ) 
-			return new String ( df.format(fsize / g) + " GB" );	
-		else if ( fsize > m ) 
-			return new String ( df.format(fsize / m) + " MB" );
-		else if ( fsize > k ) 
-			return new String ( df.format(fsize / k) + " KB" );
-		else
-			return new String ( size + "" );	
-	}
-	
-	/**
-	 * @param string file comment
-	 */
-	private void setComment( String string ) {
-		this.comment = string;
-	}
+    /**
+     * Size
+     */
+    private int size;
 
-	/**
-	 * @return The format
-	 */
-	public String getFormat() {
-		return format;
-	}
+    /**
+     * The size rounded with metric unit
+     */
+    private String stringSize;
 
-	/**
-	 * @return The History (true = normal, false = alread downloaded)
-	 */
-	public boolean getHistory() {
-		return history;
-	}
+    /**
+     * Format
+     */
+    private String format;
 
-	/**
-	 * @return The MD4
-	 */
-	public String getMd4() {
-		return md4;
-	}
-	
-	/**
-	 * @return The first possible Name
-	 */
-	public String getName() {
-		if ( this.getNames().length != 0 )
-			return this.names[ 0 ];
-		return "";	
-	}
+    /**
+     * Type
+     */
+    private String type;
 
-	/**
-	 * @return Possible Names
-	 */
-	public String[] getNames() {
-		return names;
-	}
+    /**
+     * Metatags
+     */
+    private Tag[] tags;
 
-	/**
-	 * @return The Network id
-	 */
-	public NetworkInfo getNetwork() {
-		return networkID;
-	}
+    /**
+     * true = Normal, false = Already Downloaded
+     */
+    private boolean history;
 
-	/**
-	 * @return The result id
-	 */
-	public int getResultID() {
-		return resultID;
-	}
+    /**
+     * have we downloaded this file already
+     * (just for the gui, core not involved)
+     */
+    private boolean downloading;
 
-	/**
-	 * @return The size
-	 */
-	public long getSize() {
-		// convert to long
-		long result = ( size & 0xFFFFFFFFL );
-		return result;
-	}
+    /**
+     * true if this obj contains profanity
+     */
+    private boolean containsProfanity = false;
 
-	/**
-	 * @return The Metadata
-	 */
-	public Tag[] getTags() {
-		if ( tags.length == 0 )
-			return null;
-		else 
-			return tags;
-	}
-	
-	/**
-	 * @return The Availibility
-	 */
-	public int getAvail() {
-		if ( this.getTags() != null && this.getTags().length > 0 )
-			for ( int i = 0; i < this.tags.length; i++ ) {
-				String aString = this.tags[ i ].getName();
-				if ( aString.equals( "availability" ) )
-					return this.tags[ i ].getValue();
-			}
-		return 0;
-	}
+    /**
+     * true if this obj contains pronography
+     */
+    private boolean containsPornography = false;
 
-	/**
-	 * @return The mp3 bitrate or "" if no audio
-	 */
-	public String getBitrate() {
-		if ( this.type.equals( "Audio" ) ) {
-			for ( int i = 0; i < this.tags.length; i++ ) {
-				String aString = this.tags[ i ].getName();
-				if ( aString.equals( "bitrate" ) )
-					return new Integer( this.tags[ i ].getValue() ).toString() + "kb";
-			}
-			return "";
-		}
-		return "";
-	}
-	
-	/**
-	 * @return The mp3 lenght or "" if no audio
-	 */
-	public String getLength() {
-		if ( this.type.equals( "Audio" ) ) {
-			for ( int i = 0; i < this.tags.length; i++ ) {
-				String aString = this.tags[ i ].getName();
-				if ( aString.equals( "length" ) )
-					return this.tags[ i ].getSValue();
-			}
-			return "";
-		}
-		return "";
-	}
-	
-	/**
-	 * @return The Type
-	 */
-	public String getType() {
-		return type;
-	}
-	
-	/**
-	 * @return
-	 */
-	public String getComment() {
-		return comment;
-	}
+    /**
+     * The Profanity Filter
+     */
+    private static RE profanityFilterRE;
 
-	/**
-	 * @param b The History as a byte
-	 */
-	private void setHistory( byte b ) {
-		if ( b == 0 )
-			history = true;
-		else
-			history = false;
-	}
+    /**
+     * The Pornography Filter
+     */
+    private static RE pornographyFilterRE;
 
-	/**
-	 * translate the int to networkinfo
-	 * @param i the int
-	 */
-	private void setNetworkID( int i ) {
-		this.networkID =
-		( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
-	}
+    /**
+     * Create ones this Filters
+     */
+    static {
+        // who knows how to filter this garbage properly...
+        try {
+            profanityFilterRE = new RE( "fuck|shit", RE.REG_ICASE );
+        }
+        catch ( REException e ) {
+            profanityFilterRE = null;
+        }
+        try {
+            pornographyFilterRE =
+                new RE( "fuck|shit|porn|pr0n|pussy|xxx|sex|erotic|anal|lolita|sluts|fetish"
+                        + "|naked|incest|bondage|masturbat|blow.*job|barely.*legal", RE.REG_ICASE );
+        }
+        catch ( REException e ) {
+            pornographyFilterRE = null;
+        }
+    }
 
-	/**
-	 * @param info
-	 */
-	public void setNetworkID(NetworkInfo info) {
-		networkID = info;
-	}
+    /**
+     * @return does this obj contains pornography
+     */
+    public boolean containsPornography() {
+        return containsPornography;
+    }
 
-	/**
-	 * @return The size rounded with metric unit
-	 */
-	public String getStringSize() {
-		return stringSize;
-	}
-	
-	/**
-	 * @return This result as a link corresponding to the network
-	 */
-	public String getLink() {
-		if ( this.getNetwork().getNetworkName().equals("Donkey") )
-			return "ed2k://|file|" + this.getNames()[ 0 ] + "|"
-					+ this.getSize() + "|"
-					+ this.getMd4() + "|/";
-		else
-			return "";
-	}
+    /**
+     * @return does this obj contains profanity
+     */
+    public boolean containsProfanity() {
+        return containsProfanity;
+    }
 
-	/**
-	 * @return do we already have downloaded this result
-	 */
-	public boolean isDownloading() {
-		return downloading;
-	}
+    /**
+     * Creates a new ResultInfo
+     * @param core The parent
+     */
+    public ResultInfo( CoreCommunication core ) {
+        super( core );
+    }
 
-	/**
-	 * set this download to downloaded
-	 */
-	public void setDownloading( boolean bool ) {
-		downloading = bool;
-	}
-	
+    /** (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        String result = new String();
+        result += ( "ID: " + resultID );
+        result += ( "\n Network: " + network );
+        result += "\n filenames: ";
+        for ( int i = 0; i < names.length; i++ )
+            result += ( names[ i ] + " " );
+        result += ( "\n Md4: " + md4 );
+        result += ( "\n FileSize: " + size );
+        result += ( "\n File-Format: " + format );
+        result += ( "\n File-Typ: " + type );
+        result += "\n MetaData: ";
+        for ( int i = 0; i < tags.length; i++ )
+            result += ( tags[ i ].getName() + " - " + tags[ i ].getValue() );
+        result += ( "\n comment: " + comment );
+        result += ( "\n status: " + history );
+        return result;
+    }
+
+    /**
+     * Reads a ResulfInfo from a MessageBuffer
+     * @param messageBuffer The MessageBuffer to read from
+     */
+    public void readStream( MessageBuffer messageBuffer ) {
+        /*
+         * int32                Result Identifier
+         * int32                Result Network Identifier
+         * List of         String        Possible File Names
+         * char[16]        File Md4 (binary)
+         * int32                File Size
+         * String                File Format
+         * String                File Type
+         * List of Tag        File Metadata
+         * String                Comment
+         * int8                        0 = Normal, 1 = Already Downloaded
+         */
+        this.resultID = messageBuffer.readInt32();
+        this.setNetworkID( messageBuffer.readInt32() );
+        this.names = messageBuffer.readStringList();
+        this.md4 = messageBuffer.readBinary( 16 );
+        this.size = messageBuffer.readInt32();
+        this.format = messageBuffer.readString();
+        this.type = messageBuffer.readString();
+        this.tags = messageBuffer.readTagList();
+        this.comment = messageBuffer.readString();
+        this.setHistory( messageBuffer.readByte() );
+        this.stringSize = this.calcStringSize( this.getSize() );
+        for ( int i = 0; i < names.length; i++ ) {
+            if ( ( profanityFilterRE != null ) && ( profanityFilterRE.getMatch( names[ i ] ) != null ) ) {
+                containsProfanity = true;
+                if ( containsPornography )
+                    break;
+            }
+            if ( ( pornographyFilterRE != null ) && ( pornographyFilterRE.getMatch( names[ i ] ) != null ) ) {
+                containsPornography = true;
+                if ( containsProfanity )
+                    break;
+            }
+        }
+    }
+
+    /**
+     * creates a String from the size
+     * @param size The size
+     * @return a string represantation of this size
+     */
+    private String calcStringSize( long size ) {
+        float k = 1024f;
+        float m = k * k;
+        float g = m * k;
+        float t = g * k;
+        float fsize = ( float ) size;
+        DecimalFormat df = new DecimalFormat( "0.##" );
+        if ( fsize > t )
+            return new String( df.format( fsize / t ) + " TB" );
+        else if ( fsize > g )
+            return new String( df.format( fsize / g ) + " GB" );
+        else if ( fsize > m )
+            return new String( df.format( fsize / m ) + " MB" );
+        else if ( fsize > k )
+            return new String( df.format( fsize / k ) + " KB" );
+        else
+            return new String( size + "" );
+    }
+
+    /**
+     * @param string file comment
+     */
+    private void setComment( String string ) {
+        this.comment = string;
+    }
+
+    /**
+     * @return The format
+     */
+    public String getFormat() {
+        return format;
+    }
+
+    /**
+     * @return The History (true = normal, false = alread downloaded)
+     */
+    public boolean getHistory() {
+        return history;
+    }
+
+    /**
+     * @return The MD4
+     */
+    public String getMd4() {
+        return md4;
+    }
+
+    /**
+     * @return The first possible Name
+     */
+    public String getName() {
+        if ( this.getNames().length != 0 )
+            return this.names[ 0 ];
+        return "";
+    }
+
+    /**
+     * @return Possible Names
+     */
+    public String[] getNames() {
+        return names;
+    }
+
+    /**
+     * @return The Network id
+     */
+    public NetworkInfo getNetwork() {
+        return network;
+    }
+
+    /**
+     * @return The result id
+     */
+    public int getResultID() {
+        return resultID;
+    }
+
+    /**
+     * @return The size
+     */
+    public long getSize() {
+        // convert to long
+        long result = ( size & 0xFFFFFFFFL );
+        return result;
+    }
+
+    /**
+     * @return The Metadata
+     */
+    public Tag[] getTags() {
+        if ( tags.length == 0 )
+            return null;
+        else
+            return tags;
+    }
+
+    /**
+     * @return The Availibility
+     */
+    public int getAvail() {
+        if ( ( this.getTags() != null ) && ( this.getTags().length > 0 ) )
+            for ( int i = 0; i < this.tags.length; i++ ) {
+                String aString = this.tags[ i ].getName();
+                if ( aString.equals( "availability" ) )
+                    return this.tags[ i ].getValue();
+            }
+        return 0;
+    }
+
+    /**
+     * @return The mp3 bitrate or "" if no audio
+     */
+    public String getBitrate() {
+        if ( this.type.equals( "Audio" ) ) {
+            for ( int i = 0; i < this.tags.length; i++ ) {
+                String aString = this.tags[ i ].getName();
+                if ( aString.equals( "bitrate" ) )
+                    return new Integer( this.tags[ i ].getValue() ).toString() + "kb";
+            }
+            return "";
+        }
+        return "";
+    }
+
+    /**
+     * @return The mp3 lenght or "" if no audio
+     */
+    public String getLength() {
+        if ( this.type.equals( "Audio" ) ) {
+            for ( int i = 0; i < this.tags.length; i++ ) {
+                String aString = this.tags[ i ].getName();
+                if ( aString.equals( "length" ) )
+                    return this.tags[ i ].getSValue();
+            }
+            return "";
+        }
+        return "";
+    }
+
+    /**
+     * @return The Type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @return The Comment
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * @param b The History as a byte
+     */
+    private void setHistory( byte b ) {
+        if ( b == 0 )
+            history = true;
+        else
+            history = false;
+    }
+
+    /**
+     * translate the int to networkinfo
+     * @param i the int
+     */
+    private void setNetworkID( int i ) {
+        this.network = ( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
+    }
+
+    /**
+     * @param info The networkinfo 
+     */
+    public void setNetwork( NetworkInfo info ) {
+        network = info;
+    }
+
+    /**
+     * @return The size rounded with metric unit
+     */
+    public String getStringSize() {
+        return stringSize;
+    }
+
+    /**
+     * @return This result as a link corresponding to the network
+     */
+    public String getLink() {
+        if ( this.getNetwork().getNetworkName().equals( "Donkey" ) )
+            return "ed2k://|file|" + this.getNames()[ 0 ] + "|" + this.getSize() + "|" + this.getMd4()
+                   + "|/";
+        else
+            return "";
+    }
+
+    /**
+     * @return do we already have downloaded this result
+     */
+    public boolean isDownloading() {
+        return downloading;
+    }
+
+    /**
+     * set this download to downloaded
+     * 
+     * @param bool download or not downloading
+     */
+    public void setDownloading( boolean bool ) {
+        downloading = bool;
+    }
+
     /**
      * Compares this resultInfo to the specified object.
      * The result is <code>true</code> if and only if the argument is not
      * <code>null</code> and is a <code>FileInfo</code> object that represents
      * the same sequence of md4 characters/size as this object.
      *
-	 * @param aFileInfo the object to compare this <code>ResultInfo</code> against
-	 * @return <code>true</code> if the objs are equal;
+     * @param aFileInfo the object to compare this <code>ResultInfo</code> against
+     * @return <code>true</code> if the objs are equal;
      *          <code>false</code> otherwise.
-	 */
-	public boolean equals( FileInfo aFileInfo ) {
-		/* does the size match */
-		if ( !( this.getSize() == aFileInfo.getSize() ) )
-			return false;
-		if ( !this.getNames()[ 0 ].equals( aFileInfo.getNames()[ 0 ] ) )
-			return false;		
-		return true;
-		//TODO use just the md4 to compare (when the core sends a correct one)
-	}
+     */
+    public boolean equals( FileInfo aFileInfo ) {
+        /* does the size match */
+        if ( !( this.getSize() == aFileInfo.getSize() ) )
+            return false;
+        if ( !this.getName().equals( aFileInfo.getNames()[ 0 ] ) )
+            return false;
+        return true;
+
+        //TODO use just the md4 to compare (when the core sends a correct one)
+    }
 }
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.23  2003/09/18 09:16:47  lemmster
+checkstyle
+
 Revision 1.22  2003/09/17 20:07:44  lemmster
 avoid NPE´s in search
 

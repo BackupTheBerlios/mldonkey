@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.model;
 
@@ -38,160 +38,155 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  *
- * @version $Id: FileInfoIntMap.java,v 1.25 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.26 2003/09/18 09:16:47 lemmster Exp $
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
+    /**
+     * @param communication my parent
+     */
+    public FileInfoIntMap( CoreCommunication communication ) {
+        super( communication );
+    }
 
-	/**
-	 * @param communication my parent
-	 */
-	public FileInfoIntMap( CoreCommunication communication ) {
-		super( communication );
-	}
+    /**
+     * Store a key/value pair in this object
+     * @param key The Key
+     * @param value The FileInfo object
+     */
+    public void put( int key, FileInfo value ) {
+        this.infoIntMap.put( key, value );
+    }
 
-	/**
-	 * Store a key/value pair in this object
-	 * @param key The Key
-	 * @param value The FileInfo object
-	 */
-	public void put( int key, FileInfo value ) {
-		this.infoIntMap.put( key, value );
-	}
-	
-	/**
-	 * true/false if this contains the object
-	 * @param key The key to the object
-	 * @return boolean
-	 */
-	public boolean contains( int key ) {
-		return this.infoIntMap.contains( key );
-	}
+    /**
+     * true/false if this contains the object
+     * @param key The key to the object
+     * @return boolean
+     */
+    public boolean contains( int key ) {
+        return this.infoIntMap.contains( key );
+    }
 
-	/**
-	 * Reads a List of FileInfo objects from a MessageBuffer
-	 * @param messageBuffer The MessageBuffer to read from
-	 */
-	public void readStream( MessageBuffer messageBuffer ) {
-		/* get the element count from the MessageBuffer */
-		short listElem = messageBuffer.readInt16();
+    /**
+     * Reads a List of FileInfo objects from a MessageBuffer
+     * @param messageBuffer The MessageBuffer to read from
+     */
+    public void readStream( MessageBuffer messageBuffer ) {
+        /* get the element count from the MessageBuffer */
+        short listElem = messageBuffer.readInt16();
 
-		/* clear the list */
-		this.infoIntMap.clear();
+        /* clear the list */
+        this.infoIntMap.clear();
+        /* insert the new FileInfo objects */
+        for ( int i = 0; i < listElem; i++ ) {
+            FileInfo fileInfo = new FileInfo( this.parent );
+            fileInfo.readStream( messageBuffer );
+            this.put( fileInfo.getId(), fileInfo );
+        }
+        this.setChanged();
+        this.notifyObservers();
+    }
 
-		/* insert the new FileInfo objects */
-		for ( int i = 0; i < listElem; i++ ) {
-			FileInfo fileInfo = new FileInfo( this.parent );
-			fileInfo.readStream( messageBuffer );
-			this.put( fileInfo.getId(), fileInfo );
-		}
-		this.setChanged();
-		this.notifyObservers();
-	}
-	
-	/**
-	 * Update a specific element in the List
-	 * @param messageBuffer The MessageBuffer to read from
-	 */
-	public void update(MessageBuffer messageBuffer) {
-		int id = messageBuffer.readInt32();
-		if (this.infoIntMap.containsKey(id)) {
-			this.get(id).update(messageBuffer);
-		}
-		this.setChanged();
-		this.notifyObservers ( this );
-	
-	}
-	
-	/**
-	 * Reads a single FileInfo object from a MessageBuffer
-	 * @param messageBuffer The MessageBuffer to read from
-	 */
-	public void add( MessageBuffer messageBuffer ) {
-		synchronized ( this ) {
-			int id = messageBuffer.readInt32();
-		
-			this.setChanged();
-			this.notifyObservers ( this );
-		
-			/* go 4bytes back in the MessageBuffer */
-			messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
-			if ( this.infoIntMap.containsKey( id ) ) {
-				FileInfo fileInfo = (FileInfo) this.get( id );
-				fileInfo.readStream( messageBuffer );
-			} else {
-				FileInfo fileInfo = new FileInfo( this.parent );
-				fileInfo.readStream( messageBuffer );
-				this.put( fileInfo.getId(), fileInfo );
-				this.setChanged();
-				this.notifyObservers ( fileInfo );
-			}
-			
-		}
-	}
-	
-	/**
-	 * Get a FileInfo object from this object by id
-	 * @param id The FileInfo id
-	 * @return The FileInfo object
-	 */
-	public FileInfo get( int id ) {
-		return ( FileInfo ) this.infoIntMap.get( id );
-	}
+    /**
+     * Update a specific element in the List
+     * @param messageBuffer The MessageBuffer to read from
+     */
+    public void update( MessageBuffer messageBuffer ) {
+        int id = messageBuffer.readInt32();
+        if ( this.infoIntMap.containsKey( id ) )
+            this.get( id ).update( messageBuffer );
+        this.setChanged();
+        this.notifyObservers( this );
+    }
 
-	/**
-	 * Adds a new download to this map
-	 * @param url The url of the new download
-	 */
-	public void add( String url ) {
-		Message dllink =
-			new EncodeMessage( Message.S_DLLINK, url );
-		dllink.sendMessage( this.parent.getConnection() );
-		dllink = null;	
-	}
-	
-	/**
-	 * Change the of a fileinfo to cancelled
-	 * @param key The fileinfo id to change
-	 */
-	public void remove( int key ) {
-		this.get( key ).setState( EnumFileState.CANCELLED );
-		this.setChanged();
-		this.notifyObservers( this );
-	}
-	
-	/**
-	 * Removes all compelte and canceled downloads from this map
-	 * (EnumFileState == DOWNLOADED || EnumFileState == CANCELED )
-	 * Needs manual refresh() of the tableviewer.
-	 */
-	public void removeObsolete() {
-		synchronized ( this ) {
-			List temp = new ArrayList();
-			TIntObjectIterator itr = this.iterator();
-			int collsize = this.size();
-			for ( ; collsize-- > 0;) {
-				itr.advance();
-				FileInfo aFileInfo = ( FileInfo ) itr.value();
-				/* if EnumFileState.DOWNLOADED, remove the fileinfo from this */
-				if ( aFileInfo.getState().getState() == EnumFileState.SHARED
-					|| aFileInfo.getState().getState() == EnumFileState.CANCELLED )
-				{
-					temp.add( new Integer( itr.key() ) );
-				}
-			}
-			Iterator itr2 = temp.iterator();
-			while ( itr2.hasNext() ) {
-				this.infoIntMap.remove( ( ( Integer ) itr2.next() ).intValue() );
-			}
-		}
-		this.setChanged();
-		this.notifyObservers();
-	}
+    /**
+     * Reads a single FileInfo object from a MessageBuffer
+     * @param messageBuffer The MessageBuffer to read from
+     */
+    public void add( MessageBuffer messageBuffer ) {
+        synchronized ( this ) {
+            int id = messageBuffer.readInt32();
+            this.setChanged();
+            this.notifyObservers( this );
+
+            /* go 4bytes back in the MessageBuffer */
+            messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
+            if ( this.infoIntMap.containsKey( id ) ) {
+                FileInfo fileInfo = ( FileInfo ) this.get( id );
+                fileInfo.readStream( messageBuffer );
+            }
+            else {
+                FileInfo fileInfo = new FileInfo( this.parent );
+                fileInfo.readStream( messageBuffer );
+                this.put( fileInfo.getId(), fileInfo );
+                this.setChanged();
+                this.notifyObservers( fileInfo );
+            }
+        }
+    }
+
+    /**
+     * Get a FileInfo object from this object by id
+     * @param id The FileInfo id
+     * @return The FileInfo object
+     */
+    public FileInfo get( int id ) {
+        return ( FileInfo ) this.infoIntMap.get( id );
+    }
+
+    /**
+     * Adds a new download to this map
+     * @param url The url of the new download
+     */
+    public void add( String url ) {
+        Message dllink = new EncodeMessage( Message.S_DLLINK, url );
+        dllink.sendMessage( this.parent.getConnection() );
+        dllink = null;
+    }
+
+    /**
+     * Change the of a fileinfo to cancelled
+     * @param key The fileinfo id to change
+     */
+    public void remove( int key ) {
+        this.get( key ).setState( EnumFileState.CANCELLED );
+        this.setChanged();
+        this.notifyObservers( this );
+    }
+
+    /**
+     * Removes all compelte and canceled downloads from this map
+     * (EnumFileState == DOWNLOADED || EnumFileState == CANCELED )
+     * Needs manual refresh() of the tableviewer.
+     */
+    public void removeObsolete() {
+        synchronized ( this ) {
+            List temp = new ArrayList();
+            TIntObjectIterator itr = this.iterator();
+            int collsize = this.size();
+            for ( ; collsize-- > 0;) {
+                itr.advance();
+                FileInfo aFileInfo = ( FileInfo ) itr.value();
+
+                /* if EnumFileState.DOWNLOADED, remove the fileinfo from this */
+                if ( ( aFileInfo.getState().getState() == EnumFileState.SHARED )
+                         || ( aFileInfo.getState().getState() == EnumFileState.CANCELLED ) )
+                    temp.add( new Integer( itr.key() ) );
+            }
+            Iterator itr2 = temp.iterator();
+            while ( itr2.hasNext() )
+                this.infoIntMap.remove( ( ( Integer ) itr2.next() ).intValue() );
+        }
+        this.setChanged();
+        this.notifyObservers();
+    }
 }
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.26  2003/09/18 09:16:47  lemmster
+checkstyle
+
 Revision 1.25  2003/08/23 15:21:37  zet
 remove @author
 
@@ -202,7 +197,7 @@ Revision 1.23  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.22  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.21  2003/08/15 22:05:58  zet
 *** empty log message ***

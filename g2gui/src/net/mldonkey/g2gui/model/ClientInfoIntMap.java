@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.enum.EnumClientType;
  * ClientInfoList
  * 
  *
- * @version $Id: ClientInfoIntMap.java,v 1.10 2003/09/13 22:22:59 zet Exp $ 
+ * @version $Id: ClientInfoIntMap.java,v 1.11 2003/09/18 09:16:47 lemmster Exp $ 
  */
 public class ClientInfoIntMap extends InfoIntMap {
 	/**
@@ -68,8 +68,8 @@ public class ClientInfoIntMap extends InfoIntMap {
 		int clientID = messageBuffer.readInt32();
 		ClientInfo clientInfo;
 		
-		if (this.containsKey(clientID)) 
-			clientInfo = this.get(clientID);
+		if ( this.containsKey( clientID ) ) 
+			clientInfo = this.get( clientID );
 		else {
 			clientInfo = new ClientInfo( this.parent );
 		}
@@ -84,15 +84,15 @@ public class ClientInfoIntMap extends InfoIntMap {
 	 */
 	public void put( int key, ClientInfo value ) {
 		this.infoIntMap.put( key, value );
-		if (value.getClientType() == EnumClientType.FRIEND) {
-			if (!friendsList.containsKey(value)) {
+		if ( value.getClientType() == EnumClientType.FRIEND ) {
+			if ( !friendsList.containsKey( value ) ) {
 				friendsList.put( value, null );
 				setChanged();
 				notifyObservers( value );
 			}
 		} else { 
-			if (friendsList.containsKey(value)) {
-			    friendsList.remove(value);
+			if ( friendsList.containsKey( value ) ) {
+			    friendsList.remove( value );
 				setChanged();
 				notifyObservers( value );
 			}
@@ -128,7 +128,7 @@ public class ClientInfoIntMap extends InfoIntMap {
 		int[] usefulClients = messageBuffer.readInt32List();		
 		for ( int i = 0; i < usefulClients.length; i++ ) {
 			int clientID = usefulClients[i];
-			if (this.containsKey( clientID )) // necessary check
+			if ( this.containsKey( clientID ) ) // necessary check
 				tempClientInfoList.put( clientID, this.get( clientID ) );			
 		}
 		this.infoIntMap.clear(); // tmp while debug
@@ -146,6 +146,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 }
 /*
 $$Log: ClientInfoIntMap.java,v $
+$Revision 1.11  2003/09/18 09:16:47  lemmster
+$checkstyle
+$
 $Revision 1.10  2003/09/13 22:22:59  zet
 $weak sets
 $
@@ -153,7 +156,7 @@ $Revision 1.9  2003/08/23 15:21:37  zet
 $remove @author
 $
 $Revision 1.8  2003/08/22 21:03:15  lemmster
-$replace $user$ with $Author: zet $
+$replace $user$ with $Author: lemmster $
 $
 $Revision 1.7  2003/08/14 12:57:03  zet
 $fix nullpointer in clientInfo, add icons to tables

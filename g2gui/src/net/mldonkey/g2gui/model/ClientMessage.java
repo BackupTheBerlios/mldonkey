@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.comm.Message;
 
 /**
  *
- * @version $Id: ClientMessage.java,v 1.4 2003/08/23 15:21:37 zet Exp $	
+ * @version $Id: ClientMessage.java,v 1.5 2003/09/18 09:16:47 lemmster Exp $	
  */
 public class ClientMessage extends Parent {
 
@@ -37,19 +37,19 @@ public class ClientMessage extends Parent {
 	private String messageText;
 
 	/**
-	 * @param core
+	 * @param core The parent <code>Core</code>
 	 */
 	public ClientMessage( CoreCommunication core ) {
 		super( core );
 	}
 	/**
-	 * @return
+	 * @return The client identifier
 	 */
 	public int getId() {
 		return clientId;
 	}
 	/**
-	 * @return
+	 * @return The client message
 	 */
 	public String getText() {
 		return messageText;
@@ -58,17 +58,17 @@ public class ClientMessage extends Parent {
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.model.SimpleInformation#readStream(net.mldonkey.g2gui.helper.MessageBuffer)
 	 */
-	public void readStream(MessageBuffer messageBuffer) {
+	public void readStream( MessageBuffer messageBuffer ) {
 		this.clientId = messageBuffer.readInt32();
 		this.messageText = messageBuffer.readString();
 	}
 
 	/**
-	 * @param core
-	 * @param clientId
-	 * @param messageText
+	 * @param core The parent core obj
+	 * @param clientId The client identifier
+	 * @param messageText The message to the client identifier
 	 */
-	public static void sendMessage(CoreCommunication core, int clientId, String messageText) {
+	public static void sendMessage( CoreCommunication core, int clientId, String messageText ) {
 			Object[] obj = new Object[ 2 ];
 			obj[ 0 ] = new Integer( clientId );
 			obj[ 1 ] = messageText;
@@ -85,6 +85,9 @@ public class ClientMessage extends Parent {
 
 /*
 $Log: ClientMessage.java,v $
+Revision 1.5  2003/09/18 09:16:47  lemmster
+checkstyle
+
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
@@ -92,7 +95,7 @@ Revision 1.3  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.2  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging

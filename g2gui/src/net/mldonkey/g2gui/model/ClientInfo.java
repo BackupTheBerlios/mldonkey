@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.26 2003/09/18 03:52:12 zet Exp $ 
+ * @version $Id: ClientInfo.java,v 1.27 2003/09/18 09:16:47 lemmster Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -136,7 +136,7 @@ public class ClientInfo extends Parent {
 	}
 	
 	/**
-	 * @param fileInfo
+	 * @param fileInfo The <code>FileInfo</code> obj
 	 * @return int numberOfFullChunks
 	 */
 	public int getNumChunks( FileInfo fileInfo ) {
@@ -284,6 +284,11 @@ public class ClientInfo extends Parent {
 		this.notifyObservers( this );
 	}
 
+	/**
+	 * Adds a friend to the list of friends
+	 * @param core The core the list is stored at
+	 * @param id The friend id
+	 */
 	public static void addFriend( CoreCommunication core, int id ) {
 		Message addFriend =
 			new EncodeMessage( Message.S_ADD_CLIENT_FRIEND, new Integer( id ) );
@@ -291,6 +296,11 @@ public class ClientInfo extends Parent {
 		addFriend = null;
 	}
 
+	/**
+	 * Removes a friend from the list of friends
+	 * @param core The core the list is stored at
+	 * @param id The friend id
+	 */
 	public static void removeFriend( CoreCommunication core, int id ) {
 		Message removeFriend =
 			new EncodeMessage( Message.S_REMOVE_FRIEND, new Integer( id ) );
@@ -298,6 +308,10 @@ public class ClientInfo extends Parent {
 		removeFriend = null;
 	}
 
+	/**
+	 * Removes all friends from the list of friends
+	 * @param core The core the list is stored at
+	 */
 	public static void removeAllFriends( CoreCommunication core ) {
 		Message removeAllFriends =
 			new EncodeMessage( Message.S_REMOVE_ALL_FRIENDS );
@@ -308,6 +322,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.27  2003/09/18 09:16:47  lemmster
+checkstyle
+
 Revision 1.26  2003/09/18 03:52:12  zet
 smaller map initial capacities
 
@@ -333,7 +350,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

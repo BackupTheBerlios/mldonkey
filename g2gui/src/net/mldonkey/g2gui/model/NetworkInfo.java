@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * NetworkInfo
  *
  *
- * @version $Id: NetworkInfo.java,v 1.27 2003/09/14 09:59:02 lemmster Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.28 2003/09/18 09:16:47 lemmster Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -209,17 +209,6 @@ public class NetworkInfo extends Parent {
 		return downloaded;
 	}
 	
-	/*  List of int16  Network flags
-	* 		0 : NetworkHasServers (well known servers) 
-	*		1 : NetworkHasRooms (rooms to chat with other users) 
-	*		2 : NetworkHasMultinet (files can be downloaded from several networks) 
-	*	 	3 : VirtualNetwork (not a real network) 
-	*	 	4 : NetworkHasSearch (searches can be issued) 
-	*		5 : NetworkHasChat (chat between two users) 
-	*		6 : NetworkHasSupernodes (peers can become servers) 
-	*	 	7 : NetworkHasUpload (upload is implemented) 
-	*/
-
 	/**
 	 * @return The state of this network
 	 */
@@ -402,7 +391,6 @@ public class NetworkInfo extends Parent {
 
 	/**
 	 * Enable/Disable this network
-	 * @param bool true == enable/false == disable
 	 */
 	public void setEnabled() {
 		Object[] temp = new Object[ 2 ];
@@ -460,7 +448,6 @@ public class NetworkInfo extends Parent {
 
 	/**
 	 * set the proper image for the network
-	 * @param networkInfo The network info to create the image for
 	 * @return an image representing the network status
 	 */
 	public Image getImage() {
@@ -562,13 +549,13 @@ public class NetworkInfo extends Parent {
 		return networkName;
 		
 	}
-
 }
-
-
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.28  2003/09/18 09:16:47  lemmster
+checkstyle
+
 Revision 1.27  2003/09/14 09:59:02  lemmster
 fix  0 server in mouse-popup [bug #869]
 

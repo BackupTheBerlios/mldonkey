@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,11 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.model;
 
 import java.text.DecimalFormat;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,746 +47,770 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.55 2003/09/18 03:52:12 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.56 2003/09/18 09:16:47 lemmster Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
-	
-	/**
-	 * Static strings used internally for tableviewer updates
-	 */
-	public static final String CHANGED_RATE = "rate";
-	public static final String CHANGED_DOWNLOADED = "downloaded";
-	public static final String CHANGED_PERCENT = "percent";
-	public static final String CHANGED_ETA = "eta";
-	public static final String CHANGED_LAST = "last";
-	public static final String CHANGED_AVAIL = "avail";
-	
-	private List changedProperties = Collections.synchronizedList(new ArrayList());
-	/**
-	 * Decimal format for calcStringSize
-	 */
-	private static DecimalFormat df = new DecimalFormat( "0.#" );
-	
-	/**
-	 * File identifier
-	 */
-	private int id;
-	/**
-	 * File network identifier
-	 */
-	private NetworkInfo network;
-	/**
-	 * Possible file names
-	 */
-	private String[] names;
-	/**
-	 * File md4
-	 */
-	private String md4;
-	/**
-	 * File size
-	 */
-	private int size;
-	/**
-	 * Size already downloaded
-	 */
-	private int downloaded;
-	/**
-	 * Number of sources
-	 */
-	private int sources;
-	/**
-	 * Number of clients
-	 */
-	private int clients;
-	/**
-	 * Chunks
-	 */
-	private String chunks;
-	private int numChunks;
-	/**
-	 * Availibility
-	 */
-	private String avail;
-	private int relativeAvail = 0;
-	/**
-	 * Availibility for each network
-	 * only in protocol > 17
-	 */
-	private Map avails;
-	/**
-	 * Download rate
-	 */
-	private float rate;
-	/**
-	 * File name
-	 */
-	private String name;
-	/**
-	 * File priority inside mldonkey
-	 */
-	private Enum priority;
-	/**
-	 * File last seen
-	 */
-	private int offset;
-	private String stringOffset="";
-	/**
-	 * last time each chunk has been seen
-	 */
-	private String[] chunkAges;
-	/**
-	 * when download started
-	 */
-	private String age;
-	private String stringAge;
-	/**
-	 * File Format object
-	 */
-	private Format format = new Format();
-	/**
-	 * File State object
-	 */
-	private FileState state = new FileState();
-	/**
-	 * Percent (Downloaded/Size)*100
-	 */
-	private int perc;
-	/**
-	 * A weak keyset of clients associated with this file
-	 */
-	private Map clientInfos = Collections.synchronizedMap( new WeakHashMap( 4 ) );
+    /**
+     * Static strings used internally for tableviewer updates
+     */
+    public static final String CHANGED_RATE = "rate";
+    public static final String CHANGED_DOWNLOADED = "downloaded";
+    public static final String CHANGED_PERCENT = "percent";
+    public static final String CHANGED_ETA = "eta";
+    public static final String CHANGED_LAST = "last";
+    public static final String CHANGED_AVAIL = "avail";
+    private List changedProperties = Collections.synchronizedList( new ArrayList() );
+    /**
+     * Decimal format for calcStringSize
+     */
+    private static DecimalFormat df = new DecimalFormat( "0.#" );
 
-	private String stringSize="";
-	private String stringDownloaded="";
-	private String stringETA = "";
-	private long etaSeconds;
-			
-	/**
-	 * @return String time when download started
-	 */
-	public String getAge() {
-		return age;
-	}
-	/**
-	 * @return String The file availability
-	 */
-	public String getAvail() {
-		return avail;
-	}
-	
-	/**
-	 * @return int relative availability %
-	 */
-	public int getRelativeAvail() {
-		return relativeAvail;
-	}
-	
-	/**
-	 * set the relative avail
-	 */
-	public void setRelativeAvail() {
-		int oldRelativeAvail = relativeAvail;
-		relativeAvail = 0;
-		int neededChunks = 0;
-		int availChunks = 0;
-		if (avail.length() > 0 && avail.length() == chunks.length()) {
-			for (int i = 0; i < avail.length(); i++) {
-				if (chunks.charAt(i) == '0' || chunks.charAt(i) == '1') {
-					neededChunks++;
-					if ((int) avail.charAt(i) > 0) availChunks++;
-				} 
-			}
-			if (neededChunks > 0) relativeAvail =  (int) (((float) availChunks / (float) neededChunks) * 100f);
-		}
-		if (oldRelativeAvail != relativeAvail) {
-			changedProperties.add(CHANGED_AVAIL);
-		}
-	}
-	
-	/**
-	 * @return The file availability map
-	 */
-	public Map getAvails() {
-		return avails;
-	}
-	
-	/**
-	 * @return last time each chunk has been seen
-	 */
-	public String[] getChunkAges() {
-		return chunkAges;
-	}
-	/**
-	 * @return Chunks
-	 */
-	public String getChunks() {
-		return chunks;
-	}
-	public int getNumChunks() {
-		return numChunks;
-	}
-	
-	/**
-	 * @return Size already downloaded
-	 */
-	public long getDownloaded() {
-		/*
-		 * NOTE: downloaded is an unsigned integer and should
-		 * be AND'ed with 0xFFFFFFFFL so that it can be treated
-		 * as a signed long.
-		 */
-		long result = ( downloaded & 0xFFFFFFFFL );
-		return result;
-	}
-	/**
-	 * @return The file Format
-	 */
-	public Format getFormat() {
-		return format;
-	}
-	/**
-	 * @return The file identifier
-	 */
-	public int getId() {
-		return id;
-	}
-	/**
-	 * @return The file md4
-	 */
-	public String getMd4() {
-		return md4;
-	}
-	/**
-	 * @return The name of this file
-	 */
-	public String getName() {
-		return name;
-	}
-	/**
-	 * @return Possible names for this file
-	 */
-	public String[] getNames() {
-		return names;
-	}
-	/**
-	 * @return File network identifier
-	 */
-	public NetworkInfo getNetwork() {
-		return network;
-	}
-	/**
-	 * @return File last seen
-	 */
-	public int getOffset() {
-		return offset;
-	}
-	/**
-	 * @return File priority
-	 */
-	public Enum getPriority() {
-		return priority;
-	}
-	/**
-	 * @return Priority as a string
-	 */
-	public String getStringPriority() {
-		if (priority == EnumPriority.HIGH)
-			return G2GuiResources.getString("TT_PRIO_High");
-		else if (priority == EnumPriority.LOW)
-			return G2GuiResources.getString("TT_PRIO_Low");
-		else if (priority == EnumPriority.NORMAL)
-			return G2GuiResources.getString("TT_PRIO_Normal");
-		else 
-			return "???";
-	}
-	/**
-	 * @return The rate this file is downloading
-	 */
-	public float getRate() {
-		return rate;
-	}
-	/**
-	 * @return The overall size of this file
-	 */
-	public long getSize() {
-		/*
-		 * NOTE: size is an unsigned integer and should
-		 * be AND'ed with 0xFFFFFFFFL so that it can be treated
-		 * as a signed long.
-		 */
-		 
-		long result = ( size & 0xFFFFFFFFL );
-		return result;
-	}
-	/**
-	 * @return Number of sources for this file
-	 */
-	public int getSources() {
-		// return sources; // TODO: use sources when it is not 0.
-		return clientInfos.size();
-	}
-	/**
-	 * @return File status
-	 */
-	public FileState getState() {
-		return state;
-	}
-	/**
-	 * @return Number of clients receiving this file
-	 */
-	public int getClients() {
-		return clients;
-	}
-	/**
-	 * @return The percent this file is complete
-	 */
-	public int getPerc() {
-		return perc;
-	}
-	/**
-	 * @return The clients serving this file
-	 */
-	public Map getClientInfos() {
-		return clientInfos;
-	}
+    /**
+     * File identifier
+     */
+    private int id;
+    /**
+     * File network identifier
+     */
+    private NetworkInfo network;
+    /**
+     * Possible file names
+     */
+    private String[] names;
+    /**
+     * File md4
+     */
+    private String md4;
+    /**
+     * File size
+     */
+    private int size;
+    /**
+     * Size already downloaded
+     */
+    private int downloaded;
+    /**
+     * Number of sources
+     */
+    private int sources;
+    /**
+     * Number of clients
+     */
+    private int clients;
+    /**
+     * Chunks
+     */
+    private String chunks;
+    private int numChunks;
+    /**
+     * Availibility
+     */
+    private String avail;
+    private int relativeAvail = 0;
+    /**
+     * Availibility for each network
+     * only in protocol > 17
+     */
+    private Map avails;
+    /**
+     * Download rate
+     */
+    private float rate;
+    /**
+     * File name
+     */
+    private String name;
+    /**
+     * File priority inside mldonkey
+     */
+    private Enum priority;
+    /**
+     * File last seen
+     */
+    private int offset;
+    private String stringOffset = "";
+    /**
+     * last time each chunk has been seen
+     */
+    private String[] chunkAges;
+    /**
+     * when download started
+     */
+    private String age;
+    private String stringAge;
+    /**
+     * File Format object
+     */
+    private Format format = new Format();
+    /**
+     * File State object
+     */
+    private FileState state = new FileState();
+    /**
+     * Percent (Downloaded/Size)*100
+     */
+    private int perc;
+    /**
+     * A weak keyset of clients associated with this file
+     */
+    private Map clientInfos = Collections.synchronizedMap( new WeakHashMap( 4 ) );
+    private String stringSize = "";
+    private String stringDownloaded = "";
+    private String stringETA = "";
+    private long etaSeconds;
 
-	/**
-	 * Creates a new fileinfo object
-	 * @param core The CoreCommunication parent
-	 */
-	public FileInfo( CoreCommunication core ) {
-		super( core );
-	}
+    /**
+     * @return String time when download started
+     */
+    public String getAge() {
+        return age;
+    }
 
-	/**
-	 * Reads a FileInfo object from a MessageBuffer
-	 * @param messageBuffer The MessageBuffer to read from
-	 */
-	public void readStream( MessageBuffer messageBuffer ) {
-		/*
-		* int32			File Identifier 
-		* int32			File Network Identifier 
-		* List of String	Possible File Names 
-		* char[16]		File Md4 (binary) 
-		* int32			File Size 
-		* int32			File Downloaded 
-		* int32			Number of Sources 
-		* int32			Number of Clients 
-		* FileState		Current State of the Download 
-		* String		Chunks (one char by chunk '0'-'3') 
-		* String		Availability (one char by chunk, 0-255 sources) 
-		* Float			Download Rate 
-		* List of Time	Chunks Ages (last time each chunk has been seen) 
-		* Time			File Age (when download started) 
-		* FileFormat	File Format 
-		* String		File Preferred Name 
-		* OffsetTime	File Last Seen 
-		* int32			File Priority 
-		*/ 
-		
-		this.id = messageBuffer.readInt32();
-		this.setNetwork( messageBuffer.readInt32() );
-		this.names = messageBuffer.readStringList();
-		this.md4 = messageBuffer.readBinary( 16 );
-		this.size = messageBuffer.readInt32();
-	
-		setDownloaded( messageBuffer.readInt32() );
-		
-		this.sources = messageBuffer.readInt32();
-		this.clients = messageBuffer.readInt32();
-		
-		/* File State */
-		
-		Enum oldState = this.state.getState();
-		
-		this.getState().readStream( messageBuffer );
-		
-		if (oldState != this.state.getState()) {
-			changedProperties.add(CHANGED_RATE);
-		}
-		
-		setChunks( messageBuffer.readString() );
-		
-		setAvailability( messageBuffer );
-		
-		setRate( new Double( messageBuffer.readString() ).doubleValue() ); // use float?
-		
-		this.chunkAges = messageBuffer.readStringList();
-		this.age = messageBuffer.readString();
-		
-		/* File Format */
-		this.getFormat().readStream( messageBuffer );
-		this.name = messageBuffer.readString();
-		
-		setOffset( messageBuffer.readInt32() );
-		
-		this.setPriority( messageBuffer.readSignedInt32() );
-		
-		this.stringSize = calcStringSize( this.getSize() );
-		
-		updateETA();
-		
-		this.stringAge = calcStringOfSeconds ( System.currentTimeMillis() / 1000 - Long.parseLong(this.age)  );
+    /**
+     * @return String The file availability
+     */
+    public String getAvail() {
+        return avail;
+    }
 
-		notifyChangedProperties();
-	}
-	
-	/**
-	 * Update a FileInfo object
-	 * 
-	 * int32	Downloaded
-	 * Float	Rate
-	 * int32	Number of seconds since last seen
-	 * 
-	 * @param messageBuffer The MessageBuffer to read from
-	 */
-	public void update( MessageBuffer messageBuffer ) {
-			
-		setDownloaded( messageBuffer.readInt32() );
+    /**
+     * @return int relative availability %
+     */
+    public int getRelativeAvail() {
+        return relativeAvail;
+    }
 
-		setRate( new Double( messageBuffer.readString() ).doubleValue() );
+    /**
+     * set the relative avail
+     */
+    public void setRelativeAvail() {
+        int oldRelativeAvail = relativeAvail;
+        relativeAvail = 0;
+        int neededChunks = 0;
+        int availChunks = 0;
+        if ( ( avail.length() > 0 ) && ( avail.length() == chunks.length() ) ) {
+            for ( int i = 0; i < avail.length(); i++ ) {
+                if ( ( chunks.charAt( i ) == '0' ) || ( chunks.charAt( i ) == '1' ) ) {
+                    neededChunks++;
+                    if ( ( int ) avail.charAt( i ) > 0 )
+                        availChunks++;
+                }
+            }
+            if ( neededChunks > 0 )
+                relativeAvail = ( int ) ( ( ( float ) availChunks / ( float ) neededChunks ) * 100f );
+        }
+        if ( oldRelativeAvail != relativeAvail )
+            changedProperties.add( CHANGED_AVAIL );
+    }
 
-		setOffset( messageBuffer.readInt32() );
+    /**
+     * @return The file availability map
+     */
+    public Map getAvails() {
+        return avails;
+    }
 
-		updateETA();
-		
-		notifyChangedProperties();
-		
-	}
-	
-	/**
-	 *	notify tableviewer of the changed properties 
-	 */
-	public void notifyChangedProperties() {
-		
-		String[] changed = new String[ changedProperties.size() ];
-		changedProperties.toArray( changed );
-		changedProperties.clear();
+    /**
+     * @return last time each chunk has been seen
+     */
+    public String[] getChunkAges() {
+        return chunkAges;
+    }
 
-		this.setChanged();
-		this.notifyObservers( changed );
-		
-	}
+    /**
+     * @return Chunks
+     */
+    public String getChunks() {
+        return chunks;
+    }
 
-	/**
-	 * Put the client into this list of clientinfos
-	 * @param clientInfo The clientInfo to put into this map
-	 * @return true if adding is successful
-	 */
-	public void addClientInfo( ClientInfo clientInfo ) {
-		this.clientInfos.put( clientInfo, null );
-		clientInfo.addObserver( this );
-		this.setChanged();
-		this.notifyObservers( clientInfo );
-	}
-	
-	/**
-	 * Removes a clientinfo from this list of clientinfos
-	 * @param clientInfo The clientinfo obj to remove
-	 * @return true if removing is successful
-	 */
-	public void removeClientInfo( ClientInfo clientInfo ) {
-		this.clientInfos.remove( clientInfo );
-		clientInfo.deleteObserver( this );
-		this.setChanged();
-		this.notifyObservers( clientInfo );
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public int getNumChunks() {
+        return numChunks;
+    }
 
-	/**
-	 * Compares two FileInfo objects by their md4
-	 * @param fileInfo the fileinfo to compare with
-	 * @return true if they are identical, otherwise false
-	 */
-	public boolean equals( FileInfo fileInfo ) {
-		if ( this.getMd4().equalsIgnoreCase( fileInfo.getMd4() ) )
-			return true;
-		else
-			return false;
-	}
-	
-	/**
-	 * translate the int to EnumPriority
-	 * @param i the int
-	 */
-	private void setPriority( int i ) {
-		if ( i < 0 )
-			priority = EnumPriority.LOW;
-		else if ( i > 0 )
-			priority = EnumPriority.HIGH;
-		else 
-			priority = EnumPriority.NORMAL;		
-	}
-	
-	/**
-	 * translate the int to EnumNetwork
-	 * @param i the int
-	 */
-	private void setNetwork( int i ) {
-		this.network =
-		( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
-	}
-	/**
-	 * @param messageBuffer
-	 * 
-	 * read a list of int32(networkid) and string(avail) 
-	 */
-	private void setAvailability( MessageBuffer messageBuffer ) {
+    /**
+     * @return Size already downloaded
+     */
+    public long getDownloaded() {
+        /*
+         * NOTE: downloaded is an unsigned integer and should
+         * be AND'ed with 0xFFFFFFFFL so that it can be treated
+         * as a signed long.
+         */
+        long result = ( downloaded & 0xFFFFFFFFL );
+        return result;
+    }
 
-		if (parent.getProtoToUse() > 17) {
-			
-			int listElem = messageBuffer.readInt16();
-			this.avails = new HashMap( listElem );
-			for (int i = 0; i < listElem; i++) {
-				int networkID = messageBuffer.readInt32();
-				NetworkInfo network = parent.getNetworkInfoMap().get(networkID);
-				/* multinet avail is the overall avail */
-				if (network.getNetworkType() != NetworkInfo.Enum.MULTINET) {
-					String aString = messageBuffer.readString();
-					this.avails.put(network, aString);
-				} else
-					this.avail = messageBuffer.readString();
-			}
-		} else
-			this.avail = messageBuffer.readString();
-		
-		setRelativeAvail();
+    /**
+     * @return The file Format
+     */
+    public Format getFormat() {
+        return format;
+    }
 
-	}
-	
-	/**
-	 * set chunks string and count numChunks
-	 * 
-	 * @param string
-	 */
-	private void setChunks( String s ) {
-		this.chunks = s;
-		
-		numChunks = 0;
-		for (int i = 0; i < chunks.length(); i++) {
-			if (chunks.charAt(i) == '2' || chunks.charAt(i) == '3')
-				numChunks++;
-		}
-	}
+    /**
+     * @return The file identifier
+     */
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * set downloaded
-	 * 
-	 * @param int
-	 */
-	private void setDownloaded( int i ) {
-		this.downloaded = i;
-		
-		String oldStringDownloaded = stringDownloaded;
-		this.stringDownloaded = calcStringSize( this.getDownloaded() );
-		
-		if (!oldStringDownloaded.equals(stringDownloaded)) {
-			changedProperties.add(CHANGED_DOWNLOADED);
-		}
-		
-		int oldPercent = this.perc;
-		if (this.getSize() > 0) { 
-			this.perc = ( int ) ( ( float ) this.getDownloaded() / ( float ) this.getSize() * 100f );
-		} else {
-			this.perc = 0;
-		}
-		if (oldPercent != this.perc) {
-			changedProperties.add(CHANGED_PERCENT);
-		}
-	}
-	
-	/**
-	 * setRate
-	 * 
-	 * @param double
-	 */
-	private void setRate( double d ) {
-		if (this.rate != ( float ) d ) {
-			changedProperties.add(CHANGED_RATE);
-		}
-		this.rate = ( float ) d;
-	}
-	
-	/**
-	 * set offset (last seen)
-	 * 
-	 * @param int
-	 */
-	private void setOffset( int i ) {
-		this.offset = i;
+    /**
+     * @return The file md4
+     */
+    public String getMd4() {
+        return md4;
+    }
 
-		String oldStringOffset = stringOffset;
-		this.stringOffset = calcStringOfSeconds( this.offset );	
-		if (!oldStringOffset.equals(stringOffset)) {
-			changedProperties.add(CHANGED_LAST);
-		}
-	}
-	
-	/**
-	 * update ETA
-	 */
-	private void updateETA() {
-		if (this.rate == 0) this.etaSeconds = Long.MAX_VALUE;
-		else this.etaSeconds = (long) ((getSize() - getDownloaded()) / (this.rate + 1));
-		
-		String oldStringETA = stringETA;
-		this.stringETA = calcStringOfSeconds ( this.etaSeconds );
-		
-		if (!oldStringETA.equals(stringETA)) {
-			changedProperties.add(CHANGED_ETA);
-		}
-	}
+    /**
+     * @return The name of this file
+     */
+    public String getName() {
+        return name;
+    }
 
+    /**
+     * @return Possible names for this file
+     */
+    public String[] getNames() {
+        return names;
+    }
 
-	/**
-	 * @param string The new name for this file
-	 */
-	public void setName( String string ) {
-		string = "rename " + this.getId() + " \""+ string + "\"";
-		/* create the message content */
-		Message consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, string );
-		consoleMessage.sendMessage( this.parent.getConnection() );
-		consoleMessage = null;
-	}
+    /**
+     * @return File network identifier
+     */
+    public NetworkInfo getNetwork() {
+        return network;
+    }
 
-	/**
-	 * @param enum The new priority for this file (LOW/NORMAL/HIGH)
-	 */
-	public void setPriority( EnumPriority enum ) {
-		/* first the fileid */
-		Object[] obj = new Object[ 2 ];
-		obj[ 0 ] = new Integer( this.getId() );
-		
-		/* now the new prio */
-		Integer content;
-		if ( enum == EnumPriority.LOW )
-			content = new Integer( -10 );
-		else if ( enum == EnumPriority.HIGH )
-			content = new Integer( 10 );
-		else
-			content = new Integer( 0 );
-		obj[ 1 ] = content;		
-		
-		/* create and send the message */
-		Message consoleMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, obj );
-		consoleMessage.sendMessage( this.parent.getConnection() );
-		content = null;
-		obj = null;
-		consoleMessage = null;
-	}
+    /**
+     * @return File last seen
+     */
+    public int getOffset() {
+        return offset;
+    }
 
-	/**
-	 * @param enum The new state of this file
-	 */
-	public void setState( EnumFileState enum ) {
-		this.getState().setState( enum, this.getId(), this.parent );
-	}
-	
-	/**
-	 * Verify all chunks of this fileinfo
-	 */
-	public void verifyChunks() {
-		Message chunks =
-			new EncodeMessage( Message.S_VERIFY_ALL_CHUNKS, new Integer( this.getId() ) );
-		chunks.sendMessage( this.parent.getConnection() );
-	}
-	
-	/**
-	 * @param name Save file as (name)
-	 */
-	public void saveFileAs(String name) {
-		Object[] obj = new Object[ 2 ];
-		obj[ 0 ] = new Integer( this.getId() );
-		obj[ 1 ] = name;
-					
-		Message saveAs =
-			new EncodeMessage( Message.S_SAVE_FILE_AS, obj );
-		saveAs.sendMessage( this.parent.getConnection() );
-		obj = null;
-		saveAs = null;	
-			
-	}
-	/**
-	 * creates a String from the size
-	 * @param size The size
-	 * @return a string represantation of this size
-	 */	
-	public static String calcStringSize( long size ) {
-		float k = 1024f;
-		float m = k * k;
-		float g = m * k;
-		float t = g * k;
-	
-		float fsize = (float) size;
-	
-		if ( fsize >= t ) 
-			return new String ( df.format(fsize / t) + " TB" );
-		else if ( fsize >= g ) 
-			return new String ( df.format(fsize / g) + " GB" );	
-		else if ( fsize >= m ) 
-			return new String ( df.format(fsize / m) + " MB" );
-		else if ( fsize >= k ) 
-			return new String ( df.format(fsize / k) + " KB" );
-		else
-			return new String ( size + "" );	
-	}
-	public String getStringSize () {
-		return stringSize;
-	}
-	public String getStringDownloaded () {
-		return stringDownloaded;
-	}
-	private static String calcStringOfSeconds (long inSeconds) {
-		
-		if (inSeconds < 1) return "0m";
-				
-		long days = inSeconds / 60 / 60 / 24;
-		long rest = inSeconds - days * 60 * 60 * 24;
-		long hours = rest / 60 / 60;
-		rest = rest - hours * 60 * 60;
-		long minutes = rest / 60;
-		long seconds = rest - minutes * 60;
-		
-		if (days > 99) return "";
-		if (days > 0) return "" + days + "d";
-		if (hours > 0) return "" + hours + "h" + (minutes > 0 ? " " + minutes + "m" : "");
-		return "" + minutes + "m";
-	}
-	public String getStringETA () {
-		return stringETA;
-	}
+    /**
+     * @return File priority
+     */
+    public Enum getPriority() {
+        return priority;
+    }
 
-	public String getStringOffset () {
-		return stringOffset;	
-	}
-	public String getStringAge() {
-		return stringAge;
-	}
-	
-	public long getETA() {
-		return etaSeconds;
-	}
-	
-	// hack
-	public void update (Observable o, Object obj) {
-		if (o instanceof ClientInfo) {
-			ClientInfo clientInfo = (ClientInfo) o;
-			this.setChanged();
-			// this client is now interesting.. notify the viewer
-			if (obj == null) {
-				this.notifyObservers( new TreeClientInfo(this, clientInfo) );
-			} else {
-				this.notifyObservers( clientInfo );
-			}
-			
-		}
-	}
-	
-}	
+    /**
+     * @return Priority as a string
+     */
+    public String getStringPriority() {
+        if ( priority == EnumPriority.HIGH )
+            return G2GuiResources.getString( "TT_PRIO_High" );
+        else if ( priority == EnumPriority.LOW )
+            return G2GuiResources.getString( "TT_PRIO_Low" );
+        else if ( priority == EnumPriority.NORMAL )
+            return G2GuiResources.getString( "TT_PRIO_Normal" );
+        else
+            return "???";
+    }
+
+    /**
+     * @return The rate this file is downloading
+     */
+    public float getRate() {
+        return rate;
+    }
+
+    /**
+     * @return The overall size of this file
+     */
+    public long getSize() {
+        /*
+         * NOTE: size is an unsigned integer and should
+         * be AND'ed with 0xFFFFFFFFL so that it can be treated
+         * as a signed long.
+         */
+        long result = ( size & 0xFFFFFFFFL );
+        return result;
+    }
+
+    /**
+     * @return Number of sources for this file
+     */
+    public int getSources() {
+        // return sources; 
+        // TODO: use sources when it is not 0.
+        return clientInfos.size();
+    }
+
+    /**
+     * @return File status
+     */
+    public FileState getState() {
+        return state;
+    }
+
+    /**
+     * @return Number of clients receiving this file
+     */
+    public int getClients() {
+        return clients;
+    }
+
+    /**
+     * @return The percent this file is complete
+     */
+    public int getPerc() {
+        return perc;
+    }
+
+    /**
+     * @return The clients serving this file
+     */
+    public Map getClientInfos() {
+        return clientInfos;
+    }
+
+    /**
+     * Creates a new fileinfo object
+     * @param core The CoreCommunication parent
+     */
+    public FileInfo( CoreCommunication core ) {
+        super( core );
+    }
+
+    /**
+     * Reads a FileInfo object from a MessageBuffer
+     * @param messageBuffer The MessageBuffer to read from
+     */
+    public void readStream( MessageBuffer messageBuffer ) {
+        /*
+        * int32                        File Identifier
+        * int32                        File Network Identifier
+        * List of String        Possible File Names
+        * char[16]                File Md4 (binary)
+        * int32                        File Size
+        * int32                        File Downloaded
+        * int32                        Number of Sources
+        * int32                        Number of Clients
+        * FileState                Current State of the Download
+        * String                Chunks (one char by chunk '0'-'3')
+        * String                Availability (one char by chunk, 0-255 sources)
+        * Float                        Download Rate
+        * List of Time        Chunks Ages (last time each chunk has been seen)
+        * Time                        File Age (when download started)
+        * FileFormat        File Format
+        * String                File Preferred Name
+        * OffsetTime        File Last Seen
+        * int32                        File Priority
+        */
+        this.id = messageBuffer.readInt32();
+        this.setNetwork( messageBuffer.readInt32() );
+        this.names = messageBuffer.readStringList();
+        this.md4 = messageBuffer.readBinary( 16 );
+        this.size = messageBuffer.readInt32();
+        setDownloaded( messageBuffer.readInt32() );
+        this.sources = messageBuffer.readInt32();
+        this.clients = messageBuffer.readInt32();
+
+        /* File State */
+        Enum oldState = this.state.getState();
+        this.getState().readStream( messageBuffer );
+        if ( oldState != this.state.getState() )
+            changedProperties.add( CHANGED_RATE );
+        setChunks( messageBuffer.readString() );
+        setAvailability( messageBuffer );
+        setRate( new Double( messageBuffer.readString() ).doubleValue() ); // use float?
+        this.chunkAges = messageBuffer.readStringList();
+        this.age = messageBuffer.readString();
+
+        /* File Format */
+        this.getFormat().readStream( messageBuffer );
+        this.name = messageBuffer.readString();
+        setOffset( messageBuffer.readInt32() );
+        this.setPriority( messageBuffer.readSignedInt32() );
+        this.stringSize = calcStringSize( this.getSize() );
+        updateETA();
+        this.stringAge =
+            calcStringOfSeconds( ( System.currentTimeMillis() / 1000 ) - Long.parseLong( this.age ) );
+        notifyChangedProperties();
+    }
+
+    /**
+     * Update a FileInfo object
+     *
+     * int32        Downloaded
+     * Float        Rate
+     * int32        Number of seconds since last seen
+     *
+     * @param messageBuffer The MessageBuffer to read from
+     */
+    public void update( MessageBuffer messageBuffer ) {
+        setDownloaded( messageBuffer.readInt32() );
+        setRate( new Double( messageBuffer.readString() ).doubleValue() );
+        setOffset( messageBuffer.readInt32() );
+        updateETA();
+        notifyChangedProperties();
+    }
+
+    /**
+     *        notify tableviewer of the changed properties
+     */
+    public void notifyChangedProperties() {
+        String[] changed = new String[ changedProperties.size() ];
+        changedProperties.toArray( changed );
+        changedProperties.clear();
+        this.setChanged();
+        this.notifyObservers( changed );
+    }
+
+    /**
+     * Put the client into this list of clientinfos
+     * @param clientInfo The clientInfo to put into this map
+     */
+    public void addClientInfo( ClientInfo clientInfo ) {
+        this.clientInfos.put( clientInfo, null );
+        clientInfo.addObserver( this );
+        this.setChanged();
+        this.notifyObservers( clientInfo );
+    }
+
+    /**
+     * Removes a clientinfo from this list of clientinfos
+     * @param clientInfo The clientinfo obj to remove
+	 */
+    public void removeClientInfo( ClientInfo clientInfo ) {
+        this.clientInfos.remove( clientInfo );
+        clientInfo.deleteObserver( this );
+        this.setChanged();
+        this.notifyObservers( clientInfo );
+    }
+
+    /**
+     * Compares two FileInfo objects by their md4
+     * @param fileInfo the fileinfo to compare with
+     * @return true if they are identical, otherwise false
+     */
+    public boolean equals( FileInfo fileInfo ) {
+        if ( this.getMd4().equalsIgnoreCase( fileInfo.getMd4() ) )
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * translate the int to EnumPriority
+     * @param i the int
+     */
+    private void setPriority( int i ) {
+        if ( i < 0 )
+            priority = EnumPriority.LOW;
+        else if ( i > 0 )
+            priority = EnumPriority.HIGH;
+        else
+            priority = EnumPriority.NORMAL;
+    }
+
+    /**
+     * translate the int to EnumNetwork
+     * @param i the int
+     */
+    private void setNetwork( int i ) {
+        this.network = ( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
+    }
+
+    /**
+     * @param messageBuffer
+     *
+     * read a list of int32(networkid) and string(avail)
+     */
+    private void setAvailability( MessageBuffer messageBuffer ) {
+        if ( parent.getProtoToUse() > 17 ) {
+            int listElem = messageBuffer.readInt16();
+            this.avails = new HashMap( listElem );
+            for ( int i = 0; i < listElem; i++ ) {
+                int networkID = messageBuffer.readInt32();
+                NetworkInfo network = parent.getNetworkInfoMap().get( networkID );
+                /* multinet avail is the overall avail */
+                if ( network.getNetworkType() != NetworkInfo.Enum.MULTINET ) {
+                    String aString = messageBuffer.readString();
+                    this.avails.put( network, aString );
+                }
+                else
+                    this.avail = messageBuffer.readString();
+            }
+        }
+        else
+            this.avail = messageBuffer.readString();
+        setRelativeAvail();
+    }
+
+    /**
+     * set chunks string and count numChunks
+     *
+     * @param string
+     */
+    private void setChunks( String s ) {
+        this.chunks = s;
+        numChunks = 0;
+        for ( int i = 0; i < chunks.length(); i++ ) {
+            if ( ( chunks.charAt( i ) == '2' ) || ( chunks.charAt( i ) == '3' ) )
+                numChunks++;
+        }
+    }
+
+    /**
+     * set downloaded
+     *
+     * @param int
+     */
+    private void setDownloaded( int i ) {
+        this.downloaded = i;
+        String oldStringDownloaded = stringDownloaded;
+        this.stringDownloaded = calcStringSize( this.getDownloaded() );
+        if ( !oldStringDownloaded.equals( stringDownloaded ) )
+            changedProperties.add( CHANGED_DOWNLOADED );
+        int oldPercent = this.perc;
+        if ( this.getSize() > 0 )
+            this.perc = ( int ) ( ( float ) this.getDownloaded() / ( float ) this.getSize() * 100f );
+        else
+            this.perc = 0;
+        if ( oldPercent != this.perc )
+            changedProperties.add( CHANGED_PERCENT );
+    }
+
+    /**
+     * setRate
+     *
+     * @param double
+     */
+    private void setRate( double d ) {
+        if ( this.rate != ( float ) d )
+            changedProperties.add( CHANGED_RATE );
+        this.rate = ( float ) d;
+    }
+
+    /**
+     * set offset (last seen)
+     *
+     * @param int
+     */
+    private void setOffset( int i ) {
+        this.offset = i;
+        String oldStringOffset = stringOffset;
+        this.stringOffset = calcStringOfSeconds( this.offset );
+        if ( !oldStringOffset.equals( stringOffset ) )
+            changedProperties.add( CHANGED_LAST );
+    }
+
+    /**
+     * update ETA
+     */
+    private void updateETA() {
+        if ( this.rate == 0 )
+            this.etaSeconds = Long.MAX_VALUE;
+        else
+            this.etaSeconds = ( long ) ( ( getSize() - getDownloaded() ) / ( this.rate + 1 ) );
+        String oldStringETA = stringETA;
+        this.stringETA = calcStringOfSeconds( this.etaSeconds );
+        if ( !oldStringETA.equals( stringETA ) )
+            changedProperties.add( CHANGED_ETA );
+    }
+
+    /**
+     * @param string The new name for this file
+     */
+    public void setName( String string ) {
+        string = "rename " + this.getId() + " \"" + string + "\"";
+        /* create the message content */
+        Message consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, string );
+        consoleMessage.sendMessage( this.parent.getConnection() );
+        consoleMessage = null;
+    }
+
+    /**
+     * @param enum The new priority for this file (LOW/NORMAL/HIGH)
+     */
+    public void setPriority( EnumPriority enum ) {
+        /* first the fileid */
+        Object[] obj = new Object[ 2 ];
+        obj[ 0 ] = new Integer( this.getId() );
+
+        /* now the new prio */
+        Integer content;
+        if ( enum == EnumPriority.LOW )
+            content = new Integer( -10 );
+        else if ( enum == EnumPriority.HIGH )
+            content = new Integer( 10 );
+        else
+            content = new Integer( 0 );
+        obj[ 1 ] = content;
+
+        /* create and send the message */
+        Message consoleMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, obj );
+        consoleMessage.sendMessage( this.parent.getConnection() );
+        content = null;
+        obj = null;
+        consoleMessage = null;
+    }
+
+    /**
+     * @param enum The new state of this file
+     */
+    public void setState( EnumFileState enum ) {
+        this.getState().setState( enum, this.getId(), this.parent );
+    }
+
+    /**
+     * Verify all chunks of this fileinfo
+     */
+    public void verifyChunks() {
+        Message chunks = new EncodeMessage( Message.S_VERIFY_ALL_CHUNKS, new Integer( this.getId() ) );
+        chunks.sendMessage( this.parent.getConnection() );
+    }
+
+    /**
+     * @param name Save file as (name)
+     */
+    public void saveFileAs( String name ) {
+        Object[] obj = new Object[ 2 ];
+        obj[ 0 ] = new Integer( this.getId() );
+        obj[ 1 ] = name;
+        Message saveAs = new EncodeMessage( Message.S_SAVE_FILE_AS, obj );
+        saveAs.sendMessage( this.parent.getConnection() );
+        obj = null;
+        saveAs = null;
+    }
+
+    /**
+     * creates a String from the size
+     * @param size The size
+     * @return a string represantation of this size
+     */
+    public static String calcStringSize( long size ) {
+        float k = 1024f;
+        float m = k * k;
+        float g = m * k;
+        float t = g * k;
+        float fsize = ( float ) size;
+        if ( fsize >= t )
+            return new String( df.format( fsize / t ) + " TB" );
+        else if ( fsize >= g )
+            return new String( df.format( fsize / g ) + " GB" );
+        else if ( fsize >= m )
+            return new String( df.format( fsize / m ) + " MB" );
+        else if ( fsize >= k )
+            return new String( df.format( fsize / k ) + " KB" );
+        else
+            return new String( size + "" );
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public String getStringSize() {
+        return stringSize;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public String getStringDownloaded() {
+        return stringDownloaded;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param inSeconds DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    private static String calcStringOfSeconds( long inSeconds ) {
+        if ( inSeconds < 1 )
+            return "0m";
+        long days = inSeconds / 60 / 60 / 24;
+        long rest = inSeconds - ( days * 60 * 60 * 24 );
+        long hours = rest / 60 / 60;
+        rest = rest - ( hours * 60 * 60 );
+        long minutes = rest / 60;
+        long seconds = rest - ( minutes * 60 );
+        if ( days > 99 )
+            return "";
+        if ( days > 0 )
+            return "" + days + "d";
+        if ( hours > 0 )
+            return "" + hours + "h" + ( ( minutes > 0 ) ? ( " " + minutes + "m" ) : "" );
+        return "" + minutes + "m";
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public String getStringETA() {
+        return stringETA;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public String getStringOffset() {
+        return stringOffset;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public String getStringAge() {
+        return stringAge;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public long getETA() {
+        return etaSeconds;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param o DOCUMENT ME!
+     * @param obj DOCUMENT ME!
+     */
+    public void update( Observable o, Object obj ) {
+        if ( o instanceof ClientInfo ) {
+            ClientInfo clientInfo = ( ClientInfo ) o;
+            this.setChanged();
+            // this client is now interesting.. notify the viewer
+            if ( obj == null )
+                this.notifyObservers( new TreeClientInfo( this, clientInfo ) );
+            else
+                this.notifyObservers( clientInfo );
+        }
+    }
+}
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.56  2003/09/18 09:16:47  lemmster
+checkstyle
+
 Revision 1.55  2003/09/18 03:52:12  zet
 smaller map initial capacities
 
@@ -835,7 +860,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)

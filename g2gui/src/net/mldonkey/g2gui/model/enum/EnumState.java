@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * EnumState
  *
  *
- * @version $Id: EnumState.java,v 1.7 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: EnumState.java,v 1.8 2003/09/18 09:18:01 lemmster Exp $ 
  *
  */
 public class EnumState implements Enum {
@@ -82,7 +82,7 @@ public class EnumState implements Enum {
 		state = aString;
 	}
 	/**
-	 * @param state2
+	 * @param state2 The EnumState we compare to
 	 * @return the result of this compareTo operation
 	 */
 	public int compareTo( EnumState state2 ) {
@@ -100,11 +100,14 @@ public class EnumState implements Enum {
 
 /*
 $Log: EnumState.java,v $
+Revision 1.8  2003/09/18 09:18:01  lemmster
+checkstyle
+
 Revision 1.7  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.6  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.5  2003/08/18 01:42:24  zet
 centralize resource bundle

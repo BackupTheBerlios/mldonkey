@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  *
- * @version $Id: OptionsInfo.java,v 1.22 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.23 2003/09/18 09:16:47 lemmster Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -100,7 +100,7 @@ public class OptionsInfo extends Parent {
 	}
 
 	/**
-	 * @param string the OptionValue
+	 * @param aString the OptionValue
 	 */
 	public void setValue( String aString ) {
 		Object[] obj = new Object[ 2 ];
@@ -235,7 +235,7 @@ public class OptionsInfo extends Parent {
 			this.optionType = EnumTagType.STRING;
 		else if ( aString.equals( "Ip List" ) )
 			this.optionType = EnumTagType.IP_LIST;
-		else if ( aString.equals( "Int") )
+		else if ( aString.equals( "Int" ) )
 			this.optionType = EnumTagType.INT;
 		else if ( aString.equals( "Bool" ) )
 			this.optionType = EnumTagType.BOOL;
@@ -325,6 +325,9 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.23  2003/09/18 09:16:47  lemmster
+checkstyle
+
 Revision 1.22  2003/08/23 15:21:37  zet
 remove @author
 
@@ -335,7 +338,7 @@ Revision 1.20  2003/08/19 21:02:16  lemmster
 show all options in simple mode proto < 18
 
 Revision 1.19  2003/08/19 12:47:57  lemmster
-$user$ -> $Author: zet $
+$user$ -> $Author: lemmster $
 
 Revision 1.18  2003/08/19 12:46:02  lemmster
 typo fixed

@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.6 2003/09/17 13:49:09 dek Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.7 2003/09/18 09:16:47 lemmster Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -134,10 +134,10 @@ public class SharedFileInfo implements SimpleInformation {
 	}
 
 	/**
-	 * @param messageBuffer
+	 * @param messageBuffer The <code>Messagebuffer</code> to read from
 	 * @return wether the core updated this Information
 	 */
-	public boolean update(MessageBuffer messageBuffer) {		
+	public boolean update( MessageBuffer messageBuffer ) {		
 		boolean hasChanged = false;
 		/* we don't need the fileId, as we already know it*/
 		messageBuffer.setIterator( messageBuffer.getIterator() + 4 );
@@ -159,6 +159,9 @@ public class SharedFileInfo implements SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.7  2003/09/18 09:16:47  lemmster
+checkstyle
+
 Revision 1.6  2003/09/17 13:49:09  dek
 now the gui refreshes the upload-stats, add and observer to SharedFileInfoIntMap
 to get notice of changes in # of requests and # of uploaded bytes
@@ -167,7 +170,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved
