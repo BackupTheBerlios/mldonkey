@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  * @author $user$
- * @version $Id: ResultInfo.java,v 1.1 2003/06/30 07:19:47 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfo.java,v 1.2 2003/07/05 12:52:19 lemmstercvs01 Exp $ 
  *
  */
 public class ResultInfo implements SimpleInformation {
@@ -90,6 +90,7 @@ public class ResultInfo implements SimpleInformation {
 		this.setNetworkID( messageBuffer.readInt32() );
 		this.setNames( messageBuffer.readStringList() );
 		this.setMd4( messageBuffer.readBinary( 16 ) );
+		this.setSize( messageBuffer.readInt32() );
 		this.setFormat( messageBuffer.readString() );
 		this.setType( messageBuffer.readString() );
 		this.setTags( messageBuffer.readTagList() );		
@@ -227,6 +228,9 @@ public class ResultInfo implements SimpleInformation {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.2  2003/07/05 12:52:19  lemmstercvs01
+bugfix in readStream()
+
 Revision 1.1  2003/06/30 07:19:47  lemmstercvs01
 initial commit (untested)
 
