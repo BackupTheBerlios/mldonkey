@@ -35,12 +35,10 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -56,20 +54,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 /**
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.7 2003/09/08 17:09:38 dek Exp $
+ * @version $Id: TableMenuListener.java,v 1.8 2003/09/14 13:24:30 lemmster Exp $
  *
  */
-public abstract class TableMenuListener {
-    protected CoreCommunication core;
-    protected StructuredViewer tableViewer;
+public abstract class TableMenuListener extends MenuListener {
     protected ViewerFilter incrementalViewerFilter;
 
     /**
@@ -78,8 +72,7 @@ public abstract class TableMenuListener {
      * @param core
      */
     public TableMenuListener( StructuredViewer tableViewer, CoreCommunication core ) {
-        this.tableViewer = tableViewer;
-        this.core = core;
+        super( tableViewer, core );
     }
     
     /**
@@ -89,17 +82,9 @@ public abstract class TableMenuListener {
     public void menuAboutToShow( IMenuManager menuManager ) {
 		menuManager.add( new Separator() );
 			
-		menuManager.add( new RefineFilterAction() );				
+		menuManager.add( new RefineFilterAction() );
 		
-		/* columns toogle */
-		MenuManager columnsSubMenu = new MenuManager( G2GuiResources.getString( "TML_COLUMN" ) );
-		Table table = ( ( TableViewer ) tableViewer ).getTable();
-		for ( int i = 0; i < table.getColumnCount(); i++ ) {
-			ToggleColumnsAction tCA = new ToggleColumnsAction( i );
-			if ( table.getColumn( i ).getResizable() ) tCA.setChecked( true );
-			columnsSubMenu.add( tCA );
-		}
-		menuManager.add( columnsSubMenu );
+		super.menuAboutToShow( menuManager );				
     }
 
     /**
@@ -140,17 +125,6 @@ public abstract class TableMenuListener {
         return false;
     }
 
-    /**
-     *
-     * @param viewerFilter
-     * @param toggle
-     */
-    public void toggleFilter( ViewerFilter viewerFilter, boolean toggle ) {
-        if ( toggle )
-            tableViewer.addFilter( viewerFilter );
-        else
-            tableViewer.removeFilter( viewerFilter );
-    }
 
     protected class RefineFilter extends ViewerFilter {
         private String refineString;
@@ -565,45 +539,13 @@ public abstract class TableMenuListener {
         }
     }
 
-    /**
-     *
-     * ToggleColumnsAction
-     *
-     */
-    public class ToggleColumnsAction extends Action {
-        private int column;
-        private Table table;
-        private TableColumn tableColumn;
-
-        public ToggleColumnsAction( int column ) {
-            super( "", Action.AS_CHECK_BOX );
-            this.column = column;
-            if ( tableViewer instanceof TableTreeViewer )
-                table = ( ( TableTreeViewer ) tableViewer ).getTableTree().getTable();
-            else
-                table = ( ( TableViewer ) tableViewer ).getTable();
-            tableColumn = table.getColumn( column );
-            setText( tableColumn.getText() );
-        }
-
-        /**
-         * DOCUMENT ME!
-         */
-        public void run() {
-            if ( !isChecked() ) {
-                tableColumn.setWidth( 0 );
-                tableColumn.setResizable( false );
-            }
-            else {
-                tableColumn.setResizable( true );
-                tableColumn.setWidth( 100 );
-            }
-        }
-    }
 }
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.8  2003/09/14 13:24:30  lemmster
+add header button to servertab
+
 Revision 1.7  2003/09/08 17:09:38  dek
 ;; --> ;
 

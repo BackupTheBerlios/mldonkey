@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.helper.CCLabel;
+import net.mldonkey.g2gui.view.helper.PaneMenuListener;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -49,6 +50,8 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -60,12 +63,14 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.28 2003/09/14 10:01:24 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.29 2003/09/14 13:24:30 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -80,6 +85,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	private CustomTableViewer table;
 	private Composite composite;
 	private Group group;
+	private MenuManager popupMenu;
 	private String statusText = "";
 
 	/* if you modify this, change the LayoutProvider and tableWidth */
@@ -146,17 +152,34 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 */
 	protected void createContents( Composite parent ) {
 		
-		ViewForm serverViewForm = new ViewForm( parent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		ViewForm viewForm = 
+			new ViewForm( parent, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
 		
-		CLabel serverCLabel = CCLabel.createCL(serverViewForm, "TT_ServersButton", "ServersButtonSmallTitlebar");
+		CLabel ccLabel = CCLabel.createCL( viewForm, "TT_ServersButton", "ServersButtonSmallTitlebar" );
 			
-		this.composite = new Composite( serverViewForm, SWT.NONE );
+		this.composite = new Composite( viewForm, SWT.NONE );
 		composite.setLayout( new FillLayout() );
 	
-		serverViewForm.setContent( this.composite );
-		serverViewForm.setTopLeft(serverCLabel);
+		viewForm.setContent( this.composite );
+		viewForm.setTopLeft(ccLabel);
 
 		this.createTable();
+		
+		popupMenu = new MenuManager( "" );
+		popupMenu.setRemoveAllWhenShown( true );
+		popupMenu.addMenuListener( new PaneMenuListener( table, core ) );
+		
+		ToolBar toolBar = new ToolBar( viewForm, SWT.FLAT );
+		ToolItem anItem = new ToolItem( toolBar, SWT.FLAT );
+		anItem.setImage( G2GuiResources.getImage( "DropDown" ) );
+		anItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected ( SelectionEvent s ) {
+				Menu menu = popupMenu.createContextMenu( composite );
+				menu.setVisible( true );
+			}	
+		} );		
+		
+		viewForm.setTopRight( toolBar );
 	}
 
 	/**
@@ -403,6 +426,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.29  2003/09/14 13:24:30  lemmster
+add header button to servertab
+
 Revision 1.28  2003/09/14 10:01:24  lemmster
 save column width [bug #864]
 

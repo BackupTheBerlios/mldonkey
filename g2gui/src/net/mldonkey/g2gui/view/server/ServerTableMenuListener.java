@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.Shell;
  * TableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.4 2003/09/14 11:38:50 lemmster Exp $ 
+ * @version $Id: ServerTableMenuListener.java,v 1.5 2003/09/14 13:24:30 lemmster Exp $ 
  *
  */
 public class ServerTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -183,9 +183,9 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 		
 		menuManager.add( filterSubMenu );
 
-		menuManager.add( new Separator() );
+//		menuManager.add( new Separator() );
 
-		menuManager.add( new RefreshAction() );
+//		menuManager.add( new RefreshAction() );
 	}
 	
 
@@ -494,6 +494,9 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.5  2003/09/14 13:24:30  lemmster
+add header button to servertab
+
 Revision 1.4  2003/09/14 11:38:50  lemmster
 connectMore in right click menu
 
