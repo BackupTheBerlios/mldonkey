@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.18 2003/07/20 12:15:47 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.19 2003/07/20 12:35:07 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -82,9 +82,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 			oldEditor.dispose();
 		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, 6 );
 		editor.setEditor ( chunks, this, 4 );
-		updateCell( 4,"" );
+		updateCell( 4, "" );
 		updateCell( 2, clientInfo.getClientName() );
-		updateCell( 3,"" );		
+		updateCell( 3, "" );		
 		updateCell( 6, "rank: unknown" );		
 		updateColums();	
 		addDisposeListener( new DisposeListener() {
@@ -179,6 +179,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.19  2003/07/20 12:35:07  dek
+saving some CPU time, when only sorting clientItems of expanded DownloadItems
+
 Revision 1.18  2003/07/20 12:15:47  dek
 another flickerTest
 

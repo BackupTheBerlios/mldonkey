@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.18 2003/07/20 10:31:21 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.19 2003/07/20 12:35:07 dek Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
@@ -128,8 +128,6 @@ public class DownloadTable implements Observer, Runnable {
 				DownloadItem newItem =
 					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
 				downloads.put( files[ i ].getId(), newItem );
-				/*sorting the children(ClientItems) of this object*/
-				newItem.sort( columnIndex, 1 );
 			}
 			lastSortColumn = columnIndex;
 		} else {
@@ -139,15 +137,16 @@ public class DownloadTable implements Observer, Runnable {
 				DownloadItem newItem =
 					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
 				downloads.put( files[ i ].getId(), newItem );
-				/*sorting the children(ClientItems) of this object*/
-				newItem.sort( columnIndex, -1 );
 				lastSortColumn = -1;
 			}
 		}
 		// Now expand the previous expanded items:
 		for ( int i = 0; i < expanded.length; i++ ) {
 			if ( expanded[ i ] != -1 ) {
-				( ( DownloadItem ) downloads.get( expanded[ i ] ) ).setExpanded( true );
+				DownloadItem temp = ( ( DownloadItem ) downloads.get( expanded[ i ] ) );
+				temp.setExpanded( true );
+				/*only sort the subItems if expanded, to save CPU time*/
+				temp.sort( columnIndex, lastSortColumn );
 			}
 		}
 		tableTree.setRedraw( true );
@@ -252,6 +251,9 @@ public class DownloadTable implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.19  2003/07/20 12:35:07  dek
+saving some CPU time, when only sorting clientItems of expanded DownloadItems
+
 Revision 1.18  2003/07/20 10:31:21  dek
 done some work on flickering & sorting
 

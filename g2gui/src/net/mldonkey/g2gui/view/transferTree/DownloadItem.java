@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.19 2003/07/20 11:47:04 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.20 2003/07/20 12:35:07 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem implements IItemHasMenue, SelectionListener {
@@ -165,6 +165,7 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 	 * Sorts the children( ClientItems ) of this DownloadItem, with the given
 	 * column-hint
 	 * @param columnIndex
+	 * @param order the sort order: ascending if > 0. desc, otherwise
 	 */
 	protected void sort( int columnIndex, int order ) {
 		Object[] items = namedclients.getValues();
@@ -404,6 +405,9 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 }
 /*
 $Log: DownloadItem.java,v $
+Revision 1.20  2003/07/20 12:35:07  dek
+saving some CPU time, when only sorting clientItems of expanded DownloadItems
+
 Revision 1.19  2003/07/20 11:47:04  dek
 foobar
 
