@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.ServerTab;
 import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
@@ -46,7 +47,7 @@ import org.eclipse.swt.widgets.Control;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.22 2003/08/28 22:44:30 zet Exp $ 
+ * @version $Id: NetworkItem.java,v 1.23 2003/09/12 16:28:21 lemmster Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -102,12 +103,7 @@ public class NetworkItem implements Observer {
 			popupMenu.addMenuListener( manager );
 			cLabel.setMenu( popupMenu.createContextMenu( cLabel ) );
 			
-			/* set the network name and status as tooltip */
-			if ( network.isEnabled() && ( network.hasServers() || network.hasSupernodes() ) )
-				cLabel.setToolTipText( network.getNetworkName() + " connected to: "
-									   + network.getConnectedServers() + " server" );
-			else
-				cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
+			createTooltip( network );
 	
 			/* on dispose() deregister on the model */			
 			cLabel.addDisposeListener( new DisposeListener () {
@@ -119,6 +115,23 @@ public class NetworkItem implements Observer {
 			/* now create the image */
 			cLabel.setImage( network.getImage() );
 		}
+	}
+	
+	/**
+	 * Create the tooltip help
+	 * @param network The network info with the infos
+	 */
+	private void createTooltip( NetworkInfo network ) {
+		/* set the network name and status as tooltip */
+		if ( network.isEnabled() && ( network.hasServers() || network.hasSupernodes() ) )
+			if ( network.hasServers() )
+				cLabel.setToolTipText( network.getNetworkName() + " " + G2GuiResources.getString( "NI_CONNECTED_TO" )
+						   + network.getConnectedServers() +  " " + G2GuiResources.getString( "NI_SERVER" ) );
+			else
+				cLabel.setToolTipText( network.getNetworkName() + " " +  G2GuiResources.getString( "NI_CONNECTED_TO" )
+						   + network.getConnectedServers() + " " +  G2GuiResources.getString( "NI_NODES" ) );
+		else
+			cLabel.setToolTipText( network.getNetworkName() + " " +  G2GuiResources.getString( "NI_DISABLED" ) );
 	}
 
 	/* (non-Javadoc)
@@ -141,11 +154,7 @@ public class NetworkItem implements Observer {
 				cLabel = getLabelByNetwork( controls, network );
 
 				/* set the tooltip text */
-				if ( network.isEnabled() && ( network.hasServers() || network.hasSupernodes() ) )
-				cLabel.setToolTipText( network.getNetworkName() + " connected to: "
-									   + network.getConnectedServers() + " server" );
-				else
-					cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
+				createTooltip( network );
 
 				/* set the image */
 				cLabel.setImage( network.getImage() );
@@ -172,6 +181,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.23  2003/09/12 16:28:21  lemmster
+ResourceBundle added
+
 Revision 1.22  2003/08/28 22:44:30  zet
 GridLayout helper class
 

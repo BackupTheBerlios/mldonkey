@@ -27,6 +27,7 @@ import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.ServerTab;
 import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -37,7 +38,7 @@ import org.eclipse.jface.action.Separator;
  * NetworkItemMenuListener
  *
  *
- * @version $Id: NetworkItemMenuListener.java,v 1.3 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: NetworkItemMenuListener.java,v 1.4 2003/09/12 16:28:21 lemmster Exp $ 
  *
  */
 public class NetworkItemMenuListener implements IMenuListener {
@@ -92,7 +93,7 @@ public class NetworkItemMenuListener implements IMenuListener {
 	private class EnableAction extends Action {
 		public EnableAction() {
 			super();
-			setText( "Enable" );
+			setText( G2GuiResources.getString( "NIML_ENABLE" ) );
 		}
 		public void run() {
 			network.setEnabled();
@@ -102,7 +103,7 @@ public class NetworkItemMenuListener implements IMenuListener {
 	private class DisableAction extends Action {
 		public DisableAction() {
 			super();
-			setText( "Disable" );
+			setText( G2GuiResources.getString( "NIML_DISABLE" ) );
 		}
 		public void run() {
 			network.setEnabled();
@@ -112,7 +113,7 @@ public class NetworkItemMenuListener implements IMenuListener {
 	private class ManageAction extends Action {
 		public ManageAction() {
 			super();
-			setText( "manage server" );
+			setText( G2GuiResources.getString( "NIML_MANAGE" ) );
 		}
 		public void run() {
 			statusline.getMainTab().setActive( serverTab );
@@ -123,7 +124,7 @@ public class NetworkItemMenuListener implements IMenuListener {
 	private class ConnectMoreAction extends Action {
 		public ConnectMoreAction() {
 			super();
-			setText( "connect more" );
+			setText( G2GuiResources.getString( "NIML_CONNECT" ) );
 		}
 		public void run() {
 			network.getCore().getServerInfoIntMap().connectMore( network );
@@ -133,6 +134,9 @@ public class NetworkItemMenuListener implements IMenuListener {
 
 /*
 $Log: NetworkItemMenuListener.java,v $
+Revision 1.4  2003/09/12 16:28:21  lemmster
+ResourceBundle added
+
 Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
