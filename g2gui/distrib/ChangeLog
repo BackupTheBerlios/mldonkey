@@ -1,5 +1,10 @@
+2004/03/16: Dek
+	*FileDetail Dialog: Infos (e.g. hash, filename) are now 
+	copy-and-paste enabled[TM]
+	
 2004/03/10: Dek
 	* SysTray: applied TomTom's patch [Patch #82]
+	
 2004/03/09: Dek
 	* now systray-menu is a full-blown SWT-popup-menu. Native interface 
 		for windows-systray originally from 
