@@ -28,10 +28,14 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientKind
  *
  * @author markus
- * @version $Id: ClientKind.java,v 1.1 2003/06/14 17:40:40 lemmstercvs01 Exp $ 
+ * @version $Id: ClientKind.java,v 1.2 2003/06/16 15:33:03 lemmstercvs01 Exp $ 
  *
  */
 public class ClientKind implements Information {
+	
+	public static final byte DIRECT = 0;
+	public static final byte FIREWALLED = 1;
+	
 	/**
 	 * Client Type (direct/firewalled)
 	 */
@@ -106,7 +110,10 @@ public class ClientKind implements Information {
 	 * @param b a byte
 	 */
 	public void setClientType( byte b ) {
-		clientType = b;
+		if ( b == DIRECT )
+			clientType = DIRECT;
+		else if ( b == FIREWALLED )
+			clientType = FIREWALLED;
 	}
 
 	/**
@@ -129,7 +136,7 @@ public class ClientKind implements Information {
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setClientType( messageBuffer.readByte() );
-		if ( this.getClientType() == 0 ) {
+		if ( this.getClientType() == DIRECT ) {
 			this.setIpAddress( messageBuffer.readInt32() );
 			this.setPort( messageBuffer.readInt16() );
 		}
@@ -145,6 +152,9 @@ public class ClientKind implements Information {
 
 /*
 $Log: ClientKind.java,v $
+Revision 1.2  2003/06/16 15:33:03  lemmstercvs01
+some kind of enum added
+
 Revision 1.1  2003/06/14 17:40:40  lemmstercvs01
 initial commit
 

@@ -28,10 +28,16 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Tag
  *
  * @author markus
- * @version $Id: Tag.java,v 1.1 2003/06/14 17:40:40 lemmstercvs01 Exp $ 
+ * @version $Id: Tag.java,v 1.2 2003/06/16 15:33:03 lemmstercvs01 Exp $ 
  *
  */
 public class Tag implements Information {
+	
+	public static final short UNSIGNED_INT = 0;
+	public static final short SIGNED_INT = 1;
+	public static final short STRING = 2;
+	public static final short IPADDRESS = 3;
+	
 	/**
 	 * Tag Name
 	 */
@@ -95,7 +101,14 @@ public class Tag implements Information {
 	 * @param b a byte
 	 */
 	public void setType( byte b ) {
-		type = b;
+		if ( b == 0 )
+			type = UNSIGNED_INT;
+		else if ( b == 1 )
+			type = SIGNED_INT;
+		else if ( b == 2 )
+			type = STRING;
+		else if ( b == 3 )
+			type = IPADDRESS;
 	}
 
 	/**
@@ -112,7 +125,7 @@ public class Tag implements Information {
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setName( messageBuffer.readString() );
 		this.setType( messageBuffer.readByte() );
-		if ( this.getType() != 2 ) {
+		if ( this.getType() != STRING ) {
 			this.setValue( messageBuffer.readInt32() );
 		}
 		else {
@@ -124,6 +137,9 @@ public class Tag implements Information {
 
 /*
 $Log: Tag.java,v $
+Revision 1.2  2003/06/16 15:33:03  lemmstercvs01
+some kind of enum added
+
 Revision 1.1  2003/06/14 17:40:40  lemmstercvs01
 initial commit
 

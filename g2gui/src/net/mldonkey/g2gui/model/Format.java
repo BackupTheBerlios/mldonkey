@@ -28,10 +28,15 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Format
  *
  * @author markus
- * @version $Id: Format.java,v 1.4 2003/06/14 12:47:27 lemmstercvs01 Exp $ 
+ * @version $Id: Format.java,v 1.5 2003/06/16 15:33:03 lemmstercvs01 Exp $ 
  *
  */
 public class Format implements Information {
+	
+	public static final byte UNKNOWN_FORMAT = 0;
+	public static final byte GENERIC_FORMAT = 1;
+	public static final byte AVI_FILE = 2;
+	public static final byte MP3_FILE = 3;
 
 	private byte format;
 
@@ -207,7 +212,14 @@ public class Format implements Information {
 	 * @param b a byte
 	 */
 	public void setFormat( byte b ) {
-		format = b;
+		if ( b == UNKNOWN_FORMAT )
+			format = UNKNOWN_FORMAT;
+		else if ( b == GENERIC_FORMAT )
+			format = GENERIC_FORMAT;
+		else if ( b == AVI_FILE )
+			format = AVI_FILE;
+		else if ( b == MP3_FILE )
+			format = MP3_FILE;	
 	}
 
 	/**
@@ -304,6 +316,9 @@ public class Format implements Information {
 
 /*
 $Log: Format.java,v $
+Revision 1.5  2003/06/16 15:33:03  lemmstercvs01
+some kind of enum added
+
 Revision 1.4  2003/06/14 12:47:27  lemmstercvs01
 checkstyle applied
 

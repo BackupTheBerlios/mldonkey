@@ -28,18 +28,23 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionType
  *
  * @author $user$
- * @version $Id: OptionType.java,v 1.3 2003/06/16 13:18:59 lemmstercvs01 Exp $ 
+ * @version $Id: OptionType.java,v 1.4 2003/06/16 15:33:03 lemmstercvs01 Exp $ 
  *
  */
 public class OptionType implements Information {
+	
+	public static final byte	STRING = 0;
+	public static final byte BOOL = 1;
+	public static final byte FILE = 2;
+	
 	/**
 	 * Tag Type
 	 */
-	private String tagType;
+	private byte tagType;
 	/**
 	 * @return a string
 	 */
-	public String getTagType() {
+	public byte getTagType() {
 		return tagType;
 	}
 
@@ -47,12 +52,12 @@ public class OptionType implements Information {
 	 * @param b a byte
 	 */
 	public void setTagType( byte b ) {
-		if ( b == 0 )
-			tagType = "String";
-		else if ( b == 1 )
-			tagType = "Bool";
-		else if ( b == 2 )
-			tagType = "File";
+		if ( b == STRING )
+			tagType = STRING;
+		else if ( b == BOOL )
+			tagType = BOOL;
+		else if ( b == FILE )
+			tagType = FILE;
 	}
 	
 	/**
@@ -68,13 +73,16 @@ public class OptionType implements Information {
 	 * @return string A string representation of thi object
 	 */
 	public String toString() {
-		return this.getTagType().toString();
+		return new Byte( this.getTagType() ).toString();
 	}
 
 }
 
 /*
 $Log: OptionType.java,v $
+Revision 1.4  2003/06/16 15:33:03  lemmstercvs01
+some kind of enum added
+
 Revision 1.3  2003/06/16 13:18:59  lemmstercvs01
 checkstyle applied
 

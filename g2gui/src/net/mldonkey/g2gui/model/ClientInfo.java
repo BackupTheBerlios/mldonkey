@@ -28,10 +28,14 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.1 2003/06/14 17:40:40 lemmstercvs01 Exp $ 
+ * @version $Id: ClientInfo.java,v 1.2 2003/06/16 15:33:03 lemmstercvs01 Exp $ 
  *
  */
 public class ClientInfo implements Information {
+	
+	public static final byte SOURCE = 0;
+	public static final byte FRIEND = 1;
+	public static final byte BROWSED = 2;
 	
 	/**
 	 * Client Id
@@ -179,7 +183,12 @@ public class ClientInfo implements Information {
 	 * @param b a byte
 	 */
 	public void setClientType( byte b ) {
-		clientType = b;
+		if ( b == SOURCE )
+			clientType = SOURCE;
+		else if ( b == FRIEND )
+			clientType = FRIEND;
+		else if ( b == BROWSED )
+			clientType = BROWSED;		
 	}
 
 	/**
@@ -232,6 +241,9 @@ public class ClientInfo implements Information {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.2  2003/06/16 15:33:03  lemmstercvs01
+some kind of enum added
+
 Revision 1.1  2003/06/14 17:40:40  lemmstercvs01
 initial commit
 

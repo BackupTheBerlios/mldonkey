@@ -28,10 +28,22 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * State
  *
  * @author markus
- * @version $Id: State.java,v 1.5 2003/06/14 17:41:03 lemmstercvs01 Exp $ 
+ * @version $Id: State.java,v 1.6 2003/06/16 15:33:03 lemmstercvs01 Exp $ 
  *
  */
 public class State implements Information {
+	
+	public static final byte NOT_CONNECTED = 0;
+	public static final byte CONNECTING = 1;
+	public static final byte CONNECTED_INITIATING = 2;
+	public static final byte CONNECTED_DOWNLOADING = 3;
+	public static final byte CONNECTED = 4;
+	public static final byte CONNECTED_AND_QUEUED = 5;
+	public static final byte NEW_HOST = 6;
+	public static final byte REMOVE_HOST = 7;
+	public static final byte BLACK_LISTED = 8;
+	public static final byte NOT_CONNECTED_WAS_QUEUED = 9;
+	
 	/**
 	 * Connections State
 	 */
@@ -66,7 +78,26 @@ public class State implements Information {
 	 * @param b a byte
 	 */
 	public void setState( byte b ) {
-		state = b;
+		if ( b == NOT_CONNECTED )
+			state = NOT_CONNECTED;
+		else if ( b == CONNECTING )
+			state = CONNECTING;
+		else if ( b == CONNECTED_INITIATING )
+			state = CONNECTED_INITIATING;
+		else if ( b == CONNECTED_DOWNLOADING )
+			state = CONNECTED_DOWNLOADING;
+		else if ( b == CONNECTED )
+			state = CONNECTED;
+		else if ( b == CONNECTED_AND_QUEUED )
+			state = CONNECTED_AND_QUEUED;
+		else if ( b == NEW_HOST )
+			state = NEW_HOST;
+		else if ( b == REMOVE_HOST )
+			state = REMOVE_HOST;
+		else if ( b == BLACK_LISTED )
+			state = BLACK_LISTED;
+		else if ( b == NOT_CONNECTED_WAS_QUEUED )
+			state = NOT_CONNECTED_WAS_QUEUED;
 	}
 	
 	/**
@@ -75,7 +106,8 @@ public class State implements Information {
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setState( messageBuffer.readByte() );
-		if ( this.getState() == 5 || this.getState() == 9 )
+		if ( this.getState() == CONNECTED_AND_QUEUED 
+			|| this.getState() == NOT_CONNECTED_WAS_QUEUED )
 			this.setRank( messageBuffer.readInt32() );
 	}
 	
@@ -90,6 +122,9 @@ public class State implements Information {
 
 /*
 $Log: State.java,v $
+Revision 1.6  2003/06/16 15:33:03  lemmstercvs01
+some kind of enum added
+
 Revision 1.5  2003/06/14 17:41:03  lemmstercvs01
 foobar
 
