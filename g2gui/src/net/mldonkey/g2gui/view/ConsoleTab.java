@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.41 2003/08/29 15:59:16 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.42 2003/08/29 16:06:54 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -75,7 +75,6 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 		this.parent = parent;		
 		
 		ViewForm consoleViewForm = new ViewForm( parent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
-		consoleViewForm.setLayout(new FillLayout());
 		
 		Composite consoleComposite = new Composite(consoleViewForm, SWT.NONE);
 		consoleComposite.setLayout( new FillLayout() );
@@ -181,6 +180,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.42  2003/08/29 16:06:54  zet
+optional shadow
+
 Revision 1.41  2003/08/29 15:59:16  zet
 optional shadow
 

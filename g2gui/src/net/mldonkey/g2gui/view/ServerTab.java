@@ -41,6 +41,7 @@ import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
@@ -63,7 +64,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.20 2003/08/28 22:44:30 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.21 2003/08/29 16:06:54 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -143,8 +144,14 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * @see net.mldonkey.g2gui.view.GuiTab#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected void createContents( Composite parent ) {
-		this.composite = new Composite( parent, SWT.BORDER );
+		
+		ViewForm serverViewForm = new ViewForm( parent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		
+		this.composite = new Composite( serverViewForm, SWT.NONE );
 		composite.setLayout( new FillLayout() );
+	
+		serverViewForm.setContent( this.composite );
+
 		this.createTable();
 	}
 
@@ -409,6 +416,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.21  2003/08/29 16:06:54  zet
+optional shadow
+
 Revision 1.20  2003/08/28 22:44:30  zet
 GridLayout helper class
 

@@ -73,7 +73,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Main
  *
  *
- * @version $Id: TransferTab.java,v 1.40 2003/08/29 15:43:43 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.41 2003/08/29 16:06:54 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -107,11 +107,13 @@ public class TransferTab extends GuiTab  {
 		final SashForm mainSashForm = new SashForm( parent, SWT.VERTICAL );
 		Composite downloadComposite;
 		
+		ViewForm downloadViewForm = new ViewForm( mainSashForm, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		
 		if (PreferenceLoader.loadBoolean("advancedMode")) {
 					
-			SashForm downloadSashForm = new SashForm( mainSashForm, SWT.HORIZONTAL );
+			SashForm downloadSashForm = new SashForm( downloadViewForm, SWT.HORIZONTAL );
 			
-			downloadComposite = new Composite( downloadSashForm, SWT.BORDER );
+			downloadComposite = new Composite( downloadSashForm, SWT.NONE);
 			GridLayout gridLayout = CGridLayout.createGL(1,0,0,0,0,false);
 			downloadComposite.setLayout( gridLayout );
 		
@@ -130,11 +132,14 @@ public class TransferTab extends GuiTab  {
 		
 			createClientTableViewer(downloadClients, downloadSashForm);
 		
+			downloadViewForm.setContent(downloadSashForm);
+		
 			downloadSashForm.setWeights( new int[] {100,0});
 		
 		} else {
-			downloadComposite = new Composite( mainSashForm, SWT.BORDER );
+			downloadComposite = new Composite( downloadViewForm, SWT.NONE );
 			downloadComposite.setLayout(new FillLayout());
+			downloadViewForm.setContent(downloadComposite);
 		}
 		
 				
@@ -307,6 +312,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.41  2003/08/29 16:06:54  zet
+optional shadow
+
 Revision 1.40  2003/08/29 15:43:43  zet
 try gradient headerbar
 
