@@ -27,6 +27,7 @@
 			  (just gui solution until core stores the state of a result)
 	* Search: Fix button search tab crash [bug #993]
 2003/09/15+: z
+	* Cmdline: optional "-c <path/preference file>" argument added 
 	* Comm: Rewrote EncodeMessage to fix core communication bugs [#874] [#907]
 	* Comm: Handle disconnection from core more cleanly & update statusLine
 	* Main: Add menuItem: File>Kill core 
