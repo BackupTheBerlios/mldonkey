@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  * @author ${user}
- * @version $$Id: Addr.java,v 1.6 2003/07/05 20:04:10 lemmstercvs01 Exp $$ 
+ * @version $$Id: Addr.java,v 1.7 2003/07/30 19:27:49 lemmstercvs01 Exp $$ 
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -39,33 +39,22 @@ public class Addr implements SimpleInformation {
 	 */
 	private boolean addressType;
 	/**
-	 * IP Address (if type is true)
+	 * IP Address
 	 */
-	private InetAddress ipAddress;
-	/**
-	 * Name Address (if type is false
-	 */
-	private String nameAddress;
+	private InetAddress address;
 
 	/**
-	 * @return direct or indirekt address
+	 * @return direct/true or indirekt/false address
 	 */
-	public boolean isAddressType() {
+	public boolean hasHostName() {
 		return addressType;
 	}
 
 	/**
-	 * @return The IP address
+	 * @return The address
 	 */
-	public InetAddress getIpAddress() {
-		return ipAddress;
-	}
-
-	/**
-	 * @return The address name
-	 */
-	public String getNameAddress() {
-		return nameAddress;
+	public InetAddress getAddress() {
+		return address;
 	}
 
 	/**
@@ -73,9 +62,9 @@ public class Addr implements SimpleInformation {
 	 */
 	private void setAddressType( byte b ) {
 		if ( b == 0 ) 
-			addressType = true;
-		if ( b == 1 )
 			addressType = false;
+		if ( b == 1 )
+			addressType = true;
 	}
 
 	/**
@@ -89,18 +78,40 @@ public class Addr implements SimpleInformation {
  		 * String  	 Name address (present only if Address Type = 1) 
 		 */
 		this.setAddressType( messageBuffer.readByte() );
-		if ( this.isAddressType() )
-			try {
-				this.ipAddress = messageBuffer.readInetAddress();
-			}
-			/* do nothing, we receive always a valid address */
-			catch ( UnknownHostException e ) { }
-		else
-			this.nameAddress = messageBuffer.readString();
+		try {
+			if ( this.hasHostName() )
+				this.address =  InetAddress.getAllByName( messageBuffer.readString() )[ 0 ];
+			else
+				this.address = messageBuffer.readInetAddress();
+		}
+		/* do nothing, we receive always a valid address */
+		catch ( UnknownHostException e ) { }
+	}
+
+	/**
+	 * @param anAddress
+	 * @return
+	 */
+	public int compareTo( Addr anAddress ) {
+		/* compare between hasHostName() */
+		if ( this.hasHostName() && !anAddress.hasHostName() )
+			return 1;
+		if ( !this.hasHostName() && anAddress.hasHostName() )
+			return -1;
+		if ( this.hasHostName() && anAddress.hasHostName() )
+			return this.address.getHostName().compareToIgnoreCase( anAddress.address.getHostName() );
+	
+		/* compare by ipaddress */
+		Long int1 = new Long( this.address.getHostAddress().replaceAll( "\\.", "" ) );
+		Long int2 = new Long( anAddress.address.getHostAddress().replaceAll( "\\.", "" ) );
+		return int1.compareTo( int2 );
 	}
 }
 /*
 $$Log: Addr.java,v $
+$Revision 1.7  2003/07/30 19:27:49  lemmstercvs01
+$address is always an InetAddress instead of just a String
+$
 $Revision 1.6  2003/07/05 20:04:10  lemmstercvs01
 $javadoc improved
 $
