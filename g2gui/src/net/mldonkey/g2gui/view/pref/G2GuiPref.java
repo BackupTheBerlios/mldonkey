@@ -26,14 +26,16 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 /**
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.15 2003/10/21 03:11:45 zet Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.16 2003/11/04 22:58:47 zet Exp $ 
  *
  */
 public class G2GuiPref extends PreferencePage {
@@ -89,14 +91,6 @@ public class G2GuiPref extends PreferencePage {
 			
 			String[] winExtensions = { "*.exe;*.bat" };
 			if ( SWT.getPlatform().equals( "win32" ) ) executableField.setFileExtensions( winExtensions );
-		
-			FieldEditor advancedModeEditor =
-				new BooleanFieldEditor( "advancedMode",
-					"Advanced mode (*)", composite );
-				advancedModeEditor.setPreferenceStore( this.getPreferenceStore() );
-				advancedModeEditor.fillIntoGrid( composite, 2 );
-				addField( advancedModeEditor );
-				advancedModeEditor.load();
 				
 			FieldEditor mulitpleInstancesEditor =
 				new BooleanFieldEditor( "allowMultipleInstances",
@@ -105,13 +99,29 @@ public class G2GuiPref extends PreferencePage {
 				mulitpleInstancesEditor.fillIntoGrid( composite, 2 );
 				addField( mulitpleInstancesEditor );
 				mulitpleInstancesEditor.load();
+		
+			ExtendedBooleanFieldEditor advancedModeEditor =
+				new ExtendedBooleanFieldEditor( "advancedMode",
+					"Advanced user mode (*)", composite );
+				advancedModeEditor.setPreferenceStore( this.getPreferenceStore() );
+				advancedModeEditor.fillIntoGrid( composite, 2 );
 
+				addField( advancedModeEditor );
+				advancedModeEditor.load();
+
+				// Make this a little more obvious
+				Button b = advancedModeEditor.getChangeControl( composite );
+				b.setFont( JFaceResources.getBannerFont());
+				b.setForeground( composite.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 				
 			( ( GridLayout )composite.getLayout() ).numColumns = 2;
 	}
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.16  2003/11/04 22:58:47  zet
+Make "advanced user" option more noticeable
+
 Revision 1.15  2003/10/21 03:11:45  zet
 circumvent gcj bug
 
