@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  * @author $user$
- * @version $Id: MessageBuffer.java,v 1.14 2003/07/06 07:39:49 lemmstercvs01 Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.15 2003/08/06 16:02:07 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -80,11 +80,8 @@ public class MessageBuffer {
 	 * Reads an Int8 from MessageBuffer
 	 * @return an int8
 	 */
-	public short readInt8() {
-		short result = ( short ) this.buffer[iterator];
-		if ( result < 0 ) {
-			result += 256;
-		}
+	public short readInt8() {		
+		short result = ( short ) (this.buffer[iterator] & 0xFF);		
 		iterator++;
 		return result;
 	}
@@ -242,6 +239,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.15  2003/08/06 16:02:07  dek
+unsign-fix ???
+
 Revision 1.14  2003/07/06 07:39:49  lemmstercvs01
 checkstyle applied
 
