@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.37 2003/10/15 22:06:13 zet Exp $
+ * @version $Id: Preferences.java,v 1.38 2003/10/17 15:35:48 zet Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -78,6 +78,10 @@ public class Preferences extends PreferenceManager {
        			preferencePage = new G2GuiDisplayDownloads( "Downloads", FieldEditorPreferencePage.GRID );
         		preferencePage.setPreferenceStore( preferenceStore );
          		g2guiDisplayNode.add( new PreferenceNode( "Downloads", preferencePage ) );
+         		
+				preferencePage = new G2GuiDisplayGraphs( "Graphs", FieldEditorPreferencePage.GRID );
+				preferencePage.setPreferenceStore( preferenceStore );
+				g2guiDisplayNode.add( new PreferenceNode( "Graphs", preferencePage ) );
             
 			g2GuiRootNode.add( g2guiDisplayNode );
         }
@@ -257,6 +261,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.38  2003/10/17 15:35:48  zet
+graph prefs
+
 Revision 1.37  2003/10/15 22:06:13  zet
 Split Console/Downloads pref pages.
 

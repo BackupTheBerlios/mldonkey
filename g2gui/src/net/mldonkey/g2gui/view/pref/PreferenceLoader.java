@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.38 2003/10/16 22:02:45 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.39 2003/10/17 15:35:48 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -105,7 +105,18 @@ public class PreferenceLoader {
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove10FileColor", new RGB(0,140,0) );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove0FileColor", new RGB(0,110,0) );
         PreferenceConverter.setDefault( preferenceStore, "downloadsFontData", JFaceResources.getDefaultFont().getFontData() );     
-                                        
+                 
+		PreferenceConverter.setDefault( preferenceStore, "graphUploadsColor1", display.getSystemColor( SWT.COLOR_RED ).getRGB() );
+		PreferenceConverter.setDefault( preferenceStore, "graphUploadsColor2", new RGB(125,0,0) );
+		PreferenceConverter.setDefault( preferenceStore, "graphDownloadsColor1", display.getSystemColor( SWT.COLOR_BLUE ).getRGB() );
+		PreferenceConverter.setDefault( preferenceStore, "graphDownloadsColor2", new RGB(0,0,125) );
+		PreferenceConverter.setDefault( preferenceStore, "graphBackgroundColor", display.getSystemColor( SWT.COLOR_BLACK ).getRGB() );
+		PreferenceConverter.setDefault( preferenceStore, "graphGridColor", new RGB(0,128,64) );
+		PreferenceConverter.setDefault( preferenceStore, "graphTextColor", display.getSystemColor( SWT.COLOR_WHITE ).getRGB() );
+		PreferenceConverter.setDefault( preferenceStore, "graphLabelBackgroundColor", display.getSystemColor( SWT.COLOR_WHITE ).getRGB() );
+		PreferenceConverter.setDefault( preferenceStore, "graphLabelLineColor", display.getSystemColor( SWT.COLOR_YELLOW ).getRGB() );
+		PreferenceConverter.setDefault( preferenceStore, "graphLabelTextColor", display.getSystemColor( SWT.COLOR_BLACK ).getRGB() );
+				
         preferenceStore.setDefault( "hostname", "localhost" );
         preferenceStore.setDefault( "username", "admin" );
         preferenceStore.setDefault( "password", "" );
@@ -249,6 +260,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.39  2003/10/17 15:35:48  zet
+graph prefs
+
 Revision 1.38  2003/10/16 22:02:45  zet
 move some options
 
