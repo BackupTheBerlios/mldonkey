@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Table;
  * ResultTableMenuListener
  *
  * @author $Author: lemmster $
- * @version $Id: ResultTableMenuListener.java,v 1.3 2003/08/23 09:46:18 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.4 2003/08/23 10:34:33 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -162,7 +162,7 @@ Yet			menuManager.add( webManager );
 		
 		for ( int i = 0; i < networks.length; i++ ) {
 			NetworkInfo network = networks[ i ];
-			if ( network.isEnabled() ) {
+			if ( network.isEnabled() && network.isSearchable() ) {
 				NetworkFilterAction nFA =
 					new NetworkFilterAction( network.getNetworkName(), network.getNetworkType() );
 				if ( isFiltered( network.getNetworkType() ) ) nFA.setChecked( true );
@@ -285,6 +285,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.4  2003/08/23 10:34:33  lemmster
+isSearchable() added
+
 Revision 1.3  2003/08/23 09:46:18  lemmster
 superclass TableMenuListener added
 
