@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.12 2003/08/01 17:21:19 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.13 2003/08/06 09:46:42 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo extends Parent {
 	/**
@@ -96,7 +96,9 @@ public class ServerInfo extends Parent {
 	 * @return The name of this server
 	 */
 	public String getNameOfServer() {
-		if ( nameOfServer.equals( "" ) )
+		if ( nameOfServer == null ) 
+			return "<unknown>";
+		else if ( nameOfServer.equals( "" ) )
 			return "<unknown>";
 		else
 			return nameOfServer;	
@@ -197,6 +199,11 @@ public class ServerInfo extends Parent {
 		this.numOfUsers = messageBuffer.readInt32();
 		this.numOfFilesShared = messageBuffer.readInt32();
 		this.getConnectionState().readStream( messageBuffer );
+		/* if the state is REMOVE_HOST, we delete the serverinfo from the serverinfointmap */
+		if ( this.getConnectionState().getState() == EnumState.REMOVE_HOST ) {
+			this.parent.getServerInfoIntMap().remove( this );
+			return;
+		}
 		this.nameOfServer = messageBuffer.readString();
 		this.descOfServer = messageBuffer.readString();
 	}
@@ -219,7 +226,7 @@ public class ServerInfo extends Parent {
 		this.getConnectionState().setState( state );
 		/* if this state change to REMOVE_HOST -> remove from serverintmap */
 		if ( this.getConnectionState().getState() == EnumState.REMOVE_HOST ) {
-			this.parent.getServerInfoIntMap().remove( this.getServerId() );
+			this.parent.getServerInfoIntMap().remove( this );
 		}
 	}
 	
@@ -228,32 +235,29 @@ public class ServerInfo extends Parent {
 	 * @param enum The EnumQuery
 	 */
 	public void setState( EnumState enum ) {
-		if ( this.getConnectionState().getState() == enum ) {
-			Integer anInt = new Integer( this.getServerId() );
-			EncodeMessage state = null;
-
-			/* connect server */
-			if ( enum == EnumState.CONNECTING ) {
-				state =	new EncodeMessage( Message.S_CONNECT_SERVER, anInt );
-			}
-			/* remove server */
-			else if ( enum == EnumState.REMOVE_HOST ) {
-				state =	new EncodeMessage( Message.S_REMOVE_SERVER, anInt );
-			}
-			/* disconnect server */
-			else if ( enum == EnumState.NOT_CONNECTED ) {
-				state =	new EncodeMessage( Message.S_DISCONNECT_SERVER, anInt );
-			}
-			/* unvalid input */
-			else {
-				anInt = null;
-				return;
-			}
-				
-			state.sendMessage( this.parent.getConnection() );
-			state = null;
-			anInt = null;
+		Integer anInt = new Integer( this.getServerId() );
+		EncodeMessage state = null;
+		/* connect server */
+		if ( enum == EnumState.CONNECTING ) {
+			state =	new EncodeMessage( Message.S_CONNECT_SERVER, anInt );
 		}
+		/* remove server */
+		else if ( enum == EnumState.REMOVE_HOST ) {
+			state =	new EncodeMessage( Message.S_REMOVE_SERVER, anInt );
+		}
+		/* disconnect server */
+		else if ( enum == EnumState.NOT_CONNECTED ) {
+			state =	new EncodeMessage( Message.S_DISCONNECT_SERVER, anInt );
+		}
+		/* unvalid input */
+		else {
+			anInt = null;
+			return;
+		}
+			
+		state.sendMessage( this.parent.getConnection() );
+		state = null;
+		anInt = null;
 	}
 	
 	/**
@@ -262,9 +266,31 @@ public class ServerInfo extends Parent {
 	public boolean isFavorite() {
 		return true;
 	}
+	
+	/**
+	 * A string representation of this ojb
+	 * @return String The String
+	 */
+	public String toString() {
+		StringBuffer result = new StringBuffer();
+		result.append( "ServerID: " + getServerId() + "\n" );
+		result.append( "NetworkID: " + getNetwork() + "\n" );
+		result.append( "ServerAddress: " + getServerAddress().getAddress().toString() + "\n" );
+		result.append( "ServerPort: " + getServerPort() + "\n" );
+		result.append( "ServerScore: " + getServerAddress() + "\n" );
+		result.append( "NumOfUsers: " + getNumOfUsers() + "\n" );
+		result.append( "NumOfFiles: " + getNumOfFilesShared() + "\n" );
+		result.append( "connectionState: " + getConnectionState().getState().toString() + "\n" );
+		result.append( "nameOfServer: " + getNameOfServer() + "\n" );
+		result.append( "DescOfServer: " + getDescOfServer() + "\n" );
+		return result.toString();
+	}
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.13  2003/08/06 09:46:42  lemmstercvs01
+$toString() added, some bugfixes
+$
 $Revision 1.12  2003/08/01 17:21:19  lemmstercvs01
 $reworked observer/observable design, added multiversion support
 $

@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.9 2003/08/05 13:43:18 lemmstercvs01 Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.10 2003/08/06 09:47:29 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -79,7 +79,8 @@ public class ServerInfoIntMap extends InfoIntMap {
 		else {
 			ServerInfo serverInfo = new ServerInfo( this.parent );
 			serverInfo.readStream( messageBuffer );
-			this.put( serverInfo.getServerId(), serverInfo );
+			if ( serverInfo.getConnectionState().getState() != EnumState.REMOVE_HOST )
+				this.put( serverInfo.getServerId(), serverInfo );
 		}
 		this.setChanged();
 		this.notifyObservers( this );
@@ -142,13 +143,10 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 * returns an array with all networks known to this networkMap
 	 * @return all known networks
 	 */
-	public ServerInfo[] getServers() {
-		Object[] temp = this.infoIntMap.getValues();
-		ServerInfo[] result = new ServerInfo[ temp.length ];
-		for ( int i = 0; i < temp.length; i++ ) {
-			result[ i ] = ( ServerInfo ) temp [ i ];
+	public Object[] getServers() {
+		synchronized ( this ) {
+			return this.infoIntMap.getValues();
 		}
-		return result;		
 	}
 	
 	/**
@@ -169,10 +167,10 @@ public class ServerInfoIntMap extends InfoIntMap {
 		if ( enum == null ) return this;
 		
 		ServerInfoIntMap result = new ServerInfoIntMap( this.parent );
-		int size = this.infoIntMap.size();
-		TIntObjectIterator itr = this.infoIntMap.iterator();
 		synchronized ( this ) {
-			for ( ; size > 0; size-- ) {
+			int size = this.infoIntMap.size();
+			TIntObjectIterator itr = this.infoIntMap.iterator();
+			for ( ; size-- > 0; ) {
 				itr.advance();
 				ServerInfo server = ( ServerInfo ) itr.value();
 				if ( server.getNetwork().getNetworkType() == enum )
@@ -210,6 +208,37 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 		( ( ServerInfo ) this.infoIntMap.get( key ) ).setState( EnumState.REMOVE_HOST );
 		return true;
+	}
+	
+	/**
+	 * removes a serverinfo from this obj.
+	 * (without sending a message to the core)
+	 * @param server The serverInfo to remove
+	 */
+	protected void remove( ServerInfo server ) {
+		synchronized( this ) {
+			this.infoIntMap.remove( server.getServerId() );
+		}
+	}
+	
+	/**
+	 * removes all server of the given networkinfo.enum
+	 * (without sending a message to the core)
+	 * use it to clean the serverlist if a network gets disabled
+	 * @param enum The networkinfo.enum
+	 */
+	public void remove( NetworkInfo.Enum enum ) {
+		Object[] servers = this.infoIntMap.getValues();
+		for ( int i = 0; i < servers.length; i++ ) {
+			ServerInfo server = ( ServerInfo ) servers[ i ];
+			if ( server.getNetwork().getNetworkType() == enum ) {
+				synchronized ( this ) {
+					this.infoIntMap.remove( server.getServerId() );
+				}
+			}
+		}
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -286,10 +315,27 @@ public class ServerInfoIntMap extends InfoIntMap {
 		message = null;
 		aString = null;
 	}
+	
+	/**
+	 * Returns a string representation of this obj
+	 * @return String The string
+	 */
+	public String toString() {
+		StringBuffer result = new StringBuffer();
+		Object[] obj = this.getServers();
+		for ( int i = 0; i < obj.length; i++ ) {
+			ServerInfo server = ( ServerInfo ) obj[ i ];
+			result.append(  server.toString() + "\n" );
+		}
+		return result.toString();
+	}
 }
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.10  2003/08/06 09:47:29  lemmstercvs01
+toString() added, some bugfixes
+
 Revision 1.9  2003/08/05 13:43:18  lemmstercvs01
 added some messages
 
