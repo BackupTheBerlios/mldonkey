@@ -29,10 +29,10 @@ import org.eclipse.swt.SWT;
  * the statusline.
  *
  * @author $user$
- * @version $Id: StatusLineItem.java,v 1.3 2003/06/28 09:50:12 lemmstercvs01 Exp $ 
+ * @version $Id: StatusLineItem.java,v 1.4 2003/07/17 14:58:56 lemmstercvs01 Exp $ 
  *
  */
-abstract class StatusLineItem {
+public abstract class StatusLineItem {
 	protected int position;
 	protected String content;
 	private int alignment = SWT.NONE;
@@ -95,6 +95,9 @@ abstract class StatusLineItem {
 
 /*
 $Log: StatusLineItem.java,v $
+Revision 1.4  2003/07/17 14:58:56  lemmstercvs01
+refactored
+
 Revision 1.3  2003/06/28 09:50:12  lemmstercvs01
 ResourceBundle added
 

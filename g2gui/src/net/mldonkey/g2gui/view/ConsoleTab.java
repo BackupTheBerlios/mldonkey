@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view;
 
 import java.io.IOException;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -40,10 +41,10 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.15 2003/07/15 14:43:30 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.16 2003/07/17 14:58:44 lemmstercvs01 Exp $ 
  *
  */
-public class ConsoleTab extends G2guiTab implements Observer, ControlListener, Runnable {	
+public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
 	private String[] consoleFont;
 	private PreferenceStore preferenceStore;
 	private ConsoleMessage consoleMessage;
@@ -56,19 +57,12 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 	/**
 	 * @param gui the main gui, which takes care of all our tabs
 	 */
-	public ConsoleTab( Gui gui ) {
+	public ConsoleTab( MainTab gui ) {
 		super( gui );
 		this.core = gui.getCore();		
 		this.toolItem.setText( "Console" );		
 		createContents( this.content );
-		( ( Core ) core ).addObserver( this );
 		toolItem.setImage(inActiveIm);
-		//this.consoleFont = preferenceStore.getString( "consoleFont" ).split( "|" );
-		//System.out.println("loaded: "+preferenceStore.getString( "consoleFont" ));
-		
-		
-		
-				
 	} 
 	
 	/* ( non-Javadoc )
@@ -78,26 +72,29 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 		this.parent = parent;		
 		parent.setLayout( null );
 		parent.addControlListener( this );		
-			/*
-			 * Adding the Console-Display Text-field, and creating the saved font
-			 */			
-			infoDisplay = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
-				infoDisplay.setFont( loadFont() );
+		/* Adding the Console-Display Text-field, and creating the saved font */
+		infoDisplay = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
+		infoDisplay.setFont( loadFont() );
 				
-			input = new Text( parent, SWT.SINGLE | SWT.BORDER );					
-			//Send command to core
-			input.addKeyListener( new KeyAdapter() {
-				public void keyPressed( KeyEvent e ) {
-					if ( e.character == SWT.CR ) {
-						infoDisplay.setText( infoDisplay.getText() + input.getText() + "\n" );
-						String[] command = new String[ 1 ] ;
-						command[ 0 ] = input.getText();
-						( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage( ( ( Core ) core ).getConnection() );
-						input.setText( "" );
-					}
-		  		}		
-			} );	
+		input = new Text( parent, SWT.SINGLE | SWT.BORDER );					
+		//Send command to core
+		input.addKeyListener( new KeyAdapter() {
+			public void keyPressed( KeyEvent e ) {
+				if ( e.character == SWT.CR ) {
+					infoDisplay.setText( infoDisplay.getText() + input.getText() + "\n" );
+					String[] command = new String[ 1 ] ;
+					command[ 0 ] = input.getText();
+					( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage( ( ( Core ) core ).getConnection() );
+					input.setText( "" );
+				}
+		  	}		
+		} );	
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	private Font loadFont() {
 		this.preferenceStore = new PreferenceStore( "g2gui.pref" );
 			try { preferenceStore.load(); } catch ( IOException e ) { }		
@@ -114,7 +111,8 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 		return font;
 	}
 	
-	/** what to do, if this tab becomes active
+	/**
+	 * what to do, if this tab becomes active
 	 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
 	 */
 	public void handleEvent( Event event ) {
@@ -123,20 +121,13 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 		core.getConsoleMessage().reset();
 		infoDisplay.setFont( loadFont() );
 	}
-	
-	/*
-	 * Everything below here is a private kind of LayoutManager, only for this tab, 
-	 * as none of the present ones did what i wanted it to do	
-	 * 
-	 */
-	/** ( non-Javadoc )
+
+	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.ControlListener#controlMoved( org.eclipse.swt.events.ControlEvent )
 	 */
-	public void controlMoved( ControlEvent e ) {		
-		/*do nothing*/		
-	}
+	public void controlMoved( ControlEvent e ) { }
 
-	/** ( non-Javadoc )
+	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.ControlListener#controlResized( org.eclipse.swt.events.ControlEvent )
 	 */
 	public void controlResized( ControlEvent e ) {
@@ -148,30 +139,33 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 		}
 	}
 
-	/** ( non-Javadoc )
+	/* (non-Javadoc)
 	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
 	 */
 	public void update( Observable o, Object arg ) {
+		/* are we responsable for this object */
 		if ( arg instanceof ConsoleMessage ) {	
 			this.consoleMessage = ( ConsoleMessage )arg;
 			content.getDisplay().syncExec( this );
 		}
-		/* else: we are not responsible for this Information to be displayed*/
 	}
 
-	/** ( non-Javadoc )
+	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {				
-				String message = consoleMessage.getConsoleMessage();	
-				consoleMessage.reset();	
-					infoDisplay.append( message );
-					infoDisplay.update();			
-				}
+		String message = consoleMessage.getConsoleMessage();	
+		consoleMessage.reset();	
+		infoDisplay.append( message );
+		infoDisplay.update();			
+	}
 }
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.16  2003/07/17 14:58:44  lemmstercvs01
+refactored
+
 Revision 1.15  2003/07/15 14:43:30  dek
 *** empty log message ***
 

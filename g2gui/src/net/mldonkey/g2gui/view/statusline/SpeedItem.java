@@ -29,12 +29,13 @@ import org.eclipse.swt.widgets.Composite;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.view.*;
 
 /**
  * SpeedItem
  *
  * @author $user$
- * @version $Id: SpeedItem.java,v 1.7 2003/06/28 09:37:18 lemmstercvs01 Exp $ 
+ * @version $Id: SpeedItem.java,v 1.8 2003/07/17 14:58:56 lemmstercvs01 Exp $ 
  *
  */
 public class SpeedItem extends StatusLineItem implements Observer {	
@@ -80,6 +81,9 @@ public class SpeedItem extends StatusLineItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.8  2003/07/17 14:58:56  lemmstercvs01
+refactored
+
 Revision 1.7  2003/06/28 09:37:18  lemmstercvs01
 syncExec() -> asyncExec()
 

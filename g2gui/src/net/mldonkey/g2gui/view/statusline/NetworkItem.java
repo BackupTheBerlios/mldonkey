@@ -22,22 +22,23 @@
  */
 package net.mldonkey.g2gui.view.statusline;
 
-import gnu.trove.TIntObjectIterator;
-
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 
-import org.eclipse.swt.widgets.Composite;
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.model.*;
+import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.model.NetworkInfo;
+import net.mldonkey.g2gui.view.StatusLine;
+
+import org.eclipse.swt.widgets.Composite;
 
 
 /**
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.5 2003/07/06 13:19:39 dek Exp $ 
+ * @version $Id: NetworkItem.java,v 1.6 2003/07/17 14:58:56 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkItem extends StatusLineItem implements Observer {
@@ -91,6 +92,9 @@ public class NetworkItem extends StatusLineItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.6  2003/07/17 14:58:56  lemmstercvs01
+refactored
+
 Revision 1.5  2003/07/06 13:19:39  dek
 small change
 
