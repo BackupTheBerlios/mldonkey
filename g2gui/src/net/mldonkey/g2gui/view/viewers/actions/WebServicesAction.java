@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * WebServicesAction
  *
- * @version $Id: WebServicesAction.java,v 1.4 2003/11/27 15:33:10 zet Exp $
+ * @version $Id: WebServicesAction.java,v 1.5 2003/11/27 15:39:02 zet Exp $
  *
  */
 public class WebServicesAction extends Action {
@@ -138,7 +138,7 @@ public class WebServicesAction extends Action {
     private Process openWebBrowser(String href) throws IOException {
         Process p = null;
 
-        if (webBrowser == null) {
+        if (webBrowser == null || webBrowser.equals("")) {
             try {
                 webBrowser = "mozilla"; //$NON-NLS-1$
                 p = Runtime.getRuntime().exec(webBrowser + "  " + href); //$NON-NLS-1$;
@@ -238,6 +238,9 @@ public class WebServicesAction extends Action {
 
 /*
 $Log: WebServicesAction.java,v $
+Revision 1.5  2003/11/27 15:39:02  zet
+bla
+
 Revision 1.4  2003/11/27 15:33:10  zet
 extend for multi platform support
 
