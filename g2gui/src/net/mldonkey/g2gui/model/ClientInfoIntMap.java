@@ -38,7 +38,7 @@ import java.util.Iterator;
  * ClientInfoList
  *
  *
- * @version $Id: ClientInfoIntMap.java,v 1.13 2003/11/26 15:48:09 zet Exp $
+ * @version $Id: ClientInfoIntMap.java,v 1.14 2003/11/27 00:12:10 zet Exp $
  */
 public class ClientInfoIntMap extends InfoIntMap {
     /**
@@ -159,25 +159,32 @@ public class ClientInfoIntMap extends InfoIntMap {
      * @param core
      */
     public void updateUploaders(CoreCommunication core) {
+		Message upstats;
+        
         //	This is sort of crazy, but it is how new_gui does it...
-        Iterator i = uploadersWeakMap.getKeySet().iterator();
-        Message upstats;
+        synchronized (uploadersWeakMap) {
+            Iterator i = uploadersWeakMap.getKeySet().iterator();
+            
 
-        while (i.hasNext()) {
-            ClientInfo clientInfo = (ClientInfo) i.next();
-            Object[] num = new Object[ 1 ];
-            num[ 0 ] = new Integer(clientInfo.getClientid());
-            upstats = new EncodeMessage(Message.S_GET_CLIENT_INFO, num);
-            upstats.sendMessage(core);
+            while (i.hasNext()) {
+                ClientInfo clientInfo = (ClientInfo) i.next();
+                Object[] num = new Object[ 1 ];
+                num[ 0 ] = new Integer(clientInfo.getClientid());
+                upstats = new EncodeMessage(Message.S_GET_CLIENT_INFO, num);
+                upstats.sendMessage(core);
+            }
         }
-
-        upstats = null;
+		upstats = null;
+        
     }
 }
 
 
 /*
 $Log: ClientInfoIntMap.java,v $
+Revision 1.14  2003/11/27 00:12:10  zet
+sync
+
 Revision 1.13  2003/11/26 15:48:09  zet
 minor
 
