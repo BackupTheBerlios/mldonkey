@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.search.AlbumSearch;
@@ -33,11 +34,12 @@ import net.mldonkey.g2gui.view.search.SearchResult;
 import net.mldonkey.g2gui.view.search.SimpleSearch;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
-
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -53,7 +55,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.19 2003/09/01 11:09:43 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.20 2003/09/03 14:47:54 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -110,8 +112,20 @@ public class SearchTab extends GuiTab {
 	 * The search mask
 	 */
 	private void createLeftGroup() {
-		tabFolder = new CTabFolder( tabFolderPage, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		
+		ViewForm searchViewForm = new ViewForm( tabFolderPage , SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		GridData gd = new GridData(GridData.FILL_VERTICAL);
+		gd.widthHint = 150;
+		searchViewForm.setLayoutData(gd);
+		CLabel searchCLabel = CCLabel.createCL(searchViewForm, "TT_SearchButton", "SearchButtonSmallTitlebar");
+
+		tabFolder = new CTabFolder( searchViewForm, SWT.NONE );
 		tabFolder.setLayoutData( new GridData( GridData.FILL_VERTICAL ) );
+		
+		tabFolder.setSelectionBackground(new Color[]{tabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+												tabFolder.getBackground() },
+												new int[] {75});
+		tabFolder.setSelectionForeground(tabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
 				
 		Search[] tabs = this.createTab();
 		for ( int i = 0; i < tabs.length; i++ ) {
@@ -121,6 +135,10 @@ public class SearchTab extends GuiTab {
 			item.setData( tabs[ i ] );			
 		}
 		tabFolder.setSelection( 0 );
+		
+		searchViewForm.setContent(tabFolder);
+		searchViewForm.setTopLeft(searchCLabel);
+		
 	}
 	
 
@@ -129,9 +147,18 @@ public class SearchTab extends GuiTab {
 	 */
 	private void createRightGroup() {
 		/* right group */
-		cTabFolder = new CTabFolder( tabFolderPage, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		
+		ViewForm searchResultsViewForm = new ViewForm( tabFolderPage , SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		searchResultsViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		CLabel searchResultsCLabel = CCLabel.createCL(searchResultsViewForm, G2GuiResources.getString("ST_RESULTS"), "SearchButtonSmallTitlebar");
+		
+		cTabFolder = new CTabFolder( searchResultsViewForm, SWT.NONE );
+		
+		searchResultsViewForm.setContent(cTabFolder);
+		searchResultsViewForm.setTopLeft(searchResultsCLabel);
+		
 		cTabFolder.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-		cTabFolder.marginWidth = 5;
 		/* set this as data, so our children in the ctabfolder know whos their dad ;) */
 		cTabFolder.setData( this );
 		cTabFolder.setSelectionBackground( new Color[]{ cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
@@ -240,6 +267,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.20  2003/09/03 14:47:54  zet
+add headers
+
 Revision 1.19  2003/09/01 11:09:43  lemmster
 show downloading files
 
@@ -259,7 +289,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose
