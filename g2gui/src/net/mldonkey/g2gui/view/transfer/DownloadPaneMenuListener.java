@@ -53,7 +53,7 @@ import org.eclipse.swt.events.DisposeListener;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.14 2003/10/22 17:17:30 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.15 2003/10/28 03:51:25 zet Exp $
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener, DisposeListener {
@@ -126,8 +126,8 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
      */
     public void widgetDisposed( DisposeEvent e ) {
         PreferenceStore p = PreferenceLoader.getPreferenceStore();
-        p.setValue( "downloadsFilterPaused", isFiltered( EnumFileState.PAUSED ) ? true : false );
-        p.setValue( "downloadsFilterQueued", isFiltered( EnumFileState.QUEUED ) ? true : false );
+        p.setValue( "downloadsFilterPaused", isFiltered( EnumFileState.PAUSED ) );
+        p.setValue( "downloadsFilterQueued", isFiltered( EnumFileState.QUEUED ) );
     }
 
     /* (non-Javadoc)
@@ -595,6 +595,9 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.15  2003/10/28 03:51:25  zet
+*** empty log message ***
+
 Revision 1.14  2003/10/22 17:17:30  zet
 common actions
 
