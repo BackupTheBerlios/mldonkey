@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.17 2003/09/01 11:09:43 lemmster Exp $ 
+ * @version $Id: Search.java,v 1.18 2003/09/03 22:15:27 lemmster Exp $ 
  *
  */
 public abstract class Search implements Observer {
@@ -96,7 +96,6 @@ public abstract class Search implements Observer {
 	 * create a searchquery, fill it and send it to mldonkey
 	 */
 	public abstract void performSearch();
-	
 	
 	public void setSearchButton() {
 		stackLayout.topControl = buttons[ 2 ];
@@ -174,26 +173,13 @@ public abstract class Search implements Observer {
 		gridData.horizontalSpan = 2;
 		text = new Text( group, SWT.SINGLE | SWT.BORDER );
 		text.setLayoutData( gridData );
-		// TODO Change all input to a monospaced font
-		// See http://www.nongnu.org/freefont/ and
-		// http://savannah.nongnu.org/download/freefont/freefont-ttf.zip
-		// for a possible candidate if we need to include them ourselves
-		//
-		// temporarily changed font as an example:
-	
-	
-		//	text.setFont(new org.eclipse.swt.graphics.Font(null, "Courier New", 10, SWT.NORMAL));
-		// use JFace font registry (no font leaks...)
-		
 		text.setFont(JFaceResources.getTextFont());
 		
 		text.addMouseListener( new MouseListener() {
 			public void mouseDoubleClick( MouseEvent e ) { }
-
 			public void mouseDown( MouseEvent e ) {
 				setSearchButton();
 			}
-
 			public void mouseUp( MouseEvent e ) { }
 		} );
 		
@@ -208,7 +194,6 @@ public abstract class Search implements Observer {
 			text.setText( "no searchable network enabled" );
 			text.setEnabled( false );	
 		}
-		text.setFocus();
 	}
 	
 	/**
@@ -284,6 +269,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.18  2003/09/03 22:15:27  lemmster
+advanced search introduced; not working and far from complete. just to see the design
+
 Revision 1.17  2003/09/01 11:09:43  lemmster
 show downloading files
 

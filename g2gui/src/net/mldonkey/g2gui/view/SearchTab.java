@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -29,10 +31,13 @@ import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.search.AlbumSearch;
+import net.mldonkey.g2gui.view.search.CompositeSearch;
+import net.mldonkey.g2gui.view.search.MusicComplexSearch;
+import net.mldonkey.g2gui.view.search.OtherComplexSearch;
 import net.mldonkey.g2gui.view.search.Search;
 import net.mldonkey.g2gui.view.search.SearchResult;
 import net.mldonkey.g2gui.view.search.SimpleSearch;
+import net.mldonkey.g2gui.view.search.VideoComplexSearch;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -51,12 +56,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
-
 /**
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.21 2003/09/03 14:59:23 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.22 2003/09/03 22:15:27 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -88,10 +92,22 @@ public class SearchTab extends GuiTab {
 	 * @return The tabs to display
 	 */	
 	private Search[] createTab() {
-		return new Search[] {
-			new SimpleSearch( core, this ),
-			new AlbumSearch( core, this ),
-		};	
+		if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+			List aList = new ArrayList();
+			aList.add( new MusicComplexSearch( core, this ) );
+			aList.add( new VideoComplexSearch( core, this ) );
+			aList.add( new OtherComplexSearch( core, this ) );
+			
+			return new Search[] {
+				new SimpleSearch( core, this ),
+				new CompositeSearch( core, this, aList )
+			};
+		}
+		else {
+			return new Search[] {
+				new SimpleSearch( core, this ),
+			};	
+		}
 	}
 
 	/* (non-Javadoc)
@@ -113,19 +129,22 @@ public class SearchTab extends GuiTab {
 	 */
 	private void createLeftGroup() {
 		
-		ViewForm searchViewForm = new ViewForm( tabFolderPage , SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
-		GridData gd = new GridData(GridData.FILL_VERTICAL);
+		ViewForm searchViewForm = 
+				new ViewForm( tabFolderPage , SWT.BORDER | 
+					( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+		GridData gd = new GridData( GridData.FILL_VERTICAL );
 		gd.widthHint = 150;
 		searchViewForm.setLayoutData(gd);
-		CLabel searchCLabel = CCLabel.createCL(searchViewForm, "TT_SearchButton", "SearchButtonSmallTitlebar");
+		CLabel searchCLabel = 
+			CCLabel.createCL( searchViewForm, "TT_SearchButton", "SearchButtonSmallTitlebar" );
 
 		tabFolder = new CTabFolder( searchViewForm, SWT.NONE );
 		tabFolder.setLayoutData( new GridData( GridData.FILL_VERTICAL ) );
 		
-		tabFolder.setSelectionBackground(new Color[]{tabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-												tabFolder.getBackground() },
-												new int[] {75});
-		tabFolder.setSelectionForeground(tabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
+		tabFolder.setSelectionBackground( 
+			new Color[] { tabFolder.getDisplay().getSystemColor( 
+					SWT.COLOR_TITLE_BACKGROUND ), tabFolder.getBackground() }, new int[] { 75 } );
+		tabFolder.setSelectionForeground( tabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
 				
 		Search[] tabs = this.createTab();
 		for ( int i = 0; i < tabs.length; i++ ) {
@@ -148,10 +167,13 @@ public class SearchTab extends GuiTab {
 	private void createRightGroup() {
 		/* right group */
 		
-		ViewForm searchResultsViewForm = new ViewForm( tabFolderPage , SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
-		searchResultsViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+		ViewForm searchResultsViewForm = 
+			new ViewForm( tabFolderPage , SWT.BORDER |
+				 ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+		searchResultsViewForm.setLayoutData (new GridData( GridData.FILL_BOTH ) );
 		
-		CLabel searchResultsCLabel = CCLabel.createCL(searchResultsViewForm, G2GuiResources.getString("ST_RESULTS"), "SearchButtonSmallTitlebar");
+		CLabel searchResultsCLabel = 
+			CCLabel.createCL( searchResultsViewForm, G2GuiResources.getString( "ST_RESULTS" ), "SearchButtonSmallTitlebar" );
 		
 		cTabFolder = new CTabFolder( searchResultsViewForm, SWT.NONE );
 		
@@ -161,7 +183,7 @@ public class SearchTab extends GuiTab {
 		cTabFolder.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		/* set this as data, so our children in the ctabfolder know whos their dad ;) */
 		cTabFolder.setData( this );
-		cTabFolder.setSelectionBackground( new Color[]{ cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
+		cTabFolder.setSelectionBackground( new Color[] { cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
 											cTabFolder.getBackground() },
 											new int[] { 75 } );
 		cTabFolder.setSelectionForeground( cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
@@ -267,6 +289,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.22  2003/09/03 22:15:27  lemmster
+advanced search introduced; not working and far from complete. just to see the design
+
 Revision 1.21  2003/09/03 14:59:23  zet
 remove margin
 
@@ -292,7 +317,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose
