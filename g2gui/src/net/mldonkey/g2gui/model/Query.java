@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.6 2003/07/04 13:27:50 dek Exp $ 
+ * @version $Id: Query.java,v 1.7 2003/07/04 14:07:06 dek Exp $ 
  *
  */
 public class Query implements SimpleInformation {
@@ -233,21 +233,21 @@ public class Query implements SimpleInformation {
 	}
 
 	/**
-	 * set this querys type :
-	 *  0 : And(x,y,...) -> x AND y AND ... 
-	 *  1 : Or(x,y,...) -> x OR y OR ... 
-	 *  2 : Andnot(x,y) -> x AND NOT y 
-	 *  3 : Module (name, query) -> fields of 'query' to be display in a frame 'name' 
-	 *  4 : Keywords(comment, default) -> a text field, display 'comment' in front, and default value is 'default' 
-	 *  5 : Minsize(comment, default) 
-	 *  6 : Maxsize(comment, default) 
-	 *  7 : Format(comment, default) 
-	 *  8 : Media(comment, default) 
-	 *  9 : Mp3 Artist(comment, default) 
-	 *  10 : Mp3 Title(comment, default) 
-	 *  11 : Mp3 Album(comment, default) 
-	 *  12 : Mp3 Bitrate(comment, default) 
-	 *  13 : Hidden(fields) -> A list of fields whose values cannot be changed by the 
+	 * set this querys type :<br>
+	 *  0 : And(x,y,...) -> x AND y AND ... <br>
+	 *  1 : Or(x,y,...) -> x OR y OR ... <br>
+	 *  2 : Andnot(x,y) -> x AND NOT y <br>
+	 *  3 : Module (name, query) -> fields of 'query' to be display in a frame 'name' <br>
+	 *  4 : Keywords(comment, default) -> a text field, display 'comment' in front, and default value is 'default' <br>
+	 *  5 : Minsize(comment, default) <br>
+	 *  6 : Maxsize(comment, default) <br>
+	 *  7 : Format(comment, default) <br>
+	 *  8 : Media(comment, default) <br>
+	 *  9 : Mp3 Artist(comment, default) <br>
+	 *  10 : Mp3 Title(comment, default) <br>
+	 *  11 : Mp3 Album(comment, default) <br>
+	 *  12 : Mp3 Bitrate(comment, default) <br>
+	 *  13 : Hidden(fields) -> A list of fields whose values cannot be changed by the <br>
 	 * @param b the typ to set
 	 */
 	public void setNode( byte b ) {
@@ -258,6 +258,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.7  2003/07/04 14:07:06  dek
+*** empty log message ***
+
 Revision 1.6  2003/07/04 13:27:50  dek
 inserted attribute node-type
 
