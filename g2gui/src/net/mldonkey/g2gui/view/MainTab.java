@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.5 2003/07/18 09:44:35 dek Exp $ 
+ * @version $Id: MainTab.java,v 1.6 2003/07/22 16:22:56 zet Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -73,11 +73,10 @@ public class MainTab implements Listener {
 		createInternalPrefStore();
 	
 		createContents( shell );
-		
-		/* set the old size of this window */
-		setSizeLocation( shell );
-						
+					
 		shell.pack ();
+		/* set the old size of this window - must be after pack() */
+		setSizeLocation( shell );
 		shell.open ();
 		/* things we should do if we dispose */
 		shell.addDisposeListener( new DisposeListener() {
@@ -420,20 +419,19 @@ public class MainTab implements Listener {
 	 * @param shell The shell to set the size from
 	 */
 	public void setSizeLocation( Shell shell ) {
-		int windowW = internalPrefStore.getInt( "windowWidth" );
-		int windowH = internalPrefStore.getInt( "windowHeight" );
-		int windowPX = internalPrefStore.getInt( "windowX" );
-		int windowPY = internalPrefStore.getInt( "windowY" );
-		boolean windowMaximized = internalPrefStore.getBoolean( "windowMaximized" );
-
+				
 		if (internalPrefStore.contains( "windowX" ) ) {
-			if( windowMaximized )
-				shell.setMaximized( true );
-		}
-		else
-			shell.setBounds( windowPX, windowPY, windowW, windowH );
-		}
-	
+			
+			if( internalPrefStore.getBoolean( "windowMaximized" ) ) 
+				shell.setMaximized( true );   
+			else 
+				shell.setBounds( internalPrefStore.getInt( "windowX" ),
+								internalPrefStore.getInt( "windowY" ),
+								internalPrefStore.getInt( "windowWidth" ), 
+								internalPrefStore.getInt( "windowHeight" ) 
+								);
+		} 
+	}
 	/**
 	 * Saves the size of the shell to a file
 	 * @param shell The shell to save the size from
@@ -454,6 +452,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.6  2003/07/22 16:22:56  zet
+setSizeLocation after pack
+
 Revision 1.5  2003/07/18 09:44:35  dek
 using the right setActive, when choosing default-tab
 
