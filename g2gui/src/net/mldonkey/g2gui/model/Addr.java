@@ -32,7 +32,7 @@ import java.net.UnknownHostException;
  * Addr
  *
  *
- * @version $Id: Addr.java,v 1.22 2003/12/04 08:47:25 lemmy Exp $
+ * @version $Id: Addr.java,v 1.23 2004/03/15 17:31:54 dek Exp $
  */
 public class Addr extends SimpleInformation {
 	/**
@@ -178,8 +178,13 @@ public class Addr extends SimpleInformation {
 			anAddr.address =InetAddress.getByName( aString );
 		}
 		catch ( UnknownHostException e ) {
-			// assume this will never fail
-			e.printStackTrace();
+			/* assume this will never fail
+			 * ===========================
+			 * at least it does in a win98 gcj-environment
+			 * So, stacktrace is commented out here
+			 */
+			
+			//e.printStackTrace();
 		}
 		return anAddr;
 	}
@@ -188,6 +193,9 @@ public class Addr extends SimpleInformation {
 
 /*
 $Log: Addr.java,v $
+Revision 1.23  2004/03/15 17:31:54  dek
+gcj throws exception in win98 environment, stacktrace not printed anymore
+
 Revision 1.22  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
