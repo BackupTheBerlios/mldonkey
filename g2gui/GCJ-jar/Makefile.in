@@ -1,0 +1,31 @@
+GCJ=@GCJ@
+FIND=@FIND@
+
+OBJ_DIR=@OBJ_DIR@
+JAR_DIR=.
+GCJ_LIBS=$(shell $(FIND) $(JAR_DIR) -type f  -name "*.jar" -printf "-I%p ")
+GCJ_LIBS:=$(GCJ_LIBS) -I@SWT_DIR@
+
+GCJ_ARGS=-c -w -Os $(GCJ_LIBS)
+
+JAR_OBJECTS= $(subst .jar,.o,$(shell $(FIND) . -type f  -name "*.jar"  -printf "%P "))
+
+vpath % $(shell $(FIND) $(JAR_DIR) $(OBJ_DIR) -type d)
+
+############
+# TARGETS: #
+############
+.PHONY: all mkobjdir
+
+all : mkobjdir $(JAR_OBJECTS) swt.o
+
+$(JAR_OBJECTS) : %.o : %.jar
+	$(GCJ)  $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $<
+
+swt.o:
+	@$(MAKE) -C @SWT_DIR@
+
+mkobjdir :
+	@if [ ! -d $(OBJ_DIR) ]; then  \
+	mkdir $(OBJ_DIR) ;\
+	fi
