@@ -31,28 +31,19 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.18 2003/09/07 16:12:20 zet Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.19 2003/09/08 10:25:26 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
-	private Button ok, clear, all, audio, video, image, software;
-	private String selectedMedia;
-
 	/**
 	 * @param core The parent CoreCommunication
 	 * @param tab The parent SearchTab
@@ -86,112 +77,16 @@ public class SimpleSearch extends Search {
 		group.setLayout( gridLayout );
 		group.setLayoutData( gridData );
 			
-			this.inputText = 
-				this.createInputBox( group, G2GuiResources.getString( "SS_STRING" ) );
-			this.createNetworkCombo( group, G2GuiResources.getString( "SS_NETWORK" ) );
-			
-		if (PreferenceLoader.loadBoolean("useCombo")) {
-			
-		String[] items = { 
-					G2GuiResources.getString( "SS_ALL" ), 
-					G2GuiResources.getString( "SS_AUDIO" ),
-					G2GuiResources.getString( "SS_VIDEO" ),
-					G2GuiResources.getString( "SS_IMAGE" ),
-					G2GuiResources.getString( "SS_Software" ) 
-				};
-			
-				Label fileTypeLabel = new Label( group, SWT.NONE );
-				fileTypeLabel.setText("File type:");
-				fileTypeLabel.setLayoutData( new GridData(GridData.HORIZONTAL_ALIGN_FILL ));
+		this.inputText = 
+			this.createInputBox( group, G2GuiResources.getString( "SS_STRING" ) );
+		this.createNetworkCombo( group, G2GuiResources.getString( "SS_NETWORK" ) );
 		
-				final Combo fileTypeCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-				fileTypeCombo.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
-				fileTypeCombo.setItems( items );
-				fileTypeCombo.select( 0 );
-				fileTypeCombo.addSelectionListener(new SelectionListener() {
-					public void widgetDefaultSelected(SelectionEvent e) {}
-					public void widgetSelected(SelectionEvent e) {
-						switch (fileTypeCombo.getSelectionIndex()) {
-							case 1: selectedMedia = "Audio"; 
-									break;
-							case 2: selectedMedia = "Video";
-									break;
-							case 3: selectedMedia = "Image";
-									break;
-							case 4: selectedMedia = "Software";
-									break;
-							default: selectedMedia = null;
-									break;
-						}
-					}
-			
-				});	
-			
-	} else {
-				
-			
-			
-			/* media select */
-			gridData = new GridData();
-			gridData.horizontalSpan = 2;
-			all = new Button( group, SWT.RADIO );
-			all.setLayoutData( gridData );
-			all.setText( G2GuiResources.getString( "SS_ALL" ) );
-			/* we want a default selection */
-			all.setSelection( true );
-			all.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					selectedMedia = null;
-				}	
-			} );
+		if ( PreferenceLoader.loadBoolean( "useCombo" ) )	
+			this.createMediaControl( group, G2GuiResources.getString( "SS_MEDIA" ), 0 );
+		else
+			this.createMediaControl( group, null, 1 );	
 
-			gridData = new GridData();
-			gridData.horizontalSpan = 2;
-			audio = new Button( group, SWT.RADIO );
-			audio.setLayoutData( gridData );
-			audio.setText( G2GuiResources.getString( "SS_AUDIO" ) );
-			audio.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					selectedMedia = "Audio";
-				}	
-			} );
-			
-			gridData = new GridData();
-			gridData.horizontalSpan = 2;
-			video = new Button( group, SWT.RADIO );
-			video.setLayoutData( gridData );
-			video.setText( G2GuiResources.getString( "SS_VIDEO" ) );
-			video.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					selectedMedia = "Video";
-				}	
-			} );
-			
-			gridData = new GridData();
-			gridData.horizontalSpan = 2;
-			image = new Button( group, SWT.RADIO );
-			image.setLayoutData( gridData );
-			image.setText( G2GuiResources.getString( "SS_IMAGE" ) );
-			image.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					selectedMedia = "Image";
-				}	
-			} );
-			
-			gridData = new GridData();
-			gridData.horizontalSpan = 2;
-			software = new Button( group, SWT.RADIO );
-			software.setLayoutData( gridData );
-			software.setText( G2GuiResources.getString( "SS_Software" ) );
-			software.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					selectedMedia = "Software";
-				}	
-			} );
-
-	}
-
-			this.createSearchButton( group );
+		this.createSearchButton( group );
 
 		return group;		
 	}
@@ -231,6 +126,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.19  2003/09/08 10:25:26  lemmster
+OtherComplexSearch added, rest improved
+
 Revision 1.18  2003/09/07 16:12:20  zet
 combo
 
@@ -259,7 +157,7 @@ Revision 1.9  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.8  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.7  2003/08/18 01:42:24  zet
 centralize resource bundle

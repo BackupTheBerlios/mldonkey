@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.10 2003/09/07 16:18:04 zet Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.11 2003/09/08 10:25:26 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -98,6 +98,7 @@ public class MusicComplexSearch extends ComplexSearch {
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
 		aSubComposite2.setLayoutData(gridData);
+
         /* the bitrate label */
         gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
         Label label = new Label( aSubComposite2, SWT.NONE );
@@ -106,7 +107,7 @@ public class MusicComplexSearch extends ComplexSearch {
 
         /* the bitrate combo */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        String[] bitrateItems = { "", "96kb", "128kb", "196kb", "265" };
+        String[] bitrateItems = { "", "32kb", "64", "96kb", "128kb", "196kb", "265kb" };
         this.bitrateCombo = new Combo( aSubComposite2, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
 		this.bitrateCombo.setLayoutData( gridData );
 		this.bitrateCombo.setItems( bitrateItems );
@@ -132,13 +133,15 @@ public class MusicComplexSearch extends ComplexSearch {
 		aSubComposite3.setLayoutData( gridData );
 		
         /* the min and max size text fields */
-        if (PreferenceLoader.loadBoolean("useCombo"))
-       this.createMinMaxSizeText( aSubComposite3 );
-       else
-        this.createMaxMinSizeText( aComposite );
+        if ( PreferenceLoader.loadBoolean( "useCombo" ) )
+       		this.createMinMaxSizeText( aSubComposite3 );
+       	else
+        	this.createMaxMinSizeText( aComposite );
 		
 		this.createResultCombo( aSubComposite3 );
+		
 		this.createSearchButton( aComposite );
+
         return aComposite;
     }
 
@@ -181,7 +184,13 @@ public class MusicComplexSearch extends ComplexSearch {
         query.setMp3Title( inputText.getText() );
         query.setMp3Album( albumText.getText() );
         query.setMp3Artist( artistText.getText() );
-        query.setMp3Bitrate( bitrateCombo.getItem( bitrateCombo.getSelectionIndex() ) );
+
+		/* the bitrate */
+        String bitRateString = bitrateCombo.getText();
+		if ( !bitRateString.equals( "" ) ) {
+			int rate = new Integer( bitRateString.substring( 0, bitRateString.length() - 2 ) ).intValue();
+			query.setMp3Bitrate( new Integer( rate * 1024 ).toString() );
+		}
 
 		/* set the remaining input fields and send the query */
         super.performSearch();
@@ -194,6 +203,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.11  2003/09/08 10:25:26  lemmster
+OtherComplexSearch added, rest improved
+
 Revision 1.10  2003/09/07 16:18:04  zet
 combo
 

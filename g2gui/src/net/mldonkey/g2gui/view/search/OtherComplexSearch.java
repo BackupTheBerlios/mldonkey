@@ -23,18 +23,26 @@
 package net.mldonkey.g2gui.view.search;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * OtherComplexSearch
  *
- * @version $Id: OtherComplexSearch.java,v 1.1 2003/09/03 22:15:27 lemmster Exp $ 
+ * @version $Id: OtherComplexSearch.java,v 1.2 2003/09/08 10:25:26 lemmster Exp $ 
  *
  */
 public class OtherComplexSearch extends ComplexSearch {
-
 	/**
 	 * @param core
 	 * @param tab
@@ -47,20 +55,92 @@ public class OtherComplexSearch extends ComplexSearch {
 	 * @see net.mldonkey.g2gui.view.search.ComplexSearch#getName()
 	 */
 	protected String getName() {
-		return "Other";
+		return G2GuiResources.getString( "OCS_NAME" );
 	}
 
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.search.ComplexSearch#createContent(org.eclipse.swt.widgets.Control)
 	 */
 	protected Control createContent( Control aControl ) {
-		return null;
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
+		Composite aComposite = new Composite( ( Composite ) aControl, SWT.NONE );
+		aComposite.setLayout( gridLayout );
+		 		
+		/* the input boxes */
+		Composite aSubComposite = new Composite( aComposite, SWT.NONE );
+		aSubComposite.setLayout( CGridLayout.createGL( 2, 0, 0, 2, 2, false ) );
+		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
+		gridData.horizontalSpan = 2;
+		aSubComposite.setLayoutData( gridData );
+
+		this.inputText = this.createInputBox( aSubComposite, G2GuiResources.getString( "OCS_TITLE" ) );
+
+		/* the network combo */
+		this.createNetworkCombo( aSubComposite, G2GuiResources.getString( "SS_NETWORK" ) );
+ 
+ 		this.createMediaControl( aSubComposite, G2GuiResources.getString( "OCS_MEDIA" ), 0 );
+ 
+		/* the result and size controls */
+		String[] items = { "", "exe", "bin", "img", "gif", "jpg" };
+		this.createExtensionCombo( aSubComposite, items );
+        
+		Label s = new Label( aComposite, SWT.SEPARATOR|SWT.HORIZONTAL );
+		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		gridData.horizontalSpan = 2;
+		s.setLayoutData( gridData );
+		
+		Composite aSubComposite3 = new Composite( aComposite, SWT.NONE );
+		aSubComposite3.setLayout( CGridLayout.createGL( 2, 0, 0, 2, 2, false ) );
+		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		gridData.horizontalSpan = 2;
+		aSubComposite3.setLayoutData( gridData );
+		
+		/* the min and max size text fields */
+		if ( PreferenceLoader.loadBoolean( "useCombo" ) )
+			this.createMinMaxSizeText( aSubComposite3 );
+		else
+			this.createMaxMinSizeText( aComposite );
+		
+		this.createResultCombo( aSubComposite3 );
+		this.createSearchButton( aComposite );
+
+		return aComposite;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
+	 */
+	public void performSearch() {
+		String aText = this.inputText.getText();
+		if ( aText.equals( "" ) ) return;
+
+		/* create an empty query */
+		query = new SearchQuery( core );
+
+		/* set our input fields */
+		query.setSearchString( aText );
+		
+		/* which media is selected */							
+		if ( selectedMedia != null )
+			query.setMedia( selectedMedia );
+
+		/* set the remaining input fields and send the query */
+		super.performSearch();
+
+		/* draw the empty search result */
+		String aString = inputText.getText();
+		new SearchResult( aText, tab.getCTabFolder(), core, query.getSearchIdentifier() );
+	}
 }
 
 /*
 $Log: OtherComplexSearch.java,v $
+Revision 1.2  2003/09/08 10:25:26  lemmster
+OtherComplexSearch added, rest improved
+
 Revision 1.1  2003/09/03 22:15:27  lemmster
 advanced search introduced; not working and far from complete. just to see the design
 

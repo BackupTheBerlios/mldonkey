@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.9 2003/09/07 19:50:06 zet Exp $
+ * @version $Id: ComplexSearch.java,v 1.10 2003/09/08 10:25:26 lemmster Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -101,60 +101,67 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
         return null;
     }
 
-	public void addQueryMinMax(Combo combo) {
+    /**
+     * DOCUMENT ME!
+     *
+     * @param combo DOCUMENT ME!
+     */
+    public void addQueryMinMax( Combo combo ) {
+        String tokenOne = "";
+        String tokenTwo = "MB";
+        StringTokenizer st = new StringTokenizer( combo.getText() );
+        tokenOne = st.nextToken();
+        if ( st.hasMoreTokens() )
+            tokenTwo = st.nextToken();
+        if ( combo == minCombo )
+            query.setMinSize( tokenOne, tokenTwo );
+        else
+            query.setMaxSize( tokenOne, tokenTwo );
+    }
 
-		String tokenOne = "";
-		String tokenTwo = "MB";
-				
-		StringTokenizer st = new StringTokenizer(combo.getText());
-				
-		tokenOne = st.nextToken();
-		if (st.hasMoreTokens()) {
-			tokenTwo = st.nextToken();
-		}
-	
-		if (combo == minCombo)
-			query.setMinSize( tokenOne, tokenTwo );
-		else 
-			query.setMaxSize( tokenOne, tokenTwo );
-	}
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.search.Search#performSearch()
+     */
+    public void performSearch() {
+        if ( PreferenceLoader.loadBoolean( "useCombo" ) ) {
+            if ( !minCombo.getText().equals( "" ) )
+                addQueryMinMax( minCombo );
+            if ( !maxCombo.getText().equals( "" ) )
+                addQueryMinMax( maxCombo );
+        }
+        else {
+            if ( !maxText.getText().equals( "" ) )
+                query.setMaxSize( maxText.getText(),
+                		maxCombo.getItem( maxCombo.getSelectionIndex() ) );
+            if ( !minText.getText().equals( "" ) )
+                query.setMinSize( minText.getText(), 
+                		minCombo.getItem( minCombo.getSelectionIndex() ) );
+        }
 
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
-	 */
-	public void performSearch() {
+        /* the max results */
+        if ( !resultCombo.getItem( resultCombo.getSelectionIndex() ).equals( "" ) )
+            query.setMaxSearchResults( 
+            	new Integer( 
+            		resultCombo.getItem( resultCombo.getSelectionIndex() ) ).intValue() );
 		
-		if (PreferenceLoader.loadBoolean("useCombo")) {
-			if ( !minCombo.getText().equals( "" ) )  
-				addQueryMinMax(minCombo);
-			if ( !maxCombo.getText().equals( "" ) ) 
-				addQueryMinMax(maxCombo);
-		} else {
-			if ( !maxText.getText().equals( "" ) )
-				query.setMaxSize( maxText.getText(), maxCombo.getItem( maxCombo.getSelectionIndex() ) );
-			if ( !minText.getText().equals( "" ) )
-				query.setMinSize( minText.getText(), minCombo.getItem( minCombo.getSelectionIndex() ) );
-		}		
-		
-		if ( !resultCombo.getItem( resultCombo.getSelectionIndex() ).equals( "" ) )
-			query.setMaxSearchResults( 
-				new Integer( resultCombo.getItem( resultCombo.getSelectionIndex()) ).intValue() );
-		if ( !extensionCombo.getItem( extensionCombo.getSelectionIndex() ).equals( "" ) )
-			query.setFormat( extensionCombo.getItem( extensionCombo.getSelectionIndex() ) );
+		/* the extension combo */
+        if ( !extensionCombo.getItem( extensionCombo.getSelectionIndex() ).equals( "" ) )
+            query.setFormat( extensionCombo.getItem( extensionCombo.getSelectionIndex() ) );
 
-		/* get the network id for this query */
-		Object obj = networkCombo.getData( networkCombo.getItem( networkCombo.getSelectionIndex() ) );
-		if ( obj != null ) { // if != All
-			NetworkInfo temp = ( NetworkInfo ) obj;
-			query.setNetwork( temp.getNetwork() );
-		}
+        /* get the network id for this query */
+        Object obj = 
+        	networkCombo.getData( networkCombo.getItem( networkCombo.getSelectionIndex() ) );
+        if ( obj != null ) { // if != All
+            NetworkInfo temp = ( NetworkInfo ) obj;
+            query.setNetwork( temp.getNetwork() );
+        }
 
-		/* now the query is ready to be send */
-		query.send();
-						
-		this.setStopButton();
-	}
+        /* now the query is ready to be send */
+        query.send();
+
+		/* set the button to stop */
+        this.setStopButton();
+    }
 
     /**
      * DOCUMENT ME!
@@ -168,48 +175,60 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
         Label label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
         label.setText( G2GuiResources.getString( "CS_EXTENSION" ) );
-        
-		/* the extension box */
-	  gridData = new GridData( GridData.FILL_HORIZONTAL );
-	  this.extensionCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
-	  this.extensionCombo.setLayoutData( gridData );
-	  this.extensionCombo.setItems( items );
-	  this.extensionCombo.select( 0 );
-	  this.extensionCombo.addMouseListener( this );
+        label.setToolTipText( G2GuiResources.getString( "CS_TOOLHELP" ) );
+
+        /* the extension box */
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        this.extensionCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
+        this.extensionCombo.setLayoutData( gridData );
+        this.extensionCombo.setItems( items );
+        this.extensionCombo.select( 0 );
+        this.extensionCombo.addMouseListener( this );
+        this.extensionCombo.setToolTipText( G2GuiResources.getString( "CS_TOOLHELP" ) );
     }
-      
-	protected void createResultCombo( Composite group ) {
-		/* the extension label */
-	  GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
-	  Label label = new Label( group, SWT.NONE );
-	  label.setLayoutData( gridData );
-	  label.setText( G2GuiResources.getString( "CS_MAXRESULTS" ) );
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param group DOCUMENT ME!
+     */
+    protected void createResultCombo( Composite group ) {
+        /* the extension label */
+        GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
+        Label label = new Label( group, SWT.NONE );
+        label.setLayoutData( gridData );
+        label.setText( G2GuiResources.getString( "CS_MAXRESULTS" ) );
+        label.setToolTipText( G2GuiResources.getString( "CS_TOOLHELP" ) );
 
         /* the max result box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         String[] resultItems = { "", "50", "100", "200", "400" };
-		this.resultCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
-		this.resultCombo.setLayoutData( gridData );
-		this.resultCombo.setItems( resultItems );
-		this.resultCombo.select( 0 );
-		this.resultCombo.addMouseListener( this );
-		/* add a keylistener to deny unvalid input */
-		this.resultCombo.addKeyListener( new KeyListener() {
-			public void keyReleased(KeyEvent e) { }
-			public void keyPressed( KeyEvent e ) {
-				Combo aCombo = ( Combo ) e.widget;
-				String aString = aCombo.getText();
-				try {
-					int i = Integer.parseInt( aString );
-				}
-				catch ( NumberFormatException nE ) {
-					if ( aString.length() > 1 )
-						aCombo.setText( aString.substring( 0, aString.length() - 1 ) );
-					else
-						aCombo.setText( "" );	
-				}
-			}
-		} );	
+        this.resultCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
+        this.resultCombo.setLayoutData( gridData );
+        this.resultCombo.setItems( resultItems );
+        this.resultCombo.select( 0 );
+        this.resultCombo.setToolTipText( G2GuiResources.getString( "CS_TOOLHELP" ) );
+        this.resultCombo.addMouseListener( this );
+
+        /* add a keylistener to deny unvalid input */
+        this.resultCombo.addKeyListener( new KeyListener() {
+                public void keyReleased( KeyEvent e ) {
+                }
+
+                public void keyPressed( KeyEvent e ) {
+                    Combo aCombo = ( Combo ) e.widget;
+                    String aString = aCombo.getText();
+                    try {
+                        int i = Integer.parseInt( aString );
+                    }
+                    catch ( NumberFormatException nE ) {
+                        if ( aString.length() > 1 )
+                            aCombo.setText( aString.substring( 0, aString.length() - 1 ) );
+                        else
+                            aCombo.setText( "" );
+                    }
+                }
+            } );
     }
 
     /**
@@ -218,164 +237,178 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      * @param group DOCUMENT ME!
      */
     protected void createMaxMinSizeText( Composite group ) {
-		/* the max size label */
+        /* the max size label */
         GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
         Label label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
         label.setText( G2GuiResources.getString( "CS_MAXSIZE" ) );
+        label.setToolTipText( G2GuiResources.getString( "CS_TOOLHELP" ) );
 
-		/* the min size label */
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		label = new Label( group, SWT.NONE );
-		label.setLayoutData( gridData );
-		label.setText( G2GuiResources.getString( "CS_MINSIZE" ) );
+        /* the min size label */
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        label = new Label( group, SWT.NONE );
+        label.setLayoutData( gridData );
+        label.setText( G2GuiResources.getString( "CS_MINSIZE" ) );
+        label.setToolTipText( G2GuiResources.getString( "CS_TOOLHELP" ) );
+        /* a new composite with numColumns = 4 */
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.numColumns = 4;
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        gridLayout.makeColumnsEqualWidth = true;
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalSpan = 2;
+        Composite aComposite = new Composite( group, SWT.NONE );
+        aComposite.setLayout( gridLayout );
+        aComposite.setLayoutData( gridData );
+        /* the items for the combos */
+        String[] items = { "", "KB", "MB", "GB" };
 
-		/* a new composite with numColumns = 4 */
-   		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 4;
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.makeColumnsEqualWidth = true;
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalSpan = 2;
-		Composite aComposite = new Composite( group, SWT.NONE );
-		aComposite.setLayout( gridLayout );
-		aComposite.setLayoutData( gridData );
-		
-		/* the items for the combos */
-		String[] items = { "", "KB", "MB", "GB" };
-
-		/* the max size text */
+        /* the max size text */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         this.maxText = new Text( aComposite, SWT.SINGLE | SWT.BORDER );
-		this.maxText.setLayoutData( gridData );
-		this.maxText.addListener( SWT.Verify, this );
-		this.maxText.addMouseListener( this );
+        this.maxText.setLayoutData( gridData );
+        this.maxText.addListener( SWT.Verify, this );
+        this.maxText.addMouseListener( this );
+        this.maxText.setToolTipText( G2GuiResources.getString( "CS_TOOLHELP" ) );
 
-		/* the max size combo */
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalIndent = -5;
-		this.maxCombo = new Combo( aComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-		this.maxCombo.setLayoutData( gridData );
-		this.maxCombo.setItems( items );
-		this.maxCombo.select( 0 );
-		this.maxCombo.addMouseListener( this );
+        /* the max size combo */
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalIndent = -5;
+        this.maxCombo = new Combo( aComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+        this.maxCombo.setLayoutData( gridData );
+        this.maxCombo.setItems( items );
+        this.maxCombo.select( 0 );
+        this.maxCombo.addMouseListener( this );
 
         /* the min size text */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-		this.minText = new Text( aComposite, SWT.SINGLE | SWT.BORDER );
-		this.minText.setLayoutData( gridData );
-		this.minText.addListener( SWT.Verify, this );
-		this.minText.addMouseListener( this );
+        this.minText = new Text( aComposite, SWT.SINGLE | SWT.BORDER );
+        this.minText.setLayoutData( gridData );
+        this.minText.addListener( SWT.Verify, this );
+        this.minText.addMouseListener( this );
+        this.minText.setToolTipText( G2GuiResources.getString( "CS_TOOLHELP" ) );
 
-		/* the max size combo */
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalIndent = -5;
-		this.minCombo = new Combo( aComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-		this.minCombo.setLayoutData( gridData );
-		this.minCombo.setItems( items );
-		this.minCombo.select( 0 );
-		this.minCombo.addMouseListener( this );
+        /* the max size combo */
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalIndent = -5;
+        this.minCombo = new Combo( aComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+        this.minCombo.setLayoutData( gridData );
+        this.minCombo.setItems( items );
+        this.minCombo.select( 0 );
+        this.minCombo.addMouseListener( this );
     }
-    
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param group DOCUMENT ME!
+     */
     protected void createMinMaxSizeText( Composite group ) {
-			createSizeText( group, G2GuiResources.getString( "CS_MINSIZE" ), 1 );
-			createSizeText( group, G2GuiResources.getString( "CS_MAXSIZE" ), 2 );
+        createSizeText( group, G2GuiResources.getString( "CS_MINSIZE" ), 1 );
+        createSizeText( group, G2GuiResources.getString( "CS_MAXSIZE" ), 2 );
     }
-    
-    protected void createSizeText ( Composite group, String labelText, int type ) {
 
-		/* the max size label */
-				
-		GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
-		Label label = new Label( group, SWT.NONE );
-		label.setLayoutData( gridData );
-		label.setText( labelText );
-		
-		/* the items for the combos */
-		String[] items = { "", "100 KB", "200 KB", "500 KB", "1 MB",
-							"5 MB", "10 MB", "50 MB", "100 MB", 
-							"500 MB", "1 GB", "2 GB"  };
-	
-		/* the max size combo */
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		Combo aCombo;
-		
-		if (type==1) {
-			minCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
-			aCombo = minCombo;	
-		} else {
-			maxCombo = new Combo( group, SWT.SINGLE | SWT.BORDER ); 
-			aCombo = maxCombo;
-    	}
-		
-		aCombo.setLayoutData( gridData );
-		aCombo.setItems( items );
-		aCombo.select( 0 );
-		aCombo.addMouseListener( this );
-	
-	}	
+    /**
+     * DOCUMENT ME!
+     *
+     * @param group DOCUMENT ME!
+     * @param labelText DOCUMENT ME!
+     * @param type DOCUMENT ME!
+     */
+    protected void createSizeText( Composite group, String labelText, int type ) {
+        /* the max size label */
+        GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
+        Label label = new Label( group, SWT.NONE );
+        label.setLayoutData( gridData );
+        label.setText( labelText );
+        label.setToolTipText( G2GuiResources.getString( "CS_TOOLHELP" ) );
+        /* the items for the combos */
+        String[] items = { "", "100 KB", "200 KB", "500 KB", "1 MB",
+        				   "5 MB", "10 MB", "50 MB", "100 MB", "500 MB",
+        				   "1 GB", "2 GB"
+        };
 
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @param e DOCUMENT ME!
-	 */
+        /* the max size combo */
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        Combo aCombo;
+        if ( type == 1 ) {
+            minCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
+            aCombo = minCombo;
+        }
+        else {
+            maxCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
+            aCombo = maxCombo;
+        }
+        aCombo.setLayoutData( gridData );
+        aCombo.setItems( items );
+        aCombo.select( 0 );
+        aCombo.addMouseListener( this );
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param e DOCUMENT ME!
+     */
     public void handleEvent( Event e ) {
-		Text aText = ( Text ) e.widget;
-		String aString = "";
-    	try {
-    		if ( aText.getText() != null ) {
-				aString = aText.getText();    			
-    		}
-			float f = Float.parseFloat( aString + e.text );
-    	}
-    	catch ( NumberFormatException nE ) {
-    		e.doit = false;
-    	}
-   }
-   
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update( Observable o, Object arg ) {
-		maxText.getDisplay().asyncExec( new Runnable() {
-			public void run() {
-				/* update the other text */
-				if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
-					maxText.setEnabled( false );
-					minText.setEnabled( false );
-					resultCombo.setEnabled( false );
-					extensionCombo.setEnabled( false );
-				}
-				else {	
-					maxText.setEnabled( true );
-					minText.setEnabled( true );
-					resultCombo.setEnabled( true );
-					extensionCombo.setEnabled( true );
-				}
-			}
-		} );
-		super.update( o, arg );
-	}
+        Text aText = ( Text ) e.widget;
+        String aString = "";
+        try {
+            if ( aText.getText() != null )
+                aString = aText.getText();
+            float f = Float.parseFloat( aString + e.text );
+        }
+        catch ( NumberFormatException nE ) {
+            e.doit = false;
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
-	 */
-	public void mouseDoubleClick( MouseEvent e ) { }
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-	 */
-	public void mouseUp( MouseEvent e ) { }
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-	 */
-	public void mouseDown( MouseEvent e ) {
-		setSearchButton();
-	}
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update( Observable o, Object arg ) {
+        maxText.getDisplay().asyncExec( new Runnable() {
+                public void run() {
+                    /* update the other text */
+                    if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
+                        maxText.setEnabled( false );
+                        minText.setEnabled( false );
+                        resultCombo.setEnabled( false );
+                        extensionCombo.setEnabled( false );
+                    }
+                    else {
+                        maxText.setEnabled( true );
+                        minText.setEnabled( true );
+                        resultCombo.setEnabled( true );
+                        extensionCombo.setEnabled( true );
+                    }
+                }
+            } );
+        super.update( o, arg );
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
+     */
+    public void mouseDoubleClick( MouseEvent e ) { }
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
+     */
+    public void mouseUp( MouseEvent e ) { }
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
+     */
+    public void mouseDown( MouseEvent e ) {
+        setSearchButton();
+    }
 }
+
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.10  2003/09/08 10:25:26  lemmster
+OtherComplexSearch added, rest improved
+
 Revision 1.9  2003/09/07 19:50:06  zet
 use min/max combo
 

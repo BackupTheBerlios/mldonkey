@@ -43,13 +43,15 @@ import org.eclipse.swt.widgets.Label;
 /**
  * CompositeSearch
  *
- * @version $Id: CompositeSearch.java,v 1.4 2003/09/05 23:49:07 zet Exp $
+ * @version $Id: CompositeSearch.java,v 1.5 2003/09/08 10:25:26 lemmster Exp $
  *
  */
 public class CompositeSearch extends Search {
     private List aList;
     private Control[] searches;
     private int size;
+    private StackLayout aStackLayout;
+    private Composite aComposite;
 
     /**
      * @param core
@@ -92,7 +94,7 @@ public class CompositeSearch extends Search {
 		
         /* search type (music/video/other...) */
         gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
-      //  gridData.horizontalSpan = 2;
+//		gridData.horizontalSpan = 2;
         Label label = new Label( aSubComposite, SWT.NONE );
         label.setLayoutData( gridData );
         label.setText( "Search type:" );
@@ -105,7 +107,7 @@ public class CompositeSearch extends Search {
             searchNames[ i ] = aComplexSearch.getName();
         }
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-       // gridData.horizontalSpan = 2;
+//		 gridData.horizontalSpan = 2;
         Combo typeCombo = new Combo( aSubComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
         typeCombo.setLayoutData( gridData );
         typeCombo.setItems( searchNames );
@@ -118,8 +120,8 @@ public class CompositeSearch extends Search {
                 for ( int i = 0; i < size; i++ ) {
                     ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
                     if ( aComplexSearch.getName().equals( aString ) ) {
-						stackLayout.topControl = searches[ i ];
-						composite.layout();
+						aStackLayout.topControl = searches[ i ];
+						aComposite.layout();
 						return;
                     }
                 }
@@ -133,18 +135,18 @@ public class CompositeSearch extends Search {
         bar.setLayoutData( gridData );
         
         /* the different search masks */
-        StackLayout aStackLayout = new StackLayout();
+        aStackLayout = new StackLayout();
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
-        composite = new Composite( mainComposite, SWT.NONE );
-        composite.setLayout( aStackLayout );
-        composite.setLayoutData( gridData );
+        aComposite = new Composite( mainComposite, SWT.NONE );
+        aComposite.setLayout( aStackLayout );
+        aComposite.setLayoutData( gridData );
 
         /* store the controls of the complexsearches in a control[] */
         searches = new Control[ size ];
         for ( int i = 0; i < size; i++ ) {
             ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
-            searches[ i ] = aComplexSearch.createContent( composite );
+            searches[ i ] = aComplexSearch.createContent( aComposite );
         }
 		aStackLayout.topControl = searches[ 0 ];
         
@@ -173,6 +175,9 @@ public class CompositeSearch extends Search {
 
 /*
 $Log: CompositeSearch.java,v $
+Revision 1.5  2003/09/08 10:25:26  lemmster
+OtherComplexSearch added, rest improved
+
 Revision 1.4  2003/09/05 23:49:07  zet
 1 line per search option
 

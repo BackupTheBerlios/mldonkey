@@ -41,6 +41,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -53,7 +54,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.24 2003/09/07 08:21:50 lemmster Exp $
+ * @version $Id: Search.java,v 1.25 2003/09/08 10:25:26 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -65,6 +66,7 @@ public abstract class Search implements Observer {
 	protected StackLayout stackLayout;
 	protected Composite composite;
 	protected Button[] buttons;
+	protected String selectedMedia;
     private Button okButton;
     private Button stopButton;
     private Button continueButton;
@@ -164,8 +166,7 @@ public abstract class Search implements Observer {
             } );
         buttons[ 2 ] = okButton;
 		this.stackLayout.topControl = buttons[ 2 ];
-			
-		}
+	}
 
     /**
      * Creates a blank input field for search strings
@@ -203,6 +204,103 @@ public abstract class Search implements Observer {
         }
 		return aText;        
     }
+    
+    protected void createMediaControl( Composite group, String title, int style ) {
+		if ( style == 0 ) {
+		String[] items = { 
+					G2GuiResources.getString( "SS_ALL" ), 
+					G2GuiResources.getString( "SS_AUDIO" ),
+					G2GuiResources.getString( "SS_VIDEO" ),
+					G2GuiResources.getString( "SS_IMAGE" ),
+					G2GuiResources.getString( "SS_SOFTWARE" ) 
+		};
+			
+		Label fileTypeLabel = new Label( group, SWT.NONE );
+		fileTypeLabel.setText( title );
+		fileTypeLabel.setLayoutData( new GridData(GridData.HORIZONTAL_ALIGN_FILL ));
+		
+		final Combo fileTypeCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+		fileTypeCombo.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
+		fileTypeCombo.setItems( items );
+		fileTypeCombo.select( 0 );
+		fileTypeCombo.addSelectionListener( new SelectionListener() {
+				public void widgetDefaultSelected( SelectionEvent e ) {}
+				public void widgetSelected( SelectionEvent e ) {
+					switch ( fileTypeCombo.getSelectionIndex() ) {
+						case 1: selectedMedia = "Audio"; 
+							break;
+						case 2: selectedMedia = "Video";
+							break;
+						case 3: selectedMedia = "Image";
+							break;
+						case 4: selectedMedia = "Software";
+							break;
+						default: selectedMedia = null;
+							break;
+					}
+				}
+			} );	
+		} 
+		else {
+			/* media select */
+			GridData gridData = new GridData();
+			gridData.horizontalSpan = 2;
+			Button all = new Button( group, SWT.RADIO );
+			all.setLayoutData( gridData );
+			all.setText( G2GuiResources.getString( "SS_ALL" ) );
+			/* we want a default selection */
+			all.setSelection( true );
+			all.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent event ) {
+					selectedMedia = null;
+				}	
+			} );
+
+			gridData = new GridData();
+			gridData.horizontalSpan = 2;
+			Button audio = new Button( group, SWT.RADIO );
+			audio.setLayoutData( gridData );
+			audio.setText( G2GuiResources.getString( "SS_AUDIO" ) );
+			audio.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent event ) {
+					selectedMedia = "Audio";
+				}	
+			} );
+			
+			gridData = new GridData();
+			gridData.horizontalSpan = 2;
+			Button video = new Button( group, SWT.RADIO );
+			video.setLayoutData( gridData );
+			video.setText( G2GuiResources.getString( "SS_VIDEO" ) );
+			video.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent event ) {
+					selectedMedia = "Video";
+				}	
+			} );
+			
+			gridData = new GridData();
+			gridData.horizontalSpan = 2;
+			Button image = new Button( group, SWT.RADIO );
+			image.setLayoutData( gridData );
+			image.setText( G2GuiResources.getString( "SS_IMAGE" ) );
+			image.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent event ) {
+					selectedMedia = "Image";
+				}	
+			} );
+			
+			gridData = new GridData();
+			gridData.horizontalSpan = 2;
+			Button software = new Button( group, SWT.RADIO );
+			software.setLayoutData( gridData );
+			software.setText( G2GuiResources.getString( "SS_SOFTWARE" ) );
+			software.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent event ) {
+					selectedMedia = "Software";
+				}	
+			} );
+		}
+    }
 
     /**
      * Creates a DropDown Box with all activated Networks inside
@@ -223,13 +321,13 @@ public abstract class Search implements Observer {
 		this.networkCombo.setLayoutData( gridData );
         
         /* fill the combo with values */
-        fillCombo( this.networkCombo );
+        fillNetworkCombo( this.networkCombo );
     }
 
     /**
      * fill the combo box with the networks
      */
-    private void fillCombo( Combo aCombo ) {
+    private void fillNetworkCombo( Combo aCombo ) {
         /* get all activated networks and display them in the combo */
         NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
         for ( int i = 0; i < networks.length; i++ ) {
@@ -261,7 +359,7 @@ public abstract class Search implements Observer {
             public void run() {
                 /* update the combo */
 				networkCombo.removeAll();
-                fillCombo( networkCombo );
+                fillNetworkCombo( networkCombo );
 				
                 /* update the text */
 				if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
@@ -279,6 +377,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.25  2003/09/08 10:25:26  lemmster
+OtherComplexSearch added, rest improved
+
 Revision 1.24  2003/09/07 08:21:50  lemmster
 resourcebundle added
 
