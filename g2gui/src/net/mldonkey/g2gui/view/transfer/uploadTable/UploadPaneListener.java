@@ -40,7 +40,7 @@ import org.eclipse.jface.action.Separator;
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadPaneListener.java,v 1.8 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: UploadPaneListener.java,v 1.9 2003/11/26 16:02:05 zet Exp $
  *
  */
 public class UploadPaneListener extends ViewFrameListener {
@@ -85,13 +85,16 @@ public class UploadPaneListener extends ViewFrameListener {
         // flip sash/maximize sash
         menuManager.add(new Separator());
         menuManager.add(new FlipSashAction(this.sashForm));
-        menuManager.add(new MaximizeAction(this.sashForm, this.control, "TT_Downloads"));
+        menuManager.add(new MaximizeAction(this.sashForm, this.control, "TT_Uploaders"));
     }
 }
 
 
 /*
 $Log: UploadPaneListener.java,v $
+Revision 1.9  2003/11/26 16:02:05  zet
+resString
+
 Revision 1.8  2003/11/24 01:33:27  zet
 move some classes
 

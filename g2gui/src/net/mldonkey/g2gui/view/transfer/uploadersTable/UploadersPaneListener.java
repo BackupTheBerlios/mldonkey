@@ -25,18 +25,21 @@ package net.mldonkey.g2gui.view.transfer.uploadersTable;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.helper.ViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
 import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
 
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 
 
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadersPaneListener.java,v 1.1 2003/11/26 07:43:15 zet Exp $
+ * @version $Id: UploadersPaneListener.java,v 1.2 2003/11/26 16:02:05 zet Exp $
  *
  */
 public class UploadersPaneListener extends ViewFrameListener {
@@ -53,41 +56,39 @@ public class UploadersPaneListener extends ViewFrameListener {
     public void menuAboutToShow(IMenuManager menuManager) {
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
-        // refresh table
-        menuManager.add(new Separator());
-  //      menuManager.add(new RefreshUploadsAction(gView));
-
         // columnSelector
-        if (advancedMode) {
+        if (advancedMode)
             menuManager.add(new ColumnSelectorAction(gView));
-        }
 
         // for macOS
         createSortByColumnSubMenu(menuManager);
 
         // filter submenu			
- //       MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
-   //                 "TT_DOWNLOAD_MENU_FILTER"));
+        MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
+                    "TT_DOWNLOAD_MENU_FILTER"));
 
         // all filters
-  //      filterSubMenu.add(new AllFilterAction(gView));
-  //      filterSubMenu.add(new Separator());
+        filterSubMenu.add(new AllFilterAction(gView));
+        filterSubMenu.add(new Separator());
 
         // network filters
-  //      createNetworkFilterSubMenu(filterSubMenu);
+        createNetworkFilterSubMenu(filterSubMenu);
 
-  //      menuManager.add(filterSubMenu);
+        menuManager.add(filterSubMenu);
 
         // flip sash/maximize sash
         menuManager.add(new Separator());
         menuManager.add(new FlipSashAction(this.sashForm));
-        menuManager.add(new MaximizeAction(this.sashForm, this.control, "TT_Downloads"));
+        menuManager.add(new MaximizeAction(this.sashForm, this.control, "TT_Uploads"));
     }
 }
 
 
 /*
 $Log: UploadersPaneListener.java,v $
+Revision 1.2  2003/11/26 16:02:05  zet
+resString
+
 Revision 1.1  2003/11/26 07:43:15  zet
 quick attempt at an uploaders table w/proto 19 - still in progress...
 
