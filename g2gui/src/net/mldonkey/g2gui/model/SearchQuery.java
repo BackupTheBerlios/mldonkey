@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.34 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: SearchQuery.java,v 1.35 2004/01/15 20:04:34 lemmy Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -336,7 +336,7 @@ public class SearchQuery implements Sendable {
 			factor = 1024;
 		else if ( unit.equalsIgnoreCase( "mb" ) )
 			factor = 1024 * 1024;
-		else if ( unit.equalsIgnoreCase( "tb" ) )
+		else if ( unit.equalsIgnoreCase( "gb" ) )
 			factor = 1024 * 1024 * 1024;
 		else if ( unit.equalsIgnoreCase( "" ) )
 			factor = 1;
@@ -524,6 +524,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.35  2004/01/15 20:04:34  lemmy
+applied [ Patch #62 ] typo in SearchQuery.java
+
 Revision 1.34  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
