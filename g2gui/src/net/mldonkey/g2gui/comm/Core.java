@@ -57,7 +57,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.120 2003/12/04 08:47:31 lemmy Exp $ 
+ * @version $Id: Core.java,v 1.121 2003/12/28 14:15:43 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -300,6 +300,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					this.sendPullmode( pollModeEnabled );
 					this.sendPassword();
 					this.modelFactory = ModelFactory.getFactory( this.usingVersion, this );
+					if (G2Gui.debug){
+						System.out.println("GUI Protocol-Version: "+this.usingVersion);
+					}
 					break;
 					
 			case Message.R_DEFINE_SEARCH :
@@ -650,6 +653,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.121  2003/12/28 14:15:43  dek
+debug output: gui proto-version
+
 Revision 1.120  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
