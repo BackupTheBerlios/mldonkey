@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfoList
  *
  *
- * @version $Id: SharedFileInfoIntMap.java,v 1.2 2003/09/18 09:16:47 lemmster Exp $ 
+ * @version $Id: SharedFileInfoIntMap.java,v 1.3 2003/09/19 15:56:08 lemmster Exp $ 
  *
  */
 public class SharedFileInfoIntMap extends InfoIntMap {
@@ -85,7 +85,6 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 					this.setChanged();
 				}
 		}
-		else System.out.println( "received update for file not in list :-(" );
 									
 		this.notifyObservers( sharedFileInfo );		
 	}
@@ -93,6 +92,9 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: SharedFileInfoIntMap.java,v $
+Revision 1.3  2003/09/19 15:56:08  lemmster
+removed system.out.println(...)
+
 Revision 1.2  2003/09/18 09:16:47  lemmster
 checkstyle
 
