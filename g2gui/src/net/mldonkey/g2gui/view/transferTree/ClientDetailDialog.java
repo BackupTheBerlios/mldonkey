@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * ClientDetailDialog
  *
  *
- * @version $Id: ClientDetailDialog.java,v 1.14 2003/08/31 00:08:59 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.15 2003/08/31 01:31:17 vaste Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -143,7 +143,7 @@ public class ClientDetailDialog implements Observer {
 		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		buttonComposite.setLayout(CGridLayout.createGL(2,0,0,5,0,false));
 
-		final Button addFriendButton = new Button( buttonComposite, SWT.FLAT );
+		final Button addFriendButton = new Button( buttonComposite, SWT.NONE );
 		addFriendButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));
 		addFriendButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ));
 		addFriendButton.addSelectionListener( new SelectionAdapter() {
@@ -154,7 +154,7 @@ public class ClientDetailDialog implements Observer {
 			}	
 		});
 
-		Button cButton = new Button( buttonComposite, SWT.FLAT );
+		Button cButton = new Button( buttonComposite, SWT.NONE );
 		cButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		cButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
 		cButton.addSelectionListener( new SelectionAdapter() {
@@ -268,6 +268,9 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.15  2003/08/31 01:31:17  vaste
+flat buttons look strange in win
+
 Revision 1.14  2003/08/31 00:08:59  zet
 add buttons
 
@@ -288,6 +291,9 @@ new todo (close button)
 
 Revision 1.8  2003/08/22 21:22:58  lemmster
 fix $Log: ClientDetailDialog.java,v $
+fix Revision 1.15  2003/08/31 01:31:17  vaste
+fix flat buttons look strange in win
+fix
 fix Revision 1.14  2003/08/31 00:08:59  zet
 fix add buttons
 fix
