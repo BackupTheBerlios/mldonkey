@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.view.G2Gui;
 /**
  * ClientInfo20
  *
- * @version $Id: ClientInfo20.java,v 1.7 2004/03/25 18:07:24 dek Exp $ 
+ * @version $Id: ClientInfo20.java,v 1.8 2004/03/25 19:25:23 dek Exp $ 
  *
  */
 public class ClientInfo20 extends ClientInfo19 {
@@ -59,7 +59,7 @@ public class ClientInfo20 extends ClientInfo19 {
 		this.clientNetwork = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(messageBuffer.readInt32());
 		this.getClientKind().readStream(messageBuffer);
 
-		Enum oldState = this.getState().getState();
+		Enum oldState = this.getState();
 		readState(messageBuffer);
 		this.setClientType(messageBuffer.readByte());
 		this.tag = messageBuffer.readTagList();
@@ -106,12 +106,6 @@ public class ClientInfo20 extends ClientInfo19 {
 		onChangedState(oldState);
 	}
 
-	/**
-	 * @param messageBuffer
-	 */
-	protected void readState(MessageBuffer messageBuffer) {
-		this.getState().readStream(messageBuffer);	
-	}
 
 	
 	public int getClientConnectTime() {
@@ -141,6 +135,9 @@ public class ClientInfo20 extends ClientInfo19 {
 
 /*
 $Log: ClientInfo20.java,v $
+Revision 1.8  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.7  2004/03/25 18:07:24  dek
 profiling
 

@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Shell;
  * ServerTableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.20 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.21 2004/03/25 19:25:23 dek Exp $
  *
  */
 public class ServerTableMenuListener extends TableMenuListener { 
@@ -118,7 +118,7 @@ public class ServerTableMenuListener extends TableMenuListener {
             menuManager.add( new DisconnectAction() );
         /* connect */
         if ( ( selectedServer != null )
-                 && ( selectedServer.getConnectionState().getState() == EnumState.NOT_CONNECTED ) )
+                 && ( selectedServer.getState() == EnumState.NOT_CONNECTED ) )
             menuManager.add( new ConnectAction() );
         /* connect more (with the network) */
         if ( selectedServer != null )
@@ -513,6 +513,9 @@ public class ServerTableMenuListener extends TableMenuListener {
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.21  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.20  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

@@ -38,7 +38,7 @@ import org.eclipse.swt.graphics.Image;
  * ServerTableLabelProvider
  *
  *
- * @version $Id: ServerTableLabelProvider.java,v 1.12 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: ServerTableLabelProvider.java,v 1.13 2004/03/25 19:25:23 dek Exp $
  *
  */
 public class ServerTableLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -100,7 +100,7 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
             return "" + server.getNumOfFilesShared();
 
         case ServerTableView.STATE:
-            return server.getConnectionState().getState().toString();
+            return server.getState().toString();
 
         case ServerTableView.FAVORITE:
             return G2GuiResources.getString(server.isFavorite() ? "TLP_TRUE" : "TLP_FALSE");
@@ -131,9 +131,9 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
 
         if (server.isConnected()) {
             return connectColor;
-        } else if (server.getConnectionState().getState() == EnumState.CONNECTING) {
+        } else if (server.getState() == EnumState.CONNECTING) {
             return connectingColor;
-        } else if (server.getConnectionState().getState() == EnumState.NOT_CONNECTED) {
+        } else if (server.getState() == EnumState.NOT_CONNECTED) {
             return disconnectColor;
         }
 
@@ -158,6 +158,9 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ServerTableLabelProvider.java,v $
+Revision 1.13  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.12  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

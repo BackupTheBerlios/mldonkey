@@ -34,7 +34,7 @@ import org.eclipse.jface.viewers.Viewer;
  * ServerTableSorter
  *
  *
- * @version $Id: ServerTableSorter.java,v 1.11 2003/12/04 08:47:31 lemmy Exp $
+ * @version $Id: ServerTableSorter.java,v 1.12 2004/03/25 19:25:23 dek Exp $
  *
  */
 public class ServerTableSorter extends GSorter {
@@ -106,8 +106,8 @@ public class ServerTableSorter extends GSorter {
 
         case ServerTableView.STATE:
 
-            EnumState state1 = (EnumState) server1.getConnectionState().getState();
-            EnumState state2 = (EnumState) server2.getConnectionState().getState();
+            EnumState state1 = (EnumState) server1.getState();
+            EnumState state2 = (EnumState) server2.getState();
 
             if (lastSort)
                 return state1.compareTo(state2);
@@ -148,6 +148,9 @@ public class ServerTableSorter extends GSorter {
 
 /*
 $Log: ServerTableSorter.java,v $
+Revision 1.12  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.11  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

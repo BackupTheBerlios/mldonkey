@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.view.G2Gui;
 /**
  * ClientInfo19
  *
- * @version $Id: ClientInfo19.java,v 1.4 2004/03/25 18:07:24 dek Exp $ 
+ * @version $Id: ClientInfo19.java,v 1.5 2004/03/25 19:25:23 dek Exp $ 
  *
  */
 public class ClientInfo19 extends ClientInfo {
@@ -78,8 +78,8 @@ public class ClientInfo19 extends ClientInfo {
 
 		this.getClientKind().readStream(messageBuffer);
 
-		Enum oldState = this.getState().getState();
-		this.getState().readStream(messageBuffer);
+		Enum oldState = this.getState();
+		readState(messageBuffer);		
 		this.setClientType(messageBuffer.readByte());
 		this.tag = messageBuffer.readTagList();
 		this.clientName = messageBuffer.readString();
@@ -143,6 +143,9 @@ public class ClientInfo19 extends ClientInfo {
 
 /*
 $Log: ClientInfo19.java,v $
+Revision 1.5  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.4  2004/03/25 18:07:24  dek
 profiling
 

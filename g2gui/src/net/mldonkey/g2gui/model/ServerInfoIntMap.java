@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.30 2004/03/20 01:34:02 dek Exp $
+ * @version $Id: ServerInfoIntMap.java,v 1.31 2004/03/25 19:25:23 dek Exp $
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -98,7 +98,7 @@ public class ServerInfoIntMap extends InfoIntMap {
             server.readStream( messageBuffer );
 
             /* ignore removed servers */
-            if ( server.getConnectionState().getState() != EnumState.REMOVE_HOST )
+            if ( server.getState() != EnumState.REMOVE_HOST )
                 synchronized ( this.modified ) {
                     this.modified.add( this.get( id ) );
                 }
@@ -106,7 +106,7 @@ public class ServerInfoIntMap extends InfoIntMap {
         else {
             ServerInfo serverInfo = new ServerInfo( this.parent );
             serverInfo.readStream( messageBuffer );
-            if ( serverInfo.getConnectionState().getState() != EnumState.REMOVE_HOST )
+            if ( serverInfo.getState() != EnumState.REMOVE_HOST )
                 this.put( serverInfo.getServerId(), serverInfo );
         }
         this.setChanged();
@@ -133,7 +133,7 @@ public class ServerInfoIntMap extends InfoIntMap {
             server.update( messageBuffer );
 
             /* ignore removed servers */
-            if ( server.getConnectionState().getState() != EnumState.REMOVE_HOST )
+            if ( server.getState() != EnumState.REMOVE_HOST )
                 synchronized ( this.modified ) {
                     this.modified.add( server );
                 }
@@ -434,6 +434,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.31  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.30  2004/03/20 01:34:02  dek
 implemented gui-Proto 25 !!!!!
 

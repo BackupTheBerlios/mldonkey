@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * StateGViewerFilter
  *
- * @version $Id: StateGViewerFilter.java,v 1.11 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: StateGViewerFilter.java,v 1.12 2004/03/25 19:25:23 dek Exp $
  *
  */
 public class StateGViewerFilter extends GViewerFilter {
@@ -57,7 +57,7 @@ public class StateGViewerFilter extends GViewerFilter {
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         if (element instanceof ServerInfo) {
             ServerInfo server = (ServerInfo) element;
-            if (aMatcher.matches(server.getConnectionState().getState()))
+            if (aMatcher.matches(server.getState()))
                 return !exclusion;
             return exclusion;
         }
@@ -69,7 +69,7 @@ public class StateGViewerFilter extends GViewerFilter {
         }
 		if (element instanceof ClientInfo) {
 			ClientInfo clientInfo = (ClientInfo) element;
-			if (aMatcher.matches(clientInfo.getState().getState()))
+			if (aMatcher.matches(clientInfo.getState()))
 				return !exclusion;
 			return exclusion;
 		}
@@ -106,6 +106,9 @@ public class StateGViewerFilter extends GViewerFilter {
 
 /*
 $Log: StateGViewerFilter.java,v $
+Revision 1.12  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.11  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

@@ -26,6 +26,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.G2Gui;
@@ -34,7 +35,7 @@ import net.mldonkey.g2gui.view.G2Gui;
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.29 2004/03/25 18:07:24 dek Exp $
+ * @version $Id: ServerInfo.java,v 1.30 2004/03/25 19:25:23 dek Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -69,10 +70,6 @@ public class ServerInfo extends Parent {
 	 * Number of Files shared
 	 */
 	private int numOfFilesShared;
-	/**
-	 * Connection State
-	 */
-	private State connectionState = parent.getModelFactory().getState(); 
 	
 	/**
 	 * Name of Server
@@ -86,13 +83,9 @@ public class ServerInfo extends Parent {
 	 * Is this server a favorite
 	 */
 	private boolean favorite;
+	private Enum state;
+	
 
-	/**
-	 * @return The server connection state
-	 */
-	public State getConnectionState() {
-		return connectionState;
-	}
 	
 	/**
 	 * For the moment just ed2k supported
@@ -218,7 +211,7 @@ public class ServerInfo extends Parent {
 		this.serverMetadata = messageBuffer.readTagList();		
 		this.numOfUsers = messageBuffer.readInt32();
 		this.numOfFilesShared = messageBuffer.readInt32();
-		this.getConnectionState().readStream( messageBuffer );
+		readState( messageBuffer );
 		this.nameOfServer = messageBuffer.readString();
 		this.descOfServer = messageBuffer.readString();
 		/*
@@ -228,6 +221,22 @@ public class ServerInfo extends Parent {
 		this.checkForRemove();
 	}
 	
+	/**
+	 * @param messageBuffer
+	 */
+	protected void readState(MessageBuffer messageBuffer) {
+		
+		this.state = StateHandler.getStatefromByte(messageBuffer.readByte());
+	}
+	
+	
+	/**
+	 * @return The client state
+	 */
+	public Enum getState() {    	
+		return state;
+	}
+
 	/**
 	 * translate the int to EnumNetwork
 	 * @param i the int
@@ -242,8 +251,7 @@ public class ServerInfo extends Parent {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void update( MessageBuffer messageBuffer ) {
-		byte state = messageBuffer.readByte();
-		this.getConnectionState().setState( state );
+		readState(messageBuffer);		
 		/* if this state change to REMOVE_HOST -> remove from serverintmap */
 		this.checkForRemove();
 	}
@@ -253,7 +261,7 @@ public class ServerInfo extends Parent {
 	 * and add it to the removed list
 	 */
 	private void checkForRemove() {
-		if ( this.getConnectionState().getState() == EnumState.REMOVE_HOST ) {
+		if ( getState() == EnumState.REMOVE_HOST ) {
 			this.parent.getServerInfoIntMap().remove( this );
 		}
 	}
@@ -307,7 +315,7 @@ public class ServerInfo extends Parent {
 	 * @return true when connected, false otherwise
 	 */
 	public boolean isConnected() {
-		if ( this.connectionState.getState() == EnumState.CONNECTED )
+		if ( getState() == EnumState.CONNECTED )
 			return true;
 		return false;	
 	}
@@ -325,7 +333,7 @@ public class ServerInfo extends Parent {
 		result.append( "ServerScore: " + getServerAddress() + "\n" );
 		result.append( "NumOfUsers: " + getNumOfUsers() + "\n" );
 		result.append( "NumOfFiles: " + getNumOfFilesShared() + "\n" );
-		result.append( "connectionState: " + getConnectionState().getState().toString() + "\n" );
+		result.append( "connectionState: " + getState().toString() + "\n" );
 		result.append( "nameOfServer: " + getNameOfServer() + "\n" );
 		result.append( "DescOfServer: " + getDescOfServer() + "\n" );
 		return result.toString();
@@ -333,6 +341,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.30  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.29  2004/03/25 18:07:24  dek
 profiling
 

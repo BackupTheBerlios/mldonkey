@@ -49,7 +49,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.92 2004/03/25 18:07:24 dek Exp $
+ * @version $Id: FileInfo.java,v 1.93 2004/03/25 19:25:23 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -708,9 +708,9 @@ public class FileInfo extends Parent implements Observer {
 		this.clientInfoWeakMap.add(clientInfo);
 		clientInfo.addObserver(this);
 
-		if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
-			if (clientInfo.getState().getFileNumber() == -1
-				|| clientInfo.getState().getFileNumber() == id) {
+		if (clientInfo.getState() == EnumState.CONNECTED_DOWNLOADING) {
+			if (clientInfo.getFileNumber() == -1
+				|| clientInfo.getFileNumber() == id) {
 				
 				setActiveSources(+1);
 				if (findTreeClientInfo(clientInfo) == null)
@@ -866,7 +866,7 @@ public class FileInfo extends Parent implements Observer {
             while (it.hasNext()) {
                 ClientInfo clientInfo = (ClientInfo) it.next();
 
-                if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+                if (clientInfo.getState() == EnumState.CONNECTED_DOWNLOADING)
                     activeSources++;
             }
         } else
@@ -1132,6 +1132,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.93  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.92  2004/03/25 18:07:24  dek
 profiling
 

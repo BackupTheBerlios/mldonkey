@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.18 2003/12/07 19:38:09 lemmy Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.19 2004/03/25 19:25:24 dek Exp $
  *
  */
 public class DownloadTableTreeLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -107,7 +107,7 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
         } else if ( arg0 instanceof TreeClientInfo ) {
             ClientInfo clientInfo = ( (TreeClientInfo) arg0 ).getClientInfo();
 
-            if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING ) {
+            if ( clientInfo.getState() == EnumState.CONNECTED_DOWNLOADING ) {
                 return rateAbove0Color;
             } 
             else {
@@ -155,7 +155,7 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 			   case DownloadTableTreeView.NETWORK:
 				   return G2GuiResources.getNetworkImage( clientInfo.getClientnetworkid().getNetworkType() );
 			   case DownloadTableTreeView.NAME:
-				   return G2GuiResources.getClientImage( (EnumState) clientInfo.getState().getState() );
+				   return G2GuiResources.getClientImage( (EnumState) clientInfo.getState() );
 			   default:
 				   return null;
         
@@ -252,6 +252,9 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.19  2004/03/25 19:25:24  dek
+yet more profiling
+
 Revision 1.18  2003/12/07 19:38:09  lemmy
 refactoring
 
@@ -338,7 +341,7 @@ Revision 1.15  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.14  2003/08/22 21:16:36  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer

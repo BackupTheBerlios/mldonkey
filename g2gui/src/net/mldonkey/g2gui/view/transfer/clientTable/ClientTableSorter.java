@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ClientTableSorter
  *
- * @version $Id: ClientTableSorter.java,v 1.15 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: ClientTableSorter.java,v 1.16 2004/03/25 19:25:23 dek Exp $
  *
  */
 public class ClientTableSorter extends GSorter {
@@ -86,17 +86,17 @@ public class ClientTableSorter extends GSorter {
 
         case ClientTableView.STATE:
 
-            if (clientInfo1.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+            if (clientInfo1.getState() == EnumState.CONNECTED_DOWNLOADING)
                 return -1;
-            else if (clientInfo2.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+            else if (clientInfo2.getState() == EnumState.CONNECTED_DOWNLOADING)
                 return 1;
-            else if ((clientInfo1.getState().getRank() != 0) &&
-                    (clientInfo2.getState().getRank() != 0))
-                return compareIntegers(clientInfo1.getState().getRank(),
-                    clientInfo2.getState().getRank());
-            else if (clientInfo1.getState().getRank() != 0)
+            else if ((clientInfo1.getRank() != 0) &&
+                    (clientInfo2.getRank() != 0))
+                return compareIntegers(clientInfo1.getRank(),
+                    clientInfo2.getRank());
+            else if (clientInfo1.getRank() != 0)
                 return -1;
-            else if (clientInfo2.getState().getRank() != 0)
+            else if (clientInfo2.getRank() != 0)
                 return 1;
 
         // else fall through
@@ -118,6 +118,9 @@ public class ClientTableSorter extends GSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.16  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.15  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

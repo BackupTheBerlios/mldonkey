@@ -37,7 +37,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.13 2003/12/04 08:47:28 lemmy Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.14 2004/03/25 19:25:24 dek Exp $
  *
  */
 public class DownloadTableTreeSorter extends GSorter {
@@ -218,8 +218,8 @@ public class DownloadTableTreeSorter extends GSorter {
                     labelProvider.getColumnText(e2, columnIndex));
 
             case DownloadTableTreeView.DOWNLOADED:
-                return compareIntegers(treeClientInfo1.getClientInfo().getState().getRank(),
-                    treeClientInfo2.getClientInfo().getState().getRank());
+                return compareIntegers(treeClientInfo1.getClientInfo().getRank(),
+                    treeClientInfo2.getClientInfo().getRank());
 
             case DownloadTableTreeView.CHUNKS:
                 return compareIntegers(treeClientInfo1.getClientInfo().getNumChunks(treeClientInfo1.getFileInfo()),
@@ -242,6 +242,9 @@ public class DownloadTableTreeSorter extends GSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.14  2004/03/25 19:25:24  dek
+yet more profiling
+
 Revision 1.13  2003/12/04 08:47:28  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -310,7 +313,7 @@ Revision 1.9  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.8  2003/08/22 21:16:36  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.7  2003/08/16 20:03:34  zet
 downloaded at top

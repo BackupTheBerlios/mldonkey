@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.17 2004/03/22 19:17:58 dek Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.18 2004/03/25 19:25:23 dek Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
@@ -132,7 +132,7 @@ public class ClientDetailDialog extends DetailDialog {
         clUploaded = createLine(clientGeneral, "TT_DOWNLOAD_CD_UPLOADED", false);
         clDownloaded = createLine(clientGeneral, "TT_DOWNLOAD_CD_DOWNLOADED", false);
         
-        int fileNumber = clientInfo.getState().getFileNumber();
+        int fileNumber = clientInfo.getFileNumber();
         if (fileNumber != -1){
         	FileInfo transferringFile = core.getFileInfoIntMap().get(fileNumber);
         	if (transferringFile!=null){
@@ -211,7 +211,7 @@ public class ClientDetailDialog extends DetailDialog {
         updateLabel(clUploaded, clientInfo.getUploadedString());
         updateLabel(clDownloaded, clientInfo.getDownloadedString());
         if (transferringFileName != null){
-        	int fileNumber = clientInfo.getState().getFileNumber();
+        	int fileNumber = clientInfo.getFileNumber();
         	FileInfo file = core.getFileInfoIntMap().get(fileNumber);
         	updateLabel(transferringFileName,file.getName());
         }
@@ -233,6 +233,9 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.18  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.17  2004/03/22 19:17:58  dek
 identified mysterious state-id as fileID currently beeing x-ferred
 

@@ -57,7 +57,7 @@ import java.util.Observer;
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.12 2004/01/22 21:28:03 psy Exp $
+ * @version $Id: UploadTableView.java,v 1.13 2004/03/25 19:25:23 dek Exp $
  *
  */
 public class UploadTableView extends GTableView {
@@ -223,7 +223,7 @@ public class UploadTableView extends GTableView {
 
             switch (cViewer.getColumnIDs()[ columnIndex ]) {
             case UploadTableView.STATE:
-                return G2GuiResources.getClientImage((EnumState) clientInfo.getState().getState());
+                return G2GuiResources.getClientImage((EnumState) clientInfo.getState());
 
             case UploadTableView.NETWORK:
                 return G2GuiResources.getNetworkImage(clientInfo.getClientnetworkid()
@@ -322,17 +322,17 @@ public class UploadTableView extends GTableView {
 
             case UploadTableView.STATE:
 
-                if (clientInfo1.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+                if (clientInfo1.getState() == EnumState.CONNECTED_DOWNLOADING)
                     return -1;
-                else if (clientInfo2.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+                else if (clientInfo2.getState() == EnumState.CONNECTED_DOWNLOADING)
                     return 1;
-                else if ((clientInfo1.getState().getRank() != 0) &&
-                        (clientInfo2.getState().getRank() != 0))
-                    return compareIntegers(clientInfo1.getState().getRank(),
-                        clientInfo2.getState().getRank());
-                else if (clientInfo1.getState().getRank() != 0)
+                else if ((clientInfo1.getRank() != 0) &&
+                        (clientInfo2.getRank() != 0))
+                    return compareIntegers(clientInfo1.getRank(),
+                        clientInfo2.getRank());
+                else if (clientInfo1.getRank() != 0)
                     return -1;
-                else if (clientInfo2.getState().getRank() != 0)
+                else if (clientInfo2.getRank() != 0)
                     return 1;
 
             case UploadTableView.SOCK_ADDR:
@@ -414,6 +414,9 @@ public class UploadTableView extends GTableView {
 
 /*
 $Log: UploadTableView.java,v $
+Revision 1.13  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.12  2004/01/22 21:28:03  psy
 renamed "uploads" to "shares" and moved it to a tab of its own.
 "uploaders" are now called "uploads" for improved naming-consistency

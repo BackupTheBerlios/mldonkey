@@ -24,11 +24,12 @@ package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumState;
 
 /**
  * ClientInfo21.java
  *
- * @version $Id: ClientInfo21.java,v 1.2 2004/03/22 18:47:39 dek Exp $ 
+ * @version $Id: ClientInfo21.java,v 1.3 2004/03/25 19:25:23 dek Exp $ 
  *
  */
 public class ClientInfo21 extends ClientInfo20 {
@@ -41,6 +42,11 @@ public class ClientInfo21 extends ClientInfo20 {
 	}
 	
 	private String eMulemod;
+	private int fileNumber = -2;
+	
+	public int getFileNumber(){
+		return fileNumber;
+	}
 
 
 	/*
@@ -64,6 +70,19 @@ public class ClientInfo21 extends ClientInfo20 {
 		eMulemod = messageBuffer.readString();			
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.model.ClientInfo20#readState(net.mldonkey.g2gui.helper.MessageBuffer)
+	 */
+	protected void readState(MessageBuffer messageBuffer) {		
+		super.readState(messageBuffer);
+		if (this.getState() == EnumState.CONNECTED_DOWNLOADING) {
+			fileNumber = messageBuffer.readInt32();
+		}		
+		
+	}
+	
+
+	
 
 	
 }
@@ -71,6 +90,9 @@ public class ClientInfo21 extends ClientInfo20 {
 
 /*
  $Log: ClientInfo21.java,v $
+ Revision 1.3  2004/03/25 19:25:23  dek
+ yet more profiling
+
  Revision 1.2  2004/03/22 18:47:39  dek
  Still some Gui-Protocoll enhancements
 

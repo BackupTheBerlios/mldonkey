@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.view.G2Gui;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.31 2004/03/21 21:00:51 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.32 2004/03/25 19:25:23 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -172,7 +172,7 @@ public class MessageBuffer {
 			return result;
 		} 
 		else
-			return ( "" );
+			return ( G2Gui.emptyString );
 	}
 	
 	/**
@@ -299,6 +299,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.32  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.31  2004/03/21 21:00:51  dek
 implemented gui-Proto 21-25 !!!!!
 

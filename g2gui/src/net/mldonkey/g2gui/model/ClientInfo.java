@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.44 2004/03/25 18:07:24 dek Exp $
+ * @version $Id: ClientInfo.java,v 1.45 2004/03/25 19:25:23 dek Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -65,7 +65,7 @@ public class ClientInfo extends Parent {
     /**
      * Client State
      */
-    private State state = parent.getModelFactory().getState(); 
+    //private State state = parent.getModelFactory().getState(); 
 
     /**
      * Client Type
@@ -132,6 +132,16 @@ public class ClientInfo extends Parent {
     private THash avail = new TIntObjectHashMap(1);
 
 	private TIntArrayList fileInfosTobeNotified;
+
+	
+
+	private int rank;
+	/**
+	 * the file this client is uploading to us -2 / -1 if 
+	 */
+	private int fileNumber = -2;
+
+	protected Enum state;
 
     /**
      * @param core with this object, we make our main cimmunication (the main-Layer)
@@ -218,7 +228,7 @@ public class ClientInfo extends Parent {
     /**
      * @return The client state
      */
-    public State getState() {
+    public Enum getState() {    	
         return state;
     }
 
@@ -245,16 +255,16 @@ public class ClientInfo extends Parent {
      * @return String clientActivity
      */
     public String getClientActivity() {
-        if (this.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+        if (this.getState() == EnumState.CONNECTED_DOWNLOADING)
             return G2GuiResources.getString("TT_Transferring").toLowerCase();
         else
 
             return G2GuiResources.getString("TT_Rank").toLowerCase() + ": " +
-            this.getState().getRank();
+            this.rank;
     }
 
     public boolean isConnected() {
-        Enum enumState = this.getState().getState();
+        Enum enumState = this.getState();
 
         return ((enumState == EnumState.CONNECTED_DOWNLOADING) ||
         (enumState == EnumState.CONNECTED_INITIATING) ||
@@ -266,13 +276,13 @@ public class ClientInfo extends Parent {
     * @return String clientDetailedActivity
     */
     public String getDetailedClientActivity() {
-        if ((this.getState().getState() == EnumState.CONNECTED_DOWNLOADING) ||
-                (this.getState().getRank() == 0))
-            return "" + this.getState().getState().toString();
+        if ((this.getState() == EnumState.CONNECTED_DOWNLOADING) ||
+                (this.rank == 0))
+            return "" + this.getState().toString();
         else
 
-            return "" + this.getState().getState().toString() + " (Q: " +
-            this.getState().getRank() + ")";
+            return "" + this.getState().toString() + " (Q: " +
+            this.rank + ")";
     }
 
     /**
@@ -362,8 +372,10 @@ public class ClientInfo extends Parent {
 
         this.getClientKind().readStream(messageBuffer);
 
-        Enum oldState = this.getState().getState();
-        this.getState().readStream(messageBuffer);
+        Enum oldState = this.getState();
+        //this.stateByte = me
+        //this.getState().readStream(messageBuffer);
+        readState(messageBuffer);
         this.setClientType(messageBuffer.readByte());
         this.tag = messageBuffer.readTagList();
         this.clientName = messageBuffer.readString();
@@ -372,7 +384,22 @@ public class ClientInfo extends Parent {
         onChangedState(oldState);
     }
 
-    public boolean isUploader() {
+    /**
+	 * @param messageBuffer
+	 */
+	protected void readState(MessageBuffer messageBuffer) {
+		this.state = StateHandler.getStatefromByte(messageBuffer.readByte());
+		
+		
+		if ( this.getState() == EnumState.CONNECTED_AND_QUEUED)
+			this.rank = messageBuffer.readInt32();
+		
+		if ( this.getState() == EnumState.NOT_CONNECTED_WAS_QUEUED )
+			this.rank = messageBuffer.readInt32();
+		
+	}
+
+	public boolean isUploader() {
         return false;
     }
 
@@ -381,8 +408,8 @@ public class ClientInfo extends Parent {
      * @param messageBuffer The MessageBuffer to read from
      */
     public void update(MessageBuffer messageBuffer) {
-        Enum oldState = getState().getState();
-        this.getState().update(messageBuffer);
+        Enum oldState = getState();
+        readState(messageBuffer);     
 
         onChangedState(oldState);
     }
@@ -391,7 +418,7 @@ public class ClientInfo extends Parent {
     * @param oldState
     */
     public void onChangedState(Enum oldState) {
-        Enum newState = getState().getState();
+        Enum newState = getState();
 
         this.setChanged();
 
@@ -447,69 +474,31 @@ public class ClientInfo extends Parent {
         Message removeAllFriends = new EncodeMessage(Message.S_REMOVE_ALL_FRIENDS);
         removeAllFriends.sendMessage(core);
         removeAllFriends = null;
-    }    
+    }
+
+	/**
+	 * @return
+	 */
+	public int getRank() {		
+		return rank;
+	}    
+	
+	
+	
+	public int getFileNumber(){
+		return -1;
+	}
     
-//	public synchronized void addObserver(Observer arg0) {
-//		//System.out.println("added Observer: "+arg0);
-//		if (arg0 instanceof FileInfo) {
-//			if (fileInfosTobeNotified== null)
-//				fileInfosTobeNotified = new TIntArrayList(5);
-//			FileInfo file = (FileInfo) arg0;
-//			fileInfosTobeNotified.add(file.getId());			
-//		}
-//		else super.addObserver(arg0);
-//		
-//		//super.addObserver(arg0);
-//		
-//	}
-//	public void notifyObservers() {
-//		if (fileInfosTobeNotified != null) {
-//			fileInfosTobeNotified.forEach(new TIntProcedure() {
-//				public boolean execute(int id) {
-//					FileInfo temp = parent.getFileInfoIntMap().get(id);
-//					temp.update(ClientInfo.this, null);
-//					return true;
-//				}
-//			});
-//		}
-//		super.notifyObservers();
-//	}
-//	
-//	public void notifyObservers(final Object arg0) {
-//		if (fileInfosTobeNotified != null) {
-//			fileInfosTobeNotified.forEach(new TIntProcedure() {
-//				public boolean execute(int id) {
-//					FileInfo temp = parent.getFileInfoIntMap().get(id);
-//						temp.update(ClientInfo.this, arg0);
-//						return true;
-//						}
-//			});
-//		}
-//		super.notifyObservers(arg0);
-//
-//	}	
-//	public synchronized void deleteObserver(Observer arg0) {
-//		if (arg0 instanceof FileInfo){
-//			FileInfo temp = (FileInfo) arg0;
-//			if (fileInfosTobeNotified != null){
-//				int index = fileInfosTobeNotified.indexOf(temp.getId());
-//				if (index != -1)
-//					fileInfosTobeNotified.remove( index );
-//			}
-//		}
-//		else
-//			super.deleteObserver(arg0);
-//	}
-//	public synchronized void deleteObservers() {
-//		fileInfosTobeNotified.clear();
-//		super.deleteObservers();
-//	}
+
 	
 }
 
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.45  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.44  2004/03/25 18:07:24  dek
 profiling
 

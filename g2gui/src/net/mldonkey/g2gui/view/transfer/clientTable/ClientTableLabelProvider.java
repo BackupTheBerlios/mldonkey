@@ -35,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
  *
  * ClientTableLabelProvider
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.17 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.18 2004/03/25 19:25:23 dek Exp $
  *
  */
 public class ClientTableLabelProvider extends GTableLabelProvider implements ITableLabelProvider {
@@ -51,7 +51,7 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ClientTableView.STATE:
-            return G2GuiResources.getClientImage((EnumState) clientInfo.getState().getState());
+            return G2GuiResources.getClientImage((EnumState) clientInfo.getState());
 
         case ClientTableView.NETWORK:
             return G2GuiResources.getNetworkImage(clientInfo.getClientnetworkid().getNetworkType());
@@ -107,6 +107,9 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.18  2004/03/25 19:25:23  dek
+yet more profiling
+
 Revision 1.17  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -174,7 +177,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:17:25  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.1  2003/08/20 14:58:43  zet
 sources clientinfo viewer
