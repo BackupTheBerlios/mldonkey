@@ -83,7 +83,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.46 2003/08/21 10:11:46 dek Exp $ 
+ * @version $Id: MainTab.java,v 1.47 2003/08/21 11:19:15 lemmster Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -705,8 +705,10 @@ public class MainTab implements Listener, Observer, ShellListener {
 		}
 		/* some icons for networks without all states */
 		reg.put( "BTConnected", createTrans( "bt_connected.png" ) );
+		reg.put( "BTConnectedWhite", createTrans( "bt_connected.png", white ) );
 		reg.put( "BTDisabled", createTrans( "bt_disabled.png" ) );
 		reg.put( "MULTIConnected", createTrans( "multinet_connected.png" ) );
+		reg.put( "MULTIConnectedWhite", createTrans( "multinet_connected.png", white ) );
 		reg.put( "MULTIDisabled", createTrans( "multinet_disabled.png" ) );
 			
 		reg.put( "MessagesButtonSmallWhite", createTrans( "messages-16.png", white ) );
@@ -796,6 +798,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.47  2003/08/21 11:19:15  lemmster
+added bt and multinet image
+
 Revision 1.46  2003/08/21 10:11:46  dek
 removed umlaut for comling java-file with gcj
 

@@ -75,6 +75,10 @@ public class G2GuiResources {
 				return getImage("SSConnectedWhite");
 			if (networkType == Enum.DC)
 				return getImage("DCConnectedWhite");
+			if ( networkType == Enum.BT )
+				return getImage( "BTConnectedWhite");
+			if ( networkType == Enum.MULTINET )
+				return getImage( "MULTIConnectedWhite" );		
 			return getImage("UnknownConnectedWhite");
 	}	
 
@@ -122,6 +126,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.4  2003/08/21 11:19:15  lemmster
+added bt and multinet image
+
 Revision 1.3  2003/08/20 14:58:43  zet
 sources clientinfo viewer
 
