@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.19 2003/09/04 12:17:01 lemmster Exp $
+ * @version $Id: Search.java,v 1.20 2003/09/04 21:57:21 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -67,8 +67,6 @@ public abstract class Search implements Observer {
     private Button okButton;
     private Button stopButton;
     private Button continueButton;
-    private GridData gridData;
-    private Label label;
     private Button[] buttons;
 
     /**
@@ -175,37 +173,37 @@ public abstract class Search implements Observer {
      */
     protected Text createInputBox( Composite group, String aString ) {
         /* the box label */
-        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
-        label = new Label( group, SWT.NONE );
+        Label label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
         label.setText( aString );
 
         /* the box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
-        text = new Text( group, SWT.SINGLE | SWT.BORDER );
-        text.setLayoutData( gridData );
-        text.setFont( JFaceResources.getTextFont() );
-        text.addMouseListener( new MouseListener() {
+        Text aText = new Text( group, SWT.SINGLE | SWT.BORDER );
+        aText.setLayoutData( gridData );
+        aText.setFont( JFaceResources.getTextFont() );
+        aText.addMouseListener( new MouseListener() {
             public void mouseDoubleClick( MouseEvent e ) { }
 			public void mouseUp( MouseEvent e ) { }
             public void mouseDown( MouseEvent e ) {
                     setSearchButton();
             }
         } );
-        text.addKeyListener( new KeyAdapter() {
+        aText.addKeyListener( new KeyAdapter() {
             public void keyPressed( KeyEvent e ) {
                 if ( e.character == SWT.CR )
             		performSearch();
             }
         } );
         if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
-            text.setText( "no searchable network enabled" );
-            text.setEnabled( false );
+            aText.setText( "no searchable network enabled" );
+            aText.setEnabled( false );
         }
 
-		return text;        
+		return aText;        
     }
 
     /**
@@ -216,22 +214,22 @@ public abstract class Search implements Observer {
      */
     protected Combo createNetworkCombo( Composite group, String aString ) {
 		/* the combo label */
-        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
-        label = new Label( group, SWT.NONE );
+        Label label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
         label.setText( aString );
         
         /* the combo itself */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
-        combo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-        combo.setLayoutData( gridData );
+        Combo aCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+        aCombo.setLayoutData( gridData );
         
         /* fill the combo with values */
-        fillCombo( combo );
+        fillCombo( aCombo );
         
-        return combo;
+        return aCombo;
     }
 
     /**
@@ -287,6 +285,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.20  2003/09/04 21:57:21  lemmster
+still buggy, but enough for today
+
 Revision 1.19  2003/09/04 12:17:01  lemmster
 lots of changes
 

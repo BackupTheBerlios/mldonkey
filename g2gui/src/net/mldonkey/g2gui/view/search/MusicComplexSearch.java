@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.3 2003/09/04 16:06:45 lemmster Exp $ 
+ * @version $Id: MusicComplexSearch.java,v 1.4 2003/09/04 21:57:21 lemmster Exp $ 
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -73,8 +73,8 @@ public class MusicComplexSearch extends ComplexSearch {
 		composite.setLayout( gridLayout );
 		
 		this.text = this.createInputBox( composite, "Title" );
-		artistText = this.createInputBox( composite, "Artist" );
-		albumText = this.createInputBox( composite, "Album" );
+		this.artistText = this.createInputBox( composite, "Artist" );
+		this.albumText = this.createInputBox( composite, "Album" );
 		
 		/* the bitrate label */
 		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -97,17 +97,19 @@ public class MusicComplexSearch extends ComplexSearch {
 			this.createNetworkCombo( composite, G2GuiResources.getString( "SS_NETWORK" ) );
 
 		/* the result and size controls */
-		String[] items = { "mp3", "ogg", "wav", "midi" };
+		String[] items = { "", "mp3", "ogg", "wav", "midi" };
 		Combo[] combos =
 			this.createExtensionAndResultCombo( composite, items );
 		this.extensionCombo = ( Combo ) combos[ 0 ];
 		this.resultCombo = ( Combo ) combos[ 1 ];
 
 		/* the min and max size text fields */
-		Text[] texts =
+		Control[][] controls =
 			this.createMaxMinSizeText( composite );
-		this.maxText = texts[ 0 ];
-		this.minText = texts[ 1 ];
+		this.maxText = ( Text ) controls[ 0 ][ 0 ];
+		this.maxCombo = ( Combo ) controls[ 0 ][ 1 ];
+		this.minText = ( Text ) controls[ 1 ][ 0 ];
+		this.minCombo = ( Combo ) controls[ 1 ][ 1 ];
 
 		/* the search button */
 		Object[] obj =
@@ -129,12 +131,14 @@ public class MusicComplexSearch extends ComplexSearch {
 			public void run() {
 				/* update the other text */
 				 if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
-					 artistText.setEnabled( false );
-					 albumText.setEnabled( false );
+				 	artistText.setEnabled( false );
+				 	albumText.setEnabled( false );
+					bitrateCombo.setEnabled( false );
 				 }
 				 else {
 					artistText.setEnabled( true );
 					albumText.setEnabled( true );
+				 	bitrateCombo.setEnabled( true );
 				 }
 			}
 		} );
@@ -153,13 +157,25 @@ public class MusicComplexSearch extends ComplexSearch {
 		query.setMp3Artist( artistText.getText() );
 		query.setMp3Bitrate(
 			bitrateCombo.getItem( bitrateCombo.getSelectionIndex() ) );
+		
 		super.performSearch();
+		
+		/* draw the empty search result */
+		String aString = text.getText() + " "
+						 + artistText.getText() + " "
+						 + albumText.getText();
+		new SearchResult( aString, tab.getCTabFolder(),
+						  core, query.getSearchIdentifier() );	
+
 	}
 
 }
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.4  2003/09/04 21:57:21  lemmster
+still buggy, but enough for today
+
 Revision 1.3  2003/09/04 16:06:45  lemmster
 working in progress
 

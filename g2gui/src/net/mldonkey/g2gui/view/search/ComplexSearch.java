@@ -22,6 +22,11 @@
  */
 package net.mldonkey.g2gui.view.search;
 
+import gnu.regexp.RE;
+import gnu.regexp.REException;
+
+import java.util.Observable;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.view.SearchTab;
@@ -29,6 +34,7 @@ import net.mldonkey.g2gui.view.SearchTab;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -41,12 +47,14 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.3 2003/09/04 16:06:45 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.4 2003/09/04 21:57:21 lemmster Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener {
     protected Text maxText;
     protected Text minText;
+    protected Combo maxCombo;
+    protected Combo minCombo;
     protected Combo extensionCombo;
     protected Combo resultCombo;
 
@@ -94,9 +102,9 @@ public abstract class ComplexSearch extends Search implements Listener {
 	 */
 	public void performSearch() {
 		if ( !maxText.getText().equals( "" ) )
-			query.setMaxSize( new Long( maxText.getText() ).longValue() );
+			query.setMaxSize( maxText.getText(), maxCombo.getItem( maxCombo.getSelectionIndex() ) );
 		if ( !minText.getText().equals( "" ) )
-			query.setMinSize( new Long( minText.getText() ).longValue() );
+			query.setMinSize( minText.getText(), minCombo.getItem( minCombo.getSelectionIndex() ) );
 		if ( !resultCombo.getItem( resultCombo.getSelectionIndex() ).equals( "" ) )
 			query.setMaxSearchResults( 
 				new Integer( resultCombo.getItem( resultCombo.getSelectionIndex()) ).intValue() );
@@ -113,12 +121,6 @@ public abstract class ComplexSearch extends Search implements Listener {
 		/* now the query is ready to be send */
 		query.send();
 						
-		/* draw the empty search result */
-		new SearchResult( text.getText(), tab.getCTabFolder(),
-						  core, query.getSearchIdentifier() );	
-
-		text.setText( "" );
-			
 		this.setStopButton();
 	}
 
@@ -131,21 +133,18 @@ public abstract class ComplexSearch extends Search implements Listener {
     protected Combo[] createExtensionAndResultCombo( Composite group, String[] items ) {
         /* the max result label */
         GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
-        gridData.horizontalSpan = 1;
         Label label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
         label.setText( "File Extension" );
 
         /* the extension label */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        gridData.horizontalSpan = 1;
         label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
         label.setText( "Max Results" );
 
         /* the extension box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        gridData.horizontalSpan = 1;
         extensionCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
         extensionCombo.setLayoutData( gridData );
         extensionCombo.setItems( items );
@@ -153,14 +152,11 @@ public abstract class ComplexSearch extends Search implements Listener {
 
         /* the max result box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        gridData.horizontalSpan = 1;
-        String[] resultItems = { "50", "100", "200", "400" };
+        String[] resultItems = { "", "50", "100", "200", "400" };
 		resultCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
 		resultCombo.setLayoutData( gridData );
 		resultCombo.setItems( resultItems );
 		resultCombo.select( 0 );
-		/* only allow digits for this combo */
-		resultCombo.addListener( SWT.Verify, this );
 
 		return new Combo[] { extensionCombo, resultCombo };
     }
@@ -170,7 +166,7 @@ public abstract class ComplexSearch extends Search implements Listener {
      *
      * @param group DOCUMENT ME!
      */
-    protected Text[] createMaxMinSizeText( Composite group ) {
+    protected Control[][] createMaxMinSizeText( Composite group ) {
 		/* the max size label */
         GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
         Label label = new Label( group, SWT.NONE );
@@ -182,37 +178,97 @@ public abstract class ComplexSearch extends Search implements Listener {
 		label = new Label( group, SWT.NONE );
 		label.setLayoutData( gridData );
 		label.setText( "Min Size" );
-        
+
+		/* a new composite with numColumns = 4 */
+   		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 4;
+		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		gridData.horizontalSpan = 2;
+		gridData.horizontalIndent = -6;
+		Composite aComposite = new Composite( group, SWT.NONE );
+		aComposite.setLayout( gridLayout );
+		aComposite.setLayoutData( gridData );
+		
+		/* the items for the combos */
+		String[] items = { "", "KB", "MB", "GB" };
+
 		/* the max size text */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        maxText = new Text( group, SWT.SINGLE | SWT.BORDER );
+        maxText = new Text( aComposite, SWT.SINGLE | SWT.BORDER );
         maxText.setLayoutData( gridData );
 		maxText.addListener( SWT.Verify, this );
 
+		/* the max size combo */
+		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		maxCombo = new Combo( aComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+		maxCombo.setLayoutData( gridData );
+		maxCombo.setItems( items );
+		maxCombo.select( 0 );
+
         /* the min size text */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-		minText = new Text( group, SWT.SINGLE | SWT.BORDER );
+		minText = new Text( aComposite, SWT.SINGLE | SWT.BORDER );
 		minText.setLayoutData( gridData );
 		minText.addListener( SWT.Verify, this );
+
+		/* the max size combo */
+		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		minCombo = new Combo( aComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+		minCombo.setLayoutData( gridData );
+		minCombo.setItems( items );
+		minCombo.select( 0 );
 		
-		return new Text[] { maxText, minText };
+		return new Control[][] { { maxText, maxCombo }, { minText, minCombo } };
     }
-    
+
+	/**
+	 * DOCUMENT ME!
+	 *
+	 * @param e DOCUMENT ME!
+	 */
     public void handleEvent( Event e ) {
-		String aString = e.text;
-		char[] chars = new char[ aString.length() ];
-		aString.getChars( 0, chars.length, chars, 0 );
-		for ( int i = 0; i < chars.length; i++ ) {
-			if ( !( '0' <= chars[ i ] && chars[ i ] <= '9' ) ) {
-				e.doit = false;
-				return;
-			}
+		RE regex = null;
+		try {
+			regex = new RE( "[0-9.]*" );
+		} 
+		catch ( REException reException ) { }
+		if ( !regex.isMatch( e.text ) ) {
+			e.doit = false ;
+			return;
 		}
    }
+   
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update( Observable o, Object arg ) {
+		maxText.getDisplay().asyncExec( new Runnable() {
+			public void run() {
+				/* update the other text */
+				if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
+					maxText.setEnabled( false );
+					minText.setEnabled( false );
+					resultCombo.setEnabled( false );
+					extensionCombo.setEnabled( false );
+				}
+				else {	
+					maxText.setEnabled( true );
+					minText.setEnabled( true );
+					resultCombo.setEnabled( true );
+					extensionCombo.setEnabled( true );
+				}
+			}
+		} );
+		super.update( o, arg );
+	}
+
 }
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.4  2003/09/04 21:57:21  lemmster
+still buggy, but enough for today
+
 Revision 1.3  2003/09/04 16:06:45  lemmster
 working in progress
 
