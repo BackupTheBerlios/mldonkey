@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.13 2003/08/02 09:32:23 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.14 2003/08/02 10:02:52 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -114,7 +114,7 @@ public class OptionsInfo extends Parent {
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.key = messageBuffer.readString();
-		this.setValue( messageBuffer.readString() );
+		this.value = messageBuffer.readString();
 	}
 	
 	/**
@@ -288,6 +288,9 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.14  2003/08/02 10:02:52  lemmstercvs01
+bugfix in readStream()
+
 Revision 1.13  2003/08/02 09:32:23  lemmstercvs01
 setOption added
 
