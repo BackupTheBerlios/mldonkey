@@ -29,6 +29,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
+import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -52,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.21 2003/08/31 15:37:45 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.22 2003/09/13 22:26:44 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -146,13 +147,10 @@ public class ClientDetailDialog implements Observer {
 		final Button addFriendButton = new Button( buttonComposite, SWT.NONE );
 		addFriendButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));
 		addFriendButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ));
-		for (int i = 0; i < core.getClientInfoIntMap().getFriendsList().size(); i++) {
-			ClientInfo friendClientInfo = (ClientInfo) core.getClientInfoIntMap().getFriendsList().get(i);
-			if (friendClientInfo == clientInfo) {
-				addFriendButton.setEnabled(false);
-				break;
-			}
-		}
+		
+		if (clientInfo.getClientType() == EnumClientType.FRIEND)
+			addFriendButton.setEnabled(false);
+
 		addFriendButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 				ClientInfo.addFriend(core, clientInfo.getClientid());
@@ -170,8 +168,6 @@ public class ClientDetailDialog implements Observer {
 						shell.dispose();
 			}	
 		});
-		
-
 
 		updateLabels();
 		fileInfo.addObserver(this);
@@ -272,6 +268,9 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.22  2003/09/13 22:26:44  zet
+weak sets & !rawrate
+
 Revision 1.21  2003/08/31 15:37:45  zet
 check if already a friend
 

@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Widget;
  * CustomTableTreeViewer
  *
  *
- * @version $Id: CustomTableTreeViewer.java,v 1.7 2003/08/31 15:30:41 zet Exp $ 
+ * @version $Id: CustomTableTreeViewer.java,v 1.8 2003/09/13 22:26:44 zet Exp $ 
  *
  */
 public class CustomTableTreeViewer extends TableTreeViewer {
@@ -100,11 +100,13 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 				if ( cprov.getForeground(element) != null
 					|| ( !ti.getParent().getForeground().getRGB().equals( ti.getForeground().getRGB() )) ) {
 					ti.setForeground(cprov.getForeground(element));
+					
 				}
 			}
 			if (ti.getBackground() != cprov.getBackground(element)) {
 				if ( cprov.getBackground(element) != null
 					|| ( !ti.getParent().getBackground().getRGB().equals( ti.getBackground().getRGB() )) ) {
+					
 					ti.setBackground(cprov.getBackground(element));
 				}
 			}
@@ -113,6 +115,9 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 }
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.8  2003/09/13 22:26:44  zet
+weak sets & !rawrate
+
 Revision 1.7  2003/08/31 15:30:41  zet
 colorprovider
 

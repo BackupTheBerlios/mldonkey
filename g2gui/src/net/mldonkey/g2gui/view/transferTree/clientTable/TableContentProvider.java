@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Display;
  * TableContentProvider
  *
  *
- * @version $Id: TableContentProvider.java,v 1.4 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: TableContentProvider.java,v 1.5 2003/09/13 22:26:44 zet Exp $ 
  *
  */
 public class TableContentProvider implements IStructuredContentProvider, Observer {
@@ -52,7 +52,7 @@ public class TableContentProvider implements IStructuredContentProvider, Observe
 	 
 	public Object[] getElements( Object inputElement ) {
 		FileInfo fileInfo = (FileInfo) inputElement;
-		return fileInfo.getClientInfos().toArray();
+		return fileInfo.getClientInfos().keySet().toArray();
 	}
 
 	/* (non-Javadoc)
@@ -110,6 +110,9 @@ public class TableContentProvider implements IStructuredContentProvider, Observe
 
 /*
 $Log: TableContentProvider.java,v $
+Revision 1.5  2003/09/13 22:26:44  zet
+weak sets & !rawrate
+
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 

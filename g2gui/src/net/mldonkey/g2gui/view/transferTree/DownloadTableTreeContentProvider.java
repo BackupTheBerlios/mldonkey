@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.18 2003/08/30 00:44:01 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.19 2003/09/13 22:26:44 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, TreeListener {
@@ -76,7 +76,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 			List list = Collections.synchronizedList(new ArrayList());
 			FileInfo fileInfo = (FileInfo) parent;
 			synchronized (fileInfo.getClientInfos()) {
-				Iterator it = fileInfo.getClientInfos().iterator();
+				Iterator it = fileInfo.getClientInfos().keySet().iterator();
 				while (it.hasNext()) {
 					ClientInfo clientInfo = (ClientInfo) it.next();
 					if (isInteresting(clientInfo)) {
@@ -102,7 +102,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 			
 			FileInfo fileInfo = (FileInfo) parent;
 			synchronized (fileInfo.getClientInfos()) {
-				Iterator it = fileInfo.getClientInfos().iterator();
+				Iterator it = fileInfo.getClientInfos().keySet().iterator();
 				
 				while (it.hasNext()) {
 					ClientInfo clientInfo = (ClientInfo) it.next();
@@ -234,7 +234,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	
 	public void sendUpdate(Observable o, Object arg) {
 		
-		if (tableTreeViewer == null) return;
+		if (tableTreeViewer == null || tableTreeViewer.getTableTree().isDisposed()) return;
 		
 		if (o instanceof FileInfoIntMap) {
 			// a new FileInfo
@@ -524,6 +524,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.19  2003/09/13 22:26:44  zet
+weak sets & !rawrate
+
 Revision 1.18  2003/08/30 00:44:01  zet
 move tabletree menu
 

@@ -33,7 +33,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProviderBasic
  *
- * @version $Id: DownloadTableTreeLabelProviderBasic.java,v 1.2 2003/08/31 01:46:33 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProviderBasic.java,v 1.3 2003/09/13 22:26:44 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProviderBasic
@@ -79,7 +79,7 @@ public class DownloadTableTreeLabelProviderBasic
 				else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
 					return G2GuiResources.getString( "TT_Downloaded" );	
 				else 
-					return "" + df.format(fileInfo.getRawRate() / 1000f);
+					return "" + df.format(fileInfo.getRate() / 1000f);
 			case 6: // eta
 				return ""+getFileETA(fileInfo);
 			default: 
@@ -111,6 +111,9 @@ public class DownloadTableTreeLabelProviderBasic
 
 /*
 $Log: DownloadTableTreeLabelProviderBasic.java,v $
+Revision 1.3  2003/09/13 22:26:44  zet
+weak sets & !rawrate
+
 Revision 1.2  2003/08/31 01:46:33  zet
 localise
 

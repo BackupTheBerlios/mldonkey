@@ -33,7 +33,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadtableTreeLabelProviderAdvanced
  *
- * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.3 2003/09/10 14:46:07 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.4 2003/09/13 22:26:44 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLabelProvider {
@@ -82,7 +82,7 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 				else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
 					return G2GuiResources.getString( "TT_Downloaded" );	
 				else 
-					return "" + df.format(fileInfo.getRawRate() / 1000f);
+					return "" + df.format(fileInfo.getRate() / 1000f);
 			case 8: // chunks
 				return ""+fileInfo.getNumChunks();
 			case 9: // eta
@@ -124,6 +124,9 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 }
 /*
 $Log: DownloadTableTreeLabelProviderAdvanced.java,v $
+Revision 1.4  2003/09/13 22:26:44  zet
+weak sets & !rawrate
+
 Revision 1.3  2003/09/10 14:46:07  zet
 sources
 
