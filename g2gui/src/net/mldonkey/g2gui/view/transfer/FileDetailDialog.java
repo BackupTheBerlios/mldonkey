@@ -22,6 +22,13 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
+
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
@@ -37,6 +44,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -49,21 +57,13 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import java.text.DecimalFormat;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
-
 
 /**
  *
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.4 2003/10/13 21:13:01 zet Exp $
+ * @version $Id: FileDetailDialog.java,v 1.5 2003/10/19 16:40:37 zet Exp $
  *
  */
 public class FileDetailDialog implements Observer, DisposeListener {
@@ -106,7 +106,15 @@ public class FileDetailDialog implements Observer, DisposeListener {
 
         shell.addDisposeListener( this );
 
-        shell.setBounds( ( desktop.getBounds().width - width ) / 2, ( desktop.getBounds().height - height ) / 2, width, height );
+        Rectangle parentBounds = desktop.getActiveShell().getBounds();
+
+		int tlx = parentBounds.x + (parentBounds.width / 2) - ( width / 2);
+		int tly = parentBounds.y + (parentBounds.height / 2) - ( height / 2);
+
+		tlx = Math.min( (desktop.getClientArea().width - width), Math.max( 0, tlx) );
+		tly = Math.min( (desktop.getClientArea().height - height), Math.max( 0, tly) );
+        
+        shell.setBounds( tlx, tly , width, height );
 
         shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
         shell.setText( G2GuiResources.getString( "TT_File" ) + " " + fileInfo.getId() + " " +
@@ -495,6 +503,9 @@ public class FileDetailDialog implements Observer, DisposeListener {
 
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.5  2003/10/19 16:40:37  zet
+centre
+
 Revision 1.4  2003/10/13 21:13:01  zet
 nil
 

@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -42,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * AddFriend
  *
- * @version $Id: AddFriend.java,v 1.7 2003/09/20 01:20:26 zet Exp $
+ * @version $Id: AddFriend.java,v 1.8 2003/10/19 16:40:28 zet Exp $
  */
 public class AddFriend {
     private Shell shell;
@@ -55,8 +56,16 @@ public class AddFriend {
 	 */
     public AddFriend( final CoreCommunication core ) {
         shell = new Shell( SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
-        shell.setBounds( ( desktop.getBounds().width - width ) / 2,
-                         ( desktop.getBounds().height - height ) / 2, width, height );
+		
+		Rectangle parentBounds = desktop.getActiveShell().getBounds();
+		
+        int tlx = parentBounds.x + (parentBounds.width / 2) - ( width / 2);
+		int tly = parentBounds.y + (parentBounds.height / 2) - ( height / 2);
+
+		tlx = Math.min( (desktop.getClientArea().width - width), Math.max( 0, tlx) );
+		tly = Math.min( (desktop.getClientArea().height - height), Math.max( 0, tly) );
+
+		shell.setBounds( tlx, tly , width, height );
 
         shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
         shell.setText( G2GuiResources.getString( "FR_MENU_ADD_BY_IP" ) );
@@ -107,6 +116,9 @@ public class AddFriend {
 
 /*
 $Log: AddFriend.java,v $
+Revision 1.8  2003/10/19 16:40:28  zet
+centre
+
 Revision 1.7  2003/09/20 01:20:26  zet
 *** empty log message ***
 

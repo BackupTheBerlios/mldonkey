@@ -22,6 +22,11 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
@@ -35,6 +40,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -44,17 +50,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
-
 
 /**
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.3 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.4 2003/10/19 16:40:37 zet Exp $
  *
  */
 public class ClientDetailDialog implements Observer, DisposeListener {
@@ -87,7 +88,16 @@ public class ClientDetailDialog implements Observer, DisposeListener {
     public void createContents() {
         shell = new Shell( SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
         shell.addDisposeListener( this );
-        shell.setBounds( ( desktop.getBounds().width - width ) / 2, ( desktop.getBounds().height - height ) / 2, width, height );
+        
+		Rectangle parentBounds = desktop.getActiveShell().getBounds();
+
+		int tlx = parentBounds.x + (parentBounds.width / 2) - ( width / 2);
+		int tly = parentBounds.y + (parentBounds.height / 2) - ( height / 2);
+
+		tlx = Math.min( (desktop.getClientArea().width - width), Math.max( 0, tlx) );
+		tly = Math.min( (desktop.getClientArea().height - height), Math.max( 0, tly) );
+
+		shell.setBounds( tlx, tly , width, height );
 
         shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
 
@@ -299,6 +309,9 @@ public class ClientDetailDialog implements Observer, DisposeListener {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.4  2003/10/19 16:40:37  zet
+centre
+
 Revision 1.3  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 
