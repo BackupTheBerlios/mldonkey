@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.29 2003/09/26 20:17:48 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.30 2003/09/27 00:36:54 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -111,6 +111,7 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "useCombo", false );
         preferenceStore.setDefault( "minimizeOnClose", false );
         preferenceStore.setDefault( "dragAndDrop", true );
+        preferenceStore.setDefault( "pollUpStats", true );
         
         return preferenceStore;
     }
@@ -220,6 +221,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.30  2003/09/27 00:36:54  zet
+auto poll for upstats preference
+
 Revision 1.29  2003/09/26 20:17:48  zet
 *** empty log message ***
 

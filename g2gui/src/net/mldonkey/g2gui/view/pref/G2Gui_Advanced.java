@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Advanced.java,v 1.5 2003/09/26 04:19:06 zet Exp $
+ * @version $Id: G2Gui_Advanced.java,v 1.6 2003/09/27 00:36:54 zet Exp $
  */
 public class G2Gui_Advanced extends FieldEditorPreferencePage {
 
@@ -137,7 +137,12 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 				G2GuiResources.getString( "PREF_DISPLAY_FLAT_INTERFACE" ),
 				parent ) );
 		
-	
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"pollUpStats",
+				G2GuiResources.getString( "PREF_DISPLAY_POLL_UPSTATS" ),
+				parent ) );
+
 		if ( advanced ) {
 		
 			setupEditor( 
@@ -212,6 +217,9 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Advanced.java,v $
+Revision 1.6  2003/09/27 00:36:54  zet
+auto poll for upstats preference
+
 Revision 1.5  2003/09/26 04:19:06  zet
 drag&drop
 

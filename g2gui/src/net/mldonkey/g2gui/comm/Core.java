@@ -49,12 +49,13 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.model.SimpleInformation;
 import net.mldonkey.g2gui.model.UserInfo;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
 /**
  * Core
  *
  *
- * @version $Id: Core.java,v 1.104 2003/09/26 11:55:48 dek Exp $ 
+ * @version $Id: Core.java,v 1.105 2003/09/27 00:36:54 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -75,6 +76,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * is the gui running in advancedMode
 	 */
 	private boolean advancedMode;
+	/**
+	 * will the gui auto poll for upStats 
+	 */
+	private boolean pollUpStats;
 	/**
 	 * Set this variable to false when we receive the first message after we
 	 * expected "bad password"
@@ -172,6 +177,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		this.waiterObj = waiterObj;
 		this.pollModeEnabled = pollModeEnabled;
 		this.advancedMode = advancedMode;
+		this.pollUpStats = PreferenceLoader.loadBoolean( "pollUpStats" );
 	}
 
 	/**
@@ -373,7 +379,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					/*
 					 * If we reiceive this info, we request Upload-Stats					 * 
 					 */
-					requestUpstats();
+					if ( pollUpStats ) 
+						requestUpstats();
 					break;	
 					
 			case Message.R_DOWNLOAD :
@@ -599,6 +606,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.105  2003/09/27 00:36:54  zet
+auto poll for upstats preference
+
 Revision 1.104  2003/09/26 11:55:48  dek
 right-mouse menue for upload-Table
 
