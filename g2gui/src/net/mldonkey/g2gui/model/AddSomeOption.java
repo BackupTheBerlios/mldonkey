@@ -23,12 +23,14 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumTagType;
 
 /**
  * AddSectionOption
  *
  * @author $user$
- * @version $Id: AddSomeOption.java,v 1.5 2003/07/06 09:37:41 lemmstercvs01 Exp $ 
+ * @version $Id: AddSomeOption.java,v 1.6 2003/07/06 09:52:06 lemmstercvs01 Exp $ 
  *
  */
 public class AddSomeOption implements SimpleInformation {
@@ -47,7 +49,7 @@ public class AddSomeOption implements SimpleInformation {
 	/**
 	 * The Type of the Option (to select which widget to use)
 	 */
-	private OptionType optionType = new OptionType();
+	private Enum optionType;
 
 	/**
 	 * @return The description of the option
@@ -66,7 +68,7 @@ public class AddSomeOption implements SimpleInformation {
 	/**
 	 * @return The optiontype
 	 */
-	public OptionType getOptionType() {
+	public Enum getOptionType() {
 		return optionType;
 	}
 
@@ -76,6 +78,19 @@ public class AddSomeOption implements SimpleInformation {
 	public String getSectionToAppear() {
 		return sectionToAppear;
 	}
+
+	/**
+	 * @param b a byte
+	 */
+	private void setOptionType( byte b ) {
+		if ( b == 0 )
+			optionType = EnumTagType.STRING;
+		else if ( b == 1 )
+			optionType = EnumTagType.BOOL;
+		else if ( b == 2 )
+			optionType = EnumTagType.FILE;
+	}
+
 
 	/**
 	 * Reads an AddSomeOption object from a MessageBuffer
@@ -91,7 +106,7 @@ public class AddSomeOption implements SimpleInformation {
 		 this.sectionToAppear = messageBuffer.readString();
 		 this.description = messageBuffer.readString();
 		 this.nameOfOption = messageBuffer.readString();
-		 this.getOptionType().readStream( messageBuffer );
+		 this.setOptionType( messageBuffer.readByte() );
 	}
 	
 	/**
@@ -110,6 +125,9 @@ public class AddSomeOption implements SimpleInformation {
 
 /*
 $Log: AddSomeOption.java,v $
+Revision 1.6  2003/07/06 09:52:06  lemmstercvs01
+optionType changed to EnumTagType
+
 Revision 1.5  2003/07/06 09:37:41  lemmstercvs01
 javadoc improved
 
