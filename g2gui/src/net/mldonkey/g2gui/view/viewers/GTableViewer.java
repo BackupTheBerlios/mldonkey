@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * Generic Table Viewer
  *
- * @version $Id: GTableViewer.java,v 1.2 2003/10/22 16:39:27 zet Exp $
+ * @version $Id: GTableViewer.java,v 1.3 2003/10/22 16:50:21 zet Exp $
  *
  */
 public class GTableViewer {
@@ -118,7 +118,14 @@ public class GTableViewer {
         manualDispose = false;
 
         String prefCols = PreferenceLoader.loadString(preferenceString + "TableColumns");
-        columnIDs = (validColumnIDs(prefCols) ? prefCols : allColumns);
+
+        if (validColumnIDs(prefCols)) {
+            columnIDs = prefCols;
+        } else {
+            columnIDs = allColumns;
+            PreferenceStore p = PreferenceLoader.getPreferenceStore();
+            p.setValue(preferenceString + "TableColumns", columnIDs);
+        }
 
         final PreferenceStore p = PreferenceLoader.getPreferenceStore();
         tableViewer.setColumnIDs(columnIDs);
@@ -259,6 +266,9 @@ public class GTableViewer {
 
 /*
 $Log: GTableViewer.java,v $
+Revision 1.3  2003/10/22 16:50:21  zet
+validate ids
+
 Revision 1.2  2003/10/22 16:39:27  zet
 validate columnIds
 
