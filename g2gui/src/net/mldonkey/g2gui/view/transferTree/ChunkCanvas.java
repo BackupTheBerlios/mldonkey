@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkCanvas.java,v 1.5 2003/08/04 20:46:08 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.6 2003/08/04 21:05:22 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -438,7 +438,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 		if (!shell.isDisposed()
 			&& shell != null
 			&& shell.getDisplay() != null) {
-			shell.getDisplay().syncExec(new Runnable() {
+			shell.getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (!shell.isDisposed()) {
 						if (!isDisposed())
@@ -455,6 +455,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.6  2003/08/04 21:05:22  zet
+back to async
+
 Revision 1.5  2003/08/04 20:46:08  zet
 synchronized
 
