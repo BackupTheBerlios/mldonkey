@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * AddSomeOptionList
  *
  * @author $user$
- * @version $Id: AddSomeOptionList.java,v 1.5 2003/06/27 10:35:53 lemmstercvs01 Exp $ 
+ * @version $Id: AddSomeOptionList.java,v 1.6 2003/07/06 09:37:41 lemmstercvs01 Exp $ 
  *
  */
 public class AddSomeOptionList extends InfoList {
@@ -40,14 +40,6 @@ public class AddSomeOptionList extends InfoList {
 	 */
 	public AddSomeOptionList( CoreCommunication communication ) {
 		super( communication );
-		
-	}
-
-	/**
-	 * 
-	 */
-	public AddSomeOptionList() {
-		super();
 	}
 	
 	/**
@@ -84,6 +76,9 @@ public class AddSomeOptionList extends InfoList {
 
 /*
 $Log: AddSomeOptionList.java,v $
+Revision 1.6  2003/07/06 09:37:41  lemmstercvs01
+javadoc improved
+
 Revision 1.5  2003/06/27 10:35:53  lemmstercvs01
 removed unneeded calls
 

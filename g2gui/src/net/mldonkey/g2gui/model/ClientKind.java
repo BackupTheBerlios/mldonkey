@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * ClientKind
  *
  * @author markus
- * @version $Id: ClientKind.java,v 1.5 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
+ * @version $Id: ClientKind.java,v 1.6 2003/07/06 09:37:41 lemmstercvs01 Exp $ 
  *
  */
 public class ClientKind implements SimpleInformation {
@@ -55,76 +55,50 @@ public class ClientKind implements SimpleInformation {
 	private String clientHash;
 
 	/**
-	 * @return a String
+	 * @return The client hash identifier
 	 */
 	public String getClientHash() {
 		return clientHash;
 	}
 
 	/**
-	 * @return a string
+	 * @return The client name
 	 */
 	public String getClientName() {
 		return clientName;
 	}
 
 	/**
-	 * @return a byte
+	 * @return The clientmode
 	 */
 	public Enum getClientMode() {
 		return clientMode;
 	}
 
 	/**
-	 * @return an int
+	 * @return The client ip address
+	 * (if ClientMode == EnumClientMode.DIRECT)
 	 */
 	public int getIpAddress() {
 		return ipAddress;
 	}
 
 	/**
-	 * @return a short
+	 * @return The client port
+	 * (if ClientMode == EnumClientMode.DIRECT)
 	 */
 	public short getPort() {
 		return port;
 	}
 
 	/**
-	 * @param string a string
+	 * @param b Sets the client mode
 	 */
-	public void setClientHash( String string ) {
-		clientHash = string;
-	}
-
-	/**
-	 * @param string a string
-	 */
-	public void setClientName( String string ) {
-		clientName = string;
-	}
-
-	/**
-	 * @param b a byte
-	 */
-	public void setClientMode( byte b ) {
+	private void setClientMode( byte b ) {
 		if ( b == 0 )
 			clientMode = EnumClientMode.DIRECT;
 		else if ( b == 1 )
 			clientMode = EnumClientMode.FIREWALLED;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setIpAddress( int i ) {
-		ipAddress = i;
-	}
-
-	/**
-	 * @param s a short
-	 */
-	public void setPort( short s ) {
-		port = s;
 	}
 
 	/**
@@ -134,18 +108,21 @@ public class ClientKind implements SimpleInformation {
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setClientMode( messageBuffer.readByte() );
 		if ( this.getClientMode() == EnumClientMode.DIRECT ) {
-			this.setIpAddress( messageBuffer.readInt32() );
-			this.setPort( messageBuffer.readInt16() );
+			this.ipAddress = messageBuffer.readInt32();
+			this.port = messageBuffer.readInt16();
 		}
 		else {
-			this.setClientName( messageBuffer.readString() );
-			this.setClientHash( messageBuffer.readBinary( 16 ) );
+			this.clientName = messageBuffer.readString();
+			this.clientHash = messageBuffer.readBinary( 16 );
 		}
 	}
 }
 
 /*
 $Log: ClientKind.java,v $
+Revision 1.6  2003/07/06 09:37:41  lemmstercvs01
+javadoc improved
+
 Revision 1.5  2003/06/24 09:29:57  lemmstercvs01
 Enum more improved
 

@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * AddSectionOption
  *
  * @author $user$
- * @version $Id: AddSomeOption.java,v 1.4 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: AddSomeOption.java,v 1.5 2003/07/06 09:37:41 lemmstercvs01 Exp $ 
  *
  */
 public class AddSomeOption implements SimpleInformation {
@@ -50,61 +50,33 @@ public class AddSomeOption implements SimpleInformation {
 	private OptionType optionType = new OptionType();
 
 	/**
-	 * @return a string
+	 * @return The description of the option
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	 * @return a string
+	 * @return The name of the option
 	 */
 	public String getNameOfOption() {
 		return nameOfOption;
 	}
 
 	/**
-	 * @return an OptionType object
+	 * @return The optiontype
 	 */
 	public OptionType getOptionType() {
 		return optionType;
 	}
 
 	/**
-	 * @return a string
+	 * @return The section where this option should appear
 	 */
 	public String getSectionToAppear() {
 		return sectionToAppear;
 	}
 
-	/**
-	 * @param string a string
-	 */
-	public void setDescription( String string ) {
-		description = string;
-	}
-
-	/**
-	 * @param string a string
-	 */
-	public void setNameOfOption( String string ) {
-		nameOfOption = string;
-	}
-
-	/**
-	 * @param type an OptionType
-	 */
-	public void setOptionType( OptionType type ) {
-		optionType = type;
-	}
-
-	/**
-	 * @param string a string
-	 */
-	public void setSectionToAppear( String string ) {
-		sectionToAppear = string;
-	}
-	
 	/**
 	 * Reads an AddSomeOption object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
@@ -116,9 +88,9 @@ public class AddSomeOption implements SimpleInformation {
 		 * String  	 Name of Option 
 		 * OptionType  	 The Type of the Option (to select which widget to use)
 		 */
-		 this.setSectionToAppear( messageBuffer.readString() );
-		 this.setDescription( messageBuffer.readString() );
-		 this.setNameOfOption( messageBuffer.readString() );
+		 this.sectionToAppear = messageBuffer.readString();
+		 this.description = messageBuffer.readString();
+		 this.nameOfOption = messageBuffer.readString();
 		 this.getOptionType().readStream( messageBuffer );
 	}
 	
@@ -134,11 +106,13 @@ public class AddSomeOption implements SimpleInformation {
 		result += ": " + this.getSectionToAppear();
 		return result;
 	}
-
 }
 
 /*
 $Log: AddSomeOption.java,v $
+Revision 1.5  2003/07/06 09:37:41  lemmstercvs01
+javadoc improved
+
 Revision 1.4  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
