@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.20 2003/07/24 02:22:46 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.21 2003/07/25 02:41:22 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -98,6 +98,8 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 				}
 		  	}		
 		} );	
+		
+		updateDisplay();
 	}
 	
 	/**
@@ -129,8 +131,15 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 		if (core.isConnected()) {
 			infoDisplay.append( core.getConsoleMessage().getConsoleMessage().replaceAll("\n", infoDisplay.getLineDelimiter()) );
 			core.getConsoleMessage().reset();
-			infoDisplay.setFont( loadFont() );
 		}
+	}
+	
+	public void updateDisplay() {
+		infoDisplay.setFont( loadFont2( "consoleFontData" ) );
+		infoDisplay.setBackground ( loadColour( "consoleBackground" ) );
+		infoDisplay.setForeground ( loadColour( "consoleForeground" ) );
+		input.setBackground ( loadColour( "consoleInputBackground" ) );
+		input.setForeground ( loadColour( "consoleInputForeground" ) );
 	}
 
 	/* (non-Javadoc)
@@ -174,6 +183,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.21  2003/07/25 02:41:22  zet
+console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
+
 Revision 1.20  2003/07/24 02:22:46  zet
 doesn't crash if no core is running
 

@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.11 2003/07/24 02:35:04 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.12 2003/07/25 02:41:22 zet Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -144,10 +144,8 @@ public class MainTab implements Listener {
 						)
 		);
 		pref.addListener( SWT.Selection, new Listener() {
-			public void handleEvent( Event event ) {	
-				Shell prefshell = new Shell();
-				Preferences myprefs = new Preferences( new PreferenceStore( "g2gui.pref" ) );					
-				myprefs.open( prefshell, mldonkey );
+			public void handleEvent( Event event ) {
+				openPreferences();	
 			}
 		} );
 		
@@ -166,6 +164,13 @@ public class MainTab implements Listener {
 		layoutCoolBar( coolbar );
 	} 
 	
+	protected void openPreferences() {
+	
+		Shell prefshell = new Shell();
+		Preferences myprefs = new Preferences( new PreferenceStore( "g2gui.pref" ) );					
+		myprefs.open( prefshell, mldonkey );
+		activeTab.updateDisplay();
+	}
 	/**
 	 * Create the MenuBar
 	 * @param shell The shell to create the MenuBar in
@@ -197,10 +202,7 @@ public class MainTab implements Listener {
 		item = new MenuItem( submenu, 0 );
 		item.addListener( SWT.Selection, new Listener() {
 			public void handleEvent( Event event ) {	
-				Shell prefshell = new Shell();
-				Preferences myprefs =
-					new Preferences( new PreferenceStore( "g2gui.pref" ) );					
-				myprefs.open( prefshell, mldonkey );
+				openPreferences();
 			}
 		} );
 		item.setText( "Preferences" );
@@ -465,6 +467,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.12  2003/07/25 02:41:22  zet
+console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
+
 Revision 1.11  2003/07/24 02:35:04  zet
 program icon
 

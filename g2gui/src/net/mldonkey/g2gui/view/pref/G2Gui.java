@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.15 2003/07/03 16:27:51 lemmstercvs01 Exp $ 
+ * @version $Id: G2Gui.java,v 1.16 2003/07/25 02:41:22 zet Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {	
@@ -90,13 +90,13 @@ public class G2Gui extends PreferencePage  {
 			passwordField.getTextControl( shell ).setEchoChar ( '*' );			
 			passwordField.setStringValue( preferenceStore.getString( "password" ) );
 			computeColumn( passwordField.getNumberOfControls() );
-
+/*
 		consoleTabFontField = new ExtendedFontFieldEditor ( "consoleFont", "Font for Console Window", "Sample", shell );
 			Font font = loadFont();
 				if (font != null)
 					consoleTabFontField.setFont(font);
 			computeColumn( consoleTabFontField.getNumberOfControls() );		
-			
+		*/	
 		arrangeFields();
 		return null;
 	}
@@ -109,7 +109,7 @@ public class G2Gui extends PreferencePage  {
 		setHorizontalSpan( portField );
 		setHorizontalSpan( userNameField );
 		setHorizontalSpan( passwordField );
-		consoleTabFontField.adjustForNumColumns( columns );
+	//	consoleTabFontField.adjustForNumColumns( columns );
 	}
 
 	/**
@@ -201,6 +201,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.16  2003/07/25 02:41:22  zet
+console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
+
 Revision 1.15  2003/07/03 16:27:51  lemmstercvs01
 nonsense importer removed
 

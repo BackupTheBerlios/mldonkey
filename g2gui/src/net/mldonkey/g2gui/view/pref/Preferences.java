@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.11 2003/07/10 19:27:28 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.12 2003/07/25 02:41:22 zet Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -66,7 +66,9 @@ public class Preferences extends PreferenceManager {
 	public Preferences( PreferenceStore preferenceStore ) {	
 		this.preferenceStore = 	preferenceStore;
 		myprefs = new PreferenceManager();
-		myprefs.addToRoot( new PreferenceNode( "G2gui", new G2Gui( preferenceStore, connected ) ) );		
+		PreferenceNode G2GuiRootNode = new PreferenceNode( "G2gui", new G2Gui( preferenceStore, connected ));
+		G2GuiRootNode.add(new PreferenceNode ("Display", new G2Gui_Display(preferenceStore, connected)));
+		myprefs.addToRoot( G2GuiRootNode );		
 	}
 	
 	/**
@@ -247,6 +249,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.12  2003/07/25 02:41:22  zet
+console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
+
 Revision 1.11  2003/07/10 19:27:28  dek
 some idle-race cleanup
 

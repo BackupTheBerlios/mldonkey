@@ -31,12 +31,21 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Font;
+
+import java.util.StringTokenizer;
+import java.io.IOException;
+import org.eclipse.jface.preference.*;
+
+import org.eclipse.swt.graphics.Color;
+
 
 /**
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.3 2003/07/23 04:08:07 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.4 2003/07/25 02:41:22 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -141,9 +150,37 @@ public abstract class GuiTab implements Listener, Observer {
 	public Composite getContent() {
 		return content;
 	}
+	protected Font loadFont2( String preferenceString ) {
+		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
+		try { preferenceStore.load(); } catch ( IOException e ) { }		
+	
+		return new Font (null, new FontData ( preferenceStore.getString( preferenceString ) ) ); 
+	}
+	protected Color loadColour (String preferenceString ) {
+			PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
+				try { preferenceStore.load(); } catch ( IOException e ) { }		
+		
+		if (preferenceStore.contains( preferenceString )) {
+			StringTokenizer st = new StringTokenizer(preferenceStore.getString( preferenceString ), ",");
+			return new Color(null, 
+				Integer.parseInt(st.nextToken()),  
+				Integer.parseInt(st.nextToken()),  
+				Integer.parseInt(st.nextToken())  
+				);
+		}
+		return null;
+	}
+
+	public void updateDisplay() {
+	}
+
 }
+
 /*
 $Log: GuiTab.java,v $
+Revision 1.4  2003/07/25 02:41:22  zet
+console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
+
 Revision 1.3  2003/07/23 04:08:07  zet
 looks better with icons
 
