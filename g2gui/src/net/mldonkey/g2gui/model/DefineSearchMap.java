@@ -28,11 +28,15 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * DefineSearchMap
  *
  * @author $user$
- * @version $Id: DefineSearchMap.java,v 1.1 2003/06/16 21:48:57 lemmstercvs01 Exp $ 
+ * @version $Id: DefineSearchMap.java,v 1.2 2003/06/17 12:07:37 lemmstercvs01 Exp $ 
  *
  */
 public class DefineSearchMap extends InfoMap {
-
+	
+	/**
+	 * Creates a new empty DefineSearchMap object
+	 *
+	 */
 	public DefineSearchMap() {
 		super();
 	}
@@ -62,6 +66,9 @@ public class DefineSearchMap extends InfoMap {
 
 /*
 $Log: DefineSearchMap.java,v $
+Revision 1.2  2003/06/17 12:07:37  lemmstercvs01
+checkstyle applied
+
 Revision 1.1  2003/06/16 21:48:57  lemmstercvs01
 opcode 3 added
 

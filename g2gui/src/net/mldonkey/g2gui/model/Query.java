@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.1 2003/06/16 21:48:57 lemmstercvs01 Exp $ 
+ * @version $Id: Query.java,v 1.2 2003/06/17 12:07:37 lemmstercvs01 Exp $ 
  *
  */
 public class Query implements Information {
@@ -84,7 +84,7 @@ public class Query implements Information {
 	 * Reads a Query object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	public void readStream(MessageBuffer messageBuffer) {
+	public void readStream( MessageBuffer messageBuffer ) {
 		/*
 		 * int8		The Type of this tree node 
 	   	 * List of Query	Queries for AND or OR or Hidden 
@@ -244,6 +244,9 @@ public class Query implements Information {
 
 /*
 $Log: Query.java,v $
+Revision 1.2  2003/06/17 12:07:37  lemmstercvs01
+checkstyle applied
+
 Revision 1.1  2003/06/16 21:48:57  lemmstercvs01
 opcode 3 added
 
