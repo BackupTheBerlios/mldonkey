@@ -33,6 +33,7 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -60,7 +61,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.29 2003/09/14 21:54:13 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.30 2003/09/14 22:22:46 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer, DisposeListener {
@@ -145,7 +146,6 @@ public class FileDetailDialog implements Observer, DisposeListener {
 	 * Tell the core to rename the file
 	 */
 	private void renameFile() {
-		
 		String newName = "";
 		if ( !renameText.getText().equals("") && !renameText.getText().equals( fileInfo.getName() )) {
 			newName = renameText.getText();
@@ -156,7 +156,6 @@ public class FileDetailDialog implements Observer, DisposeListener {
 		if (!newName.equals("")) {
 			fileInfo.setName(newName);
 		}
-		
 	}
 	
 	/**
@@ -251,7 +250,7 @@ public class FileDetailDialog implements Observer, DisposeListener {
 		Group renameGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT );
 		
 		renameGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_ALTERNATIVE_FILENAMES"));
-		renameGroup.setLayout(CGridLayout.createGL(1,5,2,0,0,false));
+		renameGroup.setLayout(CGridLayout.createGL(1,1,1,0,0,false));
 		renameGroup.setLayoutData(  new GridData(GridData.FILL_HORIZONTAL));
 					
 		Arrays.sort(fileInfo.getNames(), String.CASE_INSENSITIVE_ORDER);		
@@ -260,9 +259,9 @@ public class FileDetailDialog implements Observer, DisposeListener {
 		for (int i = 0; i < fileInfo.getNames().length; i++) 
 			renameList.add(fileInfo.getNames()[ i ]);
 			
-		GridData listGD = new GridData();
+		GridData listGD = new GridData(GridData.FILL_HORIZONTAL);
 		listGD.heightHint = 80;
-		listGD.widthHint = width - 50;
+		listGD.widthHint = 1;
 		renameList.setLayoutData(listGD); 
 		renameList.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
@@ -278,6 +277,7 @@ public class FileDetailDialog implements Observer, DisposeListener {
 					
 		renameText = new Text(renameComposite, SWT.BORDER);
 		renameText.setText(fileInfo.getName());
+		renameText.setFont(PreferenceLoader.loadFont("consoleFontData"));
 			
 		GridData data = new GridData( GridData.FILL_HORIZONTAL );
 		data.widthHint = 1;
@@ -299,7 +299,6 @@ public class FileDetailDialog implements Observer, DisposeListener {
 				renameFile();
 			}
 		});
-		
 	}
 	
 	/**
@@ -491,6 +490,9 @@ public class FileDetailDialog implements Observer, DisposeListener {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.30  2003/09/14 22:22:46  zet
+use console font
+
 Revision 1.29  2003/09/14 21:54:13  zet
 fix rate
 
