@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.24 2003/08/29 22:11:47 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.25 2003/09/11 13:39:19 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -287,6 +287,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
+		/* still running? */
+		if ( table.getTable().isDisposed() ) return;
+		
 		synchronized ( this.servers.getRemoved() ) {
 			table.remove( this.servers.getRemoved().toArray() );
 			this.servers.clearRemoved();
@@ -422,6 +425,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.25  2003/09/11 13:39:19  lemmster
+check for disposed
+
 Revision 1.24  2003/08/29 22:11:47  zet
 add CCLabel helper class
 
