@@ -33,15 +33,17 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.19 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.20 2003/08/25 22:20:25 zet Exp $
  */
 
 public class StatisticTab extends GuiTab {
@@ -73,15 +75,19 @@ public class StatisticTab extends GuiTab {
 	}
 
 	protected void createContents( Composite parent)  {
-		SashForm mainSash = new SashForm( parent, SWT.VERTICAL );
+		final SashForm mainSash = new SashForm( parent, SWT.VERTICAL );
 		mainSash.setLayout (new FillLayout());
 		
 		// Top composite for other stats	
 		Composite top = new Composite( mainSash, SWT.BORDER );
 		top.setLayout( new FillLayout() );
-				
-		Label tmp = new Label( top, SWT.CENTER );
-		tmp.setText("<gui protocol needs more stats>");
+		Button b = new Button(top, SWT.NONE);
+		b.setText("<gui protocol needs more stats>");
+		b.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected (SelectionEvent s) {
+				mainSash.setWeights( new int[] {0,100});
+			}
+		});		
 		
 		// Bottom graph for Sash				
 		SashForm graphSash = new SashForm ( mainSash, SWT.HORIZONTAL );
@@ -127,6 +133,9 @@ public class StatisticTab extends GuiTab {
 }
 /*
 $Log: StatisticTab.java,v $
+Revision 1.20  2003/08/25 22:20:25  zet
+*** empty log message ***
+
 Revision 1.19  2003/08/23 15:21:37  zet
 remove @author
 

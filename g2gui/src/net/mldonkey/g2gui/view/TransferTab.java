@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Main
  *
  *
- * @version $Id: TransferTab.java,v 1.37 2003/08/24 16:37:04 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.38 2003/08/25 22:17:12 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -100,7 +100,7 @@ public class TransferTab extends GuiTab  {
 	 * @see net.mldonkey.g2gui.view.G2guiTab#createContents(org.eclipse.swt.widgets.Composite)
 	 */	 
 	protected void createContents( Composite parent ) {
-		SashForm mainSashForm = new SashForm( parent, SWT.VERTICAL );
+		final SashForm mainSashForm = new SashForm( parent, SWT.VERTICAL );
 		Composite downloadComposite;
 		
 		
@@ -148,8 +148,13 @@ public class TransferTab extends GuiTab  {
 		// When we have uploaders:		
 		Composite upload = new Composite( mainSashForm, SWT.BORDER );
 		upload.setLayout(new FillLayout());
-		Label l = new Label(upload, SWT.CENTER);
-		l.setText("Try \"uploaders\" or \"upstats\" command in console until gui protocol sends upload information.");
+		Button b = new Button(upload, SWT.NONE);
+		b.setText("Try \"uploaders\" or \"upstats\" command in console until gui protocol sends upload information.");
+		b.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected (SelectionEvent s) {
+				mainSashForm.setWeights( new int[] {100,0});
+			}
+		});
 		
 		mainSashForm.setWeights( new int[] {1441,0});
 		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, clientTableViewer, mldonkey, this );
@@ -300,6 +305,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.38  2003/08/25 22:17:12  zet
+*** empty log message ***
+
 Revision 1.37  2003/08/24 16:37:04  zet
 combine the preference stores
 
