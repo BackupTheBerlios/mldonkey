@@ -33,6 +33,7 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.VersionInfo;
 import net.mldonkey.g2gui.view.helper.Splash;
+import net.mldonkey.g2gui.view.helper.WebLauncher;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.main.MainCoolBar;
 import net.mldonkey.g2gui.view.main.MainMenuBar;
@@ -55,7 +56,6 @@ import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.96 2003/11/25 17:06:50 dek Exp $
+ * @version $Id: MainTab.java,v 1.97 2003/11/28 00:57:11 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -445,7 +445,7 @@ public class MainTab implements ShellListener {
             launch.setText("Report this bug!");
             launch.addSelectionListener(new SelectionAdapter() {
                     public void widgetSelected(SelectionEvent s) {
-                        Program.launch("http://developer.berlios.de/bugs/?group_id=610");
+                        WebLauncher.openLink("http://developer.berlios.de/bugs/?group_id=610");
                     }
                 });
 
@@ -466,6 +466,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.97  2003/11/28 00:57:11  zet
+use Weblauncher
+
 Revision 1.96  2003/11/25 17:06:50  dek
 yet another test for coolBar
 
