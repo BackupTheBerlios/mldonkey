@@ -44,7 +44,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
-
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -52,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.21 2003/10/09 09:59:19 lemmster Exp $ 
+ * @version $Id: About.java,v 1.22 2003/10/19 03:55:37 zet Exp $ 
  *
  */
 public class About extends Dialog {
@@ -183,7 +182,7 @@ public class About extends Dialog {
 			gd.verticalAlignment = GridData.CENTER;
 			gd.horizontalAlignment = GridData.CENTER;
 		info.setLayoutData( gd );		
-		info.setText(  "G2gui v" + VersionInfo.getVersion() + " is (c) 2003 by the G2gui team, \n" 
+		info.setText(  "G2gui " + VersionInfo.getVersion() + " is (c) 2003 by the G2gui team, \n" 
 					 + "all of our own java code is released under \n" 
 					 + "the  " );	
 					 	
@@ -191,6 +190,12 @@ public class About extends Dialog {
 		link.addToStyledText( info );	
 		link.setURL( "http://www.opensource.org/licenses/gpl-license.php" );
 		this.linklist.add( link );
+		
+		Label swt = new Label( parent, SWT.NONE );
+				gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+				gd.horizontalSpan = 2;
+				swt.setLayoutData( gd );
+				swt.setText( "swt-" + SWT.getPlatform() + "-" + SWT.getVersion() );
 		
 		info.addMouseMoveListener( new MouseMoveListener() {
 			public void mouseMove( MouseEvent e ) {
@@ -245,7 +250,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.21 2003/10/09 09:59:19 lemmster Exp $ 
+	 * @version $Id: About.java,v 1.22 2003/10/19 03:55:37 zet Exp $ 
 	 *
 	 */
 	public class Link {
@@ -297,6 +302,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.22  2003/10/19 03:55:37  zet
+add swt info
+
 Revision 1.21  2003/10/09 09:59:19  lemmster
 get the version number from the centralized class VersionInfo
 
