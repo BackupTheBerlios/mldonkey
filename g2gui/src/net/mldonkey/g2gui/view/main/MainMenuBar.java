@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.8 2003/09/16 15:11:01 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.9 2003/09/16 15:12:07 zet Exp $ 
  *
  */
 public class MainMenuBar {
@@ -59,6 +59,7 @@ public class MainMenuBar {
 		mainMenuBar = new Menu( shell, SWT.BAR );
 		shell.setMenuBar( mainMenuBar );
 		
+		// File
 		menuItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
 		menuItem.setText ( "File" );
 		final Menu fileMenu = new Menu ( shell, SWT.DROP_DOWN );
@@ -170,6 +171,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.9  2003/09/16 15:12:07  zet
+*** empty log message ***
+
 Revision 1.8  2003/09/16 15:11:01  zet
 build filemenu dynamically
 
