@@ -27,8 +27,6 @@ import java.util.ResourceBundle;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
-import net.mldonkey.g2gui.model.SimpleInformation;
-
 import org.eclipse.jface.preference.*;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.*;
@@ -39,7 +37,7 @@ import org.eclipse.swt.widgets.*;
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.11 2003/07/04 18:06:47 dek Exp $ 
+ * @version $Id: General.java,v 1.12 2003/07/06 15:38:56 dek Exp $ 
  *
  */
 public class General extends PreferencePage {	
@@ -169,33 +167,29 @@ public class General extends PreferencePage {
 		 	 * for setting options, that have not changed.
 		 	 */		 	 
 			if ( !clientName.equals( clientNameField.getStringValue() ) ) {
-				OptionsInfo option = new OptionsInfo();
-				option.setKey( "client_name" );
+				OptionsInfo option = ( OptionsInfo ) mldonkey.getOptionsInfoMap().get("client_name");
 				option.setValue( clientNameField.getStringValue() );
-				option.send( mldonkey.getConnection() );
+				option.send();
 			}
 		 		
 			if ( !maxHardUploadRate.equals( maxHardUploadRateField.getStringValue() ) ) {
-				OptionsInfo option = new OptionsInfo();
-				option.setKey( "max_hard_upload_rate" );
+				OptionsInfo option = ( OptionsInfo ) mldonkey.getOptionsInfoMap().get( "max_hard_upload_rate" );
 				option.setValue( maxHardUploadRateField.getStringValue() );
-				option.send( mldonkey.getConnection() );
+				option.send();
 			}
 			
 							
 			if ( !maxHardDownloadRate.equals( maxHardDownloadRateField.getStringValue() ) ) {
-				OptionsInfo option = new OptionsInfo();
-				option.setKey( "max_hard_download_rate" );
+				OptionsInfo option = ( OptionsInfo ) mldonkey.getOptionsInfoMap().get( "max_hard_download_rate" );
 				option.setValue( maxHardDownloadRateField.getStringValue() );
-				option.send( mldonkey.getConnection() );
+				option.send();
 			}
 			
 				
 			if ( autoCommitField.hasChanged() ) {
-				OptionsInfo option = new OptionsInfo();
-				option.setKey( "auto_commit" );
+				OptionsInfo option = ( OptionsInfo ) mldonkey.getOptionsInfoMap().get( "auto_commit" );
 				option.setValue( autoCommitField.getValue() );
-				option.send( mldonkey.getConnection() );
+				option.send();
 			}
 			
 				
@@ -220,6 +214,9 @@ public class General extends PreferencePage {
 
 /*
 $Log: General.java,v $
+Revision 1.12  2003/07/06 15:38:56  dek
+worked changes in
+
 Revision 1.11  2003/07/04 18:06:47  dek
 *** empty log message ***
 
