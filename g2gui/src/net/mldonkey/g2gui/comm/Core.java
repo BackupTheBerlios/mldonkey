@@ -35,7 +35,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.9 2003/06/13 15:41:33 dek Exp $ 
+ * @version $Id: Core.java,v 1.10 2003/06/13 16:01:36 dek Exp $ 
  *
  */
 public class Core {
@@ -63,6 +63,12 @@ public class Core {
 	 * 
 	 */
 	private FileAddSource fileAddSources = new FileAddSource();
+	
+	/**
+	 * 
+	 */
+	private NetworkInfo networkinfo = new NetworkInfo();
+	
 	
 	/**
 	 * Core()
@@ -152,6 +158,16 @@ public class Core {
 					this.requestFileInfoList();
 										
 					break;
+			case Message.R_NETWORK_INFO :
+					/*
+					 *	PayLoad:
+					 *	int32	Network identifier (used in other messages for this network) 
+					 *	String	Network name 
+					 *	int8	Enabled(1) or Disabled(0) 
+					 *	String	Name of network config file 
+					 *	int64	Number of bytes uploaded on network 
+					 *	int64	Number of bytes downloaded on network
+					 */
 
 			case Message.R_OPTIONS_INFO :				
 					/*
@@ -251,6 +267,9 @@ public class Core {
 
 /*
 $Log: Core.java,v $
+Revision 1.10  2003/06/13 16:01:36  dek
+OpCode NetworkInfo added
+
 Revision 1.9  2003/06/13 15:41:33  dek
 Jippieh, problem finally solved. Thx to Jmoule for the inspiration
 
