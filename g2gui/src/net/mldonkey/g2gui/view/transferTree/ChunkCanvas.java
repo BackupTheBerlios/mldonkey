@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Shell;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkCanvas.java,v 1.9 2003/08/06 17:13:07 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.10 2003/08/08 23:26:21 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -391,7 +391,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 				
 			}
 	
-	
+			bufferImage.dispose();
 		
 		} else { 
 
@@ -463,6 +463,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.10  2003/08/08 23:26:21  zet
+dispose of bufferimage
+
 Revision 1.9  2003/08/06 17:13:07  zet
 minor updates
 
