@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.70 2003/09/13 11:02:45 lemmster Exp $ 
+ * @version $Id: MainTab.java,v 1.71 2003/09/16 01:12:25 zet Exp $ 
  *
  */
 public class MainTab implements ShellListener {
@@ -227,7 +227,7 @@ public class MainTab implements ShellListener {
 	 * @param activatedTab The tab to set active
 	 */
 	public void setActive( GuiTab activatedTab ) {	
-		if (!getCore().isConnected()) return;	
+		//if (!getCore().isConnected()) return;	
 		
 		if ( activeTab != null ) {
 			activeTab.getContent().setVisible( false );
@@ -373,6 +373,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.71  2003/09/16 01:12:25  zet
+// isConnected()
+
 Revision 1.70  2003/09/13 11:02:45  lemmster
 use List instead of GuiTab[] in addTabs()
 
