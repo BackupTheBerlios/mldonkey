@@ -30,14 +30,19 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * WordFilter
  *
- * @version $Id: WordFilter.java,v 1.1 2003/08/29 00:54:42 zet Exp $ 
+ * @version $Id: WordFilter.java,v 1.2 2003/09/18 10:04:57 lemmster Exp $ 
  *
  */
 public class WordFilter extends ViewerFilter {
 	private int wordFilterType = 0;
 	public static final int PROFANITY_FILTER_TYPE = 1;
 	public static final int PORNOGRAPHY_FILTER_TYPE = 2;
-		
+	
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param type DOCUMENT ME!
+	 */	
 	public WordFilter( int type ) {
 		wordFilterType = type;
 	}
@@ -59,6 +64,9 @@ public class WordFilter extends ViewerFilter {
 }
 /*
 $Log: WordFilter.java,v $
+Revision 1.2  2003/09/18 10:04:57  lemmster
+checkstyle
+
 Revision 1.1  2003/08/29 00:54:42  zet
 Move wordFilter public
 

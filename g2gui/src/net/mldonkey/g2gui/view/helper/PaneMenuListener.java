@@ -31,13 +31,15 @@ import org.eclipse.jface.viewers.StructuredViewer;
 /**
  * PaneMenuListener
  *
- * @version $Id: PaneMenuListener.java,v 1.1 2003/09/14 13:24:30 lemmster Exp $ 
+ * @version $Id: PaneMenuListener.java,v 1.2 2003/09/18 10:04:57 lemmster Exp $ 
  *
  */
 public class PaneMenuListener extends MenuListener implements IMenuListener {
 
 	/**
-	 * 
+	 * Creates a new PaneMenuListener
+	 * @param viewer The Viewer which is the parent of this objs
+	 * @param core The parent core
 	 */
 	public PaneMenuListener( StructuredViewer viewer, CoreCommunication core ) {
 		super( viewer, core );
@@ -54,6 +56,9 @@ public class PaneMenuListener extends MenuListener implements IMenuListener {
 
 /*
 $Log: PaneMenuListener.java,v $
+Revision 1.2  2003/09/18 10:04:57  lemmster
+checkstyle
+
 Revision 1.1  2003/09/14 13:24:30  lemmster
 add header button to servertab
 

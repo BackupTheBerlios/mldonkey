@@ -60,25 +60,25 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.9 2003/09/17 20:07:44 lemmster Exp $
+ * @version $Id: TableMenuListener.java,v 1.10 2003/09/18 10:04:57 lemmster Exp $
  *
  */
 public abstract class TableMenuListener extends MenuListener {
     protected ViewerFilter incrementalViewerFilter;
 
     /**
-     *
-     * @param tableViewer
-     * @param core
+     * DOCUMENT ME!
+     * 
+     * @param tableViewer DOCUMENT ME!
+     * @param core DOCUMENT ME!
      */
     public TableMenuListener( StructuredViewer tableViewer, CoreCommunication core ) {
         super( tableViewer, core );
     }
     
-    /**
-     * 
-     * @param menuManager
-     */
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
+	 */
     public void menuAboutToShow( IMenuManager menuManager ) {
 		menuManager.add( new Separator() );
 			
@@ -88,9 +88,10 @@ public abstract class TableMenuListener extends MenuListener {
     }
 
     /**
+     * DOCUMENT ME!
      *
-     * @param networkType
-     * @return
+     * @param networkType DOCUMENT ME!
+     * @return DOCUMENT ME!
      */
     public boolean isFiltered( NetworkInfo.Enum networkType ) {
         ViewerFilter[] viewerFilters = tableViewer.getFilters();
@@ -170,7 +171,10 @@ public abstract class TableMenuListener extends MenuListener {
      */
 	public static class NetworkFilter extends ViewerFilter {
         private List networkType;
-
+	
+		/**
+		 * Creates a new NetworkFilter
+		 */
         public NetworkFilter() {
             this.networkType = new ArrayList();
         }
@@ -245,7 +249,10 @@ public abstract class TableMenuListener extends MenuListener {
      */
 	public static class EnumStateFilter extends ViewerFilter {
         private List state;
-
+		
+		/**
+		 * Creates a new EnumStateFilter
+		 */
         public EnumStateFilter() {
             this.state = new ArrayList();
         }
@@ -420,26 +427,24 @@ public abstract class TableMenuListener extends MenuListener {
 					Label label = new Label( composite, SWT.WRAP );
 					label.setText( this.dialogMessage );
 					GridData data = new GridData(
-						GridData.GRAB_HORIZONTAL |
-						GridData.GRAB_VERTICAL |
-						GridData.HORIZONTAL_ALIGN_FILL |
-						GridData.VERTICAL_ALIGN_CENTER );
-					data.widthHint = convertHorizontalDLUsToPixels( IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH );
-					label.setLayoutData(data);
+						GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL
+						| GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER );
+					data.widthHint = 
+						convertHorizontalDLUsToPixels( IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH );
+					label.setLayoutData( data );
 					label.setFont( parent.getFont() );
 				}
 
-				text= new Text( composite, SWT.SINGLE | SWT.BORDER );
+				text = new Text( composite, SWT.SINGLE | SWT.BORDER );
 				text.setLayoutData( new GridData(
-					GridData.GRAB_HORIZONTAL |
-					GridData.HORIZONTAL_ALIGN_FILL ) );
+					GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL ) );
 				text.setFont( parent.getFont() );
 				text.addModifyListener(	new ModifyListener() {
 						public void modifyText( ModifyEvent e ) {
 							if ( text.getText().equals( "" ) )
-								( ( RefineFilter ) incrementalViewerFilter).setRefineString( null );
+								( ( RefineFilter ) incrementalViewerFilter ).setRefineString( null );
 							else
-								( ( RefineFilter ) incrementalViewerFilter).setRefineString( text.getText() );
+								( ( RefineFilter ) incrementalViewerFilter ).setRefineString( text.getText() );
 						}
 					}
 				);
@@ -452,9 +457,9 @@ public abstract class TableMenuListener extends MenuListener {
 				
 				Button caseButton = new Button( aSubComposite, SWT.CHECK );
 				caseButton.addSelectionListener( new SelectionListener() {
-					public void widgetDefaultSelected(SelectionEvent e) { }
+					public void widgetDefaultSelected( SelectionEvent e ) { }
 					public void widgetSelected( SelectionEvent e ) {
-						( ( RefineFilter ) incrementalViewerFilter).toggleCaseInSensitive();
+						( ( RefineFilter ) incrementalViewerFilter ).toggleCaseInSensitive();
 					}
 				} );
 				
@@ -474,6 +479,11 @@ public abstract class TableMenuListener extends MenuListener {
     public class NetworkFilterAction extends Action {
         private NetworkInfo.Enum networkType;
 
+		/**
+		 * Creates a new NetworkFilterAction
+		 * @param name The name we should display on the <code>MenuManager</code>
+		 * @param networkType The <code>NetworkInfo.Enum</code> we should filter
+		 */
         public NetworkFilterAction( String name, NetworkInfo.Enum networkType ) {
             super( name, Action.AS_CHECK_BOX );
             this.networkType = networkType;
@@ -523,6 +533,9 @@ public abstract class TableMenuListener extends MenuListener {
      *
      */
     public class AllFiltersAction extends Action {
+        /**
+         * Creates a new AllFiltersAction
+         */
         public AllFiltersAction() {
             super();
             setText( G2GuiResources.getString( "TML_NO_FILTERS" ) );
@@ -543,6 +556,9 @@ public abstract class TableMenuListener extends MenuListener {
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.10  2003/09/18 10:04:57  lemmster
+checkstyle
+
 Revision 1.9  2003/09/17 20:07:44  lemmster
 avoid NPE´s in search
 
