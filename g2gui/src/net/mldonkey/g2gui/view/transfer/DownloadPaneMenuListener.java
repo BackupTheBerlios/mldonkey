@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Control;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.23 2003/11/06 13:52:33 lemmster Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.24 2003/11/14 00:46:04 zet Exp $
  *
  */
 public class DownloadPaneMenuListener extends SashGPaneListener {
@@ -94,6 +94,9 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
         if (advancedMode) {
             menuManager.add(new ColumnSelectorAction(gView));
         }
+        
+        // sortMenu for macOS
+        createSortByColumnSubMenu(menuManager);
 
         // filter submenu			
         MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
@@ -147,6 +150,9 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.24  2003/11/14 00:46:04  zet
+sort by column menu item (for macOS)
+
 Revision 1.23  2003/11/06 13:52:33  lemmster
 filters back working
 

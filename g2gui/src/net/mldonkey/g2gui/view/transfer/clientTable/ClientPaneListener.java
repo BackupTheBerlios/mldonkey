@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ClientPaneListener
  *
- * @version $Id: ClientPaneListener.java,v 1.5 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ClientPaneListener.java,v 1.6 2003/11/14 00:46:04 zet Exp $
  *
  */
 public class ClientPaneListener extends SashGPaneListener {
@@ -83,6 +83,9 @@ public class ClientPaneListener extends SashGPaneListener {
             menuManager.add(new ColumnSelectorAction(gView));
         }
 
+		// for macOS
+		createSortByColumnSubMenu(menuManager);
+        
         // filter submenu			
         MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
                     "TT_DOWNLOAD_MENU_FILTER"));
@@ -112,6 +115,9 @@ public class ClientPaneListener extends SashGPaneListener {
 
 /*
 $Log: ClientPaneListener.java,v $
+Revision 1.6  2003/11/14 00:46:04  zet
+sort by column menu item (for macOS)
+
 Revision 1.5  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

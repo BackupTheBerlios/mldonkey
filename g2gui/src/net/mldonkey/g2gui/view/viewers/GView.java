@@ -56,7 +56,7 @@ import java.util.Map;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.6 2003/11/09 22:31:51 lemmster Exp $
+ * @version $Id: GView.java,v 1.7 2003/11/14 00:46:04 zet Exp $
  *
  */
 public abstract class GView {
@@ -280,13 +280,20 @@ public abstract class GView {
             tableColumn.addListener(SWT.Selection,
                 new Listener() {
                     public void handleEvent(Event e) {
-                        gSorter.setColumnIndex(columnIndex);
-                        refresh();
+                        sortByColumn(columnIndex);
                     }
                 });
         }
     }
 
+    /**
+     * @param column
+     */
+    public void sortByColumn(int column) {
+		gSorter.setColumnIndex(column);
+		refresh();
+    }
+    
     /**
      * createContents
      */
@@ -377,6 +384,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.7  2003/11/14 00:46:04  zet
+sort by column menu item (for macOS)
+
 Revision 1.6  2003/11/09 22:31:51  lemmster
 fixed 'show all' bug
 

@@ -43,7 +43,7 @@ import org.eclipse.swt.custom.CTabItem;
 /**
  * SearchPaneListener
  *
- * @version $Id: ResultPaneListener.java,v 1.7 2003/11/10 08:54:47 lemmster Exp $
+ * @version $Id: ResultPaneListener.java,v 1.8 2003/11/14 00:46:04 zet Exp $
  *
  */
 public class ResultPaneListener extends GPaneListener {
@@ -81,7 +81,10 @@ public class ResultPaneListener extends GPaneListener {
             // filters available if currentTab has a table
             if (cTabFolder.getSelection() != null && cTabFolder.getSelection().getData("gView") != null) {
                 gView = (GView) cTabFolder.getSelection().getData("gView");
-
+                
+				// for macOS
+				createSortByColumnSubMenu(menuManager);
+                
                 // filter submenu			
                 MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
                             "TT_DOWNLOAD_MENU_FILTER"));
@@ -107,6 +110,9 @@ public class ResultPaneListener extends GPaneListener {
 
 /*
 $Log: ResultPaneListener.java,v $
+Revision 1.8  2003/11/14 00:46:04  zet
+sort by column menu item (for macOS)
+
 Revision 1.7  2003/11/10 08:54:47  lemmster
 rating filter in searchresult
 

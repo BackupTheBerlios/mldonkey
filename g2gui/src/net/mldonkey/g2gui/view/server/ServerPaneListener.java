@@ -45,7 +45,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.9 2003/11/10 09:58:50 lemmster Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.10 2003/11/14 00:46:04 zet Exp $ 
  *
  */
 public class ServerPaneListener extends GPaneListener {
@@ -87,6 +87,9 @@ public class ServerPaneListener extends GPaneListener {
 		if ( PreferenceLoader.loadBoolean("advancedMode") )
 			menuManager.add( new ColumnSelectorAction(gView) );
 
+		// for macOS
+		createSortByColumnSubMenu(menuManager);
+		
 		// filter submenu			
 		MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILTER" ) );
 
@@ -118,6 +121,9 @@ public class ServerPaneListener extends GPaneListener {
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.10  2003/11/14 00:46:04  zet
+sort by column menu item (for macOS)
+
 Revision 1.9  2003/11/10 09:58:50  lemmster
 save filter state
 

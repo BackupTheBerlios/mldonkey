@@ -25,9 +25,12 @@ package net.mldonkey.g2gui.view.viewers;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.view.PaneGuiTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.NetworkFilterAction;
+import net.mldonkey.g2gui.view.viewers.actions.SortByColumnAction;
 
 import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -36,7 +39,7 @@ import org.eclipse.swt.events.DisposeListener;
 /**
  * GPaneListener
  *
- * @version $Id: GPaneListener.java,v 1.5 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: GPaneListener.java,v 1.6 2003/11/14 00:46:04 zet Exp $
  *
  */
 public abstract class GPaneListener implements IMenuListener, DisposeListener {
@@ -44,10 +47,13 @@ public abstract class GPaneListener implements IMenuListener, DisposeListener {
     protected PaneGuiTab paneGuiTab;
     protected CoreCommunication core;
 
-    public GPaneListener( PaneGuiTab aPaneGuiTab, CoreCommunication core) {
+    public GPaneListener(PaneGuiTab aPaneGuiTab, CoreCommunication core) {
         this.paneGuiTab = aPaneGuiTab;
-        if (paneGuiTab != null )	
-	        this.gView = paneGuiTab.getGView();
+
+        if (paneGuiTab != null) {
+            this.gView = paneGuiTab.getGView();
+        }
+
         this.core = core;
 
         // for stats the gViewer is null
@@ -55,9 +61,9 @@ public abstract class GPaneListener implements IMenuListener, DisposeListener {
             this.gView.addDisposeListener(this);
         }
     }
-    
+
     public void menuAboutToShow() {
-    	this.gView = paneGuiTab.getGView();
+        this.gView = paneGuiTab.getGView();
     }
 
     protected void createNetworkFilterSubMenu(MenuManager menu) {
@@ -72,6 +78,21 @@ public abstract class GPaneListener implements IMenuListener, DisposeListener {
         }
     }
 
+    /**
+     * for macOS - sortByColumn
+     * @param menuManager
+     */
+    protected void createSortByColumnSubMenu(IMenuManager menuManager) {
+
+        MenuManager sortSubMenu = new MenuManager(G2GuiResources.getString("MISC_SORT"));
+
+        for (int i = 0; i < gView.getTable().getColumnCount(); i++) {
+            sortSubMenu.add(new SortByColumnAction(gView, i));
+        }
+
+        menuManager.add(sortSubMenu);
+    }
+
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
@@ -82,6 +103,9 @@ public abstract class GPaneListener implements IMenuListener, DisposeListener {
 
 /*
 $Log: GPaneListener.java,v $
+Revision 1.6  2003/11/14 00:46:04  zet
+sort by column menu item (for macOS)
+
 Revision 1.5  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
