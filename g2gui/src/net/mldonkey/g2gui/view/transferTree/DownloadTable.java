@@ -44,10 +44,11 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.22 2003/07/21 15:12:39 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.23 2003/07/22 10:17:58 dek Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
+	private boolean locked;
 	private int lastSortColumn = -1;
 	protected IItemHasMenue selectedItem;
 	private TransferTab page;
@@ -231,7 +232,7 @@ public class DownloadTable implements Observer, Runnable {
 	public void update( Observable o, Object arg ) {
 		if ( arg instanceof FileInfoIntMap ) {
 			files = ( FileInfoIntMap ) arg;
-			if ( page.isActive() ) {				
+			if ( !locked  ) {				
 				if ( !tableTree.isDisposed() )
 					tableTree.getDisplay().asyncExec( this );
 			}
@@ -241,6 +242,7 @@ public class DownloadTable implements Observer, Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
+		locked = true;
 		synchronized ( files ) {
 			TIntObjectIterator it = files.iterator();
 			while ( it.hasNext() ) {
@@ -288,10 +290,14 @@ public class DownloadTable implements Observer, Runnable {
 			}
 			files.clearIds();
 		}
+		locked = false;
 	}
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.23  2003/07/22 10:17:58  dek
+locked the updating thread while active, to avoid invalid Thread access
+
 Revision 1.22  2003/07/21 15:12:39  dek
 concurrent thread-exceptions solved??
 
