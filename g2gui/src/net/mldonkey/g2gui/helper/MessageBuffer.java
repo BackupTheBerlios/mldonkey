@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.26 2003/10/13 19:30:57 zet Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.27 2003/12/01 13:20:20 zet Exp $ 
  *
  */
 public class MessageBuffer {
@@ -113,6 +113,19 @@ public class MessageBuffer {
 			  * ( readInt8() ) ) ) );
 		
 	}
+	
+	/**
+	 * read an in16 and return an unsigned int
+	 * (used for ClientKind.port)
+	 * @return int
+	 */
+	public int readUnsignedInt16() {
+	    int a = ( int ) ( readByte() & 0xFF );
+	    int b = ( int ) ( readByte() & 0xFF );
+	    
+	    return (a + 256 * b);
+	}
+
 	
 	/**
 	 * Reads an signed Int32 from the MessageBuffer
@@ -262,6 +275,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.27  2003/12/01 13:20:20  zet
+readunsigned16
+
 Revision 1.26  2003/10/13 19:30:57  zet
 only check proto version on instantiation
 
