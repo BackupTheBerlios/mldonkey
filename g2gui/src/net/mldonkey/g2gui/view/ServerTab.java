@@ -64,10 +64,11 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  * @author $Author: lemmster $
- * @version $Id: ServerTab.java,v 1.14 2003/08/23 09:46:18 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.15 2003/08/23 10:33:36 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
+	private boolean oldValue = PreferenceLoader.loadBoolean( "displayAllServers" );
 	private boolean ascending = false;;
 	private TableColumn tableColumn;
 	private Combo combo;
@@ -367,8 +368,12 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * Updates this tab on preference close
 	 */
 	public void updateDisplay() {
+		/* only update on pref change */
+		boolean temp = PreferenceLoader.loadBoolean( "displayAllServers" );
+		if ( oldValue == temp ) return;
+		
 		/* update the state filter */
-		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) ) {
+		if ( temp ) {
 			/* first remove all EnumState filters */
 			for ( int i = 0; i < table.getFilters().length; i++ ) {
 				if ( table.getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateFilter )
@@ -395,12 +400,16 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 				}
 			}
 		}
+		this.oldValue = temp;
 		super.updateDisplay();
 	}
 }
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.15  2003/08/23 10:33:36  lemmster
+updateDisplay() only on displayAllServers change
+
 Revision 1.14  2003/08/23 09:46:18  lemmster
 superclass TableMenuListener added
 
