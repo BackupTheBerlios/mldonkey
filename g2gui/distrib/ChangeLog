@@ -24,5 +24,6 @@
 	* Transfer: Fix display of files >2gb [#916]
 	* Transfer: Add menuItem: Commit as (filename selection)
 	* Statistics: Add header doubleClick to maximize a graph [#916]
+	* Statistics: Add basic hourly graph history (access in graph menu)
 	* Win TrayIcon: Add preference option to disable minimize on close [#947]
 	* Win TrayIcon: continue updating toolTip UL/DL rates while gui is visible
