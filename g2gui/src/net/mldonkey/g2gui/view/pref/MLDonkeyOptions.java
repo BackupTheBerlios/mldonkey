@@ -22,10 +22,14 @@
  */
 package net.mldonkey.g2gui.view.pref;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.enum.EnumTagType;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -40,8 +44,8 @@ import org.eclipse.swt.widgets.Control;
 /**
  * MLDonkeyOptions
  *
- * @author  $Author: dek $ 
- * @version $Id: MLDonkeyOptions.java,v 1.15 2003/08/19 13:08:03 dek Exp $ 
+ * @author  $Author: zet $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.16 2003/08/19 16:33:37 zet Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -65,6 +69,7 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		 * it in this.createContents()
 		 */
 		parent = getFieldEditorParent();
+			Collections.sort(options, new optionsComparator());
 			Iterator it = options.iterator();
 			while ( it.hasNext() ) {
 				OptionsInfo temp = ( OptionsInfo ) it.next();
@@ -144,9 +149,24 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	public void addOption( OptionsInfo option ) {
 		options.add( option );
 	}
+	
+	public class optionsComparator implements Comparator {
+		
+		public int compare(Object o1, Object o2) {
+			OptionsInfo optionsInfo1 = ( OptionsInfo ) o1;
+			OptionsInfo optionsInfo2 = ( OptionsInfo ) o2;
+			String optionDescription1 = ( optionsInfo1.getDescription().equals( "" ) ? optionsInfo1.getKey() : optionsInfo1.getDescription() );
+			String optionDescription2 = ( optionsInfo2.getDescription().equals( "" ) ? optionsInfo2.getKey() : optionsInfo2.getDescription() );
+			return optionDescription1.compareToIgnoreCase(optionDescription2);
+		}
+		
+	}
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.16  2003/08/19 16:33:37  zet
+sort the options...
+
 Revision 1.15  2003/08/19 13:08:03  dek
 advanced-Options included
 
