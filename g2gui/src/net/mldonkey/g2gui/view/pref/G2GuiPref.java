@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Group;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.7 2003/09/03 14:49:07 zet Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.8 2003/09/03 18:22:26 dek Exp $ 
  *
  */
 public class G2GuiPref extends FieldEditorPreferencePage {
@@ -65,7 +65,7 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 			group.setLayout( gl );
 			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		
-		ScrolledComposite sc = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {		
+		Composite sub = new Composite( group, SWT.NONE ) {		
 			public Point computeSize( int wHint, int hHint, boolean changed ) 
 			/* This method prevents the window from becoming huge (as in hight and width) 
 			 * when reopening "General" (or equivalents)
@@ -73,19 +73,15 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 				{ return new Point( SWT.DEFAULT, SWT.DEFAULT ); }
 		};
 		
-		sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-			sc.setLayout( new FillLayout() );
+		sub.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+		sub.setLayout( new FillLayout() );
 		
-		Composite parent = ( Composite ) super.createContents( sc );
+		Composite parent = ( Composite ) super.createContents( sub );
 		parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );		
 		
-		sc.setExpandHorizontal( true );
-		sc.setExpandVertical( true );
-		sc.setContent( parent );
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;		
+		layout.numColumns = 1;
 		
-		sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 		parent.layout();
 		
 		return parent; 
@@ -154,6 +150,9 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.8  2003/09/03 18:22:26  dek
+fixed size from now on
+
 Revision 1.7  2003/09/03 14:49:07  zet
 optionally spawn core from gui
 
@@ -170,7 +169,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.1  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
