@@ -23,14 +23,18 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.model.enum.EnumPriority;
 
 /**
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.11 2003/07/03 16:01:51 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.12 2003/07/03 21:16:16 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements SimpleInformation {
@@ -89,7 +93,7 @@ public class FileInfo implements SimpleInformation {
 	/**
 	 * File priority inside mldonkey
 	 */
-	private int priority;
+	private Enum priority;
 	/**
 	 * File last seen
 	 */
@@ -190,7 +194,7 @@ public class FileInfo implements SimpleInformation {
 	/**
 	 * @return File priority
 	 */
-	public int getPriority() {
+	public Enum getPriority() {
 		return priority;
 	}
 	/**
@@ -291,7 +295,7 @@ public class FileInfo implements SimpleInformation {
 		
 		this.name = messageBuffer.readString();
 		this.offset = messageBuffer.readInt32();
-		this.priority = messageBuffer.readInt32();
+		this.setPriority( messageBuffer.readInt32() );
 		double d2 = round( ( (double)this.getDownloaded() / (double)this.getSize() ) * 100 );
 		this.perc = d2;
 	}
@@ -331,19 +335,49 @@ public class FileInfo implements SimpleInformation {
 		else
 			return false;
 	}
+	
+	/**
+	 * translate the int to EnumPriority
+	 * @param i the int
+	 */
+	private void setPriority( int i ) {
+		if ( i < 0 )
+			priority = EnumPriority.LOW;
+		else if ( i > 0 )
+			priority = EnumPriority.HIGH;
+		else 
+			priority = EnumPriority.NORMAL;		
+	}
 
 	/**
 	 * @param string The new name for this file
 	 */
-	public void setName( String string, CoreCommunication core ) {
-		// do nothing yet
+	public void setName( String string ) {
+		Object[] content = new Object[ 2 ];
+		content[ 0 ] = new Integer( this.getId() );
+		content[ 1 ] = string;
+		/* create the message content */
+		EncodeMessage consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, content );
+		consoleMessage.sendMessage( this.getParent().getConnection() );
+		content = null;
+		consoleMessage = null;
 	}
 
 	/**
 	 * @param i The new priority for this file
 	 */
-	public void setPriority( int i ) {
-		// do nothing yet
+	public void setPriority( EnumPriority enum ) {
+		Integer content;
+		if ( enum == EnumPriority.LOW )
+			content = new Integer( -10 );
+		else if ( enum == EnumPriority.HIGH )
+			content = new Integer( 10 );
+		else
+			content = new Integer( 0 );	
+		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SAVE_FILE_AS, content );
+		consoleMessage.sendMessage( this.getParent().getConnection() );
+		content = null;
+		consoleMessage = null;
 	}
 
 	/**
@@ -352,10 +386,13 @@ public class FileInfo implements SimpleInformation {
 	public void setState( EnumFileState enum ) {
 		this.getState().setState( enum, this.getId(), this.getParent() );
 	}
-}
+}	
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.12  2003/07/03 21:16:16  lemmstercvs01
+setName() and setPriority() added, Priority from int to Enum
+
 Revision 1.11  2003/07/03 16:01:51  lemmstercvs01
 setState() works now to set the filestate on the mldonkey side
 
