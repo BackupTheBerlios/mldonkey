@@ -47,18 +47,15 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.4 2003/08/30 17:29:31 dek Exp $ 
+ * @version $Id: About.java,v 1.5 2003/08/30 17:35:12 dek Exp $ 
  *
  */
 public class About {
-	private Link activeLink;		
+//	TODO filling about-Dialog with content
 
+	private Link activeLink;
 	private final Cursor handCursor = new Cursor( Display.getDefault(), SWT.CURSOR_HAND );
-
-	private List linklist = new ArrayList();
-
-
-	//TODO filling about-Dialog with content
+	private List linklist = new ArrayList();	
 	private Shell myShell;
 	
 
@@ -139,10 +136,14 @@ public class About {
 		info.addMouseMoveListener( new MouseMoveListener() {
 
 			public void mouseMove( MouseEvent e ) {
-				if ( isLink( ( StyledText ) e.widget, e.x, e.y ) ) 
+				if ( isLink( ( StyledText ) e.widget, e.x, e.y ) ) { 				
 					( ( StyledText )e.widget ).setCursor( handCursor );
-				else
+					( ( StyledText )e.widget ).setToolTipText( activeLink.url );
+				}
+				else {			
 					( ( StyledText )e.widget ).setCursor( null );
+					( ( StyledText )e.widget ).setToolTipText( null );
+				}
 			}
 			
 			 } );
@@ -180,7 +181,7 @@ public class About {
 		while ( it.hasNext() ) {
 			Link temp = ( Link ) it.next();
 			if ( ( temp.offset < offset ) && ( offset  < temp.offset + temp.length ) ) {
-				this.activeLink = temp;
+				this.activeLink = temp;				
 				return true	;	
 			}	 
 		}		
@@ -192,7 +193,7 @@ public class About {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.4 2003/08/30 17:29:31 dek Exp $ 
+	 * @version $Id: About.java,v 1.5 2003/08/30 17:35:12 dek Exp $ 
 	 *
 	 */
 	public class Link {
@@ -244,6 +245,9 @@ public class About {
 }
 /*
 $Log: About.java,v $
+Revision 1.5  2003/08/30 17:35:12  dek
+added url too tooltip of link
+
 Revision 1.4  2003/08/30 17:29:31  dek
 added link to GPL in about-dialog
 
