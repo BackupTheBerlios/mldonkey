@@ -22,15 +22,13 @@
  */
 package net.mldonkey.g2gui.view.resource;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import net.mldonkey.g2gui.model.NetworkInfo.Enum;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -38,43 +36,49 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+
 /**
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.34 2003/10/15 04:16:37 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.35 2003/10/15 15:33:09 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
     private static final ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
-	private static final String imagesDirectory = "images/";
+    private static final String miscDirectory = "misc/";
+    private static final String imagesDirectory = "images/";
+    private static final String networksDirectory = "networks/";
 
     private G2GuiResources() {
     }
-  
-	/**
-     * Initialize G2GuiResources
-     */
+
+    /**
+    * Initialize G2GuiResources
+    */
     public static void initialize() {
         createImageRegistry();
     }
 
     /**
      * Get resource image
-     * @param key 
+     * @param key
      * @return Image
      */
     public static Image getImage( String key ) {
         return getImageRegistry().get( key );
     }
-    
+
     /**
      * Get resource imageDescriptor
      * @param key
      * @return
      */
     public static ImageDescriptor getImageDescriptor( String key ) {
-    	return getImageRegistry().getDescriptor( key );
+        return getImageRegistry().getDescriptor( key );
     }
 
     /**
@@ -82,107 +86,116 @@ public class G2GuiResources {
      * @return ImageRegistry
      */
     public static ImageRegistry getImageRegistry() {
-        if ( imageRegistry == null )
+        if ( imageRegistry == null ) {
             imageRegistry = new ImageRegistry();
+        }
+
         return imageRegistry;
     }
 
     /**
      * Get resource string
-     * @param key 
+     * @param key
      * @return String
      */
     public static String getString( String key ) {
         try {
             return bundle.getString( key );
-        }
-        catch ( MissingResourceException e ) {
+        } catch ( MissingResourceException e ) {
             return key;
         }
     }
 
     /**
      * Get network image
-     * @param networkType 
+     * @param networkType
      * @return Image
      */
     public static Image getNetworkImage( Enum networkType ) {
-        if ( networkType == Enum.DONKEY )
+        if ( networkType == Enum.DONKEY ) {
             return getImage( "DKConnectedWhite" );
-        if ( networkType == Enum.FT )
+        } else if ( networkType == Enum.FT ) {
             return getImage( "FTConnectedWhite" );
-        if ( networkType == Enum.GNUT )
+        } else if ( networkType == Enum.GNUT ) {
             return getImage( "G1ConnectedWhite" );
-        if ( networkType == Enum.GNUT2 )
+        } else if ( networkType == Enum.GNUT2 ) {
             return getImage( "G2ConnectedWhite" );
-        if ( networkType == Enum.SOULSEEK )
+        } else if ( networkType == Enum.SOULSEEK ) {
             return getImage( "SSConnectedWhite" );
-        if ( networkType == Enum.DC )
+        } else if ( networkType == Enum.DC ) {
             return getImage( "DCConnectedWhite" );
-        if ( networkType == Enum.BT )
+        } else if ( networkType == Enum.BT ) {
             return getImage( "BTConnectedWhite" );
-        if ( networkType == Enum.MULTINET )
+        } else if ( networkType == Enum.MULTINET ) {
             return getImage( "MULTIConnectedWhite" );
-        return getImage( "UnknownConnectedWhite" );
+        } else {
+            return getImage( "UnknownConnectedWhite" );
+        }
     }
 
     /**
      * Get Client Image
-     * @param clientState 
+     * @param clientState
      * @return Image
      */
     public static Image getClientImage( EnumState clientState ) {
-        if ( clientState == EnumState.CONNECTED_DOWNLOADING )
+        if ( clientState == EnumState.CONNECTED_DOWNLOADING ) {
             return G2GuiResources.getImage( "epTransferring" );
-        if ( ( clientState == EnumState.CONNECTING ) || ( clientState == EnumState.CONNECTED_INITIATING ) )
+        } else if ( ( clientState == EnumState.CONNECTING ) 
+        		|| ( clientState == EnumState.CONNECTED_INITIATING ) ) {
             return G2GuiResources.getImage( "epConnecting" );
-        if ( ( clientState == EnumState.CONNECTED_AND_QUEUED )
-                 || ( clientState == EnumState.NOT_CONNECTED_WAS_QUEUED ) )
+        } else if ( ( clientState == EnumState.CONNECTED_AND_QUEUED ) 
+        		|| ( clientState == EnumState.NOT_CONNECTED_WAS_QUEUED ) ) {
             return G2GuiResources.getImage( "epAsking" );
-        if ( clientState == EnumState.BLACK_LISTED )
+        } else if ( clientState == EnumState.BLACK_LISTED ) {
             return G2GuiResources.getImage( "epNoNeeded" );
-        return G2GuiResources.getImage( "epUnknown" );
+        } else {
+            return G2GuiResources.getImage( "epUnknown" );
+        }
     }
 
     /**
      * Get rating string
      * @param availability int
-     * @return string 
+     * @return string
      */
     public static String getRatingString( int availability ) {
-		String result = "";
-        if ( availability > 100 )
-            result += G2GuiResources.getString( "RTLP_EXCELLENT" );
-        else if ( availability > 50 )
-			result += G2GuiResources.getString( "RTLP_VERYHIGH" );
-        else if ( availability > 10 )
-			result += G2GuiResources.getString( "RTLP_HIGH" );
-        else if ( availability > 5 )
-			result += G2GuiResources.getString( "RTLP_NORMAL" );
-        else
-			result += G2GuiResources.getString( "RTLP_LOW" );
+        String result = "";
 
-		return ( result + " (" + availability + ")" );
+        if ( availability > 100 ) {
+            result += G2GuiResources.getString( "RTLP_EXCELLENT" );
+        } else if ( availability > 50 ) {
+            result += G2GuiResources.getString( "RTLP_VERYHIGH" );
+        } else if ( availability > 10 ) {
+            result += G2GuiResources.getString( "RTLP_HIGH" );
+        } else if ( availability > 5 ) {
+            result += G2GuiResources.getString( "RTLP_NORMAL" );
+        } else {
+            result += G2GuiResources.getString( "RTLP_LOW" );
+        }
+
+        return ( result + " (" + availability + ")" );
     }
 
     /**
      * Get rating image
      * @param availability int
      * @return Image
-     * 
+     *
      */
-	public static Image getRatingImage( int availability ) {
-		if ( availability > 100 )
-			return G2GuiResources.getImage( "epRatingExcellent" );
-		else if ( availability > 50 )
-			return G2GuiResources.getImage( "epRatingExcellent" );
-		else if ( availability > 10 )
-			return G2GuiResources.getImage( "epRatingGood" );
-		else if ( availability > 5 )
-			return G2GuiResources.getImage( "epRatingFair" );
-		else
-			return G2GuiResources.getImage( "epRatingPoor" );
-	}
+    public static Image getRatingImage( int availability ) {
+        if ( availability > 100 ) {
+            return G2GuiResources.getImage( "epRatingExcellent" );
+        } else if ( availability > 50 ) {
+            return G2GuiResources.getImage( "epRatingExcellent" );
+        } else if ( availability > 10 ) {
+            return G2GuiResources.getImage( "epRatingGood" );
+        } else if ( availability > 5 ) {
+            return G2GuiResources.getImage( "epRatingFair" );
+        } else {
+            return G2GuiResources.getImage( "epRatingPoor" );
+        }
+    }
 
     /**
      * Create the image registry
@@ -191,81 +204,93 @@ public class G2GuiResources {
         Color white = Display.getCurrent().getSystemColor( SWT.COLOR_WHITE );
         Color titlebar = Display.getCurrent().getSystemColor( SWT.COLOR_TITLE_BACKGROUND );
 
-		ImageRegistry reg = G2GuiResources.getImageRegistry();
+        ImageRegistry reg = G2GuiResources.getImageRegistry();
 
-		reg.put( "splashScreen" , createRawImage( "splash.png" ) );
+        reg.put( "splashScreen", createRawImage( "splash.png" ) );
         reg.put( "ProgramIcon", createRawImage( "mld_logo_48x48.gif" ) );
         reg.put( "G2GuiLogo", createTrans( "mld_logo_48x48.png" ) );
-		reg.put( "G2GuiLogoSmall", createTrans( "mld_logo_12x12.png" ) );
-		reg.put( "G2GuiICO" , createRawImage ( "g2gui.ico" ) );
-        
-        String[] buttonNames =
-        { "Preferences", "Statistics", "Console", "Transfers", "Search", "Servers", "Messages", "News" };
-        String[] buttonFiles =
-        { "preferences", "statistics", "console", "transfer3a", "search", "server", "messages", "news" };
+        reg.put( "G2GuiLogoSmall", createTrans( "mld_logo_12x12.png" ) );
+        reg.put( "G2GuiICO", createRawImage( "g2gui.ico" ) );
 
-        // still thinking about Active state buttons...							
+        String[] buttonNames = { "Preferences", "Statistics", "Console", "Transfers", "Search", "Servers", "Messages", "News" };
+        String[] buttonFiles = { "preferences", "statistics", "console", "transfer3a", "search", "server", "messages", "news" };
+
         for ( int i = 0; i < buttonNames.length; i++ ) {
             reg.put( buttonNames[ i ] + "Button", createTrans( buttonFiles[ i ] + ".png" ) );
             reg.put( buttonNames[ i ] + "ButtonActive", createActive( buttonFiles[ i ] + ".png" ) );
             reg.put( buttonNames[ i ] + "ButtonSmall", createTrans( buttonFiles[ i ] + "-16.png" ) );
-            reg.put( buttonNames[ i ] + "ButtonSmallActive",
-                               createActive( buttonFiles[ i ] + "-16.png" ) );
-            reg.put( buttonNames[ i ] + "ButtonSmallTitlebar",
-                               createTrans( buttonFiles[ i ] + "-16.png", titlebar ) );
-        }
-        String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "ONP", "Unknown" };
-        String[] fileNames = { "directconnect", "edonkey2000", "gnutella", "gnutella2",
-        					   "kazaa", "soulseek", "opennap", "unknown" };
-        for ( int i = 0; i < shortNames.length; i++ ) {
-            reg.put( shortNames[ i ] + "Connected", createTrans( fileNames[ i ] + "_connected.png" ) );
-            reg.put( shortNames[ i ] + "Disconnected",
-                               createTrans( fileNames[ i ] + "_disconnected.png" ) );
-            reg.put( shortNames[ i ] + "Disabled", createTrans( fileNames[ i ] + "_disabled.png" ) );
-            reg.put( shortNames[ i ] + "BadConnected",
-                               createTrans( fileNames[ i ] + "_badconnected.png" ) );
-            reg.put( shortNames[ i ] + "ConnectedWhite",
-                               createTrans( fileNames[ i ] + "_connected.png", white ) );
+            reg.put( buttonNames[ i ] + "ButtonSmallActive", createActive( buttonFiles[ i ] + "-16.png" ) );
+            reg.put( buttonNames[ i ] + "ButtonSmallTitlebar", createTrans( buttonFiles[ i ] + "-16.png", titlebar ) );
         }
 
-        /* some icons for networks without all states */
-        reg.put( "BTConnected", createTrans( "bt_connected.png" ) );
-        reg.put( "BTConnectedWhite", createTrans( "bt_connected.png", white ) );
-        reg.put( "BTDisabled", createTrans( "bt_disabled.png" ) );
-        reg.put( "MULTIConnected", createTrans( "multinet_connected.png" ) );
-        reg.put( "MULTIConnectedWhite", createTrans( "multinet_connected.png", white ) );
-        reg.put( "MULTIDisabled", createTrans( "multinet_disabled.png" ) );
         reg.put( "MessagesButtonSmallTrans", createRawImage( "messages-16.gif" ) );
         reg.put( "MessagesButtonSmallTransBW", createRawImage( "messages-16-bw.gif" ) );
+
         reg.put( "DownArrow", createTrans( "down.png" ) );
         reg.put( "UpArrow", createTrans( "up.png" ) );
-        reg.put( "UpArrowBlue", createRawImage( "up_blue.gif" ) );
         reg.put( "SearchSmall", createTrans( "search_small.png" ) );
         reg.put( "SearchComplete", createTrans( "search_complete.png" ) );
         reg.put( "RedCrossSmall", createTrans( "red_cross-12.png" ) );
-        reg.put( "X", createRawImage( "x.gif" ) );
-        reg.put( "DropDown", createRawImage( "dropdown.gif" ) );
-        reg.put( "epUnknown", createImageDescriptor( "ep_unknown.gif" ) );
-        reg.put( "epTransferring", createImageDescriptor( "ep_transferring.gif" ) );
-        reg.put( "epNoNeeded", createImageDescriptor( "ep_noneeded.gif" ) );
-        reg.put( "epConnecting", createImageDescriptor( "ep_connecting.gif" ) );
-        reg.put( "epAsking", createImageDescriptor( "ep_asking.gif" ) );
-        reg.put( "epRatingPoor", createImageDescriptor( "ep_rating_poor.gif" ) );
-        reg.put( "epRatingFair", createImageDescriptor( "ep_rating_fair.gif" ) );
-        reg.put( "epRatingGood", createImageDescriptor( "ep_rating_good.gif" ) );
-        reg.put( "epRatingExcellent", createImageDescriptor( "ep_rating_excellent.gif" ) );
         reg.put( "downloaded", createTrans( "downloaded_arrow.png" ) );
-        reg.put( "Jigle", createRawImage( "jigle.gif" ) );
-        reg.put( "Bitzi", createRawImage( "bitzi.gif" ) );
-        reg.put( "info", createRawImage( "info.gif") );
-        reg.put( "cancel", createRawImage( "cancel.gif") );
-        reg.put( "resume", createRawImage( "resume.gif") );
-        reg.put( "pause", createRawImage( "pause.gif" ) );
-        reg.put( "preview", createRawImage( "preview.gif") );
-        reg.put( "verify", createRawImage( "verify.gif") );
-        reg.put( "commit", createRawImage( "commit.gif" ) );
-        reg.put( "commit_question", createRawImage( "commit_question.gif" ) );
-        reg.put( "edonkey", createRawImage( "edonkey.gif" ) );
+
+        createNetworksIcons( reg );
+        createMiscIcons( reg );
+    }
+
+    /**
+     * @param reg
+     */
+    public static void createMiscIcons( ImageRegistry reg ) {
+        reg.put( "epUnknown", createRawMImage( "ep_unknown.gif" ) );
+        reg.put( "epTransferring", createRawMImage( "ep_transferring.gif" ) );
+        reg.put( "epNoNeeded", createRawMImage( "ep_noneeded.gif" ) );
+        reg.put( "epConnecting", createRawMImage( "ep_connecting.gif" ) );
+        reg.put( "epAsking", createRawMImage( "ep_asking.gif" ) );
+        reg.put( "epRatingPoor", createRawMImage( "ep_rating_poor.gif" ) );
+        reg.put( "epRatingFair", createRawMImage( "ep_rating_fair.gif" ) );
+        reg.put( "epRatingGood", createRawMImage( "ep_rating_good.gif" ) );
+        reg.put( "epRatingExcellent", createRawMImage( "ep_rating_excellent.gif" ) );
+
+        reg.put( "UpArrowBlue", createRawMImage( "up_blue.gif" ) );
+        reg.put( "X", createRawMImage( "x.gif" ) );
+
+        reg.put( "Jigle", createRawMImage( "jigle.gif" ) );
+        reg.put( "Bitzi", createRawMImage( "bitzi.gif" ) );
+        reg.put( "info", createRawMImage( "info.gif" ) );
+        reg.put( "cancel", createRawMImage( "cancel.gif" ) );
+        reg.put( "resume", createRawMImage( "resume.gif" ) );
+        reg.put( "pause", createRawMImage( "pause.gif" ) );
+        reg.put( "preview", createRawMImage( "preview.gif" ) );
+        reg.put( "verify", createRawMImage( "verify.gif" ) );
+        reg.put( "commit", createRawMImage( "commit.gif" ) );
+        reg.put( "commit_question", createRawMImage( "commit_question.gif" ) );
+        reg.put( "edonkey", createRawMImage( "edonkey.gif" ) );
+    }
+
+    /**
+    * @param reg
+    */
+    public static void createNetworksIcons( ImageRegistry reg ) {
+        Color white = Display.getCurrent().getSystemColor( SWT.COLOR_WHITE );
+
+        String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "ONP", "Unknown" };
+        String[] fileNames = { "directconnect", "edonkey2000", "gnutella", "gnutella2", "kazaa", "soulseek", "opennap", "unknown" };
+
+        for ( int i = 0; i < shortNames.length; i++ ) {
+            reg.put( shortNames[ i ] + "Connected", createNTrans( fileNames[ i ] + "_connected.png" ) );
+            reg.put( shortNames[ i ] + "Disconnected", createNTrans( fileNames[ i ] + "_disconnected.png" ) );
+            reg.put( shortNames[ i ] + "Disabled", createNTrans( fileNames[ i ] + "_disabled.png" ) );
+            reg.put( shortNames[ i ] + "BadConnected", createNTrans( fileNames[ i ] + "_badconnected.png" ) );
+            reg.put( shortNames[ i ] + "ConnectedWhite", createNTrans( fileNames[ i ] + "_connected.png", white ) );
+        }
+
+        /* some icons for networks without all states */
+        reg.put( "BTConnected", createNTrans( "bt_connected.png" ) );
+        reg.put( "BTConnectedWhite", createNTrans( "bt_connected.png", white ) );
+        reg.put( "BTDisabled", createNTrans( "bt_disabled.png" ) );
+        reg.put( "MULTIConnected", createNTrans( "multinet_connected.png" ) );
+        reg.put( "MULTIConnectedWhite", createNTrans( "multinet_connected.png", white ) );
+        reg.put( "MULTIDisabled", createNTrans( "multinet_disabled.png" ) );
     }
 
     /**
@@ -276,7 +301,7 @@ public class G2GuiResources {
      * @param color the background-color
      * @return the transparent image
      */
-   	private static Image createTransparentImage( Image src, Color color ) {
+    private static Image createTransparentImage( Image src, Color color ) {
         int width = src.getBounds().width;
         int height = src.getBounds().height;
         Image result = new Image( null, width, height );
@@ -286,17 +311,23 @@ public class G2GuiResources {
         gc.drawImage( src, 0, 0 );
         src.dispose();
         gc.dispose();
+
         return result;
     }
 
-   private static Image createActiveImage( Image src, Color color ) {
+    /**
+     * @param src
+     * @param color
+     * @return Image
+     */
+    private static Image createActiveImage( Image src, Color color ) {
         int width = src.getBounds().width;
         int height = src.getBounds().height;
         Image result = new Image( null, width, height );
         GC gc = new GC( result );
         gc.drawImage( src, 0, 0 );
 
-        // let's try a border...	
+        // let's try a border for now...	
         gc.setForeground( Display.getCurrent().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ) );
         gc.drawLine( 0, 0, width - 1, 0 );
         gc.drawLine( 0, height - 1, width - 1, height - 1 );
@@ -304,40 +335,84 @@ public class G2GuiResources {
         gc.drawLine( width - 1, 0, width - 1, height - 1 );
         src.dispose();
         gc.dispose();
+
         return result;
     }
-   
+
+    /**
+     * @param src
+     * @param control
+     * @return Image
+     */
     private static Image createTransparentImage( Image src, Control control ) {
         return createTransparentImage( src, control.getBackground() );
     }
 
-    // transparent pngs just don't work with swt 
+    /**
+     * @param filename
+     * @return Image
+     */
     private static Image createTrans( String filename ) {
         return createTrans( filename, Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND ) );
     }
-    private static ImageDescriptor createRawImage ( String filename ) {
-    	
-    	return ImageDescriptor.createFromFile( MainTab.class, imagesDirectory + filename );
-    }
-  
-    private static Image createTrans( String filename, Color color ) {
-        return createTransparentImage( 
-        	ImageDescriptor.createFromFile(
-        		MainTab.class, imagesDirectory + filename ).createImage(), color );
-    }
 
-    private static ImageDescriptor createImageDescriptor( String filename ) {
+    /**
+     * @param filename
+     * @return ImageDescriptor
+     */
+    private static ImageDescriptor createRawImage( String filename ) {
         return ImageDescriptor.createFromFile( MainTab.class, imagesDirectory + filename );
     }
- 
+
+    /**
+     * @param filename
+     * @return ImageDescriptor
+     */
+    private static ImageDescriptor createRawMImage( String filename ) {
+        return createRawImage( miscDirectory + filename );
+    }
+
+    /**
+     * @param filename
+     * @param color
+     * @return Image
+     */
+    private static Image createTrans( String filename, Color color ) {
+        return createTransparentImage( ImageDescriptor.createFromFile( MainTab.class, imagesDirectory + filename ).createImage(), color );
+    }
+
+    /**
+    * @param filename
+    * @return Image
+    */
+    private static Image createNTrans( String filename ) {
+        return createTrans( networksDirectory + filename );
+    }
+
+    /**
+    * @param filename
+    * @param color
+    * @return Image
+    */
+    private static Image createNTrans( String filename, Color color ) {
+        return createTrans( networksDirectory + filename, color );
+    }
+
+    /**
+     * @param filename
+     * @return Image
+     */
     private static Image createActive( String filename ) {
-        return createActiveImage( createTrans( filename ),
-                                  Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND ) );
+        return createActiveImage( createTrans( filename ), Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND ) );
     }
 }
 
+
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.35  2003/10/15 15:33:09  zet
+split images directory
+
 Revision 1.34  2003/10/15 04:16:37  zet
 add images
 
