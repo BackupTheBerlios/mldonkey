@@ -36,7 +36,6 @@ import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.server.ServerPaneListener;
-import net.mldonkey.g2gui.view.helper.VersionCheck;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -53,7 +52,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.63 2004/03/23 20:27:31 psy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.64 2004/03/23 20:47:38 psy Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -82,7 +81,7 @@ public class PreferenceLoader {
     	String userhome = System.getProperty("user.home");
     	String fileSep = System.getProperty("file.separator");
     	String pathToConf = userhome + fileSep + ".g2gui" + fileSep;
-    	initialize( ( VersionCheck.isWin32() ? "" : pathToConf ) + "g2gui.pref" );
+    	initialize( ( userHomeExists() ? pathToConf : "" ) + "g2gui.pref" );
     }
 
     public static void initialize( String file ) throws IOException {
@@ -97,7 +96,7 @@ public class PreferenceLoader {
     	catch ( IOException e ) {
     		// no pref file is created -> lets create one 
     		// (including all needed directories when under linux)
-    		if (!VersionCheck.isWin32()) 
+    		if (userHomeExists()) 
     			new File( new File( file ).getParent() ).mkdirs();
     		preferenceStore.save();
     		System.out.println("Created new configfile.");
@@ -106,6 +105,10 @@ public class PreferenceLoader {
     	
     	// save the critical preferences in a hashmap for later use with needsRestart()
     	saveCritPrefs();
+    }
+    
+    private static boolean userHomeExists() {
+    	return new File(System.getProperty("user.home")).exists();
     }
     
     /**
@@ -442,6 +445,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.64  2004/03/23 20:47:38  psy
+only use homedir if it exists
+
 Revision 1.63  2004/03/23 20:27:31  psy
 only create dirs for g2gui.pref if not under win32
 
