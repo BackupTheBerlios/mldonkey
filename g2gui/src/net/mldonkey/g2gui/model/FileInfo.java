@@ -23,7 +23,9 @@
 package net.mldonkey.g2gui.model;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.text.DecimalFormat;
 
@@ -39,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.27 2003/07/31 17:10:14 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.28 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo extends Parent {
@@ -84,6 +86,11 @@ public class FileInfo extends Parent {
 	 */
 	private String avail;
 	/**
+	 * Availibility for each network
+	 * only in protocol > 17
+	 */
+	private Map avails;
+	/**
 	 * Download rate
 	 */
 	private float rate;
@@ -126,7 +133,7 @@ public class FileInfo extends Parent {
 
 	private String stringSize;
 	private String stringDownloaded;
-
+	
 	/**
 	 * @return time when download started
 	 */
@@ -307,7 +314,22 @@ public class FileInfo extends Parent {
 		this.getState().readStream( messageBuffer );
 		
 		this.chunks = messageBuffer.readString();
-		this.avail = messageBuffer.readString();
+
+		/* read a list of int32(networkid) and string(avail) */
+		if ( parent.getProtoToUse() > 17 ) {
+			this.avails = new HashMap();
+			int listElem = messageBuffer.readInt16();
+			for ( int i = 0; i < listElem; i++ ) {
+				int networkID = messageBuffer.readInt32();
+				String aString = messageBuffer.readString();
+				NetworkInfo network = parent.getNetworkInfoMap().get( networkID );
+				this.avails.put( network, aString );
+				this.avail = aString; //TODO just hack until overall avail is sent by the core
+			}
+		}
+		else
+			this.avail = messageBuffer.readString();
+	
 		/* translate to kb and round to two digits after comma */
 		double d = new Double( messageBuffer.readString() ).doubleValue() / 1024;
 		this.rate = ( float ) round( d );
@@ -487,6 +509,9 @@ public class FileInfo extends Parent {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.28  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.27  2003/07/31 17:10:14  zet
 stringsize
 

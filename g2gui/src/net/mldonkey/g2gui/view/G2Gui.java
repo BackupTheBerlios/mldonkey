@@ -23,19 +23,17 @@
 package net.mldonkey.g2gui.view;
 
 import java.io.IOException;
-import java.net.Socket;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import net.mldonkey.g2gui.comm.Core;
-import net.mldonkey.g2gui.helper.SocketPool;
 import net.mldonkey.g2gui.view.pref.Preferences;
 
 /**
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.3 2003/07/18 04:34:22 lemmstercvs01 Exp $ 
+ * @version $Id: G2Gui.java,v 1.4 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public class G2Gui {
@@ -62,8 +60,7 @@ public class G2Gui {
 		String username = preferenceStore.getString( "username" );
 		String password = preferenceStore.getString( "password" );
 
-		SocketPool socketPool = new SocketPool( hostname, port, username, password );
-		mldonkey  = new Core( ( Socket ) socketPool.checkOut() );
+		mldonkey  = new Core( hostname, port, username, password );
 			
 		MainTab g2gui = new MainTab( mldonkey, shell );
 		mldonkey.disconnect();
@@ -79,6 +76,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.4  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.3  2003/07/18 04:34:22  lemmstercvs01
 checkstyle applied
 

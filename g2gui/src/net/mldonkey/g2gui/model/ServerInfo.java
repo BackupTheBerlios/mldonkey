@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.11 2003/07/30 19:29:36 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.12 2003/08/01 17:21:19 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo extends Parent {
 	/**
@@ -217,6 +217,10 @@ public class ServerInfo extends Parent {
 	public void update( MessageBuffer messageBuffer ) {
 		byte state = messageBuffer.readByte();
 		this.getConnectionState().setState( state );
+		/* if this state change to REMOVE_HOST -> remove from serverintmap */
+		if ( this.getConnectionState().getState() == EnumState.REMOVE_HOST ) {
+			this.parent.getServerInfoIntMap().remove( this.getServerId() );
+		}
 	}
 	
 	/**
@@ -261,6 +265,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.12  2003/08/01 17:21:19  lemmstercvs01
+$reworked observer/observable design, added multiversion support
+$
 $Revision 1.11  2003/07/30 19:29:36  lemmstercvs01
 $public short getServerPort() -> public int getServerPort() to fix negativ ports
 $

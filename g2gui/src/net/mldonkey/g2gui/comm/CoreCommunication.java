@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.23 2003/07/28 17:15:47 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.24 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -79,10 +79,14 @@ public interface CoreCommunication {
 	 */
 	ServerInfoIntMap getServerInfoIntMap();
 	/**
-	 * 
 	 * @return A Map with all the resultInfo obj
 	 */
-	TIntObjectHashMap getResultInfo();
+	ResultInfoIntMap getResultInfoIntMap();
+	
+	/**
+	 * @return The clientstats of the core
+	 */
+	ClientStats getClientStats();
 	
 	/**
 	 * Gets the socket the core is conntected through with mldonkey
@@ -90,6 +94,12 @@ public interface CoreCommunication {
 	 */
 	Socket getConnection();
 	
+	/**
+	 * The protocol version we are talking with the core
+	 * @return the protocol version 
+	 */
+	int getProtoToUse();
+
 	/**
 	 * Adds an Observer to this object
 	 * @param obj The Observer to add

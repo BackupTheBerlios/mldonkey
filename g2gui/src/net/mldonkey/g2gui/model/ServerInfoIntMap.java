@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,13 +30,16 @@ import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumState;
 
 /**
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.7 2003/07/30 19:28:42 lemmstercvs01 Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.8 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -52,18 +56,11 @@ public class ServerInfoIntMap extends InfoIntMap {
 	}
 
 	/**
-	 * Generates a empty ServerInfoList object
-	 */
-	public ServerInfoIntMap() {
-		super();
-	}
-
-	/**
 	 * Store a key/value pair in this object
 	 * @param key The Key
 	 * @param value The FileInfo object
 	 */
-	public void put( int key, ServerInfo value ) {
+	private void put( int key, ServerInfo value ) {
 		synchronized ( this ) {
 			this.infoIntMap.put( key, value );
 		}
@@ -82,9 +79,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 		else {
 			ServerInfo serverInfo = new ServerInfo( this.parent );
 			serverInfo.readStream( messageBuffer );
-			synchronized ( this.changed ) {
-				this.put( serverInfo.getServerId(), serverInfo );
-			}
+			this.put( serverInfo.getServerId(), serverInfo );
 		}
 	}
 	
@@ -102,7 +97,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 * @param id The FileInfo id
 	 * @return The FileInfo object
 	 */
-	public ServerInfo get( int id ) {
+	private ServerInfo get( int id ) {
 		return ( ServerInfo ) this.infoIntMap.get( id );
 	}
 
@@ -115,7 +110,11 @@ public class ServerInfoIntMap extends InfoIntMap {
 		if ( this.infoIntMap.contains( id ) ) {
 			ServerInfo server = ( ServerInfo ) this.get( id );
 			server.update( messageBuffer );
-			this.changed.add( server );
+			synchronized ( this.changed ) {
+				this.changed.add( server );
+			}
+			this.setChanged();
+			this.notifyObservers( this );
 		}
 	}
 
@@ -127,10 +126,14 @@ public class ServerInfoIntMap extends InfoIntMap {
 		TIntObjectHashMap tempServerInfoList = new TIntObjectHashMap();			
 		int[] usefulServers = messageBuffer.readInt32List();		
 		for ( int i = 0; i < usefulServers.length; i++ ) {
-			int clientID = usefulServers[i];
+			int clientID = usefulServers[ i ];
 			tempServerInfoList.put( clientID, this.get( clientID ) );			
 		}
-		this.infoIntMap = tempServerInfoList;		
+		synchronized ( this ) {
+			this.infoIntMap = tempServerInfoList;		
+		}
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -145,9 +148,10 @@ public class ServerInfoIntMap extends InfoIntMap {
 		}
 		return result;		
 	}
+	
 	/**
 	 * @return The serverinfos who have changed
-	 * clear this list, after update of the view
+	 * clear this list, after hte update at the view
 	 */
 	public List getChanged() {
 		return changed;
@@ -162,7 +166,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 		/* if null return all */
 		if ( enum == null ) return this;
 		
-		ServerInfoIntMap result = new ServerInfoIntMap();
+		ServerInfoIntMap result = new ServerInfoIntMap( this.parent );
 		int size = this.infoIntMap.size();
 		TIntObjectIterator itr = this.infoIntMap.iterator();
 		synchronized ( this ) {
@@ -175,10 +179,84 @@ public class ServerInfoIntMap extends InfoIntMap {
 		}
 		return result;
 	}
+	
+	/**
+	 * Sends Message.S_CONNECT_MORE to the core.
+	 */
+	public void connectMore() {
+		Message message = new EncodeMessage( Message.S_CONNECT_MORE );
+		message.sendMessage( this.parent.getConnection() );
+		message = null;
+	}
+
+	/**
+	 * Sends Message.S_CLEAN_OLD to the core
+	 */	
+	public void cleanOld() {
+		Message message = new EncodeMessage( Message.S_CLEAN_OLD );
+		message.sendMessage( this.parent.getConnection() );
+		message = null;
+	}
+
+	/**
+	 * Removes a old ServerInfo from this obj
+	 * @param key The ID of the ServerInfo to remove
+	 * @return true on success, false if this obj does not contain such an ID
+	 */	
+	public boolean remove( int key ) {
+		if ( !this.infoIntMap.containsKey( key ) ) return false;
+
+		( ( ServerInfo ) this.infoIntMap.get( key ) ).setState( EnumState.REMOVE_HOST );
+		return true;
+	}
+	
+	/**
+	 * Connects the ServerInfo
+	 * @param key The ID of the ServerInfo to connect
+	 * @return true on success, false if this obj does not contain such an ID
+	 */
+	public boolean connect( int key ) {
+		if ( !this.infoIntMap.containsKey( key ) ) return false;
+		
+		( ( ServerInfo ) this.infoIntMap.get( key ) ).setState( EnumState.CONNECTING );
+		return true;
+	}
+
+	/**
+	 * Disconnects the ServerInfo
+	 * @param key The ID of the ServerInfo to disconnect
+	 * @return true on success, false if this obj does not contain such an ID
+	 */
+	public boolean disconnect( int key ) {
+		if ( !this.infoIntMap.containsKey( key ) ) return false;
+		
+		( ( ServerInfo ) this.infoIntMap.get( key ) ).setState( EnumState.NOT_CONNECTED );
+		return true;
+	}
+	
+	/**
+	 * Adds a ServerInfo to this obj
+	 * @param network The NetworkInfo the ServerInfo belongs to
+	 * @param address The IP Address of the ServerInfo
+	 * @param port The Port of the ServerInfo
+	 */
+	public void add( NetworkInfo network, InetAddress address, short port ) {
+		Object[] obj = new Object[ 3 ];
+		obj[ 0 ] = new Integer( network.getNetwork() );
+		obj[ 1 ] = address.getAddress();
+		obj[ 2 ] = new Short( port );
+		
+		Message message = new EncodeMessage( Message.S_ADD_SERVER, obj );
+		message.sendMessage( this.parent.getConnection() );
+		message = null;
+	}
 }
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.8  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.7  2003/07/30 19:28:42  lemmstercvs01
 several changes
 

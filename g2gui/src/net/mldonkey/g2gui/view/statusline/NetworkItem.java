@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.7 2003/07/31 14:11:06 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkItem.java,v 1.8 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -81,7 +81,7 @@ public class NetworkItem implements Observer {
 		
 		this.createContent();
 
-		mldonkey.addObserver( this );	
+		mldonkey.getNetworkInfoMap().addObserver( this );	
 	}
 
 	/**
@@ -119,14 +119,16 @@ public class NetworkItem implements Observer {
 				public void mouseUp( MouseEvent e ) { }
 			} );
 
-			/* get the servers the network is connected to */
-//			int numConnected = network.ConnectedServers(); // need new coreproto
-//			if ( numConnected > 0 ) { //TODO get min # of servers
-				/* we are connected, the "CONNECTED" to true */
-//				label.setData( "CONNECTED", new Boolean( true ) );
-				/* alter the tooltip text, to reflect that we are connected */
-//				label.setToolTipText( network.getNetworkName() + ": connected to " + numConnected + " servers" );
-//			}
+			if ( core.getProtoToUse() >= 18 ) {
+				/* get the servers the network is connected to */
+				int numConnected = network.getConnectedServers();
+				if ( numConnected > 0 ) { //TODO get min # of servers
+					/* we are connected, the "CONNECTED" to true */
+					cLabel.setData( "CONNECTED", new Boolean( true ) );
+					/* alter the tooltip text, to reflect that we are connected */
+					cLabel.setToolTipText( network.getNetworkName() + ": connected to " + numConnected + " servers" );
+				}
+			}
 			/* now create the image */
 			cLabel.setImage( this.createNetworkImage( network ) );
 		}
@@ -185,28 +187,37 @@ public class NetworkItem implements Observer {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, Object arg ) {
-		if ( arg instanceof NetworkInfoIntMap ) {
-			final NetworkInfoIntMap networks = ( NetworkInfoIntMap ) arg;
-			composite.getDisplay().asyncExec( new Runnable () {
-				public void run() {
-					/* check for widget disposed */
-					if ( composite.isDisposed() ) return;
-	
-					/* get all labels */
-					Control[] controls = composite.getChildren();
+		final NetworkInfoIntMap networks = ( NetworkInfoIntMap ) arg;
+		composite.getDisplay().asyncExec( new Runnable () {
+			public void run() {
+				/* check for widget disposed */
+				if ( composite.isDisposed() ) return;
 
-					/* check all controls (label) */	
-					for ( int i = 0; i < controls.length; i++ ) {
-						cLabel = ( CLabel ) controls[ i ];
-						/* get the data from the network */
-						NetworkInfo network = ( NetworkInfo ) cLabel.getData();
-						cLabel.getImage().dispose(); // dispose the old image
-						cLabel.setImage( createNetworkImage( network ) );
-						cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
-					}						
-				}
-			} );	
-		}
+				/* get all labels */
+				Control[] controls = composite.getChildren();
+
+				/* check all controls (label) */	
+				for ( int i = 0; i < controls.length; i++ ) {
+					cLabel = ( CLabel ) controls[ i ];
+					/* get the data from the network */
+					NetworkInfo network = ( NetworkInfo ) cLabel.getData();
+					cLabel.getImage().dispose(); // dispose the old image
+					cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
+
+					if ( core.getProtoToUse() >= 18 ) {
+						/* get the servers the network is connected to */
+						int numConnected = network.getConnectedServers();
+						if ( numConnected > 0 ) { //TODO get min # of servers
+							/* we are connected, the "CONNECTED" to true */
+							cLabel.setData( "CONNECTED", new Boolean( true ) );
+							/* alter the tooltip text, to reflect that we are connected */
+							cLabel.setToolTipText( network.getNetworkName() + ": connected to " + numConnected + " servers" );
+						}
+					}
+					cLabel.setImage( createNetworkImage( network ) );
+				}						
+			}
+		} );	
 	}
 	
 	/**
@@ -246,7 +257,7 @@ public class NetworkItem implements Observer {
 		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.DONKEY ) {
 			if ( enabled ) { // enabled
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED" ) ).booleanValue();
-				if ( connected ) // connected to servers
+				if ( connected || core.getProtoToUse() < 18 ) // connected to servers
 					image = new Image( composite.getDisplay(),
 									"icons/edonkey2000_connected.png" );
 				else // not connected to servers 
@@ -266,7 +277,7 @@ public class NetworkItem implements Observer {
 /*		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.OV ) {
 			if ( enabled ) { // enabled
 				connected = ( ( Boolean ) label.getData( "CONNECTED") ).booleanValue();
-				if ( connected ) {
+				if ( connected || core.getProtoToUse() < 18 ) {
 					image = new Image( composite.getDisplay(),
 									"icons/overnet_connected.png" );
 				}
@@ -289,7 +300,7 @@ public class NetworkItem implements Observer {
 		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.FT ) {
 			if ( enabled ) { // enabled
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
-				if ( connected ) {
+				if ( connected || core.getProtoToUse() < 18 ) {
 					image = new Image( composite.getDisplay(),
 									"icons/kazaa_connected.png" );
 				}
@@ -311,7 +322,7 @@ public class NetworkItem implements Observer {
 		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.GNUT2 ) {
 			if ( enabled ) { // enabled
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
-				if ( connected ) {
+				if ( connected || core.getProtoToUse() < 18 ) {
 					image = new Image( composite.getDisplay(),
 									"icons/gnutella_connected.png" );
 				}
@@ -333,7 +344,7 @@ public class NetworkItem implements Observer {
 		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.GNUT ) {
 			if ( enabled ) { // enabled
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
-				if ( connected ) {
+				if ( connected || core.getProtoToUse() < 18 ) {
 					image = new Image( composite.getDisplay(),
 									"icons/gnutella_connected.png" );
 				}
@@ -356,7 +367,7 @@ public class NetworkItem implements Observer {
 		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.GNUT ) {
 			if ( enabled ) { // enabled
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
-				if ( connected ) {
+				if ( connected || core.getProtoToUse() < 18 ) {
 					image = new Image( composite.getDisplay(),
 									"icons/soulseek_connected.png" );
 				}
@@ -379,7 +390,7 @@ public class NetworkItem implements Observer {
 /*		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.BT ) {
 			if ( enabled ) { // enabled
 				connected = ( ( Boolean ) label.getData( "CONNECTED") ).booleanValue();
-				if ( connected ) {
+				if ( connected || core.getProtoToUse() < 18 ) {
 					image = new Image( composite.getDisplay(),
 									"icons/bittorrent_connected.png" );
 				}
@@ -402,7 +413,7 @@ public class NetworkItem implements Observer {
 /*		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.DC ) {
 			if ( enabled ) { // enabled
 				connected = ( ( Boolean ) label.getData( "CONNECTED") ).booleanValue();
-				if ( connected ) {
+				if ( connected || core.getProtoToUse() < 18 ) {
 					image = new Image( composite.getDisplay(),
 									"icons/directConnect_connected.png" );
 				}
@@ -425,7 +436,7 @@ public class NetworkItem implements Observer {
 /*		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.OPENNP ) {
 			if ( enabled ) { // enabled
 				connected = ( ( Boolean ) label.getData( "CONNECTED") ).booleanValue();
-				if ( connected ) {
+				if ( connected || core.getProtoToUse() < 18 ) {
 					image = new Image( composite.getDisplay(),
 									"icons/openNap_connected.png" );
 				}
@@ -447,7 +458,7 @@ public class NetworkItem implements Observer {
 //		else {
 			if ( enabled ) { // enabled
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED" ) ).booleanValue();
-				if ( connected ) {
+				if ( connected || core.getProtoToUse() < 18 ) {
 					image = new Image( composite.getDisplay(),
 									"icons/unknown_connected.png" );
 				}
@@ -470,6 +481,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.8  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.7  2003/07/31 14:11:06  lemmstercvs01
 reworked
 

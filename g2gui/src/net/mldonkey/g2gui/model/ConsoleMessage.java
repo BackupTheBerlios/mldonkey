@@ -22,15 +22,17 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.Observable;
+
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ConsoleMessage
  * 
  *  * @author ${user}
- * @version $$Id: ConsoleMessage.java,v 1.9 2003/07/04 10:26:03 lemmstercvs01 Exp $$ 
+ * @version $$Id: ConsoleMessage.java,v 1.10 2003/08/01 17:21:19 lemmstercvs01 Exp $$ 
  */
-public class ConsoleMessage implements SimpleInformation {
+public class ConsoleMessage extends Observable implements SimpleInformation {
 	
 	/**
 	 * String the core wants to display on the console
@@ -48,8 +50,12 @@ public class ConsoleMessage implements SimpleInformation {
 	 * @param string a string
 	 */
 	public void setConsoleMessage( String string ) {
-		if ( consoleMessage == null )  consoleMessage = string;	
-			else consoleMessage += string;
+		if ( consoleMessage == null )
+			consoleMessage = string;	
+		else 
+			consoleMessage += string;
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -58,6 +64,8 @@ public class ConsoleMessage implements SimpleInformation {
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setConsoleMessage( messageBuffer.readString() );
+		this.setChanged();
+		this.notifyObservers( this );						
 	}
 
 	/**
@@ -65,13 +73,13 @@ public class ConsoleMessage implements SimpleInformation {
 	 */
 	public void reset() {
 		consoleMessage = "";
-		
 	}
-	
-
 }
 /*
 $$Log: ConsoleMessage.java,v $
+$Revision 1.10  2003/08/01 17:21:19  lemmstercvs01
+$reworked observer/observable design, added multiversion support
+$
 $Revision 1.9  2003/07/04 10:26:03  lemmstercvs01
 $minor: just checkstyle
 $

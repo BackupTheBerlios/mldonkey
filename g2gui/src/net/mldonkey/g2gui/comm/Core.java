@@ -33,16 +33,30 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.helper.ObjectPool;
+import net.mldonkey.g2gui.helper.SocketPool;
 import net.mldonkey.g2gui.model.*;
 
 /**
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.72 2003/07/31 14:09:39 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.73 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
+	/**
+	 * The protocol version we maximal speak
+	 */
+	private static final int protocolVersion = 18;
+	/**
+	 * The protocol the core speaks
+	 */
+	private int coreProtocol = 0;
+	/**
+	 * The protcol version we are using
+	 */
+	private int usingVersion;
 	/**
 	 * 
 	 */
@@ -55,10 +69,6 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 	 * 
 	 */
 	private boolean connected = false;
-	/**
-	 * 
-	 */
-	private int coreProtocol = 0;
 	/**
 	 * 
 	 */
@@ -89,19 +99,42 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 	 */
 	private boolean badPassword = false;
 	
+	/**
+	 * 
+	 */
+	private String username, password, hostname;
+	private int port;
+	
+	private ObjectPool socketPool;
 	
 	/**
 	 * Core()
 	 * 
 	 * @param connection the socket, where the whole thing takes place
 	 */
-	public Core( Socket connection ) {
-		this.connection = connection;
+	public Core( String hostname, int port, String username, String password ) {
+		this.hostname = hostname;
+		this.port = port;
+		this.username = username;
+		this.password = password;
+		
+		/* get a socket from the socketpool */		
+		socketPool = new SocketPool( this.hostname, this.port );
+		this.connection = ( Socket ) socketPool.checkOut();
+
+		/* send the core protocol version */
+		Object[] temp = new Object[ 1 ];
+		temp[ 0 ] = new Integer( protocolVersion );
+		Message coreProtocol =
+					new EncodeMessage( Message.S_COREPROTOCOL, temp );
+		coreProtocol.sendMessage( connection );
+		coreProtocol = null;
+
+		/* now we can start us */
 		thisThread = new Thread( this );
 		thisThread.setDaemon( true );
 		this.connect();
 		thisThread.start();
-		
 	}
 
 	/**
@@ -182,7 +215,19 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
 					coreProtocol = messageBuffer.readInt32();
-					/* send a request for FileInfoList */					
+					/* can we speak the coreprotocol? */
+					int i = coreProtocol - protocolVersion;
+					if ( i <= 0 )
+						this.usingVersion = coreProtocol;
+					else
+						this.usingVersion = protocolVersion;
+					
+					/* send the password/username */
+					String[] aString = { this.password, this.username };
+					Message password = new EncodeMessage( Message.S_PASSWORD, aString );
+					password.sendMessage( connection );
+					password = null;
+					
 					break;
 					
 			case Message.R_DEFINE_SEARCH :
@@ -197,14 +242,10 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 					
 			case Message.R_SEARCH_RESULT :
 					this.resultInfoMap.readStream( messageBuffer );		
-					this.setChanged();	
-					this.notifyObservers( resultInfoMap );
 					break;
 					
 			case Message.R_OPTIONS_INFO :
 					this.optionsInfoMap.readStream( messageBuffer );
-					this.setChanged();	
-					this.notifyObservers( optionsInfoMap );
 					break;
 				
 			case Message.R_FILE_UPDATE_AVAILABILITY :
@@ -232,8 +273,6 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 					
 			case Message.R_SERVER_STATE : 
 					this.serverInfoMap.update( messageBuffer );
-					this.setChanged();
-					this.notifyObservers( serverInfoMap );
 					break;		
 					
 			case Message.R_CLIENT_INFO :
@@ -263,32 +302,22 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 			case Message.R_FILE_DOWNLOAD_UPDATE :
 					this.fileInfoMap.update( messageBuffer );
-					this.setChanged();
-					this.notifyObservers( fileInfoMap );
 					break;	
 					
 			case Message.R_CLIENT_STATS :				
 					clientStats.readStream( messageBuffer );
-					this.setChanged();	
-					this.notifyObservers( clientStats );
 					break;	
 					
 			case Message.R_DOWNLOAD :
 					( ( FileInfoIntMap )this.fileInfoMap ).add( messageBuffer );
-					this.setChanged();
-					this.notifyObservers( fileInfoMap );
 					break;					
 
 			case Message.R_CONSOLE :	
 					this.consoleMessage.readStream( messageBuffer );
-					this.setChanged();
-					this.notifyObservers( consoleMessage );						
 					break;
 				
 			case Message.R_NETWORK_INFO :
 					this.networkinfoMap.readStream( messageBuffer );
-					this.setChanged();
-					this.notifyObservers( networkinfoMap );
 					break;
 					
 			case Message.R_USER_INFO :
@@ -299,8 +328,6 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 					
 			case Message.R_SERVER_INFO :
 					this.serverInfoMap.readStream( messageBuffer );
-					this.setChanged();
-					this.notifyObservers( serverInfoMap );
 					break;
 							
 			case Message.R_DOWNLOADING_LIST :
@@ -360,8 +387,16 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 	/**
 	 * @return A Map with all the resultInfos
 	 */
+	public ResultInfoIntMap getResultInfoIntMap() {
+		return ( ResultInfoIntMap ) this.resultInfoMap;
+	}
+	
+	/**
+	 * return this temp resultinfo map
+	 * @return The temp resultinfo map
+	 */
 	public TIntObjectHashMap getResultInfo() {
-		return resultInfo;
+		return this.resultInfo;
 	}
 
 	/* (non-Javadoc)
@@ -378,10 +413,26 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 		return ( ServerInfoIntMap ) this.serverInfoMap;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getUsingVersion()
+	 */
+	public int getProtoToUse() {
+		return usingVersion;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getClientStats()
+	 */
+	public ClientStats getClientStats() {
+		return ( ClientStats ) this.clientStats;
+	}
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.73  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.72  2003/07/31 14:09:39  lemmstercvs01
 notify observers on networkinfo
 

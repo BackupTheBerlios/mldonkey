@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.Observable;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
@@ -30,10 +32,10 @@ import gnu.trove.TIntObjectIterator;
  * InfoMap
  *
  * @author $user$
- * @version $Id: InfoIntMap.java,v 1.5 2003/07/23 17:04:51 lemmstercvs01 Exp $ 
+ * @version $Id: InfoIntMap.java,v 1.6 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
-public abstract class InfoIntMap implements InfoCollection {
+public abstract class InfoIntMap extends Observable implements InfoCollection {
 	/**
 	 * 
 	 */
@@ -86,6 +88,9 @@ public abstract class InfoIntMap implements InfoCollection {
 
 /*
 $Log: InfoIntMap.java,v $
+Revision 1.6  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.5  2003/07/23 17:04:51  lemmstercvs01
 added containsKey(int key)
 

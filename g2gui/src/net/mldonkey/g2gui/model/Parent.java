@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.Observable;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
@@ -29,10 +31,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Parent
  *
  * @author $user$
- * @version $Id: Parent.java,v 1.1 2003/07/06 08:49:34 lemmstercvs01 Exp $ 
+ * @version $Id: Parent.java,v 1.2 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
-public abstract class Parent implements SimpleInformation {
+public abstract class Parent extends Observable implements SimpleInformation {
 	/**
 	 * The CoreCommunication parent
 	 */
@@ -53,6 +55,9 @@ public abstract class Parent implements SimpleInformation {
 
 /*
 $Log: Parent.java,v $
+Revision 1.2  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.1  2003/07/06 08:49:34  lemmstercvs01
 better oo added
 

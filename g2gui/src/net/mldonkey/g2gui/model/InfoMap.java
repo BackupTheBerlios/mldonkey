@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.model;
 
 import java.util.Collection;
+import java.util.Observable;
 import java.util.Set;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -33,10 +34,10 @@ import gnu.trove.THashMap;
  * InfoMap
  *
  * @author $user$
- * @version $Id: InfoMap.java,v 1.5 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: InfoMap.java,v 1.6 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
-public abstract class InfoMap implements InfoCollection {
+public abstract class InfoMap extends Observable implements InfoCollection {
 	/**
 	 * Map containing option value pairs
 	 */
@@ -105,6 +106,9 @@ public abstract class InfoMap implements InfoCollection {
 
 /*
 $Log: InfoMap.java,v $
+Revision 1.6  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.5  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 

@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.13 2003/07/31 14:08:54 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.14 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -63,6 +63,11 @@ public class NetworkInfo extends Parent {
 	 * Represents the network type
 	 */
 	private Enum networkType;
+	/**
+	 * The number of servers we are currently
+	 * connected to and the prev value
+	 */
+	private int connectedServers;
 	/**
 	 * disable
 	 */
@@ -102,6 +107,10 @@ public class NetworkInfo extends Parent {
 		this.uploaded = messageBuffer.readInt64();
 		this.downloaded = messageBuffer.readInt64();
 		
+		if ( parent.getProtoToUse() >= 18 )
+			this.connectedServers = messageBuffer.readInt32();
+		
+		/* set the networktype by networkname */
 		this.setNetworkType( this.networkName );
 	}
 	
@@ -176,6 +185,13 @@ public class NetworkInfo extends Parent {
 	public long getUploaded() {
 		return uploaded;
 	}
+	
+	/**
+	 * @return The number of connected Servers
+	 */
+	public int getConnectedServers() {
+		return connectedServers;
+	}
 
 	/**
 	 * @param b a short
@@ -242,6 +258,15 @@ public class NetworkInfo extends Parent {
 	}
 	
 	/**
+	 * @param i The new amount of connected servers for this network
+	 */
+	protected void setConnectedServers( int i ) {
+		this.connectedServers = i;
+		this.setChanged();
+		this.notifyObservers( this );
+	}
+	
+	/**
 	 * Creates a new EnumNetwork obj to differ each network
 	 */
 	public static class Enum {
@@ -293,6 +318,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.14  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.13  2003/07/31 14:08:54  lemmstercvs01
 added gnutella2, edited setEnable(), added getNetworkShortName()
 

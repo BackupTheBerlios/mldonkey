@@ -78,7 +78,7 @@ import org.eclipse.swt.custom.CLabel;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.10 2003/07/31 14:20:00 lemmstercvs01 Exp $ 
+ * @version $Id: SearchResult.java,v 1.11 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 //TODO search timeout, add resource bundle, add image handle, fake search, real links depending on network								   
@@ -129,7 +129,7 @@ public class SearchResult implements Observer, Runnable {
 		/* draw the display */
 		this.createContent();
 		/* register ourself to the core */
-		core.addObserver( this );
+		core.getResultInfoIntMap().addObserver( this );
 	}
 	
 	/* (non-Javadoc)
@@ -140,8 +140,7 @@ public class SearchResult implements Observer, Runnable {
 		if ( cTabItem.isDisposed() ) return;
 		
 		/* are we responsible for this update */
-		if ( arg instanceof ResultInfoIntMap 
-		&& ( ( ResultInfoIntMap ) arg ).containsKey( searchId ) ) {
+		if ( ( ( ResultInfoIntMap ) arg ).containsKey( searchId ) ) {
 			 	this.results = ( ResultInfoIntMap ) arg;
 				cTabFolder.getDisplay().asyncExec( this );
 		}
@@ -615,6 +614,9 @@ public class SearchResult implements Observer, Runnable {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.11  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.10  2003/07/31 14:20:00  lemmstercvs01
 statusline reworked
 

@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.17 2003/07/30 19:27:01 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.18 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -89,6 +89,8 @@ public class FileInfoIntMap extends InfoIntMap {
 			fileInfo.readStream( messageBuffer );
 			this.put( fileInfo.getId(), fileInfo );
 		}
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -97,8 +99,11 @@ public class FileInfoIntMap extends InfoIntMap {
 	 */
 	public void update( MessageBuffer messageBuffer ) {
 		int id = messageBuffer.readInt32();
-		if ( this.infoIntMap.containsKey( id ) )
+		if ( this.infoIntMap.containsKey( id ) ) {
 			this.get( id ).update( messageBuffer );
+			this.setChanged();
+			this.notifyObservers( this );
+		}
 	}
 	
 	/**
@@ -121,6 +126,8 @@ public class FileInfoIntMap extends InfoIntMap {
 				this.put( fileInfo.getId(), fileInfo );
 			}
 		}
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -200,6 +207,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.18  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.17  2003/07/30 19:27:01  lemmstercvs01
 ids.removeAll( ids ) -> ids.clear()
 

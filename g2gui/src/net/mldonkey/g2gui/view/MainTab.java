@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.25 2003/07/31 17:11:07 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.26 2003/08/01 17:21:18 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener, Observer {
@@ -79,7 +79,7 @@ public class MainTab implements Listener, Observer {
 	public MainTab( CoreCommunication core, Shell shell ) {
 		this.registeredTabs = new ArrayList();
 		this.mldonkey = core;
-		this.mldonkey.addObserver(this);
+		this.mldonkey.getClientStats().addObserver(this);
 		thisShell = shell;
 		final Shell mainShell = shell;	
 		Display display = shell.getDisplay();					
@@ -453,7 +453,7 @@ public class MainTab implements Listener, Observer {
 		
 		if ( activeTab != null ) {
 			activeTab.getContent().setVisible( false );
-			activeTab.setInActive(true);
+			activeTab.setInActive();
 		} 
 		( ( StackLayout ) pageContainer.getLayout() ).topControl 
 											= activatedTab.getContent();		
@@ -483,21 +483,20 @@ public class MainTab implements Listener, Observer {
 	 * @param shell The shell to set the title on
 	 * @param title The text to appear in the title-bar
 	 */
-	public void update(Observable arg0, Object receivedInfo) {
-				if (receivedInfo instanceof ClientStats){
-					final ClientStats clientInfo = (ClientStats) receivedInfo;
-					if (!thisShell.isDisposed())
-					thisShell.getDisplay().asyncExec(new Runnable() {
-						   public void run() {
-								if (!thisShell.isDisposed()) thisShell.setText(
-									"(D:" + String.valueOf(clientInfo.getTcpDownRate()) + ")" +
-									"(U:" + String.valueOf(clientInfo.getTcpUpRate()) + ")" +
-									": " + titleBarText
-									);
-						  }
-					});
+	public void update( Observable arg0, Object receivedInfo ) {
+		final ClientStats clientInfo = ( ClientStats ) receivedInfo;
+		if ( !thisShell.isDisposed() )
+			thisShell.getDisplay().asyncExec( new Runnable() {
+			   public void run() {
+					if ( !thisShell.isDisposed() ) thisShell.setText(
+						"(D:" + String.valueOf( clientInfo.getTcpDownRate()) + ")" +
+						"(U:" + String.valueOf( clientInfo.getTcpUpRate()) + ")" +
+						": " + titleBarText
+						);
 				}
+			} );
 	}
+
 	/**
 	 * Reads the preference store file from disk
 	 */
@@ -603,6 +602,9 @@ public class MainTab implements Listener, Observer {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.26  2003/08/01 17:21:18  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.25  2003/07/31 17:11:07  zet
 getShell
 

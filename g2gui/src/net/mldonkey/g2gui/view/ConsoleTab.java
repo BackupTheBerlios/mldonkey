@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.27 2003/07/27 22:39:36 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.28 2003/08/01 17:21:18 lemmstercvs01 Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -61,12 +61,10 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 	public ConsoleTab( MainTab gui ) {
 		super( gui );
 		this.core = gui.getCore();		
-		createButton("ConsoleButton", 
-						bundle.getString("TT_ConsoleButton"),
-						bundle.getString("TT_ConsoleButtonToolTip"));
-		createContents(this.content);
-		
-		
+		createButton( "ConsoleButton", 
+						bundle.getString( "TT_ConsoleButton" ),
+						bundle.getString( "TT_ConsoleButtonToolTip" ) );
+		createContents( this.content );
 	} 
 	
 	/* ( non-Javadoc )
@@ -88,10 +86,13 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 				if (e.keyCode == SWT.PAGE_UP) {
 					if ( infoDisplay.getTopIndex() > numLinesDisplayed )  
 						infoDisplay.setTopIndex( infoDisplay.getTopIndex() - ( numLinesDisplayed ) );
-					else infoDisplay.setTopIndex(0);
-				} else if (e.keyCode == SWT.PAGE_DOWN) {
+					else
+						infoDisplay.setTopIndex(0);
+				}
+				else if (e.keyCode == SWT.PAGE_DOWN) {
 					infoDisplay.setTopIndex( infoDisplay.getTopIndex() + ( numLinesDisplayed ) );
-				} else if ( e.character == SWT.CR ) {
+				}
+				else if ( e.character == SWT.CR ) {
 					infoDisplay.append( input.getText() );
 					String[] command = new String[ 1 ] ;
 					command[ 0 ] = input.getText();
@@ -100,8 +101,17 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 				}
 		  	}		
 		} );	
-		
 		updateDisplay();
+	}
+	
+	public void setInActive() {
+		this.core.getConsoleMessage().deleteObserver( this );
+		super.setInActive();
+	}
+	
+	public void setActive() {
+		this.core.getConsoleMessage().addObserver( this );
+		super.setActive();
 	}
 	
 	/**
@@ -130,12 +140,13 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 	 */
 	public void handleEvent( Event event ) {
 		super.handleEvent( event );	
-		if (core.isConnected()) {
+		if ( core.isConnected() ) {
 			
-			infoDisplay.append( Pattern.compile("\n").matcher(core.getConsoleMessage().getConsoleMessage()).replaceAll(infoDisplay.getLineDelimiter()) );
+			infoDisplay.append( Pattern.compile( "\n" ).matcher( core.getConsoleMessage().getConsoleMessage() ).
+				replaceAll( infoDisplay.getLineDelimiter() ) );
 			// workaround for GTK2 bug, to focus the bottom
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=40800
-			infoDisplay.setSelection(infoDisplay.getCharCount());
+			infoDisplay.setSelection( infoDisplay.getCharCount() );
 			infoDisplay.showSelection();
 
 			core.getConsoleMessage().reset();
@@ -171,11 +182,8 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
 	 */
 	public void update( Observable o, Object arg ) {
-		/* are we responsable for this object */
-		if ( arg instanceof ConsoleMessage ) {	
-			this.consoleMessage = ( ConsoleMessage )arg;
-			content.getDisplay().syncExec( this );
-		}
+		this.consoleMessage = ( ConsoleMessage ) arg;
+		content.getDisplay().syncExec( this );
 	}
 
 	/* (non-Javadoc)
@@ -195,6 +203,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.28  2003/08/01 17:21:18  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.27  2003/07/27 22:39:36  zet
 small buttons toggle (in popup) for main cool menu
 

@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.12 2003/07/31 14:10:44 lemmstercvs01 Exp $ 
+ * @version $Id: GuiTab.java,v 1.13 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -118,11 +118,7 @@ public abstract class GuiTab implements Listener, Observer {
 	 * is called from the gui, when this tab is set to background 
 	 * (because another tab was activated)	
 	 */
-	public void setInActive(boolean removeObserver) {			
-		if (removeObserver) {
-			this.gui.getCore().deleteObserver( this );
-			hasObserver = false;
-		}
+	public void setInActive() {			
 		this.active = false;
 		this.toolButton.setActive ( false );		
 	}
@@ -131,10 +127,6 @@ public abstract class GuiTab implements Listener, Observer {
 	 * is called when this tab is set to foreground 
 	 */
 	public void setActive() {		
-		if ( !hasObserver ) {
-			this.gui.getCore().addObserver( this );
-			hasObserver = true;
-		}
 		this.active = true;		
 		this.mainWindow.setActive( this );
 		this.toolButton.setActive( true );
@@ -205,6 +197,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.13  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.12  2003/07/31 14:10:44  lemmstercvs01
 statusline.update() changed
 

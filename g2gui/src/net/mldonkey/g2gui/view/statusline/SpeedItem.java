@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.view.*;
  * SpeedItem
  *
  * @author $user$
- * @version $Id: SpeedItem.java,v 1.9 2003/07/31 14:11:06 lemmstercvs01 Exp $ 
+ * @version $Id: SpeedItem.java,v 1.10 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public class SpeedItem implements Observer {	
@@ -62,7 +62,7 @@ public class SpeedItem implements Observer {
 		
 		this.createContent();
 
-		mldonkey.addObserver( this );	
+		mldonkey.getClientStats().addObserver( this );	
 	}
 
 	/**
@@ -93,25 +93,27 @@ public class SpeedItem implements Observer {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, Object arg ) {
-		if ( arg instanceof ClientStats ) {
-			final ClientStats stats = ( ClientStats ) arg;
-			if ( !composite.isDisposed() )				
-			composite.getDisplay().asyncExec( new Runnable () {
-				public void run() {
-					/* first the text */
-					cLabelDown.setText( "DL: " + stats.getTcpDownRate() + " kb/s");
-					cLabelUp.setText( "UL: " + stats.getTcpUpRate() + "kb/s" );
-					/* not the tooltip */
-					cLabelDown.setToolTipText( "UDP-DL: " + stats.getUdpDownRate() );
-					cLabelUp.setToolTipText( "UDP-UL: " + stats.getUdpUpRate() );
-				}
-			});
-		} 
+		final ClientStats stats = ( ClientStats ) arg;
+		if ( !composite.isDisposed() )				
+		composite.getDisplay().asyncExec( new Runnable () {
+			public void run() {
+				if ( composite.isDisposed() ) return;
+				/* first the text */
+				cLabelDown.setText( "DL: " + stats.getTcpDownRate() + " kb/s");
+				cLabelUp.setText( "UL: " + stats.getTcpUpRate() + "kb/s" );
+				/* not the tooltip */
+				cLabelDown.setToolTipText( "UDP-DL: " + stats.getUdpDownRate() );
+				cLabelUp.setToolTipText( "UDP-UL: " + stats.getUdpUpRate() );
+			}
+		} );
 	}
 }
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.10  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.9  2003/07/31 14:11:06  lemmstercvs01
 reworked
 

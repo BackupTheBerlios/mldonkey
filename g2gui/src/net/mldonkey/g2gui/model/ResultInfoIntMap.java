@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
@@ -35,7 +36,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfoIntMap
  *
  * @author $user$
- * @version $Id: ResultInfoIntMap.java,v 1.2 2003/07/23 23:08:56 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfoIntMap.java,v 1.3 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public class ResultInfoIntMap extends InfoIntMap {
@@ -54,7 +55,7 @@ public class ResultInfoIntMap extends InfoIntMap {
 		int resultID = messageBuffer.readInt32();
 		
 		/* get the result from the core resultinfo map */
-		ResultInfo result = ( ResultInfo ) parent.getResultInfo().get( resultID );
+		ResultInfo result = ( ResultInfo ) ( ( Core ) parent ).getResultInfo().get( resultID );
 		
 		/* if we didnt get a result, we done this search already and must look in this map instead */
 		if ( result == null ) {
@@ -77,7 +78,7 @@ public class ResultInfoIntMap extends InfoIntMap {
 		}
 		else {
 			/* remove the resultinfo from core resultinfo map */
-			parent.getResultInfo().remove( resultID );
+			( ( Core ) parent ).getResultInfo().remove( resultID );
 		}
 		
 		if ( this.infoIntMap.containsKey( searchID ) ) {
@@ -108,6 +109,9 @@ public class ResultInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ResultInfoIntMap.java,v $
+Revision 1.3  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.2  2003/07/23 23:08:56  lemmstercvs01
 searching for the same string twice added
 

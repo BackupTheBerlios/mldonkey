@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.13 2003/07/09 08:55:19 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.14 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -65,6 +65,8 @@ public class OptionsInfoMap extends InfoMap {
 				existingOption.setValue( optionsInfo.getValue() );
 			}
 		}
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -92,6 +94,8 @@ public class OptionsInfoMap extends InfoMap {
 		optionInfo.setDescription( description );
 		optionInfo.setSectionToAppear( sectionToAppear );
 		optionInfo.setOptionType( optionType );
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -129,6 +133,8 @@ public class OptionsInfoMap extends InfoMap {
 			optionInfo.setKey( nameOfOption );
 			this.infoMap.put( nameOfOption, optionInfo );
 		}
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 
 	/**
@@ -156,6 +162,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.14  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
 Revision 1.13  2003/07/09 08:55:19  lemmstercvs01
 bugfix for missing optionInfos
 
