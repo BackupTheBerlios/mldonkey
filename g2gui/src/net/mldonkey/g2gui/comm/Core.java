@@ -31,7 +31,7 @@ import java.util.List;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.*;
-import net.mldonkey.g2gui.view.widgets.InterFaceUI;
+import net.mldonkey.g2gui.view.InterFaceUI;
 
 
 
@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.widgets.InterFaceUI;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.29 2003/06/21 13:20:36 dek Exp $ 
+ * @version $Id: Core.java,v 1.30 2003/06/24 20:52:49 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -292,6 +292,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.30  2003/06/24 20:52:49  lemmstercvs01
+refactored
+
 Revision 1.29  2003/06/21 13:20:36  dek
 work on optiontree continued - one can already change client_name in General-leaf
 

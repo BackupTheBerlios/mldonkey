@@ -23,13 +23,13 @@ package net.mldonkey.g2gui.comm;
 import java.io.IOException;
 
 import net.mldonkey.g2gui.model.Information;
-import net.mldonkey.g2gui.view.widgets.InterFaceUI;
+import net.mldonkey.g2gui.view.InterFaceUI;
 
 /**
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.6 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.7 2003/06/24 20:53:13 lemmstercvs01 Exp $ 
  *
  */
 public interface CoreCommunication {
