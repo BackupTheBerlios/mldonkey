@@ -32,8 +32,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * DownloadTableTreeSorterBasic
  *
- * @author $Author: zet $
- * @version $Id: DownloadTableTreeSorterBasic.java,v 1.1 2003/08/23 19:44:12 zet Exp $ 
+ * @version $Id: DownloadTableTreeSorterBasic.java,v 1.2 2003/08/23 19:48:58 zet Exp $ 
  *
  */
 public class DownloadTableTreeSorterBasic extends DownloadTableTreeSorter {
@@ -181,6 +180,9 @@ public class DownloadTableTreeSorterBasic extends DownloadTableTreeSorter {
 
 /*
 $Log: DownloadTableTreeSorterBasic.java,v $
+Revision 1.2  2003/08/23 19:48:58  zet
+*** empty log message ***
+
 Revision 1.1  2003/08/23 19:44:12  zet
 split transfer table to basic/advanced modes
 

@@ -31,8 +31,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * ResultTableSorter
  *
- *
- * @version $Id: DownloadTableTreeSorter.java,v 1.11 2003/08/23 19:44:12 zet Exp $ 
+ * @version $Id: DownloadTableTreeSorter.java,v 1.12 2003/08/23 19:48:58 zet Exp $ 
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
@@ -134,6 +133,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.12  2003/08/23 19:48:58  zet
+*** empty log message ***
+
 Revision 1.11  2003/08/23 19:44:12  zet
 split transfer table to basic/advanced modes
 
