@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.8 2003/06/12 18:14:41 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.9 2003/06/13 08:47:41 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -201,11 +201,11 @@ public abstract class Message {
 	 * @throws IOException Error if read from Stream failed
 	 */
 	public static String readBinary( InputStream inputStream, int length ) throws IOException {
-		String result = new String();
+		StringBuffer result = new StringBuffer();
 		for ( int i = 0; i < length; i++ ) {
-		result += Integer.toHexString( inputStream.read() );
+			result.append( Integer.toHexString( inputStream.read() ) );
 		}
-		return result.toUpperCase();
+		return result.toString();
 	}
 	
 	/**
@@ -342,6 +342,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.9  2003/06/13 08:47:41  lemmstercvs01
+changed String to StringBuffer in readBinary()
+
 Revision 1.8  2003/06/12 18:14:41  lemmstercvs01
 some abstract methodes added
 
