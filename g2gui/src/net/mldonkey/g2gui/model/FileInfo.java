@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.25 2003/07/21 17:30:11 dek Exp $ 
+ * @version $Id: FileInfo.java,v 1.26 2003/07/21 17:32:21 dek Exp $ 
  *
  */
 public class FileInfo extends Parent {
@@ -151,7 +151,11 @@ public class FileInfo extends Parent {
 	 * @return Size already downloaded
 	 */
 	public long getDownloaded() {
-		/*first convert it to unsigned long, and then return*/
+		/*
+		 * NOTE: downloaded is an unsigned integer and should
+		 * be AND'ed with 0xFFFFFFFFL so that it can be treated
+		 * as a signed long.
+		 */
 		long result = ( downloaded & 0xFFFFFFFFL );
 		return result;
 	}
@@ -214,7 +218,11 @@ public class FileInfo extends Parent {
 	 * @return The overall size of this file
 	 */
 	public long getSize() {
-		/*first convert it to unsigned long, and then return*/
+		/*
+		 * NOTE: size is an unsigned integer and should
+		 * be AND'ed with 0xFFFFFFFFL so that it can be treated
+		 * as a signed long.
+		 */
 		long result = ( size & 0xFFFFFFFFL );
 		return result;
 	}
@@ -438,6 +446,9 @@ public class FileInfo extends Parent {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.26  2003/07/21 17:32:21  dek
+added comment for calculating the signed long out of the unsigned int
+
 Revision 1.25  2003/07/21 17:30:11  dek
 filesize is not negative anymore, since it is converted to long
 
