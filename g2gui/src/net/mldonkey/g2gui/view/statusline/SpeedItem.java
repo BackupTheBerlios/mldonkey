@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.statusline;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Observable;
 import java.util.Observer;
@@ -42,7 +43,7 @@ import org.eclipse.swt.widgets.Composite;
  * SpeedItem
  *
  *
- * @version $Id: SpeedItem.java,v 1.18 2003/09/13 22:24:17 zet Exp $ 
+ * @version $Id: SpeedItem.java,v 1.19 2003/09/17 14:41:50 zet Exp $ 
  *
  */
 public class SpeedItem implements Observer {	
@@ -53,6 +54,7 @@ public class SpeedItem implements Observer {
 	private CLabel cLabelDown, cLabelUp;
 	private static final DecimalFormat decimalFormat = new DecimalFormat( "0.##" );
 	private int speedLength = 0;
+	private String downRateTCP, upRateTCP;
 	/**
 	 * @param string
 	 * @param i
@@ -66,56 +68,101 @@ public class SpeedItem implements Observer {
 		this.createContent();
 
 		mldonkey.getClientStats().addObserver( this );	
+		mldonkey.addObserver( this );
 	}
 
 	/**
-	 * 
+	 * Create the content layout
 	 */
 	private void createContent() {
 		composite = new Composite( composite, SWT.BORDER );
-		GridLayout gridLayout = CGridLayout.createGL(2,0,0,0,0,true);
+		GridLayout gridLayout = CGridLayout.createGL(2,0,0,0,0,false);
 		composite.setLayout( gridLayout );
 	
 		/* down rate */	
 		cLabelDown = new CLabel( composite, SWT.RIGHT );
-		cLabelDown.setImage( G2GuiResources.getImage("DownArrow") );
 		cLabelDown.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-
 		
 		/* up rate */
 		cLabelUp = new CLabel( composite, SWT.NONE );
-		cLabelUp.setImage( G2GuiResources.getImage("UpArrow") );
-		cLabelUp.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		cLabelUp.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END) );
 	}
 
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
-	public void update( Observable o, Object arg ) {
-		final ClientStats stats = ( ClientStats ) arg;
-		if ( !composite.isDisposed() )				
-		composite.getDisplay().asyncExec( new Runnable () {
+	public void update(Observable o, final Object arg) {
+		
+		if (composite.isDisposed())
+			return;
+	
+		composite.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				if ( composite.isDisposed() ) return;
-				/* first the text */
-				cLabelDown.setText( "" + decimalFormat.format(stats.getTcpDownRate()) + " kb/s");
-				cLabelUp.setText( "" + decimalFormat.format(stats.getTcpUpRate()) + " kb/s" );
-				/* not the tooltip */
-				cLabelDown.setToolTipText( "TCP: " + decimalFormat.format(stats.getTcpDownRate()) + " kb/s | UDP: " + decimalFormat.format(stats.getUdpDownRate()) + " kb/s | Total: " + decimalFormat.format(stats.getTcpDownRate() + stats.getUdpDownRate()) + " kb/s" );
-				cLabelUp.setToolTipText( "TCP: " + decimalFormat.format(stats.getTcpUpRate()) + " kb/s | UDP: " + decimalFormat.format(stats.getUdpUpRate()) + " kb/s | Total: " + decimalFormat.format(stats.getTcpUpRate() + stats.getUdpUpRate()) + " kb/s");
-			
-				// only run Layout() if needed.. it seems to be an expensive call
-				if (speedLength < cLabelDown.getText().length() + cLabelUp.getText().length()) {
-					cLabelUp.getParent().getParent().layout();
-					speedLength = cLabelDown.getText().length() + cLabelUp.getText().length();
+				
+				if ( arg instanceof IOException ) {
+					updateDisconnected( (IOException) arg );
+				} else if (arg instanceof ClientStats) {
+					updateClientStats( (ClientStats) arg ); 
 				}
 			}
-		} );
+		});
 	}
+	
+	/**
+	 * @param ClientStats
+	 * Update the statusline with stats
+	 */
+	public void updateClientStats(ClientStats stats) {
+		if ( composite.isDisposed() ) return;
+	
+		if ( speedLength == 0 ) {
+			cLabelDown.setImage( G2GuiResources.getImage( "DownArrow" ) );
+			cLabelUp.setImage( G2GuiResources.getImage( "UpArrow" ) );
+		}
+		
+		downRateTCP = decimalFormat.format(stats.getTcpDownRate()) + " kb/s";
+		upRateTCP = decimalFormat.format(stats.getTcpUpRate()) + " kb/s";
+		
+		/* first the text */
+		cLabelDown.setText( downRateTCP );
+		cLabelUp.setText( upRateTCP );
+		/* now the tooltip */
+		cLabelDown.setToolTipText( "TCP: " + downRateTCP + " | UDP: " + decimalFormat.format(stats.getUdpDownRate()) + " kb/s | Total: " + decimalFormat.format(stats.getTcpDownRate() + stats.getUdpDownRate()) + " kb/s" );
+		cLabelUp.setToolTipText( "TCP: " + upRateTCP + " | UDP: " + decimalFormat.format(stats.getUdpUpRate()) + " kb/s | Total: " + decimalFormat.format(stats.getTcpUpRate() + stats.getUdpUpRate()) + " kb/s");
+
+		// only run Layout() if needed.. it seems to be an expensive call
+		if (speedLength < downRateTCP.length() + upRateTCP.length()) {
+			cLabelUp.getParent().getParent().layout();
+			speedLength = downRateTCP.length() + upRateTCP.length();
+		}
+	}
+	
+	/**
+	 * @param IOException
+	 * Update statusline when disconnected
+	 */
+	public void updateDisconnected( IOException e ) {
+		if ( composite.isDisposed() ) return;
+		
+		cLabelDown.setImage( G2GuiResources.getImage("RedCrossSmall") );
+		cLabelDown.setText( "Disconnected" );
+		cLabelDown.setToolTipText( "" );
+		
+		cLabelUp.setImage( null );
+		cLabelUp.setText( "" );
+		cLabelUp.setToolTipText( "" );
+		
+		speedLength = 0;
+		cLabelUp.getParent().getParent().layout();
+	}
+	
 }
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.19  2003/09/17 14:41:50  zet
+update on disconnect
+
 Revision 1.18  2003/09/13 22:24:17  zet
 Layout() only when necessary
 
