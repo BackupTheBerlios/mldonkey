@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.view.main;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -60,7 +59,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.3 2003/08/23 15:49:28 lemmster Exp $ 
+ * @version $Id: MainCoolBar.java,v 1.4 2003/08/23 15:55:23 zet Exp $ 
  *
  */
 public class MainCoolBar {
@@ -363,6 +362,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.4  2003/08/23 15:55:23  zet
+remove unneeded import
+
 Revision 1.3  2003/08/23 15:49:28  lemmster
 fix for prefs and refactoring
 
