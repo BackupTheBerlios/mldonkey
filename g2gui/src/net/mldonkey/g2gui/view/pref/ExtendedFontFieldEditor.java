@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.*;
  * ExtendedFontFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedFontFieldEditor.java,v 1.2 2003/07/03 08:58:34 dek Exp $ 
+ * @version $Id: ExtendedFontFieldEditor.java,v 1.3 2003/07/03 08:59:06 dek Exp $ 
  *
  */
 public class ExtendedFontFieldEditor extends FieldEditor {
@@ -62,8 +62,7 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 					new SelectionListener() {
 						public void widgetSelected( SelectionEvent e ) {
 							fontDialog.open();
-							font = new Font( null, fontDialog.getFontData() );
-							System.out.println("Font selected: "+font);
+							font = new Font( null, fontDialog.getFontData() );							
 							fontSample.setFont( font );
 							fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 							hasChanged = true;
@@ -138,8 +137,7 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 	 * @return the selected font
 	 */
 	public String toString() {
-		if ( font != null && font.getFontData() != null )	{		
-			System.out.println(font.toString());
+		if ( font != null && font.getFontData() != null )	{			
 			return font.toString();}
 		
 		return "";
@@ -149,6 +147,9 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 
 /*
 $Log: ExtendedFontFieldEditor.java,v $
+Revision 1.3  2003/07/03 08:59:06  dek
+debugging deleted
+
 Revision 1.2  2003/07/03 08:58:34  dek
 how the hell do i store a font on disk...
 
