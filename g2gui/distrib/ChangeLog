@@ -1,3 +1,6 @@
+2003/11/04: z
+	* Server: Fix 'Add server by IP' crash
+
 2003/10/22: z
 	* Handle exceptions more gracefully with a popup & option to report the bug
 	* Search: Fix null pointer crash on stop/continue (possibly bug #1022)
