@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  * @author $user$
- * @version $Id: ResultInfo.java,v 1.8 2003/07/23 23:49:22 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfo.java,v 1.9 2003/07/24 16:07:05 lemmstercvs01 Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -202,7 +202,7 @@ public class ResultInfo extends Parent {
 	/**
 	 * @return The Network id
 	 */
-	public NetworkInfo getNetworkID() {
+	public NetworkInfo getNetwork() {
 		return networkID;
 	}
 
@@ -277,6 +277,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.9  2003/07/24 16:07:05  lemmstercvs01
+renamed getNetworkID() to getNetwork()
+
 Revision 1.8  2003/07/23 23:49:22  lemmstercvs01
 stringSize for better display design added
 
