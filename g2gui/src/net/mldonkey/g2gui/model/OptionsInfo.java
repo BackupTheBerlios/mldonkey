@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.12 2003/08/02 09:27:39 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.13 2003/08/02 09:32:23 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -98,8 +98,14 @@ public class OptionsInfo extends Parent {
 	/**
 	 * @param string the OptionValue
 	 */
-	public void setValue( String string ) {
-		value = string;
+	public void setValue( String aString ) {
+		Object[] obj = new Object[ 2 ];
+		obj[ 0 ] = this.key;
+		obj[ 1 ] = aString;
+		Message message = new EncodeMessage( Message.S_SET_OPTION, obj );
+		message.sendMessage( this.parent.getConnection() );
+		message = null;
+		obj = null;
 	}
 	
 	/**
@@ -205,23 +211,9 @@ public class OptionsInfo extends Parent {
 	}
 
 	/**
-	 * @param description Some more detailed Information about this option
-	 */
-	void setDescription( String description ) {
-		this.description = description;
-	}
-
-	/**
-	 * @param sectionToAppear in which general Section this Option fits best
-	 */
-	void setSectionToAppear( String sectionToAppear ) {
-		this.sectionToAppear = sectionToAppear;
-	}
-
-	/**
 	 * @param optionType what kind of option do we have: String, Int od Boolean
 	 */
-	void setOptionType( byte optionType ) {		
+	private void setOptionType( byte optionType ) {		
 			if ( optionType == 0 )
 				this.optionType = EnumTagType.STRING;
 			else if ( optionType == 1 )
@@ -292,24 +284,13 @@ public class OptionsInfo extends Parent {
 	public String getPluginToAppear() {
 		return pluginToAppear;
 	}
-
-	/**
-	 * @param string this is an option for which plugin?
-	 */
-	 void setPluginToAppear( String string ) {
-		pluginToAppear = string;
-	}
-
-	/**
-	 * @param string
-	 */
-	void setKey( String string ) {
-		key = string;
-	}
 }
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.13  2003/08/02 09:32:23  lemmstercvs01
+setOption added
+
 Revision 1.12  2003/08/02 09:27:39  lemmstercvs01
 added support for proto > 16
 
