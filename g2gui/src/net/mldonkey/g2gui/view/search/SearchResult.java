@@ -35,13 +35,12 @@ import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
@@ -79,7 +78,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.32 2003/08/28 22:44:30 zet Exp $ 
+ * @version $Id: SearchResult.java,v 1.33 2003/08/29 00:54:42 zet Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -95,8 +94,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	private TableColumn tableColumn;
 	private String statusline;
 	private ResultTableSorter resultTableSorter = new ResultTableSorter();
-	private static final int PROFANITY_FILTER_TYPE = 1;
-	private static final int PORNOGRAPHY_FILTER_TYPE = 2;
+	private long lastRefreshTime = 0;
+	private int mustRefresh = 0;
 	
 	private int count = 0;
 	
@@ -171,7 +170,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 				 * look at API for refresh(false)
 				 */		
 				if ( list.size() != table.getTable().getItemCount() ) {									
-					table.refresh( true );
+					//table.refresh( true );
+					mustRefresh++;
+					delayedRefresh();
 				} 					
 					
 			}
@@ -182,6 +183,21 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			this.statusline = "Results: " + itemCount;
 			parent.setRightLabel( "Results: " + itemCount );
 			parent.getMainTab().getStatusline().update( this.statusline );
+		}
+	}
+	
+	/**
+	 * simple attempt to buffer refreshes
+	 */
+	private void delayedRefresh() {
+		if (System.currentTimeMillis() > lastRefreshTime + 2000) {
+			lastRefreshTime = System.currentTimeMillis();
+			table.refresh( true );
+			mustRefresh = 0;
+		} else { // schedule an update so we don't miss one
+			if (mustRefresh == 1) {
+				cTabItem.getDisplay().timerExec(2500, this);
+			}
 		}
 	}
 	
@@ -254,10 +270,10 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		
 		// add optional filters
 		if (PreferenceLoader.loadBoolean("searchFilterPornography")) {
-			table.addFilter(new WordFilter(PORNOGRAPHY_FILTER_TYPE));
+			table.addFilter(new WordFilter(WordFilter.PORNOGRAPHY_FILTER_TYPE));
 			
 		} else if (PreferenceLoader.loadBoolean("searchFilterProfanity")) {
-			table.addFilter(new WordFilter(PROFANITY_FILTER_TYPE));
+			table.addFilter(new WordFilter(WordFilter.PROFANITY_FILTER_TYPE));
 		}
 
 			
@@ -363,31 +379,6 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		this.unregister();		
 	}
 	
-	/**
-	 * A wordfilter for the resultinfo to filter pornographic and profanity
-	 */
-	private class WordFilter extends ViewerFilter {
-		private int wordFilterType = 0;
-		
-		public WordFilter( int type ) {
-			wordFilterType = type;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.ViewerFilter#
-		 * select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-		 */
-		public boolean select( Viewer viewer, Object parentElement, Object element ) {
-			if ( element instanceof ResultInfo ) {
-				ResultInfo resultInfo = ( ResultInfo ) element;
-				if ( ( wordFilterType == PROFANITY_FILTER_TYPE && resultInfo.containsProfanity() )
-				|| ( wordFilterType == PORNOGRAPHY_FILTER_TYPE && resultInfo.containsPornography() ) )
-						return false;
-				return true;
-			}
-			return true;
-		}
-	}
 	
 	/**
 	 * Emulated tooltip handler
@@ -565,6 +556,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.33  2003/08/29 00:54:42  zet
+Move wordFilter public
+
 Revision 1.32  2003/08/28 22:44:30  zet
 GridLayout helper class
 

@@ -33,6 +33,7 @@ import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
+import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
@@ -56,7 +57,7 @@ import org.eclipse.swt.widgets.Table;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.6 2003/08/25 16:02:50 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.7 2003/08/29 00:54:42 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -167,7 +168,12 @@ Yet			menuManager.add( webManager );
 		/* filter submenu (select network to display) */			
 		MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TML_FILTER" ) );
 		AllFiltersAction aFA = new AllFiltersAction();
-		if ( tableViewer.getFilters().length == 0 ) aFA.setChecked( true );
+		boolean setChecked = true;
+		for (int i = 0; i < tableViewer.getFilters().length; i++) {
+			if (!(tableViewer.getFilters()[i] instanceof WordFilter)) 
+				setChecked = false;
+		}
+		aFA.setChecked( setChecked );
 		filterSubMenu.add( aFA );
 		filterSubMenu.add( new Separator() );
 			
@@ -305,6 +311,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.7  2003/08/29 00:54:42  zet
+Move wordFilter public
+
 Revision 1.6  2003/08/25 16:02:50  zet
 remove duplicate code, move dblclick to menulistener
 

@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.3 2003/08/29 00:54:42 zet Exp $ 
  *
  */
 public abstract class TableMenuListener {
@@ -319,6 +319,7 @@ public abstract class TableMenuListener {
 		public void run() {
 			ViewerFilter[] viewerFilters = tableViewer.getFilters();
 			for ( int i = 0; i < viewerFilters.length; i++ ) 
+				if (!(viewerFilters[ i ] instanceof WordFilter))
 				toggleFilter( viewerFilters[ i ], false );
 		}
 	}
@@ -358,6 +359,9 @@ public abstract class TableMenuListener {
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.3  2003/08/29 00:54:42  zet
+Move wordFilter public
+
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
