@@ -28,22 +28,19 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * State
  *
  * @author markus
- * @version $Id: FileState.java,v 1.3 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: FileState.java,v 1.4 2003/06/24 09:22:44 lemmstercvs01 Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
-
-	static final byte DOWNLOADING = 0;
-	static final byte PAUSED = 1;
-	static final byte DOWNLOADED = 2;
-	static final byte SHARED = 3;
-	static final byte CANCELLED = 4;
-	static final byte NEW = 5;
-	static final byte ABORTED = 6;
-	static final byte QUEUED = 7;
-
-	private byte state;
-
+	
+	/**
+	 * The EnumFileState
+	 */
+	private EnumFileState state;
+	
+	/**
+	 * The reason for state
+	 */
 	private String reason = null;
 
 	/**
@@ -56,7 +53,7 @@ public class FileState implements SimpleInformation {
 	/**
 	 * @return a byte
 	 */
-	public byte getState() {
+	public EnumFileState getState() {
 		return state;
 	}
 
@@ -71,23 +68,22 @@ public class FileState implements SimpleInformation {
 	 * @param b a byte
 	 */
 	public void setState( byte b ) {
-		if ( b == DOWNLOADING )
-			state = DOWNLOADING;
-		else if ( b == PAUSED )
-			state = PAUSED;
-		else if ( b == DOWNLOADED )
-			state = DOWNLOADED;
-		else if ( b == SHARED )
-			state = SHARED;
-		else if ( b == CANCELLED )
-			state = CANCELLED;
-		else if ( b == NEW )
-			state = NEW;
-		else if ( b == ABORTED )
-			state = ABORTED;
-		else if ( b == QUEUED )
-			state = QUEUED;	
-
+		if ( b == 0 )
+			state = EnumFileState.DOWNLOADING;
+		else if ( b == 1 )
+			state = EnumFileState.PAUSED;
+		else if ( b == 2 )
+			state = EnumFileState.DOWNLOADED;
+		else if ( b == 3 )
+			state = EnumFileState.SHARED;
+		else if ( b == 4 )
+			state = EnumFileState.CANCELLED;
+		else if ( b == 5 )
+			state = EnumFileState.NEW;
+		else if ( b == 6 )
+			state = EnumFileState.ABORTED;
+		else if ( b == 7 )
+			state = EnumFileState.QUEUED;	
 	}
 	
 	/**
@@ -96,13 +92,16 @@ public class FileState implements SimpleInformation {
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setState( ( byte ) messageBuffer.readByte() );
-		if ( this.getState() == ABORTED )
+		if ( this.getState() == EnumFileState.ABORTED )
 			this.setReason( messageBuffer.readString() );			
 	}
 }
 
 /*
 $Log: FileState.java,v $
+Revision 1.4  2003/06/24 09:22:44  lemmstercvs01
+better Enum added
+
 Revision 1.3  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
