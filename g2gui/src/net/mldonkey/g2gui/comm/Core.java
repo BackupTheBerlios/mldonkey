@@ -55,7 +55,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.107 2003/10/13 08:28:09 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.108 2003/11/07 09:25:42 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -154,7 +154,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		this.connected = false;
 	}
 
-	/** (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#isConnected()
 	 */
 	public boolean isConnected() {	
@@ -599,8 +599,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public ClientInfoIntMap getClientInfoIntMap() {
 		return ( ClientInfoIntMap ) this.clientInfoList;
 	}
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getSharedFileInfoIntMap()
 	 */
 	public SharedFileInfoIntMap getSharedFileInfoIntMap() {
 		return ( SharedFileInfoIntMap ) sharedFileInfoList;
@@ -610,6 +611,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.108  2003/11/07 09:25:42  lemmster
+small javadoc fix
+
 Revision 1.107  2003/10/13 08:28:09  lemmster
 use readSignednt32() depending of the core protocol version
 
