@@ -56,10 +56,11 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  * @author $user$
- * @version $Id: ServerTab.java,v 1.5 2003/08/07 12:35:31 lemmstercvs01 Exp $ 
+ * @version $Id: ServerTab.java,v 1.6 2003/08/07 13:25:37 lemmstercvs01 Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
+	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private boolean ascending = false;;
 	private TableColumn tableColumn;
 	private Combo combo;
@@ -72,17 +73,28 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	private Composite composite;
 	private Group group;
 	private String statusText = "";
-	
-	private ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
 
 	/* if you modify this, change the LayoutProvider and tableWidth */
-	private String[] tableColumns = { "network", "name", "desc", "address",
-									   "port", "serverScore", "users", "files",
-									   "state", "favorite" };						
+	private String[] tableColumns =
+	{ 
+		res.getString( "SVT_NETWORK" ),
+		res.getString( "SVT_NAME" ),
+		res.getString( "SVT_DESC" ),
+		res.getString( "SVT_ADDRESS" ),
+		res.getString( "SVT_PORT" ),
+		res.getString( "SVT_SERVERSCORE" ),
+		res.getString( "SVT_USERS" ),
+		res.getString( "SVT_FILES" ),
+		res.getString( "SVT_STATE" ),
+		res.getString( "SVT_FAVORITES" )
+	};
 	/* 0 sets the tablewidth dynamcliy */
-	private int[] tableWidth = { 45, 120, 0, 97,
-								  50, 55, 45, 50,
-								  80, 50 };
+	private int[] tableWidth =
+	{
+		45, 120, 0, 97,
+		50, 55, 45, 50,
+		80, 50
+	};
 	
 	/**
 	 * @param gui The main gui tab
@@ -96,12 +108,24 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		
 		/* proto <= 16 does not support favorites */					
 		if ( this.core.getProtoToUse() <= 16 ) {
-			this.tableColumns = new String[] { "network", "name", "desc",
-											    "address", "port", "serverScore",
-											    "users", "files", "state" };						
-			this.tableWidth = new int[] { 45, 120, 0, 
-										   97, 50, 55,
-										   45, 50, 80 };
+			this.tableColumns = new String[]
+			{
+				res.getString( "SVT_NETWORK" ),
+				res.getString( "SVT_NAME" ),
+				res.getString( "SVT_DESC" ),
+				res.getString( "SVT_ADDRESS" ),
+				res.getString( "SVT_PORT" ),
+				res.getString( "SVT_SERVERSCORE" ),
+				res.getString( "SVT_USERS" ),
+				res.getString( "SVT_FILES" ),
+				res.getString( "SVT_STATE" ),
+			};	
+			this.tableWidth = new int[]
+			{
+				45, 120, 0, 97,
+				50, 55, 45, 50,
+				80
+			};
 		}
 
 		/* create the tab content */
@@ -185,7 +209,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		servers.clearAdded();
 		
 		/* dont update the statusline, still null */
-		this.statusText = "Server: " + table.getTable().getItemCount();
+		this.statusText = res.getString( "SVT_SERVERS" ) + table.getTable().getItemCount();
 	}
 
 	/**
@@ -271,7 +295,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * Sets the statusline to the current value
 	 */
 	private void setStatusLine() {
-		this.statusText = "Server: " + table.getTable().getItemCount();
+		this.statusText = res.getString( "SVT_SERVERS" ) + table.getTable().getItemCount();
 		this.mainWindow.statusline.update( this.statusText );
 		this.mainWindow.statusline.updateToolTip( "" );
 	}
@@ -293,6 +317,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.6  2003/08/07 13:25:37  lemmstercvs01
+ResourceBundle added
+
 Revision 1.5  2003/08/07 12:35:31  lemmstercvs01
 cleanup, more efficient
 

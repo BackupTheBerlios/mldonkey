@@ -27,6 +27,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,10 +66,11 @@ import org.eclipse.swt.widgets.TableColumn;
  * TableMenuListener
  *
  * @author $user$
- * @version $Id: TableMenuListener.java,v 1.4 2003/08/07 12:35:31 lemmstercvs01 Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.5 2003/08/07 13:25:37 lemmstercvs01 Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
+	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private ServerInfo selectedServer;
 	private List selectedServers;
 	private ServerInfoIntMap serverInfoMap;
@@ -125,13 +127,13 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			menuManager.add( new ConnectAction() );
 
 		/* add server/servers */
-		MenuManager addManager = new MenuManager( "Add Server/Server.met" );
+		MenuManager addManager = new MenuManager( res.getString( "TML_ADD_SERVER_BY" ) );
 		addManager.add( new AddServerAction() );
 		addManager.add( new AddServersAction() );
 		menuManager.add( addManager );
 
 		/* remove server */
-		MenuManager removeManager = new MenuManager( "Remove Server/Servers" );
+		MenuManager removeManager = new MenuManager( res.getString( "TML_REMOVE_SERVER_BY" ) );
 		removeManager.add( new RemoveServerAction() );
 		removeManager.add( new RemoveServersAction() );
 		menuManager.add( removeManager );
@@ -147,7 +149,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			menuManager.add( new FavoritesAction() );			
 		
 		/* columns toogle */
-		MenuManager columnsSubMenu = new MenuManager( "Columns" );
+		MenuManager columnsSubMenu = new MenuManager( res.getString( "TML_COLUMN" ) );
 		Table table = tableViewer.getTable();
 		for ( int i = 0; i < table.getColumnCount(); i++ ) {
 			ToggleColumnsAction tCA = new ToggleColumnsAction( i );
@@ -157,7 +159,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		menuManager.add( columnsSubMenu );
 			
 		// filter submenu (select network to display)			
-		MenuManager filterSubMenu = new MenuManager( "Filters" );
+		MenuManager filterSubMenu = new MenuManager( res.getString( "TML_FILTER" ) );
 		AllFiltersAction aFA = new AllFiltersAction();
 		if ( tableViewer.getFilters().length == 0 ) aFA.setChecked( true );
 		filterSubMenu.add( aFA );
@@ -230,7 +232,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class DisconnectAction extends Action {
 		public DisconnectAction() {
 			super();
-			setText( "Disconnect Server" );
+			setText( res.getString( "TML_DISCONNECT" ) );
 		}
 		public void run() {
 			for ( int i = 0; i < selectedServers.size(); i++ ) {
@@ -243,7 +245,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class ConnectAction extends Action {
 		public ConnectAction() {
 			super();
-			setText( "Connect Server" );
+			setText( res.getString( "TML_CONNECT" ) );
 		}
 		public void run() {
 			for ( int i = 0; i < selectedServers.size(); i++ ) {
@@ -256,7 +258,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class ConnectMoreAction extends Action {
 		public ConnectMoreAction() {
 			super();
-			setText( "Connect More Servers" );
+			setText( res.getString( "TML_CONNECT_MORE" ) );
 		}
 		public void run() {
 			serverInfoMap.connectMore();
@@ -267,14 +269,14 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		private MyInputDialog dialog;
 		public AddServerAction() {
 			super();
-			setText( "Add Server" );
+			setText( res.getString( "TML_ADD_SERVER" ) );
 		}
 		public void run() {
 			dialog = new MyInputDialog( tableViewer.getTable().getShell(),
-										"Add Server",
-										"The Server",
-										"The Network",
-										"hostname:port",
+										res.getString( "TML_ADD_SERVER" ),
+										res.getString( "TML_HOSTNAME_PORT" ),
+										res.getString( "TML_NETWORK" ),
+										res.getString( "TML_FOOBAR2" ),
 										new MyInputValidator() );
 			dialog.open();
 			if ( dialog.getReturnCode() == IDialogConstants.OK_ID ) {
@@ -287,8 +289,8 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 				catch ( UnknownHostException e ) {
 					MessageBox box = new MessageBox( tableViewer.getTable().getShell(),
 														 SWT.ICON_WARNING | SWT.OK );
-					box.setText( "Hostname Lookup Error" );
-					box.setMessage( "Hostname invalid" );
+					box.setText( res.getString( "TML_LOOKUP_ERROR" ) );
+					box.setMessage( res.getString( "TML_CANNOT_RESOLVE" ) );
 					box.open();
 				}
 				core.getServerInfoIntMap().add( dialog.getCombo(), inetAddress, new Short( strings[ 1 ] ).shortValue() );							
@@ -305,7 +307,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 				if ( m.matches() )
 					return null;
 				else
-					return "Invalid Input";
+					return res.getString( "TML_INVALID_INPUT" );
 			}
 			
 		}
@@ -315,13 +317,13 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		private InputDialog dialog;
 		public AddServersAction() {
 			super();
-			setText( "Add Serverlist" );
+			setText( res.getString( "TML_ADD_SERVERS" ) );
 		}
 		public void run() {
 			dialog = new InputDialog( tableViewer.getTable().getShell(),
-										"Add Serverlist",
-										"The Link to the ServerList (must end either on .met or .ocl)",
-										"http://foobar.tld/serverlist.foo",
+										res.getString( "TML_ADD_SERVERS" ),
+										res.getString( "TML_LINK_TO_LIST" ),
+										res.getString( "TML_FOOBAR" ),
 										new MyInputValidator() );
 			dialog.open();
 			String result = dialog.getValue();
@@ -339,7 +341,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 				if ( m.matches() )
 					return null;
 				else
-					return "Invalid Input";
+					return res.getString( "TML_INVALID_INPUT" );
 			}
 		}
 	}
@@ -347,7 +349,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class RemoveServerAction extends Action {
 		public RemoveServerAction() {
 			super();
-			setText( "Remove Server" );
+			setText( res.getString( "TML_REMOVE_SERVER" ) );
 		}
 		public void run() {
 			for ( int i = 0; i < selectedServers.size(); i++ ) {
@@ -360,7 +362,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class RemoveServersAction extends Action {
 		public RemoveServersAction() {
 			super();
-			setText( "Remove Old" );
+			setText( res.getString( "TML_REMOVE_SERVERS" ) );
 		}
 		public void run() {
 			serverInfoMap.cleanOld();
@@ -370,7 +372,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class BlackListAction extends Action {
 		public BlackListAction() {
 			super();
-			setText( "Add to BlackList" );
+			setText( res.getString( "TML_ADD_TO_BLACKLIST" ) );
 		}
 		public void run() {
 			for ( int i = 0; i < selectedServers.size(); i++ ) {
@@ -406,7 +408,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class AllFiltersAction extends Action {
 		public AllFiltersAction() {
 			super();
-			setText( "All Filters" );
+			setText( res.getString( "TML_NO_FILTERS" ) );
 		}
 		public void run() {
 			ViewerFilter[] viewerFilters = tableViewer.getFilters();
@@ -463,7 +465,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class RefreshAction extends Action {
 		public RefreshAction() {
 			super();
-			setText( "manual refresh" );
+			setText( "Manual Refresh (for developing)" );
 		}
 		public void run() {
 			tableViewer.getTable().getDisplay().asyncExec( new Runnable() {
@@ -477,7 +479,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	private class FavoritesAction extends Action {
 		public FavoritesAction() {
 			super();
-			setText( "Add to Favorites" );
+			setText( res.getString( "TML_FAVORITES" ) );
 		}
 		public void run() {
 			for ( int i = 0; i < selectedServers.size(); i++ ) {
@@ -626,6 +628,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.5  2003/08/07 13:25:37  lemmstercvs01
+ResourceBundle added
+
 Revision 1.4  2003/08/07 12:35:31  lemmstercvs01
 cleanup, more efficient
 

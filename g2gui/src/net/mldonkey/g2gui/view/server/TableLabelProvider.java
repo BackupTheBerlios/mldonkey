@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view.server;
 
+import java.util.ResourceBundle;
+
 import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
@@ -36,10 +38,11 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  * @author $user$
- * @version $Id: TableLabelProvider.java,v 1.4 2003/08/07 12:35:31 lemmstercvs01 Exp $ 
+ * @version $Id: TableLabelProvider.java,v 1.5 2003/08/07 13:25:37 lemmstercvs01 Exp $ 
  *
  */
 public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
+	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private Color connectColor = new Color( null, 41, 174, 57 );
 
 	/* (non-Javadoc)
@@ -94,9 +97,9 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 
 		else if ( columnIndex == 9 ) {
 			if ( server.isFavorite() ) 
-				return "true";
+				return res.getString( "TLP_TRUE" );
 			else 
-				return "false";		
+				return res.getString( "TLP_FALSE" );		
 		}
 		return "";
 	}
@@ -148,6 +151,9 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 
 /*
 $Log: TableLabelProvider.java,v $
+Revision 1.5  2003/08/07 13:25:37  lemmstercvs01
+ResourceBundle added
+
 Revision 1.4  2003/08/07 12:35:31  lemmstercvs01
 cleanup, more efficient
 

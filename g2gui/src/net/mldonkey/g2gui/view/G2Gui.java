@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -49,10 +50,11 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.7 2003/08/06 17:41:20 lemmstercvs01 Exp $ 
+ * @version $Id: G2Gui.java,v 1.8 2003/08/07 13:25:37 lemmstercvs01 Exp $ 
  *
  */
 public class G2Gui {
+	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private static Process p;
 	private static Thread mldonkey;
 	private static Object waiterObject;
@@ -107,7 +109,7 @@ public class G2Gui {
 		int x = ( displayRect.width - shellRect.width ) / 2;
 		int y = ( displayRect.height - shellRect.height ) / 2;
 		splashShell.setLocation( x, y );
-//		splashShell.open(); //TODO disabled for developing
+		splashShell.open(); //TODO disabled for developing
 
 		increaseBar( "Starting the model" );
 
@@ -138,8 +140,8 @@ public class G2Gui {
 		catch ( UnknownHostException e ) {
 			splashShell.dispose();
 			image.dispose();
-			box.setText( "Invalid Host Address" );
-			box.setMessage( "Illegal Host Address" );
+			box.setText( res.getString( "G2_INVALID_ADDRESS") );
+			box.setMessage( res.getString( "G2_ILLEGAL_ADDRESS" ) );
 			box.open();
 			myPrefs.open( shell, null );
 			relaunchSelf();
@@ -147,8 +149,8 @@ public class G2Gui {
 		catch ( IOException e ) {
 			splashShell.dispose();
 			image.dispose();
-			box.setText( "IOException" );
-			box.setMessage( "Core is not running on this Host/Port" );
+			box.setText( res.getString( "G2_IOEXCEPTION") );
+			box.setMessage( res.getString( "G2_CORE_NOT_RUNNING" ) );
 			box.open();
 			myPrefs.open( shell, null );
 			relaunchSelf();
@@ -204,8 +206,8 @@ public class G2Gui {
 		image.dispose();
 		/* raise a warning msg */
 		box = new MessageBox( shell, SWT.ICON_WARNING | SWT.OK );
-		box.setText( "Login invalid" );
-		box.setMessage( "Username or Password incorrect" );
+		box.setText( res.getString( "G2_LOGIN_INVALID" ) );
+		box.setMessage( res.getString( "G2_USER_PASS" ) );
 		box.open();
 		/* dont launch the gui but launch the password box */
 		myPrefs.open( shell, null );
@@ -248,6 +250,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.8  2003/08/07 13:25:37  lemmstercvs01
+ResourceBundle added
+
 Revision 1.7  2003/08/06 17:41:20  lemmstercvs01
 some fixes
 

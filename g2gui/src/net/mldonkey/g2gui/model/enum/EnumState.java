@@ -22,55 +22,58 @@
  */
 package net.mldonkey.g2gui.model.enum;
 
+import java.util.ResourceBundle;
+
 /**
  * EnumState
  *
  * @author markus
- * @version $Id: EnumState.java,v 1.3 2003/08/06 09:44:54 lemmstercvs01 Exp $ 
+ * @version $Id: EnumState.java,v 1.4 2003/08/07 13:25:37 lemmstercvs01 Exp $ 
  *
  */
 public class EnumState implements Enum {
+	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private String state;
 	/**
 	 * not connected
 	 */
-	public static EnumState NOT_CONNECTED = new EnumState( "not_connected" );
+	public static EnumState NOT_CONNECTED = new EnumState( res.getString( "ENS_NOT_CONNECTED" ) );
 	/**
 	 * connecting
 	 */
-	public static EnumState CONNECTING =  new EnumState( "connecting" );
+	public static EnumState CONNECTING =  new EnumState( res.getString( "ENS_CONNECTING" ) );
 	/**
 	 * connected initiating
 	 */
-	public static EnumState CONNECTED_INITIATING = new EnumState( "connected_initiated" );
+	public static EnumState CONNECTED_INITIATING = new EnumState( res.getString( "ENS_CONNECTED_INITIATING" ) );
 	/**
 	 * connected downloading
 	 */
-	public static EnumState CONNECTED_DOWNLOADING = new EnumState( "connected_downloading" );
+	public static EnumState CONNECTED_DOWNLOADING = new EnumState( res.getString( "ENS_CONNECTED_DOWNLOADING" ) );
 	/**
 	 * connected
 	 */
-	public static EnumState CONNECTED = new EnumState( "connected" );
+	public static EnumState CONNECTED = new EnumState( res.getString( "ENS_CONNECTED" ) );
 	/**
 	 * connected and queued
 	 */
-	public static EnumState CONNECTED_AND_QUEUED = new EnumState( "connected_and_queued" );
+	public static EnumState CONNECTED_AND_QUEUED = new EnumState( res.getString( "ENS_CONNECTED_AND_QUEUED" ) );
 	/**
 	 * new host
 	 */
-	public static EnumState NEW_HOST = new EnumState( "new_host" );
+	public static EnumState NEW_HOST = new EnumState( res.getString( "ENS_NEW_HOST" ) );
 	/**
 	 * remove host
 	 */
-	public static EnumState REMOVE_HOST = new EnumState( "remove_host" );
+	public static EnumState REMOVE_HOST = new EnumState( res.getString( "ENS_REMOVE_HOST" ) );
 	/**
 	 * black listed
 	 */
-	public static EnumState BLACK_LISTED = new EnumState( "black_listed" );
+	public static EnumState BLACK_LISTED = new EnumState( res.getString( "ENS_BLACK_LISTED" ) );
 	/**
 	 * not connected was queued
 	 */
-	public static EnumState NOT_CONNECTED_WAS_QUEUED = new EnumState( "not_connected_was_queued" );
+	public static EnumState NOT_CONNECTED_WAS_QUEUED = new EnumState( res.getString( "ENS_NOT_CONNECTED_WAS_QUEUED" ) );
 	
 	/**
 	 * Creates a new EnumState
@@ -98,6 +101,9 @@ public class EnumState implements Enum {
 
 /*
 $Log: EnumState.java,v $
+Revision 1.4  2003/08/07 13:25:37  lemmstercvs01
+ResourceBundle added
+
 Revision 1.3  2003/08/06 09:44:54  lemmstercvs01
 toString() added
 
