@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.10 2003/07/09 09:16:05 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.11 2003/07/10 19:27:28 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -47,6 +47,18 @@ public class Preferences extends PreferenceManager {
 	private PreferenceManager myprefs;
 	private PreferenceDialog prefdialog;
 	private PreferenceStore preferenceStore;
+	private String[] wantedSections = {
+							"Identification",
+							"Bandwidth",
+							"Ports"
+							};
+	private String[] wantedPlugins = {
+							"Overnet",
+							"eDonkey",
+							"Fasttrack",
+							"Gnutella",
+							"BitTorrent"
+							};
 
 	/**
 	 * @param preferenceStore where to store the values at
@@ -110,16 +122,17 @@ public class Preferences extends PreferenceManager {
 			
 			if ( ( section == null ) && ( plugin == null ) ) {				
 				/* create the General-section, or if already done, only add the option */
-				if ( !sections.containsKey( "aGeneral" ) ) {
-					MLDonkeyOptions temp = new MLDonkeyOptions( "aGeneral" );
-					myprefs.addToRoot( new PreferenceNode ( "aGeneral", temp ) );
-					sections.put( "aGeneral", temp );
+				if ( !sections.containsKey( "General" ) ) {
+					MLDonkeyOptions temp = new MLDonkeyOptions( "General" );
+					myprefs.addToRoot( new PreferenceNode ( "General", temp ) );
+					sections.put( "General", temp );					
+					//temp.setVisible(false);					
 					}
 			
 			/*commented out the following, as it produces ton's of options in this tab
 			 * which made it unreadable	
 			 */
-			( ( MLDonkeyOptions  )sections.get( "aGeneral" ) ).addOption( option );
+			( ( MLDonkeyOptions  )sections.get( "General" ) ).addOption( option );
 				
 			}
 			else if ( section != null ) {				
@@ -131,13 +144,13 @@ public class Preferences extends PreferenceManager {
 					}
 				( ( MLDonkeyOptions  )sections.get( section ) ).addOption( option );
 			}
-			else if ( plugin != null ) {
+
+			else if ( plugin != null ) {				
 			/* create the pluginSection, or if already done, only add the option */
 				if ( !plugins.containsKey( plugin ) ) {
-					MLDonkeyOptions temp = new MLDonkeyOptions( plugin );
-					
-					//pluginOptions.add( new PreferenceNode ( plugin, temp ) );
-					plugins.put( plugin, temp );
+					/*only create the plugin, if it is possible at all...*/					
+					MLDonkeyOptions temp = new MLDonkeyOptions( plugin );					
+					plugins.put( plugin, temp );					
 					}
 				( ( MLDonkeyOptions  )plugins.get( plugin ) ).addOption( option );			
 				//create the plugin, or if already done, only add the option
@@ -145,9 +158,21 @@ public class Preferences extends PreferenceManager {
 		}
 		/*Now we create the tree-structure, since we received all options*/
 		
+		
 		 /*
 		  * first the sections:
 		  */
+//this creates only the sections defined in wantedSections[]		 
+		 for ( int i = 0; i < wantedSections.length; i++ ) {
+			if ( sections.containsKey( wantedSections[ i ] ) ) {
+				MLDonkeyOptions optionspage = ( MLDonkeyOptions ) sections.get( wantedSections[ i ] );
+				   myprefs.addToRoot( new PreferenceNode ( wantedSections[ i ], optionspage ) );
+			}				
+		}
+		 
+			
+// this creates sections for _all_ the options we received, do we really want this?
+   		/*
 		 sections.remove( "General" ); //remove the General-page, as it is already created
 		 it = sections.keySet().iterator();
 		 while ( it.hasNext() ) {
@@ -155,18 +180,34 @@ public class Preferences extends PreferenceManager {
 		 	 MLDonkeyOptions optionspage = ( MLDonkeyOptions ) sections.get( sectionName );
 				myprefs.addToRoot( new PreferenceNode ( sectionName, optionspage ) );
 		 }
+		 */
+		 
+		 
 		 
 		 /*
 		  * and now the Plugins:
 		  */
 		PreferenceNode pluginOptions = new PreferenceNode( "plugins", new MLDonkeyOptions( "Plugins" ) );
 			myprefs.addToRoot( pluginOptions );
+			
+			
+//this creates only the sections defined in wantedPlugins[]		 
+			   for ( int i = 0; i < wantedPlugins.length; i++ ) {
+				  if ( plugins.containsKey( wantedPlugins[ i ] ) ) {
+					  MLDonkeyOptions optionspage = ( MLDonkeyOptions ) plugins.get( wantedPlugins[ i ] );
+						 pluginOptions.add( new PreferenceNode ( wantedPlugins[ i ], optionspage ) );
+				  }				
+			  }		  
+		  
+//this creates sections for _all_ the pluginsInfos we received, do we really want this?
+		/*
 		it = plugins.keySet().iterator();
 		while ( it.hasNext() ) {
 		   String sectionName = ( String ) it.next();
 			MLDonkeyOptions optionspage = ( MLDonkeyOptions ) plugins.get( sectionName );
 				pluginOptions.add( new PreferenceNode ( sectionName, optionspage ) );
 		}
+		*/
 	}
 		
 		
@@ -206,6 +247,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.11  2003/07/10 19:27:28  dek
+some idle-race cleanup
+
 Revision 1.10  2003/07/09 09:16:05  dek
 general Options
 

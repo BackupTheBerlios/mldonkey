@@ -26,7 +26,7 @@ package net.mldonkey.g2gui.view.pref;
  * IValueEditor
  *
  * @author $user$
- * @version $Id: IValueEditor.java,v 1.1 2003/07/08 16:59:23 dek Exp $ 
+ * @version $Id: IValueEditor.java,v 1.2 2003/07/10 19:27:28 dek Exp $ 
  *
  */
 public interface IValueEditor {
@@ -44,11 +44,20 @@ public interface IValueEditor {
 	 * resets the receivers hasChangedStatus to false
 	 */
 	void resetChangedStatus();
+	
+	/**
+	 * resets the option to the default Value
+	 *
+	 */
+	void restoreDefault();
 
 }
 
 /*
 $Log: IValueEditor.java,v $
+Revision 1.2  2003/07/10 19:27:28  dek
+some idle-race cleanup
+
 Revision 1.1  2003/07/08 16:59:23  dek
 now the booleanValues are checkBoxes
 

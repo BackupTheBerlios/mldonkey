@@ -46,40 +46,32 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.29 2003/07/06 19:25:45 dek Exp $ 
+ * @version $Id: Gui.java,v 1.30 2003/07/10 19:27:28 dek Exp $ 
  *
  */
-public class Gui implements IG2gui, Listener {	
-	private StackLayout pageContainerLayout;
+public class Gui implements IG2gui, Listener {
 	private ToolBar miscTools;
-	private CoolItem miscCoolItem;
-	private CoolItem mainCoolItem;
 	private ToolBar mainTools;
 	private StatusLine statusline;
-	private Composite miscButtonRow;
-	private Composite buttonRow;
 	private CoreCommunication mldonkey;
-	private Composite mainComposite, 
-					tabButtonRow, 
-					pageContainer;
+	private Composite pageContainer;
 	private List registeredTabs = new ArrayList();
 	private G2guiTab activeTab;
-	private Menu mainMenuBar;
-	private Shell mainShell;
-	private PreferenceStore internalPrefStore = new PreferenceStore("g2gui-internal.pref");
+	private Menu mainMenuBar;	
+	private PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
 	
 	/**
 	 * @param core the most important thing of the gui: were do i get my data from
 	 * @param shell were do we live?
 	 */
 	public Gui( CoreCommunication core, Shell shell ) {
-		mainShell = shell;	
-		Display display = shell.getDisplay();	
-				
+		final Shell mainShell = shell;	
+		Display display = shell.getDisplay();					
 		this.mldonkey = core;
 		shell.setLayout( new FillLayout() );
 		createInternalPrefStore();
 		createContents( shell );
+						
 		setSizeLocation( shell );
 		shell.pack ();
 		shell.open ();
@@ -100,13 +92,13 @@ public class Gui implements IG2gui, Listener {
 	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.window.Window#createContents( org.eclipse.swt.widgets.Composite )
 	 */
-	private void createContents( Composite parent ) {
-		setTitleBar( "g2gui alpha" );
-		createMenuBar();
-		CoolBar coolbar = null;				
-		GridData gridData;		
-		mainComposite = new Composite( parent, SWT.NONE );
+	private void createContents( Shell parent ) {
+		GridData gridData;	
+		Composite mainComposite = new Composite( parent, SWT.NONE );
 		
+		setTitleBar(parent, "g2gui alpha" );
+		createMenuBar(parent);					
+				
 		GridLayout mainLayout = new GridLayout();
 			mainLayout.numColumns = 1;
 			mainLayout.marginWidth = 0;
@@ -118,7 +110,7 @@ public class Gui implements IG2gui, Listener {
 			gridData = new GridData( GridData.FILL_HORIZONTAL );
 			horLine.setLayoutData( gridData );
 		
-		coolbar = createCoolBar( mainComposite );				
+		CoolBar coolbar = createCoolBar( mainComposite );				
 			
 		ToolItem pref = new ToolItem( miscTools, SWT.NONE );				
 			pref.setText( "Preferences" );	
@@ -133,36 +125,34 @@ public class Gui implements IG2gui, Listener {
 					myprefs.open( prefshell, mldonkey );
 			} } );
 		
-		pageContainer = new Composite( mainComposite, SWT.NONE );
-		this.pageContainerLayout = new StackLayout();
-		pageContainer.setLayout( pageContainerLayout );
-							
+		pageContainer = new Composite( mainComposite, SWT.NONE );			
+			pageContainer.setLayout( new StackLayout() );
+		addTabs();					
 		gridData = new GridData( GridData.FILL_BOTH );
 			gridData.grabExcessHorizontalSpace = true;
 			gridData.grabExcessVerticalSpace = true;			
-			pageContainer.setLayoutData( gridData );
-						
-		addTabs();				
+			pageContainer.setLayoutData( gridData );						
+		
 		statusline = new StatusLine( mainComposite, mldonkey );
 				
-		layoutCoolBar( coolbar );			
-
+			
+		layoutCoolBar(coolbar);
 				
 
 	} 
 	
-	private void createMenuBar () {
-		mainMenuBar = new Menu( mainShell, SWT.BAR );
-		mainShell.setMenuBar( mainMenuBar );
+	private void createMenuBar (final Shell shell) {
+		mainMenuBar = new Menu( shell, SWT.BAR );
+		shell.setMenuBar( mainMenuBar );
 		
 		MenuItem mItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
 		mItem.setText ( "File" );
-			Menu submenu = new Menu ( mainShell, SWT.DROP_DOWN );
+			Menu submenu = new Menu ( shell, SWT.DROP_DOWN );
 			mItem.setMenu ( submenu );
 			MenuItem item = new MenuItem ( submenu, 0 );
 			item.addListener ( SWT.Selection, new Listener () {
 					public void handleEvent ( Event e ) {
-						mainShell.close();
+						shell.close();
 					} 
 			} );
 			item.setText ( "E&xit\tCtrl+W" );
@@ -174,7 +164,7 @@ public class Gui implements IG2gui, Listener {
 		mItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
 		mItem.setText ( "Tools" );
 		
-			submenu = new Menu ( mainShell, SWT.DROP_DOWN );
+			submenu = new Menu ( shell, SWT.DROP_DOWN );
 			mItem.setMenu ( submenu );
 			item = new MenuItem( submenu, 0 );
 			item.addListener( SWT.Selection, new Listener() {
@@ -215,7 +205,7 @@ public class Gui implements IG2gui, Listener {
 			
 	} 
 	
-	 private CoolBar createCoolBar( Composite parent ) {
+	 private CoolBar createCoolBar( final Composite parent ) {
 		GridData gridData;
 		
 		/*now follows the creation of the CoolBar*/		
@@ -223,8 +213,8 @@ public class Gui implements IG2gui, Listener {
 			gridData = new GridData( GridData.FILL_HORIZONTAL );
 			
 		coolBar.addControlListener( new ControlListener() {
-			public void controlMoved( ControlEvent e ) { mainComposite.layout(); }
-			public void controlResized( ControlEvent e ) { mainComposite.layout(); }
+			public void controlMoved( ControlEvent e ) { parent.getParent().layout(); }
+			public void controlResized( ControlEvent e ) { parent.getParent().layout(); }
 			} );
 			
 			coolBar.setLayoutData( gridData );
@@ -236,16 +226,16 @@ public class Gui implements IG2gui, Listener {
 		CoolItem[] items = coolBar.getItems ();
 					
 		this.mainTools = new ToolBar( coolBar, SWT.FLAT );			
-			mainCoolItem = items [0];
+			CoolItem mainCoolItem = items [0];
 			mainCoolItem.setControl ( mainTools );
 			mainTools.setMenu( toolmenu );
 			
 			
 		this.miscTools = new ToolBar( coolBar, SWT.FLAT );
-			miscCoolItem = items [1];
+			CoolItem miscCoolItem = items [1];
 			miscCoolItem.setControl ( miscTools );		
 			miscTools.setMenu( toolmenu );
-		
+		layoutCoolBar(coolBar);
 		return coolBar;
 	} 
 	
@@ -338,13 +328,6 @@ public class Gui implements IG2gui, Listener {
 		System.out.println( event.widget.toString() );
 		
 	} 
-	/* ( non-Javadoc )
-	 * @see net.mldonkey.g2gui.view.widgets.Gui.IG2gui#getButtonRow()
-	 */
-	public Composite getButtonRow() {
-	
-		return tabButtonRow;
-	} 
 
 	/* ( non-Javadoc )
 	 * @see net.mldonkey.g2gui.view.widgets.Gui.IG2gui#getPageContainer()
@@ -358,8 +341,8 @@ public class Gui implements IG2gui, Listener {
 	 */
 	public void setActive( G2guiTab activatedTab ) {		
 		if ( activeTab != null ) activeTab.getContent().setVisible( false );
-		pageContainerLayout.topControl = activatedTab.getContent();
-		//activatedTab.getContent().setVisible( true );
+		( ( StackLayout )pageContainer.getLayout() ).topControl 
+											= activatedTab.getContent();		
 		pageContainer.layout();		
 		activeTab = activatedTab;		
 	} 
@@ -377,9 +360,14 @@ public class Gui implements IG2gui, Listener {
 		return mainTools;
 	} 
 
-	public void setTitleBar( String title ) {
-		mainShell.setText( title );
+	/**
+	 * The Gui's Title
+	 * @param title the text to appear in the title-bar
+	 */
+	public void setTitleBar(Shell shell, String title ) {
+		shell.setText( title );
 	} 
+	
 	public void setSizeLocation (Shell shell) {
 			
 		int windowW = internalPrefStore.getInt( "windowWidth" );
@@ -435,6 +423,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.30  2003/07/10 19:27:28  dek
+some idle-race cleanup
+
 Revision 1.29  2003/07/06 19:25:45  dek
 *** empty log message ***
 

@@ -32,10 +32,11 @@ import org.eclipse.swt.widgets.Composite;
  * ExtendedBooleanFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedBooleanFieldEditor.java,v 1.5 2003/07/08 16:59:23 dek Exp $ 
+ * @version $Id: ExtendedBooleanFieldEditor.java,v 1.6 2003/07/10 19:27:28 dek Exp $ 
  *
  */
 public class ExtendedBooleanFieldEditor extends BooleanFieldEditor implements IValueEditor {
+	private boolean defaultValue;
 	private boolean hasChanged;
 	private Composite temp;
 
@@ -66,15 +67,15 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor implements IV
 	 */
 	public void setSelection( boolean selected ) {
 		getChangeControl( temp ).setSelection( selected );
-		
+		defaultValue = selected;	
+		this.hasChanged = false;
 	}
 
 	/**
 	 * @param toolTipText The text, that should appear in a nice tooltip-way
 	 */
 	public void setToolTipText( String toolTipText ) {
-		getChangeControl( temp ).setToolTipText( toolTipText );
-		
+		getChangeControl( temp ).setToolTipText( toolTipText );		
 	}
 	
 	/** (non-Javadoc)
@@ -98,11 +99,8 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor implements IV
 	 */
 	public void resetChangedStatus() {
 		hasChanged = false;
-		
 	}
-
-
-
+	
 	/**
 	 * @return returns wether this control has been changed
 	 */
@@ -117,10 +115,21 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor implements IV
 		return Boolean.toString( this.getBooleanValue() );		
 	}
 
+	/** (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.pref.IValueEditor#restoreDefault()
+	 */
+	public void restoreDefault() {
+		getChangeControl( temp ).setSelection( defaultValue );
+		resetChangedStatus();
+	}
+
 }
 
 /*
 $Log: ExtendedBooleanFieldEditor.java,v $
+Revision 1.6  2003/07/10 19:27:28  dek
+some idle-race cleanup
+
 Revision 1.5  2003/07/08 16:59:23  dek
 now the booleanValues are checkBoxes
 

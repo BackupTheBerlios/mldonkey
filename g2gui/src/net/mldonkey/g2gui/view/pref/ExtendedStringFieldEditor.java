@@ -30,11 +30,12 @@ import org.eclipse.swt.widgets.Composite;
  * ExtendedStringFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedStringFieldEditor.java,v 1.1 2003/07/08 16:59:23 dek Exp $ 
+ * @version $Id: ExtendedStringFieldEditor.java,v 1.2 2003/07/10 19:27:28 dek Exp $ 
  *
  */
 public class ExtendedStringFieldEditor extends StringFieldEditor implements IValueEditor {
-	
+	private boolean hasChanged = false;
+	private String defaultValue;
 
 	/**
 	 * Creates a new ExtendedStringFieldEditor with the given values
@@ -44,8 +45,7 @@ public class ExtendedStringFieldEditor extends StringFieldEditor implements IVal
 	 */
 	public ExtendedStringFieldEditor( String name, String Description, Composite parent ) {
 		super( name, Description, parent );
-	}
-	private boolean hasChanged = false;
+	}	
 	
 	/** (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.pref.IValueEditor#getValue()
@@ -64,7 +64,7 @@ public class ExtendedStringFieldEditor extends StringFieldEditor implements IVal
 	 * @see org.eclipse.jface.preference.StringFieldEditor#valueChanged()
 	 */
 	protected void valueChanged() {
-		this.hasChanged = true;
+		this.hasChanged = true;		
 		super.valueChanged();
 	}
 	
@@ -73,7 +73,8 @@ public class ExtendedStringFieldEditor extends StringFieldEditor implements IVal
 	 * @see org.eclipse.jface.preference.StringFieldEditor#setStringValue(java.lang.String)
 	 */
 	public void setStringValue( String arg0 ) {		
-		super.setStringValue( arg0 );
+		super.setStringValue( arg0 );		
+		if ( defaultValue == null ) defaultValue = arg0;
 		this.hasChanged = false;
 	}
 
@@ -90,8 +91,14 @@ public class ExtendedStringFieldEditor extends StringFieldEditor implements IVal
 	 * @see net.mldonkey.g2gui.view.pref.IValueEditor#resetChangedStatus()
 	 */
 	public void resetChangedStatus() {
-		hasChanged = false;
-		
+		hasChanged = false;		
+	}
+	/** (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.pref.IValueEditor#restoreDefault()
+	 */
+	public void restoreDefault() {
+		super.setStringValue( defaultValue );		
+		resetChangedStatus();
 	}
 	
 
@@ -99,6 +106,9 @@ public class ExtendedStringFieldEditor extends StringFieldEditor implements IVal
 
 /*
 $Log: ExtendedStringFieldEditor.java,v $
+Revision 1.2  2003/07/10 19:27:28  dek
+some idle-race cleanup
+
 Revision 1.1  2003/07/08 16:59:23  dek
 now the booleanValues are checkBoxes
 

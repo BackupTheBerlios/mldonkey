@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Composite;
  * IG2gui
  *
  * @author $user$
- * @version $Id: IG2gui.java,v 1.2 2003/06/25 18:04:53 dek Exp $ 
+ * @version $Id: IG2gui.java,v 1.3 2003/07/10 19:27:28 dek Exp $ 
  *
  */
 public interface IG2gui {
@@ -42,10 +42,6 @@ public interface IG2gui {
 	
 	void registerTab( G2guiTab newTab );
 	
-	/**
-	 * @return the Row of the buttons
-	 */
-	Composite getButtonRow();
 
 	/**
 	 * @return the Content-Area
@@ -64,6 +60,9 @@ public interface IG2gui {
 
 /*
 $Log: IG2gui.java,v $
+Revision 1.3  2003/07/10 19:27:28  dek
+some idle-race cleanup
+
 Revision 1.2  2003/06/25 18:04:53  dek
 Console-Tab reworked
 

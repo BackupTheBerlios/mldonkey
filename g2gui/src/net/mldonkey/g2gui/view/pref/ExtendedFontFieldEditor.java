@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.*;
  * ExtendedFontFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedFontFieldEditor.java,v 1.8 2003/07/04 12:06:38 dek Exp $ 
+ * @version $Id: ExtendedFontFieldEditor.java,v 1.9 2003/07/10 19:27:28 dek Exp $ 
  *
  */
 public class ExtendedFontFieldEditor extends FieldEditor {
@@ -159,7 +159,7 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 	/**
 	 * @param font
 	 */
-	public void setFont(Font font) {
+	public void setFont( Font font ) {
 		this.font = font;
 		fontSample.setFont(font);
 		fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
@@ -169,6 +169,9 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 
 /*
 $Log: ExtendedFontFieldEditor.java,v $
+Revision 1.9  2003/07/10 19:27:28  dek
+some idle-race cleanup
+
 Revision 1.8  2003/07/04 12:06:38  dek
 *** empty log message ***
 
