@@ -6,6 +6,8 @@
  */
 package net.mldonkey.g2gui.view.statistic;
 
+import org.eclipse.swt.graphics.Color;
+
 /**
  * @author achim
  *
@@ -17,17 +19,19 @@ public class Graph {
 	
 	StatisticPoint firstPoint;
 	StatisticPoint lastPoint;
+	int amount;
 	long createTime;
 	
-	int GraphColor[] = new int[3];
+	Color graphColor;
 	
-	public Graph(int[] color)
+	public Graph(Color color)
 	{
+		graphColor = color;
 		System.out.println("Graph created");
 		createTime = System.currentTimeMillis();
 	}
 	
-	public void addPoint(double value)
+	public void addPoint(int value)
 	{
 		//System.out.println("pointAdded");
 		if (firstPoint == null)
@@ -38,33 +42,29 @@ public class Graph {
 		else
 		{
 			StatisticPoint nextPoint = new StatisticPoint(value);
+			nextPoint.setPrev(lastPoint);
 			lastPoint.setNext(nextPoint);
 			lastPoint = nextPoint;
 			
 		}
+		amount++;
 		//System.out.println(lastPoint.getTime());		
 	}
 	
 	public int getAmount()
 	{
-		StatisticPoint currentPoint = firstPoint;
-		int i = 1;
-		while (currentPoint.getNext() != null)
-		{
-			currentPoint = currentPoint.getNext();
-			i++;
-			
-		}
-		return i;
+
+		return amount;
 		
 	}
 	public StatisticPoint getLast()
 	{
 		return lastPoint;
 	}
-	public int[] getGraphColor()
+	
+	public Color getGraphColor()
 	{
-		return GraphColor;
+		return graphColor;
 	}
 	
 	

@@ -6,55 +6,54 @@
  */
 package net.mldonkey.g2gui.view.statistic;
 
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
+
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.*;
 
 
 public class GraphControl extends Composite{
 
-private GraphCanvas graphCanvas;
-	/**
-	 * 
-	 */
-	Composite parent;
-	GraphPainter graphPainter;
-	Graph uploadGraph,downloadGraph;
+	private GraphCanvas graphCanvas1,graphCanvas2;
+
+	private Composite parent;
+	private GraphPainter graphPainter;
+	private Graph uploadGraph,downloadGraph;
 	
 	
 	public GraphControl(Composite _parent) {
 		super(_parent,SWT.BORDER);
 		parent = _parent;
-		graphPainter = new GraphPainter();
-		graphCanvas = new GraphCanvas(this,graphPainter);
-		Thread gcThread = new Thread(graphCanvas);
-		gcThread.start();
+		graphCanvas1 = new GraphCanvas(this);
+		graphCanvas2 = new GraphCanvas(this);
+		setLayout(new FillLayout());
+		layout(true);
+		
 
 	
 		System.out.println("parent widget" + parent.getBounds());
 		
-		int uploadColor[] = {1,3,6 };
+		Color uploadColor = new Color(null,244,0,0);
 		uploadGraph = new Graph(uploadColor);
 		
-		int downloadColor[] = {122,3,0};
+		Color downloadColor = new Color(null,0,244,0);
 		downloadGraph = new Graph(downloadColor);
 		
 		this.setSize(400,200);
-		
-		graphPainter.setGraph(downloadGraph);
-		graphPainter.setGraph(uploadGraph);
+		graphCanvas1.redraw();
+		graphCanvas2.redraw();
+		graphCanvas1.setGraph(downloadGraph);
+		graphCanvas2.setGraph(uploadGraph);
 
-		System.out.println("The Image Canvas:" + graphCanvas.getBounds());
-		graphCanvas.paintImage();
 		
 		
-		addControlListener(new ControlAdapter() {
+		/*addControlListener(new ControlAdapter() {
 				 public void controlResized(ControlEvent e) {
 					GraphControl.this.controlResized(e);					
 				 }
 
-			 });
+			 });*/
 
 		 
 
@@ -63,34 +62,38 @@ private GraphCanvas graphCanvas;
 	/**
 	 * Resizes the Canvas everyTime the Control gets resized
 	 */
-	protected void controlResized(ControlEvent e) {
+	/*protected void controlResized(ControlEvent e) {
 		System.out.println("controlResized"+ this.getBounds());
-		graphCanvas.setSize(this.getBounds().width,this.getBounds().height);
+		graphCanvas1.setSize(this.getBounds().width,this.getBounds().height/2);
+		graphCanvas2.setSize(this.getBounds().width,this.getBounds().height/2);
 		
 		
-		
-	}
+	}*/
 
 	public void redraw()
 	{
-
-		//imageCanvas.redraw();
-		
+		if ( !parent.isDisposed() )				
+					parent.getDisplay().asyncExec( new Runnable () {
+						public void run() {
+							graphCanvas1.redraw();
+							graphCanvas2.redraw();
+						}
+					});
 	}
+	
+
 	
 
 	
 	public void addPointToUploadGraph(float value)
 	{
-		uploadGraph.addPoint(value);
+		uploadGraph.addPoint((int)(value*100));
 
 	}
 
 	
 	public void addPointToDownloadGraph(float value) {
-		downloadGraph.addPoint(value);
-
-		
+		downloadGraph.addPoint((int)(value*100));		
 		
 	}
 	

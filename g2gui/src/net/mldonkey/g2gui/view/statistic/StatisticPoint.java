@@ -15,10 +15,11 @@ package net.mldonkey.g2gui.view.statistic;
 public class StatisticPoint {
 	
 	StatisticPoint nextPoint;
+	StatisticPoint prevPoint;
 	long createTime;
-	double value;
+	int value;
 	
-	public StatisticPoint(double value_) {
+	public StatisticPoint(int value_) {
 		
 			value = value_;
 			createTime = System.currentTimeMillis();
@@ -42,11 +43,19 @@ public class StatisticPoint {
 			return nextPoint;
 		
 		}
-	public double getValue()
+	public int getValue()
 	{
-		return 
-		value;
+		return value;
 		
+	}
+	public void setPrev(StatisticPoint prevP)
+	{
+		prevPoint = prevP;
+	}
+	
+	public StatisticPoint getPrev()
+	{
+			return prevPoint;
 	}
 	
 

@@ -7,9 +7,13 @@
 package net.mldonkey.g2gui.view.statistic;
 
 
-import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.SWT;
+
 import org.eclipse.swt.widgets.Composite;
-import net.mldonkey.g2gui.view.statistic.j2d.J2DCanvas;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+
 
 
 
@@ -19,46 +23,43 @@ import net.mldonkey.g2gui.view.statistic.j2d.J2DCanvas;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class GraphCanvas extends J2DCanvas implements Runnable {
+public class GraphCanvas extends Canvas {
 
 	Composite parent;
+	private Thread thread;
+	Image canvas;
+	final private GraphPainter gp;
 	
-	public GraphCanvas(Composite parent_, GraphPainter graphPainter)
+	public GraphCanvas(Composite parent_)
 	 {
-	super(parent_,graphPainter);
+	super(parent_,SWT.NONE);
 		parent = parent_;
+		gp = new GraphPainter(parent);
+
+	
+	addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+			   GraphCanvas.this.paintControl(e);
+
+			}
+
+		});
+	 }
+		
+		private void paintControl(PaintEvent e)
+		{
+			GC gc = e.gc;
+			gp.setGraphicControl(gc);
+			gp.paint();		
+		}
+		
+	public void setGraph(Graph graph)
+	{
+		gp.setGraph(graph);
 	}
 
-
-
-
-	public void doRedrawStrategy(PaintEvent evt) {
-
-			super.doRedrawStrategy(evt);
 			
-			// Start a new cycle as soon as possible
-			getDisplay().asyncExec(this);
-			
-		}
-	
-		/**
-		 * When the dispatching thread dequeue the asynchExec call for this control,
-		 * it immediatly starts a new paint image cycle.
-		 */
-		public void run() {
-			
-			if (!isDisposed()) {
-				
-				
-				try {
-				paintImage();
-				}
-				catch (org.eclipse.swt.SWTException e)
-				{
-					//Thread Access not allowed (yet)
-				}
-			}
-		}
+		
 
 
 

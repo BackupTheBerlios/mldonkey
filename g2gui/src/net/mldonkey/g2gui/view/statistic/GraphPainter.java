@@ -6,12 +6,13 @@
  */
 package net.mldonkey.g2gui.view.statistic;
 
-import java.awt.Graphics2D;
-import java.awt.Color;
+
+import org.eclipse.swt.graphics.*;
 
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import net.mldonkey.g2gui.view.statistic.j2d.IPaintable;
+
 
 /**
  * @author achim
@@ -19,7 +20,7 @@ import net.mldonkey.g2gui.view.statistic.j2d.IPaintable;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class GraphPainter implements IPaintable {
+public class GraphPainter {
 
 	/* (non-Javadoc)
 	 * paint gets called from Canvas and Graphics2D is able to draw Transparent Images
@@ -29,6 +30,20 @@ public class GraphPainter implements IPaintable {
 	 
 	private int graph;
 	private Graph graphs[] = new Graph[10];
+	 private GC drawBoard;
+	final private Composite parent;
+	
+	public GraphPainter(Composite parent_)
+	{
+		System.out.println("GraphPainter added");
+		
+		parent = parent_;
+	}
+	
+	public void setGraphicControl(GC gc)
+	{
+		drawBoard = gc;
+	}
 	
 	public void setGraph(Graph graph_)
 	{
@@ -48,28 +63,70 @@ public class GraphPainter implements IPaintable {
 		
 	}
 	
-	public void paint(Control control, Graphics2D g2d) {
+	public void paint() {
 		//setting the Canvas Background to the parents Background
-		Color transparent = new Color(control.getBackground().getGreen(),control.getBackground().getGreen(),control.getBackground().getGreen());
-		//Color green = new Color(0,255,0);
-		g2d.setColor(transparent);
-		g2d.fillRect(0,0,control.getBounds().width,control.getBounds().height);
+		
+		drawBoard.setBackground(new Color(null,255,255,255));
+		drawBoard.fillRectangle(0,0,parent.getBounds().width,parent.getBounds().height);
 		//g2d.setColor(green);
+		
 		int which = 0;
+		int maximum = 20;
 		while (graphs[which]!=null)
 		
 		{
-			int red = graphs[which].getGraphColor()[0];
-			int blue = graphs[which].getGraphColor()[1];
-			int green = graphs[which].getGraphColor()[2];
-			Color graphColor = new Color(red,blue,green);
-			g2d.setColor(graphColor);
-			int valueY = (int)(graphs[which].getLast().getValue()*10);
-			g2d.drawLine(0,valueY,control.getBounds().width,valueY);
-			//System.out.println("Male Graph" + which +" hat den wert" + valueY);
+			int red = graphs[which].getGraphColor().getRed();
+			int blue = graphs[which].getGraphColor().getBlue();
+			int green = graphs[which].getGraphColor().getGreen();
+
+			
+			Color graphColor = new Color(null,red,blue,green);
+			drawBoard.setForeground(graphColor);
+			int width = parent.getBounds().width;
+			int height = parent.getBounds().height;
+			int fac = 0;
+			
+
+			StatisticPoint lastPoint = graphs[which].getLast();
+			StatisticPoint actualPoint = lastPoint;
+			int k = 0;
+			int valueY = 0;
+			while ( (k<=width) & (actualPoint.getPrev()!=null))
+			{
+				System.out.println("drawPoint");
+				valueY = (int)(actualPoint.getValue())/10;
+				if (valueY > maximum) 
+				{
+					maximum = valueY;
+				
+				} 
+				fac = height/maximum; 
+				System.out.println("valueY" + valueY + " - Maximum:"+ maximum);
+				valueY = height - valueY*fac;
+				
+				drawBoard.drawLine(k,height,k,valueY);
+				actualPoint = actualPoint.getPrev();
+				k++;
+			}
+			double vv = (double)graphs[which].getLast().getValue()/100;
+			
+			
+			System.out.println("wert:" + (height-(int)vv));
+			int textPosition = height - graphs[which].getLast().getValue()/10*fac;
+			Color aimColor = new Color(null,0,0,0);
+			drawBoard.setForeground(aimColor);
+			drawBoard.setBackground(new Color(null,255,255,255));
+			drawBoard.fillRoundRectangle(10,textPosition-3,90,20,7,7);
+			drawBoard.drawRoundRectangle(10,textPosition-3,90,20,7,7);
+			drawBoard.drawText("wert: " +vv,0+20,textPosition);
+			drawBoard.drawLine(10,textPosition,0,height - graphs[which].getLast().getValue()/10*fac);
+	
+		
 			which++;
 			
+			
 		}
+		
 		
 		
 		
