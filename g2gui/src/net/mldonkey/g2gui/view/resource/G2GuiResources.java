@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.RGB;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.55 2003/11/05 17:58:12 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.56 2003/11/05 18:32:29 vnc Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -205,7 +205,7 @@ public class G2GuiResources {
         ImageRegistry reg = G2GuiResources.getImageRegistry();
 
         reg.put("splashScreen", createRawImage("splash.png"));
-        reg.put("ProgramIcon", createRawImage("mld_logo_48x48_crome.gif"));
+        reg.put("ProgramIcon", createRawImage("mld_logo_48x48.gif"));
         reg.put("G2GuiLogo", createRawImage("mld_logo_48x48_crome.gif"));
         reg.put("G2GuiLogoSmall", createRawImage("mld_logo_12x12.gif"));
         reg.put("TrayIcon", createRawImage("tray.ico"));
@@ -377,6 +377,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.56  2003/11/05 18:32:29  vnc
+program icon back to borderless gif
+
 Revision 1.55  2003/11/05 17:58:12  zet
 recommit
 
@@ -520,7 +523,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: vnc $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
