@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.56 2003/07/06 11:56:36 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.57 2003/07/06 12:31:45 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -60,21 +60,21 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * 
 	 */
 	
-	private SimpleInformation clientStats          = new ClientStats( this ),
-						consoleMessage       = new ConsoleMessage(),
-						searchResult		 = new SearchResult();
+	private SimpleInformation clientStats = new ClientStats( this ),
+							   consoleMessage = new ConsoleMessage(),
+							   searchResult = new SearchResult();
 	/**
 	 * 
 	 */
-	private InfoCollection clientInfoList = new ClientInfoIntMap( ( CoreCommunication )this ),
-					 fileInfoMap          = new FileInfoIntMap( ( CoreCommunication )this ),
-					 serverInfoMap        = new ServerInfoIntMap( ( CoreCommunication )this ),
-					 addSectionOptionList = new AddSomeOptionList( ( CoreCommunication )this ),
-					 addPluginOptionList  = new AddSomeOptionList( ( CoreCommunication )this ),
-					 sharedFileInfoList   = new SharedFileInfoList( ( CoreCommunication )this ),	
-					 optionsInfoMap       = new OptionsInfoMap( ( CoreCommunication )this ),
-					 networkinfoMap       = new NetworkInfoIntMap( ( CoreCommunication )this ),
-					 defineSearchMap      = new DefineSearchMap( ( CoreCommunication )this );
+	private InfoCollection clientInfoList = new ClientInfoIntMap( this ),
+					 fileInfoMap          = new FileInfoIntMap( this ),
+					 serverInfoMap        = new ServerInfoIntMap( this ),
+					 addSectionOptionList = new AddSomeOptionList( this ),
+					 addPluginOptionList  = new AddSomeOptionList( this ),
+					 sharedFileInfoList   = new SharedFileInfoList( this ),	
+					 optionsInfoMap       = new OptionsInfoMap( this ),
+					 networkinfoMap       = new NetworkInfoIntMap( this ),
+					 defineSearchMap      = new DefineSearchMap( this );
 
 	/**
 	 * 
@@ -202,13 +202,15 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;
 				
 			case Message.R_FILE_UPDATE_AVAILABILITY :
-			//TODO file availability updaten.				
+					( ( FileInfoIntMap ) this.fileInfoMap ).get( messageBuffer.readInt32() ).putClientInfo( 
+						( ( ClientInfoIntMap ) this.clientInfoList ).get( messageBuffer.readInt32() ), // The Clientinfo
+						 messageBuffer.readString() ); // The availability
 					break;
 
 			case Message.R_FILE_ADD_SOURCE :
 					( ( FileInfoIntMap ) this.fileInfoMap ).get( messageBuffer.readInt32() )
-						.addClientInfo( ( ( ClientInfoIntMap ) this.clientInfoList )
-							.get( messageBuffer.readInt32() ) );
+						.putClientInfo( ( ( ClientInfoIntMap ) this.clientInfoList )
+							.get( messageBuffer.readInt32() ), null );
 					break;
 					
 			case Message.R_SERVER_STATE : 
@@ -326,6 +328,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.57  2003/07/06 12:31:45  lemmstercvs01
+fileUpdateAvailability added
+
 Revision 1.56  2003/07/06 11:56:36  lemmstercvs01
 fileAddSource added
 
