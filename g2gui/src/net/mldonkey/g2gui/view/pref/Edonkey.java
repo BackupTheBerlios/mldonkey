@@ -33,21 +33,21 @@ import org.eclipse.swt.widgets.Control;
  * Edonkey
  *
  * @author $user$
- * @version $Id: Edonkey.java,v 1.1 2003/06/24 20:44:54 lemmstercvs01 Exp $ 
+ * @version $Id: Edonkey.java,v 1.2 2003/06/26 14:09:20 dek Exp $ 
  *
  */
 public class Edonkey extends PreferencePage {
-	PreferenceStore preferenceStore;
+	private PreferenceStore preferenceStore;
 	/**
 	 * @param preferenceStore
 	 */
-	public Edonkey(PreferenceStore preferenceStore_) {
-		super("eDonkey");
+	public Edonkey( PreferenceStore preferenceStore_ ) {
+		super( "eDonkey" );
 		this.preferenceStore = preferenceStore_;
 
 	}
 
-	protected Control createContents(Composite arg0) {
+	protected Control createContents( Composite arg0 ) {
 		return null;
 	}
 
@@ -56,6 +56,9 @@ public class Edonkey extends PreferencePage {
 
 /*
 $Log: Edonkey.java,v $
+Revision 1.2  2003/06/26 14:09:20  dek
+checkstyle
+
 Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
 refactored
 

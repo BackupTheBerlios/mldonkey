@@ -32,17 +32,17 @@ import org.eclipse.swt.widgets.Control;
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.1 2003/06/24 20:44:54 lemmstercvs01 Exp $ 
+ * @version $Id: General.java,v 1.2 2003/06/26 14:09:20 dek Exp $ 
  *
  */
 public class General extends PreferencePage {
-	PreferenceStore preferenceStore;
+	private PreferenceStore preferenceStore;
 
 	/**
 	 * @param preferenceStore
 	 */
-	public General(PreferenceStore preferenceStore_) {
-		super("General Settings");
+	public General( PreferenceStore preferenceStore_ ) {
+		super( "General Settings" );
 		this.preferenceStore = preferenceStore_;		
 
 	}
@@ -51,7 +51,7 @@ public class General extends PreferencePage {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createContents(Composite shell) {
+	protected Control createContents( Composite shell ) {
 		return null;
 	}
 
@@ -59,6 +59,9 @@ public class General extends PreferencePage {
 
 /*
 $Log: General.java,v $
+Revision 1.2  2003/06/26 14:09:20  dek
+checkstyle
+
 Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
 refactored
 
