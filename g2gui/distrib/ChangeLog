@@ -1,3 +1,8 @@
+2003/11/25: z
+	* Core: Add support for protocol 19
+	* Transfers: Add uploaders table
+	* Transfers: Add client info from proto 19 to client table & client details popup
+	
 2003/11/24: 
 	*** Release version 0.2.1 ***
 	
