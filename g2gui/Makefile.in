@@ -71,7 +71,7 @@ $(OTHER_RESOBJECTS) :%.o : $(subst .,/,$<)
 	$(GCJ) $(GCJ_ARGS) --resource $(subst $(RES_DIR)/,,$(file_path)) -o $(OBJ_DIR)/$@ $(file_path)
 
 $(PROGRAM): libs $(G2GUI_RES_OBJECTS) $(G2GUI_O_OBJECTS) $(OTHER_RESOBJECTS) @PLATFORM_TARGETS@
-	$(GCJ) --main=$(MAINCLASS) $(LINK_ARGS) -o $(PROGRAM) $(JAR_DIR)/$(OBJ_DIR)/*.o $(shell $(FIND) $(OBJ_DIR) -name "*.o" -printf "%p ")
+	$(GCJ) --main=$(MAINCLASS) $(LINK_ARGS) -o $(PROGRAM) $(JAR_DIR)/$(OBJ_DIR)/*.o `$(FIND) $(OBJ_DIR) -name "*.o" -printf "%p "`
 
 
 icon.o : % : build/g2gui.rc
