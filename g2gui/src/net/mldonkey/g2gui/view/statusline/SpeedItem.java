@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.view.*;
  * SpeedItem
  *
  * @author $user$
- * @version $Id: SpeedItem.java,v 1.10 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: SpeedItem.java,v 1.11 2003/08/02 12:56:57 zet Exp $ 
  *
  */
 public class SpeedItem implements Observer {	
@@ -49,6 +49,7 @@ public class SpeedItem implements Observer {
 	private Composite composite;
 	private StatusLine statusline;
 	private CLabel cLabelDown, cLabelUp;
+	private boolean needsLayout = true;
 
 	/**
 	 * @param string
@@ -94,6 +95,8 @@ public class SpeedItem implements Observer {
 	 */
 	public void update( Observable o, Object arg ) {
 		final ClientStats stats = ( ClientStats ) arg;
+		final boolean doOnce = needsLayout;
+		needsLayout = false; 
 		if ( !composite.isDisposed() )				
 		composite.getDisplay().asyncExec( new Runnable () {
 			public void run() {
@@ -104,6 +107,8 @@ public class SpeedItem implements Observer {
 				/* not the tooltip */
 				cLabelDown.setToolTipText( "UDP-DL: " + stats.getUdpDownRate() );
 				cLabelUp.setToolTipText( "UDP-UL: " + stats.getUdpUpRate() );
+				if (doOnce) // hack
+					cLabelUp.getParent().getParent().layout();
 			}
 		} );
 	}
@@ -111,6 +116,9 @@ public class SpeedItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.11  2003/08/02 12:56:57  zet
+size statusline
+
 Revision 1.10  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

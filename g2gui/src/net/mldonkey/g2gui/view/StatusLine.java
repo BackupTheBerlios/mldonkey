@@ -29,6 +29,7 @@ import net.mldonkey.g2gui.view.statusline.NetworkItem;
 import net.mldonkey.g2gui.view.statusline.SpeedItem;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -41,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.4 2003/07/31 14:10:58 lemmstercvs01 Exp $ 
+ * @version $Id: StatusLine.java,v 1.5 2003/08/02 12:56:47 zet Exp $ 
  *
  */
 public class StatusLine {
@@ -57,20 +58,29 @@ public class StatusLine {
 	 */
 	public StatusLine( Composite parent, CoreCommunication core ) {
 		this.core = core;
+		this.composite = new Composite( parent, SWT.NONE );	
 		
-		this.composite = new Composite( parent, SWT.NONE );			
-		this.composite.setLayout( new FillLayout() );
-		composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );		
-		
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 3;
+			
+		this.composite.setLayout( gridLayout);
+		composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );	
+			
+		// why is this one a different height? 
 		/* the left field */
 		new NetworkItem( this, this.core );
 
 		/* the middle field */
-		label = new Label( composite, SWT.BORDER );	
-		label.setText( "" );
+		Composite middle = new Composite( composite, SWT.BORDER );
+		middle.setLayout( new FillLayout() );	
+		middle.setLayoutData( new GridData ( GridData.FILL_BOTH ));
+			
+		label = new Label(middle, SWT.NONE);
+		label.setText ( "");
 		
 		/* the right field */
 		new SpeedItem( this, this.core );
+		
 	}
 
 	/**
@@ -100,6 +110,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.5  2003/08/02 12:56:47  zet
+size statusline
+
 Revision 1.4  2003/07/31 14:10:58  lemmstercvs01
 reworked
 
