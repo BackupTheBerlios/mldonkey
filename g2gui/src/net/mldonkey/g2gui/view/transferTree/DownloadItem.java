@@ -26,7 +26,6 @@ import gnu.trove.TIntObjectHashMap;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
@@ -40,10 +39,12 @@ import org.eclipse.swt.custom.TableTreeItem;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.1 2003/07/11 17:53:51 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.2 2003/07/12 13:50:01 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem {
+	private TableTree tableTree;
+
 	private TIntObjectHashMap namedclients = new TIntObjectHashMap();
 
 	private FileInfo fileInfo;
@@ -55,30 +56,8 @@ public class DownloadItem extends TableTreeItem {
 	 */
 	public DownloadItem(TableTree parent, int style, FileInfo fileInfo) {
 		super(parent, style);
+		this.tableTree = parent;
 		this.fileInfo = fileInfo;		
-		setText( 0, String.valueOf( fileInfo.getId() ) );
-		setText( 1, fileInfo.getName() );
-		setText( 2, String.valueOf( fileInfo.getRate() ) );
-		setText( 3, String.valueOf( fileInfo.getDownloaded() ) );
-		setText( 4, String.valueOf( fileInfo.getSize() ) );
-		setText( 5, String.valueOf( fileInfo.getPerc() ) );
-		setText( 6, String.valueOf( fileInfo.getState() ) );			
-		Object[] clients = ((HashSet) fileInfo.getClientInfos()).toArray();		
-			for (int i = 0; i < clients.length; i++) {
-				ClientInfo info = (ClientInfo) clients[ i ];
-						
-				if ( info.getState().getState()==EnumState.CONNECTED_DOWNLOADING ){	
-								TableTreeItem detailedInfos = new TableTreeItem(this,SWT.NONE);					
-								detailedInfos.setText(1,info.getClientName());
-								detailedInfos.setText(2,info.getState().toString());
-					float rate = ( info.getClientRate()*100/(float)1024 )/100	;
-					detailedInfos.setText(2,String.valueOf(rate));	
-								namedclients.put( info.getClientid(), detailedInfos );
-								}
-			}
-	}	
-	
-	void update(){	
 		setText( 0, String.valueOf( fileInfo.getId() ) );
 		setText( 1, fileInfo.getName() );
 		setText( 2, String.valueOf( fileInfo.getRate() ) );
@@ -87,30 +66,82 @@ public class DownloadItem extends TableTreeItem {
 		setText( 5, String.valueOf( fileInfo.getPerc() ) );
 		setText( 6, String.valueOf( fileInfo.getState() ) );
 		
-		Object[] clients = ((HashSet) fileInfo.getClientInfos()).toArray();		
-			for (int i = 0; i < clients.length; i++) {			
-				ClientInfo info = (ClientInfo) clients[ i ];
-				
-				if ( namedclients.contains( info.getClientid() ) ){
-					TableTreeItem detailedInfos = (TableTreeItem) namedclients.get(info.getClientid());
-					detailedInfos.setText(1,info.getClientName());
-					float rate = ( info.getClientRate()*100/(float)1024 )/100	;
-					detailedInfos.setText(2,String.valueOf(rate));	
+		Iterator it = fileInfo.getClientInfos().iterator();
+			while ( it.hasNext() ) {		
+				ClientInfo clientInfo = ( ClientInfo ) it.next();
+	//			Here comes the question, wether we want to add this clientInfo, or not?? at the moment,
+	//			all clientInfos are accepted
+				try {
+					if (( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
 					
-					//detailedInfos.setText(0,String.valueOf(info.getClientid()));
-				}			
-				
-				else if (info.getState().getState()==EnumState.CONNECTED_DOWNLOADING){		
-					TableTreeItem detailedInfos = new TableTreeItem(this,SWT.NONE);			
-					detailedInfos.setText(1,info.getClientName());	
-					float rate = ( info.getClientRate()*100/(float)1024 )/100	;
-					detailedInfos.setText(2,String.valueOf(rate));					
-					//detailedInfos.setText(0,String.valueOf(info.getClientid()));
-					namedclients.put( info.getClientid(), detailedInfos );
+							 
+					){				
+							if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
+								namedclients.get( clientInfo.getClientid() );
+								ClientItem existingItem =
+									( ClientItem ) namedclients.get( clientInfo.getClientid() );
+								existingItem.update();
+							} else {
+								ClientItem newItem = new ClientItem( this, SWT.NONE, clientInfo );
+								namedclients.put( clientInfo.getClientid(), newItem );
+							}
 					}
+					else if ( namedclients.contains( clientInfo.getClientid() ) ) {
+						ClientItem toBeRemovedItem =
+									( ClientItem ) namedclients.get( clientInfo.getClientid() );
+						toBeRemovedItem.dispose();
+						namedclients.remove( clientInfo.getClientid() );
+						
+					}
+				} catch (RuntimeException e) {
+					// TODO Auto-generated catch block
+					System.out.println("da ging was schief, im konstruktor");
 				}
-			
-		}
+				
+							
+			}
+		
+	}
+	
+	void update() {
+		setText( 0, String.valueOf( fileInfo.getId() ) );
+		setText( 1, fileInfo.getName() );
+		setText( 2, String.valueOf( fileInfo.getRate() ) );
+		setText( 3, String.valueOf( fileInfo.getDownloaded() ) );
+		setText( 4, String.valueOf( fileInfo.getSize() ) );
+		setText( 5, String.valueOf( fileInfo.getPerc() ) );
+		setText( 6, fileInfo.getChunks() );
+		Iterator it = fileInfo.getClientInfos().iterator();
+			while ( it.hasNext() ) {			
+				try {
+					ClientInfo clientInfo = ( ClientInfo ) it.next();
+		// Here comes the question, wether we want to add this clientInfo, or not?? at the moment,
+		// all clientInfos are accepted
+						if (( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )										 
+						){				
+							if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
+								namedclients.get( clientInfo.getClientid() );
+								ClientItem existingItem =
+									( ClientItem ) namedclients.get( clientInfo.getClientid() );
+								existingItem.update();
+							} else {
+								ClientItem newItem = new ClientItem( this, SWT.NONE, clientInfo );
+								namedclients.put( clientInfo.getClientid(), newItem );
+							}
+					}
+					else if ( namedclients.contains( clientInfo.getClientid() ) ) {
+						ClientItem toBeRemovedItem =
+									( ClientItem ) namedclients.get( clientInfo.getClientid() );
+						toBeRemovedItem.dispose();
+						namedclients.remove( clientInfo.getClientid() );
+					
+					}
+				} catch (RuntimeException e) {
+					System.out.println("da ging was schief");
+				}
+			}
+		
+	}
 	
 
 	
@@ -140,10 +171,20 @@ public class DownloadItem extends TableTreeItem {
 		super(parent, style, index);
 		// TODO Auto-generated constructor stub
 	}
+	/**
+	 * @return
+	 */
+	public FileInfo getFileInfo() {
+		return fileInfo;
+	}
+
 }
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.2  2003/07/12 13:50:01  dek
+nothing to do, so i do senseless idle-working
+
 Revision 1.1  2003/07/11 17:53:51  dek
 Tree for Downloads - still unstable
 

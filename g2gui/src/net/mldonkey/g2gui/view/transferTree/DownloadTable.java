@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.1 2003/07/11 17:53:51 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.2 2003/07/12 13:50:01 dek Exp $ 
  *
  */
 public class DownloadTable  implements Observer,Runnable {
@@ -74,8 +74,9 @@ public class DownloadTable  implements Observer,Runnable {
 		downloads = new TIntObjectHashMap();	
 		 tableTree = new TableTree(parent,SWT.NONE);
 			Table table = tableTree.getTable();
-			table.setLinesVisible(true);
-			table.setHeaderVisible(true);			
+			table.setLinesVisible(false);
+			table.setHeaderVisible(true);	
+					
 			for (int i = 0; i < columns.length; i++) {
 				TableColumn column = new TableColumn(table, SWT.NONE);
 							column.setText(columns[ i ]);
@@ -99,14 +100,11 @@ public class DownloadTable  implements Observer,Runnable {
 	/* (non-Javadoc)u
 	 * @see java.lang.Runnable#run()
 	 */
-	public void run() {			
-		
+	public synchronized void run() {
 			TIntObjectIterator it = files.iterator();
 			while ( it.hasNext() ) {
 				it.advance();
-				FileInfo fileInfo = ( FileInfo ) it.value();	
-				
-				
+				FileInfo fileInfo = ( FileInfo ) it.value();
 				if( downloads.containsKey( fileInfo.getId() ) ){
 					downloads.get( fileInfo.getId());
 					DownloadItem existingItem =
@@ -114,22 +112,25 @@ public class DownloadTable  implements Observer,Runnable {
 					existingItem.update();
 				}
 				else {					
-					DownloadItem newItem =
-						new DownloadItem( tableTree, SWT.NONE, fileInfo );
-					downloads.put( fileInfo.getId(), newItem );
+				DownloadItem newItem =
+					new DownloadItem( tableTree, SWT.NONE, fileInfo );
+				downloads.put( fileInfo.getId(), newItem );
 				TableColumn[] cols = tableTree.getTable().getColumns();
 				
-				for (int i = 0; i < cols.length; i++) {
-					cols[i].pack();
-				}
+					for (int i = 0; i < cols.length; i++) {
+						cols[i].pack();
+					}
 				
 				}			
 		}
-		tableTree.getTable().update();
+		//tableTree.getTable().update();
 	}
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.2  2003/07/12 13:50:01  dek
+nothing to do, so i do senseless idle-working
+
 Revision 1.1  2003/07/11 17:53:51  dek
 Tree for Downloads - still unstable
 
