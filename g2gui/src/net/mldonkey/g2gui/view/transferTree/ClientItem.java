@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.transferTree;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumState;
 
 import org.eclipse.swt.SWT;
@@ -37,7 +38,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.6 2003/07/15 14:43:30 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.7 2003/07/15 18:14:47 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -60,7 +61,12 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 	 */
 	private FileInfo fileInfo;
 
-	public ClientItem( DownloadItem parent, int style, ClientInfo clientInfo ){
+	/**
+	 * @param parent for wich downloaditem this object delivers detailed infos
+	 * @param style the style, in which it appears (see TableTreeItem for details)
+	 * @param clientInfo the source of the Information
+	 */
+	public ClientItem( DownloadItem parent, int style, ClientInfo clientInfo ) {
 		super( parent, style );
 		this.clientInfo = clientInfo;
 		this.downloadItem = parent;
@@ -73,8 +79,8 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 			if ( oldEditor != null )
 			oldEditor.dispose();
 		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, 6 );
-		editor.setEditor ( chunks, this, 6 );	
-		setText( 1, clientInfo.getClientName() );	
+		editor.setEditor ( chunks, this, 4 );			
+		setText( 2, clientInfo.getClientName() );	
 		updateColums();	
 		
 		
@@ -85,8 +91,15 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 	 * 
 	 */
 	private void updateColums() {
-		// setText( 0, String.valueOf( clientInfo.getClientid() ) );
-		
+		//"ID"|"Network"|"Filename"|"Rate"|"Chunks"|"%"|"Downloaded"|"Size"
+		String connection = "";
+		if ( clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) {
+			connection = "firewalled";
+			}
+		else {
+			connection = "direct";
+		}
+		setText( 3, connection );
 		
 		String state = "";
 		if ( clientInfo.getState().getState() == EnumState.CONNECTED )		
@@ -119,16 +132,22 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 	}
 
 
-	public void createMenu(Menu menu) {
+	/** (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.transferTree.IItemHasMenue#createMenu(org.eclipse.swt.widgets.Menu)
+	 */
+	public void createMenu( Menu menu ) {
 		MenuItem menuItem;
 		menuItem = new MenuItem( menu, SWT.PUSH );
-		menuItem.setText( "dummy Item"+clientInfo.getClientName() );
-		MenuItem[] result = { menuItem };		
+		menuItem.setText( "Nothing to do here..." );		
+		menuItem.setEnabled( false );
 	}
 }
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.7  2003/07/15 18:14:47  dek
+Wow, nice piece of work already done, it works, looks nice, but still lots of things to do
+
 Revision 1.6  2003/07/15 14:43:30  dek
 *** empty log message ***
 

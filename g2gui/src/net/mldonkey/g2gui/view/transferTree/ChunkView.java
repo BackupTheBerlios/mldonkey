@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkView.java,v 1.5 2003/07/15 13:25:41 dek Exp $ 
+ * @version $Id: ChunkView.java,v 1.6 2003/07/15 18:14:47 dek Exp $ 
  *
  */
 public class ChunkView extends Canvas {
@@ -102,7 +102,7 @@ public class ChunkView extends Canvas {
 
 		addPaintListener( new PaintListener() {
 			public void paintControl( PaintEvent e ) {
-				ChunkView.this.paintControl( e );
+				ChunkView.this.paintControl( e );				
 				}
 			} );
 	}
@@ -166,17 +166,20 @@ public class ChunkView extends Canvas {
 		Color black = getDisplay().getSystemColor( SWT.COLOR_BLACK );
 		Color yellow = getDisplay().getSystemColor( SWT.COLOR_YELLOW );		
 		
-		if ( avail != null ){		
+		if ( avail != null ) {		
 				length = avail.length();
-		}
-				
+		}				
 		if ( image != null ) image.dispose();
-		if (length==0) 		
+		
+		if ( length == 0 ) 		
 			image = new Image( getDisplay(), 1, 1 );
 		else
 			image = new Image( getDisplay(), length, 1 );
 			
 		GC gc = new GC( image );
+		
+		gc.setBackground( getParent().getBackground( ) );		
+		gc.fillRectangle( 0, 0, image.getBounds().width, image.getBounds().height );		
 		for ( int i = 0; i < length; i++ ) {
 			
 			gc.setForeground( blue );			
@@ -270,6 +273,8 @@ public class ChunkView extends Canvas {
 			destHeight = e.height - 2;
 		}
 		if ( image != null ) {
+			gc.setBackground( getParent().getBackground( ) );		
+			gc.fillRectangle( 0, 0, e.width, e.height );
 			gc.drawImage(
 				image,
 				0,
@@ -296,7 +301,7 @@ public class ChunkView extends Canvas {
 			if ( !( chunks.equals( fileInfo.getChunks() ) )
 			  || !( avail.equals(  fileInfo.getAvail()  ) ) ) 
 					createImage();
-			else this.redraw(0,0,0,0,false);
+			else this.redraw( 0, 0, 0, 0, false );
 		}
 		else if ( type == isClientInfo ) {		
 			/*redraw if avail is not null, and has changed...*/
@@ -304,8 +309,8 @@ public class ChunkView extends Canvas {
 			if ( avail != null  )
 				if ( !tempAvail.equals( avail ) )
 					createImage();
-				else {}
-			else this.redraw(0,0,0,0,false);
+				else { }
+			else this.redraw( 0, 0, 0, 0, false );
 		}
 		
 	}
@@ -313,6 +318,9 @@ public class ChunkView extends Canvas {
 
 /*
 $Log: ChunkView.java,v $
+Revision 1.6  2003/07/15 18:14:47  dek
+Wow, nice piece of work already done, it works, looks nice, but still lots of things to do
+
 Revision 1.5  2003/07/15 13:25:41  dek
 right-mouse menu and some action to hopefully avoid flickering table
 

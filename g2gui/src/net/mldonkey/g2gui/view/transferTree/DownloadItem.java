@@ -48,13 +48,15 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
+
 
 
 /**
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.9 2003/07/15 13:25:41 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.10 2003/07/15 18:14:47 dek Exp $ 
  *
  */
 public class DownloadItem 
@@ -90,15 +92,19 @@ public class DownloadItem
 		TableTreeEditor editor = new TableTreeEditor( this.getParent() );		
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
-		Control oldEditor = editor.getEditor();
-			if ( oldEditor != null )
-			oldEditor.dispose();
-		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo, 4 );
-		editor.setEditor ( chunks, this, 4 );	
 		
-		setText( 6, String.valueOf( fileInfo.getSize() ) );
+		/*
+		 * Now fill the columns with initial values, that never change...
+		 */
 		setText( 0, String.valueOf( fileInfo.getId() ) );
-			
+		setText( 1, fileInfo.getNetwork().getNetworkName() );		
+		Control oldEditor = editor.getEditor();
+				if ( oldEditor != null )
+					oldEditor.dispose();
+				this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo, 4 );
+		editor.setEditor ( chunks, this, 4 );			
+		setText( 7, String.valueOf( fileInfo.getSize() ) );
+
 		updateColumns();
 
 		Iterator it =  fileInfo.getClientInfos().iterator();		
@@ -163,12 +169,25 @@ public class DownloadItem
 	}
 
 	private void updateColumns() {
-		//TableColumn column = tableTree.getTable().getColumn( 0 );
-		//System.out.printcolumn.getText()
-		setText( 1, fileInfo.getName() );
-		setText( 2, String.valueOf( fileInfo.getRate() ) );
-		setText( 3, String.valueOf( fileInfo.getDownloaded() ) );
-		setText( 5, String.valueOf( fileInfo.getPerc() ) );		
+		//"ID"|"Network"|"Filename"|"Rate"|"Chunks"|"%"|"Downloaded"|"Size"
+		//  0     1           2        3       4      5    6            7
+		/*
+		 * all //'ed values don't need to be updated, since they don't change,
+		 * they are only here for completeness...
+		 */
+		//setText( 0, String.valueOf( fileInfo.getId() ) );
+		//setText( 1, fileInfo.getNetwork().getNetworkName() );
+		setText( 2, fileInfo.getName() );
+		
+		if ( fileInfo.getState().getState() == EnumFileState.PAUSED )
+				setText( 3, "paused" );
+		else
+			setText( 3, String.valueOf( fileInfo.getRate() ) );
+			
+		setText( 5, String.valueOf( fileInfo.getPerc() ) );	
+		setText( 6, String.valueOf( fileInfo.getDownloaded() ) );		
+		//setText( 7, String.valueOf( fileInfo.getSize() ) );
+			
 		chunks.refresh();
 	}
 	
@@ -187,41 +206,62 @@ public class DownloadItem
 	 */
 	public void createMenu( Menu menu ) {
 		ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
-		pauseItem = new MenuItem( menu, SWT.PUSH );
-		pauseItem.setText( bundle.getString( "TT_Menu0" ) );
-		pauseItem.addSelectionListener( this );
-		resumeItem = new MenuItem( menu, SWT.PUSH );
-		resumeItem.setText( bundle.getString( "TT_Menu1" ) );
-		resumeItem.addSelectionListener( this );
+		if ( fileInfo.getState().getState() == EnumFileState.PAUSED ) {
+			/*the file is paused, then we don't need to show
+			 * the pauseItem, but the resumeItem
+			 */
+			resumeItem = new MenuItem( menu, SWT.PUSH );
+				resumeItem.setText( bundle.getString( "TT_Menu1" ) );
+				resumeItem.addSelectionListener( this );
+				menu.setDefaultItem( resumeItem );
+		}
+		else {	
+			/*Download is running, we can pause it*/	
+			pauseItem = new MenuItem( menu, SWT.PUSH );
+				pauseItem.setText( bundle.getString( "TT_Menu0" ) );
+				pauseItem.addSelectionListener( this );
+				menu.setDefaultItem( pauseItem );
+		}
+ 		
 		cancelItem = new MenuItem( menu, SWT.PUSH );
-		cancelItem.setText( bundle.getString( "TT_Menu2" ) );
-		cancelItem.addSelectionListener( this );
+			cancelItem.setText( bundle.getString( "TT_Menu2" ) );
+			cancelItem.addSelectionListener( this );
+			
 		renameItem = new MenuItem( menu, SWT.PUSH );
-		renameItem.setText( bundle.getString( "TT_Menu3" ) );
-		renameItem.addSelectionListener( this );
+			renameItem.setText( bundle.getString( "TT_Menu3" ) );
+			renameItem.addSelectionListener( this );
+			
 		linkItem = new MenuItem( menu, SWT.PUSH );
-		linkItem.setText( bundle.getString( "TT_Menu4" ) );
-		linkItem.addSelectionListener( this );
+			linkItem.setText( bundle.getString( "TT_Menu4" ) );
+			linkItem.addSelectionListener( this );
+			
+	/* Not used by now
 		clearItem = new MenuItem( menu, SWT.PUSH );
-		clearItem.setText( bundle.getString( "TT_Menu8" ) );
-		clearItem.addSelectionListener( this );
+			clearItem.setText( bundle.getString( "TT_Menu8" ) );
+			clearItem.addSelectionListener( this );
+	
+			
 		fakeItem = new MenuItem( menu, SWT.PUSH );
-		fakeItem.setText( bundle.getString( "TT_Menu5" ) );
-		fakeItem.addSelectionListener( this );
-		// new as of 1.8
+			fakeItem.setText( bundle.getString( "TT_Menu5" ) );
+			fakeItem.addSelectionListener( this );
+	*/
+		
 		MenuItem prioMenuItem = new MenuItem( menu, SWT.CASCADE );
 		Menu prioMenu = new Menu( menu );
-		prioMenuItem.setMenu( prioMenu );
-		prioMenuItem.setText( bundle.getString( "TT_Menu6" ) );
-		prio1Item = new MenuItem( prioMenu, SWT.PUSH );
-		prio1Item.setText( bundle.getString( "TT_Menu_Prio_High" ) );
-		prio1Item.addSelectionListener( this );
-		prio2Item = new MenuItem( prioMenu, SWT.PUSH );
-		prio2Item.setText( bundle.getString( "TT_Menu_Prio_Medium" ) );
-		prio2Item.addSelectionListener( this );
-		prio3Item = new MenuItem( prioMenu, SWT.PUSH );
-		prio3Item.setText( bundle.getString( "TT_Menu_Prio_Low" ) );
-		prio3Item.addSelectionListener( this );
+			prioMenuItem.setMenu( prioMenu );				
+			prioMenuItem.setText( bundle.getString( "TT_Menu6" ) );
+			prio1Item = new MenuItem( prioMenu, SWT.PUSH );
+				prio1Item.setText( bundle.getString( "TT_Menu_Prio_High" ) );
+				prio1Item.addSelectionListener( this );
+			prio2Item = new MenuItem( prioMenu, SWT.PUSH );
+				prio2Item.setText( bundle.getString( "TT_Menu_Prio_Medium" ) );
+				prio2Item.addSelectionListener( this );
+			prio3Item = new MenuItem( prioMenu, SWT.PUSH );
+				prio3Item.setText( bundle.getString( "TT_Menu_Prio_Low" ) );
+				prio3Item.addSelectionListener( this );
+		prioMenuItem.setEnabled( true );	
+				
+			
 	}
 
 	/** (non-Javadoc)
@@ -235,6 +275,7 @@ public class DownloadItem
 	 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected( org.eclipse.swt.events.SelectionEvent )
 	 */
 	public void widgetDefaultSelected( SelectionEvent arg0 ) {
+		ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
 		if ( arg0.widget instanceof MenuItem ) {
 			MenuItem item = ( MenuItem ) arg0.widget;
 			if ( item == pauseItem ) {
@@ -244,7 +285,21 @@ public class DownloadItem
 				fileInfo.setState( EnumFileState.DOWNLOADING );
 			}
 			if ( item == cancelItem ) {
-				fileInfo.setState( EnumFileState.CANCELLED );
+				MessageBox reallyCancel = new MessageBox(
+							getParent().getShell(), SWT.YES | SWT.NO | SWT.ICON_QUESTION );
+					reallyCancel.setMessage( bundle.getString( "TT_REALLY_CANCEL" ) );					
+				int answer = reallyCancel.open();
+				if ( answer == SWT.YES )
+					fileInfo.setState( EnumFileState.CANCELLED );
+			}
+			
+			if ( item == renameItem ) {
+				/*
+				 * BIG FAT TODO-ITEM:
+				 * create a window, where a filename can be selected from a sortable / sorted
+				 * list
+				 */
+				
 			}
 			if ( item == linkItem ) {
 				Clipboard clipBoard = new Clipboard( item.getDisplay() );
@@ -280,6 +335,7 @@ public class DownloadItem
 				fileInfo.setPriority( EnumPriority.NORMAL );
 			if ( item == prio3Item )
 				fileInfo.setPriority( EnumPriority.LOW );
+			
 		}
 	}
 
@@ -288,6 +344,9 @@ public class DownloadItem
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.10  2003/07/15 18:14:47  dek
+Wow, nice piece of work already done, it works, looks nice, but still lots of things to do
+
 Revision 1.9  2003/07/15 13:25:41  dek
 right-mouse menu and some action to hopefully avoid flickering table
 

@@ -35,6 +35,8 @@ import java.util.Observer;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
+import net.mldonkey.g2gui.model.enum.EnumFileState;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.events.MouseEvent;
@@ -48,7 +50,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.6 2003/07/15 13:25:41 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.7 2003/07/15 18:14:47 dek Exp $ 
  *
  */
 public class DownloadTable  implements Observer, Runnable {
@@ -60,12 +62,13 @@ public class DownloadTable  implements Observer, Runnable {
 	
 	private String[] columns = {
 							"ID",
-							"Name",
+							"Network",
+							"Name",							
 							"Rate",
-							"Downloaded",
-							"Size",
+							"Chunks",
 							"%",
-							"Status",
+							"Downloaded",
+							"Size"
 							};
 	/**
 	 * 
@@ -84,6 +87,7 @@ public class DownloadTable  implements Observer, Runnable {
 			table.setHeaderVisible( true );	
 									
 			for ( int i = 0; i < columns.length; i++ ) {
+				//"ID"|"Network"|"Filename"|"Rate"|"Chunks"|"%"|"Downloaded"|"Size"
 				TableColumn column = new TableColumn( table, SWT.NONE );
 							column.setText( columns[ i ] );
 			}
@@ -142,7 +146,7 @@ public class DownloadTable  implements Observer, Runnable {
 
 
 
-	/* ( non-Javadoc )
+	/** ( non-Javadoc )
 	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
 	 */
 	public void update( Observable o, Object arg ) {
@@ -156,7 +160,7 @@ public class DownloadTable  implements Observer, Runnable {
 
 
 
-	/* ( non-Javadoc )u
+	/** ( non-Javadoc )u
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
@@ -164,27 +168,45 @@ public class DownloadTable  implements Observer, Runnable {
 			while ( it.hasNext() ) {
 				it.advance();
 				FileInfo fileInfo = ( FileInfo ) it.value();
-				if ( downloads.containsKey( fileInfo.getId() ) ) {
-					downloads.get( fileInfo.getId() );
-					DownloadItem existingItem =
-								( DownloadItem ) downloads.get( fileInfo.getId() );
-					existingItem.update();
+				/* only process downloading and paused files
+				 * remove canceled files from table*/
+				if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING 
+					|| fileInfo.getState().getState() == EnumFileState.PAUSED ) 
+					{					
+					if ( downloads.containsKey( fileInfo.getId() ) ) {
+						downloads.get( fileInfo.getId() );
+						DownloadItem existingItem =
+									( DownloadItem ) downloads.get( fileInfo.getId() );
+						existingItem.update();
+					}
+					else {					
+					DownloadItem newItem =
+						new DownloadItem( tableTree, SWT.NONE, fileInfo );
+					downloads.put( fileInfo.getId(), newItem );
+					TableColumn[] cols = tableTree.getTable().getColumns();
+					
+						for ( int i = 0; i < cols.length; i++ ) {
+							cols[i].pack();
+						}				
+					}	
+				}	
+				else if ( downloads.containsKey( fileInfo.getId() ) ) {	
+					/* remove this file from the downloadList if contained*/					
+						( ( DownloadItem ) downloads.get( fileInfo.getId() ) ).dispose();
+						downloads.remove( fileInfo.getId() );												
+					
 				}
-				else {					
-				DownloadItem newItem =
-					new DownloadItem( tableTree, SWT.NONE, fileInfo );
-				downloads.put( fileInfo.getId(), newItem );
-				TableColumn[] cols = tableTree.getTable().getColumns();
-				
-					for ( int i = 0; i < cols.length; i++ ) {
-						cols[i].pack();
-					}				
-				}			
+				else {
+				 /* we really don't care about this one...*/
+				}
 		}		
 	}
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.7  2003/07/15 18:14:47  dek
+Wow, nice piece of work already done, it works, looks nice, but still lots of things to do
+
 Revision 1.6  2003/07/15 13:25:41  dek
 right-mouse menu and some action to hopefully avoid flickering table
 

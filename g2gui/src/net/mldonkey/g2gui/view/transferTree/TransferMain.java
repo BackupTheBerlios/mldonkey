@@ -37,14 +37,14 @@ import org.eclipse.swt.widgets.Composite;
  * Main
  *
  * @author $user$
- * @version $Id: TransferMain.java,v 1.2 2003/07/14 19:26:40 dek Exp $ 
+ * @version $Id: TransferMain.java,v 1.3 2003/07/15 18:14:47 dek Exp $ 
  *
  */
 public class TransferMain extends G2guiTab  {
 	private boolean active;
 	private CoreCommunication mldonkey;
 	/**
-	 * @param gui
+	 * @param gui where this tab belongs to
 	 */
 	public TransferMain( Gui gui ) {
 		super( gui );
@@ -59,7 +59,7 @@ public class TransferMain extends G2guiTab  {
 	protected void createContents( Composite parent ) {
 		SashForm main = new SashForm( parent, SWT.VERTICAL );
 		Composite download = new Composite( main, SWT.BORDER );
-			download.setLayout(new FillLayout());
+			download.setLayout( new FillLayout() );
 		Composite upload = new Composite( main, SWT.BORDER );
 		new DownloadTable( download, mldonkey, this );
 	}
@@ -68,6 +68,9 @@ public class TransferMain extends G2guiTab  {
 
 /*
 $Log: TransferMain.java,v $
+Revision 1.3  2003/07/15 18:14:47  dek
+Wow, nice piece of work already done, it works, looks nice, but still lots of things to do
+
 Revision 1.2  2003/07/14 19:26:40  dek
 done some clean.up work, since it seems,as if this view becomes reality..
 
