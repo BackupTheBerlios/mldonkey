@@ -26,9 +26,9 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
+import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
-import net.mldonkey.g2gui.view.viewers.actions.CTabFolderColumnSelectorAction;
-import net.mldonkey.g2gui.view.viewers.table.GTableView;
+import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -40,7 +40,7 @@ import org.eclipse.swt.custom.CTabItem;
 /**
  * SearchPaneListener
  *
- * @version $Id: ResultPaneListener.java,v 1.5 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ResultPaneListener.java,v 1.6 2003/11/08 18:25:54 zet Exp $
  *
  */
 public class ResultPaneListener extends GPaneListener {
@@ -65,8 +65,8 @@ public class ResultPaneListener extends GPaneListener {
                 CTabItem[] cTabItems = cTabFolder.getItems();
 
                 for (int i = 0; i < cTabItems.length; i++) {
-                    if (cTabItems[ i ].getData("gTableViewer") != null) {
-                        menuManager.add(new CTabFolderColumnSelectorAction(cTabFolder));
+                    if (cTabItems[ i ].getData("gView") != null) {
+                        menuManager.add(new ColumnSelectorAction(cTabFolder));
 
                         break;
                     }
@@ -74,8 +74,8 @@ public class ResultPaneListener extends GPaneListener {
             }
 
             // filters available if currentTab has a table
-            if (cTabFolder.getSelection() != null && cTabFolder.getSelection().getData("gTableViewer") != null) {
-                gView = (GTableView) cTabFolder.getSelection().getData("gTableViewer");
+            if (cTabFolder.getSelection() != null && cTabFolder.getSelection().getData("gView") != null) {
+                gView = (GView) cTabFolder.getSelection().getData("gView");
 
                 // filter submenu			
                 MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
@@ -97,6 +97,9 @@ public class ResultPaneListener extends GPaneListener {
 
 /*
 $Log: ResultPaneListener.java,v $
+Revision 1.6  2003/11/08 18:25:54  zet
+use GView instead of GTableViewer
+
 Revision 1.5  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

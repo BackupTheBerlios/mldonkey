@@ -28,29 +28,70 @@ import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.action.Action;
 
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * ColumnSelectorAction
  *
- * @version $Id: ColumnSelectorAction.java,v 1.5 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ColumnSelectorAction.java,v 1.6 2003/11/08 18:26:02 zet Exp $
  *
  */
 public class ColumnSelectorAction extends Action {
-    private GView gViewer;
+    private List gViewList;
 
-    public ColumnSelectorAction(GView gViewer) {
+    private ColumnSelectorAction() {
         super(G2GuiResources.getString("TT_ColumnSelector"));
         setImageDescriptor(G2GuiResources.getImageDescriptor("table"));
-        this.gViewer = gViewer;
+        gViewList = new ArrayList();
     }
 
-    public void run() {
-        ColumnSelector cSelector = new ColumnSelector(gViewer.getShell(),
-                gViewer.getColumnLabels(), gViewer.getAllColumnIDs(), gViewer.getPreferenceString());
+    /**
+     * @param gView
+     */
+    public ColumnSelectorAction(GView gView) {
+        this();
+        gViewList.add(gView);
+    }
 
-        if (cSelector.open() == ColumnSelector.OK) {
-            cSelector.savePrefs();
-            gViewer.resetColumns();
+    /**
+     * @param cTabFolder
+     */
+    public ColumnSelectorAction(CTabFolder cTabFolder) {
+        this();
+
+        for (int i = 0; i < cTabFolder.getItems().length; i++) {
+            CTabItem cTabItem = cTabFolder.getItems()[ i ];
+
+            if (cTabItem.getData("gView") != null) {
+                gViewList.add((GView) cTabItem.getData("gView"));
+            }
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.IAction#run()
+     */
+    public void run() {
+        if (gViewList.size() == 0) {
+            return;
+        }
+
+        GView gView = (GView) gViewList.get(0);
+
+        ColumnSelector c = new ColumnSelector(gView.getShell(), gView.getColumnLabels(),
+                gView.getAllColumnIDs(), gView.getPreferenceString());
+
+        if (c.open() == ColumnSelector.OK) {
+            c.savePrefs();
+
+            for (int i = 0; i < gViewList.size(); i++) {
+                ((GView) gViewList.get(i)).resetColumns();
+            }
         }
     }
 }
@@ -58,6 +99,9 @@ public class ColumnSelectorAction extends Action {
 
 /*
 $Log: ColumnSelectorAction.java,v $
+Revision 1.6  2003/11/08 18:26:02  zet
+use GView instead of GTableViewer
+
 Revision 1.5  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

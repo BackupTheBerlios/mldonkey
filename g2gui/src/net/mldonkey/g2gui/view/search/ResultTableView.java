@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableView.java,v 1.2 2003/11/06 20:02:39 lemmster Exp $
+ * @version $Id: ResultTableView.java,v 1.3 2003/11/08 18:25:54 zet Exp $
  *
  */
 public class ResultTableView extends GTableView {
@@ -74,7 +74,7 @@ public class ResultTableView extends GTableView {
         super(parent, aCore);
         this.cTabItem = aCTabItem;
         this.aMouseListener = aMouseListener;
-        this.cTabItem.setData("gTableViewer", this);
+        this.cTabItem.setData("gView", this);
         
         preferenceString = "result";
         columnLabels = new String[] { "SR_NETWORK", "SR_NAME", "SR_SIZE", "SR_FORMAT", "SR_MEDIA", "SR_AVAIL" };
@@ -324,6 +324,9 @@ public class ResultTableView extends GTableView {
 
 /*
 $Log: ResultTableView.java,v $
+Revision 1.3  2003/11/08 18:25:54  zet
+use GView instead of GTableViewer
+
 Revision 1.2  2003/11/06 20:02:39  lemmster
 move WordFilter
 fix AllFilterAction
