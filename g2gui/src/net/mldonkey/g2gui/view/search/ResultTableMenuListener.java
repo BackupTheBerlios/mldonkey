@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ResultTableMenuListener
  *
  * @author $Author: lemmster $
- * @version $Id: ResultTableMenuListener.java,v 1.1 2003/08/20 10:05:46 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.2 2003/08/22 19:29:16 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -196,10 +196,13 @@ Yet			menuManager.add( webManager );
 	public boolean isFiltered( NetworkInfo.Enum networkType ) {
 		ViewerFilter[] viewerFilters = tableViewer.getFilters();
 		for ( int i = 0; i < viewerFilters.length; i++ ) {
-			if ( viewerFilters [ i ] instanceof NetworkFilter )
-				if ( ( ( NetworkFilter ) viewerFilters[ i ] ).getNetworkType().equals( networkType ) )
-					return true; 
-	
+			if ( viewerFilters [ i ] instanceof NetworkFilter ) {
+				NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
+				for ( int j = 0; j < filter.getNetworkType().size(); j++ ) {
+					if ( filter.getNetworkType().get( j ).equals( networkType ) )
+						return true;					
+				}
+			}
 		}
 		return false;
 	}
@@ -352,28 +355,55 @@ Yet			menuManager.add( webManager );
 			if ( !isChecked() ) {
 				ViewerFilter[] viewerFilters = tableViewer.getFilters();
 				for ( int i = 0; i < viewerFilters.length; i++ ) {
-					if ( viewerFilters[i] instanceof NetworkFilter )
-						if ( ( ( NetworkFilter ) viewerFilters[ i ] ).getNetworkType() == networkType ) {
-							toggleFilter( viewerFilters[ i ], false );
-						}
+					if ( viewerFilters[i] instanceof NetworkFilter ) {
+						NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
+						for ( int j = 0; j < filter.getNetworkType().size(); j++ ) {
+							if ( filter.getNetworkType().get( j ) == networkType )
+								if ( filter.getNetworkType().size() == 1 )
+									toggleFilter( viewerFilters[ i ], false );
+								else {
+									filter.remove( networkType );
+									tableViewer.refresh();
+								}									
+						}	
+					}
 				}
 			}
 			else {
-				toggleFilter( new NetworkFilter( networkType ), true );
+				ViewerFilter[] viewerFilters = tableViewer.getFilters();
+				for ( int i = 0; i < viewerFilters.length; i++ ) {
+					if ( viewerFilters[i] instanceof NetworkFilter ) {
+						NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
+						filter.add( networkType );
+						tableViewer.refresh();
+						return;
+					}
+				}
+				NetworkFilter filter = new NetworkFilter();
+				filter.add( networkType );
+				toggleFilter( filter, true );
 			}
 		}
 	}
 
 	public static class NetworkFilter extends ViewerFilter {
-		private NetworkInfo.Enum networkType;
-			
-		public NetworkFilter( NetworkInfo.Enum enum ) {
-			this.networkType = enum;	
+		private List networkType;
+		
+		public NetworkFilter() {
+			this.networkType = new ArrayList();	
 		}	
-			
-		public NetworkInfo.Enum getNetworkType () {
+		
+		public List getNetworkType () {
 			return networkType;
 		}
+		
+		public boolean add( NetworkInfo.Enum enum ) {
+			return this.networkType.add( enum );
+		}
+		
+		public boolean remove( NetworkInfo.Enum enum ) {
+			return this.networkType.remove( enum );
+		}		 
 	
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.viewers.ViewerFilter#
@@ -381,19 +411,24 @@ Yet			menuManager.add( webManager );
 		 */
 		public boolean select( Viewer viewer, Object parentElement, Object element ) {
 			if ( element instanceof ResultInfo ) {
-				ResultInfo server = ( ResultInfo ) element;
-				if ( server.getNetwork().getNetworkType() == networkType )
-					return true;
-				else 
-					return false;
+				ResultInfo result = ( ResultInfo ) element;
+				for ( int i = 0; i < this.networkType.size(); i++ ) {
+					if ( result.getNetwork().getNetworkType() == networkType.get( i ) )
+						return true;
+				}	
+				return false;
 			}
 			return true;
+
 		}
 	}
 }
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.2  2003/08/22 19:29:16  lemmster
+additiv filters
+
 Revision 1.1  2003/08/20 10:05:46  lemmster
 MenuListener added
 
