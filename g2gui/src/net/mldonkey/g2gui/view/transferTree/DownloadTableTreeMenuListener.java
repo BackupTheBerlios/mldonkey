@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTableTreeMenuListener
  *
  * @author $Author: zet $
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.22 2003/08/24 16:37:04 zet Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.23 2003/08/24 18:19:02 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -392,14 +392,17 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		
 	}	
 	class PauseAction extends Action {
-			public PauseAction() {
-				super();
-				setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_PAUSE"));
-			}
-			public void run() {
-				for (int i = 0; i < selectedFiles.size(); i++)	
-					((FileInfo) selectedFiles.get(i)).setState(EnumFileState.PAUSED);
-			}
+		public PauseAction() {
+			super();
+			setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_PAUSE"));
+		}
+		public void run() {
+			 for (int i = 0; i < selectedFiles.size(); i++) {
+				  FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
+				  if (fileInfo.getState().getState() == EnumFileState.DOWNLOADING)
+					   fileInfo.setState(EnumFileState.PAUSED);
+			 }
+		}
 	}
 	
 		
@@ -412,9 +415,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			for (int i = 0; i < selectedFiles.size(); i++) {
 				FileInfo selectedFileInfo = (FileInfo) selectedFiles.get(i);
 				if (selectedFileInfo.getState().getState() == EnumFileState.DOWNLOADED)
-					selectedFileInfo.saveFileAs( selectedFileInfo.getName() );
+				selectedFileInfo.saveFileAs( selectedFileInfo.getName() );
 			}
-		
 		}
 	}
 
@@ -424,9 +426,11 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_RESUME"));
 		}
 		public void run() {
-			for (int i = 0; i < selectedFiles.size(); i++)	
-				((FileInfo) selectedFiles.get(i)).setState(EnumFileState.DOWNLOADING);
-			
+			 for (int i = 0; i < selectedFiles.size(); i++) {
+				FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
+				if (fileInfo.getState().getState() == EnumFileState.PAUSED)
+					fileInfo.setState(EnumFileState.DOWNLOADING);
+			 }
 		}
 	}
 	
@@ -444,11 +448,12 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			reallyCancel.setMessage( G2GuiResources.getString( "TT_REALLY_CANCEL" ) + " (" + selectedFiles.size() + ")" );
 			int answer = reallyCancel.open();
 			if ( answer == SWT.YES ) {
-				for (int i = 0; i < selectedFiles.size(); i++)	
-					((FileInfo) selectedFiles.get(i)).setState(EnumFileState.CANCELLED);
-				
+				for (int i = 0; i < selectedFiles.size(); i++) {
+	 			FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
+	 			if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
+		  			fileInfo.setState(EnumFileState.CANCELLED);
+	 			}
 			}
-				
 		}
 	}
 	
@@ -789,6 +794,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.23  2003/08/24 18:19:02  zet
+still fixing...
+
 Revision 1.22  2003/08/24 16:37:04  zet
 combine the preference stores
 
