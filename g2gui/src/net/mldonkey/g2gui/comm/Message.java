@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.5 2003/06/11 23:25:49 dek Exp $ 
+ * @version $Id: Message.java,v 1.6 2003/06/12 10:40:06 dek Exp $ 
  *
  */
 public abstract class Message {
@@ -97,12 +97,23 @@ public abstract class Message {
 	public static final short R_DOWNLOADED_LIST = 54;
 
 	/**
-	 * Reads a byte from an InputStream
+	 * Reads a Byte from an InputStream
 	 * @param inputStream Stream to read the byte from
 	 * @return	short
 	 * @throws IOException Error if read on inputStream failed
 	 */
-	public static short readByte( InputStream inputStream ) throws IOException {
+	public static byte readByte( InputStream inputStream ) throws IOException {
+		byte result = ( byte ) inputStream.read();		
+		return result;
+	}
+
+	/**
+	 * Reads a Int8 from an InputStream
+	 * @param inputStream Stream to read the byte from
+	 * @return	short
+	 * @throws IOException Error if read on inputStream failed
+	 */
+	public static short readInt8( InputStream inputStream ) throws IOException {
 		short result = ( short ) inputStream.read();
 		if ( result < 0 ) {
 			result += 256;
@@ -116,7 +127,7 @@ public abstract class Message {
 	 * @throws IOException Error if read on inputStream failed
 	 */
 	public static short readInt16( InputStream inputStream ) throws IOException {
-		return ( short ) ( readByte( inputStream ) + 256 * readByte( inputStream ) );
+		return ( short ) ( readInt8( inputStream ) + 256 * readInt8( inputStream ) );
 	}
 	/**
 	 * Reads an int32 from an InputStream
@@ -125,10 +136,10 @@ public abstract class Message {
 	 * @throws IOException Error if read on inputStream failed
 	 */
 	public static int readInt32( InputStream inputStream ) throws IOException {
-		return  ( readByte( inputStream ) + 256
-			  * ( readByte( inputStream ) + 256
-			  * ( readByte( inputStream ) + 256
-			  * ( readByte( inputStream ) ) ) ) );
+		return  ( readInt8( inputStream ) + 256
+			  * ( readInt8( inputStream ) + 256
+			  * ( readInt8( inputStream ) + 256
+			  * ( readInt8( inputStream ) ) ) ) );
 	}
 	/**
 	 * Reads a long from an InputStream
@@ -137,14 +148,14 @@ public abstract class Message {
 	 * @throws IOException Error if read on inputStream failed
 	 */
 	public static long readInt64( InputStream inputStream ) throws IOException {
-		return    ( readByte( inputStream ) + 256
-				* ( readByte( inputStream ) + 256 
-				* ( readByte( inputStream ) + 256 
-				* ( readByte( inputStream ) + 256 
-				* ( readByte( inputStream ) + 256 
-				* ( readByte( inputStream ) + 256
-				* ( readByte( inputStream ) + 256
-				* ( readByte( inputStream ) ) ) ) ) ) ) ) );		
+		return    ( readInt8( inputStream ) + 256
+				* ( readInt8( inputStream ) + 256 
+				* ( readInt8( inputStream ) + 256 
+				* ( readInt8( inputStream ) + 256 
+				* ( readInt8( inputStream ) + 256 
+				* ( readInt8( inputStream ) + 256
+				* ( readInt8( inputStream ) + 256
+				* ( readInt8( inputStream ) ) ) ) ) ) ) ) );		
 	}
 	/**
 	 * Reads a String from an InputStream
@@ -322,6 +333,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.6  2003/06/12 10:40:06  dek
+readByte() --> readInt8 | readByte returns now: byte
+
 Revision 1.5  2003/06/11 23:25:49  dek
 fixed readInt32 /readInt64
 
