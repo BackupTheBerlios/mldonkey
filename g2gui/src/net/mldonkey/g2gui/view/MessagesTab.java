@@ -26,8 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Observable;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
@@ -69,16 +67,16 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.17 2003/08/28 23:00:07 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.18 2003/08/29 00:55:02 zet Exp $
  */
-public class MessagesTab extends GuiTab {
+public class MessagesTab extends GuiTab implements Runnable {
 
 	private CoreCommunication core;
 	private CTabFolder cTabFolder;
 	private Hashtable openTabs = new Hashtable();
 	private CustomTableViewer tableViewer;
 	private long lastTime = 0;
-	private boolean mustRefresh;
+	private int mustRefresh = 0;
 	/**
 	 * @param gui
 	 */
@@ -256,42 +254,25 @@ public class MessagesTab extends GuiTab {
 		if (arg1 instanceof ClientMessage) {
 			messageFromClient((ClientMessage) arg1);
 		} else if (arg0 instanceof ClientInfoIntMap) {
+			mustRefresh++;
 			if (System.currentTimeMillis() > lastTime + 2000) {
-				tableViewer.refresh();
-				setRightLabel();
-				lastTime = System.currentTimeMillis();
-				mustRefresh = false;
+				this.run();
 			} else {
-				if (!mustRefresh) {
-				mustRefresh = true;
-				
-				Timer refreshTimer = new Timer();
-				refreshTimer.schedule( new TimerTask() {
-						public void run () {
-							Shell shell = mainWindow.getShell();
-							if(!shell.isDisposed() && shell !=null && shell.getDisplay()!=null) {
-								shell.getDisplay().asyncExec(new Runnable() {
-									public void run() {
-										runTimerUpdate();
-									}
-								});
-								
-							}
-						}
-					}, 2000);
+				if (mustRefresh == 1) {
+					cTabFolder.getDisplay().timerExec(2500, this);
 				}
 			}
 		}
 	}
 	
-	public void runTimerUpdate() {
-		if (mustRefresh && !mainWindow.getShell().isDisposed()) {
+	public void run() {
+		if (!cTabFolder.isDisposed()) {
+			lastTime = System.currentTimeMillis();
 			tableViewer.refresh();
 			setRightLabel();
-			mustRefresh = false;
+			mustRefresh=0;
 		}
 	}
-	
 	
 	/**
 	 * 
@@ -443,6 +424,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.18  2003/08/29 00:55:02  zet
+change timer
+
 Revision 1.17  2003/08/28 23:00:07  zet
 remove unused
 
