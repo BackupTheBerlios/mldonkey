@@ -48,8 +48,8 @@ import org.eclipse.swt.widgets.Text;
  * 
  * ClientDetailDialog
  *
- * @author $Author: lemmster $
- * @version $Id: ClientDetailDialog.java,v 1.8 2003/08/22 21:22:58 lemmster Exp $ 
+ * @author $Author: vaste $
+ * @version $Id: ClientDetailDialog.java,v 1.9 2003/08/22 22:54:04 vaste Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -145,6 +145,8 @@ public class ClientDetailDialog implements Observer {
 		GridData canvasGD2 = new GridData(GridData.FILL_HORIZONTAL);
 		canvasGD2.heightHint = 28;
 		chunkCanvas2.setLayoutData(canvasGD2);
+		
+		// TODO (by vaste) add close button (lower right corner?)
 
 		updateLabels();
 		fileInfo.addObserver(this);
@@ -252,7 +254,13 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.9  2003/08/22 22:54:04  vaste
+new todo (close button)
+
 Revision 1.8  2003/08/22 21:22:58  lemmster
-fix $Log$
+fix $Log: ClientDetailDialog.java,v $
+fix Revision 1.9  2003/08/22 22:54:04  vaste
+fix new todo (close button)
+fix
 
 */
