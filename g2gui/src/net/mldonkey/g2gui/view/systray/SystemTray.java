@@ -39,6 +39,8 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 	private float[] uploadrate = new float[5];
 	private float[] downloadrate = new float[5];
 	private int counter=0;
+	/** holds the status if the native library is loaded */
+	private boolean libLoaded=false;
 
 	/**
 	 * SystemTrayIconListener implementation
@@ -110,9 +112,21 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
+		// try to load the library
+		try {
+			System.loadLibrary("DesktopIndicator");
+		} catch (UnsatisfiedLinkError e) {
+			// thrown when the library is not found or can't be loaded
+			libLoaded=false;
+			return;
+		} catch (SecurityException e) {
+			// thrown because of security reasons, check policies
+			libLoaded=false;
+			return;
+		}
+		// the lib is loaded an ready to use
+		libLoaded=true;
 		parent.getCore().getClientStats().addObserver(this);
-		
-		System.loadLibrary("DesktopIndicator");
 		System.out.println(getClass().getName() + "g2gui.ico");
 		icon = SystemTrayIconManager.loadImage("g2gui.ico");
 		if (icon == -1) {
@@ -143,7 +157,6 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 
 			public void widgetDisposed(DisposeEvent e) {
 				systemTrayManager.finalize();
-
 			}
 		});
 
@@ -155,7 +168,12 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 		return parent;
 	}
 	
-	public void update( Observable arg0, Object receivedInfo ) {		
+	public void update( Observable arg0, Object receivedInfo ) {
+		// check if the library was loaded
+		if (!libLoaded) {
+			// no, so there is nothing what we can update
+			return;
+		}
 		ClientStats clientInfo = ( ClientStats ) receivedInfo;
 		Shell shell = parent.getShell();
 		
