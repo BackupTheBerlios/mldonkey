@@ -22,36 +22,33 @@
  */
 package net.mldonkey.g2gui.view.transfer.clientTable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.viewers.GTableMenuListener;
+import net.mldonkey.g2gui.view.viewers.actions.AddClientAsFriendAction;
+import net.mldonkey.g2gui.view.viewers.actions.ClientDetailAction;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 
 /**
  * ClientTableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.7 2003/10/23 01:23:06 zet Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.8 2003/10/24 21:26:38 zet Exp $
  *
  */
 public class ClientTableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
-    private ClientTableContentProvider tableContentProvider;
     private CoreCommunication core;
-    private ClientInfo selectedClientInfo;
     private List selectedClients = new ArrayList();
 
     /**
@@ -68,7 +65,6 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
     public void initialize() {
         super.initialize();
         this.core = gTableViewer.getCore();
-        this.tableContentProvider = (ClientTableContentProvider) gTableViewer.getContentProvider();
     }
 
     /* (non-Javadoc)
@@ -76,9 +72,8 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
      */
     public void selectionChanged(SelectionChangedEvent event) {
         IStructuredSelection sSel = (IStructuredSelection) event.getSelection();
-        Object o = sSel.getFirstElement();
+        Object o;
 
-        selectedClientInfo = (o instanceof ClientInfo) ? (ClientInfo) o : null;
         selectedClients.clear();
 
         for (Iterator it = sSel.iterator(); it.hasNext();) {
@@ -94,40 +89,15 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
     public void menuAboutToShow(IMenuManager menuManager) {
-        if (selectedClientInfo != null) {
-            menuManager.add(new AddFriendAction());
-            menuManager.add(new ClientDetailAction());
-        }
-    }
+        if (selectedClients.size() > 0) {
+            ClientInfo[] clientInfoArray = new ClientInfo[ selectedClients.size() ];
 
-    /**
-     * AddFriendAction
-     */
-    private class AddFriendAction extends Action {
-        public AddFriendAction() {
-            super(G2GuiResources.getString("TT_DOWNLOAD_MENU_ADD_FRIEND"));
-            setImageDescriptor(G2GuiResources.getImageDescriptor("MessagesButtonSmallTrans"));
-        }
-
-        public void run() {
             for (int i = 0; i < selectedClients.size(); i++) {
-                ClientInfo selectedClientInfo = (ClientInfo) selectedClients.get(i);
-                ClientInfo.addFriend(core, selectedClientInfo.getClientid());
+                clientInfoArray[ i ] = (ClientInfo) selectedClients.get(i);
             }
-        }
-    }
 
-    /**
-     * ClientDetailAction
-     */
-    class ClientDetailAction extends Action {
-        public ClientDetailAction() {
-            super(G2GuiResources.getString("TT_DOWNLOAD_MENU_CLIENT_DETAILS"));
-            setImageDescriptor(G2GuiResources.getImageDescriptor("info"));
-        }
-
-        public void run() {
-            new ClientDetailDialog((FileInfo) tableViewer.getInput(), selectedClientInfo, core);
+            menuManager.add(new AddClientAsFriendAction(core, clientInfoArray));
+            menuManager.add(new ClientDetailAction((FileInfo) tableViewer.getInput(), (ClientInfo) selectedClients.get(0), core));
         }
     }
 }
@@ -135,6 +105,9 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.8  2003/10/24 21:26:38  zet
+common actions
+
 Revision 1.7  2003/10/23 01:23:06  zet
 remove println debug
 
