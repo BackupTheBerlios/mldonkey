@@ -130,7 +130,7 @@ public class GraphPainter {
 			
 		// just for temporary fun; this might overflow pretty quickly
 						
-		drawBoardBuffer.setForeground(graph.getGraphColor1());
+		drawBoardBuffer.setForeground(new Color(null, 250, 250, 250));
 		drawBoardBuffer.drawText(graph.getName() + 
 		 " avg: " + ((double)graph.getAvg()/100) + " kb/s," +
 		 " max: " + ((double)graph.getMax()/100) + " kb/s",
@@ -168,6 +168,9 @@ public class GraphPainter {
 }
 /*
 $Log: GraphPainter.java,v $
+Revision 1.20  2003/07/26 21:49:59  zet
+white text
+
 Revision 1.19  2003/07/26 17:54:14  zet
 fix pref's illegal setParent, redo graphs, other
 
