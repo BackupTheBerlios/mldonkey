@@ -1,6 +1,9 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
+PACKAGE=g2gui
+VERSION=0.1.1
+
 AC_PREREQ(2.57)
 AC_INIT(FULL-PACKAGE-NAME, VERSION, BUG-REPORT-ADDRESS)
 AC_ARG_ENABLE(batch,
@@ -13,6 +16,18 @@ AC_ARG_ENABLE(batch,
 			   fi
 			], 
 			ac_cv_enable_batch=no)
+src_dir=src
+jar_dir=jars
+obj_dir=obj
+resources_dir=resources
+swt_dir=swt
+
+AC_SUBST(JAR_DIR,[$jar_dir])
+AC_SUBST(SRC_DIR,[$src_dir])
+AC_SUBST(OBJ_DIR,[$obj_dir])
+AC_SUBST(RES_DIR,[$resources_dir])
+AC_SUBST(SWT_DIR,[$swt_dir])
+
 
 # Checks for programs.
 
@@ -79,9 +94,13 @@ if test $ac_system_type = Linux; then
 	SWT_FILE_PRESENT([libswt-gtk-2135.so])
 	SWT_FILE_PRESENT([libswt-pi-gtk-2135.so])
 else
-	AC_MSG_WARN([TODO: add chekcs for win32 and !=Linux])
+	AC_MSG_WARN([TODO: add checks for win32 and !=Linux])
 fi
 
+
+# now creating Makefile-vars
+
+AC_SUBST(CLASSPATH,[`$ac_cv_path_FIND $jar_dir $swt_dir -name "*.jar" -printf "%p "`$src_dir/:. ])
 
 
 # Checks for header files.

@@ -1,48 +1,30 @@
-###############################################################################
-#
-# ./  gtk:  libswt-gtk-2135.so libswt-pi-gtk-2135.so
-#     win:  swt-win32-2135.dll g2gui.ico g2gui.rc
-#
-# SWT_DIR/  gtk: swt-pi.jar swt.jar 
-#           win: swt.jar libswt.a SWTMessages.o
-#
-# JAR_DIR/  boot.jar g2gui.jar jface.jar regexp.jar rss4j.jar
-#           runtime.jar trove.jar xercesImpl.jar xmlParserAPIs.jar 
-# 				
-# RES_DIR/  g2gui.properties   gnu/*  net/*  org/*
-#	
-# (prop&image files: http://download.berlios.de/pub/mldonkey/z/resources.zip)
-# 
-# n.b: zip -d xmlParserAPIs.jar org/w3c/dom/html/HTMLDOMImplementation.class
-#
-# regexp.jar is from: gnu.regexp-1.1.4/lib/gnu-regexp-1.1.4.jar
-# trove.jar is from: trove-1.0.2/lib/trove.jar
-# rss4j.jar is from: rss4j092.jar/lib/rss4j.jar (www.churchillobjects.com)
-# gcc-3.3.1/gcj/libgcj 3.3.1 was used.
-#
-########################################################################[ z ]##
-
 GCJ=@GCJ@
+FIND=@FIND@
 
-RES_DIR=resources
-JAR_DIR=jars
-SWT_DIR=swt
-OBJ_DIR=obj
-SRC_DIR=src
+JAR_DIR=@JAR_DIR@
+SRC_DIR=@SRC_DIR@
+OBJ_DIR=@OBJ_DIR@
+RES_DIR=@RES_DIR@
+SWT_DIR=@SWT_DIR@
 
 GCJ_ARGS=-c -w -O2
 SWT_ARGS=-fjni
 
-MAINCLASS=net.mldonkey.g2gui.view.G2Gui
+INSTALLPREFIX=@prefix@/g2gui
+
 PROPERTIES=$(SRC_DIR)/g2gui.properties
-CLASSPATH:=$(wildcard $(JAR_DIR)/*.jar $(SWT_DIR)/*.jar)
+
+G2GUI_CLASSPATH:=@CLASSPATH@
+
+MAINCLASS=net.mldonkey.g2gui.view.G2Gui
 
 UNAME=$(word 1, $(shell uname -a))
+
 ifeq ($(UNAME),Linux)
 	SYSTYPE=gtk
 	PROGRAM=g2gui
 	LINK_ARGS= -s -static-libgcc -Wl,-rpath,.
-	CLASSPATH:=$(subst .jar ,.jar:,$(CLASSPATH)):$(SRC_DIR)/
+	G2GUI_CLASSPATH:=$(subst .jar ,.jar:,$(G2GUI_CLASSPATH))
 else
 	SYSTYPE=win
 	PROGRAM=g2gui.exe
@@ -50,68 +32,61 @@ else
 	-Dgnu.gcj.runtime.NameFinder.demangle=false \
 	-Dgnu.gcj.runtime.NameFinder.use_addr2line=false
 	LIBGCJ=$(SWT_DIR)/libswt.a
-	CLASSPATH:=$(subst .jar ,.jar\;,$(CLASSPATH))
+	G2GUI_CLASSPATH:=$(subst .jar ,.jar\;,$(G2GUI_CLASSPATH))
 endif
-
-SRC_FILES = $(notdir $(shell @FIND@ $(SRC_DIR) -type f -name \*.java ))
-TEMP = $(shell cp $(SRC_DIR)/net/mldonkey/g2gui/view/images/*.* $(RES_DIR)/net/mldonkey/g2gui/view/images/ )
 
 JAROBJECTS = $(subst .jar,.o, $(notdir $(wildcard $(JAR_DIR)/*.jar)))
 SWTOBJECTS = $(subst .jar,.o, $(notdir $(wildcard $(SWT_DIR)/*.jar)))
-RESOBJECTS = $(notdir $(shell @FIND@ $(RES_DIR) -type f -name \* -printf "%p.o "))
-SRCOBJECTS = $(shell @FIND@ $(SRC_DIR) -type f -name "*.java" -printf "%p.o ")
-RES_DIRS = $(shell @FIND@ $(RES_DIR) -type d)
+
+#G2GUI_RESOBJECTS =@G2GUI_RESOBJECTS@ 
+#SWT_RESOBJECTS =@SWT_RESOBJECTS@ 
 
 
+G2GUI_RESOBJECTS=$(subst /,.,$(shell $(FIND) $(SRC_DIR) -type f  ! -name "*.java" -printf "%p.o "))
+OTHER_RESOBJECTS=$(subst /,.,$(shell $(FIND) $(RES_DIR) -type f  ! -name "*.java" -printf "%p.o "))
 
-vpath %.jar $(JAR_DIR) $(SWT_DIR)
-vpath %.o $(OBJ_DIR)
-vpath % $(RES_DIRS)
+SRCOBJECTS = $(subst /,.,$(shell $(FIND) $(SRC_DIR) -type f  -name "*.java" -printf "%p.o "))
 
-.SUFFIXES:  
+#vpath %.jar $(JAR_DIR) $(SWT_DIR)
+#vpath %.java $(shell $(FIND) $(SRC_DIR) -type d)
+#vpath %.o $(OBJ_DIR)
+#vpath % $(shell $(FIND) -type d)
 
-all : mkobjdir build_timestamp $(RESOBJECTS) $(SWTOBJECTS) $(JAROBJECTS) $(SRCOBJECTS) link
+vpath % $(shell $(FIND) $(JAR_DIR) $(SWT_DIR) $(SRC_DIR) $(OBJ_DIR) $(RES_DIR) -type d)
+
+define file_path
+$(subst .,/,$(basename $*))$(suffix $*)
+endef
+
+#.SUFFIXES:
+
+all : mkobjdir $(G2GUI_RESOBJECTS) $(OTHER_RESOBJECTS) $(SWTOBJECTS) $(JAROBJECTS) $(SRCOBJECTS) link
 	@echo --- DONE ---
 
-$(SWTOBJECTS) : %.o : %.jar 
-ifeq ($(SYSTYPE),gtk)
-	$(GCJ) --CLASSPATH=$(CLASSPATH) $(SWT_ARGS) $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $< 
-else
-	cp $(SWT_DIR)/SWTMessages.o $(OBJ_DIR)/SWTMessages.o
-	windres -o $(OBJ_DIR)/icon.o g2gui.rc
-endif
 
-$(JAROBJECTS) : %.o : %.jar 
-	$(GCJ) --CLASSPATH=$(CLASSPATH) $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $< 
-
-$(RESOBJECTS) : %.o : %
-	$(GCJ) --resource $(subst $(RES_DIR)/,,$<) -o $(OBJ_DIR)/$@ -c $< 
-
-$(SRCOBJECTS) : %.o  : %
+$(SWTOBJECTS) : %.o : %.jar
+	 $(GCJ) --CLASSPATH=$(G2GUI_CLASSPATH) $(SWT_ARGS) $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $<			
 	
-	$(GCJ) --CLASSPATH=$(CLASSPATH) $(GCJ_ARGS) -o $(OBJ_DIR)/$(subst /,.,$@) $<
-	
-build_timestamp :
-	@echo Updating build timestamp ...; \
-	cp $(SRC_DIR)/net/mldonkey/g2gui/view/images/*.* $(RES_DIR)/net/mldonkey/g2gui/view/images/; \
-	sed "s/.*BUILD_INFORMATION.*$$/BUILD_INFORMATION\ \= \(build: `date -u +'%F %R'`\)/g" $(PROPERTIES) > $(PROPERTIES).tmp ; \
-	mv $(PROPERTIES).tmp $(PROPERTIES)
+$(JAROBJECTS) : %.o : %.jar
+	$(GCJ) --CLASSPATH=$(G2GUI_CLASSPATH) $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $<
+
+
+$(G2GUI_RESOBJECTS) : %.o : $(subst .,/,$<)
+	$(GCJ) $(GCJ_ARGS) --resource $(subst $(SRC_DIR)/,,$(file_path)) -o $(OBJ_DIR)/$@ $(file_path)
+
+$(OTHER_RESOBJECTS) :%.o : $(subst .,/,$<)
+	$(GCJ) $(GCJ_ARGS) --resource $(subst $(RES_DIR)/,,$(file_path)) -o $(OBJ_DIR)/$@ $(file_path)
+		
+$(SRCOBJECTS) : %.o : $(subst .,/,$<)
+	$(GCJ) --CLASSPATH=$(G2GUI_CLASSPATH) $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $(file_path)
+		
 
 link :
-	$(GCJ) --main=$(MAINCLASS) $(LINK_ARGS) -o $(PROGRAM) $(OBJ_DIR)/*.o $(LIBGCJ)
+	$(GCJ) --main=$(MAINCLASS) $(LINK_ARGS) -o $(PROGRAM) $(OBJ_DIR)/*.o $(LIBSWT)
+	cp $(SWT_DIR)/libswt* .
 
-archive : 
-ifeq ($(SYSTYPE),gtk)
-	zip -9 -pr g2gui-$(SYSTYPE)-`date -u +"%Y%m%d"`.zip $(PROGRAM) libswt*.so distrib/*
-else
-	upx --best $(PROGRAM)
-	zip -9 -pr g2gui-$(SYSTYPE)-`date -u +"%Y%m%d"`.zip $(PROGRAM) swt*.dll distrib/*
-endif
-
-mkobjdir : 
+mkobjdir :
 	@if [ ! -d $(OBJ_DIR) ]; then  \
-  	mkdir $(OBJ_DIR) ;\
+	mkdir $(OBJ_DIR) ;\
 	fi
 
-clean :
-	-rm -rf $(OBJ_DIR) $(PROGRAM)
