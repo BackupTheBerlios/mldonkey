@@ -25,11 +25,10 @@ package net.mldonkey.g2gui.model;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
+import java.util.WeakHashMap;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -45,10 +44,16 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.47 2003/09/10 14:46:19 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.48 2003/09/13 22:22:59 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
+	
+	/**
+	 * Decimal format for calcStringSize
+	 */
+	private static DecimalFormat df = new DecimalFormat( "0.#" );
+	
 	/**
 	 * File identifier
 	 */
@@ -99,7 +104,6 @@ public class FileInfo extends Parent implements Observer {
 	 * Download rate
 	 */
 	private float rate;
-	private float rawRate;
 	/**
 	 * File name
 	 */
@@ -135,9 +139,9 @@ public class FileInfo extends Parent implements Observer {
 	 */
 	private double perc;
 	/**
-	 * Which clients this file have
+	 * A weak keyset of clients associated with this file
 	 */
-	private Set clientInfos = Collections.synchronizedSet( new HashSet() );
+	private Map clientInfos = Collections.synchronizedMap( new WeakHashMap() );
 
 	private String stringSize="";
 	private String stringDownloaded="";
@@ -238,7 +242,9 @@ public class FileInfo extends Parent implements Observer {
 	public Enum getPriority() {
 		return priority;
 	}
-	
+	/**
+	 * @return Priority as a string
+	 */
 	public String getStringPriority() {
 		if (priority == EnumPriority.HIGH)
 			return G2GuiResources.getString("TT_PRIO_High");
@@ -255,9 +261,6 @@ public class FileInfo extends Parent implements Observer {
 	 */
 	public float getRate() {
 		return rate;
-	}
-	public float getRawRate() {
-		return rawRate;
 	}
 	/**
 	 * @return The overall size of this file
@@ -299,7 +302,7 @@ public class FileInfo extends Parent implements Observer {
 	/**
 	 * @return The clients serving this file
 	 */
-	public Set getClientInfos() {
+	public Map getClientInfos() {
 		return clientInfos;
 	}
 
@@ -342,7 +345,7 @@ public class FileInfo extends Parent implements Observer {
 		this.md4 = messageBuffer.readBinary( 16 );
 		this.size = messageBuffer.readInt32();
 	
-		this.downloaded = messageBuffer.readInt32();
+		setDownloaded( messageBuffer.readInt32() );
 		
 		this.sources = messageBuffer.readInt32();
 		this.clients = messageBuffer.readInt32();
@@ -355,82 +358,28 @@ public class FileInfo extends Parent implements Observer {
 		
 		changedRate = (oldState != this.state.getState() ? true : false); 
 		
-		this.chunks = messageBuffer.readString();
+		setChunks( messageBuffer.readString() );
 		
-		int cnt = 0;
-		for (int i = 0; i < chunks.length(); i++) {
-			if (chunks.charAt(i) == '2' || chunks.charAt(i) == '3')
-				cnt++;
-		}
-		numChunks = cnt;
-
-		/* read a list of int32(networkid) and string(avail) */
-		if ( parent.getProtoToUse() > 17 ) {
-			this.avails = new HashMap();
-			int listElem = messageBuffer.readInt16();
-			
-			for ( int i = 0; i < listElem; i++ ) {
-				int networkID = messageBuffer.readInt32();
-				NetworkInfo network = parent.getNetworkInfoMap().get( networkID );
-				/* multinet avail is the overall avail */
-				if ( network.getNetworkType() != NetworkInfo.Enum.MULTINET ) {
-					String aString = messageBuffer.readString();
-					this.avails.put( network, aString );
-				}
-				else
-					this.avail = messageBuffer.readString();
-			}
-		}
-		else
-			this.avail = messageBuffer.readString();
-	
-		/* translate to kb and round to two digits after comma */
-		double d = new Double( messageBuffer.readString() ).doubleValue();
-		this.rate = ( float ) round( d / 1024 );
-		float oldRawRate = rawRate;
-		this.rawRate = ( float ) d;
+		setAvailability( messageBuffer );
 		
-		if (oldRawRate != rawRate) changedRate = true;
+		setRate( new Double( messageBuffer.readString() ).doubleValue() ); // use float?
 		
 		this.chunkage = messageBuffer.readStringList();
 		this.age = messageBuffer.readString();
 		
 		/* File Format */
 		this.getFormat().readStream( messageBuffer );
-		String oldname = this.name;
 		this.name = messageBuffer.readString();
 		
-		this.offset = messageBuffer.readInt32();
+		setOffset( messageBuffer.readInt32() );
 		
 		this.setPriority( messageBuffer.readSignedInt32() );
 		
-		int oldPercent = (int) this.perc;
-		
-		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
-		this.perc = d2;
-		
-		changedPercent = (oldPercent != (int) this.perc ? true : false);
-	
 		this.stringSize = calcStringSize( this.size );
 		
-		String oldStringDownloaded = stringDownloaded;
-		this.stringDownloaded = calcStringSize( this.downloaded );
-		changedDownloaded = (!oldStringDownloaded.equals(stringDownloaded) ? true : false); 
-		
-		if (rawRate == 0) this.etaSeconds = Long.MAX_VALUE;
-		else this.etaSeconds = (long) ((getSize() - getDownloaded()) / (rawRate + 1));
-		
-		String oldStringETA = stringETA;
-		this.stringETA = calcStringOfSeconds ( this.etaSeconds );
-		
-		changedETA = (!oldStringETA.equals(stringETA) ? true : false);
+		updateETA();
 		
 		this.stringAge = calcStringOfSeconds ( System.currentTimeMillis() / 1000 - Long.parseLong(this.age)  );
-	
-		String oldStringOffset = stringOffset;
-		this.stringOffset = calcStringOfSeconds( this.offset );	
-		
-		changedLast = (!oldStringOffset.equals(stringOffset) ? true : false);
 
 		this.setChanged();
 		this.notifyObservers( this );
@@ -438,46 +387,23 @@ public class FileInfo extends Parent implements Observer {
 	
 	/**
 	 * Update a FileInfo object
+	 * 
+	 * int32	Downloaded
+	 * Float	Rate
+	 * int32	Number of seconds since last seen
+	 * 
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void update( MessageBuffer messageBuffer ) {
 
-		int oldDownloaded = this.downloaded;
-		this.downloaded = messageBuffer.readInt32();
-		
-		changedDownloaded = (oldDownloaded != this.downloaded ? true : false);
-		
-		float oldRawRate = this.rawRate;
-		double d = new Double( messageBuffer.readString() ).doubleValue();
-		this.rawRate = ( float ) d;
-		this.rate = ( float ) round( d / 1024 );
-		
-		changedRate = (oldRawRate != rawRate ? true : false);
-		
-		int oldOffset = this.offset;
-		this.offset = messageBuffer.readInt32();
+		setDownloaded( messageBuffer.readInt32() );
 
-		String oldStringOffset = stringOffset;
-		this.stringOffset = calcStringOfSeconds( this.offset );	
-		changedLast = (!oldStringOffset.equals(stringOffset) ? true : false);
+		setRate( new Double( messageBuffer.readString() ).doubleValue() );
 
-		int oldPercent = (int) this.perc;
-		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
-		this.perc = d2;
+		setOffset( messageBuffer.readInt32() );
 
-		changedPercent = (oldPercent != (int) this.perc ? true : false);
-
-		if (rawRate == 0) this.etaSeconds = Long.MAX_VALUE;
-		else this.etaSeconds = (long) ((getSize() - getDownloaded()) / (rawRate + 1));
+		updateETA();
 		
-		String oldStringDownloaded = stringDownloaded;
-		this.stringDownloaded = calcStringSize( this.downloaded );
-		changedDownloaded = (!oldStringDownloaded.equals(stringDownloaded) ? true : false);
-		
-		String oldStringETA = stringETA;
-		this.stringETA = calcStringOfSeconds ( this.etaSeconds );
-		changedETA = (!oldStringETA.equals(stringETA) ? true : false);
-
 		this.setChanged();
 		this.notifyObservers( this );
 	}
@@ -487,12 +413,11 @@ public class FileInfo extends Parent implements Observer {
 	 * @param clientInfo The clientInfo to put into this map
 	 * @return true if adding is successful
 	 */
-	public boolean addClientInfo( ClientInfo clientInfo ) {
-		boolean result = this.clientInfos.add( clientInfo );
+	public void addClientInfo( ClientInfo clientInfo ) {
+		this.clientInfos.put( clientInfo, null );
 		clientInfo.addObserver( this );
 		this.setChanged();
 		this.notifyObservers( clientInfo );
-		return result;
 	}
 	
 	/**
@@ -500,12 +425,11 @@ public class FileInfo extends Parent implements Observer {
 	 * @param clientInfo The clientinfo obj to remove
 	 * @return true if removing is successful
 	 */
-	public boolean removeClientInfo( ClientInfo clientInfo ) {
-		boolean result = this.clientInfos.remove( clientInfo );
+	public void removeClientInfo( ClientInfo clientInfo ) {
+		this.clientInfos.remove( clientInfo );
 		clientInfo.deleteObserver( this );
 		this.setChanged();
 		this.notifyObservers( clientInfo );
-		return result;
 	}
 	
 	/**
@@ -551,6 +475,101 @@ public class FileInfo extends Parent implements Observer {
 		this.network =
 		( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
 	}
+	/**
+	 * @param messageBuffer
+	 * 
+	 * read a list of int32(networkid) and string(avail) 
+	 */
+	private void setAvailability( MessageBuffer messageBuffer ) {
+
+		if (parent.getProtoToUse() > 17) {
+			this.avails = new HashMap();
+			int listElem = messageBuffer.readInt16();
+
+			for (int i = 0; i < listElem; i++) {
+				int networkID = messageBuffer.readInt32();
+				NetworkInfo network = parent.getNetworkInfoMap().get(networkID);
+				/* multinet avail is the overall avail */
+				if (network.getNetworkType() != NetworkInfo.Enum.MULTINET) {
+					String aString = messageBuffer.readString();
+					this.avails.put(network, aString);
+				} else
+					this.avail = messageBuffer.readString();
+			}
+		} else
+			this.avail = messageBuffer.readString();
+
+	}
+	
+	/**
+	 * set chunks string and count numChunks
+	 * 
+	 * @param string
+	 */
+	private void setChunks( String s ) {
+		this.chunks = s;
+		
+		numChunks = 0;
+		for (int i = 0; i < chunks.length(); i++) {
+			if (chunks.charAt(i) == '2' || chunks.charAt(i) == '3')
+				numChunks++;
+		}
+	}
+
+	/**
+	 * set downloaded
+	 * 
+	 * @param int
+	 */
+	private void setDownloaded( int i ) {
+		this.downloaded = i;
+		
+		String oldStringDownloaded = stringDownloaded;
+		this.stringDownloaded = calcStringSize( this.downloaded );
+		changedDownloaded = (!oldStringDownloaded.equals(stringDownloaded) ? true : false);
+		
+		int oldPercent = (int) this.perc;
+		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
+		this.perc = d2;
+
+		changedPercent = (oldPercent != (int) this.perc ? true : false);
+	}
+	
+	/**
+	 * setRate
+	 * 
+	 * @param double
+	 */
+	private void setRate( double d ) {
+		changedRate = ( this.rate != ( float ) d ? true : false );
+		this.rate = ( float ) d;
+	}
+	
+	/**
+	 * set offset (last seen)
+	 * 
+	 * @param int
+	 */
+	private void setOffset( int i ) {
+		this.offset = i;
+
+		String oldStringOffset = stringOffset;
+		this.stringOffset = calcStringOfSeconds( this.offset );	
+		changedLast = (!oldStringOffset.equals(stringOffset) ? true : false);
+	}
+	
+	/**
+	 * update ETA
+	 */
+	private void updateETA() {
+		if (this.rate == 0) this.etaSeconds = Long.MAX_VALUE;
+		else this.etaSeconds = (long) ((getSize() - getDownloaded()) / (this.rate + 1));
+		
+		String oldStringETA = stringETA;
+		this.stringETA = calcStringOfSeconds ( this.etaSeconds );
+		changedETA = (!oldStringETA.equals(stringETA) ? true : false);
+	}
+
 
 	/**
 	 * @param string The new name for this file
@@ -633,8 +652,6 @@ public class FileInfo extends Parent implements Observer {
 	
 		float fsize = (float) size;
 	
-		DecimalFormat df = new DecimalFormat( "0.#" );
-		
 		if ( fsize >= t ) 
 			return new String ( df.format(fsize / t) + " TB" );
 		else if ( fsize >= g ) 
@@ -688,8 +705,9 @@ public class FileInfo extends Parent implements Observer {
 		if (o instanceof ClientInfo) {
 			ClientInfo clientInfo = (ClientInfo) o;
 			this.setChanged();
+			// this client is now interesting.. notify the viewer
 			if (obj == null) {
-				this.notifyObservers( new TreeClientInfo(this, clientInfo));
+				this.notifyObservers( new TreeClientInfo(this, clientInfo) );
 			} else {
 				this.notifyObservers( clientInfo );
 			}
@@ -701,6 +719,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.48  2003/09/13 22:22:59  zet
+weak sets
+
 Revision 1.47  2003/09/10 14:46:19  zet
 sources
 

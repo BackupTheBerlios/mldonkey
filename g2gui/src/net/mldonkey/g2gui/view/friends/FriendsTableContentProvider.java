@@ -24,7 +24,9 @@ package net.mldonkey.g2gui.view.friends;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -38,10 +40,11 @@ import org.eclipse.jface.viewers.Viewer;
  * TableContentProvider
  *
  *
- * @version $Id: FriendsTableContentProvider.java,v 1.4 2003/09/04 02:35:06 zet Exp $
+ * @version $Id: FriendsTableContentProvider.java,v 1.5 2003/09/13 22:23:10 zet Exp $
  */
 public class FriendsTableContentProvider implements IStructuredContentProvider, Observer {
 	
+	private static Object[] EMPTY_ARRAY = new Object[0];	
 	public TableViewer viewer;
 	public List observedClients = Collections.synchronizedList(new ArrayList());
 	
@@ -49,22 +52,31 @@ public class FriendsTableContentProvider implements IStructuredContentProvider, 
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
 	public Object[] getElements( Object inputElement ) {
+		if (inputElement instanceof Map) {
+			Map elementsMap = (Map) inputElement;
 		
-		for (int i = 0; i < observedClients.size(); i++) {
-			ClientInfo clientInfo = (ClientInfo) observedClients.get(i);
-			if (clientInfo != null) {
-				clientInfo.deleteObserver( this );
+			// Don't observe clients we are dumping
+			for (int i = 0; i < observedClients.size(); i++) {
+				ClientInfo clientInfo = (ClientInfo) observedClients.get(i);
+				if (clientInfo != null) {
+					clientInfo.deleteObserver( this );
+				}
 			}
-		}
+			observedClients.clear();
+			
+			// Keep a list of clients we are observing
+			Iterator i = elementsMap.keySet().iterator();
+			while (i.hasNext()) {
+				ClientInfo clientInfo = (ClientInfo) i.next();
+ 				clientInfo.addObserver(this);
+				observedClients.add(clientInfo);
+			}
+					
+			return elementsMap.keySet().toArray();
 		
-		observedClients.clear();
-		
-		for (int i = 0; i < ((List) inputElement).size(); i++) {
-			((ClientInfo) ((List) inputElement).get(i)).addObserver(this);
-			observedClients.add((ClientInfo) ((List) inputElement).get(i));
-		}
-				
-		return ((List) inputElement).toArray();
+		} else {
+			return EMPTY_ARRAY;	
+		} 
 	}
 
 	/* (non-Javadoc)
@@ -99,6 +111,9 @@ public class FriendsTableContentProvider implements IStructuredContentProvider, 
 
 /*
 $Log: FriendsTableContentProvider.java,v $
+Revision 1.5  2003/09/13 22:23:10  zet
+weak sets
+
 Revision 1.4  2003/09/04 02:35:06  zet
 check disposed
 

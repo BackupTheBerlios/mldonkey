@@ -24,9 +24,9 @@ package net.mldonkey.g2gui.model;
 
 import gnu.trove.TIntObjectHashMap;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
@@ -37,16 +37,13 @@ import net.mldonkey.g2gui.model.enum.EnumClientType;
  * ClientInfoList
  * 
  *
- * @version $Id: ClientInfoIntMap.java,v 1.9 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ClientInfoIntMap.java,v 1.10 2003/09/13 22:22:59 zet Exp $ 
  */
 public class ClientInfoIntMap extends InfoIntMap {
-	
 	/**
-	 * A subset of ClientInfo's that are friends
+	 * A weak subset of ClientInfo's that are friends
 	 */
-	List friendsList = Collections.synchronizedList(new ArrayList());
-
-	
+	private Map friendsList = Collections.synchronizedMap( new WeakHashMap() );
 	/**
 	 * @param communication my parent
 	 */
@@ -73,9 +70,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 		
 		if (this.containsKey(clientID)) 
 			clientInfo = this.get(clientID);
-		else
+		else {
 			clientInfo = new ClientInfo( this.parent );
-		
+		}
 		clientInfo.readStream( clientID, messageBuffer );  	
 		this.put( clientInfo.getClientid(), clientInfo );
 	}
@@ -88,13 +85,14 @@ public class ClientInfoIntMap extends InfoIntMap {
 	public void put( int key, ClientInfo value ) {
 		this.infoIntMap.put( key, value );
 		if (value.getClientType() == EnumClientType.FRIEND) {
-			if (!friendsList.contains(value)) {
-				friendsList.add( value );
+			if (!friendsList.containsKey(value)) {
+				friendsList.put( value, null );
 				setChanged();
 				notifyObservers( value );
 			}
 		} else { 
-			if (friendsList.remove(value)) {
+			if (friendsList.containsKey(value)) {
+			    friendsList.remove(value);
 				setChanged();
 				notifyObservers( value );
 			}
@@ -133,19 +131,24 @@ public class ClientInfoIntMap extends InfoIntMap {
 			if (this.containsKey( clientID )) // necessary check
 				tempClientInfoList.put( clientID, this.get( clientID ) );			
 		}
+		this.infoIntMap.clear(); // tmp while debug
 		this.infoIntMap = tempClientInfoList;		
+		System.gc(); // tmp while debug
 	}
 	
 	/**
 	 * @return friendsList ArrayList
 	 */
-	public List getFriendsList() {
+	public Map getFriendsList() {
 		return friendsList;
 	}
 	
 }
 /*
 $$Log: ClientInfoIntMap.java,v $
+$Revision 1.10  2003/09/13 22:22:59  zet
+$weak sets
+$
 $Revision 1.9  2003/08/23 15:21:37  zet
 $remove @author
 $

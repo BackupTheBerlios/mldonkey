@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.23 2003/09/02 09:24:36 lemmster Exp $ 
+ * @version $Id: ClientInfo.java,v 1.24 2003/09/13 22:22:59 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -77,7 +77,7 @@ public class ClientInfo extends Parent {
 	 */
 	private int clientChatPort;
 	/**
-	 * Availability of a file
+	 * Availability of a file (int fileId, String availability)
 	 */
 	private THash avail = new TIntObjectHashMap();
 
@@ -129,10 +129,7 @@ public class ClientInfo extends Parent {
 	 * @return String representation of the avail.
 	 */
 	public String getFileAvailability( FileInfo fileInfo ) {
-		String availability =
-		  ( String ) ( ( TIntObjectHashMap ) this.avail ).get( fileInfo.getId() );
-		  
-		return availability;
+		return ( String ) ( ( TIntObjectHashMap ) this.avail ).get( fileInfo.getId() );
 	}
 	
 	/**
@@ -142,10 +139,10 @@ public class ClientInfo extends Parent {
 	public int getNumChunks( FileInfo fileInfo ) {
 		int numChunks = 0;
 		String availability = getFileAvailability ( fileInfo );
-		if ( availability == null ) return 0;
-		
-		for ( int i = 0; i < availability.length() ; i++ ) 
-			if ( availability.charAt( i ) == '1' ) numChunks++;
+		if ( availability != null ) {
+			for ( int i = 0; i < availability.length() ; i++ ) 
+				if ( availability.charAt( i ) == '1' ) numChunks++;
+		}
 		return numChunks;
 	}
 
@@ -289,6 +286,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.24  2003/09/13 22:22:59  zet
+weak sets
+
 Revision 1.23  2003/09/02 09:24:36  lemmster
 checkstyle
 
@@ -305,7 +305,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
