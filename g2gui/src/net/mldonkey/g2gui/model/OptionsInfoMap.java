@@ -30,8 +30,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * OptionsInfo
  *
- * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.20 2003/08/21 13:13:10 lemmster Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: OptionsInfoMap.java,v 1.21 2003/08/21 20:24:37 lemmster Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -177,15 +177,15 @@ public class OptionsInfoMap extends InfoMap {
 			}
 			if ( network.getNetworkType() == NetworkInfo.Enum.GNUT ) {
 				/* first the option-prefix */
-				option = ( OptionsInfo ) this.infoMap.get( "GNUT2-options_prefix" );
+				option = ( OptionsInfo ) this.infoMap.get( "GNUT-options_prefix" );
 				prefix = option.getValue();
 				/* now the max_connected_server/peers */
-				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_ultrapeers" );
+				option = ( OptionsInfo ) this.infoMap.get( prefix + "g1_max_ultrapeers" );
 				return new Integer( option.getValue() ).intValue();
 			}
 			if ( network.getNetworkType() == NetworkInfo.Enum.GNUT2 ) {
 				/* first the option-prefix */
-				option = ( OptionsInfo ) this.infoMap.get( "GNUT2-options_prefix" );
+				option = ( OptionsInfo ) this.infoMap.get( "G2-options_prefix" );
 				prefix = option.getValue();
 				/* now the max_connected_server/peers */
 				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_ultrapeers" );
@@ -227,6 +227,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.21  2003/08/21 20:24:37  lemmster
+adjustment for the latest devel core
+
 Revision 1.20  2003/08/21 13:13:10  lemmster
 cleanup in networkitem
 
