@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  *
- * @version $Id: Addr.java,v 1.18 2003/11/29 13:01:11 lemmster Exp $
+ * @version $Id: Addr.java,v 1.19 2003/11/30 18:56:39 zet Exp $
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -71,7 +71,14 @@ public class Addr implements SimpleInformation {
 	 * @return String (hostName if available, hostAddress if not)
 	 */
 	public String toString() {
-		return hasHostName() ? getHostName() : getAddress().getHostAddress();
+	    if (hasHostName()) 
+	        return getHostName();
+	    else {
+	        if (getAddress().hashCode() == 0) 
+	            return "";
+	         else
+	            return getAddress().getHostAddress();
+	    }
 	}
 
 	/**
@@ -148,6 +155,10 @@ public class Addr implements SimpleInformation {
 	public static Addr getAddr( String aString ) {
 		Addr anAddr = new Addr();
 		anAddr.addressType = false;
+		
+		if (aString.equals("")) 
+		    aString = "0.0.0.0";
+		
 		try {
 			anAddr.address =InetAddress.getByName( aString );
 		}
@@ -160,6 +171,10 @@ public class Addr implements SimpleInformation {
 }
 /*
 $Log: Addr.java,v $
+Revision 1.19  2003/11/30 18:56:39  zet
+don't store empty addresses as localhost
+return "" in toString() for an unknown address
+
 Revision 1.18  2003/11/29 13:01:11  lemmster
 Addr.getString() renamed to the more natural word name Addr.toString()
 
