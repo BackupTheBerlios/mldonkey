@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Listener;
 /**
- * @author 
+ * @author z
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
@@ -71,6 +71,7 @@ public class ToolButton {
 	}
 	public void setImage(Image image) {
 		toolItem.setImage(image);
+		toolItem.setDisabledImage(image); // for now..
 	}
 	public ToolBar getParent() {
 		return toolItem.getParent();
@@ -91,6 +92,12 @@ public class ToolButton {
 		bigInactiveImage = image;
 	}
 	public void setActive(boolean toggle) {
+		
+		if (toggle) {
+			toolItem.setEnabled(false);
+		} else {
+			toolItem.setEnabled(true);
+		}
 		active = toggle;
 		resetImage();
 	}
@@ -106,6 +113,7 @@ public class ToolButton {
 		toolItem = new ToolItem(newtoolbar, toolItemStyle);
 		setText(text);
 		setToolTipText(toolTipText);
+		// setActive(active); // Last toolItem gets cut short
 		addListener(eventType, listener);
 		resetImage();
 	}
@@ -118,6 +126,9 @@ public class ToolButton {
 
 /*
 $Log: ToolButton.java,v $
+Revision 1.2  2003/08/21 15:45:09  zet
+set disabled state
+
 Revision 1.1  2003/07/27 22:39:36  zet
 small buttons toggle (in popup) for main cool menu
 
