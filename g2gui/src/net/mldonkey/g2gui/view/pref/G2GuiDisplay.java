@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.pref;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.helper.VersionCheck;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.swt.widgets.Composite;
@@ -29,7 +30,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiDisplay.java,v 1.9 2004/01/08 20:20:45 psy Exp $
+ * @version $Id: G2GuiDisplay.java,v 1.10 2004/01/08 21:42:12 psy Exp $
  */
 public class G2GuiDisplay extends PreferencePage {
 	/**
@@ -70,8 +71,7 @@ public class G2GuiDisplay extends PreferencePage {
 				G2GuiResources.getString( "PREF_DISPLAY_TABLE_COLORS" ),
 				composite ) );	
 
-		if (!((System.getProperty("os.name").length() > 7) &&
-				System.getProperty("os.name").substring(0, 7).equals("Windows"))) {
+		if ( !VersionCheck.isWin32() ) {
 			setupEditor( 
 				new BooleanFieldEditor( 
 					"displayFontAA",
@@ -98,6 +98,9 @@ public class G2GuiDisplay extends PreferencePage {
 }
 /*
 $Log: G2GuiDisplay.java,v $
+Revision 1.10  2004/01/08 21:42:12  psy
+introducing boolean isWin32()
+
 Revision 1.9  2004/01/08 20:20:45  psy
 added option to control GTK's font-antialiasing
 

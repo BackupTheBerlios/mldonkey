@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.pref;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.helper.VersionCheck;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
@@ -35,7 +36,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.19 2003/12/04 08:47:27 lemmy Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.20 2004/01/08 21:42:12 psy Exp $ 
  *
  */
 public class G2GuiPref extends PreferencePage {
@@ -89,8 +90,7 @@ public class G2GuiPref extends PreferencePage {
 					addField( executableField );
 					executableField.load();	
 			
-			if ((System.getProperty("os.name").length() > 7) &&
-		        System.getProperty("os.name").substring(0, 7).equals("Windows")) {
+			if (VersionCheck.isWin32()) {
 			    executableField.setFileExtensions( new String[] { "*.exe;*.bat" } );
 			} else {
 			    executableField.setFileExtensions( new String[] {"*"});
@@ -124,6 +124,9 @@ public class G2GuiPref extends PreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.20  2004/01/08 21:42:12  psy
+introducing boolean isWin32()
+
 Revision 1.19  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -176,7 +179,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.1  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name

@@ -28,11 +28,16 @@ import org.eclipse.swt.SWT;
 /**
  * VersionCheck - Since fox returns "fox" to the getPlatform() method on all platforms
  *
- * @version $Id: VersionCheck.java,v 1.1 2003/11/28 00:57:26 zet Exp $
+ * @version $Id: VersionCheck.java,v 1.2 2004/01/08 21:42:12 psy Exp $
  *
  */
 public class VersionCheck {
-    public static String getSWTPlatform() {
+    /**
+     * This method is used to determine the currently used SWT-platform.
+     * @return Returns the SWT platform name. 
+     * Examples: "win32", "win32-fox", "fox", "motif", "gtk", "photon", "carbon" 
+     */
+	public static String getSWTPlatform() {
         String platform;
 
         if ((platform = SWT.getPlatform()).equals("fox")) {
@@ -47,11 +52,23 @@ public class VersionCheck {
             return platform;
     }
     
+    /**
+     * This method is used to check if a ms windows operating system is being used
+     * @return Returns true if its a windows platform and false if not.
+     */
+	public static boolean isWin32 () {
+    	if (getSWTPlatform().startsWith("win")) return true;
+    	return false;
+    }
+   
 }
 
 
 /*
 $Log: VersionCheck.java,v $
+Revision 1.2  2004/01/08 21:42:12  psy
+introducing boolean isWin32()
+
 Revision 1.1  2003/11/28 00:57:26  zet
 initial
 
