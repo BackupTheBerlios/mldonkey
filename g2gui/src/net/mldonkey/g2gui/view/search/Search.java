@@ -22,16 +22,12 @@
  */
 package net.mldonkey.g2gui.view.search;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
-
-import gnu.trove.TIntObjectIterator;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
-import net.mldonkey.g2gui.model.NetworkInfoIntMap;
 import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
 
@@ -50,10 +46,10 @@ import org.eclipse.swt.events.KeyEvent;
  * Search
  *
  * @author $user$
- * @version $Id: Search.java,v 1.7 2003/07/30 19:32:02 lemmstercvs01 Exp $ 
+ * @version $Id: Search.java,v 1.8 2003/08/11 19:03:53 lemmstercvs01 Exp $ 
  *
  */
-public abstract class Search {
+public abstract class Search implements Observer {
 	protected CoreCommunication core;
 	protected SearchTab tab;
 	protected SearchQuery query;
@@ -73,6 +69,7 @@ public abstract class Search {
 	public Search( CoreCommunication core, SearchTab tab ) {
 		this.core = core;
 		this.tab = tab;
+		this.core.getNetworkInfoMap().addObserver( this );
 	}
 	
 	/**
@@ -138,49 +135,68 @@ public abstract class Search {
 		combo.setLayoutData( gridData );
 	
 		/* get all activated networks and display them in the combo */
-		NetworkInfoIntMap temp = this.core.getNetworkInfoMap();
-		TIntObjectIterator itr = temp.iterator();
-		List items = new ArrayList();
-		for ( int i = 0; i < temp.size(); i++ ) {
-			itr.advance();
-			NetworkInfo elem = ( NetworkInfo ) itr.value();
-			/* exclude disabled and networks without servers */
-			if ( elem.isEnabled() && elem.hasServers() )
-				items.add( elem );
+		NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
+		for ( int i = 0; i < networks.length; i++ ) {
+			NetworkInfo network = networks[ i ];
+			if ( network.isEnabled() && network.isSearchable() ) {
+				combo.add( network.getNetworkName() );
+				combo.setData( network.getNetworkName(), network );
+			}	
 		}
-		/* if more than 1 network is enabled, we need a "All" field */
-		int i = 0;
-		String[] strings;
-		Object[] data;
-		if ( items.size() > 1 ) {
-			strings = new String[ items.size() + 1 ];
-			data = new Object[ items.size() + 1 ];
-			strings[ i ] = bundle.getString( "S_ALL" );
-			data[ i++ ] = null;
+		if ( combo.getItemCount() > 1 ) {
+			combo.add( bundle.getString( "S_ALL" ) );
+			combo.setData( bundle.getString( "S_ALL" ), null );
+			combo.select( combo.indexOf( bundle.getString( "S_ALL" ) ) );
+			combo.setEnabled( true );
 		}
 		else {
-			strings = new String[ items.size() ];
-			data = new Object[ items.size() ];
+			combo.select( 0 );
+			combo.setEnabled( false );
 		}
-	
-		Iterator itr2 = items.iterator();
-		while ( itr2.hasNext() ) {
-			NetworkInfo elem = ( NetworkInfo ) itr2.next();
-			strings[ i ] = elem.getNetworkName();
-			data[ i++ ] = elem.getNetworkType();
-		}
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update( Observable o, Object arg ) {
+		if ( combo.isDisposed() ) return;
 		
-		combo.setItems( strings );
-		combo.setData( data );
-		
-		/* not get a default selection */
-		if ( strings.length > 0 )
-			combo.setText( strings[ 0 ] );
+		final NetworkInfo network = ( NetworkInfo ) arg;
+		this.combo.getDisplay().asyncExec( new Runnable() {
+			public void run() {
+				if ( network.isEnabled() && network.isSearchable() ) {
+					combo.add( network.getNetworkName() );
+					combo.setData( network.getNetworkName(), network );
+				}
+				else if ( network.isSearchable() ){
+					combo.remove( network.getNetworkName() );
+				}
+				try {
+					combo.remove( bundle.getString( "S_ALL" ) );
+				}
+				catch ( IllegalArgumentException e ) { }
+				
+				
+				if ( combo.getItemCount() > 1 ) {
+					combo.add( bundle.getString( "S_ALL" ) );
+					combo.setData( bundle.getString( "S_ALL" ), null );
+					combo.select( combo.indexOf( bundle.getString( "S_ALL" ) ) );
+					combo.setEnabled( true );
+				}
+				else {
+					combo.select( 0 );
+					combo.setEnabled( false );
+				}
+			}
+		} );
 	}
 }
 
 /*
 $Log: Search.java,v $
+Revision 1.8  2003/08/11 19:03:53  lemmstercvs01
+update networkcombo when a networkinfo status changes
+
 Revision 1.7  2003/07/30 19:32:02  lemmstercvs01
 using hasServers() instead of direct compare
 
