@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.77 2003/10/12 15:56:21 zet Exp $
+ * @version $Id: MainTab.java,v 1.78 2003/10/12 20:39:26 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -282,7 +282,7 @@ public class MainTab implements ShellListener {
     }
 
     /**
-     * @return A <code>List</code> holding our current running <code>GuiTab</code>´s
+     * @return A <code>List</code> holding our current running <code>GuiTab</code>
      */
     public List getTabs() {
         return this.tabs;
@@ -356,6 +356,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.78  2003/10/12 20:39:26  zet
+remove high ascii
+
 Revision 1.77  2003/10/12 15:56:21  zet
 nill
 
