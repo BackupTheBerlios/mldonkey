@@ -28,6 +28,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
+
 import org.eclipse.swt.graphics.Image;
 
 
@@ -35,7 +36,7 @@ import org.eclipse.swt.graphics.Image;
  *
  * ClientTableLabelProvider
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.10 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.11 2003/11/26 07:43:15 zet Exp $
  *
  */
 public class ClientTableLabelProvider extends GTableLabelProvider implements ITableLabelProvider {
@@ -80,6 +81,18 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
         case ClientTableView.KIND:
             return "" + clientInfo.getClientConnection();
 
+        case ClientTableView.SOFTWARE:
+            return clientInfo.getClientSoftware();
+
+        case ClientTableView.UPLOADED:
+            return clientInfo.getUploadedString();
+
+        case ClientTableView.DOWNLOADED:
+            return clientInfo.getDownloadedString();
+
+        case ClientTableView.SOCK_ADDR:
+            return clientInfo.getClientSockAddr();
+
         default:
             return "";
         }
@@ -89,6 +102,9 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.11  2003/11/26 07:43:15  zet
+quick attempt at an uploaders table w/proto 19 - still in progress...
+
 Revision 1.10  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

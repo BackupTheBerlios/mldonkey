@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.8 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.9 2003/11/26 07:43:15 zet Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
@@ -57,6 +57,10 @@ public class ClientDetailDialog extends DetailDialog {
     private CLabel clActivity;
     private CLabel clKind;
     private CLabel clNetwork;
+    private CLabel clSockAddr;
+    private CLabel clUploaded;
+    private CLabel clDownloaded;
+    private CLabel clSoftware;
 
     public ClientDetailDialog(Shell parentShell, FileInfo fileInfo, ClientInfo clientInfo,
         CoreCommunication core) {
@@ -83,12 +87,17 @@ public class ClientDetailDialog extends DetailDialog {
         composite.setLayout(WidgetFactory.createGridLayout(1, 5, 5, 0, 5, false));
 
         createGeneralGroup(composite);
-        createChunkGroup(composite, "TT_DOWNLOAD_CD_LOCAL_CHUNKS", null);
-        createChunkGroup(composite, "TT_DOWNLOAD_CD_CLIENT_CHUNKS", clientInfo);
+
+        if (fileInfo != null) {
+            createChunkGroup(composite, "TT_DOWNLOAD_CD_LOCAL_CHUNKS", null);
+            createChunkGroup(composite, "TT_DOWNLOAD_CD_CLIENT_CHUNKS", clientInfo);
+        }
 
         updateLabels();
 
-        fileInfo.addObserver(this);
+        if (fileInfo != null)
+            fileInfo.addObserver(this);
+
         clientInfo.addObserver(this);
 
         return composite;
@@ -110,6 +119,10 @@ public class ClientDetailDialog extends DetailDialog {
         clRating = createLine(clientGeneral, "TT_DOWNLOAD_CD_RATING", false);
         clActivity = createLine(clientGeneral, "TT_DOWNLOAD_CD_ACTIVITY", false);
         clKind = createLine(clientGeneral, "TT_DOWNLOAD_CD_KIND", false);
+        clSoftware = createLine(clientGeneral, "TT_DOWNLOAD_CD_SOFTWARE", false);
+        clSockAddr = createLine(clientGeneral, "TT_DOWNLOAD_CD_ADDRESS", false);
+        clUploaded = createLine(clientGeneral, "TT_DOWNLOAD_CD_UPLOADED", false);
+        clDownloaded = createLine(clientGeneral, "TT_DOWNLOAD_CD_DOWNLOADED", false);
     }
 
     /**
@@ -121,11 +134,10 @@ public class ClientDetailDialog extends DetailDialog {
         ChunkCanvas chunkCanvas = super.createChunkGroup(parent,
                 G2GuiResources.getString(resString), clientInfo, fileInfo, null);
 
-        if (clientInfo == null) {
+        if (clientInfo == null)
             fileInfo.addObserver(chunkCanvas);
-        } else {
+        else
             clientInfo.addObserver(chunkCanvas);
-        }
     }
 
     /* (non-Javadoc)
@@ -141,9 +153,8 @@ public class ClientDetailDialog extends DetailDialog {
                 GridData.HORIZONTAL_ALIGN_END));
         addFriendButton.setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_ADD_FRIEND"));
 
-        if (clientInfo.getClientType() == EnumClientType.FRIEND) {
+        if (clientInfo.getClientType() == EnumClientType.FRIEND)
             addFriendButton.setEnabled(false);
-        }
 
         addFriendButton.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent s) {
@@ -175,6 +186,10 @@ public class ClientDetailDialog extends DetailDialog {
         updateLabel(clActivity, clientInfo.getClientActivity());
         updateLabel(clKind, clientInfo.getClientConnection());
         updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
+        updateLabel(clSockAddr, clientInfo.getClientSockAddr());
+        updateLabel(clSoftware, clientInfo.getClientSoftware());
+        updateLabel(clUploaded, clientInfo.getUploadedString());
+        updateLabel(clDownloaded, clientInfo.getDownloadedString());
     }
 
     /* (non-Javadoc)
@@ -182,7 +197,9 @@ public class ClientDetailDialog extends DetailDialog {
      */
     public boolean close() {
         clientInfo.deleteObserver(this);
-        fileInfo.deleteObserver(this);
+
+        if (fileInfo != null)
+            fileInfo.deleteObserver(this);
 
         return super.close();
     }
@@ -191,6 +208,9 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.9  2003/11/26 07:43:15  zet
+quick attempt at an uploaders table w/proto 19 - still in progress...
+
 Revision 1.8  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

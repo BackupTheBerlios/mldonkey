@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ClientTableSorter
  *
- * @version $Id: ClientTableSorter.java,v 1.9 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: ClientTableSorter.java,v 1.10 2003/11/26 07:43:15 zet Exp $
  *
  */
 public class ClientTableSorter extends GSorter {
@@ -45,23 +45,30 @@ public class ClientTableSorter extends GSorter {
      * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     public int compare(Viewer viewer, Object obj1, Object obj2) {
+        ClientInfo clientInfo1 = (ClientInfo) obj1;
+        ClientInfo clientInfo2 = (ClientInfo) obj2;
+
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
+        case ClientTableView.UPLOADED:
+            return compareLongs(clientInfo1.getUploaded(), clientInfo2.getUploaded());
+
+        case ClientTableView.DOWNLOADED:
+            return compareLongs(clientInfo1.getDownloaded(), clientInfo2.getDownloaded());
+
         case ClientTableView.STATE:
 
-            ClientInfo clientInfo1 = (ClientInfo) obj1;
-            ClientInfo clientInfo2 = (ClientInfo) obj2;
-
-            if (clientInfo1.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
+            if (clientInfo1.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
                 return -1;
-            } else if (clientInfo2.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
+            else if (clientInfo2.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
                 return 1;
-            } else if ((clientInfo1.getState().getRank() != 0) && (clientInfo2.getState().getRank() != 0)) {
-                return compareIntegers(clientInfo1.getState().getRank(), clientInfo2.getState().getRank());
-            } else if (clientInfo1.getState().getRank() != 0) {
+            else if ((clientInfo1.getState().getRank() != 0) &&
+                    (clientInfo2.getState().getRank() != 0))
+                return compareIntegers(clientInfo1.getState().getRank(),
+                    clientInfo2.getState().getRank());
+            else if (clientInfo1.getState().getRank() != 0)
                 return -1;
-            } else if (clientInfo2.getState().getRank() != 0) {
+            else if (clientInfo2.getState().getRank() != 0)
                 return 1;
-            }
 
         // else fall through
         default:
@@ -82,6 +89,9 @@ public class ClientTableSorter extends GSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.10  2003/11/26 07:43:15  zet
+quick attempt at an uploaders table w/proto 19 - still in progress...
+
 Revision 1.9  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

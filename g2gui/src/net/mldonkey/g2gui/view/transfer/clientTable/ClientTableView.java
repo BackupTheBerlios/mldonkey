@@ -34,22 +34,31 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableView.java,v 1.4 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: ClientTableView.java,v 1.5 2003/11/26 07:43:15 zet Exp $
  *
  */
 public class ClientTableView extends GTableView {
-    public static final int STATE = 0;
+    public static final int NETWORK = 0;
     public static final int NAME = 1;
-    public static final int NETWORK = 2;
-    public static final int KIND = 3;
+    public static final int SOFTWARE = 2;
+    public static final int UPLOADED = 3;
+    public static final int DOWNLOADED = 4;
+    public static final int SOCK_ADDR = 5;
+    public static final int KIND = 6;
+    public static final int STATE = 7;
 
     public ClientTableView(ViewFrame viewFrame) {
         super(viewFrame.getChildComposite(), viewFrame.getCore());
 
         preferenceString = "client";
-        columnLabels = new String[] { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
-        columnAlignment = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
-        columnDefaultWidths = new int[] { 200, 100, 75, 75 };
+        columnLabels = new String[] {
+                "TT_CT_NETWORK", "TT_CT_NAME", "TT_CT_SOFTWARE", "TT_CT_UPLOADED",
+                "TT_CT_DOWNLOADED", "TT_CT_SOCK_ADDR", "TT_CT_KIND", "TT_CT_STATE"
+            };
+        columnAlignment = new int[] {
+                SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.LEFT
+            };
+        columnDefaultWidths = new int[] { 100, 100, 75, 75, 75, 100, 75, 150 };
 
         gSorter = new ClientTableSorter(this);
         tableContentProvider = new ClientTableContentProvider(this, viewFrame.getCLabel());
@@ -83,6 +92,9 @@ public class ClientTableView extends GTableView {
 
 /*
 $Log: ClientTableView.java,v $
+Revision 1.5  2003/11/26 07:43:15  zet
+quick attempt at an uploaders table w/proto 19 - still in progress...
+
 Revision 1.4  2003/11/24 01:33:27  zet
 move some classes
 

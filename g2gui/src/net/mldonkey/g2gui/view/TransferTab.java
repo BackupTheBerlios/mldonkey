@@ -22,8 +22,6 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.util.Observable;
-
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableView;
@@ -31,21 +29,25 @@ import net.mldonkey.g2gui.view.transfer.clientTable.ClientViewFrame;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeView;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadViewFrame;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadViewFrame;
+import net.mldonkey.g2gui.view.transfer.uploadersTable.UploadersViewFrame;
 import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
 
+import java.util.Observable;
+
 
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.95 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: TransferTab.java,v 1.96 2003/11/26 07:43:15 zet Exp $
  *
  */
 public class TransferTab extends TableGuiTab {
     private GView clientTableView = null;
     private GView uploadTableView = null;
+    private GView uploadersTableView = null;
 
     /**
      * @param gui where this tab belongs to
@@ -82,9 +84,8 @@ public class TransferTab extends TableGuiTab {
             createDownloadsView(sashForm2);
             createClientsView(sashForm2);
             WidgetFactory.loadSashForm(sashForm2, sashPrefString);
-        } else {
+        } else
             createDownloadsView(sashForm);
-        }
     }
 
     private void createDownloadsView(SashForm sashForm) {
@@ -99,7 +100,13 @@ public class TransferTab extends TableGuiTab {
     }
 
     private void createUploadsView(SashForm sashForm) {
-        uploadTableView = new UploadViewFrame(sashForm, "TT_Uploads", "UpArrowBlue", this).getGView();
+        String sashPrefString = "uploadsSash";
+        SashForm sashForm2 = WidgetFactory.createSashForm(sashForm, sashPrefString);
+
+        uploadTableView = new UploadViewFrame(sashForm2, "TT_Uploads", "UpArrowBlue", this).getGView();
+        uploadersTableView = new UploadersViewFrame(sashForm2, "TT_Uploaders", "UpArrowBlue", this).getGView();
+
+        WidgetFactory.loadSashForm(sashForm2, sashPrefString);
     }
 
     /* ( non-Javadoc )
@@ -108,6 +115,7 @@ public class TransferTab extends TableGuiTab {
     public void updateDisplay() {
         gView.updateDisplay();
         uploadTableView.updateDisplay();
+        uploadersTableView.updateDisplay();
 
         if (clientTableView != null)
             clientTableView.updateDisplay();
@@ -139,6 +147,9 @@ public class TransferTab extends TableGuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.96  2003/11/26 07:43:15  zet
+quick attempt at an uploaders table w/proto 19 - still in progress...
+
 Revision 1.95  2003/11/24 01:33:27  zet
 move some classes
 
