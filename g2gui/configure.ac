@@ -150,7 +150,7 @@ case $host in
 	swt_dir=swt-win32
 	obj_dir=obj-$host
 	platform_targets=icon.o
-	AC_SUBST(MAGIC,["#no magic"])
+	magic="# no magic here "
 	;;
 
 	*)
@@ -161,12 +161,12 @@ case $host in
     host=$(echo $(uname) | tr A-Z a-z)
 	swt_dir=swt-$host-$widget_set
 	obj_dir=obj-$widget_set
-	AC_SUBST(MAGIC,["$(magic)"])
+	magic="\$(magic)"
 	echo "SWT widget-set : $widget_set"
 	echo "SWT dir prefix : $swt_dir"
 	;;
 esac
-
+AC_SUBST(MAGIC,[$magic])
 AC_SUBST(PLATFORM_TARGETS,[$platform_targets])
 AC_SUBST(SWT_DIR,[$swt_dir-ws])
 
