@@ -76,8 +76,9 @@ public class GraphPainter {
 		int startx = 20;
 		int k = startx;
 		
+		int bottomSpace = drawBoardBuffer.getFontMetrics().getHeight() + 2;
 		float maximum = 20f;
-		float height = (float) (parent.getClientArea().height - drawBoardBuffer.getFontMetrics().getHeight() - 2);
+		float height = (float) (parent.getClientArea().height - bottomSpace);
 		
 		int width = parent.getClientArea().width;
 		int graphWidth = width - startx;
@@ -140,17 +141,24 @@ public class GraphPainter {
 		double value = (double)graph.getLast().getValue()/100;
 		String boxString = String.valueOf(value) + " kb/s";
 			
-		int textPosition = (int) (height - (float) (graph.getLast().getValue()/10) * zoom);
+		int linePosition =  (int) (height - (float) (graph.getLast().getValue()/10) * zoom);
+		int linePositionEnd = linePosition;
+		int textPosition = linePosition - 6;
+		if (textPosition + bottomSpace >= (int) height) {
+			textPosition = (int) height - bottomSpace - 3;
+			linePositionEnd = linePositionEnd - 6;
+		}
+				
 		int boxWidth = drawBoardBuffer.textExtent(boxString).x + 20;
 		int boxHeight = drawBoardBuffer.textExtent(boxString).y + 5;	
 			
 		drawBoardBuffer.setForeground(new Color(null,0,0,0));
 		drawBoardBuffer.setBackground(new Color(null,255,255,255));
-		drawBoardBuffer.fillRoundRectangle(startx+10,textPosition-3,boxWidth,boxHeight,18,18);
-		drawBoardBuffer.drawRoundRectangle(startx+10,textPosition-3,boxWidth,boxHeight,18,18);
-		drawBoardBuffer.drawText(boxString,startx+20,textPosition);
+		drawBoardBuffer.fillRoundRectangle(startx+10,textPosition,boxWidth,boxHeight,18,18);
+		drawBoardBuffer.drawRoundRectangle(startx+10,textPosition,boxWidth,boxHeight,18,18);
+		drawBoardBuffer.drawText(boxString,startx+20,textPosition+2);
 		drawBoardBuffer.setForeground(new Color(null, 255,255,0));
-		drawBoardBuffer.drawLine(startx+10,textPosition,startx,textPosition);
+		drawBoardBuffer.drawLine(startx+10,linePositionEnd,startx,linePosition);
 				
 		// output buffer to the display
 		drawBoard.drawImage(imageBuffer, 0,0);
@@ -168,6 +176,9 @@ public class GraphPainter {
 }
 /*
 $Log: GraphPainter.java,v $
+Revision 1.21  2003/07/27 00:07:53  zet
+minor
+
 Revision 1.20  2003/07/26 21:49:59  zet
 white text
 
