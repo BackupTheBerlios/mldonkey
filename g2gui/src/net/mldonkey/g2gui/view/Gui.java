@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.15 2003/07/01 18:09:51 dek Exp $ 
+ * @version $Id: Gui.java,v 1.16 2003/07/02 00:18:37 zet Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -218,7 +218,7 @@ public class Gui implements IG2gui, Listener {
 	}
 	
 	private void layoutCoolBar(CoolBar coolBar) {
-		int CoolBarWidth = this.mainComposite.getBounds().width;
+	/*	int CoolBarWidth = this.mainComposite.getBounds().width;
 		
 		int CoolBarHeight = 0;
 		for (int j = 0; j < coolBar.getItemCount(); j++) {			
@@ -233,6 +233,16 @@ public class Gui implements IG2gui, Listener {
 		}
 		CoolBarWidth = CoolBarWidth*mainTools.getItemCount();		
 		this.mainCoolItem.setSize (mainCoolItem.computeSize (CoolBarWidth,CoolBarHeight));	
+		*/
+		// This seems to work in xp/gtk - z			
+		for (int j = 0; j < coolBar.getItemCount(); j++) {	
+			CoolItem tempCoolItem = coolBar.getItem(j);		
+			ToolBar tempToolBar =  (ToolBar) tempCoolItem.getControl();			
+			Point pSize = tempToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+			pSize = tempCoolItem.computeSize(pSize.x, pSize.y);
+			tempCoolItem.setSize(pSize);
+			tempCoolItem.setMinimumSize(pSize);
+		}		
 	}
 
 	
@@ -305,6 +315,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.16  2003/07/02 00:18:37  zet
+layoutCoolBar changes - tested on xp/gtk
+
 Revision 1.15  2003/07/01 18:09:51  dek
 transparent ToolItems
 
