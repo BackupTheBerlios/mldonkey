@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.9 2003/09/25 21:06:58 dek Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.10 2003/09/25 21:08:56 dek Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -148,19 +148,14 @@ public class SharedFileInfo implements SimpleInformation {
 		int myRequests = messageBuffer.readInt32();
 		
 		if (   ( myUpload != this.numOfBytesUploaded ) 
-			|| ( myRequests != this.numOfQueriesForFile ) ) {
+			|| ( myRequests != this.numOfQueriesForFile ) ) 
+			{
 				hasChanged = true;
 				this.numOfBytesUploaded = myUpload;
 				this.numOfQueriesForFile = myRequests;			
-		}		
+			}		
 		return hasChanged;
 	}	
-	/**
-	 * @param md4
-	 */
-	void setMd4(String md4) {
-		this.md4 = md4;
-	}
 
 	/**
 	 * translate the int to EnumNetwork
@@ -170,22 +165,9 @@ public class SharedFileInfo implements SimpleInformation {
 		this.network = network;
 	}
 
-	/**
-	 * @param sharedFileName
-	 */
-	void setSharedFileName(String sharedFileName) {
-		this.sharedFileName = sharedFileName;
-	}
 
 	/**
-	 * @param shareFileSize
-	 */
-	void setShareFileSize(long shareFileSize) {
-		this.shareFileSize = shareFileSize;
-	}
-
-	/**
-	 * @return
+	 * @return the Network this file is uploaded to
 	 */
 	public NetworkInfo getNetwork() {
 		return network;
@@ -195,6 +177,9 @@ public class SharedFileInfo implements SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.10  2003/09/25 21:08:56  dek
+some checkstyle
+
 Revision 1.9  2003/09/25 21:06:58  dek
 first sketch of upload-Table not yet added to transferTab.
 
