@@ -28,7 +28,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Shell;
 
  /**
- * @version $Id: SystrayAction.java,v 1.2 2004/03/10 10:31:44 dek Exp $ 
+ * @version $Id: SystrayAction.java,v 1.3 2004/03/11 12:35:39 dek Exp $ 
  *
  */
 public abstract class SystrayAction extends Action {
@@ -37,8 +37,9 @@ public abstract class SystrayAction extends Action {
 	protected MainWindow parent;
 	protected Shell shell;
 	
-	protected SystrayAction(SystemTray tray) {
+	protected SystrayAction(SystemTray tray, String title) {
 		super();
+		setText(title);		
 		parent = tray.getParent();
 		shell = parent.getShell();
 	}
@@ -47,6 +48,9 @@ public abstract class SystrayAction extends Action {
 }
 /*
  $Log: SystrayAction.java,v $
+ Revision 1.3  2004/03/11 12:35:39  dek
+ exteranlized strings
+
  Revision 1.2  2004/03/10 10:31:44  dek
  added header and footer
 

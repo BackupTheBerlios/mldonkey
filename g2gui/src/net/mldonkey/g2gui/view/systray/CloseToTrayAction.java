@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.view.systray;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
  /**
- * @version $Id: CloseToTrayAction.java,v 1.2 2004/03/10 10:31:44 dek Exp $
+ * @version $Id: CloseToTrayAction.java,v 1.3 2004/03/11 12:35:39 dek Exp $
  *
  */
 public class CloseToTrayAction extends SystrayAction {
@@ -35,9 +35,8 @@ public class CloseToTrayAction extends SystrayAction {
 	/**
 	 * @param tray
 	 */
-	protected CloseToTrayAction(SystemTray tray) {
-		super(tray);
-		setText("close to Tray");
+	public CloseToTrayAction(SystemTray tray, String title) {
+		super(tray,title);		
 		toTray = PreferenceLoader.loadBoolean("closeToTray");
 		setChecked(toTray);
 	}
@@ -49,6 +48,9 @@ public class CloseToTrayAction extends SystrayAction {
 }
 /*
  $Log: CloseToTrayAction.java,v $
+ Revision 1.3  2004/03/11 12:35:39  dek
+ exteranlized strings
+
  Revision 1.2  2004/03/10 10:31:44  dek
  added header and footer
 

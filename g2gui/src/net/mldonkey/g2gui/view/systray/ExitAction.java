@@ -28,15 +28,14 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 
  /**
- * @version $Id: ExitAction.java,v 1.2 2004/03/10 10:31:44 dek Exp $ 
+ * @version $Id: ExitAction.java,v 1.3 2004/03/11 12:35:39 dek Exp $ 
  *
  */
 class ExitAction extends SystrayAction {	
 	
-	public ExitAction(SystemTray tray) {
-		super(tray);
-		PreferenceLoader.setValue("forceClose",false);
-		setText("Exit");
+	public ExitAction(SystemTray tray,String title) {
+		super(tray, title);
+		PreferenceLoader.setValue("forceClose",false);		
 		setImageDescriptor(G2GuiResources.getImageDescriptor("X"));
 	}
 	
@@ -50,6 +49,9 @@ class ExitAction extends SystrayAction {
 }
 /*
  $Log: ExitAction.java,v $
+ Revision 1.3  2004/03/11 12:35:39  dek
+ exteranlized strings
+
  Revision 1.2  2004/03/10 10:31:44  dek
  added header and footer
 

@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.view.MainWindow;
 
 
  /**
- * @version $Id: ToggleAction.java,v 1.3 2004/03/10 10:31:44 dek Exp $ 
+ * @version $Id: ToggleAction.java,v 1.4 2004/03/11 12:35:39 dek Exp $ 
  *
  */
 class ToggleAction extends SystrayAction {
@@ -36,10 +36,9 @@ class ToggleAction extends SystrayAction {
 	private MainWindow parent;
 	private boolean isVisible=true;
 	
-	public ToggleAction(SystemTray tray) {
-		super(tray);
-		isVisible=shell.isVisible();		
-		setText("toggle visibility");
+	public ToggleAction(SystemTray tray,String title) {
+		super(tray,title);
+		isVisible=shell.isVisible();
 		setChecked(isVisible);
 	}
 	public void run() {		
@@ -52,6 +51,9 @@ class ToggleAction extends SystrayAction {
 }
 /*
  $Log: ToggleAction.java,v $
+ Revision 1.4  2004/03/11 12:35:39  dek
+ exteranlized strings
+
  Revision 1.3  2004/03/10 10:31:44  dek
  added header and footer
 

@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
 
  /**
- * @version $Id: MinimizeToTrayAction.java,v 1.2 2004/03/10 10:31:44 dek Exp $ 
+ * @version $Id: MinimizeToTrayAction.java,v 1.3 2004/03/11 12:35:39 dek Exp $ 
  *
  */
 public class MinimizeToTrayAction extends SystrayAction  {
@@ -36,9 +36,8 @@ public class MinimizeToTrayAction extends SystrayAction  {
 	private MainWindow parent;
 	private boolean toTray;
 	
-	public MinimizeToTrayAction(SystemTray tray) {
-		super(tray);		
-		setText("Minimize to Tray");
+	public MinimizeToTrayAction(SystemTray tray, String title) {
+		super(tray, title);			
 		toTray = PreferenceLoader.loadBoolean("minimizeToTray");
 		setChecked(toTray);
 	}
@@ -49,6 +48,9 @@ public class MinimizeToTrayAction extends SystrayAction  {
 }
 /*
  $Log: MinimizeToTrayAction.java,v $
+ Revision 1.3  2004/03/11 12:35:39  dek
+ exteranlized strings
+
  Revision 1.2  2004/03/10 10:31:44  dek
  added header and footer
 

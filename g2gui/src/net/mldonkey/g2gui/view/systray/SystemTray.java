@@ -29,6 +29,8 @@ import java.util.Observer;
 import net.mldonkey.g2gui.helper.VersionInfo;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.MainWindow;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -42,7 +44,7 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
  /**
- * @version $Id: SystemTray.java,v 1.9 2004/03/10 11:08:29 dek Exp $ 
+ * @version $Id: SystemTray.java,v 1.10 2004/03/11 12:35:39 dek Exp $ 
  *
  */
 public class SystemTray implements SystemTrayIconListener,Observer {
@@ -162,11 +164,13 @@ public class SystemTray implements SystemTrayIconListener,Observer {
 		IMenuListener manager = new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
 				manager.add(new Separator());
-				manager.add(new CloseToTrayAction(SystemTray.this));
-				manager.add(new MinimizeToTrayAction(SystemTray.this));
-				manager.add(new ToggleAction(SystemTray.this));
+				manager.add(
+						new CloseToTrayAction (
+								SystemTray.this,G2GuiResources.getString("TRAY_CLOSE_TO")));
+				manager.add(new MinimizeToTrayAction(SystemTray.this,G2GuiResources.getString("TRAY_MINIMIZE_TO")));
+				manager.add(new ToggleAction(SystemTray.this,G2GuiResources.getString("TRAY_TOGGLE")));
 				manager.add(new Separator());
-				manager.add(new ExitAction(SystemTray.this));
+				manager.add(new ExitAction(SystemTray.this,G2GuiResources.getString("TRAY_EXIT")));
 
 			}
 		};
@@ -243,6 +247,9 @@ public class SystemTray implements SystemTrayIconListener,Observer {
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.10  2004/03/11 12:35:39  dek
+ exteranlized strings
+
  Revision 1.9  2004/03/10 11:08:29  dek
  Systray s now running in gui thread
 
