@@ -2,6 +2,7 @@
 	* Core: Add support for protocol 19
 	* Transfers: Add uploaders table
 	* Transfers: Add client info from proto 19 to client table & client details popup
+	* Search: Fix #1137 widgetDisposed exception when ESC pressed in listbox of tooltip
 	
 2003/11/24: 
 	*** Release version 0.2.1 ***
