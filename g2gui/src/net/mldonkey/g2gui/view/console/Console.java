@@ -37,13 +37,17 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
 /**
  * ConsoleTab
  *
  *
- * @version $Id: Console.java,v 1.9 2003/08/25 22:11:53 zet Exp $ 
+ * @version $Id: Console.java,v 1.10 2003/08/26 14:28:26 zet Exp $ 
  *
  */
 public class Console extends Observable implements ControlListener  {	
@@ -69,6 +73,18 @@ public class Console extends Observable implements ControlListener  {
 		parent.addControlListener( this );		
 		/* Adding the Console-Display Text-field */
 		infoDisplay = new StyledText( parent, style | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
+	
+		Menu popupMenu = new Menu(infoDisplay);
+		  MenuItem copyItem = new MenuItem(popupMenu, SWT.PUSH);
+		  copyItem.setText("Copy");
+		  copyItem.addListener(SWT.Selection, new Listener() {
+		   public void handleEvent(Event event) {
+			infoDisplay.copy();
+		   }
+		  });
+		
+		infoDisplay.setMenu(popupMenu);
+	
 		input = new Text( parent, SWT.SINGLE | SWT.BORDER );					
 		
 		//Send command 
@@ -168,6 +184,9 @@ public class Console extends Observable implements ControlListener  {
 
 /*
 $Log: Console.java,v $
+Revision 1.10  2003/08/26 14:28:26  zet
+add Copy menuitem
+
 Revision 1.9  2003/08/25 22:11:53  zet
 update style bits
 
