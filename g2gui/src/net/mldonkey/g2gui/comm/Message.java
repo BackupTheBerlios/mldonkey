@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.20 2003/06/21 13:20:36 dek Exp $ 
+ * @version $Id: Message.java,v 1.21 2003/06/29 17:38:49 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -72,6 +72,14 @@ public abstract class Message {
 	 */
 	public static final short R_DEFINE_SEARCH = 3;
 	/**
+	 * Receive Result Info (value is 4)
+	 */
+	public static final short R_RESULT_INFO = 4;
+	/**
+	 * Recive Search Result (value is 5)
+	 */
+	public static final short R_SEARCH_RESULT = 5;
+	/**
 	 * Receive File Update Availability (value is 9)
 	 */
 	public static final short R_FILE_UPDATE_AVAILABILITY = 9;
@@ -100,6 +108,10 @@ public abstract class Message {
 	 */	
 	public static final short R_NETWORK_INFO = 20;
 	/**
+	 * Receive User Info (value is 21)
+	 */
+	public static final short R_USER_INFO = 21;
+	/**
 	 * Receive Server Info (value is 26)
 	 */
 	public static final short R_SERVER_INFO = 26;
@@ -112,13 +124,13 @@ public abstract class Message {
 	 */
 	public static final short R_ADD_PLUGIN_OPTION = 38;
 	/**
-	 * Receive Bad Password (value is 45)
-	 */
-	public static final short R_BAD_PASSWORD = 45;
-	/**
 	 * Receive File Download Update (value is 46)
 	 */
 	public static final short R_FILE_DOWNLOAD_UPDATE = 46;
+	/**
+	 * Receive Bad Password (value is 47)
+	 */
+	public static final short R_BAD_PASSWORD = 47;
 	/**
 	 * Receive Shared File Info (value is 48)
 	 */
@@ -127,6 +139,10 @@ public abstract class Message {
 	 * Receive Client Stats (value is 49)
 	 */
 	public static final short R_CLIENT_STATS = 49;
+	/**
+	 * Receive File Remove Source (value is 50)
+	 */
+	public static final short R_FILE_REMOVE_SOURCE = 50;
 	/**
 	 * Receive Clean Table (value is 51)
 	 */	
@@ -279,6 +295,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.21  2003/06/29 17:38:49  lemmstercvs01
+opcodes added, "bad password" fixed
+
 Revision 1.20  2003/06/21 13:20:36  dek
 work on optiontree continued - one can already change client_name in General-leaf
 
