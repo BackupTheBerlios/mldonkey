@@ -1,3 +1,8 @@
+2003/11/22: z
+	* Search: Fix columnSelector option on search tab 
+	* Transfer/Stats: Save sash positions/states between sessions
+	* Transfer: Preview option available in non-advanced mode
+	
 2003/11/21: vnc
 	* StatisticTab: fixed [Bug #1107] Big CPU-leak caused by StatisticsTab
 
