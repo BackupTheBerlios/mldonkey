@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  * @author $Author: lemmster $
- * @version $Id: MessagesTab.java,v 1.9 2003/08/23 09:47:52 lemmster Exp $
+ * @version $Id: MessagesTab.java,v 1.10 2003/08/23 14:58:38 lemmster Exp $
  */
 public class MessagesTab extends GuiTab {
 
@@ -221,7 +221,7 @@ public class MessagesTab extends GuiTab {
 	public void update(final Observable arg0, final Object arg1) {
 		if (arg1 instanceof ClientMessage
 			|| arg0 instanceof ClientInfoIntMap) {
-			Shell shell = MainTab.getShell();
+			Shell shell = this.mainWindow.getShell();
 			if(!shell.isDisposed() && shell !=null && shell.getDisplay()!=null) {
 				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -255,7 +255,7 @@ public class MessagesTab extends GuiTab {
 				Timer refreshTimer = new Timer();
 				refreshTimer.schedule( new TimerTask() {
 						public void run () {
-							Shell shell = MainTab.getShell();
+							Shell shell = mainWindow.getShell();
 							if(!shell.isDisposed() && shell !=null && shell.getDisplay()!=null) {
 								shell.getDisplay().asyncExec(new Runnable() {
 									public void run() {
@@ -272,7 +272,7 @@ public class MessagesTab extends GuiTab {
 	}
 	
 	public void runTimerUpdate() {
-		if (mustRefresh && !MainTab.getShell().isDisposed()) {
+		if (mustRefresh && !mainWindow.getShell().isDisposed()) {
 			tableViewer.refresh();
 			setRightLabel();
 			mustRefresh = false;
@@ -428,6 +428,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.10  2003/08/23 14:58:38  lemmster
+cleanup of MainTab, transferTree.* broken
+
 Revision 1.9  2003/08/23 09:47:52  lemmster
 just rename
 

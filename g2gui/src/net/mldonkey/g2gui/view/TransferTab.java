@@ -67,8 +67,8 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * Main
  *
- * @author $Author: zet $
- * @version $Id: TransferTab.java,v 1.33 2003/08/22 23:25:15 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: TransferTab.java,v 1.34 2003/08/23 14:58:38 lemmster Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -272,7 +272,7 @@ public class TransferTab extends GuiTab  {
 	
 	public void runLabelUpdate(final String text) 
 		{
-			Shell shell = MainTab.getShell();
+			Shell shell = this.mainWindow.getShell();
 			if(!shell.isDisposed() && shell !=null && shell.getDisplay()!=null) {
 				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -300,11 +300,14 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.34  2003/08/23 14:58:38  lemmster
+cleanup of MainTab, transferTree.* broken
+
 Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

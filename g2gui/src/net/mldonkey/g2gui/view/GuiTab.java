@@ -44,8 +44,8 @@ import org.eclipse.swt.widgets.Listener;
 /**
  * G2guiTab
  *
- * @author $Author: zet $
- * @version $Id: GuiTab.java,v 1.24 2003/08/23 01:57:36 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: GuiTab.java,v 1.25 2003/08/23 14:58:38 lemmster Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -110,7 +110,7 @@ public abstract class GuiTab implements Listener, Observer {
 		this.subContent.setLayout( new FillLayout());
 		subContent.setLayoutData( new GridData(GridData.FILL_BOTH));
 		
-		toolButton = new ToolButton( ( ( MainTab )gui ).getMainTools(), SWT.PUSH );		
+		toolButton = new ToolButton( ( ( MainTab )gui ).getCoolBar().getMainTools(), SWT.PUSH );		
 		toolButton.addListener( SWT.Selection, this );
 		
 		this.gui = gui;
@@ -161,9 +161,9 @@ public abstract class GuiTab implements Listener, Observer {
 		this.mainWindow.setActive( this );
 		this.toolButton.setActive( true );
 		/* does the mainwindow already have a statusline */
-		if ( this.mainWindow.statusline != null ) {
-			this.mainWindow.statusline.update( this.getStatusText() );
-			this.mainWindow.statusline.updateToolTip( this.getStatusTip() );
+		if ( this.mainWindow.getStatusline() != null ) {
+			this.mainWindow.getStatusline().update( this.getStatusText() );
+			this.mainWindow.getStatusline().updateToolTip( this.getStatusTip() );
 		}
 	}
 	
@@ -228,9 +228,9 @@ public abstract class GuiTab implements Listener, Observer {
 		toolButton.setBigInactiveImage(big);
 		toolButton.setSmallActiveImage(small);
 		toolButton.setSmallInactiveImage(small);		
-		toolButton.useSmallButtons(MainTab.toolbarSmallButtons);
+		toolButton.useSmallButtons(this.mainWindow.getCoolBar().isToolbarSmallButtons());
 		toolButton.setActive(false);
-		MainTab.mainToolButtons.add( toolButton );	
+		this.mainWindow.getCoolBar().getMainToolButtons().add( toolButton );	
 		
 		setLeftLabel(tabName);
 					
@@ -240,8 +240,8 @@ public abstract class GuiTab implements Listener, Observer {
 
 		if (createMe) {
 		
-			Color backgroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
-			Color foregroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_WHITE);
+			Color backgroundColor = this.mainWindow.getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
+			Color foregroundColor = this.mainWindow.getShell().getDisplay().getSystemColor(SWT.COLOR_WHITE);
 			
 			separator1 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
 			separator1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -273,7 +273,8 @@ public abstract class GuiTab implements Listener, Observer {
 			rightLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		
 			headerBar = true;
-		} else {
+		} 
+		else {
 			GridData x = new GridData(GridData.FILL_HORIZONTAL);
 			x.heightHint = 0;
 			pageHeaderPlaceHolder.setLayoutData(x);
@@ -295,11 +296,14 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.25  2003/08/23 14:58:38  lemmster
+cleanup of MainTab, transferTree.* broken
+
 Revision 1.24  2003/08/23 01:57:36  zet
 use JFace headerfont
 
 Revision 1.23  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/18 01:42:24  zet
 centralize resource bundle

@@ -77,7 +77,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  * @author $Author: lemmster $
- * @version $Id: SearchResult.java,v 1.25 2003/08/23 10:02:02 lemmster Exp $ 
+ * @version $Id: SearchResult.java,v 1.26 2003/08/23 14:58:38 lemmster Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -176,7 +176,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			int itemCount = table.getTable().getItemCount();
 			this.statusline = "Results: " + itemCount;
 			parent.setRightLabel( "Results: " + itemCount );
-			parent.getMainTab().statusline.update( this.statusline );
+			parent.getMainTab().getStatusline().update( this.statusline );
 		}
 	}
 	
@@ -218,7 +218,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		SearchTab parent = ( SearchTab ) cTabFolder.getData();
 		parent.setRightLabel( "Results: 0" );
 		this.statusline = "Results: 0";
-		parent.getMainTab().statusline.update( this.statusline );
+		parent.getMainTab().getStatusline().update( this.statusline );
 	}
 
 	/**
@@ -554,6 +554,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.26  2003/08/23 14:58:38  lemmster
+cleanup of MainTab, transferTree.* broken
+
 Revision 1.25  2003/08/23 10:02:02  lemmster
 use supertype where possible
 

@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  * @author $Author: lemmster $
- * @version $Id: ServerTab.java,v 1.15 2003/08/23 10:33:36 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.16 2003/08/23 14:58:38 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -328,8 +328,8 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 */
 	private void setStatusLine() {
 		this.statusText = G2GuiResources.getString( "SVT_SERVERS" ) + servers.getConnected();
-		this.mainWindow.statusline.update( this.statusText );
-		this.mainWindow.statusline.updateToolTip( "" );
+		this.mainWindow.getStatusline().update( this.statusText );
+		this.mainWindow.getStatusline().updateToolTip( "" );
 	}
 	
 	/**
@@ -407,6 +407,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.16  2003/08/23 14:58:38  lemmster
+cleanup of MainTab, transferTree.* broken
+
 Revision 1.15  2003/08/23 10:33:36  lemmster
 updateDisplay() only on displayAllServers change
 

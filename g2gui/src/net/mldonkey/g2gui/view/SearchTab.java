@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.TabItem;
  * SearchTab
  *
  * @author $Author: lemmster $
- * @version $Id: SearchTab.java,v 1.13 2003/08/22 21:06:48 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.14 2003/08/23 14:58:38 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -141,13 +141,13 @@ public class SearchTab extends GuiTab {
 				if ( cTabFolder.getItemCount() != 0 ) {
 					SearchResult nResult = ( SearchResult ) cTabFolder.getSelection().getData();
 					setRightLabel( nResult.getStatusLine() );
-					mainWindow.statusline.update( nResult.getStatusLine() );
-					mainWindow.statusline.updateToolTip( "" );
+					mainWindow.getStatusline().update( nResult.getStatusLine() );
+					mainWindow.getStatusline().updateToolTip( "" );
 				}
 				else {
 					setRightLabel( "" );
-					mainWindow.statusline.update( "" );
-					mainWindow.statusline.updateToolTip( "" );
+					mainWindow.getStatusline().update( "" );
+					mainWindow.getStatusline().updateToolTip( "" );
 				}
 			}
 		} );
@@ -163,8 +163,8 @@ public class SearchTab extends GuiTab {
 				if ( item.getSelection() != null ) {
 					SearchResult result = ( SearchResult ) item.getSelection().getData();
 					setRightLabel( result.getStatusLine() );
-					mainWindow.statusline.update( result.getStatusLine() );
-					mainWindow.statusline.updateToolTip( "" );
+					mainWindow.getStatusline().update( result.getStatusLine() );
+					mainWindow.getStatusline().updateToolTip( "" );
 				}
 			}
 		} );	
@@ -205,8 +205,11 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.14  2003/08/23 14:58:38  lemmster
+cleanup of MainTab, transferTree.* broken
+
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose
