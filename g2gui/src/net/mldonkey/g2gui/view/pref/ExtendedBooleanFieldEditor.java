@@ -23,8 +23,8 @@
 package net.mldonkey.g2gui.view.pref;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.*;
+//import org.eclipse.swt.SWT;
+//import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.Composite;
 
 
@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  * ExtendedBooleanFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedBooleanFieldEditor.java,v 1.6 2003/07/10 19:27:28 dek Exp $ 
+ * @version $Id: ExtendedBooleanFieldEditor.java,v 1.7 2003/07/26 17:54:14 zet Exp $ 
  *
  */
 public class ExtendedBooleanFieldEditor extends BooleanFieldEditor implements IValueEditor {
@@ -47,6 +47,10 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor implements IV
 	 */
 	public ExtendedBooleanFieldEditor( String name, String labelText, Composite shell ) {
 		super( name, labelText, shell );
+		temp = shell;
+		
+		/* setParent is not valid on many OSs (linux gtk)
+		
 		temp = new Composite( shell, SWT.NONE );
 			GridData gridData = new GridData();
 			gridData.horizontalSpan = 2;
@@ -59,7 +63,9 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor implements IV
 			( ( GridLayout ) shell.getLayout() ).numColumns = 2;	
 					
 		//now put this whole control inside this nice composite			
-			this.getChangeControl( shell ).setParent( temp );		
+			getChangeControl( shell ).setParent( temp );
+		*/
+			
 	}
 
 	/**
@@ -127,6 +133,9 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor implements IV
 
 /*
 $Log: ExtendedBooleanFieldEditor.java,v $
+Revision 1.7  2003/07/26 17:54:14  zet
+fix pref's illegal setParent, redo graphs, other
+
 Revision 1.6  2003/07/10 19:27:28  dek
 some idle-race cleanup
 

@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.*;
  * ExtendedFontFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedFontFieldEditor2.java,v 1.4 2003/07/26 03:10:29 zet Exp $ 
+ * @version $Id: ExtendedFontFieldEditor2.java,v 1.5 2003/07/26 17:54:14 zet Exp $ 
  *
  */
 public class ExtendedFontFieldEditor2 extends FontFieldEditor {
@@ -64,6 +64,7 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 			fontButton.addSelectionListener(
 					new SelectionListener() {
 						public void widgetSelected( SelectionEvent e ) {
+							fontDialog.setFontData(chosenFont[0]);
 							fontDialog.open();
 							if (fontDialog.getFontData() != null ) {
 								font = new Font( null, fontDialog.getFontData() );	
@@ -175,6 +176,9 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 
 /*
 $Log: ExtendedFontFieldEditor2.java,v $
+Revision 1.5  2003/07/26 17:54:14  zet
+fix pref's illegal setParent, redo graphs, other
+
 Revision 1.4  2003/07/26 03:10:29  zet
 null fontdata
 

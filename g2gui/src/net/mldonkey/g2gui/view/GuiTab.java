@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.Color;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.7 2003/07/26 00:51:43 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.8 2003/07/26 17:54:14 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -156,7 +156,7 @@ public abstract class GuiTab implements Listener, Observer {
 	public Composite getContent() {
 		return content;
 	}
-	protected Font loadFont2( String preferenceString ) {
+	static Font loadFont2( String preferenceString ) {
 		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
 		try { preferenceStore.load(); } catch ( IOException e ) { }		
 	
@@ -164,7 +164,7 @@ public abstract class GuiTab implements Listener, Observer {
 			return new Font (null, PreferenceConverter.getFontDataArray( preferenceStore, preferenceString ) ); 
 		return null;
 	}
-	protected Color loadColour (String preferenceString ) {
+	static Color loadColour (String preferenceString ) {
 			PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
 				try { preferenceStore.load(); } catch ( IOException e ) { }		
 		
@@ -180,6 +180,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.8  2003/07/26 17:54:14  zet
+fix pref's illegal setParent, redo graphs, other
+
 Revision 1.7  2003/07/26 00:51:43  zet
 stats graph continues to observe when inactive
 

@@ -31,30 +31,25 @@ import org.eclipse.swt.*;
 
 public class GraphControl extends Composite{
 
-	private GraphCanvas graphCanvas1,graphCanvas2;
+	private GraphCanvas graphCanvas;
 
 	private Composite parent;
 	private GraphPainter graphPainter;
-	private Graph uploadGraph,downloadGraph;
-	
-	
-	public GraphControl(Composite parent) {
+	private Graph graph;
+		
+	public GraphControl(Composite parent, String name, Color color1, Color color2) {
 		super(parent,SWT.BORDER);
 		this.parent = parent;
-		graphCanvas1 = new GraphCanvas(this);
-		graphCanvas2 = new GraphCanvas(this);
+		graphCanvas = new GraphCanvas(this);
 		setLayout(new FillLayout());
 		layout(true);
 			
-	//	System.out.println("parent widget" + parent.getBounds());
-		uploadGraph = new Graph(new Color(null,244,0,0), "Uploads" );
-		downloadGraph = new Graph(new Color(null,0,0,244), "Downloads" );
+		graph = new Graph(name, color1, color2);
 		
 		// this.setSize(400,200);
 		//graphCanvas1.redraw();
 		//graphCanvas2.redraw();
-		graphCanvas1.setGraph(downloadGraph);
-		graphCanvas2.setGraph(uploadGraph);
+		graphCanvas.setGraph(graph);
 		
 	/*	addControlListener(new ControlAdapter() {
 				 public void controlResized(ControlEvent e) {
@@ -83,27 +78,23 @@ public class GraphControl extends Composite{
 		if ( !parent.isDisposed() )				
 					parent.getDisplay().asyncExec( new Runnable () {
 						public void run() {
-							if (!graphCanvas1.isDisposed()) graphCanvas1.redraw();
-							if (!graphCanvas2.isDisposed()) graphCanvas2.redraw();
+							if (!graphCanvas.isDisposed()) graphCanvas.redraw();
+						//	if (!graphCanvas2.isDisposed()) graphCanvas2.redraw();
 						}
 					});
 	}
 	
-	public void addPointToUploadGraph(float value)
+	public void addPointToGraph(float value)
 	{
-		uploadGraph.addPoint((int)(value*100));
-
+		graph.addPoint((int)(value*100));
 	}
-
-	public void addPointToDownloadGraph(float value) {
-		downloadGraph.addPoint((int)(value*100));		
-		
-	}
-	
 }
 
 /*
 $Log: GraphControl.java,v $
+Revision 1.9  2003/07/26 17:54:14  zet
+fix pref's illegal setParent, redo graphs, other
+
 Revision 1.8  2003/07/26 05:42:39  zet
 cleanup
 

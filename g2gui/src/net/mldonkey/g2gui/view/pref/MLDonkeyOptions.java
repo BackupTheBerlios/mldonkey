@@ -42,7 +42,7 @@ import org.eclipse.swt.layout.GridLayout;
  * MLDonkeyOptions
  *
  * @author $user$
- * @version $Id: MLDonkeyOptions.java,v 1.7 2003/07/26 03:07:12 zet Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.8 2003/07/26 17:54:14 zet Exp $ 
  *
  */
 public class MLDonkeyOptions extends PreferencePage {
@@ -71,7 +71,8 @@ public class MLDonkeyOptions extends PreferencePage {
 		scrollParent.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
+		int numGridColumns = 2;
+		layout.numColumns = numGridColumns;
 			
 		Composite composite = new Composite(scrollParent, SWT.NONE);
 		composite.setLayout(layout);
@@ -105,7 +106,8 @@ public class MLDonkeyOptions extends PreferencePage {
 											description, 
 											composite );
 				temp.setSelection( new Boolean( value ).booleanValue() );
-				temp.setToolTipText( optionName );				
+				temp.setToolTipText( optionName );	
+				temp.fillIntoGrid(composite, numGridColumns );			
 				fields.put( optionName, temp );
 			}
 			else  {			
@@ -122,7 +124,7 @@ public class MLDonkeyOptions extends PreferencePage {
 		}
 		
 		if ( options.size() == 0 ) {
-			Label noOptions = new Label ( parent, SWT.NONE );
+			Label noOptions = new Label ( composite, SWT.NONE );
 			noOptions.setText( "please select a subentry from the list" );
 			this.noDefaultAndApplyButton();
 		}
@@ -196,6 +198,9 @@ public class MLDonkeyOptions extends PreferencePage {
 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.8  2003/07/26 17:54:14  zet
+fix pref's illegal setParent, redo graphs, other
+
 Revision 1.7  2003/07/26 03:07:12  zet
 scrollbars
 

@@ -42,12 +42,14 @@ public class Graph {
 	static final short MAX_POINTS = 1600;
 
 	String graphName;
-	Color graphColor;
+	Color graphColor1, graphColor2;
 	
-	public Graph(Color color, String name)
+	public Graph(String name, Color color1, Color color2)
 	{
 		graphName = name;
-		graphColor = color;
+		graphColor1 = color1;
+		graphColor2 = color2;
+		
 		sumValue = totalPoints = avgValue = maxValue = 0;
 		// System.out.println("Graph created");
 		createTime = System.currentTimeMillis();
@@ -83,7 +85,7 @@ public class Graph {
 		sumValue += value;
 		amount++;
 		avgValue = (int) (sumValue/(long)amount);
-		//System.out.println(lastPoint.getTime());		
+		
 	}
 	
 	public int getAmount()
@@ -94,9 +96,13 @@ public class Graph {
 	{
 		return lastPoint;
 	}
-	public Color getGraphColor()
+	public Color getGraphColor1()
 	{
-		return graphColor;
+		return graphColor1;
+	}
+	public Color getGraphColor2()
+	{
+		return graphColor2;
 	}
 	public int getMax() 
 	{
@@ -114,6 +120,9 @@ public class Graph {
 }
 /*
 $Log: Graph.java,v $
+Revision 1.7  2003/07/26 17:54:14  zet
+fix pref's illegal setParent, redo graphs, other
+
 Revision 1.6  2003/07/26 05:42:39  zet
 cleanup
 

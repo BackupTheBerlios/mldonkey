@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.graphics.Color;
 
 // rz,
 // TODO status-field
@@ -26,7 +27,15 @@ public class StatisticTab
 	extends GuiTab
 	implements Observer {
 	
-	GraphControl graphControl;
+	GraphControl uploadsGraphControl;
+	String uploadsGraphName = "Uploads";
+	Color uploadsGraphColor1 = new Color(null, 255,0,0);
+	Color uploadsGraphColor2 = new Color(null, 125,0,0);
+
+	GraphControl downloadsGraphControl;	
+	String downloadsGraphName = "Downloads";
+	Color downloadsGraphColor1 = new Color(null, 0,0,255);
+	Color downloadsGraphColor2 = new Color(null, 0,0,125);
 
 	
 	/**
@@ -49,16 +58,32 @@ public class StatisticTab
 	}
 
 	protected void createContents(Composite parent) {
-		// System.out.println(parent.getBounds());
+		SashForm mainSash = new SashForm( parent, SWT.VERTICAL );
+		mainSash.setLayout (new FillLayout());
 		
-		SashForm main = new SashForm( parent, SWT.VERTICAL );
-		Composite top = new Composite( main, SWT.BORDER );
+		// Top composite for other stats	
+		Composite top = new Composite( mainSash, SWT.BORDER );
 		top.setLayout( new FillLayout() );
-		Composite bottom = new Composite( main, SWT.BORDER );
-		bottom.setLayout( new FillLayout() );
-		main.setWeights( new int[] {1,11});
-		graphControl = new GraphControl(bottom);
-		 		
+				
+		
+		// Bottom graph for Sash				
+		SashForm graphSash = new SashForm (mainSash, SWT.HORIZONTAL );
+		graphSash.setLayout(new FillLayout());
+		
+		Composite left = new Composite (graphSash, SWT.NONE );
+		left.setLayout (new FillLayout() );
+		Composite right = new Composite (graphSash, SWT.NONE );
+		right.setLayout (new FillLayout() );
+					
+		downloadsGraphControl = new GraphControl(left, downloadsGraphName, 
+									downloadsGraphColor1, downloadsGraphColor2);
+									
+		uploadsGraphControl = new GraphControl(right, uploadsGraphName, 
+						uploadsGraphColor1, uploadsGraphColor2);
+			 				
+		// Until top composite has stats	 		
+		mainSash.setWeights( new int[] {1,11});	 		
+			 		
 	}
 
 	public void mouseUp(MouseEvent arg0) {}
@@ -70,16 +95,16 @@ public class StatisticTab
 		if (receivedInfo instanceof ClientStats){
 			ClientStats clientInfo = (ClientStats) receivedInfo;
 			
-			graphControl.addPointToUploadGraph(clientInfo.getTcpUpRate());
-			graphControl.addPointToDownloadGraph(clientInfo.getTcpDownRate());
-			graphControl.redraw();
-						
-			//graphControl.setGraph((int)(clientInfo.getTcpUpRate()*10));
-				
+			uploadsGraphControl.addPointToGraph(clientInfo.getTcpUpRate());
+			downloadsGraphControl.addPointToGraph(clientInfo.getTcpDownRate());
+			uploadsGraphControl.redraw();
+			downloadsGraphControl.redraw();
+							
 		}
 	}
 	
 	public void setInActive(boolean removeObserver) {
+		// Do not remove Observer
 		super.setInActive(false);
 	}
 	
