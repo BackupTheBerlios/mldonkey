@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.21 2003/06/29 17:38:49 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.22 2003/07/03 21:13:04 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -39,6 +39,18 @@ public abstract class Message {
 	 * Send CoreProtocol (value is 0)
 	 */
 	public static final short S_COREPROTOCOL = 0;
+	/**
+	 * Send Remove Download (value is 11)
+	 */
+	public static final short S_REMOVE_DOWNLOAD = 11;
+	/**
+	 * Send Save File As (value is 13)
+	 */
+	public static final short S_SAVE_FILE_AS = 13;
+	/**
+	 * Send Switch Download (value is 23)
+	 */
+	public static final short S_SWITCH_DOWNLOAD = 23;
 	/**
 	 * Send SetOption (value is 29)
 	 */
@@ -295,6 +307,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.22  2003/07/03 21:13:04  lemmstercvs01
+some opcodes added
+
 Revision 1.21  2003/06/29 17:38:49  lemmstercvs01
 opcodes added, "bad password" fixed
 
