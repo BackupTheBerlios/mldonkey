@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.11 2003/07/09 08:54:29 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.12 2003/08/02 09:27:39 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -60,6 +60,18 @@ public class OptionsInfo extends Parent {
 	 * Options Value
 	 */
 	private String value;
+	/**
+	 * The option defaultValue
+	 */
+	private String defaultValue;
+	/**
+	 * The HelpText to this optionsinfo
+	 */
+	private String optionHelp;
+	/**
+	 * Advanced option;
+	 */
+	private boolean advanced;
 	
 	/**
 	 * Creates a new optionsinfo
@@ -97,7 +109,76 @@ public class OptionsInfo extends Parent {
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.key = messageBuffer.readString();
 		this.setValue( messageBuffer.readString() );
-	}	
+	}
+	
+	/**
+	 * Reads the sectionToAppear from the MessageBuffer
+	 * @param messageBuffer MessageBuffer to read from
+	 */
+	public void addSectionToAppear( MessageBuffer messageBuffer ) {
+		/*
+		 * String Name of Option 
+		 * String Description 
+		 * String Section where Option should appear 
+		 * String Type of Option ("Bool", "Filename", ...) 
+		 * String Option Help 
+		 * String Current Option Value 
+		 * String Option Default Value 
+		 * int8 Advanced (0 -> simple, 1 -> advanced) 
+		 */		
+		this.sectionToAppear = messageBuffer.readString();
+		this.description = messageBuffer.readString();
+		this.key = messageBuffer.readString();
+		if ( this.parent.getProtoToUse() > 16 ) {
+			this.setOptionType( messageBuffer.readString() );
+			this.optionHelp = messageBuffer.readString();
+			this.value = messageBuffer.readString();
+			this.defaultValue = messageBuffer.readString();
+			this.setAdvanced( messageBuffer.readByte() );
+		}
+		else
+			this.setOptionType( messageBuffer.readByte() );
+	}
+
+	/**
+	 * Reads the pluginToAppear from the MessageBuffer
+	 * @param messageBuffer MessageBuffer to read from
+	 */
+	public void addPluginToAppear( MessageBuffer messageBuffer ) {
+		/*
+		 * String Name of Option 
+		 * String Description 
+		 * String Plugin where Option should appear 
+		 * String Type of Option ("Bool", "Filename", ...) 
+		 * String Option Help 
+		 * String Current Option Value 
+		 * String Option Default Value 
+		 * int8 Advanced (0 -> simple, 1 -> advanced) 
+		 */		
+		this.pluginToAppear = messageBuffer.readString();
+		this.description = messageBuffer.readString();
+		this.key = messageBuffer.readString();
+		if ( this.parent.getProtoToUse() > 16 ) {
+			this.setOptionType( messageBuffer.readString() );
+			this.optionHelp = messageBuffer.readString();
+			this.value = messageBuffer.readString();
+			this.defaultValue = messageBuffer.readString();
+			this.setAdvanced( messageBuffer.readByte() );
+		}
+		else
+			this.setOptionType( messageBuffer.readByte() );
+	}
+	
+	/**
+	 * Advanced or Beginner Option
+	 * @param b the byte
+	 */
+	private void setAdvanced( byte b ) {
+		if ( b == 0 )
+			this.advanced = false;
+		else
+			this.advanced = true;
+	}
 	
 	/**
 	 * return a string representation of this object
@@ -147,6 +228,37 @@ public class OptionsInfo extends Parent {
 				this.optionType = EnumTagType.BOOL;
 			else if ( optionType == 2 )
 				this.optionType = EnumTagType.FILE;
+	}
+	
+	/**
+	 * Sets the EnumTagType by String (proto > 17)
+	 * @param aString The string representation of the TagType
+	 */
+	private void setOptionType( String aString ) {
+		if ( aString.equals( "String" ) )
+			this.optionType = EnumTagType.STRING;
+		else if ( aString.equals( "Ip List" ) )
+			this.optionType = EnumTagType.IP_LIST;
+		else if ( aString.equals( "Int") )
+			this.optionType = EnumTagType.INT;
+		else if ( aString.equals( "Bool" ) )
+			this.optionType = EnumTagType.BOOL;
+		else if ( aString.equals( "Ip" ) )
+			this.optionType = EnumTagType.IP;	
+		else if ( aString.equals( "Addr" ) )
+			this.optionType = EnumTagType.ADDR;
+		else if ( aString.equals( "Integer" ) )
+			this.optionType = EnumTagType.INT;
+		else if ( aString.equals( "Float" ) )
+			this.optionType = EnumTagType.FLOAT;
+		else if ( aString.equals( "Md4" ) )
+			this.optionType = EnumTagType.MD4;
+		else if ( aString.equals( "Sha1" ) )			
+			this.optionType = EnumTagType.SHA1;
+		else {
+			this.optionType = EnumTagType.STRING;						
+			System.out.println( "Unknown EnumTagType: " + aString );					
+		}
 	}
 
 	/**
@@ -198,6 +310,9 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.12  2003/08/02 09:27:39  lemmstercvs01
+added support for proto > 16
+
 Revision 1.11  2003/07/09 08:54:29  lemmstercvs01
 void setKey() added
 

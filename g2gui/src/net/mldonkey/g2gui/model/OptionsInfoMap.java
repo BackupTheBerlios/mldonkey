@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.14 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.15 2003/08/02 09:27:39 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -76,24 +76,27 @@ public class OptionsInfoMap extends InfoMap {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readGeneralOptionDetails( MessageBuffer messageBuffer ) {
-		/*
-		 * String  	 Section where Option should appear 
-		 * String  	 Description 
-		 * String  	 Name of Option 
-		 * OptionType  	 The Type of the Option (to select which widget to use)
-		 */
+		/* read the name of option and reset the iterator */
+		int itr = messageBuffer.getIterator();
 		String sectionToAppear = messageBuffer.readString();
 		String description = messageBuffer.readString();
 		String nameOfOption = messageBuffer.readString();
-		byte optionType = messageBuffer.readByte();
-		 
-		 /*
-		  * now get the specific Option and set the values:
-		  */
-		OptionsInfo optionInfo = ( ( OptionsInfo ) infoMap.get( nameOfOption ) );
-		optionInfo.setDescription( description );
-		optionInfo.setSectionToAppear( sectionToAppear );
-		optionInfo.setOptionType( optionType );
+		messageBuffer.setIterator( itr );
+
+		if ( this.infoMap.contains( nameOfOption ) ) {
+			OptionsInfo option = ( OptionsInfo ) this.infoMap.get( nameOfOption );			
+			option.addSectionToAppear( messageBuffer );
+		}
+		else {
+			OptionsInfo option = new OptionsInfo( this.parent );
+			option.addSectionToAppear( messageBuffer );
+			this.infoMap.put( nameOfOption, option );
+		}
+		/* we dont need the strings anymomre */
+		sectionToAppear = null;
+		description = null;
+		nameOfOption = null;
+
 		this.setChanged();
 		this.notifyObservers( this );
 	}
@@ -104,35 +107,27 @@ public class OptionsInfoMap extends InfoMap {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readPluginOptionDetails( MessageBuffer messageBuffer ) {
-		/*
-		 * 	 String  	 Plugin where Option should appear 
-		 * 	 String  	 Description 
-		 * 	 String  	 Name of Option 
-		 * 	 OptionType  	 The Type of the Option (to select which widget to use)
-		 */
+		/* read the name of option and reset the iterator */
+		int itr = messageBuffer.getIterator();
 		String pluginToAppear = messageBuffer.readString();
 		String description = messageBuffer.readString();
 		String nameOfOption = messageBuffer.readString();
-		byte optionType = messageBuffer.readByte();
-		 
-		/*
-		 * now get the specific Option and set the values:
-		 */
-		/* Bugfix for missing options */
-		if ( this.infoMap.contains( nameOfOption ) ) { 
-			OptionsInfo optionInfo = ( ( OptionsInfo ) infoMap.get( nameOfOption ) );
-			optionInfo.setDescription( description );
-			optionInfo.setPluginToAppear( pluginToAppear );
-			optionInfo.setOptionType( optionType );	   
+		messageBuffer.setIterator( itr );
+
+		if ( this.infoMap.contains( nameOfOption ) ) {
+			OptionsInfo option = ( OptionsInfo ) this.infoMap.get( nameOfOption );			
+			option.addPluginToAppear( messageBuffer );
 		}
 		else {
-			OptionsInfo optionInfo = new OptionsInfo( this.parent );
-			optionInfo.setDescription( description );
-			optionInfo.setPluginToAppear( pluginToAppear );
-			optionInfo.setOptionType( optionType );
-			optionInfo.setKey( nameOfOption );
-			this.infoMap.put( nameOfOption, optionInfo );
+			OptionsInfo option = new OptionsInfo( this.parent );
+			option.addPluginToAppear( messageBuffer );
+			this.infoMap.put( nameOfOption, option );
 		}
+		/* we dont need the strings anymore */
+		pluginToAppear = null;
+		description = null;
+		nameOfOption = null;
+
 		this.setChanged();
 		this.notifyObservers( this );
 	}
@@ -162,6 +157,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.15  2003/08/02 09:27:39  lemmstercvs01
+added support for proto > 16
+
 Revision 1.14  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

@@ -26,33 +26,63 @@ package net.mldonkey.g2gui.model.enum;
  * EnumTagType
  *
  * @author markus
- * @version $Id: EnumTagType.java,v 1.1 2003/06/24 09:29:33 lemmstercvs01 Exp $ 
+ * @version $Id: EnumTagType.java,v 1.2 2003/08/02 09:27:39 lemmstercvs01 Exp $ 
  *
  */
 public class EnumTagType implements Enum {
 	/**
+	 * display an int
+	 */
+	public static EnumTagType INT = new EnumTagType();
+	/**
 	 * string (value is 0)
 	 */	
-	public static EnumTagType	STRING = new EnumTagType( 0 );
+	public static EnumTagType	STRING = new EnumTagType();
 	/**
 	 * bool (value is 1)
 	 */
-	public static EnumTagType BOOL = new EnumTagType( 1 );
+	public static EnumTagType BOOL = new EnumTagType();
 	/**
 	 * file (value is 2)
 	 */
-	public static EnumTagType FILE = new EnumTagType( 2 );
-	
+	public static EnumTagType FILE = new EnumTagType();
+	/**
+	 * display an ip list
+	 */
+	public static EnumTagType IP_LIST = new EnumTagType();
+	/**
+	 * display an ip
+	 */
+	public static EnumTagType IP = new EnumTagType();
+	/**
+	 * display an address
+	 */
+	public static EnumTagType ADDR = new EnumTagType();
+	/**
+	 * display a float
+	 */
+	public static EnumTagType FLOAT = new EnumTagType();
+	/**
+	 * display a md4
+	 */
+	public static EnumTagType MD4 = new EnumTagType();
+	/**
+	 * display a sha1
+	 */
+	public static EnumTagType SHA1 = new EnumTagType();
 	/**
 	 * Creates a new EnumTagType
 	 * @param anInt The value
 	 */
-	private EnumTagType( int anInt ) {
+	private EnumTagType() {
 	}
 }
 
 /*
 $Log: EnumTagType.java,v $
+Revision 1.2  2003/08/02 09:27:39  lemmstercvs01
+added support for proto > 16
+
 Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
 Enum more improved
 
