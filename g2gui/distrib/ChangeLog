@@ -1,4 +1,5 @@
 2003/10/22: z
+	* Handle exceptions more gracefully with a popup & option to report the bug
 	* Search: Fix null pointer crash on stop/continue (possibly bug #1022)
 	* Search: Identify files that contain the string "fake" in any 
 				associated filenames/comments with a different color(red)
