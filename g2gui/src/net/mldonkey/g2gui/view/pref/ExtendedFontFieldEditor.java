@@ -26,7 +26,7 @@ import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.*;
  * ExtendedFontFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedFontFieldEditor.java,v 1.1 2003/07/03 08:31:06 dek Exp $ 
+ * @version $Id: ExtendedFontFieldEditor.java,v 1.2 2003/07/03 08:58:34 dek Exp $ 
  *
  */
 public class ExtendedFontFieldEditor extends FieldEditor {
@@ -63,6 +63,7 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 						public void widgetSelected( SelectionEvent e ) {
 							fontDialog.open();
 							font = new Font( null, fontDialog.getFontData() );
+							System.out.println("Font selected: "+font);
 							fontSample.setFont( font );
 							fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 							hasChanged = true;
@@ -133,17 +134,24 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * THis is, what we want to configure
+	 * a Value, that we can save in a preferenceStore
 	 * @return the selected font
 	 */
-	public Font getFont() {
-		return font;
+	public String toString() {
+		if ( font != null && font.getFontData() != null )	{		
+			System.out.println(font.toString());
+			return font.toString();}
+		
+		return "";
 	}
 
 }
 
 /*
 $Log: ExtendedFontFieldEditor.java,v $
+Revision 1.2  2003/07/03 08:58:34  dek
+how the hell do i store a font on disk...
+
 Revision 1.1  2003/07/03 08:31:06  dek
 first sketch of FontFieldeditor
 

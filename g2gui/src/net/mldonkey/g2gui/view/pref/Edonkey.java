@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Control;
  * Edonkey
  *
  * @author $user$
- * @version $Id: Edonkey.java,v 1.5 2003/07/02 16:16:47 dek Exp $ 
+ * @version $Id: Edonkey.java,v 1.6 2003/07/03 08:58:34 dek Exp $ 
  *
  */
 public class Edonkey extends PreferencePage {
@@ -61,8 +61,8 @@ public class Edonkey extends PreferencePage {
 
 /*
 $Log: Edonkey.java,v $
-Revision 1.5  2003/07/02 16:16:47  dek
-extensive Checkstyle applying
+Revision 1.6  2003/07/03 08:58:34  dek
+how the hell do i store a font on disk...
 
 Revision 1.4  2003/07/02 15:55:14  dek
 checkstyle

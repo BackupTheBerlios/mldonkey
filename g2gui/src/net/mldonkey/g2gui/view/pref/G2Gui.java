@@ -33,14 +33,14 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.11 2003/07/02 16:16:47 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.12 2003/07/03 08:58:34 dek Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {	
 	private Composite controlshell;
 
 	private int columns = 0;
-	private FontFieldEditor consoleTabFontField;	
+	private ExtendedFontFieldEditor consoleTabFontField;	
 	private boolean connected;
 	private StringFieldEditor hostNameField,
 					 	userNameField,
@@ -89,7 +89,7 @@ public class G2Gui extends PreferencePage  {
 			passwordField.setStringValue( preferenceStore.getString( "password" ) );
 			computeColumn( passwordField.getNumberOfControls() );
 
-			consoleTabFontField = new FontFieldEditor( "consoleFont", "Font for Console Window", "MLdonkey", shell );
+			consoleTabFontField = new ExtendedFontFieldEditor ( "consoleFont", "Font for Console Window", "Sample", shell );
 			computeColumn( consoleTabFontField.getNumberOfControls() );
 		
 			
@@ -105,6 +105,7 @@ public class G2Gui extends PreferencePage  {
 		setHorizontalSpan( portField );
 		setHorizontalSpan( userNameField );
 		setHorizontalSpan( passwordField );
+		consoleTabFontField.adjustForNumColumns( columns );
 	}
 
 	/**
@@ -138,12 +139,9 @@ public class G2Gui extends PreferencePage  {
 		preferenceStore.setValue( "username", userNameField.getStringValue() );
 		preferenceStore.setValue( "port", portField.getStringValue() );
 		preferenceStore.setValue( "password", passwordField.getStringValue() );
+		preferenceStore.setValue( "consoleFont", consoleTabFontField.toString() );		
 		
-		/*the next one gets the wrong thing, have to find out, how to obtain the selected
-		 * font out of the fontDialog, maybe subclassing the thing??
-		 */
 		
-		preferenceStore.setValue( "ConsoleFont", consoleTabFontField.getFieldEditorFontName() );
 		/* any more options go in here, you got the syntax??*/
 		
 			try {
@@ -180,6 +178,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.12  2003/07/03 08:58:34  dek
+how the hell do i store a font on disk...
+
 Revision 1.11  2003/07/02 16:16:47  dek
 extensive Checkstyle applying
 
