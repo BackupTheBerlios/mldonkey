@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.*;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.4 2003/07/04 17:48:57 dek Exp $ 
+ * @version $Id: NetworkItem.java,v 1.5 2003/07/06 13:19:39 dek Exp $ 
  *
  */
 public class NetworkItem extends StatusLineItem implements Observer {
@@ -69,24 +69,19 @@ public class NetworkItem extends StatusLineItem implements Observer {
 	public void update( Observable o, Object arg ) {
 		if ( arg instanceof ClientStats ) {
 			ClientStats temp = ( ClientStats ) arg;
-			final int[] networks = temp.getConnectedNetworks();
+			final NetworkInfo[] networks = temp.getConnectedNetworks();
 			if ( !parent.isDisposed() )						
 				parent.getDisplay().asyncExec( new Runnable () {
 					public void run() {
 						statusline.update( position, res.getString( "NI_ConnectedTo" ) + " "
 													 + networks.length + " "
 													 + res.getString( "NI_Networks" ) );
-						String toolTipText = "";									
-						TIntObjectIterator it = ( ( NetworkInfoIntMap ) core.getNetworkInfoMap() ).iterator();
-						int collsize = core.getNetworkInfoMap().size();
-						for ( ; collsize-- > 0;) {
-							it.advance();
-							if ( ( (NetworkInfo ) it.value() ).isEnabled() )	{	
+						String toolTipText = "";
+						
+						for ( int i = 0; i < networks.length; i++ ) {						
 								if ( toolTipText != "" ) toolTipText += "\n";					
-								toolTipText += ( ( ( NetworkInfo ) it.value() ).getNetworkName() );							
+								toolTipText += networks[ i ].getNetworkName();
 							}
-								
-						}
 						statusline.updateTooltip( position, toolTipText );
 					}
 				});
@@ -96,6 +91,9 @@ public class NetworkItem extends StatusLineItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.5  2003/07/06 13:19:39  dek
+small change
+
 Revision 1.4  2003/07/04 17:48:57  dek
 refactor
 
