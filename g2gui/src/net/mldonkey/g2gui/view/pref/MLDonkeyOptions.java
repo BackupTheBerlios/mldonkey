@@ -32,19 +32,22 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 /**
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.20 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.21 2003/08/24 11:30:57 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -77,30 +80,42 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 						if ( description.equals( "" ) )	description = temp.getKey();
 					String optionHelp = temp.getOptionHelp();					
 						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
+						
 					/*create a boolean-editor and add to page*/
-					BooleanFieldEditor bool =
-						new BooleanFieldEditor( temp.getKey(), description, BooleanFieldEditor.SEPARATE_LABEL, parent );
-					bool.getLabelControl( parent ).setToolTipText( optionHelp );
-					bool.setPreferenceStore( this.getPreferenceStore() );
+					BooleanFieldEditor bool = new BooleanFieldEditor( temp.getKey(), description, BooleanFieldEditor.SEPARATE_LABEL, parent );
+						bool.getLabelControl( parent ).setToolTipText( optionHelp );
+						bool.setPreferenceStore( this.getPreferenceStore() );
+						bool.fillIntoGrid( parent, 2 );
+						bool.load();
 					addField( bool );
-					bool.fillIntoGrid( parent, 2 );
-					bool.load();
-				} else {
+					
+				} 
+				else if ( temp.getOptionType() == EnumTagType.INT ) {
+					String description = temp.getDescription();
+						if ( description.equals( "" ) )	description = temp.getKey();
+					String optionHelp = temp.getOptionHelp();					
+						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
+							
+					/*create a IntegerFieldEditor and add to page*/
+					IntegerFieldEditor integer = new IntegerFieldEditor( temp.getKey(), description, parent, 25 );
+						integer.getLabelControl( parent ).setToolTipText( optionHelp );
+						integer.setPreferenceStore( this.getPreferenceStore() );					
+						integer.fillIntoGrid( parent, 2 );
+						integer.load();
+					addField( integer );
+				} 
+				else {
 					String description = temp.getDescription();
 						if ( description.equals( "" ) ) description = temp.getKey();
 					String optionHelp = temp.getOptionHelp();					
 						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
 					// with a very long string, the pref pages looks bad. limit to 25?
-					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, 25, parent ); 
+					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, parent ); 
 						string.getLabelControl( parent ).setToolTipText( optionHelp );					
 						string.setPreferenceStore( this.getPreferenceStore() );
-						
-					//Point inputSize = string.getTextControl( parent ).getSize();
+						string.fillIntoGrid( parent, 2 );
+						string.load();
 					addField( string );
-					string.fillIntoGrid( parent, 2 );
-					string.load();
-					// this doesn't do anything since you fillIntoGrid ?
-					// string.getTextControl( parent ).setSize( 50, inputSize.y );
 				}
 			}
 	
@@ -163,6 +178,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.21  2003/08/24 11:30:57  dek
+prefDialog is not resizable any more, and we have IntEditors for int-values
+
 Revision 1.20  2003/08/23 15:21:37  zet
 remove @author
 

@@ -36,7 +36,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
  * as mldonkey itself cares for wrong values... 
  *
  *
- * @version $Id: OptionsPreferenceStore.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: OptionsPreferenceStore.java,v 1.9 2003/08/24 11:30:57 dek Exp $ 
  *
  */
 public class OptionsPreferenceStore implements IPreferenceStore {
@@ -91,7 +91,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultDouble(java.lang.String)
 	 */
 	public double getDefaultDouble(String name) {
-		//  Auto-generated method stub
+		System.out.println("getDefaultDouble");
 		return 0;
 	}
 
@@ -99,7 +99,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultFloat(java.lang.String)
 	 */
 	public float getDefaultFloat(String name) {
-		//  Auto-generated method stub
+		System.out.println("getDefaultFloat");
 		return 0;
 	}
 
@@ -107,15 +107,15 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultInt(java.lang.String)
 	 */
 	public int getDefaultInt(String name) {
-		//  Auto-generated method stub
-		return 0;
+		String stringValue = ( ( OptionsInfo )input.get( name ) ) .getDefaultValue();
+		return new Integer( stringValue ).intValue();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultLong(java.lang.String)
 	 */
 	public long getDefaultLong(String name) {
-		//  Auto-generated method stub
+		System.out.println("getDefaultLong");
 		return 0;
 	}
 
@@ -132,7 +132,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#getDouble(java.lang.String)
 	 */
 	public double getDouble(String name) {
-		//  Auto-generated method stub
+		System.out.println("getDouble");
 		return 0;
 	}
 
@@ -140,7 +140,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#getFloat(java.lang.String)
 	 */
 	public float getFloat(String name) {
-		//  Auto-generated method stub
+		System.out.println("getFloat");
 		return 0;
 	}
 
@@ -156,7 +156,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#getLong(java.lang.String)
 	 */
 	public long getLong(String name) {
-		//  Auto-generated method stub
+		System.out.println("getLong");
 		return 0;
 	}
 
@@ -173,15 +173,14 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#isDefault(java.lang.String)
 	 */
 	public boolean isDefault(String name) {
-		//  Auto-generated method stub
+		System.out.println("isDefault");
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.IPreferenceStore#needsSaving()
 	 */
-	public boolean needsSaving() {
-		//  Auto-generated method stub
+	public boolean needsSaving() {		
 		return false;
 	}
 
@@ -189,7 +188,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#putValue(java.lang.String, java.lang.String)
 	 */
 	public void putValue(String name, String value) {
-		//  Auto-generated method stub
+		System.out.println("putValue");
 		
 	}
 
@@ -197,7 +196,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#removePropertyChangeListener(org.eclipse.jface.util.IPropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(IPropertyChangeListener listener) {
-		//  Auto-generated method stub
+		System.out.println("removePropertyChangeListener");
 		
 	}
 
@@ -205,7 +204,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, double)
 	 */
 	public void setDefault(String name, double value) {
-		//  Auto-generated method stub
+		System.out.println("setDefault");
 		
 	}
 
@@ -213,7 +212,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, float)
 	 */
 	public void setDefault(String name, float value) {
-		//  Auto-generated method stub
+		System.out.println("setDefault");
 		
 	}
 
@@ -221,7 +220,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, int)
 	 */
 	public void setDefault(String name, int value) {
-		//  Auto-generated method stub
+		System.out.println("setDefault");
 		
 	}
 
@@ -229,7 +228,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, long)
 	 */
 	public void setDefault(String name, long value) {
-		//  Auto-generated method stub
+		System.out.println("setDefault");
 		
 	}
 
@@ -237,7 +236,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, java.lang.String)
 	 */
 	public void setDefault(String name, String defaultObject) {
-		//  Auto-generated method stub
+		System.out.println("setDefault");
 		
 	}
 
@@ -245,7 +244,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, boolean)
 	 */
 	public void setDefault(String name, boolean value) {
-		//  Auto-generated method stub
+		System.out.println("setDefault");
 		
 	}
 
@@ -253,7 +252,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setToDefault(java.lang.String)
 	 */
 	public void setToDefault(String name) {
-		//  Auto-generated method stub
+		System.out.println("setDefault");
 		
 	}
 
@@ -261,7 +260,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue(java.lang.String, double)
 	 */
 	public void setValue(String name, double value) {
-		//  Auto-generated method stub
+		System.out.println("setValue");
 		
 	}
 
@@ -269,15 +268,18 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue(java.lang.String, float)
 	 */
 	public void setValue(String name, float value) {
-		//  Auto-generated method stub
+		System.out.println("setValue");
 		
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue(java.lang.String, int)
 	 */
-	public void setValue(String name, int value) {
-		//  Auto-generated method stub
+	public void setValue(String name, int value) {		
+		int oldValue = getInt(name);
+		if (oldValue != ( value ) ) {
+			( ( OptionsInfo )input.get( name ) ).setValue( Integer.toString( value ) );			
+		}
 		
 	}
 
@@ -285,7 +287,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue(java.lang.String, long)
 	 */
 	public void setValue(String name, long value) {
-		//  Auto-generated method stub
+		System.out.println("setValue");
 		
 	}
 
@@ -326,11 +328,14 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 
 /*
 $Log: OptionsPreferenceStore.java,v $
+Revision 1.9  2003/08/24 11:30:57  dek
+prefDialog is not resizable any more, and we have IntEditors for int-values
+
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.6  2003/08/19 13:08:54  dek
 minor fix

@@ -32,13 +32,14 @@ import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
 
 import org.eclipse.jface.preference.*;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.23 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: Preferences.java,v 1.24 2003/08/24 11:30:57 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -76,10 +77,17 @@ public class Preferences extends PreferenceManager {
 				/* ( non-Javadoc )
 				 * @see org.eclipse.jface.preference.PreferenceDialog#cancelPressed()
 				 */
-				protected void cancelPressed() {				
-					prefdialog.close();
-				}
+					protected void cancelPressed() {				
+						prefdialog.close();
+					}
+				/* (non-Javadoc)
+				 * @see org.eclipse.jface.window.Window#setShellStyle(int)
+				 */
+					protected void setShellStyle( int newShellStyle ) {					
+						super.setShellStyle( SWT.DIALOG_TRIM );
+					}
 				};
+		
 		if ( ( mldonkey != null ) && ( mldonkey.isConnected() ) ) {
 			this.connected = true;
 			createMLDonkeyOptions( connected, mldonkey );
@@ -218,11 +226,14 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.24  2003/08/24 11:30:57  dek
+prefDialog is not resizable any more, and we have IntEditors for int-values
+
 Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
