@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * ToolButton A simple helper class made so that the coolbar can be redrawn
  *
  *
- * @version $Id: ToolButton.java,v 1.9 2003/09/18 11:38:17 lemmster Exp $
+ * @version $Id: ToolButton.java,v 1.10 2003/09/18 14:14:29 zet Exp $
  *
  */
 public class ToolButton {
@@ -50,13 +50,7 @@ public class ToolButton {
     private int eventType;
     private Listener listener;
 
-	/**
-	 * DOCUMENT ME!
-	 *  
-	 * @param parent DOCUMENT ME!
-	 * @param style DOCUMENT ME!
-	 * @param index DOCUMENT ME!
-	 */
+	
     public ToolButton( ToolBar parent, int style, int index ) {
         this.toolbar = parent;
         this.toolItemStyle = SWT.RADIO;
@@ -66,142 +60,68 @@ public class ToolButton {
             toolItem = new ToolItem( parent, style, toolItemStyle );
     }
 
-	/**
-	 * DOCUMENT ME! 
-	 * 
-	 * @param parent DOCUMENT ME!
-	 * @param style DOCUMENT ME!
-	 */
     public ToolButton( ToolBar parent, int style ) {
         this( parent, style, -1 );
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param text DOCUMENT ME!
-     */
+ 
     public void setText( String text ) {
         this.text = text;
         toolItem.setText( text );
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param text DOCUMENT ME!
-     */
+  
     public void setToolTipText( String text ) {
         this.toolTipText = text;
         toolItem.setToolTipText( text );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param image DOCUMENT ME!
-     */
     public void setImage( Image image ) {
         toolItem.setImage( image );
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param image DOCUMENT ME!
-     */
+   
     public void setHotImage( Image image ) {
         toolItem.setHotImage( image );
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+  
     public ToolBar getParent(  ) {
         return toolItem.getParent(  );
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+   
     public ToolItem getToolItem(  ) {
         return toolItem;
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param image DOCUMENT ME!
-     */
+  
     public void setSmallActiveImage( Image image ) {
         smallActiveImage = image;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param image DOCUMENT ME!
-     */
     public void setBigActiveImage( Image image ) {
         bigActiveImage = image;
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param image DOCUMENT ME!
-     */
+   
     public void setSmallInactiveImage( Image image ) {
         smallInactiveImage = image;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param image DOCUMENT ME!
-     */
     public void setBigInactiveImage( Image image ) {
         bigInactiveImage = image;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param toggle DOCUMENT ME!
-     */
-    public void setActive( boolean toggle ) {
+     public void setActive( boolean toggle ) {
         toolItem.setSelection( toggle ); // looks bad with these non transparent .pngs
         active = toggle;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param useSmall DOCUMENT ME!
-     */
     public void useSmallButtons( boolean useSmall ) {
         useSmallButtons = useSmall;
     }
-
-    /**
-     * DOCUMENT ME!
-     */
+  
     public void resetImage(  ) {
         setHotImage( useSmallButtons ? smallActiveImage : bigActiveImage );
         setImage( useSmallButtons ? smallInactiveImage : bigInactiveImage );
         // if (active) setImage(useSmallButtons ? smallActiveImage : bigActiveImage);
         //	else	setImage(useSmallButtons ? smallInactiveImage : bigInactiveImage);
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param newtoolbar DOCUMENT ME!
-     */
+ 
     public void resetItem( ToolBar newtoolbar ) {
         toolItem.dispose(  );
         toolItem = new ToolItem( newtoolbar, toolItemStyle );
@@ -212,12 +132,6 @@ public class ToolButton {
         resetImage(  );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param eventType DOCUMENT ME!
-     * @param listener DOCUMENT ME!
-     */
     public void addListener( int eventType, Listener listener ) {
         this.listener = listener;
         this.eventType = eventType;
@@ -227,6 +141,9 @@ public class ToolButton {
 
 /*
 $Log: ToolButton.java,v $
+Revision 1.10  2003/09/18 14:14:29  zet
+revert
+
 Revision 1.9  2003/09/18 11:38:17  lemmster
 checkstyle
 
@@ -243,7 +160,7 @@ Revision 1.5  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.4  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.3  2003/08/21 16:04:24  zet
 try setSelection..

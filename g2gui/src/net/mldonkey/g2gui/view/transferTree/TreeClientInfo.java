@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- *
- *
+ * 
+ * 
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  */
 package net.mldonkey.g2gui.view.transferTree;
 
@@ -26,71 +26,47 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 
 /**
- *
+ * 
  * TreeClientInfo
  *
  *
- * @version $Id: TreeClientInfo.java,v 1.7 2003/09/18 12:12:23 lemmster Exp $
+ * @version $Id: TreeClientInfo.java,v 1.8 2003/09/18 14:11:01 zet Exp $ 
  *
  */
 public class TreeClientInfo {
-    private FileInfo fileInfo;
-    private ClientInfo clientInfo;
 
-	/**
-	 * DOCUMENT ME!
-	 *  
-	 * @param fileInfo DOCUMENT ME!
-	 * @param clientInfo DOCUMENT ME!
-	 */
-    public TreeClientInfo( FileInfo fileInfo, ClientInfo clientInfo ) {
-        this.fileInfo = fileInfo;
-        this.clientInfo = clientInfo;
-    }
+	private FileInfo fileInfo;
+	private ClientInfo clientInfo;
+	
+	public TreeClientInfo(FileInfo fileInfo, ClientInfo clientInfo) {
+		this.fileInfo = fileInfo;
+		this.clientInfo = clientInfo;
+	}
+	public FileInfo getFileInfo() {
+		return fileInfo;
+	}
+	public ClientInfo getClientInfo() {
+		return clientInfo;
+	}
+	
+	public boolean equals( Object o ) {
+			if (o instanceof TreeClientInfo) {
+				ClientInfo c = (ClientInfo) ((TreeClientInfo)o).getClientInfo();
+				FileInfo f = (FileInfo) ((TreeClientInfo)o).getFileInfo();
+				if (c.equals(this.getClientInfo()) && f.equals(this.getFileInfo()))
+					return true;
+				else
+					return false;
+			} else {
+				return false;
+			}
+		}
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public FileInfo getFileInfo(  ) {
-        return fileInfo;
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public ClientInfo getClientInfo(  ) {
-        return clientInfo;
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param o DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public boolean equals( Object o ) {
-        if ( o instanceof TreeClientInfo ) {
-            ClientInfo c = ( ClientInfo ) ( ( TreeClientInfo ) o ).getClientInfo(  );
-            FileInfo f = ( FileInfo ) ( ( TreeClientInfo ) o ).getFileInfo(  );
-            if ( c.equals( this.getClientInfo(  ) ) && f.equals( this.getFileInfo(  ) ) )
-                return true;
-            else
-                return false;
-        }
-        else
-            return false;
-    }
 }
-
 /*
 $Log: TreeClientInfo.java,v $
-Revision 1.7  2003/09/18 12:12:23  lemmster
-checkstyle
+Revision 1.8  2003/09/18 14:11:01  zet
+revert
 
 Revision 1.6  2003/09/08 19:49:16  lemmster
 just repaired the log

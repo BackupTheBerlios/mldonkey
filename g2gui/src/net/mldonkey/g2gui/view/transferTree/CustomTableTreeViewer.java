@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- *
- *
+ * 
+ * 
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  */
 package net.mldonkey.g2gui.view.transferTree;
 
@@ -34,138 +34,89 @@ import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- *
+ * 
  * CustomTableTreeViewer
  *
  *
- * @version $Id: CustomTableTreeViewer.java,v 1.9 2003/09/18 12:12:23 lemmster Exp $
+ * @version $Id: CustomTableTreeViewer.java,v 1.10 2003/09/18 14:11:01 zet Exp $ 
  *
  */
 public class CustomTableTreeViewer extends TableTreeViewer {
- 	/**
- 	 * DOCUMENT ME!
- 	 * 
- 	 * @param parent DOCUMENT ME!
- 	 * @param style DOCUMENT ME!
- 	 */
-    public CustomTableTreeViewer( Composite parent, int style ) {
-        super( parent, style );
-    }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param element DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public Widget objectToItem( Object element ) {
-        return findItem( element );
-    }
+	public CustomTableTreeViewer(Composite parent, int style) {
+		super(parent, style);
+	}
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param item DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public Item getParentItem( Item item ) {
-        return super.getParentItem( item );
-    }
+	public Widget objectToItem(Object element) {
+		return findItem(element);
+	}
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param item DOCUMENT ME!
-     * @param element DOCUMENT ME!
-     */
-    public void updatePlus( Item item, Object element ) {
-        super.updatePlus( item, element );
-    }
+	public Item getParentItem(Item item) {
+		return super.getParentItem(item);
+	}
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param item DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public Item[] getItems( Item item ) {
-        return super.getItems( item );
-    }
+	public void updatePlus(Item item, Object element) {
+		super.updatePlus(item, element);
+	}
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param item DOCUMENT ME!
-     * @param element DOCUMENT ME!
-     */
-    protected void doUpdateItem( Item item, Object element ) {
-        // update icon and label
-        // Similar code in TableTreeViewer.doUpdateItem()
-        IBaseLabelProvider prov = getLabelProvider();
-        ITableLabelProvider tprov = null;
-        ILabelProvider lprov = null;
-        if ( prov instanceof ITableLabelProvider )
-            tprov = ( ITableLabelProvider ) prov;
-        else
-            lprov = ( ILabelProvider ) prov;
-        int columnCount = this.getTableTree().getTable().getColumnCount();
-        TableTreeItem ti = ( TableTreeItem ) item;
-
-        /*
-         * Also enter loop if no columns added.  
-         * See 1G9WWGZ: JFUIF:WINNT - TableViewer with 0 columns does not work
-     	 */
-        for ( int column = 0; ( column < columnCount ) || ( column == 0 ); column++ ) {
-            String text = ""; //$NON-NLS-1$
-            Image image = null;
-            if ( tprov != null ) {
-                text = tprov.getColumnText( element, column );
-                image = tprov.getColumnImage( element, column );
-            }
-            else {
-                if ( column == 0 ) {
-                    text = lprov.getText( element );
-                    image = lprov.getImage( element );
-                }
-            }
-
-            // Only set text if it changes
-            if ( !text.equals( ti.getText( column ) ) )
-                ti.setText( column, text );
-
-            // Apparently a problem to setImage to null if already null
-            if ( ti.getImage( column ) != image )
-                ti.setImage( column, image );
-        }
-        if ( prov instanceof IColorProvider ) {
-            IColorProvider cprov = ( IColorProvider ) prov;
-            if ( ti.getForeground() != cprov.getForeground( element ) ) {
-                if ( ( cprov.getForeground( element ) != null )
-                         || ( 
-                             !ti.getParent().getForeground().getRGB().equals( ti.getForeground()
-                                                                                          .getRGB() )
-                          ) )
-                    ti.setForeground( cprov.getForeground( element ) );
-            }
-            if ( ti.getBackground() != cprov.getBackground( element ) ) {
-                if ( ( cprov.getBackground( element ) != null )
-                         || ( 
-                             !ti.getParent().getBackground().getRGB().equals( ti.getBackground()
-                                                                                          .getRGB() )
-                          ) )
-                    ti.setBackground( cprov.getBackground( element ) );
-            }
-        }
-    }
+	public Item[] getItems(Item item) {
+		return super.getItems(item);
+	}
+	protected void doUpdateItem(Item item, Object element) {
+		// update icon and label
+		// Similar code in TableTreeViewer.doUpdateItem()
+		IBaseLabelProvider prov = getLabelProvider();
+		ITableLabelProvider tprov = null;
+		ILabelProvider lprov = null;
+		if (prov instanceof ITableLabelProvider)
+			tprov = (ITableLabelProvider) prov;
+		else
+			lprov = (ILabelProvider) prov;
+		int columnCount = this.getTableTree().getTable().getColumnCount();
+		TableTreeItem ti = (TableTreeItem) item;
+		// Also enter loop if no columns added.  See 1G9WWGZ: JFUIF:WINNT - TableViewer with 0 columns does not work
+		for (int column = 0; column < columnCount || column == 0; column++) {
+			String text = ""; //$NON-NLS-1$
+			Image image = null;
+			if (tprov != null) {
+				text = tprov.getColumnText(element, column);
+				image = tprov.getColumnImage(element, column);
+			} else {
+				if (column == 0) {
+					text = lprov.getText(element);
+					image = lprov.getImage(element);
+				}
+			}
+			// Only set text if it changes
+			if (!text.equals(ti.getText(column))) 
+				ti.setText(column, text);
+			// Apparently a problem to setImage to null if already null
+			if (ti.getImage(column) != image) 
+				ti.setImage(column, image);
+		}
+		if (prov instanceof IColorProvider) {
+			IColorProvider cprov = (IColorProvider) prov;
+			if (ti.getForeground() != cprov.getForeground(element)) {
+				if ( cprov.getForeground(element) != null
+					|| ( !ti.getParent().getForeground().getRGB().equals( ti.getForeground().getRGB() )) ) {
+					ti.setForeground(cprov.getForeground(element));
+					
+				}
+			}
+			if (ti.getBackground() != cprov.getBackground(element)) {
+				if ( cprov.getBackground(element) != null
+					|| ( !ti.getParent().getBackground().getRGB().equals( ti.getBackground().getRGB() )) ) {
+					
+					ti.setBackground(cprov.getBackground(element));
+				}
+			}
+		}
+	}
 }
-
 /*
 $Log: CustomTableTreeViewer.java,v $
-Revision 1.9  2003/09/18 12:12:23  lemmster
-checkstyle
+Revision 1.10  2003/09/18 14:11:01  zet
+revert
 
 Revision 1.8  2003/09/13 22:26:44  zet
 weak sets & !rawrate
@@ -180,7 +131,7 @@ Revision 1.5  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.4  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.3  2003/08/20 22:18:56  zet
 Viewer updates
