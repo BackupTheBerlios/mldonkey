@@ -27,16 +27,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.util.Iterator;
-import java.util.List;
-
-import net.mldonkey.g2gui.model.ClientStats;
-import net.mldonkey.g2gui.model.FileAddSource;
+import net.mldonkey.g2gui.helper.*;
+import net.mldonkey.g2gui.model.*;
 
 /**
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.3 2003/06/12 10:37:56 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.4 2003/06/12 18:16:00 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -48,6 +46,8 @@ public class Core extends Thread implements CoreCommunication {
 	private String host;
 	private int port;
 	private int coreProtocol = 0;
+	private ObjectPool messagePool;
+	private ObjectPool downloadPool;
 
 	/**
 	 * Core()
@@ -60,6 +60,8 @@ public class Core extends Thread implements CoreCommunication {
 		this.username = username_;
 		this.password = password_;
 		this.connection = connection_;
+		this.messagePool =  new GuiMessagePool();
+		this.downloadPool = new FileInfoPool();
 	}
 
 	/**
@@ -95,7 +97,7 @@ public class Core extends Thread implements CoreCommunication {
 				messageLength = Message.readInt32( i );
 				bufferStream = new BufferedInputStream( i, messageLength );
 				opCode = Message.readInt16( bufferStream );
-				decodeMessage( opCode, messageLength, bufferStream );
+				this.decodeMessage( opCode, messageLength, bufferStream );
 			}
 		} catch ( IOException e ) {
 			// TODO Auto-generated catch block
@@ -120,22 +122,26 @@ public class Core extends Thread implements CoreCommunication {
 					coreProtocol = Message.readInt32( inputStream );
 					Object[] temp = new Object[ 1 ];
 					temp[ 0 ] = new Integer( 16 );
-					Message coreProtocolReply =
-						new GuiMessage( Message.S_COREPROTOCOL, temp );			
+					Message coreProtocolReply = ( GuiMessage ) messagePool.checkOut();
+					coreProtocolReply.setMessage( Message.S_COREPROTOCOL, temp );			
 					coreProtocolReply.sendMessage( connection );
+					messagePool.checkIn( coreProtocolReply );
 
 					Object[] extension = { new Integer( 1 ), new Byte( ( byte ) 1 )};
 					Object[][] a = { extension };
-					Message guiExtension =
-						new GuiMessage( Message.S_GUIEXTENSION, a );
+					Message guiExtension = ( GuiMessage ) messagePool.checkOut();
+					guiExtension.setMessage( Message.S_GUIEXTENSION, a );
 					guiExtension.sendMessage( connection );
+					messagePool.checkIn( guiExtension );
 
 					String[] aString = { this.password, this.username };
 					Message password = new GuiMessage( Message.S_PASSWORD, aString );
 					password.sendMessage( connection );
 					
-					Message downloadingFiles = new GuiMessage( Message.S_GETDOWNLOADING_FILES );
+					Message downloadingFiles = ( GuiMessage ) messagePool.checkOut();
+					downloadingFiles.setMessage( Message.S_GETDOWNLOADING_FILES );
 					downloadingFiles.sendMessage( connection );
+					messagePool.checkIn( downloadingFiles );
 					
 					break;
 			case Message.R_OPTIONS_INFO :				
@@ -248,10 +254,12 @@ public class Core extends Thread implements CoreCommunication {
 					 * Payload:
 					 * a List of running Downloads
 					 */
-					 List aList = CoreMessage.readDownloadingList( inputStream );
-					 Iterator itr = aList.iterator();
+					 FileInfoList aList = CoreMessage.readDownloadingList( inputStream, downloadPool );
+					 Iterator itr = aList.fileInfoList.iterator();
 					 while ( itr.hasNext() ) {
-					 	System.out.println( itr.next().toString() );
+					 	FileInfo elem = ( FileInfo ) itr.next();
+					 	System.out.println( elem.toString() );
+					 	downloadPool.checkIn( elem );
 					 }
 					 aList = null;
 					 break;
@@ -261,7 +269,7 @@ public class Core extends Thread implements CoreCommunication {
 					 * Payload:
 					 * a List of complete Downloads
 					 */
-					 List aList2 = CoreMessage.readDownloadedList( inputStream );
+					 FileInfoList aList2 = CoreMessage.readDownloadedList( inputStream, downloadPool );
 					 aList2 = null;
 					 break;
 		 
@@ -311,6 +319,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.4  2003/06/12 18:16:00  lemmstercvs01
+DownloadList -> FileInfoList
+
 Revision 1.3  2003/06/12 10:37:56  lemmstercvs01
 added some opcodes
 
