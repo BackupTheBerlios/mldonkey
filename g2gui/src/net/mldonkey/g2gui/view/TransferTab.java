@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.67 2003/10/12 15:58:03 zet Exp $
+ * @version $Id: TransferTab.java,v 1.68 2003/10/12 23:14:23 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -99,6 +99,8 @@ public class TransferTab extends GuiTab {
      */
     protected void createContents( Composite parent ) {
         final SashForm mainSashForm = new SashForm( parent, (PreferenceLoader.loadBoolean("transferSashVertical") ? SWT.VERTICAL : SWT.HORIZONTAL) );
+		boolean advancedMode = PreferenceLoader.loadBoolean( "advancedMode" );
+		
 		mainSashForm.addDisposeListener( new DisposeListener() { 
 			public void widgetDisposed(DisposeEvent e) {
 				PreferenceStore p = PreferenceLoader.getPreferenceStore();
@@ -108,7 +110,7 @@ public class TransferTab extends GuiTab {
         
         
         Control downloadParent = mainSashForm;
-        if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+        if ( advancedMode ) {
             downloadParent = new SashForm( mainSashForm, (PreferenceLoader.loadBoolean("clientSashHorizontal") ? SWT.HORIZONTAL : SWT.VERTICAL ) );
         }
         ViewForm downloadViewForm =
@@ -116,7 +118,7 @@ public class TransferTab extends GuiTab {
                           SWT.BORDER
                           | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
                           
-        if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+        if ( advancedMode ) {
             createClientViewForm( (SashForm) downloadParent );
         } else {
         	downloadParent = downloadViewForm;
@@ -181,7 +183,7 @@ public class TransferTab extends GuiTab {
      *
      * @param parentSash 
      */
-    public void createClientViewForm( final SashForm parentSash ) {
+    public Composite createClientViewForm( final SashForm parentSash ) {
 		parentSash.addDisposeListener( new DisposeListener() { 
 			public void widgetDisposed(DisposeEvent e) {
 				PreferenceStore p = PreferenceLoader.getPreferenceStore();
@@ -214,6 +216,7 @@ public class TransferTab extends GuiTab {
             } );
         createClientTableViewer( downloadClients, parentSash );
         parentSash.setWeights( new int[] { 100, 0 } );
+        return downloadClients;
     }
 
     /**
@@ -366,6 +369,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.68  2003/10/12 23:14:23  zet
+nil
+
 Revision 1.67  2003/10/12 15:58:03  zet
 rewrite downloads table & more..
 
