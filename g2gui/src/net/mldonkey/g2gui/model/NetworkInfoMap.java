@@ -29,7 +29,7 @@ import gnu.trove.TIntObjectHashMap;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: NetworkInfoMap.java,v 1.1 2003/06/16 15:05:20 dek Exp $ 
+ * @version $Id: NetworkInfoMap.java,v 1.2 2003/06/16 17:43:55 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfoMap implements InfoCollection {
@@ -50,18 +50,18 @@ public class NetworkInfoMap implements InfoCollection {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
-		int network_id = messageBuffer.readInt32();
+		int id = messageBuffer.readInt32();
 		
-		if ( networkInfoMap.containsKey( network_id ) ) {
+		if ( networkInfoMap.containsKey( id ) ) {
 			//update existing NetworkInfo-Object
-			NetworkInfo networkInfo = (NetworkInfo)networkInfoMap.get(network_id);
-			networkInfo.readStream(messageBuffer,network_id);
+			NetworkInfo networkInfo = ( NetworkInfo ) networkInfoMap.get( id );
+			networkInfo.readStream( messageBuffer, id );
 		}
 		else {
 			//add a new NetworkInfo-Object to the Map
 			NetworkInfo networkInfo = new NetworkInfo();
-			networkInfo.readStream( messageBuffer,network_id );
-			this.networkInfoMap.put( network_id, networkInfo );
+			networkInfo.readStream( messageBuffer, id );
+			this.networkInfoMap.put( id, networkInfo );
 		}
 	}
 	
@@ -78,6 +78,9 @@ public class NetworkInfoMap implements InfoCollection {
 
 /*
 $Log: NetworkInfoMap.java,v $
+Revision 1.2  2003/06/16 17:43:55  lemmstercvs01
+checkstyle applied
+
 Revision 1.1  2003/06/16 15:05:20  dek
 *** empty log message ***
 
