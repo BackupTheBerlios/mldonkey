@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.23 2003/07/25 22:01:23 vnc Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.24 2003/07/26 17:15:04 vnc Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -91,7 +91,7 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 		input.addKeyListener( new KeyAdapter() {
 			public void keyPressed( KeyEvent e ) {
 				if ( e.character == SWT.CR ) {
-					infoDisplay.setText( infoDisplay.getText() + input.getText() + infoDisplay.getLineDelimiter() );
+					infoDisplay.append( input.getText() );
 					String[] command = new String[ 1 ] ;
 					command[ 0 ] = input.getText();
 					( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage( ( ( Core ) core ).getConnection() );
@@ -194,6 +194,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.24  2003/07/26 17:15:04  vnc
+optimized console display appendings
+
 Revision 1.23  2003/07/25 22:01:23  vnc
 added workaround for eclipse-bug 40800 (focus bottom on GTK2)
 
