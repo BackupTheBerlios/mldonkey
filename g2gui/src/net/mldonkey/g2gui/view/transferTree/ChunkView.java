@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkView.java,v 1.9 2003/07/20 11:47:04 dek Exp $ 
+ * @version $Id: ChunkView.java,v 1.10 2003/07/21 17:38:50 dek Exp $ 
  *
  */
 public class ChunkView extends Canvas {
@@ -315,14 +315,19 @@ public class ChunkView extends Canvas {
 	 * redraws this widget, with refreshed Information from FileInfo (if changed)
 	 */
 	public void refresh() {	
-		if ( this.hasChanged() )
+		if ( this.hasChanged() ) {		
 			createImage();
+			this.redraw();
+		}
 		
 	}
 }
 
 /*
 $Log: ChunkView.java,v $
+Revision 1.10  2003/07/21 17:38:50  dek
+checkstyle
+
 Revision 1.9  2003/07/20 11:47:04  dek
 foobar
 
