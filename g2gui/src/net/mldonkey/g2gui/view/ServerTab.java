@@ -40,12 +40,11 @@ import net.mldonkey.g2gui.view.server.ServerTableSorter;
 import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MenuEvent;
@@ -66,7 +65,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.25 2003/09/11 13:39:19 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.26 2003/09/14 09:40:31 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -86,16 +85,16 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	/* if you modify this, change the LayoutProvider and tableWidth */
 	private String[] tableColumns =
 	{ 
-		G2GuiResources.getString( "SVT_NETWORK" ),
-		G2GuiResources.getString( "SVT_NAME" ),
-		G2GuiResources.getString( "SVT_DESC" ),
-		G2GuiResources.getString( "SVT_ADDRESS" ),
-		G2GuiResources.getString( "SVT_PORT" ),
-		G2GuiResources.getString( "SVT_SERVERSCORE" ),
-		G2GuiResources.getString( "SVT_USERS" ),
-		G2GuiResources.getString( "SVT_FILES" ),
-		G2GuiResources.getString( "SVT_STATE" ),
-		G2GuiResources.getString( "SVT_FAVORITES" )
+		"SVT_NETWORK",
+		"SVT_NAME",
+		"SVT_DESC",
+		"SVT_ADDRESS",
+		"SVT_PORT",
+		"SVT_SERVERSCORE",
+		"SVT_USERS",
+		"SVT_FILES",
+		"SVT_STATE",
+		"SVT_FAVORITES"
 	};
 	/* 0 sets the tablewidth dynamcliy */
 	private int[] tableWidth =
@@ -120,15 +119,15 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		if ( this.core.getProtoToUse() <= 16 ) {
 			this.tableColumns = new String[]
 			{
-				G2GuiResources.getString( "SVT_NETWORK" ),
-				G2GuiResources.getString( "SVT_NAME" ),
-				G2GuiResources.getString( "SVT_DESC" ),
-				G2GuiResources.getString( "SVT_ADDRESS" ),
-				G2GuiResources.getString( "SVT_PORT" ),
-				G2GuiResources.getString( "SVT_SERVERSCORE" ),
-				G2GuiResources.getString( "SVT_USERS" ),
-				G2GuiResources.getString( "SVT_FILES" ),
-				G2GuiResources.getString( "SVT_STATE" ),
+				"SVT_NETWORK",
+				"SVT_NAME",
+				"SVT_DESC",
+				"SVT_ADDRESS",
+				"SVT_PORT",
+				"SVT_SERVERSCORE",
+				"SVT_USERS",
+				"SVT_FILES",
+				"SVT_STATE"
 			};	
 			this.tableWidth = new int[]
 			{
@@ -183,9 +182,21 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		
 		/* create the columns */
 		for ( int i = 0; i < tableColumns.length; i++ ) {
+			PreferenceStore prefStore = PreferenceLoader.getPreferenceStore();
+			prefStore.setDefault( tableColumns[ i ], tableWidth[ i ] );
 			tableColumn = new TableColumn( table.getTable(), SWT.LEFT );
-			tableColumn.setText( tableColumns[ i ] );
-			tableColumn.pack();
+			tableColumn.setText( G2GuiResources.getString( tableColumns[ i ] ) );
+			tableColumn.setWidth( prefStore.getInt( tableColumns[ i ] ) );
+			
+			/* read the new tablewidth to the prefstore */
+			final int j = i;
+			tableColumn.addDisposeListener( new DisposeListener() {
+				public synchronized void widgetDisposed( DisposeEvent e ) {
+					PreferenceStore prefStore = PreferenceLoader.getPreferenceStore();
+					TableColumn aColumn = ( TableColumn ) e.widget;
+					prefStore.setValue( tableColumns[ j ] , aColumn.getWidth() );
+				}
+			} );
 			
 			/* adds a sort listener */
 			final int columnIndex = i;
@@ -211,13 +222,6 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			} );
 		}
 
-		/* add a resize listener */
-		composite.addControlListener( new ControlAdapter() {
-		public void controlResized( ControlEvent e ) {
-				ServerTab.this.setColumnWidth();
-			}
-		} );
-		
 		/*
 		 * add a menulistener to set the first item to default
 		 * sadly not possible with the MenuManager Class
@@ -249,30 +253,6 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		//setRightLabel("Total: " + itemCount);
 		/* dont update the statusline, still null */
 		this.statusText = G2GuiResources.getString( "SVT_SERVERS" ) + itemCount;
-	}
-
-	/**
-	 * sets the columnwidth for each column
-	 */
-	private void setColumnWidth() {
-		/* the total width of the table */
-		int totalWidth = table.getTable().getSize().x - 25; //why is it 25 to width?
-		/* our tablecolumns */
-		TableColumn[] columns = table.getTable().getColumns();
-		for ( int i = 0; i < tableWidth.length; i++ ) {
-			TableColumn column = columns[ i ];
-			int width = tableWidth[ i ];
-			if ( width != 0 ) {
-				column.setWidth( tableWidth[ i ] );
-				totalWidth -= tableWidth[ i ];
-			}
-		}
-		/* sets the size of the name (add each column you want to set dynamicly) */
-		/* note by vnc: this resize makes problems in GTK, setColumnWidth is called a bit too often
-		 * while the table is not properly in shape/displaying, resulting in a too large totalWidth 
-		 */
-		//columns[ 2 ].setWidth( totalWidth );
-
 	}
 
 	/* (non-Javadoc)
@@ -425,6 +405,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.26  2003/09/14 09:40:31  lemmster
+save column width
+
 Revision 1.25  2003/09/11 13:39:19  lemmster
 check for disposed
 
