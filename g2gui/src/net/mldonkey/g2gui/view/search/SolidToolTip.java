@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * SolidToolTip
  *
- * @version $Id: SolidToolTip.java,v 1.2 2003/11/30 09:31:26 lemmster Exp $ 
+ * @version $Id: SolidToolTip.java,v 1.3 2003/12/01 08:45:37 lemmster Exp $ 
  *
  */
 public class SolidToolTip extends ToolTip {
@@ -109,7 +109,7 @@ public class SolidToolTip extends ToolTip {
 		// alt names field
 		if ( aResult.getNames().length > 1 ) {
 			createSeparator( shell );
-			this.altNames = new MyList(shell, SWT.H_SCROLL | SWT.V_SCROLL, aResult);
+			this.altNames = new MyList(shell, SWT.H_SCROLL | SWT.V_SCROLL);
 		 	( (MyList) altNames ).add( aResult.getSortedNames() );
 		}
 
@@ -122,12 +122,12 @@ public class SolidToolTip extends ToolTip {
 	 */
 	private class MyList extends List {
 		private List self;
-		public MyList(Composite parent, int style, ResultInfo result) {
+		private GridData gridData;
+		public MyList(Composite parent, int style) {
 			super(parent, style);
 			self = this;
-			GridData gridData = new GridData();
-			gridData.heightHint = 35;
-			gridData.widthHint = (int) (parent.getBounds().width * 0.75);
+			gridData = new GridData( GridData.FILL_HORIZONTAL );
+			gridData.heightHint = 23;
 			this.setLayoutData(gridData);
 			this.setForeground(foreGround);
 			this.setBackground(backGround);
@@ -169,6 +169,9 @@ public class SolidToolTip extends ToolTip {
 
 /*
 $Log: SolidToolTip.java,v $
+Revision 1.3  2003/12/01 08:45:37  lemmster
+cosmetic
+
 Revision 1.2  2003/11/30 09:31:26  lemmster
 ToolTip complete reworked (complete)
 

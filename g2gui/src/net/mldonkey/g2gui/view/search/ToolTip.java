@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ToolTip
  *
- * @version $Id: ToolTip.java,v 1.2 2003/11/30 09:31:26 lemmster Exp $ 
+ * @version $Id: ToolTip.java,v 1.3 2003/12/01 08:45:37 lemmster Exp $ 
  *
  */
 public abstract class ToolTip {
@@ -169,13 +169,16 @@ public abstract class ToolTip {
 		Rectangle shellBounds = shell.getBounds();
 		int x = Math.max( Math.min( pt.x, displayBounds.width - shellBounds.width ), 0 );
 		int y = Math.max( Math.min( pt.y, displayBounds.height - shellBounds.height ), 0 );
-		shell.setBounds( new Rectangle( x, y + 10, shellBounds.width, shellBounds.height ) );
+		shell.setBounds( new Rectangle( x, y + 1, shellBounds.width, shellBounds.height ) );
 		shell.open();
 	}
 }
 
 /*
 $Log: ToolTip.java,v $
+Revision 1.3  2003/12/01 08:45:37  lemmster
+cosmetic
+
 Revision 1.2  2003/11/30 09:31:26  lemmster
 ToolTip complete reworked (complete)
 
