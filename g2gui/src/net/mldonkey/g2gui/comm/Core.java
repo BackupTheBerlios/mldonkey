@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.39 2003/06/27 16:23:01 dek Exp $ 
+ * @version $Id: Core.java,v 1.40 2003/06/27 18:19:11 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -58,9 +58,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * 
 	 */
 	
-	private SimpleInformation fileAddSources = new FileAddSource( this ),
-						clientStats          = new ClientStats( this ),
-						consoleMessage       = new ConsoleMessage( this );
+	private SimpleInformation fileAddSources = new FileAddSource(  ),
+						clientStats          = new ClientStats(  ),
+						consoleMessage       = new ConsoleMessage(  );
 	/**
 	 * 
 	 */
@@ -310,6 +310,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.40  2003/06/27 18:19:11  dek
+small changes only
+
 Revision 1.39  2003/06/27 16:23:01  dek
 getOptions() added
 
