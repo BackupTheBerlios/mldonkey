@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.10 2003/07/27 22:54:05 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.11 2003/07/29 09:38:24 lemmstercvs01 Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -94,6 +94,20 @@ public abstract class GuiTab implements Listener, Observer {
 	protected abstract void createContents( Composite parent );
 	
 	/**
+	 * @return The text to display in the statusline for this tab
+	 */
+	public String getStatusText() {
+		return "";		
+	}
+	
+	/**
+	 * @return The tooltip to display in the statusline for this tab
+	 */
+	public String getStatusTip() {
+		return "";
+	}
+	
+	/**
 	 * To call if the MainWindow dispose
 	 */
 	public void dispose() {
@@ -117,13 +131,18 @@ public abstract class GuiTab implements Listener, Observer {
 	 * is called when this tab is set to foreground 
 	 */
 	public void setActive() {		
-		if (!hasObserver) {
+		if ( !hasObserver ) {
 			this.gui.getCore().addObserver( this );
-			hasObserver=true;
+			hasObserver = true;
 		}
 		this.active = true;		
 		this.mainWindow.setActive( this );
 		this.toolButton.setActive( true );
+		/* does the mainwindow already have a statusline */
+		if ( this.mainWindow.statusline != null ) {
+			this.mainWindow.statusline.update( 1, this.getStatusText() );
+			this.mainWindow.statusline.updateTooltip( 1, this.getStatusTip() );
+		}
 	}
 	
 	/**
@@ -186,6 +205,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.11  2003/07/29 09:38:24  lemmstercvs01
+set the statusline
+
 Revision 1.10  2003/07/27 22:54:05  zet
 coolbar small buttons
 
