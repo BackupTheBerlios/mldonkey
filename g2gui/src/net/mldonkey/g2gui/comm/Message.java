@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.4 2003/06/11 20:43:45 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.5 2003/06/11 23:25:49 dek Exp $ 
  *
  */
 public abstract class Message {
@@ -125,7 +125,10 @@ public abstract class Message {
 	 * @throws IOException Error if read on inputStream failed
 	 */
 	public static int readInt32( InputStream inputStream ) throws IOException {
-		return ( readInt16( inputStream ) + 256 * readInt16( inputStream ) );
+		return  ( readByte( inputStream ) + 256
+			  * ( readByte( inputStream ) + 256
+			  * ( readByte( inputStream ) + 256
+			  * ( readByte( inputStream ) ) ) ) );
 	}
 	/**
 	 * Reads a long from an InputStream
@@ -134,7 +137,14 @@ public abstract class Message {
 	 * @throws IOException Error if read on inputStream failed
 	 */
 	public static long readInt64( InputStream inputStream ) throws IOException {
-		return ( readInt32( inputStream ) + 256 * readInt32( inputStream ) );
+		return    ( readByte( inputStream ) + 256
+				* ( readByte( inputStream ) + 256 
+				* ( readByte( inputStream ) + 256 
+				* ( readByte( inputStream ) + 256 
+				* ( readByte( inputStream ) + 256 
+				* ( readByte( inputStream ) + 256
+				* ( readByte( inputStream ) + 256
+				* ( readByte( inputStream ) ) ) ) ) ) ) ) );		
 	}
 	/**
 	 * Reads a String from an InputStream
@@ -312,6 +322,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.5  2003/06/11 23:25:49  dek
+fixed readInt32 /readInt64
+
 Revision 1.4  2003/06/11 20:43:45  lemmstercvs01
 setMd4() fixed
 
