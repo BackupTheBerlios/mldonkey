@@ -22,46 +22,31 @@
  */
 package net.mldonkey.g2gui.model;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.helper.MessageBuffer;
-
 /**
- * FileInfo25.java
+ * ModelFactory21.java
  *
- * @version $Id: FileInfo25.java,v 1.2 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: ModelFactory21.java,v 1.1 2004/03/21 21:00:50 dek Exp $ 
  *
  */
-public class FileInfo25 extends FileInfo24 {
+public class ModelFactory21 extends ModelFactory20 {
 	
-	/**
-	 * @param core
-	 */
-	FileInfo25(CoreCommunication core) {
-		super(core);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param messageBuffer
-	 */
-	protected void setSize(MessageBuffer messageBuffer) {		
-		setSize( messageBuffer.readInt64());
-		
+	public ClientInfo getClientInfo() {		
+		return new ClientInfo21( core );
 	}
 	
-	/**
-	 * @param messageBuffer
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.model.ModelFactory#getState()
 	 */
-	protected void setDownloaded(MessageBuffer messageBuffer) {		
-		setDownloaded(messageBuffer.readInt64());
+	public State getState() {		
+		return new State21();
 	}
 
 }
 
 
 /*
- $Log: FileInfo25.java,v $
- Revision 1.2  2004/03/21 21:00:50  dek
+ $Log: ModelFactory21.java,v $
+ Revision 1.1  2004/03/21 21:00:50  dek
  implemented gui-Proto 21-25 !!!!!
 
 

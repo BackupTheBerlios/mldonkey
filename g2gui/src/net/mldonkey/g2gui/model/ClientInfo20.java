@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.Enum;
 /**
  * ClientInfo20
  *
- * @version $Id: ClientInfo20.java,v 1.4 2004/03/20 01:34:02 dek Exp $ 
+ * @version $Id: ClientInfo20.java,v 1.5 2004/03/21 21:00:50 dek Exp $ 
  *
  */
 public class ClientInfo20 extends ClientInfo19 {
@@ -55,12 +55,11 @@ public class ClientInfo20 extends ClientInfo19 {
 	 */
 	public void readStream(int clientID, MessageBuffer messageBuffer) {
 		this.clientid = clientID;		
-		this.clientnetworkid = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(messageBuffer.readInt32());
+		this.clientNetwork = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(messageBuffer.readInt32());
 		this.getClientKind().readStream(messageBuffer);
 
 		Enum oldState = this.getState().getState();
-		this.getState().readStream(messageBuffer);
-		readNewVersion(messageBuffer);
+		readState(messageBuffer);
 		this.setClientType(messageBuffer.readByte());
 		this.tag = messageBuffer.readTagList();
 		this.clientName = messageBuffer.readString();		
@@ -108,12 +107,12 @@ public class ClientInfo20 extends ClientInfo19 {
 	}
 
 	/**
-	 * 
+	 * @param messageBuffer
 	 */
-	protected void readNewVersion(MessageBuffer messageBuffer) {
-		// TODO Auto-generated method stub
-		
+	protected void readState(MessageBuffer messageBuffer) {
+		this.getState().readStream(messageBuffer);	
 	}
+
 	/**
 	 * @param messageBuffer
 	 */
@@ -148,6 +147,9 @@ public class ClientInfo20 extends ClientInfo19 {
 
 /*
 $Log: ClientInfo20.java,v $
+Revision 1.5  2004/03/21 21:00:50  dek
+implemented gui-Proto 21-25 !!!!!
+
 Revision 1.4  2004/03/20 01:34:02  dek
 implemented gui-Proto 25 !!!!!
 

@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.view.G2Gui;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.30 2004/03/20 01:34:02 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.31 2004/03/21 21:00:51 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -167,7 +167,7 @@ public class MessageBuffer {
 			stringLength += readInt32();			
 		}
 		if ( stringLength > 0 ) {					
-			String result = new String( buffer, iterator, stringLength );			
+			String result = new String( buffer, iterator, stringLength );
 			this.iterator = this.iterator + stringLength;
 			return result;
 		} 
@@ -222,9 +222,9 @@ public class MessageBuffer {
 	 * Reads a Tag[] from a MessageBuffer
 	 * @return a Tag[]
 	 */
-	public Tag[] readTagList() {
+	public Tag[] readTagList() {		
 		/* read the list of tags */
-		short listElem = this.readInt16();
+		short listElem = this.readInt16();		
 		Tag[] result = new Tag[ listElem ];
 		for ( int i = 0; i < listElem; i++ ) {
 			Tag aTag = core.getModelFactory().getTag();
@@ -276,9 +276,10 @@ public class MessageBuffer {
 		if (G2Gui.debug) {
 			if (buffer != null) {
 				if (buffer.length != iterator) {
-					if (G2Gui.debug) 
+					if (G2Gui.debug) {
 						System.out.println("MessageBuffer not empty after decoding OpCode:" + opCode);
-					
+						System.out.println("bytes left: "+(buffer.length-iterator));
+					}
 				}
 			}
 		}
@@ -298,6 +299,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.31  2004/03/21 21:00:51  dek
+implemented gui-Proto 21-25 !!!!!
+
 Revision 1.30  2004/03/20 01:34:02  dek
 implemented gui-Proto 25 !!!!!
 

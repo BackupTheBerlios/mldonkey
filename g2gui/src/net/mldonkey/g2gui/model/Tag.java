@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * Tag
  *
  *
- * @version $Id: Tag.java,v 1.10 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: Tag.java,v 1.11 2004/03/21 21:00:50 dek Exp $ 
  *
  */
 public class Tag extends SimpleInformation {
@@ -105,9 +105,9 @@ public class Tag extends SimpleInformation {
 		this.name = messageBuffer.readString();
 		this.setType( messageBuffer.readByte() );
 		if ( this.getType() != EnumType.STRING ) {
-			this.value = messageBuffer.readInt32();
+			this.value = messageBuffer.readInt32();			
 		}
-		else {
+		else {		
 			this.sValue = messageBuffer.readString();
 		}
 	}
@@ -115,6 +115,9 @@ public class Tag extends SimpleInformation {
 
 /*
 $Log: Tag.java,v $
+Revision 1.11  2004/03/21 21:00:50  dek
+implemented gui-Proto 21-25 !!!!!
+
 Revision 1.10  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -125,7 +128,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.6  2003/07/05 20:04:02  lemmy
 javadoc improved

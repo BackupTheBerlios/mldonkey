@@ -24,57 +24,65 @@ package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.G2Gui;
 
 /**
- * ClientInfo25.java
+ * ClientInfo21.java
  *
- * @version $Id: ClientInfo25.java,v 1.1 2004/03/20 01:34:02 dek Exp $ 
+ * @version $Id: ClientInfo21.java,v 1.1 2004/03/21 21:00:50 dek Exp $ 
  *
  */
-public class ClientInfo25 extends ClientInfo20 {
-
-	private String mod;
+public class ClientInfo21 extends ClientInfo20 {
 
 	/**
 	 * @param core
 	 */
-	public ClientInfo25(CoreCommunication core) {
-		super(core);
+	public ClientInfo21(CoreCommunication core) {
+		super(core);		
 	}
+	
+	private String eMulemod;
+
 	
 	protected void readEmuleMod(MessageBuffer messageBuffer) {
-		mod = messageBuffer.readString();		
+		eMulemod = messageBuffer.readString();		
 	}
-	
 
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.model.ClientInfo#getEmuleMod()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.mldonkey.g2gui.model.ClientInfo#getClientName()
 	 */
-	protected String getEmuleMod() {		
-		return mod;
+	public String getClientName() {
+		String result = super.getClientName();
+		if (!eMulemod.equals(""))
+			result = result+" ("+eMulemod+")";		
+		return result;
 	}
 	
-	protected void readNewVersion(MessageBuffer messageBuffer) {
-		/* dont know what this is, maybe client-speed?, print it */
-		if (getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
-			if (G2Gui.debug)
-				System.out.println(
-					"unkown field [ClientInfo25.java)(" + getClientName() + ") :" + messageBuffer.readInt32());
-			else
-				messageBuffer.readInt32();
-		}
-
+	/**
+	 * Updates the state of this object
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	public void update(MessageBuffer messageBuffer) {
+		super.update(messageBuffer);
+	}
+	
+	/**
+	 * @param messageBuffer
+	 */
+	protected void readState(MessageBuffer messageBuffer) {
+		this.getState().readStream(messageBuffer);	
 	}
 
+	
 }
 
 
 /*
- $Log: ClientInfo25.java,v $
- Revision 1.1  2004/03/20 01:34:02  dek
- implemented gui-Proto 25 !!!!!
+ $Log: ClientInfo21.java,v $
+ Revision 1.1  2004/03/21 21:00:50  dek
+ implemented gui-Proto 21-25 !!!!!
 
 
  */

@@ -48,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.86 2004/03/20 01:34:02 dek Exp $
+ * @version $Id: FileInfo.java,v 1.87 2004/03/21 21:00:50 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -154,8 +154,8 @@ public class FileInfo extends Parent implements Observer {
     /**
      * last time each chunk has been seen
      */
-    private String[] chunkAges;
-
+    protected String[] chunkAges;
+    protected int[] cunkAgesInt;
     /**
      * when download started
      */
@@ -574,7 +574,7 @@ public class FileInfo extends Parent implements Observer {
 
         /* File State */
         Enum oldState = this.state.getState();
-        this.getState().readStream(messageBuffer);
+        readState(messageBuffer);
 
         if (oldState != this.state.getState())
             changedProperties.add(CHANGED_RATE);
@@ -601,6 +601,13 @@ public class FileInfo extends Parent implements Observer {
     }
 
     /**
+	 * @param messageBuffer
+	 */
+	protected void readState(MessageBuffer messageBuffer) {
+		this.getState().readStream(messageBuffer);
+	}
+
+	/**
 	 * @param messageBuffer
 	 */
 	protected void readComment(MessageBuffer messageBuffer) {
@@ -657,7 +664,6 @@ public class FileInfo extends Parent implements Observer {
 	 * @param messageBuffer
 	 */
 	protected void setSize(MessageBuffer messageBuffer) {
-		System.out.println("setting size XX");
 		this.size = messageBuffer.readInt32();		
 	}
 	
@@ -1120,6 +1126,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.87  2004/03/21 21:00:50  dek
+implemented gui-Proto 21-25 !!!!!
+
 Revision 1.86  2004/03/20 01:34:02  dek
 implemented gui-Proto 25 !!!!!
 

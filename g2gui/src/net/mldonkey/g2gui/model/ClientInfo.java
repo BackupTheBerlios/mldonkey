@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.42 2004/03/20 01:34:02 dek Exp $
+ * @version $Id: ClientInfo.java,v 1.43 2004/03/21 21:00:50 dek Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -51,7 +51,7 @@ public class ClientInfo extends Parent {
     /**
      * Client Network Id
      */
-    protected NetworkInfo clientnetworkid;
+    protected NetworkInfo clientNetwork;
 
     /**
      * Client Kind
@@ -61,7 +61,7 @@ public class ClientInfo extends Parent {
     /**
      * Client State
      */
-    private State state = new State();
+    private State state = parent.getModelFactory().getState(); 
 
     /**
      * Client Type
@@ -166,7 +166,7 @@ public class ClientInfo extends Parent {
      * @return The client network identifier
      */
     public NetworkInfo getClientnetworkid() {
-        return clientnetworkid;
+        return clientNetwork;
     }
 
     /**
@@ -352,7 +352,7 @@ public class ClientInfo extends Parent {
     public void readStream(int clientID, MessageBuffer messageBuffer) {
         this.clientid = clientID;
 
-        this.clientnetworkid = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(messageBuffer.readInt32());
+        this.clientNetwork = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(messageBuffer.readInt32());
 
         this.getClientKind().readStream(messageBuffer);
 
@@ -410,13 +410,6 @@ public class ClientInfo extends Parent {
         this.setChanged();
         this.notifyObservers(this);
     }
-    /**
-     * 
-     * @return the emule-mod the client is using, "" if none present
-     */
-    protected String getEmuleMod(){
-		return "";
-    }
 
     /**
      * Adds a friend to the list of friends
@@ -454,6 +447,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.43  2004/03/21 21:00:50  dek
+implemented gui-Proto 21-25 !!!!!
+
 Revision 1.42  2004/03/20 01:34:02  dek
 implemented gui-Proto 25 !!!!!
 

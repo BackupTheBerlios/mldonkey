@@ -26,42 +26,33 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
- * FileInfo25.java
+ * FileInfo21.java
  *
- * @version $Id: FileInfo25.java,v 1.2 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: FileInfo22.java,v 1.1 2004/03/21 21:00:50 dek Exp $ 
  *
  */
-public class FileInfo25 extends FileInfo24 {
-	
+public class FileInfo22 extends FileInfo20 {
+
 	/**
 	 * @param core
 	 */
-	FileInfo25(CoreCommunication core) {
-		super(core);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param messageBuffer
-	 */
-	protected void setSize(MessageBuffer messageBuffer) {		
-		setSize( messageBuffer.readInt64());
-		
+	FileInfo22(CoreCommunication core) {
+		super(core);		
 	}
 	
 	/**
 	 * @param messageBuffer
 	 */
-	protected void setDownloaded(MessageBuffer messageBuffer) {		
-		setDownloaded(messageBuffer.readInt64());
+	protected void readComment(MessageBuffer messageBuffer) {		
+		setComment(messageBuffer.readString());		
 	}
 
 }
 
 
 /*
- $Log: FileInfo25.java,v $
- Revision 1.2  2004/03/21 21:00:50  dek
+ $Log: FileInfo22.java,v $
+ Revision 1.1  2004/03/21 21:00:50  dek
  implemented gui-Proto 21-25 !!!!!
 
 

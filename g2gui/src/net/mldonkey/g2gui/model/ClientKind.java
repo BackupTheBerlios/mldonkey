@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.enum.EnumClientMode;
  * ClientKind
  *
  *
- * @version $Id: ClientKind.java,v 1.11 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: ClientKind.java,v 1.12 2004/03/21 21:00:50 dek Exp $ 
  *
  */
 public class ClientKind extends SimpleInformation {
@@ -99,23 +99,30 @@ public class ClientKind extends SimpleInformation {
 	 * @param b Sets the client mode
 	 */
 	private void setClientMode( byte b ) {
-		if ( b == 0 )
+		if ( b == 0 ){			
 			clientMode = EnumClientMode.DIRECT;
-		else if ( b == 1 )
+		}
+		else if ( b == 1 ){			
 			clientMode = EnumClientMode.FIREWALLED;
+		}
+		else {
+			System.out.println("SYSTEM ERROR; WRONG FORMAT OF OPCODE");		
+		}
+		
+		
 	}
 
 	/**
 	 * Reads a Client Kind object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	public void readStream( MessageBuffer messageBuffer ) {
+	public void readStream( MessageBuffer messageBuffer ) {	
 		this.setClientMode( messageBuffer.readByte() );
-		if ( this.getClientMode() == EnumClientMode.DIRECT ) {
+		if ( this.getClientMode() == EnumClientMode.DIRECT ) {			
 			this.addr.readStream( false, messageBuffer );
 			this.port = messageBuffer.readUnsignedInt16();
 		}
-		else {
+		else {			
 			this.clientName = messageBuffer.readString();
 			this.clientHash = messageBuffer.readBinary( 16 );
 			this.addr = Addr.getAddr("0.0.0.0");
@@ -125,6 +132,9 @@ public class ClientKind extends SimpleInformation {
 
 /*
 $Log: ClientKind.java,v $
+Revision 1.12  2004/03/21 21:00:50  dek
+implemented gui-Proto 21-25 !!!!!
+
 Revision 1.11  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -138,7 +148,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.6  2003/07/06 09:37:41  lemmy
 javadoc improved

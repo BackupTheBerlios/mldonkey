@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * NetworkInfo18
  *
- * @version $Id: NetworkInfo18.java,v 1.2 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: NetworkInfo18.java,v 1.3 2004/03/21 21:00:50 dek Exp $ 
  *
  */
 public class NetworkInfo18 extends NetworkInfo {
@@ -104,7 +104,7 @@ public class NetworkInfo18 extends NetworkInfo {
 		 *	 	7 : NetworkHasUpload (upload is implemented) 
 		 */
 		this.network = messageBuffer.readInt32();
-		this.networkName = messageBuffer.readString();
+		this.networkName = messageBuffer.readString();		
 		this.setEnabled( messageBuffer.readInt8() );
 		this.configFile = messageBuffer.readString();
 		this.uploaded = messageBuffer.readInt64();
@@ -220,6 +220,9 @@ public class NetworkInfo18 extends NetworkInfo {
 
 /*
 $Log: NetworkInfo18.java,v $
+Revision 1.3  2004/03/21 21:00:50  dek
+implemented gui-Proto 21-25 !!!!!
+
 Revision 1.2  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

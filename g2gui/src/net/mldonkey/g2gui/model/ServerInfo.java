@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.27 2003/12/04 08:47:25 lemmy Exp $
+ * @version $Id: ServerInfo.java,v 1.28 2004/03/21 21:00:50 dek Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -71,7 +71,8 @@ public class ServerInfo extends Parent {
 	/**
 	 * Connection State
 	 */
-	private State connectionState = new State();
+	private State connectionState = parent.getModelFactory().getState(); 
+	
 	/**
 	 * Name of Server
 	 */
@@ -331,6 +332,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.28  2004/03/21 21:00:50  dek
+implemented gui-Proto 21-25 !!!!!
+
 Revision 1.27  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -361,7 +365,7 @@ Revision 1.19  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
 Revision 1.18  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.17  2003/08/11 11:22:53  lemmy
 avoid npes

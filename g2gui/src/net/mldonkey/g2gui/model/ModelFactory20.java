@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.model;
 /**
  * ModelFactory20
  *
- * @version $Id: ModelFactory20.java,v 1.2 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: ModelFactory20.java,v 1.3 2004/03/21 21:00:50 dek Exp $ 
  *
  */
 public class ModelFactory20 extends ModelFactory19 {
@@ -38,13 +38,16 @@ public class ModelFactory20 extends ModelFactory19 {
 	public FileInfo getFileInfo() {
 		return new FileInfo20( core );
 	}
-	public ClientInfo getClientInfo() {
+	public ClientInfo getClientInfo() {		
 		return new ClientInfo20( core );
 	}
 }
 
 /*
 $Log: ModelFactory20.java,v $
+Revision 1.3  2004/03/21 21:00:50  dek
+implemented gui-Proto 21-25 !!!!!
+
 Revision 1.2  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

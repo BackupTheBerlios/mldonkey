@@ -22,46 +22,41 @@
  */
 package net.mldonkey.g2gui.model;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.G2Gui;
 
 /**
- * FileInfo25.java
+ * State21.java
  *
- * @version $Id: FileInfo25.java,v 1.2 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: State21.java,v 1.1 2004/03/21 21:00:50 dek Exp $ 
  *
  */
-public class FileInfo25 extends FileInfo24 {
+public class State21 extends State {
 	
 	/**
-	 * @param core
+	 *  Reads a State object from a MessageBuffer
+	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	FileInfo25(CoreCommunication core) {
-		super(core);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param messageBuffer
-	 */
-	protected void setSize(MessageBuffer messageBuffer) {		
-		setSize( messageBuffer.readInt64());
+	public void readStream( MessageBuffer messageBuffer ) {
+		super.readStream(messageBuffer);	
 		
-	}
-	
-	/**
-	 * @param messageBuffer
-	 */
-	protected void setDownloaded(MessageBuffer messageBuffer) {		
-		setDownloaded(messageBuffer.readInt64());
+		if ( this.getState() == EnumState.CONNECTED_DOWNLOADING){
+			int unkown = messageBuffer.readInt32();
+			if (G2Gui.debug){
+			System.out.println("[State21.java]decoded unknown field ");			
+			}
+		}
+		
+		
 	}
 
 }
 
 
 /*
- $Log: FileInfo25.java,v $
- Revision 1.2  2004/03/21 21:00:50  dek
+ $Log: State21.java,v $
+ Revision 1.1  2004/03/21 21:00:50  dek
  implemented gui-Proto 21-25 !!!!!
 
 
