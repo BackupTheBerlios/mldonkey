@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -30,7 +31,7 @@ import java.net.Socket;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.2 2003/06/09 22:08:23 dek Exp $ 
+ * @version $Id: Core.java,v 1.3 2003/06/10 16:06:36 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -83,30 +84,32 @@ public class Core extends Thread implements CoreCommunication {
 	public void run() {
 		connect();
 		InputStream i;
+		int messageLength;
+		short opCode;
+		BufferedInputStream bufferStream;
 		try {
 			i = connection.getInputStream();
-			//getting length of message (No use for this so far??):	
-			Message.readInt32(i);
-			while (connected) {
-				short opCode = Message.readInt16(i);
-				decodeMessage(opCode, connection);
+			//getting length of message (No use for this so far??):				
+			while (connected) {				
+				//getting length of message:	
+				messageLength = Message.readInt32(i);						
+				bufferStream = new BufferedInputStream(i, messageLength);
+				opCode = Message.readInt16(bufferStream);			
+				decodeMessage(opCode,messageLength, bufferStream);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
 	}
-
+	
 	/**
 	 * @param opcode
 	 * @param connection
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private void decodeMessage(int opcode, Socket connection ) throws IOException {
-				InputStream inputStream = connection.getInputStream();
+	private void decodeMessage(int opcode,int length, BufferedInputStream inputStream ) throws IOException {
 				switch (opcode) {
 					case Message.R_COREPROTOCOL :{
 							/*
@@ -233,10 +236,10 @@ public class Core extends Thread implements CoreCommunication {
 
 					default :
 						{
-							System.out.println("unknown OP-Code : " + opcode + "!!!");
+							System.out.println("unknown OP-Code : " + opcode + "!");
 							//receivedMessage.getStream().read(new byte[receivedMessage.getLength()], 0, receivedMessage.getLength());
 							//String payload_ascii = new String(content, 0, receivedMessage.getLength());
-							//byte[] content = new byte[receivedMessage.getLength()-2];
+							byte[] content = new byte[length];
 							//inputStream.read(content, 0, receivedMessage.getLength()-2);
 							//String payload_ascii = new String(content, 0, receivedMessage.getLength()-2);
 													//System.out.println("ASCII: "+ payload_ascii );							
@@ -289,6 +292,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.3  2003/06/10 16:06:36  dek
+now working
+
 Revision 1.2  2003/06/09 22:08:23  dek
 No time for checkstyle yet. Next step: trying to get the whole thing running...
 
