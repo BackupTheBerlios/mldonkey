@@ -42,6 +42,8 @@ import net.mldonkey.g2gui.view.main.Minimizer;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.systray.SystemTray;
+
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -67,10 +69,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.MessageBox;
 
+
+
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.11 2004/02/29 17:36:31 psy Exp $
+ * @version $Id: MainWindow.java,v 1.12 2004/03/08 20:42:23 dek Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText;
@@ -89,7 +93,11 @@ public class MainWindow implements ShellListener {
      * @param core the most important thing of the gui: were do i get my data from
      * @param shell were do we live?
      */
+    
+   
+    
     public MainWindow(CoreCommunication core, final Shell shell) {
+    	
         this.titleBarText = "g2gui alpha (" + G2Gui.getConnectionString() + ")";
     	this.registeredTabs = new ArrayList();
         this.mldonkey = core;
@@ -156,6 +164,7 @@ public class MainWindow implements ShellListener {
                     PreferenceLoader.cleanUp(); */ 
                 }
             });
+        SystemTray tray = new SystemTray(this);
 
         try {
             while (!shell.isDisposed()) {
@@ -176,6 +185,8 @@ public class MainWindow implements ShellListener {
                 errorDialog.open(); 
             } 
         }
+        
+       
 
     }
 
@@ -495,6 +506,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.12  2004/03/08 20:42:23  dek
+a first version of a systray for windows
+
 Revision 1.11  2004/02/29 17:36:31  psy
 improved local core handling
 
