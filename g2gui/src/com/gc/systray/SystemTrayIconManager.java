@@ -61,12 +61,6 @@ public class SystemTrayIconManager {
     	
         this.image = image;
         this.tooltip = tooltip;
-
-       
-        String title = generateUniqueTitle();
-      
-        nativeMoveToFront(title);
-
     }
 
     /**
@@ -119,12 +113,6 @@ public class SystemTrayIconManager {
             }
         }
     }
-
-    private String generateUniqueTitle() {
-        return "ThisIsATitle_UNIQUE_" + String.valueOf(new Date().getTime());
-    }
-
-
 
     /**
      * This static methos is used to load an icon in the
