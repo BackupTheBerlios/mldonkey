@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author ${user}
- * @version $Id: GuiMessage.java,v 1.2 2003/06/11 15:32:33 lemmstercvs01 Exp $ 
+ * @version $Id: GuiMessage.java,v 1.3 2003/06/12 13:20:26 lemmstercvs01 Exp $ 
  *
  */
 public class GuiMessage extends Message {
@@ -49,6 +49,12 @@ public class GuiMessage extends Message {
 	 */
 	private byte[] content;
 	
+	/**
+	 * Generates a new and empty message opject
+	 */
+	public GuiMessage() {
+	}
+
 	/**
 	 * Generates a new message object
 	 * @param opCode the opcode for the message
@@ -71,6 +77,28 @@ public class GuiMessage extends Message {
 		this.length = 2;
 	}
 	
+	/**
+	 * Sets a new Message
+	 * @param opCode the opcode for the message
+	 * @param content an object array with the message content
+	 */
+	public void setMessage( short opCode, Object[] content ) {
+		this.opCode = opCode;
+		this.content = createContent( content );
+		/* message length = content length + opcode length */
+		this.length = this.content.length + 2;
+	}
+
+	/**
+	 * Sets a message object without content
+	 * @param opCode the opcode for the message
+	 */
+	public void setMessage( short opCode ) {
+		this.opCode = opCode;
+		this.content = null;
+		this.length = 2;
+	}
+	
 	
 	/**
 	 * Reads the message into the socket
@@ -84,7 +112,6 @@ public class GuiMessage extends Message {
 			
 			byte[] temp = Message.merge( Message.toBytes( this.length ), 
 										  Message.toBytes( this.opCode ) );
-			
 			byte[] temp2;
 			if ( this.content != null )
 				temp2 = Message.merge( temp, this.content );
@@ -262,6 +289,9 @@ public class GuiMessage extends Message {
 
 /*
 $Log: GuiMessage.java,v $
+Revision 1.3  2003/06/12 13:20:26  lemmstercvs01
+minor changes to provide GuiMessagePool
+
 Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
 still in progress
 
