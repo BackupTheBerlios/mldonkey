@@ -84,7 +84,7 @@ import org.eclipse.swt.widgets.Text;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.14 2003/10/15 00:49:56 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.15 2003/10/15 04:16:51 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -101,6 +101,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     private boolean myDrag = false;
     private final int WS_JIGLE = 1;
     private final int WS_BITZI = 2;
+    private final int WS_FILEDONKEY = 3;
 
     public DownloadTableTreeMenuListener( final CustomTableTreeViewer tableTreeViewer, TableViewer clientTableViewer, CoreCommunication mldonkey ) {
         this.tableTreeViewer = tableTreeViewer;
@@ -304,14 +305,17 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
 
         if ( selectedFile != null ) {
-            menuManager.add( new LinkToClipboardAction( false ) );
-            menuManager.add( new LinkToClipboardAction( true ) );
+        	MenuManager clipboardMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COPYTO" ) );
+            clipboardMenu.add( new LinkToClipboardAction( false ) );
+            clipboardMenu.add( new LinkToClipboardAction( true ) );
+			menuManager.add( clipboardMenu );
         }
         
         if ( selectedFile != null && advancedMode ) {
         	MenuManager webServicesMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_SERVICES" ) );
-        	webServicesMenu.add( new WebServiceAction( WS_JIGLE ) ) ;
-        	webServicesMenu.add( new WebServiceAction( WS_BITZI ) ) ;
+			webServicesMenu.add( new WebServiceAction( WS_BITZI ) ) ;
+        	webServicesMenu.add( new WebServiceAction( WS_FILEDONKEY ) ) ;
+			webServicesMenu.add( new WebServiceAction( WS_JIGLE ) ) ;
         	menuManager.add( webServicesMenu );
         }
         
@@ -343,8 +347,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
      */
     private class VerifyChunksAction extends Action {
         public VerifyChunksAction() {
-            super();
-            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_VERIFY_CHUNKS" ) );
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_VERIFY_CHUNKS" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "verify" ) );
         }
 
         public void run() {
@@ -358,8 +362,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     */
     private class PreviewAction extends Action {
         public PreviewAction() {
-            super();
-            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PREVIEW" ) );
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PREVIEW" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "preview" ) );
         }
 
         public void run() {
@@ -373,8 +377,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
      */
     private class FileDetailAction extends Action {
         public FileDetailAction() {
-            super();
-            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILE_DETAILS" ) );
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILE_DETAILS" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "info" ) );
         }
 
         public void run() {
@@ -418,8 +422,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
      */
     private class PauseAction extends Action {
         public PauseAction() {
-            super();
-            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ) );
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "pause" ) );
         }
 
         public void run() {
@@ -442,15 +446,18 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
         public CommitAction() {
             super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_SELECTED" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "commit" ) );
         }
 
         public CommitAction( String commitAs ) {
             super( commitAs );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "commit" ) );
             this.commitAs = commitAs;
         }
 
         public CommitAction( boolean b ) {
             super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_INPUT" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "commit_question" ) );
             manualInput = b;
         }
 
@@ -488,8 +495,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
      */
     private class ResumeAction extends Action {
         public ResumeAction() {
-            super();
-            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ) );
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ) );
+        	setImageDescriptor( G2GuiResources.getImageDescriptor( "resume" ) );
         }
 
         public void run() {
@@ -508,8 +515,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
      */
     private class CancelAction extends Action {
         public CancelAction() {
-            super();
-            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CANCEL" ) );
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CANCEL" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "cancel" ) );
         }
 
         public void run() {
@@ -632,7 +639,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         public LinkToClipboardAction( boolean useHTML ) {
             super();
             this.useHTML = useHTML;
-            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_LINKTO" ) + ( useHTML ? " (html)" : "" ) );
+            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ED2K_COPY" ) + ( useHTML ? " (html)" : "" ) );
+       		setImageDescriptor(G2GuiResources.getImageDescriptor( "edonkey" ) );
         }
 
         public void run() {
@@ -668,10 +676,16 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     		switch (type) {
     			case WS_JIGLE:
     				setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_JIGLE_LOOKUP" ) );
+    				setImageDescriptor( G2GuiResources.getImageDescriptor( "Jigle" ) );
     				break;
     			case WS_BITZI: 
     				setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_BITZI_LOOKUP" ) );
+    				setImageDescriptor( G2GuiResources.getImageDescriptor( "Bitzi" ) );
     				break;
+    			case WS_FILEDONKEY:
+					setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_FILEDONKEY_LOOKUP" ) );
+					setImageDescriptor( G2GuiResources.getImageDescriptor( "edonkey" ) );
+    				
     		}
     	}
     	
@@ -682,7 +696,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 					break;
 				case WS_BITZI: 
 					Program.launch("http://bitzi.com/lookup/" + selectedFile.getMd4());
-					break;		
+					break;	
+				case WS_FILEDONKEY:
+					Program.launch("http://www.filedonkey.com/file.html?md4=" + selectedFile.getMd4());	
 			}	
 		}
     }
@@ -737,6 +753,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.15  2003/10/15 04:16:51  zet
+add filedonkey lookup
+
 Revision 1.14  2003/10/15 00:49:56  zet
 add web services hash lookup
 
