@@ -1,5 +1,7 @@
 package net.mldonkey.g2gui.view;
 
+import net.mldonkey.g2gui.comm.Core;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -14,8 +16,9 @@ public interface Tab {
 	/**
 	 * initializes the Tab logically
 	 * @param preferences an object storing
+	 * @param core the Core-object
 	 */
-	public void init(IPreferenceStore preferences);
+	public void init(IPreferenceStore preferences,Core core);
 	
 	/**
 	 * used to build the tab's content
