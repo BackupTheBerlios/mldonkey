@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Control;
  * MLDonkeyOptions
  *
  * @author $user$
- * @version $Id: MLDonkeyOptions.java,v 1.3 2003/07/08 16:59:23 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.4 2003/07/09 08:30:37 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends PreferencePage {
@@ -62,6 +62,12 @@ public class MLDonkeyOptions extends PreferencePage {
 			
 		
 			OptionsInfo option = ( OptionsInfo ) options.get( it.next() );
+			String description = option.getDescription();
+			String optionName = option.getKey();
+			String value = option.getValue();
+			if ( description.equals( "" ) )
+				description = optionName;
+			
 			/*First check the Option, what kind of option it is: string or boolean
 			 * to known, which widget to use*/	
 			 if ( option.getOptionType().equals( EnumTagType.STRING ) ) {			
@@ -75,12 +81,12 @@ public class MLDonkeyOptions extends PreferencePage {
 			 }
 			else if ( option.getOptionType().equals( EnumTagType.BOOL ) ) {			
 				ExtendedBooleanFieldEditor temp = new ExtendedBooleanFieldEditor(
-											 option.getKey(), 
-											 option.getDescription(), 
-											 parent );
+											optionName, 
+											description, 
+											parent );
 				temp.setSelection( new Boolean( option.getValue() ).booleanValue() );
-				temp.setToolTipText( option.getKey() );				
-				fields.put( option.getKey(), temp );
+				temp.setToolTipText( optionName );				
+				fields.put( optionName, temp );
 			}
 			 
 			 
@@ -95,8 +101,7 @@ public class MLDonkeyOptions extends PreferencePage {
 	public void addOption( OptionsInfo option ) {
 		this.options.put( option.getKey(), option );
 		/*if this option has no description, we set its name as description*/
-		if ( option.getDescription().equals( "" ) )
-			option.setDescription( option.getKey() );
+
 	}
 	
 	/**
@@ -130,6 +135,9 @@ public class MLDonkeyOptions extends PreferencePage {
 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.4  2003/07/09 08:30:37  dek
+removed setter
+
 Revision 1.3  2003/07/08 16:59:23  dek
 now the booleanValues are checkBoxes
 
