@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.12 2003/09/19 03:38:53 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.13 2003/09/20 01:41:12 zet Exp $ 
  *
  */
 public class MainMenuBar {
@@ -52,9 +52,7 @@ public class MainMenuBar {
 	private MenuItem menuItem;
 
 	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param mainTab DOCUMENT ME!
+	 * @param mainTab 
 	 */
 	public MainMenuBar( MainTab mainTab ) {
 		this.mainTab = mainTab;
@@ -177,19 +175,11 @@ public class MainMenuBar {
 	 */
 	public class URLListener implements Listener {
 		private String url;
-		/**
-		 * DOCUMENT ME!
-		 * 
-		 * @param url DOCUMENT ME!
-		 */
+		
 		public URLListener( String url ) {
 			this.url = url;
 		}
-		/**
-		 * DOCUMENT ME!
-		 * 
-		 * @param event DOCUMENT ME!
-		 */
+		
 		public void handleEvent( Event event ) {
 			Program.launch( url );
 		}
@@ -199,6 +189,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.13  2003/09/20 01:41:12  zet
+*** empty log message ***
+
 Revision 1.12  2003/09/19 03:38:53  zet
 confirm kill
 
