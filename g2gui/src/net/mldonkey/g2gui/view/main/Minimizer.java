@@ -36,13 +36,15 @@ import org.eclipse.swt.widgets.Shell;
  * A temp class to help use swt TrayIcon on win32 only
  * https://bugs.eclipse.org/bugs/show_bug.cgi?id=30834
  *
- * @version $Id: Minimizer.java,v 1.7 2003/12/04 08:47:31 lemmy Exp $
+ * @version $Id: Minimizer.java,v 1.8 2004/03/09 19:16:27 dek Exp $
  */
 public class Minimizer implements Observer {
 	private static final DecimalFormat decimalFormat = new DecimalFormat( "0.#" );
     private Shell shell;
     private CoreCommunication core;
     private String titleBarText;
+	private boolean forceClose = false ;
+	
 
 	/**
 	 * @param shell 
@@ -59,8 +61,12 @@ public class Minimizer implements Observer {
         shell.setText( titleBarText + " v" + VersionInfo.getVersion() );
     }
 
+    /**
+     * 
+     * @return is the shell to be closed or minimized to Tray only?
+     */
     public boolean close() {
-        return true;
+        return forceClose;
     }
 
     public void minimize() {
@@ -68,7 +74,10 @@ public class Minimizer implements Observer {
     }
 
 	public void forceClose() {
+		forceClose = true;
+		
 	}
+	
     public void restore() {
         core.getClientStats().deleteObserver( this );
         setTitleBarText();
@@ -97,6 +106,9 @@ public class Minimizer implements Observer {
 
 /*
 $Log: Minimizer.java,v $
+Revision 1.8  2004/03/09 19:16:27  dek
+Now the Systray-Menu becomes usable, now featuring" tooltip"
+
 Revision 1.7  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

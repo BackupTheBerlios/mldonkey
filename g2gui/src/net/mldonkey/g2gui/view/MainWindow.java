@@ -62,9 +62,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.MessageBox;
@@ -74,7 +72,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.12 2004/03/08 20:42:23 dek Exp $
+ * @version $Id: MainWindow.java,v 1.13 2004/03/09 19:16:27 dek Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText;
@@ -88,6 +86,7 @@ public class MainWindow implements ShellListener {
     private List tabs;
     private MainCoolBar coolBar;
     private Minimizer minimizer;
+	private SystemTray trayMenu;
 
     /**
      * @param core the most important thing of the gui: were do i get my data from
@@ -119,13 +118,6 @@ public class MainWindow implements ShellListener {
         /* set the old size of this window - must be after pack() */
         setSizeLocation(shell);
 
-        /* what do we do when the close button is selected */
-        shell.addListener(SWT.Close,
-            new Listener() {
-                public void handleEvent(Event event) {
-                    event.doit = minimizer.close();
-                }
-            });
         shell.open();
 
         /* things we should do if we dispose */
@@ -164,7 +156,8 @@ public class MainWindow implements ShellListener {
                     PreferenceLoader.cleanUp(); */ 
                 }
             });
-        SystemTray tray = new SystemTray(this);
+         trayMenu = new SystemTray(this);
+
 
         try {
             while (!shell.isDisposed()) {
@@ -416,6 +409,11 @@ public class MainWindow implements ShellListener {
      * shellClosed(org.eclipse.swt.events.ShellEvent)
      */
     public void shellClosed(ShellEvent e) {
+    	if (PreferenceLoader.loadBoolean("closeToTray")){					
+    		shell.setVisible(false);
+    		e.doit=minimizer.close();
+    	}
+
     }
 
     /* (non-Javadoc)
@@ -438,7 +436,13 @@ public class MainWindow implements ShellListener {
      * shellIconified(org.eclipse.swt.events.ShellEvent)
      */
     public void shellIconified(ShellEvent e) {
-        minimizer.minimize();
+    	if (PreferenceLoader.loadBoolean("minimizeToTray")){
+    		shell.setVisible(false);
+    		e.doit=false;	
+    	}
+        else {
+        	minimizer.minimize();
+        }
     }
 
     /**
@@ -506,6 +510,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.13  2004/03/09 19:16:27  dek
+Now the Systray-Menu becomes usable, now featuring" tooltip"
+
 Revision 1.12  2004/03/08 20:42:23  dek
 a first version of a systray for windows
 

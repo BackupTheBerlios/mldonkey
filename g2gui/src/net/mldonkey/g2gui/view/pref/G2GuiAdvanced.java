@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.13 2004/03/01 21:12:21 psy Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.14 2004/03/09 19:16:27 dek Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -64,11 +64,19 @@ public class G2GuiAdvanced extends PreferencePage {
 		if ( SWT.getPlatform().equals("win32") ) {
 			setupEditor( 
 				new BooleanFieldEditor( 
-					"minimizeOnClose",
-					G2GuiResources.getString( "PREF_DISPLAY_MIN_CLOSE" ),
+					"closeToTray",
+					G2GuiResources.getString( "PREF_DISPLAY_CLOSE_TO_TRAY" ),
 					composite ) );
 		
 		}	
+		if ( SWT.getPlatform().equals("win32") ) {
+			setupEditor( 
+				new BooleanFieldEditor( 
+						"minimizeToTray",
+						G2GuiResources.getString( "PREF_DISPLAY_MIN_TO_TRAY" ),
+						composite ) );
+			
+		}
 		
 		setupEditor( 
 			new BooleanFieldEditor( 
@@ -137,6 +145,9 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.14  2004/03/09 19:16:27  dek
+Now the Systray-Menu becomes usable, now featuring" tooltip"
+
 Revision 1.13  2004/03/01 21:12:21  psy
 removed download-table font config (use global one instead)
 started re-arranging the preferences (to be continued...)

@@ -1,9 +1,12 @@
 package net.mldonkey.g2gui.view.systray;
 
-import net.mldonkey.g2gui.view.MainWindow;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import java.text.DecimalFormat;
+import java.util.Observable;
+import java.util.Observer;
 
-import org.eclipse.jface.action.Action;
+import net.mldonkey.g2gui.helper.VersionInfo;
+import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.view.MainWindow;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -19,51 +22,23 @@ import com.gc.systray.SystemTrayIconManager;
 /**
  * Test class
  */
-public class SystemTray implements SystemTrayIconListener, Runnable {
+public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 
-	/**
-	 * @author joerg
-	 * 
-	 * To change the template for this generated type comment go to Window -
-	 * Preferences - Java - Code Generation - Code and Comments
-	 */
-	private class ToggleAction extends Action {
-
-		public ToggleAction() {
-			super();
-			setText("toggle visibility");
-			setChecked(parent.getShell().isVisible());
-		}
-		public void run() {
-			Shell shell = parent.getShell();
-			shell.setVisible(!shell.isVisible());
-			setChecked(parent.getShell().isVisible());
-			shell.setFocus();
-		}
-
-	}
-	/**
-	 * @author joerg
-	 * 
-	 * To change the template for this generated type comment go to Window -
-	 * Preferences - Java - Code Generation - Code and Comments
-	 */
-	private class ExitAction extends Action {
-		public ExitAction() {
-			super();
-			setText("Exit");
-			setImageDescriptor(G2GuiResources.getImageDescriptor("X"));
-		}
-		public void run() {
-			parent.getMinimizer().forceClose();
-			parent.getShell().close();
-		}
-
-	}
 	private Menu menu;
 	private MenuManager popupMenu;
 	private MainWindow parent;
-	private SystemTrayIconManager mgr;
+	private SystemTrayIconManager systemTrayManager;
+	private static final DecimalFormat decimalFormat = new DecimalFormat( "0.#" );
+	private String titleBarText;
+	private int icon;
+	
+	/* the following attributes are a hack to "smoothen Tooltip-updates in tray#
+	 * because tooltip is not updated but killed and redrawn if text changes
+	 * maye a native-code hacker can change this ;-)
+	 */
+	private float[] uploadrate = new float[5];
+	private float[] downloadrate = new float[5];
+	private int counter=0;
 
 	/**
 	 * SystemTrayIconListener implementation
@@ -96,9 +71,8 @@ public class SystemTray implements SystemTrayIconListener, Runnable {
 					menu.setVisible(false);
 					return;
 					}
-				
 				menu = popupMenu.createContextMenu(parent.getShell());
-				menu.setLocation(x-5, y-5);
+				menu.setLocation(x-2, y-2);
 				menu.setVisible(true);
 			}
 		});
@@ -121,19 +95,15 @@ public class SystemTray implements SystemTrayIconListener, Runnable {
 	 * @param window
 	 */
 	public SystemTray(MainWindow window) {
+		this.titleBarText = "g2gui v " + VersionInfo.getVersion();
+		
 		parent = window;
 		Thread tray = new Thread(this);
 		tray.setDaemon(true);
 		tray.run();
 	}
 
-	private class TestAction extends Action {
-		public TestAction(int i) {
-			super();
-			setText("Hello World - version" + i);
-		}
-
-	}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -141,28 +111,28 @@ public class SystemTray implements SystemTrayIconListener, Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
+		parent.getCore().getClientStats().addObserver(this);
+		
 		System.loadLibrary("DesktopIndicator");
 		System.out.println(getClass().getName() + "g2gui.ico");
-		int quick = SystemTrayIconManager.loadImage("g2gui.ico");
-		if (quick == -1) {
+		icon = SystemTrayIconManager.loadImage("g2gui.ico");
+		if (icon == -1) {
 			System.out.println("image icon.ico error");
 			return;
 		}
 
-		mgr = new SystemTrayIconManager(quick, "Daemon?");
-		mgr.addSystemTrayIconListener(this);
-		mgr.setVisible(true);
+		systemTrayManager = new SystemTrayIconManager(icon, titleBarText);
+		systemTrayManager.addSystemTrayIconListener(this);
+		systemTrayManager.setVisible(true);
 
 		IMenuListener manager = new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(new TestAction(1));
-				manager.add(new TestAction(2));
-				manager.add(new TestAction(3));
 				manager.add(new Separator());
-				manager.add(new TestAction(4));
-				manager.add(new ToggleAction());
+				manager.add(new CloseToTrayAction(SystemTray.this));
+				manager.add(new MinimizeToTrayAction(SystemTray.this));
+				manager.add(new ToggleAction(SystemTray.this));
 				manager.add(new Separator());
-				manager.add(new ExitAction());
+				manager.add(new ExitAction(SystemTray.this));
 
 			}
 		};
@@ -173,10 +143,54 @@ public class SystemTray implements SystemTrayIconListener, Runnable {
 		parent.getShell().addDisposeListener(new DisposeListener() {
 
 			public void widgetDisposed(DisposeEvent e) {
-				mgr.finalize();
+				systemTrayManager.finalize();
 
 			}
 		});
 
 	}
+	/**
+	 * @return Returns the parent.
+	 */
+	public MainWindow getParent() {
+		return parent;
+	}
+	
+	public void update( Observable arg0, Object receivedInfo ) {		
+		ClientStats clientInfo = ( ClientStats ) receivedInfo;
+		Shell shell = parent.getShell();
+		
+		if ( counter < uploadrate.length ){
+			uploadrate[counter]=clientInfo.getTcpUpRate();
+			downloadrate[counter]=clientInfo.getTcpDownRate();	
+			counter++;
+		}
+		else {
+		/* median transfer-Rates: */
+			float medianUpRate=0;
+			float medianDownRate=0;
+			
+			for (int i = 0; i < uploadrate.length; i++) {
+				medianUpRate = medianUpRate+uploadrate[i];
+				medianDownRate = medianDownRate+downloadrate[i];			
+			}
+			medianUpRate = medianUpRate / uploadrate.length;
+			medianDownRate = medianDownRate / downloadrate.length;
+			
+			String transferRates =
+					 "\nDL:" + decimalFormat.format(medianDownRate) + 
+					 " / UL:" + decimalFormat.format(medianUpRate  );
+			
+			systemTrayManager.update(icon,titleBarText+transferRates);			
+			counter=0;		
+		}
+					
+			
+
+	}
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+
+
 }
