@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.17 2003/09/03 14:49:07 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.18 2003/09/03 18:19:40 zet Exp $
  */
 public class PreferenceLoader {
 
@@ -98,7 +98,6 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( "displayChunkGraphs", false );
 		preferenceStore.setDefault( "displayGridLines", true );
 		preferenceStore.setDefault( "tableCellEditors", false );
-		preferenceStore.setDefault( "displayHeaderBar", true );
 		
 		preferenceStore.setDefault( "coreExecutable", "" );
 		
@@ -213,6 +212,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.18  2003/09/03 18:19:40  zet
+remove unused
+
 Revision 1.17  2003/09/03 14:49:07  zet
 optionally spawn core from gui
 
