@@ -22,13 +22,16 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * Addr
  * 
  * @author ${user}
- * @version $$Id: Addr.java,v 1.3 2003/06/18 13:30:56 dek Exp $$ 
+ * @version $$Id: Addr.java,v 1.4 2003/06/30 07:21:27 lemmstercvs01 Exp $$ 
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -38,7 +41,7 @@ public class Addr implements SimpleInformation {
 	/**
 	 * IP Address (if type is true)
 	 */
-	private int ipAddress;
+	private InetAddress ipAddress;
 	/**
 	 * Name Address (if type is false
 	 */
@@ -54,7 +57,7 @@ public class Addr implements SimpleInformation {
 	/**
 	 * @return an int
 	 */
-	public int getIpAddress() {
+	public InetAddress getIpAddress() {
 		return ipAddress;
 	}
 
@@ -78,7 +81,7 @@ public class Addr implements SimpleInformation {
 	/**
 	 * @param i an int
 	 */
-	public void setIpAddress( int i ) {
+	public void setIpAddress( InetAddress i ) {
 		ipAddress = i;
 	}
 
@@ -101,14 +104,20 @@ public class Addr implements SimpleInformation {
 		 */
 		this.setAddressType( messageBuffer.readByte() );
 		if ( this.isAddressType() )
-			this.setIpAddress( messageBuffer.readInt32() );
+			try {
+				this.setIpAddress( messageBuffer.readInetAddress() );
+			}
+			/* do nothing, we receive always a valid address */
+			catch ( UnknownHostException e ) {}
 		else
 			this.setNameAddress( messageBuffer.readString() );
 	}
-
 }
 /*
 $$Log: Addr.java,v $
+$Revision 1.4  2003/06/30 07:21:27  lemmstercvs01
+$changed ip from int to InetAddress
+$
 $Revision 1.3  2003/06/18 13:30:56  dek
 $Improved Communication Layer view <--> model by introducing a super-interface
 $
