@@ -37,7 +37,6 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -51,7 +50,7 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.34 2003/08/29 20:24:42 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.35 2003/08/29 20:27:52 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {	
@@ -231,6 +230,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 } 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.35  2003/08/29 20:27:52  dek
+removed unused import
+
 Revision 1.34  2003/08/29 20:24:42  dek
 icon for preferences, and simple frame (group)
 
