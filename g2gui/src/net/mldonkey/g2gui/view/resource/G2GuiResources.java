@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.13 2003/08/30 00:44:01 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.14 2003/08/30 18:23:51 dek Exp $
  */
 public class G2GuiResources {
 	
@@ -146,7 +146,7 @@ public class G2GuiResources {
 		Image icon = new Image( Display.getCurrent(), source,mask);		
 		imageRegistry.put("ProgramIcon",icon);	
 		
-		//reg.put("ProgramIcon", createTrans("mld_logo_48x48.png"));	
+		imageRegistry.put( "G2GuiLogo", createTrans( "mld_logo_48x48.png") );	
 		
 		String[] buttonNames = { "Preferences", "Statistics", "Console",
 									"Transfers", "Search", "Servers", "Messages" };
@@ -249,6 +249,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.14  2003/08/30 18:23:51  dek
+added g2guiLogo (png)
+
 Revision 1.13  2003/08/30 00:44:01  zet
 move tabletree menu
 
@@ -274,7 +277,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
