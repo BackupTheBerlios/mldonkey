@@ -28,9 +28,8 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
-import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
-import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
-import net.mldonkey.g2gui.view.viewers.actions.RefreshUploadsAction;
+//import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
+//import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -39,9 +38,9 @@ import org.eclipse.swt.events.DisposeEvent;
 
 
 /**
- * UploadPaneListener
+ * SharesPaneListener
  *
- * @version $Id: UploadPaneListener.java,v 1.13 2003/12/17 13:06:03 lemmy Exp $
+ * @version $Id: UploadPaneListener.java,v 1.14 2004/01/22 21:28:03 psy Exp $
  *
  */
 public class UploadPaneListener extends SashViewFrameListener {
@@ -53,6 +52,7 @@ public class UploadPaneListener extends SashViewFrameListener {
      */
     public UploadPaneListener(SashViewFrame sashViewFrame) {
         super(sashViewFrame);
+        
         setBestFit();
         setNetworkFilterState();
     }
@@ -60,21 +60,16 @@ public class UploadPaneListener extends SashViewFrameListener {
     public void menuAboutToShow(IMenuManager menuManager) {
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
-        // refresh table
-        menuManager.add(new Separator());
-        menuManager.add(new RefreshUploadsAction(gView));
-
         // columnSelector
-        if (advancedMode) {
+        if (advancedMode)
             menuManager.add(new ColumnSelectorAction(gView));
-        }
 
         // for macOS
         createSortByColumnSubMenu(menuManager);
 
         // my pref column which should be autosized
         createBestFitColumnSubMenu(menuManager);
-
+        
         // filter submenu			
         MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
                     "TT_DOWNLOAD_MENU_FILTER"));
@@ -89,10 +84,12 @@ public class UploadPaneListener extends SashViewFrameListener {
         menuManager.add(filterSubMenu);
 
         // flip sash/maximize sash
-        menuManager.add(new Separator());
-        menuManager.add(new FlipSashAction(this.sashForm));
-        menuManager.add(new MaximizeAction(this.sashForm, this.control, "TT_Uploaders"));
+        // TODO: Implement a generic show/hide-sash class
+        //menuManager.add(new Separator());
+        //menuManager.add(new FlipSashAction(this.sashForm));
+        //menuManager.add(new MaximizeAction(this.sashForm, this.control, "TT_Downloads"));
     }
+
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
@@ -105,56 +102,24 @@ public class UploadPaneListener extends SashViewFrameListener {
 
 /*
 $Log: UploadPaneListener.java,v $
-Revision 1.13  2003/12/17 13:06:03  lemmy
+Revision 1.14  2004/01/22 21:28:03  psy
+renamed "uploads" to "shares" and moved it to a tab of its own.
+"uploaders" are now called "uploads" for improved naming-consistency
+
+Revision 1.5  2003/12/17 13:06:05  lemmy
 save all panelistener states correctly to the prefstore
 
-Revision 1.12  2003/12/07 19:40:19  lemmy
+Revision 1.4  2003/12/07 19:40:20  lemmy
 [Bug #1156] Allow a certain column to be 100% by pref
 
-Revision 1.11  2003/12/04 08:47:30  lemmy
-replaced "lemmstercvs01" and "lemmster" with "lemmy"
-
-Revision 1.10  2003/11/28 01:06:21  zet
+Revision 1.3  2003/11/28 01:06:21  zet
 not much- slowly expanding viewframe - will continue later
 
-Revision 1.9  2003/11/26 16:02:05  zet
+Revision 1.2  2003/11/26 16:02:05  zet
 resString
 
-Revision 1.8  2003/11/24 01:33:27  zet
-move some classes
-
-Revision 1.7  2003/11/22 02:24:30  zet
-widgetfactory & save sash postions/states between sessions
-
-Revision 1.6  2003/11/15 21:15:29  zet
-Label restore action
-
-Revision 1.5  2003/11/14 00:46:04  zet
-sort by column menu item (for macOS)
-
-Revision 1.4  2003/10/31 16:02:57  zet
-use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
-
-Revision 1.3  2003/10/31 13:16:33  lemmy
-Rename Viewer -> Page
-Constructors changed
-
-Revision 1.2  2003/10/31 10:42:47  lemmy
-Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
-Removed IGViewer because our abstract class GPage do the job
-Use supertype/interface where possible to keep the design flexible!
-
-Revision 1.1  2003/10/31 07:24:01  zet
-fix: filestate filter - put back important isFilterProperty check
-fix: filestate filter - exclusionary fileinfo filters
-fix: 2 new null pointer exceptions (search tab)
-recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
-- all search tab tables are column updated
-regexp helpers in one class
-rework viewers heirarchy
-filter clients table properly
-discovered sync errors and NPEs in upload table... will continue later.
-
+Revision 1.1  2003/11/26 07:43:15  zet
+quick attempt at an uploaders table w/proto 19 - still in progress...
 
 
 */

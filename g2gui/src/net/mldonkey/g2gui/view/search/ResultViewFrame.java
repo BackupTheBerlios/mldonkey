@@ -31,7 +31,7 @@ import org.eclipse.swt.custom.SashForm;
 /**
  * ResultViewFrame
  *
- * @version $Id: ResultViewFrame.java,v 1.1 2003/11/29 17:02:27 zet Exp $
+ * @version $Id: ResultViewFrame.java,v 1.2 2004/01/22 21:28:06 psy Exp $
  *
  */
 public class ResultViewFrame extends CTabFolderViewFrame {
@@ -39,7 +39,7 @@ public class ResultViewFrame extends CTabFolderViewFrame {
         GuiTab guiTab) {
         super(parentSashForm, prefString, prefImageString, guiTab);
 
-        // gView = new UploadersTableView(this);
+        // gView = new UploadTableView(this);
         createPaneListener(new ResultPaneListener(this));
     }
 }
@@ -47,6 +47,10 @@ public class ResultViewFrame extends CTabFolderViewFrame {
 
 /*
 $Log: ResultViewFrame.java,v $
+Revision 1.2  2004/01/22 21:28:06  psy
+renamed "uploads" to "shares" and moved it to a tab of its own.
+"uploaders" are now called "uploads" for improved naming-consistency
+
 Revision 1.1  2003/11/29 17:02:27  zet
 more viewframes.. will continue later.
 

@@ -1,6 +1,10 @@
+2004/01/22: vnc
+	* New Tab: Shares
+		Displays all your shared files and some statistics
+
 2004/01/08: vnc
 	* Added option in prefs to control g2gui's font-antialiasing under linux. 
-	 	This speeds up g2gui-gtk2 around 20-30%.
+	 	This speeds up g2gui-gtk2 around 20-30%
 
 2003/12/23: vnc
 	* Improved commandline and connection settings errorhandling

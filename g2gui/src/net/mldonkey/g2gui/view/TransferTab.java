@@ -30,7 +30,6 @@ import net.mldonkey.g2gui.view.transfer.clientTable.ClientViewFrame;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeView;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadViewFrame;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadViewFrame;
-import net.mldonkey.g2gui.view.transfer.uploadersTable.UploadersViewFrame;
 
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
@@ -41,7 +40,7 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.103 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: TransferTab.java,v 1.104 2004/01/22 21:28:03 psy Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -93,8 +92,8 @@ public class TransferTab extends GuiTab {
     private void createUploadsView(SashForm sashForm) {
         String sashPrefString = "uploadsSash";
         SashForm sashForm2 = WidgetFactory.createSashForm(sashForm, sashPrefString);
+        //addViewFrame(new SharesViewFrame(sashForm2, "TT_Uploads", "UpArrowBlue", this));
         addViewFrame(new UploadViewFrame(sashForm2, "TT_Uploads", "UpArrowBlue", this));
-        addViewFrame(new UploadersViewFrame(sashForm2, "TT_Uploaders", "UpArrowBlue", this));
         WidgetFactory.loadSashForm(sashForm2, sashPrefString);
     }
 
@@ -119,6 +118,10 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.104  2004/01/22 21:28:03  psy
+renamed "uploads" to "shares" and moved it to a tab of its own.
+"uploaders" are now called "uploads" for improved naming-consistency
+
 Revision 1.103  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -339,7 +342,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

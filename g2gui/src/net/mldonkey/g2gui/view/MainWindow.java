@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.6 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: MainWindow.java,v 1.7 2004/01/22 21:28:03 psy Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -214,9 +214,11 @@ public class MainWindow implements ShellListener {
             tabs.add(new TransferTab(this));
             tabs.add(new SearchTab(this));
             tabs.add(new ServerTab(this));
+            tabs.add(new SharesTab(this));
             tabs.add(new ConsoleTab(this));
             tabs.add(new StatisticTab(this));
             tabs.add(new MessagesTab(this));
+            
         } else {
             tabs.add(new TransferTab(this));
             tabs.add(new SearchTab(this));
@@ -457,6 +459,10 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.7  2004/01/22 21:28:03  psy
+renamed "uploads" to "shares" and moved it to a tab of its own.
+"uploaders" are now called "uploads" for improved naming-consistency
+
 Revision 1.6  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

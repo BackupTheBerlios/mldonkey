@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.RGB;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.62 2003/12/04 08:47:31 lemmy Exp $
+ * @version $Id: G2GuiResources.java,v 1.63 2004/01/22 21:28:03 psy Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -166,10 +166,10 @@ public class G2GuiResources {
         reg.put("TrayIcon", createRawImage("tray.ico"));
 
         String[] buttonNames = {
-            "Preferences", "Statistics", "Console", "Transfers", "Search", "Servers", "Messages"
+            "Preferences", "Statistics", "Console", "Transfers", "Shares", "Search", "Servers", "Messages"
         };
         String[] buttonFiles = {
-            "preferences", "statistics", "console", "transfer", "search", "server", "messages"
+            "preferences", "statistics", "console", "transfer", "shares", "search", "server", "messages"
         };
 
         for (int i = 0; i < buttonNames.length; i++) {
@@ -332,6 +332,10 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.63  2004/01/22 21:28:03  psy
+renamed "uploads" to "shares" and moved it to a tab of its own.
+"uploaders" are now called "uploads" for improved naming-consistency
+
 Revision 1.62  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -496,7 +500,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.4  2003/08/21 11:19:15  lemmy
 added bt and multinet image

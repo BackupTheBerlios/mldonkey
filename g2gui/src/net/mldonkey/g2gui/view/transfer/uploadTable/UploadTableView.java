@@ -22,15 +22,14 @@
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 
-import net.mldonkey.g2gui.helper.RegExp;
-import net.mldonkey.g2gui.model.ClientStats;
-import net.mldonkey.g2gui.model.SharedFileInfo;
-import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
+import net.mldonkey.g2gui.helper.ObjectWeakMap;
+import net.mldonkey.g2gui.model.ClientInfo;
+import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GSorter;
-import net.mldonkey.g2gui.view.viewers.actions.CopyED2KLinkToClipboardAction;
-import net.mldonkey.g2gui.view.viewers.actions.RefreshUploadsAction;
+import net.mldonkey.g2gui.view.viewers.actions.AddClientAsFriendAction;
+import net.mldonkey.g2gui.view.viewers.actions.ClientDetailAction;
 import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
@@ -38,17 +37,15 @@ import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-
-import gnu.trove.TIntObjectIterator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,17 +55,24 @@ import java.util.Observer;
 
 
 /**
- * UploadTableViewer
+ * UploadersTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.11 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: UploadTableView.java,v 1.12 2004/01/22 21:28:03 psy Exp $
  *
  */
-public class UploadTableView extends GTableView implements Observer {
+public class UploadTableView extends GTableView {
     private static final int NETWORK = 0;
-    private static final int BYTES = 1;
-    private static final int REQUESTS = 2;
-    private static final int NAME = 3;
-    private SharedFileInfoIntMap sharedFileInfoIntMap;
+    private static final int NAME = 1;
+    private static final int SOFTWARE = 2;
+    private static final int UPLOADED = 3;
+    private static final int DOWNLOADED = 4;
+    private static final int CONNECT_TIME = 5;
+    private static final int SOCK_ADDR = 6;
+    private static final int PORT = 7;
+    private static final int KIND = 8;
+    private static final int STATE = 9;
+    private static final int FILENAME = 10;
+    private ObjectWeakMap objectWeakMap;
     private long lastTimeStamp;
 
     /**
@@ -79,21 +83,25 @@ public class UploadTableView extends GTableView implements Observer {
     public UploadTableView(ViewFrame viewFrame) {
         super(viewFrame);
 
-        preferenceString = "upload";
+        preferenceString = "uploaders";
         columnLabels = new String[] {
-                "TT_UPLOAD_NETWORK", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES", "TT_UPLOAD_NAME"
+                "TT_UT_NETWORK", "TT_UT_NAME", "TT_UT_SOFTWARE", "TT_UT_UPLOADED",
+                "TT_UT_DOWNLOADED", "TT_UT_CONNECT_TIME", "TT_UT_SOCK_ADDR", "TT_UT_PORT",
+                "TT_UT_KIND", "TT_UT_STATE", "TT_UT_FILENAME"
             };
-        columnDefaultWidths = new int[] { 50, 50, 50, 50 };
-        columnAlignment = new int[] { SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT };
 
-        gSorter = new UploadTableSorter(this);
+        columnDefaultWidths = new int[] { 100, 100, 100, 100, 100, 100, 100, 100, 100, 150, 200 };
+        columnAlignment = new int[] {
+                SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT,
+                SWT.LEFT, SWT.LEFT, SWT.LEFT
+            };
+
+        gSorter = new UploadersTableSorter(this);
         tableContentProvider = new UploadContentProvider(this);
-        tableLabelProvider = new UploadLabelProvider(this);
-        tableMenuListener = new UploadTableMenuListener(this);
+        tableLabelProvider = new UploadersTableLabelProvider(this);
+        tableMenuListener = new UploadersTableMenuListener(this);
 
-        this.sharedFileInfoIntMap = core.getSharedFileInfoIntMap();
         createContents(viewFrame.getChildComposite());
-        core.getClientStats().addObserver(this);
     }
 
     /* (non-Javadoc)
@@ -101,23 +109,15 @@ public class UploadTableView extends GTableView implements Observer {
      */
     protected void createContents(Composite parent) {
         super.createContents(parent);
-        sViewer.setInput(this.sharedFileInfoIntMap);
-        sViewer.addSelectionChangedListener((UploadTableMenuListener) tableMenuListener);
+        objectWeakMap = core.getClientInfoIntMap().getUploadersWeakMap();
+        sViewer.setInput(objectWeakMap);
+        sViewer.addSelectionChangedListener((UploadersTableMenuListener) tableMenuListener);
+        updateHeaderLabel();
     }
 
-    /* (non-Javadoc)
-     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-     */
-    public void update(Observable o, Object obj) {
-        final ClientStats clientStats = (ClientStats) obj;
-
-        if (System.currentTimeMillis() > (lastTimeStamp + 5000)) {
-            lastTimeStamp = System.currentTimeMillis();
-
-            viewFrame.updateCLabelTextInGuiThread(G2GuiResources.getString("TT_Uploads") + ": " +
-                clientStats.getNumOfShare() + " (" +
-                RegExp.calcStringSize(clientStats.getTotalUp()) + ")");
-        }
+    private void updateHeaderLabel() {
+        viewFrame.updateCLabelText(G2GuiResources.getString("TT_Uploads") + ": " +
+            objectWeakMap.getWeakMap().size());
     }
 
     /**
@@ -135,21 +135,12 @@ public class UploadTableView extends GTableView implements Observer {
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
         public Object[] getElements(Object inputElement) {
-            synchronized (inputElement) {
-                SharedFileInfoIntMap sharedFiles = (SharedFileInfoIntMap) inputElement;
-                TIntObjectIterator it = sharedFiles.iterator();
-                SharedFileInfo[] result = new SharedFileInfo[ sharedFiles.size() ];
-                int i = 0;
+            objectWeakMap = (ObjectWeakMap) inputElement;
 
-                while (it.hasNext()) { // java.util.ConcurrentModificationException
-                    it.advance();
-                    result[ i ] = (SharedFileInfo) it.value();
-                    i++;
-                }
+            synchronized (objectWeakMap) {
+                objectWeakMap.clearAllLists();
 
-                sharedFiles.clearAdded();
-
-                return result;
+                return objectWeakMap.getKeySet().toArray();
             }
         }
 
@@ -157,20 +148,19 @@ public class UploadTableView extends GTableView implements Observer {
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
          */
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-            SharedFileInfoIntMap oldI = (SharedFileInfoIntMap) oldInput;
-            SharedFileInfoIntMap newI = (SharedFileInfoIntMap) newInput;
+            if (oldInput != null)
+                ((Observable) oldInput).deleteObserver(this);
 
-            if (oldI != null)
-                oldI.deleteObserver(this);
-
-            if (newI != null)
-                newI.addObserver(this);
+            if (newInput != null)
+                ((Observable) newInput).addObserver(this);
         }
 
         /* (non-Javadoc)
          * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
          */
         public void update(Observable arg0, final Object arg1) {
+            final Integer updateType = (Integer) arg1;
+
             if (getTableViewer().getTable().isDisposed())
                 return;
 
@@ -179,26 +169,38 @@ public class UploadTableView extends GTableView implements Observer {
                         if (getTableViewer().getTable().isDisposed())
                             return;
 
-                        synchronized (sharedFileInfoIntMap.getRemoved()) {
-                            if (sharedFileInfoIntMap.getRemoved().size() > 0) {
-                                getTableViewer().remove(sharedFileInfoIntMap.getRemoved().toArray());
-                                sharedFileInfoIntMap.clearRemoved();
-                            }
-                        }
+                        switch (updateType.intValue()) {
+                        case ObjectWeakMap.REMOVED:
 
-                        synchronized (sharedFileInfoIntMap.getAdded()) {
-                            if (sharedFileInfoIntMap.getAdded().size() > 0) {
-                                getTableViewer().add(sharedFileInfoIntMap.getAdded().toArray());
-                                sharedFileInfoIntMap.clearAdded();
+                            synchronized (objectWeakMap) {
+                                getTableViewer().remove(objectWeakMap.getRemovedList().toArray());
+                                objectWeakMap.clearRemovedList();
                             }
-                        }
 
-                        synchronized (sharedFileInfoIntMap.getUpdated()) {
-                            if (sharedFileInfoIntMap.getUpdated().size() > 0) {
-                                getTableViewer().update(sharedFileInfoIntMap.getUpdated().toArray(),
+                            updateHeaderLabel();
+
+                            break;
+
+                        case ObjectWeakMap.ADDED:
+
+                            synchronized (objectWeakMap) {
+                                getTableViewer().add(objectWeakMap.getAddedList().toArray());
+                                objectWeakMap.clearAddedList();
+                            }
+
+                            updateHeaderLabel();
+
+                            break;
+
+                        case ObjectWeakMap.UPDATED:
+
+                            synchronized (objectWeakMap) {
+                                getTableViewer().update(objectWeakMap.getUpdatedList().toArray(),
                                     null);
-                                sharedFileInfoIntMap.clearUpdated();
+                                objectWeakMap.clearUpdatedList();
                             }
+
+                            break;
                         }
                     }
                 });
@@ -208,8 +210,8 @@ public class UploadTableView extends GTableView implements Observer {
     /**
      * UploadLabelProvider
      */
-    public class UploadLabelProvider extends GTableLabelProvider {
-        public UploadLabelProvider(UploadTableView uTableViewer) {
+    public class UploadersTableLabelProvider extends GTableLabelProvider {
+        public UploadersTableLabelProvider(UploadTableView uTableViewer) {
             super(uTableViewer);
         }
 
@@ -217,12 +219,15 @@ public class UploadTableView extends GTableView implements Observer {
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
          */
         public Image getColumnImage(Object element, int columnIndex) {
-            switch (getTableViewer().getColumnIDs()[ columnIndex ]) {
+            ClientInfo clientInfo = (ClientInfo) element;
+
+            switch (cViewer.getColumnIDs()[ columnIndex ]) {
+            case UploadTableView.STATE:
+                return G2GuiResources.getClientImage((EnumState) clientInfo.getState().getState());
+
             case UploadTableView.NETWORK:
-
-                SharedFileInfo file = (SharedFileInfo) element;
-
-                return G2GuiResources.getNetworkImage(file.getNetwork().getNetworkType());
+                return G2GuiResources.getNetworkImage(clientInfo.getClientnetworkid()
+                                                                .getNetworkType());
 
             default:
                 return null;
@@ -233,20 +238,41 @@ public class UploadTableView extends GTableView implements Observer {
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
         public String getColumnText(Object element, int columnIndex) {
-            SharedFileInfo info = (SharedFileInfo) element;
+            ClientInfo clientInfo = (ClientInfo) element;
 
-            switch (getTableViewer().getColumnIDs()[ columnIndex ]) {
-            case UploadTableView.NETWORK:
-                return info.getNetwork().getNetworkName();
-
-            case UploadTableView.BYTES:
-                return info.getUploadedString();
-
-            case UploadTableView.REQUESTS:
-                return "" + info.getNumOfQueriesForFile();
+            switch (cViewer.getColumnIDs()[ columnIndex ]) {
+            case UploadTableView.STATE:
+                return "" + clientInfo.getDetailedClientActivity();
 
             case UploadTableView.NAME:
-                return info.getName();
+                return "" + clientInfo.getClientName();
+
+            case UploadTableView.NETWORK:
+                return "" + clientInfo.getClientnetworkid().getNetworkName();
+
+            case UploadTableView.KIND:
+                return "" + clientInfo.getClientConnection();
+
+            case UploadTableView.SOFTWARE:
+                return clientInfo.getClientSoftware();
+
+            case UploadTableView.UPLOADED:
+                return clientInfo.getUploadedString();
+
+            case UploadTableView.CONNECT_TIME:
+                return clientInfo.getClientConnectTimePassedString();
+
+            case UploadTableView.DOWNLOADED:
+                return clientInfo.getDownloadedString();
+
+            case UploadTableView.SOCK_ADDR:
+                return clientInfo.getClientKind().getAddr().toString();
+
+            case UploadTableView.PORT:
+                return "" + clientInfo.getClientKind().getPort();
+
+            case UploadTableView.FILENAME:
+                return clientInfo.getUploadFilename();
 
             default:
                 return "";
@@ -257,8 +283,8 @@ public class UploadTableView extends GTableView implements Observer {
     /**
      * UploadTableSorter
      */
-    public class UploadTableSorter extends GSorter {
-        public UploadTableSorter(UploadTableView uTableViewer) {
+    public class UploadersTableSorter extends GSorter {
+        public UploadersTableSorter(UploadTableView uTableViewer) {
             super(uTableViewer);
         }
 
@@ -267,8 +293,11 @@ public class UploadTableView extends GTableView implements Observer {
          */
         public boolean sortOrder(int columnIndex) {
             switch (cViewer.getColumnIDs()[ columnIndex ]) {
-            case UploadTableView.BYTES:
-            case UploadTableView.REQUESTS:
+            case UploadTableView.UPLOADED:
+            case UploadTableView.DOWNLOADED:
+            case UploadTableView.CONNECT_TIME:
+            case UploadTableView.SOCK_ADDR:
+            case UploadTableView.PORT:
                 return false;
 
             default:
@@ -281,27 +310,55 @@ public class UploadTableView extends GTableView implements Observer {
          * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
          */
         public int compare(Viewer viewer, Object obj1, Object obj2) {
-            SharedFileInfo sharedFile1 = (SharedFileInfo) obj1;
-            SharedFileInfo sharedFile2 = (SharedFileInfo) obj2;
+            ClientInfo clientInfo1 = (ClientInfo) obj1;
+            ClientInfo clientInfo2 = (ClientInfo) obj2;
 
             switch (cViewer.getColumnIDs()[ columnIndex ]) {
-            case UploadTableView.NETWORK:
-                return compareStrings(sharedFile1.getNetwork().getNetworkName(), // NPE
-                    sharedFile2.getNetwork().getNetworkName());
+            case UploadTableView.UPLOADED:
+                return compareLongs(clientInfo1.getUploaded(), clientInfo2.getUploaded());
 
-            case UploadTableView.BYTES:
-                return compareLongs(sharedFile1.getNumOfBytesUploaded(),
-                    sharedFile2.getNumOfBytesUploaded());
+            case UploadTableView.DOWNLOADED:
+                return compareLongs(clientInfo1.getDownloaded(), clientInfo2.getDownloaded());
 
-            case UploadTableView.REQUESTS:
-                return compareLongs(sharedFile1.getNumOfQueriesForFile(),
-                    sharedFile2.getNumOfQueriesForFile());
+            case UploadTableView.STATE:
 
-            case UploadTableView.NAME:
-                return compareStrings(sharedFile1.getName(), sharedFile2.getName());
+                if (clientInfo1.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+                    return -1;
+                else if (clientInfo2.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+                    return 1;
+                else if ((clientInfo1.getState().getRank() != 0) &&
+                        (clientInfo2.getState().getRank() != 0))
+                    return compareIntegers(clientInfo1.getState().getRank(),
+                        clientInfo2.getState().getRank());
+                else if (clientInfo1.getState().getRank() != 0)
+                    return -1;
+                else if (clientInfo2.getState().getRank() != 0)
+                    return 1;
 
+            case UploadTableView.SOCK_ADDR:
+                return compareAddrs(clientInfo1.getClientKind().getAddr(),
+                    clientInfo2.getClientKind().getAddr());
+
+            case UploadTableView.PORT:
+                return compareIntegers(clientInfo1.getClientKind().getPort(),
+                    clientInfo2.getClientKind().getPort());
+
+            case UploadTableView.CONNECT_TIME:
+                return compareIntegers(clientInfo1.getClientConnectTime(),
+                    clientInfo2.getClientConnectTime());
+
+            // else fall through
             default:
-                return 0;
+
+                String s1;
+                String s2;
+
+                UploadersTableLabelProvider lprov = (UploadersTableLabelProvider) ((TableViewer) viewer).getLabelProvider();
+
+                s1 = lprov.getColumnText(obj1, columnIndex);
+                s2 = lprov.getColumnText(obj2, columnIndex);
+
+                return compareStrings(s1, s2);
             }
         }
     }
@@ -309,15 +366,14 @@ public class UploadTableView extends GTableView implements Observer {
     /**
      * UploadTableMenuListener
      */
-    public class UploadTableMenuListener extends GTableMenuListener
+    public class UploadersTableMenuListener extends GTableMenuListener
         implements ISelectionChangedListener, IMenuListener {
-        private SharedFileInfo selectedFile;
-        private List selectedFiles = new ArrayList();
+        private List selectedClientInfos = new ArrayList();
 
         /**
          * @param gTableViewer
          */
-        public UploadTableMenuListener(GTableView gTableViewer) {
+        public UploadersTableMenuListener(GTableView gTableViewer) {
             super(gTableViewer);
         }
 
@@ -327,14 +383,13 @@ public class UploadTableView extends GTableView implements Observer {
         public void selectionChanged(SelectionChangedEvent event) {
             IStructuredSelection sSel = (IStructuredSelection) event.getSelection();
             Object o = sSel.getFirstElement();
-            selectedFile = (o instanceof SharedFileInfo) ? (SharedFileInfo) o : null;
-            selectedFiles.clear();
+            selectedClientInfos.clear();
 
             for (Iterator it = sSel.iterator(); it.hasNext();) {
                 o = it.next();
 
-                if (o instanceof SharedFileInfo)
-                    selectedFiles.add(o);
+                if (o instanceof ClientInfo)
+                    selectedClientInfos.add(o);
             }
         }
 
@@ -342,21 +397,16 @@ public class UploadTableView extends GTableView implements Observer {
          * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
          */
         public void menuAboutToShow(IMenuManager menuManager) {
-            /*copy ED2K-Link*/
-            if (selectedFile != null) {
-                String[] linkList = new String[ selectedFiles.size() ];
+            if (selectedClientInfos.size() > 0) {
+                ClientInfo[] clientInfoArray = new ClientInfo[ selectedClientInfos.size() ];
 
-                for (int i = 0; i < selectedFiles.size(); i++)
-                    linkList[ i ] = new String(((SharedFileInfo) selectedFiles.get(i)).getED2K());
+                for (int i = 0; i < selectedClientInfos.size(); i++)
+                    clientInfoArray[ i ] = (ClientInfo) selectedClientInfos.get(i);
 
-                MenuManager clipboardMenu = new MenuManager(G2GuiResources.getString(
-                            "TT_DOWNLOAD_MENU_COPYTO"));
-                clipboardMenu.add(new CopyED2KLinkToClipboardAction(false, linkList));
-                clipboardMenu.add(new CopyED2KLinkToClipboardAction(true, linkList));
-                menuManager.add(clipboardMenu);
+                menuManager.add(new AddClientAsFriendAction(core, clientInfoArray));
+                menuManager.add(new ClientDetailAction(gView.getShell(), null,
+                        (ClientInfo) selectedClientInfos.get(0), core));
             }
-
-            menuManager.add(new RefreshUploadsAction(gView));
         }
     }
 }
@@ -364,103 +414,42 @@ public class UploadTableView extends GTableView implements Observer {
 
 /*
 $Log: UploadTableView.java,v $
-Revision 1.11  2003/12/04 08:47:30  lemmy
+Revision 1.12  2004/01/22 21:28:03  psy
+renamed "uploads" to "shares" and moved it to a tab of its own.
+"uploaders" are now called "uploads" for improved naming-consistency
+
+Revision 1.11  2003/12/19 22:15:27  psy
+added human readable value for connectiontime passed since connection initiation
+
+Revision 1.10  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
-Revision 1.10  2003/12/01 16:39:25  zet
+Revision 1.9  2003/12/01 16:39:25  zet
 set default sort order for specific columns
 
-Revision 1.9  2003/11/27 21:42:33  zet
+Revision 1.8  2003/12/01 13:28:16  zet
+add port info
+
+Revision 1.7  2003/11/30 23:42:56  zet
+updates for latest mldonkey cvs
+
+Revision 1.6  2003/11/29 13:01:11  lemmy
+Addr.getString() renamed to the more natural word name Addr.toString()
+
+Revision 1.5  2003/11/28 22:37:59  zet
+coalesce addr use
+
+Revision 1.4  2003/11/28 08:23:28  lemmy
+use Addr instead of String
+
+Revision 1.3  2003/11/27 21:42:33  zet
 integrate ViewFrame a little more.. more to come.
 
-Revision 1.8  2003/11/24 01:33:27  zet
-move some classes
+Revision 1.2  2003/11/26 16:05:37  zet
+minor
 
-Revision 1.7  2003/11/23 17:58:03  lemmy
-removed dead/unused code
+Revision 1.1  2003/11/26 07:43:15  zet
+quick attempt at an uploaders table w/proto 19 - still in progress...
 
-Revision 1.6  2003/11/22 02:24:30  zet
-widgetfactory & save sash postions/states between sessions
-
-Revision 1.5  2003/11/09 02:22:46  zet
-*** empty log message ***
-
-Revision 1.4  2003/11/09 02:18:37  zet
-put some info in the headers
-
-Revision 1.3  2003/11/03 03:08:12  zet
-synchronized
-
-Revision 1.2  2003/10/31 16:30:49  zet
-minor renames
-
-Revision 1.1  2003/10/31 16:02:57  zet
-use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
-
-Revision 1.1  2003/10/31 13:16:33  lemmy
-Rename Viewer -> Page
-Constructors changed
-
-Revision 1.17  2003/10/31 10:42:47  lemmy
-Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
-Removed IGViewer because our abstract class GPage do the job
-Use supertype/interface where possible to keep the design flexible!
-
-Revision 1.16  2003/10/31 07:24:01  zet
-fix: filestate filter - put back important isFilterProperty check
-fix: filestate filter - exclusionary fileinfo filters
-fix: 2 new null pointer exceptions (search tab)
-recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
-- all search tab tables are column updated
-regexp helpers in one class
-rework viewers heirarchy
-filter clients table properly
-discovered sync errors and NPEs in upload table... will continue later.
-
-Revision 1.15  2003/10/22 20:38:35  zet
-common actions
-
-Revision 1.14  2003/10/22 01:38:45  zet
-add column selector
-
-Revision 1.13  2003/10/21 17:00:45  lemmy
-class hierarchy for tableviewer
-
-Revision 1.12  2003/10/16 20:56:50  zet
-save column widths
-
-Revision 1.11  2003/09/27 13:30:22  dek
-all tables have now show-Gridlines-behaviour as descibed in  preferences
-
-Revision 1.10  2003/09/27 12:30:40  dek
-upload-Table has now same show-Gridlines-behaviour as download-Table
-
-Revision 1.9  2003/09/27 00:02:37  dek
-bugfixes, merged right-mouse-click menues (nothing is uglier than one-item-menues)
-
-Revision 1.8  2003/09/26 17:03:26  zet
-remove unneeded String result
-
-Revision 1.7  2003/09/26 17:02:03  zet
-reorder case statements
-return instead of falling through
-
-Revision 1.6  2003/09/26 15:45:59  dek
-we now have upload-stats (well, kind of...)
-
-Revision 1.5  2003/09/26 12:25:52  dek
-changed refresh() -> update() to avoid flickering table
-
-Revision 1.4  2003/09/26 11:55:48  dek
-right-mouse menue for upload-Table
-
-Revision 1.3  2003/09/25 21:50:16  dek
-added icons for networks + TableSorter
-
-Revision 1.2  2003/09/25 21:48:55  dek
-added icons for networks + TableSorter
-
-Revision 1.1  2003/09/25 18:28:07  dek
-first sketch of upload-Table not yet added to transferTab.
 
 */

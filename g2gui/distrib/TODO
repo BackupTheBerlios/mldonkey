@@ -7,8 +7,6 @@ G2gui's TODO-list (last update: 22.01.04)
 
 * Fix damaged dynamic-column behaviour under linux (important!)
 
-* Move "Uploads"-sash to a tab of its own called "Shared Files"
-
 * Fix core-connection-loss crash
   - The (to be extended/fixed) relaunch() method should be called
     when the core goes down. A small countdown-window counts down
