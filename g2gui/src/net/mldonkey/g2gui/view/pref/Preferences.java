@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.28 2003/08/25 13:14:12 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.29 2003/08/26 09:21:52 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -73,14 +73,7 @@ public class Preferences extends PreferenceManager {
 			} catch ( IOException e ) {
 				System.out.println( "initalizing Preferences Dialog failed due to IOException" );
 			}
-		prefdialog = new PreferenceDialog( shell, this ) {				
-				/* (non-Javadoc)
-				 * @see org.eclipse.jface.window.Window#setShellStyle(int)
-				 */
-					protected void setShellStyle( int newShellStyle ) {					
-						super.setShellStyle( SWT.DIALOG_TRIM |SWT.APPLICATION_MODAL );
-					}
-				};
+		prefdialog = new PreferenceDialog( shell, this );
 		
 		if ( ( mldonkey != null ) && ( mldonkey.isConnected() ) ) {
 			this.connected = true;
@@ -227,6 +220,10 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.29  2003/08/26 09:21:52  dek
+pref-dialog is now resizable again, since the problem with the huge pages is gone.
+And maybe some people don't like fixed-size dialogs ;-)
+
 Revision 1.28  2003/08/25 13:14:12  dek
 now integegerFields have the same width as StringInputFields
 
