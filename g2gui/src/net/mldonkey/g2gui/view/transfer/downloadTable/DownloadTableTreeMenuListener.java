@@ -84,7 +84,7 @@ import java.util.List;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.12 2003/10/12 19:43:12 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.13 2003/10/13 21:27:00 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -505,7 +505,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         public void run() {
             MessageBox reallyCancel = new MessageBox( tableTreeViewer.getTableTree().getShell(), SWT.YES | SWT.NO | SWT.ICON_QUESTION );
 
-            reallyCancel.setMessage( G2GuiResources.getString( "TT_REALLY_CANCEL" ) + " (" + selectedFiles.size() + ")" );
+            reallyCancel.setMessage( G2GuiResources.getString( "TT_REALLY_CANCEL" ) + ( selectedFiles.size() > 1 ? " (" + selectedFiles.size() + " selected)" : "" ) );
 
             int answer = reallyCancel.open();
 
@@ -693,6 +693,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.13  2003/10/13 21:27:00  zet
+nil
+
 Revision 1.12  2003/10/12 19:43:12  zet
 very high & low priorities
 
