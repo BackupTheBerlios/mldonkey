@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * AddFriend
  *
- * @version $Id: AddFriend.java,v 1.3 2003/08/31 00:08:59 zet Exp $
+ * @version $Id: AddFriend.java,v 1.4 2003/08/31 15:40:12 zet Exp $
  */
 public class AddFriend {
 
@@ -81,7 +81,7 @@ public class AddFriend {
 		portLabel.setText(G2GuiResources.getString( "FR_ADD_PORT" )+ ":");
 		
 		final Text port = new Text(shell, SWT.BORDER);
-		port.setText("4242");
+		port.setText("4662");
 		port.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Button okButton = new Button(shell, SWT.NONE);
@@ -114,6 +114,9 @@ public class AddFriend {
 }
 /*
 $Log: AddFriend.java,v $
+Revision 1.4  2003/08/31 15:40:12  zet
+port
+
 Revision 1.3  2003/08/31 00:08:59  zet
 add buttons
 
