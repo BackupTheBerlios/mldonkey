@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * G2GuiDisplayGraphs
  *
- * @version $Id: G2GuiDisplayGraphs.java,v 1.1 2003/10/17 15:35:48 zet Exp $ 
+ * @version $Id: G2GuiDisplayGraphs.java,v 1.2 2003/10/23 01:51:23 zet Exp $ 
  *
  */
 public class G2GuiDisplayGraphs extends PreferencePage {
@@ -76,7 +76,7 @@ public class G2GuiDisplayGraphs extends PreferencePage {
 		setupEditor( 
 			new ExtendedColorFieldEditor( 
 				"graphDownloadsColor1",
-				G2GuiResources.getString( "PREF_DISPLAY_G_DOWNLOADS2" ),
+				G2GuiResources.getString( "PREF_DISPLAY_G_DOWNLOADS1" ),
 				composite ) );
 
 		setupEditor( 
@@ -109,6 +109,9 @@ public class G2GuiDisplayGraphs extends PreferencePage {
 
 /*
 $Log: G2GuiDisplayGraphs.java,v $
+Revision 1.2  2003/10/23 01:51:23  zet
+typo
+
 Revision 1.1  2003/10/17 15:35:48  zet
 graph prefs
 
