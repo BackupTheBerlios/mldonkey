@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.59 2003/08/24 16:37:04 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.60 2003/08/24 17:15:47 zet Exp $ 
  *
  */
 public class MainTab implements Observer, ShellListener {
@@ -252,7 +252,7 @@ public class MainTab implements Observer, ShellListener {
 	 */
 	public void openPreferences() {
 		Shell prefshell = new Shell();
-		Preferences myprefs = new Preferences( new PreferenceStore( "g2gui.pref" ) );					
+		Preferences myprefs = new Preferences( PreferenceLoader.getPreferenceStore() );					
 		myprefs.open( prefshell, mldonkey );
 		
 		Iterator itr = registeredTabs.iterator();
@@ -385,6 +385,9 @@ public class MainTab implements Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.60  2003/08/24 17:15:47  zet
+use preferenceloader
+
 Revision 1.59  2003/08/24 16:37:04  zet
 combine the preference stores
 
