@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.4 2003/06/24 09:16:48 lemmstercvs01 Exp $ 
+ * @version $Id: Query.java,v 1.5 2003/06/24 09:18:51 lemmstercvs01 Exp $ 
  *
  */
 public class Query implements SimpleInformation {
@@ -78,7 +78,7 @@ public class Query implements SimpleInformation {
 		 */
 		byte node = messageBuffer.readByte();
 
-		if ( node == 0 || node == 1 || node == 11 ) {
+		if ( node == 0 || node == 1 || node == 13 ) {
 			short listElem = messageBuffer.readInt16();
 			for ( int i = 0; i < listElem; i++ ) {
 				this.queries = new Query[ listElem ];
@@ -209,6 +209,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.5  2003/06/24 09:18:51  lemmstercvs01
+typo fixed
+
 Revision 1.4  2003/06/24 09:16:48  lemmstercvs01
 better Enum added
 
