@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author ${user}
- * @version $Id: EncodeMessage.java,v 1.3 2003/07/03 21:12:50 lemmstercvs01 Exp $ 
+ * @version $Id: EncodeMessage.java,v 1.4 2003/07/24 10:33:13 lemmstercvs01 Exp $ 
  *
  */
 public class EncodeMessage extends Message {
@@ -156,9 +156,8 @@ public class EncodeMessage extends Message {
 							msglength += 4;
 						else if ( received[ j ] instanceof Long )
 							msglength += 8;
-						else if ( received[ j ] instanceof String )
-							msglength =
-								msglength + content[ i ].toString().length() + 2;
+						else if ( received[ j ] instanceof String ) 
+							msglength = msglength + received[ j ].toString().length() + 2;
 					} //end for loop
 				} // end if
 			} // end last else if 
@@ -281,6 +280,9 @@ public class EncodeMessage extends Message {
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.4  2003/07/24 10:33:13  lemmstercvs01
+bugfix in msglength calc of a String[]
+
 Revision 1.3  2003/07/03 21:12:50  lemmstercvs01
 new EncodeMessage(short, Object) added
 
