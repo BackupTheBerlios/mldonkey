@@ -12,7 +12,7 @@ SWT_ARGS=-fjni
 JAR_PATH=$(shell $(FIND) $(JAR_DIR) -name "*.jar" -printf "-I%p " )
 GCJ_ARGS=-c -w -Os $(JAR_PATH) -I$(JAR_DIR)/@RUNTIME_DIR@ -I$(JAR_DIR)/@SWT_DIR@ -Isrc -I.
 
-G2GUI_JAVA_OBJECTS= $(shell $(FIND) $(SRC_DIR) -type f  -name "*.java"  -printf "%p ")
+G2GUI_JAVA_OBJECTS= $(shell $(FIND) $(SRC_DIR) -type f  -name "*.java"  ! -name "*#*" -printf "%p ")
 G2GUI_O_OBJECTS=$(subst .java,.o,$(G2GUI_JAVA_OBJECTS))
 G2GUI_RES_OBJECTS = $(shell $(FIND) $(SRC_DIR) -type f  ! -path "*CVS*" ! -name "*.java" -printf "%p.o ")
 OTHER_RESOBJECTS=$(subst /,.,$(shell $(FIND) $(RES_DIR) -type f  ! -path "*CVS*" ! -name "*.java" -printf "%p.o "))
