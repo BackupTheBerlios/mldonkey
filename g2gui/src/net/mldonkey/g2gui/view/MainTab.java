@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.text.DecimalFormat;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -50,10 +51,10 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.26 2003/08/01 17:21:18 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.27 2003/08/02 17:19:22 zet Exp $ 
  *
  */
-public class MainTab implements Listener, Observer {
+public class MainTab implements Listener, Observer, ShellListener {
 	private CoolBar coolbar;
 	private ToolBar miscTools;
 	private ToolBar mainTools;
@@ -72,6 +73,8 @@ public class MainTab implements Listener, Observer {
 	private ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
 	private static Shell thisShell = null;
 	private final String titleBarText = "g2gui alpha";
+	public static final DecimalFormat decimalFormat = new DecimalFormat( "#.#" );
+	
 	/**
 	 * @param core the most important thing of the gui: were do i get my data from
 	 * @param shell were do we live?
@@ -79,10 +82,12 @@ public class MainTab implements Listener, Observer {
 	public MainTab( CoreCommunication core, Shell shell ) {
 		this.registeredTabs = new ArrayList();
 		this.mldonkey = core;
-		this.mldonkey.getClientStats().addObserver(this);
+		
 		thisShell = shell;
 		final Shell mainShell = shell;	
-		Display display = shell.getDisplay();					
+		Display display = shell.getDisplay();
+		shell.addShellListener(this);
+		shell.setText(titleBarText);					
 		shell.setLayout( new FillLayout() );
 
 		createInternalPrefStore();
@@ -486,13 +491,14 @@ public class MainTab implements Listener, Observer {
 	public void update( Observable arg0, Object receivedInfo ) {
 		final ClientStats clientInfo = ( ClientStats ) receivedInfo;
 		if ( !thisShell.isDisposed() )
-			thisShell.getDisplay().asyncExec( new Runnable() {
+			thisShell.getDisplay().syncExec( new Runnable() {
 			   public void run() {
-					if ( !thisShell.isDisposed() ) thisShell.setText(
-						"(D:" + String.valueOf( clientInfo.getTcpDownRate()) + ")" +
-						"(U:" + String.valueOf( clientInfo.getTcpUpRate()) + ")" +
-						": " + titleBarText
-						);
+					if ( !thisShell.isDisposed() ) {
+						String prependText = 
+							"(D:" + decimalFormat.format( clientInfo.getTcpDownRate()) + ")" +
+							"(U:" + decimalFormat.format( clientInfo.getTcpUpRate()) + ")";			
+						thisShell.setText( prependText + " : " + titleBarText );
+					}	
 				}
 			} );
 	}
@@ -598,10 +604,28 @@ public class MainTab implements Listener, Observer {
 	public static Shell getShell() {
 		return thisShell;
 	}
+	public void shellActivated (ShellEvent e) {
+		
+	}
+	public void shellClosed (ShellEvent e) {
+		
+	}
+	public void shellDeactivated (ShellEvent e) {
+	}
+	public void shellDeiconified (ShellEvent e) {
+		this.mldonkey.getClientStats().deleteObserver(this);
+		thisShell.setText(titleBarText);
+	}
+	public void shellIconified (ShellEvent e) {
+		this.mldonkey.getClientStats().addObserver(this);
+	}
 } 
 
 /*
 $Log: MainTab.java,v $
+Revision 1.27  2003/08/02 17:19:22  zet
+only print stats in titlebar while minimized (stats overkill)
+
 Revision 1.26  2003/08/01 17:21:18  lemmstercvs01
 reworked observer/observable design, added multiversion support
 
