@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Control;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.25 2003/09/14 09:18:02 lemmster Exp $ 
+ * @version $Id: NetworkItem.java,v 1.26 2003/09/18 11:37:24 lemmster Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -89,7 +89,7 @@ public class NetworkItem implements Observer {
 		NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
 
 		composite = new Composite( composite, SWT.BORDER );
-		GridLayout gridLayout = CGridLayout.createGL(networks.length,0,0,0,0,false);
+		GridLayout gridLayout = CGridLayout.createGL( networks.length, 0, 0, 0, 0, false );
 		composite.setLayout( gridLayout );
 		
 		/* sets the enabled/disabled image for each known network */
@@ -108,7 +108,7 @@ public class NetworkItem implements Observer {
 	
 			/* on dispose() deregister on the model */			
 			cLabel.addDisposeListener( new DisposeListener () {
-				public void widgetDisposed(DisposeEvent e) {
+				public void widgetDisposed( DisposeEvent e ) {
 					core.getNetworkInfoMap().deleteObserver( NetworkItem.this );
 				}
 			} );
@@ -126,16 +126,19 @@ public class NetworkItem implements Observer {
 		/* set the network name and status as tooltip */
 		if ( network.isEnabled() && ( network.hasServers() || network.hasSupernodes() ) )
 			if ( network.hasServers() )
-				cLabel.setToolTipText( network.getNetworkName() + " " + G2GuiResources.getString( "NI_CONNECTED_TO" )
+				cLabel.setToolTipText( network.getNetworkName() + " "
+						   + G2GuiResources.getString( "NI_CONNECTED_TO" )
 						   + network.getConnectedServers() +  " " + G2GuiResources.getString( "NI_SERVER" ) );
 			else
-				cLabel.setToolTipText( network.getNetworkName() + " " +  G2GuiResources.getString( "NI_CONNECTED_TO" )
+				cLabel.setToolTipText( network.getNetworkName() + " "
+						   +  G2GuiResources.getString( "NI_CONNECTED_TO" )
 						   + network.getConnectedServers() + " " +  G2GuiResources.getString( "NI_NODES" ) );
 		else
 			if ( network.isVirtual() )
 				cLabel.setToolTipText( network.getNetworkName() );
 			else
-				cLabel.setToolTipText( network.getNetworkName() + " " +  G2GuiResources.getString( "NI_DISABLED" ) );
+				cLabel.setToolTipText( network.getNetworkName() + " "
+				+  G2GuiResources.getString( "NI_DISABLED" ) );
 	}
 
 	/* (non-Javadoc)
@@ -143,7 +146,7 @@ public class NetworkItem implements Observer {
 	 */
 	public void update( Observable o, Object arg ) {
 		// ClassCastException without this
-		if (!(arg instanceof NetworkInfo)) return;
+		if ( !( arg instanceof NetworkInfo ) ) return;
 		
 		final NetworkInfo network = ( NetworkInfo ) arg;
 		composite.getDisplay().asyncExec( new Runnable () {
@@ -185,6 +188,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.26  2003/09/18 11:37:24  lemmster
+checkstyle
+
 Revision 1.25  2003/09/14 09:18:02  lemmster
 tooltip for multinet
 

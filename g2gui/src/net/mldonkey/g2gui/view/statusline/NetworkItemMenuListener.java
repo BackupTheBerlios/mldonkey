@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.statusline;
 
@@ -38,102 +38,123 @@ import org.eclipse.jface.action.Separator;
  * NetworkItemMenuListener
  *
  *
- * @version $Id: NetworkItemMenuListener.java,v 1.5 2003/09/15 22:53:35 lemmster Exp $ 
+ * @version $Id: NetworkItemMenuListener.java,v 1.6 2003/09/18 11:37:24 lemmster Exp $
  *
  */
 public class NetworkItemMenuListener implements IMenuListener {
-	private static final boolean advanced = PreferenceLoader.loadBoolean( "advancedMode" );
-	/**
-	 * The <code>StatusLine</code>
-	 */
-	private StatusLine statusline;
-	/**
-	 * The <code>NetworkInfo</code> to this <code>IMenuListener</code>
-	 */
-	private NetworkInfo network;
-	/**
-	 * The <code>GuiTab</code>
-	 */
-	private GuiTab serverTab;
-	/**
-	 * Creates a new NetworkItemMenuListener
-	 * @param network The <code>NetworkInfo</code> this obj belong to
-	 * @param serverTab The <code>GuiTab</code>
-	 */
-	public NetworkItemMenuListener( NetworkInfo network, GuiTab serverTab, StatusLine statusline ) {
-		super();
-		this.network = network;
-		this.serverTab = serverTab;
-		this.statusline = statusline;
-	}
+    private static final boolean advanced = PreferenceLoader.loadBoolean( "advancedMode" );
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IMenuListener#
-	 * menuAboutToShow(org.eclipse.jface.action.IMenuManager)
-	 */
-	public void menuAboutToShow( IMenuManager manager ) {
-		if ( network.isEnabled() ) {
-			if ( network.hasServers() && advanced )
-					manager.add( new ManageAction() );
+    /**
+     * The <code>StatusLine</code>
+     */
+    private StatusLine statusline;
 
-			if ( network.hasServers() || network.hasSupernodes() )
-				manager.add( new ConnectMoreAction() );
+    /**
+     * The <code>NetworkInfo</code> to this <code>IMenuListener</code>
+     */
+    private NetworkInfo network;
 
-			manager.add( new Separator() );
-		}
-		
-		if ( !network.isVirtual() ) {
-			if ( network.isEnabled() )
-				manager.add( new DisableAction() );
-			else
-				manager.add( new EnableAction() );	
-		}
-	}
-	
-	private class EnableAction extends Action {
-		public EnableAction() {
-			super();
-			setText( G2GuiResources.getString( "NIML_ENABLE" ) );
-		}
-		public void run() {
-			network.setEnabled();
-		}
-	}
+    /**
+     * The <code>GuiTab</code>
+     */
+    private GuiTab serverTab;
 
-	private class DisableAction extends Action {
-		public DisableAction() {
-			super();
-			setText( G2GuiResources.getString( "NIML_DISABLE" ) );
-		}
-		public void run() {
-			network.setEnabled();
-		}
-	}
+    /**
+     * Creates a new NetworkItemMenuListener
+     * @param network The <code>NetworkInfo</code> this obj belong to
+     * @param serverTab The <code>GuiTab</code>
+     * @param statusline The <code>StatusLine<code> we draw at
+     */
+    public NetworkItemMenuListener( NetworkInfo network, GuiTab serverTab, StatusLine statusline ) {
+        super();
+        this.network = network;
+        this.serverTab = serverTab;
+        this.statusline = statusline;
+    }
 
-	private class ManageAction extends Action {
-		public ManageAction() {
-			super();
-			setText( G2GuiResources.getString( "NIML_MANAGE" ) );
-		}
-		public void run() {
-			statusline.getMainTab().setActive( serverTab );
-			( ( ServerTab ) serverTab ).setFilter( network.getNetworkType() );
-		}
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.IMenuListener#
+     * menuAboutToShow(org.eclipse.jface.action.IMenuManager)
+     */
+    public void menuAboutToShow( IMenuManager manager ) {
+        if ( network.isEnabled() ) {
+            if ( network.hasServers() && advanced )
+                manager.add( new ManageAction() );
+            if ( network.hasServers() || network.hasSupernodes() )
+                manager.add( new ConnectMoreAction() );
+            manager.add( new Separator() );
+        }
+        if ( !network.isVirtual() ) {
+            if ( network.isEnabled() )
+                manager.add( new DisableAction() );
+            else
+                manager.add( new EnableAction() );
+        }
+    }
 
-	private class ConnectMoreAction extends Action {
-		public ConnectMoreAction() {
-			super();
-			setText( G2GuiResources.getString( "NIML_CONNECT" ) );
-		}
-		public void run() {
-			network.getCore().getServerInfoIntMap().connectMore( network );
-		}
-	}
+    private class EnableAction extends Action {
+        public EnableAction() {
+            super();
+            setText( G2GuiResources.getString( "NIML_ENABLE" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            network.setEnabled();
+        }
+    }
+
+    private class DisableAction extends Action {
+        public DisableAction() {
+            super();
+            setText( G2GuiResources.getString( "NIML_DISABLE" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            network.setEnabled();
+        }
+    }
+
+    private class ManageAction extends Action {
+        public ManageAction() {
+            super();
+            setText( G2GuiResources.getString( "NIML_MANAGE" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            statusline.getMainTab().setActive( serverTab );
+            ( ( ServerTab ) serverTab ).setFilter( network.getNetworkType() );
+        }
+    }
+
+    private class ConnectMoreAction extends Action {
+        public ConnectMoreAction() {
+            super();
+            setText( G2GuiResources.getString( "NIML_CONNECT" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            network.getCore().getServerInfoIntMap().connectMore( network );
+        }
+    }
 }
 
 /*
 $Log: NetworkItemMenuListener.java,v $
+Revision 1.6  2003/09/18 11:37:24  lemmster
+checkstyle
+
 Revision 1.5  2003/09/15 22:53:35  lemmster
 bugfix [bug #912]
 

@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.statusline;
 
@@ -38,42 +38,55 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * CoreConsoleItem
  *
- * @version $Id: CoreConsoleItem.java,v 1.1 2003/09/03 14:49:07 zet Exp $ 
+ * @version $Id: CoreConsoleItem.java,v 1.2 2003/09/18 11:37:24 lemmster Exp $
  *
  */
 public class CoreConsoleItem {
+    private StatusLine statusLine;
+    private Composite composite;
+    private boolean linkEntryToggle = false;
 
-	private StatusLine statusLine;
-	private Composite composite;
-	private boolean linkEntryToggle = false;
+	/**
+	 * DOCUMENT ME!
+	 *  
+	 * @param statusLine DOCUMENT ME!
+	 * @param mldonkey DOCUMENT ME!
+	 */
+    public CoreConsoleItem( StatusLine statusLine, CoreCommunication mldonkey ) {
+        this.statusLine = statusLine;
+        this.composite = statusLine.getStatusline();
+        createContents();
+    }
 
-	public CoreConsoleItem( StatusLine statusLine, CoreCommunication mldonkey ) {
-		this.statusLine = statusLine;
-		this.composite = statusLine.getStatusline();
-		createContents();
-	}
+    /**
+     * DOCUMENT ME!
+     */
+    public void createContents() {
+        Composite linkComposite = new Composite( composite, SWT.BORDER );
+        linkComposite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
+        linkComposite.setLayout( new FillLayout() );
+        CLabel link = new CLabel( linkComposite, SWT.BORDER );
+        link.setImage( G2GuiResources.getImage( "G2GuiLogoSmall" ) );
+        link.setToolTipText( G2GuiResources.getString( "CORE_CONSOLE_TOOLTIP" ) );
+        link.addMouseListener( new MouseListener() {
+                public void mouseDown( MouseEvent e ) {
+                    G2Gui.getCoreConsole().getShell().open();
+                }
 
-	public void createContents() {
-			
-		Composite linkComposite = new Composite(composite, SWT.BORDER );
-		linkComposite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER));
-		linkComposite.setLayout( new FillLayout() );
+                public void mouseUp( MouseEvent e ) {
+                }
 
-		CLabel link = new CLabel( linkComposite, SWT.BORDER );
-		link.setImage ( G2GuiResources.getImage("G2GuiLogoSmall") );
-		link.setToolTipText(G2GuiResources.getString("CORE_CONSOLE_TOOLTIP"));
-		link.addMouseListener(new MouseListener() {
-			public void mouseDown(MouseEvent e) {
-				G2Gui.getCoreConsole().getShell().open();
-			}
-			public void mouseUp(MouseEvent e) {}
-			public void mouseDoubleClick(MouseEvent e) {}
-		
-		});
-	}
+                public void mouseDoubleClick( MouseEvent e ) {
+                }
+            } );
+    }
 }
+
 /*
 $Log: CoreConsoleItem.java,v $
+Revision 1.2  2003/09/18 11:37:24  lemmster
+checkstyle
+
 Revision 1.1  2003/09/03 14:49:07  zet
 optionally spawn core from gui
 

@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -18,13 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.statusline;
 
 import gnu.regexp.RE;
 import gnu.regexp.REException;
 import gnu.regexp.REMatch;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -48,95 +49,115 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.11 2003/08/30 23:37:51 zet Exp $ 
+ * @version $Id: LinkEntry.java,v 1.12 2003/09/18 11:37:24 lemmster Exp $
  *
  */
 public class LinkEntry {
+    private CoreCommunication core;
+    private StatusLine statusLine;
 
-	private CoreCommunication core;
-	private StatusLine statusLine;
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param statusLine DOCUMENT ME!
+	 * @param core DOCUMENT ME!
+	 * @param parent DOCUMENT ME!
+	 */
+    public LinkEntry( StatusLine statusLine, CoreCommunication core, Composite parent ) {
+        this.statusLine = statusLine;
+        this.core = core;
+        createContents( parent );
+    }
 
-	public LinkEntry(StatusLine statusLine, CoreCommunication core, Composite parent) {
-		this.statusLine = statusLine;
-		this.core = core;
-		createContents(parent);
-	}
-	
-	public void createContents(Composite parent) {
-		
-		ViewForm linkEntryViewForm = new ViewForm( parent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
-		linkEntryViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));	
-			
-		CLabel linkEntryCLabel = CCLabel.createCL(linkEntryViewForm, "LE_HEADER", "UpArrowBlue");	
-			
-		final Text linkEntryText = new Text(linkEntryViewForm, SWT.WRAP | SWT.MULTI | SWT.V_SCROLL );
-		linkEntryText.setLayoutData(new FillLayout());
-		
-		linkEntryText.setFont( PreferenceLoader.loadFont( "consoleFontData" ) );
-		linkEntryText.setForeground( PreferenceLoader.loadColour( "consoleInputForeground" ) );
-		linkEntryText.setBackground( PreferenceLoader.loadColour( "consoleInputBackground" ) );
-		
-		ToolBar linkEntryToolBar = new ToolBar(linkEntryViewForm, SWT.RIGHT | SWT.FLAT );
-		ToolItem sendItem = new ToolItem(linkEntryToolBar, SWT.NONE);
-		sendItem.setText(G2GuiResources.getString("LE_BUTTON"));
-		sendItem.setImage(G2GuiResources.getImage("UpArrowBlue"));
-		sendItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected (SelectionEvent s) {
-				enterLinks(linkEntryText);
-			}	
-		});
-		
-		linkEntryViewForm.setTopLeft(linkEntryCLabel);
-		linkEntryViewForm.setContent(linkEntryText);
-		linkEntryViewForm.setTopRight(linkEntryToolBar);
-		
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param parent DOCUMENT ME!
+     */
+    public void createContents( Composite parent ) {
+        ViewForm linkEntryViewForm =
+            new ViewForm( parent,
+                          SWT.BORDER
+                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+        linkEntryViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        CLabel linkEntryCLabel = CCLabel.createCL( linkEntryViewForm, "LE_HEADER", "UpArrowBlue" );
+        final Text linkEntryText = new Text( linkEntryViewForm, SWT.WRAP | SWT.MULTI | SWT.V_SCROLL );
+        linkEntryText.setLayoutData( new FillLayout() );
+        linkEntryText.setFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+        linkEntryText.setForeground( PreferenceLoader.loadColour( "consoleInputForeground" ) );
+        linkEntryText.setBackground( PreferenceLoader.loadColour( "consoleInputBackground" ) );
+        ToolBar linkEntryToolBar = new ToolBar( linkEntryViewForm, SWT.RIGHT | SWT.FLAT );
+        ToolItem sendItem = new ToolItem( linkEntryToolBar, SWT.NONE );
+        sendItem.setText( G2GuiResources.getString( "LE_BUTTON" ) );
+        sendItem.setImage( G2GuiResources.getImage( "UpArrowBlue" ) );
+        sendItem.addSelectionListener( new SelectionAdapter() {
+                public void widgetSelected( SelectionEvent s ) {
+                    enterLinks( linkEntryText );
+                }
+            } );
+        linkEntryViewForm.setTopLeft( linkEntryCLabel );
+        linkEntryViewForm.setContent( linkEntryText );
+        linkEntryViewForm.setTopRight( linkEntryToolBar );
+    }
 
-	// bleah. When do magnet links terminate? or ".torrent?value=x..."?  I don't know..
-	public void enterLinks(Text linkEntryText) {
-		String input = linkEntryText.getText();
-		RE regex = null;	
-		try {
-			 regex = new RE( "(ed2k://\\|file\\|[^\\|]+\\|(\\d+)\\|([\\dabcdef]+)\\|)" 
-			+ "|(sig2dat:///?\\|File:[^\\|]+\\|Length:.+?\\|UUHash:\\=.+?\\=)"
-			+ "|(\\\"magnet:\\?xt=.+?\\\")"
-			+ "|(magnet:\\?xt=.+?\n)"
-			+ (linkEntryText.getLineCount() == 1 ? "|(magnet:\\?xt=.+)" : "")
-			+ (linkEntryText.getLineCount() == 1 ? "|(http://.+?\\.torrent.+)" : "")
-			+ "|(\"http://.+?\\.torrent\\?[^>]+\")"
-			+ "|(http://.+?\\.torrent)" , RE.REG_ICASE );
-		} 
-		catch ( REException e ) {			
-			e.printStackTrace();
-		}		
-	
-		REMatch[] matches = regex.getAllMatches(input);
-		for (int i = 0; i < matches.length; i++) {
-			String link = replaceAll(matches[i].toString(), "\"", "");
-			link = replaceAll(link, "\n", "");
-			Message dllLink = new EncodeMessage( Message.S_DLLINK, link );
-			dllLink.sendMessage( core.getConnection() );
-		}
-		statusLine.update(G2GuiResources.getString("LE_LINKS_SENT") + " " + matches.length);
-		linkEntryText.setText("");
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param linkEntryText DOCUMENT ME!
+     */
+    public void enterLinks( Text linkEntryText ) {
+        String input = linkEntryText.getText();
+        RE regex = null;
+        try {
+            regex =
+                new RE( "(ed2k://\\|file\\|[^\\|]+\\|(\\d+)\\|([\\dabcdef]+)\\|)"
+                        + "|(sig2dat:///?\\|File:[^\\|]+\\|Length:.+?\\|UUHash:\\=.+?\\=)"
+                        + "|(\\\"magnet:\\?xt=.+?\\\")" + "|(magnet:\\?xt=.+?\n)"
+                        + ( ( linkEntryText.getLineCount() == 1 ) ? "|(magnet:\\?xt=.+)" : "" )
+                        + ( ( linkEntryText.getLineCount() == 1 ) ? "|(http://.+?\\.torrent.+)" : "" )
+                        + "|(\"http://.+?\\.torrent\\?[^>]+\")" + "|(http://.+?\\.torrent)", RE.REG_ICASE );
+        }
+        catch ( REException e ) {
+            e.printStackTrace();
+        }
+        REMatch[] matches = regex.getAllMatches( input );
+        for ( int i = 0; i < matches.length; i++ ) {
+            String link = replaceAll( matches[ i ].toString(), "\"", "" );
+            link = replaceAll( link, "\n", "" );
+            Message dllLink = new EncodeMessage( Message.S_DLLINK, link );
+            dllLink.sendMessage( core.getConnection() );
+        }
+        statusLine.update( G2GuiResources.getString( "LE_LINKS_SENT" ) + " " + matches.length );
+        linkEntryText.setText( "" );
+    }
 
-	private String replaceAll( String input, String toBeReplaced, String replaceWith ) {		
-			RE regex = null;			
-			try {
-				 regex = new RE( toBeReplaced );
-			}
-			catch ( REException e ) {			
-				e.printStackTrace();
-			}		
-			String result = regex.substituteAll( input, replaceWith );	
-			return result;
-	}
-
-
+    /**
+     * DOCUMENT ME!
+     *
+     * @param input DOCUMENT ME!
+     * @param toBeReplaced DOCUMENT ME!
+     * @param replaceWith DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    private String replaceAll( String input, String toBeReplaced, String replaceWith ) {
+        RE regex = null;
+        try {
+            regex = new RE( toBeReplaced );
+        }
+        catch ( REException e ) {
+            e.printStackTrace();
+        }
+        String result = regex.substituteAll( input, replaceWith );
+        return result;
+    }
 }
+
 /*
 $Log: LinkEntry.java,v $
+Revision 1.12  2003/09/18 11:37:24  lemmster
+checkstyle
+
 Revision 1.11  2003/08/30 23:37:51  zet
 use preference colors/fonts
 
