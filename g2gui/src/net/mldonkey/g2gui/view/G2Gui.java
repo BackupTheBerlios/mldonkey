@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.58 2003/12/28 15:32:46 dek Exp $
+ * @version $Id: G2Gui.java,v 1.59 2003/12/30 13:48:08 psy Exp $
  *
  */
 public class G2Gui {
@@ -464,15 +464,15 @@ public class G2Gui {
 	
 			if (rc == SWT.CANCEL) {
 				closeApp();
-			} else {
-				myPrefs.open(shell, null);
+			} else if ( myPrefs.open(shell, null) == 0 ) {
 				relaunchSelf();
 			}
 		} else {
 			myPrefs = new Preferences(PreferenceLoader.getPreferenceStore());
 			shell = new Shell();
-			myPrefs.open(shell, null);
-			relaunchSelf();
+			if ( myPrefs.open(shell, null) == 0 ) {
+				relaunchSelf();
+			}
 		}
     }
 
@@ -518,6 +518,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.59  2003/12/30 13:48:08  psy
+connection settings improvement
+
 Revision 1.58  2003/12/28 15:32:46  dek
 NPE fixed (when using -c switch)
 

@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.46 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: Preferences.java,v 1.47 2003/12/30 13:48:08 psy Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -114,7 +114,7 @@ public class Preferences extends PreferenceManager {
      * @param shell the parent shell, where this pref-window has to be opened
      * @param mldonkey the Core we want to configure
      */
-    public void open(Shell shell, CoreCommunication mldonkey) {
+    public int open(Shell shell, CoreCommunication mldonkey) {
         prefdialog = new PreferenceDialog(shell, this);
         PreferenceDialog.setDefaultImage(G2GuiResources.getImage("ProgramIcon"));
 
@@ -127,7 +127,9 @@ public class Preferences extends PreferenceManager {
         //		
         //myprefs.addToRoot( new PreferenceNode
         //		( "eDonkey", new Edonkey( preferenceStore, connected ) ) );	
-        prefdialog.open();
+
+        //returns 0 when OK was pressed, and 1 when CANCEL was pressed
+        return prefdialog.open();
     }
 
     /**
@@ -257,6 +259,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.47  2003/12/30 13:48:08  psy
+connection settings improvement
+
 Revision 1.46  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -332,7 +337,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
