@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTableTreeMenuListener
  *
  * @author $Author: zet $
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.23 2003/08/24 18:19:02 zet Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.24 2003/08/24 18:22:37 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -636,7 +636,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 				+ (useHTML ? " (html)" : ""));
 		}
 		public void run() {
-			Clipboard clipBoard = new Clipboard( tableTreeViewer.getTableTree().getShell().getDisplay() );
+			Clipboard clipBoard = new Clipboard( tableTreeViewer.getTableTree().getDisplay() );
 			String link = "";
 			for (int i = 0; i < selectedFiles.size(); i++) {
 			 	FileInfo aFileInfo = (FileInfo) selectedFiles.get(i);
@@ -794,6 +794,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.24  2003/08/24 18:22:37  zet
+*** empty log message ***
+
 Revision 1.23  2003/08/24 18:19:02  zet
 still fixing...
 
