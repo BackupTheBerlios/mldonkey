@@ -25,18 +25,16 @@ package net.mldonkey.g2gui.view.transfer;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
@@ -45,13 +43,11 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.2 2003/10/15 18:25:00 zet Exp $
+ * @version $Id: ColumnSelector.java,v 1.3 2003/10/19 17:35:04 zet Exp $
  *
  */
-public class ColumnSelector {
-    private DownloadTableTreeViewer downloadTableTreeViewer;
+public class ColumnSelector extends Dialog {
     private Shell shell;
-    private Display desktop = Display.getCurrent();
     private String[] columnLegend;
     private String allColumnIDs;
     private String leftColumnIDs;
@@ -59,14 +55,12 @@ public class ColumnSelector {
     private List leftList;
     private List rightList;
     private String prefOption;
-    int width = 300;
-    int height = 450;
 
-    public ColumnSelector( String[] columnLegend, String allColumnIDs, String prefOption, DownloadTableTreeViewer downloadTableTreeViewer ) {
+    public ColumnSelector( Shell parentShell, String[] columnLegend, String allColumnIDs, String prefOption ) {
+        super(parentShell);
         this.columnLegend = columnLegend;
         this.allColumnIDs = allColumnIDs;
         this.prefOption = prefOption;
-        this.downloadTableTreeViewer = downloadTableTreeViewer;
 
         String aString = PreferenceLoader.loadString( prefOption );
         rightColumnIDs = ( ( !aString.equals( "" ) ) ? aString : allColumnIDs );
@@ -77,27 +71,36 @@ public class ColumnSelector {
                 leftColumnIDs += allColumnIDs.charAt( i );
             }
         }
-
-        createContents();
     }
 
-    public void createContents() {
-        shell = new Shell( SWT.BORDER | SWT.TITLE | SWT.APPLICATION_MODAL );
-        shell.setBounds( ( desktop.getBounds().width - width ) / 2, ( desktop.getBounds().height - height ) / 2, width, height );
-        shell.setImage( G2GuiResources.getImage( "table" ) );
-        shell.setText( G2GuiResources.getString( "TT_ColumnSelector" ) );
-        shell.setLayout( new FillLayout() );
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+     */
+    public Control createDialogArea( Composite oldParent ) {
+		Composite parent = (Composite)super.createDialogArea( oldParent);
 
-        Composite parent = new Composite( shell, SWT.NONE );
         parent.setLayout( CGridLayout.createGL( 3, 5, 5, 0, 5, false ) );
 
         createHeader( parent );
         createLists( parent );
-        createButtons( parent );
         refreshLists();
-        shell.open();
+        
+        return parent;
     }
 
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+	 */
+	protected void configureShell(Shell shell) {
+		super.configureShell( shell );
+		shell.setText( G2GuiResources.getString( "TT_ColumnSelector" ) );
+		shell.setImage( G2GuiResources.getImage( "table" ) );
+	}
+
+    /**
+     * @param parent
+     */
     public void createHeader( Composite parent ) {
         Label aLabel = new Label( parent, SWT.NONE );
         aLabel.setText( "Available" );
@@ -108,9 +111,16 @@ public class ColumnSelector {
         cLabel.setText( "In Use" );
     }
 
+    /**
+     * @param parent
+     */
     public void createLists( Composite parent ) {
         leftList = new List( parent, SWT.BORDER | SWT.MULTI );
-        leftList.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        
+		// Needs more height on gtk
+        GridData gd = new GridData( GridData.FILL_BOTH );
+		gd.heightHint = 330;
+        leftList.setLayoutData( gd );
 
         Composite arrowComposite = new Composite( parent, SWT.NONE );
         arrowComposite.setLayout( CGridLayout.createGL( 1, 5, 5, 0, 5, false ) );
@@ -139,46 +149,30 @@ public class ColumnSelector {
         rightList = new List( parent, SWT.BORDER | SWT.MULTI );
         rightList.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     }
+   
 
-    public void createButtons( Composite parent ) {
-        Composite buttonComposite = new Composite( parent, SWT.NONE );
-        buttonComposite.setLayout( CGridLayout.createGL( 2, 5, 5, 5, 5, false ) );
-
-        GridData gd = new GridData( GridData.FILL_HORIZONTAL );
-        gd.horizontalSpan = 3;
-        buttonComposite.setLayoutData( gd );
-
-        Button cancelButton = new Button( buttonComposite, SWT.NONE );
-        cancelButton.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END ) );
-        cancelButton.setText( G2GuiResources.getString( "BTN_CANCEL" ) );
-        cancelButton.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent s ) {
-                    shell.close();
-                }
-            } );
-
-        Button okButton = new Button( buttonComposite, SWT.NONE );
-        okButton.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
-        okButton.setText( G2GuiResources.getString( "BTN_OK" ) );
-        okButton.setFocus();
-        okButton.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent s ) {
-                    if ( rightColumnIDs.length() > 1 ) {
-                        PreferenceStore p = PreferenceLoader.getPreferenceStore();
-                        p.setValue( prefOption, rightColumnIDs );
-                        downloadTableTreeViewer.resetColumns();
-                    }
-
-                    shell.close();
-                }
-            } );
-    }
-
+    /**
+     * savePrefs
+     */
+    public void savePrefs () {
+		if ( rightColumnIDs.length() > 1 ) {
+			  PreferenceStore p = PreferenceLoader.getPreferenceStore();
+			  p.setValue( prefOption, rightColumnIDs );
+		  }
+	}
+    
+    /**
+     * refreshLists
+     */
     public void refreshLists() {
         refreshList( leftColumnIDs, leftList );
         refreshList( rightColumnIDs, rightList );
     }
 
+    /**
+     * @param string
+     * @param list
+     */
     public void refreshList( String string, List list ) {
         list.removeAll();
 
@@ -188,6 +182,9 @@ public class ColumnSelector {
         }
     }
 
+    /**
+     * ArrowSelectionAdapter
+     */
     private class ArrowSelectionAdapter extends SelectionAdapter {
         private boolean b;
 
@@ -237,6 +234,9 @@ public class ColumnSelector {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.3  2003/10/19 17:35:04  zet
+generalize columnselector
+
 Revision 1.2  2003/10/15 18:25:00  zet
 icons
 

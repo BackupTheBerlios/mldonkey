@@ -50,7 +50,7 @@ import org.eclipse.swt.events.DisposeListener;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.11 2003/10/16 23:56:59 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.12 2003/10/19 17:35:04 zet Exp $
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener, DisposeListener {
@@ -372,7 +372,11 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
         }
 
         public void run() {
-            new ColumnSelector( DownloadTableTreeViewer.COLUMN_LABELS, DownloadTableTreeViewer.ALL_COLUMNS, "downloadTableColumns", downloadTableTreeViewer );
+            ColumnSelector c = new ColumnSelector( tableTreeViewer.getTableTree().getShell(), DownloadTableTreeViewer.COLUMN_LABELS, DownloadTableTreeViewer.ALL_COLUMNS, "downloadTableColumns" );
+			if ( c.open() == ColumnSelector.OK ) {
+			 	c.savePrefs();
+				downloadTableTreeViewer.resetColumns();
+			}
         }
     }
     
@@ -608,6 +612,9 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.12  2003/10/19 17:35:04  zet
+generalize columnselector
+
 Revision 1.11  2003/10/16 23:56:59  zet
 not much
 
