@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.mldonkey.g2gui.view.MainTab;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.10 2003/10/11 21:32:32 zet Exp $
+ * @version $Id: MainCoolBar.java,v 1.11 2003/11/22 02:24:30 zet Exp $
  *
  */
 public class MainCoolBar {
@@ -90,7 +90,7 @@ public class MainCoolBar {
      */
     private void createContent( Composite parent ) {
         composite = new Composite( parent, SWT.NONE );
-        GridLayout gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 0, false );
+        GridLayout gridLayout = WidgetFactory.createGridLayout( 1, 0, 0, 0, 0, false );
         composite.setLayout( gridLayout );
         composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         createCoolBar();
@@ -278,6 +278,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.11  2003/11/22 02:24:30  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.10  2003/10/11 21:32:32  zet
 remove hand cursor (looks weird on gtk)
 

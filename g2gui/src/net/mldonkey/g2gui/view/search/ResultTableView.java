@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.view.search;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.view.GuiTab;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.filters.WordViewerFilter;
@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableView.java,v 1.4 2003/11/15 11:44:04 lemmster Exp $
+ * @version $Id: ResultTableView.java,v 1.5 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class ResultTableView extends GTableView {
@@ -157,7 +157,7 @@ public class ResultTableView extends GTableView {
             final Display display = parent.getDisplay();
             tipShell = new Shell(parent.getShell(), SWT.ON_TOP);
 
-            GridLayout gridLayout = CGridLayout.createGL(1, 2, 2, 0, 0, false);
+            GridLayout gridLayout = WidgetFactory.createGridLayout(1, 2, 2, 0, 0, false);
             tipShell.setLayout(gridLayout);
             tipShell.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
             tipLabelImage = new CLabel(tipShell, SWT.NONE);
@@ -327,6 +327,9 @@ public class ResultTableView extends GTableView {
 
 /*
 $Log: ResultTableView.java,v $
+Revision 1.5  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.4  2003/11/15 11:44:04  lemmster
 fix: [Bug #1089] 0.2 similair stop search crash
 

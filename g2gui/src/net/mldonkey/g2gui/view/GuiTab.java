@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view;
 
 import java.util.Observer;
 
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.35 2003/10/31 13:20:31 lemmster Exp $
+ * @version $Id: GuiTab.java,v 1.36 2003/11/22 02:24:29 zet Exp $
  *
  */
 public abstract class GuiTab implements Listener, Observer {
@@ -78,7 +78,7 @@ public abstract class GuiTab implements Listener, Observer {
         this.mainWindow = gui;
 
         this.content = new Composite( gui.getPageContainer(), SWT.NONE );
-        GridLayout gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 0, false );
+        GridLayout gridLayout = WidgetFactory.createGridLayout( 1, 0, 0, 0, 0, false );
         this.content.setLayout( gridLayout );
         this.content.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         this.content.setVisible( false );
@@ -167,32 +167,22 @@ public abstract class GuiTab implements Listener, Observer {
         return content;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public Composite getSubContent() {
         return subContent;
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void updateDisplay() {
         content.layout();
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param buttonName DOCUMENT ME!
-     * @param buttonText DOCUMENT ME!
-     * @param buttonToolTip DOCUMENT ME!
+     * @param buttonName 
+     * @param buttonText 
+     * @param buttonToolTip
      */
-    public void createButton( String buttonName, String buttonText, String buttonToolTip ) {
-        toolButton.setText( buttonText );
-        toolButton.setToolTipText( buttonToolTip );
+    public void createButton( String buttonName ) {
+        toolButton.setText( G2GuiResources.getString("TT_" + buttonName) );
+        toolButton.setToolTipText( G2GuiResources.getString("TT_" + buttonName + "ToolTip") );
         toolButton.setBigActiveImage( G2GuiResources.getImage( buttonName + "Active" ) );
         toolButton.setBigInactiveImage( G2GuiResources.getImage( buttonName ) );
         toolButton.setSmallActiveImage( G2GuiResources.getImage( buttonName + "SmallActive" ) );
@@ -206,6 +196,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.36  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.35  2003/10/31 13:20:31  lemmster
 added PaneGuiTab and TableGuiTab
 added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
@@ -246,7 +239,7 @@ Revision 1.24  2003/08/23 01:57:36  zet
 use JFace headerfont
 
 Revision 1.23  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/18 01:42:24  zet
 centralize resource bundle

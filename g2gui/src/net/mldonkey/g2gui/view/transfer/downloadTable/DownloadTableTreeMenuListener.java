@@ -86,7 +86,7 @@ import java.util.List;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.30 2003/11/10 18:57:33 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.31 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -101,10 +101,12 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
     private boolean createClientTable = false;
     private boolean myDrag = false;
 
-    public DownloadTableTreeMenuListener(DownloadTableTreeView downloadTableTreeViewer,
-        GView clientTableViewer) {
+    public DownloadTableTreeMenuListener(DownloadTableTreeView downloadTableTreeViewer) {
         super(downloadTableTreeViewer);
-        this.clientView = clientTableViewer;
+    }
+
+    public void setClientView(GView clientView) {
+        this.clientView = clientView;
     }
 
     public void initialize() {
@@ -293,8 +295,11 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             menuManager.add(prioritySubMenu);
         }
 
-        if ((selectedFile != null) && advancedMode) {
+        if (selectedFile != null) {
             menuManager.add(new PreviewAction());
+        }
+
+        if ((selectedFile != null) && advancedMode) {
             menuManager.add(new VerifyChunksAction());
             menuManager.add(new ToggleClientsAction((DownloadTableTreeView) gView));
         }
@@ -676,6 +681,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.31  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.30  2003/11/10 18:57:33  zet
 use jface dialogs
 

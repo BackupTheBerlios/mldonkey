@@ -22,13 +22,12 @@
  */
 package net.mldonkey.g2gui.view.viewers;
 
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -54,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.6 2003/11/02 22:27:32 zet Exp $
+ * @version $Id: ColumnSelector.java,v 1.7 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -97,7 +96,7 @@ public class ColumnSelector extends Dialog {
     public Control createDialogArea(Composite oldParent) {
         Composite parent = (Composite) super.createDialogArea(oldParent);
 
-        parent.setLayout(CGridLayout.createGL(3, 5, 5, 0, 5, false));
+        parent.setLayout(WidgetFactory.createGridLayout(3, 5, 5, 0, 5, false));
 
         createHeader(parent);
         createLists(parent);
@@ -155,7 +154,7 @@ public class ColumnSelector extends Dialog {
         leftList.setLayoutData(gd);
 
         Composite arrowComposite = new Composite(parent, SWT.NONE);
-        arrowComposite.setLayout(CGridLayout.createGL(1, 5, 5, 0, 5, false));
+        arrowComposite.setLayout(WidgetFactory.createGridLayout(1, 5, 5, 0, 5, false));
 
         Button moveRight = new Button(arrowComposite, SWT.NONE);
         moveRight.setText(" ---> ");
@@ -317,6 +316,9 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.7  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.6  2003/11/02 22:27:32  zet
 -
 

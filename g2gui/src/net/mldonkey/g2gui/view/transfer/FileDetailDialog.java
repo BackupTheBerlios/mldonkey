@@ -22,10 +22,14 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Iterator;
+
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -46,18 +50,13 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import java.text.DecimalFormat;
-
-import java.util.Arrays;
-import java.util.Iterator;
-
 
 /**
  *
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.8 2003/11/11 02:31:42 zet Exp $
+ * @version $Id: FileDetailDialog.java,v 1.9 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class FileDetailDialog extends DetailDialog {
@@ -99,7 +98,7 @@ public class FileDetailDialog extends DetailDialog {
      */
     protected Control createDialogArea(Composite parent) {
         Composite composite = (Composite) super.createDialogArea(parent);
-        composite.setLayout(CGridLayout.createGL(1, 5, 5, 0, 5, false));
+        composite.setLayout(WidgetFactory.createGridLayout(1, 5, 5, 0, 5, false));
 
         createFileGeneralGroup(composite);
 
@@ -159,7 +158,7 @@ public class FileDetailDialog extends DetailDialog {
         Group fileGeneral = new Group(parent, SWT.SHADOW_ETCHED_OUT);
 
         fileGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_FILE_INFO"));
-        fileGeneral.setLayout(CGridLayout.createGL(4, 5, 0, 0, 0, false));
+        fileGeneral.setLayout(WidgetFactory.createGridLayout(4, 5, 0, 0, 0, false));
         fileGeneral.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         clFileName = createLine(fileGeneral, "TT_DOWNLOAD_FD_FILENAME", true);
@@ -176,7 +175,7 @@ public class FileDetailDialog extends DetailDialog {
         Group fileTransfer = new Group(parent, SWT.SHADOW_ETCHED_OUT);
 
         fileTransfer.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_TRANSFER_INFO"));
-        fileTransfer.setLayout(CGridLayout.createGL(4, 5, 0, 0, 0, false));
+        fileTransfer.setLayout(WidgetFactory.createGridLayout(4, 5, 0, 0, 0, false));
         fileTransfer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         clSources = createLine(fileTransfer, "TT_DOWNLOAD_FD_SOURCES", false);
@@ -207,7 +206,7 @@ public class FileDetailDialog extends DetailDialog {
         Group renameGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT);
 
         renameGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_ALTERNATIVE_FILENAMES"));
-        renameGroup.setLayout(CGridLayout.createGL(1, 1, 1, 0, 0, false));
+        renameGroup.setLayout(WidgetFactory.createGridLayout(1, 1, 1, 0, 0, false));
         renameGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Arrays.sort(fileInfo.getNames(), String.CASE_INSENSITIVE_ORDER);
@@ -230,7 +229,7 @@ public class FileDetailDialog extends DetailDialog {
 
         Composite renameComposite = new Composite(parent, SWT.NONE);
 
-        renameComposite.setLayout(CGridLayout.createGL(2, 0, 0, 4, 0, false));
+        renameComposite.setLayout(WidgetFactory.createGridLayout(2, 0, 0, 4, 0, false));
         renameComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         renameText = new Text(renameComposite, SWT.BORDER);
@@ -265,7 +264,7 @@ public class FileDetailDialog extends DetailDialog {
     protected Control createButtonBar(Composite parent) {
         Composite buttonComposite = new Composite(parent, SWT.NONE);
         buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        buttonComposite.setLayout(CGridLayout.createGL(3, 5, 5, 5, 0, false));
+        buttonComposite.setLayout(WidgetFactory.createGridLayout(3, 5, 5, 5, 0, false));
 
         if ((fileInfo.getState().getState() == EnumFileState.PAUSED) ||
                 (fileInfo.getState().getState() == EnumFileState.DOWNLOADING) ||
@@ -396,6 +395,9 @@ public class FileDetailDialog extends DetailDialog {
 
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.9  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.8  2003/11/11 02:31:42  zet
 cleanup
 

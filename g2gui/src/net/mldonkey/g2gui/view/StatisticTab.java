@@ -22,42 +22,34 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.util.Observable;
+
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
-import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
 import net.mldonkey.g2gui.view.statistic.GraphPaneListener;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
 import net.mldonkey.g2gui.view.viewers.GView;
 
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.ToolBar;
-
-import java.util.Observable;
 
 
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.42 2003/11/21 19:17:04 vnc Exp $
+ * @version $Id: StatisticTab.java,v 1.43 2003/11/22 02:24:29 zet Exp $
  */
 public class StatisticTab extends PaneGuiTab {
     private GraphControl uploadsGraphControl;
@@ -71,9 +63,8 @@ public class StatisticTab extends PaneGuiTab {
      * @param gui object representing the top level gui layer
      */
     public StatisticTab(MainTab gui) {
-    	super(gui);
-        createButton("StatisticsButton", G2GuiResources.getString("TT_StatisticsButton"),
-            G2GuiResources.getString("TT_StatisticsButtonToolTip"));
+        super(gui);
+        createButton("StatisticsButton");
         createContents(this.subContent);
         gui.getCore().getClientStats().addObserver(this);
     }
@@ -82,27 +73,16 @@ public class StatisticTab extends PaneGuiTab {
      * @param parent
      */
     protected void createContents(Composite parent) {
-    	SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
+        SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
         mainSash.setLayout(new FillLayout());
 
-        /* Top composite for other stats */
+        // Top composite for stats (when available)
         createStatsComposite(mainSash);
 
-        /* Bottom Sash for graphs */
-        final SashForm graphSash = new SashForm(mainSash,
-                (PreferenceLoader.loadBoolean("graphSashHorizontal") ? SWT.HORIZONTAL : SWT.VERTICAL));
+        // Graph sash
+        createGraphSash(mainSash);
 
-        graphSash.addDisposeListener(new DisposeListener() {
-                public void widgetDisposed(DisposeEvent e) {
-                    PreferenceStore p = PreferenceLoader.getPreferenceStore();
-                    p.setValue("graphSashHorizontal",
-                        ((graphSash.getOrientation() == SWT.HORIZONTAL) ? true : false));
-                }
-            });
-        downloadsGraphControl = createGraph(graphSash, "TT_Downloads");
-        uploadsGraphControl = createGraph(graphSash, "TT_Uploads");
-
-        /* Until top composite has stats */
+        // Keep top sash hidden until it is useful 
         mainSash.setWeights(new int[] { 0, 10 });
     }
 
@@ -111,11 +91,9 @@ public class StatisticTab extends PaneGuiTab {
      * @param mainSash
      */
     private void createStatsComposite(final SashForm mainSash) {
-        ViewForm statsViewForm = new ViewForm(mainSash,
-                SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE));
-        statsViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+        ViewForm statsViewForm = WidgetFactory.createViewForm(mainSash);
 
-        CLabel statsCLabel = CCLabel.createCL(statsViewForm, "TT_StatisticsButton",
+        CLabel statsCLabel = WidgetFactory.createCLabel(statsViewForm, "TT_StatisticsButton",
                 "StatisticsButtonSmall");
         Composite statsComposite = new Composite(statsViewForm, SWT.NONE);
         statsComposite.setLayout(new FillLayout());
@@ -129,6 +107,19 @@ public class StatisticTab extends PaneGuiTab {
             });
         statsViewForm.setTopLeft(statsCLabel);
         statsViewForm.setContent(statsComposite);
+    }
+
+    /**
+     * @param parent
+     */
+    private void createGraphSash(SashForm parent) {
+        String graphSashPrefString = "graphSash";
+        SashForm graphSash = WidgetFactory.createSashForm(parent, graphSashPrefString);
+
+        downloadsGraphControl = createGraph(graphSash, "TT_Downloads");
+        uploadsGraphControl = createGraph(graphSash, "TT_Uploads");
+
+        WidgetFactory.loadSashForm(graphSash, graphSashPrefString);
     }
 
     /**
@@ -146,9 +137,8 @@ public class StatisticTab extends PaneGuiTab {
         popupMenu.setRemoveAllWhenShown(true);
 
         String graphName = G2GuiResources.getString(titleResString);
-        ViewForm graphViewForm = new ViewForm(graphSash,
-                SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE));
-        CLabel cLabel = CCLabel.createCL(graphViewForm, titleResString, "StatisticsButtonSmall");
+        ViewForm graphViewForm = WidgetFactory.createViewForm(graphSash);
+        CLabel cLabel = WidgetFactory.createCLabel(graphViewForm, titleResString, "StatisticsButtonSmall");
 
         String showResString = "TT_Uploads";
 
@@ -162,7 +152,6 @@ public class StatisticTab extends PaneGuiTab {
         GraphControl graphControl = new GraphControl(graphViewForm, graphName);
         GPaneListener aListener = new GraphPaneListener(graphSash, graphViewForm, graphControl,
                 showResString);
-        createPaneToolBar(graphViewForm, aListener);
 
         popupMenu.addMenuListener(aListener);
         graphViewForm.setTopLeft(cLabel);
@@ -172,14 +161,7 @@ public class StatisticTab extends PaneGuiTab {
 
         return graphControl;
     }
-
-    private void createPaneToolBar(ViewForm aViewForm, IMenuListener menuListener) {
-        ToolBar toolBar = new ToolBar(aViewForm, SWT.RIGHT | SWT.FLAT);
-
-        super.createPaneToolBar(toolBar, menuListener);
-
-        aViewForm.setTopRight(toolBar);
-    }
+    
 
     /* (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
@@ -229,15 +211,8 @@ public class StatisticTab extends PaneGuiTab {
         super.setInActive();
     }
 
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.GuiTab#dispose()
-     */
-    public void dispose() {
-        super.dispose();
-    }
-
     public void updateDisplay() {
-    	super.updateDisplay();
+        super.updateDisplay();
         uploadsGraphControl.updateDisplay();
         downloadsGraphControl.updateDisplay();
     }
@@ -254,6 +229,9 @@ public class StatisticTab extends PaneGuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.43  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.42  2003/11/21 19:17:04  vnc
 big cpu leak: draw statistic graphs only when tab is active
 
@@ -331,7 +309,7 @@ Revision 1.18  2003/08/23 01:12:43  zet
 remove todos
 
 Revision 1.17  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: vnc $
+replace $user$ with $Author: zet $
 
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle

@@ -22,15 +22,17 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.ConsoleMessage;
 import net.mldonkey.g2gui.view.console.Console;
-import net.mldonkey.g2gui.view.helper.CCLabel;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -39,15 +41,12 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
-import java.util.Observable;
-import java.util.Observer;
-
 
 /**
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.49 2003/11/04 20:38:27 zet Exp $
+ * @version $Id: ConsoleTab.java,v 1.50 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {
@@ -63,8 +62,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
     public ConsoleTab(MainTab gui) {
         super(gui);
         this.core = gui.getCore();
-        createButton("ConsoleButton", G2GuiResources.getString("TT_ConsoleButton"),
-            G2GuiResources.getString("TT_ConsoleButtonToolTip"));
+        createButton("ConsoleButton");
         createContents(this.subContent);
     }
 
@@ -74,17 +72,15 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
     protected void createContents(Composite parent) {
         this.parent = parent;
 
-        ViewForm consoleViewForm = new ViewForm(parent,
-                SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE));
+        ViewForm consoleViewForm = WidgetFactory.createViewForm(parent);
         Composite consoleComposite = new Composite(consoleViewForm, SWT.NONE);
         consoleComposite.setLayout(new FillLayout());
 
-        CLabel consoleCLabel = CCLabel.createCL(consoleViewForm, "TT_ConsoleButton",
+        CLabel consoleCLabel = WidgetFactory.createCLabel(consoleViewForm, "TT_ConsoleButton",
                 "ConsoleButtonSmall");
         console = new Console(consoleComposite, SWT.NONE);
         console.addObserver(this);
 
-        //parent.setLayout( null );
         loadPreferences();
         consoleViewForm.setContent(consoleComposite);
         consoleViewForm.setTopLeft(consoleCLabel);
@@ -164,6 +160,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.50  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.49  2003/11/04 20:38:27  zet
 update for transparent gifs
 

@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.view.friends;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * AddFriend
  *
- * @version $Id: AddFriend.java,v 1.9 2003/11/14 19:06:39 zet Exp $
+ * @version $Id: AddFriend.java,v 1.10 2003/11/22 02:24:29 zet Exp $
  */
 public class AddFriend extends Dialog {
     private CoreCommunication core;
@@ -73,7 +73,7 @@ public class AddFriend extends Dialog {
      */
     protected Control createDialogArea(Composite parent) {
         Composite composite = (Composite) super.createDialogArea(parent);
-        composite.setLayout(CGridLayout.createGL(2, 5, 5, 10, 5, false));
+        composite.setLayout(WidgetFactory.createGridLayout(2, 5, 5, 10, 5, false));
 
         Label hostLabel = new Label(composite, SWT.NONE);
         hostLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
@@ -102,7 +102,7 @@ public class AddFriend extends Dialog {
     protected Control createButtonBar(Composite parent) {
         Composite buttonComposite = new Composite(parent, SWT.NONE);
 		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		buttonComposite.setLayout(CGridLayout.createGL(2, 5, 5, 5, 0, false));
+		buttonComposite.setLayout(WidgetFactory.createGridLayout(2, 5, 5, 5, 0, false));
 				
         Button okButton = new Button(buttonComposite, SWT.NONE);
         okButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -133,6 +133,9 @@ public class AddFriend extends Dialog {
 
 /*
 $Log: AddFriend.java,v $
+Revision 1.10  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.9  2003/11/14 19:06:39  zet
 use Dialog / fix #1087 (fox)
 

@@ -22,14 +22,13 @@
  */
 package net.mldonkey.g2gui.view.transfer.clientTable;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.PaneGuiTab;
-import net.mldonkey.g2gui.view.TransferTab;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
+import net.mldonkey.g2gui.view.helper.ViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.SashGPaneListener;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
@@ -39,17 +38,15 @@ import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.widgets.Control;
 
 
 /**
  * ClientPaneListener
  *
- * @version $Id: ClientPaneListener.java,v 1.7 2003/11/15 21:15:29 zet Exp $
+ * @version $Id: ClientPaneListener.java,v 1.8 2003/11/22 02:24:30 zet Exp $
  *
  */
-public class ClientPaneListener extends SashGPaneListener {
+public class ClientPaneListener extends ViewFrameListener {
     private Enum[] states;
 
     /**
@@ -58,9 +55,8 @@ public class ClientPaneListener extends SashGPaneListener {
      * @param aSashForm
      * @param aControl
      */
-    public ClientPaneListener(PaneGuiTab aPaneGuiTab, CoreCommunication core, SashForm aSashForm,
-        Control aControl) {
-        super(aPaneGuiTab, core, aSashForm, aControl);
+    public ClientPaneListener(ViewFrame viewFrame, PaneGuiTab paneGuiTab) {
+        super(viewFrame, paneGuiTab);
         this.states = new Enum[] {
                 EnumState.BLACK_LISTED, EnumState.CONNECTED, EnumState.CONNECTED_AND_QUEUED,
                 EnumState.CONNECTED_DOWNLOADING, EnumState.CONNECTED_INITIATING,
@@ -73,8 +69,6 @@ public class ClientPaneListener extends SashGPaneListener {
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
     public void menuAboutToShow(IMenuManager menuManager) {
-		// get the gpage
-		this.gView = ( (TransferTab) paneGuiTab ).getClientGView();
 
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
@@ -83,9 +77,9 @@ public class ClientPaneListener extends SashGPaneListener {
             menuManager.add(new ColumnSelectorAction(gView));
         }
 
-		// for macOS
-		createSortByColumnSubMenu(menuManager);
-        
+        // for macOS
+        createSortByColumnSubMenu(menuManager);
+
         // filter submenu			
         MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
                     "TT_DOWNLOAD_MENU_FILTER"));
@@ -115,6 +109,9 @@ public class ClientPaneListener extends SashGPaneListener {
 
 /*
 $Log: ClientPaneListener.java,v $
+Revision 1.8  2003/11/22 02:24:30  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.7  2003/11/15 21:15:29  zet
 Label restore action
 

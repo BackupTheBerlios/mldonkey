@@ -26,7 +26,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.7 2003/11/11 02:31:42 zet Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.8 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
@@ -80,7 +80,7 @@ public class ClientDetailDialog extends DetailDialog {
      */
     protected Control createDialogArea(Composite parent) {
         Composite composite = (Composite) super.createDialogArea(parent);
-        composite.setLayout(CGridLayout.createGL(1, 5, 5, 0, 5, false));
+        composite.setLayout(WidgetFactory.createGridLayout(1, 5, 5, 0, 5, false));
 
         createGeneralGroup(composite);
         createChunkGroup(composite, "TT_DOWNLOAD_CD_LOCAL_CHUNKS", null);
@@ -102,7 +102,7 @@ public class ClientDetailDialog extends DetailDialog {
     public void createGeneralGroup(Composite parent) {
         Group clientGeneral = new Group(parent, SWT.SHADOW_ETCHED_OUT);
         clientGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_INFO"));
-        clientGeneral.setLayout(CGridLayout.createGL(4, 5, 2, 0, 0, false));
+        clientGeneral.setLayout(WidgetFactory.createGridLayout(4, 5, 2, 0, 0, false));
         clientGeneral.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         clName = createLine(clientGeneral, "TT_DOWNLOAD_CD_NAME", true);
@@ -134,7 +134,7 @@ public class ClientDetailDialog extends DetailDialog {
     protected Control createButtonBar(Composite parent) {
         Composite buttonComposite = new Composite(parent, SWT.NONE);
         buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        buttonComposite.setLayout(CGridLayout.createGL(2, 5, 5, 5, 0, false));
+        buttonComposite.setLayout(WidgetFactory.createGridLayout(2, 5, 5, 5, 0, false));
 
         final Button addFriendButton = new Button(buttonComposite, SWT.NONE);
         addFriendButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL |
@@ -191,6 +191,9 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.8  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.7  2003/11/11 02:31:42  zet
 cleanup
 

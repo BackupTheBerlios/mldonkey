@@ -26,7 +26,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import net.mldonkey.g2gui.helper.RegExp;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.5 2003/11/20 14:05:15 lemmster Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.6 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -60,7 +60,7 @@ public class G2GuiWinReg extends PreferencePage {
      */
     protected void createFieldEditors() {
         Composite composite = getFieldEditorParent();
-        composite.setLayout(CGridLayout.createGL(1, 5, 5, 5, 5, false));
+        composite.setLayout(WidgetFactory.createGridLayout(1, 5, 5, 5, 5, false));
 
         registerLinks = new RegisterLink[ 3 ];
 
@@ -183,8 +183,6 @@ public class G2GuiWinReg extends PreferencePage {
     /**
      * @param p
      * @param name
-     * @param exeFile
-     * @param prefFile
      */
     private void unregisterType(PrintStream p, String name) {
         p.println("[-HKEY_CLASSES_ROOT\\" + name + "\\shell\\open\\command]");
@@ -212,7 +210,7 @@ public class G2GuiWinReg extends PreferencePage {
         protected void createContents(Composite parent) {
             Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
             group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            group.setLayout(CGridLayout.createGL(1, 5, 5, 5, 5, false));
+            group.setLayout(WidgetFactory.createGridLayout(1, 5, 5, 5, 5, false));
             group.setText(text + "://");
 
             createButton(group, G2GuiResources.getString("BTN_NO_CHANGE"), NO_CHANGE);
@@ -257,6 +255,9 @@ public class G2GuiWinReg extends PreferencePage {
 
 /*
 $Log: G2GuiWinReg.java,v $
+Revision 1.6  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.5  2003/11/20 14:05:15  lemmster
 link need the "-l" prefix by now
 

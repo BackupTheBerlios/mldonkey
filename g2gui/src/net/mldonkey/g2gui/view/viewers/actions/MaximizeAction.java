@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.viewers.actions;
 
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.custom.SashForm;
@@ -31,7 +32,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * MaximizeAction
  *
- * @version $Id: MaximizeAction.java,v 1.2 2003/11/15 21:15:29 zet Exp $
+ * @version $Id: MaximizeAction.java,v 1.3 2003/11/22 02:24:30 zet Exp $
  *
  */
 public class MaximizeAction extends SashAction {
@@ -52,17 +53,16 @@ public class MaximizeAction extends SashAction {
     }
 
     public void run() {
-        if (sashForm.getMaximizedControl() == null) {
-            sashForm.setMaximizedControl(control);
-        } else {
-            sashForm.setMaximizedControl(null);
-        }
+        WidgetFactory.setMaximizedSashFormControl(sashForm, control);
     }
 }
 
 
 /*
 $Log: MaximizeAction.java,v $
+Revision 1.3  2003/11/22 02:24:30  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.2  2003/11/15 21:15:29  zet
 Label restore action
 

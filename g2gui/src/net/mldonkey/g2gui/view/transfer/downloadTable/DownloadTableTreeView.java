@@ -24,10 +24,12 @@ package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.view.TransferTab;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
+import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableView;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeView;
@@ -39,10 +41,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -51,7 +50,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeView.java,v 1.6 2003/11/14 16:00:40 zet Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.7 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
@@ -78,7 +77,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
     private CellEditor[] cellEditors = null;
     private CustomTableTreeViewer tableTreeViewer;
     private GView clientView;
-    private Composite parent;
+    private ViewFrame viewFrame;
 
     /**
      * Creates a new Viewer inside the composite parent
@@ -86,11 +85,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      * @param mldonkey
      * @param page
      */
-    public DownloadTableTreeView(Composite parent, GView clientTableView,
-        final CoreCommunication core, TransferTab page, CLabel headerLabel) {
-        super(parent, core);
-        this.clientView = clientTableView;
-        this.parent = parent;
+    public DownloadTableTreeView(ViewFrame viewFrame, CoreCommunication core) {
+        super(viewFrame.getChildComposite(), core);
+        this.viewFrame = viewFrame;
 
         preferenceString = "download";
         columnLabels = new String[] {
@@ -108,13 +105,13 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
         columnDefaultWidths = new int[] { 50, 50, 250, 75, 75, 50, 50, 50, 50, 75, 75, 50, 75, 75 };
 
         gSorter = new DownloadTableTreeSorter(this);
-        tableTreeContentProvider = new DownloadTableTreeContentProvider(this, headerLabel);
+        tableTreeContentProvider = new DownloadTableTreeContentProvider(this, viewFrame.getCLabel());
         tableLabelProvider = new DownloadTableTreeLabelProvider(this);
-        tableTreeMenuListener = new DownloadTableTreeMenuListener(this, clientTableView);
+        tableTreeMenuListener = new DownloadTableTreeMenuListener(this);
 
         advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
-        createContents(parent);
+        createContents(viewFrame.getChildComposite());
     }
 
     /* (non-Javadoc)
@@ -126,17 +123,19 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
         // Does this pack() hurt or help?  
         // Header label text will disappear (SWT Bug)
         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=26632
-        
         // But does this affect whole columns disappearing?
-        
-//        if (SWT.getPlatform().equals("gtk")) {
-//            getTable().getColumns()[ 0 ].pack();
-//        }
-
+        //        if (SWT.getPlatform().equals("gtk")) {
+        //            getTable().getColumns()[ 0 ].pack();
+        //        }
         addMenuListener();
         tableTreeViewer.addDoubleClickListener(this);
         tableTreeViewer.addSelectionChangedListener((DownloadTableTreeMenuListener) tableTreeMenuListener);
         tableTreeViewer.setInput(core.getFileInfoIntMap());
+    }
+
+    public void setClientTableView(ClientTableView clientTableView) {
+        clientView = clientTableView;
+        ((DownloadTableTreeMenuListener) tableTreeMenuListener).setClientView(clientTableView);
     }
 
     /* (non-Javadoc)
@@ -269,9 +268,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      */
     public boolean clientsDisplayed() {
         if (clientView != null) {
-            SashForm sashForm = (SashForm) parent.getParent().getParent();
-
-            return sashForm.getWeights()[ 1 ] != 0;
+            return viewFrame.getSashForm().getMaximizedControl() == null;
         } else {
             return false;
         }
@@ -281,16 +278,11 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      * toggle Clients table
      */
     public void toggleClientsTable() {
-        if (clientView != null) {
-            SashForm sashForm = (SashForm) parent.getParent().getParent();
-
-            if (clientsDisplayed()) {
-                sashForm.setWeights(new int[] { 1, 0 });
-                updateClientsTable(false);
-            } else {
-                sashForm.setWeights(new int[] { 2, 1 });
-            }
+        if (clientView == null) {
+            return;
         }
+
+        WidgetFactory.setMaximizedSashFormControl(viewFrame.getSashForm(), viewFrame.getViewForm());
     }
 
     /* (non-Javadoc)
@@ -320,6 +312,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
 /*
 $Log: DownloadTableTreeView.java,v $
+Revision 1.7  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.6  2003/11/14 16:00:40  zet
 comment
 

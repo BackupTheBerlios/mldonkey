@@ -23,11 +23,11 @@
 package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableView.java,v 1.2 2003/11/08 22:47:15 zet Exp $
+ * @version $Id: ClientTableView.java,v 1.3 2003/11/22 02:24:30 zet Exp $
  *
  */
 public class ClientTableView extends GTableView {
@@ -44,8 +44,8 @@ public class ClientTableView extends GTableView {
     public static final int NETWORK = 2;
     public static final int KIND = 3;
 
-    public ClientTableView(Composite parent, CoreCommunication core, CLabel headerCLabel) {
-        super(parent, core);
+    public ClientTableView(ViewFrame viewFrame, CoreCommunication core) {
+        super(viewFrame.getChildComposite(), core);
 
         preferenceString = "client";
         columnLabels = new String[] { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
@@ -53,11 +53,11 @@ public class ClientTableView extends GTableView {
         columnDefaultWidths = new int[] { 200, 100, 75, 75 };
 
         gSorter = new ClientTableSorter(this);
-        tableContentProvider = new ClientTableContentProvider(this, headerCLabel);
+        tableContentProvider = new ClientTableContentProvider(this, viewFrame.getCLabel());
         tableLabelProvider = new ClientTableLabelProvider(this);
         tableMenuListener = new ClientTableMenuListener(this);
 
-        createContents(parent);
+        createContents(viewFrame.getChildComposite());
     }
 
     /* (non-Javadoc)
@@ -84,6 +84,9 @@ public class ClientTableView extends GTableView {
 
 /*
 $Log: ClientTableView.java,v $
+Revision 1.3  2003/11/22 02:24:30  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.2  2003/11/08 22:47:15  zet
 update client table header
 

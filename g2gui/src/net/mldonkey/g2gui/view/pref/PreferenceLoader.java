@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.46 2003/11/21 22:02:42 vnc Exp $
+ * @version $Id: PreferenceLoader.java,v 1.47 2003/11/22 02:24:29 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -155,9 +155,14 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( "downloadsFilterQueued", false );
 		preferenceStore.setDefault( "downloadsFilterPaused", false );
 		
-		preferenceStore.setDefault( "graphSashHorizontal", true );
-		preferenceStore.setDefault( "clientSashHorizontal", true );
-		preferenceStore.setDefault( "transferSashVertical", true );
+		preferenceStore.setDefault( "graphSashOrientation", SWT.HORIZONTAL );
+		preferenceStore.setDefault( "graphSashMaximized", -1 );
+		
+		preferenceStore.setDefault( "clientSashOrientation", SWT.HORIZONTAL );
+		preferenceStore.setDefault( "clientSashMaximized", 0 );
+		
+		preferenceStore.setDefault( "transferSashOrientation", SWT.VERTICAL );
+		preferenceStore.setDefault( "transferSashMaximized", -1 );
 		
 		preferenceStore.setDefault( G2GuiResources.getString( "ENS_NOT_CONNECTED" ), false );		
 		preferenceStore.setDefault( G2GuiResources.getString( "ENS_CONNECTING" ), false );		
@@ -278,6 +283,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.47  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.46  2003/11/21 22:02:42  vnc
 color-adjustments to fit the general theme (green==downloads)
 
@@ -388,7 +396,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: vnc $
+replace $user$ with $Author: zet $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates

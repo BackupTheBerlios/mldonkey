@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.RGB;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.59 2003/11/10 08:18:21 lemmster Exp $
+ * @version $Id: G2GuiResources.java,v 1.60 2003/11/22 02:24:29 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -292,7 +292,7 @@ public class G2GuiResources {
                             ((oldRGB.blue + 20) <= 255) ? (oldRGB.blue + 20) : 255);
                     Color foregroundColor = new Color(null, newRGB);
                     gc.setForeground(foregroundColor);
-                    gc.drawLine(w, h, w, h);
+                    gc.drawPoint(w, h);
                     foregroundColor.dispose();
                 }
             }
@@ -332,6 +332,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.60  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.59  2003/11/10 08:18:21  lemmster
 move logic into model(controller)
 
@@ -487,7 +490,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image

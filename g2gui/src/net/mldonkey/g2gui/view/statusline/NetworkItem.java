@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.ServerTab;
 import net.mldonkey.g2gui.view.StatusLine;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.MenuManager;
@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.29 2003/10/31 10:44:41 lemmster Exp $ 
+ * @version $Id: NetworkItem.java,v 1.30 2003/11/22 02:24:29 zet Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -93,7 +93,7 @@ public class NetworkItem implements Observer {
 	private void createContent() {
 		
 		Composite aComposite = new Composite( composite, SWT.NONE );
-		aComposite.setLayout(CGridLayout.createGL(1,0,0,0,0,false));
+		aComposite.setLayout(WidgetFactory.createGridLayout(1,0,0,0,0,false));
 		aComposite.setLayoutData( new GridData(GridData.FILL_VERTICAL));
 		toolBar = new ToolBar( aComposite, SWT.FLAT ) ;
 		
@@ -202,6 +202,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.30  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.29  2003/10/31 10:44:41  lemmster
 use addSelectionListener(...) instead of addListener(SWT.Selection...)
 

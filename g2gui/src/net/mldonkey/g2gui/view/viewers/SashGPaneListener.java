@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.viewers;
 
@@ -28,29 +28,35 @@ import net.mldonkey.g2gui.view.PaneGuiTab;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Control;
 
+
 /**
  * SashGPaneListener
  *
- * @version $Id: SashGPaneListener.java,v 1.4 2003/10/31 13:16:32 lemmster Exp $ 
+ * @version $Id: SashGPaneListener.java,v 1.5 2003/11/22 02:24:29 zet Exp $
  *
  */
 public abstract class SashGPaneListener extends GPaneListener {
-	protected SashForm sashForm;
-	protected Control control;
+    protected SashForm sashForm;
+    protected Control control;
 
-	/**
-	 * @param gViewer
-	 * @param core
-	 */
-	public SashGPaneListener( PaneGuiTab aPaneGuiTab, CoreCommunication core, SashForm aSashForm, Control aControl ) {
-		super( aPaneGuiTab, core );
-		this.sashForm = aSashForm;
-		this.control = aControl;
-	}
+    /**
+     * @param gViewer
+     * @param core
+     */
+    public SashGPaneListener(PaneGuiTab aPaneGuiTab, CoreCommunication core, SashForm aSashForm,
+        Control aControl) {
+        super(aPaneGuiTab, core);
+        this.sashForm = aSashForm;
+        this.control = aControl;
+    }
 }
+
 
 /*
 $Log: SashGPaneListener.java,v $
+Revision 1.5  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.4  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed

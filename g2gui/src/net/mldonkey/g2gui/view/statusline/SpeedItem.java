@@ -23,16 +23,14 @@
 package net.mldonkey.g2gui.view.statusline;
 
 import java.io.IOException;
-
 import java.text.DecimalFormat;
-
 import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.StatusLine;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -45,7 +43,7 @@ import org.eclipse.swt.widgets.Composite;
  * SpeedItem
  *
  *
- * @version $Id: SpeedItem.java,v 1.24 2003/11/20 15:44:56 dek Exp $
+ * @version $Id: SpeedItem.java,v 1.25 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class SpeedItem implements Observer {
@@ -78,7 +76,7 @@ public class SpeedItem implements Observer {
     private void createContent() {
         composite = new Composite( composite, SWT.NONE );
         composite.setLayoutData(new GridData( GridData.FILL_VERTICAL ) );
-        GridLayout gridLayout = CGridLayout.createGL( 2, 0, 0, 0, 0, false );
+        GridLayout gridLayout = WidgetFactory.createGridLayout( 2, 0, 0, 0, 0, false );
         composite.setLayout( gridLayout );
 
         /* down rate */
@@ -163,6 +161,9 @@ public class SpeedItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.25  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.24  2003/11/20 15:44:56  dek
 reconnect started
 
@@ -191,7 +192,7 @@ Revision 1.16  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.15  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.14  2003/08/17 23:13:42  zet
 centralize resources, move images

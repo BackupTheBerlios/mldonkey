@@ -22,14 +22,18 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
+
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.dialogs.Dialog;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.GridData;
@@ -38,16 +42,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
-
 
 /**
  * DetailDialog
  *
- * @version $Id: DetailDialog.java,v 1.1 2003/11/11 02:31:33 zet Exp $
+ * @version $Id: DetailDialog.java,v 1.2 2003/11/22 02:24:29 zet Exp $
  *
  */
 public abstract class DetailDialog extends Dialog implements Observer {
@@ -121,7 +120,7 @@ public abstract class DetailDialog extends Dialog implements Observer {
         }
 
         chunkGroup.setText(string + totalChunks);
-        chunkGroup.setLayout(CGridLayout.createGL(1, 5, 2, 0, 0, false));
+        chunkGroup.setLayout(WidgetFactory.createGridLayout(1, 5, 2, 0, 0, false));
         chunkGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         ChunkCanvas chunkCanvas = new ChunkCanvas(chunkGroup, SWT.NO_BACKGROUND, clientInfo,
@@ -181,6 +180,9 @@ public abstract class DetailDialog extends Dialog implements Observer {
 
 /*
 $Log: DetailDialog.java,v $
+Revision 1.2  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.1  2003/11/11 02:31:33  zet
 initial
 

@@ -22,12 +22,11 @@
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.PaneGuiTab;
-import net.mldonkey.g2gui.view.TransferTab;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
+import net.mldonkey.g2gui.view.helper.ViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.SashGPaneListener;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
@@ -37,32 +36,26 @@ import net.mldonkey.g2gui.view.viewers.actions.RefreshUploadsAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.widgets.Control;
 
 
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadPaneListener.java,v 1.6 2003/11/15 21:15:29 zet Exp $
+ * @version $Id: UploadPaneListener.java,v 1.7 2003/11/22 02:24:30 zet Exp $
  *
  */
-public class UploadPaneListener extends SashGPaneListener {
+public class UploadPaneListener extends ViewFrameListener {
     /**
      * @param gViewer
      * @param core
      * @param aSashForm
      * @param aControl
      */
-    public UploadPaneListener(PaneGuiTab aPaneGuiTab, CoreCommunication core, SashForm aSashForm,
-        Control aControl) {
-        super(aPaneGuiTab, core, aSashForm, aControl);
+    public UploadPaneListener(ViewFrame viewFrame, PaneGuiTab paneGuiTab) {
+        super(viewFrame, paneGuiTab);
     }
 
     public void menuAboutToShow(IMenuManager menuManager) {
-		// get the gpage
-		this.gView = ( (TransferTab) paneGuiTab ).getUploadGView();
-
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
         // refresh table
@@ -73,7 +66,7 @@ public class UploadPaneListener extends SashGPaneListener {
         if (advancedMode) {
             menuManager.add(new ColumnSelectorAction(gView));
         }
-        
+
         // for macOS
         createSortByColumnSubMenu(menuManager);
 
@@ -100,6 +93,9 @@ public class UploadPaneListener extends SashGPaneListener {
 
 /*
 $Log: UploadPaneListener.java,v $
+Revision 1.7  2003/11/22 02:24:30  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.6  2003/11/15 21:15:29  zet
 Label restore action
 

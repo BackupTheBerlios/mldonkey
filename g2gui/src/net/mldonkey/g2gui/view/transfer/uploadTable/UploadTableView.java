@@ -22,12 +22,20 @@
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 
+import gnu.trove.TIntObjectIterator;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
-import net.mldonkey.g2gui.view.TransferTab;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GSorter;
 import net.mldonkey.g2gui.view.viewers.actions.CopyED2KLinkToClipboardAction;
@@ -44,25 +52,16 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-import gnu.trove.TIntObjectIterator;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
 
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.4 2003/11/09 02:18:37 zet Exp $
+ * @version $Id: UploadTableView.java,v 1.6 2003/11/22 02:24:30 zet Exp $
  *
  */
 public class UploadTableView extends GTableView implements Observer {
@@ -79,10 +78,9 @@ public class UploadTableView extends GTableView implements Observer {
      * @param mldonkey the source of our data
      * @param tab We live on this tab
      */
-    public UploadTableView(Composite parent, CoreCommunication aCore, TransferTab tab,
-        CLabel headerCLabel) {
-        super(parent, aCore);
-        this.headerCLabel = headerCLabel;
+    public UploadTableView(ViewFrame viewFrame, CoreCommunication core) {
+        super(viewFrame.getChildComposite(), core);
+        this.headerCLabel = viewFrame.getCLabel();
 
         preferenceString = "upload";
         columnLabels = new String[] {
@@ -97,7 +95,7 @@ public class UploadTableView extends GTableView implements Observer {
         tableMenuListener = new UploadTableMenuListener(this);
 
         this.sharedFileInfoIntMap = core.getSharedFileInfoIntMap();
-        createContents(parent);
+        createContents(viewFrame.getChildComposite());
         core.getClientStats().addObserver(this);
     }
 
@@ -130,8 +128,8 @@ public class UploadTableView extends GTableView implements Observer {
                         }
 
                         headerCLabel.setText(G2GuiResources.getString("TT_Uploads") + ": " +
-                            clientStats.getNumOfShare() + " ( " +
-                            FileInfo.calcStringSize(clientStats.getTotalUp()) + " )");
+                            clientStats.getNumOfShare() + " (" +
+                            FileInfo.calcStringSize(clientStats.getTotalUp()) + ")");
                     }
                 });
         }
@@ -373,6 +371,12 @@ public class UploadTableView extends GTableView implements Observer {
 
 /*
 $Log: UploadTableView.java,v $
+Revision 1.6  2003/11/22 02:24:30  zet
+widgetfactory & save sash postions/states between sessions
+
+Revision 1.5  2003/11/09 02:22:46  zet
+*** empty log message ***
+
 Revision 1.4  2003/11/09 02:18:37  zet
 put some info in the headers
 

@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Composite;
  * GraphPainter
  *
  *
- * @version $Id: GraphPainter.java,v 1.34 2003/10/17 15:36:02 zet Exp $
+ * @version $Id: GraphPainter.java,v 1.35 2003/11/22 02:24:30 zet Exp $
  *
  */
 public class GraphPainter {
@@ -49,196 +49,206 @@ public class GraphPainter {
     private Color backgroundColor;
     private Color gridColor;
     private Color textColor;
-    
     private Color labelTextColor;
     private Color labelLineColor;
     private Color labelBackgroundColor;
 
-    public GraphPainter( Composite parent ) {
+    public GraphPainter(Composite parent) {
         this.parent = parent;
         updateDisplay();
     }
 
-    public void setGraphicControl( GC gc ) {
+    public void setGraphicControl(GC gc) {
         drawBoard = gc;
     }
 
-    public void setGraph( Graph graph ) {
+    public void setGraph(Graph graph) {
         this.graph = graph;
     }
 
-    public void paint( Image imageBuffer ) {
+    public void paint(Image imageBuffer) {
         // might help with rare: java.lang.IllegalArgumentException: Argument not valid	?
-        if ( ( parent.getBounds(  ).height < 5 ) || ( parent.getBounds(  ).width < 5 ) ) {
+        if ((parent.getBounds().height < 5) || (parent.getBounds().width < 5)) {
             return;
         }
 
         // create a buffer
-        GC drawBoardBuffer = new GC( imageBuffer );
+        GC drawBoardBuffer = new GC(imageBuffer);
 
         // set canvas background color
-      	drawBoardBuffer.setBackground( backgroundColor );
-		drawBoardBuffer.setForeground( backgroundColor );
-		drawBoardBuffer.fillRectangle( 0, 0, parent.getClientArea(  ).width, parent.getClientArea(  ).height );
+        drawBoardBuffer.setBackground(backgroundColor);
+        drawBoardBuffer.setForeground(backgroundColor);
+        drawBoardBuffer.fillRectangle(0, 0, parent.getClientArea().width,
+            parent.getClientArea().height);
 
         int startx = 1;
         int k = startx;
 
-        int bottomSpace = drawBoardBuffer.getFontMetrics(  ).getHeight(  ) + 2;
-        float height = (float) ( parent.getClientArea(  ).height - bottomSpace );
+        int bottomSpace = drawBoardBuffer.getFontMetrics().getHeight() + 2;
+        float height = (float) (parent.getClientArea().height - bottomSpace);
 
-        int width = parent.getClientArea(  ).width;
+        int width = parent.getClientArea().width;
         int graphWidth = width - startx;
         float zoom = 0;
         float valueY = 0;
-        float maximum = (float) ( graph.findMax( width ) / 10 );
-        zoom = ( height - 10f ) / maximum;
+        float maximum = (float) (graph.findMax(width) / 10);
+        zoom = (height - 10f) / maximum;
 
         // draw graph gradiant lines (switch outside the for loop)
-        switch ( graph.getGraphType(  ) ) {
+        switch (graph.getGraphType()) {
         case 1:
-            drawBarGraph( startx, width, height, zoom, drawBoardBuffer );
+            drawBarGraph(startx, width, height, zoom, drawBoardBuffer);
+
             break;
 
         case 2:
-            drawLineGraph( startx, width, height, zoom, drawBoardBuffer );
+            drawLineGraph(startx, width, height, zoom, drawBoardBuffer);
+
             break;
 
-			// fillGradiantRectangle is an expensive call creating many RGB objects.
+        // fillGradiantRectangle is an expensive call creating many RGB objects.
         default:
-            drawGradiantGraph( startx, width, height, zoom, drawBoardBuffer );
+            drawGradiantGraph(startx, width, height, zoom, drawBoardBuffer);
+
             break;
         }
 
-
         // draw grid
-        drawBoardBuffer.setForeground( gridColor );
+        drawBoardBuffer.setForeground(gridColor);
 
         // vertical lines
-        for ( int i = startx - 1; i < ( startx + graphWidth ); i += 20 )
-            drawBoardBuffer.drawLine( i, 0, i, (int) height + 1 );
+        for (int i = startx - 1; i < (startx + graphWidth); i += 20)
+            drawBoardBuffer.drawLine(i, 0, i, (int) height + 1);
 
         // horizontal lines					
-        for ( int i = (int) height + 1; i > 0; i -= 20 )
-            drawBoardBuffer.drawLine( startx, i, startx + graphWidth, i );
+        for (int i = (int) height + 1; i > 0; i -= 20)
+            drawBoardBuffer.drawLine(startx, i, startx + graphWidth, i);
 
         // just for temporary fun; this might overflow pretty quickly
-        drawBoardBuffer.setForeground( textColor );
-        drawBoardBuffer.drawText( graph.getName(  ) + " avg: " + ( (double) graph.getAvg(  ) / 100 ) + " kb/s," + " max: " +
-            ( (double) graph.getMax(  ) / 100 ) + " kb/s", startx,
-            parent.getClientArea(  ).height - drawBoardBuffer.getFontMetrics(  ).getHeight(  ), true );
+        drawBoardBuffer.setForeground(textColor);
+        drawBoardBuffer.drawText(graph.getName() + " avg: " + ((double) graph.getAvg() / 100) +
+            " kb/s," + " max: " + ((double) graph.getMax() / 100) + " kb/s", startx,
+            parent.getClientArea().height - drawBoardBuffer.getFontMetrics().getHeight(), true);
 
         // draw floating box
-        double value = (double) graph.getNewestPoint(  ) / 100;
-        String boxString = String.valueOf( value ) + " kb/s";
+        double value = (double) graph.getNewestPoint() / 100;
+        String boxString = String.valueOf(value) + " kb/s";
 
-        int linePosition = (int) ( height - ( (float) ( graph.getNewestPoint(  ) / 10 ) * zoom ) );
+        int linePosition = (int) (height - ((float) (graph.getNewestPoint() / 10) * zoom));
         int linePositionEnd = linePosition;
         int textPosition = linePosition - 6;
 
-        if ( ( textPosition + bottomSpace ) >= (int) height ) {
+        if ((textPosition + bottomSpace) >= (int) height) {
             textPosition = (int) height - bottomSpace - 3;
             linePositionEnd = linePositionEnd - 6;
         }
 
-        int boxWidth = drawBoardBuffer.textExtent( boxString ).x + 20;
-        int boxHeight = drawBoardBuffer.textExtent( boxString ).y + 5;
+        int boxWidth = drawBoardBuffer.textExtent(boxString).x + 20;
+        int boxHeight = drawBoardBuffer.textExtent(boxString).y + 5;
 
-        drawBoardBuffer.setForeground( labelTextColor );
-        drawBoardBuffer.setBackground( labelBackgroundColor );
-        drawBoardBuffer.fillRoundRectangle( startx + 10, textPosition, boxWidth, boxHeight, 18, 18 );
-        drawBoardBuffer.drawRoundRectangle( startx + 10, textPosition, boxWidth, boxHeight, 18, 18 );
-        drawBoardBuffer.drawText( boxString, startx + 20, textPosition + 2 );
-        drawBoardBuffer.setForeground( labelLineColor );
-        drawBoardBuffer.drawLine( startx + 10, linePositionEnd, startx, linePosition );
+        drawBoardBuffer.setForeground(labelTextColor);
+        drawBoardBuffer.setBackground(labelBackgroundColor);
+        drawBoardBuffer.fillRoundRectangle(startx + 10, textPosition, boxWidth, boxHeight, 18, 18);
+        drawBoardBuffer.drawRoundRectangle(startx + 10, textPosition, boxWidth, boxHeight, 18, 18);
+        drawBoardBuffer.drawText(boxString, startx + 20, textPosition + 2);
+        drawBoardBuffer.setForeground(labelLineColor);
+        drawBoardBuffer.drawLine(startx + 10, linePositionEnd, startx, linePosition);
 
         // output buffer to the display
-        drawBoard.drawImage( imageBuffer, 0, 0 );
-        drawBoardBuffer.dispose(  );
+        drawBoard.drawImage(imageBuffer, 0, 0);
+        drawBoardBuffer.dispose();
     }
 
-    private void drawGradiantGraph( int startx, int width, float height, float zoom, GC drawBoardBuffer ) {
-        int positionInArray = graph.getInsertAt(  ) - 1;
-        int validPoints = ( ( Graph.MAX_POINTS > graph.getAmount(  ) ) ? graph.getAmount(  ) : Graph.MAX_POINTS );
+    private void drawGradiantGraph(int startx, int width, float height, float zoom,
+        GC drawBoardBuffer) {
+        int positionInArray = graph.getInsertAt() - 1;
+        int validPoints = ((Graph.MAX_POINTS > graph.getAmount()) ? graph.getAmount()
+                                                                  : Graph.MAX_POINTS);
         float valueY;
 
-        drawBoardBuffer.setBackground( graph.getColor1(  ) );
-        drawBoardBuffer.setForeground( graph.getColor2(  ) );
+        drawBoardBuffer.setBackground(graph.getColor1());
+        drawBoardBuffer.setForeground(graph.getColor2());
 
-        for ( int k = startx; ( k < width ) && ( validPoints > 0 ); k++, validPoints-- ) {
-            if ( positionInArray < 0 ) {
+        for (int k = startx; (k < width) && (validPoints > 0); k++, validPoints--) {
+            if (positionInArray < 0) {
                 positionInArray = Graph.MAX_POINTS - 1;
             }
 
-            valueY = (float) ( graph.getPointAt( positionInArray ) / 10 );
-            valueY = height - ( valueY * zoom );
+            valueY = (float) (graph.getPointAt(positionInArray) / 10);
+            valueY = height - (valueY * zoom);
 
-            drawBoardBuffer.fillGradientRectangle( k, (int) height + 1, 1, (int) ( valueY - height ), true );
+            drawBoardBuffer.fillGradientRectangle(k, (int) height + 1, 1, (int) (valueY - height),
+                true);
             positionInArray--;
         }
     }
 
-    private void drawBarGraph( int startx, int width, float height, float zoom, GC drawBoardBuffer ) {
-        int positionInArray = graph.getInsertAt(  ) - 1;
-        int validPoints = ( ( Graph.MAX_POINTS > graph.getAmount(  ) ) ? graph.getAmount(  ) : Graph.MAX_POINTS );
+    private void drawBarGraph(int startx, int width, float height, float zoom, GC drawBoardBuffer) {
+        int positionInArray = graph.getInsertAt() - 1;
+        int validPoints = ((Graph.MAX_POINTS > graph.getAmount()) ? graph.getAmount()
+                                                                  : Graph.MAX_POINTS);
         float valueY;
-        drawBoardBuffer.setForeground( graph.getColor1(  ) );
+        drawBoardBuffer.setForeground(graph.getColor1());
 
-        for ( int k = startx; ( k < width ) && ( validPoints > 0 ); k++, validPoints-- ) {
-            if ( positionInArray < 0 ) {
+        for (int k = startx; (k < width) && (validPoints > 0); k++, validPoints--) {
+            if (positionInArray < 0) {
                 positionInArray = Graph.MAX_POINTS - 1;
             }
 
-            valueY = (float) ( graph.getPointAt( positionInArray ) / 10 );
-            valueY = height - ( valueY * zoom );
+            valueY = (float) (graph.getPointAt(positionInArray) / 10);
+            valueY = height - (valueY * zoom);
 
-            drawBoardBuffer.drawLine( k, (int) height + 1, k, (int) ( valueY ) );
+            drawBoardBuffer.drawLine(k, (int) height + 1, k, (int) (valueY));
             positionInArray--;
         }
     }
 
-    private void drawLineGraph( int startx, int width, float height, float zoom, GC drawBoardBuffer ) {
-        int positionInArray = graph.getInsertAt(  ) - 1;
-        int validPoints = ( ( Graph.MAX_POINTS > graph.getAmount(  ) ) ? graph.getAmount(  ) : Graph.MAX_POINTS );
+    private void drawLineGraph(int startx, int width, float height, float zoom, GC drawBoardBuffer) {
+        int positionInArray = graph.getInsertAt() - 1;
+        int validPoints = ((Graph.MAX_POINTS > graph.getAmount()) ? graph.getAmount()
+                                                                  : Graph.MAX_POINTS);
         float valueY;
         float lastY = -1;
-        drawBoardBuffer.setForeground( graph.getColor1(  ) );
-        drawBoardBuffer.setLineWidth( 3 );
+        drawBoardBuffer.setForeground(graph.getColor1());
+        drawBoardBuffer.setLineWidth(3);
 
-        for ( int k = startx; ( k < width ) && ( validPoints > 0 ); k++, validPoints-- ) {
-            if ( positionInArray < 0 ) {
+        for (int k = startx; (k < width) && (validPoints > 0); k++, validPoints--) {
+            if (positionInArray < 0) {
                 positionInArray = Graph.MAX_POINTS - 1;
             }
 
-            valueY = (float) ( graph.getPointAt( positionInArray ) / 10 );
-            valueY = height - ( valueY * zoom );
+            valueY = (float) (graph.getPointAt(positionInArray) / 10);
+            valueY = height - (valueY * zoom);
 
-            if ( lastY == -1 ) {
+            if (lastY == -1) {
                 lastY = valueY;
             }
 
-            drawBoardBuffer.drawLine( k - 1, (int) lastY, k, (int) ( valueY ) );
+            drawBoardBuffer.drawLine(k - 1, (int) lastY, k, (int) (valueY));
             lastY = valueY;
             positionInArray--;
         }
 
-        drawBoardBuffer.setLineWidth( 1 );
+        drawBoardBuffer.setLineWidth(1);
     }
-    
+
     public void updateDisplay() {
-    	backgroundColor = PreferenceLoader.loadColour( "graphBackgroundColor" );
-    	gridColor = PreferenceLoader.loadColour( "graphGridColor" );
-    	textColor = PreferenceLoader.loadColour( "graphTextColor" );
-    	
-		labelBackgroundColor = PreferenceLoader.loadColour( "graphLabelBackgroundColor" );
-		labelTextColor = PreferenceLoader.loadColour( "graphLabelTextColor" );
-		labelLineColor = PreferenceLoader.loadColour( "graphLabelLineColor" ) ;
+        backgroundColor = PreferenceLoader.loadColour("graphBackgroundColor");
+        gridColor = PreferenceLoader.loadColour("graphGridColor");
+        textColor = PreferenceLoader.loadColour("graphTextColor");
+
+        labelBackgroundColor = PreferenceLoader.loadColour("graphLabelBackgroundColor");
+        labelTextColor = PreferenceLoader.loadColour("graphLabelTextColor");
+        labelLineColor = PreferenceLoader.loadColour("graphLabelLineColor");
     }
 }
 
 
 /*
 $Log: GraphPainter.java,v $
+Revision 1.35  2003/11/22 02:24:30  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.34  2003/10/17 15:36:02  zet
 graph colour prefs
 

@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.search.CompositeSearch;
@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.41 2003/11/16 10:26:25 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.42 2003/11/22 02:24:29 zet Exp $ 
  *
  */
 public class SearchTab extends PaneGuiTab {
@@ -92,9 +92,7 @@ public class SearchTab extends PaneGuiTab {
 		/* associate this tab with the corecommunication */
 		this.core = gui.getCore();
 		/* Set our name on the coolbar */
-		createButton( "SearchButton", 
-							G2GuiResources.getString( "TT_SearchButton" ),
-							G2GuiResources.getString( "TT_SearchButtonToolTip" ) );
+		createButton( "SearchButton" );
 		/* create the tab content */
 		this.createContents( this.subContent );
 	}
@@ -136,14 +134,12 @@ public class SearchTab extends PaneGuiTab {
 	 * The search mask
 	 */
 	private void createLeftGroup() {
-		ViewForm viewForm = 
-				new ViewForm( mainSash , SWT.BORDER
-				| ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+		ViewForm viewForm = WidgetFactory.createViewForm(mainSash);
 		GridData gd = new GridData( GridData.FILL_VERTICAL );
 		gd.widthHint = 150;
 		viewForm.setLayoutData( gd );
 		CLabel searchCLabel = 
-			CCLabel.createCL( viewForm, "TT_SearchButton", "SearchButtonSmall" );
+			WidgetFactory.createCLabel( viewForm, "TT_SearchButton", "SearchButtonSmall" );
 
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.marginHeight = 0;
@@ -206,14 +202,11 @@ public class SearchTab extends PaneGuiTab {
 	 */
 	private void createRightGroup() {
 		/* right group */
-		ViewForm searchResultsViewForm = 
-			new ViewForm( mainSash , SWT.BORDER
-			| ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+		ViewForm searchResultsViewForm = WidgetFactory.createViewForm(mainSash);
 		searchResultsViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		
 		CLabel searchResultsCLabel = 
-			CCLabel.createCL( searchResultsViewForm,
-								 G2GuiResources.getString( "ST_RESULTS" ), "SearchButtonSmall" );
+			WidgetFactory.createCLabel( searchResultsViewForm, "ST_RESULTS" , "SearchButtonSmall" );
 		
 		cTabFolder = new CTabFolder( searchResultsViewForm, SWT.NONE );
 		
@@ -463,6 +456,9 @@ public class SearchTab extends PaneGuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.42  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.41  2003/11/16 10:26:25  lemmster
 fix: [Bug #1080] Searchbox should get focused when switching to servertab
 
@@ -549,7 +545,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

@@ -26,7 +26,7 @@ import java.util.List;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.SearchTab;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * CompositeSearch
  *
- * @version $Id: CompositeSearch.java,v 1.9 2003/11/16 10:26:25 lemmster Exp $
+ * @version $Id: CompositeSearch.java,v 1.10 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class CompositeSearch extends Search {
@@ -89,7 +89,7 @@ public class CompositeSearch extends Search {
         mainComposite.setLayoutData( gridData );
 
 		Composite aSubComposite = new Composite( mainComposite, SWT.NONE );
-		aSubComposite.setLayout( CGridLayout.createGL( 2, 0, 0, 2, 2, false ) );
+		aSubComposite.setLayout( WidgetFactory.createGridLayout( 2, 0, 0, 2, 2, false ) );
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
 		aSubComposite.setLayoutData( gridData );
@@ -171,6 +171,9 @@ public class CompositeSearch extends Search {
 
 /*
 $Log: CompositeSearch.java,v $
+Revision 1.10  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.9  2003/11/16 10:26:25  lemmster
 fix: [Bug #1080] Searchbox should get focused when switching to servertab
 

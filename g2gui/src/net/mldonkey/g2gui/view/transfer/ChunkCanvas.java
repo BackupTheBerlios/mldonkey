@@ -49,7 +49,7 @@ import java.util.Observer;
  * ChunkView
  *
  *
- * @version $Id: ChunkCanvas.java,v 1.3 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: ChunkCanvas.java,v 1.4 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -89,44 +89,45 @@ public class ChunkCanvas extends Canvas implements Observer {
      * @param clientInfo the source of this chunkviews information
      * @param fileInfo for this fileInfo we want to display the Information
      */
-    public ChunkCanvas( Composite parent, int style, ClientInfo clientInfo, FileInfo fileInfo, NetworkInfo networkInfo ) {
-        super( parent, style );
+    public ChunkCanvas(Composite parent, int style, ClientInfo clientInfo, FileInfo fileInfo,
+        NetworkInfo networkInfo) {
+        super(parent, style);
 
         this.clientInfo = clientInfo;
         this.fileInfo = fileInfo;
         this.networkInfo = networkInfo;
-        this.type = ( ( clientInfo == null ) ? isFileInfo : isClientInfo );
+        this.type = ((clientInfo == null) ? isFileInfo : isClientInfo);
 
         createImage();
 
-        addDisposeListener( new DisposeListener() {
-                public void widgetDisposed( DisposeEvent e ) {
-                    ChunkCanvas.this.widgetDisposed( e );
+        addDisposeListener(new DisposeListener() {
+                public void widgetDisposed(DisposeEvent e) {
+                    ChunkCanvas.this.widgetDisposed(e);
                 }
-            } );
+            });
 
-        addPaintListener( new PaintListener() {
-                public void paintControl( PaintEvent e ) {
-                    synchronized ( this ) {
-                        ChunkCanvas.this.paintControl( e );
+        addPaintListener(new PaintListener() {
+                public void paintControl(PaintEvent e) {
+                    synchronized (this) {
+                        ChunkCanvas.this.paintControl(e);
                     }
                 }
-            } );
+            });
 
-        addControlListener( new ControlListener() {
-                public void controlResized( ControlEvent e ) {
-                    synchronized ( this ) {
-                        ChunkCanvas.this.resizeImage( e );
+        addControlListener(new ControlListener() {
+                public void controlResized(ControlEvent e) {
+                    synchronized (this) {
+                        ChunkCanvas.this.resizeImage(e);
                     }
                 }
 
-                public void controlMoved( ControlEvent e ) {
+                public void controlMoved(ControlEvent e) {
                 }
-            } );
+            });
     }
 
     private void createImage() {
-        switch ( type ) {
+        switch (type) {
         case isClientInfo:
             createClientInfoImage();
 
@@ -148,17 +149,17 @@ public class ChunkCanvas extends Canvas implements Observer {
      * http://www.emule-project.net/faq/progress.htm
      */
     private void createClientInfoImage() {
-        this.avail = clientInfo.getFileAvailability( fileInfo );
+        this.avail = clientInfo.getFileAvailability(fileInfo);
         this.chunks = fileInfo.getChunks();
 
         int length = 0;
 
-        if ( avail != null ) {
+        if (avail != null) {
             length = avail.length();
         }
 
-        if ( length == 0 ) {
-            if ( image != null ) {
+        if (length == 0) {
+            if (image != null) {
                 image.dispose();
             }
 
@@ -167,48 +168,48 @@ public class ChunkCanvas extends Canvas implements Observer {
 
         Display thisDisplay = Display.getCurrent();
 
-        Color red = thisDisplay.getSystemColor( SWT.COLOR_RED );
-        Color black = thisDisplay.getSystemColor( SWT.COLOR_BLACK );
-        Color yellow = thisDisplay.getSystemColor( SWT.COLOR_YELLOW );
-        Color blue = new Color( null, 0, 150, 255 );
-        Color silver = new Color( null, 226, 225, 221 );
-        Color darkGray = new Color( null, 107, 81, 9 );
+        Color red = thisDisplay.getSystemColor(SWT.COLOR_RED);
+        Color black = thisDisplay.getSystemColor(SWT.COLOR_BLACK);
+        Color yellow = thisDisplay.getSystemColor(SWT.COLOR_YELLOW);
+        Color blue = new Color(null, 0, 150, 255);
+        Color silver = new Color(null, 226, 225, 221);
+        Color darkGray = new Color(null, 107, 81, 9);
 
         Color fromColor = black;
         Color toColor;
 
-        if ( image != null ) {
+        if (image != null) {
             image.dispose();
         }
 
-        image = new Image( thisDisplay, length, initialHeight );
+        image = new Image(thisDisplay, length, initialHeight);
 
-        GC imageGC = new GC( image );
+        GC imageGC = new GC(image);
 
-        for ( int i = 0; i < length; i++ ) {
+        for (int i = 0; i < length; i++) {
             toColor = blue;
 
             // we have it
-            if ( ( chunks.length() == avail.length() ) && ( chunks.charAt( i ) == '2' ) ) {
+            if ((chunks.length() == avail.length()) && (chunks.charAt(i) == '2')) {
                 toColor = darkGray;
             } // doesn't have it
-            else if ( avail.charAt( i ) == '0' ) {
+            else if (avail.charAt(i) == '0') {
                 toColor = silver;
             } // they have it
-            else if ( avail.charAt( i ) == '1' ) {
+            else if (avail.charAt(i) == '1') {
                 toColor = blue;
             } // ???
-            else if ( avail.charAt( i ) == '2' ) {
+            else if (avail.charAt(i) == '2') {
                 toColor = yellow;
             }
 
-            imageGC.setBackground( toColor );
-            imageGC.setForeground( fromColor );
-            imageGC.fillGradientRectangle( i, 0, 1, initialHeight / 2, true );
+            imageGC.setBackground(toColor);
+            imageGC.setForeground(fromColor);
+            imageGC.fillGradientRectangle(i, 0, 1, initialHeight / 2, true);
 
-            imageGC.setForeground( toColor );
-            imageGC.setBackground( fromColor );
-            imageGC.fillGradientRectangle( i, initialHeight / 2, 1, initialHeight / 2, true );
+            imageGC.setForeground(toColor);
+            imageGC.setBackground(fromColor);
+            imageGC.fillGradientRectangle(i, initialHeight / 2, 1, initialHeight / 2, true);
         }
 
         imageGC.dispose();
@@ -218,11 +219,11 @@ public class ChunkCanvas extends Canvas implements Observer {
 
         imageData = image.getImageData();
 
-        if ( resizedImageData == null ) {
+        if (resizedImageData == null) {
             resizedImageData = imageData;
         }
 
-        resizeImage( null );
+        resizeImage(null);
     }
 
     /**
@@ -231,10 +232,10 @@ public class ChunkCanvas extends Canvas implements Observer {
     private void createFileInfoImage() {
         this.chunks = fileInfo.getChunks();
 
-        if ( networkInfo != null ) {
-            Object tmpAvail = fileInfo.getAvails().get( networkInfo );
+        if (networkInfo != null) {
+            Object tmpAvail = fileInfo.getAvails().get(networkInfo);
 
-            if ( tmpAvail instanceof String ) {
+            if (tmpAvail instanceof String) {
                 this.avail = (String) tmpAvail;
             } else {
                 this.avail = fileInfo.getAvail();
@@ -247,19 +248,19 @@ public class ChunkCanvas extends Canvas implements Observer {
 
         Display thisDisplay = Display.getCurrent();
 
-        Color red = thisDisplay.getSystemColor( SWT.COLOR_RED );
-        Color black = thisDisplay.getSystemColor( SWT.COLOR_BLACK );
-        Color yellow = thisDisplay.getSystemColor( SWT.COLOR_YELLOW );
-        Color darkGray = new Color( null, 107, 81, 9 );
+        Color red = thisDisplay.getSystemColor(SWT.COLOR_RED);
+        Color black = thisDisplay.getSystemColor(SWT.COLOR_BLACK);
+        Color yellow = thisDisplay.getSystemColor(SWT.COLOR_YELLOW);
+        Color darkGray = new Color(null, 107, 81, 9);
 
         Color fromColor = black;
         Color toColor;
 
-        if ( avail.length() != 0 ) {
+        if (avail.length() != 0) {
             length = avail.length();
         }
 
-        if ( length == 0 ) {
+        if (length == 0) {
             return;
         }
 
@@ -267,53 +268,53 @@ public class ChunkCanvas extends Canvas implements Observer {
         int highestNumSources = 0;
         float factor = 1f;
 
-        for ( int i = 0; i < avail.length(); i++ ) {
-            numChunkSources = avail.charAt( i );
+        for (int i = 0; i < avail.length(); i++) {
+            numChunkSources = avail.charAt(i);
 
-            if ( numChunkSources > highestNumSources ) {
+            if (numChunkSources > highestNumSources) {
                 highestNumSources = numChunkSources;
             }
         }
 
-        if ( highestNumSources > 0 ) {
+        if (highestNumSources > 0) {
             factor = 10f / highestNumSources;
         }
 
-        if ( image != null ) {
+        if (image != null) {
             image.dispose();
         }
 
-        image = new Image( thisDisplay, length, initialHeight );
+        image = new Image(thisDisplay, length, initialHeight);
 
-        GC imageGC = new GC( image );
+        GC imageGC = new GC(image);
 
-        for ( int i = 0; i < avail.length(); i++ ) {
-            numChunkSources = avail.charAt( i );
+        for (int i = 0; i < avail.length(); i++) {
+            numChunkSources = avail.charAt(i);
 
             Color intenseColor = null;
 
             // this old "chunks" field doesn't fit well into multi network transfers...
-            if ( ( chunks.length() == avail.length() ) && ( chunks.charAt( i ) == '2' ) ) {
+            if ((chunks.length() == avail.length()) && (chunks.charAt(i) == '2')) {
                 toColor = darkGray;
-            } else if ( ( chunks.length() == avail.length() ) && ( chunks.charAt( i ) == '3' ) ) {
+            } else if ((chunks.length() == avail.length()) && (chunks.charAt(i) == '3')) {
                 toColor = yellow;
-            } else if ( numChunkSources == 0 ) {
+            } else if (numChunkSources == 0) {
                 toColor = red;
             } else {
-                int colorIntensity = 255 - ( (int) ( (float) numChunkSources * factor ) * 25 );
-                intenseColor = new Color( null, 0, colorIntensity, 255 );
+                int colorIntensity = 255 - ((int) ((float) numChunkSources * factor) * 25);
+                intenseColor = new Color(null, 0, colorIntensity, 255);
                 toColor = intenseColor;
             }
 
-            imageGC.setBackground( toColor );
-            imageGC.setForeground( fromColor );
-            imageGC.fillGradientRectangle( i, 0, 1, initialHeight / 2, true );
+            imageGC.setBackground(toColor);
+            imageGC.setForeground(fromColor);
+            imageGC.fillGradientRectangle(i, 0, 1, initialHeight / 2, true);
 
-            imageGC.setForeground( toColor );
-            imageGC.setBackground( fromColor );
-            imageGC.fillGradientRectangle( i, initialHeight / 2, 1, initialHeight / 2, true );
+            imageGC.setForeground(toColor);
+            imageGC.setBackground(fromColor);
+            imageGC.fillGradientRectangle(i, initialHeight / 2, 1, initialHeight / 2, true);
 
-            if ( intenseColor != null ) {
+            if (intenseColor != null) {
                 intenseColor.dispose();
             }
         }
@@ -323,32 +324,32 @@ public class ChunkCanvas extends Canvas implements Observer {
 
         imageData = image.getImageData();
 
-        if ( resizedImageData == null ) {
+        if (resizedImageData == null) {
             resizedImageData = imageData;
         }
 
-        resizeImage( null );
+        resizeImage(null);
     }
 
     /**
      * @param e
      */
-    protected void widgetDisposed( DisposeEvent e ) {
-        if ( ( image != null ) && !image.isDisposed() ) {
+    protected void widgetDisposed(DisposeEvent e) {
+        if ((image != null) && !image.isDisposed()) {
             image.dispose();
         }
 
-        if ( type == isFileInfo ) {
-            fileInfo.deleteObserver( this );
+        if (type == isFileInfo) {
+            fileInfo.deleteObserver(this);
         } else {
-            clientInfo.deleteObserver( this );
+            clientInfo.deleteObserver(this);
         }
     }
 
-    protected void resizeImage( ControlEvent e ) {
-        if ( ( image != null ) && ( imageData != null ) ) {
-            if ( ( getClientArea().width > 0 ) && ( getClientArea().height > 0 ) ) {
-                resizedImageData = imageData.scaledTo( getClientArea().width, getClientArea().height );
+    protected void resizeImage(ControlEvent e) {
+        if ((image != null) && (imageData != null)) {
+            if ((getClientArea().width > 0) && (getClientArea().height > 0)) {
+                resizedImageData = imageData.scaledTo(getClientArea().width, getClientArea().height);
             }
         }
     }
@@ -356,15 +357,15 @@ public class ChunkCanvas extends Canvas implements Observer {
     /**
      * @param e
      */
-    protected void paintControl( PaintEvent e ) {
+    protected void paintControl(PaintEvent e) {
         GC canvasGC = e.gc;
 
         // does this help? probably not...	
-        if ( canvasGC == null ) {
+        if (canvasGC == null) {
             return;
         }
 
-        if ( image != null ) {
+        if (image != null) {
             int srcWidth = e.width;
             int srcHeight = e.height;
             int srcX = e.x;
@@ -374,65 +375,66 @@ public class ChunkCanvas extends Canvas implements Observer {
             int destX = e.x;
             int destY = e.y;
 
-            Image bufferImage = new Image( null, resizedImageData );
+            Image bufferImage = new Image(null, resizedImageData);
 
-            GC bufferGC = new GC( bufferImage );
+            GC bufferGC = new GC(bufferImage);
 
-            if ( type == isFileInfo ) {
-                createProgressBar( resizedImageData.width, bufferGC );
+            if (type == isFileInfo) {
+                createProgressBar(resizedImageData.width, bufferGC);
             }
 
-            roundCorners( resizedImageData.width, resizedImageData.height, bufferGC );
+            roundCorners(resizedImageData.width, resizedImageData.height, bufferGC);
 
             boolean fits = true;
 
-            if ( ( srcX + srcWidth ) > bufferImage.getBounds().width ) {
+            if ((srcX + srcWidth) > bufferImage.getBounds().width) {
                 fits = false;
             }
 
-            if ( ( srcY + srcHeight ) > bufferImage.getBounds().height ) {
+            if ((srcY + srcHeight) > bufferImage.getBounds().height) {
                 fits = false;
             }
 
             try {
-                if ( fits ) {
-                    canvasGC.drawImage( bufferImage, srcX, srcY, srcWidth, srcHeight, destX, destY, destWidth, destHeight );
+                if (fits) {
+                    canvasGC.drawImage(bufferImage, srcX, srcY, srcWidth, srcHeight, destX, destY,
+                        destWidth, destHeight);
                 }
-            } catch ( Exception x ) {
-                System.out.println( "e.width: " + e.width + " e.height: " + e.height + " bw: " + bufferImage.getBounds().width + " bh: " +
-                    bufferImage.getBounds().height );
+            } catch (Exception x) {
+                System.out.println("e.width: " + e.width + " e.height: " + e.height + " bw: " +
+                    bufferImage.getBounds().width + " bh: " + bufferImage.getBounds().height);
                 x.printStackTrace();
             }
 
             bufferImage.dispose();
         } else {
-            canvasGC.setBackground( getParent().getBackground() );
-            canvasGC.fillRectangle( e.x, e.y, e.width, e.height );
+            canvasGC.setBackground(getParent().getBackground());
+            canvasGC.fillRectangle(e.x, e.y, e.width, e.height);
         }
 
         canvasGC.dispose();
     }
 
-    private void roundCorners( int srcWidth, int srcHeight, GC bufferGC ) {
+    private void roundCorners(int srcWidth, int srcHeight, GC bufferGC) {
         // spacer in background colour	
-        bufferGC.setForeground( getParent().getBackground() );
-        bufferGC.drawLine( 0, 0, srcWidth - 1, 0 );
+        bufferGC.setForeground(getParent().getBackground());
+        bufferGC.drawLine(0, 0, srcWidth - 1, 0);
 
         // round the corners
-        bufferGC.drawLine( 0, 1, 0, 1 );
-        bufferGC.drawLine( 0, srcHeight - 1, 0, srcHeight - 1 );
-        bufferGC.drawLine( srcWidth - 1, 1, srcWidth - 1, 1 );
-        bufferGC.drawLine( srcWidth - 1, srcHeight - 1, srcWidth - 1, srcHeight - 1 );
+        bufferGC.drawPoint(0, 1);
+        bufferGC.drawPoint(0, srcHeight - 1);
+        bufferGC.drawPoint(srcWidth - 1, 1);
+        bufferGC.drawPoint(srcWidth - 1, srcHeight - 1);
         bufferGC.dispose();
     }
 
-    private void createProgressBar( int srcWidth, GC bufferGC ) {
-        Color green1 = new Color( null, 15, 136, 0 );
-        Color green2 = new Color( null, 41, 187, 26 );
-        int pix = (int) ( ( fileInfo.getPerc() / 100 ) * (double) ( srcWidth - 1 ) );
-        bufferGC.setBackground( green1 );
-        bufferGC.setForeground( green2 );
-        bufferGC.fillGradientRectangle( 0, 0, pix, 4, false );
+    private void createProgressBar(int srcWidth, GC bufferGC) {
+        Color green1 = new Color(null, 15, 136, 0);
+        Color green2 = new Color(null, 41, 187, 26);
+        int pix = (int) ((fileInfo.getPerc() / 100) * (double) (srcWidth - 1));
+        bufferGC.setBackground(green1);
+        bufferGC.setForeground(green2);
+        bufferGC.fillGradientRectangle(0, 0, pix, 4, false);
         green1.dispose();
         green2.dispose();
     }
@@ -440,16 +442,16 @@ public class ChunkCanvas extends Canvas implements Observer {
     private boolean hasChanged() {
         boolean result = false;
 
-        if ( type == isFileInfo ) {
+        if (type == isFileInfo) {
             boolean part1 = chunks.hashCode() != fileInfo.getChunks().hashCode();
             boolean part2 = avail.hashCode() != fileInfo.getAvail().hashCode();
             result = part1 || part2;
-        } else if ( type == isClientInfo ) {
-            String tempAvail = clientInfo.getFileAvailability( fileInfo );
+        } else if (type == isClientInfo) {
+            String tempAvail = clientInfo.getFileAvailability(fileInfo);
 
-            if ( ( avail == null ) && ( tempAvail != null ) ) {
+            if ((avail == null) && (tempAvail != null)) {
                 result = true;
-            } else if ( ( avail != null ) && ( tempAvail != null ) ) {
+            } else if ((avail != null) && (tempAvail != null)) {
                 result = tempAvail.hashCode() != avail.hashCode();
             }
         }
@@ -461,8 +463,8 @@ public class ChunkCanvas extends Canvas implements Observer {
      * redraws this widget, with refreshed Information from FileInfo ( if changed )
      */
     public void refresh() {
-        if ( this.hasChanged() ) {
-            synchronized ( this ) {
+        if (this.hasChanged()) {
+            synchronized (this) {
                 createImage();
             }
 
@@ -471,18 +473,18 @@ public class ChunkCanvas extends Canvas implements Observer {
     }
 
     // runs in gui thread	
-    public void update( Observable o, Object obj ) {
-        Display.getDefault().asyncExec( new Runnable() {
+    public void update(Observable o, Object obj) {
+        Display.getDefault().asyncExec(new Runnable() {
                 public void run() {
-                    if ( !isDisposed() ) {
+                    if (!isDisposed()) {
                         refresh();
                     }
                 }
-            } );
+            });
     }
 
     public int getHash() {
-        if ( type == isClientInfo ) {
+        if (type == isClientInfo) {
             return clientInfo.hashCode();
         } else {
             return fileInfo.hashCode();
@@ -493,6 +495,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.4  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.3  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 

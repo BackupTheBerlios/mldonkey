@@ -22,14 +22,14 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumExtension;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.PaneGuiTab;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
+import net.mldonkey.g2gui.view.helper.ViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.SashGPaneListener;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 import net.mldonkey.g2gui.view.viewers.actions.ExtensionFilterAction;
@@ -45,28 +45,26 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.PreferenceStore;
-
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.widgets.Control;
 
 
 /**
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.25 2003/11/15 21:15:29 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.26 2003/11/22 02:24:29 zet Exp $
  *
  */
-public class DownloadPaneMenuListener extends SashGPaneListener {
-	private Enum[] states;
+public class DownloadPaneMenuListener extends ViewFrameListener {
+    private Enum[] states;
 
-    public DownloadPaneMenuListener(PaneGuiTab aPaneGuiTab, CoreCommunication core,
-        SashForm aSashForm, Control aControl) {
-        super(aPaneGuiTab, core, aSashForm, aControl);
+    public DownloadPaneMenuListener(ViewFrame viewFrame, PaneGuiTab paneGuiTab) {
+        super(viewFrame, paneGuiTab);
 
-		this.states = new Enum[]  { EnumExtension.AUDIO, EnumExtension.VIDEO, EnumExtension.ARCHIVE,
-									 EnumExtension.CDIMAGE, EnumExtension.PICTURE };
+        this.states = new Enum[] {
+                EnumExtension.AUDIO, EnumExtension.VIDEO, EnumExtension.ARCHIVE,
+                EnumExtension.CDIMAGE, EnumExtension.PICTURE
+            };
 
         // set defaults on startup
         if (PreferenceLoader.loadBoolean("downloadsFilterQueued")) {
@@ -94,7 +92,7 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
         if (advancedMode) {
             menuManager.add(new ColumnSelectorAction(gView));
         }
-        
+
         // sortMenu for macOS
         createSortByColumnSubMenu(menuManager);
 
@@ -119,7 +117,7 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
         filterSubMenu.add(new Separator());
 
         for (int i = 0; i < states.length; i++) {
-			EnumExtension extension = (EnumExtension) states[ i ];        	
+            EnumExtension extension = (EnumExtension) states[ i ];
             filterSubMenu.add(new ExtensionFilterAction(extension.getName(), gView, extension));
         }
 
@@ -150,6 +148,9 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.26  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.25  2003/11/15 21:15:29  zet
 Label restore action
 

@@ -26,9 +26,8 @@ import java.util.Observable;
 
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
-import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.server.ServerPaneListener;
 import net.mldonkey.g2gui.view.server.ServerTableView;
@@ -52,7 +51,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.48 2003/11/09 23:09:57 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.49 2003/11/22 02:24:29 zet Exp $ 
  *
  */
 public class ServerTab extends TableGuiTab implements Runnable, DisposeListener {
@@ -68,9 +67,7 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 		/* associate this tab with the corecommunication */
 		this.core = gui.getCore();
 		/* Set our name on the coolbar */
-		createButton( "ServersButton", 
-						G2GuiResources.getString( "TT_ServersButton" ),
-						G2GuiResources.getString( "TT_ServersButtonToolTip" ) );
+		createButton( "ServersButton" );
 
 		/* create the tab content */
 		this.createContents( this.subContent );
@@ -81,11 +78,8 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 	 * @see net.mldonkey.g2gui.view.GuiTab#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected void createContents( Composite parent ) {
-		ViewForm viewForm = 
-			new ViewForm( parent, SWT.BORDER
-				| ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-		
-		CLabel ccLabel = CCLabel.createCL( viewForm, "TT_ServersButton", "ServersButtonSmall" );
+		ViewForm viewForm = WidgetFactory.createViewForm(parent);
+		CLabel ccLabel = WidgetFactory.createCLabel( viewForm, "TT_ServersButton", "ServersButtonSmall" );
 			
 		Composite composite = new Composite( viewForm, SWT.NONE );
 		composite.setLayout( new FillLayout() );
@@ -217,6 +211,9 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.49  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.48  2003/11/09 23:09:57  lemmster
 remove "Show connected Servers only"
 added filter saving in searchtab

@@ -27,7 +27,7 @@ import java.util.Observable;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.16 2003/09/19 15:19:14 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.17 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -81,7 +81,7 @@ public class MusicComplexSearch extends ComplexSearch {
  		
  		/* the input boxes */
  		Composite aSubComposite = new Composite( aComposite, SWT.NONE );
- 		aSubComposite.setLayout( CGridLayout.createGL( 2, 0, 0, 2, 2, false ) );
+ 		aSubComposite.setLayout( WidgetFactory.createGridLayout( 2, 0, 0, 2, 2, false ) );
 		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
  		aSubComposite.setLayoutData( gridData );
@@ -96,7 +96,7 @@ public class MusicComplexSearch extends ComplexSearch {
 		s.setLayoutData( gridData );
  
 		Composite aSubComposite2 = new Composite( aComposite, SWT.NONE );
-		aSubComposite2.setLayout( CGridLayout.createGL( 2, 0, 0, 2, 2, false ) );
+		aSubComposite2.setLayout( WidgetFactory.createGridLayout( 2, 0, 0, 2, 2, false ) );
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
 		aSubComposite2.setLayoutData( gridData );
@@ -130,7 +130,7 @@ public class MusicComplexSearch extends ComplexSearch {
 		s.setLayoutData( gridData );
 		
 		Composite aSubComposite3 = new Composite( aComposite, SWT.NONE );
-		aSubComposite3.setLayout( CGridLayout.createGL( 2, 0, 0, 2, 2, false ) );
+		aSubComposite3.setLayout( WidgetFactory.createGridLayout( 2, 0, 0, 2, 2, false ) );
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
 		aSubComposite3.setLayoutData( gridData );
@@ -207,6 +207,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.17  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.16  2003/09/19 15:19:14  lemmster
 reworked
 

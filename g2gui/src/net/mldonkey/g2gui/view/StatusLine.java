@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.statusline.CoreConsoleItem;
 import net.mldonkey.g2gui.view.statusline.LinkEntry;
@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.19 2003/11/09 04:13:38 zet Exp $
+ * @version $Id: StatusLine.java,v 1.20 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class StatusLine {
@@ -75,7 +75,7 @@ public class StatusLine {
             PreferenceLoader.loadBoolean("advancedMode"));
 
         Composite mainComposite = new Composite(mainTab.getMainComposite(), SWT.BORDER);
-        mainComposite.setLayout(CGridLayout.createGL(1, 0, 0, 0, 0, false));
+        mainComposite.setLayout(WidgetFactory.createGridLayout(1, 0, 0, 0, 0, false));
         mainComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         /*
@@ -88,7 +88,7 @@ public class StatusLine {
         new LinkEntry(this, this.core, linkEntryComposite);
 
         statusLineComposite = new Composite(mainComposite, SWT.NONE);
-        statusLineComposite.setLayout(CGridLayout.createGL(spawnedCore ? 9 : 7, 0, 0, 0, 0, false));
+        statusLineComposite.setLayout(WidgetFactory.createGridLayout(spawnedCore ? 9 : 7, 0, 0, 0, 0, false));
         statusLineComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         /*
@@ -138,7 +138,7 @@ public class StatusLine {
      */
     private void createLinkEntry(Composite parent) {
         linkEntryComposite = new Composite(parent, SWT.NONE);
-        linkEntryComposite.setLayout(CGridLayout.createGL(2, 0, 0, 0, 0, false));
+        linkEntryComposite.setLayout(WidgetFactory.createGridLayout(2, 0, 0, 0, 0, false));
 
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.heightHint = 0;
@@ -190,6 +190,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.20  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.19  2003/11/09 04:13:38  zet
 cleanup
 

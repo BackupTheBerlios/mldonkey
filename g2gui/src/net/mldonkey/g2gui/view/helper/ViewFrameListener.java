@@ -22,43 +22,40 @@
  */
 package net.mldonkey.g2gui.view.helper;
 
-import org.eclipse.jface.action.MenuManager;
+import net.mldonkey.g2gui.view.PaneGuiTab;
+import net.mldonkey.g2gui.view.viewers.GPaneListener;
 
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Control;
 
 
 /**
- * MaximizeSashMouseAdapter
+ * ViewFrameListener
  *
- * @version $Id: MaximizeSashMouseAdapter.java,v 1.2 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: ViewFrameListener.java,v 1.1 2003/11/22 02:24:29 zet Exp $
  *
  */
-public class MaximizeSashMouseAdapter extends HeaderBarMouseAdapter {
-    private SashForm sashForm;
-    private Control control;
+public abstract class ViewFrameListener extends GPaneListener {
+    protected SashForm sashForm;
+    protected Control control;
+    protected ViewFrame viewFrame;
 
-    public MaximizeSashMouseAdapter(CLabel cLabel, MenuManager menuManager, SashForm sashForm,
-        Control control) {
-        super(cLabel, menuManager);
-        this.sashForm = sashForm;
-        this.control = control;
+    public ViewFrameListener(ViewFrame viewFrame, PaneGuiTab paneGuiTab) {
+        super(paneGuiTab, viewFrame.getGView().getCore()); 
+        this.viewFrame = viewFrame;
+        this.sashForm = viewFrame.getParentSashForm();
+        this.control = viewFrame.getControl();
+        this.gView = viewFrame.getGView();
     }
 
-    public void mouseDoubleClick(MouseEvent e) {
-        WidgetFactory.setMaximizedSashFormControl(sashForm, control);
+    public void menuAboutToShow() {
     }
 }
 
 
 /*
-$Log: MaximizeSashMouseAdapter.java,v $
-Revision 1.2  2003/11/22 02:24:29  zet
+$Log: ViewFrameListener.java,v $
+Revision 1.1  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
-
-Revision 1.1  2003/09/26 16:07:47  zet
-initial
 
 */

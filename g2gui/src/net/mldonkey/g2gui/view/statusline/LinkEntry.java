@@ -22,15 +22,12 @@
  */
 package net.mldonkey.g2gui.view.statusline;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
-import gnu.regexp.REMatch;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.view.StatusLine;
-import net.mldonkey.g2gui.view.helper.CCLabel;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.UniformResourceLocator;
@@ -55,136 +52,148 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import gnu.regexp.RE;
+import gnu.regexp.REException;
+import gnu.regexp.REMatch;
+
+
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.19 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: LinkEntry.java,v 1.20 2003/11/22 02:24:29 zet Exp $
  *
  */
 public class LinkEntry {
     private CoreCommunication core;
     private StatusLine statusLine;
 
-	/**
-	 * @param statusLine 
-	 * @param core 
-	 * @param parent 
-	 */
-    public LinkEntry( StatusLine statusLine, CoreCommunication core, Composite parent ) {
+    /**
+     * @param statusLine
+     * @param core
+     * @param parent
+     */
+    public LinkEntry(StatusLine statusLine, CoreCommunication core, Composite parent) {
         this.statusLine = statusLine;
         this.core = core;
-        createContents( parent );
+        createContents(parent);
     }
 
     /**
-     * @param parent 
+     * @param parent
      */
-    public void createContents( Composite parent ) {
-        ViewForm linkEntryViewForm =
-            new ViewForm( parent,
-                          SWT.BORDER
-                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-        linkEntryViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        CLabel linkEntryCLabel = CCLabel.createCL( linkEntryViewForm, "LE_HEADER", "UpArrowGreen" );
-       
-        final Text linkEntryText = new Text( linkEntryViewForm, SWT.WRAP | SWT.MULTI | SWT.V_SCROLL );
-        linkEntryText.setLayoutData( new FillLayout() );
-        linkEntryText.setFont( PreferenceLoader.loadFont( "consoleFontData" ) );
-        linkEntryText.setForeground( PreferenceLoader.loadColour( "consoleInputForeground" ) );
-        linkEntryText.setBackground( PreferenceLoader.loadColour( "consoleInputBackground" ) );
-      
-      	linkEntryText.addKeyListener( new KeyAdapter() {
-				public void keyPressed( KeyEvent e ) {
-					if ( (e.stateMask & SWT.CTRL) != 0  ) {
-						if (e.character == SWT.LF || e.character == SWT.CR) 
-							enterLinks( linkEntryText );	
-					}
-				}
-      		});
-      
-        ToolBar linkEntryToolBar = new ToolBar( linkEntryViewForm, SWT.RIGHT | SWT.FLAT );
-        ToolItem sendItem = new ToolItem( linkEntryToolBar, SWT.NONE );
-        sendItem.setText( G2GuiResources.getString( "LE_BUTTON" ) );
-        sendItem.setImage( G2GuiResources.getImage( "UpArrowGreen" ) );
-        sendItem.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent s ) {
-                    enterLinks( linkEntryText );
+    public void createContents(Composite parent) {
+        ViewForm linkEntryViewForm = WidgetFactory.createViewForm(parent);
+        linkEntryViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        CLabel linkEntryCLabel = WidgetFactory.createCLabel(linkEntryViewForm, "LE_HEADER",
+                "UpArrowGreen");
+
+        final Text linkEntryText = new Text(linkEntryViewForm, SWT.WRAP | SWT.MULTI | SWT.V_SCROLL);
+        linkEntryText.setLayoutData(new FillLayout());
+        linkEntryText.setFont(PreferenceLoader.loadFont("consoleFontData"));
+        linkEntryText.setForeground(PreferenceLoader.loadColour("consoleInputForeground"));
+        linkEntryText.setBackground(PreferenceLoader.loadColour("consoleInputBackground"));
+
+        linkEntryText.addKeyListener(new KeyAdapter() {
+                public void keyPressed(KeyEvent e) {
+                    if ((e.stateMask & SWT.CTRL) != 0) {
+                        if ((e.character == SWT.LF) || (e.character == SWT.CR)) {
+                            enterLinks(linkEntryText);
+                        }
+                    }
                 }
-            } );
-            
-        linkEntryViewForm.setTopLeft( linkEntryCLabel );
-        linkEntryViewForm.setContent( linkEntryText );
-        linkEntryViewForm.setTopRight( linkEntryToolBar );
+            });
 
-		if (SWT.getPlatform().equals("win32") 
-			&& PreferenceLoader.loadBoolean("dragAndDrop") ) {
-				activateDropTarget( linkEntryText );
-		}
+        ToolBar linkEntryToolBar = new ToolBar(linkEntryViewForm, SWT.RIGHT | SWT.FLAT);
+        ToolItem sendItem = new ToolItem(linkEntryToolBar, SWT.NONE);
+        sendItem.setText(G2GuiResources.getString("LE_BUTTON"));
+        sendItem.setImage(G2GuiResources.getImage("UpArrowGreen"));
+        sendItem.addSelectionListener(new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent s) {
+                    enterLinks(linkEntryText);
+                }
+            });
+
+        linkEntryViewForm.setTopLeft(linkEntryCLabel);
+        linkEntryViewForm.setContent(linkEntryText);
+        linkEntryViewForm.setTopRight(linkEntryToolBar);
+
+        if (SWT.getPlatform().equals("win32") && PreferenceLoader.loadBoolean("dragAndDrop")) {
+            activateDropTarget(linkEntryText);
+        }
     }
 
-    /**
-     * @param linkEntryText 
-     */
-    public void enterLinks( Text linkEntryText ) {
-        String input = linkEntryText.getText();
-        RE regex = null;
-        try {
-            regex =
-                new RE( "(ed2k://\\|file\\|[^\\|]+\\|(\\d+)\\|([\\dabcdef]+)\\|)"
-                        + "|(sig2dat:///?\\|File:[^\\|]+\\|Length:.+?\\|UUHash:\\=.+?\\=)"
-                        + "|(\\\"magnet:\\?xt=.+?\\\")" + "|(magnet:\\?xt=.+?\n)"
-                        + ( ( linkEntryText.getLineCount() == 1 ) ? "|(magnet:\\?xt=.+)" : "" )
-                        + ( ( linkEntryText.getLineCount() == 1 ) ? "|(http://.+?\\.torrent.+)" : "" )
-                        + "|(\"http://.+?\\.torrent\\?[^>]+\")" + "|(http://.+?\\.torrent)", RE.REG_ICASE );
-        }
-        catch ( REException e ) {
-            e.printStackTrace();
-        }
-        REMatch[] matches = regex.getAllMatches( input );
-        for ( int i = 0; i < matches.length; i++ ) {
-            String link = RegExp.replaceAll( matches[ i ].toString(), "\"", "" );
-            link = RegExp.replaceAll( link, "\n", "" );
-            Message dllLink = new EncodeMessage( Message.S_DLLINK, link );
-            dllLink.sendMessage( core );
-        }
-        statusLine.update( G2GuiResources.getString( "LE_LINKS_SENT" ) + " " + matches.length );
-        linkEntryText.setText( "" );
-    }
-
-  
     /**
      * @param linkEntryText
      */
-    private void activateDropTarget( final Text linkEntryText ) {
-    	
-		DropTarget dropTarget = new DropTarget(linkEntryText, DND.DROP_COPY | DND.DROP_DEFAULT | DND.DROP_LINK);
-		final UniformResourceLocator uRL = UniformResourceLocator.getInstance();
-		final TextTransfer textTransfer = TextTransfer.getInstance();
-		dropTarget.setTransfer(new Transfer[] { uRL, textTransfer });
-		dropTarget.addDropListener(new DropTargetAdapter() {
-    
-			public void dragEnter(DropTargetEvent event) {
-				event.detail = DND.DROP_COPY;
-				for (int i = 0; i < event.dataTypes.length; i++) {
-					if (uRL.isSupportedType(event.dataTypes[i])) {
-						event.detail = DND.DROP_LINK;
-						break;
-					}
-				}
-			}
-			public void drop(DropTargetEvent event) {
-				if (event.data == null) return;
-				linkEntryText.append( (String) event.data );
-			}
-		});
-    	
+    public void enterLinks(Text linkEntryText) {
+        String input = linkEntryText.getText();
+        RE regex = null;
+
+        try {
+            regex = new RE("(ed2k://\\|file\\|[^\\|]+\\|(\\d+)\\|([\\dabcdef]+)\\|)" +
+                    "|(sig2dat:///?\\|File:[^\\|]+\\|Length:.+?\\|UUHash:\\=.+?\\=)" +
+                    "|(\\\"magnet:\\?xt=.+?\\\")" + "|(magnet:\\?xt=.+?\n)" +
+                    ((linkEntryText.getLineCount() == 1) ? "|(magnet:\\?xt=.+)" : "") +
+                    ((linkEntryText.getLineCount() == 1) ? "|(http://.+?\\.torrent.+)" : "") +
+                    "|(\"http://.+?\\.torrent\\?[^>]+\")" + "|(http://.+?\\.torrent)", RE.REG_ICASE);
+        } catch (REException e) {
+            e.printStackTrace();
+        }
+
+        REMatch[] matches = regex.getAllMatches(input);
+
+        for (int i = 0; i < matches.length; i++) {
+            String link = RegExp.replaceAll(matches[ i ].toString(), "\"", "");
+            link = RegExp.replaceAll(link, "\n", "");
+
+            Message dllLink = new EncodeMessage(Message.S_DLLINK, link);
+            dllLink.sendMessage(core);
+        }
+
+        statusLine.update(G2GuiResources.getString("LE_LINKS_SENT") + " " + matches.length);
+        linkEntryText.setText("");
     }
-    
-    
+
+    /**
+     * @param linkEntryText
+     */
+    private void activateDropTarget(final Text linkEntryText) {
+        DropTarget dropTarget = new DropTarget(linkEntryText,
+                DND.DROP_COPY | DND.DROP_DEFAULT | DND.DROP_LINK);
+        final UniformResourceLocator uRL = UniformResourceLocator.getInstance();
+        final TextTransfer textTransfer = TextTransfer.getInstance();
+        dropTarget.setTransfer(new Transfer[] { uRL, textTransfer });
+        dropTarget.addDropListener(new DropTargetAdapter() {
+                public void dragEnter(DropTargetEvent event) {
+                    event.detail = DND.DROP_COPY;
+
+                    for (int i = 0; i < event.dataTypes.length; i++) {
+                        if (uRL.isSupportedType(event.dataTypes[ i ])) {
+                            event.detail = DND.DROP_LINK;
+
+                            break;
+                        }
+                    }
+                }
+
+                public void drop(DropTargetEvent event) {
+                    if (event.data == null) {
+                        return;
+                    }
+
+                    linkEntryText.append((String) event.data);
+                }
+            });
+    }
 }
+
 
 /*
 $Log: LinkEntry.java,v $
+Revision 1.20  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.19  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

@@ -32,8 +32,8 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.VersionInfo;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.helper.Splash;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.main.MainCoolBar;
 import net.mldonkey.g2gui.view.main.MainMenuBar;
 import net.mldonkey.g2gui.view.main.Minimizer;
@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.91 2003/11/20 14:02:17 lemmster Exp $
+ * @version $Id: MainTab.java,v 1.92 2003/11/22 02:24:29 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -174,18 +174,16 @@ public class MainTab implements ShellListener {
      * @see org.eclipse.jface.window.Window#createContents( org.eclipse.swt.widgets.Composite )
      */
     private void createContents(Shell parent) {
-        GridData gridData;
         mainComposite = new Composite(parent, SWT.NONE);
         parent.setImage(G2GuiResources.getImage("ProgramIcon"));
         new MainMenuBar(this);
 
         // try a margin of 1 ?
-        GridLayout gridLayout = CGridLayout.createGL(1, 1, 1, 0, 1, false);
+        GridLayout gridLayout = WidgetFactory.createGridLayout(1, 1, 1, 0, 1, false);
         mainComposite.setLayout(gridLayout);
 
         Label horLine = new Label(mainComposite, SWT.HORIZONTAL | SWT.SEPARATOR);
-        gridData = new GridData(GridData.FILL_HORIZONTAL);
-        horLine.setLayoutData(gridData);
+        horLine.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         this.coolBar = new MainCoolBar(this, PreferenceLoader.loadBoolean("toolbarSmallButtons"),
                 PreferenceLoader.loadBoolean("coolbarLocked"));
         pageContainer = new Composite(mainComposite, SWT.NONE);
@@ -193,7 +191,7 @@ public class MainTab implements ShellListener {
 
         /* now we add all the tabs */
         this.addTabs();
-        gridData = new GridData(GridData.FILL_BOTH);
+        GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.grabExcessHorizontalSpace = true;
         gridData.grabExcessVerticalSpace = true;
         pageContainer.setLayoutData(gridData);
@@ -424,7 +422,7 @@ public class MainTab implements ShellListener {
                     SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
             textInfo.setLayoutData(new GridData(GridData.FILL_BOTH));
             textInfo.setText("Please help us to improve this product!\n" +
-                "Please submit a bug report detailing exactly what you were doing when this happened!\n" +
+                "Please submit a bug report detailing *exactly* what you were doing when this happened!!!\n" +
                 "http://developer.berlios.de/bugs/?group_id=610\n\n" + 
                 SWT.getPlatform() + "/" + SWT.getVersion() + "/" +  VersionInfo.getVersion() + "\n" +
                 "StackTrace:\n\n" + string);
@@ -434,7 +432,7 @@ public class MainTab implements ShellListener {
 
         protected Control createButtonBar(Composite parent) {
             Composite composite = new Composite(parent, SWT.NONE);
-            composite.setLayout(CGridLayout.createGL(2, 5, 5, 5, 5, false));
+            composite.setLayout(WidgetFactory.createGridLayout(2, 5, 5, 5, 5, false));
             composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
             Button launch = new Button(composite, SWT.NONE);
@@ -463,6 +461,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.92  2003/11/22 02:24:29  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.91  2003/11/20 14:02:17  lemmster
 G2Gui cleanup
 

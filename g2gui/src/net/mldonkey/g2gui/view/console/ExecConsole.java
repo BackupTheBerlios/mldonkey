@@ -30,11 +30,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.util.Observable;
 import java.util.Observer;
 
-import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -57,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ExecConsole : to spawn and watch an executable in a shell/console
  *
- * @version $Id: ExecConsole.java,v 1.4 2003/09/20 22:07:40 zet Exp $
+ * @version $Id: ExecConsole.java,v 1.5 2003/11/22 02:24:30 zet Exp $
  *
  */
 public class ExecConsole implements Observer {
@@ -84,7 +83,7 @@ public class ExecConsole implements Observer {
         shell = new Shell( SWT.CLOSE | SWT.TITLE | SWT.RESIZE | SWT.BORDER );
         shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
         shell.setText( "Core" );
-        shell.setLayout( CGridLayout.createGL( 1, 0, 0, 0, 0, false ) );
+        shell.setLayout( WidgetFactory.createGridLayout( 1, 0, 0, 0, 0, false ) );
         shell.addDisposeListener( new DisposeListener() {
                 public synchronized void widgetDisposed( DisposeEvent e ) {
                     PreferenceStore p = PreferenceLoader.getPreferenceStore();
@@ -234,6 +233,9 @@ public class ExecConsole implements Observer {
 
 /*
 $Log: ExecConsole.java,v $
+Revision 1.5  2003/11/22 02:24:30  zet
+widgetfactory & save sash postions/states between sessions
+
 Revision 1.4  2003/09/20 22:07:40  zet
 *** empty log message ***
 
