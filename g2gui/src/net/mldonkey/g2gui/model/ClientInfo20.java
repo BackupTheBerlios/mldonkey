@@ -33,16 +33,18 @@ import net.mldonkey.g2gui.view.G2Gui;
 /**
  * ClientInfo20
  *
- * @version $Id: ClientInfo20.java,v 1.9 2004/03/26 18:11:03 dek Exp $ 
+ * @version $Id: ClientInfo20.java,v 1.10 2004/03/27 17:00:01 dek Exp $ 
  *
  */
 public class ClientInfo20 extends ClientInfo19 {
 	/**
 	 * clientConnectTime
 	 */
-	private int clientConnectTime;
-	private String clientConnectTimeString = G2Gui.emptyString;
-	private String clientConnectTimePassedString = G2Gui.emptyString;
+	
+	protected int clientConnectTime;
+	protected String clientConnectTimeString = G2Gui.emptyString;
+	protected String clientConnectTimePassedString = G2Gui.emptyString;
+	
 	/**
 	 * @param core
 	 */
@@ -70,6 +72,20 @@ public class ClientInfo20 extends ClientInfo19 {
 		this.clientUploaded = messageBuffer.readInt64();
 		this.clientUploadFilename = messageBuffer.readString();
 
+		readConnectTime(messageBuffer);
+		
+		// update client upload and download information
+		this.clientUploadedString = RegExp.calcStringSize(clientUploaded);
+		this.clientDownloadedString = RegExp.calcStringSize(clientDownloaded);
+
+		// Occasionally it seems the filename isn't reset to null when not uploading anymore
+		this.isUploader = (clientUploadFilename != G2Gui.emptyString);
+		onChangedState(oldState);
+	}
+
+
+	
+	protected void readConnectTime(MessageBuffer messageBuffer) {
 		// this needs to be fixed in the core soon since core/gui clocks can be out of sync rendering this useless
 		// I've sent mail... 
 		this.clientConnectTime = messageBuffer.readInt32();		
@@ -96,18 +112,7 @@ public class ClientInfo20 extends ClientInfo19 {
 		} else {
 			this.clientConnectTimePassedString = "-";
 		}
-		
-		// update client upload and download information
-		this.clientUploadedString = RegExp.calcStringSize(clientUploaded);
-		this.clientDownloadedString = RegExp.calcStringSize(clientDownloaded);
-
-		// Occasionally it seems the filename isn't reset to null when not uploading anymore
-		this.isUploader = (clientUploadFilename != G2Gui.emptyString);
-		onChangedState(oldState);
 	}
-
-
-	
 	public int getClientConnectTime() {
 		return clientConnectTime;
 	}
@@ -135,6 +140,9 @@ public class ClientInfo20 extends ClientInfo19 {
 
 /*
 $Log: ClientInfo20.java,v $
+Revision 1.10  2004/03/27 17:00:01  dek
+new date format in newer gui-Protos
+
 Revision 1.9  2004/03/26 18:11:03  dek
 some more profiling and mem-saving option (hopefully)  introduced
 

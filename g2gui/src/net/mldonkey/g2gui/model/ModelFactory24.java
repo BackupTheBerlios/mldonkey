@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.model;
 /**
  * ModelFactory24.java
  *
- * @version $Id: ModelFactory24.java,v 1.1 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: ModelFactory24.java,v 1.2 2004/03/27 17:00:01 dek Exp $ 
  *
  */
 public class ModelFactory24 extends ModelFactory22 {
@@ -34,12 +34,21 @@ public class ModelFactory24 extends ModelFactory22 {
 		return new FileInfo24( core );
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.model.ModelFactory21#getClientInfo()
+	 */
+	public ClientInfo getClientInfo() {		
+		return new ClientInfo24(core);
+	}
 
 }
 
 
 /*
  $Log: ModelFactory24.java,v $
+ Revision 1.2  2004/03/27 17:00:01  dek
+ new date format in newer gui-Protos
+
  Revision 1.1  2004/03/21 21:00:50  dek
  implemented gui-Proto 21-25 !!!!!
 
