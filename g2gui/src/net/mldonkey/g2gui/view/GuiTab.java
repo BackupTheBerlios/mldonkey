@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -44,8 +44,8 @@ import org.eclipse.swt.widgets.Listener;
 /**
  * G2guiTab
  *
- * @author $Author: lemmster $
- * @version $Id: GuiTab.java,v 1.23 2003/08/22 21:06:48 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: GuiTab.java,v 1.24 2003/08/23 01:57:36 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -74,8 +74,6 @@ public abstract class GuiTab implements Listener, Observer {
 	
 	protected Composite pageHeaderPlaceHolder, pageHeader, subContent;
 	protected boolean headerBar;
-	
-	private Font font = new Font(null, "Helvetica", 12, SWT.BOLD); // fix later
 	protected CLabel leftLabel, rightLabel;
 	protected Label separator1, separator2;
 	protected String tabName;
@@ -85,7 +83,6 @@ public abstract class GuiTab implements Listener, Observer {
 	 */
 	public GuiTab( MainTab gui ) {
 		this.mainWindow = gui;		
-		
 		this.content = new Composite( gui.getPageContainer(), SWT.NONE );
 		GridLayout contentGD = new GridLayout();
 		contentGD.marginHeight = 0;
@@ -144,7 +141,6 @@ public abstract class GuiTab implements Listener, Observer {
 	 * To call if the MainWindow dispose
 	 */
 	public void dispose() {
-		font.dispose();
 		this.gui.getCore().deleteObserver( this );
 	}
 
@@ -196,7 +192,6 @@ public abstract class GuiTab implements Listener, Observer {
 		return subContent;
 	}
 	
-
 	public void updateDisplay() {
 		if (headerBar != PreferenceLoader.loadBoolean("displayHeaderBar")) {
 			if (pageHeader != null
@@ -263,16 +258,15 @@ public abstract class GuiTab implements Listener, Observer {
 			pageHeader.setLayout(layout);
 			pageHeader.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			
-			// fix font/color later
 			leftLabel = new CLabel(pageHeader, SWT.NONE);
-			leftLabel.setFont(font);
+			leftLabel.setFont(JFaceResources.getHeaderFont());
 			leftLabel.setBackground(backgroundColor);
 			leftLabel.setForeground(foregroundColor);
 			leftLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	
 			rightLabel = new CLabel(pageHeader, SWT.NONE);
 			rightLabel.setText("");
-			rightLabel.setFont(font);
+			rightLabel.setFont(JFaceResources.getHeaderFont());
 			rightLabel.setForeground(foregroundColor);
 			rightLabel.setBackground(backgroundColor);
 			
@@ -301,8 +295,11 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.24  2003/08/23 01:57:36  zet
+use JFace headerfont
+
 Revision 1.23  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/18 01:42:24  zet
 centralize resource bundle
