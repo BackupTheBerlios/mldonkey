@@ -23,7 +23,6 @@
 package net.mldonkey.g2gui.view.transfer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
@@ -46,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.10 2003/11/28 08:23:28 lemmster Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.11 2003/11/28 22:37:09 zet Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
@@ -187,13 +186,7 @@ public class ClientDetailDialog extends DetailDialog {
         updateLabel(clActivity, clientInfo.getClientActivity());
         updateLabel(clKind, clientInfo.getClientConnection());
         updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
-        Addr addr = clientInfo.getClientSockAddr();
-        if (addr.hasHostName()) {
-        	updateLabel(clSockAddr, addr.getHostName());
-        } 
-        else {
-        	updateLabel(clSockAddr, addr.getAddress().getHostAddress());
-        }
+        updateLabel(clSockAddr, clientInfo.getClientSockAddr().getString());
         updateLabel(clSoftware, clientInfo.getClientSoftware());
         updateLabel(clUploaded, clientInfo.getUploadedString());
         updateLabel(clDownloaded, clientInfo.getDownloadedString());
@@ -215,6 +208,9 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.11  2003/11/28 22:37:09  zet
+getString
+
 Revision 1.10  2003/11/28 08:23:28  lemmster
 use Addr instead of String
 
