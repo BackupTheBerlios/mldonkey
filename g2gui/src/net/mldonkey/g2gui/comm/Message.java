@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.23 2003/07/04 11:04:24 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.24 2003/07/23 17:01:55 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -111,6 +111,10 @@ public abstract class Message {
 	 * Send Get Downloading Files (value is 45)
 	 */
 	public static final short S_GETDOWNLOADING_FILES = 45;
+	/**
+	 * Sends "add" Download
+	 */
+	public static final short S_DOWNLOAD = 50;
 	/**
 	 * Send Password (value is 52)
 	 */
@@ -359,6 +363,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.24  2003/07/23 17:01:55  lemmstercvs01
+added S_DOWNLOAD (opcode 50)
+
 Revision 1.23  2003/07/04 11:04:24  lemmstercvs01
 added some opcodes
 
