@@ -35,18 +35,22 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	char* executable = "javaw.exe\0";
 	char* javaArguments1 = "-Djava.library.path=\0";
-	char* javaArguments2 = "lib -jar \0";
+	char* javaArguments2 = "lib\" -jar \0";
 	char* pathToJar = "lib\\g2gui.jar \0";
+	char* quote = "\"";
 
 	/*create a string, that is long enough for all the strings*/
-	char arguments[(strlen(lpCmdLine)+strlen(javaArguments1)+2*strlen(pathToExe)+strlen(pathToJar)+strlen(javaArguments2))+1];
+	char arguments[(strlen(lpCmdLine)+strlen(javaArguments1)+2*strlen(pathToExe)+strlen(pathToJar)+strlen(javaArguments2))+5];
 
 	/*copy all the strings together, bulding the right sequence*/
 	strcat(arguments, javaArguments1);
+	strcat(arguments,quote);
 	strcat(arguments,pathToExe);
 	strcat(arguments, javaArguments2);
+	strcat(arguments,quote);
 	strcat(arguments, pathToExe);
 	strcat(arguments, pathToJar);
+	strcat(arguments,quote);
 	strcat(arguments, lpCmdLine);
 
 
@@ -54,6 +58,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	* execute the Java VM with corresponding arguments, MessageBox if javaw.exe
 	* is not found or fails for other reasons
 	*/
+	MessageBox(NULL,arguments,executable,MB_OK);
 	if(ShellExecute(NULL,NULL,executable,arguments,".",SW_SHOWNORMAL)<=(HINSTANCE)32)
 	{
 		MessageBox(NULL,
@@ -75,9 +80,6 @@ void getPath(char *result, char* lpCmdLine){
 	// Remove lpCmdLine from back
 	int lastPosition = strlen(commandLine)-strlen(lpCmdLine);
 
-	/*searches for g2gui from behind and since this is the exe, we discard
-	 *it, we are only interested in path to g2gui.exe
-	 */
 	while(commandLine[lastPosition]!='i')
 	{
 		if (commandLine[lastPosition--]=='u')
@@ -101,5 +103,6 @@ void getPath(char *result, char* lpCmdLine){
 	strcpy(&result[0], &commandLine[firstPosition]);
 
 	int resultlength = strlen(result);
-	result[resultlength+1] = '\0';
+	result[resultlength+1] = '"';
+	result[resultlength+2] = '\0';
 }
