@@ -1,3 +1,12 @@
+2004/03/09: Dek
+	* now systray-menu is a full-blown SWT-popup-menu. Native interface 
+		for windows-systray originally from 
+		http://members.lycos.co.uk/gciubotaru/systray/
+		all other code adapted for g2gui and SWT.
+		If you run g2gui make sure, "DesktopIndicator.dll" is reachable
+		for java/ g2gui.exe (i.e. in %PATH%)
+		
+	
 2004/03/02: vnc
 	* More hex-encoding related fixes. Using G2gui with a browser
 		to open torrents should work now even if there are a lot
