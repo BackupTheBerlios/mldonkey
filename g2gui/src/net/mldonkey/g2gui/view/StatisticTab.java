@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
  */
 
 public class StatisticTab
-	extends G2guiTab
+	extends GuiTab
 	implements Observer {
 
 
@@ -34,11 +34,11 @@ public class StatisticTab
 	 * default constructor
 	 * @param gui The GUI-Objekt representing the top-level gui-layer
 	 */
-	public StatisticTab(Gui gui) {
+	public StatisticTab(MainTab gui) {
 		super(gui);
 		toolItem.setText(bundle.getString("TT_StatisticButton"));
 		toolItem.setImage(
-			Gui.createTransparentImage(
+			MainTab.createTransparentImage(
 				new Image(
 					toolItem.getParent().getDisplay(),
 					"src/icons/statistics.png"),
