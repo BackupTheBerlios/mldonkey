@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003  Jörg Maisenbacher
+ * Copyright (C) 2003  Joerg Maisenbacher
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.28 2003/08/12 04:10:29 zet Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.29 2003/08/21 09:35:13 dek Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
