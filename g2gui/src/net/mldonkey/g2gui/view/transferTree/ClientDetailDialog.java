@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * ClientDetailDialog
  *
  *
- * @version $Id: ClientDetailDialog.java,v 1.15 2003/08/31 01:31:17 vaste Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.16 2003/08/31 01:33:22 vaste Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -154,10 +154,10 @@ public class ClientDetailDialog implements Observer {
 			}	
 		});
 
-		Button cButton = new Button( buttonComposite, SWT.NONE );
-		cButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		cButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
-		cButton.addSelectionListener( new SelectionAdapter() {
+		Button closeButton = new Button( buttonComposite, SWT.NONE );
+		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		closeButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
+		closeButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 						shell.dispose();
 			}	
@@ -268,6 +268,9 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.16  2003/08/31 01:33:22  vaste
+cosmetic (cButton -> closeButton)
+
 Revision 1.15  2003/08/31 01:31:17  vaste
 flat buttons look strange in win
 
@@ -291,6 +294,9 @@ new todo (close button)
 
 Revision 1.8  2003/08/22 21:22:58  lemmster
 fix $Log: ClientDetailDialog.java,v $
+fix Revision 1.16  2003/08/31 01:33:22  vaste
+fix cosmetic (cButton -> closeButton)
+fix
 fix Revision 1.15  2003/08/31 01:31:17  vaste
 fix flat buttons look strange in win
 fix
