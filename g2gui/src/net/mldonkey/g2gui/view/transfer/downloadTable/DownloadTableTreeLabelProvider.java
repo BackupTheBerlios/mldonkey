@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.10 2003/10/23 00:04:32 zet Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.11 2003/10/23 00:07:19 zet Exp $
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -230,9 +230,13 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 				   return "" + dfp.format( fileInfo.getPerc() ) + "%";
 	
 			   case DownloadTableTreeViewer.SOURCES:
-					int a =	fileInfo.getActiveSources();
 			       	int s = fileInfo.getSources();
-				    return "" + (s == 0 ? "-" : a > 0 ? fileInfo.getSources() + "(" + a + ")" : "" + s ) ;
+				    if (s == 0) return "-";
+				    else {
+						int a =	fileInfo.getActiveSources();
+				        return "" + (a > 0 ? s + "(" + a + ")" : "" + s ) ;
+		   			}
+			       	 
 	
 			   case DownloadTableTreeViewer.AVAIL:
 				   return "" + fileInfo.getRelativeAvail() + "%";
@@ -302,6 +306,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.11  2003/10/23 00:07:19  zet
+use "-" instead of 0
+
 Revision 1.10  2003/10/23 00:04:32  zet
 use "-" instead of 0
 
