@@ -23,18 +23,18 @@
 package net.mldonkey.g2gui.view.pref;
 
 import org.eclipse.jface.preference.FontFieldEditor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+//import org.eclipse.swt.SWT;
+//import org.eclipse.swt.events.SelectionEvent;
+//import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.GridData;
+//import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
 /**
  * ExtendedFontFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedFontFieldEditor2.java,v 1.1 2003/07/25 02:41:22 zet Exp $ 
+ * @version $Id: ExtendedFontFieldEditor2.java,v 1.2 2003/07/25 03:50:53 zet Exp $ 
  *
  */
 public class ExtendedFontFieldEditor2 extends FontFieldEditor {
@@ -53,7 +53,11 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 	 * @param composite where the whole thing takes place
 	 */
 	public ExtendedFontFieldEditor2( String name, String labelText, String sampleText, Composite composite ) {
-		fontDialog = new FontDialog( composite.getShell() );
+		super(name,labelText,composite);
+		
+	// still thinking about this..		
+/*	
+	fontDialog = new FontDialog( composite.getShell() );
 		this.fontLabel = new Label( composite, SWT.NONE );
 			fontLabel.setText( labelText );
 		this.fontButton = new Button( composite, SWT.NONE );
@@ -75,6 +79,8 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 			gridData.horizontalSpan = 1;
 			gridData.grabExcessHorizontalSpace = true;
 		fontSample.setLayoutData( gridData );
+		
+		*/
 	}
 
 	/**
@@ -97,8 +103,8 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 	 * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
 	 */
 	protected void adjustForNumColumns( int arg0 ) {
-		( ( GridData )fontSample.getLayoutData() ).horizontalSpan = ( arg0 - 2 );
-
+		//( ( GridData )fontSample.getLayoutData() ).horizontalSpan = ( arg0 - 2 );
+		super.adjustForNumColumns(arg0);
 	}
 
 	/* (non-Javadoc)
@@ -137,7 +143,7 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 	 * @see org.eclipse.jface.preference.FieldEditor#getNumberOfControls()
 	 */
 	public int getNumberOfControls() {		
-		return 3;
+		return super.getNumberOfControls();
 	}
 
 	/**
@@ -145,24 +151,47 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 	 * @return the selected font
 	 */
 	public String toString() {
+		
 		return super.toString();
 	}
 
 	/**
 	 * @param font
 	 */
-	public void setFont( Font font ) {
-		this.font = font;
-		fontSample.setFont(font);
-		fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
-	}
+	
 
 }
 
 /*
 $Log: ExtendedFontFieldEditor2.java,v $
-Revision 1.1  2003/07/25 02:41:22  zet
-console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
+Revision 1.2  2003/07/25 03:50:53  zet
+damn fontfield.. will continue
 
+Revision 1.9  2003/07/10 19:27:28  dek
+some idle-race cleanup
+
+Revision 1.8  2003/07/04 12:06:38  dek
+*** empty log message ***
+
+Revision 1.7  2003/07/03 22:56:43  mitch
+fixed getFontData() (replaced by getFontList()[0] because of deprecation)
+
+Revision 1.6  2003/07/03 10:23:20  dek
+OK, the font-thing finally works
+
+Revision 1.5  2003/07/03 10:14:56  dek
+saving font now works
+
+Revision 1.4  2003/07/03 09:42:34  dek
+now saving Font as string representation
+
+Revision 1.3  2003/07/03 08:59:06  dek
+debugging deleted
+
+Revision 1.2  2003/07/03 08:58:34  dek
+how the hell do i store a font on disk...
+
+Revision 1.1  2003/07/03 08:31:06  dek
+first sketch of FontFieldeditor
 
 */

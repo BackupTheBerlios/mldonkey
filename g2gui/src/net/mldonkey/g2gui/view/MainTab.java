@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.12 2003/07/25 02:41:22 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.13 2003/07/25 03:50:53 zet Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -169,7 +169,12 @@ public class MainTab implements Listener {
 		Shell prefshell = new Shell();
 		Preferences myprefs = new Preferences( new PreferenceStore( "g2gui.pref" ) );					
 		myprefs.open( prefshell, mldonkey );
-		activeTab.updateDisplay();
+		
+		Iterator itr = registeredTabs.iterator();
+		while ( itr.hasNext() ) {
+			GuiTab aTab = ( GuiTab ) itr.next();
+			aTab.updateDisplay();
+		}
 	}
 	/**
 	 * Create the MenuBar
@@ -467,6 +472,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.13  2003/07/25 03:50:53  zet
+damn fontfield.. will continue
+
 Revision 1.12  2003/07/25 02:41:22  zet
 console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
 
