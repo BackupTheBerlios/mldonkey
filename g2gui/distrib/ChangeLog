@@ -1,7 +1,10 @@
-2003709/29: vnc
+2003/09/29: lemmy
+	* Search: Tooltip are now optional (circumvent gtk tooltip bug)
+	
+2003/09/29: vnc
 	* Added new startup splash with border
 
-2003709/28: Dek
+2003/09/28: Dek
 	* Added Option, wether multiple Instances of G2Gui are allowed or not[bug #867]
 	
 2003/09/27: Dek
