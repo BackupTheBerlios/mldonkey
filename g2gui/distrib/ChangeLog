@@ -1,3 +1,11 @@
+2004/03/01: vnc
+	* Added the ability to directly pass .torrent files to G2gui,
+		so you can simply advice your browser to open all 
+		torrents with G2gui. It serves the torrent to the core
+		via http, by default on port 4081.
+		For more information and extended cmdline-parameters
+		please check g2gui --help!
+
 2004/02/29: vnc
 	* Links are now hex-decoded before submission
 	* Improved the local core-handler:

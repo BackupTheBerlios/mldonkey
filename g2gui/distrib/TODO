@@ -1,4 +1,4 @@
-G2gui's TODO-list (last update: 29.02.04)
+G2gui's TODO-list (last update: 01.03.04)
 =================
 Things with "!" will be implemented/fixed next
 
@@ -9,7 +9,7 @@ Things with "!" will be implemented/fixed next
 * Fix memleak when relaunching g2gui after a pref-change. MainWindow or the core
   does not seem to be disposed properly
 
-* Get the subsearch right
+* Get the subsearch right and put it to another place
 
 * The mousewheel does not scroll in motif but produces clicks/doubleclicks!
   Very irritating and you accidently download stuff from the results-list etc.
@@ -17,7 +17,6 @@ Things with "!" will be implemented/fixed next
  ----------------------
 | Feature Enhancements |
  ----------------------
-! Implement .torrent proxy
 
 * stop downloads from search results in case you accicently started it from there
   - use more colors: blue for already downloaded, green for being downloaded
