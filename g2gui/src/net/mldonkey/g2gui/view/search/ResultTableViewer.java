@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableViewer.java,v 1.2 2003/10/22 01:37:45 zet Exp $
+ * @version $Id: ResultTableViewer.java,v 1.3 2003/10/22 02:25:10 zet Exp $
  *
  */
 public class ResultTableViewer extends GTableViewer {
@@ -75,7 +75,8 @@ public class ResultTableViewer extends GTableViewer {
         super(parent, aCore);
         this.cTabItem = aCTabItem;
         this.aMouseListener = aMouseListener;
-
+		
+        preferenceString = "result";
         columnLabels = new String[] { "SR_NETWORK", "SR_NAME", "SR_SIZE", "SR_FORMAT", "SR_MEDIA", "SR_AVAIL" };
 
         columnDefaultWidths = new int[] { 58, 300, 65, 45, 50, 70 };
@@ -323,6 +324,9 @@ public class ResultTableViewer extends GTableViewer {
 
 /*
 $Log: ResultTableViewer.java,v $
+Revision 1.3  2003/10/22 02:25:10  zet
++prefString
+
 Revision 1.2  2003/10/22 01:37:45  zet
 add column selector to server/search (might not be finished yet..)
 

@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTableViewer.java,v 1.2 2003/10/22 01:37:55 zet Exp $ 
+ * @version $Id: ServerTableViewer.java,v 1.3 2003/10/22 02:25:24 zet Exp $ 
  *
  */
 public class ServerTableViewer extends GTableViewer {
@@ -61,6 +61,7 @@ public class ServerTableViewer extends GTableViewer {
 	 */
 	public ServerTableViewer( Composite parent, CoreCommunication aCore ) {
 		super( parent, aCore );
+		preferenceString = "server";
 		
 		/* proto <= 16 does not support favorites */					
 		if ( core.getProtoToUse() <= 16 ) {
@@ -177,6 +178,9 @@ public class ServerTableViewer extends GTableViewer {
 
 /*
 $Log: ServerTableViewer.java,v $
+Revision 1.3  2003/10/22 02:25:24  zet
++prefString
+
 Revision 1.2  2003/10/22 01:37:55  zet
 add column selector to server/search (might not be finished yet..)
 
