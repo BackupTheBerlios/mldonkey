@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.13 2003/09/01 14:31:12 dek Exp $ 
+ * @version $Id: About.java,v 1.14 2003/09/01 14:44:36 dek Exp $ 
  *
  */
 public class About extends Dialog {
@@ -69,6 +69,7 @@ public class About extends Dialog {
 	 */
 	public About( Shell shell ) {
 		super( shell );
+		setDefaultImage( G2GuiResources.getImage( "ProgramIcon" ) );
 	}
 
 	/**
@@ -242,7 +243,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.13 2003/09/01 14:31:12 dek Exp $ 
+	 * @version $Id: About.java,v 1.14 2003/09/01 14:44:36 dek Exp $ 
 	 *
 	 */
 	public class Link {
@@ -294,6 +295,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.14  2003/09/01 14:44:36  dek
+has now icon in upper-left-corner
+
 Revision 1.13  2003/09/01 14:31:12  dek
 no change in look / function, but converted to JFace Dialog..
 
