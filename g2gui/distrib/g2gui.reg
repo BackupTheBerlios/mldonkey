@@ -9,4 +9,4 @@ Windows Registry Editor Version 5.00
 [HKEY_CLASSES_ROOT\ed2k\shell\open]
 
 [HKEY_CLASSES_ROOT\ed2k\shell\open\command]
-@="\"f:\\g2gui\\g2gui.exe\" \"-c\" \"f:\\g2gui\\g2gui.pref\" \"%1\""
+@="\"f:\\g2gui\\g2gui.exe\" \"-c\" \"f:\\g2gui\\g2gui.pref\" \"-l\" \"%1\""

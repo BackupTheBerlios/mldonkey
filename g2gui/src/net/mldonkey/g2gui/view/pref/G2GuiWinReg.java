@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.4 2003/11/09 17:11:45 zet Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.5 2003/11/20 14:05:15 lemmster Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -177,7 +177,7 @@ public class G2GuiWinReg extends PreferencePage {
         p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell]");
         p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell\\open]");
         p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell\\open\\command]");
-        p.println("@=\"\\\"" + exeFile + "\\\" \\\"-c\\\" \\\"" + prefFile + "\\\" \\\"%1\\\"\"");
+        p.println("@=\"\\\"" + exeFile + "\\\" \\\"-c\\\" \\\"" + prefFile + "\\\" \\\"-l\\\" \\\"%1\\\"\"");
     }
 
     /**
@@ -257,6 +257,9 @@ public class G2GuiWinReg extends PreferencePage {
 
 /*
 $Log: G2GuiWinReg.java,v $
+Revision 1.5  2003/11/20 14:05:15  lemmster
+link need the "-l" prefix by now
+
 Revision 1.4  2003/11/09 17:11:45  zet
 minor
 
