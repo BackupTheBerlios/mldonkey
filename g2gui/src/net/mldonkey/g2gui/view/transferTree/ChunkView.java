@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkView.java,v 1.6 2003/07/15 18:14:47 dek Exp $ 
+ * @version $Id: ChunkView.java,v 1.7 2003/07/15 20:13:56 dek Exp $ 
  *
  */
 public class ChunkView extends Canvas {
@@ -235,6 +235,10 @@ public class ChunkView extends Canvas {
 				gc.setForeground( black );
 				height = 127;
 			}
+			if ( chunks.charAt( i ) == '3' ) {			
+				gc.setForeground( yellow );
+				height = 127;
+			}
 									
 			gc.drawLine( i, 127, i, 127 - height );			
 		}	
@@ -318,6 +322,9 @@ public class ChunkView extends Canvas {
 
 /*
 $Log: ChunkView.java,v $
+Revision 1.7  2003/07/15 20:13:56  dek
+sorting works now, chunk-display is kind of broken, when sorting with expanded tree-items...
+
 Revision 1.6  2003/07/15 18:14:47  dek
 Wow, nice piece of work already done, it works, looks nice, but still lots of things to do
 

@@ -42,6 +42,8 @@ import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.program.Program;
@@ -56,7 +58,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.10 2003/07/15 18:14:47 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.11 2003/07/15 20:13:56 dek Exp $ 
  *
  */
 public class DownloadItem 
@@ -87,9 +89,8 @@ public class DownloadItem
 	public DownloadItem( TableTree parent, int style, FileInfo fileInfo ) {
 		super( parent, style );		
 		this.tableTree = parent;
-		this.fileInfo = fileInfo;
-		
-		TableTreeEditor editor = new TableTreeEditor( this.getParent() );		
+		this.fileInfo = fileInfo;		
+		final TableTreeEditor editor = new TableTreeEditor( this.getParent() );		
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
 		
@@ -102,7 +103,7 @@ public class DownloadItem
 				if ( oldEditor != null )
 					oldEditor.dispose();
 				this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo, 4 );
-		editor.setEditor ( chunks, this, 4 );			
+		editor.setEditor ( chunks, this, 4 );					
 		setText( 7, String.valueOf( fileInfo.getSize() ) );
 
 		updateColumns();
@@ -134,7 +135,12 @@ public class DownloadItem
 					}		
 			}
 
-		
+		addDisposeListener(new DisposeListener(){
+			public void widgetDisposed(DisposeEvent e) {
+				editor.dispose();
+				chunks.dispose();	
+				
+			}});
 	}
 	
 	void update() {
@@ -184,10 +190,17 @@ public class DownloadItem
 		else
 			setText( 3, String.valueOf( fileInfo.getRate() ) );
 			
+		//setting the chunk-colums with # of complete chunks (for sorting it)
+			byte[] temp = fileInfo.getAvail().getBytes();
+			int numberOfAvailabelChunks = 0;
+			for ( int i = 0; i < temp.length; i++ ) {
+				if ( temp[ i ] == '2' ) numberOfAvailabelChunks++;
+			}
+		setText( 4, String.valueOf( numberOfAvailabelChunks ) );	
+		
 		setText( 5, String.valueOf( fileInfo.getPerc() ) );	
 		setText( 6, String.valueOf( fileInfo.getDownloaded() ) );		
-		//setText( 7, String.valueOf( fileInfo.getSize() ) );
-			
+		//setText( 7, String.valueOf( fileInfo.getSize() ) );		
 		chunks.refresh();
 	}
 	
@@ -344,6 +357,9 @@ public class DownloadItem
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.11  2003/07/15 20:13:56  dek
+sorting works now, chunk-display is kind of broken, when sorting with expanded tree-items...
+
 Revision 1.10  2003/07/15 18:14:47  dek
 Wow, nice piece of work already done, it works, looks nice, but still lots of things to do
 

@@ -28,6 +28,7 @@ import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
 
 
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -41,6 +42,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
 
@@ -50,10 +53,11 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.7 2003/07/15 18:14:47 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.8 2003/07/15 20:13:56 dek Exp $ 
  *
  */
 public class DownloadTable  implements Observer, Runnable {
+	private int lastSortColumn = -1;
 	protected IItemHasMenue selectedItem;
 	private TransferMain page;
 	private FileInfoIntMap files;
@@ -89,7 +93,13 @@ public class DownloadTable  implements Observer, Runnable {
 			for ( int i = 0; i < columns.length; i++ ) {
 				//"ID"|"Network"|"Filename"|"Rate"|"Chunks"|"%"|"Downloaded"|"Size"
 				TableColumn column = new TableColumn( table, SWT.NONE );
-							column.setText( columns[ i ] );
+							column.setText( columns[ i ] );							
+				final int columnIndex = i;
+				column.addSelectionListener( new SelectionAdapter() {
+					public void widgetSelected( SelectionEvent e ) {
+						sort( columnIndex );
+					}
+				});
 			}
 			
 			table.addMouseListener( new MouseListener () {
@@ -101,12 +111,55 @@ public class DownloadTable  implements Observer, Runnable {
 				public void mouseUp( MouseEvent e ) { }
 			} );
 			table.setMenu( createRightMouse() );
-			mldonkey.addObserver( this );
-			
+			mldonkey.addObserver( this );			
 	}
 
 
 
+	/**
+	 * @param columnIndex
+	 */
+	protected void sort( int columnIndex ) {
+		Object[] items = downloads.getValues();
+		FileInfo[] files = new FileInfo[ items.length ];
+		int[] expanded = new int[ items.length ];
+		
+		for ( int i = 0; i < items.length; i++ ) {
+			files[ i ] = ( ( DownloadItem ) items[ i ] ).getFileInfo();
+			// to save the expanded-status, we save all expanded fileIds:
+			expanded[ i ] = -1;
+			if ( ( ( DownloadItem ) items[ i ] ).getExpanded() )
+				expanded[ i ] = ( ( DownloadItem ) items[ i ] ).getFileInfo().getId();
+			//Now dispose the now unneeded Table-tree Entries:
+			( ( DownloadItem ) items[ i ] ).dispose();
+			downloads.remove( files[ i ].getId() );
+		}
+		Arrays.sort( files, new FileInfoComparator( columnIndex ) );
+		
+		if ( lastSortColumn != columnIndex ) {
+			for ( int i = 0; i < files.length; i++ ) {
+				DownloadItem newItem =
+					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
+				downloads.put( files[ i ].getId(), newItem );				
+			}
+			lastSortColumn = columnIndex;
+		} else {
+			// reverse order if the current column is selected again
+			int j = files.length - 1;
+			for ( int i = files.length-1; i >=0 ; i-- ) {
+				DownloadItem newItem =
+					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
+				downloads.put( files[ i ].getId(), newItem );
+				lastSortColumn = -1;
+			}
+		}
+		// Now expand the previous expanded items:
+		for (int i = 0; i < expanded.length; i++) {
+			if ( expanded[ i ] != -1 ){			
+				( ( DownloadItem )downloads.get( expanded[ i ] ) ).setExpanded( true );
+			}
+		}
+	}
 	/**
 	 * @return creates a menu for this download-table end returns it
 	 */
@@ -204,6 +257,9 @@ public class DownloadTable  implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.8  2003/07/15 20:13:56  dek
+sorting works now, chunk-display is kind of broken, when sorting with expanded tree-items...
+
 Revision 1.7  2003/07/15 18:14:47  dek
 Wow, nice piece of work already done, it works, looks nice, but still lots of things to do
 
