@@ -22,14 +22,12 @@
  */
 package net.mldonkey.g2gui.view.transfer.clientTable;
 
-import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
-
 import org.eclipse.swt.graphics.Image;
 
 
@@ -37,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
  *
  * ClientTableLabelProvider
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.12 2003/11/28 08:23:28 lemmster Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.13 2003/11/28 22:37:53 zet Exp $
  *
  */
 public class ClientTableLabelProvider extends GTableLabelProvider implements ITableLabelProvider {
@@ -92,13 +90,7 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
             return clientInfo.getDownloadedString();
 
         case ClientTableView.SOCK_ADDR:
-        	Addr addr = clientInfo.getClientSockAddr();
-        	if ( addr.hasHostName() ) {
-        		return addr.getHostName();
-        	} 
-        	else {
-        		return addr.getAddress().getHostAddress();
-        	}
+            return clientInfo.getClientSockAddr().getString();
 
         default:
             return "";
@@ -109,6 +101,9 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.13  2003/11/28 22:37:53  zet
+coalesce addr use
+
 Revision 1.12  2003/11/28 08:23:28  lemmster
 use Addr instead of String
 
@@ -161,7 +156,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:17:25  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.1  2003/08/20 14:58:43  zet
 sources clientinfo viewer

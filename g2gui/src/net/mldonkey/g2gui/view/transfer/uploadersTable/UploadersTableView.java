@@ -29,12 +29,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.helper.ObjectWeakMap;
-import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableView;
 import net.mldonkey.g2gui.view.viewers.GSorter;
 import net.mldonkey.g2gui.view.viewers.actions.AddClientAsFriendAction;
 import net.mldonkey.g2gui.view.viewers.actions.ClientDetailAction;
@@ -58,7 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadersTableView.java,v 1.4 2003/11/28 08:23:28 lemmster Exp $
+ * @version $Id: UploadersTableView.java,v 1.5 2003/11/28 22:37:59 zet Exp $
  *
  */
 public class UploadersTableView extends GTableView {
@@ -261,14 +259,8 @@ public class UploadersTableView extends GTableView {
                 return clientInfo.getDownloadedString();
 
             case UploadersTableView.SOCK_ADDR:
-            	Addr addr = clientInfo.getClientSockAddr();
-            	if ( addr.hasHostName() ) {
-            		return addr.getHostName();
-            	} 
-            	else {
-            		return addr.getAddress().getHostAddress();
-            	}
-            	
+                return clientInfo.getClientSockAddr().getString();
+
             case UploadersTableView.FILENAME:
                 return clientInfo.getUploadFilename();
 
@@ -295,13 +287,13 @@ public class UploadersTableView extends GTableView {
             ClientInfo clientInfo2 = (ClientInfo) obj2;
 
             switch (cViewer.getColumnIDs()[ columnIndex ]) {
-            case ClientTableView.UPLOADED:
+            case UploadersTableView.UPLOADED:
                 return compareLongs(clientInfo1.getUploaded(), clientInfo2.getUploaded());
 
-            case ClientTableView.DOWNLOADED:
+            case UploadersTableView.DOWNLOADED:
                 return compareLongs(clientInfo1.getDownloaded(), clientInfo2.getDownloaded());
 
-            case ClientTableView.STATE:
+            case UploadersTableView.STATE:
 
                 if (clientInfo1.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
                     return -1;
@@ -315,17 +307,9 @@ public class UploadersTableView extends GTableView {
                     return -1;
                 else if (clientInfo2.getState().getRank() != 0)
                     return 1;
-                
-            case ClientTableView.SOCK_ADDR:
-            	Addr addr1 = clientInfo1.getClientSockAddr();
-            	Addr addr2 = clientInfo2.getClientSockAddr();
 
-            	if (lastSort) {
-            		return addr1.compareTo(addr2);
-            	} 
-            	else {
-            		return addr2.compareTo(addr1);
-            	}
+            case UploadersTableView.SOCK_ADDR:
+                return compareAddrs(clientInfo1.getClientSockAddr(), clientInfo2.getClientSockAddr());
 
             // else fall through
             default:
@@ -394,6 +378,9 @@ public class UploadersTableView extends GTableView {
 
 /*
 $Log: UploadersTableView.java,v $
+Revision 1.5  2003/11/28 22:37:59  zet
+coalesce addr use
+
 Revision 1.4  2003/11/28 08:23:28  lemmster
 use Addr instead of String
 

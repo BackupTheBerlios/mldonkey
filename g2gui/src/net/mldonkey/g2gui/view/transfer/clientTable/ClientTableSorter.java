@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ClientTableSorter
  *
- * @version $Id: ClientTableSorter.java,v 1.10 2003/11/26 07:43:15 zet Exp $
+ * @version $Id: ClientTableSorter.java,v 1.11 2003/11/28 22:37:53 zet Exp $
  *
  */
 public class ClientTableSorter extends GSorter {
@@ -55,6 +55,9 @@ public class ClientTableSorter extends GSorter {
         case ClientTableView.DOWNLOADED:
             return compareLongs(clientInfo1.getDownloaded(), clientInfo2.getDownloaded());
 
+        case ClientTableView.SOCK_ADDR:
+            return compareAddrs(clientInfo1.getClientSockAddr(), clientInfo2.getClientSockAddr());
+            
         case ClientTableView.STATE:
 
             if (clientInfo1.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
@@ -89,6 +92,9 @@ public class ClientTableSorter extends GSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.11  2003/11/28 22:37:53  zet
+coalesce addr use
+
 Revision 1.10  2003/11/26 07:43:15  zet
 quick attempt at an uploaders table w/proto 19 - still in progress...
 

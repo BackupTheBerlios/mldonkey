@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.viewers;
 
+import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
 import org.eclipse.jface.preference.PreferenceStore;
@@ -34,7 +35,7 @@ import org.eclipse.swt.events.DisposeListener;
 /**
  * GSorter - Generic sorter
  *
- * @version $Id: GSorter.java,v 1.3 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: GSorter.java,v 1.4 2003/11/28 22:38:06 zet Exp $
  *
  */
 public class GSorter extends ViewerSorter implements DisposeListener {
@@ -139,6 +140,16 @@ public class GSorter extends ViewerSorter implements DisposeListener {
     }
 
     /**
+     * @param addr1
+     * @param addr2
+     * @return int
+     */
+    public int compareAddrs(Addr addr1, Addr addr2) {
+        return (lastSort ? addr1.compareTo(addr2) : addr2.compareTo(addr1));
+    }
+    
+    
+    /**
      * @param i
      */
     public void setColumnIndex(int i) {
@@ -202,6 +213,9 @@ public class GSorter extends ViewerSorter implements DisposeListener {
 
 /*
 $Log: GSorter.java,v $
+Revision 1.4  2003/11/28 22:38:06  zet
+coalesce addr use
+
 Revision 1.3  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
