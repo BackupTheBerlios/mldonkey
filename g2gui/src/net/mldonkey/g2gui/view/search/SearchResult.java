@@ -79,7 +79,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.35 2003/08/31 12:32:04 lemmster Exp $ 
+ * @version $Id: SearchResult.java,v 1.36 2003/08/31 13:38:38 lemmster Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -143,18 +143,16 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 * continues a stopped search
 	 */
 	public void continueSearch() {
-		cTabFolder.getDisplay().asyncExec( this );
 		this.stopped = false;
+		cTabFolder.getDisplay().asyncExec( this );
 	}
 	
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, final Object arg ) {
-		if ( this.stopped == true ) return;
-
 		/* if the tab is already disposed, dont update */
-		if ( cTabItem.isDisposed() ) return;
+		if ( cTabItem.isDisposed() || this.stopped ) return;
 		
 		/* are we responsible for this update */		
 		if ( ( ( ResultInfoIntMap ) arg ).containsKey( searchId ) ) {
@@ -167,7 +165,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 */
 	public void run() {
 		/* if the tab is already disposed, dont update */
-		if ( cTabItem.isDisposed() ) return;
+		if ( cTabItem.isDisposed() || this.stopped ) return;
 		
 		this.results = this.core.getResultInfoIntMap();
 		
@@ -186,9 +184,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			 * look at API for refresh(false)
 			 */		
 			if ( list.size() != table.getTable().getItemCount() ) {									
-				table.refresh();
-//				mustRefresh++;
-//				delayedRefresh();
+				mustRefresh++;
+				delayedRefresh();
 			} 					
 		}
 		/* are we active? set the statusline text */
@@ -575,6 +572,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.36  2003/08/31 13:38:38  lemmster
+delayedRefresh() is working again
+
 Revision 1.35  2003/08/31 12:32:04  lemmster
 major changes to search
 
