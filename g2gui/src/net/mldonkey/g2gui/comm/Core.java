@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.102 2003/09/25 00:51:03 zet Exp $ 
+ * @version $Id: Core.java,v 1.103 2003/09/25 21:04:26 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -588,10 +588,20 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public ClientInfoIntMap getClientInfoIntMap() {
 		return ( ClientInfoIntMap ) this.clientInfoList;
 	}
+	/**
+	 * @return
+	 */
+	public SharedFileInfoIntMap getSharedFileInfoList() {
+		return ( SharedFileInfoIntMap ) sharedFileInfoList;
+	}
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.103  2003/09/25 21:04:26  dek
+first sketch of upload-Table not yet added to transferTab.
+
 Revision 1.102  2003/09/25 00:51:03  zet
 reset active sources on clean_tables
 

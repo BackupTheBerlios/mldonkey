@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.8 2003/09/25 14:24:11 dek Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.9 2003/09/25 21:06:58 dek Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -184,10 +184,20 @@ public class SharedFileInfo implements SimpleInformation {
 		this.shareFileSize = shareFileSize;
 	}
 
+	/**
+	 * @return
+	 */
+	public NetworkInfo getNetwork() {
+		return network;
+	}
+
 }
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.9  2003/09/25 21:06:58  dek
+first sketch of upload-Table not yet added to transferTab.
+
 Revision 1.8  2003/09/25 14:24:11  dek
 sharedFile no has Network (not only networkID)
 

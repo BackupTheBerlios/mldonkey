@@ -34,12 +34,13 @@ import net.mldonkey.g2gui.model.OptionsInfoMap;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.model.RoomInfoIntMap;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
+import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 
 /**
  * CoreCommunication
  *
  *
- * @version $Id: CoreCommunication.java,v 1.38 2003/09/18 15:29:25 zet Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.39 2003/09/25 21:04:26 dek Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -111,6 +112,11 @@ public interface CoreCommunication extends Runnable {
 	 * @return The clientstats of the core
 	 */
 	ClientStats getClientStats();
+	/**
+	 * 
+	 * @return the Shared Files Map
+	 */
+	SharedFileInfoIntMap getSharedFileInfoList();
 	
 	/**
 	 * Gets the socket the core is conntected through with mldonkey
@@ -157,6 +163,9 @@ public interface CoreCommunication extends Runnable {
 }
 /*
 $Log: CoreCommunication.java,v $
+Revision 1.39  2003/09/25 21:04:26  dek
+first sketch of upload-Table not yet added to transferTab.
+
 Revision 1.38  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
