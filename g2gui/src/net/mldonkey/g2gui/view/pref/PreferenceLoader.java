@@ -34,6 +34,7 @@ import java.util.HashMap;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.helper.VersionCheck;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.server.ServerPaneListener;
 
@@ -52,7 +53,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.64 2004/03/23 20:47:38 psy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.65 2004/03/24 19:00:28 dek Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -108,7 +109,10 @@ public class PreferenceLoader {
     }
     
     private static boolean userHomeExists() {
-    	return new File(System.getProperty("user.home")).exists();
+    	if (VersionCheck.isWin32() && System.getProperty("user.home").equals("\\"))
+    		return false;
+    	
+    	return new File(System.getProperty("user.home")).exists(); 
     }
     
     /**
@@ -445,6 +449,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.65  2004/03/24 19:00:28  dek
+homedir \ under windows is invalid and treated like it don't exist
+
 Revision 1.64  2004/03/23 20:47:38  psy
 only use homedir if it exists
 
@@ -613,7 +620,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: psy $
+replace $user$ with $Author: dek $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates
