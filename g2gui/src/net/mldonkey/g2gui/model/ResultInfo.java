@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.19 2003/08/31 12:22:27 lemmster Exp $ 
+ * @version $Id: ResultInfo.java,v 1.20 2003/09/08 12:38:00 lemmster Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -307,12 +307,42 @@ public class ResultInfo extends Parent {
 	 * @return The Metadata
 	 */
 	public Tag[] getTags() {
-		if (tags.length == 0){
+		if ( tags.length == 0 )
 			return null;
-		}
-		else return tags;
+		else 
+			return tags;
 	}
 
+	/**
+	 * @return The mp3 bitrate or "" if no audio
+	 */
+	public String getBitrate() {
+		if ( this.type.equals( "Audio" ) ) {
+			for ( int i = 0; i < this.tags.length; i++ ) {
+				String aString = this.tags[ i ].getName();
+				if ( aString.equals( "bitrate" ) )
+					return new Integer( this.tags[ i ].getValue() ).toString() + "kb";
+			}
+			return "";
+		}
+		return "";
+	}
+	
+	/**
+	 * @return The mp3 lenght or "" if no audio
+	 */
+	public String getLength() {
+		if ( this.type.equals( "Audio" ) ) {
+			for ( int i = 0; i < this.tags.length; i++ ) {
+				String aString = this.tags[ i ].getName();
+				if ( aString.equals( "length" ) )
+					return this.tags[ i ].getSValue();
+			}
+			return "";
+		}
+		return "";
+	}
+	
 	/**
 	 * @return The Type
 	 */
@@ -389,6 +419,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.20  2003/09/08 12:38:00  lemmster
+show bitrate/length for audio files in tooltip
+
 Revision 1.19  2003/08/31 12:22:27  lemmster
 added boolean downloading
 

@@ -78,7 +78,7 @@ import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.39 2003/09/08 11:54:23 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.40 2003/09/08 12:38:00 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -526,8 +526,18 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
                                             );
                             aString += ( 
                                                G2GuiResources.getString( "ST_TT_SOURCES" )
-                                               + aResult.getTags()[ 0 ].getValue()
+                                               + aResult.getTags()[ 0 ].getValue() + "\n"
                                             );
+                            if ( aResult.getType().equals( "Audio" ) ) {
+                            	aString += ( 
+                            				G2GuiResources.getString( "ST_TT_BITRATE" )
+                            				+ aResult.getBitrate() + "\n"
+                            				 );
+                            	aString += ( 
+                            				G2GuiResources.getString( "ST_TT_LENGTH" )
+                            				+ aResult.getLength() 
+                            				 );
+                            }
                             if ( !aResult.getHistory() )
                                 aString = aString + "\n" + G2GuiResources.getString( "ST_TT_DOWNLOADED" );
 
@@ -573,6 +583,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.40  2003/09/08 12:38:00  lemmster
+show bitrate/length for audio files in tooltip
+
 Revision 1.39  2003/09/08 11:54:23  lemmster
 added download button
 
