@@ -24,28 +24,15 @@ package net.mldonkey.g2gui.helper;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * SocketPool
  *
  * @author ${user}
- * @version $Id: SocketPool.java,v 1.3 2003/06/11 15:32:33 lemmstercvs01 Exp $ 
+ * @version $Id: SocketPool.java,v 1.4 2003/06/12 13:09:52 lemmstercvs01 Exp $ 
  *
  */
-public class SocketPool {
-	
-	/**
-	 * This Object represents the currently <CODE>used</CODE> sockets
-	 */
-	protected List used;
-	
-	/**
-	 * This Object represents the currently <CODE>unused<CODE> sockets
-	 */
-	protected List unused;
+public class SocketPool extends ObjectPool {
 	
 	/**
 	 * Address of sockets in the pool
@@ -60,12 +47,17 @@ public class SocketPool {
 	/**
 	 * Amount of Socket Connections to initial create
 	 */
-	protected int min = 3;
+	protected short initial = 3;
 	
 	/**
 	 * Maximum amount of Socket Connections to hold
 	 */
-	protected int max = 6;
+	protected short max = 6;
+	
+	/**
+	 * Amount of Sockets minimal in the Pool
+	 */
+	protected short min = 1;
 
 	/**
 	 * Initialize the SocketPool by hostname and port
@@ -73,14 +65,13 @@ public class SocketPool {
 	 * @param port The port to connect to
 	 */
 	public SocketPool( String address, int port ) {
+		super();
+
 		this.address = address;
 		this.port = port;
-	
-		this.used = new ArrayList();
-		this.unused = new ArrayList();
 		
 		/* spawn Sockets for min */
-		for ( int i = 0; i < min; i++ ) {
+		for ( int i = 0; i < initial; i++ ) {
 			this.unused.add( create() );
 		}
 	}
@@ -90,7 +81,7 @@ public class SocketPool {
 	 * @return
 	 * @throws IOException
 	 */
-	private Socket create() {
+	protected Object create() {
 		Socket socket = null;
 		try {
 			socket = new Socket( this.address, this.port );
@@ -101,45 +92,12 @@ public class SocketPool {
 			return socket;
 	}
 	
-	/**
-	 * Receive a Socket from the Pool 
-	 * @return Socket
-	 */
-	public synchronized Socket getSocket() {
-		Socket socket = null;
-		
-		/* iterate over the list to find a socket */
-		Iterator itr = this.unused.iterator();
-		while ( itr.hasNext() ) {
-			Object elem = itr.next();
-			/* if we found a socket */
-			if ( !( elem == null ) ) {
-				/* remove the socket from our unused list */
-				this.unused.remove( elem );
-				/* add the socket to our used list */
-				this.used.add( elem );
-				
-				socket = ( Socket ) elem;
-				
-				/* check if there are enough sockets left in unused 
-				 * if false, generate spawn -1 new sockets */
-				if ( this.unused.size() == 1 ) {
-						for ( int i = 0; i < ( min - 1 ); i++ ) {
-							this.unused.add( create() );
-						}
-				}
-				/* we´ve done all our work, so leave the while loop */
-				break;
-			}
-		}
-		return socket;
-	}
 	
 	/**
 	 * Returns the Socket to the SocketPool 
 	 * @param socket The socket which is returned
 	 */
-	public synchronized void returnSocket( Socket socket ) {
+	public synchronized void checkIn( Socket socket ) {
 		/* remove the socket from the used list */
 		this.used.remove( socket );
 
@@ -161,6 +119,10 @@ public class SocketPool {
 
 /*
 $Log: SocketPool.java,v $
+Revision 1.4  2003/06/12 13:09:52  lemmstercvs01
+ObjectPool, DownloadPool, GuiMessagePool added;
+class hierarchy under ObjectPool created
+
 Revision 1.3  2003/06/11 15:32:33  lemmstercvs01
 still in progress
 
