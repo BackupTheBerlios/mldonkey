@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.RGB;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.65 2004/03/14 17:37:59 dek Exp $
+ * @version $Id: G2GuiResources.java,v 1.66 2004/03/19 14:16:03 dek Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -165,7 +165,7 @@ public class G2GuiResources {
         reg.put("ProgramIcon", createRawImage("mld_logo_48x48.gif"));
         reg.put("G2GuiLogo", createRawImage("mld_logo_48x48_crome.gif"));
         reg.put("G2GuiLogoSmall", createRawImage("mld_logo_12x12.gif"));
-        reg.put("TrayIcon", createRawImage("tray.ico"));
+        reg.put("TrayIcon", createRawImage("tray.gif"));
 
         String[] buttonNames = {
             "Preferences", "Statistics", "Console", "Transfers", "Shares", "Search", "Servers", "Messages"
@@ -338,6 +338,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.66  2004/03/19 14:16:03  dek
+*** empty log message ***
+
 Revision 1.65  2004/03/14 17:37:59  dek
 Systray reloaded
 

@@ -38,6 +38,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
@@ -45,7 +46,7 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
 /**
- * @version $Id: SystemTray.java,v 1.18 2004/03/14 20:54:02 dek Exp $
+ * @version $Id: SystemTray.java,v 1.19 2004/03/19 14:16:03 dek Exp $
  *  
  */
 public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
@@ -57,6 +58,7 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 	private static final DecimalFormat decimalFormat = new DecimalFormat("0.#");
 	private String titleBarText;
 	private int icon;
+	private Image iconImage;
 
 	/*
 	 * the following attributes are a hack to "smoothen Tooltip-updates in
@@ -68,7 +70,7 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 	private int counter = 0;
 
 	/* holds the status if the native library is loaded */
-	private boolean libLoaded = false;
+	private boolean libLoaded = false;		
 
 	/* SystemTrayIconListener implementation */
 	public void mouseClickedLeftButton(
@@ -157,7 +159,8 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 
 		parent.getCore().getClientStats().addObserver(this);
 		
-		icon = G2GuiResources.getImageDescriptor("TrayIcon").createImage().handle;
+		iconImage = G2GuiResources.getImageDescriptor("TrayIcon").createImage();
+		icon = iconImage.handle;
 				
 		systemTrayManager = new SystemTrayIconManager(icon, titleBarText);
 		systemTrayManager.addSystemTrayIconListener(this);
@@ -235,48 +238,28 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 			// no, so there is nothing what we can update
 			return;
 		}
+
 		ClientStats clientInfo = (ClientStats) receivedInfo;
 		Shell shell = parent.getShell();
+		final String transferRates =
+			"\nDL:"
+				+ decimalFormat.format(clientInfo.getTcpDownRate())
+				+ " / UL:"
+				+ decimalFormat.format(clientInfo.getTcpUpRate());
 
-		if (counter < uploadrate.length) {
-			uploadrate[counter] = clientInfo.getTcpUpRate();
-			downloadrate[counter] = clientInfo.getTcpDownRate();
-			counter++;
-		} else {
-			/* median transfer-Rates: */
-			float medianUpRate = 0;
-			float medianDownRate = 0;
+		if (parent.getShell().isDisposed())
+			return;
 
-			for (int i = 0; i < uploadrate.length; i++) {
-				medianUpRate = medianUpRate + uploadrate[i];
-				medianDownRate = medianDownRate + downloadrate[i];
+		parent.getShell().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				Shell shell = parent.getShell();
+				/* check for widget disposed */
+				if (parent.getShell().isDisposed())
+					return;
+				systemTrayManager.update(icon, titleBarText + transferRates);
+
 			}
-			medianUpRate = medianUpRate / uploadrate.length;
-			medianDownRate = medianDownRate / downloadrate.length;
-
-			final String transferRates =
-				"\nDL:"
-					+ decimalFormat.format(medianDownRate)
-					+ " / UL:"
-					+ decimalFormat.format(medianUpRate);
-
-			if (parent.getShell().isDisposed())
-				return;
-
-			parent.getShell().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					Shell shell = parent.getShell();
-					/* check for widget disposed */
-					if (parent.getShell().isDisposed())
-						return;
-					systemTrayManager.update(
-						icon,
-						titleBarText + transferRates);
-
-				}
-			});
-			counter = 0;
-		}
+		});
 
 	}
 
@@ -284,6 +267,9 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.19  2004/03/19 14:16:03  dek
+ *** empty log message ***
+
  Revision 1.18  2004/03/14 20:54:02  dek
  *** empty log message ***
 
