@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.49 2003/11/04 18:05:42 vnc Exp $
+ * @version $Id: G2GuiResources.java,v 1.50 2003/11/04 19:16:25 vnc Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -211,28 +211,28 @@ public class G2GuiResources {
         reg.put( "splashScreen", createRawImage( "splash.png" ) );
         reg.put( "ProgramIcon", createRawImage( "mld_logo_48x48_crome.gif" ) );
         reg.put( "G2GuiLogo", createTrans( "mld_logo_48x48_crome.gif" ) );
-        reg.put( "G2GuiLogoSmall", createTrans( "mld_logo_12x12.png" ) );
+        reg.put( "G2GuiLogoSmall", createTrans( "mld_logo_12x12.gif" ) );
         reg.put( "TrayIcon", createRawImage( "tray.ico" ) );
 
         String[] buttonNames = { "Preferences", "Statistics", "Console", "Transfers", "Search", "Servers", "Messages", "News" };
         String[] buttonFiles = { "preferences", "statistics", "console", "transfer3a", "search", "server", "messages", "news" };
 
         for ( int i = 0; i < buttonNames.length; i++ ) {
-            reg.put( buttonNames[ i ] + "Button", createTrans( buttonFiles[ i ] + ".png" ) );
-            reg.put( buttonNames[ i ] + "ButtonActive", createActive( buttonFiles[ i ] + ".png" ) );
-            reg.put( buttonNames[ i ] + "ButtonSmall", createTrans( buttonFiles[ i ] + "-16.png" ) );
-            reg.put( buttonNames[ i ] + "ButtonSmallActive", createActive( buttonFiles[ i ] + "-16.png" ) );
-            reg.put( buttonNames[ i ] + "ButtonSmallTitlebar", createTrans( buttonFiles[ i ] + "-16.png", titlebar ) );
+            reg.put( buttonNames[ i ] + "Button", createTrans( buttonFiles[ i ] + ".gif" ) );
+            reg.put( buttonNames[ i ] + "ButtonActive", createActive( buttonFiles[ i ] + ".gif" ) );
+            reg.put( buttonNames[ i ] + "ButtonSmall", createTrans( buttonFiles[ i ] + "-16.gif" ) );
+            reg.put( buttonNames[ i ] + "ButtonSmallActive", createActive( buttonFiles[ i ] + "-16.gif" ) );
+            reg.put( buttonNames[ i ] + "ButtonSmallTitlebar", createTrans( buttonFiles[ i ] + "-16.gif", titlebar ) );
         }
 
         reg.put( "MessagesButtonSmallTrans", createRawImage( "messages-16.gif" ) );
         reg.put( "MessagesButtonSmallTransBW", createRawImage( "messages-16-bw.gif" ) );
 
-        reg.put( "DownArrow", createTrans( "down.png" ) );
-        reg.put( "UpArrow", createTrans( "up.png" ) );
+        reg.put( "DownArrow", createTrans( "down.gif" ) );
+        reg.put( "UpArrow", createTrans( "up.gif" ) );
        
-        reg.put( "RedCrossSmall", createTrans( "red_cross-12.png" ) );
-        reg.put( "downloaded", createTrans( "downloaded_arrow.png" ) );
+        reg.put( "RedCrossSmall", createTrans( "red_cross-12.gif" ) );
+        reg.put( "downloaded", createTrans( "downloaded_arrow.gif" ) );
 
         createNetworksIcons( reg );
         createMiscIcons( reg );
@@ -429,6 +429,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.50  2003/11/04 19:16:25  vnc
+(complete rest) conversions png->gif
+
 Revision 1.49  2003/11/04 18:05:42  vnc
 more conversions png->gif
 
