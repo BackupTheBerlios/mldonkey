@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.TableItem;
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.3 2003/06/25 18:35:36 lemmstercvs01 Exp $ 
+ * @version $Id: TransferTab.java,v 1.4 2003/06/26 09:11:04 lemmstercvs01 Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements InterFaceUI {
@@ -79,8 +79,8 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 		table.setLabelProvider( new FileInfoTableLabelProvider() );
 		table.setSorter( new FileInfoTableViewerSorter() );
 		
-		String[] aString = { "ID", "Name", "Rate", "Downloaded", "Size" };
-		int[] anInt = { 25, 300, 40, 70, 70 };
+		String[] aString = { "ID", "Name", "Rate", "Downloaded", "Size", "%" };
+		int[] anInt = { 25, 300, 40, 70, 70, 40 };
 		TableColumn column = null;
 		for ( int i = 0; i < aString.length; i++ ) {
 			column = new TableColumn(table.getTable(), SWT.LEFT);
@@ -123,33 +123,37 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 	}
 	
 	/**
-	 * 
-	 * @param table
-	 * @param fileInfo
+	 * Creates a TableItem from a fileInfo
+	 * @param table TableViewer to display on
+	 * @param fileInfo FileInfo to use
 	 */
 	private static void createItem( TableViewer table, FileInfo fileInfo ) {
 		TableItem item = new TableItem ( table.getTable(), SWT.NULL );
 		item.setText( 0, new Integer( fileInfo.getId() ).toString() );
 		item.setText( 1, fileInfo.getName() );
-		item.setText( 2, new Float( fileInfo.getRate() / 1024 ).toString() );
+		item.setText( 2, new Float( ( fileInfo.getRate() ) ).toString() );
 		item.setText( 3, new Integer( fileInfo.getDownloaded() ).toString() );
 		item.setText( 4, new Integer( fileInfo.getSize() ).toString() );
+		item.setText( 5, new Double( fileInfo.getPerc() ).toString() );
 		tableItemSetColor( fileInfo, item );
 		item.setData( fileInfo );
 	}
 	
 	/**
-	 * 
-	 * @param item
-	 * @param fileInfo
+	 * Refresh the data of a fileInfo
+	 * @param item TableItem to refresh
+	 * @param fileInfo FileInfo to use
 	 */
 	private static void updateItem( TableItem item, FileInfo fileInfo ) {
-		if ( ! ( item.getText( 2 ).equals( new Float( fileInfo.getRate() / 1024 ).toString() )  )) {
-			item.setText( 2, new Float( fileInfo.getRate() / 1024 ).toString() );
+		/* update "rate" and "downloaded" */
+		if ( ! ( item.getText( 2 ).equals( new Float( fileInfo.getRate() ).toString() )  )) {
+			item.setText( 2, new Float( fileInfo.getRate() ).toString() );
 			item.setText( 3, new Integer( fileInfo.getDownloaded() ).toString() );
 		}
+		/* update "downloaded" */
 		else if ( ! ( item.getText( 3 ).equals( new Integer( fileInfo.getDownloaded() ).toString() ) ) ) {
 			item.setText( 3, new Integer( fileInfo.getDownloaded() ).toString() );
+			item.setText( 5, new Double( fileInfo.getPerc() ).toString() );
 		}
 		item.setData( fileInfo );
 	}
@@ -170,9 +174,9 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 	}
 	
 	/**
-	 * 
-	 * @param newElem
-	 * @param item
+	 * Sets the color of a TableItem
+	 * @param newElem FileInfo to use
+	 * @param item TableItem to set color on
 	 */	
 	private static void tableItemSetColor( FileInfo newElem, TableItem item ) {
 		if ( newElem.getState().getState() == EnumFileState.ABORTED )
@@ -180,7 +184,7 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 		else if ( newElem.getState().getState() == EnumFileState.CANCELLED )
 			item.setForeground( new Color( null, 160, 7, 4 ) );
 		else if ( newElem.getState().getState() == EnumFileState.DOWNLOADED )
-			item.setForeground( new Color( null, 160, 7, 4 ) );
+			item.setForeground( new Color( null, 160, 133, 45 ) );
 		else if ( newElem.getState().getState() == EnumFileState.DOWNLOADING )
 			item.setForeground( new Color( null, 160, 7, 4 ) );
 		else if ( newElem.getState().getState() == EnumFileState.NEW )
@@ -204,6 +208,9 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.4  2003/06/26 09:11:04  lemmstercvs01
+added percent
+
 Revision 1.3  2003/06/25 18:35:36  lemmstercvs01
 not nice, but working
 
