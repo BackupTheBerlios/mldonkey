@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.17 2003/07/20 11:47:04 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.18 2003/07/20 12:15:47 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -82,8 +82,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 			oldEditor.dispose();
 		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, 6 );
 		editor.setEditor ( chunks, this, 4 );
-		updateCell( 4,"" );		
-		updateCell( 2, clientInfo.getClientName() );	
+		updateCell( 4,"" );
+		updateCell( 2, clientInfo.getClientName() );
+		updateCell( 3,"" );		
 		updateCell( 6, "rank: unknown" );		
 		updateColums();	
 		addDisposeListener( new DisposeListener() {
@@ -135,40 +136,20 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		//"ID"|"Network"|"Filename"|"Rate"|"Chunks"|"%"|"Downloaded"|"Size"
 		//  0      1         2         3       4     5       6          7
 		String connection = "";
-		if ( clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) {
-			connection = "firewalled";
-			}
-		else {
+		if ( clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) 
+			connection = "firewalled";			
+		else
 			connection = "direct";
-		}
-		updateCell( 3, connection );
 		
-		if ( !getText( 6 ).equals( "rank: " + clientInfo.getState().getRank() ) ) {
-			updateCell( 6, "rank: " + clientInfo.getState().getRank() );			
-		}
-		String state = "";
-		if ( clientInfo.getState().getState() == EnumState.CONNECTED )		
-			state = "connected";
-		if ( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED )
-			state = "Queued";
-		if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING ) {
-			updateCell( 6, "transfering" );
-			state = "transfering";
-			}			
-		if ( clientInfo.getState().getState() == EnumState.CONNECTED_INITIATING )
-			state = "initiating";
-		if ( clientInfo.getState().getState() == EnumState.CONNECTING )
-			state = "connecting";
-		if ( clientInfo.getState().getState() == EnumState.NOT_CONNECTED )
-			state = "not connected";
-		if ( clientInfo.getState().getState() == EnumState.BLACK_LISTED )
-			state = "blackListed";		
-		if ( clientInfo.getState().getState() == EnumState.NEW_HOST )
-			state = "new host";	
-		if ( clientInfo.getState().getState() == EnumState.NOT_CONNECTED_WAS_QUEUED )
-			state = "NOT_CONNECTED_WAS_QUEUED";	
-		if ( clientInfo.getState().getState() == EnumState.REMOVE_HOST )
-			state = "removeHost";
+		if ( !getText( 3 ).equals( connection ) )
+			updateCell( 3, connection );
+		
+		if ( !getText( 6 ).equals( "rank: " + clientInfo.getState().getRank() )
+			&& !( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING ) ) 
+				updateCell( 6, "rank: " + clientInfo.getState().getRank() );		
+		else if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
+			updateCell( 6, "transfering" );	
+			
 		chunks.refresh();
 	}
 
@@ -198,6 +179,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.18  2003/07/20 12:15:47  dek
+another flickerTest
+
 Revision 1.17  2003/07/20 11:47:04  dek
 foobar
 
