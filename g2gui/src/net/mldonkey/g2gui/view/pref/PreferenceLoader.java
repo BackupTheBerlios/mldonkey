@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.30 2003/09/27 00:36:54 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.31 2003/09/28 13:10:31 dek Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -112,6 +112,8 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "minimizeOnClose", false );
         preferenceStore.setDefault( "dragAndDrop", true );
         preferenceStore.setDefault( "pollUpStats", true );
+		preferenceStore.setDefault( "running", false );
+		preferenceStore.setDefault( "allowMultipleInstances", false );
         
         return preferenceStore;
     }
@@ -221,6 +223,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.31  2003/09/28 13:10:31  dek
+Added Option, wether multiple Instances of G2Gui are allowed or not[bug #867]
+
 Revision 1.30  2003/09/27 00:36:54  zet
 auto poll for upstats preference
 
@@ -282,7 +287,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates

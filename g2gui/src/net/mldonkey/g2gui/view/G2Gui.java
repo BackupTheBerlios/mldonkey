@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.31 2003/09/25 03:41:12 zet Exp $
+ * @version $Id: G2Gui.java,v 1.32 2003/09/28 13:10:31 dek Exp $
  *
  */
 public class G2Gui {
@@ -97,12 +97,12 @@ public class G2Gui {
         G2GuiResources.initialize();
         
         // -c <path/preferenceFile>
-        if (args.length > 1 && args[0].equals( "-c" )) {
-        	PreferenceLoader.initialize( args[1] );
-        	String newArgs[] = new String[args.length - 2];
-        	for (int i = 2; i < args.length; i++) {
-        		newArgs[i-2] = args[i];
-        		System.out.println(newArgs[i-2]);
+        if ( args.length > 1 && args[ 0 ].equals( "-c" ) ) {
+        	PreferenceLoader.initialize( args[ 1 ] );
+        	String[] newArgs = new String[ args.length - 2 ];
+        	for ( int i = 2; i < args.length; i++ ) {
+        		newArgs[ i - 2 ] = args[ i ];
+        		System.out.println( newArgs[ i - 2 ] );
         	}
         	args = newArgs;
         	
@@ -111,7 +111,25 @@ public class G2Gui {
         }
    
         preferenceStore = PreferenceLoader.getPreferenceStore();
-        launch( args );
+        
+		if ( containsLink( args ) ) {
+			/*these two fields are only for easier if ( boolean )*/
+			notProcessingLink = false;
+			processingLink = true;
+		}
+		/*determine wether a new instance of G2gui is allowed: */
+		if ( processingLink )	
+			launch( args );        	
+        else if ( PreferenceLoader.loadBoolean( "allowMultipleInstances" ) )
+			launch( args );
+		else if ( !PreferenceLoader.loadBoolean( "running" ) )
+			launch( args );
+		else {
+			MessageBox alreadyRunning = new MessageBox( new Shell( display ), SWT.ICON_ERROR ) ;
+			alreadyRunning.setText( G2GuiResources.getString ( "G2_MULTIPLE_WARNING_HEAD"  ) );
+			alreadyRunning.setMessage( G2GuiResources.getString ( "G2_MULTIPLE_WARNING_MESSAGE" ) );
+			alreadyRunning.open();
+		}        
     }
 
     /**
@@ -138,11 +156,11 @@ public class G2Gui {
      * @param args DOCUMENT ME!
      */
     public static void launch( String[] args ) {
-        if ( containsLink( args ) ) {
-            /*these two fields are only for easier if ( boolean )*/
-            notProcessingLink = false;
-            processingLink = true;
-        }
+		 
+		 /* we are running, so we make this available to other instances */		 
+		PreferenceLoader.getPreferenceStore().setValue( "running", true );
+		PreferenceLoader.saveStore();
+		
         waiterObject = new Object();
         if ( notProcessingLink ) {
             myPrefs = new Preferences( preferenceStore );
@@ -291,6 +309,13 @@ public class G2Gui {
                 sendDownloadLink( args );
         }
         core.disconnect();
+        
+        /* 
+         * we are not running anymore, so we can allow another instance to
+         * be started
+         */
+        PreferenceLoader.getPreferenceStore().setValue( "running", false );
+        PreferenceLoader.saveStore(); 
     }
 
     /**
@@ -410,6 +435,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.32  2003/09/28 13:10:31  dek
+Added Option, wether multiple Instances of G2Gui are allowed or not[bug #867]
+
 Revision 1.31  2003/09/25 03:41:12  zet
 -c <pref file>
 

@@ -1,3 +1,6 @@
+2003709/28: Dek
+	* Added Option, wether multiple Instances of G2Gui are allowed or not[bug #867]
+	
 2003/09/27: Dek
 	* Now all tables have "show-gridlines"-behaviour as described in preferences
 	

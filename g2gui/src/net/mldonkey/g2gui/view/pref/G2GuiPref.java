@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.11 2003/09/26 04:19:06 zet Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.12 2003/09/28 13:10:31 dek Exp $ 
  *
  */
 public class G2GuiPref extends FieldEditorPreferencePage {
@@ -145,19 +145,31 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 			String[] winExtensions = { "*.exe;*.bat" };
 			if ( SWT.getPlatform().equals( "win32" ) ) executableField.setFileExtensions( winExtensions );
 		
-			FieldEditor booleanEditor =
+			FieldEditor advancedModeEditor =
 				new BooleanFieldEditor( "advancedMode",
 					"Advanced mode (*)", parent );
-				booleanEditor.setPreferenceStore( this.getPreferenceStore() );
-				booleanEditor.fillIntoGrid( parent, 2 );
-				addField( booleanEditor );
-				booleanEditor.load();
+				advancedModeEditor.setPreferenceStore( this.getPreferenceStore() );
+				advancedModeEditor.fillIntoGrid( parent, 2 );
+				addField( advancedModeEditor );
+				advancedModeEditor.load();
+				
+			FieldEditor mulitpleInstancesEditor =
+				new BooleanFieldEditor( "allowMultipleInstances",
+					G2GuiResources.getString( "PREF_ALLOW_MULIPLE" ), parent );
+				mulitpleInstancesEditor.setPreferenceStore( this.getPreferenceStore() );
+				mulitpleInstancesEditor.fillIntoGrid( parent, 2 );
+				addField( mulitpleInstancesEditor );
+				mulitpleInstancesEditor.load();
+
 				
 			( ( GridLayout )parent.getLayout() ).numColumns = 2;
 	}
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.12  2003/09/28 13:10:31  dek
+Added Option, wether multiple Instances of G2Gui are allowed or not[bug #867]
+
 Revision 1.11  2003/09/26 04:19:06  zet
 drag&drop
 
@@ -186,7 +198,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.1  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
