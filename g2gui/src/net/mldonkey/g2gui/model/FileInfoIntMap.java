@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.15 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.16 2003/07/07 15:08:39 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -184,7 +184,7 @@ public class FileInfoIntMap extends InfoIntMap {
 				itr.advance();
 				FileInfo aFileInfo = ( FileInfo ) itr.value();
 				/* if EnumFileState.DOWNLOADED, remove the fileinfo from this */
-				if ( aFileInfo.getState().getState() == EnumFileState.DOWNLOADED
+				if ( aFileInfo.getState().getState() == EnumFileState.SHARED
 					|| aFileInfo.getState().getState() == EnumFileState.CANCELLED )
 				{
 					temp.add( new Integer( itr.key() ) );
@@ -200,6 +200,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.16  2003/07/07 15:08:39  lemmstercvs01
+removeObsolete() finally fixed
+
 Revision 1.15  2003/07/06 07:45:26  lemmstercvs01
 checkstyle applied
 
