@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.50 2003/09/14 16:23:23 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.51 2003/09/15 22:10:46 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -59,6 +59,8 @@ public class FileInfo extends Parent implements Observer {
 	public static final String CHANGED_PERCENT = "percent";
 	public static final String CHANGED_ETA = "eta";
 	public static final String CHANGED_LAST = "last";
+	public static final String CHANGED_AVAIL = "avail";
+	
 	private List changedProperties = Collections.synchronizedList(new ArrayList());
 	/**
 	 * Decimal format for calcStringSize
@@ -106,6 +108,7 @@ public class FileInfo extends Parent implements Observer {
 	 * Availibility
 	 */
 	private String avail;
+	private int relativeAvail = 0;
 	/**
 	 * Availibility for each network
 	 * only in protocol > 17
@@ -131,7 +134,7 @@ public class FileInfo extends Parent implements Observer {
 	/**
 	 * last time each chunk has been seen
 	 */
-	private String[] chunkage;
+	private String[] chunkAges;
 	/**
 	 * when download started
 	 */
@@ -160,16 +163,45 @@ public class FileInfo extends Parent implements Observer {
 	private long etaSeconds;
 			
 	/**
-	 * @return time when download started
+	 * @return String time when download started
 	 */
 	public String getAge() {
 		return age;
 	}
 	/**
-	 * @return The file availability
+	 * @return String The file availability
 	 */
 	public String getAvail() {
 		return avail;
+	}
+	
+	/**
+	 * @return int relative availability %
+	 */
+	public int getRelativeAvail() {
+		return relativeAvail;
+	}
+	
+	/**
+	 * set the relative avail
+	 */
+	public void setRelativeAvail() {
+		int oldRelativeAvail = relativeAvail;
+		relativeAvail = 0;
+		int neededChunks = 0;
+		int availChunks = 0;
+		if (avail.length() > 0 && avail.length() == chunks.length()) {
+			for (int i = 0; i < avail.length(); i++) {
+				if (chunks.charAt(i) == '0' || chunks.charAt(i) == '1') {
+					neededChunks++;
+					if ((int) avail.charAt(i) > 0) availChunks++;
+				} 
+			}
+			if (neededChunks > 0) relativeAvail =  (int) (((float) availChunks / (float) neededChunks) * 100f);
+		}
+		if (oldRelativeAvail != relativeAvail) {
+			changedProperties.add(CHANGED_AVAIL);
+		}
 	}
 	
 	/**
@@ -182,8 +214,8 @@ public class FileInfo extends Parent implements Observer {
 	/**
 	 * @return last time each chunk has been seen
 	 */
-	public String[] getChunkage() {
-		return chunkage;
+	public String[] getChunkAges() {
+		return chunkAges;
 	}
 	/**
 	 * @return Chunks
@@ -380,7 +412,7 @@ public class FileInfo extends Parent implements Observer {
 		
 		setRate( new Double( messageBuffer.readString() ).doubleValue() ); // use float?
 		
-		this.chunkage = messageBuffer.readStringList();
+		this.chunkAges = messageBuffer.readStringList();
 		this.age = messageBuffer.readString();
 		
 		/* File Format */
@@ -527,6 +559,8 @@ public class FileInfo extends Parent implements Observer {
 			}
 		} else
 			this.avail = messageBuffer.readString();
+		
+		setRelativeAvail();
 
 	}
 	
@@ -760,6 +794,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.51  2003/09/15 22:10:46  zet
+add relative availability
+
 Revision 1.50  2003/09/14 16:23:23  zet
 getAvails
 
