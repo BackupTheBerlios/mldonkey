@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Group;
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Display.java,v 1.25 2003/08/29 20:24:42 dek Exp $
+ * @version $Id: G2Gui_Display.java,v 1.26 2003/09/10 16:55:32 dek Exp $
  */
 public class G2Gui_Display extends FieldEditorPreferencePage {
 	private Composite parent;
@@ -172,7 +172,7 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 				G2GuiResources.getString( "PREF_DISPLAY_FLAT_INTERFACE" ),
 				parent ) );
 
-		setupEditor( 
+		if ( advanced ) setupEditor( 
 			new BooleanFieldEditor( 
 				"displayChunkGraphs",
 				G2GuiResources.getString( "PREF_DISPLAY_CHUNK" ),
@@ -200,6 +200,9 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.26  2003/09/10 16:55:32  dek
+chunks are hidden in simple-mode, so is the corresponding option..
+
 Revision 1.25  2003/08/29 20:24:42  dek
 icon for preferences, and simple frame (group)
 
