@@ -175,8 +175,15 @@ public class DownloadTab
 				file.setState(EnumFileState.PAUSED);
 				table.update(file,null);
 			} 
-			if(item==resumeItem) file.setState(EnumFileState.DOWNLOADING);
-			if(item==cancelItem) file.setState(EnumFileState.CANCELLED);
+			if(item==resumeItem) {
+				 file.setState(EnumFileState.DOWNLOADING);
+				table.update(file,null);
+			} 
+			if(item==cancelItem) {
+				file.setState(EnumFileState.CANCELLED);
+				fileInfoMap.removeComplete();
+				table.refresh();
+			}
 			if(item==linkItem) {
 				Clipboard clipBoard = new Clipboard(item.getDisplay());
 				String link = "ed2k://|file|"+file.getName()+"|"+file.getSize()+"|"+file.getMd4()+"|/";
