@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  * @author ${user}
- * @version $$Id: Addr.java,v 1.9 2003/08/09 13:42:24 dek Exp $$ 
+ * @version $$Id: Addr.java,v 1.10 2003/08/11 11:23:06 lemmstercvs01 Exp $$ 
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -111,23 +111,27 @@ public class Addr implements SimpleInformation {
 		if ( !this.hasHostName() && anAddress.hasHostName() )
 			return -1;
 		if ( this.hasHostName() && anAddress.hasHostName() )
-			return this.address.getHostName().compareToIgnoreCase( anAddress.address.getHostName() );
+			return this.getHostName().compareToIgnoreCase( anAddress.getHostName() );
 	
 		RE regex=null;
 		/* compare by ipaddress */
 		try {
-			 regex = new RE("\\.");
-		} catch (REException e) {			
+			 regex = new RE( "\\." );
+		}
+		catch ( REException e ) {			
 			e.printStackTrace();
 		}
 		
-		Long int1 = new Long( regex.substituteAll(this.address.getHostAddress(),"") );
-		Long int2 = new Long( regex.substituteAll(anAddress.address.getHostAddress(),"") );
+		Long int1 = new Long( regex.substituteAll( this.address.getHostAddress(),"" ) );
+		Long int2 = new Long( regex.substituteAll( anAddress.address.getHostAddress(),"" ) );
 		return int1.compareTo( int2 );
 	}
 }
 /*
 $$Log: Addr.java,v $
+$Revision 1.10  2003/08/11 11:23:06  lemmstercvs01
+$fix sort by string
+$
 $Revision 1.9  2003/08/09 13:42:24  dek
 $added gnu.regexp for compiling with gcj
 $you can get it at:
