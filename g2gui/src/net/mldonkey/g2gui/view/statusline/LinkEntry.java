@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.1 2003/08/25 12:24:09 zet Exp $ 
+ * @version $Id: LinkEntry.java,v 1.2 2003/08/26 21:14:45 zet Exp $ 
  *
  */
 public class LinkEntry {
@@ -82,14 +82,14 @@ public class LinkEntry {
 	public void enterLinks(String input) {
 		RE regex = null;	
 		try {
-			 regex = new RE( "(ed2k://\\|file\\|[^\\|]+\\|(\\d+)\\|([\\dabcdefABCDEF]+)\\|)" 
+			 regex = new RE( "(ed2k://\\|file\\|[^\\|]+\\|(\\d+)\\|([\\dabcdef]+)\\|)" 
 			+ "|(sig2dat:///?\\|File:[^\\|]+\\|Length:.+?\\|UUHash:\\=.+?\\=)"
 			+ "|(\\\"magnet:\\?xt=.+?\\\")"
 			+ "|(magnet:\\?xt=.+?\n)"
 			+ (linkEntryText.getLineCount() == 1 ? "|(magnet:\\?xt=.+)" : "")
 			+ (linkEntryText.getLineCount() == 1 ? "|(http://.+?\\.torrent.+)" : "")
 			+ "|(\"http://.+?\\.torrent\\?[^>]+\")"
-			+ "|(http://.+?\\.torrent)" );
+			+ "|(http://.+?\\.torrent)" , RE.REG_ICASE );
 		} 
 		catch ( REException e ) {			
 			e.printStackTrace();
@@ -122,6 +122,9 @@ public class LinkEntry {
 }
 /*
 $Log: LinkEntry.java,v $
+Revision 1.2  2003/08/26 21:14:45  zet
+ignore case
+
 Revision 1.1  2003/08/25 12:24:09  zet
 Toggleable link entry.  It should parse links from pasted HTML as well.
 
