@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.3 2003/10/12 16:27:01 lemmster Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.4 2003/10/16 22:02:45 zet Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -108,22 +108,12 @@ public class G2GuiAdvanced extends PreferencePage {
 				G2GuiResources.getString( "PREF_SEARCH_FILTER_PROFANITY" ),
 				composite ) );
 
+		if ( advanced ) 
+		
 		setupEditor( 
-				new BooleanFieldEditor( 
-				"displayTableColors",
-				G2GuiResources.getString( "PREF_DISPLAY_TABLE_COLORS" ),
-				composite ) );
-
-		if ( advanced ) setupEditor( 
 			new BooleanFieldEditor( 
 				"displayChunkGraphs",
 				G2GuiResources.getString( "PREF_DISPLAY_CHUNK" ),
-				composite ) );
-
-		setupEditor( 
-			new BooleanFieldEditor( 
-				"displayGridLines",
-				G2GuiResources.getString( "PREF_DISPLAY_GRID" ),
 				composite ) );
 
 		setupEditor( 
@@ -154,6 +144,9 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.4  2003/10/16 22:02:45  zet
+move some options
+
 Revision 1.3  2003/10/12 16:27:01  lemmster
 minor changes
 

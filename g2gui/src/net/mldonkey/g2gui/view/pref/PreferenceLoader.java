@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.37 2003/10/16 18:20:18 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.38 2003/10/16 22:02:45 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -116,6 +116,7 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "searchFilterProfanity", false );
         preferenceStore.setDefault( "maintainSortOrder", false );
         preferenceStore.setDefault( "updateDelay", 0 );
+        preferenceStore.setDefault( "useGradient", true );
         preferenceStore.setDefault( "displayAllServers", true );
         preferenceStore.setDefault( "displayNodes", false );
         preferenceStore.setDefault( "displayChunkGraphs", false );
@@ -248,6 +249,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.38  2003/10/16 22:02:45  zet
+move some options
+
 Revision 1.37  2003/10/16 18:20:18  zet
 red
 

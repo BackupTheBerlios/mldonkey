@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiDisplay.java,v 1.4 2003/10/15 22:06:13 zet Exp $
+ * @version $Id: G2GuiDisplay.java,v 1.5 2003/10/16 22:02:45 zet Exp $
  */
 public class G2GuiDisplay extends PreferencePage {
 	/**
@@ -57,10 +57,27 @@ public class G2GuiDisplay extends PreferencePage {
 				"useGradient",
 				G2GuiResources.getString( "PREF_DISPLAY_USE_GRADIENT" ),
 				composite ) );
+				
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"displayTableColors",
+				G2GuiResources.getString( "PREF_DISPLAY_TABLE_COLORS" ),
+				composite ) );	
+		
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"displayGridLines",
+				G2GuiResources.getString( "PREF_DISPLAY_GRID" ),
+				composite ) );		
+					
+				
 	}
 }
 /*
 $Log: G2GuiDisplay.java,v $
+Revision 1.5  2003/10/16 22:02:45  zet
+move some options
+
 Revision 1.4  2003/10/15 22:06:13  zet
 Split Console/Downloads pref pages.
 
