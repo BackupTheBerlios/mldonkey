@@ -78,15 +78,15 @@ import org.eclipse.swt.custom.CLabel;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.12 2003/08/08 02:46:31 zet Exp $ 
+ * @version $Id: SearchResult.java,v 1.13 2003/08/10 10:27:38 lemmstercvs01 Exp $ 
  *
  */
-//TODO search timeout, add resource bundle, add image handle, fake search, real links depending on network								   
-public class SearchResult implements Observer, Runnable {
+//TODO add image handle, fake search, real links depending on network								   
+public class SearchResult implements Observer, Runnable, DisposeListener {
 	private MainTab mainTab;
 	private CTabFolder cTabFolder;
 	private String searchString;
-	private static CoreCommunication core;
+	private CoreCommunication core;
 	private int searchId;
 	private ResultInfoIntMap results;
 	private TableViewer table;
@@ -119,7 +119,8 @@ public class SearchResult implements Observer, Runnable {
 	 * @param searchId The identifier to this search
 	 */
 	protected SearchResult( String aString, CTabFolder parent,
-								 CoreCommunication theCore, int searchId ) {
+							 CoreCommunication theCore, int searchId )
+	{
 								 	
 		this.searchString = aString;
 		this.cTabFolder = parent;
@@ -175,7 +176,7 @@ public class SearchResult implements Observer, Runnable {
 			SearchTab parent = ( SearchTab ) cTabFolder.getData();
 			int itemCount = table.getTable().getItemCount();
 			this.statusline = "Results: " + itemCount;
-			parent.setRightLabel("Results: " + itemCount);
+			parent.setRightLabel( "Results: " + itemCount );
 			parent.getMainTab().statusline.update( this.statusline );
 		}
 	}
@@ -211,12 +212,13 @@ public class SearchResult implements Observer, Runnable {
 		/* listen for dispose to close this open search */
 		cTabItem.addDisposeListener( new DisposeListener() {
 			public void widgetDisposed( DisposeEvent e ) {
-				( ( SearchResult ) cTabItem.getData() ).dispose();
+				( ( SearchResult ) cTabItem.getData() ).widgetDisposed( null );
 			} 
 		} );
+		
 		/* display 0 searchresults for the moment */
 		SearchTab parent = ( SearchTab ) cTabFolder.getData();
-		parent.setRightLabel("Results: 0");
+		parent.setRightLabel( "Results: 0" );
 		this.statusline = "Results: 0";
 		parent.getMainTab().statusline.update( this.statusline );
 	}
@@ -225,10 +227,14 @@ public class SearchResult implements Observer, Runnable {
 	 * Build the whole table and the tablecolumns
 	 */
 	private void createTable() {
+		/* set a new image for the ctabitem to show we found results */
+		cTabItem.getImage().dispose(); // dispose the old image first
+		image = new Image( cTabFolder.getDisplay(), "icons/search_complete.png" );
+		cTabItem.setImage( MainTab.createTransparentImage( image, cTabItem.getParent() ) );
 		/* create the result table */		
 		table = new TableViewer( cTabFolder, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
 		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
-		table.getTable().setLinesVisible( false );
+		table.getTable().setLinesVisible( true );
 		table.getTable().setHeaderVisible( true );
 		table.getTable().setMenu( createRightClickMenu() );
 
@@ -435,11 +441,15 @@ public class SearchResult implements Observer, Runnable {
 	public String getStatusLine() {
 		return this.statusline;
 	}
-   
-	/**
-	 * dispose this search result
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.DisposeListener#
+	 * widgetDisposed(org.eclipse.swt.events.DisposeEvent)
 	 */
-	public void dispose() {
+	public void widgetDisposed( DisposeEvent e ) {
+		/* dispose the table */
+		table.getTable().dispose();
+		
 		/* tell the core to forget the search */
 		Object[] temp = { new Integer( searchId ), new Byte( ( byte ) 1 ) };
 		EncodeMessage message = new EncodeMessage( Message.S_CLOSE_SEARCH, temp );
@@ -482,7 +492,7 @@ public class SearchResult implements Observer, Runnable {
 			tipShell.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
 			
 			tipLabelImage = new CLabel( tipShell, SWT.NONE );
-			tipLabelImage.setAlignment(SWT.LEFT);
+			tipLabelImage.setAlignment( SWT.LEFT );
 			tipLabelImage.setForeground( display.getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
 			tipLabelImage.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
 			tipLabelImage.setLayoutData( 
@@ -537,8 +547,8 @@ public class SearchResult implements Observer, Runnable {
 
 				
 					// Create the tooltip on demand
-					if (widget instanceof TableItem) {
-						TableItem tableItem = (TableItem) widget; 
+					if ( widget instanceof TableItem ) {
+						TableItem tableItem = ( TableItem ) widget; 
 						ResultInfo aResult = ( ResultInfo ) tableItem.getData();
 						
 						Image image = null;
@@ -617,6 +627,9 @@ public class SearchResult implements Observer, Runnable {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.13  2003/08/10 10:27:38  lemmstercvs01
+bugfix and new image on table create
+
 Revision 1.12  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 

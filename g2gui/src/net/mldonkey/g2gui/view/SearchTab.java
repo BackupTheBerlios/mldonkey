@@ -24,6 +24,12 @@ package net.mldonkey.g2gui.view;
 
 import java.util.Observable;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.search.AlbumSearch;
+import net.mldonkey.g2gui.view.search.Search;
+import net.mldonkey.g2gui.view.search.SearchResult;
+import net.mldonkey.g2gui.view.search.SimpleSearch;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolderAdapter;
@@ -31,7 +37,6 @@ import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -39,14 +44,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.view.search.*;
-
 /**
  * SearchTab
  *
  * @author $user$
- * @version $Id: SearchTab.java,v 1.9 2003/08/08 02:46:31 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.10 2003/08/10 10:27:38 lemmstercvs01 Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -128,19 +130,15 @@ public class SearchTab extends GuiTab {
 		/* add a "X" and listen for close event */
 		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
 			public void itemClosed( CTabFolderEvent event ) {
-				SearchResult result = ( SearchResult ) event.item.getData();
-				result.dispose();
-				result = null;
-
+				CTabItem item = ( CTabItem ) event.item;
+				( ( SearchResult ) item.getData() ).widgetDisposed( null );
+	
 				/* dispose the tabitem image */
-				Image image = ( ( CTabItem ) event.item ).getImage();	
-				if ( image != null )
-					image.dispose();
-
+				item.getImage().dispose();
+	
 				/* close the tab item */
-				if ( event.item != null )
-					event.item.dispose();
-
+				item.dispose();
+	
 				/* set the new statusline */
 				if ( cTabFolder.getItemCount() != 0 ) {
 					SearchResult nResult = ( SearchResult ) cTabFolder.getSelection().getData();
@@ -149,13 +147,14 @@ public class SearchTab extends GuiTab {
 					mainWindow.statusline.updateToolTip( "" );
 				}
 				else {
-					setRightLabel("");
+					setRightLabel( "" );
 					mainWindow.statusline.update( "" );
 					mainWindow.statusline.updateToolTip( "" );
 				}
 			}
 		} );
 		
+		/* add a focus listener to set the status line */
 		cTabFolder.addFocusListener( new FocusListener () {
 			public void focusGained( FocusEvent e ) {
 			}
@@ -171,15 +170,6 @@ public class SearchTab extends GuiTab {
 				}
 			}
 		} );	
-
-		//VNC need real colors
-/*		Color fgColor = new Color( cTabFolder.getDisplay(), 10, 10, 10 );
-		Color[] bgColors { };
-		int[] bgPercents = { 1, 2, 3 };
-
-		cTabFolder.setSelectionForeground( fgColor );
-		cTabFolder.setSelectionBackground( bgColors, bgPercents );
-*/
 	}
 
 	/* (non-Javadoc)
@@ -217,6 +207,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.10  2003/08/10 10:27:38  lemmstercvs01
+bugfix and new image on table create
+
 Revision 1.9  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 
