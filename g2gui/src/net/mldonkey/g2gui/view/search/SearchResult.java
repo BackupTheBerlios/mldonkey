@@ -80,7 +80,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.51 2003/09/22 20:20:09 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.52 2003/09/25 17:58:41 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -288,7 +288,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         popupMenu.setRemoveAllWhenShown( true );
         popupMenu.addMenuListener( resultTableMenuListener );
         table.getTable().setMenu( popupMenu.createContextMenu( table.getTable() ) );
-
+		
         // add optional filters
         if ( PreferenceLoader.loadBoolean( "searchFilterPornography" ) )
             table.addFilter( new WordFilter( WordFilter.PORNOGRAPHY_FILTER_TYPE ) );
@@ -406,10 +406,6 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
     public void widgetDisposed( DisposeEvent e ) {
 		/* no longer receive results for this search */
 		this.unregister();
-
-        /* dispose the table */
-        if ( table != null )
-            table.getTable().dispose();
 
         /* tell the core to forget the search */
         Object[] temp = { new Integer( searchId ), new Byte( ( byte ) 1 ) };
@@ -606,6 +602,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 }
 /*
 $Log: SearchResult.java,v $
+Revision 1.52  2003/09/25 17:58:41  lemmster
+fixed crash bug
+
 Revision 1.51  2003/09/22 20:20:09  lemmster
 show # sources in search result avail table
 

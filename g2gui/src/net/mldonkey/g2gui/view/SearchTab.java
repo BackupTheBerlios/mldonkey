@@ -63,7 +63,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.30 2003/09/22 19:50:07 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.31 2003/09/25 17:58:41 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -208,6 +208,10 @@ public class SearchTab extends GuiTab {
 		/* add a "X" and listen for close event */
 		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
 			public void itemClosed( CTabFolderEvent event ) {
+				/* dispose the items control (to avoid arrayindexoutofbound?) */
+				CTabItem item = ( CTabItem ) event.item;
+				item.getControl().dispose();
+				
 				/* set the new statusline */
 				if ( cTabFolder.getItemCount() != 0 ) {
 					SearchResult nResult = ( SearchResult ) cTabFolder.getSelection().getData();
@@ -237,6 +241,7 @@ public class SearchTab extends GuiTab {
 			}
 		} );
 		
+		/* add a mouse listener to set the correct button when the item gets focus */
 		cTabFolder.addMouseListener( new MouseListener() {
 			public void mouseDoubleClick( MouseEvent e ) { }
 
@@ -383,6 +388,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.31  2003/09/25 17:58:41  lemmster
+fixed crash bug
+
 Revision 1.30  2003/09/22 19:50:07  lemmster
 searchbutton a little bit more beautiful.
 
