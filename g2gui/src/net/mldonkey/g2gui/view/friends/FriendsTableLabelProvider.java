@@ -33,7 +33,7 @@ import org.eclipse.swt.graphics.Image;
  * FriendsTableLabelProvider
  *
  *
- * @version $Id: FriendsTableLabelProvider.java,v 1.7 2003/11/29 14:29:27 zet Exp $
+ * @version $Id: FriendsTableLabelProvider.java,v 1.8 2003/11/29 19:46:19 zet Exp $
  */
 public class FriendsTableLabelProvider extends GTableLabelProvider {
     public FriendsTableLabelProvider(FriendsTableView fTableView) {
@@ -66,6 +66,9 @@ public class FriendsTableLabelProvider extends GTableLabelProvider {
         case FriendsTableView.NAME:
             return clientInfo.getClientName();
 
+        case FriendsTableView.STATE:
+            return "" + clientInfo.getDetailedClientActivity();
+
         default:
             return "??";
         }
@@ -75,6 +78,9 @@ public class FriendsTableLabelProvider extends GTableLabelProvider {
 
 /*
 $Log: FriendsTableLabelProvider.java,v $
+Revision 1.8  2003/11/29 19:46:19  zet
+add state column (like mlgui)
+
 Revision 1.7  2003/11/29 14:29:27  zet
 small viewframe updates
 

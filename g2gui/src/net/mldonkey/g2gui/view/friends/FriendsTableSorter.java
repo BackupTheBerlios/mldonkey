@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view.friends;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.view.viewers.GSorter;
 
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 
@@ -32,7 +33,7 @@ import org.eclipse.jface.viewers.Viewer;
  * FriendsTableSorter
  *
  *
- * @version $Id: FriendsTableSorter.java,v 1.5 2003/11/29 14:29:27 zet Exp $
+ * @version $Id: FriendsTableSorter.java,v 1.6 2003/11/29 19:46:19 zet Exp $
  *
  */
 public class FriendsTableSorter extends GSorter {
@@ -51,6 +52,18 @@ public class FriendsTableSorter extends GSorter {
         case FriendsTableView.NAME:
             return compareStrings(clientInfo1.getClientName(), clientInfo2.getClientName());
 
+        case FriendsTableView.STATE:
+
+            String s1;
+            String s2;
+
+            FriendsTableLabelProvider lprov = (FriendsTableLabelProvider) ((TableViewer) viewer).getLabelProvider();
+
+            s1 = lprov.getColumnText(obj1, columnIndex);
+            s2 = lprov.getColumnText(obj2, columnIndex);
+
+            return compareStrings(s1, s2);
+
         default:
             return 0;
         }
@@ -60,6 +73,9 @@ public class FriendsTableSorter extends GSorter {
 
 /*
 $Log: FriendsTableSorter.java,v $
+Revision 1.6  2003/11/29 19:46:19  zet
+add state column (like mlgui)
+
 Revision 1.5  2003/11/29 14:29:27  zet
 small viewframe updates
 

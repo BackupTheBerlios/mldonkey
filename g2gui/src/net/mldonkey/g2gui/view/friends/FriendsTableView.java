@@ -32,19 +32,20 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * FriendsTableView
  *
- * @version $Id: FriendsTableView.java,v 1.1 2003/11/29 14:29:27 zet Exp $
+ * @version $Id: FriendsTableView.java,v 1.2 2003/11/29 19:46:19 zet Exp $
  *
  */
 public class FriendsTableView extends GTableView {
     public static final int NAME = 0;
+    public static final int STATE = 1;
 
     public FriendsTableView(ViewFrame viewFrame) {
         super(viewFrame);
 
         preferenceString = "friends";
-        columnLabels = new String[] { "FR_FRIENDS" };
-        columnAlignment = new int[] { SWT.LEFT };
-        columnDefaultWidths = new int[] { 150 };
+        columnLabels = new String[] { "FR_NAME", "FR_STATE" };
+        columnAlignment = new int[] { SWT.LEFT, SWT.LEFT };
+        columnDefaultWidths = new int[] { 150, 150 };
 
         gSorter = new FriendsTableSorter(this);
         tableContentProvider = new FriendsTableContentProvider(this);
@@ -75,6 +76,9 @@ public class FriendsTableView extends GTableView {
 
 /*
 $Log: FriendsTableView.java,v $
+Revision 1.2  2003/11/29 19:46:19  zet
+add state column (like mlgui)
+
 Revision 1.1  2003/11/29 14:29:27  zet
 small viewframe updates
 
