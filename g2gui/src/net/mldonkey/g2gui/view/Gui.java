@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view;
 import java.util.List;
 import java.util.ArrayList;
 
+import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.statusline.*;
@@ -41,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.10 2003/06/27 13:40:50 dek Exp $ 
+ * @version $Id: Gui.java,v 1.11 2003/06/27 17:14:32 lemmstercvs01 Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {
@@ -108,7 +109,7 @@ public class Gui implements IG2gui, Listener {
 		shell.open ();
 		shell.addDisposeListener(new DisposeListener(){
 			public synchronized void widgetDisposed(DisposeEvent e) {
-				mldonkey.disconnect();				
+				((Core)mldonkey).disconnect();				
 			}});
 		while (!shell.isDisposed ()) {
 			if (!display.readAndDispatch ()) display.sleep ();
@@ -242,6 +243,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.11  2003/06/27 17:14:32  lemmstercvs01
+removed unneeded importer
+
 Revision 1.10  2003/06/27 13:40:50  dek
 *** empty log message ***
 
