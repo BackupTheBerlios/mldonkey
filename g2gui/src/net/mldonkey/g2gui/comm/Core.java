@@ -26,15 +26,17 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.List;
 
 import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.model.FileAddSource;
 
 /**
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.2 2003/06/11 15:32:33 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.3 2003/06/12 10:37:56 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -159,8 +161,19 @@ public class Core extends Thread implements CoreCommunication {
 					 *	int32	The File Identifier 
 					 *	int32	The Source/Client Identifier 
 					 */
-					break;				
-
+					FileAddSource fileAddSource = CoreMessage.readFileAddSource( inputStream ); 
+					System.out.println(fileAddSource.toString());
+					fileAddSource = null; 
+					break;
+			
+			case Message.R_BAD_PASSWORD :
+					/*
+					 * No Payload:
+					 * Just display a message and stop receiving
+					 */
+					System.out.println("Bad Password");						
+					this.disconnect();
+					break;
 			case Message.R_CLIENT_STATS :				
 					/*
 					 *	PayLoad:
@@ -178,6 +191,7 @@ public class Core extends Thread implements CoreCommunication {
 					 */
 					ClientStats clientStats = CoreMessage.readClientStats( inputStream );
 					System.out.println( clientStats.toString() );
+					clientStats = null;
 					break;				
 
 			case Message.R_CONSOLE :				
@@ -235,6 +249,11 @@ public class Core extends Thread implements CoreCommunication {
 					 * a List of running Downloads
 					 */
 					 List aList = CoreMessage.readDownloadingList( inputStream );
+					 Iterator itr = aList.iterator();
+					 while ( itr.hasNext() ) {
+					 	System.out.println( itr.next().toString() );
+					 }
+					 aList = null;
 					 break;
 					 
 			case Message.R_DOWNLOADED_LIST :
@@ -243,6 +262,7 @@ public class Core extends Thread implements CoreCommunication {
 					 * a List of complete Downloads
 					 */
 					 List aList2 = CoreMessage.readDownloadedList( inputStream );
+					 aList2 = null;
 					 break;
 		 
 
@@ -291,6 +311,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.3  2003/06/12 10:37:56  lemmstercvs01
+added some opcodes
+
 Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
 still in progress
 
