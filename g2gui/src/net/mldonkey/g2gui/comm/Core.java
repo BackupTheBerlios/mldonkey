@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.4 2003/06/12 18:16:00 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.5 2003/06/12 18:22:56 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -119,24 +119,7 @@ public class Core extends Thread implements CoreCommunication {
 					 *	PayLoad:
 					 *	int32	The maximal protocol version accepted by the core 
 					 */
-					coreProtocol = Message.readInt32( inputStream );
-					Object[] temp = new Object[ 1 ];
-					temp[ 0 ] = new Integer( 16 );
-					Message coreProtocolReply = ( GuiMessage ) messagePool.checkOut();
-					coreProtocolReply.setMessage( Message.S_COREPROTOCOL, temp );			
-					coreProtocolReply.sendMessage( connection );
-					messagePool.checkIn( coreProtocolReply );
-
-					Object[] extension = { new Integer( 1 ), new Byte( ( byte ) 1 )};
-					Object[][] a = { extension };
-					Message guiExtension = ( GuiMessage ) messagePool.checkOut();
-					guiExtension.setMessage( Message.S_GUIEXTENSION, a );
-					guiExtension.sendMessage( connection );
-					messagePool.checkIn( guiExtension );
-
-					String[] aString = { this.password, this.username };
-					Message password = new GuiMessage( Message.S_PASSWORD, aString );
-					password.sendMessage( connection );
+					coreProtocol = Message.readInt32( inputStream );					
 					
 					Message downloadingFiles = ( GuiMessage ) messagePool.checkOut();
 					downloadingFiles.setMessage( Message.S_GETDOWNLOADING_FILES );
@@ -319,6 +302,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.5  2003/06/12 18:22:56  dek
+*** empty log message ***
+
 Revision 1.4  2003/06/12 18:16:00  lemmstercvs01
 DownloadList -> FileInfoList
 
