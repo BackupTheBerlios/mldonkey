@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view.search;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -49,7 +50,7 @@ import org.eclipse.swt.events.KeyEvent;
  * Search
  *
  * @author $user$
- * @version $Id: Search.java,v 1.5 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
+ * @version $Id: Search.java,v 1.6 2003/07/28 08:19:20 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Search {
@@ -144,18 +145,35 @@ public abstract class Search {
 			itr.advance();
 			NetworkInfo elem = ( NetworkInfo ) itr.value();
 			/* exclude disabled and bittorrent (no search in there) */
-			if ( elem.isEnabled() && !elem.getNetworkName().equals( "Bittorrent" ) )
-				items.add( elem.getNetworkName() );
+			if ( elem.isEnabled() && elem.getNetworkType() != NetworkInfo.Enum.BT )
+				items.add( elem );
 		}
-		if ( items.size() > 1 )
-			items.add( bundle.getString( "S_ALL" ) );
+		/* if more than 1 network is enabled, we need a "All" field */
+		int i = 0;
+		String[] strings;
+		Object[] data;
+		if ( items.size() > 1 ) {
+			strings = new String[ items.size() + 1 ];
+			data = new Object[ items.size() + 1 ];
+			strings[ i ] = bundle.getString( "S_ALL" );
+			data[ i++ ] = null;
+		}
+		else {
+			strings = new String[ items.size() ];
+			data = new Object[ items.size() ];
+		}
 	
-		Object[] itemsArray = items.toArray();
-		String[] strings = new String[ itemsArray.length ];
-		for ( int i = 0; i < itemsArray.length; i++ ) {
-			strings[ i ] = ( String ) itemsArray[ i ];
+		Iterator itr2 = items.iterator();
+		while ( itr2.hasNext() ) {
+			NetworkInfo elem = ( NetworkInfo ) itr2.next();
+			strings[ i ] = elem.getNetworkName();
+			data[ i++ ] = elem.getNetworkType();
 		}
+		
 		combo.setItems( strings );
+		combo.setData( data );
+		
+		/* not get a default selection */
 		if ( strings.length > 0 )
 			combo.setText( strings[ 0 ] );
 	}
@@ -163,6 +181,9 @@ public abstract class Search {
 
 /*
 $Log: Search.java,v $
+Revision 1.6  2003/07/28 08:19:20  lemmstercvs01
+get NetworkInfo by Enum instead of NetworkName
+
 Revision 1.5  2003/07/27 18:45:47  lemmstercvs01
 lots of changes
 

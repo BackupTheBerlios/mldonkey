@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.TabFolder;
  * SimpleSearch
  *
  * @author $user$
- * @version $Id: SimpleSearch.java,v 1.4 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.5 2003/07/28 08:19:20 lemmstercvs01 Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -167,16 +167,17 @@ public class SimpleSearch extends Search {
 			query.setSearchString( text.getText() );
 					
 			/* get the network id for this query */
-			NetworkInfo[] temp = core.getNetworkInfoMap().getNetworks();
-			for ( int i = 0; i < temp.length; i++ ) {
-				if ( temp[ i ].getNetworkName().equals( combo.getText() ) ) {
-					query.setNetwork( temp[ i ].getNetwork() );
-					break;										
-				}
+			int selection = combo.getSelectionIndex();
+			Object[] obj = ( Object[] ) combo.getData();
+			if ( obj[ selection ] != null ) { // if != All
+				NetworkInfo.Enum enum = ( NetworkInfo.Enum ) obj[ selection ];
+				NetworkInfo temp = core.getNetworkInfoMap().getByEnum( enum );
+				query.setNetwork( temp.getNetwork() );
 			}
+
 			/* which media is selected */							
 			if ( selectedMedia != null )
-			query.setMedia( selectedMedia );
+				query.setMedia( selectedMedia );
 			/* now the query is ready to be send */
 			query.send();
 						
@@ -190,6 +191,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.5  2003/07/28 08:19:20  lemmstercvs01
+get NetworkInfo by Enum instead of NetworkName
+
 Revision 1.4  2003/07/27 18:45:47  lemmstercvs01
 lots of changes
 
