@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.65 2004/02/05 20:44:44 psy Exp $
+ * @version $Id: G2Gui.java,v 1.66 2004/02/17 22:49:58 psy Exp $
  *
  */
 public class G2Gui {
@@ -100,12 +100,13 @@ public class G2Gui {
 		// parse args
 		int optind;
 		for (optind = 0; optind < argv.length; optind++) {
+			// give additional verbosity/debug
+			if (argv[optind].equals("-d") | argv[optind].equals("-v") )
+				debug = true;
+			// need help?
 			if ( argv[optind].startsWith("--help") ) {
 				printCommandlineHelp();
 				System.exit(1);
-			// give additional verbosity/debug
-			} else if (argv[optind].equals("-d") | argv[optind].equals("-v") ) {
-				debug = true;
 			// ed2k/http link for submission
 			} else if (argv[optind].toLowerCase().startsWith("ed2k://") | 
 					argv[optind].toLowerCase().startsWith("http://")) {
@@ -151,6 +152,9 @@ public class G2Gui {
 			}
 		}
 
+		/* display generic VM and OS information */
+		if (debug) System.out.println( VersionCheck.getInfoString() );
+		
 		// if there has not been specified a config-file, use default
 		if (configfile == null) {
 			G2GuiResources.initialize();
@@ -189,9 +193,10 @@ public class G2Gui {
      *
      */
     private static void printCommandlineHelp() {
+    	if (debug) System.out.println( VersionCheck.getInfoString() );
     	System.out.println(
     		"G2gui " + VersionInfo.getVersion() + " (" + VersionCheck.getSWTPlatform() + ")\n" +
-    		"Usage: g2gui [params] [links]\n" +
+			"Usage: g2gui [params] [links]\n" +
     		"\n" + 
     		"   --help	this help\n" +
 			"   -v		increase verbosiveness / debug output\n" +
@@ -611,6 +616,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.66  2004/02/17 22:49:58  psy
+added more VM/OS/Version debug- and crash-info
+
 Revision 1.65  2004/02/05 20:44:44  psy
 hopefully fixed dynamic column behaviour under gtk by introducing a
 bogus column.

@@ -33,6 +33,7 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.VersionInfo;
 import net.mldonkey.g2gui.view.helper.Splash;
+import net.mldonkey.g2gui.view.helper.VersionCheck;
 import net.mldonkey.g2gui.view.helper.WebLauncher;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.main.MainCoolBar;
@@ -69,7 +70,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.9 2004/02/05 20:44:44 psy Exp $
+ * @version $Id: MainWindow.java,v 1.10 2004/02/17 22:49:58 psy Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText;
@@ -440,7 +441,7 @@ public class MainWindow implements ShellListener {
         protected void configureShell(Shell newShell) {
             super.configureShell(newShell);
             newShell.setSize(400, 300);
-            newShell.setText("Boog Ditekted!");
+            newShell.setText("Bug detected!");
         }
 
         protected Control createDialogArea(Composite parent) {
@@ -451,8 +452,9 @@ public class MainWindow implements ShellListener {
             textInfo.setLayoutData(new GridData(GridData.FILL_BOTH));
             textInfo.setText("Please help us to improve this product!\n" +
                 "Please submit a bug report detailing *exactly* what you were doing when this happened!!!\n" +
-                "http://developer.berlios.de/bugs/?group_id=610\n\n" + SWT.getPlatform() + "/" +
-                SWT.getVersion() + "/" + VersionInfo.getVersion() + "\n" + "StackTrace:\n\n" +
+                "http://developer.berlios.de/bugs/?group_id=610\n\n" + 
+				VersionInfo.getVersion() + "\n"  + 
+				VersionCheck.getInfoString() + "\n" + "StackTrace:\n\n" +
                 string);
 
             return composite;
@@ -489,6 +491,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.10  2004/02/17 22:49:58  psy
+added more VM/OS/Version debug- and crash-info
+
 Revision 1.9  2004/02/05 20:44:44  psy
 hopefully fixed dynamic column behaviour under gtk by introducing a
 bogus column.

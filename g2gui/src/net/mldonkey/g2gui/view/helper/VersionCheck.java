@@ -28,7 +28,7 @@ import org.eclipse.swt.SWT;
 /**
  * VersionCheck - Since fox returns "fox" to the getPlatform() method on all platforms
  *
- * @version $Id: VersionCheck.java,v 1.4 2004/02/05 20:44:43 psy Exp $
+ * @version $Id: VersionCheck.java,v 1.5 2004/02/17 22:49:58 psy Exp $
  *
  */
 public class VersionCheck {
@@ -50,6 +50,10 @@ public class VersionCheck {
             return platform;
     }
     
+	public static int getSWTVersion() {
+		return SWT.getVersion();
+	}
+	
     /**
      * This method is used to check if a ms-windows operating system is being used
      * @return Returns true if its a windows platform and false if not.
@@ -75,11 +79,42 @@ public class VersionCheck {
 		if (getSWTPlatform().startsWith("gtk")) return true;
 		return false;
 	}
+
+	/**
+	 * This method gives us java.vendor, java.vm.name and java.version
+	 * @return a combined String with java information
+	 */
+	public static String getJavaVersion() {
+		return System.getProperty("java.vendor") + " " + System.getProperty("java.vm.name") + 
+			" " + System.getProperty("java.version");
+	}
+
+	/**
+	 * This method gives us os.name, os.arch and os.version
+	 * @return a combined string with OS information
+	 */
+	public static String getOsVersion() {
+		return System.getProperty("os.name") + " " + System.getProperty("os.arch") + 
+		" " + System.getProperty("os.version");
+	}
+
+	/**
+	 * This method gives us a bunch of OS/VM/SWT information
+	 * @return a String which contains info about SWTplatform, SWTversion,
+	 * JavaVersion and OsVersion 
+	 */
+	public static String getInfoString() {
+		return getJavaVersion() + "\n" + getOsVersion() + "\n" + 
+			getSWTPlatform() + "/" + getSWTVersion();
+	}
 }
 
 
 /*
 $Log: VersionCheck.java,v $
+Revision 1.5  2004/02/17 22:49:58  psy
+added more VM/OS/Version debug- and crash-info
+
 Revision 1.4  2004/02/05 20:44:43  psy
 hopefully fixed dynamic column behaviour under gtk by introducing a
 bogus column.
