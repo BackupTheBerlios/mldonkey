@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.14 2003/09/08 13:00:20 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.15 2003/09/18 10:39:21 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -51,10 +51,12 @@ public class MusicComplexSearch extends ComplexSearch {
     private Text albumText;
     private Combo bitrateCombo;
 
-    /**
-     * @param core
-     * @param tab
-     */
+	/**
+	 * Creates a new MusicComplexSearch obj
+	 * 
+	 * @param core The core obj with the <code>Information</code>
+	 * @param tab The <code>GuiTab</code> we draw this obj inside
+	 */
     public MusicComplexSearch( CoreCommunication core, SearchTab tab ) {
         super( core, tab );
     }
@@ -88,16 +90,16 @@ public class MusicComplexSearch extends ComplexSearch {
         this.artistText = this.createInputBox( aSubComposite, G2GuiResources.getString( "MCS_ARTIST" )  );
         this.albumText = this.createInputBox( aSubComposite, G2GuiResources.getString( "MCS_ALBUM" )  );
  
- 		Label s = new Label( aComposite, SWT.SEPARATOR|SWT.HORIZONTAL );
+ 		Label s = new Label( aComposite, SWT.SEPARATOR | SWT.HORIZONTAL );
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
 		s.setLayoutData( gridData );
  
 		Composite aSubComposite2 = new Composite( aComposite, SWT.NONE );
-		aSubComposite2.setLayout(CGridLayout.createGL(2,0,0,2,2,false));
+		aSubComposite2.setLayout( CGridLayout.createGL( 2, 0, 0, 2, 2, false ) );
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
-		aSubComposite2.setLayoutData(gridData);
+		aSubComposite2.setLayoutData( gridData );
 
         /* the bitrate label */
         gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
@@ -122,7 +124,7 @@ public class MusicComplexSearch extends ComplexSearch {
         String[] items = { "", "mp3", "ogg", "wav", "midi" };
         this.createExtensionCombo( aSubComposite2, items );
         
-		s = new Label(aComposite, SWT.SEPARATOR|SWT.HORIZONTAL);
+		s = new Label( aComposite, SWT.SEPARATOR | SWT.HORIZONTAL );
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
 		s.setLayoutData( gridData );
@@ -205,6 +207,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.15  2003/09/18 10:39:21  lemmster
+checkstyle
+
 Revision 1.14  2003/09/08 13:00:20  lemmster
 added tooltip
 

@@ -78,7 +78,7 @@ import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.44 2003/09/18 07:45:09 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.45 2003/09/18 10:39:21 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -405,6 +405,11 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         this.search.setSearchButton();
     }
     
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @return DOCUMENT ME!
+	 */
     public ResultTableMenuListener getMenuListener() {
 		return this.tableMenuListener;
     }
@@ -598,6 +603,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.45  2003/09/18 10:39:21  lemmster
+checkstyle
+
 Revision 1.44  2003/09/18 07:45:09  lemmster
 fix [bug # 933]
 

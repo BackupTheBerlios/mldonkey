@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * CompositeSearch
  *
- * @version $Id: CompositeSearch.java,v 1.5 2003/09/08 10:25:26 lemmster Exp $
+ * @version $Id: CompositeSearch.java,v 1.6 2003/09/18 10:39:21 lemmster Exp $
  *
  */
 public class CompositeSearch extends Search {
@@ -53,10 +53,13 @@ public class CompositeSearch extends Search {
     private StackLayout aStackLayout;
     private Composite aComposite;
 
-    /**
-     * @param core
-     * @param tab
-     */
+	/**
+	 * Creates a new CompositeSearch obj. A CompositeSearch obj creates several <code>ComplexSearch</code>
+	 * objs and draw them inside this objs
+	 * 
+	 * @param core The core obj with the <code>Information</code>
+	 * @param tab The <code>GuiTab</code> we draw this obj inside
+	 */
     public CompositeSearch( CoreCommunication core, SearchTab tab, List aList ) {
         super( core, tab );
 		this.aList = aList;
@@ -87,14 +90,13 @@ public class CompositeSearch extends Search {
         mainComposite.setLayoutData( gridData );
 
 		Composite aSubComposite = new Composite( mainComposite, SWT.NONE );
-		aSubComposite.setLayout(CGridLayout.createGL(2,0,0,2,2,false));
+		aSubComposite.setLayout( CGridLayout.createGL( 2, 0, 0, 2, 2, false ) );
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
-		aSubComposite.setLayoutData(gridData);
+		aSubComposite.setLayoutData( gridData );
 		
         /* search type (music/video/other...) */
         gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
-//		gridData.horizontalSpan = 2;
         Label label = new Label( aSubComposite, SWT.NONE );
         label.setLayoutData( gridData );
         label.setText( "Search type:" );
@@ -107,7 +109,6 @@ public class CompositeSearch extends Search {
             searchNames[ i ] = aComplexSearch.getName();
         }
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-//		 gridData.horizontalSpan = 2;
         Combo typeCombo = new Combo( aSubComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
         typeCombo.setLayoutData( gridData );
         typeCombo.setItems( searchNames );
@@ -153,6 +154,10 @@ public class CompositeSearch extends Search {
         return mainComposite;
     }
     
+	/*
+	 *  (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.search.Search#setStopButton()
+	 */
     public void setStopButton() {
     	for ( int i = 0; i < size; i++ ) {
 			ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
@@ -160,6 +165,10 @@ public class CompositeSearch extends Search {
     	}
     }
     
+    /*
+     *  (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.search.Search#setContinueButton()
+     */
     public void setContinueButton() {
 		for ( int i = 0; i < size; i++ ) {
 			ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
@@ -175,6 +184,9 @@ public class CompositeSearch extends Search {
 
 /*
 $Log: CompositeSearch.java,v $
+Revision 1.6  2003/09/18 10:39:21  lemmster
+checkstyle
+
 Revision 1.5  2003/09/08 10:25:26  lemmster
 OtherComplexSearch added, rest improved
 

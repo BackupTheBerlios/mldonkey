@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.13 2003/09/11 12:37:35 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.14 2003/09/18 10:39:21 lemmster Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -63,8 +63,10 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
     protected Combo resultCombo;
 
     /**
-     * @param core
-     * @param tab
+     * Creates a new ComplexSearch obj
+     * 
+     * @param core The core obj with the <code>Information</code>
+     * @param tab The <code>GuiTab</code> we draw this obj inside
      */
     public ComplexSearch( CoreCommunication core, SearchTab tab ) {
         super( core, tab );
@@ -364,10 +366,10 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable o, Object arg ) {
-    	if (resultCombo.isDisposed()) return;
+    	if ( resultCombo.isDisposed() ) return;
        	resultCombo.getDisplay().asyncExec( new Runnable() {
                 public void run() {
-                	if (resultCombo.isDisposed()) return;
+                	if ( resultCombo.isDisposed() ) return;
                     /* update the other text */
                     if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
                         maxText.setEnabled( false );
@@ -404,6 +406,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.14  2003/09/18 10:39:21  lemmster
+checkstyle
+
 Revision 1.13  2003/09/11 12:37:35  lemmster
 fixed crash with combo boxes [bug #886]
 

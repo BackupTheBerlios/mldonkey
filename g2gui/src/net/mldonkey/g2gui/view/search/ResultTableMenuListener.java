@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.13 2003/09/17 20:07:44 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.14 2003/09/18 10:39:21 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -114,7 +114,7 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 			selectedResult = null;
 			
 		selectedResults.clear();	
-		for ( Iterator it = sSel.iterator(); it.hasNext(); ) {
+		for ( Iterator it = sSel.iterator(); it.hasNext();) {
 			o = it.next();
 			if ( o instanceof ResultInfo ) 
 				selectedResults.add( ( ResultInfo ) o );
@@ -161,8 +161,8 @@ Yet			menuManager.add( webManager );
 		MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TML_FILTER" ) );
 		AllFiltersAction aFA = new AllFiltersAction();
 		boolean setChecked = true;
-		for (int i = 0; i < tableViewer.getFilters().length; i++) {
-			if (!(tableViewer.getFilters()[i] instanceof WordFilter)) 
+		for ( int i = 0; i < tableViewer.getFilters().length; i++ ) {
+			if ( !( tableViewer.getFilters()[ i ] instanceof WordFilter ) ) 
 				setChecked = false;
 		}
 		aFA.setChecked( setChecked );
@@ -196,7 +196,10 @@ Yet			menuManager.add( webManager );
 		}
 	}
 	
-	public void downloadSelected() {				
+	/**
+	 * downloads the selected files and creates error msgs if needed
+	 */
+	void downloadSelected() {				
 		Download download = new Download( core );
 		String anErrorString = new String();
 		int counter = 0;
@@ -344,6 +347,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.14  2003/09/18 10:39:21  lemmster
+checkstyle
+
 Revision 1.13  2003/09/17 20:07:44  lemmster
 avoid NPE´s in search
 

@@ -39,13 +39,15 @@ import org.eclipse.swt.widgets.Label;
 /**
  * OtherComplexSearch
  *
- * @version $Id: OtherComplexSearch.java,v 1.3 2003/09/08 11:54:22 lemmster Exp $ 
+ * @version $Id: OtherComplexSearch.java,v 1.4 2003/09/18 10:39:21 lemmster Exp $ 
  *
  */
 public class OtherComplexSearch extends ComplexSearch {
 	/**
-	 * @param core
-	 * @param tab
+	 * Creates a new OtherComplexSearch obj.
+	 * 
+	 * @param core The core obj with the <code>Information</code>
+	 * @param tab The <code>GuiTab</code> we draw this obj inside
 	 */
 	public OtherComplexSearch( CoreCommunication core, SearchTab tab ) {
 		super( core, tab );
@@ -87,7 +89,7 @@ public class OtherComplexSearch extends ComplexSearch {
 		String[] items = { "", "exe", "bin", "img", "gif", "jpg" };
 		this.createExtensionCombo( aSubComposite, items );
         
-		Label s = new Label( aComposite, SWT.SEPARATOR|SWT.HORIZONTAL );
+		Label s = new Label( aComposite, SWT.SEPARATOR | SWT.HORIZONTAL );
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
 		s.setLayoutData( gridData );
@@ -139,6 +141,9 @@ public class OtherComplexSearch extends ComplexSearch {
 
 /*
 $Log: OtherComplexSearch.java,v $
+Revision 1.4  2003/09/18 10:39:21  lemmster
+checkstyle
+
 Revision 1.3  2003/09/08 11:54:22  lemmster
 added download button
 

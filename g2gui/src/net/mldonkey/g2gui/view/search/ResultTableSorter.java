@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.search;
 
@@ -31,132 +31,156 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  *
- * @version $Id: ResultTableSorter.java,v 1.9 2003/09/17 20:07:44 lemmster Exp $ 
+ * @version $Id: ResultTableSorter.java,v 1.10 2003/09/18 10:39:21 lemmster Exp $
  *
  */
 public class ResultTableSorter extends ViewerSorter {
-	// set the default column to sort to name
-	private int columnIndex = 1;
-	private int lastColumnIndex = 1;
-	// last sort ascending = true
-	private boolean lastSort = true;
-	
+    // set the default column to sort to name
+    private int columnIndex = 1;
+    private int lastColumnIndex = 1;
+
+    // last sort ascending = true
+    private boolean lastSort = true;
+
+    /**
+     * Creates a new viewer sorter
+     */
+    public ResultTableSorter() {
+        super();
+    }
+
+    /**
+     * Returns a negative, zero, or positive number depending on whether
+     * the first element is less than, equal to, or greater than
+     * the second element.
+     * <p>
+     * The default implementation of this method is based on
+     * comparing the elements' categories as computed by the <code>category</code>
+     * framework method. Elements within the same category are further
+     * subjected to a case insensitive compare of their label strings, either
+     * as computed by the content viewer's label provider, or their
+     * <code>toString</code> values in other cases. Subclasses may override.
+     * </p>
+     *
+     * @param viewer the viewer
+     * @param obj1 the first element
+     * @param obj2 the second element
+     * @return a negative number if the first element is less  than the
+     *  second element; the value <code>0</code> if the first element is
+     *  equal to the second element; and a positive number if the first
+     *  element is greater than the second element
+     */
+    public int compare( Viewer viewer, Object obj1, Object obj2 ) {
+        ResultInfo result1 = ( ResultInfo ) obj1;
+        ResultInfo result2 = ( ResultInfo ) obj2;
+        String aString1;
+        String aString2;
+        switch ( columnIndex ) {
+        case 0: // network name
+            aString1 = "" + result1.getNetwork().getNetworkName();
+            aString2 = "" + result2.getNetwork().getNetworkName();
+            return compareStrings( aString1, aString2 );
+        case 1: // filename
+            aString1 = "" + result1.getName();
+            aString2 = "" + result2.getName();
+            return compareStrings( aString1, aString2 );
+        case 2: // filesize
+            Long aLong1 = new Long( result1.getSize() );
+            Long aLong2 = new Long( result2.getSize() );
+            return ( lastSort ? aLong1.compareTo( aLong2 ) : aLong2.compareTo( aLong1 ) );
+        case 3: // format 
+            aString1 = "" + result1.getFormat();
+            aString2 = "" + result2.getFormat();
+            return compareStrings( aString1, aString2 );
+        case 4: // media
+            aString1 = "" + result1.getType();
+            aString2 = "" + result2.getType();
+            return compareStrings( aString1, aString2 );
+        case 5: // availability 
+            Integer anInt1 = new Integer( result1.getAvail() );
+            Integer anInt2 = new Integer( result2.getAvail() );
+            return ( lastSort ? anInt1.compareTo( anInt2 ) : anInt2.compareTo( anInt1 ) );
+        default:
+            return 0;
+        }
+    }
+
 	/**
-	 * Creates a new viewer sorter
-	 */
-	public ResultTableSorter() {
-		super();
-	}
-	
-	/**
-	 * Returns a negative, zero, or positive number depending on whether
-	 * the first element is less than, equal to, or greater than
-	 * the second element.
-	 * <p>
-	 * The default implementation of this method is based on
-	 * comparing the elements' categories as computed by the <code>category</code>
-	 * framework method. Elements within the same category are further 
-	 * subjected to a case insensitive compare of their label strings, either
-	 * as computed by the content viewer's label provider, or their 
-	 * <code>toString</code> values in other cases. Subclasses may override.
-	 * </p>
+	 * DOCUMENT ME!
 	 * 
-	 * @param viewer the viewer
-	 * @param obj1 the first element
-	 * @param obj2 the second element
-	 * @return a negative number if the first element is less  than the 
-	 *  second element; the value <code>0</code> if the first element is
-	 *  equal to the second element; and a positive number if the first
-	 *  element is greater than the second element
+	 * @param aString1 DOCUMENT ME!
+	 * @param aString2 DOCUMENT ME!
+	 * @return DOCUMENT ME!
 	 */
-	public int compare( Viewer viewer, Object obj1, Object obj2 ) {
-		ResultInfo result1 = ( ResultInfo ) obj1;
-		ResultInfo result2 = ( ResultInfo ) obj2;
+    public int compareStrings( String aString1, String aString2 ) {
+        if ( aString1.equals( "" ) )
+            return 1;
+        if ( aString2.equals( "" ) )
+            return -1;
+        return
+        	( lastSort ? aString1.compareToIgnoreCase( aString2 )
+        			   : aString2.compareToIgnoreCase( aString1 ) );
+    }
 
-		String aString1, aString2;
-		
-		switch (columnIndex) {
-			
-			case 0: // network name
-				aString1 = ""+result1.getNetwork().getNetworkName();
-				aString2 = ""+result2.getNetwork().getNetworkName();
-				return compareStrings( aString1, aString2 );
-												
-			case 1: // filename
-				aString1 = ""+result1.getName();
-				aString2 = ""+result2.getName();
-				return compareStrings( aString1, aString2 );
-						 	
-			case 2: // filesize
-				Long aLong1 = new Long( result1.getSize() );
-				Long aLong2 = new Long( result2.getSize() );
-				return ( lastSort ? aLong1.compareTo( aLong2 ) 
-								: aLong2.compareTo( aLong1) );
-								
-			case 3: // format 
-				aString1 = ""+result1.getFormat();
-				aString2 = ""+result2.getFormat();
-				return compareStrings( aString1, aString2 ); 
-								
-			case 4: // media
-				aString1 = ""+result1.getType();
-				aString2 = ""+result2.getType();
-				return compareStrings( aString1, aString2 );
-										
-			case 5: // availability 
-				Integer anInt1 = new Integer ( result1.getAvail() );				
-				Integer	anInt2 = new Integer ( result2.getAvail() );				
-				
-				return ( lastSort ? anInt1.compareTo( anInt2 ) 
-								: anInt2.compareTo( anInt1 ) );	
-			default:
-				return 0;
-		}
-	}
-	
-	// always leave empty strings at the bottom
-	public int compareStrings(String aString1, String aString2) {
-		if (aString1.equals ( "" )) return 1;
-		if (aString2.equals ( "" )) return -1;
-		return ( lastSort ? aString1.compareToIgnoreCase( aString2 )
-						: aString2.compareToIgnoreCase( aString1 ) );
-		
-	}
-	
-	
-	/**
-	 * Sets the column index
-	 * @param i The column index to sort
-	 */
-	public void setColumnIndex( int i ) {
-		columnIndex = i;
-		if (columnIndex == lastColumnIndex)
-			lastSort = !lastSort;
-		else {
-			if (i == 2)
-				lastSort = false;
-			else
-				lastSort = true;
-		}
-		lastColumnIndex = columnIndex;
-	}
-	public int getLastColumnIndex() {
-		return lastColumnIndex;
-	}
-	public void setLastColumnIndex(int i) {
-		lastColumnIndex = i;
-	}
-	public boolean getLastSort() {
-		return lastSort;
-	}
-	public void setLastSort(boolean b) {
-		lastSort = b;
-	}
+    /**
+     * Sets the column index
+     * @param i The column index to sort
+     */
+    public void setColumnIndex( int i ) {
+        columnIndex = i;
+        if ( columnIndex == lastColumnIndex )
+            lastSort = !lastSort;
+        else {
+            if ( i == 2 )
+                lastSort = false;
+            else
+                lastSort = true;
+        }
+        lastColumnIndex = columnIndex;
+    }
 
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public int getLastColumnIndex() {
+        return lastColumnIndex;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param i DOCUMENT ME!
+     */
+    public void setLastColumnIndex( int i ) {
+        lastColumnIndex = i;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public boolean getLastSort() {
+        return lastSort;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param b DOCUMENT ME!
+     */
+    public void setLastSort( boolean b ) {
+        lastSort = b;
+    }
 }
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.10  2003/09/18 10:39:21  lemmster
+checkstyle
+
 Revision 1.9  2003/09/17 20:07:44  lemmster
 avoid NPE´s in search
 

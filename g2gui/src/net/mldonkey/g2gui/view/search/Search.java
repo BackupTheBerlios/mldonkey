@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.26 2003/09/08 11:54:22 lemmster Exp $
+ * @version $Id: Search.java,v 1.27 2003/09/18 10:39:21 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -138,7 +138,7 @@ public abstract class Search implements Observer {
         this.composite = new Composite( group, SWT.NONE );
 		GridData gridData = new GridData( GridData.FILL_HORIZONTAL ) ;
 		gridData.horizontalSpan = 2;
-        composite.setLayoutData(gridData);
+        composite.setLayoutData( gridData );
 		this.composite.setLayout( this.stackLayout );
         this.buttons = new Button[ 4 ];
         Button stopButton = new Button( this.composite, SWT.PUSH );
@@ -233,14 +233,14 @@ public abstract class Search implements Observer {
 			
 		Label fileTypeLabel = new Label( group, SWT.NONE );
 		fileTypeLabel.setText( title );
-		fileTypeLabel.setLayoutData( new GridData(GridData.HORIZONTAL_ALIGN_FILL ));
+		fileTypeLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL ) );
 		
 		final Combo fileTypeCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-		fileTypeCombo.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
+		fileTypeCombo.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 		fileTypeCombo.setItems( items );
 		fileTypeCombo.select( 0 );
 		fileTypeCombo.addSelectionListener( new SelectionListener() {
-				public void widgetDefaultSelected( SelectionEvent e ) {}
+				public void widgetDefaultSelected( SelectionEvent e ) { }
 				public void widgetSelected( SelectionEvent e ) {
 					switch ( fileTypeCombo.getSelectionIndex() ) {
 						case 1: selectedMedia = "Audio"; 
@@ -393,6 +393,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.27  2003/09/18 10:39:21  lemmster
+checkstyle
+
 Revision 1.26  2003/09/08 11:54:22  lemmster
 added download button
 

@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.20 2003/09/08 11:54:23 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.21 2003/09/18 10:39:21 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -72,7 +72,7 @@ public class SimpleSearch extends Search {
 		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
 		gridData.horizontalIndent = 12;
-		gridData.widthHint=500;
+		gridData.widthHint = 500;
 		Composite group = new Composite( tabFolder, SWT.NONE );
 		group.setLayout( gridLayout );
 		group.setLayoutData( gridData );
@@ -126,6 +126,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.21  2003/09/18 10:39:21  lemmster
+checkstyle
+
 Revision 1.20  2003/09/08 11:54:23  lemmster
 added download button
 
