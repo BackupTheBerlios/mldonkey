@@ -37,13 +37,14 @@ import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.G2Gui;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
 
 /**
  * ClientInfoList
  *
  *
- * @version $Id: ClientInfoIntMap.java,v 1.18 2004/03/26 18:11:03 dek Exp $
+ * @version $Id: ClientInfoIntMap.java,v 1.19 2004/03/26 18:38:37 dek Exp $
  */
 public class ClientInfoIntMap extends InfoIntMap {
     /**
@@ -95,6 +96,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 	 * @return
 	 */
 	private boolean isInterstingClient(MessageBuffer messageBuffer) {
+		if (PreferenceLoader.getBoolean("allClients"))
+				return true;
+				
 		//save message-buffer Iterator:
 		int oldIt = messageBuffer.getIterator();
 		boolean result = true;
@@ -280,6 +284,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ClientInfoIntMap.java,v $
+Revision 1.19  2004/03/26 18:38:37  dek
+now the "surpress-received-clients" option is working
+
 Revision 1.18  2004/03/26 18:11:03  dek
 some more profiling and mem-saving option (hopefully)  introduced
 

@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.67 2004/03/26 18:11:04 dek Exp $
+ * @version $Id: PreferenceLoader.java,v 1.68 2004/03/26 18:38:37 dek Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -130,6 +130,7 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "toolbarSmallButtons", false );
         preferenceStore.setDefault( "flatInterface", false );
         preferenceStore.setDefault( "useGraident", true );
+        preferenceStore.setDefault( "allClients", false);
         preferenceStore.setDefault( "splashScreen", true );
         
         PreferenceConverter.setDefault( preferenceStore, "windowBounds", new Rectangle(0,0,640,480) );
@@ -469,6 +470,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.68  2004/03/26 18:38:37  dek
+now the "surpress-received-clients" option is working
+
 Revision 1.67  2004/03/26 18:11:04  dek
 some more profiling and mem-saving option (hopefully)  introduced
 
