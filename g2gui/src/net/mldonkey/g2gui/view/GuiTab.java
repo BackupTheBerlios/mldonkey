@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -10,7 +10,7 @@
  * the Free Software Foundation; either version 2 of the License, or
  * ( at your option ) any later version.
  *
- * G2GUI is distributed in the hope that it will be useful, 
+ * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view;
 
@@ -40,158 +40,175 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.32 2003/09/01 00:44:21 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.33 2003/09/18 09:44:57 lemmster Exp $
  *
  */
-public abstract class GuiTab implements Listener, Observer {	
-	/**
-	 * whether this tab is active
-	 */
-	private boolean active;
-	/**
-	 * The parent Composite
-	 */
-	protected Composite content;
-	/**
-	 * The main Window
-	 */
-	protected MainTab mainWindow;
-	/**
-	 * The ToolItem
-	 */
-	protected ToolButton toolButton;
-	/**
-	 * The master Gui
-	 */
-	private MainTab gui;
-	
-	private boolean hasObserver;
-	
-	protected Composite subContent;
-	
-	/**
-	 * @param gui the gui, to which this tab belongs
-	 */
-	public GuiTab( MainTab gui ) {
-		this.mainWindow = gui;		
-		this.content = new Composite( gui.getPageContainer(), SWT.NONE );
-		
-		GridLayout gridLayout = CGridLayout.createGL(1,0,0,0,0,false);
-		
-		this.content.setLayout( gridLayout );
-		this.content.setLayoutData( new GridData(GridData.FILL_BOTH));
-		this.content.setVisible( false );
-					
-		this.subContent = new Composite( content , SWT.NONE);
-		this.subContent.setLayout( new FillLayout());
-		subContent.setLayoutData( new GridData(GridData.FILL_BOTH));
-		
-		toolButton = new ToolButton( ( ( MainTab )gui ).getCoolBar().getMainTools(), SWT.PUSH );		
-		toolButton.addListener( SWT.Selection, this );
-		
-		this.gui = gui;
-		this.gui.registerTab( this );		
-	}
-	
-	/**
-	 * Creates the content for the tab
-	 * @param parent The parent composite
-	 */	
-	protected abstract void createContents( Composite parent );
-	
-	/**
-	 * @return The text to display in the statusline for this tab
-	 */
-	public String getStatusText() {
-		return "";		
-	}
-	
-	/**
-	 * @return The tooltip to display in the statusline for this tab
-	 */
-	public String getStatusTip() {
-		return "";
-	}
-	
-	/**
-	 * To call if the MainWindow dispose
-	 */
-	public void dispose() {
-		this.gui.getCore().deleteObserver( this );
-	}
+public abstract class GuiTab implements Listener, Observer {
+    /**
+     * whether this tab is active
+     */
+    private boolean active;
 
-	/**
-	 * is called from the gui, when this tab is set to background 
-	 * (because another tab was activated)	
-	 */
-	public void setInActive() {			
-		this.active = false;
-		this.toolButton.setActive ( false );		
-	}
-	
-	/**
-	 * is called when this tab is set to foreground 
-	 */
-	public void setActive() {		
-		this.active = true;		
-		this.mainWindow.setActive( this );
-		this.toolButton.setActive( true );
-		/* does the mainwindow already have a statusline */
-		if ( this.mainWindow.getStatusline() != null ) {
-			this.mainWindow.getStatusline().update( this.getStatusText() );
-			this.mainWindow.getStatusline().updateToolTip( this.getStatusTip() );
-		}
-	}
-	
-	/**
-	 * @return wether this tab is actually beeing displayed or sleeping in the background..
-	 */
-	public boolean isActive() {			
-		return active;
-	}
+    /**
+     * The parent Composite
+     */
+    protected Composite content;
 
-	/**
-	 * what to do, when we are selected: bring us in front of the whole thing
-	 * @param event the Button-press event from the CoolBar
-	 */
-	public void handleEvent( Event event ) {
-		setActive();		
-	}
+    /**
+     * The main Window
+     */
+    protected MainTab mainWindow;
 
-	/**
-	 * @return the Composite, where all the Tab is layed out onto
-	 */
-	public Composite getContent() {
-		return content;
-	}
-	public Composite getSubContent() {
-		return subContent;
-	}
-	
-	public void updateDisplay() {
-		
-		content.layout();
-	}
-	
-	public void createButton(String buttonName, String buttonText, String buttonToolTip) {
-								
-		toolButton.setText(buttonText);
-		toolButton.setToolTipText(buttonToolTip);
-		toolButton.setBigActiveImage(G2GuiResources.getImage(buttonName + "Active"));
-		toolButton.setBigInactiveImage(G2GuiResources.getImage(buttonName));
-		toolButton.setSmallActiveImage(G2GuiResources.getImage(buttonName + "SmallActive"));
-		toolButton.setSmallInactiveImage(G2GuiResources.getImage(buttonName + "Small"));		
-		toolButton.useSmallButtons(this.mainWindow.getCoolBar().isToolbarSmallButtons());
-		toolButton.setActive(false);
-		toolButton.resetImage();
-		this.mainWindow.getCoolBar().getMainToolButtons().add( toolButton );	
-					
-	}
+    /**
+     * The ToolItem
+     */
+    protected ToolButton toolButton;
 
+    /**
+     * The master Gui
+     */
+    private MainTab gui;
+    private boolean hasObserver;
+    protected Composite subContent;
+
+    /**
+     * @param gui the gui, to which this tab belongs
+     */
+    public GuiTab( MainTab gui ) {
+        this.mainWindow = gui;
+
+        this.content = new Composite( gui.getPageContainer(), SWT.NONE );
+        GridLayout gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 0, false );
+        this.content.setLayout( gridLayout );
+        this.content.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        this.content.setVisible( false );
+
+        this.subContent = new Composite( content, SWT.NONE );
+        this.subContent.setLayout( new FillLayout() );
+        subContent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+        toolButton = new ToolButton( ( ( MainTab ) gui ).getCoolBar().getMainTools(), SWT.PUSH );
+        toolButton.addListener( SWT.Selection, this );
+
+        this.gui = gui;
+        this.gui.registerTab( this );
+    }
+
+    /**
+     * Creates the content for the tab
+     * @param parent The parent composite
+     */
+    protected abstract void createContents( Composite parent );
+
+    /**
+     * @return The text to display in the statusline for this tab
+     */
+    public String getStatusText() {
+        return "";
+    }
+
+    /**
+     * @return The tooltip to display in the statusline for this tab
+     */
+    public String getStatusTip() {
+        return "";
+    }
+
+    /**
+     * To call if the MainWindow dispose
+     */
+    public void dispose() {
+        this.gui.getCore().deleteObserver( this );
+    }
+
+    /**
+     * is called from the gui, when this tab is set to background
+     * (because another tab was activated)
+     */
+    public void setInActive() {
+        this.active = false;
+        this.toolButton.setActive( false );
+    }
+
+    /**
+     * is called when this tab is set to foreground
+     */
+    public void setActive() {
+        this.active = true;
+        this.mainWindow.setActive( this );
+        this.toolButton.setActive( true );
+
+        /* does the mainwindow already have a statusline */
+        if ( this.mainWindow.getStatusline() != null ) {
+            this.mainWindow.getStatusline().update( this.getStatusText() );
+            this.mainWindow.getStatusline().updateToolTip( this.getStatusTip() );
+        }
+    }
+
+    /**
+     * @return wether this tab is actually beeing displayed or sleeping in the background..
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * what to do, when we are selected: bring us in front of the whole thing
+     * @param event the Button-press event from the CoolBar
+     */
+    public void handleEvent( Event event ) {
+        setActive();
+    }
+
+    /**
+     * @return the Composite, where all the Tab is layed out onto
+     */
+    public Composite getContent() {
+        return content;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public Composite getSubContent() {
+        return subContent;
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    public void updateDisplay() {
+        content.layout();
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param buttonName DOCUMENT ME!
+     * @param buttonText DOCUMENT ME!
+     * @param buttonToolTip DOCUMENT ME!
+     */
+    public void createButton( String buttonName, String buttonText, String buttonToolTip ) {
+        toolButton.setText( buttonText );
+        toolButton.setToolTipText( buttonToolTip );
+        toolButton.setBigActiveImage( G2GuiResources.getImage( buttonName + "Active" ) );
+        toolButton.setBigInactiveImage( G2GuiResources.getImage( buttonName ) );
+        toolButton.setSmallActiveImage( G2GuiResources.getImage( buttonName + "SmallActive" ) );
+        toolButton.setSmallInactiveImage( G2GuiResources.getImage( buttonName + "Small" ) );
+        toolButton.useSmallButtons( this.mainWindow.getCoolBar().isToolbarSmallButtons() );
+        toolButton.setActive( false );
+        toolButton.resetImage();
+        this.mainWindow.getCoolBar().getMainToolButtons().add( toolButton );
+    }
 }
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.33  2003/09/18 09:44:57  lemmster
+checkstyle
+
 Revision 1.32  2003/09/01 00:44:21  zet
 use hotimage
 
@@ -220,7 +237,7 @@ Revision 1.24  2003/08/23 01:57:36  zet
 use JFace headerfont
 
 Revision 1.23  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/18 01:42:24  zet
 centralize resource bundle
@@ -325,8 +342,8 @@ Revision 1.1  2003/06/24 18:25:43  dek
 working on main gui, without any connection to mldonkey atm, but the princip works
 test with:
 public class guitest{
-	public static void main( String[] args ) {
-	Gui g2gui = new Gui( null );
+        public static void main( String[] args ) {
+        Gui g2gui = new Gui( null );
 }
 
 */

@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,12 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view;
 
 import java.io.File;
 import java.io.IOException;
+
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -54,326 +55,344 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.28 2003/09/08 18:25:45 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.29 2003/09/18 09:44:57 lemmster Exp $
  *
  */
 public class G2Gui {
-	private static boolean processingLink = false;
-	private static Socket socket;
-	private static boolean notProcessingLink = true;
-	private static boolean advancedMode;
-	private static Process p;
-	private static Thread mldonkey;
-	private static Object waiterObject;
-	private static ObjectPool socketPool;
-	private static CoreCommunication core;
-	private static PreferenceStore preferenceStore;
-	private static Preferences myPrefs;
-	private static String aString, hostname, username, password;
-	private static int port;
-	private static int[] count;
-	private static MessageBox box;
-	private static Display display = null;
-	private static Shell shell, splashShell;
-	private static ProgressBar progressBar;
-	private static FormLayout formLayout;
-	private static FormData formData;
-	private static Rectangle shellRect, displayRect;
-	private static Label label;
-	private static ExecConsole execConsole = null;
-	
-	/**
-	 * Starts a new Core and launch the Gui
-	 * @param args Nothing to put inside
-	 */
-	public static void main( String[] args ) {		
-		display = new Display();
-		G2GuiResources.initialize();
-		PreferenceLoader.initialize();
-		preferenceStore = PreferenceLoader.getPreferenceStore();
-		launch( args );
-	}
-	
-	/**
-	 * spawn core
-	 */
-	public static void spawnCore() {
-		
-		if (PreferenceLoader.loadString("coreExecutable").equals("")) return;
-		
-		File coreEXE = new File( PreferenceLoader.loadString("coreExecutable") );
-		
-		if ( execConsole == null && coreEXE.exists() && coreEXE.isFile() ) {
-			execConsole = new ExecConsole();
-			try {
-				// wait while the core loads and opens the gui port? something better?
-				Thread.sleep( 7777 );
-			} catch ( InterruptedException e ) {
-			
-			}
-		}
-	}
-	
-	public static void launch( String[] args ) {
-		if ( containsLink(args) ) {
-			/*these two fields are only for easier if ( boolean )*/
-			notProcessingLink = false;
-			processingLink = true;
-		} 		
-		waiterObject = new Object();
-		
-		if ( notProcessingLink ){	
-			myPrefs = new Preferences( preferenceStore );
-			
-			/* load the preferences */
-			try {
-				myPrefs.initialize( preferenceStore );
-			}
-			catch ( IOException e ) { System.out.println( "failed" ); }	
-			
-			shell = new Shell( display );
-			splashShell = new Shell( shell, SWT.ON_TOP );	
-			box = new MessageBox( shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);					
-			progressBar = new ProgressBar( splashShell, SWT.NONE );
-			count = new int[] { 3 };
-				
-			/* build the splash */
-			progressBar.setMaximum( count[0] );
-			label = new Label( splashShell, SWT.NONE );
-			label.setImage( G2GuiResources.getImage("splashScreen") );
-			FormLayout layout = new FormLayout();
-			splashShell.setLayout( layout );
-			formData = new FormData();
-			formData.left = new FormAttachment( 0, 5 );
-			formData.right = new FormAttachment( 100, -5 );
-			formData.bottom = new FormAttachment( 100, -5 );
-			progressBar.setLayoutData( formData );
-			splashShell.pack();
-			shellRect = splashShell.getBounds();
-			displayRect = display.getBounds();
-			int x = ( displayRect.width - shellRect.width ) / 2;
-			int y = ( displayRect.height - shellRect.height ) / 2;
-			splashShell.setLocation( x, y );
-			splashShell.open(); 
-			spawnCore();
-			increaseBar( "Starting the model" );
-		}
-	
-		/* if the gui isnt set up yet launch the preference window */
-		if ( !( preferenceStore.getBoolean( "initialized" ) ) && notProcessingLink ) {
-			preferenceStore.setValue( "initialized", true );	
-			splashShell.setVisible( false );
-			myPrefs.open( shell, null );
-			// crashes if you call myPrefs.open again 
-			// if you don't create a new Preferenes() - Why?
-			// a jface.Wizard would be better
-			// temporary hack
-			myPrefs = new Preferences( preferenceStore );
-			splashShell.setVisible( true );
-		}
-		
-		port = preferenceStore.getInt( "port" );		
-		hostname = preferenceStore.getString( "hostname" );			
-		username = preferenceStore.getString( "username" );			
-		password = preferenceStore.getString( "password" );	
-		advancedMode = preferenceStore.getBoolean( "advancedMode" );
-		if ( processingLink ) advancedMode = false;
-		
-		/* create the socket connection to the core */
-		socket = null;
-		try {
-			socketPool = new SocketPool( hostname, port );
-			socket = ( Socket ) socketPool.checkOut();
-		
-		}
-		
-		catch ( UnknownHostException e ) {
-			if ( notProcessingLink ) {
-				splashShell.dispose();
-				box.setText( G2GuiResources.getString( "G2_INVALID_ADDRESS") );
-				box.setMessage( G2GuiResources.getString( "G2_ILLEGAL_ADDRESS" ) );
-				int rc = box.open();
-				if ( rc == SWT.NO ) {
-					shell.dispose();
-					display.dispose();
-				}
-				else {
-					myPrefs.open( shell, null );
-					relaunchSelf( args );
-				}
-			}
-			else {
-				myPrefs = new Preferences( preferenceStore );
-				shell = new Shell();
-				myPrefs.open( shell, null);
-				relaunchSelf( args );
-			}
-			return;
-		}
-		catch ( IOException e ) {
-			if ( notProcessingLink ) {
-				splashShell.dispose(); 
-				box.setText( G2GuiResources.getString( "G2_IOEXCEPTION") );
-				box.setMessage( G2GuiResources.getString( "G2_CORE_NOT_RUNNING" ) );
-				int rc = box.open();
-				if ( rc == SWT.NO ) {
-					shell.dispose();
-					display.dispose();
-				}
-				else {
-					myPrefs.open( shell, null );
-					relaunchSelf( args );
-				}
-			}
-			else {
-				myPrefs = new Preferences( preferenceStore );
-				shell = new Shell();
-				myPrefs.open( shell, null);
-				relaunchSelf(args);
-			}
-			return;
-		}
-		
-		/* launch the model */
-		PreferenceLoader.saveStore();
-		
-		boolean pollMode = processingLink;
-		/* wait as long as the core tells us to continue */
-		synchronized ( waiterObject ) {
-		
-			core = new Core( socket, username, password, waiterObject, pollMode, advancedMode );
-			core.connect();
-			
-			mldonkey = new Thread( core );
-			mldonkey.setDaemon( true );
-			mldonkey.start();
-			try {
-				waiterObject.wait();  
-			}
-			catch ( InterruptedException e1 ) { }
-		}
-		/* did the core receive "bad password" */
-		if ( core.getConnectionDenied() ) {
-			if ( notProcessingLink )
-				connectDeniedHandling();
-		}
-		else if ( core.getBadPassword() ) {
-			core.disconnect();
-			if ( notProcessingLink )
-				badPasswordHandling( args );
-		}
-		else {
-			if ( notProcessingLink ){
-				increaseBar( "Starting the view" ); 			
-				MainTab g2gui = new MainTab( core, shell );
-			}
-			else {
-				sendDownloadLink( args );
-			}
-		}
-		core.disconnect();
-	}
-	
-	/**
-	 * @param args
-	 * @return
-	 */
-	private static boolean containsLink(String[] args) {
-		/*TODO: regex-check wether the args[] contains an ed2k-link
-		 * this is for the handling of platform independent link-handling-hack
-		 * but this seems not to be important, as core ignores malformed links
-		 */
-		if ( args.length!= 0 )
-			return true;
-		else
-			return false;
-	}
+    private static boolean processingLink = false;
+    private static Socket socket;
+    private static boolean notProcessingLink = true;
+    private static boolean advancedMode;
+    private static Process p;
+    private static Thread mldonkey;
+    private static Object waiterObject;
+    private static ObjectPool socketPool;
+    private static CoreCommunication core;
+    private static PreferenceStore preferenceStore;
+    private static Preferences myPrefs;
+    private static String aString;
+    private static String hostname;
+    private static String username;
+    private static String password;
+    private static int port;
+    private static int[] count;
+    private static MessageBox box;
+    private static Display display = null;
+    private static Shell shell;
+    private static Shell splashShell;
+    private static ProgressBar progressBar;
+    private static FormLayout formLayout;
+    private static FormData formData;
+    private static Rectangle shellRect;
+    private static Rectangle displayRect;
+    private static Label label;
+    private static ExecConsole execConsole = null;
 
-	/**
-	 * 
-	 */
-	private static void sendDownloadLink( String[] args ) {
-		//TODO creating message and send it out		
-		Object[] content = args;		
-		Message link = new EncodeMessage( Message.S_DLLINK, content );		
-		link.sendMessage( socket );
-	}
+    /**
+     * Starts a new Core and launch the Gui
+     * @param args Nothing to put inside
+     */
+    public static void main( String[] args ) {
+        display = new Display();
+        G2GuiResources.initialize();
+        PreferenceLoader.initialize();
+        preferenceStore = PreferenceLoader.getPreferenceStore();
+        launch( args );
+    }
 
-	/**
-	 * relaunch the main method with killing the old one
-	 */
-	private static void relaunchSelf( String[] args)  {
-		shell.dispose();
-		launch( args );
-	}
-	
-	/**
-	 * Raise an messagebox on badpassword exception
-	 * and send the password again
-	 */
-	public static void badPasswordHandling( String[] args ) {
-		splashShell.dispose();
-		/* raise a warning msg */
-		box = new MessageBox( shell, SWT.ICON_WARNING | SWT.YES | SWT.NO );
-		box.setText( G2GuiResources.getString( "G2_LOGIN_INVALID" ) );
-		box.setMessage( G2GuiResources.getString( "G2_USER_PASS" ) );
-		int rc = box.open();
-		if ( rc == SWT.NO ) {
-			shell.dispose();
-			display.dispose();
-		}
-		else {
-			myPrefs.open( shell, null );
-			relaunchSelf( args );
-		}
-	}
-	
-	public static void connectDeniedHandling() {
-		splashShell.dispose();
-		/* raise a warning msg */
-		box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
-		box.setText( G2GuiResources.getString( "G2_CONNECTION_DENIED" ) );
-		box.setMessage( G2GuiResources.getString( "G2_CONNECTION_ATTEMPT_DENIED" ) );
-		box.open();
-		shell.dispose();
-		display.dispose();
-	}
+    /**
+     * spawn core
+     */
+    public static void spawnCore() {
+        if ( PreferenceLoader.loadString( "coreExecutable" ).equals( "" ) )
+            return;
+        File coreEXE = new File( PreferenceLoader.loadString( "coreExecutable" ) );
+        if ( ( execConsole == null ) && coreEXE.exists() && coreEXE.isFile() ) {
+            execConsole = new ExecConsole();
+            try {
+                // wait while the core loads and opens the gui port? something better?
+                Thread.sleep( 7777 );
+            }
+            catch ( InterruptedException e ) {
+            }
+        }
+    }
 
-	/**
-	 * Increse the ProgressBar and updates the label text
-	 * @param aString The new label text
-	 */	
-	static void increaseBar( final String aString ) {
-		display.syncExec( new Runnable() {
-			public void run() {
-				int selection = progressBar.getSelection();
-				progressBar.setSelection( selection + 1 );
-			}	
-		} );
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param args DOCUMENT ME!
+     */
+    public static void launch( String[] args ) {
+        if ( containsLink( args ) ) {
+            /*these two fields are only for easier if ( boolean )*/
+            notProcessingLink = false;
+            processingLink = true;
+        }
+        waiterObject = new Object();
+        if ( notProcessingLink ) {
+            myPrefs = new Preferences( preferenceStore );
+            /* load the preferences */
+            try {
+                myPrefs.initialize( preferenceStore );
+            }
+            catch ( IOException e ) {
+                System.out.println( "failed" );
+            }
+            shell = new Shell( display );
+            splashShell = new Shell( shell, SWT.ON_TOP );
+            box = new MessageBox( shell, SWT.ICON_ERROR | SWT.YES | SWT.NO );
+            progressBar = new ProgressBar( splashShell, SWT.NONE );
+            count = new int[] { 3 };
 
-	/**
-	 * @return The splashShell
-	 */
-	public static Shell getSplashShell() {
-		return splashShell;
-	}
-	/**
-	 * @return The parent CoreCommuncation obj
-	 */
-	public static CoreCommunication getMldonkey() {
-		return core;
-	}
-	
-	public static ExecConsole getCoreConsole() {
-		return execConsole;
-	}
-	
-	
+            /* build the splash */
+            progressBar.setMaximum( count[ 0 ] );
+            label = new Label( splashShell, SWT.NONE );
+            label.setImage( G2GuiResources.getImage( "splashScreen" ) );
+            FormLayout layout = new FormLayout();
+            splashShell.setLayout( layout );
+            formData = new FormData();
+            formData.left = new FormAttachment( 0, 5 );
+            formData.right = new FormAttachment( 100, -5 );
+            formData.bottom = new FormAttachment( 100, -5 );
+            progressBar.setLayoutData( formData );
+            splashShell.pack();
+            shellRect = splashShell.getBounds();
+            displayRect = display.getBounds();
+            int x = ( displayRect.width - shellRect.width ) / 2;
+            int y = ( displayRect.height - shellRect.height ) / 2;
+            splashShell.setLocation( x, y );
+            splashShell.open();
+            spawnCore();
+            increaseBar( "Starting the model" );
+        }
+        /* if the gui isnt set up yet launch the preference window */
+        if ( !( preferenceStore.getBoolean( "initialized" ) ) && notProcessingLink ) {
+            preferenceStore.setValue( "initialized", true );
+            splashShell.setVisible( false );
+            myPrefs.open( shell, null );
+
+            // crashes if you call myPrefs.open again 
+            // if you don't create a new Preferenes() - Why?
+            // a jface.Wizard would be better
+            // temporary hack
+            myPrefs = new Preferences( preferenceStore );
+            splashShell.setVisible( true );
+        }
+        port = preferenceStore.getInt( "port" );
+        hostname = preferenceStore.getString( "hostname" );
+        username = preferenceStore.getString( "username" );
+        password = preferenceStore.getString( "password" );
+        advancedMode = preferenceStore.getBoolean( "advancedMode" );
+        if ( processingLink )
+            advancedMode = false;
+
+        /* create the socket connection to the core */
+        socket = null;
+        try {
+            socketPool = new SocketPool( hostname, port );
+            socket = ( Socket ) socketPool.checkOut();
+        }
+        catch ( UnknownHostException e ) {
+            if ( notProcessingLink ) {
+                splashShell.dispose();
+                box.setText( G2GuiResources.getString( "G2_INVALID_ADDRESS" ) );
+                box.setMessage( G2GuiResources.getString( "G2_ILLEGAL_ADDRESS" ) );
+                int rc = box.open();
+                if ( rc == SWT.NO ) {
+                    shell.dispose();
+                    display.dispose();
+                }
+                else {
+                    myPrefs.open( shell, null );
+                    relaunchSelf( args );
+                }
+            }
+            else {
+                myPrefs = new Preferences( preferenceStore );
+                shell = new Shell();
+                myPrefs.open( shell, null );
+                relaunchSelf( args );
+            }
+            return;
+        }
+        catch ( IOException e ) {
+            if ( notProcessingLink ) {
+                splashShell.dispose();
+                box.setText( G2GuiResources.getString( "G2_IOEXCEPTION" ) );
+                box.setMessage( G2GuiResources.getString( "G2_CORE_NOT_RUNNING" ) );
+                int rc = box.open();
+                if ( rc == SWT.NO ) {
+                    shell.dispose();
+                    display.dispose();
+                }
+                else {
+                    myPrefs.open( shell, null );
+                    relaunchSelf( args );
+                }
+            }
+            else {
+                myPrefs = new Preferences( preferenceStore );
+                shell = new Shell();
+                myPrefs.open( shell, null );
+                relaunchSelf( args );
+            }
+            return;
+        }
+
+        /* launch the model */
+        PreferenceLoader.saveStore();
+        boolean pollMode = processingLink;
+
+        /* wait as long as the core tells us to continue */
+        synchronized ( waiterObject ) {
+            core = new Core( socket, username, password, waiterObject, pollMode, advancedMode );
+            core.connect();
+            mldonkey = new Thread( core );
+            mldonkey.setDaemon( true );
+            mldonkey.start();
+            try {
+                waiterObject.wait();
+            }
+            catch ( InterruptedException e1 ) {
+            }
+        }
+
+        /* did the core receive "bad password" */
+        if ( core.getConnectionDenied() ) {
+            if ( notProcessingLink )
+                connectDeniedHandling();
+        }
+        else if ( core.getBadPassword() ) {
+            core.disconnect();
+            if ( notProcessingLink )
+                badPasswordHandling( args );
+        }
+        else {
+            if ( notProcessingLink ) {
+                increaseBar( "Starting the view" );
+                MainTab g2gui = new MainTab( core, shell );
+            }
+            else
+                sendDownloadLink( args );
+        }
+        core.disconnect();
+    }
+
+    /**
+     * @param args
+     * @return
+     */
+    private static boolean containsLink( String[] args ) {
+        /*TODO: regex-check wether the args[] contains an ed2k-link
+         * this is for the handling of platform independent link-handling-hack
+         * but this seems not to be important, as core ignores malformed links
+         */
+        if ( args.length != 0 )
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     *
+     */
+    private static void sendDownloadLink( String[] args ) {
+        //TODO creating message and send it out		
+        Object[] content = args;
+        Message link = new EncodeMessage( Message.S_DLLINK, content );
+        link.sendMessage( socket );
+    }
+
+    /**
+     * relaunch the main method with killing the old one
+     */
+    private static void relaunchSelf( String[] args ) {
+        shell.dispose();
+        launch( args );
+    }
+
+    /**
+     * Raise an messagebox on badpassword exception
+     * and send the password again
+     * 
+     * @param args nothing to put inside
+     */
+    public static void badPasswordHandling( String[] args ) {
+        splashShell.dispose();
+
+        /* raise a warning msg */
+        box = new MessageBox( shell, SWT.ICON_WARNING | SWT.YES | SWT.NO );
+        box.setText( G2GuiResources.getString( "G2_LOGIN_INVALID" ) );
+        box.setMessage( G2GuiResources.getString( "G2_USER_PASS" ) );
+        int rc = box.open();
+        if ( rc == SWT.NO ) {
+            shell.dispose();
+            display.dispose();
+        }
+        else {
+            myPrefs.open( shell, null );
+            relaunchSelf( args );
+        }
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    public static void connectDeniedHandling() {
+        splashShell.dispose();
+
+        /* raise a warning msg */
+        box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
+        box.setText( G2GuiResources.getString( "G2_CONNECTION_DENIED" ) );
+        box.setMessage( G2GuiResources.getString( "G2_CONNECTION_ATTEMPT_DENIED" ) );
+        box.open();
+        shell.dispose();
+        display.dispose();
+    }
+
+    /**
+     * Increse the ProgressBar and updates the label text
+     * @param aString The new label text
+     */
+    static void increaseBar( final String aString ) {
+        display.syncExec( new Runnable() {
+                public void run() {
+                    int selection = progressBar.getSelection();
+                    progressBar.setSelection( selection + 1 );
+                }
+            } );
+    }
+
+    /**
+     * @return The splashShell
+     */
+    public static Shell getSplashShell() {
+        return splashShell;
+    }
+
+    /**
+     * @return The parent CoreCommuncation obj
+     */
+    public static CoreCommunication getMldonkey() {
+        return core;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public static ExecConsole getCoreConsole() {
+        return execConsole;
+    }
 }
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.29  2003/09/18 09:44:57  lemmster
+checkstyle
+
 Revision 1.28  2003/09/08 18:25:45  zet
 init resources in g2gui
 
@@ -396,7 +415,7 @@ Revision 1.22  2003/08/22 10:28:22  lemmster
 catch wrong "allowed_ips" values (connection denied)
 
 Revision 1.21  2003/08/20 14:26:19  dek
-work on build-in-link handler, now sendig out poll-mode request, 
+work on build-in-link handler, now sendig out poll-mode request,
 not only creating it...
 
 Revision 1.20  2003/08/20 11:51:52  dek

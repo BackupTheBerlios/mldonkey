@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.31 2003/09/16 02:12:30 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.32 2003/09/18 09:44:57 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -150,7 +150,8 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	protected void createContents( Composite parent ) {
 		
 		ViewForm viewForm = 
-			new ViewForm( parent, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+			new ViewForm( parent, SWT.BORDER
+				| ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
 		
 		CLabel ccLabel = CCLabel.createCL( viewForm, "TT_ServersButton", "ServersButtonSmallTitlebar" );
 			
@@ -158,7 +159,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		composite.setLayout( new FillLayout() );
 	
 		viewForm.setContent( this.composite );
-		viewForm.setTopLeft(ccLabel);
+		viewForm.setTopLeft( ccLabel );
 
 		this.createTable();
 		
@@ -166,7 +167,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		popupMenu.setRemoveAllWhenShown( true );
 		popupMenu.addMenuListener( new PaneMenuListener( table, core ) );
 		
-		ccLabel.addMouseListener(new HeaderBarMouseAdapter(ccLabel, popupMenu));
+		ccLabel.addMouseListener( new HeaderBarMouseAdapter( ccLabel, popupMenu ) );
 	}
 
 	/**
@@ -236,7 +237,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		 * (Feature Request on eclipse?)
 		 */
 		Menu menu = table.getTable().getMenu();
-		menu.addMenuListener( new MenuListener(){
+		menu.addMenuListener( new MenuListener() {
 			public void menuShown( MenuEvent e ) {
 				Menu menu = table.getTable().getMenu();
 				if ( !table.getSelection().isEmpty() )
@@ -294,11 +295,13 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		this.setStatusLine();
 		
 		/* refresh the table if "show connected servers only" is true and the filter is activated */
-		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) && this.servers.getConnected() != itemCount ) {
+		if ( PreferenceLoader.loadBoolean( "displayAllServers" )
+		&& this.servers.getConnected() != itemCount ) {
 			ViewerFilter[] filters = table.getFilters();
 			for ( int i = 0; i < filters.length; i++ )
 				if ( filters[ i ] instanceof ServerTableMenuListener.EnumStateFilter ) {
-					TableMenuListener.EnumStateFilter filter = ( TableMenuListener.EnumStateFilter ) filters[ i ];
+					TableMenuListener.EnumStateFilter filter =
+						( TableMenuListener.EnumStateFilter ) filters[ i ];
 					for ( int j = 0; j < filter.getEnumState().size(); j++ ) {
 						if ( filter.getEnumState().get( j ) == EnumState.CONNECTED )
 							table.refresh();
@@ -349,7 +352,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * @see org.eclipse.swt.events.DisposeListener#
 	 * widgetDisposed(org.eclipse.swt.events.DisposeEvent)
 	 */
-	public void widgetDisposed(DisposeEvent e) {
+	public void widgetDisposed( DisposeEvent e ) {
 		this.core.getServerInfoIntMap().deleteObserver( this );
 	}
 	
@@ -357,7 +360,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * Adds a <code>ViewerFilter</code> to the <code>TableViewer</code> by
 	 * removing all present <code>TabelMenuListener.NetworkFilter</code> 
 	 * from the table.
-	 * @param enum
+	 * @param enum The <code>NetworkInfo.Enum</code> we want to be filtered
 	 */
 	public void setFilter( NetworkInfo.Enum enum ) {
 		ViewerFilter[] filters = table.getFilters();
@@ -385,7 +388,8 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 						table.removeFilter( table.getFilters()[ i ] );
 				}
 				/* now add the new one */
-				ServerTableMenuListener.EnumStateFilter filter = new ServerTableMenuListener.EnumStateFilter();
+				ServerTableMenuListener.EnumStateFilter filter =
+					 new ServerTableMenuListener.EnumStateFilter();
 				filter.add( EnumState.CONNECTED );
 				table.addFilter( filter );
 			}
@@ -393,7 +397,8 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 				ViewerFilter[] filters = table.getFilters();
 				for ( int i = 0; i < filters.length; i++ ) {
 					if ( table.getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateFilter ) {
-						TableMenuListener.EnumStateFilter filter = ( TableMenuListener.EnumStateFilter ) filters[ i ];
+						TableMenuListener.EnumStateFilter filter =
+							( TableMenuListener.EnumStateFilter ) filters[ i ];
 						if ( filter.contains( EnumState.CONNECTED ) ) {
 							if (  filter.getEnumState().size() == 1 )
 								table.removeFilter( filter );
@@ -413,6 +418,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.32  2003/09/18 09:44:57  lemmster
+checkstyle
+
 Revision 1.31  2003/09/16 02:12:30  zet
 match the menus with transfertab
 

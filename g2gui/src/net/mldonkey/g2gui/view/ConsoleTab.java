@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -10,7 +10,7 @@
  * the Free Software Foundation; either version 2 of the License, or
  * ( at your option ) any later version.
  *
- * G2GUI is distributed in the hope that it will be useful, 
+ * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view;
 
@@ -48,143 +48,153 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.45 2003/08/29 22:11:47 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.46 2003/09/18 09:44:57 lemmster Exp $
  *
  */
-public class ConsoleTab extends GuiTab implements Observer, Runnable {	
-	private String[] consoleFont;
-	private ConsoleMessage consoleMessage;
-	private CoreCommunication core;
-	private Composite parent;
-	private Console console;
+public class ConsoleTab extends GuiTab implements Observer, Runnable {
+    private String[] consoleFont;
+    private ConsoleMessage consoleMessage;
+    private CoreCommunication core;
+    private Composite parent;
+    private Console console;
 
-	/**
-	 * @param gui the main gui, which takes care of all our tabs
-	 */
-	public ConsoleTab( MainTab gui ) {
-		super( gui );
-		this.core = gui.getCore();		
-		createButton( "ConsoleButton", 
-						G2GuiResources.getString( "TT_ConsoleButton" ),
-						G2GuiResources.getString( "TT_ConsoleButtonToolTip" ) );
-		createContents( this.subContent );
-	} 
-	
-	/* ( non-Javadoc )
-	 * @see net.mldonkey.g2gui.view.widgets.Gui.G2guiTab#createContents( org.eclipse.swt.widgets.Composite )
-	 */
-	protected void createContents( Composite parent ) {	
-		this.parent = parent;		
-		
-		ViewForm consoleViewForm = new ViewForm( parent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
-		
-		Composite consoleComposite = new Composite(consoleViewForm, SWT.NONE);
-		consoleComposite.setLayout( new FillLayout() );
-		
-		CLabel consoleCLabel = CCLabel.createCL(consoleViewForm, "TT_ConsoleButton", "ConsoleButtonSmallTitlebar");
-		
-		console = new Console ( consoleComposite, SWT.NONE );
-		console.addObserver( this );
+    /**
+     * @param gui the main gui, which takes care of all our tabs
+     */
+    public ConsoleTab( MainTab gui ) {
+        super( gui );
+        this.core = gui.getCore();
+        createButton( "ConsoleButton", G2GuiResources.getString( "TT_ConsoleButton" ),
+                      G2GuiResources.getString( "TT_ConsoleButtonToolTip" ) );
+        createContents( this.subContent );
+    }
 
-//		parent.setLayout( null );
-		loadPreferences();
-	
-		consoleViewForm.setContent(consoleComposite);
-		consoleViewForm.setTopLeft(consoleCLabel);
+    /* ( non-Javadoc )
+     * @see net.mldonkey.g2gui.view.widgets.Gui.G2guiTab#createContents( org.eclipse.swt.widgets.Composite )
+     */
+    protected void createContents( Composite parent ) {
+        this.parent = parent;
+        ViewForm consoleViewForm =
+            new ViewForm( parent,
+                          SWT.BORDER
+                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+        Composite consoleComposite = new Composite( consoleViewForm, SWT.NONE );
+        consoleComposite.setLayout( new FillLayout() );
+        CLabel consoleCLabel =
+            CCLabel.createCL( consoleViewForm, "TT_ConsoleButton", "ConsoleButtonSmallTitlebar" );
+        console = new Console( consoleComposite, SWT.NONE );
+        console.addObserver( this );
 
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.GuiTab#setInActive()
-	 */
-	public void setInActive() {
-		this.core.getConsoleMessage().deleteObserver( this );
-		console.deleteObserver( this );
-		super.setInActive();
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.GuiTab#setActive()
-	 */
-	public void setActive() {
-		console.addObserver( this );
-		this.core.getConsoleMessage().addObserver( this );
-		super.setActive();
-		console.setFocus();
-	}
-		
-	/**
-	 * what to do, if this tab becomes active
-	 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
-	 */
-	public void handleEvent(Event event) {
-		super.handleEvent(event);
-		if ( core.isConnected() ) {
-			console.append(
-				replaceAll(	core.getConsoleMessage().getConsoleMessage(),
-							"\n",
-							console.getLineDelimiter() ) 
-						   );
-			core.getConsoleMessage().reset();
-		}
-	}
-	
-	private String replaceAll( String input, String toBeReplaced, String replaceWith ) {		
-		RE regex = null;			
-		try {
-			 regex = new RE( toBeReplaced );
-		}
-		catch ( REException e ) {			
-			e.printStackTrace();
-		}		
-		String result = regex.substituteAll( input, replaceWith );	
-		return result;
-	}
-	
-	public void updateDisplay() {
-		loadPreferences();
-		super.updateDisplay();
-	}
-	
-	public void loadPreferences() {
-		
-		console.setDisplayFont( PreferenceLoader.loadFont( "consoleFontData" ) );
-		console.setInputFont( PreferenceLoader.loadFont( "consoleFontData" ) );
-		console.setHighlightColor( PreferenceLoader.loadColour( "consoleHighlight" ) );
-		console.setDisplayBackground( PreferenceLoader.loadColour( "consoleBackground" ) );
-		console.setDisplayForeground( PreferenceLoader.loadColour( "consoleForeground" ) );
-		console.setInputBackground( PreferenceLoader.loadColour( "consoleInputBackground" ) );
-		console.setInputForeground( PreferenceLoader.loadColour( "consoleInputForeground" ) );
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
-	 */
-	public void update( Observable o, Object arg ) {
-		if ( o instanceof Console ) {
-			String[] command = new String[ 1 ] ;
-			command[ 0 ] = ( String ) arg ;
-			( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage(
-				 ( ( CoreCommunication ) core ).getConnection() );
-		}
-		else if ( o instanceof ConsoleMessage ) {
-			this.consoleMessage = ( ConsoleMessage ) arg;
-			content.getDisplay().syncExec( this );
-		}
-	}
+        //parent.setLayout( null );
+        loadPreferences();
+        consoleViewForm.setContent( consoleComposite );
+        consoleViewForm.setTopLeft( consoleCLabel );
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
-	public void run() {		
-		console.append(consoleMessage.getConsoleMessage());	
-		consoleMessage.reset();	
-	}
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.GuiTab#setInActive()
+     */
+    public void setInActive() {
+        this.core.getConsoleMessage().deleteObserver( this );
+        console.deleteObserver( this );
+        super.setInActive();
+    }
+
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.GuiTab#setActive()
+     */
+    public void setActive() {
+        console.addObserver( this );
+        this.core.getConsoleMessage().addObserver( this );
+        super.setActive();
+        console.setFocus();
+    }
+
+    /**
+     * what to do, if this tab becomes active
+     * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+     */
+    public void handleEvent( Event event ) {
+        super.handleEvent( event );
+        if ( core.isConnected() ) {
+            console.append( replaceAll( core.getConsoleMessage().getConsoleMessage(), "\n",
+                                        console.getLineDelimiter() ) );
+            core.getConsoleMessage().reset();
+        }
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param input DOCUMENT ME!
+     * @param toBeReplaced DOCUMENT ME!
+     * @param replaceWith DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    private String replaceAll( String input, String toBeReplaced, String replaceWith ) {
+        RE regex = null;
+        try {
+            regex = new RE( toBeReplaced );
+        }
+        catch ( REException e ) {
+            e.printStackTrace();
+        }
+        String result = regex.substituteAll( input, replaceWith );
+        return result;
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    public void updateDisplay() {
+        loadPreferences();
+        super.updateDisplay();
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    public void loadPreferences() {
+        console.setDisplayFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+        console.setInputFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+        console.setHighlightColor( PreferenceLoader.loadColour( "consoleHighlight" ) );
+        console.setDisplayBackground( PreferenceLoader.loadColour( "consoleBackground" ) );
+        console.setDisplayForeground( PreferenceLoader.loadColour( "consoleForeground" ) );
+        console.setInputBackground( PreferenceLoader.loadColour( "consoleInputBackground" ) );
+        console.setInputForeground( PreferenceLoader.loadColour( "consoleInputForeground" ) );
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
+     */
+    public void update( Observable o, Object arg ) {
+        if ( o instanceof Console ) {
+            String[] command = new String[ 1 ];
+            command[ 0 ] = ( String ) arg;
+            ( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage( ( ( CoreCommunication ) core )
+                                                                                .getConnection() );
+        }
+        else if ( o instanceof ConsoleMessage ) {
+            this.consoleMessage = ( ConsoleMessage ) arg;
+            content.getDisplay().syncExec( this );
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
+    public void run() {
+        console.append( consoleMessage.getConsoleMessage() );
+        consoleMessage.reset();
+    }
 }
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.46  2003/09/18 09:44:57  lemmster
+checkstyle
+
 Revision 1.45  2003/08/29 22:11:47  zet
 add CCLabel helper class
 
@@ -210,7 +220,7 @@ Revision 1.38  2003/08/23 09:56:15  lemmster
 use supertype instead of Core
 
 Revision 1.37  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.36  2003/08/18 01:42:24  zet
 centralize resource bundle

@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -10,7 +10,7 @@
  * the Free Software Foundation; either version 2 of the License, or
  * ( at your option ) any later version.
  *
- * G2GUI is distributed in the hope that it will be useful, 
+ * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view;
 
@@ -59,320 +59,310 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.71 2003/09/16 01:12:25 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.72 2003/09/18 09:44:57 lemmster Exp $
  *
  */
 public class MainTab implements ShellListener {
+    private String titleBarText = "g2gui alpha";
+    private StatusLine statusline;
+    private Object waiterObject;
+    private Shell shell;
+    private CoreCommunication mldonkey;
+    private Composite mainComposite;
+    private Composite pageContainer;
+    private List registeredTabs;
+    private GuiTab activeTab;
+    private List tabs;
+    private MainCoolBar coolBar;
+    private Minimizer minimizer;
 
-	private String titleBarText = "g2gui alpha";
-	private StatusLine statusline;
-	private Object waiterObject;
-	private Shell shell;
-	private CoreCommunication mldonkey;
-	private Composite mainComposite, pageContainer;
-	private List registeredTabs;
-	private GuiTab activeTab;
-	private List tabs;
-	private MainCoolBar coolBar;
-	private Minimizer minimizer;
-	
-	/**
-	 * @param core the most important thing of the gui: were do i get my data from
-	 * @param shell were do we live?
-	 */
-	public MainTab( CoreCommunication core, final Shell shell ) {
-		this.registeredTabs = new ArrayList();
-		this.mldonkey = core;
-		this.shell = shell;
-		final Shell mainShell = shell;	
-		Display display = shell.getDisplay();
-		shell.addShellListener( this );
-		minimizer = new Minimizer(shell, core, titleBarText);
-		minimizer.setTitleBarText(); 
-		shell.setLayout( new FillLayout() );
-		createContents( shell );
-		shell.pack ();
-		/* close the splashShell from G2Gui.java */
-		G2Gui.increaseBar( "" );
-		G2Gui.getSplashShell().dispose();
-		
-		/* set the old size of this window - must be after pack() */
-		setSizeLocation( shell );
-		
-		// what do we do when the close button is selected
-		shell.addListener (SWT.Close, new Listener () {
-			public void handleEvent (Event event) {
-				event.doit = minimizer.close();
-			}
-		});
-		
-		shell.open ();
-		
-		/* things we should do if we dispose */
-		shell.addDisposeListener( new DisposeListener() {
-			public synchronized void widgetDisposed( DisposeEvent e ) {
-				/* save the size of this window */
-				saveSizeLocation( mainShell );
-				
-				/* set all tabs to inactive */
-				Iterator itr = registeredTabs.iterator();
-				while ( itr.hasNext() ) {
-					GuiTab aTab = ( GuiTab ) itr.next();
-					aTab.dispose();
-				}
-			
-				coolBar.getHandCursor().dispose();
-				
-				// If we have created the core, kill it
-				if (G2Gui.getCoreConsole() != null) {
-					Message killCore = new EncodeMessage( Message.S_KILL_CORE );
-					killCore.sendMessage( mldonkey.getConnection() );
-					G2Gui.getCoreConsole().dispose();
-				} 
-				
-				// disconnect from core
-				( ( CoreCommunication )mldonkey ).disconnect();	
-				
-				// save preferences
-				PreferenceLoader.saveStore();
-				PreferenceLoader.cleanUp();
-			}
-		} );
-		while ( !shell.isDisposed () ) {
-			if ( !display.readAndDispatch () ) display.sleep ();
-		} 
-		display.dispose();
-	} 
-	
-	/* ( non-Javadoc )
-	 * @see org.eclipse.jface.window.Window#createContents( org.eclipse.swt.widgets.Composite )
-	 */
-	private void createContents( Shell parent ) {
-		GridData gridData;	
-		mainComposite = new Composite( parent, SWT.NONE );
-				
-		parent.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
-				
-		new MainMenuBar( this );		
-				
-		GridLayout gridLayout = CGridLayout.createGL(1,0,0,0,1,false);
-		mainComposite.setLayout( gridLayout ); 
-			
-		Label horLine = new Label( mainComposite, SWT.HORIZONTAL | SWT.SEPARATOR );
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		horLine.setLayoutData( gridData );
-		
-		this.coolBar = new MainCoolBar( this, 
-			PreferenceLoader.loadBoolean( "toolbarSmallButtons" ),
-			PreferenceLoader.loadBoolean( "coolbarLocked" ) );
-			
-		pageContainer = new Composite( mainComposite, SWT.NONE );			
-		pageContainer.setLayout( new StackLayout() );
+    /**
+     * @param core the most important thing of the gui: were do i get my data from
+     * @param shell were do we live?
+     */
+    public MainTab( CoreCommunication core, final Shell shell ) {
+        this.registeredTabs = new ArrayList();
+        this.mldonkey = core;
+        this.shell = shell;
+        final Shell mainShell = shell;
+        Display display = shell.getDisplay();
+        shell.addShellListener( this );
+        minimizer = new Minimizer( shell, core, titleBarText );
+        minimizer.setTitleBarText();
+        shell.setLayout( new FillLayout() );
+        createContents( shell );
+        shell.pack();
 
-		/* now we add all the tabs */
-		this.addTabs();					
+        /* close the splashShell from G2Gui.java */
+        G2Gui.increaseBar( "" );
+        G2Gui.getSplashShell().dispose();
 
-		gridData = new GridData( GridData.FILL_BOTH );
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;			
-		pageContainer.setLayoutData( gridData );
-		
-		/* layout the coolbar, because we added icons */
-		this.coolBar.layoutCoolBar();						
+        /* set the old size of this window - must be after pack() */
+        setSizeLocation( shell );
 
-		statusline = new StatusLine( this );
-	} 
-	
-	/**
-	 * Here we add the tabs, they must extend G2GuiTab. They are responsible 
-	 * for the content and their button.
-	 */
-	private void addTabs() {
-		if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-			this.tabs = new ArrayList();
-			tabs.add( new TransferTab( this ) );
-			tabs.add( new SearchTab( this ) );
-			tabs.add( new ServerTab( this ) );
-			tabs.add( new ConsoleTab( this ) );
-			tabs.add( new StatisticTab( this ) );
-			tabs.add( new MessagesTab( this ) );
-		}
-		else {
-			this.tabs = new ArrayList();
-			tabs.add( new TransferTab( this ) );
-			tabs.add( new SearchTab( this ) );
-			tabs.add( new StatisticTab( this ) );
-		}	
+        // what do we do when the close button is selected
+        shell.addListener( SWT.Close,
+                           new Listener() {
+                public void handleEvent( Event event ) {
+                    event.doit = minimizer.close();
+                }
+            } );
+        shell.open();
 
-		/*setting TransferTab active if registered*/
-		Iterator tabIterator = registeredTabs.iterator();
-		while ( tabIterator.hasNext() ) {
-			GuiTab tempTab = ( GuiTab )  tabIterator.next();
-			/* set the default tab to active */
-			if ( tempTab instanceof TransferTab )									
-				tempTab.setActive();					 
-		}		
-	} 
+        /* things we should do if we dispose */
+        shell.addDisposeListener( new DisposeListener() {
+                public synchronized void widgetDisposed( DisposeEvent e ) {
+                    /* save the size of this window */
+                    saveSizeLocation( mainShell );
+                    /* set all tabs to inactive */
+                    Iterator itr = registeredTabs.iterator();
+                    while ( itr.hasNext() ) {
+                        GuiTab aTab = ( GuiTab ) itr.next();
+                        aTab.dispose();
+                    }
+                    coolBar.getHandCursor().dispose();
+                    // If we have created the core, kill it
+                    if ( G2Gui.getCoreConsole() != null ) {
+                        Message killCore = new EncodeMessage( Message.S_KILL_CORE );
+                        killCore.sendMessage( mldonkey.getConnection() );
+                        G2Gui.getCoreConsole().dispose();
+                    }
 
-	/**
-	 * Registers a new Tab to this MainWindow
-	 * @param newTab The GuiTab to register to this MainWindow
-	 */
-	public void registerTab( GuiTab newTab ) {
-		registeredTabs.add( newTab );		
-	} 
+                    // disconnect from core
+                    ( ( CoreCommunication ) mldonkey ).disconnect();
 
-	/**
-	 * Sets the given tab to the current active page
-	 * @param activatedTab The tab to set active
-	 */
-	public void setActive( GuiTab activatedTab ) {	
-		//if (!getCore().isConnected()) return;	
-		
-		if ( activeTab != null ) {
-			activeTab.getContent().setVisible( false );
-			activeTab.setInActive();
-		} 
-		( ( StackLayout ) pageContainer.getLayout() ).topControl 
-											= activatedTab.getContent();		
-		pageContainer.layout();	
-		activeTab = activatedTab;		
-	} 
+                    // save preferences
+                    PreferenceLoader.saveStore();
+                    PreferenceLoader.cleanUp();
+                }
+            } );
+        while ( !shell.isDisposed() ) {
+            if ( !display.readAndDispatch() )
+                display.sleep();
+        }
+        display.dispose();
+    }
 
-	/**
-	 * Create the preference window
-	 */
-	public void openPreferences() {
-		Shell prefshell = new Shell();
-		Preferences myprefs = new Preferences( PreferenceLoader.getPreferenceStore() );					
-		myprefs.open( prefshell, mldonkey );
-		
-		Iterator itr = registeredTabs.iterator();
-		while ( itr.hasNext() ) {
-			GuiTab aTab = ( GuiTab ) itr.next();
-			aTab.updateDisplay();
-		}
-	}
+    /* ( non-Javadoc )
+     * @see org.eclipse.jface.window.Window#createContents( org.eclipse.swt.widgets.Composite )
+     */
+    private void createContents( Shell parent ) {
+        GridData gridData;
+        mainComposite = new Composite( parent, SWT.NONE );
+        parent.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
+        new MainMenuBar( this );
+        GridLayout gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 1, false );
+        mainComposite.setLayout( gridLayout );
+        Label horLine = new Label( mainComposite, SWT.HORIZONTAL | SWT.SEPARATOR );
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        horLine.setLayoutData( gridData );
+        this.coolBar =
+            new MainCoolBar( this, PreferenceLoader.loadBoolean( "toolbarSmallButtons" ),
+                             PreferenceLoader.loadBoolean( "coolbarLocked" ) );
+        pageContainer = new Composite( mainComposite, SWT.NONE );
+        pageContainer.setLayout( new StackLayout() );
 
-	/**
-	 * Sets the size to the old value of the given shell obj
-	 * @param shell The shell to set the size from
-	 */
-	public void setSizeLocation( Shell shell ) {
-				
-		if (PreferenceLoader.contains( "windowBounds" ) ) {
-			
-			if( PreferenceLoader.loadBoolean( "windowMaximized" ) ) 
-				shell.setMaximized( true );   
-			else 
-				shell.setBounds( PreferenceLoader.loadRectangle("windowBounds") );
-		} 
-	}
+        /* now we add all the tabs */
+        this.addTabs();
+        gridData = new GridData( GridData.FILL_BOTH );
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.grabExcessVerticalSpace = true;
+        pageContainer.setLayoutData( gridData );
 
-	/**
-	 * Saves the size of the shell to a file
-	 * @param shell The shell to save the size from
-	 */
-	public void saveSizeLocation( Shell shell ) {
-		PreferenceStore p = PreferenceLoader.getPreferenceStore();
-		
-		p.setValue( "coolbarLocked", coolBar.isCoolbarLocked() );
-		p.setValue( "toolbarSmallButtons", coolBar.isToolbarSmallButtons() );
-	
-		if ( shell.getMaximized() )
-			p.setValue( "windowMaximized", shell.getMaximized() );
-		else {
-			PreferenceConverter.setValue(p, "windowBounds", shell.getBounds());
-			p.setValue( "windowMaximized", shell.getMaximized() );
-		}
-	}
-	
-	/**
-	 * @return
-	 */
-	public Composite getMainComposite() {
-		return mainComposite;
-	}
-	
-	/**
-	 * @return
-	 */
-	public StatusLine getStatusline() {
-		return statusline;
-	}
+        /* layout the coolbar, because we added icons */
+        this.coolBar.layoutCoolBar();
+        statusline = new StatusLine( this );
+    }
 
-	/**
-	 * @return
-	 */
-	public List getTabs() {
-		return this.tabs;
-	}
+    /**
+     * Here we add the tabs, they must extend G2GuiTab. They are responsible
+     * for the content and their button.
+     */
+    private void addTabs() {
+        if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+            this.tabs = new ArrayList();
+            tabs.add( new TransferTab( this ) );
+            tabs.add( new SearchTab( this ) );
+            tabs.add( new ServerTab( this ) );
+            tabs.add( new ConsoleTab( this ) );
+            tabs.add( new StatisticTab( this ) );
+            tabs.add( new MessagesTab( this ) );
+        }
+        else {
+            this.tabs = new ArrayList();
+            tabs.add( new TransferTab( this ) );
+            tabs.add( new SearchTab( this ) );
+            tabs.add( new StatisticTab( this ) );
+        }
+        /*setting TransferTab active if registered*/
+        Iterator tabIterator = registeredTabs.iterator();
+        while ( tabIterator.hasNext() ) {
+            GuiTab tempTab = ( GuiTab ) tabIterator.next();
 
-	/**
-	 * @return The PageContainer Composite
-	 */
-	public Composite getPageContainer() {		
-		return pageContainer;
-	}
-	
-	/**
-	 * @return
-	 */
-	public CoreCommunication getCore() {		
-		return mldonkey;
-	} 
+            /* set the default tab to active */
+            if ( tempTab instanceof TransferTab )
+                tempTab.setActive();
+        }
+    }
 
-	/**
-	 * @return
-	 */	
-	public Shell getShell() {
-		return shell;
-	}
+    /**
+     * Registers a new Tab to this MainWindow
+     * @param newTab The GuiTab to register to this MainWindow
+     */
+    public void registerTab( GuiTab newTab ) {
+        registeredTabs.add( newTab );
+    }
 
-	/**
-	 * @return
-	 */
-	public MainCoolBar getCoolBar() {
-		return coolBar;
-	}
+    /**
+     * Sets the given tab to the current active page
+     * @param activatedTab The tab to set active
+     */
+    public void setActive( GuiTab activatedTab ) {
+        //if (!getCore().isConnected()) return;	
+        if ( activeTab != null ) {
+            activeTab.getContent().setVisible( false );
+            activeTab.setInActive();
+        }
+        ( ( StackLayout ) pageContainer.getLayout() ).topControl = activatedTab.getContent();
+        pageContainer.layout();
+        activeTab = activatedTab;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.ShellListener#
-	 * shellActivated(org.eclipse.swt.events.ShellEvent)
-	 */
-	public void shellActivated( ShellEvent e ) { }
+    /**
+     * Create the preference window
+     */
+    public void openPreferences() {
+        Shell prefshell = new Shell();
+        Preferences myprefs = new Preferences( PreferenceLoader.getPreferenceStore() );
+        myprefs.open( prefshell, mldonkey );
+        Iterator itr = registeredTabs.iterator();
+        while ( itr.hasNext() ) {
+            GuiTab aTab = ( GuiTab ) itr.next();
+            aTab.updateDisplay();
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.ShellListener#
-	 * shellClosed(org.eclipse.swt.events.ShellEvent)
-	 */
-	public void shellClosed( ShellEvent e ) { }
+    /**
+     * Sets the size to the old value of the given shell obj
+     * @param shell The shell to set the size from
+     */
+    public void setSizeLocation( Shell shell ) {
+        if ( PreferenceLoader.contains( "windowBounds" ) ) {
+            if ( PreferenceLoader.loadBoolean( "windowMaximized" ) )
+                shell.setMaximized( true );
+            else
+                shell.setBounds( PreferenceLoader.loadRectangle( "windowBounds" ) );
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.ShellListener#
-	 * shellDeactivated(org.eclipse.swt.events.ShellEvent)
-	 */
-	public void shellDeactivated( ShellEvent e ) { }
+    /**
+     * Saves the size of the shell to a file
+     * @param shell The shell to save the size from
+     */
+    public void saveSizeLocation( Shell shell ) {
+        PreferenceStore p = PreferenceLoader.getPreferenceStore();
+        p.setValue( "coolbarLocked", coolBar.isCoolbarLocked() );
+        p.setValue( "toolbarSmallButtons", coolBar.isToolbarSmallButtons() );
+        if ( shell.getMaximized() )
+            p.setValue( "windowMaximized", shell.getMaximized() );
+        else {
+            PreferenceConverter.setValue( p, "windowBounds", shell.getBounds() );
+            p.setValue( "windowMaximized", shell.getMaximized() );
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.ShellListener#
-	 * shellDeiconified(org.eclipse.swt.events.ShellEvent)
-	 */
-	public void shellDeiconified( ShellEvent e ) {
-		minimizer.restore();
-	}
+    /**
+     * @return The main composite where we display our data in
+     */
+    public Composite getMainComposite() {
+        return mainComposite;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.ShellListener#
-	 * shellIconified(org.eclipse.swt.events.ShellEvent)
-	 */
-	public void shellIconified( ShellEvent e ) {
-		minimizer.minimize(true);
-	}
-} 
+    /**
+     * @return The statusline
+     */
+    public StatusLine getStatusline() {
+        return statusline;
+    }
+
+    /**
+     * @return A <code>List</code> holding our current running <code>GuiTab</code>´s
+     */
+    public List getTabs() {
+        return this.tabs;
+    }
+
+    /**
+     * @return The PageContainer Composite
+     */
+    public Composite getPageContainer() {
+        return pageContainer;
+    }
+
+    /**
+     * @return The core where we get our <code>Information</code> from
+     */
+    public CoreCommunication getCore() {
+        return mldonkey;
+    }
+
+    /**
+     * @return The main shell
+     */
+    public Shell getShell() {
+        return shell;
+    }
+
+    /**
+     * @return The CoolBar
+     */
+    public MainCoolBar getCoolBar() {
+        return coolBar;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.ShellListener#
+     * shellActivated(org.eclipse.swt.events.ShellEvent)
+     */
+    public void shellActivated( ShellEvent e ) {
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.ShellListener#
+     * shellClosed(org.eclipse.swt.events.ShellEvent)
+     */
+    public void shellClosed( ShellEvent e ) {
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.ShellListener#
+     * shellDeactivated(org.eclipse.swt.events.ShellEvent)
+     */
+    public void shellDeactivated( ShellEvent e ) {
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.ShellListener#
+     * shellDeiconified(org.eclipse.swt.events.ShellEvent)
+     */
+    public void shellDeiconified( ShellEvent e ) {
+        minimizer.restore();
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.ShellListener#
+     * shellIconified(org.eclipse.swt.events.ShellEvent)
+     */
+    public void shellIconified( ShellEvent e ) {
+        minimizer.minimize( true );
+    }
+}
 
 /*
 $Log: MainTab.java,v $
+Revision 1.72  2003/09/18 09:44:57  lemmster
+checkstyle
+
 Revision 1.71  2003/09/16 01:12:25  zet
 // isConnected()
 
@@ -693,8 +683,8 @@ Revision 1.1  2003/06/24 18:25:43  dek
 working on main gui, without any connection to mldonkey atm, but the princip works
 test with:
 public class guitest {
-	public static void main( String[] args ) {
-	Gui g2gui = new Gui( null );
-} 
+        public static void main( String[] args ) {
+        Gui g2gui = new Gui( null );
+}
 
 */

@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.26 2003/09/08 10:25:26 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.27 2003/09/18 09:44:57 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -125,11 +125,11 @@ public class SearchTab extends GuiTab {
 	private void createLeftGroup() {
 		
 		ViewForm searchViewForm = 
-				new ViewForm( mainSash , SWT.BORDER | 
-					( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+				new ViewForm( mainSash , SWT.BORDER
+				| ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
 		GridData gd = new GridData( GridData.FILL_VERTICAL );
 		gd.widthHint = 150;
-		searchViewForm.setLayoutData(gd);
+		searchViewForm.setLayoutData( gd );
 		CLabel searchCLabel = 
 			CCLabel.createCL( searchViewForm, "TT_SearchButton", "SearchButtonSmallTitlebar" );
 
@@ -139,7 +139,8 @@ public class SearchTab extends GuiTab {
 		tabFolder.setSelectionBackground( 
 			new Color[] { tabFolder.getDisplay().getSystemColor( 
 					SWT.COLOR_TITLE_BACKGROUND ), tabFolder.getBackground() }, new int[] { 75 } );
-		tabFolder.setSelectionForeground( tabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
+		tabFolder.setSelectionForeground( 
+			tabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
 				
 		Search[] tabs = this.createTab();
 		for ( int i = 0; i < tabs.length; i++ ) {
@@ -150,8 +151,8 @@ public class SearchTab extends GuiTab {
 		}
 		tabFolder.setSelection( 0 );
 		
-		searchViewForm.setContent(tabFolder);
-		searchViewForm.setTopLeft(searchCLabel);
+		searchViewForm.setContent( tabFolder );
+		searchViewForm.setTopLeft( searchCLabel );
 		
 	}
 	
@@ -163,25 +164,27 @@ public class SearchTab extends GuiTab {
 		/* right group */
 		
 		ViewForm searchResultsViewForm = 
-			new ViewForm( mainSash , SWT.BORDER |
-				 ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-		searchResultsViewForm.setLayoutData (new GridData( GridData.FILL_BOTH ) );
+			new ViewForm( mainSash , SWT.BORDER
+			| ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+		searchResultsViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		
 		CLabel searchResultsCLabel = 
-			CCLabel.createCL( searchResultsViewForm, G2GuiResources.getString( "ST_RESULTS" ), "SearchButtonSmallTitlebar" );
+			CCLabel.createCL( searchResultsViewForm,
+								 G2GuiResources.getString( "ST_RESULTS" ), "SearchButtonSmallTitlebar" );
 		
 		cTabFolder = new CTabFolder( searchResultsViewForm, SWT.NONE );
 		
-		searchResultsViewForm.setContent(cTabFolder);
-		searchResultsViewForm.setTopLeft(searchResultsCLabel);
+		searchResultsViewForm.setContent( cTabFolder );
+		searchResultsViewForm.setTopLeft( searchResultsCLabel );
 		
 		cTabFolder.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		/* set this as data, so our children in the ctabfolder know whos their dad ;) */
 		cTabFolder.setData( this );
-		cTabFolder.setSelectionBackground( new Color[] { cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
-											cTabFolder.getBackground() },
-											new int[] { 75 } );
-		cTabFolder.setSelectionForeground( cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
+		cTabFolder.setSelectionBackground(
+			new Color[] { cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
+				cTabFolder.getBackground() }, new int[] { 75 } );
+		cTabFolder.setSelectionForeground(
+			cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
 
 		
 		/* add a "X" and listen for close event */
@@ -268,6 +271,9 @@ public class SearchTab extends GuiTab {
 		return cTabFolder;
 	}
 	
+	/**
+	 * @return The current active <code>SearchResult</code>
+	 */
 	public SearchResult getSearchResult() {
 		CTabItem item = cTabFolder.getSelection();
 		SearchResult result = ( SearchResult ) item.getData();
@@ -284,6 +290,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.27  2003/09/18 09:44:57  lemmster
+checkstyle
+
 Revision 1.26  2003/09/08 10:25:26  lemmster
 OtherComplexSearch added, rest improved
 

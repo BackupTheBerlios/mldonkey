@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -10,7 +10,7 @@
  * the Free Software Foundation; either version 2 of the License, or
  * ( at your option ) any later version.
  *
- * G2GUI is distributed in the hope that it will be useful, 
+ * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,11 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view;
 
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -70,395 +71,422 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.27 2003/09/03 14:49:07 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.28 2003/09/18 09:44:57 lemmster Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
+    private CoreCommunication core;
+    private CTabFolder cTabFolder;
+    private Hashtable openTabs = new Hashtable();
+    private CustomTableViewer tableViewer;
+    private long lastTime = 0;
+    private int mustRefresh = 0;
+    private CLabel friendsCLabel;
+    private CLabel messagesCLabel;
 
-	private CoreCommunication core;
-	private CTabFolder cTabFolder;
-	private Hashtable openTabs = new Hashtable();
-	private CustomTableViewer tableViewer;
-	private long lastTime = 0;
-	private int mustRefresh = 0;
-	private CLabel friendsCLabel, messagesCLabel;
-	/**
-	 * @param gui
-	 */
-	public MessagesTab ( MainTab gui ) {
-		super( gui );
-		/* associate this tab with the corecommunication */
-		this.core = gui.getCore();
-		
-		createButton("MessagesButton", 
-			G2GuiResources.getString("TT_MessagesButton"),
-			G2GuiResources.getString("TT_MessagesButtonToolTip"));
-		
-		core.getClientInfoIntMap().addObserver(this);
-		createContents(this.subContent);
-	}
+    public MessagesTab( MainTab gui ) {
+        super( gui );
 
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.GuiTab#createContents(org.eclipse.swt.widgets.Composite)
-	 */
-	protected void createContents(Composite parent) {
-		SashForm main = new SashForm( parent, SWT.HORIZONTAL );
-		
-		createLeftSash( main );
-		createRightSash( main );
-		core.addObserver( this );
-		main.setWeights( new int[] {1,5});
-		
-	}
-	/**
-	 * @param main
-	 */
-	// what will this become on other networks?
-	// can the concept of a friend be generalized? 
-	// obviously we want to list their files, and what else?
-	// simple and for messaging only atm 
-	private void createLeftSash( Composite main ) {
-		ViewForm friendsViewForm = new ViewForm( main, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
-		
-		Composite friendsComposite = new Composite( friendsViewForm, SWT.NONE );
-		friendsComposite.setLayout( new FillLayout() );
-		
-		friendsCLabel = CCLabel.createCL(friendsViewForm, "FR_FRIENDS", "MessagesButtonSmallTrans");
-		createFriendsTable(friendsComposite);
-		
-		friendsViewForm.setTopLeft(friendsCLabel);
-		friendsViewForm.setContent(friendsComposite);
-	}
+        /* associate this tab with the corecommunication */
+        this.core = gui.getCore();
+        createButton( "MessagesButton", G2GuiResources.getString( "TT_MessagesButton" ),
+                      G2GuiResources.getString( "TT_MessagesButtonToolTip" ) );
+        core.getClientInfoIntMap().addObserver( this );
+        createContents( this.subContent );
+    }
 
-	/**
-	 * 
-	 */
-	public void createFriendsTable( Composite parent ) {
-		tableViewer = new CustomTableViewer( parent , SWT.NONE | SWT.MULTI);
-		tableViewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
-		tableViewer.getTable().setHeaderVisible( false );
-		tableViewer.setContentProvider(new FriendsTableContentProvider());
-		tableViewer.setLabelProvider(new FriendsTableLabelProvider());
-		
-		FriendsTableMenuListener tableMenuListener = new FriendsTableMenuListener( tableViewer, core, this );
-		tableViewer.addSelectionChangedListener( tableMenuListener );
-		MenuManager popupMenu = new MenuManager( "" );
-		popupMenu.setRemoveAllWhenShown( true );
-		popupMenu.addMenuListener( tableMenuListener );			
-		tableViewer.getTable().setMenu( popupMenu.createContextMenu( tableViewer.getTable() ) );
-		tableViewer.setSorter(new FriendsTableSorter());
-				
-		tableViewer.setInput(core.getClientInfoIntMap().getFriendsList());
-		setFriendsLabel();
-		
-		
-		/*add default-action to menu (hack, but i didn't find this is 
-		 * menuManager etc.)*/
-		Menu menu = tableViewer.getTable().getMenu();
-		menu.addMenuListener(new MenuListener(){
-			public void menuHidden(MenuEvent e) {}
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.GuiTab#createContents(org.eclipse.swt.widgets.Composite)
+     */
+    protected void createContents( Composite parent ) {
+        SashForm main = new SashForm( parent, SWT.HORIZONTAL );
+        createLeftSash( main );
+        createRightSash( main );
+        core.addObserver( this );
+        main.setWeights( new int[] { 1, 5 } );
+    }
 
-			public void menuShown(MenuEvent e) {
-				Menu menu = tableViewer.getTable().getMenu();
-				MenuItem[] items = menu.getItems();
-				menu.setDefaultItem(items [( items.length - 1) ] );				
-			}
-			});
-			
-		/*add the double-click handler to open message-window on double-click*/
-		tableViewer.getTable().addMouseListener(new MouseListener(){
-			public void mouseDoubleClick(MouseEvent e) {
-				TableItem[] currentItems = tableViewer.getTable().getSelection();
-								
-				for ( int i = 0; i < currentItems.length;	 i ++ ) {					
-					ClientInfo selectedClientInfo = ( ClientInfo ) currentItems[ i ].getData();
-					openTab(selectedClientInfo);
-				}
-			}
-			public void mouseDown(MouseEvent e) {}
-			public void mouseUp(MouseEvent e) {}
-			});
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param main DOCUMENT ME!
+     */
+    private void createLeftSash( Composite main ) {
+		// what will this become on other networks?
+		// can the concept of a friend be generalized? 
+		// obviously we want to list their files, and what else?
+		// simple and for messaging only atm 
+   		ViewForm friendsViewForm =
+            new ViewForm( main,
+                          SWT.BORDER
+                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+        Composite friendsComposite = new Composite( friendsViewForm, SWT.NONE );
+        friendsComposite.setLayout( new FillLayout() );
+        friendsCLabel = CCLabel.createCL( friendsViewForm, "FR_FRIENDS", "MessagesButtonSmallTrans" );
+        createFriendsTable( friendsComposite );
+        friendsViewForm.setTopLeft( friendsCLabel );
+        friendsViewForm.setContent( friendsComposite );
+    }
 
-	/**
-	 * @param main
-	 */
-	private void createRightSash( Composite main ) {
-		ViewForm messagesViewForm = new ViewForm( main, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
-				
-		messagesCLabel = CCLabel.createCL(messagesViewForm, "FR_TABS", "MessagesButtonSmallTrans");
-		
-		ToolBar messagesToolBar = new ToolBar(messagesViewForm, SWT.RIGHT | SWT.FLAT );
-		ToolItem sendItem = new ToolItem(messagesToolBar, SWT.NONE);
-		sendItem.setToolTipText(G2GuiResources.getString("FR_TABS_CLOSE_TOOLTIP"));
-		sendItem.setImage(G2GuiResources.getImage("X"));
-		sendItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected (SelectionEvent s) {
-				closeAllTabs();
-			}	
-		});
-		
-			
-		cTabFolder = new CTabFolder( messagesViewForm , SWT.NONE );
-		
-		messagesViewForm.setTopLeft(messagesCLabel);
-		messagesViewForm.setTopRight(messagesToolBar);
-		messagesViewForm.setContent(cTabFolder);
-		
-		cTabFolder.setBorderVisible(false);
-		cTabFolder.setLayoutData( new FillLayout() );
-		cTabFolder.setSelectionBackground(new Color[]{cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-											cTabFolder.getBackground() },
-							 			 	new int[] {75});
-		cTabFolder.setSelectionForeground(cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-		
-		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
-		public void itemClosed( CTabFolderEvent event ) {
-				CTabItem item = ( CTabItem ) event.item;
-				//Console console = (Console) item.getData("console");
-				Composite consoleComposite = (Composite) item.getData("composite");
-				Integer id = (Integer) item.getData("id");
-				openTabs.remove(id);
-				consoleComposite.dispose();
-				item.dispose();
-				setTabsLabel();
-			}
-		} );
-		
-		// set the focus to the input line of the console when 
-		// an item is selected
-		cTabFolder.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			
-			public void widgetSelected(SelectionEvent e) {
-				CTabItem cTabItem = (CTabItem) e.item;
-				Console console = (Console) cTabItem.getData("console");
-				setTabsLabel();
-				console.setFocus();
-			}
-		});
-	}
-	
-	public void closeAllTabs() {
-		
-		Iterator iterator = openTabs.keySet().iterator();
-		while (iterator.hasNext()) {
-			Integer id = (Integer) iterator.next();
-			CTabItem cTabItem = (CTabItem) openTabs.get(id);
-			Composite consoleComposite = (Composite) cTabItem.getData("composite");
-			consoleComposite.dispose();
-			cTabItem.dispose();
-		}
-		openTabs.clear();
-		setTabsLabel();
-	}
-	
+    /**
+     * DOCUMENT ME!
+     *
+     * @param parent DOCUMENT ME!
+     */
+    public void createFriendsTable( Composite parent ) {
+        tableViewer = new CustomTableViewer( parent, SWT.NONE | SWT.MULTI );
+        tableViewer.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        tableViewer.getTable().setHeaderVisible( false );
+        tableViewer.setContentProvider( new FriendsTableContentProvider() );
+        tableViewer.setLabelProvider( new FriendsTableLabelProvider() );
 
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(final Observable arg0, final Object arg1) {
-		if (arg1 instanceof ClientMessage
-			|| arg0 instanceof ClientInfoIntMap) {
-			if(!cTabFolder.isDisposed()) {
-				cTabFolder.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						runUpdate(arg0, arg1);
-					}
-				});
-				
-			}
-		} else if (arg0 instanceof Console) {
-			messageToClient((Console) arg0, (String) arg1);
-		} 
-	}
-	
-	/**
-	 * @param arg0
-	 * @param arg1
-	 */
-	public void runUpdate(Observable arg0, Object arg1) {
-		if (arg1 instanceof ClientMessage) {
-			messageFromClient((ClientMessage) arg1);
-		} else if (arg0 instanceof ClientInfoIntMap) {
-			mustRefresh++;
-			if (System.currentTimeMillis() > lastTime + 2000) {
-				this.run();
-			} else {
-				if (mustRefresh == 1) {
-					cTabFolder.getDisplay().timerExec(2500, this);
-				}
-			}
-		}
-	}
-	
-	public void run() {
-		if (!cTabFolder.isDisposed()) {
-			lastTime = System.currentTimeMillis();
-			tableViewer.refresh();
-			setFriendsLabel();
-			mustRefresh=0;
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	public void setFriendsLabel() {
-		friendsCLabel.setText(G2GuiResources.getString("FR_FRIENDS") + ": " + tableViewer.getTable().getItemCount()); 
-	} 
-	public void setTabsLabel() {
-		
-		String extra = "";
-		if (cTabFolder.getSelection() != null)
-			extra = " -> " + cTabFolder.getSelection().getText();
-		
-		messagesCLabel.setText(G2GuiResources.getString("FR_TABS") + ": " +  openTabs.size() + extra);
-	}
-	
-	/**
-	 * @param console
-	 * @param messageText
-	 */
-	public void messageToClient(Console console, String messageText) {
-		ClientMessage.sendMessage(core, console.getClientId(), messageText);
-	}
+        FriendsTableMenuListener tableMenuListener = new FriendsTableMenuListener( tableViewer, core, this );
+        tableViewer.addSelectionChangedListener( tableMenuListener );
 
-	/**
-	 * @param message
-	 */
-	
-	public void sendTabMessage(int id, String textMessage) {
-		ClientInfo clientInfo = core.getClientInfoIntMap().get(id);
-		CTabItem cTabItem = (CTabItem) openTabs.get(new Integer(id));
-		Console console = (Console) cTabItem.getData("console");
-		console.append(textMessage + console.getLineDelimiter());
-	}
-	
-	/**
-	 * @param message
-	 */
-	public void messageFromClient(ClientMessage message) {
-		mainWindow.getStatusline().update( "New message!" );
-		
-		if (openTabs.containsKey(new Integer(message.getId()))) {
-			String textMessage;
-			ClientInfo clientInfo = core.getClientInfoIntMap().get(message.getId());
-			if (clientInfo == null) // Why don't we have clientInfo for these?
-				textMessage = getTimeStamp() + message.getId() +  ": <unknown>> " + message.getText();
-			else
-				textMessage = getTimeStamp() + message.getId() +  ": " + clientInfo.getClientName() + "> " + message.getText();		
-				sendTabMessage(message.getId(), textMessage );
-			
-		} else {
-			
-			// the core sends the clientInfo for this message's clientID AFTER
-			// the message itself.. not very smart.  So, neither is this curious loop.
-			// TODO: does this help at all? remove if not.
-			
-			ClientInfo clientInfo = null;
-			
-			for (int i = 0; (i < 6) && ( (clientInfo = core.getClientInfoIntMap().get(message.getId())) == null); i++)
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				
-			}
-			
-			String tabText;
-			if (clientInfo == null) tabText = "" + message.getId() + ": <unknown>"; 
-			else tabText = "" + clientInfo.getClientid() + ": " + clientInfo.getClientName();
-			
-			String textMessage = getTimeStamp() + tabText + "> " + message.getText();		
-			
-			CTabItem cTabItem = addCTabItem(message.getId(), "  " + tabText);
+        MenuManager popupMenu = new MenuManager( "" );
+        popupMenu.setRemoveAllWhenShown( true );
+        popupMenu.addMenuListener( tableMenuListener );
 
-			if (cTabFolder.getItemCount() == 1) {
-				setItemFocus(cTabItem);
-			}
+        tableViewer.getTable().setMenu( popupMenu.createContextMenu( tableViewer.getTable() ) );
+        tableViewer.setSorter( new FriendsTableSorter() );
+        tableViewer.setInput( core.getClientInfoIntMap().getFriendsList() );
 
-			sendTabMessage(message.getId(), textMessage);
-			setTabsLabel();
-		}
-	}
-	
-	/**
-	 * @param id
-	 * @param tabText
-	 * @return
-	 */
-	public CTabItem addCTabItem(int id, String tabText) {
-		
-		CTabItem tabItem = new CTabItem(cTabFolder, SWT.NONE);
-		tabItem.setText(tabText);
-		Composite consoleComposite = new Composite(cTabFolder, SWT.BORDER);
-		consoleComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		Console console = new Console(consoleComposite, SWT.WRAP );
-		setPreferences(console);
-		console.setClientId(id);
-		console.addObserver( this );
-		tabItem.setControl( consoleComposite );
-		tabItem.setData("id", new Integer(id));
-		tabItem.setData("composite", consoleComposite);
-		tabItem.setData("console", console);
-		openTabs.put(new Integer(id), tabItem);
-		return tabItem;
-	}
-	
-	/**
-	 * @param clientInfo
-	 */
-	public void openTab(ClientInfo clientInfo) {
-		if (!openTabs.containsKey(new Integer(clientInfo.getClientid())))  {
-			String tabText = "  " + clientInfo.getClientid() + ": " + clientInfo.getClientName();
-			setItemFocus(addCTabItem(clientInfo.getClientid(), tabText));
-		} else {
-			cTabFolder.setSelection((CTabItem) openTabs.get(new Integer(clientInfo.getClientid())));
-		}
-		setTabsLabel();
-	}
+        setFriendsLabel();
 
-	/**
-	 * @return
-	 */
-	public String getTimeStamp() {
-		SimpleDateFormat sdFormatter = new SimpleDateFormat("[HH:mm:ss] ");
-		Date oToday = new Date();
-		return sdFormatter.format(oToday);
-	}
-	
-	/**
-	 * @param cTabItem
-	 */
-	public void setItemFocus(CTabItem cTabItem) {
-		cTabFolder.setSelection(cTabItem);
-		Console console = (Console) cTabItem.getData("console");
-		console.setFocus();
-	}
-	
-	public void setActive() {
-		super.setActive();
-		if (cTabFolder.getSelection() != null) {
-			setItemFocus(cTabFolder.getSelection());
-		}
-	}	
-	
-	/**
-	 * @param console
-	 */
-	public void setPreferences(Console console) {
-		console.setDisplayFont( PreferenceLoader.loadFont( "consoleFontData" ) );
-		console.setInputFont( PreferenceLoader.loadFont( "consoleFontData" ) );
-		console.setHighlightColor( PreferenceLoader.loadColour( "consoleHighlight" ) );
-		console.setDisplayBackground ( PreferenceLoader.loadColour( "consoleBackground" ) );
-		console.setDisplayForeground ( PreferenceLoader.loadColour( "consoleForeground" ) );
-		console.setInputBackground ( PreferenceLoader.loadColour( "consoleInputBackground" ) );
-		console.setInputForeground ( PreferenceLoader.loadColour( "consoleInputForeground" ) );
-	}
+        /*add default-action to menu (hack, but i didn't find this is menuManager etc.)*/
+        Menu menu = tableViewer.getTable().getMenu();
+        menu.addMenuListener( new MenuListener() {
+                public void menuHidden( MenuEvent e ) {
+                }
 
+                public void menuShown( MenuEvent e ) {
+                    Menu menu = tableViewer.getTable().getMenu();
+                    MenuItem[] items = menu.getItems();
+                    menu.setDefaultItem( items[ ( items.length - 1 ) ] );
+                }
+            } );
+
+        /*add the double-click handler to open message-window on double-click*/
+        tableViewer.getTable().addMouseListener( new MouseListener() {
+                public void mouseDoubleClick( MouseEvent e ) {
+                    TableItem[] currentItems = tableViewer.getTable().getSelection();
+                    for ( int i = 0; i < currentItems.length; i++ ) {
+                        ClientInfo selectedClientInfo = ( ClientInfo ) currentItems[ i ].getData();
+                        openTab( selectedClientInfo );
+                    }
+                }
+
+                public void mouseDown( MouseEvent e ) {
+                }
+
+                public void mouseUp( MouseEvent e ) {
+                }
+            } );
+    }
+
+    /**
+     * @param main
+     */
+    private void createRightSash( Composite main ) {
+        ViewForm messagesViewForm =
+            new ViewForm( main,
+                          SWT.BORDER
+                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+        messagesCLabel = CCLabel.createCL( messagesViewForm, "FR_TABS", "MessagesButtonSmallTrans" );
+        ToolBar messagesToolBar = new ToolBar( messagesViewForm, SWT.RIGHT | SWT.FLAT );
+        ToolItem sendItem = new ToolItem( messagesToolBar, SWT.NONE );
+        sendItem.setToolTipText( G2GuiResources.getString( "FR_TABS_CLOSE_TOOLTIP" ) );
+        sendItem.setImage( G2GuiResources.getImage( "X" ) );
+        sendItem.addSelectionListener( new SelectionAdapter() {
+                public void widgetSelected( SelectionEvent s ) {
+                    closeAllTabs();
+                }
+            } );
+        cTabFolder = new CTabFolder( messagesViewForm, SWT.NONE );
+        messagesViewForm.setTopLeft( messagesCLabel );
+        messagesViewForm.setTopRight( messagesToolBar );
+        messagesViewForm.setContent( cTabFolder );
+        cTabFolder.setBorderVisible( false );
+        cTabFolder.setLayoutData( new FillLayout() );
+        cTabFolder.setSelectionBackground( 
+        	new Color[] { cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
+        		cTabFolder.getBackground() }, new int[] { 75 } );
+        cTabFolder.setSelectionForeground( 
+        	cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
+        cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
+                public void itemClosed( CTabFolderEvent event ) {
+                    CTabItem item = ( CTabItem ) event.item;
+
+                    //Console console = (Console) item.getData("console");
+                    Composite consoleComposite = ( Composite ) item.getData( "composite" );
+                    Integer id = ( Integer ) item.getData( "id" );
+                    openTabs.remove( id );
+                    consoleComposite.dispose();
+                    item.dispose();
+                    setTabsLabel();
+                }
+            } );
+
+        // set the focus to the input line of the console when 
+        // an item is selected
+        cTabFolder.addSelectionListener( new SelectionListener() {
+                public void widgetDefaultSelected( SelectionEvent e ) {
+                }
+
+                public void widgetSelected( SelectionEvent e ) {
+                    CTabItem cTabItem = ( CTabItem ) e.item;
+                    Console console = ( Console ) cTabItem.getData( "console" );
+                    setTabsLabel();
+                    console.setFocus();
+                }
+            } );
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    public void closeAllTabs() {
+        Iterator iterator = openTabs.keySet().iterator();
+        while ( iterator.hasNext() ) {
+            Integer id = ( Integer ) iterator.next();
+            CTabItem cTabItem = ( CTabItem ) openTabs.get( id );
+            Composite consoleComposite = ( Composite ) cTabItem.getData( "composite" );
+            consoleComposite.dispose();
+            cTabItem.dispose();
+        }
+        openTabs.clear();
+        setTabsLabel();
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update( final Observable arg0, final Object arg1 ) {
+        if ( arg1 instanceof ClientMessage || arg0 instanceof ClientInfoIntMap ) {
+            if ( !cTabFolder.isDisposed() )
+                cTabFolder.getDisplay().asyncExec( new Runnable() {
+                        public void run() {
+                            runUpdate( arg0, arg1 );
+                        }
+                    } );
+
+        }
+        else if ( arg0 instanceof Console )
+            messageToClient( ( Console ) arg0, ( String ) arg1 );
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param arg0 DOCUMENT ME!
+     * @param arg1 DOCUMENT ME!
+     */
+    public void runUpdate( Observable arg0, Object arg1 ) {
+        if ( arg1 instanceof ClientMessage )
+            messageFromClient( ( ClientMessage ) arg1 );
+        else if ( arg0 instanceof ClientInfoIntMap ) {
+            mustRefresh++;
+            if ( System.currentTimeMillis() > ( lastTime + 2000 ) )
+                this.run();
+            else {
+                if ( mustRefresh == 1 )
+                    cTabFolder.getDisplay().timerExec( 2500, this );
+            }
+        }
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    public void run() {
+        if ( !cTabFolder.isDisposed() ) {
+            lastTime = System.currentTimeMillis();
+            tableViewer.refresh();
+            setFriendsLabel();
+            mustRefresh = 0;
+        }
+    }
+
+    /**
+     *
+     */
+    public void setFriendsLabel() {
+        friendsCLabel.setText( G2GuiResources.getString( "FR_FRIENDS" ) + ": "
+                               + tableViewer.getTable().getItemCount() );
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    public void setTabsLabel() {
+        String extra = "";
+        if ( cTabFolder.getSelection() != null )
+            extra = " -> " + cTabFolder.getSelection().getText();
+        messagesCLabel.setText( 
+        	G2GuiResources.getString( "FR_TABS" ) + ": " + openTabs.size() + extra );
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param console DOCUMENT ME!
+     * @param messageText DOCUMENT ME!
+     */
+    public void messageToClient( Console console, String messageText ) {
+        ClientMessage.sendMessage( core, console.getClientId(), messageText );
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param id DOCUMENT ME!
+     * @param textMessage DOCUMENT ME!
+     */
+    public void sendTabMessage( int id, String textMessage ) {
+        ClientInfo clientInfo = core.getClientInfoIntMap().get( id );
+        CTabItem cTabItem = ( CTabItem ) openTabs.get( new Integer( id ) );
+        Console console = ( Console ) cTabItem.getData( "console" );
+        console.append( textMessage + console.getLineDelimiter() );
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param message DOCUMENT ME!
+     */
+    public void messageFromClient( ClientMessage message ) {
+        mainWindow.getStatusline().update( "New message!" );
+        if ( openTabs.containsKey( new Integer( message.getId() ) ) ) {
+            String textMessage;
+            ClientInfo clientInfo = core.getClientInfoIntMap().get( message.getId() );
+            if ( clientInfo == null ) // Why don't we have clientInfo for these?
+
+                textMessage = getTimeStamp() + message.getId() + ": <unknown>> " + message.getText();
+            else
+                textMessage =
+                    getTimeStamp() + message.getId() + ": " + clientInfo.getClientName() + "> "
+                    + message.getText();
+            sendTabMessage( message.getId(), textMessage );
+        }
+        else {
+            // the core sends the clientInfo for this message's clientID AFTER
+            // the message itself.. not very smart.  So, neither is this curious loop.
+            // TODO: does this help at all? remove if not.
+            ClientInfo clientInfo = null;
+            for ( int i = 0;
+                      ( i < 6 )
+                      && ( ( clientInfo = core.getClientInfoIntMap().get( message.getId() ) ) == null );
+                      i++ )
+                try {
+                    Thread.sleep( 1000 );
+                }
+                catch ( InterruptedException e ) {
+                }
+            String tabText;
+            if ( clientInfo == null )
+                tabText = "" + message.getId() + ": <unknown>";
+            else
+                tabText = "" + clientInfo.getClientid() + ": " + clientInfo.getClientName();
+            String textMessage = getTimeStamp() + tabText + "> " + message.getText();
+            CTabItem cTabItem = addCTabItem( message.getId(), "  " + tabText );
+            if ( cTabFolder.getItemCount() == 1 )
+                setItemFocus( cTabItem );
+            sendTabMessage( message.getId(), textMessage );
+            setTabsLabel();
+        }
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param id DOCUMENT ME!
+     * @param tabText DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public CTabItem addCTabItem( int id, String tabText ) {
+        CTabItem tabItem = new CTabItem( cTabFolder, SWT.NONE );
+        tabItem.setText( tabText );
+        Composite consoleComposite = new Composite( cTabFolder, SWT.BORDER );
+        consoleComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        Console console = new Console( consoleComposite, SWT.WRAP );
+        setPreferences( console );
+        console.setClientId( id );
+        console.addObserver( this );
+        tabItem.setControl( consoleComposite );
+        tabItem.setData( "id", new Integer( id ) );
+        tabItem.setData( "composite", consoleComposite );
+        tabItem.setData( "console", console );
+        openTabs.put( new Integer( id ), tabItem );
+        return tabItem;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param clientInfo DOCUMENT ME!
+     */
+    public void openTab( ClientInfo clientInfo ) {
+        if ( !openTabs.containsKey( new Integer( clientInfo.getClientid() ) ) ) {
+            String tabText = "  " + clientInfo.getClientid() + ": " + clientInfo.getClientName();
+            setItemFocus( addCTabItem( clientInfo.getClientid(), tabText ) );
+        }
+        else
+            cTabFolder.setSelection( ( CTabItem ) openTabs.get( new Integer( clientInfo.getClientid() ) ) );
+        setTabsLabel();
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public String getTimeStamp() {
+        SimpleDateFormat sdFormatter = new SimpleDateFormat( "[HH:mm:ss] " );
+        Date oToday = new Date();
+        return sdFormatter.format( oToday );
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param cTabItem DOCUMENT ME!
+     */
+    public void setItemFocus( CTabItem cTabItem ) {
+        cTabFolder.setSelection( cTabItem );
+        Console console = ( Console ) cTabItem.getData( "console" );
+        console.setFocus();
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    public void setActive() {
+        super.setActive();
+        if ( cTabFolder.getSelection() != null )
+            setItemFocus( cTabFolder.getSelection() );
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param console DOCUMENT ME!
+     */
+    public void setPreferences( Console console ) {
+        console.setDisplayFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+        console.setInputFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+        console.setHighlightColor( PreferenceLoader.loadColour( "consoleHighlight" ) );
+        console.setDisplayBackground( PreferenceLoader.loadColour( "consoleBackground" ) );
+        console.setDisplayForeground( PreferenceLoader.loadColour( "consoleForeground" ) );
+        console.setInputBackground( PreferenceLoader.loadColour( "consoleInputBackground" ) );
+        console.setInputForeground( PreferenceLoader.loadColour( "consoleInputForeground" ) );
+    }
 }
+
 /*
 $Log: MessagesTab.java,v $
+Revision 1.28  2003/09/18 09:44:57  lemmster
+checkstyle
+
 Revision 1.27  2003/09/03 14:49:07  zet
 optionally spawn core from gui
 
@@ -517,7 +545,7 @@ Revision 1.9  2003/08/23 09:47:52  lemmster
 just rename
 
 Revision 1.8  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.7  2003/08/20 22:18:56  zet
 Viewer updates
