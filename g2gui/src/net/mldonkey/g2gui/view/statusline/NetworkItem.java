@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.9 2003/08/02 09:55:16 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkItem.java,v 1.10 2003/08/02 19:47:54 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -66,7 +66,7 @@ public class NetworkItem implements Observer {
 	private Composite composite;
 	private GridLayout gridLayout;
 	private Image image;
-	private CLabel cLabel;
+	private CLabel cLabel, anotherCLabel;
 	private boolean enabled;
 
 
@@ -114,7 +114,7 @@ public class NetworkItem implements Observer {
 			cLabel.addMouseListener( new MouseListener() {
 				public void mouseDown( MouseEvent e ) {
 					if ( e.button != 3 ) return;
-					cLabel = ( CLabel ) e.widget;
+					anotherCLabel = ( CLabel ) e.widget;
 				}
 				public void mouseDoubleClick( MouseEvent e ) { }
 				public void mouseUp( MouseEvent e ) { }
@@ -141,55 +141,6 @@ public class NetworkItem implements Observer {
 			cLabel.setImage( this.createNetworkImage( network ) );
 		}
 	}
-	/**
-	 * Creates the "button 3" menu
-	 * @return The menu added to the table
-	 */
-	private Menu createRightClickMenu() {
-		Shell shell = composite.getShell();
-		Menu menu = new Menu( shell , SWT.POP_UP );
-
-		MenuItem item;
-		final MenuItem stateItem;
-
-		/* change the menu for bittorrent (doesnt have servers) */
-		if ( ( ( NetworkInfo ) cLabel.getData() ).hasServers() ) {
-	
-			/* disconnect Server */
-			item = new MenuItem( menu, SWT.PUSH );
-			item.setText( "manage server" );
-			item.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent e ) {
-					//TODO open servertab
-				}
-			} );
-
-			new MenuItem( menu, SWT.SEPARATOR );
-		}
-
-		/* disable/enable the network */
-		stateItem = new MenuItem( menu, SWT.PUSH );
-		stateItem.setText( "enable" );
-		stateItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent e ) {
-				NetworkInfo networkInfo = ( NetworkInfo ) cLabel.getData();
-				networkInfo.setEnabled();
-			}
-		} );
-		
-		/* disable or enable? */
-		menu.addListener( SWT.Show, new Listener () {
-			public void handleEvent( Event event ) {
-				NetworkInfo networkInfo = ( NetworkInfo ) cLabel.getData();
-				if ( networkInfo.isEnabled() )
-					stateItem.setText( "Disable" );
-				else
-					stateItem.setText( "Enable" );						
-			}
-		} );
-		return menu;
-	}
-
 
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
@@ -205,30 +156,33 @@ public class NetworkItem implements Observer {
 				Control[] controls = composite.getChildren();
 
 				/* find the corresponding label */	
-				for ( int i = 0; i < controls.length; i++ ) {
-					cLabel = ( CLabel ) controls[ i ];
-					/* get the data from the network */
-					NetworkInfo cNetwork = ( NetworkInfo ) cLabel.getData();
-					if ( network == cNetwork ) {
-						cLabel.getImage().dispose(); // dispose the old image
-						cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
+				cLabel = getLabelByNetwork( controls, network );
+				cLabel.getImage().dispose(); // dispose the old image
+				cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
 
-						if ( core.getProtoToUse() >= 18 ) {
-							/* get the servers the network is connected to */
-							int numConnected = network.getConnectedServers();
-							if ( numConnected > 0 ) { //TODO get min # of servers
-								/* we are connected, the "CONNECTED" to true */
-								cLabel.setData( "CONNECTED", new Boolean( true ) );
-								/* alter the tooltip text, to reflect that we are connected */
-								cLabel.setToolTipText( network.getNetworkName() + ": connected to " + numConnected + " servers" );
-							}
-						}
-						cLabel.setImage( createNetworkImage( network ) );
-						break;
+				if ( core.getProtoToUse() >= 18 ) {
+					/* get the servers the network is connected to */
+					int numConnected = network.getConnectedServers();
+					if ( numConnected > 0 ) { //TODO get min # of servers
+						/* we are connected, the "CONNECTED" to true */
+						cLabel.setData( "CONNECTED", new Boolean( true ) );
+						/* alter the tooltip text, to reflect that we are connected */
+						cLabel.setToolTipText( network.getNetworkName() + ": connected to " + numConnected + " servers" );
 					}
-				}						
+				}
+				cLabel.setImage( createNetworkImage( network ) );
 			}
 		} );	
+	}
+	
+	private CLabel getLabelByNetwork( Control[] controls, NetworkInfo network ) {
+		for ( int i = 0; i < controls.length; i++ ) {
+			cLabel = ( CLabel ) controls[ i ];
+			if ( cLabel.getData() == network ) {
+				return cLabel;
+			}
+		}
+		return null;
 	}
 	
 	/**
@@ -488,10 +442,62 @@ public class NetworkItem implements Observer {
 			return image;
 //		}
 	}
+	
+	/**
+	 * Creates the "button 3" menu
+	 * @return The menu added to the table
+	 */
+	private Menu createRightClickMenu() {
+		Shell shell = composite.getShell();
+		Menu menu = new Menu( shell , SWT.POP_UP );
+	
+		MenuItem item;
+		final MenuItem stateItem;
+	
+		/* change the menu for bittorrent (doesnt have servers) */
+		if ( ( ( NetworkInfo ) cLabel.getData() ).hasServers() ) {
+		
+			/* disconnect Server */
+			item = new MenuItem( menu, SWT.PUSH );
+			item.setText( "manage server" );
+			item.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent e ) {
+					//TODO open servertab
+				}
+			} );
+	
+			new MenuItem( menu, SWT.SEPARATOR );
+		}
+	
+		/* disable/enable the network */
+		stateItem = new MenuItem( menu, SWT.PUSH );
+		stateItem.setText( "enable" );
+		stateItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent e ) {
+				NetworkInfo networkInfo = ( NetworkInfo ) anotherCLabel.getData();
+				networkInfo.setEnabled();
+			}
+		} );
+			
+		/* disable or enable? */
+		menu.addListener( SWT.Show, new Listener () {
+			public void handleEvent( Event event ) {
+				NetworkInfo networkInfo = ( NetworkInfo ) anotherCLabel.getData();
+				if ( networkInfo.isEnabled() )
+					stateItem.setText( "Disable" );
+				else
+					stateItem.setText( "Enable" );						
+			}
+		} );
+		return menu;
+	}
 }
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.10  2003/08/02 19:47:54  lemmstercvs01
+finally working
+
 Revision 1.9  2003/08/02 09:55:16  lemmstercvs01
 observers changed
 
