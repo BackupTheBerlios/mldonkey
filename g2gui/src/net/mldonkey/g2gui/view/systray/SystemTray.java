@@ -45,7 +45,7 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
 /**
- * @version $Id: SystemTray.java,v 1.15 2004/03/13 14:34:12 dek Exp $
+ * @version $Id: SystemTray.java,v 1.16 2004/03/14 17:37:59 dek Exp $
  *  
  */
 public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
@@ -141,7 +141,7 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 	public SystemTray(MainWindow window) {
 		this.titleBarText = "g2gui v " + VersionInfo.getVersion();
 		parent = window;
-		Thread tray = new Thread(this);
+		Thread tray = new Thread(this);		
 		tray.start();
 	}
 
@@ -151,24 +151,13 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		// try to load the library
-		try {
-			System.loadLibrary("DesktopIndicator");
-		} catch (UnsatisfiedLinkError e) {
-			// thrown when the library is not found or can't be loaded
-			libLoaded = false;
-			return;
-		} catch (SecurityException e) {
-			// thrown because of security reasons, check policies
-			libLoaded = false;
-			return;
-		}
-		// the lib is loaded an ready to use
-		libLoaded = true;
+		
+		libLoaded = SystemTrayIconManager.libLoaded;
 
 		parent.getCore().getClientStats().addObserver(this);
 
 		icon = G2GuiResources.getImageDescriptor("TrayIcon").createImage().handle;
+		System.out.println(icon);
 		
 		systemTrayManager = new SystemTrayIconManager(icon, titleBarText);
 		systemTrayManager.addSystemTrayIconListener(this);
@@ -280,6 +269,9 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.16  2004/03/14 17:37:59  dek
+ Systray reloaded
+
  Revision 1.15  2004/03/13 14:34:12  dek
  gui thread was not a good thing for gui [TM] it crashed with gcj
 

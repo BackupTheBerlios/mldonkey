@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.71 2004/03/04 21:15:32 dek Exp $
+ * @version $Id: G2Gui.java,v 1.72 2004/03/14 17:37:59 dek Exp $
  *
  */
 public class G2Gui {
@@ -94,7 +94,7 @@ public class G2Gui {
      * Starts a new Core and launch the Gui
      * @param args Nothing to put inside
      */
-    public static void main(String[] argv) {
+    public static void main(String[] argv) {    	
     	String fileNotFound = "preference file not found on disk";
     	String configfile = null;
     	
@@ -449,6 +449,7 @@ public class G2Gui {
     		aCore.connect();
     		Thread mldonkey = new Thread(aCore);
     		mldonkey.setDaemon(true);
+    		mldonkey.setName("CoreCommunication");
     		mldonkey.start();
     		try {
     			waiterObject.wait();
@@ -652,6 +653,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.72  2004/03/14 17:37:59  dek
+Systray reloaded
+
 Revision 1.71  2004/03/04 21:15:32  dek
 yet another fix for gcj
 

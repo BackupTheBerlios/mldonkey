@@ -2,6 +2,8 @@ package com.gc.systray;
 
 import java.util.LinkedList;
 
+import net.mldonkey.g2gui.view.G2Gui;
+
 
 
 /**
@@ -44,7 +46,29 @@ public class SystemTrayIconManager {
     private boolean mouseOnPopup = false;
 
     private static String dllName = new String("DesktopIndicator");
+	public static boolean libLoaded;
 
+    static {		
+    	// try to load the library
+		try {
+			System.loadLibrary(dllName);
+		} 
+		catch (ExceptionInInitializerError e){
+			/*sometimes seen in gcj-environment*/
+			libLoaded = false;
+		}catch (UnsatisfiedLinkError e) {
+			// thrown when the library is not found or can't be loaded
+			libLoaded = false;
+			e.printStackTrace();			
+		} catch (SecurityException e) {
+			// thrown because of security reasons, check policies
+			libLoaded = false;
+			
+		}		
+		libLoaded=true;
+		
+		if (G2Gui.debug) System.out.println(dllName+".dll"+" loaded: "+libLoaded);
+    }
 
 
     private final int DISTANCE = 1000; // a positive value

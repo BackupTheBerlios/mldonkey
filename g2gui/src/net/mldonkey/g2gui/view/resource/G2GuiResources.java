@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.RGB;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.64 2004/02/17 21:23:53 psy Exp $
+ * @version $Id: G2GuiResources.java,v 1.65 2004/03/14 17:37:59 dek Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -307,6 +307,7 @@ public class G2GuiResources {
 
         return result;
     }
+    
 
     /**
      * @param filename
@@ -337,6 +338,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.65  2004/03/14 17:37:59  dek
+Systray reloaded
+
 Revision 1.64  2004/02/17 21:23:53  psy
 added FileTP as a new network
 
@@ -508,7 +512,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: psy $
+replace $user$ with $Author: dek $
 
 Revision 1.4  2003/08/21 11:19:15  lemmy
 added bt and multinet image

@@ -22,17 +22,19 @@
  */
 package net.mldonkey.g2gui.view.systray;
 
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
 
 
  /**
- * @version $Id: ExitAction.java,v 1.4 2004/03/11 13:11:43 dek Exp $ 
+ * @version $Id: ExitAction.java,v 1.5 2004/03/14 17:37:59 dek Exp $ 
  *
  */
 class ExitAction extends SystrayAction {	
 	
 	public ExitAction(SystemTray tray,String title) {
 		super(tray, title);			
-		//setImageDescriptor(G2GuiResources.getImageDescriptor("X"));
+		setImageDescriptor(G2GuiResources.getImageDescriptor("X"));
 	}
 	
 	
@@ -44,6 +46,9 @@ class ExitAction extends SystrayAction {
 }
 /*
  $Log: ExitAction.java,v $
+ Revision 1.5  2004/03/14 17:37:59  dek
+ Systray reloaded
+
  Revision 1.4  2004/03/11 13:11:43  dek
  Submenu for traymenu + some OO
 
