@@ -26,17 +26,11 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.TransferTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
-import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
-import net.mldonkey.g2gui.view.viewers.GPaneListener;
-import net.mldonkey.g2gui.view.viewers.GTableViewer;
-import net.mldonkey.g2gui.view.viewers.GViewer;
+import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeViewer;
 
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -44,45 +38,27 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.ViewerFilter;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.custom.TableTreeItem;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 
 
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.16 2003/10/29 16:56:21 lemmster Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.17 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class DownloadTableTreeViewer implements GViewer, ICellModifier, IDoubleClickListener {
-    private static boolean displayChunkGraphs = false;
+public class DownloadTableTreeViewer extends GTableTreeViewer implements ICellModifier,
+    IDoubleClickListener {
     public static final String ALL_COLUMNS = "ABCDEFGHIJKLMN";
     public static final String BASIC_COLUMNS = "ABCDFIK";
     public static final String NAME_COLUMN = "C";
     public static final String RATE_COLUMN = "I";
     public static final String CHUNK_COLUMN = "J";
-    public static final String[] COLUMN_LABELS = {
-        "TT_Download_Id", "TT_Download_Network", "TT_Download_Name", "TT_Download_Size", "TT_Download_Downloaded", "TT_Download_%",
-        "TT_Download_Sources", "TT_Download_Avail", "TT_Download_Rate", "TT_Download_Chunks", "TT_Download_ETA", "TT_Download_Priority",
-        "TT_Download_Last", "TT_Download_Age"
-    };
-    private static final int[] COLUMN_DEFAULT_WIDTHS = { 50, 50, 250, 75, 75, 50, 50, 50, 50, 75, 75, 50, 75, 75 };
-    private static final int[] COLUMN_ALIGNMENT = {
-        SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT,
-        SWT.RIGHT
-    };
     public static final int ID = 0;
     public static final int NETWORK = 1;
     public static final int NAME = 2;
@@ -97,21 +73,9 @@ public class DownloadTableTreeViewer implements GViewer, ICellModifier, IDoubleC
     public static final int PRIORITY = 11;
     public static final int LAST = 12;
     public static final int AGE = 13;
-    private CustomTableTreeViewer tableTreeViewer;
-    private TableTree tableTree;
-    private Table table;
-    private DownloadTableTreeSorter tableTreeSorter;
-    private DownloadTableTreeContentProvider tableTreeContentProvider;
-    private DownloadTableTreeLabelProvider tableTreeLabelProvider;
-    private DownloadTableTreeMenuListener tableTreeMenuListener;
-    private FileInfo selectedFile = null;
-    private MenuManager popupMenu;
     private boolean advancedMode = false;
-    private boolean manualDispose = false;
-    private CoreCommunication mldonkey;
     private CellEditor[] cellEditors = null;
     private ClientTableViewer clientTableViewer;
-    private String columnIDs;
     private Composite parent;
 
     /**
@@ -120,116 +84,71 @@ public class DownloadTableTreeViewer implements GViewer, ICellModifier, IDoubleC
      * @param mldonkey
      * @param page
      */
-    public DownloadTableTreeViewer(Composite parent, ClientTableViewer clientTableViewer, final CoreCommunication mldonkey, TransferTab page) {
+    public DownloadTableTreeViewer(Composite parent, ClientTableViewer clientTableViewer,
+        final CoreCommunication core, TransferTab page) {
+        super(parent, core);
         this.clientTableViewer = clientTableViewer;
         this.parent = parent;
-        this.mldonkey = mldonkey;
+
+        preferenceString = "download";
+        columnLabels = new String[] {
+                "TT_Download_Id", "TT_Download_Network", "TT_Download_Name", "TT_Download_Size",
+                "TT_Download_Downloaded", "TT_Download_%", "TT_Download_Sources",
+                "TT_Download_Avail", "TT_Download_Rate", "TT_Download_Chunks", "TT_Download_ETA",
+                "TT_Download_Priority", "TT_Download_Last", "TT_Download_Age"
+            };
+
+        columnAlignment = new int[] {
+                SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT,
+                SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT
+            };
+
+        columnDefaultWidths = new int[] { 50, 50, 250, 75, 75, 50, 50, 50, 50, 75, 75, 50, 75, 75 };
+
+        gSorter = new DownloadTableTreeSorter(this);
+        tableTreeContentProvider = new DownloadTableTreeContentProvider(this);
+        tableLabelProvider = new DownloadTableTreeLabelProvider(this);
+        tableTreeMenuListener = new DownloadTableTreeMenuListener(this, clientTableViewer);
 
         advancedMode = PreferenceLoader.loadBoolean("advancedMode");
-        createTableTreeViewer(parent, mldonkey);
+
+        // createTableTreeViewer(parent, core);
+        createContents(parent);
     }
 
-    /**
-     * @param parent
-     * @param mldonkey
-     */
-    public void createTableTreeViewer(Composite parent, final CoreCommunication mldonkey) {
-        tableTreeViewer = new CustomTableTreeViewer(parent, SWT.MULTI | SWT.FULL_SELECTION);
-        tableTree = tableTreeViewer.getTableTree();
-        table = tableTree.getTable();
-        tableTree.setLayoutData(new GridData(GridData.FILL_BOTH));
+    public void createContents(Composite parent) {
+        super.createContents(parent);
 
-        createColumns();
-
-        // SWT3: SWT.RIGHT labels don't show up on gtk until a resize.. why? 
         if (SWT.getPlatform().equals("gtk")) {
-            table.getColumns()[ 0 ].pack();
+            getTable().getColumns()[ 0 ].pack();
         }
 
-        tableTreeLabelProvider = new DownloadTableTreeLabelProvider();
-        tableTreeLabelProvider.setTableTreeViewer(tableTreeViewer);
-
-        tableTreeSorter = new DownloadTableTreeSorter();
-        tableTreeSorter.setTableTreeViewer(tableTreeViewer);
-
-        tableTreeViewer.setLabelProvider(tableTreeLabelProvider);
-
-        tableTreeContentProvider = new DownloadTableTreeContentProvider();
-        tableTreeContentProvider.setDownloadTableTreeViewer(this);
-
-        tableTreeViewer.setContentProvider(tableTreeContentProvider);
-        tableTreeViewer.setUseHashlookup(true);
-
+        addMenuListener();
         tableTreeViewer.addDoubleClickListener(this);
+        tableTreeViewer.addSelectionChangedListener((DownloadTableTreeMenuListener) tableTreeMenuListener);
+        tableTreeViewer.setInput(core.getFileInfoIntMap());
+        core.getFileInfoIntMap().addObserver((DownloadTableTreeContentProvider) tableTreeContentProvider);
+    }
 
-        tableTreeMenuListener = new DownloadTableTreeMenuListener(this, clientTableViewer, mldonkey);
-
-        tableTreeViewer.addSelectionChangedListener(tableTreeMenuListener);
-
-        popupMenu = new MenuManager();
-        popupMenu.setRemoveAllWhenShown(true);
-        popupMenu.addMenuListener(tableTreeMenuListener);
-
-        tableTree.setMenu(popupMenu.createContextMenu(tableTree));
-
-        String savedSort = PreferenceLoader.loadString("downloadsTableLastSort");
-
-        if (!savedSort.equals("") && (columnIDs.indexOf(savedSort) != -1)) {
-            tableTreeSorter.setColumnIndex(columnIDs.indexOf(savedSort));
+    public void loadColumnIDs() {
+        if (advancedMode) {
+            super.loadColumnIDs();
         } else {
-            if (columnIDs.indexOf(RATE_COLUMN) != -1) {
-                tableTreeSorter.setColumnIndex(columnIDs.indexOf(RATE_COLUMN));
-            }
+            columnIDs = BASIC_COLUMNS;
         }
-
-        tableTreeViewer.setSorter(tableTreeSorter);
-
-        tableTreeViewer.getTableTree().addDisposeListener(new DisposeListener() {
-                public void widgetDisposed(DisposeEvent e) {
-                    int col = ((DownloadTableTreeSorter) tableTreeViewer.getSorter()).getLastColumnIndex();
-                    PreferenceStore p = PreferenceLoader.getPreferenceStore();
-                    p.setValue("downloadsTableLastSort", String.valueOf(columnIDs.charAt(col)));
-                }
-            });
-
-        setPreferences();
-        tableTreeViewer.setInput(mldonkey.getFileInfoIntMap());
-        mldonkey.getFileInfoIntMap().addObserver(tableTreeContentProvider);
     }
 
     /**
      * Create columns
      */
     public void createColumns() {
-        TableColumn[] tableColumns = tableTreeViewer.getTableTree().getTable().getColumns();
-
-        // The SWT TableColumn DisposeEvent.widget returns a width of 0 when manually disposing
-        manualDispose = true;
-
-        for (int i = tableColumns.length - 1; i > -1; i--) {
-            tableColumns[ i ].dispose();
-        }
-
-        manualDispose = false;
-
         if (advancedMode) {
-            String prefCols = PreferenceLoader.loadString("downloadTableColumns");
-
-            if (GTableViewer.validColumnIDs(prefCols, ALL_COLUMNS)) {
-                columnIDs = prefCols;
-            } else {
-                columnIDs = ALL_COLUMNS;
-
-                PreferenceStore p = PreferenceLoader.getPreferenceStore();
-                p.setValue("downloadTableColumns", columnIDs);
-            }
+            loadColumnIDs();
         } else {
             columnIDs = BASIC_COLUMNS;
         }
-
-        tableTreeViewer.setColumnIDs(columnIDs);
-        tableTreeViewer.setColumnProperties(COLUMN_LABELS);
-        table.setHeaderVisible(true);
+        
+        tableTreeViewer.setColumnProperties(columnLabels);
 
         if (cellEditors != null) {
             for (int i = 0; i < cellEditors.length; i++) {
@@ -243,58 +162,10 @@ public class DownloadTableTreeViewer implements GViewer, ICellModifier, IDoubleC
 
         if (columnIDs.indexOf(NAME_COLUMN) > 0) {
             cellEditors = new CellEditor[ columnIDs.length() ];
-            cellEditors[ columnIDs.indexOf(NAME_COLUMN) ] = new TextCellEditor(table);
+            cellEditors[ columnIDs.indexOf(NAME_COLUMN) ] = new TextCellEditor(getTable());
         }
 
-        final PreferenceStore p = PreferenceLoader.getPreferenceStore();
-
-        for (int i = 0; i < columnIDs.length(); i++) {
-            final int columnIndex = i;
-            final int arrayItem = columnIDs.charAt(i) - 65;
-
-            TableColumn tableColumn = new TableColumn(table, COLUMN_ALIGNMENT[ arrayItem ]);
-            p.setDefault(COLUMN_LABELS[ arrayItem ], COLUMN_DEFAULT_WIDTHS[ arrayItem ]);
-            tableColumn.setText(G2GuiResources.getString(COLUMN_LABELS[ arrayItem ]));
-            tableColumn.setWidth(p.getInt(COLUMN_LABELS[ arrayItem ]));
-
-            tableColumn.addDisposeListener(new DisposeListener() {
-                    public synchronized void widgetDisposed(DisposeEvent e) {
-                        TableColumn thisColumn = (TableColumn) e.widget;
-
-                        if (!manualDispose) {
-                            p.setValue(COLUMN_LABELS[ arrayItem ], thisColumn.getWidth());
-                        }
-                    }
-                });
-
-            tableColumn.addListener(SWT.Selection,
-                new Listener() {
-                    public void handleEvent(Event e) {
-                        tableTreeSorter.setColumnIndex(columnIndex);
-                        tableTreeViewer.refresh();
-                    }
-                });
-        }
-    }
-
-    /**
-     * Reset columns
-     */
-    public void resetColumns() {
-        tableTreeViewer.setInput(null);
-        tableTreeViewer.setEditors(false);
-        tableTreeSorter.setColumnIndex(0);
-        tableTreeViewer.closeAllTTE();
-        createColumns();
-        tableTreeViewer.setInput(mldonkey.getFileInfoIntMap());
-        updateDisplay();
-    }
-
-    /**
-     * @return CustomTableTreeViewer
-     */
-    public CustomTableTreeViewer getTableTreeViewer() {
-        return tableTreeViewer;
+        super.createColumns();
     }
 
     /* (non-Javadoc)
@@ -335,7 +206,9 @@ public class DownloadTableTreeViewer implements GViewer, ICellModifier, IDoubleC
      */
     public void updateDisplay() {
         setPreferences();
-        tableTreeLabelProvider.updateDisplay();
+        tableLabelProvider.updateDisplay();
+        tableTreeContentProvider.updateDisplay();
+        gSorter.updateDisplay();
         tableTreeViewer.refresh();
     }
 
@@ -343,11 +216,10 @@ public class DownloadTableTreeViewer implements GViewer, ICellModifier, IDoubleC
      * Set Preferneces
      */
     public void setPreferences() {
+        Table table = getTable();
         table.setBackground(PreferenceLoader.loadColour("downloadsBackgroundColor"));
         table.setFont(PreferenceLoader.loadFont("downloadsFontData"));
         table.setLinesVisible(PreferenceLoader.loadBoolean("displayGridLines"));
-        tableTreeLabelProvider.displayColors(PreferenceLoader.loadBoolean("displayTableColors"));
-        tableTreeContentProvider.setUpdateDelay(PreferenceLoader.loadInteger("updateDelay"));
 
         if (PreferenceLoader.loadBoolean("tableCellEditors")) {
             tableTreeViewer.setCellEditors(cellEditors);
@@ -377,17 +249,13 @@ public class DownloadTableTreeViewer implements GViewer, ICellModifier, IDoubleC
                 }
             }
         }
-
-        if (tableTreeViewer.getSorter() != null) {
-            ((DownloadTableTreeSorter) tableTreeViewer.getSorter()).setMaintainSortOrder(PreferenceLoader.loadBoolean("maintainSortOrder"));
-        }
     }
 
     /**
      * @param b
      */
     public void updateClientsTable(boolean b) {
-        tableTreeMenuListener.updateClientsTable(b);
+        ((DownloadTableTreeMenuListener) tableTreeMenuListener).updateClientsTable(b);
     }
 
     /**
@@ -433,91 +301,26 @@ public class DownloadTableTreeViewer implements GViewer, ICellModifier, IDoubleC
             }
         } else if (o instanceof TreeClientInfo) {
             TreeClientInfo treeClientInfo = (TreeClientInfo) o;
-            new ClientDetailDialog(treeClientInfo.getFileInfo(), treeClientInfo.getClientInfo(), mldonkey);
+            new ClientDetailDialog(treeClientInfo.getFileInfo(), treeClientInfo.getClientInfo(),
+                getCore());
         }
     }
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getFilters()
-	 */
-	public ViewerFilter[] getFilters() {
-		return this.tableTreeViewer.getFilters();
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GViewer#addFilter(org.eclipse.jface.viewers.ViewerFilter)
-	 */
-	public void addFilter(ViewerFilter viewerFilter) {
-		this.tableTreeViewer.addFilter( viewerFilter );
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GViewer#removeFilter(org.eclipse.jface.viewers.ViewerFilter)
-	 */
-	public void removeFilter(ViewerFilter viewerFilter) {
-		this.tableTreeViewer.removeFilter( viewerFilter );
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GViewer#refresh()
-	 */
-	public void refresh() {
-		this.tableTreeViewer.refresh();
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getShell()
-	 */
-	public Shell getShell() {
-		return this.tableTreeViewer.getTableTree().getShell();
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getViewer()
-	 */
-	public Object getViewer() {
-		return this.tableTreeViewer;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getAllColumnIDs()
-	 */
-	public String getAllColumnIDs() {
-		return ALL_COLUMNS;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getColumnLabels()
-	 */
-	public String[] getColumnLabels() {
-		return COLUMN_LABELS;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getPreferenceString()
-	 */
-	public String getPreferenceString() {
-		return "download";
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getCore()
-	 */
-	public CoreCommunication getCore() {
-		return this.mldonkey;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GViewer#addDisposeListener(net.mldonkey.g2gui.view.viewers.GPaneListener)
-	 */
-	public void addDisposeListener(GPaneListener listener) {
-		this.tableTreeViewer.getTableTree().addDisposeListener( listener );
-	}
 }
 
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.17  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.16  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 
@@ -603,7 +406,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/22 13:47:56  dek
 selection is removed with click on empty-row

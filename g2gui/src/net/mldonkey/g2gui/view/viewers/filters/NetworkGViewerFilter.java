@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,55 +18,87 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.viewers.filters;
 
-import org.eclipse.jface.viewers.Viewer;
-
+import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 
+import org.eclipse.jface.viewers.Viewer;
+
+
 /**
  * NetworkGViewerFilter
  *
- * @version $Id: NetworkGViewerFilter.java,v 1.1 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: NetworkGViewerFilter.java,v 1.2 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class NetworkGViewerFilter extends GViewerFilter {
-	public boolean matches( NetworkInfo networkInfo ) {
-		return super.matches( networkInfo.getNetworkType() );
-	}
-        
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-	 */
-	public boolean select( Viewer viewer, Object parentElement, Object element ) {
-		if ( element instanceof ServerInfo ) {
-			ServerInfo server = ( ServerInfo ) element;
-			if ( matches( server.getNetwork() ) )
-			   return true;
-			return false;
-		}
-		if ( element instanceof ResultInfo ) {
-			ResultInfo result = ( ResultInfo ) element;
-			if ( matches( result.getNetwork() ) )
-				return true;
-			return false;
-		}
-		if ( element instanceof FileInfo ) {
-			FileInfo fileInfo = ( FileInfo ) element;
-			if ( matches( fileInfo.getNetwork() ) )
-				return true;
-			return false;
-		}
-		return true;
-	}
+    public boolean matches(NetworkInfo networkInfo) {
+        return super.matches(networkInfo.getNetworkType());
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
+    public boolean select(Viewer viewer, Object parentElement, Object element) {
+        if (element instanceof ServerInfo) {
+            ServerInfo server = (ServerInfo) element;
+
+            if (matches(server.getNetwork())) {
+                return true;
+            }
+
+            return false;
+        }
+        else if (element instanceof ResultInfo) {
+            ResultInfo result = (ResultInfo) element;
+
+            if (matches(result.getNetwork())) {
+                return true;
+            }
+
+            return false;
+        } else if (element instanceof FileInfo) {
+            FileInfo fileInfo = (FileInfo) element;
+
+            if (matches(fileInfo.getNetwork())) {
+                return true;
+            }
+
+            return false;
+        } else if (element instanceof ClientInfo) {
+            ClientInfo clientInfo = (ClientInfo) element;
+
+            if (matches(clientInfo.getClientnetworkid())) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
 }
+
+
 /*
 $Log: NetworkGViewerFilter.java,v $
+Revision 1.2  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.1  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

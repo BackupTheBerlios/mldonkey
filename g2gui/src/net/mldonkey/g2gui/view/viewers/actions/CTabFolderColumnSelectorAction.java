@@ -22,42 +22,61 @@
  */
 package net.mldonkey.g2gui.view.viewers.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.ColumnSelector;
-import net.mldonkey.g2gui.view.viewers.IGViewer;
+import net.mldonkey.g2gui.view.viewers.table.GTableViewer;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 
 
 /**
- * ColumnSelectorAction
+ * CTabFolderColumnSelectorAction
  *
- * @version $Id: ColumnSelectorAction.java,v 1.3 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: CTabFolderColumnSelectorAction.java,v 1.3 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class ColumnSelectorAction extends Action {
-    private IGViewer gViewer;
+public class CTabFolderColumnSelectorAction extends Action {
+    private List gTableViewerList = new ArrayList();
 
-    public ColumnSelectorAction(IGViewer gViewer) {
+    public CTabFolderColumnSelectorAction(CTabFolder cTabFolder) {
         super(G2GuiResources.getString("TT_ColumnSelector"));
         setImageDescriptor(G2GuiResources.getImageDescriptor("table"));
-        this.gViewer = gViewer;
+
+        for (int i = 0; i < cTabFolder.getItems().length; i++) {
+            CTabItem cTabItem = cTabFolder.getItems()[ i ];
+
+            if (cTabItem.getData("gTableViewer") != null) {
+                gTableViewerList.add((GTableViewer) cTabItem.getData("gTableViewer"));
+            }
+        }
     }
 
     public void run() {
-        ColumnSelector cSelector = new ColumnSelector(gViewer.getShell(),
-                gViewer.getColumnLabels(), gViewer.getAllColumnIDs(), gViewer.getPreferenceString());
+        if (gTableViewerList.size() == 0) return;
+        
+        GTableViewer gTableViewer = (GTableViewer) gTableViewerList.get(0);
 
-        if (cSelector.open() == ColumnSelector.OK) {
-            cSelector.savePrefs();
-            gViewer.resetColumns();
+        ColumnSelector c = new ColumnSelector(gTableViewer.getTableViewer().getTable().getShell(), gTableViewer.getColumnLabels(),
+                gTableViewer.getAllColumnIDs(), gTableViewer.getPreferenceString());
+
+        if (c.open() == ColumnSelector.OK) {
+            c.savePrefs();
+
+            for (int i = 0; i < gTableViewerList.size(); i++) {
+                ((GTableViewer) gTableViewerList.get(i)).resetColumns();
+            }
         }
     }
 }
 
 
 /*
-$Log: ColumnSelectorAction.java,v $
+$Log: CTabFolderColumnSelectorAction.java,v $
 Revision 1.3  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
@@ -69,11 +88,7 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.2  2003/10/29 16:56:21  lemmster
-added reasonable class hierarchy for panelisteners, viewers...
-
-Revision 1.1  2003/10/22 16:28:52  zet
-common actions
-
+Revision 1.1  2003/10/28 00:36:25  zet
+init
 
 */

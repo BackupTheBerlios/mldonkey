@@ -26,7 +26,7 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
-import net.mldonkey.g2gui.view.viewers.GTableContentProvider;
+import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 
 import org.eclipse.jface.viewers.Viewer;
 
@@ -40,7 +40,7 @@ import java.util.Observer;
  *
  * ClientTableContentProvider
  *
- * @version $Id: ClientTableContentProvider.java,v 1.4 2003/10/22 01:38:19 zet Exp $
+ * @version $Id: ClientTableContentProvider.java,v 1.5 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class ClientTableContentProvider extends GTableContentProvider implements Observer {
@@ -105,7 +105,7 @@ public class ClientTableContentProvider extends GTableContentProvider implements
                 tableViewer.refresh();
                 lastUpdateTime = System.currentTimeMillis();
             } else {
-                tableViewer.update(clientInfo, null); // widget disposed
+                tableViewer.update(clientInfo, new String[] { "z" }); // requires a property string
             }
         }
     }
@@ -114,6 +114,17 @@ public class ClientTableContentProvider extends GTableContentProvider implements
 
 /*
 $Log: ClientTableContentProvider.java,v $
+Revision 1.5  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.4  2003/10/22 01:38:19  zet
 add column selector to server/search (might not be finished yet..)
 

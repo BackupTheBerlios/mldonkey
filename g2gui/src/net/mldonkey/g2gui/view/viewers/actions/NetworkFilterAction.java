@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumNetwork;
-import net.mldonkey.g2gui.view.viewers.GViewer;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
 import net.mldonkey.g2gui.view.viewers.filters.NetworkGViewerFilter;
 
 import org.eclipse.jface.action.Action;
@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * NetworkFilterAction
  *
- * @version $Id: NetworkFilterAction.java,v 1.1 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: NetworkFilterAction.java,v 1.2 2003/10/31 07:24:01 zet Exp $ 
  *
  */
 public class NetworkFilterAction extends FilterAction {
@@ -44,7 +44,7 @@ public class NetworkFilterAction extends FilterAction {
 	 * @param name The name we should display on the <code>MenuManager</code>
 	 * @param networkType The <code>NetworkInfo.Enum</code> we should filter
 	 */
-	public NetworkFilterAction( GViewer gViewer, NetworkInfo network ) {
+	public NetworkFilterAction( IGViewer gViewer, NetworkInfo network ) {
 		super( network.getNetworkName(), Action.AS_CHECK_BOX, gViewer );
 		this.networkType = network.getNetworkType();
 		if ( this.isFiltered( network ) )
@@ -93,6 +93,17 @@ public class NetworkFilterAction extends FilterAction {
 
 /*
 $Log: NetworkFilterAction.java,v $
+Revision 1.2  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.1  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

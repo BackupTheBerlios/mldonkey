@@ -22,25 +22,25 @@
  */
 package net.mldonkey.g2gui.view.viewers.actions;
 
-import org.eclipse.jface.viewers.ViewerFilter;
-
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GViewer;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
+
+import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * AllFilterAction
  *
- * @version $Id: AllFilterAction.java,v 1.1 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: AllFilterAction.java,v 1.2 2003/10/31 07:24:01 zet Exp $ 
  *
  */
 public class AllFilterAction extends FilterAction {
 	/**
 	 * Creates a new AllFiltersAction
 	 */
-	public AllFilterAction( GViewer gViewer ) {
+	public AllFilterAction( IGViewer gViewer ) {
 		super( G2GuiResources.getString( "TML_NO_FILTERS" ), 0, gViewer );
-		if ( gViewer.getFilters().length == 0 )
+		if ( gViewer != null && gViewer.getFilters().length == 0 )
 			this.setChecked( true );
 	}
 
@@ -55,6 +55,17 @@ public class AllFilterAction extends FilterAction {
 
 /*
 $Log: AllFilterAction.java,v $
+Revision 1.2  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.1  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

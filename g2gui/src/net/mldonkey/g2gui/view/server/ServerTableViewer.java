@@ -25,11 +25,11 @@ package net.mldonkey.g2gui.view.server;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.viewers.GTableViewer;
 import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
 import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
+import net.mldonkey.g2gui.view.viewers.table.GTableViewer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTableViewer.java,v 1.6 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: ServerTableViewer.java,v 1.7 2003/10/31 07:24:01 zet Exp $ 
  *
  */
 public class ServerTableViewer extends GTableViewer {
@@ -84,7 +84,7 @@ public class ServerTableViewer extends GTableViewer {
 		
 		tableContentProvider = new ServerTableContentProvider( this );
 		tableLabelProvider = new ServerTableLabelProvider( this );
-		tableSorter = new ServerTableSorter( this );
+		gSorter = new ServerTableSorter( this );
 		tableMenuListener = new ServerTableMenuListener( this );
 		
 
@@ -139,6 +139,17 @@ public class ServerTableViewer extends GTableViewer {
 
 /*
 $Log: ServerTableViewer.java,v $
+Revision 1.7  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.6  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

@@ -20,33 +20,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-package net.mldonkey.g2gui.view.viewers;
+package net.mldonkey.g2gui.view.viewers.table;
+
+import net.mldonkey.g2gui.view.viewers.ICustomViewer;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-
 import org.eclipse.swt.graphics.Image;
 
 
 /**
  * GenericTableLabelProvider
  *
- * @version $Id: GTableLabelProvider.java,v 1.1 2003/10/22 01:36:59 zet Exp $
+ * @version $Id: GTableLabelProvider.java,v 1.1 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class GTableLabelProvider implements ITableLabelProvider {
-    protected CustomTableViewer tableViewer;
-    protected GTableViewer gTableViewer;
+    protected IGViewer gViewer;
+    protected ICustomViewer cViewer;
 
-    public GTableLabelProvider(GTableViewer gTableViewer) {
-        this.gTableViewer = gTableViewer;
+    public GTableLabelProvider(IGViewer gViewer) {
+        this.gViewer = gViewer;
     }
 
     /**
      * initialize after tableViewer creation
      */
     public void initialize() {
-        tableViewer = gTableViewer.getTableViewer();
+        cViewer = (ICustomViewer) gViewer.getViewer();
     }
 
     /* (non-Javadoc)
@@ -89,14 +91,27 @@ public class GTableLabelProvider implements ITableLabelProvider {
      */
     public void removeListener(ILabelProviderListener listener) {
     }
+
+    /**
+     * update display after preference changes
+     */
+    public void updateDisplay() {
+    }
 }
 
 
 /*
 $Log: GTableLabelProvider.java,v $
-Revision 1.1  2003/10/22 01:36:59  zet
-add column selector to server/search (might not be finished yet..)
-
+Revision 1.1  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
 
 
 */

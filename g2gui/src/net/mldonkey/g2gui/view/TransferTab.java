@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.transfer.DownloadPaneMenuListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientPaneListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
-import net.mldonkey.g2gui.view.transfer.uploadTable.UploadMenuListener;
+import net.mldonkey.g2gui.view.transfer.uploadTable.UploadPaneListener;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.81 2003/10/29 16:56:21 lemmster Exp $
+ * @version $Id: TransferTab.java,v 1.82 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -210,7 +210,7 @@ public class TransferTab extends GuiTab {
     public void createUploadHeader(ViewForm parentViewForm, final SashForm mainSashForm, final Control uploadParent) {
         popupMenuUL = new MenuManager("");
         popupMenuUL.setRemoveAllWhenShown(true);
-        popupMenuUL.addMenuListener(new UploadMenuListener(uploadTableViewer, mldonkey, mainSashForm, parentViewForm));
+        popupMenuUL.addMenuListener(new UploadPaneListener(uploadTableViewer, mldonkey, mainSashForm, parentViewForm));
 
         CLabel uploadsCLabel = CCLabel.createCL(parentViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar");
         uploadsCLabel.addMouseListener(new MaximizeSashMouseAdapter(uploadsCLabel, popupMenuUL, mainSashForm, uploadParent));
@@ -405,6 +405,17 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.82  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.81  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 
@@ -547,7 +558,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

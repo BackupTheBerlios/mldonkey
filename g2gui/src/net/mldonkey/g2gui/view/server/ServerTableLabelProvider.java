@@ -28,10 +28,9 @@ import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GTableLabelProvider;
+import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 
 import org.eclipse.jface.viewers.IColorProvider;
-
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
@@ -40,7 +39,7 @@ import org.eclipse.swt.graphics.Image;
  * ServerTableLabelProvider
  *
  *
- * @version $Id: ServerTableLabelProvider.java,v 1.7 2003/10/22 01:37:55 zet Exp $
+ * @version $Id: ServerTableLabelProvider.java,v 1.8 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class ServerTableLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -57,7 +56,7 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      */
     public Image getColumnImage(Object element, int columnIndex) {
-        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ServerTableViewer.NETWORK:
 
             ServerInfo server = (ServerInfo) element;
@@ -77,7 +76,7 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
     public String getColumnText(Object element, int columnIndex) {
         ServerInfo server = (ServerInfo) element;
 
-        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ServerTableViewer.NETWORK:
             return " " + ((NetworkInfo) server.getNetwork()).getNetworkName();
 
@@ -172,6 +171,17 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ServerTableLabelProvider.java,v $
+Revision 1.8  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.7  2003/10/22 01:37:55  zet
 add column selector to server/search (might not be finished yet..)
 

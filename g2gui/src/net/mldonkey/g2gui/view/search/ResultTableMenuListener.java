@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.25 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.26 2003/10/31 07:24:01 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -80,8 +80,8 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	
 	public void initialize() {
 	    super.initialize();
-	    this.cTabItem = ((ResultTableViewer) gTableViewer).getCTabItem();
-	    this.core = gTableViewer.getCore();
+	    this.cTabItem = ((ResultTableViewer) gViewer).getCTabItem();
+	    this.core = gViewer.getCore();
 		this.resultInfoMap = this.core.getResultInfoIntMap();
 	}
 	
@@ -305,6 +305,17 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.26  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.25  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

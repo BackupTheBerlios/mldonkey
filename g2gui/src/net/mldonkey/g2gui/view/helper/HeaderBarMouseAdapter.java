@@ -23,16 +23,18 @@
 package net.mldonkey.g2gui.view.helper;
 
 import org.eclipse.jface.action.MenuManager;
+
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Menu;
 
+
 /**
  * HeaderBarMouseAdapter - A helper for header bar mouse events & menus
  *
- * @version $Id: HeaderBarMouseAdapter.java,v 1.3 2003/09/20 01:27:31 zet Exp $
+ * @version $Id: HeaderBarMouseAdapter.java,v 1.4 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class HeaderBarMouseAdapter extends MouseAdapter {
@@ -41,36 +43,53 @@ public class HeaderBarMouseAdapter extends MouseAdapter {
 
     /**
      * Creates a new HeaderBarMouseAdapter
-     * @param cLabel 
-     * @param menuManager 
+     * @param cLabel
+     * @param menuManager
      */
-    public HeaderBarMouseAdapter( CLabel cLabel, MenuManager menuManager ) {
+    public HeaderBarMouseAdapter(CLabel cLabel, MenuManager menuManager) {
         this.cLabel = cLabel;
         this.menuManager = menuManager;
     }
-    private boolean overImage( int x ) {
+
+    private boolean overImage(int x) {
         return x < cLabel.getImage().getBounds().width;
     }
-    private void showMenu( Point p ) {
-        Menu menu = menuManager.createContextMenu( cLabel );
-        menu.setLocation( p );
-        menu.setVisible( true );
+
+    private void showMenu(Point p) {
+        Menu menu = menuManager.createContextMenu(cLabel);
+        menu.setLocation(p);
+        menu.setVisible(true);
     }
 
-    public void mouseDown( MouseEvent e ) {
-        if ( ( ( e.button == 1 ) && overImage( e.x ) ) || ( e.button == 3 ) ) {
+    public void mouseDown(MouseEvent e) {
+        if (((e.button == 1) && overImage(e.x)) || (e.button == 3)) {
             Point p;
-            if ( e.button == 1 )
-                p = new Point( 0, cLabel.getBounds().height );
-            else
-                p = new Point( e.x, e.y );
-            showMenu( ( ( CLabel ) e.widget ).toDisplay( p ) );
+
+            if (e.button == 1) {
+                p = new Point(0, cLabel.getBounds().height);
+            } else {
+                p = new Point(e.x, e.y);
+            }
+
+            showMenu(((CLabel) e.widget).toDisplay(p));
         }
     }
 }
 
+
 /*
 $Log: HeaderBarMouseAdapter.java,v $
+Revision 1.4  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.3  2003/09/20 01:27:31  zet
 *** empty log message ***
 

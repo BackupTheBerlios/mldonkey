@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.viewers.GTableSorter;
+import net.mldonkey.g2gui.view.viewers.GSorter;
 
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -35,10 +35,10 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ClientTableSorter
  *
- * @version $Id: ClientTableSorter.java,v 1.5 2003/10/22 01:38:19 zet Exp $
+ * @version $Id: ClientTableSorter.java,v 1.6 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class ClientTableSorter extends GTableSorter {
+public class ClientTableSorter extends GSorter {
     public ClientTableSorter(ClientTableViewer cTableViewer) {
         super(cTableViewer);
     }
@@ -47,7 +47,7 @@ public class ClientTableSorter extends GTableSorter {
      * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     public int compare(Viewer viewer, Object obj1, Object obj2) {
-        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ClientTableViewer.STATE:
 
             ClientInfo clientInfo1 = (ClientInfo) obj1;
@@ -85,6 +85,17 @@ public class ClientTableSorter extends GTableSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.6  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.5  2003/10/22 01:38:19  zet
 add column selector to server/search (might not be finished yet..)
 

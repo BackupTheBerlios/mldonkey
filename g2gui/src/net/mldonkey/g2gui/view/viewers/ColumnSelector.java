@@ -28,6 +28,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceStore;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -44,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.2 2003/10/24 22:49:04 zet Exp $
+ * @version $Id: ColumnSelector.java,v 1.3 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -63,7 +64,8 @@ public class ColumnSelector extends Dialog {
      * @param allColumnIDs
      * @param prefOption
      */
-    public ColumnSelector(Shell parentShell, String[] columnLegend, String allColumnIDs, String prefOption) {
+    public ColumnSelector(Shell parentShell, String[] columnLegend, String allColumnIDs,
+        String prefOption) {
         super(parentShell);
         this.columnLegend = columnLegend;
         this.allColumnIDs = allColumnIDs;
@@ -151,7 +153,7 @@ public class ColumnSelector extends Dialog {
         rightList = new List(parent, SWT.BORDER | SWT.MULTI);
 
         // set height in pixels
-		GC gc = new GC(parent);
+        GC gc = new GC(parent);
         GridData gd = new GridData(GridData.FILL_BOTH);
         int height = gc.getFontMetrics().getHeight() + 7;
         gc.dispose();
@@ -167,6 +169,7 @@ public class ColumnSelector extends Dialog {
         if (rightColumnIDs.length() > 1) {
             PreferenceStore p = PreferenceLoader.getPreferenceStore();
             p.setValue(prefOption, rightColumnIDs);
+            PreferenceLoader.saveStore();
         }
     }
 
@@ -244,6 +247,17 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.3  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.2  2003/10/24 22:49:04  zet
 get fontHeight in pixels, not points
 

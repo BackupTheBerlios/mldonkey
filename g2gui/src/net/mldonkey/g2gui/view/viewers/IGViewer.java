@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,39 +18,100 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.viewers;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.jface.viewers.ViewerFilter;
+
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+
 
 /**
- * SashGPaneListener
+ * IGViewer
  *
- * @version $Id: SashGPaneListener.java,v 1.2 2003/10/31 07:24:01 zet Exp $ 
+ * @version $Id: IGViewer.java,v 1.1 2003/10/31 07:24:01 zet Exp $
  *
  */
-public abstract class SashGPaneListener extends GPaneListener {
-	protected SashForm sashForm;
-	protected Control control;
+public interface IGViewer {
+    /**
+     * @return ViewerFilter[]
+     */
+    ViewerFilter[] getFilters();
 
-	/**
-	 * @param gViewer
-	 * @param core
-	 */
-	public SashGPaneListener( IGViewer gViewer, CoreCommunication core, SashForm aSashForm, Control aControl ) {
-		super( gViewer, core );
-		this.sashForm = aSashForm;
-		this.control = aControl;
-	}
+    /**
+     * @param viewerFilter
+     */
+    void addFilter(ViewerFilter viewerFilter);
+
+    /**
+     * @param viewerFilter
+     */
+    void removeFilter(ViewerFilter viewerFilter);
+
+    /**
+     * refresh
+     */
+    void refresh();
+
+    /**
+     * resetColumns
+     */
+    void resetColumns();
+
+    /**
+     * @return Table
+     */
+    Table getTable();
+
+    /**
+     * @return Shell
+     */
+    Shell getShell();
+
+    /**
+     * @return Object
+     */
+    Object getViewer();
+
+    /**
+     * @return String
+     */
+    String getAllColumnIDs();
+
+    /**
+     * @return String[]
+     */
+    String[] getColumnLabels();
+
+    /**
+     * @return String
+     */
+    String getColumnIDs();
+
+    /**
+     * @return String
+     */
+    String getPreferenceString();
+
+    /**
+     * @return CoreCommunication
+     */
+    CoreCommunication getCore();
+
+    /**
+     * @param listener
+     */
+    void addDisposeListener(GPaneListener listener);
 }
 
+
 /*
-$Log: SashGPaneListener.java,v $
-Revision 1.2  2003/10/31 07:24:01  zet
+$Log: IGViewer.java,v $
+Revision 1.1  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
 fix: 2 new null pointer exceptions (search tab)
@@ -61,7 +122,5 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.1  2003/10/29 16:56:21  lemmster
-added reasonable class hierarchy for panelisteners, viewers...
 
 */

@@ -22,16 +22,16 @@
  */
 package net.mldonkey.g2gui.view.viewers.actions;
 
+import net.mldonkey.g2gui.view.viewers.IGViewer;
+import net.mldonkey.g2gui.view.viewers.filters.FileExtensionFilter;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ViewerFilter;
-
-import net.mldonkey.g2gui.view.viewers.GViewer;
-import net.mldonkey.g2gui.view.viewers.filters.FileExtensionFilter;
 
 /**
  * ExtensionFilterAction
  *
- * @version $Id: ExtensionFilterAction.java,v 1.1 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: ExtensionFilterAction.java,v 1.2 2003/10/31 07:24:01 zet Exp $ 
  *
  */
 public class ExtensionFilterAction extends FilterAction {
@@ -41,7 +41,7 @@ public class ExtensionFilterAction extends FilterAction {
 	 * @param anInt
 	 * @param gViewer
 	 */
-	public ExtensionFilterAction(String name, GViewer gViewer, String[] extensions ) {
+	public ExtensionFilterAction(String name, IGViewer gViewer, String[] extensions ) {
 		super( name, Action.AS_CHECK_BOX, gViewer );
 		this.extensions = extensions;
 		if ( this.isFiltered( this.extensions ) )
@@ -89,6 +89,17 @@ public class ExtensionFilterAction extends FilterAction {
 
 /*
 $Log: ExtensionFilterAction.java,v $
+Revision 1.2  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.1  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

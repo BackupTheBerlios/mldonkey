@@ -20,7 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-package net.mldonkey.g2gui.view.viewers;
+package net.mldonkey.g2gui.view.viewers.table;
+
+import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -29,22 +32,23 @@ import org.eclipse.jface.action.IMenuManager;
 /**
  * GenericTableMenuListener
  *
- * @version $Id: GTableMenuListener.java,v 1.1 2003/10/22 01:36:59 zet Exp $
+ * @version $Id: GTableMenuListener.java,v 1.1 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class GTableMenuListener implements IMenuListener {
-    protected GTableViewer gTableViewer;
+    protected IGViewer gViewer;
     protected CustomTableViewer tableViewer;
 
-    public GTableMenuListener(GTableViewer gTableViewer) {
-        this.gTableViewer = gTableViewer;
+    public GTableMenuListener(IGViewer gViewer) {
+        this.gViewer = gViewer;
     }
 
     /**
      * initialize after tableViewer creation
      */
     public void initialize() {
-        tableViewer = gTableViewer.getTableViewer();
+        if (gViewer.getViewer() instanceof GTableViewer)
+		tableViewer = ((GTableViewer) gViewer).getTableViewer();
     }
 
     /* (non-Javadoc)
@@ -57,7 +61,16 @@ public class GTableMenuListener implements IMenuListener {
 
 /*
 $Log: GTableMenuListener.java,v $
-Revision 1.1  2003/10/22 01:36:59  zet
-add column selector to server/search (might not be finished yet..)
+Revision 1.1  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 
 */

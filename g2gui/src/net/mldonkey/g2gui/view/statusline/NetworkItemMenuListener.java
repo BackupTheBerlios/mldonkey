@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.view.ServerTab;
 import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GViewer;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
 import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.NetworkFilterAction;
 
@@ -41,7 +41,7 @@ import org.eclipse.jface.action.Separator;
  * NetworkItemMenuListener
  *
  *
- * @version $Id: NetworkItemMenuListener.java,v 1.10 2003/10/29 16:56:21 lemmster Exp $
+ * @version $Id: NetworkItemMenuListener.java,v 1.11 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class NetworkItemMenuListener implements IMenuListener {
@@ -129,7 +129,7 @@ public class NetworkItemMenuListener implements IMenuListener {
 
         public void run() {
             statusline.getMainTab().setActive( serverTab );
-			GViewer gViewer = ( ( ServerTab ) serverTab ).getOurTableViewer();
+			IGViewer gViewer = ( ( ServerTab ) serverTab ).getOurTableViewer();
 			FilterAction action = new NetworkFilterAction( gViewer, network );
 			( ( NetworkFilterAction ) action ).removeAllNetworkFilter();
 			action.setChecked( true );
@@ -151,6 +151,17 @@ public class NetworkItemMenuListener implements IMenuListener {
 
 /*
 $Log: NetworkItemMenuListener.java,v $
+Revision 1.11  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.10  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

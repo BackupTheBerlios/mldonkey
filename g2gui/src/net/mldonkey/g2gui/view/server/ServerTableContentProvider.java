@@ -23,13 +23,13 @@
 package net.mldonkey.g2gui.view.server;
 
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
-import net.mldonkey.g2gui.view.viewers.GTableContentProvider;
+import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 
 /**
  * ServerTableContentProvider
  *
  *
- * @version $Id: ServerTableContentProvider.java,v 1.3 2003/10/22 01:37:55 zet Exp $ 
+ * @version $Id: ServerTableContentProvider.java,v 1.4 2003/10/31 07:24:01 zet Exp $ 
  *
  */
 public class ServerTableContentProvider extends GTableContentProvider {
@@ -49,6 +49,17 @@ public class ServerTableContentProvider extends GTableContentProvider {
 
 /*
 $Log: ServerTableContentProvider.java,v $
+Revision 1.4  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.3  2003/10/22 01:37:55  zet
 add column selector to server/search (might not be finished yet..)
 

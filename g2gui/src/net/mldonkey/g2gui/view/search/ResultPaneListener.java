@@ -26,19 +26,22 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
-import net.mldonkey.g2gui.view.viewers.GViewer;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
-import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
+import net.mldonkey.g2gui.view.viewers.actions.CTabFolderColumnSelectorAction;
+import net.mldonkey.g2gui.view.viewers.table.GTableViewer;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+
 
 /**
  * SearchPaneListener
  *
- * @version $Id: ResultPaneListener.java,v 1.1 2003/10/29 16:56:21 lemmster Exp $
+ * @version $Id: ResultPaneListener.java,v 1.2 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class ResultPaneListener extends GPaneListener {
@@ -48,44 +51,64 @@ public class ResultPaneListener extends GPaneListener {
      * @param gViewer
      * @param core
      */
-    public ResultPaneListener( CTabFolder cTabFolder, CoreCommunication core ) {
-        super( null, core );
+    public ResultPaneListener(CTabFolder cTabFolder, CoreCommunication core) {
+        super(null, core);
         this.cTabFolder = cTabFolder;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
-    public void menuAboutToShow( IMenuManager menuManager ) {
-        // check if we already got results
-        if ( ( cTabFolder != null )
-        	&& ( cTabFolder.getSelection() != null )
-        	&& ( cTabFolder.getSelection().getData( "gTableViewer" ) != null ) )
+    public void menuAboutToShow(IMenuManager menuManager) {
+        if (cTabFolder != null) {
+            // check if a table exists in any tab
+            if (PreferenceLoader.loadBoolean("advanced")) {
+                CTabItem[] cTabItems = cTabFolder.getItems();
 
-		// get each time the current GViewer
-		this.gViewer = ( GViewer ) cTabFolder.getSelection().getData( "gTableViewer" );
+                for (int i = 0; i < cTabItems.length; i++) {
+                    if (cTabItems[ i ].getData("gTableViewer") != null) {
+                        menuManager.add(new CTabFolderColumnSelectorAction(cTabFolder));
 
-		//TODO ColumnSelector works for all tables instead of only the current selection
-		if ( PreferenceLoader.loadBoolean( "advanced" ) )
-	        menuManager.add( new ColumnSelectorAction( gViewer ) );
+                        break;
+                    }
+                }
+            }
 
-		// filter submenu			
-		MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILTER" ) );
+            // filters available if currentTab has a table
+            if (cTabFolder.getSelection() != null && cTabFolder.getSelection().getData("gTableViewer") != null) {
+                gViewer = (GTableViewer) cTabFolder.getSelection().getData("gTableViewer");
 
-		// all filters
-		filterSubMenu.add( new AllFilterAction( gViewer ) );
+                // filter submenu			
+                MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
+                            "TT_DOWNLOAD_MENU_FILTER"));
 
-		filterSubMenu.add( new Separator() );
+                // all filters
+                filterSubMenu.add(new AllFilterAction(gViewer));
+                filterSubMenu.add(new Separator());
 
-		// network filters
-		createNetworkFilterSubMenu( filterSubMenu );
+                // network filters
+                createNetworkFilterSubMenu(filterSubMenu);
 
-		menuManager.add( filterSubMenu );
+                menuManager.add(filterSubMenu);
+            }
+        }
     }
 }
 
+
 /*
 $Log: ResultPaneListener.java,v $
+Revision 1.2  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.1  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

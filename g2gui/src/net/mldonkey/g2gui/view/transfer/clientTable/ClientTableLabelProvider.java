@@ -25,10 +25,9 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GTableLabelProvider;
+import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
-
 import org.eclipse.swt.graphics.Image;
 
 
@@ -36,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
  *
  * ClientTableLabelProvider
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.7 2003/10/22 01:38:19 zet Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.8 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class ClientTableLabelProvider extends GTableLabelProvider implements ITableLabelProvider {
@@ -50,7 +49,7 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
     public Image getColumnImage(Object element, int columnIndex) {
         ClientInfo clientInfo = (ClientInfo) element;
 
-        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ClientTableViewer.STATE:
             return G2GuiResources.getClientImage((EnumState) clientInfo.getState().getState());
 
@@ -68,7 +67,7 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
     public String getColumnText(Object element, int columnIndex) {
         ClientInfo clientInfo = (ClientInfo) element;
 
-        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ClientTableViewer.STATE:
             return "" + clientInfo.getDetailedClientActivity();
 
@@ -90,6 +89,17 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.8  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.7  2003/10/22 01:38:19  zet
 add column selector to server/search (might not be finished yet..)
 

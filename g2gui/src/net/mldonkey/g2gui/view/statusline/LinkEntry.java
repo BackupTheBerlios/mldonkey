@@ -28,6 +28,7 @@ import gnu.regexp.REMatch;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -57,7 +58,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.18 2003/10/17 03:36:43 zet Exp $
+ * @version $Id: LinkEntry.java,v 1.19 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class LinkEntry {
@@ -141,8 +142,8 @@ public class LinkEntry {
         }
         REMatch[] matches = regex.getAllMatches( input );
         for ( int i = 0; i < matches.length; i++ ) {
-            String link = replaceAll( matches[ i ].toString(), "\"", "" );
-            link = replaceAll( link, "\n", "" );
+            String link = RegExp.replaceAll( matches[ i ].toString(), "\"", "" );
+            link = RegExp.replaceAll( link, "\n", "" );
             Message dllLink = new EncodeMessage( Message.S_DLLINK, link );
             dllLink.sendMessage( core );
         }
@@ -150,25 +151,7 @@ public class LinkEntry {
         linkEntryText.setText( "" );
     }
 
-    /**
-     * @param input 
-     * @param toBeReplaced 
-     * @param replaceWith 
-     *
-     * @return String
-     */
-    private String replaceAll( String input, String toBeReplaced, String replaceWith ) {
-        RE regex = null;
-        try {
-            regex = new RE( toBeReplaced );
-        }
-        catch ( REException e ) {
-            e.printStackTrace();
-        }
-        String result = regex.substituteAll( input, replaceWith );
-        return result;
-    }
-    
+  
     /**
      * @param linkEntryText
      */
@@ -202,6 +185,17 @@ public class LinkEntry {
 
 /*
 $Log: LinkEntry.java,v $
+Revision 1.19  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.18  2003/10/17 03:36:43  zet
 use toolbar
 

@@ -22,10 +22,6 @@
  */
 package net.mldonkey.g2gui.view.search;
 
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -46,16 +42,21 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Label;
 
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+
 /**
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.59 2003/10/23 01:14:10 zet Exp $
+ * @version $Id: SearchResult.java,v 1.60 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
-	private GuiTab search;
-	private MainTab mainTab;
+    private GuiTab search;
+    private MainTab mainTab;
     private CTabFolder cTabFolder;
     private String searchString;
     private CoreCommunication core;
@@ -65,7 +66,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
     private Label label;
     private CTabItem cTabItem;
     private String statusline;
-	private boolean mustRefresh = false;
+    private boolean mustRefresh = false;
     private long lastRefreshTime = 0;
     private ResultTableViewer ourTableViewer;
 
@@ -76,7 +77,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      * @param core The core to communicate with
      * @param searchId The identifier to this search
      */
-    protected SearchResult( String aString, CTabFolder parent, CoreCommunication aCore, int searchId, GuiTab aSearch ) {
+    protected SearchResult(String aString, CTabFolder parent, CoreCommunication aCore,
+        int searchId, GuiTab aSearch) {
         this.searchString = aString;
         this.cTabFolder = parent;
         this.searchId = searchId;
@@ -87,7 +89,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         this.createContent();
 
         /* register ourself to the core */
-        core.getResultInfoIntMap().addObserver( this );
+        core.getResultInfoIntMap().addObserver(this);
     }
 
     /**
@@ -102,29 +104,32 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      */
     public void continueSearch() {
         this.stopped = false;
-        cTabFolder.getDisplay().asyncExec( this );
+        cTabFolder.getDisplay().asyncExec(this);
     }
 
     /* (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
-    public void update( Observable o, final Object arg ) {
+    public void update(Observable o, final Object arg) {
         /* if the tab is already disposed, dont update */
-        if ( cTabItem.isDisposed() || this.stopped )
+        if (cTabItem.isDisposed() || this.stopped) {
             return;
-            
-        if ( arg instanceof ResultInfo ) {
-        	cTabFolder.getDisplay().asyncExec( new Runnable() {
-				public void run() {
-					ourTableViewer.getTableViewer().update( arg, null );
-				}
-        	} );
-        	return;
-        }    
+        }
+
+        if (arg instanceof ResultInfo) {
+            cTabFolder.getDisplay().asyncExec(new Runnable() {
+                    public void run() {
+                        ourTableViewer.getTableViewer().update(arg, null);
+                    }
+                });
+
+            return;
+        }
 
         /* are we responsible for this update */
-        if ( ( ( ResultInfoIntMap ) arg ).containsKey( searchId ) )
-            cTabFolder.getDisplay().asyncExec( this );
+        if (((ResultInfoIntMap) arg).containsKey(searchId)) {
+            cTabFolder.getDisplay().asyncExec(this);
+        }
     }
 
     /* (non-Javadoc)
@@ -132,34 +137,38 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      */
     public void run() {
         /* if the tab is already disposed, dont update */
-        if ( cTabItem.isDisposed() || this.stopped )
+        if (cTabItem.isDisposed() || this.stopped) {
             return;
+        }
+
         this.results = this.core.getResultInfoIntMap();
-        List list = ( List ) results.get( searchId );
-        if ( ourTableViewer == null ) {
+
+        List list = (List) results.get(searchId);
+
+        if (ourTableViewer == null) {
             /* remove the old label "searching..." */
             label.dispose();
             this.createTable();
-            ourTableViewer.setInput( list );
-        }
-        else {
+            ourTableViewer.setInput(list);
+        } else {
             /*
              * has our result changed:
              * only refresh the changed items,
              * look at API for refresh(false)
              */
-            if ( list != null && list.size() != ourTableViewer.getTableViewer().getTable().getItemCount() ) {
+            if ((list != null) &&
+                    (list.size() != ourTableViewer.getTableViewer().getTable().getItemCount())) {
                 mustRefresh = true;
                 delayedRefresh();
             }
         }
 
         /* are we active? set the statusline text */
-        if ( cTabFolder.getSelection() == cTabItem ) {
-            SearchTab parent = ( SearchTab ) cTabFolder.getData();
+        if (cTabFolder.getSelection() == cTabItem) {
+            SearchTab parent = (SearchTab) cTabFolder.getData();
             int itemCount = ourTableViewer.getTableViewer().getTable().getItemCount();
             this.statusline = "Results: " + itemCount;
-            parent.getMainTab().getStatusline().update( this.statusline );
+            parent.getMainTab().getStatusline().update(this.statusline);
         }
     }
 
@@ -167,14 +176,15 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      * simple attempt to buffer refreshes
      */
     private void delayedRefresh() {
-        if ( System.currentTimeMillis() > ( lastRefreshTime + 2000 ) ) {
+        if (System.currentTimeMillis() > (lastRefreshTime + 2000)) {
             lastRefreshTime = System.currentTimeMillis();
-			ourTableViewer.getTableViewer().refresh( true );
+            ourTableViewer.getTableViewer().refresh(true);
             mustRefresh = false;
-        }
-        else { // schedule an update so we don't miss one
-            if ( mustRefresh )
-                cTabItem.getDisplay().timerExec( 2500, this );
+        } else { // schedule an update so we don't miss one
+
+            if (mustRefresh) {
+                cTabItem.getDisplay().timerExec(2500, this);
+            }
         }
     }
 
@@ -182,7 +192,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      * unregister ourself (Observer) by the core
      */
     private void unregister() {
-        core.deleteObserver( this );
+        core.deleteObserver(this);
     }
 
     /**
@@ -191,26 +201,26 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      */
     private void createContent() {
         /* first we need a CTabFolder item for the search result */
-        cTabItem = new CTabItem( cTabFolder, SWT.FLAT );
-        cTabItem.addDisposeListener( this );
-        cTabItem.setText( searchString );
-        cTabItem.setToolTipText( G2GuiResources.getString( "SR_SEARCHINGFOR" ) + searchString );
-        cTabItem.setImage( G2GuiResources.getImage( "SearchSmall" ) );
-        cTabItem.setData( this );        
-        
+        cTabItem = new CTabItem(cTabFolder, SWT.FLAT);
+        cTabItem.addDisposeListener(this);
+        cTabItem.setText(searchString);
+        cTabItem.setToolTipText(G2GuiResources.getString("SR_SEARCHINGFOR") + searchString);
+        cTabItem.setImage(G2GuiResources.getImage("SearchSmall"));
+        cTabItem.setData(this);
+
         /* for the search delay, just draw a label */
-        label = new Label( cTabFolder, SWT.NONE );
-        label.setText( G2GuiResources.getString( "SR_SEARCHING" ) );
-        cTabItem.setControl( label );
+        label = new Label(cTabFolder, SWT.NONE);
+        label.setText(G2GuiResources.getString("SR_SEARCHING"));
+        cTabItem.setControl(label);
 
         /* sets the tabitem on focus */
-        cTabFolder.setSelection( cTabItem );
+        cTabFolder.setSelection(cTabItem);
 
         /* display 0 searchresults for the moment */
-        SearchTab parent = ( SearchTab ) cTabFolder.getData();
+        SearchTab parent = (SearchTab) cTabFolder.getData();
 
         this.statusline = "Results: 0";
-        parent.getMainTab().getStatusline().update( this.statusline );
+        parent.getMainTab().getStatusline().update(this.statusline);
     }
 
     /**
@@ -218,28 +228,30 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      */
     private void createTable() {
         /* set a new image for the ctabitem to show we found results */
-        cTabItem.setImage( G2GuiResources.getImage( "SearchComplete" ) );
+        cTabItem.setImage(G2GuiResources.getImage("SearchComplete"));
 
         /* create the result table */
-		this.ourTableViewer = new ResultTableViewer( cTabFolder, core, cTabItem, new MyMouseListener() );
-		
+        this.ourTableViewer = new ResultTableViewer(cTabFolder, core, cTabItem,
+                new MyMouseListener());
+
         /* set the this table as the new CTabItem Control */
-        cTabItem.setControl( ourTableViewer.getTableViewer().getTable() );
-        
+        cTabItem.setControl(ourTableViewer.getTableViewer().getTable());
+
         /*load behaviour from preference-Store*/
-		updateDisplay();
+        updateDisplay();
     }
-    
-	/**
-	 * refreshes the Display with values from preference-Store.
-	 * This method is called, when preference-Sotre is closed, that means, something
-	 * might have benn changed.
-	 */
-	public void updateDisplay() {
-		ourTableViewer.getTableViewer().getTable().setLinesVisible(
-						PreferenceLoader.loadBoolean( "displayGridLines" ) );
-		
-	}
+
+    /**
+     * refreshes the Display with values from preference-Store.
+     * This method is called, when preference-Sotre is closed, that means, something
+     * might have benn changed.
+     */
+    public void updateDisplay() {
+        if (ourTableViewer != null) {
+            ourTableViewer.getTableViewer().getTable().setLinesVisible(PreferenceLoader.loadBoolean(
+                    "displayGridLines"));
+        }
+    }
 
     /**
      * @return The string to display in the statusline
@@ -259,47 +271,63 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      * @see org.eclipse.swt.events.DisposeListener#
      * widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
-    public void widgetDisposed( DisposeEvent e ) {
-		/* no longer receive results for this search */
-		this.unregister();
+    public void widgetDisposed(DisposeEvent e) {
+        /* no longer receive results for this search */
+        this.unregister();
 
         /* tell the core to forget the search */
-        Object[] temp = { new Integer( searchId ), new Byte( ( byte ) 1 ) };
-        Message message = new EncodeMessage( Message.S_CLOSE_SEARCH, temp );
-        message.sendMessage( core );
+        Object[] temp = { new Integer(searchId), new Byte((byte) 1) };
+        Message message = new EncodeMessage(Message.S_CLOSE_SEARCH, temp);
+        message.sendMessage(core);
         message = null;
     }
-    
+
     /**
-     * 
+     *
      * MyMouseListener
      *
      */
     public class MyMouseListener implements MouseListener {
-		/* (non-Javadoc)
-		 * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
-		 */
-		public void mouseDoubleClick( MouseEvent e ) {
-		    
-			( ( ResultTableViewer ) ourTableViewer ).getMenuListener().downloadSelected();
-		}
-		/* (non-Javadoc)
-		 * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-		 */
-		public void mouseDown( MouseEvent e ) {
-			if ( stopped )
-				( ( SearchTab ) search ).setContinueButton();
-			else
-				( ( SearchTab ) search ).setStopButton();
-		}
-		/* (non-Javadoc)
-		 * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-		 */
-		public void mouseUp( MouseEvent e ) { }
+        /* (non-Javadoc)
+         * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
+         */
+        public void mouseDoubleClick(MouseEvent e) {
+            ((ResultTableViewer) ourTableViewer).getMenuListener().downloadSelected();
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
+         */
+        public void mouseDown(MouseEvent e) {
+            if (stopped) {
+                ((SearchTab) search).setContinueButton();
+            } else {
+                ((SearchTab) search).setStopButton();
+            }
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
+         */
+        public void mouseUp(MouseEvent e) {
+        }
     }
 }
+
+
 /*
 $Log: SearchResult.java,v $
+Revision 1.60  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.59  2003/10/23 01:14:10  zet
 remove debug println
 

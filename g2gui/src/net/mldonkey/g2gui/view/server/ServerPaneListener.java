@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
-import net.mldonkey.g2gui.view.viewers.GViewer;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
@@ -45,7 +45,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.1 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.2 2003/10/31 07:24:01 zet Exp $ 
  *
  */
 public class ServerPaneListener extends GPaneListener {
@@ -54,7 +54,7 @@ public class ServerPaneListener extends GPaneListener {
 	 * @param gViewer
 	 * @param core
 	 */
-	public ServerPaneListener(GViewer gViewer, CoreCommunication core) {
+	public ServerPaneListener(IGViewer gViewer, CoreCommunication core) {
 		super(gViewer, core);
 		this.states = new Enum[] { EnumState.BLACK_LISTED, EnumState.CONNECTED, 
 									EnumState.CONNECTED_INITIATING, EnumState.CONNECTING,
@@ -120,6 +120,17 @@ public class ServerPaneListener extends GPaneListener {
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.2  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.1  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

@@ -33,44 +33,38 @@ import org.eclipse.swt.events.DisposeListener;
 
 
 /**
- * GenericTableSorter
+ * GSorter - Generic sorter
  *
- * @version $Id: GTableSorter.java,v 1.1 2003/10/22 01:36:59 zet Exp $
+ * @version $Id: GSorter.java,v 1.1 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class GTableSorter extends ViewerSorter implements DisposeListener {
-    public GTableViewer gTableViewer;
-    public CustomTableViewer tableViewer;
+public class GSorter extends ViewerSorter implements DisposeListener {
     protected int lastColumnIndex;
     protected int columnIndex;
     protected boolean lastSort;
     protected PreferenceStore preferenceStore = PreferenceLoader.getPreferenceStore();
+    protected IGViewer gViewer;
+    protected ICustomViewer cViewer;
 
-    public GTableSorter(GTableViewer gTableViewer) {
-        this.gTableViewer = gTableViewer;
+    public GSorter(IGViewer gViewer) {
+        this.gViewer = gViewer;
     }
 
     /**
-     * initialize after tableViewer creation
+     * after viewer creation
      */
-    protected void initialize() {
-        this.tableViewer = gTableViewer.getTableViewer();
-        this.tableViewer.getTable().addDisposeListener(this);
+    public void initialize() {
+        cViewer = (ICustomViewer) gViewer.getViewer();
+        gViewer.getTable().addDisposeListener(this);
 
-        String savedSort = PreferenceLoader.loadString(gTableViewer.getPreferenceString() + "LastSortColumn");
+        String savedSort = PreferenceLoader.loadString(gViewer.getPreferenceString() +
+                "LastSortColumn");
 
-        if (!savedSort.equals("") && (gTableViewer.getColumnIDs().indexOf(savedSort) != -1)) {
-            setColumnIndex(gTableViewer.getColumnIDs().indexOf(savedSort));
-			setLastSort(PreferenceLoader.loadBoolean(gTableViewer.getPreferenceString() + "LastSortOrder"));
+        if (!savedSort.equals("") && (gViewer.getColumnIDs().indexOf(savedSort) != -1)) {
+            setColumnIndex(gViewer.getColumnIDs().indexOf(savedSort));
+            setLastSort(PreferenceLoader.loadBoolean(gViewer.getPreferenceString() +
+                    "LastSortOrder"));
         }
-        
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-     */
-    public int compare(Viewer viewer, Object obj1, Object obj2) {
-        return 0;
     }
 
     /**
@@ -88,7 +82,8 @@ public class GTableSorter extends ViewerSorter implements DisposeListener {
             return -1;
         }
 
-        return (lastSort ? aString1.compareToIgnoreCase(aString2) : aString2.compareToIgnoreCase(aString1));
+        return (lastSort ? aString1.compareToIgnoreCase(aString2)
+                         : aString2.compareToIgnoreCase(aString1));
     }
 
     /**
@@ -127,11 +122,29 @@ public class GTableSorter extends ViewerSorter implements DisposeListener {
     }
 
     /**
+     * @param aDouble1
+     * @param aDouble2
+     * @return int
+     */
+    public int compareDoubles(Double aDouble1, Double aDouble2) {
+        return (lastSort ? aDouble1.compareTo(aDouble2) : aDouble2.compareTo(aDouble1));
+    }
+
+    /**
+     * @param aDouble1
+     * @param aDouble2
+     * @return int
+     */
+    public int compareDoubles(double aDouble1, double aDouble2) {
+        return compareDoubles(new Double(aDouble1), new Double(aDouble2));
+    }
+
+    /**
      * @param i
      */
     public void setColumnIndex(int i) {
         columnIndex = i;
-        lastSort = columnIndex == lastColumnIndex ? !lastSort : true;
+        lastSort = (columnIndex == lastColumnIndex) ? (!lastSort) : true;
         lastColumnIndex = columnIndex;
     }
 
@@ -164,20 +177,41 @@ public class GTableSorter extends ViewerSorter implements DisposeListener {
     }
 
     /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
+    public int compare(Viewer viewer, Object obj1, Object obj2) {
+        return 0;
+    }
+
+    /* (non-Javadoc)
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
     public void widgetDisposed(DisposeEvent e) {
-        preferenceStore.setValue(gTableViewer.getPreferenceString() + "LastSortColumn",
-            String.valueOf(gTableViewer.getColumnIDs().charAt(columnIndex)));
-		preferenceStore.setDefault(gTableViewer.getPreferenceString() + "LastSortOrder", true);
-        preferenceStore.setValue(gTableViewer.getPreferenceString() + "LastSortOrder", lastSort);
+        preferenceStore.setValue(gViewer.getPreferenceString() + "LastSortColumn",
+            String.valueOf(gViewer.getColumnIDs().charAt(columnIndex)));
+        preferenceStore.setDefault(gViewer.getPreferenceString() + "LastSortOrder", true);
+        preferenceStore.setValue(gViewer.getPreferenceString() + "LastSortOrder", lastSort);
+    }
+
+    /**
+     * update display
+     */
+    public void updateDisplay() {
     }
 }
 
 
 /*
-$Log: GTableSorter.java,v $
-Revision 1.1  2003/10/22 01:36:59  zet
-add column selector to server/search (might not be finished yet..)
+$Log: GSorter.java,v $
+Revision 1.1  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
 
 */

@@ -24,7 +24,6 @@ package net.mldonkey.g2gui.view.server;
 
 import gnu.regexp.RE;
 import gnu.regexp.REException;
-import gnu.regexp.REMatch;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -33,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
@@ -60,16 +60,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-
 /**
  * ServerTableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.13 2003/10/29 16:56:21 lemmster Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.14 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class ServerTableMenuListener extends TableMenuListener { 
-    //TableMenuListener {
     private ServerInfo selectedServer;
     private List selectedServers;
     private ServerInfoIntMap serverInfoMap;
@@ -87,7 +85,7 @@ public class ServerTableMenuListener extends TableMenuListener {
     
     public void initialize() {
         super.initialize();
-        this.core = gTableViewer.getCore();
+        this.core = gViewer.getCore();
         this.serverInfoMap = this.core.getServerInfoIntMap();
         this.selectedServers = new ArrayList();
     }
@@ -189,7 +187,7 @@ public class ServerTableMenuListener extends TableMenuListener {
 					aString += ( SWT.getPlatform().equals( "win32" ) ? "\r\n" : "\n" );
 				aString += server.getLink();
 			}
-			System.out.println("str" + aString);
+			// System.out.println("str" + aString);
 			clipboard.setContents( new Object[] { aString },
 								new Transfer[] { TextTransfer.getInstance() } );
 			clipboard.dispose();						
@@ -253,7 +251,7 @@ public class ServerTableMenuListener extends TableMenuListener {
             dialog.open();
             if ( dialog.getReturnCode() == IDialogConstants.OK_ID ) {
                 String text = dialog.getValue();
-                String[] strings = split( dialog.getValue(), ':' );
+                String[] strings = RegExp.split( dialog.getValue(), ':' );
                 InetAddress inetAddress = null;
                 try {
                     inetAddress = InetAddress.getByName( strings[ 0 ] );
@@ -269,37 +267,6 @@ public class ServerTableMenuListener extends TableMenuListener {
                 core.getServerInfoIntMap().add( dialog.getCombo(), inetAddress,
                                                   new Short( strings[ 1 ] ).shortValue() );
             }
-        }
-
-        /**
-         * DOCUMENT ME!
-         *
-         * @param searchString DOCUMENT ME!
-         * @param delimiter DOCUMENT ME!
-         *
-         * @return DOCUMENT ME!
-         */
-        private String[] split( String searchString, char delimiter ) {
-            RE regex = null;
-            String expression = "([^" + delimiter + "])*";
-            try {
-                regex = new RE( expression );
-            }
-            catch ( REException e ) {
-                e.printStackTrace();
-            }
-            ArrayList patterns = new ArrayList();
-            REMatch[] matches = regex.getAllMatches( searchString );
-            for ( int i = 0; i < matches.length; i++ ) {
-                String match = matches[ i ].toString();
-                if ( !match.equals( "" ) )
-                    patterns.add( match );
-            }
-            Object[] temp = patterns.toArray();
-            String[] result = new String[ temp.length ];
-            for ( int i = 0; i < temp.length; i++ )
-                result[ i ] = ( String ) temp[ i ];
-            return result;
         }
 
         private class MyInputValidator implements IInputValidator {
@@ -541,6 +508,17 @@ public class ServerTableMenuListener extends TableMenuListener {
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.14  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.13  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

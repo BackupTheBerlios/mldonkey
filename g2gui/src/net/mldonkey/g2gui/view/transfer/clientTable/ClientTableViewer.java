@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.viewers.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.table.GTableViewer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableViewer.java,v 1.6 2003/10/22 01:38:19 zet Exp $
+ * @version $Id: ClientTableViewer.java,v 1.7 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class ClientTableViewer extends GTableViewer {
@@ -51,7 +51,7 @@ public class ClientTableViewer extends GTableViewer {
         columnAlignment = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
         columnDefaultWidths = new int[] { 200, 100, 75, 75 };
 
-        tableSorter = new ClientTableSorter(this);
+        gSorter = new ClientTableSorter(this);
         tableContentProvider = new ClientTableContentProvider(this);
         tableLabelProvider = new ClientTableLabelProvider(this);
         tableMenuListener = new ClientTableMenuListener(this);
@@ -83,6 +83,17 @@ public class ClientTableViewer extends GTableViewer {
 
 /*
 $Log: ClientTableViewer.java,v $
+Revision 1.7  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.6  2003/10/22 01:38:19  zet
 add column selector to server/search (might not be finished yet..)
 

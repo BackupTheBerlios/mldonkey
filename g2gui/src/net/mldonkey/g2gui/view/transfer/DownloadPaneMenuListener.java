@@ -27,7 +27,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
-import net.mldonkey.g2gui.view.viewers.GViewer;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
 import net.mldonkey.g2gui.view.viewers.SashGPaneListener;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
@@ -44,6 +44,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.PreferenceStore;
+
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Control;
@@ -53,117 +54,112 @@ import org.eclipse.swt.widgets.Control;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.17 2003/10/29 16:56:43 lemmster Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.18 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class DownloadPaneMenuListener extends SashGPaneListener {	
-	private static String[] extensionNames = {
-		G2GuiResources.getString("TT_DOWNLOAD_FILTER_AUDIO"), 
-		G2GuiResources.getString("TT_DOWNLOAD_FILTER_VIDEO"), 
-		G2GuiResources.getString("TT_DOWNLOAD_FILTER_ARCHIVE"), 
-		G2GuiResources.getString("TT_DOWNLOAD_FILTER_CDIMAGE"), 
-		G2GuiResources.getString("TT_DOWNLOAD_FILTER_PICTURE")
-	};
+public class DownloadPaneMenuListener extends SashGPaneListener {
+    private static String[] extensionNames = {
+        G2GuiResources.getString("TT_DOWNLOAD_FILTER_AUDIO"),
+        G2GuiResources.getString("TT_DOWNLOAD_FILTER_VIDEO"),
+        G2GuiResources.getString("TT_DOWNLOAD_FILTER_ARCHIVE"),
+        G2GuiResources.getString("TT_DOWNLOAD_FILTER_CDIMAGE"),
+        G2GuiResources.getString("TT_DOWNLOAD_FILTER_PICTURE")
+    };
+    private static String[] audioExtensions = {
+        "aac", "ape", "au", "flac", "mpc", "mp2", "mp3", "mp4", "wav", "ogg", "wma"
+    };
+    private static String[] videoExtensions = {
+        "avi", "mpg", "mpeg", "ram", "rm", "asf", "vob", "divx", "vivo", "ogm", "mov", "wmv"
+    };
+    private static String[] archiveExtensions = { "gz", "zip", "ace", "rar", "tar", "tgz", "bz2" };
+    private static String[] cdImageExtensions = {
+        "ccd", "sub", "cue", "bin", "iso", "nrg", "img", "bwa", "bwi", "bws", "bwt", "mds", "mdf"
+    };
+    private static String[] pictureExtensions = { "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "png" };
+    private static String[][] extensions = {
+        audioExtensions, videoExtensions, archiveExtensions, cdImageExtensions, pictureExtensions
+    };
 
-	private static String[] audioExtensions = {
-		"aac", "ape", "au", "flac", "mpc", "mp2", "mp3", "mp4", 
-		"wav", "ogg", "wma"
-	};
+    public DownloadPaneMenuListener(IGViewer gViewer, CoreCommunication core, SashForm aSashForm,
+        Control aControl) {
+        super(gViewer, core, aSashForm, aControl);
 
-	private static String[] videoExtensions = {
-		"avi", "mpg", "mpeg", "ram", "rm", "asf", "vob",
-		"divx", "vivo", "ogm", "mov", "wmv"
-	};
+        // set defaults on startup
+        if (PreferenceLoader.loadBoolean("downloadsFilterQueued")) {
+            StateGViewerFilter aFilter = new StateGViewerFilter(true);
+            aFilter.add(EnumFileState.QUEUED);
+            gViewer.addFilter(aFilter);
+        }
 
-	private static String[] archiveExtensions = {
-		"gz", "zip", "ace", "rar", "tar", "tgz", "bz2"
-	};
-
-	private static String[] cdImageExtensions = {
-		"ccd", "sub", "cue", "bin", "iso", "nrg", "img",
-		"bwa", "bwi", "bws", "bwt", "mds", "mdf"
-	};
-
-	private static String[] pictureExtensions = {
-		"jpg", "jpeg", "bmp", "gif", "tif", "tiff", "png"
-	};
-
-	private static String[][] extensions = {
-		audioExtensions, videoExtensions, archiveExtensions,
-		cdImageExtensions, pictureExtensions
-	};
-
-    public DownloadPaneMenuListener( GViewer gViewer, CoreCommunication core, SashForm aSashForm, Control aControl ) {
-		super( gViewer, core, aSashForm, aControl );
-		// set defaults on startup
-		if ( PreferenceLoader.loadBoolean( "downloadsFilterQueued" ) ) {
-			StateGViewerFilter aFilter = new StateGViewerFilter();
-			aFilter.add( EnumFileState.QUEUED );
-			gViewer.addFilter( aFilter );
-		}
-		if ( PreferenceLoader.loadBoolean( "downloadsFilterPaused" ) ) {
-			StateGViewerFilter aFilter = new StateGViewerFilter();
-			aFilter.add( EnumFileState.PAUSED );
-			gViewer.addFilter( aFilter );
-		}
+        if (PreferenceLoader.loadBoolean("downloadsFilterPaused")) {
+            StateGViewerFilter aFilter = new StateGViewerFilter(true);
+            aFilter.add(EnumFileState.PAUSED);
+            gViewer.addFilter(aFilter);
+        }
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
-    public void menuAboutToShow( IMenuManager menuManager ) {
-		boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
+    public void menuAboutToShow(IMenuManager menuManager) {
+        boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
+
         // columnSelector
-        if ( advancedMode )
-        	menuManager.add( new ColumnSelectorAction(gViewer) );
+        if (advancedMode) {
+            menuManager.add(new ColumnSelectorAction(gViewer));
+        }
 
         // filter submenu			
-        MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILTER" ) );
+        MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
+                    "TT_DOWNLOAD_MENU_FILTER"));
 
-		// all filters
-        filterSubMenu.add( new AllFilterAction( gViewer ) );
+        // all filters
+        filterSubMenu.add(new AllFilterAction(gViewer));
 
+        // network filters
+        filterSubMenu.add(new Separator());
+        createNetworkFilterSubMenu(filterSubMenu);
 
-		// network filters
-		filterSubMenu.add( new Separator() );
-		createNetworkFilterSubMenu( filterSubMenu );
+        // state filter - exclusionary
+        filterSubMenu.add(new Separator());
+        filterSubMenu.add(new StateFilterAction(G2GuiResources.getString("TT_Paused"), gViewer,
+                EnumFileState.PAUSED, true));
+        filterSubMenu.add(new StateFilterAction(G2GuiResources.getString("TT_Queued"), gViewer,
+                EnumFileState.QUEUED, true));
 
-		// state filter
-		filterSubMenu.add( new Separator() );
-		filterSubMenu.add( new StateFilterAction( G2GuiResources.getString( "TT_Queued" ), gViewer, EnumFileState.QUEUED ) );
-		filterSubMenu.add( new StateFilterAction( G2GuiResources.getString( "TT_Paused" ), gViewer, EnumFileState.PAUSED ) );
+        filterSubMenu.add(new Separator());
 
-		filterSubMenu.add( new Separator() );
-		for ( int i = 0; i < extensions.length; i++ )
-			filterSubMenu.add( new ExtensionFilterAction( extensionNames[ i ], gViewer, extensions[ i ] ) );
+        for (int i = 0; i < extensions.length; i++)
+            filterSubMenu.add(new ExtensionFilterAction(extensionNames[ i ], gViewer,
+                    extensions[ i ]));
 
-        menuManager.add( filterSubMenu );
-        
+        menuManager.add(filterSubMenu);
+
+        // expand action
+        menuManager.add(new Separator());
+        menuManager.add(new ExpandCollapseAction(true));
+        menuManager.add(new ExpandCollapseAction(false));
+
+        // toggle clients windows
+        if (advancedMode) {
+            menuManager.add(new Separator());
+            menuManager.add(new ToggleClientsAction(gViewer));
+        }
+
         // flip sash/maximize sash
-        menuManager.add( new Separator() );
-        menuManager.add( new FlipSashAction( this.sashForm ) );
-        menuManager.add( new MaximizeAction( this.sashForm, this.control ) );
-
-		// toggle clients windows
-		if ( advancedMode ) {
-			menuManager.add( new Separator() );
-			menuManager.add( new ToggleClientsAction( gViewer ) );
-		}
-
-		// expand action
-		menuManager.add( new Separator() );
-		menuManager.add( new ExpandCollapseAction( true ) );
-		menuManager.add( new ExpandCollapseAction( false ) );
+        menuManager.add(new Separator());
+        menuManager.add(new FlipSashAction(this.sashForm));
+        menuManager.add(new MaximizeAction(this.sashForm, this.control));
     }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
-	 */
-	public void widgetDisposed(DisposeEvent arg0) {
-			PreferenceStore p = PreferenceLoader.getPreferenceStore();
-			p.setValue( "downloadsFilterPaused", FilterAction.isFiltered( gViewer, EnumFileState.PAUSED ) );
-			p.setValue( "downloadsFilterQueued", FilterAction.isFiltered( gViewer, EnumFileState.QUEUED ) );
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+     */
+    public void widgetDisposed(DisposeEvent arg0) {
+        PreferenceStore p = PreferenceLoader.getPreferenceStore();
+        p.setValue("downloadsFilterPaused", FilterAction.isFiltered(gViewer, EnumFileState.PAUSED));
+        p.setValue("downloadsFilterQueued", FilterAction.isFiltered(gViewer, EnumFileState.QUEUED));
+    }
 
     /**
      * ExpandCollapseAction
@@ -171,25 +167,25 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
     private class ExpandCollapseAction extends Action {
         private boolean expand;
 
-        public ExpandCollapseAction( boolean expand ) {
+        public ExpandCollapseAction(boolean expand) {
             super();
-            if ( expand ) {
-                setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_EXPANDALL" ) );
-                setImageDescriptor( G2GuiResources.getImageDescriptor( "expandAll" ) );
-            } 
-            else {
-                setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COLLAPSEALL" ) );
-				setImageDescriptor( G2GuiResources.getImageDescriptor( "collapseAll" ) );
+
+            if (expand) {
+                setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_EXPANDALL"));
+                setImageDescriptor(G2GuiResources.getImageDescriptor("expandAll"));
+            } else {
+                setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_COLLAPSEALL"));
+                setImageDescriptor(G2GuiResources.getImageDescriptor("collapseAll"));
             }
+
             this.expand = expand;
         }
 
         public void run() {
-            if ( expand ) {
-				( ( CustomTableTreeViewer ) gViewer.getViewer() ).expandAll();
-            } 
-            else {
-				( ( CustomTableTreeViewer ) gViewer.getViewer() ).collapseAll();
+            if (expand) {
+                ((CustomTableTreeViewer) gViewer.getViewer()).expandAll();
+            } else {
+                ((CustomTableTreeViewer) gViewer.getViewer()).collapseAll();
             }
         }
     }
@@ -198,6 +194,17 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.18  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.17  2003/10/29 16:56:43  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

@@ -22,12 +22,16 @@
  */
 package net.mldonkey.g2gui.view.transfer.clientTable;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.view.viewers.GTableMenuListener;
 import net.mldonkey.g2gui.view.viewers.actions.AddClientAsFriendAction;
 import net.mldonkey.g2gui.view.viewers.actions.ClientDetailAction;
+import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -35,16 +39,12 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 
 /**
  * ClientTableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.8 2003/10/24 21:26:38 zet Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.9 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class ClientTableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -64,7 +64,7 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
      */
     public void initialize() {
         super.initialize();
-        this.core = gTableViewer.getCore();
+        this.core = gViewer.getCore();
     }
 
     /* (non-Javadoc)
@@ -105,6 +105,17 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.9  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.8  2003/10/24 21:26:38  zet
 common actions
 

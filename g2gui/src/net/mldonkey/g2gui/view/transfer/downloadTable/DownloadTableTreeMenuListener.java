@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.ClientInfo;
@@ -39,15 +38,14 @@ import net.mldonkey.g2gui.view.transfer.FileDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.transfer.UniformResourceLocator;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
-import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.viewers.actions.AddClientAsFriendAction;
 import net.mldonkey.g2gui.view.viewers.actions.ClientDetailAction;
 import net.mldonkey.g2gui.view.viewers.actions.CopyED2KLinkToClipboardAction;
 import net.mldonkey.g2gui.view.viewers.actions.ToggleClientsAction;
 import net.mldonkey.g2gui.view.viewers.actions.WebServicesAction;
+import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -86,39 +84,39 @@ import org.eclipse.swt.widgets.Text;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.23 2003/10/24 21:26:30 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.24 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
+public class DownloadTableTreeMenuListener extends GTableMenuListener
+    implements ISelectionChangedListener {
     private FileInfo lastSelectedFile;
     private FileInfo selectedFile;
     private TreeClientInfo selectedClient;
     private List selectedClients = new ArrayList();
     private List selectedFiles = new ArrayList();
-    private CustomTableTreeViewer tableTreeViewer;
     private ClientTableViewer clientTableViewer;
-    private DownloadTableTreeViewer downloadTableTreeViewer;
     private DownloadTableTreeContentProvider tableTreeContentProvider;
-    private CoreCommunication core;
     private boolean createClientTable = false;
     private boolean myDrag = false;
 
-    public DownloadTableTreeMenuListener(DownloadTableTreeViewer downloadTableTreeViewer, ClientTableViewer clientTableViewer,
-        CoreCommunication mldonkey) {
-        this.downloadTableTreeViewer = downloadTableTreeViewer;
-        this.tableTreeViewer = downloadTableTreeViewer.getTableTreeViewer();
+    public DownloadTableTreeMenuListener(DownloadTableTreeViewer downloadTableTreeViewer,
+        ClientTableViewer clientTableViewer) {
+        super(downloadTableTreeViewer);
         this.clientTableViewer = clientTableViewer;
-        this.core = mldonkey;
-        tableTreeContentProvider = (DownloadTableTreeContentProvider) tableTreeViewer.getContentProvider();
+    }
+
+    public void initialize() {
+        super.initialize();
+        tableTreeContentProvider = (DownloadTableTreeContentProvider) ((DownloadTableTreeViewer) gViewer).getTableContentProvider();
 
         /*this is to delete the selection, if one clicks in an empty row of the table*/
-        tableTreeViewer.getTableTree().getTable().addMouseListener(new MouseAdapter() {
+        gViewer.getTable().addMouseListener(new MouseAdapter() {
                 public void mouseDown(MouseEvent e) {
                     Table table = (Table) e.widget;
                     TableItem item = table.getItem(new Point(e.x, e.y));
 
                     if (item == null) {
-                        tableTreeViewer.getTableTree().getTable().deselectAll();
+                        gViewer.getTable().deselectAll();
                         selectedFiles.clear();
                         selectedClients.clear();
                         selectedClient = null;
@@ -136,7 +134,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
      * Activate drag and drop
      */
     public void activateDragAndDrop() {
-        DragSource dragSource = new DragSource(tableTreeViewer.getTableTree().getTable(), DND.DROP_COPY | DND.DROP_LINK);
+        DragSource dragSource = new DragSource(gViewer.getTable(), DND.DROP_COPY | DND.DROP_LINK);
         dragSource.setTransfer(new Transfer[] { TextTransfer.getInstance() });
 
         dragSource.addDragListener(new DragSourceAdapter() {
@@ -158,7 +156,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
                 }
             });
 
-        DropTarget dropTarget = new DropTarget(tableTreeViewer.getTableTree().getTable(), DND.DROP_COPY | DND.DROP_DEFAULT | DND.DROP_LINK);
+        DropTarget dropTarget = new DropTarget(gViewer.getTable(),
+                DND.DROP_COPY | DND.DROP_DEFAULT | DND.DROP_LINK);
         final UniformResourceLocator uRL = UniformResourceLocator.getInstance();
         final TextTransfer textTransfer = TextTransfer.getInstance();
         dropTarget.setTransfer(new Transfer[] { uRL, textTransfer });
@@ -181,7 +180,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
                     }
 
                     Message dllLink = new EncodeMessage(Message.S_DLLINK, event.data);
-                    dllLink.sendMessage(core);
+                    dllLink.sendMessage(gViewer.getCore());
                 }
             });
     }
@@ -197,7 +196,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
             FileInfo fileInfo = (FileInfo) o;
             selectedFile = fileInfo;
 
-            if (createClientTable && ((lastSelectedFile == null) || (lastSelectedFile != selectedFile))) {
+            if (createClientTable &&
+                    ((lastSelectedFile == null) || (lastSelectedFile != selectedFile))) {
                 clientTableViewer.getTableViewer().setInput(fileInfo);
             }
 
@@ -248,8 +248,10 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
             menuManager.add(new CommitAction());
         }
 
-        if ((selectedFile != null) && (selectedFile.getState().getState() == EnumFileState.DOWNLOADED)) {
-            MenuManager commitAsSubMenu = new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_AS"));
+        if ((selectedFile != null) &&
+                (selectedFile.getState().getState() == EnumFileState.DOWNLOADED)) {
+            MenuManager commitAsSubMenu = new MenuManager(G2GuiResources.getString(
+                        "TT_DOWNLOAD_MENU_COMMIT_AS"));
 
             commitAsSubMenu.add(new CommitAction(true));
 
@@ -277,7 +279,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
 
         if ((selectedFile != null) && selectedFileListContainsOtherThan(EnumFileState.DOWNLOADED)) {
-            MenuManager prioritySubMenu = new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY"));
+            MenuManager prioritySubMenu = new MenuManager(G2GuiResources.getString(
+                        "TT_DOWNLOAD_MENU_PRIORITY"));
             prioritySubMenu.add(new PriorityAction(EnumPriority.VERY_HIGH));
             prioritySubMenu.add(new PriorityAction(EnumPriority.HIGH));
             prioritySubMenu.add(new PriorityAction(EnumPriority.NORMAL));
@@ -296,43 +299,50 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         if ((selectedFile != null) && advancedMode) {
             menuManager.add(new PreviewAction());
             menuManager.add(new VerifyChunksAction());
-            menuManager.add(new ToggleClientsAction( downloadTableTreeViewer ));
+            menuManager.add(new ToggleClientsAction((DownloadTableTreeViewer) gViewer));
         }
 
         if ((selectedClient != null) && advancedMode) {
-            
             ClientInfo[] clientInfoArray = new ClientInfo[ selectedClients.size() ];
-            for (int i = 0; i < selectedClients.size(); i++ ) {
+
+            for (int i = 0; i < selectedClients.size(); i++) {
                 TreeClientInfo treeClientInfo = (TreeClientInfo) selectedClients.get(i);
                 clientInfoArray[ i ] = treeClientInfo.getClientInfo();
             }
-            menuManager.add(new AddClientAsFriendAction(core, clientInfoArray));
+
+            menuManager.add(new AddClientAsFriendAction(gViewer.getCore(), clientInfoArray));
         }
 
         if (selectedClient != null) {
-            menuManager.add(new ClientDetailAction(selectedClient.getFileInfo(), selectedClient.getClientInfo(), core));
+            menuManager.add(new ClientDetailAction(selectedClient.getFileInfo(),
+                    selectedClient.getClientInfo(), gViewer.getCore()));
         }
 
         if (selectedFile != null) {
-            String[] linkList = new String[selectedFiles.size()];
-            
+            String[] linkList = new String[ selectedFiles.size() ];
+
             for (int i = 0; i < selectedFiles.size(); i++) {
-                linkList[i] = new String( ((FileInfo) selectedFiles.get(i)).getED2K() );
+                linkList[ i ] = new String(((FileInfo) selectedFiles.get(i)).getED2K());
             }
-            
-            MenuManager clipboardMenu = new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_COPYTO"));
+
+            MenuManager clipboardMenu = new MenuManager(G2GuiResources.getString(
+                        "TT_DOWNLOAD_MENU_COPYTO"));
             clipboardMenu.add(new CopyED2KLinkToClipboardAction(false, linkList));
             clipboardMenu.add(new CopyED2KLinkToClipboardAction(true, linkList));
             menuManager.add(clipboardMenu);
         }
 
         if ((selectedFile != null) && advancedMode) {
-            MenuManager webServicesMenu = new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_SERVICES"));
+            MenuManager webServicesMenu = new MenuManager(G2GuiResources.getString(
+                        "TT_DOWNLOAD_MENU_WEB_SERVICES"));
             webServicesMenu.add(new WebServicesAction(WebServicesAction.BITZI, selectedFile.getMd4()));
-            webServicesMenu.add(new WebServicesAction(WebServicesAction.FILEDONKEY, selectedFile.getMd4()));
+            webServicesMenu.add(new WebServicesAction(WebServicesAction.FILEDONKEY,
+                    selectedFile.getMd4()));
             webServicesMenu.add(new WebServicesAction(WebServicesAction.JIGLE, selectedFile.getMd4()));
-            webServicesMenu.add(new WebServicesAction(WebServicesAction.SHAREREACTOR, selectedFile.getED2K()));
-			webServicesMenu.add(new WebServicesAction(WebServicesAction.DONKEY_FAKES, selectedFile.getED2K()));
+            webServicesMenu.add(new WebServicesAction(WebServicesAction.SHAREREACTOR,
+                    selectedFile.getED2K()));
+            webServicesMenu.add(new WebServicesAction(WebServicesAction.DONKEY_FAKES,
+                    selectedFile.getED2K()));
             menuManager.add(webServicesMenu);
         }
     }
@@ -457,8 +467,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
                 }
             } else {
                 if (manualInput) {
-                    InputDialog inputDialog = new InputDialog(tableTreeViewer.getTableTree().getShell(),
-                            G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_AS"), G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_AS"),
+                    InputDialog inputDialog = new InputDialog(gViewer.getShell(),
+                            G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_AS"),
+                            G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_AS"),
                             selectedFile.getName(), null);
 
                     if (inputDialog.open() == InputDialog.OK) {
@@ -505,7 +516,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
 
         public void run() {
-            MessageBox reallyCancel = new MessageBox(tableTreeViewer.getTableTree().getShell(), SWT.YES | SWT.NO | SWT.ICON_QUESTION);
+            MessageBox reallyCancel = new MessageBox(gViewer.getShell(),
+                    SWT.YES | SWT.NO | SWT.ICON_QUESTION);
 
             reallyCancel.setMessage(G2GuiResources.getString("TT_REALLY_CANCEL") +
                 ((selectedFiles.size() > 1) ? (" (" + selectedFiles.size() + " selected)") : ""));
@@ -521,7 +533,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
                     }
 
                     // this conceptually breaks core/gui synchronicity and should be removed ASAP.
-                    core.getResultInfoIntMap().setDownloading(fileInfo, false);
+                    gViewer.getCore().getResultInfoIntMap().setDownloading(fileInfo, false);
                 }
             }
         }
@@ -586,10 +598,11 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         public void run() {
             String title = G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY") + " (" +
                 (relative ? G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_CUSTOM_RELATIVE")
-                          : G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_CUSTOM_ABSOLUTE")) + ")";
+                          : G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_CUSTOM_ABSOLUTE")) +
+                ")";
 
-            PriorityInputDialog priorityInputDialog = new PriorityInputDialog(tableTreeViewer.getTableTree().getShell(), title, title,
-                    (relative ? 0 : selectedFile.getPriority()), null);
+            PriorityInputDialog priorityInputDialog = new PriorityInputDialog(gViewer.getShell(),
+                    title, title, (relative ? 0 : selectedFile.getPriority()), null);
 
             if (priorityInputDialog.open() == PriorityInputDialog.OK) {
                 int newPriority;
@@ -621,7 +634,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     private class PriorityInputDialog extends InputDialog {
         int initialValue;
 
-        public PriorityInputDialog(Shell parentShell, String dialogTitle, String dialogMessage, int initialValue, IInputValidator validator) {
+        public PriorityInputDialog(Shell parentShell, String dialogTitle, String dialogMessage,
+            int initialValue, IInputValidator validator) {
             super(parentShell, dialogTitle, dialogMessage, "" + initialValue, validator);
             this.initialValue = initialValue;
         }
@@ -664,6 +678,17 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.24  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.23  2003/10/24 21:26:30  zet
 add donkey fakes web service
 

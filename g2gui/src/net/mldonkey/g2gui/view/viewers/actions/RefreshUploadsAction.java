@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.view.viewers.GViewer;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
 
 import org.eclipse.jface.action.Action;
 
@@ -32,13 +32,13 @@ import org.eclipse.jface.action.Action;
 /**
  * RefreshUploadsAction
  *
- * @version $Id: RefreshUploadsAction.java,v 1.2 2003/10/29 16:56:21 lemmster Exp $
+ * @version $Id: RefreshUploadsAction.java,v 1.3 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class RefreshUploadsAction extends Action {
-    private GViewer gViewer;
+    private IGViewer gViewer;
 
-    public RefreshUploadsAction(GViewer gViewer) {
+    public RefreshUploadsAction(IGViewer gViewer) {
         super("Refresh");
         this.gViewer = gViewer;
     }
@@ -52,6 +52,17 @@ public class RefreshUploadsAction extends Action {
 
 /*
 $Log: RefreshUploadsAction.java,v $
+Revision 1.3  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.2  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.view.search;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GTableLabelProvider;
+import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.swt.SWT;
@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Display;
  * ResultTableLabelProvider
  *
  *
- * @version $Id: ResultTableLabelProvider.java,v 1.21 2003/10/22 23:43:36 zet Exp $
+ * @version $Id: ResultTableLabelProvider.java,v 1.22 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class ResultTableLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -56,7 +56,7 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
     public Image getColumnImage(Object arg0, int columnIndex) {
         ResultInfo resultInfo = (ResultInfo) arg0;
 
-        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ResultTableViewer.NETWORK:
 
             if (!resultInfo.isDownloading()) {
@@ -80,7 +80,7 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
     public String getColumnText(Object arg0, int columnIndex) {
         ResultInfo resultInfo = (ResultInfo) arg0;
 
-        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ResultTableViewer.NETWORK:
             return ((NetworkInfo) resultInfo.getNetwork()).getNetworkName();
 
@@ -137,6 +137,17 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.22  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.21  2003/10/22 23:43:36  zet
 flag results that contain "fake" string
 

@@ -20,11 +20,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-package net.mldonkey.g2gui.view.transfer.clientTable;
+package net.mldonkey.g2gui.view.transfer.uploadTable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.model.enum.Enum;
-import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.IGViewer;
@@ -33,7 +31,7 @@ import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
 import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
-import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
+import net.mldonkey.g2gui.view.viewers.actions.RefreshUploadsAction;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -44,36 +42,29 @@ import org.eclipse.swt.widgets.Control;
 
 
 /**
- * ClientPaneListener
+ * UploadPaneListener
  *
- * @version $Id: ClientPaneListener.java,v 1.2 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: UploadPaneListener.java,v 1.1 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class ClientPaneListener extends SashGPaneListener {
-    private Enum[] states;
-
+public class UploadPaneListener extends SashGPaneListener {
     /**
      * @param gViewer
      * @param core
      * @param aSashForm
      * @param aControl
      */
-    public ClientPaneListener(IGViewer gViewer, CoreCommunication core, SashForm aSashForm,
+    public UploadPaneListener(IGViewer gViewer, CoreCommunication core, SashForm aSashForm,
         Control aControl) {
         super(gViewer, core, aSashForm, aControl);
-        this.states = new Enum[] {
-                EnumState.BLACK_LISTED, EnumState.CONNECTED, EnumState.CONNECTED_AND_QUEUED,
-                EnumState.CONNECTED_DOWNLOADING, EnumState.CONNECTED_INITIATING,
-                EnumState.CONNECTING, EnumState.NEW_HOST, EnumState.NOT_CONNECTED,
-                EnumState.NOT_CONNECTED_WAS_QUEUED
-            };
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
-     */
     public void menuAboutToShow(IMenuManager menuManager) {
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
+
+        // refresh table
+        menuManager.add(new Separator());
+        menuManager.add(new RefreshUploadsAction(gViewer));
 
         // columnSelector
         if (advancedMode) {
@@ -91,12 +82,6 @@ public class ClientPaneListener extends SashGPaneListener {
         // network filters
         createNetworkFilterSubMenu(filterSubMenu);
 
-        // state filter
-        filterSubMenu.add(new Separator());
-
-        for (int i = 0; i < states.length; i++)
-            filterSubMenu.add(new StateFilterAction(states[ i ].toString(), gViewer, states[ i ]));
-
         menuManager.add(filterSubMenu);
 
         // flip sash/maximize sash
@@ -108,8 +93,8 @@ public class ClientPaneListener extends SashGPaneListener {
 
 
 /*
-$Log: ClientPaneListener.java,v $
-Revision 1.2  2003/10/31 07:24:01  zet
+$Log: UploadPaneListener.java,v $
+Revision 1.1  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
 fix: 2 new null pointer exceptions (search tab)
@@ -120,7 +105,6 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.1  2003/10/29 16:56:21  lemmster
-added reasonable class hierarchy for panelisteners, viewers...
+
 
 */

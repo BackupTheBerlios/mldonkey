@@ -51,10 +51,10 @@ import java.util.List;
  * CustomTableTreeViewer
  *
  *
- * @version $Id: CustomTableTreeViewer.java,v 1.1 2003/10/22 01:36:59 zet Exp $
+ * @version $Id: CustomTableTreeViewer.java,v 1.2 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class CustomTableTreeViewer extends TableTreeViewer {
+public class CustomTableTreeViewer extends TableTreeViewer implements ICustomViewer {
     private Hashtable tableTreeEditors = new Hashtable();
     private boolean activeEditors = false;
     private int chunksColumn = -1;
@@ -309,6 +309,17 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.2  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.1  2003/10/22 01:36:59  zet
 add column selector to server/search (might not be finished yet..)
 

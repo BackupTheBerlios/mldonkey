@@ -20,33 +20,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-package net.mldonkey.g2gui.view.viewers;
+package net.mldonkey.g2gui.view.viewers.table;
+
+import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
 
 /**
  *
  * GenericContentProvider
  *
- * @version $Id: GTableContentProvider.java,v 1.2 2003/10/22 21:23:19 zet Exp $
+ * @version $Id: GTableContentProvider.java,v 1.1 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class GTableContentProvider implements IStructuredContentProvider {
     protected final static Object[] EMPTY_ARRAY = new Object[ 0 ];
     protected CustomTableViewer tableViewer;
-    protected GTableViewer gTableViewer;
+    protected IGViewer gViewer;
 
-    public GTableContentProvider(GTableViewer gTableViewer) {
-        this.gTableViewer = gTableViewer;
+    public GTableContentProvider(IGViewer gViewer) {
+        this.gViewer = gViewer;
     }
 
     /**
      * initialize after tableViewer creation
      */
     public void initialize() {
-        tableViewer = gTableViewer.getTableViewer();
+        tableViewer = ((GTableViewer) gViewer).getTableViewer();
     }
 
     /* (non-Javadoc)
@@ -67,12 +69,32 @@ public class GTableContentProvider implements IStructuredContentProvider {
      * inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        if (viewer instanceof CustomTableViewer) {
+            this.tableViewer = (CustomTableViewer) viewer;
+        }
+    }
+
+    /**
+     * update display
+     */
+    public void updateDisplay() {
     }
 }
 
 
 /*
 $Log: GTableContentProvider.java,v $
+Revision 1.1  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.2  2003/10/22 21:23:19  zet
 private -> protected
 

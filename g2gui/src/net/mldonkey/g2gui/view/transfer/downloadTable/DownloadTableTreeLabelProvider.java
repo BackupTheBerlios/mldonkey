@@ -31,11 +31,10 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
-import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
+import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 
 import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
@@ -43,10 +42,10 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.11 2003/10/23 00:07:19 zet Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.12 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
+public class DownloadTableTreeLabelProvider extends GTableLabelProvider implements IColorProvider {
     
     private Color availableFileColor;
     private Color unAvailableFileColor; 
@@ -60,10 +59,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	private boolean displayColors = true;
     private DecimalFormat df = new DecimalFormat( "0.0" );
     private DecimalFormat dfp = new DecimalFormat( "0" );
-    private CustomTableTreeViewer tableTreeViewer;
 
-	public DownloadTableTreeLabelProvider() {
-		updateDisplay();	
+	public DownloadTableTreeLabelProvider(IGViewer gViewer) {
+	    super(gViewer);
 	}
 
     /* (non-Javadoc)
@@ -123,47 +121,14 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
     }
 
     /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-     */
-    public void dispose() {
-    }
-
-    /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      */
     public boolean isLabelProperty( Object arg0, String arg1 ) {
         return true;
     }
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-	 */
-	public void addListener( ILabelProviderListener arg0 ) {
-	}
-	
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     */
-    public void removeListener( ILabelProviderListener arg0 ) {
-    }
-
-    /**
-     * @param v
-     */
-    public void setTableTreeViewer( CustomTableTreeViewer v ) {
-        tableTreeViewer = v;
-    }
-
-    /**
-     * @param b
-     */
-    public void displayColors( boolean b ) {
-        displayColors = b;
-    }
-    
     
     public void updateDisplay() {
-    	
+		displayColors = PreferenceLoader.loadBoolean("displayTableColors");
 		unAvailableFileColor = PreferenceLoader.loadColour( "downloadsUnAvailableFileColor" );
 		downloadedFileColor = PreferenceLoader.loadColour( "downloadsDownloadedFileColor" );
 		queuedFileColor = PreferenceLoader.loadColour( "downloadsQueuedFileColor" );
@@ -180,14 +145,14 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
    public Image getColumnImage( Object arg0, int arg1 ) {
 	   if ( arg0 instanceof FileInfo 
-		   && tableTreeViewer.getColumnIDs()[ arg1 ] == DownloadTableTreeViewer.NETWORK ) {
+		   && cViewer.getColumnIDs()[ arg1 ] == DownloadTableTreeViewer.NETWORK ) {
 		   FileInfo fileInfo = (FileInfo) arg0;
 
 		   return G2GuiResources.getNetworkImage( fileInfo.getNetwork().getNetworkType() );
 	   } else if ( arg0 instanceof TreeClientInfo ) {
 		   ClientInfo clientInfo = ( (TreeClientInfo) arg0 ).getClientInfo();
 
-		   switch ( tableTreeViewer.getColumnIDs()[ arg1 ] ) {
+		   switch ( cViewer.getColumnIDs()[ arg1 ] ) {
 
 			   case DownloadTableTreeViewer.NETWORK:
 				   return G2GuiResources.getNetworkImage( clientInfo.getClientnetworkid().getNetworkType() );
@@ -209,7 +174,7 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	   if ( arg0 instanceof FileInfo ) {
 		   FileInfo fileInfo = (FileInfo) arg0;
 
-		   switch ( tableTreeViewer.getColumnIDs()[ arg1 ] ) {
+		   switch ( cViewer.getColumnIDs()[ arg1 ] ) {
         
 			   case DownloadTableTreeViewer.ID: 
 				   return "" + fileInfo.getId();
@@ -276,7 +241,7 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	   } else if ( arg0 instanceof TreeClientInfo ) {
 		   TreeClientInfo treeClientInfo = (TreeClientInfo) arg0;
 
-		   switch ( tableTreeViewer.getColumnIDs()[ arg1 ] ) {
+		   switch ( cViewer.getColumnIDs()[ arg1 ] ) {
        
 			   case DownloadTableTreeViewer.NETWORK:
 				   return "" + treeClientInfo.getClientInfo().getClientid();
@@ -306,6 +271,17 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.12  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.11  2003/10/23 00:07:19  zet
 use "-" instead of 0
 

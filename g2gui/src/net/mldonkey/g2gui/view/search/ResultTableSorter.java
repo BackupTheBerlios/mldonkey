@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view.search;
 
 import net.mldonkey.g2gui.model.ResultInfo;
-import net.mldonkey.g2gui.view.viewers.GTableSorter;
+import net.mldonkey.g2gui.view.viewers.GSorter;
 
 import org.eclipse.jface.viewers.Viewer;
 
@@ -31,10 +31,10 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: ResultTableSorter.java,v 1.13 2003/10/22 14:38:32 dek Exp $
+ * @version $Id: ResultTableSorter.java,v 1.14 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class ResultTableSorter extends GTableSorter {
+public class ResultTableSorter extends GSorter {
     public ResultTableSorter(ResultTableViewer rTableViewer) {
         super(rTableViewer);
     }
@@ -47,7 +47,7 @@ public class ResultTableSorter extends GTableSorter {
         ResultInfo result1 = (ResultInfo) obj1;
         ResultInfo result2 = (ResultInfo) obj2;
 
-        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ResultTableViewer.NETWORK:
             return compareStrings(result1.getNetwork().getNetworkName(), result2.getNetwork().getNetworkName());
 
@@ -75,6 +75,17 @@ public class ResultTableSorter extends GTableSorter {
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.14  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.13  2003/10/22 14:38:32  dek
 removed malformed UTF-8 char gcj complains about (was only in comment)
 
@@ -94,7 +105,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.6  2003/08/16 20:59:09  dek
 searching works now without errors AGAIN ;-)

@@ -24,344 +24,251 @@ package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
-import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.GSorter;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 
 
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.6 2003/10/22 01:38:31 zet Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.7 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class DownloadTableTreeSorter extends ViewerSorter {
-    
-    private int columnIndex = 0;
-    private int lastColumnIndex = 0;
-    private boolean lastSort = false;
+public class DownloadTableTreeSorter extends GSorter {
     private boolean maintainSortOrder = false;
-	private ITableLabelProvider labelProvider;
-	private CustomTableTreeViewer tableTreeViewer;
-	
+    private ITableLabelProvider labelProvider;
+
     /**
      * Creates a new viewer sorter
      */
-    public DownloadTableTreeSorter() {
-        super();
+    public DownloadTableTreeSorter(IGViewer gViewer) {
+        super(gViewer);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ViewerSorter#category(java.lang.Object)
      */
-    public int category( Object element ) {
-        if ( element instanceof FileInfo ) {
+    public int category(Object element) {
+        if (element instanceof FileInfo) {
             return 1;
         }
-
-        if ( element instanceof TreeClientInfo ) {
+        else if (element instanceof TreeClientInfo) {
             return 2;
         }
 
         return 3;
     }
 
-	/**
-	 * Leave empty strings on bottom
-	 * @param aString1
-	 * @param aString2
-	 * @return int
-	 */    
-    public int compareStrings( String aString1, String aString2 ) {
-        if ( aString1.equals( "" ) ) {
-            return 1;
-        }
-
-        if ( aString2.equals( "" ) ) {
-            return -1;
-        }
-
-        return ( lastSort ? aString1.compareToIgnoreCase( aString2 ) : aString2.compareToIgnoreCase( aString1 ) );
-    }
-
-	/**
-	 * @param anInt1
-	 * @param anInt2
-	 * @return int
-	 */
-    public int compareIntegers( int anInt1, int anInt2 ) {
-        return ( lastSort ? ( anInt1 - anInt2 ) : ( anInt2 - anInt1 ) );
-    }
-
-	/**
-	 * @param aDouble1
-	 * @param aDouble2
-	 * @return int
-	 */
-    public int compareDoubles( Double aDouble1, Double aDouble2 ) {
-        return ( lastSort ? aDouble1.compareTo( aDouble2 ) : aDouble2.compareTo( aDouble1 ) );
-    }
-
-	/**
-	 * @param aDouble1
-	 * @param aDouble2
-	 * @return int
-	 */
-    public int compareDoubles( double aDouble1, double aDouble2 ) {
-        return compareDoubles( new Double( aDouble1 ), new Double( aDouble2 ) );
-    }
-    
-	/**
-	 * @param aLong1
-	 * @param aLong2
-	 * @return int
-	 */
-    public int compareLongs( Long aLong1, Long aLong2 ) {
-        return ( lastSort ? aLong1.compareTo( aLong2 ) : aLong2.compareTo( aLong1 ) );
-    }
-
-	/**
-	 * @param aLong1
-	 * @param aLong2
-	 * @return
-	 */
-    public int compareLongs( long aLong1, long aLong2 ) {
-        return compareLongs( new Long( aLong1 ), new Long( aLong2 ) );
-    }
-
     /**
      * Sets the column index
      * @param i The column index to sort
      */
-    public void setColumnIndex( int i ) {
+    public void setColumnIndex(int i) {
         columnIndex = i;
 
-        if ( columnIndex == lastColumnIndex ) {
+        if (columnIndex == lastColumnIndex) {
             lastSort = !lastSort;
         } else {
-        	switch (tableTreeViewer.getColumnIDs()[ columnIndex ]) {
-        		case DownloadTableTreeViewer.ID:
-        		case DownloadTableTreeViewer.NAME:
-				case DownloadTableTreeViewer.NETWORK:
-				case DownloadTableTreeViewer.LAST:   
-				case DownloadTableTreeViewer.ETA:      		
-        			lastSort = true;
-        			break;
-				default:
-					lastSort = false;
-					break;
-        	}
+            switch (cViewer.getColumnIDs()[ columnIndex ]) {
+            case DownloadTableTreeViewer.ID:
+            case DownloadTableTreeViewer.NAME:
+            case DownloadTableTreeViewer.NETWORK:
+            case DownloadTableTreeViewer.LAST:
+            case DownloadTableTreeViewer.ETA:
+                lastSort = true;
+
+                break;
+
+            default:
+                lastSort = false;
+
+                break;
+            }
         }
 
         lastColumnIndex = columnIndex;
     }
 
-	/**
-	 * @return int
-	 */
-    public int getLastColumnIndex() {
-        return lastColumnIndex;
-    }
-
-	/**
-	 * @param i
-	 */
-    public void setLastColumnIndex( int i ) {
-        lastColumnIndex = i;
-    }
-
-	/**
-	 * @return boolean
-	 */
-    public boolean getLastSort() {
-        return lastSort;
-    }
-
-	/**
-	 * @param b
-	 */
-    public void setLastSort( boolean b ) {
-        lastSort = b;
-    }
-
-    public boolean getMaintainSortOrder() {
-        return maintainSortOrder;
-    }
-
-	/**
-	 * @param b
-	 */
-    public void setMaintainSortOrder( boolean b ) {
-        maintainSortOrder = b;
-    }
-    
-    /**
-     * @param v
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ViewerSorter#isSorterProperty(java.lang.Object, java.lang.String)
      */
-	public void setTableTreeViewer( CustomTableTreeViewer v ) {
-		tableTreeViewer = v;
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ViewerSorter#isSorterProperty(java.lang.Object, java.lang.String)
-	 */
-	public boolean isSorterProperty( Object element, String property ) {
-		if ( element instanceof FileInfo && maintainSortOrder ) {
-        	
-			switch ( tableTreeViewer.getColumnIDs()[ columnIndex ] ) {
-			
-			case DownloadTableTreeViewer.DOWNLOADED:
-				return ( property.equals( FileInfo.CHANGED_DOWNLOADED ) ? true : false );
+    public boolean isSorterProperty(Object element, String property) {
+        if (element instanceof FileInfo && maintainSortOrder) {
+            switch (cViewer.getColumnIDs()[ columnIndex ]) {
+            case DownloadTableTreeViewer.DOWNLOADED:
+                return (property.equals(FileInfo.CHANGED_DOWNLOADED) ? true : false);
 
-			case DownloadTableTreeViewer.PERCENT:
-				return ( property.equals( FileInfo.CHANGED_PERCENT ) ? true : false );
-					
-			case DownloadTableTreeViewer.AVAIL:
-				return ( property.equals( FileInfo.CHANGED_AVAIL ) ? true : false );
+            case DownloadTableTreeViewer.PERCENT:
+                return (property.equals(FileInfo.CHANGED_PERCENT) ? true : false);
 
-			case DownloadTableTreeViewer.RATE:
-				return ( property.equals( FileInfo.CHANGED_RATE ) ? true : false );
+            case DownloadTableTreeViewer.AVAIL:
+                return (property.equals(FileInfo.CHANGED_AVAIL) ? true : false);
 
-			case DownloadTableTreeViewer.ETA:
-				return ( property.equals( FileInfo.CHANGED_ETA ) ? true : false );
+            case DownloadTableTreeViewer.RATE:
+                return (property.equals(FileInfo.CHANGED_RATE) ? true : false);
 
-			case DownloadTableTreeViewer.LAST:
-				return ( property.equals( FileInfo.CHANGED_LAST ) ? true : false );
+            case DownloadTableTreeViewer.ETA:
+                return (property.equals(FileInfo.CHANGED_ETA) ? true : false);
 
-			default:
-				return false;
-			}
-		}
+            case DownloadTableTreeViewer.LAST:
+                return (property.equals(FileInfo.CHANGED_LAST) ? true : false);
 
-		return false;
-	}
+            default:
+                return false;
+            }
+        }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-	 */
-	public int compare( Viewer viewer, Object e1, Object e2 ) {
-		int cat1 = category( e1 );
-		int cat2 = category( e2 );
+        return false;
+    }
 
-		if ( cat1 != cat2 ) {
-			return cat1 - cat2;
-		}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
+    public int compare(Viewer viewer, Object e1, Object e2) {
+        int cat1 = category(e1);
+        int cat2 = category(e2);
 
-		// fill in all columns
-		if ( e1 instanceof FileInfo ) {
-			FileInfo fileInfo1 = (FileInfo) e1;
-			FileInfo fileInfo2 = (FileInfo) e2;
+        if (cat1 != cat2) {
+            return cat1 - cat2;
+        }
 
-			switch ( tableTreeViewer.getColumnIDs()[ columnIndex ] ) {
-        
-			case DownloadTableTreeViewer.ID: 
-				return compareIntegers( fileInfo1.getId(), fileInfo2.getId() );
+        // fill in all columns
+        if (e1 instanceof FileInfo) {
+            FileInfo fileInfo1 = (FileInfo) e1;
+            FileInfo fileInfo2 = (FileInfo) e2;
 
-			case DownloadTableTreeViewer.NETWORK:
-				return compareStrings( fileInfo1.getNetwork().getNetworkName(), fileInfo2.getNetwork().getNetworkName() );
+            switch (cViewer.getColumnIDs()[ columnIndex ]) {
+            case DownloadTableTreeViewer.ID:
+                return compareIntegers(fileInfo1.getId(), fileInfo2.getId());
 
-			case DownloadTableTreeViewer.NAME:
-				return compareStrings( fileInfo1.getName(), fileInfo2.getName() );
+            case DownloadTableTreeViewer.NETWORK:
+                return compareStrings(fileInfo1.getNetwork().getNetworkName(),
+                    fileInfo2.getNetwork().getNetworkName());
 
-			case DownloadTableTreeViewer.SIZE:
-				return compareLongs( fileInfo1.getSize(), fileInfo2.getSize() );
+            case DownloadTableTreeViewer.NAME:
+                return compareStrings(fileInfo1.getName(), fileInfo2.getName());
 
-			case DownloadTableTreeViewer.DOWNLOADED:
-				return compareLongs( fileInfo1.getDownloaded(), fileInfo2.getDownloaded() );
+            case DownloadTableTreeViewer.SIZE:
+                return compareLongs(fileInfo1.getSize(), fileInfo2.getSize());
 
-			case DownloadTableTreeViewer.PERCENT:
-				return compareDoubles( fileInfo1.getPerc(), fileInfo2.getPerc() );
+            case DownloadTableTreeViewer.DOWNLOADED:
+                return compareLongs(fileInfo1.getDownloaded(), fileInfo2.getDownloaded());
 
-			case DownloadTableTreeViewer.SOURCES:
-				return compareIntegers( fileInfo1.getSources( ), fileInfo2.getSources() );
+            case DownloadTableTreeViewer.PERCENT:
+                return compareDoubles(fileInfo1.getPerc(), fileInfo2.getPerc());
 
-			case DownloadTableTreeViewer.AVAIL:
-				return compareIntegers( fileInfo1.getRelativeAvail(), fileInfo2.getRelativeAvail() );
+            case DownloadTableTreeViewer.SOURCES:
+                return compareIntegers(fileInfo1.getSources(), fileInfo2.getSources());
 
-			case DownloadTableTreeViewer.RATE:
+            case DownloadTableTreeViewer.AVAIL:
+                return compareIntegers(fileInfo1.getRelativeAvail(), fileInfo2.getRelativeAvail());
 
-				if ( fileInfo1.getState().getState() == EnumFileState.DOWNLOADED ) {
-					return -1;
-				} else if ( fileInfo2.getState().getState() == EnumFileState.DOWNLOADED ) {
-					return 1;
-				} else if ( fileInfo1.getState().getState() == EnumFileState.QUEUED ) {
-					return 2;
-				} else if ( fileInfo2.getState().getState() == EnumFileState.QUEUED ) {
-					return -2;
-				} else if ( fileInfo1.getState().getState() == EnumFileState.PAUSED ) {
-					return 3;
-				} else if ( fileInfo2.getState().getState() == EnumFileState.PAUSED ) {
-					return -3;
-				}
-				else {
-					return compareDoubles( fileInfo1.getRate(), fileInfo2.getRate() );
-				}
+            case DownloadTableTreeViewer.RATE:
 
-			case DownloadTableTreeViewer.CHUNKS:
-				return compareIntegers( fileInfo1.getNumChunks(), fileInfo2.getNumChunks() );
+                if (fileInfo1.getState().getState() == EnumFileState.DOWNLOADED) {
+                    return -1;
+                } else if (fileInfo2.getState().getState() == EnumFileState.DOWNLOADED) {
+                    return 1;
+                } else if (fileInfo1.getState().getState() == EnumFileState.QUEUED) {
+                    return 2;
+                } else if (fileInfo2.getState().getState() == EnumFileState.QUEUED) {
+                    return -2;
+                } else if (fileInfo1.getState().getState() == EnumFileState.PAUSED) {
+                    return 3;
+                } else if (fileInfo2.getState().getState() == EnumFileState.PAUSED) {
+                    return -3;
+                } else {
+                    return compareDoubles(fileInfo1.getRate(), fileInfo2.getRate());
+                }
 
-			case DownloadTableTreeViewer.ETA:
-				labelProvider = (ITableLabelProvider) ( (TableTreeViewer) viewer ).getLabelProvider();
+            case DownloadTableTreeViewer.CHUNKS:
+                return compareIntegers(fileInfo1.getNumChunks(), fileInfo2.getNumChunks());
 
-				if ( labelProvider.getColumnText( e1, columnIndex ).equals( "" ) ) {
-					return 1;
-				} else if ( labelProvider.getColumnText( e2, columnIndex ).equals( "" ) ) {
-					return -1;
-				} else {
-					return compareLongs( fileInfo1.getETA(), fileInfo2.getETA() );
-				}
+            case DownloadTableTreeViewer.ETA:
+                labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
 
-			case DownloadTableTreeViewer.PRIORITY:
-				return compareIntegers( fileInfo1.getPriority( ), fileInfo2.getPriority( ) );
+                if (labelProvider.getColumnText(e1, columnIndex).equals("")) {
+                    return 1;
+                } else if (labelProvider.getColumnText(e2, columnIndex).equals("")) {
+                    return -1;
+                } else {
+                    return compareLongs(fileInfo1.getETA(), fileInfo2.getETA());
+                }
 
-			case DownloadTableTreeViewer.LAST:
-				return compareIntegers( fileInfo1.getOffset(), fileInfo2.getOffset() );
+            case DownloadTableTreeViewer.PRIORITY:
+                return compareIntegers(fileInfo1.getPriority(), fileInfo2.getPriority());
 
-			case DownloadTableTreeViewer.AGE:
-				return compareLongs( Long.parseLong( fileInfo1.getAge() ), Long.parseLong( fileInfo2.getAge() ) );
+            case DownloadTableTreeViewer.LAST:
+                return compareIntegers(fileInfo1.getOffset(), fileInfo2.getOffset());
 
-			default:
-				return 0;
-			}
-		} else {
-			TreeClientInfo treeClientInfo1 = (TreeClientInfo) e1;
-			TreeClientInfo treeClientInfo2 = (TreeClientInfo) e2;
+            case DownloadTableTreeViewer.AGE:
+                return compareLongs(Long.parseLong(fileInfo1.getAge()),
+                    Long.parseLong(fileInfo2.getAge()));
 
-			switch ( tableTreeViewer.getColumnIDs()[ columnIndex ] ) {
-        
-			case DownloadTableTreeViewer.NETWORK: 
-				return compareIntegers( treeClientInfo1.getClientInfo().getClientid(), treeClientInfo2.getClientInfo().getClientid() );
+            default:
+                return 0;
+            }
+        } else {
+            TreeClientInfo treeClientInfo1 = (TreeClientInfo) e1;
+            TreeClientInfo treeClientInfo2 = (TreeClientInfo) e2;
 
-			case DownloadTableTreeViewer.NAME:
-				return compareStrings( treeClientInfo1.getClientInfo().getClientName(), treeClientInfo2.getClientInfo().getClientName() );
+            switch (cViewer.getColumnIDs()[ columnIndex ]) {
+            case DownloadTableTreeViewer.NETWORK:
+                return compareIntegers(treeClientInfo1.getClientInfo().getClientid(),
+                    treeClientInfo2.getClientInfo().getClientid());
 
-			case DownloadTableTreeViewer.SIZE:
-				labelProvider = (ITableLabelProvider) ( (TableTreeViewer) viewer ).getLabelProvider();
+            case DownloadTableTreeViewer.NAME:
+                return compareStrings(treeClientInfo1.getClientInfo().getClientName(),
+                    treeClientInfo2.getClientInfo().getClientName());
 
-				return compareStrings( labelProvider.getColumnText( e1, columnIndex ), labelProvider.getColumnText( e2, columnIndex ) );
+            case DownloadTableTreeViewer.SIZE:
+                labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
 
-			case DownloadTableTreeViewer.DOWNLOADED:
-				return compareIntegers( treeClientInfo1.getClientInfo().getState().getRank(),
-					treeClientInfo2.getClientInfo().getState().getRank() );
+                return compareStrings(labelProvider.getColumnText(e1, columnIndex),
+                    labelProvider.getColumnText(e2, columnIndex));
 
-			case DownloadTableTreeViewer.CHUNKS:
-				return compareIntegers( treeClientInfo1.getClientInfo().getNumChunks( treeClientInfo1.getFileInfo() ),
-					treeClientInfo2.getClientInfo().getNumChunks( treeClientInfo2.getFileInfo() ) );
+            case DownloadTableTreeViewer.DOWNLOADED:
+                return compareIntegers(treeClientInfo1.getClientInfo().getState().getRank(),
+                    treeClientInfo2.getClientInfo().getState().getRank());
 
-			default:
-				return 0;
-			}
-		}
-	}    
-    
+            case DownloadTableTreeViewer.CHUNKS:
+                return compareIntegers(treeClientInfo1.getClientInfo().getNumChunks(treeClientInfo1.getFileInfo()),
+                    treeClientInfo2.getClientInfo().getNumChunks(treeClientInfo2.getFileInfo()));
+
+            default:
+                return 0;
+            }
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeSorter#updateDisplay()
+     */
+    public void updateDisplay() {
+        maintainSortOrder = PreferenceLoader.loadBoolean("maintainSortOrder");
+    }
 }
 
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.7  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.6  2003/10/22 01:38:31  zet
 *** empty log message ***
 

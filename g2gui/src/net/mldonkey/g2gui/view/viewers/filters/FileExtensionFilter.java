@@ -33,14 +33,14 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * FileExtensionFilter
  *
- * @version $Id: FileExtensionFilter.java,v 1.1 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: FileExtensionFilter.java,v 1.2 2003/10/31 07:24:01 zet Exp $ 
  *
  */
 public class FileExtensionFilter extends ViewerFilter {
 	private List fileExtensionsList;
 
 	public FileExtensionFilter() {
-		this.fileExtensionsList = new ArrayList();
+		fileExtensionsList = new ArrayList();
 	}
 
 	public List getFileExtensionList() {
@@ -48,11 +48,11 @@ public class FileExtensionFilter extends ViewerFilter {
 	}
 
 	public boolean add( String[] extensions ) {
-		return this.fileExtensionsList.add( extensions );
+		return fileExtensionsList.add( extensions );
 	}
 
 	public boolean remove( String[] extensions ) {
-		return this.fileExtensionsList.remove( extensions );
+		return fileExtensionsList.remove( extensions );
 	}
 
 	/* (non-Javadoc)
@@ -77,6 +77,17 @@ public class FileExtensionFilter extends ViewerFilter {
 
 /*
 $Log: FileExtensionFilter.java,v $
+Revision 1.2  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.1  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

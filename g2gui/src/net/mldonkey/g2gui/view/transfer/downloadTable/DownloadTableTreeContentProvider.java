@@ -22,39 +22,31 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
+import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.model.FileInfoIntMap;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
+import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeContentProvider;
+
 import gnu.trove.TIntObjectIterator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
-
-import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.model.FileInfoIntMap;
-import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
-import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
-
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 
 
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.6 2003/10/22 01:38:31 zet Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.7 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer  {
-    private final static Object[] EMPTY_ARRAY = new Object[ 0 ];
-    private CustomTableTreeViewer tableTreeViewer = null;
+public class DownloadTableTreeContentProvider extends GTableTreeContentProvider implements Observer {
     private Set delayedFileInfoUpdateSet = new HashSet();
     private Set delayedFileInfoAddSet = new HashSet();
     private Set delayedFileInfoRemoveSet = new HashSet();
-    private List tableTreeEditorList = Collections.synchronizedList( new ArrayList() );
-    private DownloadTableTreeViewer downloadTableTreeViewer = null;
     private int updateDelay = 2;
     private long lastUpdateTimeStamp = 0;
     private long lastRemoveTimeStamp = 0;
@@ -63,15 +55,20 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
     private boolean removeTimerRunning = false;
     private boolean updateTimerRunning = false;
 
+    public DownloadTableTreeContentProvider(DownloadTableTreeViewer downloadTableTreeViewer) {
+        super(downloadTableTreeViewer);
+    }
+
     /*
      *  (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      * Called at every tree expansion
      */
-    public Object[] getChildren( Object parent ) {
-        if ( parent instanceof FileInfo ) {
+    public Object[] getChildren(Object parent) {
+        if (parent instanceof FileInfo) {
             FileInfo fileInfo = (FileInfo) parent;
-			return fileInfo.getTreeClientInfoSet().toArray();
+
+            return fileInfo.getTreeClientInfoSet().toArray();
         } else {
             return EMPTY_ARRAY;
         }
@@ -81,11 +78,13 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
      *  (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
-    public boolean hasChildren( Object parent ) {
-        if ( parent instanceof FileInfo ) {
+    public boolean hasChildren(Object parent) {
+        if (parent instanceof FileInfo) {
             FileInfo fileInfo = (FileInfo) parent;
-			return (fileInfo.getTreeClientInfoSet().size() > 0);
+
+            return (fileInfo.getTreeClientInfoSet().size() > 0);
         }
+
         return false;
     }
 
@@ -93,12 +92,12 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
      *  (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
-    public Object getParent( Object child ) {
-        if ( child instanceof TreeClientInfo ) {
+    public Object getParent(Object child) {
+        if (child instanceof TreeClientInfo) {
             TreeClientInfo treeClientInfo = (TreeClientInfo) child;
 
             return treeClientInfo.getFileInfo();
-        } else if ( child instanceof FileInfo ) {
+        } else if (child instanceof FileInfo) {
             return tableTreeViewer.getInput();
         }
 
@@ -109,24 +108,25 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
      *  (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements( Object element ) {
-        if ( element instanceof FileInfoIntMap ) {
-            synchronized ( element ) {
+    public Object[] getElements(Object element) {
+        if (element instanceof FileInfoIntMap) {
+            synchronized (element) {
                 FileInfoIntMap fileInfoIntMap = (FileInfoIntMap) element;
                 ArrayList list = new ArrayList();
                 TIntObjectIterator it = fileInfoIntMap.iterator();
 
-                while ( it.hasNext() ) {
+                while (it.hasNext()) {
                     it.advance();
 
                     FileInfo fileInfo = (FileInfo) it.value();
 
-                    if ( fileInfo.isInteresting() ) {
-                        fileInfo.deleteObserver( this );
-                        fileInfo.addObserver( this );
-                        list.add( fileInfo );
+                    if (fileInfo.isInteresting()) {
+                        fileInfo.deleteObserver(this);
+                        fileInfo.addObserver(this);
+                        list.add(fileInfo);
                     }
                 }
+
                 return list.toArray();
             }
         }
@@ -136,95 +136,67 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 
     /*
      *  (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-     */
-    public void dispose() {
-        tableTreeViewer = null;
-    }
-    
-    /**
-     * @param v
-     */
-	public void setDownloadTableTreeViewer( DownloadTableTreeViewer v ) {
-			downloadTableTreeViewer = v;
-		}
-	/**
-	 * @param i
-	 */
-	public void setUpdateDelay( int i ) {
-		updateDelay = i;
-	}
-    /*
-     *  (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-     */
-    public void inputChanged( Viewer tableTreeViewer, Object oldInput, Object newInput ) {
-        if ( tableTreeViewer instanceof CustomTableTreeViewer ) {
-            this.tableTreeViewer = (CustomTableTreeViewer) tableTreeViewer;
-        }
-    }
-    /*
-     *  (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
-    public void update( final Observable o, final Object object ) {
-        if ( ( tableTreeViewer == null ) || tableTreeViewer.getTableTree().isDisposed() ) {
+    public void update(final Observable o, final Object object) {
+        if ((tableTreeViewer == null) || tableTreeViewer.getTableTree().isDisposed()) {
             return;
         }
 
-        tableTreeViewer.getTableTree().getDisplay().asyncExec( new Runnable() {
+        tableTreeViewer.getTableTree().getDisplay().asyncExec(new Runnable() {
                 public void run() {
-                    sendUpdate( o, object );
+                    sendUpdate(o, object);
                 }
-            } );
+            });
     }
 
-	/**
-	 * @param o
-	 * @param arg
-	 */
-    public void sendUpdate( Observable o, Object arg ) {
-        if ( tableTreeViewer == null  
-        	|| tableTreeViewer.getTableTree().isDisposed() ) {
+    /**
+     * @param o
+     * @param arg
+     */
+    public void sendUpdate(Observable o, Object arg) {
+        if ((tableTreeViewer == null) || tableTreeViewer.getTableTree().isDisposed()) {
             return;
         }
 
-        if ( o instanceof FileInfoIntMap ) {
+        if (o instanceof FileInfoIntMap) {
             // a new FileInfo
-            if ( arg instanceof FileInfo ) {
+            if (arg instanceof FileInfo) {
                 FileInfo fileInfo = (FileInfo) arg;
 
-                if ( fileInfo.isInteresting() ) {
-                    fileInfo.addObserver( this );
-                    delayedAddFileInfo( fileInfo );
+                if (fileInfo.isInteresting()) {
+                    fileInfo.addObserver(this);
+                    delayedAddFileInfo(fileInfo);
                 }
+
                 // removeObsolete && readStream
-            } else if ( arg == null ) {
+            } else if (arg == null) {
                 tableTreeViewer.refresh();
             }
-        } else if ( o instanceof FileInfo ) {
+        } else if (o instanceof FileInfo) {
             // updated fileInfo
-            if ( arg instanceof String[] ) {
+            if (arg instanceof String[]) {
                 FileInfo fileInfo = (FileInfo) o;
 
-                if ( fileInfo.isInteresting() ) {
-                    if ( updateDelay == 0 ) {
+                if (fileInfo.isInteresting()) {
+                    if (updateDelay == 0) {
                         String[] args = (String[]) arg;
-                        tableTreeViewer.update( fileInfo, ( args.length > 0 ) ? args : null );
+                        tableTreeViewer.update(fileInfo, (args.length > 0) ? args : null);
                     } else {
-                        delayedUpdateFileInfo( fileInfo );
+                        delayedUpdateFileInfo(fileInfo);
                     }
                 } else {
-                    delayedRemoveFileInfo( fileInfo );
+                    delayedRemoveFileInfo(fileInfo);
                 }
-             // ClientInfos in a TreeClientInfo
-            } else if ( arg instanceof TreeClientInfo ) {
+
+                // ClientInfos in a TreeClientInfo
+            } else if (arg instanceof TreeClientInfo) {
                 TreeClientInfo treeClientInfo = (TreeClientInfo) arg;
-                
+
                 if (treeClientInfo.getDelete()) {
-					tableTreeViewer.remove( treeClientInfo );
+                    tableTreeViewer.remove(treeClientInfo);
                 } else {
-                	tableTreeViewer.add( treeClientInfo.getFileInfo(), treeClientInfo );
+                    tableTreeViewer.add(treeClientInfo.getFileInfo(), treeClientInfo);
                 }
             }
         }
@@ -233,29 +205,32 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
     /**
      * @param fileInfo
      */
-    public void delayedUpdateFileInfo( FileInfo fileInfo ) {
-        if ( fileInfo != null ) {
-            delayedFileInfoUpdateSet.add( fileInfo );
+    public void delayedUpdateFileInfo(FileInfo fileInfo) {
+        if (fileInfo != null) {
+            delayedFileInfoUpdateSet.add(fileInfo);
         }
 
-        if ( System.currentTimeMillis() > ( lastUpdateTimeStamp + ( updateDelay * 1000 ) ) ) {
-            if ( delayedFileInfoUpdateSet.size() > 0 ) {
-            	if (tableTreeViewer != null && !tableTreeViewer.getTableTree().isDisposed())
-                	tableTreeViewer.update( delayedFileInfoUpdateSet.toArray(), FileInfo.ALL_PROPERTIES );
+        if (System.currentTimeMillis() > (lastUpdateTimeStamp + (updateDelay * 1000))) {
+            if (delayedFileInfoUpdateSet.size() > 0) {
+                if ((tableTreeViewer != null) && !tableTreeViewer.getTableTree().isDisposed()) {
+                    tableTreeViewer.update(delayedFileInfoUpdateSet.toArray(),
+                        FileInfo.ALL_PROPERTIES);
+                }
+
                 delayedFileInfoUpdateSet.clear();
             }
 
             lastUpdateTimeStamp = System.currentTimeMillis();
         } else {
-            if ( !updateTimerRunning && ( delayedFileInfoUpdateSet.size() > 0 ) ) {
+            if (!updateTimerRunning && (delayedFileInfoUpdateSet.size() > 0)) {
                 updateTimerRunning = true;
-                tableTreeViewer.getTableTree().getDisplay().timerExec( (updateDelay * 1000) + 2000,
+                tableTreeViewer.getTableTree().getDisplay().timerExec((updateDelay * 1000) + 2000,
                     new Runnable() {
                         public void run() {
-                            delayedUpdateFileInfo( null );
+                            delayedUpdateFileInfo(null);
                             updateTimerRunning = false;
                         }
-                    } );
+                    });
             }
         }
     }
@@ -263,29 +238,31 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
     /**
      * @param fileInfo
      */
-    public void delayedAddFileInfo( FileInfo fileInfo ) {
-        if ( fileInfo != null ) {
-            delayedFileInfoAddSet.add( fileInfo );
+    public void delayedAddFileInfo(FileInfo fileInfo) {
+        if (fileInfo != null) {
+            delayedFileInfoAddSet.add(fileInfo);
         }
 
-        if ( System.currentTimeMillis() > ( lastAddTimeStamp + 789 ) ) {
-            if ( delayedFileInfoAddSet.size() > 0 ) {
-				if (tableTreeViewer != null && !tableTreeViewer.getTableTree().isDisposed())
-               		tableTreeViewer.add( tableTreeViewer.getInput(), delayedFileInfoAddSet.toArray() );
+        if (System.currentTimeMillis() > (lastAddTimeStamp + 789)) {
+            if (delayedFileInfoAddSet.size() > 0) {
+                if ((tableTreeViewer != null) && !tableTreeViewer.getTableTree().isDisposed()) {
+                    tableTreeViewer.add(tableTreeViewer.getInput(), delayedFileInfoAddSet.toArray());
+                }
+
                 delayedFileInfoAddSet.clear();
             }
 
             lastAddTimeStamp = System.currentTimeMillis();
         } else {
-            if ( !addTimerRunning && ( delayedFileInfoAddSet.size() > 0 ) ) {
+            if (!addTimerRunning && (delayedFileInfoAddSet.size() > 0)) {
                 addTimerRunning = true;
-                tableTreeViewer.getTableTree().getDisplay().timerExec( 2000,
+                tableTreeViewer.getTableTree().getDisplay().timerExec(2000,
                     new Runnable() {
                         public void run() {
-                            delayedAddFileInfo( null );
+                            delayedAddFileInfo(null);
                             addTimerRunning = false;
                         }
-                    } );
+                    });
             }
         }
     }
@@ -293,39 +270,54 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
     /**
      * @param fileInfo
      */
-    public void delayedRemoveFileInfo( FileInfo fileInfo ) {
-        if ( fileInfo != null ) {
-            delayedFileInfoRemoveSet.add( fileInfo );
+    public void delayedRemoveFileInfo(FileInfo fileInfo) {
+        if (fileInfo != null) {
+            delayedFileInfoRemoveSet.add(fileInfo);
         }
 
-        if ( System.currentTimeMillis() > ( lastRemoveTimeStamp + 789 ) ) {
-            if ( delayedFileInfoRemoveSet.size() > 0 ) {
-				if (tableTreeViewer != null && !tableTreeViewer.getTableTree().isDisposed())
-                	tableTreeViewer.remove( delayedFileInfoRemoveSet.toArray() );
+        if (System.currentTimeMillis() > (lastRemoveTimeStamp + 789)) {
+            if (delayedFileInfoRemoveSet.size() > 0) {
+                if ((tableTreeViewer != null) && !tableTreeViewer.getTableTree().isDisposed()) {
+                    tableTreeViewer.remove(delayedFileInfoRemoveSet.toArray());
+                }
+
                 delayedFileInfoRemoveSet.clear();
             }
 
             lastRemoveTimeStamp = System.currentTimeMillis();
         } else {
-            if ( !removeTimerRunning && ( delayedFileInfoRemoveSet.size() > 0 ) ) {
+            if (!removeTimerRunning && (delayedFileInfoRemoveSet.size() > 0)) {
                 removeTimerRunning = true;
-                tableTreeViewer.getTableTree().getDisplay().timerExec( 2000,
+                tableTreeViewer.getTableTree().getDisplay().timerExec(2000,
                     new Runnable() {
                         public void run() {
-                            delayedRemoveFileInfo( null );
+                            delayedRemoveFileInfo(null);
                             removeTimerRunning = false;
                         }
-                    } );
+                    });
             }
         }
     }
 
-    
+    public void updateDisplay() {
+        updateDelay = PreferenceLoader.loadInteger("updateDelay");
+    }
 }
 
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.7  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.6  2003/10/22 01:38:31  zet
 *** empty log message ***
 

@@ -29,7 +29,7 @@ import java.util.List;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.helper.OurTools;
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.EnumQuery;
 
 /**
@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.30 2003/09/27 10:43:13 lemmster Exp $ 
+ * @version $Id: SearchQuery.java,v 1.31 2003/10/31 07:24:01 zet Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -138,7 +138,7 @@ public class SearchQuery implements Sendable {
 	 */
 	public void setSearchString( String searchString ) {
 		this.searchString = searchString;
-		String[] patterns = OurTools.split( searchString, ' ' );
+		String[] patterns = RegExp.split( searchString, ' ' );
 		/* now we have to generate a query-Object for each search pattern */
 		Query newQuery;
 		
@@ -531,6 +531,17 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.31  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.30  2003/09/27 10:43:13  lemmster
 OurTools added for static helper methods
 
@@ -584,7 +595,7 @@ Revision 1.17  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.16  2003/08/22 21:03:14  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.15  2003/08/09 15:32:45  dek
 removed unused import

@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
-import net.mldonkey.g2gui.view.viewers.GViewer;
+import net.mldonkey.g2gui.view.viewers.IGViewer;
 
 import org.eclipse.jface.action.Action;
 
@@ -32,13 +32,13 @@ import org.eclipse.jface.action.Action;
 /**
  * ToggleClientsAction
  *
- * @version $Id: ToggleClientsAction.java,v 1.2 2003/10/29 16:56:21 lemmster Exp $
+ * @version $Id: ToggleClientsAction.java,v 1.3 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class ToggleClientsAction extends Action {
-    private GViewer gViewer;
+    private IGViewer gViewer;
 
-    public ToggleClientsAction(GViewer gViewer) {
+    public ToggleClientsAction(IGViewer gViewer) {
         super();
         this.gViewer = gViewer;
 
@@ -60,6 +60,17 @@ public class ToggleClientsAction extends Action {
 
 /*
 $Log: ToggleClientsAction.java,v $
+Revision 1.3  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.2  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

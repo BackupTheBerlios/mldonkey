@@ -28,7 +28,6 @@ import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GTableViewer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -52,12 +51,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
-
+import net.mldonkey.g2gui.view.viewers.table.GTableViewer;
 
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableViewer.java,v 1.4 2003/10/28 00:36:06 zet Exp $
+ * @version $Id: ResultTableViewer.java,v 1.5 2003/10/31 07:24:01 zet Exp $
  *
  */
 public class ResultTableViewer extends GTableViewer {
@@ -87,7 +86,7 @@ public class ResultTableViewer extends GTableViewer {
         //	this.swtLayout = SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI;
         tableContentProvider =  new ResultTableContentProvider( this );
         tableLabelProvider = new ResultTableLabelProvider( this );
-        tableSorter = new ResultTableSorter( this );
+        gSorter = new ResultTableSorter( this );
         tableMenuListener = new ResultTableMenuListener( this );
 
         this.createContents(parent);
@@ -325,6 +324,17 @@ public class ResultTableViewer extends GTableViewer {
 
 /*
 $Log: ResultTableViewer.java,v $
+Revision 1.5  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.4  2003/10/28 00:36:06  zet
 move columnselector into the pane
 

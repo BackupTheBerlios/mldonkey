@@ -20,45 +20,42 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-package net.mldonkey.g2gui.view.viewers.actions;
+package net.mldonkey.g2gui.view.viewers;
 
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.ColumnSelector;
-import net.mldonkey.g2gui.view.viewers.IGViewer;
-
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IInputProvider;
+import org.eclipse.jface.viewers.ViewerSorter;
 
 
 /**
- * ColumnSelectorAction
+ * ICustomViewer
  *
- * @version $Id: ColumnSelectorAction.java,v 1.3 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ICustomViewer.java,v 1.1 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class ColumnSelectorAction extends Action {
-    private IGViewer gViewer;
+public interface ICustomViewer extends IInputProvider {
+    int[] getColumnIDs();
 
-    public ColumnSelectorAction(IGViewer gViewer) {
-        super(G2GuiResources.getString("TT_ColumnSelector"));
-        setImageDescriptor(G2GuiResources.getImageDescriptor("table"));
-        this.gViewer = gViewer;
-    }
+    void setColumnIDs(String string);
 
-    public void run() {
-        ColumnSelector cSelector = new ColumnSelector(gViewer.getShell(),
-                gViewer.getColumnLabels(), gViewer.getAllColumnIDs(), gViewer.getPreferenceString());
+    void setContentProvider(IContentProvider provider);
 
-        if (cSelector.open() == ColumnSelector.OK) {
-            cSelector.savePrefs();
-            gViewer.resetColumns();
-        }
-    }
+    void setLabelProvider(IBaseLabelProvider labelProvider);
+
+    void setSorter(ViewerSorter sorter);
+
+    void setInput(Object input);
+
+    void setEditors(boolean b);
+
+    void closeAllTTE();
 }
 
 
 /*
-$Log: ColumnSelectorAction.java,v $
-Revision 1.3  2003/10/31 07:24:01  zet
+$Log: ICustomViewer.java,v $
+Revision 1.1  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
 fix: 2 new null pointer exceptions (search tab)
@@ -68,12 +65,5 @@ regexp helpers in one class
 rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
-
-Revision 1.2  2003/10/29 16:56:21  lemmster
-added reasonable class hierarchy for panelisteners, viewers...
-
-Revision 1.1  2003/10/22 16:28:52  zet
-common actions
-
 
 */

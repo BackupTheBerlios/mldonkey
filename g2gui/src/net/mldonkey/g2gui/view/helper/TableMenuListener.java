@@ -25,8 +25,8 @@ package net.mldonkey.g2gui.view.helper;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GTableMenuListener;
-import net.mldonkey.g2gui.view.viewers.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
+import net.mldonkey.g2gui.view.viewers.table.GTableViewer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.17 2003/10/29 16:56:21 lemmster Exp $
+ * @version $Id: TableMenuListener.java,v 1.18 2003/10/31 07:24:01 zet Exp $
  *
  */
 public abstract class TableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -226,6 +226,17 @@ public abstract class TableMenuListener extends GTableMenuListener implements IS
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.18  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.17  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

@@ -25,19 +25,17 @@ package net.mldonkey.g2gui.view.server;
 import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.viewers.GTableSorter;
+import net.mldonkey.g2gui.view.viewers.GSorter;
 
 import org.eclipse.jface.viewers.Viewer;
-
-
 /**
  * ServerTableSorter
  *
  *
- * @version $Id: ServerTableSorter.java,v 1.5 2003/10/22 01:37:55 zet Exp $
+ * @version $Id: ServerTableSorter.java,v 1.6 2003/10/31 07:24:01 zet Exp $
  *
  */
-public class ServerTableSorter extends GTableSorter {
+public class ServerTableSorter extends GSorter {
     public ServerTableSorter(ServerTableViewer sTableViewer) {
         super(sTableViewer);
     }
@@ -50,7 +48,7 @@ public class ServerTableSorter extends GTableSorter {
         ServerInfo server1 = (ServerInfo) obj1;
         ServerInfo server2 = (ServerInfo) obj2;
 
-        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ServerTableViewer.NETWORK:
             return compareStrings(server1.getNetwork().getNetworkName(), server2.getNetwork().getNetworkName());
 
@@ -136,6 +134,17 @@ public class ServerTableSorter extends GTableSorter {
 
 /*
 $Log: ServerTableSorter.java,v $
+Revision 1.6  2003/10/31 07:24:01  zet
+fix: filestate filter - put back important isFilterProperty check
+fix: filestate filter - exclusionary fileinfo filters
+fix: 2 new null pointer exceptions (search tab)
+recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
+- all search tab tables are column updated
+regexp helpers in one class
+rework viewers heirarchy
+filter clients table properly
+discovered sync errors and NPEs in upload table... will continue later.
+
 Revision 1.5  2003/10/22 01:37:55  zet
 add column selector to server/search (might not be finished yet..)
 
