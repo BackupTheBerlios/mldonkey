@@ -33,7 +33,6 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.ModifyEvent;
@@ -53,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.29 2003/09/21 09:57:17 lemmster Exp $
+ * @version $Id: Search.java,v 1.30 2003/09/24 05:53:00 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -85,7 +84,7 @@ public abstract class Search implements Observer {
      * @param tabFolder The tabfolder to create the control in
      * @return a Control filled with the content of this obj
      */
-    public abstract Control createTabFolderPage( CTabFolder tabFolder );
+    public abstract Control createTabFolderPage( Composite tabFolder );
 
     /**
      * create a searchquery, fill it and send it to mldonkey
@@ -307,6 +306,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.30  2003/09/24 05:53:00  lemmster
+CTabFolder -> Composite
+
 Revision 1.29  2003/09/21 09:57:17  lemmster
 update the inputText only on change
 

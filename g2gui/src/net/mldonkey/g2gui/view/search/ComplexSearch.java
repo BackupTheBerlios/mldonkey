@@ -32,7 +32,6 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -51,7 +50,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.16 2003/09/21 09:57:01 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.17 2003/09/24 05:53:00 lemmster Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -92,7 +91,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      * @see net.mldonkey.g2gui.view.search.Search#
      * createTabFolderPage(org.eclipse.swt.widgets.TabFolder)
      */
-    public Control createTabFolderPage( CTabFolder tabFolder ) {
+    public Control createTabFolderPage( Composite tabFolder ) {
         return null;
     }
 
@@ -406,6 +405,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.17  2003/09/24 05:53:00  lemmster
+CTabFolder -> Composite
+
 Revision 1.16  2003/09/21 09:57:01  lemmster
 protected -> private
 

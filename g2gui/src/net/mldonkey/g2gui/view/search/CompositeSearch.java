@@ -29,7 +29,6 @@ import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -43,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * CompositeSearch
  *
- * @version $Id: CompositeSearch.java,v 1.7 2003/09/19 15:19:14 lemmster Exp $
+ * @version $Id: CompositeSearch.java,v 1.8 2003/09/24 05:53:00 lemmster Exp $
  *
  */
 public class CompositeSearch extends Search {
@@ -78,7 +77,7 @@ public class CompositeSearch extends Search {
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.search.Search#createTabFolderPage(org.eclipse.swt.custom.CTabFolder)
      */
-    public Control createTabFolderPage( CTabFolder tabFolder ) {
+    public Control createTabFolderPage( Composite tabFolder ) {
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
         GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -164,6 +163,9 @@ public class CompositeSearch extends Search {
 
 /*
 $Log: CompositeSearch.java,v $
+Revision 1.8  2003/09/24 05:53:00  lemmster
+CTabFolder -> Composite
+
 Revision 1.7  2003/09/19 15:19:14  lemmster
 reworked
 

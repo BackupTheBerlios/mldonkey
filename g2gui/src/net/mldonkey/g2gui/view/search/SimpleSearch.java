@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.22 2003/09/19 15:19:14 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.23 2003/09/24 05:53:00 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -63,9 +63,10 @@ public class SimpleSearch extends Search {
 	 * @see net.mldonkey.g2gui.view.search.Search#
 	 * createTabFolderPage(org.eclipse.swt.widgets.TabFolder)
 	 */
-	public Control createTabFolderPage( CTabFolder tabFolder ) {		
+	public Control createTabFolderPage( Composite tabFolder ) {
 		/* set the minimum width so, that the whole title is visible */
-		tabFolder.MIN_TAB_WIDTH = tabFolder.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
+		( ( CTabFolder ) tabFolder ).MIN_TAB_WIDTH =
+				( ( CTabFolder ) tabFolder ).computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
 		/* the input field */
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
@@ -124,6 +125,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.23  2003/09/24 05:53:00  lemmster
+CTabFolder -> Composite
+
 Revision 1.22  2003/09/19 15:19:14  lemmster
 reworked
 
