@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.11 2003/07/29 09:38:24 lemmstercvs01 Exp $ 
+ * @version $Id: GuiTab.java,v 1.12 2003/07/31 14:10:44 lemmstercvs01 Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -140,8 +140,8 @@ public abstract class GuiTab implements Listener, Observer {
 		this.toolButton.setActive( true );
 		/* does the mainwindow already have a statusline */
 		if ( this.mainWindow.statusline != null ) {
-			this.mainWindow.statusline.update( 1, this.getStatusText() );
-			this.mainWindow.statusline.updateTooltip( 1, this.getStatusTip() );
+			this.mainWindow.statusline.update( this.getStatusText() );
+			this.mainWindow.statusline.updateToolTip( this.getStatusTip() );
 		}
 	}
 	
@@ -205,6 +205,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.12  2003/07/31 14:10:44  lemmstercvs01
+statusline.update() changed
+
 Revision 1.11  2003/07/29 09:38:24  lemmstercvs01
 set the statusline
 
