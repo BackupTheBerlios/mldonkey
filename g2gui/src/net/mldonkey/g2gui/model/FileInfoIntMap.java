@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.10 2003/07/04 13:29:15 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.11 2003/07/05 08:58:49 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -113,15 +113,17 @@ public class FileInfoIntMap extends InfoIntMap {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void add( MessageBuffer messageBuffer ) {
-		id = messageBuffer.readInt32();
-		/* go 4bytes back in the MessageBuffer */
-		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
-		if ( this.infoIntMap.containsKey( id ) )
-			this.get( id ).readStream( messageBuffer );
-		else {
-			FileInfo fileInfo = new FileInfo( this.parent );
-			fileInfo.readStream( messageBuffer );
-			this.put( fileInfo.getId(), fileInfo );
+		synchronized( this ) {
+			id = messageBuffer.readInt32();
+			/* go 4bytes back in the MessageBuffer */
+			messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
+			if ( this.infoIntMap.containsKey( id ) )
+				this.get( id ).readStream( messageBuffer );
+			else {
+				FileInfo fileInfo = new FileInfo( this.parent );
+				fileInfo.readStream( messageBuffer );
+				this.put( fileInfo.getId(), fileInfo );
+			}
 		}
 	}
 	
@@ -166,27 +168,32 @@ public class FileInfoIntMap extends InfoIntMap {
 	 * Needs manual refresh() of the tableviewer.
 	 */
 	public void removeObsolete() {
-		List temp = new ArrayList();
-		TIntObjectIterator itr = this.iterator();
-		int collsize = this.size();
-		for ( ; collsize-- > 0;) {
-			itr.advance();
-			FileInfo aFileInfo = ( FileInfo ) itr.value();
-			/* if EnumFileState.DOWNLOADED, remove the fileinfo from this */
-			if ( aFileInfo.getState().getState() == EnumFileState.DOWNLOADED
-				|| aFileInfo.getState().getState() == EnumFileState.CANCELLED ) {
-				temp.add( new Integer( itr.key() ) );
+		synchronized( this ) {
+			List temp = new ArrayList();
+			TIntObjectIterator itr = this.iterator();
+			int collsize = this.size();
+			for ( ; collsize-- > 0;) {
+				itr.advance();
+				FileInfo aFileInfo = ( FileInfo ) itr.value();
+				/* if EnumFileState.DOWNLOADED, remove the fileinfo from this */
+				if ( aFileInfo.getState().getState() == EnumFileState.DOWNLOADED
+					|| aFileInfo.getState().getState() == EnumFileState.CANCELLED ) {
+					temp.add( new Integer( itr.key() ) );
+				}
 			}
-		}
-		Iterator itr2 = temp.iterator();
-		while ( itr2.hasNext() ) {
-			this.remove( ( ( Integer ) itr2.next() ).intValue() );
+			Iterator itr2 = temp.iterator();
+			while ( itr2.hasNext() ) {
+				this.infoIntMap.remove( ( ( Integer ) itr2.next() ).intValue() );
+			}
 		}
 	}
 }
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.11  2003/07/05 08:58:49  lemmstercvs01
+removeObsolete() fixed
+
 Revision 1.10  2003/07/04 13:29:15  lemmstercvs01
 removeObsolete() fixed
 
