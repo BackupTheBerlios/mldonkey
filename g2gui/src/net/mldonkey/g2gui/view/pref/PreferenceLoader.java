@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.36 2003/10/16 16:10:14 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.37 2003/10/16 18:20:18 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -94,15 +94,13 @@ public class PreferenceLoader {
                                         display.getSystemColor( SWT.COLOR_LIST_FOREGROUND ).getRGB() );
         PreferenceConverter.setDefault( preferenceStore, "consoleFontData",
                                         JFaceResources.getTextFont().getFontData() );
-                                        
-                                        
              
 		PreferenceConverter.setDefault( preferenceStore, "downloadsBackgroundColor", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );               
-        PreferenceConverter.setDefault( preferenceStore, "downloadsAvailableFileColor", display.getSystemColor( SWT.COLOR_BLACK ).getRGB() );
+        PreferenceConverter.setDefault( preferenceStore, "downloadsAvailableFileColor", display.getSystemColor( SWT.COLOR_RED ).getRGB() );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsUnAvailableFileColor", new RGB(128,128,128) );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsDownloadedFileColor", display.getSystemColor( SWT.COLOR_BLUE ).getRGB() );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsQueuedFileColor", display.getSystemColor( SWT.COLOR_GRAY ).getRGB() );
-		PreferenceConverter.setDefault( preferenceStore, "downloadsPausedFileColor", display.getSystemColor( SWT.COLOR_RED ).getRGB() );
+		PreferenceConverter.setDefault( preferenceStore, "downloadsPausedFileColor", display.getSystemColor( SWT.COLOR_DARK_RED ).getRGB() );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove20FileColor", new RGB(0,160,0) );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove10FileColor", new RGB(0,140,0) );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove0FileColor", new RGB(0,110,0) );
@@ -250,6 +248,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.37  2003/10/16 18:20:18  zet
+red
+
 Revision 1.36  2003/10/16 16:10:14  zet
 background/font
 
