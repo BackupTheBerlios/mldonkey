@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.22 2003/07/03 21:13:04 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.23 2003/07/04 11:04:24 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -40,17 +40,53 @@ public abstract class Message {
 	 */
 	public static final short S_COREPROTOCOL = 0;
 	/**
+	 * Send Kill Core (value is 3)
+	 */
+	public static final short S_KILL_CORE = 3;
+	/**
+	 * Send Extend Search (value is 4)
+	 */
+	public static final short S_EXTEND_SEARCH = 4;
+	/**
+	 * Send Download Link (value is 8)
+	 */
+	public static final short S_DLLINK = 8;
+	/**
+	 * Send Remove Server (value is 9)
+	 */
+	public static final short S_REMOVE_SERVER = 9;
+	/**
+	 * Send Save Option (value is 10)
+	 */
+	public static final short S_SAVE_OPTION = 10;
+	/**
 	 * Send Remove Download (value is 11)
 	 */
 	public static final short S_REMOVE_DOWNLOAD = 11;
+	/**
+	 * Send Get Server Users (value is 12)
+	 */
+	public static final short S_GET_SERVER_USERS = 12;
 	/**
 	 * Send Save File As (value is 13)
 	 */
 	public static final short S_SAVE_FILE_AS = 13;
 	/**
+	 * Send Connect Server (value is 21)
+	 */
+	public static final short S_CONNECT_SERVER = 21;
+	/**
+	 * Send Disconnect Server (value is 22)
+	 */
+	public static final short S_DISCONNECT_SERVER = 22;
+	/**
 	 * Send Switch Download (value is 23)
 	 */
 	public static final short S_SWITCH_DOWNLOAD = 23;
+	/**
+	 * Send Verify all Chunks (value is 24)
+	 */
+	public static final short S_VERIFY_ALL_CHUNKS = 24;
 	/**
 	 * Send SetOption (value is 29)
 	 */
@@ -59,6 +95,14 @@ public abstract class Message {
 	 * Send Console Message (value is 29)
 	 */
 	public static final short S_CONSOLEMSG = 29;
+	/**
+	 * Send Enable Network (value is 40)
+	 */
+	public static final short S_ENABLE_NETWORK = 40;
+	/**
+	 * Send Search Query (value is 42)
+	 */
+	public static final short S_SEARCH_QUERY = 42;
 	/**
 	 * Send GuiExtension (value is 47)
 	 */
@@ -71,6 +115,14 @@ public abstract class Message {
 	 * Send Password (value is 52)
 	 */
 	public static final short S_PASSWORD = 52;
+	/**
+	 * Send Close Search (value is 53)
+	 */
+	public static final short S_CLOSE_SEARCH = 53;
+	/**
+	 * Send Add Server (value is 54)
+	 */
+	public static final short S_ADD_SERVER = 54;
 	/**
 	 * Receive Core Protocol (value is 0)
 	 */
@@ -307,6 +359,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.23  2003/07/04 11:04:24  lemmstercvs01
+added some opcodes
+
 Revision 1.22  2003/07/03 21:13:04  lemmstercvs01
 some opcodes added
 
