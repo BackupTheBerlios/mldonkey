@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.14 2003/08/30 18:23:51 dek Exp $
+ * @version $Id: G2GuiResources.java,v 1.15 2003/08/31 12:29:32 dek Exp $
  */
 public class G2GuiResources {
 	
@@ -237,7 +237,7 @@ public class G2GuiResources {
 
 	// transparent pngs just don't work with swt 
 	private static Image createTrans(String filename) {
-		return createTrans( filename, Display.getCurrent().getShells()[1].getBackground());
+		return createTrans( filename, Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND ));
 	}
 	private static Image createTrans(String filename, Color color) {
 		return createTransparentImage( ImageDescriptor.createFromFile(MainTab.class, "images/" + filename).createImage(), color);
@@ -249,6 +249,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.15  2003/08/31 12:29:32  dek
+changed getter for background-color (for transparent images)
+
 Revision 1.14  2003/08/30 18:23:51  dek
 added g2guiLogo (png)
 
