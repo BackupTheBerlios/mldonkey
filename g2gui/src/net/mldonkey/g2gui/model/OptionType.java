@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionType
  *
  * @author $user$
- * @version $Id: OptionType.java,v 1.2 2003/06/15 16:18:41 lemmstercvs01 Exp $ 
+ * @version $Id: OptionType.java,v 1.3 2003/06/16 13:18:59 lemmstercvs01 Exp $ 
  *
  */
 public class OptionType implements Information {
@@ -44,7 +44,7 @@ public class OptionType implements Information {
 	}
 
 	/**
-	 * @param byte a byte
+	 * @param b a byte
 	 */
 	public void setTagType( byte b ) {
 		if ( b == 0 )
@@ -63,6 +63,10 @@ public class OptionType implements Information {
 		this.setTagType( messageBuffer.readByte() ); 
 	}
 	
+	/**
+	 * String representation of this object
+	 * @return string A string representation of thi object
+	 */
 	public String toString() {
 		return this.getTagType().toString();
 	}
@@ -71,6 +75,9 @@ public class OptionType implements Information {
 
 /*
 $Log: OptionType.java,v $
+Revision 1.3  2003/06/16 13:18:59  lemmstercvs01
+checkstyle applied
+
 Revision 1.2  2003/06/15 16:18:41  lemmstercvs01
 new interface introduced
 

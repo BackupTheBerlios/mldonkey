@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoList.java,v 1.5 2003/06/15 16:18:41 lemmstercvs01 Exp $$ 
+ * @version $$Id: ClientInfoList.java,v 1.6 2003/06/16 13:18:59 lemmstercvs01 Exp $$ 
  */
 public class ClientInfoList extends InfoMap {
 	/**
@@ -59,7 +59,7 @@ public class ClientInfoList extends InfoMap {
 	
 	/**
 	 * Get a ClientInfo object from this object by there id
-	 * @param id The ClientInfo id
+	 * @param key The ClientInfo id
 	 * @return The ClientInfo object
 	 */
 	public ClientInfo get( int key ) {
@@ -77,6 +77,9 @@ public class ClientInfoList extends InfoMap {
 }
 /*
 $$Log: ClientInfoList.java,v $
+$Revision 1.6  2003/06/16 13:18:59  lemmstercvs01
+$checkstyle applied
+$
 $Revision 1.5  2003/06/15 16:18:41  lemmstercvs01
 $new interface introduced
 $

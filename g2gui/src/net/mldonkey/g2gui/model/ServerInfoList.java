@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoList.java,v 1.3 2003/06/15 16:18:41 lemmstercvs01 Exp $ 
+ * @version $Id: ServerInfoList.java,v 1.4 2003/06/16 13:18:59 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoList extends InfoMap {
@@ -68,16 +68,20 @@ public class ServerInfoList extends InfoMap {
 		return ( ServerInfo ) this.infoMap.get( id );
 	}
 
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.model.InfoList#update(net.mldonkey.g2gui.helper.MessageBuffer)
+	/**
+	 * Does nothing!
+	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	public void update(MessageBuffer messageBuffer) {
+	public void update( MessageBuffer messageBuffer ) {
 		// do nothing
 	}
 }
 
 /*
 $Log: ServerInfoList.java,v $
+Revision 1.4  2003/06/16 13:18:59  lemmstercvs01
+checkstyle applied
+
 Revision 1.3  2003/06/15 16:18:41  lemmstercvs01
 new interface introduced
 

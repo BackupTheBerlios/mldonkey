@@ -31,7 +31,7 @@ import gnu.trove.THashMap;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.1 2003/06/15 16:18:41 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.2 2003/06/16 13:18:59 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfoMap implements InfoCollection {
@@ -73,6 +73,7 @@ public class OptionsInfoMap implements InfoCollection {
 	
 	/**
 	 * String representation of this object
+	 * @return string A string representation of thi object
 	 */
 	public String toString() {
 		String result = new String();
@@ -86,6 +87,9 @@ public class OptionsInfoMap implements InfoCollection {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.2  2003/06/16 13:18:59  lemmstercvs01
+checkstyle applied
+
 Revision 1.1  2003/06/15 16:18:41  lemmstercvs01
 new interface introduced
 

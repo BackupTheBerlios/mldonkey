@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * AddSomeOptionList
  *
  * @author $user$
- * @version $Id: AddSomeOptionList.java,v 1.2 2003/06/15 16:18:41 lemmstercvs01 Exp $ 
+ * @version $Id: AddSomeOptionList.java,v 1.3 2003/06/16 13:18:59 lemmstercvs01 Exp $ 
  *
  */
 public class AddSomeOptionList extends InfoList {
@@ -45,7 +45,7 @@ public class AddSomeOptionList extends InfoList {
 	 * Reads an AddSomeOptionList from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer which is untouched
 	 */
-	public void readStream(MessageBuffer messageBuffer) {
+	public void readStream( MessageBuffer messageBuffer ) {
 		AddSomeOption someOption = new AddSomeOption();
 		someOption.readStream( messageBuffer );
 		this.infoList.add( someOption );
@@ -55,7 +55,7 @@ public class AddSomeOptionList extends InfoList {
 	 * Does nothing!
 	 * @param messageBuffer The MessageBuffer which is untouched
 	 */
-	public void update(MessageBuffer messageBuffer) {
+	public void update( MessageBuffer messageBuffer ) {
 		// do nothing
 	}
 	
@@ -75,6 +75,9 @@ public class AddSomeOptionList extends InfoList {
 
 /*
 $Log: AddSomeOptionList.java,v $
+Revision 1.3  2003/06/16 13:18:59  lemmstercvs01
+checkstyle applied
+
 Revision 1.2  2003/06/15 16:18:41  lemmstercvs01
 new interface introduced
 
