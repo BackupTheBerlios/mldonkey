@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.21 2003/09/18 10:39:21 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.22 2003/09/19 15:19:14 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -86,8 +86,6 @@ public class SimpleSearch extends Search {
 		else
 			this.createMediaControl( group, null, 1 );	
 
-		this.createSearchButton( group );
-
 		return group;		
 	}
 
@@ -115,17 +113,20 @@ public class SimpleSearch extends Search {
 						
 			/* draw the empty search result */
 			new SearchResult( inputText.getText(), tab.getCTabFolder(),
-							  core, query.getSearchIdentifier(), this );	
+							  core, query.getSearchIdentifier(), this.tab );	
 
 			inputText.setText( "" );
 			
-			this.setStopButton();
+			tab.setStopButton();
 		}
 	}
 }
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.22  2003/09/19 15:19:14  lemmster
+reworked
+
 Revision 1.21  2003/09/18 10:39:21  lemmster
 checkstyle
 

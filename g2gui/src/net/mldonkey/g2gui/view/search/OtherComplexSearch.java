@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * OtherComplexSearch
  *
- * @version $Id: OtherComplexSearch.java,v 1.4 2003/09/18 10:39:21 lemmster Exp $ 
+ * @version $Id: OtherComplexSearch.java,v 1.5 2003/09/19 15:19:14 lemmster Exp $ 
  *
  */
 public class OtherComplexSearch extends ComplexSearch {
@@ -107,7 +107,8 @@ public class OtherComplexSearch extends ComplexSearch {
 			this.createMaxMinSizeText( aComposite );
 		
 		this.createResultCombo( aSubComposite3 );
-		this.createSearchButton( aComposite );
+
+		aComposite.setData( this );
 
 		return aComposite;
 	}
@@ -135,12 +136,15 @@ public class OtherComplexSearch extends ComplexSearch {
 		/* draw the empty search result */
 		String aString = inputText.getText();
 		new SearchResult( aText, tab.getCTabFolder(),
-			 core, query.getSearchIdentifier(), this );
+			 core, query.getSearchIdentifier(), this.tab );
 	}
 }
 
 /*
 $Log: OtherComplexSearch.java,v $
+Revision 1.5  2003/09/19 15:19:14  lemmster
+reworked
+
 Revision 1.4  2003/09/18 10:39:21  lemmster
 checkstyle
 

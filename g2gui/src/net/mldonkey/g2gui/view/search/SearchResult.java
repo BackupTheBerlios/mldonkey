@@ -26,6 +26,20 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.model.ResultInfo;
+import net.mldonkey.g2gui.model.ResultInfoIntMap;
+import net.mldonkey.g2gui.view.GuiTab;
+import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.WordFilter;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
+
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -40,6 +54,7 @@ import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -61,29 +76,16 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.comm.EncodeMessage;
-import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.model.ResultInfo;
-import net.mldonkey.g2gui.model.ResultInfoIntMap;
-import net.mldonkey.g2gui.view.MainTab;
-import net.mldonkey.g2gui.view.SearchTab;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
-import net.mldonkey.g2gui.view.helper.WordFilter;
-import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
-
 /**
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.46 2003/09/18 15:30:05 zet Exp $
+ * @version $Id: SearchResult.java,v 1.47 2003/09/19 15:19:14 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
-    private ResultTableMenuListener tableMenuListener;
-	private Search search;
+    private ResultTableMenuListener resultTableMenuListener;
+	private GuiTab search;
 	private MainTab mainTab;
     private CTabFolder cTabFolder;
     private String searchString;
@@ -119,12 +121,12 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      * @param core The core to communicate with
      * @param searchId The identifier to this search
      */
-    protected SearchResult( String aString, CTabFolder parent, CoreCommunication aCore, int searchId, Search aSearch ) {
+    protected SearchResult( String aString, CTabFolder parent, CoreCommunication aCore, int searchId, GuiTab aTab ) {
         this.searchString = aString;
         this.cTabFolder = parent;
         this.searchId = searchId;
         this.core = aCore;
-        this.search = aSearch;
+        this.search = aTab;
 
         /* draw the display */
         this.createContent();
@@ -236,6 +238,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
     private void createContent() {
         /* first we need a CTabFolder item for the search result */
         cTabItem = new CTabItem( cTabFolder, SWT.FLAT );
+        cTabItem.addDisposeListener( this );
         cTabItem.setText( searchString );
         cTabItem.setToolTipText( G2GuiResources.getString( "SR_SEARCHINGFOR" ) + searchString );
         cTabItem.setImage( G2GuiResources.getImage( "SearchSmall" ) );
@@ -249,17 +252,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         /* sets the tabitem on focus */
         cTabFolder.setSelection( cTabItem );
 
-        /* listen for dispose to close this open search */
-        cTabItem.addDisposeListener( new DisposeListener() {
-                public void widgetDisposed( DisposeEvent e ) {
-                    ( ( SearchResult ) cTabItem.getData() ).widgetDisposed( null );
-                }
-            } );
-
         /* display 0 searchresults for the moment */
         SearchTab parent = ( SearchTab ) cTabFolder.getData();
 
-        //parent.setRightLabel( "Results: 0" );
         this.statusline = "Results: 0";
         parent.getMainTab().getStatusline().update( this.statusline );
     }
@@ -280,12 +275,12 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         table.setContentProvider( new ResultTableContentProvider() );
         table.setLabelProvider( new ResultTableLabelProvider() );
         table.setSorter( resultTableSorter );
-        tableMenuListener = 
-        	new ResultTableMenuListener( table, core, cTabItem, this.search );
-        table.addSelectionChangedListener( tableMenuListener );
+        resultTableMenuListener = 
+        	new ResultTableMenuListener( table, core, cTabItem );
+        table.addSelectionChangedListener( resultTableMenuListener );
         MenuManager popupMenu = new MenuManager( "" );
         popupMenu.setRemoveAllWhenShown( true );
-        popupMenu.addMenuListener( tableMenuListener );
+        popupMenu.addMenuListener( resultTableMenuListener );
         table.getTable().setMenu( popupMenu.createContextMenu( table.getTable() ) );
 
         // add optional filters
@@ -333,6 +328,21 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
                 public void menuHidden( MenuEvent e ) {
                 }
             } );
+           
+		/* add a mouse-listener to catch double-clicks */
+		table.getTable().addMouseListener( new MouseListener() {
+			public void mouseDoubleClick( MouseEvent e ) {
+				resultTableMenuListener.downloadSelected();
+			}
+			public void mouseDown( MouseEvent e ) { 
+				if ( stopped )
+					( ( SearchTab ) search ).setContinueButton();
+				else
+					( ( SearchTab ) search ).setStopButton();
+			}
+			public void mouseUp( MouseEvent e ) { }
+		} );
+    
 
         final ToolTipHandler tooltip = new ToolTipHandler( table.getTable().getShell() );
         tooltip.activateHoverHelp( table.getTable() );
@@ -388,6 +398,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      * widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
     public void widgetDisposed( DisposeEvent e ) {
+		/* no longer receive results for this search */
+		this.unregister();
+
         /* dispose the table */
         if ( table != null )
             table.getTable().dispose();
@@ -397,23 +410,10 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         Message message = new EncodeMessage( Message.S_CLOSE_SEARCH, temp );
         message.sendMessage( core );
         message = null;
-
-        /* no longer receive results for this search */
-        this.unregister();
-        
-        /* change the left button */
-        this.search.setSearchButton();
+		
+		( ( SearchTab ) search ).setSearchButton();
     }
     
-	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @return DOCUMENT ME!
-	 */
-    public ResultTableMenuListener getMenuListener() {
-		return this.tableMenuListener;
-    }
-
     /**
      * Emulated tooltip handler
      * Notice that we could display anything in a tooltip besides text and images.
@@ -600,9 +600,11 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         }
     }
 }
-
 /*
 $Log: SearchResult.java,v $
+Revision 1.47  2003/09/19 15:19:14  lemmster
+reworked
+
 Revision 1.46  2003/09/18 15:30:05  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
@@ -674,7 +676,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

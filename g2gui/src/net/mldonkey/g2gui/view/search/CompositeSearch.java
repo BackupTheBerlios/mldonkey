@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * CompositeSearch
  *
- * @version $Id: CompositeSearch.java,v 1.6 2003/09/18 10:39:21 lemmster Exp $
+ * @version $Id: CompositeSearch.java,v 1.7 2003/09/19 15:19:14 lemmster Exp $
  *
  */
 public class CompositeSearch extends Search {
@@ -153,37 +153,20 @@ public class CompositeSearch extends Search {
         
         return mainComposite;
     }
-    
-	/*
-	 *  (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.search.Search#setStopButton()
-	 */
-    public void setStopButton() {
-    	for ( int i = 0; i < size; i++ ) {
-			ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
-			aComplexSearch.setStopButton();
-    	}
-    }
-    
-    /*
-     *  (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.search.Search#setContinueButton()
-     */
-    public void setContinueButton() {
-		for ( int i = 0; i < size; i++ ) {
-			ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
-			aComplexSearch.setContinueButton();
-		}
-    }
 
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
 	 */
-	public void performSearch() { }
+	public void performSearch() {
+		( ( Search ) aStackLayout.topControl.getData() ).performSearch();
+	}
 }
 
 /*
 $Log: CompositeSearch.java,v $
+Revision 1.7  2003/09/19 15:19:14  lemmster
+reworked
+
 Revision 1.6  2003/09/18 10:39:21  lemmster
 checkstyle
 

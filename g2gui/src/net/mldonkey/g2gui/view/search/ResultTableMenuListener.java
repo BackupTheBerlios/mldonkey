@@ -50,8 +50,6 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -59,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.14 2003/09/18 10:39:21 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.15 2003/09/19 15:19:14 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -69,7 +67,6 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	private List selectedResults;
 	private ResultTableContentProvider tableContentProvider;
 	private Clipboard clipboard;
-	private Search search;
 
 	/**
 	 * Creates a new TableMenuListener
@@ -77,27 +74,14 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	 * @param core The CoreCommunication supporting this with data
 	 * @param cTabItem The CTabItem in which the table res
 	 */
-	public ResultTableMenuListener( TableViewer tableViewer, CoreCommunication core, CTabItem cTabItem, Search aSearch ) {
+	public ResultTableMenuListener( TableViewer tableViewer, CoreCommunication core, CTabItem cTabItem ) {
 		super( tableViewer, core );
 		this.cTabItem = cTabItem;
-		this.search = aSearch;
 		this.resultInfoMap = this.core.getResultInfoIntMap();
 		this.tableContentProvider =
 				( ResultTableContentProvider ) this.tableViewer.getContentProvider();
 		this.selectedResults = new ArrayList();
 		this.clipboard = new Clipboard( tableViewer.getTable().getDisplay() );
-		
-		/* add a mouse-listener to catch double-clicks */
-		tableViewer.getTable().addMouseListener( new MouseListener() {
-			public void mouseDoubleClick( MouseEvent e ) {
-				downloadSelected();
-			}
-			public void mouseDown( MouseEvent e ) { 
-				search.setDownloadButton();
-			}
-			public void mouseUp( MouseEvent e ) { }
-		} );
-		
 	}
 
 	/* (non-Javadoc)
@@ -347,6 +331,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.15  2003/09/19 15:19:14  lemmster
+reworked
+
 Revision 1.14  2003/09/18 10:39:21  lemmster
 checkstyle
 

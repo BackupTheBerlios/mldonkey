@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.15 2003/09/18 10:39:21 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.16 2003/09/19 15:19:14 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -143,8 +143,8 @@ public class MusicComplexSearch extends ComplexSearch {
 		
 		this.createResultCombo( aSubComposite3 );
 		
-		this.createSearchButton( aComposite );
-
+		aComposite.setData( this );
+		
         return aComposite;
     }
 
@@ -201,12 +201,15 @@ public class MusicComplexSearch extends ComplexSearch {
         /* draw the empty search result */
         String aString = inputText.getText() + " " + artistText.getText() + " " + albumText.getText();
         new SearchResult( aString.trim(), tab.getCTabFolder(),
-        	 core, query.getSearchIdentifier(), this );
+        	 core, query.getSearchIdentifier(), this.tab );
     }
 }
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.16  2003/09/19 15:19:14  lemmster
+reworked
+
 Revision 1.15  2003/09/18 10:39:21  lemmster
 checkstyle
 

@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.14 2003/09/18 10:39:21 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.15 2003/09/19 15:19:14 lemmster Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -158,7 +158,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
         query.send();
 
 		/* set the button to stop */
-        this.setStopButton();
+        tab.setStopButton();
     }
 
     /**
@@ -400,12 +400,15 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
      */
     public void mouseDown( MouseEvent e ) {
-        setSearchButton();
+        tab.setSearchButton();
     }
 }
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.15  2003/09/19 15:19:14  lemmster
+reworked
+
 Revision 1.14  2003/09/18 10:39:21  lemmster
 checkstyle
 

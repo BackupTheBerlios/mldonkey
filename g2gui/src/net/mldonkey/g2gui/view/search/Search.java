@@ -34,11 +34,10 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -54,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.27 2003/09/18 10:39:21 lemmster Exp $
+ * @version $Id: Search.java,v 1.28 2003/09/19 15:19:14 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -63,9 +62,6 @@ public abstract class Search implements Observer {
     protected SearchQuery query;
 	protected Combo networkCombo;
 	protected Text inputText;
-	protected StackLayout stackLayout;
-	protected Composite composite;
-	protected Button[] buttons;
 	protected String selectedMedia;
 
     /**
@@ -97,94 +93,6 @@ public abstract class Search implements Observer {
     public abstract void performSearch();
 
     /**
-     * DOCUMENT ME!
-     */
-    public void setSearchButton() {
-		this.stackLayout.topControl = this.buttons[ 2 ];
-        this.composite.layout();
-    }
-
-    /**
-     * DOCUMENT ME!
-     */
-    public void setContinueButton() {
-		this.stackLayout.topControl = this.buttons[ 1 ];
-        this.composite.layout();
-    }
-
-    /**
-     * DOCUMENT ME!
-     */
-    public void setStopButton() {
-		this.stackLayout.topControl = this.buttons[ 0 ];
-        this.composite.layout();
-    }
-
-	/**
-	 * DOCUMENT ME!
-	 */
-	public void setDownloadButton() {
-		this.stackLayout.topControl = this.buttons[ 3 ];
-		this.composite.layout();
-	}
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param group DOCUMENT ME!
-     */
-    protected void createSearchButton( Composite group ) {
-        this.stackLayout = new StackLayout();
-        this.composite = new Composite( group, SWT.NONE );
-		GridData gridData = new GridData( GridData.FILL_HORIZONTAL ) ;
-		gridData.horizontalSpan = 2;
-        composite.setLayoutData( gridData );
-		this.composite.setLayout( this.stackLayout );
-        this.buttons = new Button[ 4 ];
-        Button stopButton = new Button( this.composite, SWT.PUSH );
-        stopButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        stopButton.setText( G2GuiResources.getString( "SS_STOP" ) );
-        stopButton.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent event ) {
-                    tab.getSearchResult().stopSearch();
-                    setContinueButton();
-                }
-            } );
-        buttons[ 0 ] = stopButton;
-		Button continueButton = new Button( this.composite, SWT.PUSH );
-        continueButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        continueButton.setText( G2GuiResources.getString( "SS_CONTINUE" ) );
-        continueButton.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent event ) {
-                    tab.getSearchResult().continueSearch();
-                    setStopButton();
-                }
-            } );
-        buttons[ 1 ] = continueButton;
-		Button okButton = new Button( this.composite, SWT.PUSH );
-		okButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        okButton.setText( G2GuiResources.getString( "SS_SEARCH" ) );
-        okButton.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent event ) {
-                    performSearch();
-                }
-            } );
-        buttons[ 2 ] = okButton;
-		Button downloadButton = new Button( this.composite, SWT.PUSH );
-		downloadButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-		downloadButton.setText( "Download" );
-		downloadButton.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					tab.getSearchResult().getMenuListener().downloadSelected();
-				}
-			} );
-		buttons[ 3 ] = downloadButton;
-        
-        
-		this.stackLayout.topControl = buttons[ 2 ];
-	}
-
-    /**
      * Creates a blank input field for search strings
      * @param group The Group to display the box in
      * @param aString The Box header
@@ -201,15 +109,9 @@ public abstract class Search implements Observer {
         Text aText = new Text( group, SWT.SINGLE | SWT.BORDER );
         aText.setLayoutData( gridData );
         aText.setFont( JFaceResources.getTextFont() );
-        aText.addMouseListener( new MouseListener() {
-            public void mouseDoubleClick( MouseEvent e ) { }
-			public void mouseUp( MouseEvent e ) { }
-            public void mouseDown( MouseEvent e ) {
-                    setSearchButton();
-            }
-        } );
         aText.addKeyListener( new KeyAdapter() {
             public void keyPressed( KeyEvent e ) {
+            	tab.setSearchButton();
                 if ( e.character == SWT.CR )
             		performSearch();
             }
@@ -223,39 +125,39 @@ public abstract class Search implements Observer {
     
     protected void createMediaControl( Composite group, String title, int style ) {
 		if ( style == 0 ) {
-		String[] items = { 
-					G2GuiResources.getString( "SS_ALL" ), 
-					G2GuiResources.getString( "SS_AUDIO" ),
-					G2GuiResources.getString( "SS_VIDEO" ),
-					G2GuiResources.getString( "SS_IMAGE" ),
-					G2GuiResources.getString( "SS_SOFTWARE" ) 
-		};
+			String[] items = { 
+						G2GuiResources.getString( "SS_ALL" ), 
+						G2GuiResources.getString( "SS_AUDIO" ),
+						G2GuiResources.getString( "SS_VIDEO" ),
+						G2GuiResources.getString( "SS_IMAGE" ),
+						G2GuiResources.getString( "SS_SOFTWARE" ) 
+			};
+				
+			Label fileTypeLabel = new Label( group, SWT.NONE );
+			fileTypeLabel.setText( title );
+			fileTypeLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL ) );
 			
-		Label fileTypeLabel = new Label( group, SWT.NONE );
-		fileTypeLabel.setText( title );
-		fileTypeLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL ) );
-		
-		final Combo fileTypeCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-		fileTypeCombo.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-		fileTypeCombo.setItems( items );
-		fileTypeCombo.select( 0 );
-		fileTypeCombo.addSelectionListener( new SelectionListener() {
-				public void widgetDefaultSelected( SelectionEvent e ) { }
-				public void widgetSelected( SelectionEvent e ) {
-					switch ( fileTypeCombo.getSelectionIndex() ) {
-						case 1: selectedMedia = "Audio"; 
-							break;
-						case 2: selectedMedia = "Video";
-							break;
-						case 3: selectedMedia = "Image";
-							break;
-						case 4: selectedMedia = "Software";
-							break;
-						default: selectedMedia = null;
-							break;
+			final Combo fileTypeCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+			fileTypeCombo.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+			fileTypeCombo.setItems( items );
+			fileTypeCombo.select( 0 );
+			fileTypeCombo.addSelectionListener( new SelectionListener() {
+					public void widgetDefaultSelected( SelectionEvent e ) { }
+					public void widgetSelected( SelectionEvent e ) {
+						switch ( fileTypeCombo.getSelectionIndex() ) {
+							case 1: selectedMedia = "Audio"; 
+								break;
+							case 2: selectedMedia = "Video";
+								break;
+							case 3: selectedMedia = "Image";
+								break;
+							case 4: selectedMedia = "Software";
+								break;
+							default: selectedMedia = null;
+								break;
+						}
 					}
-				}
-			} );	
+				} );	
 		} 
 		else {
 			/* media select */
@@ -269,6 +171,7 @@ public abstract class Search implements Observer {
 			all.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = null;
+					tab.setSearchButton();
 				}	
 			} );
 
@@ -280,6 +183,7 @@ public abstract class Search implements Observer {
 			audio.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Audio";
+					tab.setSearchButton();
 				}	
 			} );
 			
@@ -291,6 +195,7 @@ public abstract class Search implements Observer {
 			video.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Video";
+					tab.setSearchButton();
 				}	
 			} );
 			
@@ -302,6 +207,7 @@ public abstract class Search implements Observer {
 			image.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Image";
+					tab.setSearchButton();
 				}	
 			} );
 			
@@ -313,6 +219,7 @@ public abstract class Search implements Observer {
 			software.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Software";
+					tab.setSearchButton();
 				}	
 			} );
 		}
@@ -338,6 +245,13 @@ public abstract class Search implements Observer {
         
         /* fill the combo with values */
         fillNetworkCombo( this.networkCombo );
+        
+		/* when the combo is modified, set the button to "search" */
+        networkCombo.addModifyListener( new ModifyListener() {
+			public void modifyText( ModifyEvent e ) {
+				tab.setSearchButton();
+			}
+        } );
     }
 
     /**
@@ -393,6 +307,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.28  2003/09/19 15:19:14  lemmster
+reworked
+
 Revision 1.27  2003/09/18 10:39:21  lemmster
 checkstyle
 

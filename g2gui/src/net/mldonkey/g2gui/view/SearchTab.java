@@ -44,14 +44,18 @@ import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
@@ -59,7 +63,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.27 2003/09/18 09:44:57 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.28 2003/09/19 15:19:14 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -69,7 +73,10 @@ public class SearchTab extends GuiTab {
 	private CTabFolder tabFolder;
 	private CTabFolder cTabFolder;
 	private CoreCommunication core;
-
+	private StackLayout stackLayout;
+	private Composite composite;
+	private Button[] buttons;
+	
 	/**
 	 * Create a new Search Tab
 	 * @param gui The parent Tab Page
@@ -133,27 +140,43 @@ public class SearchTab extends GuiTab {
 		CLabel searchCLabel = 
 			CCLabel.createCL( searchViewForm, "TT_SearchButton", "SearchButtonSmallTitlebar" );
 
-		tabFolder = new CTabFolder( searchViewForm, SWT.NONE );
-		tabFolder.setLayoutData( new GridData( GridData.FILL_VERTICAL ) );
-		
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
+		Composite aComposite = new Composite( searchViewForm, SWT.NONE );
+		aComposite.setLayout( gridLayout );
+
+		tabFolder = new CTabFolder( aComposite, SWT.NONE );
+		tabFolder.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+				
 		tabFolder.setSelectionBackground( 
 			new Color[] { tabFolder.getDisplay().getSystemColor( 
 					SWT.COLOR_TITLE_BACKGROUND ), tabFolder.getBackground() }, new int[] { 75 } );
 		tabFolder.setSelectionForeground( 
 			tabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
 				
-		Search[] tabs = this.createTab();
-		for ( int i = 0; i < tabs.length; i++ ) {
+		Search[] searchTabs = this.createTab();
+		for ( int i = 0; i < searchTabs.length; i++ ) {
 			CTabItem item = new CTabItem( tabFolder, SWT.NONE );
-			item.setText( tabs[ i ].getTabName() );
-			item.setControl( tabs[ i ].createTabFolderPage( tabFolder ) );
-			item.setData( tabs[ i ] );			
+			item.setText( searchTabs[ i ].getTabName() );
+			item.setControl( searchTabs[ i ].createTabFolderPage( tabFolder ) );
+			item.setData( searchTabs[ i ] );			
 		}
 		tabFolder.setSelection( 0 );
+
+		// listen for focus to resize the control when the tab gets active		
+		tabFolder.addFocusListener( new FocusListener() {
+			public void focusGained( FocusEvent e ) {
+				//TODO resize CTabItem to fit with the button (any ideas?)
+			}
+			public void focusLost( FocusEvent e ) {
+			}
+		} );
 		
-		searchViewForm.setContent( tabFolder );
+		createSearchButton( aComposite );
+		
+		searchViewForm.setContent( aComposite );
 		searchViewForm.setTopLeft( searchCLabel );
-		
 	}
 	
 
@@ -162,7 +185,6 @@ public class SearchTab extends GuiTab {
 	 */
 	private void createRightGroup() {
 		/* right group */
-		
 		ViewForm searchResultsViewForm = 
 			new ViewForm( mainSash , SWT.BORDER
 			| ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
@@ -190,21 +212,13 @@ public class SearchTab extends GuiTab {
 		/* add a "X" and listen for close event */
 		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
 			public void itemClosed( CTabFolderEvent event ) {
-				CTabItem item = ( CTabItem ) event.item;
-				( ( SearchResult ) item.getData() ).widgetDisposed( null );
-	
-				/* close the tab item */
-				item.dispose();
-	
 				/* set the new statusline */
 				if ( cTabFolder.getItemCount() != 0 ) {
 					SearchResult nResult = ( SearchResult ) cTabFolder.getSelection().getData();
-					//setRightLabel( nResult.getStatusLine() );
 					mainWindow.getStatusline().update( nResult.getStatusLine() );
 					mainWindow.getStatusline().updateToolTip( "" );
 				}
 				else {
-					//setRightLabel( "" );
 					mainWindow.getStatusline().update( "" );
 					mainWindow.getStatusline().updateToolTip( "" );
 				}
@@ -233,15 +247,12 @@ public class SearchTab extends GuiTab {
 				CTabFolder item = ( CTabFolder ) e.widget;
 				if ( item.getSelection() != null ) {
 					SearchResult result = ( SearchResult ) item.getSelection().getData();
-					CTabItem tab = tabFolder.getItem( tabFolder.getSelectionIndex() );
-					Search search = ( Search ) tab.getData();
 					if ( result.isStopped() )
-						search.setContinueButton();
+						setContinueButton();
 					else
-						search.setStopButton();
+						setStopButton();
 				}		
 			}
-
 			public void mouseUp( MouseEvent e ) { }
 		} );
 	}
@@ -274,9 +285,15 @@ public class SearchTab extends GuiTab {
 	/**
 	 * @return The current active <code>SearchResult</code>
 	 */
-	public SearchResult getSearchResult() {
+	private SearchResult getSearchResult() {
 		CTabItem item = cTabFolder.getSelection();
 		SearchResult result = ( SearchResult ) item.getData();
+		return result;
+	}
+	
+	private Search getSearch() {
+		CTabItem item = tabFolder.getSelection();
+		Search result = ( Search ) item.getData();
 		return result;
 	}
 	
@@ -286,10 +303,89 @@ public class SearchTab extends GuiTab {
 	public MainTab getMainTab() {
 		return this.mainWindow;
 	}
+
+	/**
+	 * Set all <code>Button</code> in the <code>Search</code>
+	 * to the search-state
+	 */
+	public void setSearchButton() {
+		this.stackLayout.topControl = this.buttons[ 2 ];
+		this.composite.layout();
+	}
+
+	/**
+	 * Set all <code>Button</code> in the <code>Search</code>
+	 * to the continue-state
+	 */
+	public void setContinueButton() {
+		this.stackLayout.topControl = this.buttons[ 1 ];
+		this.composite.layout();
+	}
+
+	/**
+	 * Set all <code>Button</code> in the <code>Search</code>
+	 * to the stop-state
+	 */
+	public void setStopButton() {
+		this.stackLayout.topControl = this.buttons[ 0 ];
+		this.composite.layout();
+	}
+
+	/**
+	 * DOCUMENT ME!
+	 *
+	 * @param group DOCUMENT ME!
+	 */
+	private void createSearchButton( Composite group ) {
+		this.stackLayout = new StackLayout();
+		this.composite = new Composite( group, SWT.NONE );
+		GridData gridData = new GridData( GridData.FILL_HORIZONTAL ) ;
+		gridData.horizontalSpan = 2;
+		this.composite.setLayoutData( gridData );
+		this.composite.setLayout( stackLayout );
+
+		this.buttons = new Button[ 3 ];
+		Button stopButton = new Button( this.composite, SWT.PUSH );
+		stopButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		stopButton.setText( G2GuiResources.getString( "SS_STOP" ) );
+		stopButton.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent event ) {
+					getSearchResult().stopSearch();
+					setContinueButton();
+				}
+			} );
+		this.buttons[ 0 ] = stopButton;
+
+		Button continueButton = new Button( this.composite, SWT.PUSH );
+		continueButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		continueButton.setText( G2GuiResources.getString( "SS_CONTINUE" ) );
+		continueButton.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent event ) {
+					getSearchResult().continueSearch();
+					setStopButton();
+				}
+			} );
+		this.buttons[ 1 ] = continueButton;
+
+		Button searchButton = new Button( this.composite, SWT.PUSH );
+		searchButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		searchButton.setText( G2GuiResources.getString( "SS_SEARCH" ) );
+		searchButton.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent event ) {
+					getSearch().performSearch();
+				}			
+			} );
+		this.buttons[ 2 ] = searchButton;
+        
+		this.stackLayout.topControl = buttons[ 2 ];
+	}
 }
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.28  2003/09/19 15:19:14  lemmster
+reworked
+
 Revision 1.27  2003/09/18 09:44:57  lemmster
 checkstyle
 
