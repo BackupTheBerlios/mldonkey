@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.24 2003/07/23 17:01:55 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.25 2003/08/01 13:46:24 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -39,6 +39,14 @@ public abstract class Message {
 	 * Send CoreProtocol (value is 0)
 	 */
 	public static final short S_COREPROTOCOL = 0;
+	/**
+	 * Send Connect More (value is 1)
+	 */
+	public static final short S_CONNECT_MORE = 1;
+	/**
+	 * Clean Old (value is 2)
+	 */
+	public static final short S_CLEAN_OLD = 2;
 	/**
 	 * Send Kill Core (value is 3)
 	 */
@@ -88,6 +96,12 @@ public abstract class Message {
 	 */
 	public static final short S_VERIFY_ALL_CHUNKS = 24;
 	/**
+	 * Send Close Search (value is 27)
+	 * The difference between this and 53 is:
+	 * no boolean for forget
+	 */
+	public static final short S_OLD_CLOSE_SEARCH = 27;
+	/**
 	 * Send SetOption (value is 29)
 	 */
 	public static final short S_SET_OPTION = 28;	
@@ -95,6 +109,14 @@ public abstract class Message {
 	 * Send Console Message (value is 29)
 	 */
 	public static final short S_CONSOLEMSG = 29;
+	/**
+	 * Connect Friend (value is 31)
+	 */
+	public static final short S_CONNECT_FRIEND = 31;
+	/**
+	 * Get File Info (value is 37)
+	 */
+	public static final short S_GET_FILE_INFO = 37;
 	/**
 	 * Send Enable Network (value is 40)
 	 */
@@ -104,17 +126,33 @@ public abstract class Message {
 	 */
 	public static final short S_SEARCH_QUERY = 42;
 	/**
+	 * Get Connected Servers (value is 44)
+	 */
+	public static final short S_GET_CONNECTED_SERVERS = 44; 
+	/**
+	 * Send Get Downloading Files (value is 45)
+	 */
+	public static final short S_GET_DOWNLOADING_FILES = 45;
+	/**
+	 * Send Get Downloaded Files (value is 46)
+	 */
+	public static final short S_GET_DOWNLOADED_FILES = 46;
+	/**
 	 * Send GuiExtension (value is 47)
 	 */
 	public static final short S_GUIEXTENSION = 47;
 	/**
-	 * Send Get Downloading Files (value is 45)
+	 * Send Refresh upload Stats (value is 49)
 	 */
-	public static final short S_GETDOWNLOADING_FILES = 45;
+	public static final short S_REFRESH_UPLOAD_STATS = 49;
 	/**
 	 * Sends "add" Download
 	 */
 	public static final short S_DOWNLOAD = 50;
+	/**
+	 * Send Set File Priority (value is 51)
+	 */
+	public static final short S_SET_FILE_PRIO = 51;
 	/**
 	 * Send Password (value is 52)
 	 */
@@ -127,6 +165,10 @@ public abstract class Message {
 	 * Send Add Server (value is 54)
 	 */
 	public static final short S_ADD_SERVER = 54;
+	/**
+	 * Send Message Version (value is 55)
+	 */
+	public static final short S_MESSAGE_VERSION = 55;
 	/**
 	 * Receive Core Protocol (value is 0)
 	 */
@@ -363,6 +405,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.25  2003/08/01 13:46:24  lemmstercvs01
+opcodes added
+
 Revision 1.24  2003/07/23 17:01:55  lemmstercvs01
 added S_DOWNLOAD (opcode 50)
 
