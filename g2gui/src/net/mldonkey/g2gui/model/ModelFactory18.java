@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.model;
 /**
  * ModelFactory18
  *
- * @version $Id: ModelFactory18.java,v 1.2 2003/12/01 16:19:50 lemmster Exp $ 
+ * @version $Id: ModelFactory18.java,v 1.3 2003/12/03 09:22:53 lemmy Exp $ 
  *
  */
 public class ModelFactory18 extends ModelFactory17 {
@@ -43,8 +43,10 @@ public class ModelFactory18 extends ModelFactory17 {
 	public FileInfo getFileInfo() {
 		return new FileInfo18( core );
 	}
+	public NetworkInfo getNetworkInfo() {
+		return new NetworkInfo18( core );
+	}
 	public ClientStats getClientStats() {
-		// should be Singleton
 		if ( clientStats == null )
 			clientStats = new ClientStats18( core );
 		return (ClientStats) clientStats;
@@ -58,6 +60,9 @@ public class ModelFactory18 extends ModelFactory17 {
 
 /*
 $Log: ModelFactory18.java,v $
+Revision 1.3  2003/12/03 09:22:53  lemmy
+create the correct NetworkInfo obj in the factory for Protocol >=18
+
 Revision 1.2  2003/12/01 16:19:50  lemmster
 fix options
 
