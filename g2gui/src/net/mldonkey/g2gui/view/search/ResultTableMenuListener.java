@@ -35,7 +35,8 @@ import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.ColumnSelectorAction;
+import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
+import net.mldonkey.g2gui.view.viewers.actions.WebServicesAction;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -51,7 +52,6 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.19 2003/10/22 14:38:32 dek Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.20 2003/10/22 16:28:52 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -68,11 +68,6 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	private ResultInfoIntMap resultInfoMap;
 	private List selectedResults;
 	private CoreCommunication core;
-	
-	private static final int WS_JIGLE = 1;
-	private static final int WS_BITZI = 2;
-	private static final int WS_FILEDONKEY = 3;
-	private static final int WS_SHAREREACTOR = 4;
 
 	/**
 	 * Creates a new TableMenuListener
@@ -147,12 +142,14 @@ Yet			menuManager.add( webManager );
 			menuManager.add( new Separator() );
 */
 			menuManager.add(new Separator() );
-			MenuManager wsManager = new MenuManager( G2GuiResources.getString( "ST_WEBSERVICES" ) );
-				wsManager.add( new WebServiceAction( WS_BITZI ) );
-				wsManager.add( new WebServiceAction( WS_FILEDONKEY ) );
-				wsManager.add( new WebServiceAction( WS_JIGLE ) );
-				wsManager.add( new WebServiceAction( WS_SHAREREACTOR ) );
-			menuManager.add( wsManager );
+			MenuManager webServicesMenu = new MenuManager( G2GuiResources.getString( "ST_WEBSERVICES" ) );
+			
+				webServicesMenu.add( new WebServicesAction( WebServicesAction.BITZI, selectedResult.getMd4() ) ) ;
+				webServicesMenu.add( new WebServicesAction( WebServicesAction.FILEDONKEY, selectedResult.getMd4() ) ) ;
+				webServicesMenu.add( new WebServicesAction( WebServicesAction.JIGLE, selectedResult.getMd4() ) ) ;
+				webServicesMenu.add( new WebServicesAction( WebServicesAction.SHAREREACTOR, selectedResult.getLink() ) );
+			
+			menuManager.add( webServicesMenu );
 			
 		}
 		
@@ -356,58 +353,13 @@ Yet			menuManager.add( webManager );
 			cTabItem.dispose();
 		}
 	}
-	
-	
-	private class WebServiceAction extends Action {
-    
-		private int type;
-    
-		public WebServiceAction( int type ) {
-			super();
-			this.type = type;
-			switch (type) {
-				case WS_JIGLE:
-					setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_JIGLE_LOOKUP" ) );
-					setImageDescriptor( G2GuiResources.getImageDescriptor( "Jigle" ) );
-					break;
-				case WS_BITZI: 
-					setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_BITZI_LOOKUP" ) );
-					setImageDescriptor( G2GuiResources.getImageDescriptor( "Bitzi" ) );
-					break;
-				case WS_FILEDONKEY:
-					setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_FILEDONKEY_LOOKUP" ) );
-					setImageDescriptor( G2GuiResources.getImageDescriptor( "edonkey" ) );
-					break;
-				case WS_SHAREREACTOR:
-				    setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_SR_FAKECHECK" ) );
-				    setImageDescriptor( G2GuiResources.getImageDescriptor( "ShareReactor" ) );
-				    break;
-    				
-			}
-		}
-    	
-		public void run() {
-			switch (type) {
-				case WS_JIGLE:
-					Program.launch("http://www.jigle.com/search?p=ed2k:" + selectedResult.getMd4());
-					break;
-				case WS_BITZI: 
-					Program.launch("http://bitzi.com/lookup/" + selectedResult.getMd4());
-					break;	
-				case WS_FILEDONKEY:
-					Program.launch("http://www.filedonkey.com/file.html?md4=" + selectedResult.getMd4());	
-				    break;
-				case WS_SHAREREACTOR:
-					Program.launch("http://http://www.sharereactor.com/fakesearch.php?search=" + selectedResult.getLink());	
-					break;  
-			}	
-		}
-	}
-	
 }
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.20  2003/10/22 16:28:52  zet
+common actions
+
 Revision 1.19  2003/10/22 14:38:32  dek
 removed malformed UTF-8 char gcj complains about (was only in comment)
 

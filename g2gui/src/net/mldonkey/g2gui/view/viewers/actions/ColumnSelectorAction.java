@@ -20,9 +20,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-package net.mldonkey.g2gui.view.viewers;
+package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.ColumnSelector;
+import net.mldonkey.g2gui.view.viewers.GTableViewer;
 
 import org.eclipse.jface.action.Action;
 
@@ -30,7 +32,7 @@ import org.eclipse.jface.action.Action;
 /**
  * ColumnSelectorAction
  *
- * @version $Id: ColumnSelectorAction.java,v 1.1 2003/10/22 01:36:59 zet Exp $
+ * @version $Id: ColumnSelectorAction.java,v 1.1 2003/10/22 16:28:52 zet Exp $
  *
  */
 public class ColumnSelectorAction extends Action {
@@ -56,7 +58,8 @@ public class ColumnSelectorAction extends Action {
 
 /*
 $Log: ColumnSelectorAction.java,v $
-Revision 1.1  2003/10/22 01:36:59  zet
-add column selector to server/search (might not be finished yet..)
+Revision 1.1  2003/10/22 16:28:52  zet
+common actions
+
 
 */

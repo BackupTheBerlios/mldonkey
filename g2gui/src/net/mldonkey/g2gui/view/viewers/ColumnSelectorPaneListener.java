@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view.viewers;
 
+import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
+
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 
@@ -29,7 +31,7 @@ import org.eclipse.jface.action.IMenuManager;
 /**
  * ColumnSelectorPaneListener 
  *
- * @version $Id: ColumnSelectorPaneListener.java,v 1.1 2003/10/22 01:36:59 zet Exp $
+ * @version $Id: ColumnSelectorPaneListener.java,v 1.2 2003/10/22 16:28:52 zet Exp $
  *
  */
 public class ColumnSelectorPaneListener implements IMenuListener {
@@ -52,6 +54,9 @@ public class ColumnSelectorPaneListener implements IMenuListener {
 
 /*
 $Log: ColumnSelectorPaneListener.java,v $
+Revision 1.2  2003/10/22 16:28:52  zet
+common actions
+
 Revision 1.1  2003/10/22 01:36:59  zet
 add column selector to server/search (might not be finished yet..)
 
