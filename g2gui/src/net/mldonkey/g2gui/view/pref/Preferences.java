@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.47 2003/12/30 13:48:08 psy Exp $
+ * @version $Id: Preferences.java,v 1.48 2004/01/02 21:22:00 psy Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -113,6 +113,7 @@ public class Preferences extends PreferenceManager {
     /**
      * @param shell the parent shell, where this pref-window has to be opened
      * @param mldonkey the Core we want to configure
+     * @return returns 0 if OK was pressed and 1 when CANCEL was pressed
      */
     public int open(Shell shell, CoreCommunication mldonkey) {
         prefdialog = new PreferenceDialog(shell, this);
@@ -259,6 +260,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.48  2004/01/02 21:22:00  psy
+javadoc
+
 Revision 1.47  2003/12/30 13:48:08  psy
 connection settings improvement
 
