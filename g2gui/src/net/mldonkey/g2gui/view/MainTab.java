@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  * @author $Author: lemmster $
- * @version $Id: MainTab.java,v 1.53 2003/08/23 14:58:38 lemmster Exp $ 
+ * @version $Id: MainTab.java,v 1.54 2003/08/23 15:15:11 lemmster Exp $ 
  *
  */
 public class MainTab implements Observer, ShellListener {
@@ -187,12 +187,12 @@ public class MainTab implements Observer, ShellListener {
 	private void addTabs() {
 		if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
 			this.tabs = new GuiTab[ 6 ];
-			tabs[ 1 ] =	new TransferTab( this );
-			tabs[ 2 ] =	new SearchTab( this );
-			tabs[ 3 ] =	new ServerTab( this );
-			tabs[ 4 ] =	new ConsoleTab( this );
-			tabs[ 5 ] =	new StatisticTab( this );
-			tabs[ 6 ] = new MessagesTab( this );
+			tabs[ 0 ] =	new TransferTab( this );
+			tabs[ 1 ] =	new SearchTab( this );
+			tabs[ 2 ] =	new ServerTab( this );
+			tabs[ 3 ] =	new ConsoleTab( this );
+			tabs[ 4 ] =	new StatisticTab( this );
+			tabs[ 5 ] = new MessagesTab( this );
 		}
 		else {
 			this.tabs = new GuiTab[ 3 ];
@@ -206,7 +206,7 @@ public class MainTab implements Observer, ShellListener {
 		while ( tabIterator.hasNext() ) {
 			GuiTab tempTab = ( GuiTab )  tabIterator.next();
 			/* set the default tab to active */
-			if ( tempTab instanceof SearchTab )									
+			if ( tempTab instanceof TransferTab )									
 				tempTab.setActive();					 
 		}		
 	} 
@@ -495,8 +495,8 @@ public class MainTab implements Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
-Revision 1.53  2003/08/23 14:58:38  lemmster
-cleanup of MainTab, transferTree.* broken
+Revision 1.54  2003/08/23 15:15:11  lemmster
+addTabs() proper
 
 Revision 1.52  2003/08/23 09:56:15  lemmster
 use supertype instead of Core
