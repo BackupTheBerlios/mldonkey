@@ -30,7 +30,6 @@ import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
-import net.mldonkey.g2gui.model.ClientInfoIntMap;
 import net.mldonkey.g2gui.model.ClientMessage;
 import net.mldonkey.g2gui.view.console.Console;
 import net.mldonkey.g2gui.view.friends.FriendsTableContentProvider;
@@ -71,15 +70,13 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.34 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: MessagesTab.java,v 1.35 2003/11/26 07:42:22 zet Exp $
  */
-public class MessagesTab extends GuiTab implements Runnable {
+public class MessagesTab extends GuiTab {
     private CoreCommunication core;
     private CTabFolder cTabFolder;
     private Hashtable openTabs = new Hashtable();
     private CustomTableViewer tableViewer;
-    private long lastTime = 0;
-    private int mustRefresh = 0;
     private CLabel friendsCLabel;
     private CLabel messagesCLabel;
 
@@ -89,7 +86,8 @@ public class MessagesTab extends GuiTab implements Runnable {
         /* associate this tab with the corecommunication */
         this.core = gui.getCore();
         createButton("MessagesButton");
-        core.getClientInfoIntMap().addObserver(this);
+
+        // core.getClientInfoIntMap().addObserver(this);
         createContents(this.subContent);
     }
 
@@ -115,7 +113,8 @@ public class MessagesTab extends GuiTab implements Runnable {
         ViewForm friendsViewForm = WidgetFactory.createViewForm(main);
         Composite friendsComposite = new Composite(friendsViewForm, SWT.NONE);
         friendsComposite.setLayout(new FillLayout());
-        friendsCLabel = WidgetFactory.createCLabel(friendsViewForm, "FR_FRIENDS", "MessagesButtonSmall");
+        friendsCLabel = WidgetFactory.createCLabel(friendsViewForm, "FR_FRIENDS",
+                "MessagesButtonSmall");
         createFriendsTable(friendsComposite);
         friendsViewForm.setTopLeft(friendsCLabel);
         friendsViewForm.setContent(friendsComposite);
@@ -128,7 +127,7 @@ public class MessagesTab extends GuiTab implements Runnable {
         tableViewer = new CustomTableViewer(parent, SWT.NONE | SWT.MULTI);
         tableViewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
         tableViewer.getTable().setHeaderVisible(false);
-        tableViewer.setContentProvider(new FriendsTableContentProvider());
+        tableViewer.setContentProvider(new FriendsTableContentProvider(friendsCLabel));
         tableViewer.setLabelProvider(new FriendsTableLabelProvider());
 
         FriendsTableMenuListener tableMenuListener = new FriendsTableMenuListener(tableViewer,
@@ -141,9 +140,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 
         tableViewer.getTable().setMenu(popupMenu.createContextMenu(tableViewer.getTable()));
         tableViewer.setSorter(new FriendsTableSorter());
-        tableViewer.setInput(core.getClientInfoIntMap().getFriendsList());
-
-        setFriendsLabel();
+        tableViewer.setInput(core.getClientInfoIntMap().getFriendsWeakMap());
 
         /*add default-action to menu (hack, but i didn't find this is menuManager etc.)*/
         Menu menu = tableViewer.getTable().getMenu();
@@ -182,7 +179,8 @@ public class MessagesTab extends GuiTab implements Runnable {
      */
     private void createRightSash(Composite main) {
         ViewForm messagesViewForm = WidgetFactory.createViewForm(main);
-        messagesCLabel = WidgetFactory.createCLabel(messagesViewForm, "FR_TABS", "MessagesButtonSmall");
+        messagesCLabel = WidgetFactory.createCLabel(messagesViewForm, "FR_TABS",
+                "MessagesButtonSmall");
 
         ToolBar messagesToolBar = new ToolBar(messagesViewForm, SWT.RIGHT | SWT.FLAT);
         ToolItem sendItem = new ToolItem(messagesToolBar, SWT.NONE);
@@ -252,56 +250,25 @@ public class MessagesTab extends GuiTab implements Runnable {
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update(final Observable arg0, final Object arg1) {
-        if (arg1 instanceof ClientMessage || arg0 instanceof ClientInfoIntMap) {
-            if (!cTabFolder.isDisposed()) {
+        if (arg1 instanceof ClientMessage) {
+            if (!cTabFolder.isDisposed())
                 cTabFolder.getDisplay().asyncExec(new Runnable() {
                         public void run() {
-                            runUpdate(arg0, arg1);
+                            messageFromClient((ClientMessage) arg1);
                         }
                     });
 
-            }
-        } else if (arg0 instanceof Console) {
+        } else if (arg0 instanceof Console)
             messageToClient((Console) arg0, (String) arg1);
-        }
     }
 
-    public void runUpdate(Observable arg0, Object arg1) {
-        if (arg1 instanceof ClientMessage) {
-            messageFromClient((ClientMessage) arg1);
-        } else if (arg0 instanceof ClientInfoIntMap) {
-            mustRefresh++;
-
-            if (System.currentTimeMillis() > (lastTime + 2000)) {
-                this.run();
-            } else {
-                if (mustRefresh == 1) {
-                    cTabFolder.getDisplay().timerExec(2500, this);
-                }
-            }
-        }
-    }
-
-    public void run() {
-        if (!cTabFolder.isDisposed()) {
-            lastTime = System.currentTimeMillis();
-            tableViewer.refresh();
-            setFriendsLabel();
-            mustRefresh = 0;
-        }
-    }
-
-    public void setFriendsLabel() {
-        friendsCLabel.setText(G2GuiResources.getString("FR_FRIENDS") + ": " +
-            tableViewer.getTable().getItemCount());
-    }
+    
 
     public void setTabsLabel() {
         String extra = "";
 
-        if (cTabFolder.getSelection() != null) {
+        if (cTabFolder.getSelection() != null)
             extra = " -> " + cTabFolder.getSelection().getText();
-        }
 
         messagesCLabel.setText(G2GuiResources.getString("FR_TABS") + ": " + openTabs.size() +
             extra);
@@ -336,13 +303,12 @@ public class MessagesTab extends GuiTab implements Runnable {
             String textMessage;
             ClientInfo clientInfo = core.getClientInfoIntMap().get(message.getId());
 
-            if (clientInfo == null) { // Why don't we have clientInfo for these?
+            if (clientInfo == null)
                 textMessage = getTimeStamp() + message.getId() + ": <unknown>> " +
                     message.getText();
-            } else {
+            else
                 textMessage = getTimeStamp() + message.getId() + ": " + clientInfo.getClientName() +
                     "> " + message.getText();
-            }
 
             sendTabMessage(message.getId(), textMessage);
         } else {
@@ -362,18 +328,16 @@ public class MessagesTab extends GuiTab implements Runnable {
 
             String tabText;
 
-            if (clientInfo == null) {
+            if (clientInfo == null)
                 tabText = "" + message.getId() + ": <unknown>";
-            } else {
+            else
                 tabText = "" + clientInfo.getClientid() + ": " + clientInfo.getClientName();
-            }
 
             String textMessage = getTimeStamp() + tabText + "> " + message.getText();
             CTabItem cTabItem = addCTabItem(message.getId(), "  " + tabText);
 
-            if (cTabFolder.getItemCount() == 1) {
+            if (cTabFolder.getItemCount() == 1)
                 setItemFocus(cTabItem);
-            }
 
             sendTabMessage(message.getId(), textMessage);
             setTabsLabel();
@@ -413,9 +377,8 @@ public class MessagesTab extends GuiTab implements Runnable {
         if (!openTabs.containsKey(new Integer(clientInfo.getClientid()))) {
             String tabText = "  " + clientInfo.getClientid() + ": " + clientInfo.getClientName();
             setItemFocus(addCTabItem(clientInfo.getClientid(), tabText));
-        } else {
+        } else
             cTabFolder.setSelection((CTabItem) openTabs.get(new Integer(clientInfo.getClientid())));
-        }
 
         setTabsLabel();
     }
@@ -443,9 +406,8 @@ public class MessagesTab extends GuiTab implements Runnable {
     public void setActive() {
         super.setActive();
 
-        if (cTabFolder.getSelection() != null) {
+        if (cTabFolder.getSelection() != null)
             setItemFocus(cTabFolder.getSelection());
-        }
     }
 
     /**
@@ -465,6 +427,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.35  2003/11/26 07:42:22  zet
+small changes
+
 Revision 1.34  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
@@ -544,7 +509,7 @@ Revision 1.9  2003/08/23 09:47:52  lemmster
 just rename
 
 Revision 1.8  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.7  2003/08/20 22:18:56  zet
 Viewer updates
