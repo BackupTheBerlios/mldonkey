@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.15 2003/08/31 12:29:32 dek Exp $
+ * @version $Id: G2GuiResources.java,v 1.16 2003/08/31 12:32:56 lemmster Exp $
  */
 public class G2GuiResources {
 	
@@ -200,6 +200,7 @@ public class G2GuiResources {
 		imageRegistry.put( "epRatingFair", createImageDescriptor("ep_rating_fair.gif") );
 		imageRegistry.put( "epRatingGood", createImageDescriptor("ep_rating_good.gif") );
 		imageRegistry.put( "epRatingExcellent", createImageDescriptor("ep_rating_excellent.gif") );
+		imageRegistry.put( "downloaded", createTrans( "downloaded_arrow.png" ) );
 	}
 	
 	/**
@@ -249,6 +250,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.16  2003/08/31 12:32:56  lemmster
+major changes to search
+
 Revision 1.15  2003/08/31 12:29:32  dek
 changed getter for background-color (for transparent images)
 
@@ -280,7 +284,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image

@@ -38,9 +38,10 @@ import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
+
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
@@ -78,7 +79,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.34 2003/08/29 17:33:20 zet Exp $ 
+ * @version $Id: SearchResult.java,v 1.35 2003/08/31 12:32:04 lemmster Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -87,8 +88,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	private String searchString;
 	private CoreCommunication core;
 	private int searchId;
+	private boolean stopped = false;
 	private ResultInfoIntMap results;
-	private CustomTableViewer table;
+	private TableViewer table;
 	private Label label;
 	private CTabItem cTabItem;
 	private TableColumn tableColumn;
@@ -119,7 +121,6 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	protected SearchResult( String aString, CTabFolder parent,
 							 CoreCommunication theCore, int searchId )
 	{
-								 	
 		this.searchString = aString;
 		this.cTabFolder = parent;
 		this.searchId = searchId;
@@ -129,21 +130,35 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		this.createContent();
 		/* register ourself to the core */
 		core.getResultInfoIntMap().addObserver( this );
-			
+	}
+	
+	/**
+	 * stops this search
+	 */
+	public void stopSearch() {
+		this.stopped = true;
+	}
+	
+	/**
+	 * continues a stopped search
+	 */
+	public void continueSearch() {
+		cTabFolder.getDisplay().asyncExec( this );
+		this.stopped = false;
 	}
 	
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, final Object arg ) {
+		if ( this.stopped == true ) return;
+
 		/* if the tab is already disposed, dont update */
 		if ( cTabItem.isDisposed() ) return;
 		
 		/* are we responsible for this update */		
-		
-		if ( ( ( ResultInfoIntMap )arg ).containsKey( searchId ) ) {
-			 	this.results = ( ResultInfoIntMap )arg;			 	
-				cTabFolder.getDisplay().asyncExec( this );
+		if ( ( ( ResultInfoIntMap ) arg ).containsKey( searchId ) ) {
+			cTabFolder.getDisplay().asyncExec( this );
 		}
 	}
 	
@@ -154,34 +169,33 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		/* if the tab is already disposed, dont update */
 		if ( cTabItem.isDisposed() ) return;
 		
-			List list = ( List ) results.get( searchId );
-			if ( table == null ) {
-				/* remove the old label "searching..." */
-				label.dispose();
-				this.createTable();
-				table.setInput( list );				
-				//this.modifyItems();
-				this.setColumnWidth();
-			} 
-			else {
-				/*
-				 * has our result changed: 				
-				 * only refresh the changed items, 
-				 * look at API for refresh(false)
-				 */		
-				if ( list.size() != table.getTable().getItemCount() ) {									
-					//table.refresh( true );
-					mustRefresh++;
-					delayedRefresh();
-				} 					
-					
-			}
+		this.results = this.core.getResultInfoIntMap();
+		
+		List list = ( List ) results.get( searchId );
+		if ( table == null ) {
+			/* remove the old label "searching..." */
+			label.dispose();
+			this.createTable();
+			table.setInput( list );				
+			this.setColumnWidth();
+		} 
+		else {
+			/*
+			 * has our result changed: 				
+			 * only refresh the changed items, 
+			 * look at API for refresh(false)
+			 */		
+			if ( list.size() != table.getTable().getItemCount() ) {									
+				table.refresh();
+//				mustRefresh++;
+//				delayedRefresh();
+			} 					
+		}
 		/* are we active? set the statusline text */
 		if ( cTabFolder.getSelection() == cTabItem ) {
 			SearchTab parent = ( SearchTab ) cTabFolder.getData();
 			int itemCount = table.getTable().getItemCount();
 			this.statusline = "Results: " + itemCount;
-		//	parent.setRightLabel( "Results: " + itemCount );
 			parent.getMainTab().getStatusline().update( this.statusline );
 		}
 	}
@@ -190,13 +204,14 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 * simple attempt to buffer refreshes
 	 */
 	private void delayedRefresh() {
-		if (System.currentTimeMillis() > lastRefreshTime + 2000) {
+		if ( System.currentTimeMillis() > lastRefreshTime + 2000)  {
 			lastRefreshTime = System.currentTimeMillis();
 			table.refresh( true );
 			mustRefresh = 0;
-		} else { // schedule an update so we don't miss one
-			if (mustRefresh == 1) {
-				cTabItem.getDisplay().timerExec(2500, this);
+		}
+		else { // schedule an update so we don't miss one
+			if ( mustRefresh == 1 ) {
+				cTabItem.getDisplay().timerExec( 2500, this );
 			}
 		}
 	}
@@ -250,7 +265,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		cTabItem.setImage( G2GuiResources.getImage( "SearchComplete" ) );
 		
 		/* create the result table */		
-		table = new CustomTableViewer( cTabFolder, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
+		table = new TableViewer( cTabFolder, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
 		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		table.getTable().setLinesVisible( true );
 		table.getTable().setHeaderVisible( true );
@@ -269,11 +284,11 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		
 		
 		// add optional filters
-		if (PreferenceLoader.loadBoolean("searchFilterPornography")) {
-			table.addFilter(new WordFilter(WordFilter.PORNOGRAPHY_FILTER_TYPE));
-			
-		} else if (PreferenceLoader.loadBoolean("searchFilterProfanity")) {
-			table.addFilter(new WordFilter(WordFilter.PROFANITY_FILTER_TYPE));
+		if ( PreferenceLoader.loadBoolean( "searchFilterPornography" ) ) {
+			table.addFilter( new WordFilter( WordFilter.PORNOGRAPHY_FILTER_TYPE ) );
+		}
+		else if ( PreferenceLoader.loadBoolean( "searchFilterProfanity" ) ) {
+			table.addFilter( new WordFilter( WordFilter.PROFANITY_FILTER_TYPE ) );
 		}
 
 			
@@ -300,8 +315,6 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			}
 		} );
 		
-		
-		
 		/*
 		 * add a menulistener to set the first item to default
 		 * sadly not possible with the MenuManager Class
@@ -323,7 +336,6 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		
 		/* set the this table as the new CTabItem Control */
 		cTabItem.setControl( table.getTable() );
-		
 	}
 	
 	/**
@@ -357,6 +369,13 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 */
 	public String getStatusLine() {
 		return this.statusline;
+	}
+	
+	/**
+	 * @return does this search has stopped
+	 */
+	public boolean isStopped() {
+		return stopped;
 	}
 
 	/* (non-Javadoc)
@@ -556,6 +575,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.35  2003/08/31 12:32:04  lemmster
+major changes to search
+
 Revision 1.34  2003/08/29 17:33:20  zet
 remove headerbar
 
@@ -590,7 +612,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

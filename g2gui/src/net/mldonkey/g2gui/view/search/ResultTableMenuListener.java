@@ -45,19 +45,22 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 /**
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.7 2003/08/29 00:54:42 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.8 2003/08/31 12:32:04 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -206,17 +209,47 @@ Yet			menuManager.add( webManager );
 	
 	private void downloadSelected() {				
 		Download download = new Download( core );
+		int counter = 0;
 		for ( int i = 0; i < selectedResults.size(); i++ ) {
 			ResultInfo result = ( ResultInfo ) selectedResults.get( i );
 			download.setPossibleNames( result.getNames() );	
 			download.setResultID( result.getResultID() );
 			download.setForce( false );
-			download.send();
+
+			if ( result.isDownloading() && result.getHistory() ) {
+				Shell shell = ( ( TableViewer ) tableViewer ).getTable().getShell();
+				MessageBox box = new MessageBox( shell, SWT.ICON_WARNING );
+				box.setText( G2GuiResources.getString( "ST_DOWNLOADED_TEXT" ) );
+				box.setMessage( G2GuiResources.getString( "ST_DOWNLOADED_MSG" ) );
+				box.open();
+			}
+			else if ( !result.getHistory() ) {
+				Shell shell = ( ( TableViewer ) tableViewer ).getTable().getShell();
+				MessageBox box = new MessageBox( shell, SWT.ICON_INFORMATION | SWT.YES | SWT.NO );
+				box.setText( G2GuiResources.getString( "ST_HISTORY_TEXT" ) );
+				box.setMessage( G2GuiResources.getString( "ST_HISTORY_MSG" ) );
+				int rc = box.open();
+				if ( rc == SWT.YES ) {
+					download.setForce( true );
+					download.send();
+					result.setDownloading();
+					counter++;
+				}
+			}
+			else {
+				download.send();
+				result.setDownloading();
+				counter++;
+			}
 		}
 		download = null;
-		String statusline = "Started download: " + selectedResults.size();
+		/* update the statusline */
+		String statusline = G2GuiResources.getString( "ST_STARTED_DOWNLOADS" ) + counter;
 		SearchTab parent = ( SearchTab ) cTabItem.getParent().getData();
-		parent.getMainTab().getStatusline().update( statusline );
+		parent.getMainTab().getStatusline().update( statusline );	
+		/* update the downloaded tableitems */
+		if ( counter > 0 )
+			tableViewer.refresh();
 	}
 		
 	private class DownloadAction extends Action {
@@ -311,6 +344,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.8  2003/08/31 12:32:04  lemmster
+major changes to search
+
 Revision 1.7  2003/08/29 00:54:42  zet
 Move wordFilter public
 

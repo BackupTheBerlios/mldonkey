@@ -40,6 +40,8 @@ import org.eclipse.swt.custom.CTabItem;
 
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -50,7 +52,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.17 2003/08/29 19:09:25 dek Exp $ 
+ * @version $Id: SearchTab.java,v 1.18 2003/08/31 12:32:04 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -81,7 +83,7 @@ public class SearchTab extends GuiTab {
 	 * Create all tabs we want to display inside the TabFolder
 	 * @return The tabs to display
 	 */	
-	public Search[] createTab() {
+	private Search[] createTab() {
 		return new Search[] {
 			new SimpleSearch( core, this ),
 			new AlbumSearch( core, this ),
@@ -117,7 +119,7 @@ public class SearchTab extends GuiTab {
 			item.setControl( tabs[ i ].createTabFolderPage( tabFolder ) );
 			item.setData( tabs[ i ] );			
 		}
-		tabFolder.setSelection(0);
+		tabFolder.setSelection( 0 );
 	}
 	
 
@@ -166,12 +168,30 @@ public class SearchTab extends GuiTab {
 				CTabFolder item = ( CTabFolder ) e.widget;
 				if ( item.getSelection() != null ) {
 					SearchResult result = ( SearchResult ) item.getSelection().getData();
-					//setRightLabel( result.getStatusLine() );
 					mainWindow.getStatusline().update( result.getStatusLine() );
 					mainWindow.getStatusline().updateToolTip( "" );
 				}
 			}
-		} );	
+		} );
+		
+		cTabFolder.addMouseListener( new MouseListener() {
+			public void mouseDoubleClick( MouseEvent e ) { }
+
+			public void mouseDown( MouseEvent e ) {
+				CTabFolder item = ( CTabFolder ) e.widget;
+				if ( item.getSelection() != null ) {
+					SearchResult result = ( SearchResult ) item.getSelection().getData();
+					CTabItem tab = tabFolder.getItem( tabFolder.getSelectionIndex() );
+					Search search = ( Search ) tab.getData();
+					if ( result.isStopped() )
+						search.setContinueButton();
+					else
+						search.setStopButton();
+				}		
+			}
+
+			public void mouseUp( MouseEvent e ) { }
+		} );
 	}
 
 	/* (non-Javadoc)
@@ -199,6 +219,12 @@ public class SearchTab extends GuiTab {
 		return cTabFolder;
 	}
 	
+	public SearchResult getSearchResult() {
+		CTabItem item = cTabFolder.getSelection();
+		SearchResult result = ( SearchResult ) item.getData();
+		return result;
+	}
+	
 	/**
 	 * @return The parent maintab window
 	 */
@@ -209,6 +235,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.18  2003/08/31 12:32:04  lemmster
+major changes to search
+
 Revision 1.17  2003/08/29 19:09:25  dek
 new look'n feel
 
@@ -222,7 +251,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

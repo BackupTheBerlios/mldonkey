@@ -37,12 +37,12 @@ import org.eclipse.swt.graphics.Image;
  * ResultTableLabelProvider
  *
  *
- * @version $Id: ResultTableLabelProvider.java,v 1.15 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.16 2003/08/31 12:32:04 lemmster Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
 	
-	private Color alreadyDownloadedColor = new Color(null, 41, 174, 57);
+	private Color alreadyDownloadedColor = new Color( null, 41, 174, 57 );
 	
 
 	/* (non-Javadoc)
@@ -50,15 +50,17 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 	 * getColumnImage(java.lang.Object, int)
 	 */
 	public Image getColumnImage( Object arg0, int arg1 ) {
-		if (arg0 instanceof ResultInfo) {
+		if ( arg0 instanceof ResultInfo ) {
 			ResultInfo resultInfo = ( ResultInfo ) arg0;
-			if (arg1 == 0)
+			if ( arg1 == 0 )
 				return G2GuiResources.getNetworkImage( resultInfo.getNetwork().getNetworkType() );
+			else if ( arg1 == 1 && resultInfo.isDownloading() )
+					return G2GuiResources.getImage( "downloaded" );
 			else if (arg1 == 5) {
 				Tag[] tags = resultInfo.getTags();
-				if (tags != null) {					
+				if ( tags != null ) {					
 					Tag aTag = resultInfo.getTags()[ 0 ];
-					return G2GuiResources.getRatingImage(aTag.getValue());
+					return G2GuiResources.getRatingImage( aTag.getValue() );
 				}
 			}
 		}
@@ -108,10 +110,8 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 						return G2GuiResources.getRatingString(aTag.getValue());
 					}
 					else return "";
-					
 				default: 
 					return "";
-			
 			}	
 		}
 		return "";
@@ -166,11 +166,14 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.16  2003/08/31 12:32:04  lemmster
+major changes to search
+
 Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.14  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer

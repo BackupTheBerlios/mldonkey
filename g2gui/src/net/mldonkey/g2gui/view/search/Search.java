@@ -34,32 +34,40 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-
 import org.eclipse.swt.widgets.Text;
 
 /**
  * Search
  *
  *
- * @version $Id: Search.java,v 1.15 2003/08/29 19:09:25 dek Exp $ 
+ * @version $Id: Search.java,v 1.16 2003/08/31 12:32:04 lemmster Exp $ 
  *
  */
 public abstract class Search implements Observer {
 	protected CoreCommunication core;
 	protected SearchTab tab;
 	protected SearchQuery query;
-	
-	private GridData gridData;
-	private Label label;
+	protected Button okButton, stopButton, continueButton;
 	protected Text text;
 	protected Combo combo;
+	private GridData gridData;
+	private Label label;
+	private Composite composite;
+	private StackLayout stackLayout;
+	private Button[] buttons;
 
 	/**
 	 * 
@@ -89,6 +97,65 @@ public abstract class Search implements Observer {
 	 */
 	public abstract void performSearch();
 	
+	
+	public void setSearchButton() {
+		stackLayout.topControl = buttons[ 2 ];
+		composite.layout();
+	}
+	
+	public void setContinueButton() {
+		stackLayout.topControl = buttons[ 1 ];
+		composite.layout();
+	}
+
+	public void setStopButton() {
+		stackLayout.topControl = buttons[ 0 ];
+		composite.layout();
+	}
+	
+
+	protected void createSearchButton( Composite group ) {
+		stackLayout = new StackLayout();
+		composite = new Composite( group, SWT.NONE );
+		composite.setLayout( stackLayout );
+		
+		buttons = new Button[ 3 ];
+
+		stopButton = new Button( composite, SWT.PUSH );
+		stopButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		stopButton.setText( G2GuiResources.getString( "SS_STOP" ) );
+		stopButton.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent event ) {
+				tab.getSearchResult().stopSearch();
+				setContinueButton();
+			}		
+		} );
+		buttons[ 0 ] = stopButton;
+
+		continueButton = new Button( composite, SWT.PUSH );
+		continueButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		continueButton.setText( G2GuiResources.getString( "SS_CONTINUE" ) );
+		continueButton.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent event ) {
+				tab.getSearchResult().continueSearch();
+				setStopButton();
+			}		
+		} );
+		buttons[ 1 ] = continueButton;
+
+		okButton = new Button( composite, SWT.PUSH );
+		okButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		okButton.setText( G2GuiResources.getString( "SS_SEARCH" ) );
+		okButton.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent event ) {
+				performSearch();
+			}		
+		} );
+		buttons[ 2 ] = okButton;
+		
+		stackLayout.topControl = buttons[ 2 ];
+	}
+
 	/**
 	 * Creates a blank input field for search strings
 	 * @param group The Group to display the box in
@@ -119,6 +186,16 @@ public abstract class Search implements Observer {
 		// use JFace font registry (no font leaks...)
 		
 		text.setFont(JFaceResources.getTextFont());
+		
+		text.addMouseListener( new MouseListener() {
+			public void mouseDoubleClick( MouseEvent e ) { }
+
+			public void mouseDown( MouseEvent e ) {
+				setSearchButton();
+			}
+
+			public void mouseUp( MouseEvent e ) { }
+		} );
 		
 		text.addKeyListener( new KeyAdapter() {
 			public void keyPressed( KeyEvent e ) {
@@ -206,6 +283,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.16  2003/08/31 12:32:04  lemmster
+major changes to search
+
 Revision 1.15  2003/08/29 19:09:25  dek
 new look'n feel
 

@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.10 2003/08/29 19:09:25 dek Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.11 2003/08/31 12:32:04 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -145,16 +145,7 @@ public class SimpleSearch extends Search {
 					selectedMedia = "Software";
 				}	
 			} );
-
-			/* search button */
-			ok = new Button( group, SWT.PUSH );
-			ok.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-			ok.setText( G2GuiResources.getString( "SS_SEARCH" ) );
-			ok.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					performSearch();
-				}		
-			} );
+			this.createSearchButton( group );
 		return group;		
 	}
 
@@ -188,12 +179,17 @@ public class SimpleSearch extends Search {
 
 			query = null;
 			text.setText( "" );
+			
+			this.setStopButton();
 		}
 	}
 }
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.11  2003/08/31 12:32:04  lemmster
+major changes to search
+
 Revision 1.10  2003/08/29 19:09:25  dek
 new look'n feel
 
@@ -201,7 +197,7 @@ Revision 1.9  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.8  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.7  2003/08/18 01:42:24  zet
 centralize resource bundle
