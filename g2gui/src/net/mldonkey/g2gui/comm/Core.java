@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.comm;
 
+import gnu.trove.TIntObjectHashMap;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -34,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.42 2003/06/29 18:33:30 dek Exp $ 
+ * @version $Id: Core.java,v 1.43 2003/06/30 07:24:19 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -58,9 +60,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * 
 	 */
 	
-	private SimpleInformation fileAddSources = new FileAddSource(  ),
-						clientStats          = new ClientStats(  ),
-						consoleMessage       = new ConsoleMessage(  );
+	private SimpleInformation fileAddSources = new FileAddSource(),
+						clientStats          = new ClientStats(),
+						consoleMessage       = new ConsoleMessage(),
+						searchResult		 = new SearchResult();
 	/**
 	 * 
 	 */
@@ -73,6 +76,11 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					 optionsInfoMap       = new OptionsInfoMap( ( CoreCommunication )this ),
 					 networkinfoMap       = new NetworkInfoIntMap( ( CoreCommunication )this ),
 					 defineSearchMap      = new DefineSearchMap( ( CoreCommunication )this );
+
+	/**
+	 * 
+	 */
+	private TIntObjectHashMap resultInfo = new TIntObjectHashMap();
 
 	/**
 	 * 
@@ -163,6 +171,18 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					this.defineSearchMap.readStream( messageBuffer );
 					break;		
 
+			case Message.R_RESULT_INFO :
+					ResultInfo result = new ResultInfo();
+					result.readStream( messageBuffer );
+					this.resultInfo.put( result.getResultID(), result );
+					break;
+					
+			case Message.R_SEARCH_RESULT :
+					this.searchResult.readStream( messageBuffer );		
+					this.setChanged();	
+					this.notifyObservers( searchResult );
+					break;
+					
 			case Message.R_OPTIONS_INFO :
 					this.optionsInfoMap.readStream( messageBuffer );				
 					break;
@@ -313,6 +333,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.43  2003/06/30 07:24:19  lemmstercvs01
+some opcodes added
+
 Revision 1.42  2003/06/29 18:33:30  dek
 and removed debugging  system.out.println
 
