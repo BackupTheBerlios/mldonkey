@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  * @author markus
- * @version $Id: State.java,v 1.9 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
+ * @version $Id: State.java,v 1.10 2003/07/05 16:04:34 lemmstercvs01 Exp $ 
  *
  */
 public class State implements SimpleInformation {
@@ -44,30 +44,23 @@ public class State implements SimpleInformation {
 	private int rank;
 	
 	/**
-	 * @return an int
+	 * @return The current rank
 	 */
 	public int getRank() {
 		return rank;
 	}
 
 	/**
-	 * @return a byte
+	 * @return The current state
 	 */
 	public Enum getState() {
 		return state;
 	}
 
 	/**
-	 * @param i an int
-	 */
-	public void setRank( int i ) {
-		rank = i;
-	}
-
-	/**
 	 * @param b a byte
 	 */
-	public void setState( byte b ) {
+	protected void setState( byte b ) {
 		if ( b == 0 )
 			state = EnumState.NOT_CONNECTED;
 		else if ( b == 1 )
@@ -98,7 +91,7 @@ public class State implements SimpleInformation {
 		this.setState( messageBuffer.readByte() );
 		if ( this.getState() == EnumState.CONNECTED_AND_QUEUED
 			 || this.getState() == EnumState.NOT_CONNECTED_WAS_QUEUED )
-			this.setRank( messageBuffer.readInt32() );
+			this.rank = messageBuffer.readInt32();
 	}
 	
 	/**
@@ -112,6 +105,9 @@ public class State implements SimpleInformation {
 
 /*
 $Log: State.java,v $
+Revision 1.10  2003/07/05 16:04:34  lemmstercvs01
+javadoc improved
+
 Revision 1.9  2003/06/24 09:29:57  lemmstercvs01
 Enum more improved
 
