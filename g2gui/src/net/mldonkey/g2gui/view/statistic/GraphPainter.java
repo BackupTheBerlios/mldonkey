@@ -83,13 +83,15 @@ public class GraphPainter {
 			Color graphColor = new Color(null,red,blue,green);
 			drawBoard.setForeground(graphColor);
 			int width = parent.getBounds().width;
-			int height = parent.getBounds().height;
+			int height = parent.getBounds().height-20;
 			int fac = 0;
 			
 
 			StatisticPoint lastPoint = graphs[which].getLast();
 			StatisticPoint actualPoint = lastPoint;
-			int k = 0;
+			
+			int startx = 20;
+			int k = startx;
 			int valueY = 0;
 			while ( (k<=width) & (actualPoint.getPrev()!=null))
 			{
@@ -107,7 +109,18 @@ public class GraphPainter {
 				drawBoard.drawLine(k,height,k,valueY);
 				actualPoint = actualPoint.getPrev();
 				k++;
+
 			}
+			drawBoard.setForeground(new Color(null,0,0,0));
+			drawBoard.drawLine(startx,height+1,width-40,height+1);
+			drawBoard.drawLine(startx,0,startx,height+20);
+			for (int dummy=0;dummy<10;dummy++)
+			{
+				int value = dummy*2;
+				drawBoard.drawText("  " + value,0,height-8-fac*value*10);
+			}
+			
+			
 			double vv = (double)graphs[which].getLast().getValue()/100;
 			
 			
@@ -116,10 +129,10 @@ public class GraphPainter {
 			Color aimColor = new Color(null,0,0,0);
 			drawBoard.setForeground(aimColor);
 			drawBoard.setBackground(new Color(null,255,255,255));
-			drawBoard.fillRoundRectangle(10,textPosition-3,90,20,7,7);
-			drawBoard.drawRoundRectangle(10,textPosition-3,90,20,7,7);
-			drawBoard.drawText("wert: " +vv,0+20,textPosition);
-			drawBoard.drawLine(10,textPosition,0,height - graphs[which].getLast().getValue()/10*fac);
+			drawBoard.fillRoundRectangle(startx+10,textPosition-3,90,20,7,7);
+			drawBoard.drawRoundRectangle(startx+10,textPosition-3,90,20,7,7);
+			drawBoard.drawText("wert: " +vv,startx+20,textPosition);
+			drawBoard.drawLine(startx+10,textPosition,startx,height - graphs[which].getLast().getValue()/10*fac);
 	
 		
 			which++;
