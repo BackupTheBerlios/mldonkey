@@ -38,7 +38,6 @@ import net.mldonkey.g2gui.view.helper.HeaderBarMenuListener;
 import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
 import net.mldonkey.g2gui.view.transfer.DownloadPaneMenuListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
@@ -69,14 +68,14 @@ import org.eclipse.swt.widgets.Label;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.68 2003/10/12 23:14:23 zet Exp $
+ * @version $Id: TransferTab.java,v 1.69 2003/10/16 16:10:05 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
     private CLabel downloadCLabel;
     private CoreCommunication mldonkey;
     private DownloadTableTreeViewer downloadTableTreeViewer = null;
-    private CustomTableViewer clientTableViewer = null;
+    private ClientTableViewer clientTableViewer = null;
     private Composite downloadComposite;
     private MenuManager popupMenuDL, popupMenuUL, popupMenuCL = null;
 	private UploadTableViewer uploadTableViewer;
@@ -129,7 +128,7 @@ public class TransferTab extends GuiTab {
         downloadViewForm.setContent( downloadComposite );
         createUploads( mainSashForm );
         downloadTableTreeViewer =
-            new DownloadTableTreeViewer( downloadComposite, clientTableViewer, mldonkey, this );
+            new DownloadTableTreeViewer( downloadComposite, clientTableViewer.getTableViewer(), mldonkey, this );
         popupMenuDL.addMenuListener( new DownloadPaneMenuListener( downloadTableTreeViewer.getTableTreeViewer(),
                                                                  mldonkey, downloadTableTreeViewer ) );
         mainSashForm.setWeights( new int[] { 1, 1 } );
@@ -227,8 +226,7 @@ public class TransferTab extends GuiTab {
      */
     public void createClientTableViewer( Composite parent, final SashForm parentSash ) {
      
-     	ClientTableViewer cTV = new ClientTableViewer( parent, mldonkey );
-     	clientTableViewer = cTV.getTableViewer();
+     	clientTableViewer = new ClientTableViewer( parent, mldonkey );
         
         Composite bottomBar = new Composite( parent, SWT.NONE );
         GridLayout gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 0, false );
@@ -321,9 +319,10 @@ public class TransferTab extends GuiTab {
     public void updateDisplay() {
         downloadTableTreeViewer.updateDisplay();
         uploadTableViewer.updateDisplay();
-        if ( clientTableViewer != null )
-            clientTableViewer.getTable().setLinesVisible(
-            	PreferenceLoader.loadBoolean( "displayGridLines" ) );
+        if ( clientTableViewer != null ) {
+        	clientTableViewer.updateDisplay();	
+        }
+          
         super.updateDisplay();
     }
 
@@ -369,6 +368,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.69  2003/10/16 16:10:05  zet
+updateDisplay()
+
 Revision 1.68  2003/10/12 23:14:23  zet
 nil
 
