@@ -37,6 +37,10 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
+import org.eclipse.swt.custom.TableTreeItem;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -46,7 +50,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.4 2003/07/14 19:26:40 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.5 2003/07/14 20:13:39 dek Exp $ 
  *
  */
 public class DownloadTable  implements Observer, Runnable {
@@ -74,14 +78,27 @@ public class DownloadTable  implements Observer, Runnable {
 	public DownloadTable( Composite parent, CoreCommunication mldonkey,TransferMain page ) {
 		this.page = page;	
 		downloads = new TIntObjectHashMap();	
-		 tableTree = new TableTree( parent, SWT.NONE );
+		 tableTree = new TableTree( parent, SWT.FULL_SELECTION | SWT.MULTI );
 			Table table = tableTree.getTable();
 			table.setLinesVisible( false );
-			table.setHeaderVisible( true );						
+			table.setHeaderVisible( true );	
+									
 			for ( int i = 0; i < columns.length; i++ ) {
 				TableColumn column = new TableColumn( table, SWT.NONE );
 							column.setText( columns[ i ] );
 			}
+			
+			table.addMouseListener( new MouseListener () {
+			public void mouseDown( MouseEvent e ) {
+				if ( e.button == 3 ) {
+					Point pt = new Point( e.x, e.y );
+					TableTreeItem item = tableTree.getItem( pt );
+					System.out.println(item);
+				}
+			}
+			public void mouseDoubleClick(MouseEvent e) {}
+			public void mouseUp(MouseEvent e) {}
+		});
 			mldonkey.addObserver( this );
 			
 	}
@@ -131,6 +148,9 @@ public class DownloadTable  implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.5  2003/07/14 20:13:39  dek
+now full-row selection, with System.out.println'ing item, on which right-mous-button was clicked
+
 Revision 1.4  2003/07/14 19:26:40  dek
 done some clean.up work, since it seems,as if this view becomes reality..
 
