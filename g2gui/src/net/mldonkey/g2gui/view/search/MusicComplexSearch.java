@@ -28,6 +28,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -42,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.9 2003/09/07 08:21:50 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.10 2003/09/07 16:18:04 zet Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -131,7 +132,9 @@ public class MusicComplexSearch extends ComplexSearch {
 		aSubComposite3.setLayoutData( gridData );
 		
         /* the min and max size text fields */
-        //this.createMinMaxSizeText( aSubComposite3 );
+        if (PreferenceLoader.loadBoolean("useCombo"))
+       this.createMinMaxSizeText( aSubComposite3 );
+       else
         this.createMaxMinSizeText( aComposite );
 		
 		this.createResultCombo( aSubComposite3 );
@@ -191,6 +194,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.10  2003/09/07 16:18:04  zet
+combo
+
 Revision 1.9  2003/09/07 08:21:50  lemmster
 resourcebundle added
 
