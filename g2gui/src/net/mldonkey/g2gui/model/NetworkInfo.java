@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.18 2003/08/10 10:19:58 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.19 2003/08/11 11:23:49 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -137,10 +137,23 @@ public class NetworkInfo extends Parent {
 	 */
 	public boolean hasServers() {
 		/* bittorrent has no servers */
-		if ( this.networkType == Enum.BT ) 
+		if ( this.networkType == Enum.BT
+		|| this.networkType == Enum.FT
+		|| this.networkType == Enum.GNUT ) 
 			return false;
 		/* all others do */	
 		return true;	
+	}
+	
+	/**
+	 * Is this network searchable
+	 * (dummy method for new protocol)
+	 * @return true on searchable
+	 */
+	public boolean isSearchable() {
+		if ( this.networkType == Enum.BT )
+			return false;
+		return true;
 	}
 
 	/**
@@ -320,6 +333,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.19  2003/08/11 11:23:49  lemmstercvs01
+added GNUT and FT to networks without servers and added isSearchable()
+
 Revision 1.18  2003/08/10 10:19:58  lemmstercvs01
 return ONP instead of OFT in getNetworkShortName()
 
