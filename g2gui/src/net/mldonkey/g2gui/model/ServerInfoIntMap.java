@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.2 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.3 2003/06/26 17:57:46 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -91,7 +91,8 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 */
 	public void update( MessageBuffer messageBuffer ) {
 		int id = messageBuffer.readInt32();
-		this.get( id ).update( messageBuffer );
+		if ( this.infoIntMap.contains( id ) )
+			this.get( id ).update( messageBuffer );
 	}
 
 	/**
@@ -111,6 +112,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.3  2003/06/26 17:57:46  lemmstercvs01
+added workaround for bug in core proto
+
 Revision 1.2  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
