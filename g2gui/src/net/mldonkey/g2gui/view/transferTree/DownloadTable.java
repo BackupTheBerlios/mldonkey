@@ -40,11 +40,14 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+
 /**
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.24 2003/07/22 15:57:39 zet Exp $ 
+ * @version $Id: DownloadTable.java,v 1.25 2003/07/28 17:40:19 zet Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
@@ -89,13 +92,21 @@ public class DownloadTable implements Observer, Runnable {
 			//"ID"|"Network"|"Filename"|"Rate"|"Chunks"|"%"|"Downloaded"|"Size"
 			TableColumn column = new TableColumn( table, SWT.NONE );
 			column.setText( columns[ i ] );
+			column.setWidth(MainTab.getStore().getInt("TT_DownloadColumn_" + column.getText() ));
+			column.addDisposeListener(new DisposeListener() {
+				public synchronized void widgetDisposed( DisposeEvent e ) {
+					TableColumn thisColumn =  ( TableColumn ) e.widget;
+					MainTab.getStore().setValue("TT_DownloadColumn_" + thisColumn.getText(), thisColumn.getWidth() );
+				}
+			} );
+							
 			final int columnIndex = i;
 			column.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent e ) {
 					sort( columnIndex );
 				}
 			} );
-			column.pack();
+			if (column.getWidth() == 0) column.pack();
 		}
 		table.addMouseListener( new MouseListener() {
 			public void mouseDown( MouseEvent e ) {
@@ -263,9 +274,10 @@ public class DownloadTable implements Observer, Runnable {
 							new DownloadItem( tableTree, SWT.NONE, fileInfo );
 						downloads.put( fileInfo.getId(), newItem );
 						TableColumn[] cols = tableTree.getTable().getColumns();
-						for ( int i = 0; i < cols.length; i++ ) {
-							cols[ i ].pack();
-						}
+					// This is very slow
+					//	for ( int i = 0; i < cols.length; i++ ) {
+					//		cols[ i ].pack();
+					//	}
 					}
 				} else if ( downloads.containsKey( fileInfo.getId() ) ) {
 					/* remove this file from the downloadList if contained*/
@@ -296,6 +308,9 @@ public class DownloadTable implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.25  2003/07/28 17:40:19  zet
+save column widths
+
 Revision 1.24  2003/07/22 15:57:39  zet
 column pack
 
