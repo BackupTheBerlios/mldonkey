@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  *
- * @version $Id: Console.java,v 1.11 2003/09/03 14:49:07 zet Exp $ 
+ * @version $Id: Console.java,v 1.12 2003/09/16 02:34:16 zet Exp $ 
  *
  */
 public class Console extends Observable implements ControlListener  {	
@@ -81,6 +81,20 @@ public class Console extends Observable implements ControlListener  {
 		copyItem.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				infoDisplay.copy();
+			}
+		});
+		MenuItem selectAll = new MenuItem(popupMenu, SWT.PUSH);
+		selectAll.setText("SelectAll");
+		selectAll.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				infoDisplay.selectAll();
+			}
+		});
+		MenuItem clearItem = new MenuItem(popupMenu, SWT.PUSH);
+		clearItem.setText("Clear");
+		clearItem.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				infoDisplay.replaceTextRange(0,infoDisplay.getText().length(),"");
 			}
 		});
 		
@@ -189,6 +203,9 @@ public class Console extends Observable implements ControlListener  {
 
 /*
 $Log: Console.java,v $
+Revision 1.12  2003/09/16 02:34:16  zet
+selectall/clear menuitems
+
 Revision 1.11  2003/09/03 14:49:07  zet
 optionally spawn core from gui
 
