@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.1 2003/10/22 01:36:59 zet Exp $
+ * @version $Id: ColumnSelector.java,v 1.2 2003/10/24 22:49:04 zet Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -150,10 +150,12 @@ public class ColumnSelector extends Dialog {
 
         rightList = new List(parent, SWT.BORDER | SWT.MULTI);
 
-        // set height
+        // set height in pixels
+		GC gc = new GC(parent);
         GridData gd = new GridData(GridData.FILL_BOTH);
-        int height = restore.getFont().getFontData()[ 0 ].getHeight() + 7;
-        gd.heightHint = (allColumnIDs.length() * height) + 5;
+        int height = gc.getFontMetrics().getHeight() + 7;
+        gc.dispose();
+        gd.heightHint = (allColumnIDs.length() * height);
 
         rightList.setLayoutData(gd);
     }
@@ -174,6 +176,7 @@ public class ColumnSelector extends Dialog {
     public void refreshLists() {
         refreshList(leftColumnIDs, leftList);
         refreshList(rightColumnIDs, rightList);
+        leftList.getParent().layout();
     }
 
     /**
@@ -241,6 +244,9 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.2  2003/10/24 22:49:04  zet
+get fontHeight in pixels, not points
+
 Revision 1.1  2003/10/22 01:36:59  zet
 add column selector to server/search (might not be finished yet..)
 
