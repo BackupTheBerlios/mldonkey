@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.78 2004/03/29 00:06:19 psy Exp $
+ * @version $Id: G2Gui.java,v 1.79 2004/04/05 00:08:16 psy Exp $
  *
  */
 public class G2Gui {
@@ -96,7 +96,7 @@ public class G2Gui {
     private static Display display;
 	private static Shell shell;
     private static ExecConsole execConsole = null;
- 
+    
     /**
      * Starts a new Core and launch the Gui
      * @param args Nothing to put inside
@@ -322,13 +322,10 @@ public class G2Gui {
 			// launch the view
 			Splash.increaseSplashBar("connection to core successfully created");
             new MainWindow(core, shell);
-
+            
             /* after this point, we either relaunch or quit */
             if (!PreferenceLoader.isQuitting())
             	relaunchSelf();
-            else
-            	System.out.println("Shutting down.");
- 
         }
     }
     
@@ -473,11 +470,13 @@ public class G2Gui {
      * relaunch the launch method with killing the old one
      */
     public static void relaunchSelf() {
+    	PreferenceLoader.setRelaunching(true);
+    	
     	if (getCoreConsole() != null) { 
     		getCoreConsole().dispose();
     		execConsole = null;
     	}
-
+    	   	
     	shell.dispose();
     	PreferenceLoader.cleanUp();
     	
@@ -659,6 +658,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.79  2004/04/05 00:08:16  psy
+improved relaunching mechanism a bit
+
 Revision 1.78  2004/03/29 00:06:19  psy
 cosmetics
 
