@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.mldonkey.g2gui.helper.VersionInfo;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -51,7 +52,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.20 2003/10/08 22:24:23 zet Exp $ 
+ * @version $Id: About.java,v 1.21 2003/10/09 09:59:19 lemmster Exp $ 
  *
  */
 public class About extends Dialog {
@@ -61,7 +62,6 @@ public class About extends Dialog {
 	private List linklist = new ArrayList();	
 	private Composite myShell;
 	private Color background = Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND );
-	private final String version = "0.1.1";
 
 	/**
 	 * @param shell were this dialog lives
@@ -183,7 +183,7 @@ public class About extends Dialog {
 			gd.verticalAlignment = GridData.CENTER;
 			gd.horizontalAlignment = GridData.CENTER;
 		info.setLayoutData( gd );		
-		info.setText(  "G2gui v" + version + " is (c) 2003 by the G2gui team, \n" 
+		info.setText(  "G2gui v" + VersionInfo.getVersion() + " is (c) 2003 by the G2gui team, \n" 
 					 + "all of our own java code is released under \n" 
 					 + "the  " );	
 					 	
@@ -245,7 +245,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.20 2003/10/08 22:24:23 zet Exp $ 
+	 * @version $Id: About.java,v 1.21 2003/10/09 09:59:19 lemmster Exp $ 
 	 *
 	 */
 	public class Link {
@@ -297,6 +297,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.21  2003/10/09 09:59:19  lemmster
+get the version number from the centralized class VersionInfo
+
 Revision 1.20  2003/10/08 22:24:23  zet
 include a version #
 
