@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.8 2003/06/27 10:35:53 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.9 2003/07/01 13:31:42 dek Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -56,12 +56,13 @@ public class OptionsInfoMap extends InfoMap {
 	public void readStream( MessageBuffer messageBuffer ) {
 		/*
 		 * List of (String,String)	The list of options with their current value
+		 * 
 		 */
-		short listElem = messageBuffer.readInt16();
-		for ( int i = 0; i < ( listElem / 2 ); i++ ) {
+		short listElem = messageBuffer.readInt16();		
+		for ( int i = 0; i < ( listElem ); i++ ) {
 			OptionsInfo optionsInfo = new OptionsInfo();
 			optionsInfo.readStream( messageBuffer );
-			this.infoMap.put( optionsInfo.getKey(), optionsInfo );
+			this.infoMap.put( optionsInfo.getKey(), optionsInfo );			
 		}
 		
 	}
@@ -98,6 +99,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.9  2003/07/01 13:31:42  dek
+now it does read out the complete Optionslist, not only the first half...
+
 Revision 1.8  2003/06/27 10:35:53  lemmstercvs01
 removed unneeded calls
 
