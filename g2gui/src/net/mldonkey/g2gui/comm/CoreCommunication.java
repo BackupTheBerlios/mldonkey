@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
  * CoreCommunication
  *
  * @author $Author: lemmster $
- * @version $Id: CoreCommunication.java,v 1.33 2003/08/22 20:53:00 lemmster Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.34 2003/08/22 20:54:05 lemmster Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -137,8 +137,10 @@ public interface CoreCommunication extends Runnable {
 	void deleteObserver( Observer obj );
 }
 /*
-$$Log: CoreCommunication.java,v $
-$Revision 1.33  2003/08/22 20:53:00  lemmster
-$just include the log
-$$
+$Log: CoreCommunication.java,v $
+Revision 1.34  2003/08/22 20:54:05  lemmster
+fix for the fix ;o
+
+Revision 1.33  2003/08/22 20:53:00  lemmster
+just include the log
  */
