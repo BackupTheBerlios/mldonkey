@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeView.java,v 1.9 2003/11/27 21:42:33 zet Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.10 2003/11/28 20:52:36 zet Exp $
  *
  */
 public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
@@ -231,20 +231,12 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
         if (advancedMode) {
             boolean b = PreferenceLoader.loadBoolean("displayChunkGraphs");
 
-            if (columnIDs.indexOf(CHUNK_COLUMN) > 0)
-                tableTreeViewer.setChunksColumn(columnIDs.indexOf(CHUNK_COLUMN));
+            tableTreeViewer.closeAllTTE();
+            tableTreeViewer.setChunksColumn(columnIDs.indexOf(CHUNK_COLUMN));
+            tableTreeViewer.setEditors(b);
 
-            if ((b == false) && tableTreeViewer.getEditors()) {
-                tableTreeViewer.closeAllTTE();
-
-                if (columnIDs.indexOf(CHUNK_COLUMN) > 0)
-                    tableTreeViewer.setEditors(b);
-            } else if ((b == true) && !tableTreeViewer.getEditors()) {
-                if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
-                    tableTreeViewer.setEditors(true);
-                    tableTreeViewer.openAllTTE();
-                }
-            }
+            if (b)
+                tableTreeViewer.openAllTTE();
         }
     }
 
@@ -262,6 +254,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
         if (clientView != null)
             return ((DownloadViewFrame) viewFrame).getParentSashForm(false).getMaximizedControl() == null;
         else
+
             return false;
     }
 
@@ -307,6 +300,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
 /*
 $Log: DownloadTableTreeView.java,v $
+Revision 1.10  2003/11/28 20:52:36  zet
+close/reopen tte on set pref
+
 Revision 1.9  2003/11/27 21:42:33  zet
 integrate ViewFrame a little more.. more to come.
 
