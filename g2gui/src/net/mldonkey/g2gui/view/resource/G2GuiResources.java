@@ -46,7 +46,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.51 2003/11/04 20:39:02 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.52 2003/11/04 21:07:39 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -225,10 +225,11 @@ public class G2GuiResources {
 
         for (int i = 0; i < buttonNames.length; i++) {
             reg.put(buttonNames[ i ] + "Button", createRawImage(buttonFiles[ i ] + ".gif"));
-            reg.put(buttonNames[ i ] + "ButtonActive", createActive(buttonFiles[ i ] + ".gif"));
+            reg.put(buttonNames[ i ] + "ButtonActive",
+                createActiveImage(reg.getDescriptor( buttonNames[ i ] + "Button")));
             reg.put(buttonNames[ i ] + "ButtonSmall", createRawImage(buttonFiles[ i ] + "-16.gif"));
             reg.put(buttonNames[ i ] + "ButtonSmallActive",
-                createActive(buttonFiles[ i ] + "-16.gif"));
+                createActiveImage(reg.getDescriptor(buttonNames[ i ] + "ButtonSmall")));
         }
 
         reg.put("MessagesButtonSmallBW", createRawImage("messages-16-bw.gif"));
@@ -379,19 +380,15 @@ public class G2GuiResources {
     private static ImageDescriptor createRawNImage(String filename) {
         return createRawImage(networksDirectory + filename);
     }
-
-    /**
-     * @param filename
-     * @return Image
-     */
-    private static Image createActive(String filename) {
-        return createActiveImage(createRawImage(filename));
-    }
+ 
 }
 
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.52  2003/11/04 21:07:39  zet
+minor
+
 Revision 1.51  2003/11/04 20:39:02  zet
 update for transparent gifs
 
