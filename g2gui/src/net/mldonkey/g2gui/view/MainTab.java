@@ -83,7 +83,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.45 2003/08/20 22:16:33 lemmster Exp $ 
+ * @version $Id: MainTab.java,v 1.46 2003/08/21 10:11:46 dek Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -796,6 +796,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.46  2003/08/21 10:11:46  dek
+removed umlaut for comling java-file with gcj
+
 Revision 1.45  2003/08/20 22:16:33  lemmster
 badconnect is display too. added some icons
 
@@ -996,7 +999,7 @@ Revision 1.13  2003/06/30 21:40:09  dek
 CoolBar created
 
 Revision 1.12  2003/06/27 18:20:44  dek
-für preferences
+preferences
 
 Revision 1.11  2003/06/27 17:14:32  lemmstercvs01
 removed unneeded importer
