@@ -23,15 +23,17 @@
 package net.mldonkey.g2gui.view;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.statusline.LinkEntry;
+import net.mldonkey.g2gui.view.statusline.LinkEntryItem;
 import net.mldonkey.g2gui.view.statusline.NetworkItem;
 import net.mldonkey.g2gui.view.statusline.SpeedItem;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * Statusline, This class handles all the Information that should be visible all the time in a 
@@ -40,15 +42,16 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.10 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: StatusLine.java,v 1.11 2003/08/25 12:24:09 zet Exp $ 
  *
  */
 public class StatusLine {
 	private CoreCommunication core;
 	private Composite composite;
-	private Label label;
+	private CLabel label;
 	private MainTab mainTab;
 	private GridLayout gridLayout;
+	private Composite mainComposite, linkEntryComposite;
 
 	/**
 	 * Creates a new StatusLine obj
@@ -58,10 +61,40 @@ public class StatusLine {
 	public StatusLine( MainTab mainTab ) {
 		this.mainTab = mainTab;
 		this.core = mainTab.getCore();
-		this.composite = new Composite( mainTab.getMainComposite(), SWT.NONE );	
+		
+		mainComposite = new Composite( mainTab.getMainComposite(), SWT.NONE);
+		gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.verticalSpacing = 0;
+		
+		mainComposite.setLayout(gridLayout);
+		mainComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		// This hidden composite contains linkEntry which is displayed 
+		// on demand from linkEntryItem
+		linkEntryComposite = new Composite( mainComposite, SWT.NONE );
+		gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.verticalSpacing = 0;
+
+		linkEntryComposite.setLayout(gridLayout);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.heightHint = 0;
+		linkEntryComposite.setLayoutData(gd);
+		
+		// the linkEntry
+		new LinkEntry(this, this.core, linkEntryComposite);
+				
+		this.composite = new Composite( mainComposite, SWT.NONE );	
 		
 		gridLayout = new GridLayout();
-		gridLayout.numColumns = 3;
+		gridLayout.numColumns = 4;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
 		gridLayout.horizontalSpacing = 0;
@@ -69,17 +102,21 @@ public class StatusLine {
 		this.composite.setLayout( gridLayout);
 		composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );	
 			
-		// why is this one a different height? 
 		/* the left field */
 		new NetworkItem( this, this.core );
 
-		/* the middle field */
+		// the toggle for linkEntry
+		new LinkEntryItem( this, this.core );
+		
+
+		/* the fill field */
 		Composite middle = new Composite( composite, SWT.BORDER );
 		middle.setLayout( new FillLayout() );	
-		middle.setLayoutData( new GridData ( GridData.FILL_BOTH ) );
+		middle.setLayoutData( new GridData ( GridData.FILL_BOTH) );
 
-		label = new Label(middle, SWT.NONE);
+		label = new CLabel(middle, SWT.NONE);
 		label.setText ( "" );
+		
 		
 		/* the right field */
 		new SpeedItem( this, this.core );
@@ -109,6 +146,13 @@ public class StatusLine {
 	public Composite getStatusline() {
 		return composite;
 	}
+	
+	/**
+	 * @return the LinkEntryComposite
+	 */
+	public Composite getLinkEntryComposite() {
+		return linkEntryComposite;
+	}
 	/**
 	 * @return The maintab we are started from
 	 */
@@ -119,6 +163,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.11  2003/08/25 12:24:09  zet
+Toggleable link entry.  It should parse links from pasted HTML as well.
+
 Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 

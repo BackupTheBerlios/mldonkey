@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.7 2003/08/23 15:49:28 lemmster Exp $
+ * @version $Id: G2GuiResources.java,v 1.8 2003/08/25 12:24:09 zet Exp $
  */
 public class G2GuiResources {
 	
@@ -180,6 +180,7 @@ public class G2GuiResources {
 		
 		imageRegistry.put( "DownArrow", createTrans( "down.png" ) );
 		imageRegistry.put( "UpArrow", createTrans( "up.png" ) );
+		imageRegistry.put( "UpArrowBlue", createTrans( "up_blue.png" ) );
 		
 		imageRegistry.put( "SearchSmall", createTrans( "search_small.png" )) ;
 		imageRegistry.put( "SearchComplete", createTrans( "search_complete.png" )) ;
@@ -243,6 +244,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.8  2003/08/25 12:24:09  zet
+Toggleable link entry.  It should parse links from pasted HTML as well.
+
 Revision 1.7  2003/08/23 15:49:28  lemmster
 fix for prefs and refactoring
 
@@ -250,7 +254,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
