@@ -24,10 +24,12 @@ package net.mldonkey.g2gui.view.statusline;
 
 import java.util.ArrayList;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+
 import org.eclipse.swt.widgets.Label;
 
 /**
@@ -36,27 +38,31 @@ import org.eclipse.swt.widgets.Label;
  * It has to be placed in a GridLayout, since it applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.2 2003/06/26 14:11:58 dek Exp $ 
+ * @version $Id: StatusLine.java,v 1.3 2003/06/26 21:11:10 dek Exp $ 
  *
  */
 public class StatusLine {
+	CoreCommunication mldonkey;
 	private Composite statusline;
 	private ArrayList fields;
+	int counter = 0;
 
 	/**
 	 * @param mainComposite the Composite where this status-line finds its place fpr living
 	 */
-	public StatusLine(Composite parent) {
-		fields = new ArrayList();		
+	public StatusLine(Composite parent,CoreCommunication mldonkey) {
+		fields = new ArrayList();	
+		this.mldonkey = mldonkey;
 		this.statusline = new Composite(parent,SWT.NONE);			
 		this.statusline.setLayout(new FillLayout());
 			GridData gridData = new GridData( GridData.FILL_HORIZONTAL );	
 			statusline.setLayoutData( gridData );		
 			
 	addField(new SimpleStatusLineItem(" Connection-Status",SWT.NONE));
-	addField(new SimpleStatusLineItem(" Statistics",SWT.CENTER));
+	addField(new SpeedItem(statusline,this,mldonkey));
 	addField(new SimpleStatusLineItem(" other Information",SWT.NONE));
 	addField(new SimpleStatusLineItem(".....",SWT.NONE));
+	
 	}
 
 	/**
@@ -67,6 +73,13 @@ public class StatusLine {
 		newField.setText(item.getContent());
 		newField.setAlignment(item.getAlignment());
 		this.fields.add(newField);
+		item.setIndex(this.fields.size()-1);
+	}
+	
+	public void update(int index,String content){
+		for (int i = 0; i < fields.size(); i++) {
+			((Label)fields.get(index)).setText(content);			
+		}		
 	}
 	
 	
@@ -78,6 +91,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.3  2003/06/26 21:11:10  dek
+speed is shown
+
 Revision 1.2  2003/06/26 14:11:58  dek
 NPE fixed ;-)
 

@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.5 2003/06/26 14:08:03 dek Exp $ 
+ * @version $Id: Gui.java,v 1.6 2003/06/26 21:11:10 dek Exp $ 
  *
  */
 public class Gui extends ApplicationWindow implements IG2gui, Listener {
@@ -168,8 +168,8 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 		gridData = new GridData( GridData.FILL_BOTH );			
 			pageContainer.setLayoutData( gridData );
 						
-		addTabs();
-		statusline = new StatusLine(mainComposite);					
+		addTabs();		
+		statusline = new StatusLine(mainComposite,mldonkey);					
 		
 		return super.createContents( parent );
 	}
@@ -235,6 +235,9 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.6  2003/06/26 21:11:10  dek
+speed is shown
+
 Revision 1.5  2003/06/26 14:08:03  dek
 statusline created
 

@@ -25,11 +25,9 @@ package net.mldonkey.g2gui.view;
 
 import java.io.IOException;
 import java.net.Socket;
-
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.helper.SocketPool;
 import net.mldonkey.g2gui.view.pref.Preferences;
@@ -38,7 +36,7 @@ import net.mldonkey.g2gui.view.pref.Preferences;
  * G2GuiTest
  *
  * @author $user$
- * @version $Id: Main.java,v 1.4 2003/06/26 12:04:59 dek Exp $ 
+ * @version $Id: Main.java,v 1.5 2003/06/26 21:11:10 dek Exp $ 
  *
  */
 public class Main {
@@ -91,6 +89,9 @@ public class Main {
 
 /*
 $Log: Main.java,v $
+Revision 1.5  2003/06/26 21:11:10  dek
+speed is shown
+
 Revision 1.4  2003/06/26 12:04:59  dek
 pref-dialog accessible in main-window
 

@@ -29,11 +29,12 @@ import org.eclipse.swt.SWT;
  * the statusline.
  *
  * @author $user$
- * @version $Id: StatusLineItem.java,v 1.1 2003/06/26 14:04:59 dek Exp $ 
+ * @version $Id: StatusLineItem.java,v 1.2 2003/06/26 21:11:10 dek Exp $ 
  *
  */
 abstract class StatusLineItem {
-	private String content;
+	protected int position;
+	protected String content;
 	private int alignment = SWT.NONE;
 
 	/**
@@ -83,10 +84,21 @@ abstract class StatusLineItem {
 		alignment = i;
 	}
 
+	/**
+	 * @param i
+	 */
+	public void setIndex(int i) {
+		this.position = i;
+		
+	}
+
 }
 
 /*
 $Log: StatusLineItem.java,v $
+Revision 1.2  2003/06/26 21:11:10  dek
+speed is shown
+
 Revision 1.1  2003/06/26 14:04:59  dek
 Class statusline for easy information display
 
