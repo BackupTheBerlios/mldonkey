@@ -37,6 +37,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -57,7 +58,7 @@ import org.eclipse.swt.widgets.TableItem;
  * 
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.29 2003/09/15 15:32:09 lemmster Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.30 2003/09/16 16:58:03 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -150,16 +151,23 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
 	 */
 	public void menuAboutToShow(IMenuManager menuManager) {
-		fillContextMenu(menuManager);
-	}
-
-	// Build the menu
-	
-	public void fillContextMenu(IMenuManager menuManager) {
 
 		if (selectedFile != null
 		 && selectedFileListContains(EnumFileState.DOWNLOADED))
 		 menuManager.add(new CommitAction());
+
+		if (selectedFile != null
+			&& selectedFile.getState().getState() == EnumFileState.DOWNLOADED) 
+			{
+				MenuManager commitAsSubMenu = new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_AS"));
+			 	
+			 	commitAsSubMenu.add(new CommitAction(true));
+			 	
+			 	for (int i = 0; i < selectedFile.getNames().length; i++) {
+					commitAsSubMenu.add(new CommitAction(selectedFile.getNames()[i]));
+			 	}
+				menuManager.add(commitAsSubMenu);
+		}
 
 		if (selectedFile != null)
 			 menuManager.add(new FileDetailAction());
@@ -278,19 +286,54 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			 }
 		}
 	}
-	
 		
 	class CommitAction extends Action {
+		
+		String commitAs;
+		boolean manualInput = false;
+		
 		public CommitAction() {
-			super();
-			setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT"));
+			super(G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_SELECTED"));
 		}
+		public CommitAction( String commitAs ) {
+			super( commitAs );
+			this.commitAs = commitAs;
+		}
+		public CommitAction( boolean b ) {
+			super(G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_INPUT"));
+			manualInput = b;
+		}
+		
 		public void run() {
-			for (int i = 0; i < selectedFiles.size(); i++) {
-				FileInfo selectedFileInfo = (FileInfo) selectedFiles.get(i);
-				if (selectedFileInfo.getState().getState() == EnumFileState.DOWNLOADED)
-				selectedFileInfo.saveFileAs( selectedFileInfo.getName() );
+			
+			if (commitAs == null && !manualInput) {
+				
+				for (int i = 0; i < selectedFiles.size(); i++) {
+					FileInfo selectedFileInfo = (FileInfo) selectedFiles.get(i);
+					if (selectedFileInfo.getState().getState() == EnumFileState.DOWNLOADED)
+					selectedFileInfo.saveFileAs( selectedFileInfo.getName() );
+				}
+				
+			} else {
+				if (manualInput) {
+					
+					InputDialog inputDialog = new InputDialog( tableTreeViewer.getTableTree().getShell(),
+									G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_AS"),
+									G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_AS"),
+									selectedFile.getName(),
+									null);
+									
+					if (inputDialog.open() == InputDialog.OK) {
+						String newFileName = inputDialog.getValue();
+						if (!newFileName.equals("")) {
+							selectedFile.saveFileAs(newFileName);
+						}
+					}
+				} else {
+					selectedFile.saveFileAs( commitAs );	
+				}
 			}
+
 		}
 	}
 
@@ -391,11 +434,18 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		}
 	}	
 		
+	
+	
+	
+		
 }
 
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.30  2003/09/16 16:58:03  zet
+commit as
+
 Revision 1.29  2003/09/15 15:32:09  lemmster
 reset state of canceled downloads from search [bug #908]
 
@@ -445,7 +495,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/22 14:30:45  lemmster
 verify chunks added
