@@ -20,8 +20,6 @@
  
 package net.mldonkey.g2gui.comm;
 
-import gnu.trove.TIntObjectHashMap;
-
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Observer;
@@ -32,7 +30,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.24 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.25 2003/08/01 20:33:22 zet Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -111,3 +109,6 @@ public interface CoreCommunication {
 	 */
 	void deleteObserver( Observer obj );
 }
+/*
+ * 
+ */
