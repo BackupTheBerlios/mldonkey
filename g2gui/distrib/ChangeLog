@@ -1,5 +1,8 @@
 2003/11/24: 
 	*** Release version 0.2.1 ***
+	
+2003/11/24: z
+	* Search: Display alternative filenames in the tooltip if available
 
 2003/11/24: lemmy
 	* Search: fixed [Bug #1132] search combo retains duplicates
