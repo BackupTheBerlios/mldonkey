@@ -24,12 +24,13 @@ package net.mldonkey.g2gui.view.pref;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * G2GuiDisplayConsole
  *
- * @version $Id: G2GuiDisplayConsole.java,v 1.1 2003/10/15 22:06:13 zet Exp $ 
+ * @version $Id: G2GuiDisplayConsole.java,v 1.2 2003/10/31 23:33:01 zet Exp $ 
  *
  */
 public class G2GuiDisplayConsole extends PreferencePage {
@@ -72,7 +73,8 @@ public class G2GuiDisplayConsole extends PreferencePage {
 				"consoleInputForeground",
 				G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_IFG" ),
 				composite ) );
-
+		
+		if (!SWT.getPlatform().equals("fox")) 
 		setupEditor( 
 			new ExtendedFontFieldEditor2( 
 				"consoleFontData",
@@ -86,6 +88,9 @@ public class G2GuiDisplayConsole extends PreferencePage {
 
 /*
 $Log: G2GuiDisplayConsole.java,v $
+Revision 1.2  2003/10/31 23:33:01  zet
+disable font selector on "fox"
+
 Revision 1.1  2003/10/15 22:06:13  zet
 Split Console/Downloads pref pages.
 
