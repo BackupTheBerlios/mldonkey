@@ -45,7 +45,7 @@ import org.eclipse.swt.program.Program;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.29 2003/11/29 13:03:54 lemmster Exp $
+ * @version $Id: ResultInfo.java,v 1.30 2003/11/30 09:31:26 lemmster Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -341,6 +341,18 @@ public class ResultInfo extends Parent {
     }
     
     /**
+     * @return The length of the longest String in this array
+     */
+    public int getMaxNamesLength() {
+    	int result = 0;
+    	for ( int i = 0; i < getNames().length; i++ ) {
+    		if ( getNames()[ i ].length() > result )
+    			result = getNames()[ i ].length();
+    	}
+    	return result;
+    }
+    
+    /**
      * 
      * @return The alternative names alphabetic ordered
      */
@@ -370,8 +382,13 @@ public class ResultInfo extends Parent {
     			break;
     		}
     		result.append( "\n" );
+    		result.append( " -" );
     		result.append( strings[ i ] );
     	}
+    	// add the title if we contain at least 1 char
+    	if ( result.length() != 0 )
+    		result.insert( 0, "Alt. names:" );
+
     	return result.toString();
     }
     
@@ -687,6 +704,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.30  2003/11/30 09:31:26  lemmster
+ToolTip complete reworked (complete)
+
 Revision 1.29  2003/11/29 13:03:54  lemmster
 ToolTip complete reworked (to be continued)
 

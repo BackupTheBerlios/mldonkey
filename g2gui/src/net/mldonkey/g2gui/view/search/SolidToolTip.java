@@ -24,32 +24,36 @@ package net.mldonkey.g2gui.view.search;
 
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * SolidToolTip
  *
- * @version $Id: SolidToolTip.java,v 1.1 2003/11/29 13:03:54 lemmster Exp $ 
+ * @version $Id: SolidToolTip.java,v 1.2 2003/11/30 09:31:26 lemmster Exp $ 
  *
  */
 public class SolidToolTip extends ToolTip {
 	private StyledText details;
-	private ToolTipHandler handler;
+	
 	/**
 	 * @param aParent
 	 */
-	public SolidToolTip( Composite aParent, ToolTipHandler handler ) {
+	public SolidToolTip( Composite aParent ) {
 		super(aParent);
-		this.handler = handler;
 	}
 
 	/*
@@ -64,18 +68,15 @@ public class SolidToolTip extends ToolTip {
 		shell.setText("result details");
 		shell.setLayout(WidgetFactory.createGridLayout(1, 2, 2, 0, 0, false));
 		shell.setBackground(backGround);
-		shell.addDisposeListener( new DisposeListener() {
-			public void widgetDisposed( DisposeEvent e ) {
-				handler.setLocked( false );
-			}
-		} );
 		
+		// title field
 		this.title = createCLabel( shell );
 		this.title.setImage( aResult.getToolTipImage() );
 		this.title.setText( aResult.getName() );
 		
 		createSeparator( shell );
 
+		// detail field
 		this.details = new StyledText( shell, SWT.NONE );
 		this.details.setForeground(foreGround);
 		this.details.setBackground(backGround);
@@ -83,29 +84,71 @@ public class SolidToolTip extends ToolTip {
 				GridData.VERTICAL_ALIGN_CENTER));
 		this.details.setEditable( false );
 		this.details.setText( aResult.getToolTipString() );
+		Menu popupMenu = new Menu( this.details );
+		MenuItem menuItem = new MenuItem( popupMenu, SWT.PUSH );
+		menuItem.setText( G2GuiResources.getString( "MISC_COPY" ) );
+		menuItem.setImage( G2GuiResources.getImage( "copy" ) );
+		menuItem.addListener( SWT.Selection,
+				new Listener() {
+					public void handleEvent( Event event ) {
+						details.copy();
+					}
+				} );
+
+		menuItem = new MenuItem( popupMenu, SWT.PUSH );
+		menuItem.setText( G2GuiResources.getString( "MISC_SELECT_ALL" ) );
+		menuItem.setImage( G2GuiResources.getImage( "plus" ) );
+		menuItem.addListener( SWT.Selection,
+				new Listener() {
+					public void handleEvent( Event event ) {
+						details.selectAll();
+					}
+				} );
+		this.details.setMenu( popupMenu );
 		
+		// alt names field
 		if ( aResult.getNames().length > 1 ) {
 			createSeparator( shell );
-			this.altNames = new MyList(shell, SWT.H_SCROLL | SWT.V_SCROLL);
+			this.altNames = new MyList(shell, SWT.H_SCROLL | SWT.V_SCROLL, aResult);
 		 	( (MyList) altNames ).add( aResult.getSortedNames() );
 		}
 
 		setupShell( e );
-		handler.setLocked( true );
+		this.shell.forceFocus();
 	}
 	
 	/**
 	 * class MyList 
 	 */
 	private class MyList extends List {
-		public MyList(Composite parent, int style) {
+		private List self;
+		public MyList(Composite parent, int style, ResultInfo result) {
 			super(parent, style);
+			self = this;
 			GridData gridData = new GridData();
-			gridData.heightHint = 50;
-			gridData.widthHint = parent.getBounds().width;
+			gridData.heightHint = 35;
+			gridData.widthHint = (int) (parent.getBounds().width * 0.75);
 			this.setLayoutData(gridData);
 			this.setForeground(foreGround);
 			this.setBackground(backGround);
+			
+			Menu popupMenu = new Menu( this );
+			MenuItem menuItem = new MenuItem( popupMenu, SWT.PUSH );
+			menuItem.setText( G2GuiResources.getString( "MISC_COPY" ) );
+			menuItem.setImage( G2GuiResources.getImage( "copy" ) );
+			menuItem.addListener( SWT.Selection,
+					new Listener() {
+						public void handleEvent( Event event ) {
+							int i = self.getSelectionIndex();
+							if ( i != -1 ) {
+								Clipboard clipboard = new Clipboard( self.getDisplay() );
+								clipboard.setContents( new Object[] { self.getItem( i ) },
+									new Transfer[] { TextTransfer.getInstance() } );
+								clipboard.dispose();						
+							}
+						}
+					} );
+			this.setMenu( popupMenu );
 		}
 		
 		public void add( String[] strings ) {
@@ -126,6 +169,9 @@ public class SolidToolTip extends ToolTip {
 
 /*
 $Log: SolidToolTip.java,v $
+Revision 1.2  2003/11/30 09:31:26  lemmster
+ToolTip complete reworked (complete)
+
 Revision 1.1  2003/11/29 13:03:54  lemmster
 ToolTip complete reworked (to be continued)
 

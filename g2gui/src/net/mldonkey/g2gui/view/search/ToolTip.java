@@ -43,14 +43,13 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ToolTip
  *
- * @version $Id: ToolTip.java,v 1.1 2003/11/29 13:03:54 lemmster Exp $ 
+ * @version $Id: ToolTip.java,v 1.2 2003/11/30 09:31:26 lemmster Exp $ 
  *
  */
 public abstract class ToolTip {
 	protected Shell shell;
 	protected CLabel title;
-	protected Control parent;
-	protected Control altNames;
+	protected Control parent, altNames;
 	
 	protected static Color foreGround;
 	protected static Color backGround;
@@ -117,9 +116,6 @@ public abstract class ToolTip {
 	 * @return
 	 */
 	protected ResultInfo getResult( Event e ) {
-		if ( this instanceof SolidToolTip )
-			System.out.println("");
-		
 		if ( e.widget == null ) return null;
 		Table table = (Table) e.widget;
 		if ( e.x == 0 && e.y == 0 ) return null;
@@ -166,18 +162,23 @@ public abstract class ToolTip {
 	 */
 	protected void setupShell( Event e ) {
 		shell.pack();
+
+		// calculate the location of the shell
+		Point pt = parent.toDisplay( e.x, e.y );
 		Rectangle displayBounds = shell.getDisplay().getBounds();
 		Rectangle shellBounds = shell.getBounds();
-		int x = Math.max( Math.min( e.x, displayBounds.width - shellBounds.width ), 0 );
-		int y = Math.max( Math.min( e.y + 1, displayBounds.height - shellBounds.height ), 0 );
-		shell.setBounds( new Rectangle( x, y, shellBounds.width, shellBounds.height ) );
+		int x = Math.max( Math.min( pt.x, displayBounds.width - shellBounds.width ), 0 );
+		int y = Math.max( Math.min( pt.y, displayBounds.height - shellBounds.height ), 0 );
+		shell.setBounds( new Rectangle( x, y + 10, shellBounds.width, shellBounds.height ) );
 		shell.open();
-		parent.forceFocus();
 	}
 }
 
 /*
 $Log: ToolTip.java,v $
+Revision 1.2  2003/11/30 09:31:26  lemmster
+ToolTip complete reworked (complete)
+
 Revision 1.1  2003/11/29 13:03:54  lemmster
 ToolTip complete reworked (to be continued)
 

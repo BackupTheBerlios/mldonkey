@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * LiquidToolTip
  *
- * @version $Id: LiquidToolTip.java,v 1.1 2003/11/29 13:03:54 lemmster Exp $ 
+ * @version $Id: LiquidToolTip.java,v 1.2 2003/11/30 09:31:26 lemmster Exp $ 
  *
  */
 public class LiquidToolTip extends ToolTip {
@@ -70,16 +70,19 @@ public class LiquidToolTip extends ToolTip {
 
 		if ( aResult.getNames().length > 1 ) {
 			this.altNames = createLabel( shell );
-			( (Label) this.altNames ).setText( "bla\nbla\n" );
+			( (Label) this.altNames ).setText( aResult.getSortedNamesPreview() );
 		}
-
+			
 		createSeparator( shell );
 
-		Label aLabel = (Label) createLabel( shell );
+		Label aLabel = createLabel( shell );
 		aLabel.setFont( JFaceResources.getTextFont() );
 		aLabel.setText( "Press F2 for focus" );
 		
 		setupShell( e );
+		
+		// we need focus on the parent to listen for "F2"
+		parent.forceFocus();
 	}
 
 	/**
@@ -99,6 +102,9 @@ public class LiquidToolTip extends ToolTip {
 
 /*
 $Log: LiquidToolTip.java,v $
+Revision 1.2  2003/11/30 09:31:26  lemmster
+ToolTip complete reworked (complete)
+
 Revision 1.1  2003/11/29 13:03:54  lemmster
 ToolTip complete reworked (to be continued)
 
