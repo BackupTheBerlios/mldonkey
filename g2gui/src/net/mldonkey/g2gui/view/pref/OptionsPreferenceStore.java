@@ -36,7 +36,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
  * as mldonkey itself cares for wrong values... 
  *
  * @author $user$
- * @version $Id: OptionsPreferenceStore.java,v 1.5 2003/08/19 13:08:03 dek Exp $ 
+ * @version $Id: OptionsPreferenceStore.java,v 1.6 2003/08/19 13:08:54 dek Exp $ 
  *
  */
 public class OptionsPreferenceStore implements IPreferenceStore {
@@ -84,7 +84,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	public boolean getDefaultBoolean(String name) {
 		return new Boolean ( ( ( OptionsInfo )input
 							.get( name ) )
-							.defaultValue() ).booleanValue();
+							.getDefaultValue() ).booleanValue();
 	}
 
 	/* (non-Javadoc)
@@ -125,7 +125,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	public String getDefaultString(String name) {
 		return  ( ( OptionsInfo )input
 					.get( name ) )
-					.defaultValue();
+					.getDefaultValue();
 	}
 
 	/* (non-Javadoc)
@@ -326,6 +326,9 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 
 /*
 $Log: OptionsPreferenceStore.java,v $
+Revision 1.6  2003/08/19 13:08:54  dek
+minor fix
+
 Revision 1.5  2003/08/19 13:08:03  dek
 advanced-Options included
 
