@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.34 2003/09/28 17:05:46 zet Exp $
+ * @version $Id: G2Gui.java,v 1.35 2003/09/28 17:26:36 zet Exp $
  *
  */
 public class G2Gui {
@@ -124,10 +124,12 @@ public class G2Gui {
 		else if ( !PreferenceLoader.loadBoolean( "running" ) )
 			launch( args );
 		else {
-			MessageBox alreadyRunning = new MessageBox( new Shell( display ), SWT.ICON_ERROR ) ;
+			MessageBox alreadyRunning = new MessageBox( new Shell( display ),SWT.YES | SWT.NO | SWT.ICON_ERROR ) ;
 			alreadyRunning.setText( G2GuiResources.getString ( "G2_MULTIPLE_WARNING_HEAD"  ) );
 			alreadyRunning.setMessage( G2GuiResources.getString ( "G2_MULTIPLE_WARNING_MESSAGE" ) );
-			alreadyRunning.open();
+			if (alreadyRunning.open() == SWT.YES) {
+				launch( args );
+			} 
 		}        
     }
 
@@ -453,6 +455,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.35  2003/09/28 17:26:36  zet
+Yes/No check on "load if running"...
+
 Revision 1.34  2003/09/28 17:05:46  zet
 hopefully display splashImage on GTK
 
