@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.18 2004/02/05 20:44:43 psy Exp $
+ * @version $Id: GView.java,v 1.19 2004/02/17 22:48:45 psy Exp $
  *
  */
 public abstract class GView {
@@ -246,7 +246,6 @@ public abstract class GView {
     	if (prefCols.length() > 0 && 
     		(prefCols.charAt(prefCols.length()-1) == 
     		(char) (ColumnSelector.MAGIC_NUMBER + columnLabels.length))) {
-    		System.out.println("NON-GTK: Killing bogos column: " + (char) (ColumnSelector.MAGIC_NUMBER + columnLabels.length));
     		return prefCols.substring(0, prefCols.length() - 1);
     	} else
     		return prefCols;
@@ -532,6 +531,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.19  2004/02/17 22:48:45  psy
+removed old debug info
+
 Revision 1.18  2004/02/05 20:44:43  psy
 hopefully fixed dynamic column behaviour under gtk by introducing a
 bogus column.
