@@ -23,6 +23,8 @@
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.view.TransferTab;
@@ -44,6 +46,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
@@ -59,23 +62,27 @@ import java.util.Observer;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.3 2003/11/03 03:08:12 zet Exp $
+ * @version $Id: UploadTableView.java,v 1.5 2003/11/09 02:22:46 zet Exp $
  *
  */
-public class UploadTableView extends GTableView {
+public class UploadTableView extends GTableView implements Observer {
     private static final int NETWORK = 0;
     private static final int BYTES = 1;
     private static final int REQUESTS = 2;
     private static final int NAME = 3;
     private SharedFileInfoIntMap sharedFileInfoIntMap;
+    private CLabel headerCLabel;
+    private long lastTimeStamp;
 
     /**
      * @param parent the place where this table lives
      * @param mldonkey the source of our data
      * @param tab We live on this tab
      */
-    public UploadTableView(Composite parent, CoreCommunication aCore, TransferTab tab) {
+    public UploadTableView(Composite parent, CoreCommunication aCore, TransferTab tab,
+        CLabel headerCLabel) {
         super(parent, aCore);
+        this.headerCLabel = headerCLabel;
 
         preferenceString = "upload";
         columnLabels = new String[] {
@@ -91,6 +98,7 @@ public class UploadTableView extends GTableView {
 
         this.sharedFileInfoIntMap = core.getSharedFileInfoIntMap();
         createContents(parent);
+        core.getClientStats().addObserver(this);
     }
 
     /* (non-Javadoc)
@@ -100,6 +108,33 @@ public class UploadTableView extends GTableView {
         super.createContents(parent);
         sViewer.setInput(this.sharedFileInfoIntMap);
         sViewer.addSelectionChangedListener((UploadTableMenuListener) tableMenuListener);
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update(Observable o, Object obj) {
+        final ClientStats clientStats = (ClientStats) obj;
+
+        if (System.currentTimeMillis() > (lastTimeStamp + 5000)) {
+            lastTimeStamp = System.currentTimeMillis();
+
+            if ((headerCLabel == null) || headerCLabel.isDisposed()) {
+                return;
+            }
+
+            headerCLabel.getDisplay().asyncExec(new Runnable() {
+                    public void run() {
+                        if ((headerCLabel == null) || headerCLabel.isDisposed()) {
+                            return;
+                        }
+
+                        headerCLabel.setText(G2GuiResources.getString("TT_Uploads") + ": " +
+                            clientStats.getNumOfShare() + " (" +
+                            FileInfo.calcStringSize(clientStats.getTotalUp()) + ")");
+                    }
+                });
+        }
     }
 
     /**
@@ -338,6 +373,12 @@ public class UploadTableView extends GTableView {
 
 /*
 $Log: UploadTableView.java,v $
+Revision 1.5  2003/11/09 02:22:46  zet
+*** empty log message ***
+
+Revision 1.4  2003/11/09 02:18:37  zet
+put some info in the headers
+
 Revision 1.3  2003/11/03 03:08:12  zet
 synchronized
 
