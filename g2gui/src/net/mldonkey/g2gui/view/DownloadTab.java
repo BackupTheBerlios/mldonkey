@@ -120,6 +120,7 @@ public class DownloadTab
 
 	public void run() {
 		if(table.getInput()==null) table.setInput(fileInfoMap);
+		if(fileInfoMap.contains(fileInfoMap.getId())) table.update(fileInfoMap.get(fileInfoMap.getId()),null);
 		table.refresh();
 	}
 
@@ -146,7 +147,7 @@ public class DownloadTab
 			}
 			if(item==fakeItem) {
 				String link = "ed2k://|file|"+file.getName()+"|"+file.getSize()+"|"+file.getMd4()+"|/";
-				Program.findProgram(".htm").execute("http:///edonkeyfakes.ath.cx/fakecheck/update/fakecheck.php?ed2k="+link);
+				Program.findProgram(".htm").execute("http://edonkeyfakes.ath.cx/fakecheck/update/fakecheck.php?ed2k="+link);
 			}
 		}
 	}
