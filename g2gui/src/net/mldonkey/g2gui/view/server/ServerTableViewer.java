@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTableViewer.java,v 1.3 2003/10/22 02:25:24 zet Exp $ 
+ * @version $Id: ServerTableViewer.java,v 1.4 2003/10/26 11:07:33 lemmster Exp $ 
  *
  */
 public class ServerTableViewer extends GTableViewer {
@@ -68,7 +68,7 @@ public class ServerTableViewer extends GTableViewer {
 			columnLabels = new String[] { "SVT_NETWORK", "SVT_NAME", "SVT_DESC", "SVT_ADDRESS",
 												"SVT_PORT", "SVT_SERVERSCORE", "SVT_USERS",	"SVT_FILES",
 												"SVT_STATE" };	
-			columnDefaultWidths = new int[] { 70, 160, 0, 120, 50, 55, 55, 60, 80 };
+			columnDefaultWidths = new int[] { 70, 160, 160, 120, 50, 55, 55, 60, 80 };
 			columnAlignment = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT,
 											SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT };
 		}
@@ -178,6 +178,9 @@ public class ServerTableViewer extends GTableViewer {
 
 /*
 $Log: ServerTableViewer.java,v $
+Revision 1.4  2003/10/26 11:07:33  lemmster
+fixed zero width for description
+
 Revision 1.3  2003/10/22 02:25:24  zet
 +prefString
 
