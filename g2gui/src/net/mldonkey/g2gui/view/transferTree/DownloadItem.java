@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.20 2003/07/20 12:35:07 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.21 2003/07/20 22:10:06 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem implements IItemHasMenue, SelectionListener {
@@ -102,25 +102,27 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 		updateCell( 6, "" );
 		updateCell( 7, String.valueOf( fileInfo.getSize() ) );
 		updateColumns();
+		synchronized ( fileInfo.getClientInfos() ){
 		Iterator it = fileInfo.getClientInfos().iterator();
-		while ( it.hasNext() ) {
-			ClientInfo clientInfo = ( ClientInfo ) it.next();
-			if ( isInteresting( clientInfo ) ) {
-				if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
-					namedclients.get( clientInfo.getClientid() );
-					ClientItem existingItem =
+			while ( it.hasNext() ) {
+				ClientInfo clientInfo = ( ClientInfo ) it.next();
+				if ( isInteresting( clientInfo ) ) {
+					if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
+						namedclients.get( clientInfo.getClientid() );
+						ClientItem existingItem =
+							( ClientItem ) namedclients.get( clientInfo.getClientid() );
+						existingItem.update();
+					} else {
+						ClientItem newItem =
+							new ClientItem( this, SWT.NONE, clientInfo );
+						namedclients.put( clientInfo.getClientid(), newItem );
+					}
+				} else if ( namedclients.contains( clientInfo.getClientid() ) ) {
+					ClientItem toBeRemovedItem =
 						( ClientItem ) namedclients.get( clientInfo.getClientid() );
-					existingItem.update();
-				} else {
-					ClientItem newItem =
-						new ClientItem( this, SWT.NONE, clientInfo );
-					namedclients.put( clientInfo.getClientid(), newItem );
+					toBeRemovedItem.dispose();
+					namedclients.remove( clientInfo.getClientid() );
 				}
-			} else if ( namedclients.contains( clientInfo.getClientid() ) ) {
-				ClientItem toBeRemovedItem =
-					( ClientItem ) namedclients.get( clientInfo.getClientid() );
-				toBeRemovedItem.dispose();
-				namedclients.remove( clientInfo.getClientid() );
 			}
 		}
 		addDisposeListener( new DisposeListener() {
@@ -150,13 +152,16 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 		if /*we are downloading from this client, so he is interesting*/
 			( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
 			return true;
-		else if /*we are connected to this client and have a queue-rank != 0*/
+		else if /*we are connected to this client and have a queue-rank != 0 and smaller 500*/
 			( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED
-					&& clientInfo.getState().getRank() != 0 )
+					&& clientInfo.getState().getRank() != 0 
+					&& clientInfo.getState().getRank() < 500
+					)
 			return true;
-		else if /*we were connected to this client but have a queue-rank != 0*/
+		else if /*we were connected to this client but have a queue-rank != 0 and smaller 500*/
 			( clientInfo.getState().getState() == EnumState.NOT_CONNECTED_WAS_QUEUED
-					&& clientInfo.getState().getRank() != 0 )
+					&& clientInfo.getState().getRank() != 0
+					&& clientInfo.getState().getRank() < 500 )
 			return true;
 		else
 			return false;
@@ -405,6 +410,9 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 }
 /*
 $Log: DownloadItem.java,v $
+Revision 1.21  2003/07/20 22:10:06  dek
+synchronized() added
+
 Revision 1.20  2003/07/20 12:35:07  dek
 saving some CPU time, when only sorting clientItems of expanded DownloadItems
 
