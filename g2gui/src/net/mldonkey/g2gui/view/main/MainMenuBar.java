@@ -25,7 +25,9 @@ package net.mldonkey.g2gui.view.main;
 import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.swt.SWT;
+
 import org.eclipse.swt.program.Program;
+
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -36,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * MenuBar
  *
  *
- * @version $Id: MainMenuBar.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.3 2003/08/25 20:28:56 dek Exp $ 
  *
  */
 public class MainMenuBar {
@@ -78,6 +80,7 @@ public class MainMenuBar {
 				mainTab.openPreferences();
 			}
 		} );
+		
 		item.setText( "Preferences" );
 		mItem.setMenu( submenu );
 	
@@ -85,9 +88,9 @@ public class MainMenuBar {
 		mItem.setText ( "Help" );
 		
 		submenu = new Menu ( shell, SWT.DROP_DOWN );
-		item = new MenuItem( submenu, 0);
+		item = new MenuItem( submenu, 0 );
 		item.addListener( SWT.Selection, new Listener() {
-			public void handleEvent (Event event ) {
+			public void handleEvent ( Event event ) {
 				Program.launch( "https://developer.berlios.de/docman/?group_id=610" );
 			}
 		} );
@@ -95,27 +98,42 @@ public class MainMenuBar {
 		
 		
 		mItem.setMenu( submenu );
-		item = new MenuItem( submenu, 0);
+		item = new MenuItem( submenu, 0 );
 		item.addListener( SWT.Selection, new Listener() {
-			public void handleEvent (Event event ) {
+			public void handleEvent ( Event event ) {
 				Program.launch( "http://mldonkey.berlios.de/modules.php?name=Forums&file=viewforum&f=9" );
 			}
 		} );
 		item.setText( "Feedback Forum" );
 		
 		mItem.setMenu( submenu );
-		item = new MenuItem( submenu, 0);
+		item = new MenuItem( submenu, 0 );
 		item.addListener( SWT.Selection, new Listener() {
-			public void handleEvent (Event event ) {
+			public void handleEvent ( Event event ) {
 				Program.launch( "https://developer.berlios.de/bugs/?group_id=610" );
 			}
 		} );
 		item.setText( "Bugs" );
+		
+
+		item = new MenuItem( submenu, 0 );
+		item.addListener( SWT.Selection, new Listener() {
+			public void handleEvent( Event event ) {	
+				About about = new About();
+				about.open();
+			}
+		} );
+		
+		item.setText( "About" );
+		mItem.setMenu( submenu );
 	}	
 }
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.3  2003/08/25 20:28:56  dek
+first sketch of an about-dialog, feel free to extend ;-)
+
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
