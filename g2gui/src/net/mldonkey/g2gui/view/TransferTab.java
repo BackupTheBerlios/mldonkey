@@ -32,6 +32,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -55,7 +56,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.47 2003/08/29 21:21:46 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.48 2003/08/29 22:11:47 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -102,13 +102,7 @@ public class TransferTab extends GuiTab  {
 		SashForm mainSashForm = new SashForm( parent, SWT.VERTICAL );
 		ViewForm downloadViewForm = new ViewForm( mainSashForm, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 
-		downloadCLabel = new CLabel(downloadViewForm, SWT.LEFT );	
-		downloadCLabel.setText(G2GuiResources.getString("TT_Downloads"));
-		downloadCLabel.setForeground(downloadViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-		downloadCLabel.setImage(G2GuiResources.getImage("TransfersButtonSmallTitlebar"));
-		downloadCLabel.setBackground(new Color[]{downloadViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-									downloadViewForm.getBackground()},
-									new int[] {100});	
+		downloadCLabel = CCLabel.createCL(downloadViewForm, "TT_Downloads", "TransfersButtonSmallTitlebar");	
 		
 		downloadViewForm.setTopLeft(downloadCLabel);
 		
@@ -138,14 +132,8 @@ public class TransferTab extends GuiTab  {
 		ViewForm uploadsViewForm = new ViewForm( mainSashForm, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		uploadsViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));	
 	
-		CLabel uploadsCLabel = new CLabel(uploadsViewForm, SWT.LEFT );	
-		uploadsCLabel.setText(G2GuiResources.getString("TT_Uploads"));
-		uploadsCLabel.setImage(G2GuiResources.getImage("TransfersButtonSmallTitlebar"));
-		uploadsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		uploadsCLabel.setForeground(uploadsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-		uploadsCLabel.setBackground(new Color[]{uploadsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-										uploadsViewForm.getBackground()},
-										new int[] {100});	
+	
+		CLabel uploadsCLabel = CCLabel.createCL(uploadsViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar");
 
 		Composite uploadersComposite = new Composite( uploadsViewForm, SWT.NONE );
 		uploadersComposite.setLayout(new FillLayout());
@@ -335,6 +323,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.48  2003/08/29 22:11:47  zet
+add CCLabel helper class
+
 Revision 1.47  2003/08/29 21:21:46  zet
 sash_width
 

@@ -36,6 +36,7 @@ import net.mldonkey.g2gui.view.friends.FriendsTableContentProvider;
 import net.mldonkey.g2gui.view.friends.FriendsTableLabelProvider;
 import net.mldonkey.g2gui.view.friends.FriendsTableMenuListener;
 import net.mldonkey.g2gui.view.friends.FriendsTableSorter;
+import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
@@ -67,7 +68,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.21 2003/08/29 19:33:24 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.22 2003/08/29 22:11:47 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
 
@@ -77,7 +78,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 	private CustomTableViewer tableViewer;
 	private long lastTime = 0;
 	private int mustRefresh = 0;
-	private CLabel friendsCLabel;
+	private CLabel friendsCLabel, messagesCLabel;
 	/**
 	 * @param gui
 	 */
@@ -114,21 +115,12 @@ public class MessagesTab extends GuiTab implements Runnable {
 	// obviously we want to list their files, and what else?
 	// simple and for messaging only atm 
 	private void createLeftSash( Composite main ) {
-		
 		ViewForm friendsViewForm = new ViewForm( main, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		
 		Composite friendsComposite = new Composite( friendsViewForm, SWT.NONE );
 		friendsComposite.setLayout( new FillLayout() );
 		
-		friendsCLabel = new CLabel(friendsViewForm, SWT.LEFT );
-		friendsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		friendsCLabel.setForeground(friendsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-		friendsCLabel.setBackground(new Color[]{friendsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-												friendsViewForm.getBackground()},
-												new int[] {100});
-										
-		friendsCLabel.setText(G2GuiResources.getString("FR_FRIENDS"));
-		friendsCLabel.setImage(G2GuiResources.getImage("MessagesButtonSmallTrans"));
+		friendsCLabel = CCLabel.createCL(friendsViewForm, "FR_FRIENDS", "MessagesButtonSmallTrans");
 		createFriendsTable(friendsComposite);
 		
 		friendsViewForm.setTopLeft(friendsCLabel);
@@ -154,7 +146,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 		tableViewer.setSorter(new FriendsTableSorter());
 				
 		tableViewer.setInput(core.getClientInfoIntMap().getFriendsList());
-		setRightLabel();
+		setFriendsLabel();
 		
 		
 		/*add default-action to menu (hack, but i didn't find this is 
@@ -190,11 +182,16 @@ public class MessagesTab extends GuiTab implements Runnable {
 	 * @param main
 	 */
 	private void createRightSash( Composite main ) {
-		SashForm messagesSash = new SashForm ( main, SWT.HORIZONTAL );
-		messagesSash.setLayout( new FillLayout() );
+		ViewForm messagesViewForm = new ViewForm( main, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+				
+		messagesCLabel = CCLabel.createCL(messagesViewForm, "FR_TABS", "MessagesButtonSmallTrans");
 			
-		cTabFolder = new CTabFolder( messagesSash, (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
-		cTabFolder.setBorderVisible(true);
+		cTabFolder = new CTabFolder( messagesViewForm , SWT.NONE );
+		
+		messagesViewForm.setTopLeft(messagesCLabel);
+		messagesViewForm.setContent(cTabFolder);
+		
+		cTabFolder.setBorderVisible(false);
 		cTabFolder.setLayoutData( new FillLayout() );
 		Display display = cTabFolder.getDisplay();
 		cTabFolder.setSelectionBackground(new Color[]{display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
@@ -211,7 +208,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 				openTabs.remove(id);
 				consoleComposite.dispose();
 				item.dispose();
-				setRightLabel();
+				setTabsLabel();
 			}
 		} );
 		
@@ -272,7 +269,8 @@ public class MessagesTab extends GuiTab implements Runnable {
 		if (!cTabFolder.isDisposed()) {
 			lastTime = System.currentTimeMillis();
 			tableViewer.refresh();
-			setRightLabel();
+			setTabsLabel();
+			setFriendsLabel();
 			mustRefresh=0;
 		}
 	}
@@ -280,8 +278,11 @@ public class MessagesTab extends GuiTab implements Runnable {
 	/**
 	 * 
 	 */
-	public void setRightLabel() {
+	public void setFriendsLabel() {
 		friendsCLabel.setText(G2GuiResources.getString("FR_FRIENDS") + ": " + tableViewer.getTable().getItemCount()); 
+	} 
+	public void setTabsLabel() {
+		messagesCLabel.setText(G2GuiResources.getString("FR_TABS") + ": " +  openTabs.size());
 	}
 	
 	/**
@@ -369,7 +370,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 		tabItem.setData("composite", consoleComposite);
 		tabItem.setData("console", console);
 		openTabs.put(new Integer(id), tabItem);
-		setRightLabel();
+		setTabsLabel();
 		return tabItem;
 	}
 	
@@ -426,6 +427,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.22  2003/08/29 22:11:47  zet
+add CCLabel helper class
+
 Revision 1.21  2003/08/29 19:33:24  zet
 color
 

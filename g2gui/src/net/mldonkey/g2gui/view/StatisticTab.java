@@ -26,6 +26,7 @@ package net.mldonkey.g2gui.view;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
@@ -47,7 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.21 2003/08/29 21:42:11 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.22 2003/08/29 22:11:47 zet Exp $
  */
 
 public class StatisticTab extends GuiTab {
@@ -86,14 +87,7 @@ public class StatisticTab extends GuiTab {
 		ViewForm statsViewForm = new ViewForm( mainSash, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		statsViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));	
 
-		CLabel statsCLabel = new CLabel(statsViewForm, SWT.LEFT );	
-		statsCLabel.setText(G2GuiResources.getString("TT_StatisticsButton"));
-		statsCLabel.setImage(G2GuiResources.getImage("StatisticsButtonSmallTitlebar"));
-		statsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		statsCLabel.setForeground(statsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-		statsCLabel.setBackground(new Color[]{statsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-										statsViewForm.getBackground()},
-										new int[] {100});	
+		CLabel statsCLabel = CCLabel.createCL(statsViewForm, "TT_StatisticsButton", "StatisticsButtonSmallTitlebar");
 
 		Composite statsComposite = new Composite( statsViewForm, SWT.NONE );
 		statsComposite.setLayout(new FillLayout());
@@ -110,28 +104,12 @@ public class StatisticTab extends GuiTab {
 		
 		// Bottom graph for Sash				
 		SashForm graphSash = new SashForm ( mainSash, SWT.HORIZONTAL );
-//	graphSash.setLayout( new FillLayout() );
 		
 		ViewForm downloadsGraphViewForm = new ViewForm( graphSash, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		ViewForm uploadsGraphViewForm = new ViewForm( graphSash, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		
-		CLabel downloadsCLabel = new CLabel(downloadsGraphViewForm, SWT.LEFT );	
-		downloadsCLabel.setText(G2GuiResources.getString("TT_Downloads"));
-		downloadsCLabel.setImage(G2GuiResources.getImage("StatisticsButtonSmallTitlebar"));
-		downloadsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		downloadsCLabel.setForeground(downloadsGraphViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-		downloadsCLabel.setBackground(new Color[]{downloadsGraphViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-												downloadsGraphViewForm.getBackground()},
-												new int[] {100});	
-		
-		CLabel uploadsCLabel = new CLabel(uploadsGraphViewForm, SWT.LEFT );	
-		uploadsCLabel.setText(G2GuiResources.getString("TT_Uploads"));
-		uploadsCLabel.setImage(G2GuiResources.getImage("StatisticsButtonSmallTitlebar"));
-		uploadsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		uploadsCLabel.setForeground(uploadsGraphViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-		uploadsCLabel.setBackground(new Color[]{uploadsGraphViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-												uploadsGraphViewForm.getBackground()},
-												new int[] {100});	
+		CLabel downloadsCLabel = CCLabel.createCL(downloadsGraphViewForm, "TT_Downloads", "TT_Downloads" );	
+		CLabel uploadsCLabel = CCLabel.createCL(uploadsGraphViewForm, "TT_Uploads", "StatisticsButtonSmallTitlebar");
 						
 		downloadsGraphControl = new GraphControl( downloadsGraphViewForm, downloadsGraphName, 
 									downloadsGraphColor1, downloadsGraphColor2 );
@@ -174,6 +152,9 @@ public class StatisticTab extends GuiTab {
 }
 /*
 $Log: StatisticTab.java,v $
+Revision 1.22  2003/08/29 22:11:47  zet
+add CCLabel helper class
+
 Revision 1.21  2003/08/29 21:42:11  zet
 add shadow
 

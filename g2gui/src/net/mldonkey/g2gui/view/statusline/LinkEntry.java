@@ -29,6 +29,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.view.StatusLine;
+import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -38,7 +39,6 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.9 2003/08/29 19:30:50 zet Exp $ 
+ * @version $Id: LinkEntry.java,v 1.10 2003/08/29 22:11:47 zet Exp $ 
  *
  */
 public class LinkEntry {
@@ -68,15 +68,7 @@ public class LinkEntry {
 		ViewForm linkEntryViewForm = new ViewForm( parent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		linkEntryViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));	
 			
-		CLabel linkEntryCLabel = new CLabel(linkEntryViewForm, SWT.LEFT );	
-		linkEntryCLabel.setText(G2GuiResources.getString("LE_HEADER"));
-		linkEntryCLabel.setImage(G2GuiResources.getImage("UpArrowBlue"));
-		linkEntryCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		linkEntryCLabel.setForeground(linkEntryViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-		linkEntryCLabel.setBackground(new Color[]{linkEntryViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-										linkEntryViewForm.getBackground()},
-										new int[] {100});	
-			
+		CLabel linkEntryCLabel = CCLabel.createCL(linkEntryViewForm, "LE_HEADER", "UpArrowBlue");	
 			
 		final Text linkEntryText = new Text(linkEntryViewForm, SWT.WRAP | SWT.MULTI | SWT.V_SCROLL );
 		linkEntryText.setLayoutData(new FillLayout());
@@ -144,6 +136,9 @@ public class LinkEntry {
 }
 /*
 $Log: LinkEntry.java,v $
+Revision 1.10  2003/08/29 22:11:47  zet
+add CCLabel helper class
+
 Revision 1.9  2003/08/29 19:30:50  zet
 font colour
 

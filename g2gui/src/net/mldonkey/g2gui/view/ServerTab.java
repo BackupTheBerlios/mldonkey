@@ -29,6 +29,7 @@ import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -49,7 +50,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.23 2003/08/29 19:30:50 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.24 2003/08/29 22:11:47 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -150,14 +150,8 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		
 		ViewForm serverViewForm = new ViewForm( parent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		
-		CLabel serverCLabel = new CLabel(serverViewForm, SWT.LEFT );	
-		serverCLabel.setText(G2GuiResources.getString("TT_ServersButton"));
-		serverCLabel.setImage(G2GuiResources.getImage("ServersButtonSmallTitlebar"));
-		serverCLabel.setForeground(serverViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-		serverCLabel.setBackground(new Color[]{serverViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-					serverViewForm.getBackground()},
-					new int[] {100});	
-		
+		CLabel serverCLabel = CCLabel.createCL(serverViewForm, "TT_ServersButton", "ServersButtonSmallTitlebar");
+			
 		this.composite = new Composite( serverViewForm, SWT.NONE );
 		composite.setLayout( new FillLayout() );
 	
@@ -428,6 +422,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.24  2003/08/29 22:11:47  zet
+add CCLabel helper class
+
 Revision 1.23  2003/08/29 19:30:50  zet
 font colour
 

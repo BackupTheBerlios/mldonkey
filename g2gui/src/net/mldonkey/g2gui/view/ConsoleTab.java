@@ -33,13 +33,13 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.ConsoleMessage;
 import net.mldonkey.g2gui.view.console.Console;
+import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.44 2003/08/29 19:30:50 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.45 2003/08/29 22:11:47 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -81,15 +81,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 		Composite consoleComposite = new Composite(consoleViewForm, SWT.NONE);
 		consoleComposite.setLayout( new FillLayout() );
 		
-		CLabel consoleCLabel = new CLabel(consoleViewForm, SWT.LEFT );	
-		consoleCLabel.setText(G2GuiResources.getString("TT_ConsoleButton"));
-		consoleCLabel.setImage(G2GuiResources.getImage("ConsoleButtonSmallTitlebar"));
-		consoleCLabel.setForeground(consoleViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-		consoleCLabel.setBackground(new Color[]{consoleViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-												consoleViewForm.getBackground()},
-												new int[] {100});	
-												
-	
+		CLabel consoleCLabel = CCLabel.createCL(consoleViewForm, "TT_ConsoleButton", "ConsoleButtonSmallTitlebar");
 		
 		console = new Console ( consoleComposite, SWT.NONE );
 		console.addObserver( this );
@@ -193,6 +185,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.45  2003/08/29 22:11:47  zet
+add CCLabel helper class
+
 Revision 1.44  2003/08/29 19:30:50  zet
 font colour
 
