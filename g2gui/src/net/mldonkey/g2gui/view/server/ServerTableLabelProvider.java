@@ -39,7 +39,7 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: ServerTableLabelProvider.java,v 1.5 2003/09/23 11:46:25 lemmster Exp $ 
+ * @version $Id: ServerTableLabelProvider.java,v 1.6 2003/10/12 00:21:34 zet Exp $ 
  *
  */
 public class ServerTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -122,6 +122,8 @@ public class ServerTableLabelProvider implements ITableLabelProvider, IColorProv
 	 */
 	public void dispose() {
 		connectColor.dispose();
+		connectingColor.dispose();
+		disconnectColor.dispose();
 	}
 
 	/* (non-Javadoc)
@@ -172,6 +174,9 @@ public class ServerTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ServerTableLabelProvider.java,v $
+Revision 1.6  2003/10/12 00:21:34  zet
+dispose colors
+
 Revision 1.5  2003/09/23 11:46:25  lemmster
 displayTableColors for servertab
 
