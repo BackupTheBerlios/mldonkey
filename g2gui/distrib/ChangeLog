@@ -1,5 +1,6 @@
 2004/02/17: vnc
-	* Fixed G2gui problem with 2.5.7 and newer Cores
+	* Fixed G2gui problem with 2.5.7 and newer Cores which resulted
+		in a nullpointer / segfault problem
 
 2004/02/03: vnc
 	* Fixed dynamic-column behaviour under GTK
