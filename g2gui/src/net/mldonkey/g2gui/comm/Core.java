@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.34 2003/06/27 10:41:19 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.35 2003/06/27 11:56:23 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -220,7 +220,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;					
 
 			case Message.R_CONSOLE :	
-					this.consoleMessage.readStream( messageBuffer );								
+					this.consoleMessage.readStream( messageBuffer );
+					this.notifyObservers( consoleMessage );						
 					break;
 				
 			case Message.R_NETWORK_INFO :
@@ -272,10 +273,23 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public ConsoleMessage getConsoleMessage() {
 		return (ConsoleMessage) this.consoleMessage;
 	}
+
+	/* sends a ConsoleCommand to mldonkey
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#sendConsoleMessage(java.lang.String)
+	 */
+	public void sendConsoleMessage(String command) {
+		String[] content = {command};		
+		EncodeMessage sendConsoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, content );
+		sendConsoleMessage.sendMessage( connection );	
+		
+	}
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.35  2003/06/27 11:56:23  dek
+sending out consolemesages to observers
+
 Revision 1.34  2003/06/27 10:41:19  lemmstercvs01
 changed notify to observer/observable
 
