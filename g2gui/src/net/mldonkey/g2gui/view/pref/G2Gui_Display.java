@@ -27,13 +27,20 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 /**
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Display.java,v 1.21 2003/08/29 14:59:34 dek Exp $
+ * @version $Id: G2Gui_Display.java,v 1.22 2003/08/29 17:13:29 dek Exp $
  */
 public class G2Gui_Display extends FieldEditorPreferencePage {
 	private Composite parent;
@@ -60,9 +67,43 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 		super.setPreferenceStore( PreferenceLoader.setDefaults( store ) );
 	}
 	
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
+	 */
 	protected Control createContents( Composite myparent ) {
-		this.parent = ( Composite ) super.createContents( myparent );
-		return parent;
+		
+		Group group = new Group( myparent, SWT.NONE );
+			GridLayout gl = new GridLayout( 1, false );
+				gl.horizontalSpacing = 10;
+				gl.verticalSpacing = 10;
+			group.setLayout( gl );
+			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+			group.setText( getTitle() );		
+		
+		ScrolledComposite sc = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {		
+			public Point computeSize( int wHint, int hHint, boolean changed ) 
+			/* This method prevents the window from becoming huge (as in hight and width) 
+			 * when reopening "General" (or equivalents)
+			 */ 
+				{ return new Point( SWT.DEFAULT, SWT.DEFAULT ); }
+		};
+		
+		sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+			sc.setLayout( new FillLayout() );
+		
+		Composite parent = ( Composite ) super.createContents( sc );
+		parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );		
+		
+		sc.setExpandHorizontal( true );
+		sc.setExpandVertical( true );
+		sc.setContent( parent );
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;		
+		
+		sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+		parent.layout();
+		
+		return parent; 
 	}
 	/* (   non-Javadoc   )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
@@ -177,6 +218,9 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.22  2003/08/29 17:13:29  dek
+all content is now within a group, do you like it, or should i revert changes?
+
 Revision 1.21  2003/08/29 14:59:34  dek
 cleaning up, jFaced the whole thing even more, removed not needed methods & calls..
 now the whole thing is kind of small ;-)

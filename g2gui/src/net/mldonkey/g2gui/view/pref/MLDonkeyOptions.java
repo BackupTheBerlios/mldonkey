@@ -44,16 +44,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 /**
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.31 2003/08/29 15:35:58 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.32 2003/08/29 17:13:29 dek Exp $ 
  *
  */
-public class MLDonkeyOptions extends FieldEditorPreferencePage {
-	private ScrolledComposite sc;
+public class MLDonkeyOptions extends FieldEditorPreferencePage {	
 	private Composite parent;
 	private List options = new ArrayList();
 	private final int inputFieldLength = 20;
@@ -167,9 +167,15 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	 */
 	protected Control createContents( Composite myparent ) {
 		
-		computeSize();
+		Group group = new Group( myparent, SWT.NONE );
+			GridLayout gl = new GridLayout( 1, false );
+				gl.horizontalSpacing = 10;
+				gl.verticalSpacing = 10;
+			group.setLayout( gl );
+			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+			group.setText( getTitle() );		
 		
-		sc = new ScrolledComposite( myparent, SWT.H_SCROLL | SWT.V_SCROLL ) {		
+		ScrolledComposite sc = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {		
 			public Point computeSize( int wHint, int hHint, boolean changed ) 
 			/* This method prevents the window from becoming huge (as in hight and width) 
 			 * when reopening "General" (or equivalents)
@@ -226,6 +232,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 } 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.32  2003/08/29 17:13:29  dek
+all content is now within a group, do you like it, or should i revert changes?
+
 Revision 1.31  2003/08/29 15:35:58  dek
 re-added tooltip-Help
 
