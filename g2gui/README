@@ -10,7 +10,7 @@ it yourself, natively compiled (win32, linux, ...) and java bytecode
 packages are available. 
 
 Compiling it from sources is recommended if you have a recent gcj 
-(which is part of the Gnu Compiler Colletion), but a version bigger
+(which is part of the Gnu Compiler Collection), but a version bigger
 than 3.2 is strictly required. If compilation fails, using natively 
 precompiled binaries is recommended. In case they also refuse to run, 
 stick to the java bytecode packages.
