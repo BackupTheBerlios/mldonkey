@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.4 2003/10/13 20:47:16 zet Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.5 2003/10/13 21:26:39 zet Exp $
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -51,9 +51,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
     private Color downloadedFileColor = new Color( null, 0, 0, 255 );
     private Color queuedFileColor = new Color( null, 192, 192, 192 );
     private Color pausedFileColor = new Color( null, 255, 0, 0 );
-    private Color rateAbove20Color = new Color( null, 35, 214, 0 );
-    private Color rateAbove10Color = new Color( null, 30, 170, 2 );
-    private Color rateAbove0Color = new Color( null, 24, 142, 4 );
+    private Color rateAbove20Color = new Color( null, 0, 160, 0 );
+    private Color rateAbove10Color = new Color( null, 0, 140, 0 );
+    private Color rateAbove0Color = new Color( null, 0, 110, 0 );
 	
 	private boolean displayColors = true;
     private DecimalFormat df = new DecimalFormat( "0.0" );
@@ -286,6 +286,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.5  2003/10/13 21:26:39  zet
+different, darker greens
+
 Revision 1.4  2003/10/13 20:47:16  zet
 orange -> black
 
