@@ -45,7 +45,7 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
 /**
- * @version $Id: SystemTray.java,v 1.13 2004/03/11 13:16:14 dek Exp $
+ * @version $Id: SystemTray.java,v 1.14 2004/03/11 13:37:38 dek Exp $
  *  
  */
 public class SystemTray implements SystemTrayIconListener, Observer {
@@ -164,16 +164,11 @@ public class SystemTray implements SystemTrayIconListener, Observer {
 		}
 		// the lib is loaded an ready to use
 		libLoaded = true;
-		System.out.println(getClass().getName() + "g2gui.ico");
-		icon = SystemTrayIconManager.loadImage("g2gui.ico");
-		if (icon == -1) {
-			System.out.println("image icon.ico error");
-			libLoaded = false;
-			return;
-		}
 
 		parent.getCore().getClientStats().addObserver(this);
 
+		icon = G2GuiResources.getImageDescriptor("TrayIcon").createImage().handle;
+		
 		systemTrayManager = new SystemTrayIconManager(icon, titleBarText);
 		systemTrayManager.addSystemTrayIconListener(this);
 		systemTrayManager.setVisible(true);
@@ -198,6 +193,8 @@ public class SystemTray implements SystemTrayIconListener, Observer {
 						SystemTray.this,
 						G2GuiResources.getString("TRAY_MINIMIZE_TO")));
 				manager.add(settingsSubMenu);
+				
+				
 
 				manager.add(new Separator());
 
@@ -286,6 +283,9 @@ public class SystemTray implements SystemTrayIconListener, Observer {
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.14  2004/03/11 13:37:38  dek
+ now icon is loaded from G2GUIRESSOURCES
+
  Revision 1.13  2004/03/11 13:16:14  dek
  lod-appendix looks now right
 
