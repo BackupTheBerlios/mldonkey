@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.70 2004/03/02 23:39:29 psy Exp $
+ * @version $Id: G2Gui.java,v 1.71 2004/03/04 21:15:32 dek Exp $
  *
  */
 public class G2Gui {
@@ -97,6 +97,13 @@ public class G2Gui {
     public static void main(String[] argv) {
     	String fileNotFound = "preference file not found on disk";
     	String configfile = null;
+    	
+    	/*
+    	 * without this sleep(0) gcj crashes right after start,
+    	 * nobody knows why
+    	 */
+    	try { Thread.sleep(0); } catch (InterruptedException e1) {}
+    	
     	display = new Display();
         links = new ArrayList();
         
@@ -645,6 +652,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.71  2004/03/04 21:15:32  dek
+yet another fix for gcj
+
 Revision 1.70  2004/03/02 23:39:29  psy
 replaced raw-socket link-submission
 
