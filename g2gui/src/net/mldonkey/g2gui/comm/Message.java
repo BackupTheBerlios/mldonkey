@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.16 2003/06/15 19:37:01 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.17 2003/06/16 18:43:05 dek Exp $ 
  *
  */
 public abstract class Message {
@@ -116,8 +116,12 @@ public abstract class Message {
 	 */
 	public static final short R_CLIENT_STATS = 49;
 	/**
+	 * Receive Clean Table (value is 51)
+	 */	
+	public static final short R_CLEAN_TABLE = 51;
+	/**
 	 * Receive a Download (value is 52)
-	 */
+	 */	
 	public static final short R_DOWNLOAD = 52;
 	/**
 	 * Receive a List of Downloads (value is 53)
@@ -263,6 +267,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.17  2003/06/16 18:43:05  dek
+opcode 51 added
+
 Revision 1.16  2003/06/15 19:37:01  lemmstercvs01
 fixed a bug in readInt32()
 
