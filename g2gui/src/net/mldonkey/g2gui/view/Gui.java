@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.19 2003/07/02 17:04:46 dek Exp $ 
+ * @version $Id: Gui.java,v 1.20 2003/07/02 19:03:51 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -68,7 +68,7 @@ public class Gui implements IG2gui, Listener {
 		 * This class is from the JFace-Package, i hope they don't
 		 * mind
 		 */
-		private class PageLayout extends Layout {
+		private class StackLayout extends Layout {
 			public void layout( Composite composite, boolean force ) {
 				Rectangle rect = composite.getClientArea();
 				Control[] children = composite.getChildren();
@@ -140,7 +140,7 @@ public class Gui implements IG2gui, Listener {
 			mainLayout.numColumns = 1;
 			mainLayout.marginWidth = 0;
 			mainLayout.marginHeight = 0;
-			mainComposite.setLayout( mainLayout );
+			mainComposite.setLayout( mainLayout ); 
 			
 		coolbar = createCoolBar( mainComposite );				
 			
@@ -158,7 +158,7 @@ public class Gui implements IG2gui, Listener {
 			} } );
 		
 		pageContainer = new Composite( mainComposite, SWT.NONE );
-		pageContainer.setLayout( new PageLayout() );						
+		pageContainer.setLayout( new StackLayout() );						
 		gridData = new GridData( GridData.FILL_BOTH );
 			gridData.grabExcessHorizontalSpace = true;
 			gridData.grabExcessVerticalSpace = true;			
@@ -213,9 +213,11 @@ public class Gui implements IG2gui, Listener {
 	
 	/**
 	 * Creates a Transparent imageobject with a given .png|.gif Image-Object
+	 * be aware, the the scr-image is disposed, so dont' use it any further
+	 * 
 	 * @param src the non-transparent image we want to process
 	 * @param control where is our image laid in, to check for the background-color
-	 * @return
+	 * @return the transparent image
 	 */
 	public static Image createTransparentImage( Image src, Control control ) {
 		int width = src.getBounds().width;
@@ -227,7 +229,7 @@ public class Gui implements IG2gui, Listener {
 				gc.fillRectangle( 0, 0, width, height );							
 				gc.drawImage( src, 0, 0 );
 			
-						
+				src.dispose();		
 				gc.dispose();		
 		return result;
 			
@@ -236,33 +238,75 @@ public class Gui implements IG2gui, Listener {
 	 private CoolBar createCoolBar( Composite parent ) {
 		GridData gridData;
 		
-		Composite coolBarPanel = new Composite( parent, SWT.NONE );
-		coolBarPanel.setLayout( new FillLayout() );
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		coolBarPanel.setLayoutData( gridData );
-		
-		CoolBar coolBar = new CoolBar ( coolBarPanel, SWT.FLAT );		
-			gridData = new GridData( GridData.FILL_VERTICAL );
-			gridData.grabExcessHorizontalSpace = true;		
-			gridData.horizontalAlignment = GridData.BEGINNING;
+		/*now follows the creation of the CoolBar*/		
+		final CoolBar coolBar = new CoolBar ( parent, SWT.FLAT );
+			gridData = new GridData( GridData.FILL_HORIZONTAL );
 			coolBar.setLayoutData( gridData );
+		Menu toolmenu = createToolBarRMMenu(coolBar);
+			
+		/* this ControlListener has to take care of the fact,
+		 *  that a CoolBar also can me multi-lined 
+		 */	
+		coolBar.addControlListener( new ControlListener() {	
+				public void controlMoved( ControlEvent e ) {				
+				}
+	
+				public void controlResized( ControlEvent e ) {
+					
+					Point size = coolBar.computeSize(SWT.DEFAULT,SWT.DEFAULT);					
+					//System.out.println(size);
+					//coolBar.setSize(size);
+					//((GridData)coolBar.getLayoutData()).widthHint = size.x;
+					
+					//((GridData)coolBar.getLayoutData()).heightHint = size.y;
+					
+				} } )	;
+				
+
+				
 				for ( int i = 0; i < 2; i++ ) { 			
 					CoolItem item = new CoolItem ( coolBar, SWT.NONE );
 					} 
+					
 		CoolItem[] items = coolBar.getItems ();
 					
 		this.mainTools = new ToolBar( coolBar, SWT.FLAT );			
 			mainCoolItem = items [0];
 			mainCoolItem.setControl ( mainTools );
+			mainTools.setMenu( toolmenu );
 			
 			
 		this.miscTools = new ToolBar( coolBar, SWT.FLAT );
 			miscCoolItem = items [1];
 			miscCoolItem.setControl ( miscTools );		
-			
+			miscTools.setMenu( toolmenu );
+		
 		return coolBar;
 	} 
 	
+	/**
+	 * creates a right-mouse-menue
+	 * @return a right-Mouse menue
+	 */
+	private Menu createToolBarRMMenu( CoolBar coolBar ) {
+		final CoolBar thiscoolBar = coolBar;
+		Shell shell = coolBar.getShell();
+		Menu menu = new Menu( shell , SWT.POP_UP );
+		
+
+		/* lock CoolBar */
+		final MenuItem lockItem = new MenuItem( menu, SWT.CHECK );
+		lockItem.setText( "Lock the Toolbars" );
+		lockItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent e ) {
+				thiscoolBar.setLocked( lockItem.getSelection() );
+			}
+		});
+		
+		
+		return menu;
+	}
+
 	private void layoutCoolBar( CoolBar coolBar ) {
 	/*	int CoolBarWidth = this.mainComposite.getBounds().width;
 		
@@ -288,7 +332,8 @@ public class Gui implements IG2gui, Listener {
 			pSize = tempCoolItem.computeSize( pSize.x, pSize.y );
 			tempCoolItem.setSize( pSize );
 			tempCoolItem.setMinimumSize( pSize );
-		} 		
+		}
+		
 	} 
 
 	
@@ -364,6 +409,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.20  2003/07/02 19:03:51  dek
+Right-mouse-menue for lockable ToolBar
+
 Revision 1.19  2003/07/02 17:04:46  dek
 Checkstyle, JavaDocs still have to be added
 
