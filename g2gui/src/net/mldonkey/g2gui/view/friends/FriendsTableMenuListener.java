@@ -39,7 +39,7 @@ import org.eclipse.jface.viewers.TableViewer;
  * TableMenuListener
  *
  *
- * @version $Id: FriendsTableMenuListener.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: FriendsTableMenuListener.java,v 1.3 2003/08/29 21:02:45 zet Exp $ 
  *
  */
 public class FriendsTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -88,6 +88,8 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 
 		if (selectedClientInfo != null)
 			menuManager.add( new SendMessageAction() );
+			
+		menuManager.add( new AddByIPAction() );	
 		
 	}
 	private class RemoveFriendAction extends Action {
@@ -111,19 +113,32 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 	}
 
 	private class SendMessageAction extends Action {
-			public SendMessageAction() {
-				super();
-				setText( G2GuiResources.getString( "FR_MENU_SEND_MESSAGE" ) );
-			}
-			public void run() {
-				messagesTab.openTab(selectedClientInfo);
-			}
+		public SendMessageAction() {
+			super();
+			setText( G2GuiResources.getString( "FR_MENU_SEND_MESSAGE" ) );
+		}
+		public void run() {
+			messagesTab.openTab(selectedClientInfo);
+		}
+	}
+
+	private class AddByIPAction extends Action {
+		public AddByIPAction() {
+			super();
+			setText( G2GuiResources.getString( "FR_MENU_ADD_BY_IP" ) );
+		}
+		public void run() {
+			new AddFriend(core);
+		}
 	}
 
 }
 
 /*
 $Log: FriendsTableMenuListener.java,v $
+Revision 1.3  2003/08/29 21:02:45  zet
+Add friend by ip
+
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
