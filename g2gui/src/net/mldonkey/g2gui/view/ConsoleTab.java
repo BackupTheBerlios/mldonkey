@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.32 2003/08/10 00:38:17 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.33 2003/08/10 23:24:20 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -75,7 +75,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 		console.addObserver( this );
 		
 		parent.setLayout( null );
-		updateDisplay();
+		loadPreferences();
 	}
 	
 	/* (non-Javadoc)
@@ -125,13 +125,19 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 	}
 	
 	public void updateDisplay() {
+		loadPreferences();
+		super.updateDisplay();
+	}
+	
+	public void loadPreferences() {
+		
 		console.setDisplayFont( PreferenceLoader.loadFont( "consoleFontData" ) );
 		console.setDisplayBackground ( PreferenceLoader.loadColour( "consoleBackground" ) );
 		console.setDisplayForeground ( PreferenceLoader.loadColour( "consoleForeground" ) );
 		console.setInputBackground ( PreferenceLoader.loadColour( "consoleInputBackground" ) );
 		console.setInputForeground ( PreferenceLoader.loadColour( "consoleInputForeground" ) );
-		super.updateDisplay();
 	}
+	
 	
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
@@ -158,6 +164,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.33  2003/08/10 23:24:20  zet
+move updatedisplay
+
 Revision 1.32  2003/08/10 00:38:17  zet
 setFocus on activation
 
