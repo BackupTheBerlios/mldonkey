@@ -24,7 +24,6 @@ package net.mldonkey.g2gui.view;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -41,12 +40,14 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
@@ -55,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.33 2003/09/28 15:24:18 zet Exp $
+ * @version $Id: G2Gui.java,v 1.34 2003/09/28 17:05:46 zet Exp $
  *
  */
 public class G2Gui {
@@ -85,7 +86,6 @@ public class G2Gui {
     private static FormData formData;
     private static Rectangle shellRect;
     private static Rectangle displayRect;
-    private static Label label;
     private static ExecConsole execConsole = null;
 
     /**
@@ -150,9 +150,8 @@ public class G2Gui {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param args DOCUMENT ME!
+     * Launch
+     * @param args 
      */
     public static void launch( String[] args ) {
 		 
@@ -171,15 +170,21 @@ public class G2Gui {
                 System.out.println( "failed" );
             }
             shell = new Shell( display );
-            splashShell = new Shell( shell, SWT.ON_TOP );
+            splashShell = new Shell( display, SWT.NO_TRIM | SWT.NO_BACKGROUND | SWT.ON_TOP );
             box = new MessageBox( shell, SWT.ICON_ERROR | SWT.YES | SWT.NO );
-            progressBar = new ProgressBar( splashShell, SWT.NONE );
+        	final Image splashImage = G2GuiResources.getImage( "splashScreen" );
+          
+            splashShell.addPaintListener( new PaintListener() {
+                public void paintControl( PaintEvent e ) {
+                    e.gc.drawImage( splashImage, 0, 0 );
+                }
+            });
+            
+            progressBar = new ProgressBar(splashShell, SWT.NONE );
             count = new int[] { 3 };
 
             /* build the splash */
             progressBar.setMaximum( count[ 0 ] );
-            label = new Label( splashShell, SWT.NONE );
-            label.setImage( G2GuiResources.getImage( "splashScreen" ) );
             FormLayout layout = new FormLayout();
             splashShell.setLayout( layout );
             formData = new FormData();
@@ -187,13 +192,27 @@ public class G2Gui {
             formData.right = new FormAttachment( 100, -5 );
             formData.bottom = new FormAttachment( 100, -5 );
             progressBar.setLayoutData( formData );
-            splashShell.pack();
-            shellRect = splashShell.getBounds();
-            displayRect = display.getBounds();
-            int x = ( displayRect.width - shellRect.width ) / 2;
-            int y = ( displayRect.height - shellRect.height ) / 2;
-            splashShell.setLocation( x, y );
+          	splashShell.pack();
+			
+			Rectangle displayBounds = display.getBounds();
+			Rectangle splashImageBounds = splashImage.getBounds();
+		   	
+		   	splashShell.setBounds(
+				displayBounds.x + ( displayBounds.width - splashImageBounds.width ) / 2,
+				displayBounds.y + ( displayBounds.height - splashImageBounds.height ) / 2,
+				splashImageBounds.width,
+				splashImageBounds.height
+			);
+            
             splashShell.open();
+            
+            // Needed on GTK to dispatch paintEvent.
+            // SWT is idiotic.
+			for ( int i = 0; i < 10; i++ ) {
+				 if ( !display.readAndDispatch() )
+					 display.sleep();
+			}
+            
             spawnCore();
             increaseBar( "Starting the model" );
         }
@@ -434,6 +453,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.34  2003/09/28 17:05:46  zet
+hopefully display splashImage on GTK
+
 Revision 1.33  2003/09/28 15:24:18  zet
 remove println
 
