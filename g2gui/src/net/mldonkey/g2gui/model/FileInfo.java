@@ -44,7 +44,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.42 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.43 2003/08/24 14:27:36 lemmster Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -367,16 +367,17 @@ public class FileInfo extends Parent implements Observer {
 		if ( parent.getProtoToUse() > 17 ) {
 			this.avails = new HashMap();
 			int listElem = messageBuffer.readInt16();
+			
 			for ( int i = 0; i < listElem; i++ ) {
 				int networkID = messageBuffer.readInt32();
-				String aString = messageBuffer.readString();
 				NetworkInfo network = parent.getNetworkInfoMap().get( networkID );
-				this.avails.put( network, aString );
-				/*TODO still just a hack until overall avail is sent by the core				
-				 *  but this is a more failsafe-way
-				 */
-				 if ( aString.length() == chunks.length() )
-					this.avail = aString;
+				/* multinet avail is the overall avail */
+				if ( network.getNetworkType() != NetworkInfo.Enum.MULTINET ) {
+					String aString = messageBuffer.readString();
+					this.avails.put( network, aString );
+				}
+				else
+					this.avail = messageBuffer.readString();
 			}
 		}
 		else
@@ -699,6 +700,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.43  2003/08/24 14:27:36  lemmster
+mutlinet avail is overall avail
+
 Revision 1.42  2003/08/23 15:21:37  zet
 remove @author
 
@@ -709,7 +713,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)
