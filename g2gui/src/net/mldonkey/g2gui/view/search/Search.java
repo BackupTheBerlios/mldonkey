@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.28 2003/09/19 15:19:14 lemmster Exp $
+ * @version $Id: Search.java,v 1.29 2003/09/21 09:57:17 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -296,7 +296,7 @@ public abstract class Search implements Observer {
 					inputText.setText( G2GuiResources.getString( "S_UNAVAILABLE" ) );
 					inputText.setEnabled( false );
 				}
-				else {
+				else if ( !inputText.isEnabled() ){
 					inputText.setText( "" );
 					inputText.setEnabled( true );
 				}
@@ -307,6 +307,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.29  2003/09/21 09:57:17  lemmster
+update the inputText only on change
+
 Revision 1.28  2003/09/19 15:19:14  lemmster
 reworked
 
