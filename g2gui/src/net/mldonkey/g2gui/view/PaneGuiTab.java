@@ -25,13 +25,12 @@ package net.mldonkey.g2gui.view;
 import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * PaneGuiTab
  *
- * @version $Id: PaneGuiTab.java,v 1.3 2003/10/31 16:02:17 zet Exp $ 
+ * @version $Id: PaneGuiTab.java,v 1.4 2003/11/04 18:50:00 lemmster Exp $ 
  *
  */
 public abstract class PaneGuiTab extends GuiTab {
@@ -46,28 +45,32 @@ public abstract class PaneGuiTab extends GuiTab {
 	 * @param aToolBar
 	 */
 	protected void createPaneToolBar( final ToolBar aToolBar, IMenuListener aMenuManager ) {
-		// create the menu to the button
+/*		// create the menu to the button
 		final MenuManager popupMenu = new MenuManager( "" );
 		popupMenu.setRemoveAllWhenShown( true );
 		popupMenu.addMenuListener( aMenuManager );
 		
-// this is incorrect and duplicates the existing menu
-//
-//		// create the button itself
-//		ToolItem toolItem = new ToolItem( aToolBar, SWT.NONE );
-//		toolItem.setToolTipText( G2GuiResources.getString( "TT_MISC_BUTTON" ) );
-//		//TODO why is this fu**ing "dropdown" image not working? a color depth swt cant handle?
-//		toolItem.setImage( G2GuiResources.getImage( "dropdown" ) );
-//		toolItem.addSelectionListener( new SelectionAdapter() {
-//			public void widgetSelected( SelectionEvent s ) {
-//				Rectangle rect = ( (ToolItem) s.widget ).getBounds();
-//				Menu menu = popupMenu.createContextMenu( aToolBar );
-//				Point pt = new Point( rect.x, rect.y + rect.height );
-//				pt = aToolBar.toDisplay( pt );
-//				menu.setLocation( pt.x, pt.y );
-//				menu.setVisible( true );
-//			}
-//		} );
+		//TODO decide how the pane listener should work? read more...
+		// "right click" and "image click" for table layout and buttons 
+		// for "mldonkey controls" (eclipse style) or
+		// windows style with all buttons on the right side...
+		// this uncommented implementation adds the right "dropdown" button
+		// to all tables.
+
+		// create the button itself
+		ToolItem toolItem = new ToolItem( aToolBar, SWT.NONE );
+		toolItem.setToolTipText( G2GuiResources.getString( "TT_MISC_BUTTON" ) );
+		toolItem.setImage( G2GuiResources.getImage( "dropdown" ) );
+		toolItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent s ) {
+				Rectangle rect = ( (ToolItem) s.widget ).getBounds();
+				Menu menu = popupMenu.createContextMenu( aToolBar );
+				Point pt = new Point( rect.x, rect.y + rect.height );
+				pt = aToolBar.toDisplay( pt );
+				menu.setLocation( pt.x, pt.y );
+				menu.setVisible( true );
+			}
+		} );*/
 	}
 	
 	public abstract GView getGView();
@@ -75,6 +78,9 @@ public abstract class PaneGuiTab extends GuiTab {
 
 /*
 $Log: PaneGuiTab.java,v $
+Revision 1.4  2003/11/04 18:50:00  lemmster
+added a TODO tag
+
 Revision 1.3  2003/10/31 16:02:17  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
