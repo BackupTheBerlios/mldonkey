@@ -4,8 +4,8 @@
  */</codetemplate><codetemplate name="typecomment" description="Comment for created types" context="typecomment_context" enabled="true">/**
  * ${type_name}
  *
- * @author $$user$$
- * @version $$Id$$ 
+ * @author $Author$
+ * @version $Id$ 
  *
  */</codetemplate><codetemplate name="methodcomment" description="Comment for non-overriding methods" context="methodcomment_context" enabled="true">/**
  * ${tags}
@@ -38,5 +38,8 @@ ${package_declaration}
 ${typecomment}
 ${type_declaration}
 /*
-$$Log$$
+$Log$
+*/</codetemplate><codetemplate name="catchblock" description="Code in new catch blocks" context="catchblock_context" enabled="true">// ${todo} Auto-generated catch block
+${exception_var}.printStackTrace();</codetemplate><codetemplate name="methodbody" description="Code in created method stubs" context="methodbody_context" enabled="true">// ${todo} Auto-generated method stub
+${body_statement}</codetemplate><codetemplate name="constructorbody" description="Code in created constructor stubs" context="constructorbody_context" enabled="true">${body_statement}
 // ${todo} Auto-generated constructor stub</codetemplate></templates>
