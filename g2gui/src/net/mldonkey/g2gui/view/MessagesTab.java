@@ -72,7 +72,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.23 2003/08/29 23:34:14 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.24 2003/08/30 14:25:57 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
 
@@ -135,7 +135,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 	 * 
 	 */
 	public void createFriendsTable( Composite parent ) {
-		tableViewer = new CustomTableViewer( parent , SWT.NONE);
+		tableViewer = new CustomTableViewer( parent , SWT.NONE | SWT.MULTI);
 		tableViewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
 		tableViewer.getTable().setHeaderVisible( false );
 		tableViewer.setContentProvider(new FriendsTableContentProvider());
@@ -458,6 +458,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.24  2003/08/30 14:25:57  zet
+multi select
+
 Revision 1.23  2003/08/29 23:34:14  zet
 close all tabs
 

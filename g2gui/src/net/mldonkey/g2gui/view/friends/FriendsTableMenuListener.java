@@ -22,6 +22,10 @@
  */
 package net.mldonkey.g2gui.view.friends;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.view.MessagesTab;
@@ -38,8 +42,7 @@ import org.eclipse.jface.viewers.TableViewer;
 /**
  * TableMenuListener
  *
- *
- * @version $Id: FriendsTableMenuListener.java,v 1.3 2003/08/29 21:02:45 zet Exp $ 
+ * @version $Id: FriendsTableMenuListener.java,v 1.4 2003/08/30 14:25:57 zet Exp $ 
  *
  */
 public class FriendsTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -47,7 +50,7 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 	private FriendsTableContentProvider tableContentProvider;
 	private TableViewer tableViewer;
 	private CoreCommunication core;
-	private ClientInfo selectedClientInfo;
+	private List selectedClients = new ArrayList();
 	private MessagesTab messagesTab;
 
 	/**
@@ -70,24 +73,28 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 		IStructuredSelection sSel = ( IStructuredSelection ) event.getSelection();
 		Object o = sSel.getFirstElement();
 
-		if ( o instanceof ClientInfo )
-			selectedClientInfo = ( ClientInfo ) o;
-		else
-			selectedClientInfo = null;
+		selectedClients.clear();
+		for (Iterator it = sSel.iterator(); it.hasNext(); ) {
+			o = it.next();
+			if (o instanceof ClientInfo) 
+				selectedClients.add((ClientInfo) o);	
+		}
+
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
 	 */
 	public void menuAboutToShow( IMenuManager menuManager ) {
-		/* disconnect */
-		if ( selectedClientInfo != null )
+
+		if (selectedClients.size() != 0)
+			menuManager.add( new SendMessageAction() );
+		
+		if ( selectedClients.size() != 0 )
 			menuManager.add( new RemoveFriendAction() );
 			
-		menuManager.add( new RemoveAllFriendsAction() );
-
-		if (selectedClientInfo != null)
-			menuManager.add( new SendMessageAction() );
+		if (tableViewer.getTable().getItemCount() > 0)		
+			menuManager.add( new RemoveAllFriendsAction() );
 			
 		menuManager.add( new AddByIPAction() );	
 		
@@ -95,10 +102,14 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 	private class RemoveFriendAction extends Action {
 		public RemoveFriendAction() {
 			super();
-			setText( G2GuiResources.getString( "FR_MENU_REMOVE_FRIEND" ) );
+			String num = (selectedClients.size() > 1 ? " (" + selectedClients.size() + ")" : "");
+			setText( G2GuiResources.getString( "FR_MENU_REMOVE_FRIEND" ) + num);
 		}
 		public void run() {
-			ClientInfo.removeFriend(core, selectedClientInfo.getClientid());
+			for (int i = 0; i < selectedClients.size(); i++) {
+				 ClientInfo clientInfo = (ClientInfo) selectedClients.get(i);
+				ClientInfo.removeFriend(core, clientInfo.getClientid());
+			}
 		}
 	}
 
@@ -115,10 +126,14 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 	private class SendMessageAction extends Action {
 		public SendMessageAction() {
 			super();
-			setText( G2GuiResources.getString( "FR_MENU_SEND_MESSAGE" ) );
+			String num = (selectedClients.size() > 1 ? " (" + selectedClients.size() + ")" : "");
+			setText( G2GuiResources.getString( "FR_MENU_SEND_MESSAGE" ) + num);
 		}
 		public void run() {
-			messagesTab.openTab(selectedClientInfo);
+			for (int i = 0; i < selectedClients.size(); i++) {
+				 ClientInfo clientInfo = (ClientInfo) selectedClients.get(i);
+				messagesTab.openTab(clientInfo);
+			}
 		}
 	}
 
@@ -136,6 +151,9 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 
 /*
 $Log: FriendsTableMenuListener.java,v $
+Revision 1.4  2003/08/30 14:25:57  zet
+multi select
+
 Revision 1.3  2003/08/29 21:02:45  zet
 Add friend by ip
 
