@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.43 2003/11/20 14:02:17 lemmster Exp $
+ * @version $Id: G2Gui.java,v 1.44 2003/11/20 15:42:04 dek Exp $
  *
  */
 public class G2Gui {
@@ -215,17 +215,8 @@ public class G2Gui {
 			advancedMode = preferenceStore.getBoolean("advancedMode");
 
 
-        // create the socket connection to the core and handle the errors
-        try {
-            ObjectPool socketPool = new SocketPool(hostname, port);
-            socket = (Socket) socketPool.checkOut();
-        } catch (UnknownHostException e) {
-        	errorHandling(G2GuiResources.getString("G2_INVALID_ADDRESS"),G2GuiResources.getString("G2_ILLEGAL_ADDRESS"));
-            return;
-        } catch (IOException e) {
-			errorHandling(G2GuiResources.getString("G2_IOEXCEPTION"),G2GuiResources.getString("G2_CORE_NOT_RUNNING"));
-			return;
-        }
+        socket = initializeSocket();
+		if (socket == null ) return;
 
         PreferenceLoader.saveStore();
 
@@ -279,8 +270,25 @@ public class G2Gui {
         PreferenceLoader.getPreferenceStore().setValue("running", false);
         PreferenceLoader.saveStore();
     }
+	/**
+	 * 
+	 *
+	 */
+    public static Socket initializeSocket() {
+		// create the socket connection to the core and handle the errors
+        try {
+            ObjectPool socketPool = new SocketPool(hostname, port);
+            socket = (Socket) socketPool.checkOut();
+        } catch (UnknownHostException e) {
+        	errorHandling(G2GuiResources.getString("G2_INVALID_ADDRESS"),G2GuiResources.getString("G2_ILLEGAL_ADDRESS"));			
+            return null;
+        } catch (IOException e) {
+			errorHandling(G2GuiResources.getString("G2_IOEXCEPTION"),G2GuiResources.getString("G2_CORE_NOT_RUNNING"));
+			return null;
+        }        
+	}
 
-    /**
+	/**
      * Send a link - raw socket without a core
      */
     private static void sendDownloadLink() {
@@ -409,6 +417,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.44  2003/11/20 15:42:04  dek
+reconnect started
+
 Revision 1.43  2003/11/20 14:02:17  lemmster
 G2Gui cleanup
 

@@ -57,7 +57,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.109 2003/11/20 14:02:17 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.110 2003/11/20 15:39:26 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -141,6 +141,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * Username and Password to work with
 	 */
 	private String username, password;
+	private DisconnectListener disconnectListener;
 	
 	/**
 	 * Connects the Core to mldonkey @remote
@@ -152,7 +153,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * disConnects the Core from mldonkey @remote	 * 
 	 */
-	public synchronized void disconnect() {
+	public void disconnect() {		
 		this.connected = false;
 	}
 
@@ -180,6 +181,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		this.pollModeEnabled = pollModeEnabled;
 		this.advancedMode = advancedMode;
 		this.pollUpStats = PreferenceLoader.loadBoolean( "pollUpStats" );
+		this.disconnectListener = new DisconnectListener( this, waiterObj );
 	}
 
 	/**
@@ -187,6 +189,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * starts the Core and begin receiving messages	 * 
 	 */
 	public void  run() {
+		
 
 		/* send the initial protocol version */
 		this.sendProtocolVersion();
@@ -197,8 +200,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		short opCode;		
 		BufferedInputStream i;
 		try {
-			i = new BufferedInputStream( connection.getInputStream() );
-		
+			i = new BufferedInputStream( connection.getInputStream() );		
 			byte[] messageContent;
 			
 			while ( connected ) {	
@@ -250,11 +252,21 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param e The Exception to handle
 	 */
 	public void onIOException( IOException e ) {
-		connected = false;
+		this.disconnect();		
 		this.setChanged();
 		this.notifyObservers( e );
 	}
 	
+	/**
+	 * reconnects to mldonkey after connection-loss
+	 */
+	public void reconnect() {		
+		this.connection = G2Gui.initializeSocket();		
+		this.connected = true;
+		Thread restarted = new Thread( this );
+		restarted.start();
+	}
+
 	/**
 	 * @param opcode
 	 * @param connection
@@ -620,6 +632,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.110  2003/11/20 15:39:26  dek
+reconnect started
+
 Revision 1.109  2003/11/20 14:02:17  lemmster
 G2Gui cleanup
 

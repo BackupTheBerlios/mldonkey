@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Composite;
  * SpeedItem
  *
  *
- * @version $Id: SpeedItem.java,v 1.23 2003/10/22 15:46:06 dek Exp $
+ * @version $Id: SpeedItem.java,v 1.24 2003/11/20 15:44:56 dek Exp $
  *
  */
 public class SpeedItem implements Observer {
@@ -157,11 +157,15 @@ public class SpeedItem implements Observer {
         cLabelUp.setToolTipText( "" );
         speedLength = 0;
         cLabelUp.getParent().getParent().layout();
+		speedLength = 0;
     }
 }
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.24  2003/11/20 15:44:56  dek
+reconnect started
+
 Revision 1.23  2003/10/22 15:46:06  dek
 flattened status bar
 
