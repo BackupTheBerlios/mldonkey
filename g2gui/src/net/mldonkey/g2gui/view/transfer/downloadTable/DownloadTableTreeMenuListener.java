@@ -91,7 +91,7 @@ import java.io.File;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.39 2004/03/25 19:33:58 psy Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.40 2004/03/26 19:01:24 psy Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -296,11 +296,13 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             
             /* new http-preview method */
             OptionsInfo http_port = (OptionsInfo) gView.getCore().getOptionsInfoMap().get("http_port");
-            if ( new File(PreferenceLoader.getString("defaultPreviewer")).exists() &&
-            		http_port != null && gView.getCore().getProtoToUse() >= 25) {
+
+            if ( !PreferenceLoader.loadString("defaultPreviewer").equals("") && 
+				new File(PreferenceLoader.getString("defaultPreviewer")).exists() &&
+            	http_port != null && gView.getCore().getProtoToUse() >= 25) {
             	menuManager.add(new NetPreviewAction());
             }
-        
+ 
         }
 
         if ((selectedFile != null) && advancedMode) {
@@ -732,6 +734,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.40  2004/03/26 19:01:24  psy
+workaround for garbage windows gcc: java.io.IOException: GetFullPathName failed
+
 Revision 1.39  2004/03/25 19:33:58  psy
 added core-proto check (need 25+ to support http-preview)
 
