@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.47 2003/11/24 17:56:58 vnc Exp $
+ * @version $Id: G2Gui.java,v 1.48 2003/11/24 19:16:42 dek Exp $
  *
  */
 public class G2Gui {
@@ -147,8 +147,10 @@ public class G2Gui {
      */
     private static void launch() {
         /* we are running, so we make this available to other instances */
-        PreferenceLoader.getPreferenceStore().setValue("running", true);
-        PreferenceLoader.saveStore();
+    	if (!processingLink) {
+	        PreferenceLoader.getPreferenceStore().setValue("running", true);
+	        PreferenceLoader.saveStore();
+    	}
 
         Object waiterObject = new Object();
 
@@ -219,7 +221,7 @@ public class G2Gui {
         socket = initializeSocket();
 		if (socket == null ) return;
 
-        PreferenceLoader.saveStore();
+        if ( !processingLink ) PreferenceLoader.saveStore();
 
         /* wait as long till the core tells us to continue */
         synchronized (waiterObject) {
@@ -268,8 +270,10 @@ public class G2Gui {
          * we are not running anymore, so we can allow another instance to
          * be started
          */
+        if ( !processingLink ){
         PreferenceLoader.getPreferenceStore().setValue("running", false);
         PreferenceLoader.saveStore();
+        }
     }
 	/**
 	 * 
@@ -419,6 +423,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.48  2003/11/24 19:16:42  dek
+fast-link processing enabled
+
 Revision 1.47  2003/11/24 17:56:58  vnc
 added --h[elp] param
 
