@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.transferTree;
 
@@ -50,257 +50,231 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * 
+ *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.25 2003/09/14 21:54:13 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.26 2003/09/18 12:12:23 lemmster Exp $
  *
- */  
+ */
 public class ClientDetailDialog implements Observer, DisposeListener {
-
-	private Shell shell;
-	private CoreCommunication core;
-	private Display desktop = Display.getDefault();
-	private FileInfo fileInfo;
-	private ClientInfo clientInfo;
-
-	private CLabel clName, clRating, clActivity, clKind, clNetwork;
-	private ArrayList chunkCanvases = new ArrayList();
-
-	int leftColumn = 100;
-	int rightColumn = leftColumn * 3;
-	int width = leftColumn + rightColumn + 30;
-	int height = 420;
-	
-	public ClientDetailDialog ( FileInfo fileInfo, final ClientInfo clientInfo, final CoreCommunication core ) 
-	{
-		this.fileInfo = fileInfo;
-		this.clientInfo = clientInfo;
-		this.core = core;
-		createContents();
-	}
-	
-	/**
-	 * Create dialog contents
-	 */
-	public void createContents() {
-		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
-		shell.addDisposeListener( this );
-		shell.setBounds( (desktop.getBounds().width - width) / 2,
-								  (desktop.getBounds().height - height) / 2,
-								  width, height);
-								  
-		shell.setImage(G2GuiResources.getImage("ProgramIcon"));
-		
-		shell.setText( G2GuiResources.getString("TT_Client") + " " + clientInfo.getClientid() 
-						+ " " + G2GuiResources.getString("TT_Details").toLowerCase());						  
-		
-		GridLayout gridLayout = CGridLayout.createGL(1,5,5,0,5,false);
-		
-		shell.setLayout( gridLayout );
-		shell.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
-		createGeneralGroup(shell);
-		
-		createChunkGroup(shell, G2GuiResources.getString("TT_DOWNLOAD_CD_LOCAL_CHUNKS"), null);
-		createChunkGroup(shell, G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_CHUNKS"), clientInfo);
-	
-		createButtons(shell);
-
-		updateLabels();
-		fileInfo.addObserver(this);
-		clientInfo.addObserver(this);
-		shell.pack();
-		shell.open();
-	}
-
+    private Shell shell;
+    private CoreCommunication core;
+    private Display desktop = Display.getDefault();
+    private FileInfo fileInfo;
+    private ClientInfo clientInfo;
+    private CLabel clName;
+    private CLabel clRating;
+    private CLabel clActivity;
+    private CLabel clKind;
+    private CLabel clNetwork;
+    private ArrayList chunkCanvases = new ArrayList();
+    private int leftColumn = 100;
+    private int rightColumn = leftColumn * 3;
+    private int width = leftColumn + rightColumn + 30;
+    private int height = 420;
 
 	/**
-	 * @param parent
+	 * DOCUMENT ME!
 	 * 
-	 * Create general client information
+	 * @param fileInfo DOCUMENT ME!
+	 * @param clientInfo DOCUMENT ME!
+	 * @param core DOCUMENT ME!
 	 */
-	public void createGeneralGroup(Shell parent) {
-		
-		 Group clientGeneral = new Group(parent, SWT.SHADOW_ETCHED_OUT );
-		 clientGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_INFO"));
-		
-		 clientGeneral.setLayout(CGridLayout.createGL(4,5,2,0,0,false));
-		
-		 clName = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NAME"), true);
-		 clNetwork = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NETWORK"), false);
-		 clRating = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_RATING"), false);
-		 clActivity = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_ACTIVITY"), false);
-		 clKind = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_KIND"), false);
-	
-		 clientGeneral.setLayoutData( new GridData(GridData.FILL_HORIZONTAL ) );
+    public ClientDetailDialog( FileInfo fileInfo, final ClientInfo clientInfo,
+    							final CoreCommunication core ) {
+        this.fileInfo = fileInfo;
+        this.clientInfo = clientInfo;
+        this.core = core;
+        createContents();
+    }
 
-	}
-	
-	/**
-	 * @param shell
-	 * @param text
-	 * @param clientInfo
-	 * 
-	 * Create chunk group (clientInfo=null to display fileInfo chunks)
-	 */
-	public void createChunkGroup(Shell shell, String text, ClientInfo clientInfo) {
-		
-		Group chunkGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		
-		String totalChunks = "";
-		// clientInfo.getFileAvail is not synched. TIntObjHash.. 
-		if (clientInfo == null) {
-			totalChunks = " (" + fileInfo.getAvail().length() + ")";
-		} 
-		
-		chunkGroup.setText(text + totalChunks);
-		chunkGroup.setLayout(CGridLayout.createGL(1,5,5,0,0,false));
-		chunkGroup.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) ) ;
-				
-		ChunkCanvas chunkCanvas = new ChunkCanvas( chunkGroup, SWT.NO_BACKGROUND, clientInfo, fileInfo, null );
-		
-		if (clientInfo == null) 
-			fileInfo.addObserver( chunkCanvas );
-		else {
-			clientInfo.addObserver( chunkCanvas );
-		}
-		
-		chunkCanvases.add(chunkCanvas);
-		
-		GridData canvasGD = new GridData(GridData.FILL_HORIZONTAL);
-		canvasGD.heightHint = 28;
-		chunkCanvas.setLayoutData(canvasGD);
-	
-	}
-	
-	/**
-	 * @param parent
-	 * 
-	 * Create dialog buttons
-	 * 
-	 */
-	private void createButtons(Shell parent) {
-		
-		Composite buttonComposite = new Composite(parent, SWT.NONE);
-		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		buttonComposite.setLayout(CGridLayout.createGL(2,0,0,5,0,false));
+    /**
+     * Create dialog contents
+     */
+    public void createContents() {
+        shell = new Shell( SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
+        shell.addDisposeListener( this );
+        shell.setBounds( ( desktop.getBounds().width - width ) / 2,
+                         ( desktop.getBounds().height - height ) / 2, width, height );
+        shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
+        shell.setText( G2GuiResources.getString( "TT_Client" ) + " " + clientInfo.getClientid() + " "
+                       + G2GuiResources.getString( "TT_Details" ).toLowerCase() );
+        GridLayout gridLayout = CGridLayout.createGL( 1, 5, 5, 0, 5, false );
+        shell.setLayout( gridLayout );
+        shell.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        createGeneralGroup( shell );
+        createChunkGroup( shell, G2GuiResources.getString( "TT_DOWNLOAD_CD_LOCAL_CHUNKS" ), null );
+        createChunkGroup( shell, G2GuiResources.getString( "TT_DOWNLOAD_CD_CLIENT_CHUNKS" ), clientInfo );
+        createButtons( shell );
+        updateLabels();
+        fileInfo.addObserver( this );
+        clientInfo.addObserver( this );
+        shell.pack();
+        shell.open();
+    }
 
-		final Button addFriendButton = new Button( buttonComposite, SWT.NONE );
-		addFriendButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));
-		addFriendButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ));
-		
-		if (clientInfo.getClientType() == EnumClientType.FRIEND)
-			addFriendButton.setEnabled(false);
+    /**
+     * Create general client information
+     * 
+     * @param parent DOCUMENT ME!
+     */
+    public void createGeneralGroup( Shell parent ) {
+        Group clientGeneral = new Group( parent, SWT.SHADOW_ETCHED_OUT );
+        clientGeneral.setText( G2GuiResources.getString( "TT_DOWNLOAD_CD_CLIENT_INFO" ) );
+        clientGeneral.setLayout( CGridLayout.createGL( 4, 5, 2, 0, 0, false ) );
+        clName = createLine( clientGeneral, G2GuiResources.getString( "TT_DOWNLOAD_CD_NAME" ), true );
+        clNetwork = createLine( clientGeneral, G2GuiResources.getString( "TT_DOWNLOAD_CD_NETWORK" ), false );
+        clRating = createLine( clientGeneral, G2GuiResources.getString( "TT_DOWNLOAD_CD_RATING" ), false );
+        clActivity =
+            createLine( clientGeneral, G2GuiResources.getString( "TT_DOWNLOAD_CD_ACTIVITY" ), false );
+        clKind = createLine( clientGeneral, G2GuiResources.getString( "TT_DOWNLOAD_CD_KIND" ), false );
+        clientGeneral.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    }
 
-		addFriendButton.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected (SelectionEvent s) {
-				ClientInfo.addFriend(core, clientInfo.getClientid());
-				addFriendButton.setText(G2GuiResources.getString( "BTN_OK" ));
-				addFriendButton.setEnabled(false);
-			}	
-		});
+    /**
+     * Create chunk group (clientInfo=null to display fileInfo chunks)
+     * 
+	 * @param shell DOCUMENT ME!
+     * @param text DOCUMENT ME!
+     * @param clientInfo DOCUMENT ME!
+     */
+    public void createChunkGroup( Shell shell, String text, ClientInfo clientInfo ) {
+        Group chunkGroup = new Group( shell, SWT.SHADOW_ETCHED_OUT );
+        String totalChunks = "";
 
-		Button closeButton = new Button( buttonComposite, SWT.NONE );
-		closeButton.setFocus();
-		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		closeButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
-		closeButton.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected (SelectionEvent s) {
-						shell.close();
-			}	
-		});
-	}
-	
-	
-	/**
-	 * @param composite
-	 * @param label
-	 * @param longlabel
-	 * @return CLabel
-	 * 
-	 * Create a Label/CLabel combination for information display
-	 * 
-	 */
-	private CLabel createLine(Composite composite, String label, boolean longlabel) {
-		
-		Label aLabel = new Label(composite, SWT.NONE);
-		aLabel.setText(label);
-		GridData lGD = new GridData(); 
-		lGD.widthHint = leftColumn;
-		aLabel.setLayoutData(lGD);
-		
-		CLabel aCLabel = new CLabel(composite, SWT.NONE);
-		GridData clGD = new GridData();
-		if (longlabel) {
-			clGD.widthHint = rightColumn;
-			clGD.horizontalSpan = 3;
-		} else {
-			clGD.widthHint = leftColumn;
-		}
-			
-		aCLabel.setLayoutData(clGD); 
-		return aCLabel;	 
-		
-	}
-	
-	/**
-	 * Update labels
-	 */
-	public void updateLabels() {
-		
-		updateLabel(clName, clientInfo.getClientName());
-		updateLabel(clRating, "" + clientInfo.getClientRating());
-		updateLabel(clActivity, clientInfo.getClientActivity());
-		updateLabel(clKind, clientInfo.getClientConnection());
-		updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
-		
-	}
-	
-	/**
-	 * @param cLabel
-	 * @param string
-	 * 
-	 * Update a label
-	 * 
-	 */
-	public void updateLabel(CLabel cLabel, String string) {
-		if (!cLabel.isDisposed()) {
-			cLabel.setText(string);
-			if (string.length() > 10) 
-				cLabel.setToolTipText(string);
-			else cLabel.setToolTipText("");
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable o, Object arg) {
-		if (o instanceof FileInfo && !shell.isDisposed()) {
-			shell.getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					updateLabels();
-				}
-			});
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
-	 */
-	public synchronized void widgetDisposed( DisposeEvent e ) {
-		Iterator i = chunkCanvases.iterator();
-		while ( i.hasNext() )
-			( ( ChunkCanvas ) i.next() ).dispose();
-		
-		clientInfo.deleteObserver(this);
-		fileInfo.deleteObserver(this);
-	}
-	
+        // clientInfo.getFileAvail is not synched. TIntObjHash.. 
+        if ( clientInfo == null )
+            totalChunks = " (" + fileInfo.getAvail().length() + ")";
+        chunkGroup.setText( text + totalChunks );
+        chunkGroup.setLayout( CGridLayout.createGL( 1, 5, 5, 0, 0, false ) );
+        chunkGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        ChunkCanvas chunkCanvas =
+            new ChunkCanvas( chunkGroup, SWT.NO_BACKGROUND, clientInfo, fileInfo, null );
+        if ( clientInfo == null )
+            fileInfo.addObserver( chunkCanvas );
+        else
+            clientInfo.addObserver( chunkCanvas );
+        chunkCanvases.add( chunkCanvas );
+        GridData canvasGD = new GridData( GridData.FILL_HORIZONTAL );
+        canvasGD.heightHint = 28;
+        chunkCanvas.setLayoutData( canvasGD );
+    }
+
+    /**
+     * Create dialog buttons
+     * 
+     * @param parent DOCUMENT ME!
+     */
+    private void createButtons( Shell parent ) {
+        Composite buttonComposite = new Composite( parent, SWT.NONE );
+        buttonComposite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        buttonComposite.setLayout( CGridLayout.createGL( 2, 0, 0, 5, 0, false ) );
+        final Button addFriendButton = new Button( buttonComposite, SWT.NONE );
+        addFriendButton.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END ) );
+        addFriendButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
+        if ( clientInfo.getClientType() == EnumClientType.FRIEND )
+            addFriendButton.setEnabled( false );
+        addFriendButton.addSelectionListener( new SelectionAdapter() {
+                public void widgetSelected( SelectionEvent s ) {
+                    ClientInfo.addFriend( core, clientInfo.getClientid() );
+                    addFriendButton.setText( G2GuiResources.getString( "BTN_OK" ) );
+                    addFriendButton.setEnabled( false );
+                }
+            } );
+
+        Button closeButton = new Button( buttonComposite, SWT.NONE );
+        closeButton.setFocus();
+        closeButton.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
+        closeButton.setText( G2GuiResources.getString( "BTN_CLOSE" ) );
+        closeButton.addSelectionListener( new SelectionAdapter() {
+                public void widgetSelected( SelectionEvent s ) {
+                    shell.close();
+                }
+            } );
+    }
+
+    /**
+     * Create a Label/CLabel combination for information display
+     *
+     * @param composite DOCUMENT ME!
+     * @param label DOCUMENT ME!
+     * @param longlabel DOCUMENT ME!
+     * @return CLabel DOCUMENT ME!
+     */
+    private CLabel createLine( Composite composite, String label, boolean longlabel ) {
+        Label aLabel = new Label( composite, SWT.NONE );
+        aLabel.setText( label );
+        GridData lGD = new GridData();
+        lGD.widthHint = leftColumn;
+        aLabel.setLayoutData( lGD );
+        CLabel aCLabel = new CLabel( composite, SWT.NONE );
+        GridData clGD = new GridData();
+        if ( longlabel ) {
+            clGD.widthHint = rightColumn;
+            clGD.horizontalSpan = 3;
+        }
+        else
+            clGD.widthHint = leftColumn;
+        aCLabel.setLayoutData( clGD );
+        return aCLabel;
+    }
+
+    /**
+     * Update labels
+     */
+    public void updateLabels() {
+        updateLabel( clName, clientInfo.getClientName() );
+        updateLabel( clRating, "" + clientInfo.getClientRating() );
+        updateLabel( clActivity, clientInfo.getClientActivity() );
+        updateLabel( clKind, clientInfo.getClientConnection() );
+        updateLabel( clNetwork, clientInfo.getClientnetworkid().getNetworkName() );
+    }
+
+    /**
+     * Update a label
+     *
+     * @param cLabel DOCUMENT ME!
+     * @param string DOCUMENT ME!
+     */
+    public void updateLabel( CLabel cLabel, String string ) {
+        if ( !cLabel.isDisposed() ) {
+            cLabel.setText( string );
+            if ( string.length() > 10 )
+                cLabel.setToolTipText( string );
+            else
+                cLabel.setToolTipText( "" );
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update( Observable o, Object arg ) {
+        if ( o instanceof FileInfo && !shell.isDisposed() )
+            shell.getDisplay().asyncExec( new Runnable() {
+                    public void run() {
+                        updateLabels();
+                    }
+                } );
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+     */
+    public synchronized void widgetDisposed( DisposeEvent e ) {
+        Iterator i = chunkCanvases.iterator();
+        while ( i.hasNext() )
+            ( ( ChunkCanvas ) i.next() ).dispose();
+        clientInfo.deleteObserver( this );
+        fileInfo.deleteObserver( this );
+    }
 }
+
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.26  2003/09/18 12:12:23  lemmster
+checkstyle
+
 Revision 1.25  2003/09/14 21:54:13  zet
 fix rate
 

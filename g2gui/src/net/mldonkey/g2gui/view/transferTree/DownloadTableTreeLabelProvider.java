@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * g2gui Team
- * 
- * 
+ *
+ *
  * This file is part of g2gui.
  *
  * g2gui is free software; you can redistribute it and/or modify
@@ -18,9 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with g2gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
- 
 package net.mldonkey.g2gui.view.transferTree;
 
 import java.text.DecimalFormat;
@@ -39,125 +38,137 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.20 2003/09/14 03:37:43 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.21 2003/09/18 12:12:23 lemmster Exp $
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
-	
-	protected Color unAvailableFileColor = new Color(null, 255,0,0);
-	protected Color availableFileColor = new Color(null, 255,165,0);
-	protected Color downloadedFileColor = new Color(null, 0,0,255);
-	protected Color queuedFileColor = new Color(null, 192,192,192);
-	protected Color pausedFileColor = new Color(null, 255, 0, 0);
-	protected Color rateAbove20Color = new Color(null, 35, 214, 0);
-	protected Color rateAbove10Color = new Color(null, 30, 170, 2);
-	protected Color rateAbove0Color = new Color(null, 24, 142, 4);
-	protected DecimalFormat df = new DecimalFormat( "0.0" );
-	protected DecimalFormat dfp = new DecimalFormat( "0" );
-	
-	protected CustomTableTreeViewer tableTreeViewer;
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
-	 */
-	public Color getBackground (Object arg0) {
-			return null;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
-	 */
-	public Image getColumnImage(Object object, int column) {
-		return null;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
-	 */
-	public String getColumnText(Object object, int column) {
-		return "";
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
-	 */
-	public Color getForeground(Object arg0) {
-		if (arg0 instanceof FileInfo) {
-			FileInfo fileInfo = (FileInfo) arg0;
-			if (fileInfo.getState().getState() == EnumFileState.QUEUED)
-				return queuedFileColor;
-			if (fileInfo.getState().getState() == EnumFileState.PAUSED)
-				return pausedFileColor;
-			if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
-				return downloadedFileColor;
-			if (fileInfo.getRate() > 20f) 
-				return rateAbove20Color;
-			if (fileInfo.getRate() > 10f) 
-				return rateAbove10Color;
-			if (fileInfo.getRate() > 0f) 
-				return rateAbove0Color;	
-			return availableFileColor;
-		} else if (arg0 instanceof TreeClientInfo) {
-			ClientInfo clientInfo = ((TreeClientInfo) arg0).getClientInfo();
-			if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
-				return rateAbove0Color;
-			else
-				return null;
-		}
-		return null;
-	}
-	
+    protected Color unAvailableFileColor = new Color( null, 255, 0, 0 );
+    protected Color availableFileColor = new Color( null, 255, 165, 0 );
+    protected Color downloadedFileColor = new Color( null, 0, 0, 255 );
+    protected Color queuedFileColor = new Color( null, 192, 192, 192 );
+    protected Color pausedFileColor = new Color( null, 255, 0, 0 );
+    protected Color rateAbove20Color = new Color( null, 35, 214, 0 );
+    protected Color rateAbove10Color = new Color( null, 30, 170, 2 );
+    protected Color rateAbove0Color = new Color( null, 24, 142, 4 );
+    protected DecimalFormat df = new DecimalFormat( "0.0" );
+    protected DecimalFormat dfp = new DecimalFormat( "0" );
+    protected CustomTableTreeViewer tableTreeViewer;
 
-	public String getFileETA (FileInfo fileInfo) {
-		
-		if ( fileInfo.getState().getState() == EnumFileState.QUEUED
-			|| fileInfo.getState().getState() == EnumFileState.PAUSED )
-			return "";
-		return fileInfo.getStringETA();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-	 */
-	public void addListener(ILabelProviderListener arg0) {
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
+     */
+    public Color getBackground( Object arg0 ) {
+        return null;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-	 */
-	public void dispose() {
-		unAvailableFileColor.dispose();
-		availableFileColor.dispose();
-		queuedFileColor.dispose();
-		pausedFileColor.dispose();
-		downloadedFileColor.dispose();
-		rateAbove20Color.dispose();
-		rateAbove10Color.dispose();
-		rateAbove0Color.dispose();
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+     */
+    public Image getColumnImage( Object object, int column ) {
+        return null;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
-	 */
-	public boolean isLabelProperty(Object arg0, String arg1) {
-		return true;
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-	 */
-	public void removeListener(ILabelProviderListener arg0) {
-	}
-	/**
-	 * @param v
-	 */
-	public void setTableTreeViewer(CustomTableTreeViewer v) {
-		tableTreeViewer = v;
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+     */
+    public String getColumnText( Object object, int column ) {
+        return "";
+    }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+     */
+    public Color getForeground( Object arg0 ) {
+        if ( arg0 instanceof FileInfo ) {
+            FileInfo fileInfo = ( FileInfo ) arg0;
+            if ( fileInfo.getState().getState() == EnumFileState.QUEUED )
+                return queuedFileColor;
+            if ( fileInfo.getState().getState() == EnumFileState.PAUSED )
+                return pausedFileColor;
+            if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADED )
+                return downloadedFileColor;
+            if ( fileInfo.getRate() > 20f )
+                return rateAbove20Color;
+            if ( fileInfo.getRate() > 10f )
+                return rateAbove10Color;
+            if ( fileInfo.getRate() > 0f )
+                return rateAbove0Color;
+            return availableFileColor;
+        }
+        else if ( arg0 instanceof TreeClientInfo ) {
+            ClientInfo clientInfo = ( ( TreeClientInfo ) arg0 ).getClientInfo();
+            if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
+                return rateAbove0Color;
+            else
+                return null;
+        }
+        return null;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param fileInfo DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public String getFileETA( FileInfo fileInfo ) {
+        if ( ( fileInfo.getState().getState() == EnumFileState.QUEUED )
+                 || ( fileInfo.getState().getState() == EnumFileState.PAUSED ) )
+            return "";
+        return fileInfo.getStringETA();
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#
+     * addListener(org.eclipse.jface.viewers.ILabelProviderListener)
+     */
+    public void addListener( ILabelProviderListener arg0 ) {
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
+     */
+    public void dispose() {
+        unAvailableFileColor.dispose();
+        availableFileColor.dispose();
+        queuedFileColor.dispose();
+        pausedFileColor.dispose();
+        downloadedFileColor.dispose();
+        rateAbove20Color.dispose();
+        rateAbove10Color.dispose();
+        rateAbove0Color.dispose();
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
+     */
+    public boolean isLabelProperty( Object arg0, String arg1 ) {
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#
+     * removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+     */
+    public void removeListener( ILabelProviderListener arg0 ) {
+    }
+
+    /**
+     * DOCUMENT ME!
+     *  
+     * @param v DOCUMENT ME!
+     */
+    public void setTableTreeViewer( CustomTableTreeViewer v ) {
+        tableTreeViewer = v;
+    }
 }
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.21  2003/09/18 12:12:23  lemmster
+checkstyle
+
 Revision 1.20  2003/09/14 03:37:43  zet
 changedProperties
 
@@ -177,7 +188,7 @@ Revision 1.15  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.14  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer
