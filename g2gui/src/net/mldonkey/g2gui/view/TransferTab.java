@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.73 2003/10/16 23:56:53 zet Exp $
+ * @version $Id: TransferTab.java,v 1.74 2003/10/19 17:07:08 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -258,8 +258,12 @@ public class TransferTab extends GuiTab {
                 public void controlResized( ControlEvent e ) {
                     Composite c = ( Composite ) e.widget;
                     int width = c.getBounds().width;
-                    if ( ( width > 0 ) && ( downloadTableTreeViewer != null ) )
+                    int height = c.getBounds().height;
+                    if ( ( width > 0 ) &&  (height > 0 ) && ( downloadTableTreeViewer != null ) ) {
                         downloadTableTreeViewer.updateClientsTable( true );
+                    } else {
+                        downloadTableTreeViewer.updateClientsTable( false );
+                    }
                 }
             } );
         createClientTableViewer( downloadClients, parentSash );
@@ -408,6 +412,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.74  2003/10/19 17:07:08  zet
+check height
+
 Revision 1.73  2003/10/16 23:56:53  zet
 not much
 
