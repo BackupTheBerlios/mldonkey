@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.8 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.9 2003/08/05 13:43:18 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -73,7 +73,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 	public void readStream( MessageBuffer messageBuffer ) {
 		int id = messageBuffer.readInt32();
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
-		if ( this.get( id ) != null ) {
+		if ( this.containsKey( id ) ) {
 			this.get( id ).readStream( messageBuffer );
 		}
 		else {
@@ -81,6 +81,8 @@ public class ServerInfoIntMap extends InfoIntMap {
 			serverInfo.readStream( messageBuffer );
 			this.put( serverInfo.getServerId(), serverInfo );
 		}
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -250,10 +252,47 @@ public class ServerInfoIntMap extends InfoIntMap {
 		message.sendMessage( this.parent.getConnection() );
 		message = null;
 	}
+	
+	/**
+	 * Adds the server to the black list
+	 * @param key The serverid
+	 */
+	public void addToBlackList( int key ) {
+		ServerInfo server = ( ServerInfo ) this.infoIntMap.get( key );
+		String ip = server.getServerAddress().getAddress().toString();
+		Message message = new EncodeMessage( Message.S_CONSOLEMSG, ip );
+		message.sendMessage( this.parent.getConnection() );
+		ip = null;
+		message = null;
+	}
+	
+	/**
+	 * Add servers from a weblist to this obj
+	 * @param url The url to the server list
+	 */
+	public void addServerList( String url ) {
+		int index = url.lastIndexOf( "." );
+		String suffix = url.substring( index );
+		if ( suffix.equalsIgnoreCase( ".met" ) )
+			suffix = "server.met";
+		else
+			suffix = "ocl";	
+
+		String aString = "add_url ";
+		aString += suffix + " ";
+		aString += url;
+		Message message = new EncodeMessage( Message.S_CONSOLEMSG, aString );
+		message.sendMessage( this.parent.getConnection() );
+		message = null;
+		aString = null;
+	}
 }
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.9  2003/08/05 13:43:18  lemmstercvs01
+added some messages
+
 Revision 1.8  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 
