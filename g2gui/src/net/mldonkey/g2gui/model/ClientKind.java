@@ -30,10 +30,10 @@ import net.mldonkey.g2gui.model.enum.EnumClientMode;
  * ClientKind
  *
  *
- * @version $Id: ClientKind.java,v 1.9 2003/12/01 13:28:02 zet Exp $ 
+ * @version $Id: ClientKind.java,v 1.10 2003/12/01 14:34:26 lemmster Exp $ 
  *
  */
-public class ClientKind implements SimpleInformation {
+public class ClientKind extends SimpleInformation {
 	/**
 	 * Client Type (direct/firewalled)
 	 */
@@ -50,12 +50,14 @@ public class ClientKind implements SimpleInformation {
 	 * Client Hash (present only if client type = 1)
 	 */
 	private String clientHash;
-	
-	
 	/**
 	 * IpAddr (present only if client type = 0)
 	 */
 	private Addr addr = new Addr();
+
+	ClientKind() {
+		//prevent outer package instanciation
+	}
 
 	/**
 	 * @return The client hash identifier
@@ -123,6 +125,9 @@ public class ClientKind implements SimpleInformation {
 
 /*
 $Log: ClientKind.java,v $
+Revision 1.10  2003/12/01 14:34:26  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.9  2003/12/01 13:28:02  zet
 updates for ipaddr
 
@@ -130,7 +135,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.6  2003/07/06 09:37:41  lemmstercvs01
 javadoc improved

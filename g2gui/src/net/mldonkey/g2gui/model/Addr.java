@@ -32,160 +32,165 @@ import java.net.UnknownHostException;
  * Addr
  *
  *
- * @version $Id: Addr.java,v 1.20 2003/12/01 13:20:31 zet Exp $
+ * @version $Id: Addr.java,v 1.21 2003/12/01 14:31:37 lemmster Exp $
  */
-public class Addr implements SimpleInformation {
-    /**
-     * Address Type
-     */
-    private boolean addressType;
+public class Addr extends SimpleInformation {
+	/**
+	 * Address Type
+	 */
+	private boolean addressType;
+	/**
+	 * IP Address
+	 */
+	private InetAddress address;
+	/**
+	 * Host Name
+	 */
+	private String hostName = "";
 
-    /**
-     * IP Address
-     */
-    private InetAddress address;
+	Addr() {
+		// prevent outer package instanciation
+	}
+	
+	/**
+	 * @return direct/true or indirekt/false address
+	 */
+	public boolean hasHostName() {
+		return addressType;
+	}
 
-    /**
-     * Host Name
-     */
-    private String hostName = "";
+	/**
+	 * @return The address
+	 */
+	private InetAddress getAddress() {
+		return this.address;
+	}
+	/**
+	 * @return The HostName
+	 */
+	private String getHostName() {
+		return this.hostName;
+	}
+	
+	/**
+	 * @return String (hostName if available, hostAddress if not)
+	 */
+	public String toString() {
+	    if (hasHostName()) 
+	        return getHostName();
+	    else {
+	        if (getAddress().hashCode() == 0) 
+	            return "";
+	         else
+	            return getAddress().getHostAddress();
+	    }
+	}
 
-    /**
-     * @return direct/true or indirekt/false address
-     */
-    public boolean hasHostName() {
-        return addressType;
-    }
+	/**
+	 * @param b a boolean
+	 */
+	private void setAddressType( byte b ) {
+		if ( b == 0 ) 
+			addressType = false;
+		if ( b == 1 )
+			addressType = true;
+	}
 
-    /**
-     * @return The address
-     */
-    private InetAddress getAddress() {
-        return this.address;
-    }
+	/**
+	 * Reads an Addr object from a MessageBuffer
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	public void readStream(MessageBuffer messageBuffer) {
+		/*
+		 * int8           Address Type: 0 = Address is IP, 1 = Address is Name
+		 * int32           IP address (present only if Address Type = 0)
+		 * String           Name address (present only if Address Type = 1)
+		 */
+		this.setAddressType( messageBuffer.readByte() );
+		this.readStream( this.hasHostName(), messageBuffer );
+	}
 
-    /**
-     * @return The HostName
-     */
-    private String getHostName() {
-        return this.hostName;
-    }
+	/**
+	 * Reads an Addr object from a MessageBuffer
+	 * @param hasAHostName Tells if this Addr is an InetAddress of just a String
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	public void readStream(boolean hasAHostName, MessageBuffer messageBuffer) {
+		if ( hasAHostName )
+			this.hostName = messageBuffer.readString();
+		else {
+			try {
+				this.address = messageBuffer.readInetAddress();
+			} 
+			catch ( UnknownHostException e ) { }
+		}
+	}
+	
+	/**
+	 * @param anAddress The address to compare
+	 * @return an Int
+	 */
+	public int compareTo( Addr anAddress ) {
+		/* compare between hasHostName() */
+		if ( this.hasHostName() && !anAddress.hasHostName() )
+			return 1;
+		if ( !this.hasHostName() && anAddress.hasHostName() )
+			return -1;
+		if ( this.hasHostName() && anAddress.hasHostName() )
+			return this.getHostName().compareToIgnoreCase( anAddress.getHostName() );
+			
+		return this.compareTo( this.address.getAddress(), anAddress.address.getAddress(), 0 );
+	}
+	
+	private int compareTo( byte[] aByte1, byte[] aByte2, int index ) {
+		// break condition (assume aByte1 and aByte2 have same length)
+		if ( index >= aByte1.length )
+			return 0;
+			
+		int i1 = aByte1[ index ] & 0xff;
+		int i2 = aByte2[ index ] & 0xff;	
+			
+		// 1 > 2	
+		if ( i1 > i2 )
+			return 1;
+			
+		// 1 < 2	
+		if ( i1 < i2 )
+			return -1;
 
-    /**
-     * @return String (hostName if available, hostAddress if not)
-     */
-    public String toString() {
-        if (hasHostName())
-            return getHostName();
-        else {
-            if (getAddress().hashCode() == 0)
-                return "";
-            else
-
-                return getAddress().getHostAddress();
-        }
-    }
-
-    /**
-     * @param b a boolean
-     */
-    private void setAddressType(byte b) {
-        if (b == 0)
-            addressType = false;
-
-        if (b == 1)
-            addressType = true;
-    }
-
-    /**
-     * Reads an Addr object from a MessageBuffer
-     * @param messageBuffer The MessageBuffer to read from
-     */
-    public void readStream(MessageBuffer messageBuffer) {
-        /*
-         * int8           Address Type: 0 = Address is IP, 1 = Address is Name
-          * int32           IP address (present only if Address Type = 0)
-          * String           Name address (present only if Address Type = 1)
-         */
-        this.setAddressType(messageBuffer.readByte());
-        readStream(hasHostName(), messageBuffer);
-    }
-
-    public void readStream(boolean hasHostName, MessageBuffer messageBuffer) {
-        if (hasHostName)
-            this.hostName = messageBuffer.readString();
-        else
-
-            try {
-                this.address = messageBuffer.readInetAddress();
-            } catch (UnknownHostException e) {
-            }
-    }
-
-    /**
-     * @param anAddress The address to compare
-     * @return an Int
-     */
-    public int compareTo(Addr anAddress) {
-        /* compare between hasHostName() */
-        if (this.hasHostName() && !anAddress.hasHostName())
-            return 1;
-
-        if (!this.hasHostName() && anAddress.hasHostName())
-            return -1;
-
-        if (this.hasHostName() && anAddress.hasHostName())
-            return this.getHostName().compareToIgnoreCase(anAddress.getHostName());
-
-        return this.compareTo(this.address.getAddress(), anAddress.address.getAddress(), 0);
-    }
-
-    private int compareTo(byte[] aByte1, byte[] aByte2, int index) {
-        // break condition (assume aByte1 and aByte2 have same length)
-        if (index >= aByte1.length)
-            return 0;
-
-        int i1 = aByte1[ index ] & 0xff;
-        int i2 = aByte2[ index ] & 0xff;
-
-        // 1 > 2	
-        if (i1 > i2)
-            return 1;
-
-        // 1 < 2	
-        if (i1 < i2)
-            return -1;
-
-        // equal -> recusion
-        return this.compareTo(aByte1, aByte2, ++index);
-    }
-
-    /**
-     * Creates an Addr obj from a given hostname of an ipaddress
-     * @param aString hostname of ipaddress
-     * @return An Addr
-     */
-    public static Addr getAddr(String aString) {
-        Addr anAddr = new Addr();
-        anAddr.addressType = false;
-
-        if (aString.equals(""))
-            aString = "0.0.0.0";
-
-        try {
-            anAddr.address = InetAddress.getByName(aString);
-        } catch (UnknownHostException e) {
-            // assume this will never fail
-            e.printStackTrace();
-        }
-
-        return anAddr;
-    }
+		// equal -> recusion
+		return this.compareTo( aByte1, aByte2, ++index );
+	}
+	
+	/**
+	 * Creates an Addr obj from a given hostname of an ipaddress
+	 * @param aString hostname of ipaddress
+	 * @return An Addr
+	 */
+	public static Addr getAddr( String aString ) {
+		Addr anAddr = new Addr();
+		anAddr.addressType = false;
+		
+		if (aString.equals("")) 
+		    aString = "0.0.0.0";
+		
+		try {
+			anAddr.address =InetAddress.getByName( aString );
+		}
+		catch ( UnknownHostException e ) {
+			// assume this will never fail
+			e.printStackTrace();
+		}
+		return anAddr;
+	}
 }
 
 
 /*
 $Log: Addr.java,v $
+Revision 1.21  2003/12/01 14:31:37  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.20  2003/12/01 13:20:31  zet
 update for use with clientkind
 
