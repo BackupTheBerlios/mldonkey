@@ -27,7 +27,7 @@ package net.mldonkey.g2gui.model.enum;
  * Enum
  *
  *
- * @version $Id: Enum.java,v 1.8 2003/11/10 09:56:51 lemmster Exp $
+ * @version $Id: Enum.java,v 1.9 2003/11/11 17:14:35 lemmster Exp $
  *
  */
 public abstract class Enum {
@@ -51,6 +51,18 @@ public abstract class Enum {
 		objString = objString.substring(objString.lastIndexOf( "." ) + 1, objString.length());
 		
     	return objString + "_" + this.toString();
+    }
+    
+    /**
+     * Creates the preference string
+     * @param enum
+     * @param obj
+     * @return a String
+     */
+    public static String getPrefName( Enum enum, Class aClass ) {
+		String objString = aClass.getName();
+		objString = objString.substring(objString.lastIndexOf( "." ) + 1, objString.length());
+	   	return objString + "_" + enum.toString();
     }
 
     /**
@@ -117,6 +129,9 @@ public abstract class Enum {
 
 /*
 $Log: Enum.java,v $
+Revision 1.9  2003/11/11 17:14:35  lemmster
+default filters for servertab
+
 Revision 1.8  2003/11/10 09:56:51  lemmster
 save filter state
 

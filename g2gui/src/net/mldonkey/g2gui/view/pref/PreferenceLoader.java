@@ -29,7 +29,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.server.ServerPaneListener;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -46,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.42 2003/11/10 09:58:38 lemmster Exp $
+ * @version $Id: PreferenceLoader.java,v 1.43 2003/11/11 17:14:35 lemmster Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -161,7 +164,10 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( G2GuiResources.getString( "ENS_BLACK_LISTED" ), false );		
 		preferenceStore.setDefault( G2GuiResources.getString( "ENS_NOT_CONNECTED_WAS_QUEUED" ), false );		
 		
-		
+		// set the default filter for server tab to connected, connecting and connection initiated
+		preferenceStore.setDefault( Enum.getPrefName( EnumState.CONNECTED, ServerPaneListener.class ), true );
+		preferenceStore.setDefault( Enum.getPrefName( EnumState.CONNECTING, ServerPaneListener.class ), true );
+		preferenceStore.setDefault( Enum.getPrefName( EnumState.CONNECTED_INITIATING, ServerPaneListener.class ), true );
         
         return preferenceStore;
     }
@@ -272,6 +278,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.43  2003/11/11 17:14:35  lemmster
+default filters for servertab
+
 Revision 1.42  2003/11/10 09:58:38  lemmster
 return false by default instead of true in loadBoolean(someString)
 
