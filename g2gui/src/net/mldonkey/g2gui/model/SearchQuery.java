@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.28 2003/09/25 16:14:40 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.29 2003/09/25 16:15:58 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -183,16 +183,13 @@ public class SearchQuery implements Sendable {
 					case OR :
 						newQuery.setNode( EnumQuery.KEYWORDS );
 						newQuery.setComment( "Search-pattern:" );
-						if ( workingPattern != null ){
-							System.out.println("pattern: "+workingPattern);
+						if ( workingPattern != null ){							
 							newQuery.setDefaultValue( workingPattern );
 							orQuerys.add( newQuery );
 						}
-						else if ( i < patterns.length ) {
-							System.out.println("pattern null: ");
+						else if ( i < patterns.length ) {							
 							i++;
-							workingPattern = patterns[ i ];
-							System.out.println("new pattern: "+workingPattern);
+							workingPattern = patterns[ i ];							
 							newQuery.setDefaultValue( workingPattern );
 							orQuerys.add( newQuery );
 						}
@@ -215,8 +212,7 @@ public class SearchQuery implements Sendable {
 		}
 		else if ( workingPattern.equals( "OR" ) ){
 			/* set pattern to "null", take this as sign to use the following pattern */
-			workingPattern = null;
-			System.out.println("OR-query identified");
+			workingPattern = null;			
 			return OR;			
 		}
 		else if ( workingPattern.equals( "AND" ) ){
@@ -562,6 +558,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.29  2003/09/25 16:15:58  dek
+removed System.out
+
 Revision 1.28  2003/09/25 16:14:40  dek
 bugfix, now it should work more naturally
 
