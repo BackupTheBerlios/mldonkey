@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.38 2003/06/27 12:47:19 dek Exp $ 
+ * @version $Id: Core.java,v 1.39 2003/06/27 16:23:01 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -291,10 +291,28 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		return (NetworkInfoIntMap) networkinfoMap;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#isConnected()
+	 */
+	public boolean isConnected() {		
+		return connected;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getOptions()
+	 */
+	public OptionsInfoMap getOptions() {
+		return (OptionsInfoMap) optionsInfoMap;
+		
+	}
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.39  2003/06/27 16:23:01  dek
+getOptions() added
+
 Revision 1.38  2003/06/27 12:47:19  dek
 getNetWorkInfoMap() added - update ;-)
 

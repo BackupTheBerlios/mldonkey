@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.13 2003/06/27 12:47:19 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.14 2003/06/27 16:23:01 dek Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -62,4 +62,16 @@ public interface CoreCommunication {
 	 * @param string
 	 */
 	void sendConsoleMessage( String command );
+	/**
+	 * 
+	 */
+	void disconnect();
+	/**
+	 * @return
+	 */
+	boolean isConnected();
+	/**
+	 * 
+	 */
+	 OptionsInfoMap getOptions();
 }
