@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.42 2003/11/22 02:24:29 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.43 2003/11/28 13:24:17 lemmster Exp $ 
  *
  */
 public class SearchTab extends PaneGuiTab {
@@ -150,12 +150,14 @@ public class SearchTab extends PaneGuiTab {
 		tabFolder = new CTabFolder( aComposite, SWT.NONE );
 		tabFolder.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 				
-		tabFolder.setSelectionBackground( 
-			new Color[] { tabFolder.getDisplay().getSystemColor( 
-					SWT.COLOR_TITLE_BACKGROUND ), tabFolder.getBackground() }, new int[] { 75 } );
-		tabFolder.setSelectionForeground( 
-			tabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
-				
+		if (PreferenceLoader.loadBoolean("useGradient")) {
+			tabFolder.setSelectionBackground( 
+					new Color[] { tabFolder.getDisplay().getSystemColor( 
+							SWT.COLOR_TITLE_BACKGROUND ), tabFolder.getBackground() }, new int[] { 75 } );
+			tabFolder.setSelectionForeground( 
+					tabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
+		}
+			
 		Search[] searchTabs = this.createTab();
 		Control aControl;
 		for ( int i = 0; i < searchTabs.length; i++ ) {
@@ -456,6 +458,9 @@ public class SearchTab extends PaneGuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.43  2003/11/28 13:24:17  lemmster
+useGradient in headerbars
+
 Revision 1.42  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -545,7 +550,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

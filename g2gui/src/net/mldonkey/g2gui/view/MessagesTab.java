@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.35 2003/11/26 07:42:22 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.36 2003/11/28 13:24:17 lemmster Exp $
  */
 public class MessagesTab extends GuiTab {
     private CoreCommunication core;
@@ -197,11 +197,13 @@ public class MessagesTab extends GuiTab {
         messagesViewForm.setContent(cTabFolder);
         cTabFolder.setBorderVisible(false);
         cTabFolder.setLayoutData(new FillLayout());
-        cTabFolder.setSelectionBackground(new Color[] {
+        if (PreferenceLoader.loadBoolean("useGradient")) {
+        	cTabFolder.setSelectionBackground(new Color[] {
                 cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
                 cTabFolder.getBackground()
             }, new int[] { 75 });
-        cTabFolder.setSelectionForeground(cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
+        	cTabFolder.setSelectionForeground(cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
+        }
         cTabFolder.addCTabFolderListener(new CTabFolderAdapter() {
                 public void itemClosed(CTabFolderEvent event) {
                     CTabItem item = (CTabItem) event.item;
@@ -427,6 +429,9 @@ public class MessagesTab extends GuiTab {
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.36  2003/11/28 13:24:17  lemmster
+useGradient in headerbars
+
 Revision 1.35  2003/11/26 07:42:22  zet
 small changes
 
@@ -509,7 +514,7 @@ Revision 1.9  2003/08/23 09:47:52  lemmster
 just rename
 
 Revision 1.8  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.7  2003/08/20 22:18:56  zet
 Viewer updates
