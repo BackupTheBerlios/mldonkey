@@ -48,7 +48,7 @@ import java.util.Map;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.39 2003/11/06 03:27:38 zet Exp $
+ * @version $Id: Preferences.java,v 1.40 2003/11/06 15:12:44 zet Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -103,7 +103,8 @@ public class Preferences extends PreferenceManager {
 
         /* windows registry page */
         if (SWT.getPlatform().equals("win32") ||
-                System.getProperty("os.name").substring(0,7).equals("Windows")) {
+                ((System.getProperty("os.name").length() > 7) &&
+                System.getProperty("os.name").substring(0, 7).equals("Windows"))) {
             preferencePage = new G2GuiWinReg("Windows Registry", FieldEditorPreferencePage.NONE);
             preferencePage.setPreferenceStore(preferenceStore);
             g2GuiRootNode.add(new PreferenceNode("Windows Registry", preferencePage));
@@ -292,6 +293,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.40  2003/11/06 15:12:44  zet
+check getProperty length
+
 Revision 1.39  2003/11/06 03:27:38  zet
 add windows registry page
 

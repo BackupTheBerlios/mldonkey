@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.86 2003/11/06 03:27:11 zet Exp $
+ * @version $Id: MainTab.java,v 1.87 2003/11/06 15:12:44 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -155,7 +155,9 @@ public class MainTab implements ShellListener {
 		    ErrorDialog errorDialog = new ErrorDialog( new Shell(display), sw.toString() );
 		    errorDialog.open();
         }
-        if (SWT.getPlatform().equals("fox") && System.getProperty("os.name").substring(0,7).equals("Windows") ) {
+        if (SWT.getPlatform().equals("fox") 
+                && System.getProperty("os.name").length() > 7  
+                && System.getProperty("os.name").substring(0,7).equals("Windows") ) {
             // why does this not completely close
         } else {
             display.dispose();
@@ -450,6 +452,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.87  2003/11/06 15:12:44  zet
+check getProperty length
+
 Revision 1.86  2003/11/06 03:27:11  zet
 fox
 
