@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.7 2003/06/30 19:11:10 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.8 2003/06/30 21:42:45 dek Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {	
@@ -108,9 +108,7 @@ public class G2Gui extends PreferencePage  {
 	 * @param i
 	 */
 	private void computeColumn(int i) {
-		if (columns<i) columns = i;
-		System.out.println(i+" - " +columns);
-		
+		if (columns<i) columns = i;		
 	}
 
 	/**
@@ -179,6 +177,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.8  2003/06/30 21:42:45  dek
+and removed debugging  system.out.println
+
 Revision 1.7  2003/06/30 19:11:10  dek
 work in progress, committing before i make a huge mistake
 
