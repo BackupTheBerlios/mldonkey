@@ -29,8 +29,8 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
-import net.mldonkey.g2gui.view.viewers.GPage;
-import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreePage;
+import net.mldonkey.g2gui.view.viewers.GView;
+import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeView;
 
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CellEditor;
@@ -49,10 +49,10 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.19 2003/10/31 15:16:38 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.20 2003/10/31 16:02:57 zet Exp $
  *
  */
-public class DownloadTableTreeViewer extends GTableTreePage implements ICellModifier,
+public class DownloadTableTreeViewer extends GTableTreeView implements ICellModifier,
     IDoubleClickListener {
     public static final String ALL_COLUMNS = "ABCDEFGHIJKLMN";
     public static final String BASIC_COLUMNS = "ABCDFIK";
@@ -76,7 +76,7 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
     private boolean advancedMode = false;
     private CellEditor[] cellEditors = null;
     private CustomTableTreeViewer tableTreeViewer;
-    private GPage gPage;
+    private GView clientView;
     private Composite parent;
 
     /**
@@ -85,10 +85,10 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
      * @param mldonkey
      * @param page
      */
-    public DownloadTableTreeViewer(Composite parent, GPage clientTableViewer,
+    public DownloadTableTreeViewer(Composite parent, GView clientTableViewer,
         final CoreCommunication core, TransferTab page) {
         super(parent, core);
-        this.gPage = clientTableViewer;
+        this.clientView = clientTableViewer;
         this.parent = parent;
 
         preferenceString = "download";
@@ -119,8 +119,6 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
 
     public void createContents(Composite parent) {
         super.createContents(parent);
-
-        
         
         if (SWT.getPlatform().equals("gtk")) {
             getTable().getColumns()[ 0 ].pack();
@@ -267,7 +265,7 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
      * @return boolean
      */
     public boolean clientsDisplayed() {
-        if (gPage != null) {
+        if (clientView != null) {
             SashForm sashForm = (SashForm) parent.getParent().getParent();
 
             return sashForm.getWeights()[ 1 ] != 0;
@@ -277,7 +275,7 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
     }
 
     public void toggleClientsTable() {
-        if (gPage != null) {
+        if (clientView != null) {
             SashForm sashForm = (SashForm) parent.getParent().getParent();
 
             if (clientsDisplayed()) {
@@ -315,6 +313,9 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.20  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.19  2003/10/31 15:16:38  zet
 use a local
 

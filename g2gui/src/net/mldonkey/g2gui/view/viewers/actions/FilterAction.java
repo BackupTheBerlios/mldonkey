@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.Enum;
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.filters.FileExtensionFilter;
 import net.mldonkey.g2gui.view.viewers.filters.NetworkGViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
@@ -35,12 +35,12 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * GAction
  *
- * @version $Id: FilterAction.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $ 
+ * @version $Id: FilterAction.java,v 1.4 2003/10/31 16:02:57 zet Exp $ 
  *
  */
 public abstract class FilterAction extends Action {
-	protected GPage gViewer;
-	public FilterAction( String aString, int anInt, GPage gViewer ) {
+	protected GView gViewer;
+	public FilterAction( String aString, int anInt, GView gViewer ) {
 		super( aString, anInt );
 		this.gViewer = gViewer;
 	}
@@ -52,7 +52,7 @@ public abstract class FilterAction extends Action {
 			gViewer.removeFilter( viewerFilter );
 	}
 	
-	public static boolean isFiltered( GPage aGViewer, NetworkInfo aNetworkInfo ) {
+	public static boolean isFiltered( GView aGViewer, NetworkInfo aNetworkInfo ) {
 		ViewerFilter[] viewerFilters = aGViewer.getFilters();
 		for ( int i = 0; i < viewerFilters.length; i++ ) {
 			if ( viewerFilters[ i ] instanceof NetworkGViewerFilter ) {
@@ -76,7 +76,7 @@ public abstract class FilterAction extends Action {
 		return false;
 	}
 
-	public static boolean isFiltered( GPage aGViewer, Enum state ) {
+	public static boolean isFiltered( GView aGViewer, Enum state ) {
 		ViewerFilter[] viewerFilters = aGViewer.getFilters();
 		for ( int i = 0; i < viewerFilters.length; i++ ) {
 			if ( viewerFilters[ i ] instanceof StateGViewerFilter ) {
@@ -116,7 +116,7 @@ public abstract class FilterAction extends Action {
 		return false;
 	}
 	
-	private static boolean isFiltered( GPage gViewer, String[] extensions ) {
+	private static boolean isFiltered( GView gViewer, String[] extensions ) {
 		ViewerFilter[] viewerFilters = gViewer.getFilters();
 		for ( int i = 0; i < viewerFilters.length; i++ ) {
 			if ( viewerFilters[ i ] instanceof FileExtensionFilter ) {
@@ -135,6 +135,9 @@ public abstract class FilterAction extends Action {
 
 /*
 $Log: FilterAction.java,v $
+Revision 1.4  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.3  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

@@ -28,6 +28,7 @@ import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -51,15 +52,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
-import net.mldonkey.g2gui.view.viewers.table.GTablePage;
 
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTablePage.java,v 1.1 2003/10/31 13:16:33 lemmster Exp $
+ * @version $Id: ResultTableView.java,v 1.1 2003/10/31 16:02:57 zet Exp $
  *
  */
-public class ResultTablePage extends GTablePage {
+public class ResultTableView extends GTableView {
     private CTabItem cTabItem;
     private MouseListener aMouseListener;
     
@@ -70,7 +70,7 @@ public class ResultTablePage extends GTablePage {
     public static final int MEDIA = 4;
     public static final int AVAILABILITY = 5;
 
-    public ResultTablePage(Composite parent, CoreCommunication aCore, CTabItem aCTabItem, MouseListener aMouseListener) {
+    public ResultTableView(Composite parent, CoreCommunication aCore, CTabItem aCTabItem, MouseListener aMouseListener) {
         super(parent, aCore);
         this.cTabItem = aCTabItem;
         this.aMouseListener = aMouseListener;
@@ -323,7 +323,10 @@ public class ResultTablePage extends GTablePage {
 
 
 /*
-$Log: ResultTablePage.java,v $
+$Log: ResultTableView.java,v $
+Revision 1.1  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.1  2003/10/31 13:16:33  lemmster
 Rename Viewer -> Page
 Constructors changed

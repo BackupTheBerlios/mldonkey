@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.view.ServerTab;
 import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.NetworkFilterAction;
 
@@ -41,7 +41,7 @@ import org.eclipse.jface.action.Separator;
  * NetworkItemMenuListener
  *
  *
- * @version $Id: NetworkItemMenuListener.java,v 1.12 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: NetworkItemMenuListener.java,v 1.13 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class NetworkItemMenuListener implements IMenuListener {
@@ -129,8 +129,8 @@ public class NetworkItemMenuListener implements IMenuListener {
 
         public void run() {
             statusline.getMainTab().setActive( serverTab );
-			GPage gPage = ( ( ServerTab ) serverTab ).getPage();
-			FilterAction action = new NetworkFilterAction( gPage, network );
+			GView gView = ( ( ServerTab ) serverTab ).getView();
+			FilterAction action = new NetworkFilterAction( gView, network );
 			( ( NetworkFilterAction ) action ).removeAllNetworkFilter();
 			action.setChecked( true );
 			action.run();
@@ -151,6 +151,9 @@ public class NetworkItemMenuListener implements IMenuListener {
 
 /*
 $Log: NetworkItemMenuListener.java,v $
+Revision 1.13  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.12  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

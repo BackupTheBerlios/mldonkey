@@ -32,11 +32,11 @@ import org.eclipse.jface.viewers.Viewer;
  * ServerTableSorter
  *
  *
- * @version $Id: ServerTableSorter.java,v 1.7 2003/10/31 13:16:32 lemmster Exp $
+ * @version $Id: ServerTableSorter.java,v 1.8 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ServerTableSorter extends GSorter {
-    public ServerTableSorter(ServerTablePage sTableViewer) {
+    public ServerTableSorter(ServerTableView sTableViewer) {
         super(sTableViewer);
     }
 
@@ -49,16 +49,16 @@ public class ServerTableSorter extends GSorter {
         ServerInfo server2 = (ServerInfo) obj2;
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ServerTablePage.NETWORK:
+        case ServerTableView.NETWORK:
             return compareStrings(server1.getNetwork().getNetworkName(), server2.getNetwork().getNetworkName());
 
-        case ServerTablePage.NAME:
+        case ServerTableView.NAME:
             return compareStrings(server1.getNameOfServer(), server2.getNameOfServer());
 
-        case ServerTablePage.DESCRIPTION:
+        case ServerTableView.DESCRIPTION:
             return compareStrings(server1.getDescOfServer(), server2.getDescOfServer());
 
-        case ServerTablePage.ADDRESS:
+        case ServerTableView.ADDRESS:
 
             try {
                 Addr addr1 = server1.getServerAddress();
@@ -73,19 +73,19 @@ public class ServerTableSorter extends GSorter {
                 return 0;
             }
 
-        case ServerTablePage.PORT:
+        case ServerTableView.PORT:
             return compareIntegers(server1.getServerPort(), server2.getServerPort());
 
-        case ServerTablePage.SCORE:
+        case ServerTableView.SCORE:
             return compareIntegers(server1.getServerScore(), server2.getServerScore());
 
-        case ServerTablePage.USERS:
+        case ServerTableView.USERS:
             return compareIntegers(server1.getNumOfUsers(), server2.getNumOfUsers());
 
-        case ServerTablePage.FILES:
+        case ServerTableView.FILES:
             return compareIntegers(server1.getNumOfFilesShared(), server2.getNumOfFilesShared());
 
-        case ServerTablePage.STATE:
+        case ServerTableView.STATE:
 
             EnumState state1 = (EnumState) server1.getConnectionState().getState();
             EnumState state2 = (EnumState) server2.getConnectionState().getState();
@@ -96,7 +96,7 @@ public class ServerTableSorter extends GSorter {
                 return state2.compareTo(state1);
             }
 
-        case ServerTablePage.FAVORITE:
+        case ServerTableView.FAVORITE:
 
             boolean bool1 = server1.isFavorite();
             boolean bool2 = server2.isFavorite();
@@ -134,6 +134,9 @@ public class ServerTableSorter extends GSorter {
 
 /*
 $Log: ServerTableSorter.java,v $
+Revision 1.8  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.7  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed

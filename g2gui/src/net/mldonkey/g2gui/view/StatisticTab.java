@@ -31,8 +31,8 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
 import net.mldonkey.g2gui.view.statistic.GraphPaneListener;
-import net.mldonkey.g2gui.view.viewers.GPage;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.ToolBar;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.37 2003/10/31 13:20:31 lemmster Exp $
+ * @version $Id: StatisticTab.java,v 1.38 2003/10/31 16:02:17 zet Exp $
  */
 public class StatisticTab extends PaneGuiTab {
     private GraphControl uploadsGraphControl;
@@ -197,7 +197,7 @@ public class StatisticTab extends PaneGuiTab {
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.PaneGuiTab#getGPage()
 	 */
-	public GPage getGPage() {
+	public GView getGView() {
 		// we dont have a GPage so we return null. its checked in GPage
 		return null;
 	}
@@ -205,6 +205,9 @@ public class StatisticTab extends PaneGuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.38  2003/10/31 16:02:17  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.37  2003/10/31 13:20:31  lemmster
 added PaneGuiTab and TableGuiTab
 added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
@@ -267,7 +270,7 @@ Revision 1.18  2003/08/23 01:12:43  zet
 remove todos
 
 Revision 1.17  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle

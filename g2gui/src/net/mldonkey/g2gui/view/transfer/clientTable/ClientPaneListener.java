@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ClientPaneListener
  *
- * @version $Id: ClientPaneListener.java,v 1.4 2003/10/31 13:16:32 lemmster Exp $
+ * @version $Id: ClientPaneListener.java,v 1.5 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ClientPaneListener extends SashGPaneListener {
@@ -74,13 +74,13 @@ public class ClientPaneListener extends SashGPaneListener {
      */
     public void menuAboutToShow(IMenuManager menuManager) {
 		// get the gpage
-		this.gPage = ( (TransferTab) paneGuiTab ).getClientGPage();
+		this.gView = ( (TransferTab) paneGuiTab ).getClientGView();
 
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
         // columnSelector
         if (advancedMode) {
-            menuManager.add(new ColumnSelectorAction(gPage));
+            menuManager.add(new ColumnSelectorAction(gView));
         }
 
         // filter submenu			
@@ -88,7 +88,7 @@ public class ClientPaneListener extends SashGPaneListener {
                     "TT_DOWNLOAD_MENU_FILTER"));
 
         // all filters
-        filterSubMenu.add(new AllFilterAction(gPage));
+        filterSubMenu.add(new AllFilterAction(gView));
         filterSubMenu.add(new Separator());
 
         // network filters
@@ -98,7 +98,7 @@ public class ClientPaneListener extends SashGPaneListener {
         filterSubMenu.add(new Separator());
 
         for (int i = 0; i < states.length; i++)
-            filterSubMenu.add(new StateFilterAction(states[ i ].toString(), gPage, states[ i ]));
+            filterSubMenu.add(new StateFilterAction(states[ i ].toString(), gView, states[ i ]));
 
         menuManager.add(filterSubMenu);
 
@@ -112,6 +112,9 @@ public class ClientPaneListener extends SashGPaneListener {
 
 /*
 $Log: ClientPaneListener.java,v $
+Revision 1.5  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.4  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed

@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
 import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
-import net.mldonkey.g2gui.view.viewers.table.GTablePage;
+import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -37,10 +37,10 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTablePage.java,v 1.1 2003/10/31 13:16:32 lemmster Exp $ 
+ * @version $Id: ServerTableView.java,v 1.1 2003/10/31 16:02:57 zet Exp $ 
  *
  */
-public class ServerTablePage extends GTablePage {
+public class ServerTableView extends GTableView {
 	private boolean oldValue = PreferenceLoader.loadBoolean( "displayAllServers" );
 	private boolean oldValue2 = PreferenceLoader.loadBoolean( "displayTableColors" );
 	
@@ -60,7 +60,7 @@ public class ServerTablePage extends GTablePage {
 	 * @param composite
 	 * @param core
 	 */
-	public ServerTablePage( Composite parent, CoreCommunication aCore ) {
+	public ServerTableView( Composite parent, CoreCommunication aCore ) {
 		super( parent, aCore );
 		preferenceString = "server";
 		
@@ -138,7 +138,10 @@ public class ServerTablePage extends GTablePage {
 }
 
 /*
-$Log: ServerTablePage.java,v $
+$Log: ServerTableView.java,v $
+Revision 1.1  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.1  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed

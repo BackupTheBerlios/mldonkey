@@ -50,10 +50,10 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GPage.java,v 1.1 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: GView.java,v 1.1 2003/10/31 16:02:57 zet Exp $
  *
  */
-public abstract class GPage {
+public abstract class GView {
     protected boolean manualDispose;
     protected CoreCommunication core;
     protected String[] columnLabels;
@@ -288,7 +288,10 @@ public abstract class GPage {
 
 
 /*
-$Log: GPage.java,v $
+$Log: GView.java,v $
+Revision 1.1  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.1  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

@@ -26,7 +26,7 @@ import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
-import net.mldonkey.g2gui.view.viewers.table.GTablePage;
+import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -56,13 +56,13 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.19 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: TableMenuListener.java,v 1.20 2003/10/31 16:02:57 zet Exp $
  *
  */
 public abstract class TableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
     protected ViewerFilter incrementalViewerFilter;
 
-    public TableMenuListener( GTablePage gTableViewer ) {
+    public TableMenuListener( GTableView gTableViewer ) {
         super(gTableViewer);
     }
         
@@ -226,6 +226,9 @@ public abstract class TableMenuListener extends GTableMenuListener implements IS
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.20  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.19  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

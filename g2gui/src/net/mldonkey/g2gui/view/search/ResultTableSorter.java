@@ -31,11 +31,11 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: ResultTableSorter.java,v 1.15 2003/10/31 13:16:33 lemmster Exp $
+ * @version $Id: ResultTableSorter.java,v 1.16 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ResultTableSorter extends GSorter {
-    public ResultTableSorter(ResultTablePage rTableViewer) {
+    public ResultTableSorter(ResultTableView rTableViewer) {
         super(rTableViewer);
     }
 
@@ -48,22 +48,22 @@ public class ResultTableSorter extends GSorter {
         ResultInfo result2 = (ResultInfo) obj2;
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ResultTablePage.NETWORK:
+        case ResultTableView.NETWORK:
             return compareStrings(result1.getNetwork().getNetworkName(), result2.getNetwork().getNetworkName());
 
-        case ResultTablePage.NAME:
+        case ResultTableView.NAME:
             return compareStrings(result1.getName(), result2.getName());
 
-        case ResultTablePage.SIZE:
+        case ResultTableView.SIZE:
             return compareLongs(result1.getSize(), result2.getSize());
 
-        case ResultTablePage.FORMAT:
+        case ResultTableView.FORMAT:
             return compareStrings(result1.getFormat(), result2.getFormat());
 
-        case ResultTablePage.MEDIA:
+        case ResultTableView.MEDIA:
             return compareStrings(result1.getType(), result2.getType());
 
-        case ResultTablePage.AVAILABILITY:
+        case ResultTableView.AVAILABILITY:
             return compareIntegers(result1.getAvail(), result2.getAvail());
 
         default:
@@ -75,6 +75,9 @@ public class ResultTableSorter extends GSorter {
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.16  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.15  2003/10/31 13:16:33  lemmster
 Rename Viewer -> Page
 Constructors changed
@@ -109,7 +112,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.6  2003/08/16 20:59:09  dek
 searching works now without errors AGAIN ;-)

@@ -39,7 +39,7 @@ import org.eclipse.swt.graphics.Image;
  * ServerTableLabelProvider
  *
  *
- * @version $Id: ServerTableLabelProvider.java,v 1.9 2003/10/31 13:16:32 lemmster Exp $
+ * @version $Id: ServerTableLabelProvider.java,v 1.10 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ServerTableLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -48,7 +48,7 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
     private Color connectingColor = new Color(null, 255, 165, 0);
     private Color disconnectColor = new Color(null, 192, 192, 192);
 
-    public ServerTableLabelProvider(ServerTablePage sTableViewer) {
+    public ServerTableLabelProvider(ServerTableView sTableViewer) {
         super(sTableViewer);
     }
 
@@ -57,7 +57,7 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
      */
     public Image getColumnImage(Object element, int columnIndex) {
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ServerTablePage.NETWORK:
+        case ServerTableView.NETWORK:
 
             ServerInfo server = (ServerInfo) element;
 
@@ -77,16 +77,16 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
         ServerInfo server = (ServerInfo) element;
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ServerTablePage.NETWORK:
+        case ServerTableView.NETWORK:
             return " " + ((NetworkInfo) server.getNetwork()).getNetworkName();
 
-        case ServerTablePage.NAME:
+        case ServerTableView.NAME:
             return server.getNameOfServer();
 
-        case ServerTablePage.DESCRIPTION:
+        case ServerTableView.DESCRIPTION:
             return server.getDescOfServer();
 
-        case ServerTablePage.ADDRESS:
+        case ServerTableView.ADDRESS:
 
             try {
                 Addr addr = server.getServerAddress();
@@ -100,22 +100,22 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
                 return "0.0.0.0";
             }
 
-        case ServerTablePage.PORT:
+        case ServerTableView.PORT:
             return "" + server.getServerPort();
 
-        case ServerTablePage.SCORE:
+        case ServerTableView.SCORE:
             return "" + server.getServerScore();
 
-        case ServerTablePage.USERS:
+        case ServerTableView.USERS:
             return "" + server.getNumOfUsers();
 
-        case ServerTablePage.FILES:
+        case ServerTableView.FILES:
             return "" + server.getNumOfFilesShared();
 
-        case ServerTablePage.STATE:
+        case ServerTableView.STATE:
             return server.getConnectionState().getState().toString();
 
-        case ServerTablePage.FAVORITE:
+        case ServerTableView.FAVORITE:
             return G2GuiResources.getString(server.isFavorite() ? "TLP_TRUE" : "TLP_FALSE");
 
         default:
@@ -171,6 +171,9 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ServerTableLabelProvider.java,v $
+Revision 1.10  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.9  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed

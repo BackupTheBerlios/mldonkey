@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Shell;
  * ServerTableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.15 2003/10/31 13:16:32 lemmster Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.16 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ServerTableMenuListener extends TableMenuListener { 
@@ -78,7 +78,7 @@ public class ServerTableMenuListener extends TableMenuListener {
      * @param tableViewer The TableViewer
      * @param core The CoreCommunication supporting this with data
      */
-    public ServerTableMenuListener( ServerTablePage sTableViewer) {
+    public ServerTableMenuListener( ServerTableView sTableViewer) {
         super( sTableViewer);
         
     }    
@@ -508,6 +508,9 @@ public class ServerTableMenuListener extends TableMenuListener {
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.16  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.15  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed

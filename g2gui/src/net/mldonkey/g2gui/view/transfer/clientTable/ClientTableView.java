@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.viewers.table.GTablePage;
+import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -34,16 +34,16 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTablePage.java,v 1.1 2003/10/31 13:16:33 lemmster Exp $
+ * @version $Id: ClientTableView.java,v 1.1 2003/10/31 16:02:57 zet Exp $
  *
  */
-public class ClientTablePage extends GTablePage {
+public class ClientTableView extends GTableView {
     public static final int STATE = 0;
     public static final int NAME = 1;
     public static final int NETWORK = 2;
     public static final int KIND = 3;
 
-    public ClientTablePage(Composite parent, CoreCommunication core) {
+    public ClientTableView(Composite parent, CoreCommunication core) {
         super(parent, core);
 
         preferenceString = "client";
@@ -82,7 +82,10 @@ public class ClientTablePage extends GTablePage {
 
 
 /*
-$Log: ClientTablePage.java,v $
+$Log: ClientTableView.java,v $
+Revision 1.1  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.1  2003/10/31 13:16:33  lemmster
 Rename Viewer -> Page
 Constructors changed

@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadPaneListener.java,v 1.3 2003/10/31 13:16:33 lemmster Exp $
+ * @version $Id: UploadPaneListener.java,v 1.4 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class UploadPaneListener extends SashGPaneListener {
@@ -61,17 +61,17 @@ public class UploadPaneListener extends SashGPaneListener {
 
     public void menuAboutToShow(IMenuManager menuManager) {
 		// get the gpage
-		this.gPage = ( (TransferTab) paneGuiTab ).getUploadGPage();
+		this.gView = ( (TransferTab) paneGuiTab ).getUploadGView();
 
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
         // refresh table
         menuManager.add(new Separator());
-        menuManager.add(new RefreshUploadsAction(gPage));
+        menuManager.add(new RefreshUploadsAction(gView));
 
         // columnSelector
         if (advancedMode) {
-            menuManager.add(new ColumnSelectorAction(gPage));
+            menuManager.add(new ColumnSelectorAction(gView));
         }
 
         // filter submenu			
@@ -79,7 +79,7 @@ public class UploadPaneListener extends SashGPaneListener {
                     "TT_DOWNLOAD_MENU_FILTER"));
 
         // all filters
-        filterSubMenu.add(new AllFilterAction(gPage));
+        filterSubMenu.add(new AllFilterAction(gView));
         filterSubMenu.add(new Separator());
 
         // network filters
@@ -97,6 +97,9 @@ public class UploadPaneListener extends SashGPaneListener {
 
 /*
 $Log: UploadPaneListener.java,v $
+Revision 1.4  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.3  2003/10/31 13:16:33  lemmster
 Rename Viewer -> Page
 Constructors changed

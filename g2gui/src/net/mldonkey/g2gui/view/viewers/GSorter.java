@@ -34,7 +34,7 @@ import org.eclipse.swt.events.DisposeListener;
 /**
  * GSorter - Generic sorter
  *
- * @version $Id: GSorter.java,v 1.2 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: GSorter.java,v 1.3 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class GSorter extends ViewerSorter implements DisposeListener {
@@ -42,10 +42,10 @@ public class GSorter extends ViewerSorter implements DisposeListener {
     protected int columnIndex;
     protected boolean lastSort;
     protected PreferenceStore preferenceStore = PreferenceLoader.getPreferenceStore();
-    protected GPage gViewer;
+    protected GView gViewer;
     protected ICustomViewer cViewer;
 
-    public GSorter(GPage gViewer) {
+    public GSorter(GView gViewer) {
         this.gViewer = gViewer;
     }
 
@@ -202,6 +202,9 @@ public class GSorter extends ViewerSorter implements DisposeListener {
 
 /*
 $Log: GSorter.java,v $
+Revision 1.3  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.2  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

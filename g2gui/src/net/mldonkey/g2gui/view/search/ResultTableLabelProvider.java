@@ -38,14 +38,14 @@ import org.eclipse.swt.widgets.Display;
  * ResultTableLabelProvider
  *
  *
- * @version $Id: ResultTableLabelProvider.java,v 1.23 2003/10/31 13:16:33 lemmster Exp $
+ * @version $Id: ResultTableLabelProvider.java,v 1.24 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ResultTableLabelProvider extends GTableLabelProvider implements IColorProvider {
     private Color alreadyDownloadedColor = new Color(null, 41, 174, 57);
     private Color containsFakeColor = Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED);
 
-    public ResultTableLabelProvider(ResultTablePage rTableViewer) {
+    public ResultTableLabelProvider(ResultTableView rTableViewer) {
         super(rTableViewer);
     }
 
@@ -57,7 +57,7 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
         ResultInfo resultInfo = (ResultInfo) arg0;
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ResultTablePage.NETWORK:
+        case ResultTableView.NETWORK:
 
             if (!resultInfo.isDownloading()) {
                 return G2GuiResources.getNetworkImage(resultInfo.getNetwork().getNetworkType());
@@ -65,7 +65,7 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
                 return G2GuiResources.getImage("downloaded");
             }
 
-        case ResultTablePage.AVAILABILITY:
+        case ResultTableView.AVAILABILITY:
             return G2GuiResources.getRatingImage(resultInfo.containsFake() ? -1 : resultInfo.getAvail());
 
         default:
@@ -81,22 +81,22 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
         ResultInfo resultInfo = (ResultInfo) arg0;
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ResultTablePage.NETWORK:
+        case ResultTableView.NETWORK:
             return ((NetworkInfo) resultInfo.getNetwork()).getNetworkName();
 
-        case ResultTablePage.NAME:
+        case ResultTableView.NAME:
             return resultInfo.getName();
 
-        case ResultTablePage.SIZE:
+        case ResultTableView.SIZE:
             return resultInfo.getStringSize();
 
-        case ResultTablePage.FORMAT:
+        case ResultTableView.FORMAT:
             return resultInfo.getFormat();
 
-        case ResultTablePage.MEDIA:
+        case ResultTableView.MEDIA:
             return resultInfo.getType();
 
-        case ResultTablePage.AVAILABILITY:
+        case ResultTableView.AVAILABILITY:
             return G2GuiResources.getRatingString(resultInfo.getAvail());
 
         default:
@@ -137,6 +137,9 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.24  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.23  2003/10/31 13:16:33  lemmster
 Rename Viewer -> Page
 Constructors changed
@@ -174,7 +177,7 @@ Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.14  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer

@@ -22,6 +22,10 @@
  */
 package net.mldonkey.g2gui.view.search;
 
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -33,7 +37,7 @@ import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -44,16 +48,12 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Label;
 
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
 
 /**
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.62 2003/10/31 13:16:33 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.63 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -70,7 +70,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
     private String statusline;
     private boolean mustRefresh = false;
     private long lastRefreshTime = 0;
-    private GPage gPage;
+    private GView gView;
 
     /**
      * Creates a new SearchResult to display all the results supplied by mldonkey
@@ -121,7 +121,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         if (arg instanceof ResultInfo) {
             cTabFolder.getDisplay().asyncExec(new Runnable() {
                     public void run() {
-                        gPage.getViewer().update(arg, null);
+                        gView.getViewer().update(arg, null);
                     }
                 });
 
@@ -147,11 +147,11 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
         List list = (List) results.get(searchId);
 
-        if (gPage == null) {
+        if (gView == null) {
             /* remove the old label "searching..." */
             label.dispose();
             this.createTable();
-            gPage.getViewer().setInput(list);
+            gView.getViewer().setInput(list);
         } else {
             /*
              * has our result changed:
@@ -159,7 +159,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
              * look at API for refresh(false)
              */
             if ((list != null) &&
-                    (list.size() != ( ( CustomTableViewer ) gPage.getViewer() ).getTable().getItemCount())) {
+                    (list.size() != ( ( CustomTableViewer ) gView.getViewer() ).getTable().getItemCount())) {
                 mustRefresh = true;
                 delayedRefresh();
             }
@@ -168,7 +168,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         /* are we active? set the statusline text */
         if (cTabFolder.getSelection() == cTabItem) {
             SearchTab parent = (SearchTab) cTabFolder.getData();
-            int itemCount = ( (CustomTableViewer) gPage.getViewer() ).getTable().getItemCount();
+            int itemCount = ( (CustomTableViewer) gView.getViewer() ).getTable().getItemCount();
             this.statusline = "Results: " + itemCount;
             parent.getMainTab().getStatusline().update(this.statusline);
         }
@@ -180,7 +180,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
     private void delayedRefresh() {
         if (System.currentTimeMillis() > (lastRefreshTime + 2000)) {
             lastRefreshTime = System.currentTimeMillis();
-            gPage.getViewer().refresh(true);
+            gView.getViewer().refresh(true);
             mustRefresh = false;
         } else { // schedule an update so we don't miss one
 
@@ -233,11 +233,11 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         cTabItem.setImage(G2GuiResources.getImage("SearchComplete"));
 
         /* create the result table */
-        this.gPage = new ResultTablePage(cTabFolder, core, cTabItem,
+        this.gView = new ResultTableView(cTabFolder, core, cTabItem,
                 new MyMouseListener());
 
         /* set the this table as the new CTabItem Control */
-        cTabItem.setControl( ( (CustomTableViewer) gPage.getViewer() ).getTable());
+        cTabItem.setControl( ( (CustomTableViewer) gView.getViewer() ).getTable());
 
         /*load behaviour from preference-Store*/
         updateDisplay();
@@ -249,8 +249,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      * might have benn changed.
      */
     public void updateDisplay() {
-        if (gPage != null) {
-            ( (CustomTableViewer) gPage.getViewer() ).getTable().setLinesVisible(PreferenceLoader.loadBoolean(
+        if (gView != null) {
+            ( (CustomTableViewer) gView.getViewer() ).getTable().setLinesVisible(PreferenceLoader.loadBoolean(
                     "displayGridLines"));
         }
     }
@@ -294,7 +294,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
          * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
          */
         public void mouseDoubleClick(MouseEvent e) {
-            ((ResultTablePage) gPage).getMenuListener().downloadSelected();
+            ((ResultTableView) gView).getMenuListener().downloadSelected();
         }
 
         /* (non-Javadoc)
@@ -315,21 +315,24 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         }
     }
     
-    public GPage getGPage() {
-    	return gPage;
+    public GView getGView() {
+    	return gView;
     }
 }
 
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.63  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.62  2003/10/31 13:16:33  lemmster
 Rename Viewer -> Page
 Constructors changed
 
 Revision 1.61  2003/10/31 10:42:47  lemmster
-Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
-Removed IGViewer because our abstract class GPage do the job
+Renamed GViewer, GTableViewer and GTableTreeViewer to gView... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class gView do the job
 Use supertype/interface where possible to keep the design flexible!
 
 Revision 1.60  2003/10/31 07:24:01  zet
@@ -453,7 +456,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

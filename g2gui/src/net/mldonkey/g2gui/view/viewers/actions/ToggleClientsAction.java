@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.action.Action;
 
@@ -32,13 +32,13 @@ import org.eclipse.jface.action.Action;
 /**
  * ToggleClientsAction
  *
- * @version $Id: ToggleClientsAction.java,v 1.4 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: ToggleClientsAction.java,v 1.5 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ToggleClientsAction extends Action {
-    private GPage gViewer;
+    private GView gViewer;
 
-    public ToggleClientsAction(GPage gViewer) {
+    public ToggleClientsAction(GView gViewer) {
         super();
         this.gViewer = gViewer;
 
@@ -60,6 +60,9 @@ public class ToggleClientsAction extends Action {
 
 /*
 $Log: ToggleClientsAction.java,v $
+Revision 1.5  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.4  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

@@ -28,12 +28,11 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.CTabFolderColumnSelectorAction;
-import net.mldonkey.g2gui.view.viewers.table.GTablePage;
+import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 
@@ -41,7 +40,7 @@ import org.eclipse.swt.custom.CTabItem;
 /**
  * SearchPaneListener
  *
- * @version $Id: ResultPaneListener.java,v 1.4 2003/10/31 13:16:33 lemmster Exp $
+ * @version $Id: ResultPaneListener.java,v 1.5 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ResultPaneListener extends GPaneListener {
@@ -76,14 +75,14 @@ public class ResultPaneListener extends GPaneListener {
 
             // filters available if currentTab has a table
             if (cTabFolder.getSelection() != null && cTabFolder.getSelection().getData("gTableViewer") != null) {
-                gPage = (GTablePage) cTabFolder.getSelection().getData("gTableViewer");
+                gView = (GTableView) cTabFolder.getSelection().getData("gTableViewer");
 
                 // filter submenu			
                 MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
                             "TT_DOWNLOAD_MENU_FILTER"));
 
                 // all filters
-                filterSubMenu.add(new AllFilterAction(gPage));
+                filterSubMenu.add(new AllFilterAction(gView));
                 filterSubMenu.add(new Separator());
 
                 // network filters
@@ -98,6 +97,9 @@ public class ResultPaneListener extends GPaneListener {
 
 /*
 $Log: ResultPaneListener.java,v $
+Revision 1.5  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.4  2003/10/31 13:16:33  lemmster
 Rename Viewer -> Page
 Constructors changed

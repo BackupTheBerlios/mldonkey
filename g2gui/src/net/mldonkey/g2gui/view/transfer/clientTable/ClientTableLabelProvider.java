@@ -35,11 +35,11 @@ import org.eclipse.swt.graphics.Image;
  *
  * ClientTableLabelProvider
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.9 2003/10/31 13:16:33 lemmster Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.10 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ClientTableLabelProvider extends GTableLabelProvider implements ITableLabelProvider {
-    public ClientTableLabelProvider(ClientTablePage cTableViewer) {
+    public ClientTableLabelProvider(ClientTableView cTableViewer) {
         super(cTableViewer);
     }
 
@@ -50,10 +50,10 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
         ClientInfo clientInfo = (ClientInfo) element;
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ClientTablePage.STATE:
+        case ClientTableView.STATE:
             return G2GuiResources.getClientImage((EnumState) clientInfo.getState().getState());
 
-        case ClientTablePage.NETWORK:
+        case ClientTableView.NETWORK:
             return G2GuiResources.getNetworkImage(clientInfo.getClientnetworkid().getNetworkType());
 
         default:
@@ -68,16 +68,16 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
         ClientInfo clientInfo = (ClientInfo) element;
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ClientTablePage.STATE:
+        case ClientTableView.STATE:
             return "" + clientInfo.getDetailedClientActivity();
 
-        case ClientTablePage.NAME:
+        case ClientTableView.NAME:
             return "" + clientInfo.getClientName();
 
-        case ClientTablePage.NETWORK:
+        case ClientTableView.NETWORK:
             return "" + clientInfo.getClientnetworkid().getNetworkName();
 
-        case ClientTablePage.KIND:
+        case ClientTableView.KIND:
             return "" + clientInfo.getClientConnection();
 
         default:
@@ -89,6 +89,9 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.10  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.9  2003/10/31 13:16:33  lemmster
 Rename Viewer -> Page
 Constructors changed
@@ -132,7 +135,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:17:25  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.1  2003/08/20 14:58:43  zet
 sources clientinfo viewer

@@ -22,7 +22,7 @@
  */
 package net.mldonkey.g2gui.view.viewers.table;
 
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.ICustomViewer;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -33,14 +33,14 @@ import org.eclipse.swt.graphics.Image;
 /**
  * GenericTableLabelProvider
  *
- * @version $Id: GTableLabelProvider.java,v 1.2 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: GTableLabelProvider.java,v 1.3 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class GTableLabelProvider implements ITableLabelProvider {
-    protected GPage gViewer;
+    protected GView gViewer;
     protected ICustomViewer cViewer;
 
-    public GTableLabelProvider(GPage gViewer) {
+    public GTableLabelProvider(GView gViewer) {
         this.gViewer = gViewer;
     }
 
@@ -102,6 +102,9 @@ public class GTableLabelProvider implements ITableLabelProvider {
 
 /*
 $Log: GTableLabelProvider.java,v $
+Revision 1.3  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.2  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

@@ -36,28 +36,28 @@ import org.eclipse.swt.events.DisposeListener;
 /**
  * GPaneListener
  *
- * @version $Id: GPaneListener.java,v 1.4 2003/10/31 13:16:32 lemmster Exp $
+ * @version $Id: GPaneListener.java,v 1.5 2003/10/31 16:02:57 zet Exp $
  *
  */
 public abstract class GPaneListener implements IMenuListener, DisposeListener {
-    protected GPage gPage;
+    protected GView gView;
     protected PaneGuiTab paneGuiTab;
     protected CoreCommunication core;
 
     public GPaneListener( PaneGuiTab aPaneGuiTab, CoreCommunication core) {
         this.paneGuiTab = aPaneGuiTab;
         if (paneGuiTab != null )	
-	        this.gPage = paneGuiTab.getGPage();
+	        this.gView = paneGuiTab.getGView();
         this.core = core;
 
         // for stats the gViewer is null
-        if (gPage != null) {
-            this.gPage.addDisposeListener(this);
+        if (gView != null) {
+            this.gView.addDisposeListener(this);
         }
     }
     
     public void menuAboutToShow() {
-    	this.gPage = paneGuiTab.getGPage();
+    	this.gView = paneGuiTab.getGView();
     }
 
     protected void createNetworkFilterSubMenu(MenuManager menu) {
@@ -67,7 +67,7 @@ public abstract class GPaneListener implements IMenuListener, DisposeListener {
             NetworkInfo network = networks[ i ];
 
             if (network.isEnabled() && network.isSearchable()) {
-                menu.add(new NetworkFilterAction(gPage, network));
+                menu.add(new NetworkFilterAction(gView, network));
             }
         }
     }
@@ -82,6 +82,9 @@ public abstract class GPaneListener implements IMenuListener, DisposeListener {
 
 /*
 $Log: GPaneListener.java,v $
+Revision 1.5  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.4  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed

@@ -22,7 +22,7 @@
  */
 package net.mldonkey.g2gui.view;
 
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.ToolBar;
 /**
  * PaneGuiTab
  *
- * @version $Id: PaneGuiTab.java,v 1.2 2003/10/31 15:14:56 zet Exp $ 
+ * @version $Id: PaneGuiTab.java,v 1.3 2003/10/31 16:02:17 zet Exp $ 
  *
  */
 public abstract class PaneGuiTab extends GuiTab {
@@ -70,11 +70,14 @@ public abstract class PaneGuiTab extends GuiTab {
 //		} );
 	}
 	
-	public abstract GPage getGPage();
+	public abstract GView getGView();
 }
 
 /*
 $Log: PaneGuiTab.java,v $
+Revision 1.3  2003/10/31 16:02:17  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.2  2003/10/31 15:14:56  zet
 remove duplicate dropdown
 

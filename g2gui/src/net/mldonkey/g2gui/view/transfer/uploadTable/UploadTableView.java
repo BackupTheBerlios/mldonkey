@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.view.viewers.actions.RefreshUploadsAction;
 import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
-import net.mldonkey.g2gui.view.viewers.table.GTablePage;
+import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -58,10 +58,10 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTablePage.java,v 1.1 2003/10/31 13:16:33 lemmster Exp $
+ * @version $Id: UploadTableView.java,v 1.1 2003/10/31 16:02:57 zet Exp $
  *
  */
-public class UploadTablePage extends GTablePage {
+public class UploadTableView extends GTableView {
     private static final int NETWORK = 0;
     private static final int BYTES = 1;
     private static final int REQUESTS = 2;
@@ -73,7 +73,7 @@ public class UploadTablePage extends GTablePage {
      * @param mldonkey the source of our data
      * @param tab We live on this tab
      */
-    public UploadTablePage(Composite parent, CoreCommunication aCore, TransferTab tab) {
+    public UploadTableView(Composite parent, CoreCommunication aCore, TransferTab tab) {
         super(parent, aCore);
 
         preferenceString = "upload";
@@ -108,7 +108,7 @@ public class UploadTablePage extends GTablePage {
         /* ( non-Javadoc )
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements( java.lang.Object )
          */
-        public UploadContentProvider(UploadTablePage uTableViewer) {
+        public UploadContentProvider(UploadTableView uTableViewer) {
             super(uTableViewer);
         }
 
@@ -184,7 +184,7 @@ public class UploadTablePage extends GTablePage {
      * UploadLabelProvider
      */
     public class UploadLabelProvider extends GTableLabelProvider {
-        public UploadLabelProvider(UploadTablePage uTableViewer) {
+        public UploadLabelProvider(UploadTableView uTableViewer) {
             super(uTableViewer);
         }
 
@@ -193,7 +193,7 @@ public class UploadTablePage extends GTablePage {
          */
         public Image getColumnImage(Object element, int columnIndex) {
             switch (getTableViewer().getColumnIDs()[ columnIndex ]) {
-            case UploadTablePage.NETWORK:
+            case UploadTableView.NETWORK:
 
                 SharedFileInfo file = (SharedFileInfo) element;
 
@@ -211,16 +211,16 @@ public class UploadTablePage extends GTablePage {
             SharedFileInfo info = (SharedFileInfo) element;
 
             switch (getTableViewer().getColumnIDs()[ columnIndex ]) {
-            case UploadTablePage.NETWORK:
+            case UploadTableView.NETWORK:
                 return info.getNetwork().getNetworkName();
 
-            case UploadTablePage.BYTES:
+            case UploadTableView.BYTES:
                 return info.getUploadedString();
 
-            case UploadTablePage.REQUESTS:
+            case UploadTableView.REQUESTS:
                 return "" + info.getNumOfQueriesForFile();
 
-            case UploadTablePage.NAME:
+            case UploadTableView.NAME:
                 return info.getName();
 
             default:
@@ -233,7 +233,7 @@ public class UploadTablePage extends GTablePage {
      * UploadTableSorter
      */
     public class UploadTableSorter extends GSorter {
-        public UploadTableSorter(UploadTablePage uTableViewer) {
+        public UploadTableSorter(UploadTableView uTableViewer) {
             super(uTableViewer);
         }
 
@@ -246,19 +246,19 @@ public class UploadTablePage extends GTablePage {
             SharedFileInfo sharedFile2 = (SharedFileInfo) obj2;
 
             switch (cViewer.getColumnIDs()[ columnIndex ]) {
-            case UploadTablePage.NETWORK:
+            case UploadTableView.NETWORK:
                 return compareStrings(sharedFile1.getNetwork().getNetworkName(), // NPE
                     sharedFile2.getNetwork().getNetworkName());
 
-            case UploadTablePage.BYTES:
+            case UploadTableView.BYTES:
                 return compareLongs(sharedFile1.getNumOfBytesUploaded(),
                     sharedFile2.getNumOfBytesUploaded());
 
-            case UploadTablePage.REQUESTS:
+            case UploadTableView.REQUESTS:
                 return compareLongs(sharedFile1.getNumOfQueriesForFile(),
                     sharedFile2.getNumOfQueriesForFile());
 
-            case UploadTablePage.NAME:
+            case UploadTableView.NAME:
                 return compareStrings(sharedFile1.getName(), sharedFile2.getName());
 
             default:
@@ -278,7 +278,7 @@ public class UploadTablePage extends GTablePage {
         /**
          * @param gTableViewer
          */
-        public UploadTableMenuListener(GTablePage gTableViewer) {
+        public UploadTableMenuListener(GTableView gTableViewer) {
             super(gTableViewer);
         }
 
@@ -326,7 +326,10 @@ public class UploadTablePage extends GTablePage {
 
 
 /*
-$Log: UploadTablePage.java,v $
+$Log: UploadTableView.java,v $
+Revision 1.1  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.1  2003/10/31 13:16:33  lemmster
 Rename Viewer -> Page
 Constructors changed

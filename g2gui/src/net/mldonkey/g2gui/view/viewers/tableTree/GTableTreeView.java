@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view.viewers.tableTree;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
@@ -41,16 +41,16 @@ import org.eclipse.swt.widgets.Table;
 /**
  * GTableTreeViewer
  *
- * @version $Id: GTableTreePage.java,v 1.1 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: GTableTreeView.java,v 1.1 2003/10/31 16:02:57 zet Exp $
  *
  */
-public class GTableTreePage extends GPage {
+public class GTableTreeView extends GView {
     protected GTableLabelProvider tableLabelProvider;
     protected GTableTreeContentProvider tableTreeContentProvider;
     protected GTableMenuListener tableTreeMenuListener;
     private StructuredViewer sViewer;
 
-    public GTableTreePage(Composite parent, CoreCommunication core) {
+    public GTableTreeView(Composite parent, CoreCommunication core) {
         this.core = core;
     }
 
@@ -143,7 +143,10 @@ public class GTableTreePage extends GPage {
 
 
 /*
-$Log: GTableTreePage.java,v $
+$Log: GTableTreeView.java,v $
+Revision 1.1  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.1  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

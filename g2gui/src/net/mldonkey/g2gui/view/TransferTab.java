@@ -37,13 +37,13 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.DownloadPaneMenuListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientPaneListener;
-import net.mldonkey.g2gui.view.transfer.clientTable.ClientTablePage;
+import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableView;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadPaneListener;
-import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTablePage;
+import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableView;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
-import net.mldonkey.g2gui.view.viewers.GPage;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
@@ -69,18 +69,18 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.84 2003/10/31 13:20:31 lemmster Exp $
+ * @version $Id: TransferTab.java,v 1.85 2003/10/31 16:02:17 zet Exp $
  *
  */
 public class TransferTab extends TableGuiTab {
     private CLabel downloadCLabel;
     private CoreCommunication mldonkey;
-    private GPage clientTableViewer = null;
+    private GView clientTableView = null;
     private Composite downloadComposite;
     private MenuManager popupMenuDL;
     private MenuManager popupMenuUL;
     private MenuManager popupMenuCL = null;
-    private GPage uploadTableViewer = null;
+    private GView uploadTableView = null;
     private String oldDLabelText = "";
     private long lastLabelUpdate = 0;
     boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
@@ -137,7 +137,7 @@ public class TransferTab extends TableGuiTab {
 
         createUploads(mainSashForm);
 
-        gPage = new DownloadTableTreeViewer(downloadComposite, clientTableViewer, mldonkey, this);
+        gView = new DownloadTableTreeViewer(downloadComposite, clientTableView, mldonkey, this);
 
         popupMenuDL.addMenuListener( aListener );
 
@@ -179,7 +179,7 @@ public class TransferTab extends TableGuiTab {
             toolItem.setImage(G2GuiResources.getImage("split-table"));
             toolItem.addSelectionListener(new SelectionAdapter() {
                     public void widgetSelected(SelectionEvent s) {
-                        ( (DownloadTableTreeViewer) gPage ).toggleClientsTable();
+                        ( (DownloadTableTreeViewer) gView ).toggleClientsTable();
                     }
                 });
         }
@@ -189,7 +189,7 @@ public class TransferTab extends TableGuiTab {
         toolItem.setImage(G2GuiResources.getImage("collapseAll"));
         toolItem.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent s) {
-                    ( (CustomTableTreeViewer) gPage.getViewer() ).collapseAll();
+                    ( (CustomTableTreeViewer) gView.getViewer() ).collapseAll();
                 }
             });
 
@@ -198,7 +198,7 @@ public class TransferTab extends TableGuiTab {
         toolItem.setImage(G2GuiResources.getImage("expandAll"));
         toolItem.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent s) {
-                    ( (CustomTableTreeViewer) gPage.getViewer() ).expandAll();
+                    ( (CustomTableTreeViewer) gView.getViewer() ).expandAll();
                 }
             });
             
@@ -218,7 +218,7 @@ public class TransferTab extends TableGuiTab {
 
         Composite uploadersComposite = new Composite(uploadsViewForm, SWT.NONE);
         uploadersComposite.setLayout(new FillLayout());
-        uploadTableViewer = new UploadTablePage(uploadersComposite, mldonkey, this);
+        uploadTableView = new UploadTableView(uploadersComposite, mldonkey, this);
         createUploadHeader(uploadsViewForm, aSashForm, uploadsViewForm);
         uploadsViewForm.setContent(uploadersComposite);
     }
@@ -260,10 +260,10 @@ public class TransferTab extends TableGuiTab {
                     int width = c.getBounds().width;
                     int height = c.getBounds().height;
 
-                    if ((width > 0) && (height > 0) && (gPage != null)) {
-						( (DownloadTableTreeViewer) gPage ).updateClientsTable(true);
+                    if ((width > 0) && (height > 0) && (gView != null)) {
+						( (DownloadTableTreeViewer) gView ).updateClientsTable(true);
                     } else {
-						( (DownloadTableTreeViewer) gPage ).updateClientsTable(false);
+						( (DownloadTableTreeViewer) gView ).updateClientsTable(false);
                     }
                 }
             });
@@ -285,7 +285,7 @@ public class TransferTab extends TableGuiTab {
      * @param parentSash
      */
     public void createClientTableViewer(Composite aComposite, final SashForm aSashForm) {
-        clientTableViewer = new ClientTablePage(aComposite, mldonkey);
+        clientTableView = new ClientTableView(aComposite, mldonkey);
     }
 
     /**
@@ -394,11 +394,11 @@ public class TransferTab extends TableGuiTab {
      * @see net.mldonkey.g2gui.view.GuiTab#updateDisplay()
      */
     public void updateDisplay() {
-        gPage.updateDisplay();
-        uploadTableViewer.updateDisplay();
+        gView.updateDisplay();
+        uploadTableView.updateDisplay();
 
-        if (clientTableViewer != null) {
-            clientTableViewer.updateDisplay();
+        if (clientTableView != null) {
+            clientTableView.updateDisplay();
         }
 
         super.updateDisplay();
@@ -417,18 +417,21 @@ public class TransferTab extends TableGuiTab {
         }
     }
     
-    public GPage getClientGPage() {
-    	return this.clientTableViewer;
+    public GView getClientGView() {
+    	return this.clientTableView;
     }
 
-	public GPage getUploadGPage() {
-		return this.uploadTableViewer;
+	public GView getUploadGView() {
+		return this.uploadTableView;
 	}
 }
 
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.85  2003/10/31 16:02:17  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.84  2003/10/31 13:20:31  lemmster
 added PaneGuiTab and TableGuiTab
 added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
@@ -591,7 +594,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

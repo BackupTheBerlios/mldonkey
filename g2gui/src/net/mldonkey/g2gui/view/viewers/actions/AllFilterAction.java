@@ -24,21 +24,21 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * AllFilterAction
  *
- * @version $Id: AllFilterAction.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $ 
+ * @version $Id: AllFilterAction.java,v 1.4 2003/10/31 16:02:57 zet Exp $ 
  *
  */
 public class AllFilterAction extends FilterAction {
 	/**
 	 * Creates a new AllFiltersAction
 	 */
-	public AllFilterAction( GPage gViewer ) {
+	public AllFilterAction( GView gViewer ) {
 		super( G2GuiResources.getString( "TML_NO_FILTERS" ), 0, gViewer );
 		if ( gViewer != null && gViewer.getFilters().length == 0 )
 			this.setChecked( true );
@@ -55,6 +55,9 @@ public class AllFilterAction extends FilterAction {
 
 /*
 $Log: AllFilterAction.java,v $
+Revision 1.4  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.3  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

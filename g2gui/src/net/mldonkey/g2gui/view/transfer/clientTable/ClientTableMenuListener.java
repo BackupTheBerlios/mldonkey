@@ -44,7 +44,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * ClientTableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.10 2003/10/31 13:16:32 lemmster Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.11 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ClientTableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -54,7 +54,7 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
     /**
      * @param The parent ClientTableViewer
      */
-    public ClientTableMenuListener(ClientTablePage cTableViewer) {
+    public ClientTableMenuListener(ClientTableView cTableViewer) {
         super(cTableViewer);
     }
 
@@ -105,6 +105,9 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.11  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.10  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed

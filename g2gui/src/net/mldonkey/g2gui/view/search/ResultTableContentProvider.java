@@ -31,11 +31,11 @@ import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
  * ResultTableContentProvider
  *
  *
- * @version $Id: ResultTableContentProvider.java,v 1.7 2003/10/31 13:16:33 lemmster Exp $
+ * @version $Id: ResultTableContentProvider.java,v 1.8 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ResultTableContentProvider extends GTableContentProvider {
-    public ResultTableContentProvider(ResultTablePage rTableViewer) {
+    public ResultTableContentProvider(ResultTableView rTableViewer) {
         super(rTableViewer);
     }
 
@@ -53,6 +53,9 @@ public class ResultTableContentProvider extends GTableContentProvider {
 
 /*
 $Log: ResultTableContentProvider.java,v $
+Revision 1.8  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.7  2003/10/31 13:16:33  lemmster
 Rename Viewer -> Page
 Constructors changed
@@ -75,7 +78,7 @@ Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.3  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.2  2003/07/24 16:20:10  lemmstercvs01
 lots of changes

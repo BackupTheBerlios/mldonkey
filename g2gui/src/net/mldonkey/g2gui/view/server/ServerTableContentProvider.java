@@ -29,12 +29,12 @@ import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
  * ServerTableContentProvider
  *
  *
- * @version $Id: ServerTableContentProvider.java,v 1.5 2003/10/31 13:16:32 lemmster Exp $ 
+ * @version $Id: ServerTableContentProvider.java,v 1.6 2003/10/31 16:02:57 zet Exp $ 
  *
  */
 public class ServerTableContentProvider extends GTableContentProvider {
 
-    public ServerTableContentProvider( ServerTablePage sTableViewer) {
+    public ServerTableContentProvider( ServerTableView sTableViewer) {
         super(sTableViewer);
     }
     
@@ -49,6 +49,9 @@ public class ServerTableContentProvider extends GTableContentProvider {
 
 /*
 $Log: ServerTableContentProvider.java,v $
+Revision 1.6  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.5  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed

@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.server.ServerPaneListener;
-import net.mldonkey.g2gui.view.server.ServerTablePage;
+import net.mldonkey.g2gui.view.server.ServerTableView;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.45 2003/10/31 13:20:31 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.46 2003/10/31 16:02:17 zet Exp $ 
  *
  */
 public class ServerTab extends TableGuiTab implements Runnable, DisposeListener {
@@ -95,14 +95,14 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 		GPaneListener aListener = new ServerPaneListener(this, core);
 		createPaneToolBar( viewForm, aListener);
 
-		gPage = new ServerTablePage( composite, core );
+		gView = new ServerTableView( composite, core );
 
 		/* fill the table with content */
 		servers = core.getServerInfoIntMap();
-		gPage.getViewer().setInput( servers );
+		gView.getViewer().setInput( servers );
 		servers.clearAdded();
 
-		int itemCount = gPage.getTable().getItemCount();
+		int itemCount = gView.getTable().getItemCount();
 		this.statusText = G2GuiResources.getString( "SVT_SERVERS" ) + itemCount;
 		
 		popupMenu = new MenuManager( "" );
@@ -124,7 +124,7 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, Object arg ) {
-		if ( gPage.getTable().isDisposed() ) return;
+		if ( gView.getTable().isDisposed() ) return;
 		this.content.getDisplay().asyncExec( this );
 	}		
 
@@ -133,28 +133,28 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 	 */
 	public void run() {
 		/* still running? */
-		if (gPage.getTable().isDisposed() ) return;
+		if (gView.getTable().isDisposed() ) return;
 		
 		synchronized ( this.servers.getRemoved() ) {
-			( (TableViewer) gPage.getViewer() ).remove( this.servers.getRemoved().toArray() );
+			( (TableViewer) gView.getViewer() ).remove( this.servers.getRemoved().toArray() );
 			this.servers.clearRemoved();
 		}
 		synchronized ( this.servers.getAdded() ) {
-			( (TableViewer) gPage.getViewer() ).add( this.servers.getAdded().toArray() );
+			( (TableViewer) gView.getViewer() ).add( this.servers.getAdded().toArray() );
 			this.servers.clearAdded();
 		}
 		synchronized ( this.servers.getModified() ) {
-			( (TableViewer) gPage.getViewer() ).update( this.servers.getModified().toArray(), null );
+			( (TableViewer) gView.getViewer() ).update( this.servers.getModified().toArray(), null );
 			this.servers.clearModified();
 		}
-		int itemCount = gPage.getTable().getItemCount();	
+		int itemCount = gView.getTable().getItemCount();	
 		this.setStatusLine();
 
 		/* refresh the table if "show connected servers only" is true and the filter is activated */
 		if ( PreferenceLoader.loadBoolean( "displayAllServers" )
 		&& this.servers.getConnected() != itemCount ) {
-			if ( StateGViewerFilter.matches( gPage, EnumState.CONNECTED ) )
-				gPage.refresh();
+			if ( StateGViewerFilter.matches( gView, EnumState.CONNECTED ) )
+				gView.refresh();
 		}
 	}
 	
@@ -172,7 +172,7 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 	public void setActive() {
 		/* if we become active, refresh the table */
 		this.servers = this.core.getServerInfoIntMap();
-		gPage.getShell().getDisplay().asyncExec( this );
+		gView.getShell().getDisplay().asyncExec( this );
 		this.setStatusLine();
 		
 		this.core.getServerInfoIntMap().addObserver( this );
@@ -208,20 +208,23 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 	 * Updates this tab on preference close
 	 */
 	public void updateDisplay() {
-		( ( ServerTablePage ) gPage ).updateDisplay();
+		( ( ServerTableView ) gView ).updateDisplay();
 		super.updateDisplay();
 	}
 }
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.46  2003/10/31 16:02:17  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.45  2003/10/31 13:20:31  lemmster
 added PaneGuiTab and TableGuiTab
 added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
 
 Revision 1.44  2003/10/31 10:42:47  lemmster
-Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
-Removed IGViewer because our abstract class GPage do the job
+Renamed GViewer, GTableViewer and GTableTreeViewer to gView... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class gView do the job
 Use supertype/interface where possible to keep the design flexible!
 
 Revision 1.43  2003/10/29 16:56:21  lemmster

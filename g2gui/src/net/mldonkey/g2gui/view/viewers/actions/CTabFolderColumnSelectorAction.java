@@ -27,7 +27,7 @@ import java.util.List;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.ColumnSelector;
-import net.mldonkey.g2gui.view.viewers.table.GTablePage;
+import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.custom.CTabFolder;
@@ -37,7 +37,7 @@ import org.eclipse.swt.custom.CTabItem;
 /**
  * CTabFolderColumnSelectorAction
  *
- * @version $Id: CTabFolderColumnSelectorAction.java,v 1.4 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: CTabFolderColumnSelectorAction.java,v 1.5 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class CTabFolderColumnSelectorAction extends Action {
@@ -51,7 +51,7 @@ public class CTabFolderColumnSelectorAction extends Action {
             CTabItem cTabItem = cTabFolder.getItems()[ i ];
 
             if (cTabItem.getData("gTableViewer") != null) {
-                gTableViewerList.add((GTablePage) cTabItem.getData("gTableViewer"));
+                gTableViewerList.add((GTableView) cTabItem.getData("gTableViewer"));
             }
         }
     }
@@ -59,7 +59,7 @@ public class CTabFolderColumnSelectorAction extends Action {
     public void run() {
         if (gTableViewerList.size() == 0) return;
         
-        GTablePage gTableViewer = (GTablePage) gTableViewerList.get(0);
+        GTableView gTableViewer = (GTableView) gTableViewerList.get(0);
 
         ColumnSelector c = new ColumnSelector(gTableViewer.getShell(), gTableViewer.getColumnLabels(),
                 gTableViewer.getAllColumnIDs(), gTableViewer.getPreferenceString());
@@ -68,7 +68,7 @@ public class CTabFolderColumnSelectorAction extends Action {
             c.savePrefs();
 
             for (int i = 0; i < gTableViewerList.size(); i++) {
-                ((GTablePage) gTableViewerList.get(i)).resetColumns();
+                ((GTableView) gTableViewerList.get(i)).resetColumns();
             }
         }
     }
@@ -77,6 +77,9 @@ public class CTabFolderColumnSelectorAction extends Action {
 
 /*
 $Log: CTabFolderColumnSelectorAction.java,v $
+Revision 1.5  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.4  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

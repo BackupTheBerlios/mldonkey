@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Control;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.20 2003/10/31 13:16:32 lemmster Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.21 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class DownloadPaneMenuListener extends SashGPaneListener {
@@ -87,13 +87,13 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
         if (PreferenceLoader.loadBoolean("downloadsFilterQueued")) {
             StateGViewerFilter aFilter = new StateGViewerFilter(true);
             aFilter.add(EnumFileState.QUEUED);
-            gPage.addFilter(aFilter);
+            gView.addFilter(aFilter);
         }
 
         if (PreferenceLoader.loadBoolean("downloadsFilterPaused")) {
             StateGViewerFilter aFilter = new StateGViewerFilter(true);
             aFilter.add(EnumFileState.PAUSED);
-            gPage.addFilter(aFilter);
+            gView.addFilter(aFilter);
         }
     }
 
@@ -107,7 +107,7 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
 
         // columnSelector
         if (advancedMode) {
-            menuManager.add(new ColumnSelectorAction(gPage));
+            menuManager.add(new ColumnSelectorAction(gView));
         }
 
         // filter submenu			
@@ -115,7 +115,7 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
                     "TT_DOWNLOAD_MENU_FILTER"));
 
         // all filters
-        filterSubMenu.add(new AllFilterAction(gPage));
+        filterSubMenu.add(new AllFilterAction(gView));
 
         // network filters
         filterSubMenu.add(new Separator());
@@ -123,15 +123,15 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
 
         // state filter - exclusionary
         filterSubMenu.add(new Separator());
-        filterSubMenu.add(new StateFilterAction(G2GuiResources.getString("TT_Paused"), gPage,
+        filterSubMenu.add(new StateFilterAction(G2GuiResources.getString("TT_Paused"), gView,
                 EnumFileState.PAUSED, true));
-        filterSubMenu.add(new StateFilterAction(G2GuiResources.getString("TT_Queued"), gPage,
+        filterSubMenu.add(new StateFilterAction(G2GuiResources.getString("TT_Queued"), gView,
                 EnumFileState.QUEUED, true));
 
         filterSubMenu.add(new Separator());
 
         for (int i = 0; i < extensions.length; i++)
-            filterSubMenu.add(new ExtensionFilterAction(extensionNames[ i ], gPage,
+            filterSubMenu.add(new ExtensionFilterAction(extensionNames[ i ], gView,
                     extensions[ i ]));
 
         menuManager.add(filterSubMenu);
@@ -144,7 +144,7 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
         // toggle clients windows
         if (advancedMode) {
             menuManager.add(new Separator());
-            menuManager.add(new ToggleClientsAction(gPage));
+            menuManager.add(new ToggleClientsAction(gView));
         }
 
         // flip sash/maximize sash
@@ -158,8 +158,8 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
      */
     public void widgetDisposed(DisposeEvent arg0) {
         PreferenceStore p = PreferenceLoader.getPreferenceStore();
-        p.setValue("downloadsFilterPaused", FilterAction.isFiltered(gPage, EnumFileState.PAUSED));
-        p.setValue("downloadsFilterQueued", FilterAction.isFiltered(gPage, EnumFileState.QUEUED));
+        p.setValue("downloadsFilterPaused", FilterAction.isFiltered(gView, EnumFileState.PAUSED));
+        p.setValue("downloadsFilterQueued", FilterAction.isFiltered(gView, EnumFileState.QUEUED));
     }
 
     /**
@@ -184,9 +184,9 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
 
         public void run() {
             if (expand) {
-                ((CustomTableTreeViewer) gPage.getViewer()).expandAll();
+                ((CustomTableTreeViewer) gView.getViewer()).expandAll();
             } else {
-                ((CustomTableTreeViewer) gPage.getViewer()).collapseAll();
+                ((CustomTableTreeViewer) gView.getViewer()).collapseAll();
             }
         }
     }
@@ -195,13 +195,16 @@ public class DownloadPaneMenuListener extends SashGPaneListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.21  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.20  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed
 
 Revision 1.19  2003/10/31 10:42:47  lemmster
-Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
-Removed IGViewer because our abstract class GPage do the job
+Renamed GViewer, GTableViewer and GTableTreeViewer to gView... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class gView do the job
 Use supertype/interface where possible to keep the design flexible!
 
 Revision 1.18  2003/10/31 07:24:01  zet

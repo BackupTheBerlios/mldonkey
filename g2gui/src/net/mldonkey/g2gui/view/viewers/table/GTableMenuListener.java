@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view.viewers.table;
 
 import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -32,14 +32,14 @@ import org.eclipse.jface.action.IMenuManager;
 /**
  * GenericTableMenuListener
  *
- * @version $Id: GTableMenuListener.java,v 1.2 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: GTableMenuListener.java,v 1.3 2003/10/31 16:02:57 zet Exp $
  *
  */
 public abstract class GTableMenuListener implements IMenuListener {
-    protected GPage gViewer;
+    protected GView gViewer;
     protected CustomTableViewer tableViewer;
 
-    public GTableMenuListener(GPage gViewer) {
+    public GTableMenuListener(GView gViewer) {
         this.gViewer = gViewer;
     }
 
@@ -47,8 +47,8 @@ public abstract class GTableMenuListener implements IMenuListener {
      * initialize after tableViewer creation
      */
     public void initialize() {
-        if (gViewer instanceof GTablePage)
-		tableViewer = ((GTablePage) gViewer).getTableViewer();
+        if (gViewer instanceof GTableView)
+		tableViewer = ((GTableView) gViewer).getTableViewer();
     }
 
     /* (non-Javadoc)
@@ -61,6 +61,9 @@ public abstract class GTableMenuListener implements IMenuListener {
 
 /*
 $Log: GTableMenuListener.java,v $
+Revision 1.3  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.2  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

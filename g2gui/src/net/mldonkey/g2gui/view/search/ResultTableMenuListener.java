@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.27 2003/10/31 13:16:33 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.28 2003/10/31 16:02:57 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -73,14 +73,14 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	 * @param core The CoreCommunication supporting this with data
 	 * @param cTabItem The CTabItem in which the table res
 	 */
-	public ResultTableMenuListener( ResultTablePage rTableViewer ) {
+	public ResultTableMenuListener( ResultTableView rTableViewer ) {
 		super( rTableViewer );
 		this.selectedResults = new ArrayList();
 	}
 	
 	public void initialize() {
 	    super.initialize();
-	    this.cTabItem = ((ResultTablePage) gViewer).getCTabItem();
+	    this.cTabItem = ((ResultTableView) gViewer).getCTabItem();
 	    this.core = gViewer.getCore();
 		this.resultInfoMap = this.core.getResultInfoIntMap();
 	}
@@ -305,6 +305,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.28  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.27  2003/10/31 13:16:33  lemmster
 Rename Viewer -> Page
 Constructors changed

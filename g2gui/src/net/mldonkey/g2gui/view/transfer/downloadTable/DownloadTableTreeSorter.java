@@ -27,7 +27,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.viewers.GSorter;
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableTreeViewer;
@@ -37,7 +37,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.8 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.9 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class DownloadTableTreeSorter extends GSorter {
@@ -47,7 +47,7 @@ public class DownloadTableTreeSorter extends GSorter {
     /**
      * Creates a new viewer sorter
      */
-    public DownloadTableTreeSorter(GPage gViewer) {
+    public DownloadTableTreeSorter(GView gViewer) {
         super(gViewer);
     }
 
@@ -258,6 +258,9 @@ public class DownloadTableTreeSorter extends GSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.9  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.8  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
@@ -311,7 +314,7 @@ Revision 1.9  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.8  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.7  2003/08/16 20:03:34  zet
 downloaded at top

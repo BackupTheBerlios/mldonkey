@@ -22,7 +22,7 @@
  */
 package net.mldonkey.g2gui.view.viewers.actions;
 
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.filters.FileExtensionFilter;
 
 import org.eclipse.jface.action.Action;
@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * ExtensionFilterAction
  *
- * @version $Id: ExtensionFilterAction.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $ 
+ * @version $Id: ExtensionFilterAction.java,v 1.4 2003/10/31 16:02:57 zet Exp $ 
  *
  */
 public class ExtensionFilterAction extends FilterAction {
@@ -41,7 +41,7 @@ public class ExtensionFilterAction extends FilterAction {
 	 * @param anInt
 	 * @param gViewer
 	 */
-	public ExtensionFilterAction(String name, GPage gViewer, String[] extensions ) {
+	public ExtensionFilterAction(String name, GView gViewer, String[] extensions ) {
 		super( name, Action.AS_CHECK_BOX, gViewer );
 		this.extensions = extensions;
 		if ( this.isFiltered( this.extensions ) )
@@ -89,6 +89,9 @@ public class ExtensionFilterAction extends FilterAction {
 
 /*
 $Log: ExtensionFilterAction.java,v $
+Revision 1.4  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.3  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

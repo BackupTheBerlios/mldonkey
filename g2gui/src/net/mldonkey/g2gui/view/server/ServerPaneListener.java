@@ -45,7 +45,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.4 2003/10/31 13:16:32 lemmster Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.5 2003/10/31 16:02:57 zet Exp $ 
  *
  */
 public class ServerPaneListener extends GPaneListener {
@@ -75,13 +75,13 @@ public class ServerPaneListener extends GPaneListener {
 		}
 		// just add the filter if we really added enums to it
 		if ( temp )
-			gPage.addFilter( aFilter );
+			gView.addFilter( aFilter );
 		// everything is default, so pay attention to displayAllServers
 		else
 			if ( PreferenceLoader.loadBoolean( "displayAllServers" ) ) {
 				StateGViewerFilter filter = new StateGViewerFilter();
 				filter.add( EnumState.CONNECTED );
-				gPage.addFilter( filter );
+				gView.addFilter( filter );
 			}
 	}
 
@@ -93,13 +93,13 @@ public class ServerPaneListener extends GPaneListener {
 
 		// columnSelector
 		if ( PreferenceLoader.loadBoolean("advancedMode") )
-			menuManager.add( new ColumnSelectorAction(gPage) );
+			menuManager.add( new ColumnSelectorAction(gView) );
 
 		// filter submenu			
 		MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILTER" ) );
 
 		// all filters
-		filterSubMenu.add( new AllFilterAction( gPage ) );
+		filterSubMenu.add( new AllFilterAction( gView ) );
 
 		filterSubMenu.add( new Separator() );
 
@@ -109,7 +109,7 @@ public class ServerPaneListener extends GPaneListener {
 		// state filter
 		filterSubMenu.add( new Separator() );
 		for ( int i = 0; i < states.length; i++ )
-			filterSubMenu.add( new StateFilterAction( states[ i ].toString(), gPage,  states[ i ] ) );
+			filterSubMenu.add( new StateFilterAction( states[ i ].toString(), gView,  states[ i ] ) );
 
 		menuManager.add( filterSubMenu );
 	}
@@ -120,19 +120,22 @@ public class ServerPaneListener extends GPaneListener {
 	public void widgetDisposed(DisposeEvent arg0) {
 		PreferenceStore p = PreferenceLoader.getPreferenceStore();
 		for ( int i = 0; i < this.states.length; i++ )
-			p.setValue( states[ i ].toString(), FilterAction.isFiltered( gPage, states[ i ] ) ); 
+			p.setValue( states[ i ].toString(), FilterAction.isFiltered( gView, states[ i ] ) ); 
 	}
 }
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.5  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.4  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed
 
 Revision 1.3  2003/10/31 10:42:47  lemmster
-Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
-Removed IGViewer because our abstract class GPage do the job
+Renamed GViewer, GTableViewer and GTableTreeViewer to gView... to avoid mix-ups with StructuredViewer...
+Removed IGViewer because our abstract class gView do the job
 Use supertype/interface where possible to keep the design flexible!
 
 Revision 1.2  2003/10/31 07:24:01  zet

@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view.viewers.table;
 
 import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -32,15 +32,15 @@ import org.eclipse.jface.viewers.Viewer;
  *
  * GenericContentProvider
  *
- * @version $Id: GTableContentProvider.java,v 1.2 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: GTableContentProvider.java,v 1.3 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class GTableContentProvider implements IStructuredContentProvider {
     protected final static Object[] EMPTY_ARRAY = new Object[ 0 ];
     protected CustomTableViewer tableViewer;
-    protected GPage gViewer;
+    protected GView gViewer;
 
-    public GTableContentProvider(GPage gViewer) {
+    public GTableContentProvider(GView gViewer) {
         this.gViewer = gViewer;
     }
 
@@ -48,7 +48,7 @@ public class GTableContentProvider implements IStructuredContentProvider {
      * initialize after tableViewer creation
      */
     public void initialize() {
-        tableViewer = ((GTablePage) gViewer).getTableViewer();
+        tableViewer = ((GTableView) gViewer).getTableViewer();
     }
 
     /* (non-Javadoc)
@@ -84,6 +84,9 @@ public class GTableContentProvider implements IStructuredContentProvider {
 
 /*
 $Log: GTableContentProvider.java,v $
+Revision 1.3  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.2  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

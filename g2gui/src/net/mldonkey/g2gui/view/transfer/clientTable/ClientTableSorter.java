@@ -35,11 +35,11 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ClientTableSorter
  *
- * @version $Id: ClientTableSorter.java,v 1.7 2003/10/31 13:16:32 lemmster Exp $
+ * @version $Id: ClientTableSorter.java,v 1.8 2003/10/31 16:02:57 zet Exp $
  *
  */
 public class ClientTableSorter extends GSorter {
-    public ClientTableSorter(ClientTablePage cTableViewer) {
+    public ClientTableSorter(ClientTableView cTableViewer) {
         super(cTableViewer);
     }
 
@@ -48,7 +48,7 @@ public class ClientTableSorter extends GSorter {
      */
     public int compare(Viewer viewer, Object obj1, Object obj2) {
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ClientTablePage.STATE:
+        case ClientTableView.STATE:
 
             ClientInfo clientInfo1 = (ClientInfo) obj1;
             ClientInfo clientInfo2 = (ClientInfo) obj2;
@@ -85,6 +85,9 @@ public class ClientTableSorter extends GSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.8  2003/10/31 16:02:57  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.7  2003/10/31 13:16:32  lemmster
 Rename Viewer -> Page
 Constructors changed

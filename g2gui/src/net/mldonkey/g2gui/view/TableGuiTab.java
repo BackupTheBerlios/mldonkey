@@ -23,17 +23,17 @@
 package net.mldonkey.g2gui.view;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GView;
 
 /**
  * TableGuiTab
  *
- * @version $Id: TableGuiTab.java,v 1.2 2003/10/31 13:20:31 lemmster Exp $ 
+ * @version $Id: TableGuiTab.java,v 1.3 2003/10/31 16:02:17 zet Exp $ 
  *
  */
 public abstract class TableGuiTab extends PaneGuiTab {
 	protected CoreCommunication core;
-	protected GPage gPage;
+	protected GView gView;
 
 	/**
 	 * @param gui
@@ -45,17 +45,20 @@ public abstract class TableGuiTab extends PaneGuiTab {
 	/**
 	 * @return
 	 */
-	public GPage getPage() {
-		return gPage;
+	public GView getView() {
+		return gView;
 	}
 	
-	public GPage getGPage() {
-		return gPage;
+	public GView getGView() {
+		return gView;
 	}
 }
 
 /*
 $Log: TableGuiTab.java,v $
+Revision 1.3  2003/10/31 16:02:17  zet
+use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
+
 Revision 1.2  2003/10/31 13:20:31  lemmster
 added PaneGuiTab and TableGuiTab
 added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
