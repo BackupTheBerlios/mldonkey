@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.31 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.32 2003/11/25 01:13:13 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -149,11 +149,11 @@ Yet			menuManager.add( webManager );
 			menuManager.add(new Separator() );
 			MenuManager webServicesMenu = new MenuManager( G2GuiResources.getString( "ST_WEBSERVICES" ) );
 			
-				webServicesMenu.add( new WebServicesAction( WebServicesAction.BITZI, selectedResult.getMd4() ) ) ;
-				webServicesMenu.add( new WebServicesAction( WebServicesAction.FILEDONKEY, selectedResult.getMd4() ) ) ;
-				webServicesMenu.add( new WebServicesAction( WebServicesAction.JIGLE, selectedResult.getMd4() ) ) ;
-				webServicesMenu.add( new WebServicesAction( WebServicesAction.SHAREREACTOR, selectedResult.getLink() ) );
-				webServicesMenu.add( new WebServicesAction( WebServicesAction.DONKEY_FAKES, selectedResult.getLink() ) );
+				webServicesMenu.add( new WebServicesAction( WebServicesAction.BITZI, selectedResult.getSize(), selectedResult.getMd4() ) ) ;
+				webServicesMenu.add( new WebServicesAction( WebServicesAction.FILEDONKEY, selectedResult.getSize(), selectedResult.getMd4() ) ) ;
+				webServicesMenu.add( new WebServicesAction( WebServicesAction.JIGLE, selectedResult.getSize(), selectedResult.getMd4() ) ) ;
+				webServicesMenu.add( new WebServicesAction( WebServicesAction.SHAREREACTOR, selectedResult.getSize(), selectedResult.getLink() ) );
+				webServicesMenu.add( new WebServicesAction( WebServicesAction.DONKEY_FAKES, selectedResult.getSize(), selectedResult.getLink() ) );
 			
 			menuManager.add( webServicesMenu );
 			
@@ -298,6 +298,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.32  2003/11/25 01:13:13  zet
+include filesize for webservice>jigle lookup
+
 Revision 1.31  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

@@ -22,10 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.ClientInfo;
@@ -54,6 +50,7 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -79,12 +76,16 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 
 /**
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.32 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.33 2003/11/25 01:13:13 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -125,9 +126,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                 }
             });
 
-        if (SWT.getPlatform().equals("win32") && PreferenceLoader.loadBoolean("dragAndDrop")) {
+        if (SWT.getPlatform().equals("win32") && PreferenceLoader.loadBoolean("dragAndDrop"))
             activateDragAndDrop();
-        }
     }
 
     /**
@@ -139,9 +139,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
         dragSource.addDragListener(new DragSourceAdapter() {
                 public void dragStart(DragSourceEvent event) {
-                    if (selectedFile == null) {
+                    if (selectedFile == null)
                         event.doit = false;
-                    } else {
+                    else {
                         event.doit = true;
                         myDrag = true;
                     }
@@ -175,9 +175,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                 }
 
                 public void drop(DropTargetEvent event) {
-                    if ((event.data == null) || myDrag) {
+                    if ((event.data == null) || myDrag)
                         return;
-                    }
 
                     Message dllLink = new EncodeMessage(Message.S_DLLINK, event.data);
                     dllLink.sendMessage(gView.getCore());
@@ -197,14 +196,12 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             selectedFile = fileInfo;
 
             if (createClientTable &&
-                    ((lastSelectedFile == null) || (lastSelectedFile != selectedFile))) {
+                    ((lastSelectedFile == null) || (lastSelectedFile != selectedFile)))
                 clientView.getViewer().setInput(fileInfo);
-            }
 
             lastSelectedFile = selectedFile;
-        } else {
+        } else
             selectedFile = null;
-        }
 
         selectedClient = (o instanceof TreeClientInfo) ? (TreeClientInfo) o : null;
         selectedClients.clear();
@@ -213,22 +210,19 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         for (Iterator it = sSel.iterator(); it.hasNext();) {
             o = it.next();
 
-            if (o instanceof FileInfo) {
+            if (o instanceof FileInfo)
                 selectedFiles.add(o);
-            } else if (o instanceof TreeClientInfo) {
+            else if (o instanceof TreeClientInfo)
                 selectedClients.add(o);
-            }
         }
     }
 
     public void updateClientsTable(boolean b) {
         if (b) {
-            if (createClientTable != b) {
+            if (createClientTable != b)
                 clientView.getViewer().setInput(lastSelectedFile);
-            }
-        } else {
+        } else
             clientView.getViewer().setInput(null);
-        }
 
         createClientTable = b;
     }
@@ -239,9 +233,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
     public void menuAboutToShow(IMenuManager menuManager) {
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
-        if ((selectedFile != null) && selectedFileListContains(EnumFileState.DOWNLOADED)) {
+        if ((selectedFile != null) && selectedFileListContains(EnumFileState.DOWNLOADED))
             menuManager.add(new CommitAction());
-        }
 
         if ((selectedFile != null) &&
                 (selectedFile.getState().getState() == EnumFileState.DOWNLOADED)) {
@@ -250,28 +243,23 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
             commitAsSubMenu.add(new CommitAction(true));
 
-            for (int i = 0; i < selectedFile.getNames().length; i++) {
+            for (int i = 0; i < selectedFile.getNames().length; i++)
                 commitAsSubMenu.add(new CommitAction(selectedFile.getNames()[ i ]));
-            }
 
             menuManager.add(commitAsSubMenu);
         }
 
-        if (selectedFile != null) {
+        if (selectedFile != null)
             menuManager.add(new FileDetailAction());
-        }
 
-        if ((selectedFile != null) && selectedFileListContains(EnumFileState.DOWNLOADING)) {
+        if ((selectedFile != null) && selectedFileListContains(EnumFileState.DOWNLOADING))
             menuManager.add(new PauseAction());
-        }
 
-        if ((selectedFile != null) && selectedFileListContains(EnumFileState.PAUSED)) {
+        if ((selectedFile != null) && selectedFileListContains(EnumFileState.PAUSED))
             menuManager.add(new ResumeAction());
-        }
 
-        if ((selectedFile != null) && selectedFileListContainsOtherThan(EnumFileState.DOWNLOADED)) {
+        if ((selectedFile != null) && selectedFileListContainsOtherThan(EnumFileState.DOWNLOADED))
             menuManager.add(new CancelAction());
-        }
 
         if ((selectedFile != null) && selectedFileListContainsOtherThan(EnumFileState.DOWNLOADED)) {
             MenuManager prioritySubMenu = new MenuManager(G2GuiResources.getString(
@@ -291,9 +279,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             menuManager.add(prioritySubMenu);
         }
 
-        if (selectedFile != null) {
+        if (selectedFile != null)
             menuManager.add(new PreviewAction());
-        }
 
         if ((selectedFile != null) && advancedMode) {
             menuManager.add(new VerifyChunksAction());
@@ -311,17 +298,15 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             menuManager.add(new AddClientAsFriendAction(gView.getCore(), clientInfoArray));
         }
 
-        if (selectedClient != null) {
+        if (selectedClient != null)
             menuManager.add(new ClientDetailAction(gView.getShell(), selectedClient.getFileInfo(),
                     selectedClient.getClientInfo(), gView.getCore()));
-        }
 
         if (selectedFile != null) {
             String[] linkList = new String[ selectedFiles.size() ];
 
-            for (int i = 0; i < selectedFiles.size(); i++) {
+            for (int i = 0; i < selectedFiles.size(); i++)
                 linkList[ i ] = new String(((FileInfo) selectedFiles.get(i)).getED2K());
-            }
 
             MenuManager clipboardMenu = new MenuManager(G2GuiResources.getString(
                         "TT_DOWNLOAD_MENU_COPYTO"));
@@ -333,14 +318,16 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         if ((selectedFile != null) && advancedMode) {
             MenuManager webServicesMenu = new MenuManager(G2GuiResources.getString(
                         "TT_DOWNLOAD_MENU_WEB_SERVICES"));
-            webServicesMenu.add(new WebServicesAction(WebServicesAction.BITZI, selectedFile.getMd4()));
+            webServicesMenu.add(new WebServicesAction(WebServicesAction.BITZI,
+                    selectedFile.getSize(), selectedFile.getMd4()));
             webServicesMenu.add(new WebServicesAction(WebServicesAction.FILEDONKEY,
-                    selectedFile.getMd4()));
-            webServicesMenu.add(new WebServicesAction(WebServicesAction.JIGLE, selectedFile.getMd4()));
+                    selectedFile.getSize(), selectedFile.getMd4()));
+            webServicesMenu.add(new WebServicesAction(WebServicesAction.JIGLE,
+                    selectedFile.getSize(), selectedFile.getMd4()));
             webServicesMenu.add(new WebServicesAction(WebServicesAction.SHAREREACTOR,
-                    selectedFile.getED2K()));
+                    selectedFile.getSize(), selectedFile.getED2K()));
             webServicesMenu.add(new WebServicesAction(WebServicesAction.DONKEY_FAKES,
-                    selectedFile.getED2K()));
+                    selectedFile.getSize(), selectedFile.getED2K()));
             menuManager.add(webServicesMenu);
         }
     }
@@ -348,18 +335,16 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
     // Helpers
     private boolean selectedFileListContains(EnumFileState e) {
         for (int i = 0; i < selectedFiles.size(); i++)
-            if (((FileInfo) selectedFiles.get(i)).getState().getState() == e) {
+            if (((FileInfo) selectedFiles.get(i)).getState().getState() == e)
                 return true;
-            }
 
         return false;
     }
 
     private boolean selectedFileListContainsOtherThan(EnumFileState e) {
         for (int i = 0; i < selectedFiles.size(); i++)
-            if (((FileInfo) selectedFiles.get(i)).getState().getState() != e) {
+            if (((FileInfo) selectedFiles.get(i)).getState().getState() != e)
                 return true;
-            }
 
         return false;
     }
@@ -424,9 +409,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             for (int i = 0; i < selectedFiles.size(); i++) {
                 FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
 
-                if (fileInfo.getState().getState() == EnumFileState.DOWNLOADING) {
+                if (fileInfo.getState().getState() == EnumFileState.DOWNLOADING)
                     fileInfo.setState(EnumFileState.PAUSED);
-                }
             }
         }
     }
@@ -460,9 +444,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                 for (int i = 0; i < selectedFiles.size(); i++) {
                     FileInfo selectedFileInfo = (FileInfo) selectedFiles.get(i);
 
-                    if (selectedFileInfo.getState().getState() == EnumFileState.DOWNLOADED) {
+                    if (selectedFileInfo.getState().getState() == EnumFileState.DOWNLOADED)
                         selectedFileInfo.saveFileAs(selectedFileInfo.getName());
-                    }
                 }
             } else {
                 if (manualInput) {
@@ -474,13 +457,11 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                     if (inputDialog.open() == InputDialog.OK) {
                         String newFileName = inputDialog.getValue();
 
-                        if (!newFileName.equals("")) {
+                        if (!newFileName.equals(""))
                             selectedFile.saveFileAs(newFileName);
-                        }
                     }
-                } else {
+                } else
                     selectedFile.saveFileAs(commitAs);
-                }
             }
         }
     }
@@ -498,9 +479,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             for (int i = 0; i < selectedFiles.size(); i++) {
                 FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
 
-                if (fileInfo.getState().getState() == EnumFileState.PAUSED) {
+                if (fileInfo.getState().getState() == EnumFileState.PAUSED)
                     fileInfo.setState(EnumFileState.DOWNLOADING);
-                }
             }
         }
     }
@@ -527,9 +507,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                 for (int i = 0; i < selectedFiles.size(); i++) {
                     FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
 
-                    if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED) {
+                    if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
                         fileInfo.setState(EnumFileState.CANCELLED);
-                    }
 
                     // this conceptually breaks core/gui synchronicity and should be removed ASAP.
                     gView.getCore().getResultInfoIntMap().setDownloading(fileInfo, false);
@@ -548,26 +527,24 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             super("", Action.AS_CHECK_BOX);
             enumPriority = e;
 
-            if (e == EnumPriority.VERY_HIGH) {
+            if (e == EnumPriority.VERY_HIGH)
                 setText(G2GuiResources.getString("TT_PRIO_Very_High").toLowerCase());
-            } else if (e == EnumPriority.HIGH) {
+            else if (e == EnumPriority.HIGH)
                 setText(G2GuiResources.getString("TT_PRIO_High").toLowerCase());
-            } else if (e == EnumPriority.NORMAL) {
+            else if (e == EnumPriority.NORMAL)
                 setText(G2GuiResources.getString("TT_PRIO_Normal").toLowerCase());
-            } else if (e == EnumPriority.LOW) {
+            else if (e == EnumPriority.LOW)
                 setText(G2GuiResources.getString("TT_PRIO_Low").toLowerCase());
-            } else if (e == EnumPriority.VERY_LOW) {
+            else if (e == EnumPriority.VERY_LOW)
                 setText(G2GuiResources.getString("TT_PRIO_Very_Low").toLowerCase());
-            }
         }
 
         public void run() {
             for (int i = 0; i < selectedFiles.size(); i++) {
                 FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
 
-                if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED) {
+                if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
                     fileInfo.sendPriority(enumPriority);
-                }
             }
         }
 
@@ -587,11 +564,10 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             super("", Action.AS_CHECK_BOX);
             this.relative = relative;
 
-            if (relative) {
+            if (relative)
                 setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_CUSTOM_RELATIVE"));
-            } else {
+            else
                 setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_CUSTOM_ABSOLUTE"));
-            }
         }
 
         public void run() {
@@ -615,9 +591,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                 for (int i = 0; i < selectedFiles.size(); i++) {
                     FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
 
-                    if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED) {
+                    if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
                         fileInfo.sendPriority(relative, newPriority);
-                    }
                 }
             }
         }
@@ -652,13 +627,12 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             scale.setIncrement(1);
             scale.setPageIncrement(5);
 
-            if (initialValue < -100) {
+            if (initialValue < -100)
                 scale.setSelection(0);
-            } else if (initialValue > 100) {
+            else if (initialValue > 100)
                 scale.setSelection(200);
-            } else {
+            else
                 scale.setSelection(initialValue + 100);
-            }
 
             scale.addSelectionListener(new SelectionListener() {
                     public void widgetDefaultSelected(SelectionEvent e) {
@@ -677,6 +651,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.33  2003/11/25 01:13:13  zet
+include filesize for webservice>jigle lookup
+
 Revision 1.32  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
@@ -838,7 +815,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/22 14:30:45  lemmster
 verify chunks added

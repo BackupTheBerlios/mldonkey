@@ -25,14 +25,13 @@ package net.mldonkey.g2gui.view.viewers.actions;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
-
 import org.eclipse.swt.program.Program;
 
 
 /**
  * WebServicesAction
  *
- * @version $Id: WebServicesAction.java,v 1.2 2003/10/24 21:26:20 zet Exp $
+ * @version $Id: WebServicesAction.java,v 1.3 2003/11/25 01:13:13 zet Exp $
  *
  */
 public class WebServicesAction extends Action {
@@ -42,12 +41,15 @@ public class WebServicesAction extends Action {
     public static final int SHAREREACTOR = 3;
     public static final int DONKEY_FAKES = 4;
     private String string;
+    private long fileSize;
     private int type;
 
-    public WebServicesAction(int type, String string) {
+    public WebServicesAction(int type, long fileSize, String string) {
         super();
         this.type = type;
+        this.fileSize = fileSize;
         this.string = string;
+        
 
         switch (type) {
         case JIGLE:
@@ -85,7 +87,7 @@ public class WebServicesAction extends Action {
     public void run() {
         switch (type) {
         case JIGLE:
-            Program.launch("http://www.jigle.com/search?p=ed2k:" + string);
+            Program.launch("http://www.jigle.com/search?p=ed2k:" + fileSize + ":" + string);
 
             break;
 
@@ -115,6 +117,9 @@ public class WebServicesAction extends Action {
 
 /*
 $Log: WebServicesAction.java,v $
+Revision 1.3  2003/11/25 01:13:13  zet
+include filesize for webservice>jigle lookup
+
 Revision 1.2  2003/10/24 21:26:20  zet
 add donkey fakes web service
 
