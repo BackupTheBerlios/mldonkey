@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.13 2003/08/25 23:04:02 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.14 2003/08/26 15:37:32 zet Exp $
  */
 public class MessagesTab extends GuiTab {
 
@@ -217,10 +217,10 @@ public class MessagesTab extends GuiTab {
 		public void itemClosed( CTabFolderEvent event ) {
 				CTabItem item = ( CTabItem ) event.item;
 				//Console console = (Console) item.getData("console");
-				//Composite consoleComposite = (Composite) item.getData("composite");
+				Composite consoleComposite = (Composite) item.getData("composite");
 				Integer id = (Integer) item.getData("id");
 				openTabs.remove(id);
-				//consoleComposite.dispose();
+				consoleComposite.dispose();
 				item.dispose();
 				setRightLabel();
 			}
@@ -455,6 +455,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.14  2003/08/26 15:37:32  zet
+dispose composite
+
 Revision 1.13  2003/08/25 23:04:02  zet
 update statusline on incoming msg
 
