@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.49 2003/07/02 16:22:41 dek Exp $ 
+ * @version $Id: Core.java,v 1.50 2003/07/02 17:12:11 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -335,7 +335,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#search(java.lang.String)
 	 */
 	public void search( String searchstring ) {
-		// TODO Auto-generated method stub
+		/*dummy, without funciotn 'till now, maybe forever...*/
 		
 	}
 
@@ -343,6 +343,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.50  2003/07/02 17:12:11  dek
+removed Senseless ToDo-Tag for dummy-method
+
 Revision 1.49  2003/07/02 16:22:41  dek
 extensive Checkstyle applying
 
