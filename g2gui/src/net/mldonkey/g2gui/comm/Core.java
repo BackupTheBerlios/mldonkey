@@ -57,7 +57,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.121 2003/12/28 14:15:43 dek Exp $ 
+ * @version $Id: Core.java,v 1.122 2004/01/23 22:12:45 psy Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -275,6 +275,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * reconnects to mldonkey after connection-loss
 	 */
 	public void reconnect() {		
+		if (G2Gui.debug) System.out.println("Reconnect");
 		this.connection = G2Gui.initializeSocket( pollModeEnabled );		
 		this.connected = true;
 		Thread restarted = new Thread( this );
@@ -653,6 +654,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.122  2004/01/23 22:12:45  psy
+reconnection and local core probing improved, continuing work...
+
 Revision 1.121  2003/12/28 14:15:43  dek
 debug output: gui proto-version
 

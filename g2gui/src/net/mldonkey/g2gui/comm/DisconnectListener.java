@@ -22,6 +22,9 @@
  */
 package net.mldonkey.g2gui.comm;
 
+import net.mldonkey.g2gui.view.*;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
@@ -34,7 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * DisconnectListener
  *
- * @version $Id: DisconnectListener.java,v 1.5 2003/12/04 08:47:31 lemmy Exp $ 
+ * @version $Id: DisconnectListener.java,v 1.6 2004/01/23 22:12:45 psy Exp $ 
  *
  */
 public class DisconnectListener implements Observer, Runnable {
@@ -44,9 +47,13 @@ public class DisconnectListener implements Observer, Runnable {
 	private Shell shell;
 
 	/**
+	 * The DisconnectListener constructor adds an observer to the g2gui-core which
+	 * is responsible for handling disconnections from mlnet-core.
+	 * 
 	 * @param core handles all the connections to mldonkey
 	 */
 	public DisconnectListener( CoreCommunication core, Shell shell ) {
+		if (G2Gui.debug) System.out.println("Adding DisconnectListener");
 		this.core = core;
 		this.shell = shell;
 		core.addObserver( this );		
@@ -70,9 +77,15 @@ public class DisconnectListener implements Observer, Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {				
-		MessageBox box = new MessageBox( shell , SWT.ICON_ERROR | SWT.YES | SWT.NO );
-		box.setMessage( "disconnected : reconnect ?" );		
-		result = box.open();		
+		/* do not pop up disconnect-window when g2gui is shut down 
+		 * and the local core with it
+		 */  
+		System.out.println("Disconnected");
+		if (!shell.isDisposed()) {
+			MessageBox box = new MessageBox( shell , SWT.ICON_ERROR | SWT.YES | SWT.NO );
+			box.setMessage( G2GuiResources.getString("G2_DISCONNECT") );		
+			result = box.open();
+		}
 	}
 	
 }
@@ -81,6 +94,9 @@ public class DisconnectListener implements Observer, Runnable {
 
 /*
 $Log: DisconnectListener.java,v $
+Revision 1.6  2004/01/23 22:12:45  psy
+reconnection and local core probing improved, continuing work...
+
 Revision 1.5  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.61 2004/01/13 22:57:25 psy Exp $
+ * @version $Id: G2Gui.java,v 1.62 2004/01/23 22:12:46 psy Exp $
  *
  */
 public class G2Gui {
@@ -222,9 +223,13 @@ public class G2Gui {
         shell = new Shell(display);
 
         // should the core be spawned by the gui?
+        // if yes, set hostname to localhost
 		boolean runCore = false;
-		if (!PreferenceLoader.loadString("coreExecutable").equals(""))
+		if (!PreferenceLoader.loadString("coreExecutable").equals("")) {
 			runCore = true;
+			hostname = "localhost";
+		}
+			
 
 		// create the splash
         if (PreferenceLoader.loadBoolean("splashScreen"))
@@ -344,7 +349,8 @@ public class G2Gui {
         		G2GuiResources.getString("G2_ILLEGAL_ADDRESS"), mode, true);			
             return null;
         } catch (IOException e) {
-			errorHandling(G2GuiResources.getString("G2_IOEXCEPTION"),
+			if (debug) System.out.println("while initializing socket: " + e);
+        	errorHandling(G2GuiResources.getString("G2_IOEXCEPTION"),
         		G2GuiResources.getString("G2_CORE_NOT_RUNNING") + hostname + ":" + port + 
         		G2GuiResources.getString("G2_CORE_NOT_RUNNING2"), mode, true);
 			return null;
@@ -496,19 +502,43 @@ public class G2Gui {
     }
 
 	/**
-	 * spawn core
+	 * spawnCore() is used to spawn a local mlnet core and wait until
+	 * a connection to localhost:4001 is possible (i.e. until the core is ready for use).
+	 * It tries to connect the freshly spawned core once a second, up to 20 times, 
+	 * then gives up
 	 */
 	private static void spawnCore() {
 		File coreEXE = new File(PreferenceLoader.loadString("coreExecutable"));
 
 		if ((execConsole == null) && coreEXE.exists() && coreEXE.isFile()) {
 			execConsole = new ExecConsole();
-
-			try {
-				// wait while the core loads and opens the gui port? something better?
-				Thread.sleep(7777);
-			} catch (InterruptedException e) {
+			if (debug) System.out.println("Starting local core");
+			
+			// try 20 times with 1 sec delays to connect the core 
+			int counter = 0;
+			boolean connected = false;
+			while (!connected & counter++ < 20) {
+				// try to establish a connection to the core-port
+				try {
+					Socket socket = new Socket(InetAddress.getByName("localhost"), 4001);
+					connected = true;
+					// close the socket again directly after successful connect
+					try {
+						socket.close();
+					} catch (IOException e1) {
+						if (debug) System.out.println("While closing probesocket: " + e1);
+					}
+				// if no core has been found, we catch the exception and sleep 1 second
+				} catch (IOException e2) {
+					System.out.println("trying...");
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e3) {
+						if (debug) System.out.println("Interrupted sleep: " + e3);
+					}
+				}
 			}
+			if (debug) System.out.println("Local core successfully started!");
 		}
 	}
 
@@ -537,6 +567,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.62  2004/01/23 22:12:46  psy
+reconnection and local core probing improved, continuing work...
+
 Revision 1.61  2004/01/13 22:57:25  psy
 *** empty log message ***
 

@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.33 2003/12/04 08:47:27 lemmy Exp $ 
+ * @version $Id: NetworkItem.java,v 1.34 2004/01/23 22:12:46 psy Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -152,8 +152,10 @@ public class NetworkItem implements Observer {
 						   +  G2GuiResources.getString( "NI_CONNECTED_TO" )
 						   + network.getConnectedServers() + " " +  G2GuiResources.getString( "NI_NODES" ) );
 		else
-			if ( network.isVirtual() )
+			if ( network.isVirtual() ) {
+				// TODO: setting tooltiptext for virtual networks necessary?
 				toolItem.setToolTipText( network.getNetworkName() );
+			}
 			else {
 				toolItem.setToolTipText( network.getNetworkName() + " " +
 				( network.isEnabled() ? G2GuiResources.getString( "NI_ENABLED" ) :
@@ -174,13 +176,16 @@ public class NetworkItem implements Observer {
 				/* check for widget disposed */
 				if ( composite.isDisposed() ) return;
 
-				/* set the tooltip text */
-				ToolItem toolItem = getToolItemByNetwork( network );
-				
-				createTooltip( toolItem, network );
-
-				/* set the image */
-				toolItem.setImage( network.getImage() );
+				/* icon/tooltip updates for virtual networks are not necessary */
+				if (!network.isVirtual()) {
+					ToolItem toolItem = getToolItemByNetwork( network );
+					
+					/* set the tooltip text */
+					createTooltip( toolItem, network );
+					
+					/* set the image */
+					toolItem.setImage( network.getImage() );
+				}
 			}
 		} );	
 	}
@@ -202,6 +207,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.34  2004/01/23 22:12:46  psy
+reconnection and local core probing improved, continuing work...
+
 Revision 1.33  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
