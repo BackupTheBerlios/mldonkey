@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumNetwork;
  * OptionsInfo
  *
  *
- * @version $Id: OptionsInfoMap.java,v 1.24 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.25 2003/11/23 19:56:55 lemmster Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -160,70 +160,78 @@ public class OptionsInfoMap extends InfoMap {
 	public int getMaxConnectedServers( NetworkInfo network ) {
 		if ( parent.getProtoToUse() < 18 ) return 0;
 	
-		/* does this networkinfo has servers/supernodes */
-		if ( network.hasServers() || network.hasSupernodes() ) {
-			OptionsInfo option = null;
-			String prefix = null;
-			if ( network.equals( EnumNetwork.FT ) ) {
-				/* first the option-prefix */
-				option = ( OptionsInfo ) this.infoMap.get( "FT-options_prefix" );
-				prefix = option.getValue();
-				/* now the max_connected_server/peers */
-				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_ultrapeers" );
-				return new Integer( option.getValue() ).intValue();
+		try {
+			/* does this networkinfo has servers/supernodes */
+			if ( network.hasServers() || network.hasSupernodes() ) {
+				OptionsInfo option = null;
+				String prefix = null;
+				if ( network.equals( EnumNetwork.FT ) ) {
+					/* first the option-prefix */
+					option = ( OptionsInfo ) this.infoMap.get( "FT-options_prefix" );
+					prefix = option.getValue();
+					/* now the max_connected_server/peers */
+					option = ( OptionsInfo ) this.infoMap.get( prefix + "max_ultrapeers" );
+					return new Integer( option.getValue() ).intValue();
+				}
+				if ( network.equals( EnumNetwork.GNUT ) ) {
+					/* first the option-prefix */
+					option = ( OptionsInfo ) this.infoMap.get( "GNUT-options_prefix" );
+					prefix = option.getValue();
+					/* now the max_connected_server/peers */
+					option = ( OptionsInfo ) this.infoMap.get( prefix + "g1_max_ultrapeers" );
+					return new Integer( option.getValue() ).intValue();
+				}
+				if ( network.equals( EnumNetwork.GNUT2 ) ) {
+					/* first the option-prefix */
+					option = ( OptionsInfo ) this.infoMap.get( "G2-options_prefix" );
+					prefix = option.getValue();
+					/* now the max_connected_server/peers */
+					option = ( OptionsInfo ) this.infoMap.get( prefix + "max_ultrapeers" );
+					return new Integer( option.getValue() ).intValue();
+				}
+				if ( network.equals( EnumNetwork.DC ) ) {
+					/* first the option-prefix */
+					option = ( OptionsInfo ) this.infoMap.get( "DC-options_prefix" );
+					prefix = option.getValue();
+					/* now the max_connected_server/peers */
+					option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
+					return new Integer( option.getValue() ).intValue();
+				}
+				if ( network.equals( EnumNetwork.OPENNP ) ) {
+					/* first the option-prefix */
+					option = ( OptionsInfo ) this.infoMap.get( "OpenNap-options_prefix" );
+					prefix = option.getValue();
+					/* now the max_connected_server/peers */
+					option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
+					return new Integer( option.getValue() ).intValue();
+				}
+				if ( network.equals( EnumNetwork.SOULSEEK ) ) {
+					/* first the option-prefix */
+					option = ( OptionsInfo ) this.infoMap.get( "slsk-options_prefix" );
+					prefix = option.getValue();
+					/* now the max_connected_server/peers */
+					option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
+					return new Integer( option.getValue() ).intValue();
+				}
+				if ( network.equals( EnumNetwork.DONKEY ) ) {
+					/* now the max_connected_server/peers */
+					option = ( OptionsInfo ) this.infoMap.get( "max_connected_servers" );
+					return new Integer( option.getValue() ).intValue();
+				}
 			}
-			if ( network.equals( EnumNetwork.GNUT ) ) {
-				/* first the option-prefix */
-				option = ( OptionsInfo ) this.infoMap.get( "GNUT-options_prefix" );
-				prefix = option.getValue();
-				/* now the max_connected_server/peers */
-				option = ( OptionsInfo ) this.infoMap.get( prefix + "g1_max_ultrapeers" );
-				return new Integer( option.getValue() ).intValue();
-			}
-			if ( network.equals( EnumNetwork.GNUT2 ) ) {
-				/* first the option-prefix */
-				option = ( OptionsInfo ) this.infoMap.get( "G2-options_prefix" );
-				prefix = option.getValue();
-				/* now the max_connected_server/peers */
-				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_ultrapeers" );
-				return new Integer( option.getValue() ).intValue();
-			}
-			if ( network.equals( EnumNetwork.DC ) ) {
-				/* first the option-prefix */
-				option = ( OptionsInfo ) this.infoMap.get( "DC-options_prefix" );
-				prefix = option.getValue();
-				/* now the max_connected_server/peers */
-				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
-				return new Integer( option.getValue() ).intValue();
-			}
-			if ( network.equals( EnumNetwork.OPENNP ) ) {
-				/* first the option-prefix */
-				option = ( OptionsInfo ) this.infoMap.get( "OpenNap-options_prefix" );
-				prefix = option.getValue();
-				/* now the max_connected_server/peers */
-				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
-				return new Integer( option.getValue() ).intValue();
-			}
-			if ( network.equals( EnumNetwork.SOULSEEK ) ) {
-				/* first the option-prefix */
-				option = ( OptionsInfo ) this.infoMap.get( "slsk-options_prefix" );
-				prefix = option.getValue();
-				/* now the max_connected_server/peers */
-				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
-				return new Integer( option.getValue() ).intValue();
-			}
-			if ( network.equals( EnumNetwork.DONKEY ) ) {
-				/* now the max_connected_server/peers */
-				option = ( OptionsInfo ) this.infoMap.get( "max_connected_servers" );
-				return new Integer( option.getValue() ).intValue();
-			}
+			return 0;
 		}
-		return 0;
+		catch ( NullPointerException e ) {
+			return 0;
+		}	
 	}
 }
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.25  2003/11/23 19:56:55  lemmster
+temporarily workaround until the core comes up with a better solution
+
 Revision 1.24  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
