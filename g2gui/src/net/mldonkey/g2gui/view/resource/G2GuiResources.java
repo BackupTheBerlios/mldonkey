@@ -22,31 +22,28 @@
  */
 package net.mldonkey.g2gui.view.resource;
 
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
-
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 
 /**
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.52 2003/11/04 21:07:39 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.53 2003/11/05 01:59:02 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -205,9 +202,6 @@ public class G2GuiResources {
      * Create the image registry
      */
     private static void createImageRegistry() {
-        Color white = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-        Color titlebar = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
-
         ImageRegistry reg = G2GuiResources.getImageRegistry();
 
         reg.put("splashScreen", createRawImage("splash.png"));
@@ -297,8 +291,6 @@ public class G2GuiResources {
     * @param reg
     */
     public static void createNetworksIcons(ImageRegistry reg) {
-        Color white = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-
         String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "ONP", "Unknown" };
         String[] fileNames = {
             "directconnect", "edonkey2000", "gnutella", "gnutella2", "kazaa", "soulseek", "opennap",
@@ -323,8 +315,7 @@ public class G2GuiResources {
     }
 
     /**
-     * @param src
-     * @param color
+     * @param imageDescriptor
      * @return Image
      */
     private static Image createActiveImage(ImageDescriptor imageDescriptor) {
@@ -386,6 +377,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.53  2003/11/05 01:59:02  zet
+minor
+
 Revision 1.52  2003/11/04 21:07:39  zet
 minor
 

@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.83 2003/11/05 01:51:35 zet Exp $
+ * @version $Id: MainTab.java,v 1.84 2003/11/05 01:54:13 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -197,8 +197,9 @@ public class MainTab implements ShellListener {
      * for the content and their button.
      */
     private void addTabs() {
+        
+        this.tabs = new ArrayList();
         if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-            this.tabs = new ArrayList();
             tabs.add( new TransferTab( this ) );
             tabs.add( new SearchTab( this ) );
             tabs.add( new ServerTab( this ) );
@@ -207,7 +208,6 @@ public class MainTab implements ShellListener {
             tabs.add( new MessagesTab( this ) );
         }
         else {
-            this.tabs = new ArrayList();
             tabs.add( new TransferTab( this ) );
             tabs.add( new SearchTab( this ) );
             tabs.add( new StatisticTab( this ) );
@@ -448,6 +448,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.84  2003/11/05 01:54:13  zet
+minor
+
 Revision 1.83  2003/11/05 01:51:35  zet
 resizable error dialog
 
