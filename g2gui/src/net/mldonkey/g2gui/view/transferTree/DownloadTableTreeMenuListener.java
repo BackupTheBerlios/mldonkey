@@ -201,6 +201,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			menuManager.add(prioritySubMenu);
 		}
 		
+		if ( selectedFile != null && PreferenceLoader.loadBoolean( "advancedMode") )
+			menuManager.add( new VerifyChunksAction() );
+		
 		if (selectedClient != null && PreferenceLoader.loadBoolean( "advancedMode" ))
 			menuManager.add(new AddFriendAction());
 		
@@ -319,7 +322,18 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		tableTreeContentProvider.updateAllEditors();
 	}
 		
-	// Menu Actions	
+	// Menu Actions
+	
+	class VerifyChunksAction extends Action {
+		public VerifyChunksAction() {
+			super();
+			setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_VERIFY_CHUNKS" ) );	
+		}
+		public void run() {
+			for (int i = 0; i < selectedFiles.size(); i++)	
+				( ( FileInfo ) selectedFiles.get( i ) ).verifyChunks();
+		}
+	}
 	
 	class FileDetailAction extends Action {
 		public FileDetailAction() {
@@ -708,6 +722,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.12  2003/08/22 14:30:45  lemmster
+verify chunks added
+
 Revision 1.11  2003/08/21 00:59:57  zet
 doubleclick expand
 
