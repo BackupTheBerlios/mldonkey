@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.18 2003/08/31 01:48:25 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.19 2003/08/31 02:16:55 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -154,10 +154,10 @@ public class ClientDetailDialog implements Observer {
 			}	
 		});
 
-		Button cButton = new Button( buttonComposite, SWT.NONE );
-		cButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		cButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
-		cButton.addSelectionListener( new SelectionAdapter() {
+		Button closeButton = new Button( buttonComposite, SWT.NONE );
+		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		closeButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
+		closeButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 						shell.dispose();
 			}	
@@ -264,6 +264,9 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.19  2003/08/31 02:16:55  zet
+*** empty log message ***
+
 Revision 1.18  2003/08/31 01:48:25  zet
 *** empty log message ***
 
