@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.7 2003/06/25 00:57:49 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.8 2003/06/26 09:10:54 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements SimpleInformation {
@@ -104,6 +104,10 @@ public class FileInfo implements SimpleInformation {
 	 * File State object
 	 */
 	private FileState state = new FileState();
+	/**
+	 * Percent (Downloaded/Size)*100
+	 */
+	private double perc;
 
 	/**
 	 * @return a String
@@ -358,6 +362,21 @@ public class FileInfo implements SimpleInformation {
 	}
 	
 	/**
+	 * @return a double
+	 */
+	public double getPerc() {
+		return perc;
+	}
+
+	/**
+	 * @param d a double
+	 */
+	public void setPerc( double d ) {
+		perc = d;
+	}
+
+	
+	/**
 	 * @return A string representation of this object
 	 */
 	public String toString() {
@@ -384,7 +403,9 @@ public class FileInfo implements SimpleInformation {
 		
 		this.setChunks( messageBuffer.readString() );
 		this.setAvail( messageBuffer.readString() );
-		this.setRate( new Float( messageBuffer.readString() ).floatValue() );
+		/* translate to kb and round to two digits after comma */
+		double d = new Double( messageBuffer.readString() ).doubleValue() / 1024;
+		this.setRate( ( float ) round( d ) );
 		this.setChunkage( messageBuffer.readStringList() );
 		this.setAge( messageBuffer.readString() );
 		
@@ -394,6 +415,8 @@ public class FileInfo implements SimpleInformation {
 		this.setName( messageBuffer.readString() );
 		this.setOffset( messageBuffer.readInt32() );
 		this.setPriority( messageBuffer.readInt32() );
+		double d2 = round( ( (double)this.getDownloaded() / (double)this.getSize() ) * 100 );
+		this.setPerc( d2 );
 	}
 	
 	/**
@@ -402,8 +425,22 @@ public class FileInfo implements SimpleInformation {
 	 */
 	public void update( MessageBuffer messageBuffer ) {
 		this.setDownloaded( messageBuffer.readInt32() );
-		this.setRate( new Float( messageBuffer.readString() ).floatValue() );
+		/* translate to kb and round to two digits after comma */
+		double d = new Double( messageBuffer.readString() ).doubleValue() / 1024;
+		this.setRate( ( float ) round( d ) );
 		this.setOffset( messageBuffer.readInt32() );
+		double d2 = round( ( (double)this.getDownloaded() / (double)this.getSize() ) * 100 );
+		this.setPerc( d2 );
+	}
+	
+	/**
+	 * Rounds a double to two decimal places
+	 * @param d The double to round
+	 * @return a rounden double
+	 */
+	public static double round( double d ) {
+		d = ( double )( ( int )( d * 100 + 0.5 ) ) / 100;
+		return d;
 	}
 
 	/**
@@ -417,10 +454,14 @@ public class FileInfo implements SimpleInformation {
 		else
 			return false;
 	}
+
 }
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.8  2003/06/26 09:10:54  lemmstercvs01
+added field for percent, store rate rounded
+
 Revision 1.7  2003/06/25 00:57:49  lemmstercvs01
 equals methode added
 
