@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.15 2003/08/09 13:45:54 dek Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.16 2003/08/09 13:51:42 dek Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -330,8 +330,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 			}
 		}
 		else {	
-			RE regex=null;
-			/* compare by ipaddress */
+			RE regex=null;			
 			try {
 				 regex = new RE("/");
 			} catch (REException e) {			
@@ -384,6 +383,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.16  2003/08/09 13:51:42  dek
+removed wrong comment (from cut'n paste)
+
 Revision 1.15  2003/08/09 13:45:54  dek
 added gnu.regexp for compiling with gcj
 you can get it at:
