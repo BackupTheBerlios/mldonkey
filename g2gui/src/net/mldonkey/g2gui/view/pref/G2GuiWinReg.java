@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.9 2004/03/26 20:24:46 dek Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.10 2004/03/26 21:37:37 dek Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -64,10 +64,10 @@ public class G2GuiWinReg extends PreferencePage {
 
         registerLinks = new RegisterLink[ 4 ];
 
-        registerLinks[ 0 ] = new RegisterLink("ed2k://","ed2k", composite);
-        registerLinks[ 1 ] = new RegisterLink("magnet://","magnet", composite);
-        registerLinks[ 2 ] = new RegisterLink("sig2dat://","sig2dat", composite);
-        registerLinks[ 3 ] = new RegisterLink(".torrent",".torrent", composite);
+        registerLinks[ 0 ] = new RegisterLink("ed2k://","ed2k",1 ,composite);
+        registerLinks[ 1 ] = new RegisterLink("magnet://","magnet",1, composite);
+        registerLinks[ 2 ] = new RegisterLink("sig2dat://","sig2dat",1, composite);
+        registerLinks[ 3 ] = new RegisterLink(".torrent",".torrent",2, composite);
         
 
         Button button = new Button(composite, SWT.NONE);
@@ -125,12 +125,17 @@ public class G2GuiWinReg extends PreferencePage {
             for (int i = 0; i < registerLinks.length; i++) {
                 switch (registerLinks[ i ].getSelection()) {
                 case RegisterLink.REGISTER:
-                    registerType(p, registerLinks[ i ].getName(), exeFile, prefFile);
-
+                	if (registerLinks[i].getUsageHint() == RegisterLink.PROTO)
+                		registerType(p, registerLinks[ i ].getName(), exeFile, prefFile);
+                	if (registerLinks[i].getUsageHint() == RegisterLink.FILETYPE)
+                		registerExtension(p,registerLinks[i].getName(),exeFile,prefFile);
                     break;
 
-                case RegisterLink.UNREGISTER:
-                    unregisterType(p, registerLinks[ i ].getName());
+                case RegisterLink.UNREGISTER:                    
+                	if (registerLinks[i].getUsageHint() == RegisterLink.PROTO)
+                		unRegisterType(p, registerLinks[ i ].getName());
+                	if (registerLinks[i].getUsageHint() == RegisterLink.FILETYPE)
+                		unRegisterExtension(p,registerLinks[i].getName());
 
                     break;
 
@@ -147,7 +152,12 @@ public class G2GuiWinReg extends PreferencePage {
         }
     }
 
-    /**
+
+		
+		
+
+
+	/**
      * Spawn regedit passing the regfile as the parameter
      * Requires regedit.exe to be in the system path
      * @param regFile
@@ -202,7 +212,18 @@ public class G2GuiWinReg extends PreferencePage {
     	p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell\\open\\command]");
     	p.println("@=\"\\\"" + exeFile + "\\\" \\\"-c\\\" \\\"" + prefFile + "\\\" \\\"-l\\\" \\\"%1\\\"\"");
     	
-    	
+    }
+    
+    /**
+     * @param p
+     * @param string
+     */
+    private void unRegisterExtension(PrintStream p, String name) {
+    	p.println("[-HKEY_CLASSES_ROOT\\" + name + "\\shell\\open\\command]");
+    	p.println("[-HKEY_CLASSES_ROOT\\" + name + "\\shell\\open]");
+    	p.println("[-HKEY_CLASSES_ROOT\\" + name + "\\DefaultIcon]");
+    	p.println("[-HKEY_CLASSES_ROOT\\" + name + "\\shell]");
+    	p.println("[-HKEY_CLASSES_ROOT\\" + name + "]");
     }
     /*
     
@@ -216,7 +237,7 @@ public class G2GuiWinReg extends PreferencePage {
      * @param p
      * @param name
      */
-    private void unregisterType(PrintStream p, String name) {
+    private void unRegisterType(PrintStream p, String name) {
         p.println("[-HKEY_CLASSES_ROOT\\" + name + "\\shell\\open\\command]");
         p.println("[-HKEY_CLASSES_ROOT\\" + name + "\\shell\\open]");
         p.println("[-HKEY_CLASSES_ROOT\\" + name + "\\shell]");
@@ -227,15 +248,29 @@ public class G2GuiWinReg extends PreferencePage {
         public static final int NO_CHANGE = 0;
         public static final int REGISTER = 1;
         public static final int UNREGISTER = 2;
+        
+        public static final int PROTO = 1;
+        public static final int FILETYPE = 2;
+        
         private int selection;       
 		private String caption;
 		private String name;
-
-        public RegisterLink(String caption, String name, Composite parent) {
+		private int usageHint;	
+		
+		/**
+		 * 
+		 * @param caption the caption of the group
+		 * @param name the name of the option (in registry)
+		 * @param usageHint : "1" for protocol (ed2k://,..); "2" for fileTyp (.torrent,...)
+		 * @param parent
+		 */
+        public RegisterLink(String caption, String name,int usageHint, Composite parent) {
         	this.caption = caption;
             this.name = name;
             selection = NO_CHANGE;
+            this.usageHint = usageHint;
             createContents(parent);
+            
         }
 
         /**
@@ -283,12 +318,24 @@ public class G2GuiWinReg extends PreferencePage {
         public String getName() {
             return name;
         }
+        
+      
+		/**
+		 * @return Returns the usageHint.
+		 */
+		public int getUsageHint() {
+			return usageHint;
+		}
+
     }
 }
 
 
 /*
 $Log: G2GuiWinReg.java,v $
+Revision 1.10  2004/03/26 21:37:37  dek
+*** empty log message ***
+
 Revision 1.9  2004/03/26 20:24:46  dek
 .torrent is added to registry
 
