@@ -26,6 +26,7 @@ import java.util.Observable;
 
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.helper.CCLabel;
+import net.mldonkey.g2gui.view.helper.HeaderBarMenuListener;
 import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -34,7 +35,6 @@ import net.mldonkey.g2gui.view.statistic.GraphControl;
 import net.mldonkey.g2gui.view.statistic.GraphHistory;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
@@ -48,13 +48,14 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.MessageBox;
 
 
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.29 2003/09/26 16:08:02 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.30 2003/09/27 00:26:41 zet Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
@@ -141,7 +142,7 @@ public class StatisticTab extends GuiTab {
 
         GraphControl graphControl = new GraphControl( graphViewForm, graphName, color1, color2 );
 
-        popupMenu.addMenuListener( new GraphMenuListener( graphControl ) );
+        popupMenu.addMenuListener( new GraphMenuListener( graphSash, graphViewForm, graphControl ) );
 
         graphViewForm.setTopLeft( cLabel );
         graphViewForm.setContent( graphControl );
@@ -181,16 +182,18 @@ public class StatisticTab extends GuiTab {
     /**
      * GraphMenuListener
      */
-    public class GraphMenuListener implements IMenuListener {
+    public class GraphMenuListener extends HeaderBarMenuListener {
         GraphControl graphControl;
 
-        public GraphMenuListener( GraphControl graphControl ) {
+        public GraphMenuListener( SashForm sashForm, Control control, GraphControl graphControl ) {
+        	super(sashForm, control);
             this.graphControl = graphControl;
         }
 
         public void menuAboutToShow( IMenuManager menuManager ) {
             menuManager.add( new GraphHistoryAction( graphControl.getGraph(  ) ) );
             menuManager.add( new ClearGraphHistoryAction( graphControl.getGraph(  ) ) );
+            super.menuAboutToShow( menuManager );
         }
     }
 
@@ -239,6 +242,9 @@ public class StatisticTab extends GuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.30  2003/09/27 00:26:41  zet
+put menu back
+
 Revision 1.29  2003/09/26 16:08:02  zet
 dblclick header to maximize/restore
 

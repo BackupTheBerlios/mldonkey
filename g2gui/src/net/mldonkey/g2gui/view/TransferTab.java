@@ -28,12 +28,14 @@ import java.text.DecimalFormat;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.HeaderBarMenuListener;
 import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -44,7 +46,8 @@ import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeContentPr
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableViewer;
 
-
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -65,7 +68,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.64 2003/09/27 00:02:37 dek Exp $
+ * @version $Id: TransferTab.java,v 1.65 2003/09/27 00:26:41 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -153,7 +156,9 @@ public class TransferTab extends GuiTab {
         uploadsViewForm.setContent( uploadersComposite );
     }
 	public void createUploadHeader( ViewForm parentViewForm, final SashForm mainSashForm, final Control uploadParent ) {
-		
+		popupMenuUL = new MenuManager( "" );
+		popupMenuUL.setRemoveAllWhenShown( true );
+		popupMenuUL.addMenuListener( new UploadsMenuListener(mainSashForm, parentViewForm) );
 		CLabel uploadsCLabel = CCLabel.createCL( parentViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar" );
 		uploadsCLabel.addMouseListener( new MaximizeSashMouseAdapter( uploadsCLabel, popupMenuUL, mainSashForm, uploadParent  ) );
 		parentViewForm.setTopLeft( uploadsCLabel );
@@ -295,14 +300,42 @@ public class TransferTab extends GuiTab {
         super.dispose();
         popupMenuDL.dispose();
         popupMenuUL.dispose();
-    }   
+    }
+    
+	/**
+     * UploadsMenuListener
+     */
+    public class UploadsMenuListener extends HeaderBarMenuListener {
+    	
+    	public UploadsMenuListener(SashForm sashForm, Control control) {
+    		super(sashForm, control);
+    	}
+
+		public void menuAboutToShow( IMenuManager menuManager ) {
+			menuManager.add( new RefreshUploadsAction( ) );
+			super.menuAboutToShow(menuManager);
+		}
+	}
+	/**
+     * RefreshUploadsAction
+     */
+    public class RefreshUploadsAction extends Action {
+	   public RefreshUploadsAction( ) {
+		   super( "Refresh" );
+	   }
+
+	   public void run(  ) {
+			Message refresh = new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
+			refresh.sendMessage( mldonkey );
+	   }
+   }
     
 }
 
 /*
 $Log: TransferTab.java,v $
-Revision 1.64  2003/09/27 00:02:37  dek
-bugfixes, merged right-mouse-click menues (nothing is uglier than one-item-menues)
+Revision 1.65  2003/09/27 00:26:41  zet
+put menu back
 
 Revision 1.63  2003/09/26 17:19:55  zet
 add refresh menuitem
@@ -398,7 +431,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression
