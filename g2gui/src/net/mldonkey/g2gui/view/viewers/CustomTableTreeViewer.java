@@ -52,7 +52,7 @@ import java.util.List;
  * CustomTableTreeViewer
  *
  *
- * @version $Id: CustomTableTreeViewer.java,v 1.7 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: CustomTableTreeViewer.java,v 1.8 2004/02/18 13:25:30 psy Exp $
  *
  */
 public class CustomTableTreeViewer extends TableTreeViewer implements ICustomViewer {
@@ -83,9 +83,9 @@ public class CustomTableTreeViewer extends TableTreeViewer implements ICustomVie
     }
 
     public void nudgeColumn() {
-        if (activeEditors) {
-            TableColumn c = this.getTableTree().getTable().getColumn(chunksColumn);
-            c.setWidth(c.getWidth());
+        if (activeEditors && chunksColumn > -1) {
+        	TableColumn c = this.getTableTree().getTable().getColumn(chunksColumn);
+           	c.setWidth(c.getWidth());
         }
     }
 
@@ -309,6 +309,9 @@ public class CustomTableTreeViewer extends TableTreeViewer implements ICustomVie
 
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.8  2004/02/18 13:25:30  psy
+hardened code for motif and chunksdisplay
+
 Revision 1.7  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

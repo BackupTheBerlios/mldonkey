@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.19 2004/02/17 22:48:45 psy Exp $
+ * @version $Id: GView.java,v 1.20 2004/02/18 13:25:30 psy Exp $
  *
  */
 public abstract class GView {
@@ -214,8 +214,11 @@ public abstract class GView {
                 public void menuShown(MenuEvent e) {
                     Menu aMenu = getTable().getMenu();
 
-                    if (!((StructuredViewer) getViewer()).getSelection().isEmpty())
-                        aMenu.setDefaultItem(aMenu.getItem(0));
+                    /* set the default menue entry, this makes problems with motif
+                     * if nothing in the table has been selected */
+                    if (!((StructuredViewer) getViewer()).getSelection().isEmpty() &&
+                    		!VersionCheck.isMotif())
+                       	aMenu.setDefaultItem(aMenu.getItem(0));
                 }
             });
     }
@@ -312,7 +315,7 @@ public abstract class GView {
      */
     protected void createColumns() {
     	loadColumnIDs();
-        ((ICustomViewer) getViewer()).setColumnIDs(columnIDs);
+    	((ICustomViewer) getViewer()).setColumnIDs(columnIDs);
 
         Table table = getTable();
         table.setHeaderVisible(true);
@@ -531,6 +534,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.20  2004/02/18 13:25:30  psy
+hardened code for motif and chunksdisplay
+
 Revision 1.19  2004/02/17 22:48:45  psy
 removed old debug info
 
