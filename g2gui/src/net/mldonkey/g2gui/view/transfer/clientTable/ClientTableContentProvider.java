@@ -43,7 +43,7 @@ import java.util.Observer;
  *
  * ClientTableContentProvider
  *
- * @version $Id: ClientTableContentProvider.java,v 1.9 2003/11/14 20:29:50 zet Exp $
+ * @version $Id: ClientTableContentProvider.java,v 1.10 2003/11/26 23:32:35 zet Exp $
  *
  */
 public class ClientTableContentProvider extends GTableContentProvider implements Observer {
@@ -61,7 +61,7 @@ public class ClientTableContentProvider extends GTableContentProvider implements
     public Object[] getElements(Object inputElement) {
         FileInfo fileInfo = (FileInfo) inputElement;
 
-        return fileInfo.getClientInfos().keySet().toArray();
+        return fileInfo.getClientInfoWeakMap().getKeySet().toArray();
     }
 
     /* (non-Javadoc)
@@ -87,50 +87,50 @@ public class ClientTableContentProvider extends GTableContentProvider implements
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update(Observable o, final Object obj) {
-        if (obj instanceof ClientInfo || obj instanceof TreeClientInfo) {
+        if (obj instanceof ClientInfo || obj instanceof TreeClientInfo)
             Display.getDefault().asyncExec(new Runnable() {
                     public void run() {
                         refreshTable(obj);
                     }
                 });
-        }
     }
 
     // delay for 5 seconds to prevent too much flicker
     public void refreshTable(Object obj) {
         ClientInfo clientInfo = null;
 
-        if (obj instanceof ClientInfo) {
+        if (obj instanceof ClientInfo)
             clientInfo = (ClientInfo) obj;
-        } else if (obj instanceof TreeClientInfo) {
+        else if (obj instanceof TreeClientInfo)
             clientInfo = ((TreeClientInfo) obj).getClientInfo();
-        }
 
         if ((tableViewer != null) && !tableViewer.getTable().isDisposed()) {
             if (System.currentTimeMillis() > (lastUpdateTime + 5000)) {
                 tableViewer.refresh();
                 lastUpdateTime = System.currentTimeMillis();
                 updateHeader(tableViewer.getInput());
-            } else {
+            } else
                 tableViewer.update(clientInfo, new String[] { "z" }); // requires a property string
-            }
         }
     }
 
     public void updateHeader(Object input) {
-        if (input == null) return;
+        if (input == null)
+            return;
+
         FileInfo fileInfo = (FileInfo) input;
         int totalClients = 0;
         int totalConnected = 0;
 
-        for (Iterator i = fileInfo.getClientInfos().keySet().iterator(); i.hasNext();) {
-            ClientInfo clientInfo = (ClientInfo) i.next();
+        synchronized (fileInfo.getClientInfoWeakMap()) {
+            for (Iterator i = fileInfo.getClientInfoWeakMap().getKeySet().iterator(); i.hasNext();) {
+                ClientInfo clientInfo = (ClientInfo) i.next();
 
-            if (clientInfo.isConnected()) {
-                totalConnected++;
+                if (clientInfo.isConnected())
+                    totalConnected++;
+
+                totalClients++;
             }
-
-            totalClients++;
         }
 
         headerCLabel.setText(G2GuiResources.getString("TT_Clients") + ": " + totalConnected +
@@ -141,6 +141,9 @@ public class ClientTableContentProvider extends GTableContentProvider implements
 
 /*
 $Log: ClientTableContentProvider.java,v $
+Revision 1.10  2003/11/26 23:32:35  zet
+sync
+
 Revision 1.9  2003/11/14 20:29:50  zet
 null check (maybe #1086, not sure)
 

@@ -34,7 +34,7 @@ import java.util.WeakHashMap;
 /**
  * ObjectWeakMap
  *
- * @version $Id: ObjectWeakMap.java,v 1.2 2003/11/26 15:48:09 zet Exp $
+ * @version $Id: ObjectWeakMap.java,v 1.3 2003/11/26 23:32:35 zet Exp $
  *
  */
 public class ObjectWeakMap extends Observable {
@@ -129,11 +129,18 @@ public class ObjectWeakMap extends Observable {
     public Set getKeySet() {
 		return weakMap.keySet();
     }
+    
+    public int size() {
+        return weakMap.size();
+    }
 }
 
 
 /*
 $Log: ObjectWeakMap.java,v $
+Revision 1.3  2003/11/26 23:32:35  zet
+sync
+
 Revision 1.2  2003/11/26 15:48:09  zet
 minor
 

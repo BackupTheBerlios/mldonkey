@@ -30,12 +30,12 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.helper.ObjectWeakMap;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumExtension;
@@ -50,7 +50,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.77 2003/11/23 20:29:25 dek Exp $
+ * @version $Id: FileInfo.java,v 1.78 2003/11/26 23:32:35 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -236,7 +236,7 @@ public class FileInfo extends Parent implements Observer {
     /**
      * A weak keyset of clients associated with this file
      */
-    private Map clientInfos = Collections.synchronizedMap(new WeakHashMap(4));
+    private ObjectWeakMap clientInfoWeakMap = new ObjectWeakMap();
 
     /**
      * String size
@@ -469,7 +469,7 @@ public class FileInfo extends Parent implements Observer {
     public int getSources() {
         // return sources; 
         // TODO: use "sources" when core sends it
-        return clientInfos.size();
+        return clientInfoWeakMap.size();
     }
 
     /**
@@ -503,8 +503,8 @@ public class FileInfo extends Parent implements Observer {
     /**
      * @return The clients serving this file
      */
-    public Map getClientInfos() {
-        return clientInfos;
+    public ObjectWeakMap getClientInfoWeakMap() {
+        return clientInfoWeakMap;
     }
 
     /**
@@ -619,7 +619,7 @@ public class FileInfo extends Parent implements Observer {
      * @param clientInfo The clientInfo to put into this map
      */
     public void addClientInfo(ClientInfo clientInfo) {
-        this.clientInfos.put(clientInfo, null);
+        this.clientInfoWeakMap.add(clientInfo);
         clientInfo.addObserver(this);
 
         if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
@@ -639,7 +639,7 @@ public class FileInfo extends Parent implements Observer {
      * @param clientInfo The clientinfo obj to remove
          */
     public void removeClientInfo(ClientInfo clientInfo) {
-        this.clientInfos.remove(clientInfo);
+        this.clientInfoWeakMap.remove(clientInfo);
         clientInfo.deleteObserver(this);
         removeTreeClientInfo(clientInfo);
         setActiveSources(0);
@@ -805,7 +805,7 @@ public class FileInfo extends Parent implements Observer {
         if (i == 0) {
             activeSources = 0;
 
-            Iterator it = clientInfos.keySet().iterator();
+            Iterator it = clientInfoWeakMap.getKeySet().iterator();
 
             while (it.hasNext()) {
                 ClientInfo clientInfo = (ClientInfo) it.next();
@@ -1110,6 +1110,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.78  2003/11/26 23:32:35  zet
+sync
+
 Revision 1.77  2003/11/23 20:29:25  dek
 re-added comment...
 
@@ -1224,7 +1227,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)
