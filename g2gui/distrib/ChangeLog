@@ -15,6 +15,7 @@
 	* Server: Show ips in correct order [bug #883]
 	* Server: Show all connected servers (FT/Gnut/Gnut2) [bug #904]
 			  (enable in preference)
+	* Server: Show table colors like Transfer [forum request]
 	* Server: Update statusline text only on active window
 	* Statusline: Show correct num of servers [bug #869]
 	* Statusline: Display proper tooltip for network items
