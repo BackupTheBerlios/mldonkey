@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.transferTree;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
@@ -58,15 +59,15 @@ import org.eclipse.swt.widgets.TableItem;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.32 2003/09/18 13:04:36 lemmster Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.33 2003/09/18 13:07:19 lemmster Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
     private FileInfo lastSelectedFile;
     private FileInfo selectedFile;
     private TreeClientInfo selectedClient;
-    private ArrayList selectedClients = new ArrayList();
-    private ArrayList selectedFiles = new ArrayList();
+    private List selectedClients = new ArrayList();
+    private List selectedFiles = new ArrayList();
     private TableTreeViewer tableTreeViewer;
     private TableViewer clientTableViewer;
     private DownloadTableTreeContentProvider tableTreeContentProvider;
@@ -99,7 +100,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
                     if ( item == null ) {
                         table.setSelection( new int[ 0 ] );
                         selectedFiles.clear();
-                        selectedClients.clear();
+						selectedClients.clear();
                         selectedClient = null;
                         selectedFile = null;
                     }
@@ -474,6 +475,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.33  2003/09/18 13:07:19  lemmster
+checkstyle
+
 Revision 1.32  2003/09/18 13:04:36  lemmster
 checkstyle
 
