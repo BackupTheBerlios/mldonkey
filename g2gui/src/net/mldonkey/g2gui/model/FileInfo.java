@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.24 2003/07/18 04:34:22 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.25 2003/07/21 17:30:11 dek Exp $ 
  *
  */
 public class FileInfo extends Parent {
@@ -120,7 +121,7 @@ public class FileInfo extends Parent {
 	/**
 	 * Which clients this file have
 	 */
-	private Set clientInfos = new HashSet();
+	private Set clientInfos = Collections.synchronizedSet( new HashSet() );
 
 	/**
 	 * @return time when download started
@@ -149,8 +150,10 @@ public class FileInfo extends Parent {
 	/**
 	 * @return Size already downloaded
 	 */
-	public int getDownloaded() {
-		return downloaded;
+	public long getDownloaded() {
+		/*first convert it to unsigned long, and then return*/
+		long result = ( downloaded & 0xFFFFFFFFL );
+		return result;
 	}
 	/**
 	 * @return The file Format
@@ -210,8 +213,10 @@ public class FileInfo extends Parent {
 	/**
 	 * @return The overall size of this file
 	 */
-	public int getSize() {
-		return size;
+	public long getSize() {
+		/*first convert it to unsigned long, and then return*/
+		long result = ( size & 0xFFFFFFFFL );
+		return result;
 	}
 	/**
 	 * @return Number of sources for this file
@@ -433,6 +438,9 @@ public class FileInfo extends Parent {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.25  2003/07/21 17:30:11  dek
+filesize is not negative anymore, since it is converted to long
+
 Revision 1.24  2003/07/18 04:34:22  lemmstercvs01
 checkstyle applied
 
