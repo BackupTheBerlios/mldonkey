@@ -24,7 +24,6 @@ ifeq ($(UNAME),Linux)
 	SYSTYPE=gtk
 	PROGRAM=g2gui-bin
 	LINK_ARGS= -s -static-libgcc -Wl,-rpath,.	
-	cp ./build/g2gui-starter.example ./g2gui
 else
 	SYSTYPE=win
 	PROGRAM=g2gui.exe
@@ -47,6 +46,7 @@ vpath % $(shell $(FIND) $(JAR_DIR) $(OBJ_DIR) -type d)
 .PHONY : swt libs mkobjdir
 
 all : mkobjdir $(PROGRAM) 
+	@cp ./build/g2gui-starter.example ./g2gui
 	@echo --- DONE ---
 
 libs:
