@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeView.java,v 1.1 2003/10/31 22:41:59 zet Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.2 2003/11/07 03:51:22 zet Exp $
  *
  */
 public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
@@ -205,6 +205,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      * Update display after pref changes
      */
     public void updateDisplay() {
+        super.updateDisplay();
         setPreferences();
         tableLabelProvider.updateDisplay();
         tableTreeContentProvider.updateDisplay();
@@ -219,7 +220,6 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
         Table table = getTable();
         table.setBackground(PreferenceLoader.loadColour("downloadsBackgroundColor"));
         table.setFont(PreferenceLoader.loadFont("downloadsFontData"));
-        table.setLinesVisible(PreferenceLoader.loadBoolean("displayGridLines"));
 
         if (PreferenceLoader.loadBoolean("tableCellEditors")) {
             tableTreeViewer.setCellEditors(cellEditors);
@@ -313,6 +313,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
 /*
 $Log: DownloadTableTreeView.java,v $
+Revision 1.2  2003/11/07 03:51:22  zet
+super.updateDisplay()
+
 Revision 1.1  2003/10/31 22:41:59  zet
 rename to View
 
