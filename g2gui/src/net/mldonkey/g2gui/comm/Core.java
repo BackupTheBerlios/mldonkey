@@ -33,10 +33,10 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.15 2003/06/15 16:19:29 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.16 2003/06/16 12:13:26 lemmstercvs01 Exp $ 
  *
  */
-public class Core extends Thread {
+public class Core extends Thread implements CoreCommunication {
 	/**
 	 * 
 	 */
@@ -114,7 +114,7 @@ public class Core extends Thread {
 			
 			byte[] content;
 		 		
-			while ( connected ) {											
+			while ( connected ) {	
 				/* getting length of message */
 				messageLength = Message.readInt32( i );							
 				content = new byte[messageLength];
@@ -194,7 +194,11 @@ public class Core extends Thread {
 					
 			case Message.R_CLIENT_STATS :				
 					clientStats.readStream( messageBuffer );
-					break;				
+					break;	
+					
+			case Message.R_DOWNLOAD :
+					( ( FileInfoList )this.fileInfoMap ).add( messageBuffer );
+					break;					
 
 			case Message.R_CONSOLE :				
 					this.consoleMessage.readStream( messageBuffer );
@@ -238,6 +242,9 @@ public class Core extends Thread {
 
 /*
 $Log: Core.java,v $
+Revision 1.16  2003/06/16 12:13:26  lemmstercvs01
+opcode 52 added
+
 Revision 1.15  2003/06/15 16:19:29  lemmstercvs01
 some opcodes added
 

@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoList.java,v 1.10 2003/06/15 20:37:23 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoList.java,v 1.11 2003/06/16 12:13:26 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoList extends InfoMap {
@@ -78,6 +78,23 @@ public class FileInfoList extends InfoMap {
 	}
 	
 	/**
+	 * Reads a single FileInfo object from a MessageBuffer
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	public void add( MessageBuffer messageBuffer ) {
+		int id = messageBuffer.readInt32();
+		/* go 4bytes back in the MessageBuffer */
+		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
+		if ( this.infoMap.containsKey( id ) )
+			this.get( id ).readStream( messageBuffer );
+		else {
+			FileInfo fileInfo = new FileInfo();
+			fileInfo.readStream( messageBuffer );
+			this.put( fileInfo.getId(), fileInfo );
+		}
+	}
+	
+	/**
 	 * Get a FileInfo object from this object by there id
 	 * @param id The FileInfo id
 	 * @return The FileInfo object
@@ -89,6 +106,9 @@ public class FileInfoList extends InfoMap {
 
 /*
 $Log: FileInfoList.java,v $
+Revision 1.11  2003/06/16 12:13:26  lemmstercvs01
+opcode 52 added
+
 Revision 1.10  2003/06/15 20:37:23  lemmstercvs01
 fixed a bug in a bugfix ;)
 
