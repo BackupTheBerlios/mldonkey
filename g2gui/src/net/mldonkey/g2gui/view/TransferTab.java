@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
@@ -53,10 +54,11 @@ import org.eclipse.swt.widgets.TableItem;
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.9 2003/06/27 21:45:54 lemmstercvs01 Exp $ 
+ * @version $Id: TransferTab.java,v 1.10 2003/06/27 22:04:45 lemmstercvs01 Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements Observer {
+	private static ResourceBundle res = ResourceBundle.getBundle("g2gui");
 	private TableViewer table;
 	private TableItem item;
 
@@ -65,7 +67,7 @@ public class TransferTab extends G2guiTab implements Observer {
 	 */
 	public TransferTab( IG2gui gui ) {
 		super( gui );
-		this.button.setText( "Transfer" );
+		this.button.setText( res.getString( "TT_Button" ) );
 		createContents( this.content );
 
 		gui.getCore().addObserver( this );
@@ -90,7 +92,14 @@ public class TransferTab extends G2guiTab implements Observer {
 		table.setLabelProvider( new FileInfoTableLabelProvider() );
 
 		/* create the headers and set the width */		
-		String[] aString = { "ID", "Name", "Rate", "Downloaded", "Size", "%", "Status" };
+		String[] aString = { res.getString( "TT_Field0" ),
+						 	 res.getString( "TT_Field1" ),
+				   			 res.getString( "TT_Field2" ),
+							 res.getString( "TT_Field3" ),
+							 res.getString( "TT_Field4" ),
+ 							 res.getString( "TT_Field5" ),
+ 							 res.getString( "TT_Field6") };
+
 		int[] anInt = { 25, 300, 40, 70, 70, 40, 70 };
 		TableColumn column = null;
 		for ( int i = 0; i < aString.length; i++ ) {
@@ -145,7 +154,7 @@ public class TransferTab extends G2guiTab implements Observer {
 
 		/* Pause */
 		menuItem = new MenuItem( menu, SWT.PUSH );
-		menuItem.setText( "Pause" );
+		menuItem.setText( res.getString( "TT_Menu0" ) );
 		menuItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
 			}
@@ -153,7 +162,7 @@ public class TransferTab extends G2guiTab implements Observer {
 
 		/* Resume */
 		menuItem = new MenuItem( menu, SWT.PUSH );
-		menuItem.setText( "Resume" );
+		menuItem.setText( res.getString( "TT_Menu1" ) );
 		menuItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
 			}
@@ -161,7 +170,7 @@ public class TransferTab extends G2guiTab implements Observer {
 
 		/* Cancel */
 		menuItem = new MenuItem( menu, SWT.PUSH );
-		menuItem.setText("Cancel");
+		menuItem.setText( res.getString( "TT_Menu2" ) );
 		menuItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
 			}
@@ -171,13 +180,13 @@ public class TransferTab extends G2guiTab implements Observer {
 
 		/* Rename to */
 		menuItem = new MenuItem( menu, SWT.CASCADE );
-		menuItem.setText( "Rename to..." );
+		menuItem.setText( res.getString( "TT_Menu3" ) );
 			final Menu rename = new Menu( menu );
 		menuItem.setMenu( rename );				
 
 		/* Copy to */
 		menuItem = new MenuItem( menu, SWT.CASCADE );
-		menuItem.setText( "Copy Link to Clipboard" );
+		menuItem.setText( res.getString( "TT_Menu4" ) );
 			Menu copy = new Menu( menu );
 			MenuItem copyItem = new MenuItem( copy, SWT.PUSH );
 			copyItem.setText( "TODO" );
@@ -213,6 +222,9 @@ public class TransferTab extends G2guiTab implements Observer {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.10  2003/06/27 22:04:45  lemmstercvs01
+ResourceBundle introduced
+
 Revision 1.9  2003/06/27 21:45:54  lemmstercvs01
 added right click menu
 
