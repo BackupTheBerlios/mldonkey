@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  *
- * @version $Id: Addr.java,v 1.15 2003/11/07 15:12:14 zet Exp $
+ * @version $Id: Addr.java,v 1.16 2003/11/28 08:23:28 lemmster Exp $
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -132,9 +132,30 @@ public class Addr implements SimpleInformation {
 		// equal -> recusion
 		return this.compareTo( aByte1, aByte2, ++index );
 	}
+	
+	/**
+	 * Creates an Addr obj from a given hostname of an ipaddress
+	 * @param aString hostname of ipaddress
+	 * @return An Addr
+	 */
+	public static Addr getAddr( String aString ) {
+		Addr anAddr = new Addr();
+		anAddr.addressType = false;
+		try {
+			anAddr.address =InetAddress.getByName( aString );
+		}
+		catch ( UnknownHostException e ) {
+			// assume this will never fail
+			e.printStackTrace();
+		}
+		return anAddr;
+	}
 }
 /*
 $Log: Addr.java,v $
+Revision 1.16  2003/11/28 08:23:28  lemmster
+use Addr instead of String
+
 Revision 1.15  2003/11/07 15:12:14  zet
 fix log
 

@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.33 2003/11/26 07:46:36 zet Exp $
+ * @version $Id: ClientInfo.java,v 1.34 2003/11/28 08:23:28 lemmster Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -109,7 +109,7 @@ public class ClientInfo extends Parent {
     /**
      * Client IP address
      */
-    private String clientSockAddr = "";
+    private Addr clientSockAddr;
 
     /**
      * Filename being uploaded to client
@@ -290,7 +290,7 @@ public class ClientInfo extends Parent {
     /**
      * @return clientSockAddr
      */
-    public String getClientSockAddr() {
+    public Addr getClientSockAddr() {
         return clientSockAddr;
     }
     
@@ -364,7 +364,8 @@ public class ClientInfo extends Parent {
             this.clientSoftware = messageBuffer.readString();
             this.clientDownloaded = messageBuffer.readInt64();
             this.clientUploaded = messageBuffer.readInt64();
-            this.clientSockAddr = messageBuffer.readString();
+            //TODO change this to "messageBuffer.readInetAdress()" when the core sends a correct inetaddress
+            this.clientSockAddr = Addr.getAddr( messageBuffer.readString() );
             this.clientUploadFilename = messageBuffer.readString();
 
             this.clientUploadedString = RegExp.calcStringSize(clientUploaded);
@@ -458,6 +459,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.34  2003/11/28 08:23:28  lemmster
+use Addr instead of String
+
 Revision 1.33  2003/11/26 07:46:36  zet
 init variables (maybe needed w proto < 19?)
 
@@ -505,7 +509,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view.transfer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
@@ -45,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.9 2003/11/26 07:43:15 zet Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.10 2003/11/28 08:23:28 lemmster Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
@@ -186,7 +187,13 @@ public class ClientDetailDialog extends DetailDialog {
         updateLabel(clActivity, clientInfo.getClientActivity());
         updateLabel(clKind, clientInfo.getClientConnection());
         updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
-        updateLabel(clSockAddr, clientInfo.getClientSockAddr());
+        Addr addr = clientInfo.getClientSockAddr();
+        if (addr.hasHostName()) {
+        	updateLabel(clSockAddr, addr.getHostName());
+        } 
+        else {
+        	updateLabel(clSockAddr, addr.getAddress().getHostAddress());
+        }
         updateLabel(clSoftware, clientInfo.getClientSoftware());
         updateLabel(clUploaded, clientInfo.getUploadedString());
         updateLabel(clDownloaded, clientInfo.getDownloadedString());
@@ -208,6 +215,9 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.10  2003/11/28 08:23:28  lemmster
+use Addr instead of String
+
 Revision 1.9  2003/11/26 07:43:15  zet
 quick attempt at an uploaders table w/proto 19 - still in progress...
 

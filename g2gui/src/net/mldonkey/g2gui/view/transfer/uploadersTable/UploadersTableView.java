@@ -29,6 +29,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.helper.ObjectWeakMap;
+import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
@@ -57,7 +58,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadersTableView.java,v 1.3 2003/11/27 21:42:33 zet Exp $
+ * @version $Id: UploadersTableView.java,v 1.4 2003/11/28 08:23:28 lemmster Exp $
  *
  */
 public class UploadersTableView extends GTableView {
@@ -260,8 +261,14 @@ public class UploadersTableView extends GTableView {
                 return clientInfo.getDownloadedString();
 
             case UploadersTableView.SOCK_ADDR:
-                return clientInfo.getClientSockAddr();
-
+            	Addr addr = clientInfo.getClientSockAddr();
+            	if ( addr.hasHostName() ) {
+            		return addr.getHostName();
+            	} 
+            	else {
+            		return addr.getAddress().getHostAddress();
+            	}
+            	
             case UploadersTableView.FILENAME:
                 return clientInfo.getUploadFilename();
 
@@ -308,6 +315,17 @@ public class UploadersTableView extends GTableView {
                     return -1;
                 else if (clientInfo2.getState().getRank() != 0)
                     return 1;
+                
+            case ClientTableView.SOCK_ADDR:
+            	Addr addr1 = clientInfo1.getClientSockAddr();
+            	Addr addr2 = clientInfo2.getClientSockAddr();
+
+            	if (lastSort) {
+            		return addr1.compareTo(addr2);
+            	} 
+            	else {
+            		return addr2.compareTo(addr1);
+            	}
 
             // else fall through
             default:
@@ -376,6 +394,9 @@ public class UploadersTableView extends GTableView {
 
 /*
 $Log: UploadersTableView.java,v $
+Revision 1.4  2003/11/28 08:23:28  lemmster
+use Addr instead of String
+
 Revision 1.3  2003/11/27 21:42:33  zet
 integrate ViewFrame a little more.. more to come.
 
