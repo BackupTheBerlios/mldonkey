@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.view.InterFaceUI;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.8 2003/06/25 18:04:53 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.9 2003/06/26 23:07:32 lemmstercvs01 Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -58,4 +58,10 @@ public interface CoreCommunication {
 	void notifyListeners( Information info );
 	
 	ConsoleMessage getConsoleMessage();
+	
+	/**
+	 * Removes a listener from the list of listeners
+	 * @param anInterFaceUI The InterFaceUI to remove
+	 */
+	void removeListener( InterFaceUI anInterFaceUI );
 }

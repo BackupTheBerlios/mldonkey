@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.InterFaceUI;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.32 2003/06/26 17:34:40 dek Exp $ 
+ * @version $Id: Core.java,v 1.33 2003/06/26 23:07:32 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -277,6 +277,15 @@ public class Core extends Thread implements CoreCommunication {
 			this.registeredListeners.add( anInterFaceUI );
 	}
 	
+	/**
+	 * Removes a listener from the list of listeners
+	 * @param anInterFaceUI The InterFaceUI to remove
+	 */
+	public synchronized void removeListener( InterFaceUI anInterFaceUI ) {
+		if ( this.registeredListeners.contains( anInterFaceUI ) )
+			this.registeredListeners.remove( anInterFaceUI );
+	}
+	
 
 	/**
 	 * @param name Option-Name
@@ -300,6 +309,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.33  2003/06/26 23:07:32  lemmstercvs01
+added removeListeners()
+
 Revision 1.32  2003/06/26 17:34:40  dek
 added client-Stat to Information-broadcast
 
