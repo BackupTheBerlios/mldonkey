@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.19 2003/08/19 18:09:31 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.20 2003/08/19 20:58:45 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -119,7 +119,6 @@ public class Preferences extends PreferenceManager {
 				/* create the General-section, or if already done, only add the option */
 				if ( !sections.containsKey( "General" ) ) {
 					MLDonkeyOptions temp = new MLDonkeyOptions( "General", FieldEditorPreferencePage.FLAT );
-					addToRoot( new PreferenceNode ( "General", temp ) );
 					sections.put( "General", temp );	
 					temp.setPreferenceStore( optionsStore );			
 					}			
@@ -219,6 +218,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.20  2003/08/19 20:58:45  dek
+only 1 general by now
+
 Revision 1.19  2003/08/19 18:09:31  dek
 fixed advanced / pro with new devel-core
 
