@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Group;
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Display.java,v 1.26 2003/09/10 16:55:32 dek Exp $
+ * @version $Id: G2Gui_Display.java,v 1.27 2003/09/14 09:01:15 lemmster Exp $
  */
 public class G2Gui_Display extends FieldEditorPreferencePage {
 	private Composite parent;
@@ -152,6 +152,12 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 					"displayAllServers",
 					G2GuiResources.getString( "PREF_DISPLAY_CONN_SERV" ),
 					parent ) );
+						
+			setupEditor( 
+				new BooleanFieldEditor( 
+					"displayNodes",
+					G2GuiResources.getString( "PREF_DISPLAY_NODES" ),
+					parent ) );
 
 		}
 		setupEditor( 
@@ -200,6 +206,9 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.27  2003/09/14 09:01:15  lemmster
+show nodes on request
+
 Revision 1.26  2003/09/10 16:55:32  dek
 chunks are hidden in simple-mode, so is the corresponding option..
 
@@ -232,7 +241,7 @@ Revision 1.17  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.16  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.15  2003/08/19 22:02:15  zet
 localise

@@ -37,12 +37,13 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
 /**
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.20 2003/09/12 16:29:02 lemmster Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.21 2003/09/14 09:01:15 lemmster Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -84,11 +85,14 @@ public class ServerInfoIntMap extends InfoIntMap {
 	public void readStream( MessageBuffer messageBuffer ) {
 		int id = messageBuffer.readInt32();
 
-		NetworkInfo network = this.parent.getNetworkInfoMap().get( messageBuffer.readInt32() );
-		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
-		/* ignore fasttrack and gnutella servers */
-		if ( !network.hasServers() )
-			return; //TODO change gui proto to not send ft and gnut* nodes on startup
+
+		if ( !PreferenceLoader.loadBoolean( "displayNodes" ) ) {
+			NetworkInfo network = this.parent.getNetworkInfoMap().get( messageBuffer.readInt32() );
+			messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
+			/* ignore fasttrack and gnutella servers */
+			if ( !network.hasServers() )
+				return;
+		}
 
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 		ServerInfo server = this.get( id );
@@ -432,6 +436,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.21  2003/09/14 09:01:15  lemmster
+show nodes on request
+
 Revision 1.20  2003/09/12 16:29:02  lemmster
 ignore FT/GNU/GNUT2 servers in proto >=18 as long as the core sends them
 

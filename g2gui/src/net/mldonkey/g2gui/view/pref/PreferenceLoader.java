@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.19 2003/09/07 16:12:33 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.20 2003/09/14 09:01:15 lemmster Exp $
  */
 public class PreferenceLoader {
 
@@ -95,6 +95,7 @@ public class PreferenceLoader {
 		
 		preferenceStore.setDefault( "maintainSortOrder", false );
 		preferenceStore.setDefault( "displayAllServers", true );
+		preferenceStore.setDefault( "displayNodes", false );
 		preferenceStore.setDefault( "displayChunkGraphs", false );
 		preferenceStore.setDefault( "displayGridLines", true );
 		preferenceStore.setDefault( "tableCellEditors", false );
@@ -214,6 +215,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.20  2003/09/14 09:01:15  lemmster
+show nodes on request
+
 Revision 1.19  2003/09/07 16:12:33  zet
 combo
 
@@ -242,7 +246,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates
