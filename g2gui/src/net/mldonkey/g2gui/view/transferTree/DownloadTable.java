@@ -33,6 +33,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
+import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -43,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.19 2003/07/20 12:35:07 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.20 2003/07/20 13:03:26 dek Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
@@ -110,45 +111,83 @@ public class DownloadTable implements Observer, Runnable {
 	 * @param columnIndex
 	 */
 	protected void sort( int columnIndex ) {
+		//As we don't want a flickering table while sorting, we completely disable
+		//painting the table on screen
 		tableTree.setRedraw( false );
+		
 		Object[] items = downloads.getValues();
 		FileInfo[] files = new FileInfo[ items.length ];
+		
+		//all DownloadItems, that are expanded are stored here with the ID
 		int[] expanded = new int[ items.length ];
 		for ( int i = 0; i < items.length; i++ ) {
 			files[ i ] = ( ( DownloadItem ) items[ i ] ).getFileInfo();
 			// to save the expanded-status, we save all expanded fileIds:
 			expanded[ i ] = -1;
-			if ( ( ( DownloadItem ) items[ i ] ).getExpanded() )
-				expanded[ i ] = ( ( DownloadItem ) items[ i ] ).getFileInfo().getId();
+			DownloadItem temp = ( ( DownloadItem ) items[ i ] );
+			if ( temp.getExpanded() )
+				expanded[ i ] = temp.getFileInfo().getId();
 		}
+		
+		//all selected items are stored here with their ID
+			int[] selectedItemsIDs = new int[ tableTree.getSelection().length ];
+			for ( int i = 0; i < tableTree.getSelection().length; i++ ) {
+				selectedItemsIDs[ i ] = -1;
+				TableTreeItem temp = tableTree.getSelection()[ i ];
+				if ( temp instanceof DownloadItem ) {
+					selectedItemsIDs[ i ] =
+						( ( DownloadItem ) temp ).getFileInfo().getId();
+				}
+			}
+		
 		tableTree.removeAll();
-		Arrays.sort( files, new FileInfoComparator( columnIndex ) );	
-		if ( lastSortColumn != columnIndex ) {
-			for ( int i = 0; i < files.length; i++ ) {
-				DownloadItem newItem =
-					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
-				downloads.put( files[ i ].getId(), newItem );
+		Arrays.sort( files, new FileInfoComparator( columnIndex ) );
+		
+		// Now rebuild the whole table, withe the now sorted fileInfos
+			if ( lastSortColumn != columnIndex ) {
+				for ( int i = 0; i < files.length; i++ ) {
+					DownloadItem newItem =
+						new DownloadItem( tableTree, SWT.NONE, files[ i ] );
+					downloads.put( files[ i ].getId(), newItem );
+				}
+				lastSortColumn = columnIndex;
+			} else {
+				// reverse order if the current column is selected again
+				int j = files.length - 1;
+				for ( int i = files.length - 1; i >= 0; i-- ) {
+					DownloadItem newItem =
+						new DownloadItem( tableTree, SWT.NONE, files[ i ] );
+					downloads.put( files[ i ].getId(), newItem );
+					lastSortColumn = -1;
+				}
 			}
-			lastSortColumn = columnIndex;
-		} else {
-			// reverse order if the current column is selected again
-			int j = files.length - 1;
-			for ( int i = files.length - 1; i >= 0; i-- ) {
-				DownloadItem newItem =
-					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
-				downloads.put( files[ i ].getId(), newItem );
-				lastSortColumn = -1;
-			}
-		}
+		
 		// Now expand the previous expanded items:
-		for ( int i = 0; i < expanded.length; i++ ) {
-			if ( expanded[ i ] != -1 ) {
-				DownloadItem temp = ( ( DownloadItem ) downloads.get( expanded[ i ] ) );
-				temp.setExpanded( true );
-				/*only sort the subItems if expanded, to save CPU time*/
-				temp.sort( columnIndex, lastSortColumn );
+			for ( int i = 0; i < expanded.length; i++ ) {
+				if ( expanded[ i ] != -1 ) {
+					DownloadItem temp = ( ( DownloadItem ) downloads.get( expanded[ i ] ) );
+					temp.setExpanded( true );
+					/*only sort the subItems if expanded, to save CPU time*/
+					temp.sort( columnIndex, lastSortColumn );
+				}
 			}
-		}
+		
+		//now select the previous selected items:
+			TableTreeItem[] selectedItems =
+				new TableTreeItem[ selectedItemsIDs.length ];
+			boolean downloadItemSelected = true;
+			for ( int i = 0; i < selectedItemsIDs.length; i++ ) {
+				if ( downloads.contains( selectedItemsIDs[ i ] ) ) {
+					TableTreeItem temp =
+						( ( TableTreeItem ) downloads.get( selectedItemsIDs[ i ] ) );
+					selectedItems[ i ] = temp;
+				} else
+					downloadItemSelected = false;
+			}
+			if ( downloadItemSelected )
+				tableTree.setSelection( selectedItems );
+		
+		//now the whole thing is finished, we can show the sorted table:
 		tableTree.setRedraw( true );
 	}
 	/**
@@ -251,6 +290,9 @@ public class DownloadTable implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.20  2003/07/20 13:03:26  dek
+selected items remain selected, except, when the selected item was a ClientItem
+
 Revision 1.19  2003/07/20 12:35:07  dek
 saving some CPU time, when only sorting clientItems of expanded DownloadItems
 
