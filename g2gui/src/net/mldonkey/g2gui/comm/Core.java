@@ -29,6 +29,9 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.Observable;
 
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.*;
 
@@ -36,10 +39,10 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.61 2003/07/07 15:33:09 dek Exp $ 
+ * @version $Id: Core.java,v 1.62 2003/07/08 17:44:59 dek Exp $ 
  *
  */
-public class Core extends Observable implements Runnable, CoreCommunication {
+public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
 	/**
 	 * 
 	 */
@@ -108,7 +111,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * disconnect()
 	 * disConnects the Core from mldonkey @remote	 * 
 	 */
-	public void disconnect() {
+	public synchronized void disconnect() {
 		this.connected = false;
 	}
 
@@ -331,10 +334,21 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public OptionsInfoMap getOptionsInfoMap() {
 		return ( OptionsInfoMap ) optionsInfoMap;
 	}
+
+	/** stops reading messages if the Gui is disposed
+	 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+	 */
+	public void widgetDisposed( DisposeEvent e ) {
+		disconnect();
+		
+	}
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.62  2003/07/08 17:44:59  dek
+*** empty log message ***
+
 Revision 1.61  2003/07/07 15:33:09  dek
 made Option-handling more natural
 
