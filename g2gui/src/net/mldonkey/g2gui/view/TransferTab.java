@@ -64,19 +64,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.44 2003/08/29 18:24:24 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.45 2003/08/29 18:28:42 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
 	private CoreCommunication mldonkey;
-	private long timestamp = 0;
 	public static DecimalFormat decimalFormat = new DecimalFormat( "0.0" );
 	private DownloadTableTreeViewer downloadTableTreeViewer = null;
 	private CustomTableViewer clientTableViewer = null;
@@ -131,6 +129,9 @@ public class TransferTab extends GuiTab  {
 		
 	}
 	
+	/**
+	 * @param mainSashForm
+	 */
 	public void createUploads(final SashForm mainSashForm) {
 		
 		ViewForm uploadsViewForm = new ViewForm( mainSashForm, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
@@ -159,6 +160,10 @@ public class TransferTab extends GuiTab  {
 		
 	}
 	
+	/**
+	 * @param downloadViewForm
+	 * @return
+	 */
 	public SashForm createClientSash( ViewForm downloadViewForm) {
 	
 		SashForm downloadSashForm = new SashForm( downloadViewForm, SWT.HORIZONTAL );
@@ -188,6 +193,10 @@ public class TransferTab extends GuiTab  {
 	}
 	
 	
+	/**
+	 * @param parent
+	 * @param parentSash
+	 */
 	public void createClientTableViewer(Composite parent, final SashForm parentSash) {
 
 		final String[] COLUMN_LABELS = { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
@@ -295,22 +304,24 @@ public class TransferTab extends GuiTab  {
 	
 	}
 	
+	/**
+	 * @param text
+	 */
 	public void runLabelUpdate(final String text) 
 	{
-		Shell shell = this.mainWindow.getShell();
-		if(!shell.isDisposed() && shell !=null && shell.getDisplay()!=null) {
-			shell.getDisplay().asyncExec(new Runnable() {
+		if(!downloadCLabel.isDisposed()) {
+			downloadCLabel.getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					downloadCLabel.setText(G2GuiResources.getString("TT_Downloads") + ": " + text);
+					if (!downloadCLabel.isDisposed())
+						downloadCLabel.setText(G2GuiResources.getString("TT_Downloads") + ": " + text);
 				}
 			});
 		}
 	}	
 	
-	public void dispose() {
-		super.dispose();
-	}
-	
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.GuiTab#updateDisplay()
+	 */
 	public void updateDisplay() {
 		downloadTableTreeViewer.updateDisplay();
 		if (clientTableViewer != null)
@@ -321,6 +332,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.45  2003/08/29 18:28:42  zet
+remove import Shell
+
 Revision 1.44  2003/08/29 18:24:24  zet
 localise
 
