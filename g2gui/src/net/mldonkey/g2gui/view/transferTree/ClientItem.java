@@ -26,13 +26,12 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 
 import org.eclipse.swt.custom.TableTreeItem;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.2 2003/07/12 21:49:36 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.3 2003/07/13 12:48:28 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem {
@@ -43,8 +42,8 @@ public class ClientItem extends TableTreeItem {
 	private ClientInfo clientInfo;
 
 
-	public ClientItem(DownloadItem parent, int style, ClientInfo clientInfo){
-		super(parent, style);
+	public ClientItem( DownloadItem parent, int style, ClientInfo clientInfo ){
+		super( parent, style );
 		this.clientInfo = clientInfo;
 		this.downloadItem = parent;
 		updateColums();	
@@ -82,22 +81,26 @@ public class ClientItem extends TableTreeItem {
 			state = "NOT_CONNECTED_WAS_QUEUED";	
 		if ( clientInfo.getState().getState() == EnumState.REMOVE_HOST )
 			state = "removeHost";				
-		if ( availability==null )	availability="";	
+		if ( availability == null )	availability = "";	
 		setText( 3, state );
 		setText( 6, availability );		
 		
 		//setText( 6, String.valueOf( clientInfo.getState() ) );
-		
+		if ( !availability.equals( "" ) ) {
+		}
 	}
 
 
-	void update(){
+	void update() {
 		updateColums();
 	}
 }
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.3  2003/07/13 12:48:28  dek
+chunk-bar begins to work
+
 Revision 1.2  2003/07/12 21:49:36  dek
 transferring and queued clients shown
 

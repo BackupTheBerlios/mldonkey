@@ -24,25 +24,26 @@ package net.mldonkey.g2gui.view.transferTree;
 
 import gnu.trove.TIntObjectHashMap;
 
-import java.util.HashSet;
-import java.util.Iterator;
-
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
+import org.eclipse.swt.custom.TableTreeEditor;
 import org.eclipse.swt.custom.TableTreeItem;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.4 2003/07/12 21:49:36 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.5 2003/07/13 12:48:28 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem {
+	private ChunkView chunks;
+
 	private TableTree tableTree;
 
 	private TIntObjectHashMap namedclients = new TIntObjectHashMap();
@@ -58,27 +59,27 @@ public class DownloadItem extends TableTreeItem {
 		super(parent, style);
 		this.tableTree = parent;
 		this.fileInfo = fileInfo;		
-		setText( 0, String.valueOf( fileInfo.getId() ) );
-		setText( 1, fileInfo.getName() );
-		setText( 2, String.valueOf( fileInfo.getRate() ) );
-		setText( 3, String.valueOf( fileInfo.getDownloaded() ) );
-		setText( 4, String.valueOf( fileInfo.getSize() ) );
-		setText( 5, String.valueOf( fileInfo.getPerc() ) );
-		setText( 6, String.valueOf( fileInfo.getState() ) );
+		updateColumns();
 		
-//		Iterator it = fileInfo.getClientInfos().iterator();
-//			while ( it.hasNext() ) {		
-//				ClientInfo clientInfo = ( ClientInfo ) it.next();
+		TableTreeEditor editor = new TableTreeEditor(this.getParent());		
+		editor.horizontalAlignment = SWT.LEFT;
+		editor.grabHorizontal = true;
+		Control oldEditor = editor.getEditor();
+			if (oldEditor != null)
+			oldEditor.dispose();
+		this.chunks = new ChunkView(this.getParent().getTable(),SWT.NONE,fileInfo);
+		editor.setEditor (chunks, this, 6);
+
 		Object[] temp = fileInfo.getClientInfos().toArray();
 		for (int i = 0; i < temp.length; i++) {	
 			ClientInfo clientInfo =  (ClientInfo) temp[ i ];
+			
 	//			Here comes the question, wether we want to add this clientInfo, or not?? at the moment,
 	//			all clientInfos are accepted
 				
 					if (( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
 						|| ( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED )	
-							 
-					){				
+						){				
 							if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
 								namedclients.get( clientInfo.getClientid() );
 								ClientItem existingItem =
@@ -102,22 +103,12 @@ public class DownloadItem extends TableTreeItem {
 	}
 	
 	void update() {
-		setText( 0, String.valueOf( fileInfo.getId() ) );
-		setText( 1, fileInfo.getName() );
-		setText( 2, String.valueOf( fileInfo.getRate() ) );
-		setText( 3, String.valueOf( fileInfo.getDownloaded() ) );
-		setText( 4, String.valueOf( fileInfo.getSize() ) );
-		setText( 5, String.valueOf( fileInfo.getPerc() ) );
-		setText( 6, fileInfo.getChunks() );	
+		updateColumns();
 			
 		Object[] temp =  fileInfo.getClientInfos().toArray();
 		for (int i = 0; i < temp.length; i++) {	
-			ClientInfo clientInfo =  (ClientInfo) temp[ i ];
-			
-		//Iterator it = fileInfo.getClientInfos().iterator();
-		//while ( it.hasNext() ) {		
-		//ClientInfo clientInfo = ( ClientInfo ) it.next();
-
+		ClientInfo clientInfo =  (ClientInfo) temp[ i ];
+		
 		// Here comes the question, wether we want to add this clientInfo, or not?? at the moment,
 		// all clientInfos are accepted
 						if (( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )	
@@ -143,6 +134,18 @@ public class DownloadItem extends TableTreeItem {
 				
 			}
 		
+	}
+
+	private void updateColumns() {
+		setText( 0, String.valueOf( fileInfo.getId() ) );
+		setText( 1, fileInfo.getName() );
+		setText( 2, String.valueOf( fileInfo.getRate() ) );
+		setText( 3, String.valueOf( fileInfo.getDownloaded() ) );
+		setText( 4, String.valueOf( fileInfo.getSize() ) );
+		setText( 5, String.valueOf( fileInfo.getPerc() ) );
+		chunks.refresh();
+		
+
 	}
 	
 
@@ -180,10 +183,26 @@ public class DownloadItem extends TableTreeItem {
 		return fileInfo;
 	}
 
+
+/*
+ * 		TableTreeEditor editor = new TableTreeEditor(this.getParent());		
+		editor.horizontalAlignment = SWT.LEFT;
+		editor.grabHorizontal = true;
+		Control oldEditor = editor.getEditor();
+			if (oldEditor != null)
+			oldEditor.dispose();
+		Control chunks = new ChunkView(this.getParent().getTable(),SWT.NONE);
+		editor.setEditor (chunks, this, 5);
+
+ *
+ */
 }
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.5  2003/07/13 12:48:28  dek
+chunk-bar begins to work
+
 Revision 1.4  2003/07/12 21:49:36  dek
 transferring and queued clients shown
 
