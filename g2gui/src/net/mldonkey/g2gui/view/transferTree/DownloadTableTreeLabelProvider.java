@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.9 2003/08/16 13:48:24 vnc Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.10 2003/08/16 20:05:19 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -56,8 +56,6 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	private Color rateAbove20Color = new Color(null, 35, 214, 0);
 	private Color rateAbove10Color = new Color(null, 30, 170, 2);
 	private Color rateAbove0Color = new Color(null, 24, 142, 4);
-	private Color clientTransferringColor = new Color(null, 8, 162, 180);
-	private Color clientRankedColor = new Color(null, 23, 229, 253);
 	private DecimalFormat df = new DecimalFormat( "0.0" );
 	private DecimalFormat dfp = new DecimalFormat( "0" );
 	
@@ -87,9 +85,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 		} else if (arg0 instanceof TreeClientInfo) {
 			ClientInfo clientInfo = ((TreeClientInfo) arg0).getClientInfo();
 			if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
-				return clientTransferringColor;
+				return rateAbove0Color;
 			else
-				return clientRankedColor;
+				return null;
 		}
 		return null;
 	}
@@ -210,8 +208,7 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 		rateAbove20Color.dispose();
 		rateAbove10Color.dispose();
 		rateAbove0Color.dispose();
-		clientRankedColor.dispose();
-		clientTransferringColor.dispose();
+
 	}
 
 	public boolean isLabelProperty(Object arg0, String arg1) {
@@ -229,6 +226,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.10  2003/08/16 20:05:19  zet
+*** empty log message ***
+
 Revision 1.9  2003/08/16 13:48:24  vnc
 dispose() the two new added colors
 
