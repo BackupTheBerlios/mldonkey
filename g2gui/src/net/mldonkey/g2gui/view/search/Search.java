@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  * @author $user$
- * @version $Id: Search.java,v 1.9 2003/08/18 01:42:24 zet Exp $ 
+ * @version $Id: Search.java,v 1.10 2003/08/19 15:03:43 lemmster Exp $ 
  *
  */
 public abstract class Search implements Observer {
@@ -131,7 +131,14 @@ public abstract class Search implements Observer {
 		gridData.horizontalSpan = 2;
 		combo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
 		combo.setLayoutData( gridData );
+		
+		fillCombo();
+	}
 	
+	/**
+	 * fill the combo box with the networks
+	 */
+	private void fillCombo() {
 		/* get all activated networks and display them in the combo */
 		NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
 		for ( int i = 0; i < networks.length; i++ ) {
@@ -159,32 +166,10 @@ public abstract class Search implements Observer {
 	public void update( Observable o, Object arg ) {
 		if ( combo.isDisposed() ) return;
 		
-		final NetworkInfo network = ( NetworkInfo ) arg;
 		this.combo.getDisplay().asyncExec( new Runnable() {
 			public void run() {
-				if ( network.isEnabled() && network.isSearchable() ) {
-					combo.add( network.getNetworkName() );
-					combo.setData( network.getNetworkName(), network );
-				}
-				else if ( network.isSearchable() ){
-					combo.remove( network.getNetworkName() );
-				}
-				try {
-					combo.remove( G2GuiResources.getString( "S_ALL" ) );
-				}
-				catch ( IllegalArgumentException e ) { }
-				
-				
-				if ( combo.getItemCount() > 1 ) {
-					combo.add( G2GuiResources.getString( "S_ALL" ) );
-					combo.setData( G2GuiResources.getString( "S_ALL" ), null );
-					combo.select( combo.indexOf( G2GuiResources.getString( "S_ALL" ) ) );
-					combo.setEnabled( true );
-				}
-				else {
-					combo.select( 0 );
-					combo.setEnabled( false );
-				}
+				combo.removeAll();
+				fillCombo();
 			}
 		} );
 	}
@@ -192,6 +177,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.10  2003/08/19 15:03:43  lemmster
+bugfix in update
+
 Revision 1.9  2003/08/18 01:42:24  zet
 centralize resource bundle
 
