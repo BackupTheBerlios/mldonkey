@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.31 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: NetworkItem.java,v 1.32 2003/11/27 21:59:48 lemmster Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -101,6 +101,8 @@ public class NetworkItem implements Observer {
 		/* sets the enabled/disabled image for each known network */
 		for ( int i = 0; i < networks.length; i++ ) {
 			NetworkInfo network = networks[ i ];
+			// we ignore virtual networks in our list
+			if ( network.isVirtual() ) break;
 			toolItem = new ToolItem( toolBar, SWT.NONE );
 			toolItem.setData( network );
 			
@@ -200,6 +202,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.32  2003/11/27 21:59:48  lemmster
+don't display virtual networks anymore
+
 Revision 1.31  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
