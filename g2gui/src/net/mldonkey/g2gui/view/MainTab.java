@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.21 2003/07/28 17:08:03 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.22 2003/07/28 17:41:32 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer {
@@ -67,7 +67,7 @@ public class MainTab implements Listener, Observer {
 	private List registeredTabs;
 	private GuiTab activeTab;
 	private Menu mainMenuBar;	
-	private PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
+	private static PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
 	private static ImageRegistry imageRegistry = new ImageRegistry();
 	private ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
 	private Shell thisShell = null;
@@ -525,7 +525,7 @@ public class MainTab implements Listener, Observer {
 	 * The preference store file
 	 * @return A PreferenceStore file with our Information
 	 */
-	public PreferenceStore getStore() {
+	public static PreferenceStore getStore() {
 		return internalPrefStore;
 	}
 	
@@ -601,6 +601,9 @@ public class MainTab implements Listener, Observer {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.22  2003/07/28 17:41:32  zet
+static prefstore
+
 Revision 1.21  2003/07/28 17:08:03  zet
 lock coolbar
 
