@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.58 2004/01/29 15:06:36 lemmy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.59 2004/02/29 17:08:50 psy Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -298,6 +298,10 @@ public class PreferenceLoader {
         return preferenceStore;
     }
 
+	/**
+	 * This method writes the PreferenceStore to disk
+	 *
+	 */
     public static void saveStore() {
         try {
             preferenceStore.save();
@@ -436,6 +440,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.59  2004/02/29 17:08:50  psy
+little javadoc
+
 Revision 1.58  2004/01/29 15:06:36  lemmy
 use supertype (programm against the interface, not the concrete class)
 
@@ -585,7 +592,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates
