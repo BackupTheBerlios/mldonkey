@@ -22,17 +22,18 @@
  */
 package net.mldonkey.g2gui.view.pref;
 import org.eclipse.jface.preference.*;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 /**
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.23 2003/08/18 12:41:54 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.24 2003/08/18 14:51:58 dek Exp $ 
  *
  */
 public class G2Gui extends FieldEditorPreferencePage {
-	private Composite parent;
+	
 	/**
 	 * @param string name
 	 * @param i style (SWT.XYZ)
@@ -43,8 +44,8 @@ public class G2Gui extends FieldEditorPreferencePage {
 	
 
 	protected Control createContents( Composite myparent ) {
-		this.parent = ( Composite ) super.createContents( myparent );
-		createFieldEditors();
+		Composite parent = ( Composite ) super.createContents( myparent );
+		parent.setLayoutData(new GridData(GridData.FILL_BOTH));
 		return parent;
 	}
 	/** ( non-Javadoc )
@@ -61,7 +62,7 @@ public class G2Gui extends FieldEditorPreferencePage {
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected void createFieldEditors() {
-		if ( parent != null ) {
+		Composite parent = getFieldEditorParent();
 			StringFieldEditor hostNameField =
 					new StringFieldEditor( "hostname", "Hostname", parent );
 				hostNameField.setPreferenceStore( this.getPreferenceStore() );
@@ -90,11 +91,14 @@ public class G2Gui extends FieldEditorPreferencePage {
 				passwordField.setPreferenceStore( this.getPreferenceStore() );
 				addField( passwordField );
 				passwordField.load();
-		}
+		
 	}
 }
 /*
 $Log: G2Gui.java,v $
+Revision 1.24  2003/08/18 14:51:58  dek
+some more jface-work
+
 Revision 1.23  2003/08/18 12:41:54  dek
 checkstyle
 

@@ -8,7 +8,7 @@
  * G2GUI is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
  * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,140 +21,139 @@
  * 
  */
 package net.mldonkey.g2gui.view.pref;
-
 import java.util.ArrayList;
-
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
-import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
 /**
  * @author z
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class G2Gui_Display extends PreferencePage  {
-	private Composite controlshell;
-
+public class G2Gui_Display extends FieldEditorPreferencePage {
+	private Composite parent;
 	private ArrayList fieldEditorArray = new ArrayList();
 	private int columns = 0;
-	
-	public G2Gui_Display(PreferenceStore preferenceStore, boolean connected) {
-		super( "Display" );
-		setPreferenceStore(preferenceStore);
-		preferenceStore = PreferenceLoader.setDefaults(preferenceStore);
+	public G2Gui_Display( String string, int i ) {
+		super( string, i );
 	}
-	
-	protected void setupEditor(FieldEditor e) {
-		e.setPreferencePage(this);
+	protected void setupEditor( FieldEditor e ) {
+		e.setPreferencePage( this );
 		e.setPreferenceStore( getPreferenceStore() );
 		e.load();
 		computeColumn( e.getNumberOfControls() );
-		fieldEditorArray.add(e);
+		addField( e );
+		fieldEditorArray.add( e );
 	}
-	
-	protected Control createContents( Composite shell ) {	
-
-		this.controlshell = shell;			
-						
-		setupEditor(new ExtendedColorFieldEditor("consoleBackground", "Console window background colour", shell));
-			
-		setupEditor(new ExtendedColorFieldEditor("consoleForeground", "Console window foreground colour", shell));
-	
-		setupEditor(new ExtendedColorFieldEditor("consoleHighlight", "Console window highlight colour", shell));
-	
-		setupEditor(new ExtendedColorFieldEditor("consoleInputBackground", "Console input background colour", shell));
-			
-		setupEditor(new ExtendedColorFieldEditor("consoleInputForeground", "Console input foreground colour", shell));
-	
-		setupEditor(new ExtendedFontFieldEditor2("consoleFontData", "Console window font", "Sample",  shell));
-
-		setupEditor(new BooleanFieldEditor( "displayAllServers", "Show only connected servers", shell ));
-		
-		setupEditor(new BooleanFieldEditor("displayHeaderBar", "Display header bar", shell));
-		
-		setupEditor(new BooleanFieldEditor("displayChunkGraphs", "Display chunk graphs", shell));
-		
-		setupEditor(new BooleanFieldEditor("displayGridLines", "Display grid lines", shell));
-		
-		setupEditor(new BooleanFieldEditor("tableCellEditors", "Activate table cell editors", shell));
-		
-		setupEditor(new BooleanFieldEditor("forceRefresh", "Force full table refresh at each update (maintains sort order, might flicker)", shell));
-				
-		IntegerFieldEditor displayBuffer = new IntegerFieldEditor("displayBuffer", "GUI update buffer (0-60 seconds)", shell);
-		displayBuffer.setValidRange(0,60);
-		setupEditor(displayBuffer);
-		
-		arrangeFields();
-		return null;
-	}	
-	/* (non-Javadoc)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.PreferencePage#setPreferenceStore( org.eclipse.jface.preference.IPreferenceStore )
+	 */
+	public void setPreferenceStore( IPreferenceStore store ) {
+		super.setPreferenceStore( PreferenceLoader.setDefaults( store ) );
+	}
+	protected Control createContents( Composite myparent ) {
+		this.parent = ( Composite ) super.createContents( myparent );
+		return parent;
+	}
+	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	private void setHorizontalSpan( FieldEditor editor ) {
-		
-		if (editor instanceof ExtendedColorFieldEditor) {
-			( ( GridData ) ((ExtendedColorFieldEditor) editor).getChangeControl ( controlshell ).getLayoutData() )
-				 .horizontalSpan = columns - 1;
-			( ( GridData ) ((ExtendedColorFieldEditor) editor).getChangeControl( controlshell ).getLayoutData() )
-				.horizontalAlignment = GridData.FILL;
+		if ( editor instanceof ExtendedColorFieldEditor ) {
+			( 
+				( GridData ) ( ( ExtendedColorFieldEditor ) editor )
+					.getChangeControl( parent )
+					.getLayoutData() )
+					.horizontalSpan =
+				columns - 1;
+			( 
+				( GridData ) ( ( ExtendedColorFieldEditor ) editor )
+					.getChangeControl( parent )
+					.getLayoutData() )
+					.horizontalAlignment =
+				GridData.FILL;
 		} else {
-			( ( GridData ) ((StringFieldEditor) editor).getTextControl( controlshell ).getLayoutData() )
-				.horizontalSpan = columns - 1;
+			( 
+				( GridData ) ( ( StringFieldEditor ) editor )
+					.getTextControl( parent )
+					.getLayoutData() )
+					.horizontalSpan =
+				columns - 1;
 		}
-								  
-		( ( GridLayout )controlshell.getLayout() ).numColumns = columns;
-		
-	} 
+		( ( GridLayout ) parent.getLayout() ).numColumns = columns;
+	}
 	
 	private void arrangeFields() {
-		
-		for (int i = 0; i < fieldEditorArray.size(); i++) {
-			FieldEditor fieldEditor = (FieldEditor) fieldEditorArray.get(i);
-					
-			if (fieldEditor instanceof ExtendedColorFieldEditor)
-				setHorizontalSpan( (ExtendedColorFieldEditor) fieldEditor );
-			else if (fieldEditor instanceof BooleanFieldEditor
-					|| fieldEditor instanceof IntegerFieldEditor)
-				fieldEditor.fillIntoGrid(controlshell, columns);
-			else if (fieldEditor instanceof ExtendedFontFieldEditor2)
-				((ExtendedFontFieldEditor2) fieldEditor).adjustForNumColumns( columns );
+		for ( int i = 0; i < fieldEditorArray.size(); i++ ) {
+			FieldEditor fieldEditor = ( FieldEditor ) fieldEditorArray.get( i );
+			if ( fieldEditor instanceof ExtendedColorFieldEditor )
+				setHorizontalSpan( ( ExtendedColorFieldEditor ) fieldEditor );
+			else if ( 
+				fieldEditor instanceof BooleanFieldEditor
+					|| fieldEditor instanceof IntegerFieldEditor )
+				fieldEditor.fillIntoGrid( parent, columns );
+			else if ( fieldEditor instanceof ExtendedFontFieldEditor2 )
+				( ( ExtendedFontFieldEditor2 ) fieldEditor ).adjustForNumColumns( 
+					columns );
 		}
 	}
-
 	/**
 	 * @param i
 	 */
 	private void computeColumn( int i ) {
-		if ( columns < i ) columns = i;		
+		if ( columns < i )
+			columns = i;
 	}
-	protected void performApply() {		
-		super.performApply();
-		
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
-	protected void performDefaults() {	
-		super.performDefaults();
-	}
-	public boolean performOk() {
- 		for (int i = 0; i < fieldEditorArray.size(); i++)
-	 		((FieldEditor) fieldEditorArray.get(i) ).store();
-	 	return super.performOk();
+	protected void createFieldEditors() {
+		parent = getFieldEditorParent();
+		setupEditor( 
+			new ExtendedColorFieldEditor( "consoleBackground", "Console window background colour", parent ) );
+				
+		setupEditor( new ExtendedColorFieldEditor( "consoleForeground", "Console window foreground colour",parent ) );
+				
+		setupEditor( new ExtendedColorFieldEditor( "consoleHighlight", "Console window highlight colour", parent ) );
+				
+		setupEditor( new ExtendedColorFieldEditor( "consoleInputBackground", "Console input background colour", parent ) );
+				
+		setupEditor( new ExtendedColorFieldEditor( "consoleInputForeground", "Console input foreground colour", parent ) );
+				
+		setupEditor( new ExtendedFontFieldEditor2( "consoleFontData", "Console window font", "Sample", parent ) );
+				
+		setupEditor( new BooleanFieldEditor( "displayAllServers", "Show only connected servers", parent ) );
+				
+		setupEditor( new BooleanFieldEditor( "displayHeaderBar", "Display header bar", parent ) );
+				
+		setupEditor( new BooleanFieldEditor(  "displayChunkGraphs", "Display chunk graphs", parent ) );
+				
+		setupEditor( new BooleanFieldEditor( "displayGridLines", "Display grid lines", parent ) );
+				
+		setupEditor( new BooleanFieldEditor( "tableCellEditors", "Activate table cell editors", parent ) );
+				
+		setupEditor( new BooleanFieldEditor( "forceRefresh", "Force full table refresh at each update ( maintains sort order, might flicker )",parent ) );
+				
+		IntegerFieldEditor displayBuffer = new IntegerFieldEditor( "displayBuffer", "GUI update buffer ( 0-60 seconds )",parent );
+				
+		displayBuffer.setValidRange( 0, 60 );
+		setupEditor( displayBuffer );
+		arrangeFields();
 	}
 }
-
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.13  2003/08/18 14:51:58  dek
+some more jface-work
+
 Revision 1.12  2003/08/18 00:24:44  zet
 cleanup
 

@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.15 2003/08/18 13:55:22 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.16 2003/08/18 14:51:58 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -64,10 +64,14 @@ public class Preferences extends PreferenceManager {
 	 */
 	public Preferences( PreferenceStore preferenceStore ) {	
 		this.preferenceStore = 	preferenceStore;
-		G2Gui temp = new G2Gui( "General", FieldEditorPreferencePage.FLAT );	
-		temp.setPreferenceStore( preferenceStore );		
-		PreferenceNode G2GuiRootNode = new PreferenceNode( "G2gui", temp );
-		G2GuiRootNode.add(new PreferenceNode ("Display", new G2Gui_Display(preferenceStore, connected)));
+		G2Gui g2gui = new G2Gui( "General", FieldEditorPreferencePage.FLAT );	
+		g2gui.setPreferenceStore( preferenceStore );		
+		PreferenceNode G2GuiRootNode = new PreferenceNode( "G2gui", g2gui );
+		
+			G2Gui_Display g2gui_display = new G2Gui_Display("Display", FieldEditorPreferencePage.FLAT);
+			g2gui_display.setPreferenceStore( preferenceStore );
+			
+			G2GuiRootNode.add(new PreferenceNode ("Display", g2gui_display));
 		addToRoot( G2GuiRootNode );		
 	}
 	
@@ -247,6 +251,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.16  2003/08/18 14:51:58  dek
+some more jface-work
+
 Revision 1.15  2003/08/18 13:55:22  dek
 plugins-crash fixed
 

@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.pref;
 
 import java.io.IOException;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -46,7 +47,7 @@ public class PreferenceLoader {
 		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
 		try { preferenceStore.load(); } catch ( IOException e ) { }
 		
-		preferenceStore = setDefaults(preferenceStore);
+		preferenceStore =  ( PreferenceStore ) setDefaults(preferenceStore);
 		return preferenceStore;
 	}
 	
@@ -54,7 +55,7 @@ public class PreferenceLoader {
 	 * @param preferenceStore
 	 * @return
 	 */
-	static PreferenceStore setDefaults(PreferenceStore preferenceStore) {
+	static IPreferenceStore setDefaults(IPreferenceStore preferenceStore) {
 		Display display = Display.getDefault();
 	
 		PreferenceConverter.setDefault(preferenceStore, "consoleBackground", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );
@@ -89,7 +90,7 @@ public class PreferenceLoader {
 	 * @return
 	 */
 	static public Color loadColour (String preferenceString ) {
-		PreferenceStore preferenceStore = loadStore();
+		PreferenceStore preferenceStore =  loadStore();
 		
 		if (preferenceStore.contains( preferenceString ))
 			return new Color( null, PreferenceConverter.getColor(preferenceStore, preferenceString ) );
@@ -121,6 +122,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.6  2003/08/18 14:51:58  dek
+some more jface-work
+
 Revision 1.5  2003/08/17 21:05:38  zet
 Use system default colours
 

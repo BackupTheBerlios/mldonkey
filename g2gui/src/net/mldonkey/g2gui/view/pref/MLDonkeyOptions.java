@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Control;
  * MLDonkeyOptions
  *
  * @author  $Author: dek $ 
- * @version $Id: MLDonkeyOptions.java,v 1.11 2003/08/18 10:36:17 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.12 2003/08/18 14:51:58 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -64,11 +64,11 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		 * returned the parent for these controls??? this is why i check for null and recall
 		 * it in this.createContents()
 		 */
-		if ( parent != null ) {
+		parent = getFieldEditorParent();
 			Iterator it = options.iterator();
 			while ( it.hasNext() ) {
 				OptionsInfo temp = ( OptionsInfo ) it.next();
-				if ( temp.getOptionType() == EnumTagType.BOOL ) {
+				if ( temp.getOptionType() == EnumTagType.BOOL || isboolean( temp.getValue() )) {
 					String description = temp.getDescription();
 					if ( description.equals( "" ) )
 						description = temp.getKey();
@@ -76,8 +76,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 					BooleanFieldEditor bool =
 						new BooleanFieldEditor( 
 							temp.getKey(),
-							description,
+							description, 
 							parent );
+							
 					bool.setPreferenceStore( this.getPreferenceStore() );
 					addField( bool );
 					bool.fillIntoGrid( parent, 2 );
@@ -101,28 +102,36 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 					string.getTextControl( parent ).setSize( 50, inputSize.y );
 				}
 			}
-			sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
-			parent.layout();
-		}
+	}
+	/**
+	 * @param string
+	 * @return
+	 */
+	private boolean isboolean(String string) {
+		if ( string.equalsIgnoreCase("true")|| string.equalsIgnoreCase("false") )
+			return true;
+		else return false;
 	}
 	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
 	 */
 	protected Control createContents( Composite myparent ) {
-		parent = ( Composite ) super.createContents( myparent );
-		parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-		sc = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL );
+		sc = new ScrolledComposite( myparent, SWT.H_SCROLL | SWT.V_SCROLL );
 		sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-		sc.setLayout( new FillLayout() );
-		Composite c1 = new Composite( sc, SWT.NONE );
+			sc.setLayout( new FillLayout() );
+		
+		Composite parent = ( Composite ) super.createContents( sc );
+		parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );		
+		
 		sc.setExpandHorizontal( true );
 		sc.setExpandVertical( true );
-		sc.setContent( c1 );
+		sc.setContent( parent );
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		c1.setLayout( layout );
-		parent = c1;
-		createFieldEditors();
+		layout.numColumns = 1;		
+		
+		sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+		parent.layout();
+		
 		return parent;
 	}
 	/**
@@ -134,6 +143,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.12  2003/08/18 14:51:58  dek
+some more jface-work
+
 Revision 1.11  2003/08/18 10:36:17  dek
 added scoll-bars for long options-list
 
