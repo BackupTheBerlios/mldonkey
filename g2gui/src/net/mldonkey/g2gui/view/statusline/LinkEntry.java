@@ -43,6 +43,8 @@ import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -55,7 +57,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.15 2003/09/26 04:19:22 zet Exp $
+ * @version $Id: LinkEntry.java,v 1.16 2003/10/16 20:24:53 zet Exp $
  *
  */
 public class LinkEntry {
@@ -88,6 +90,16 @@ public class LinkEntry {
         linkEntryText.setFont( PreferenceLoader.loadFont( "consoleFontData" ) );
         linkEntryText.setForeground( PreferenceLoader.loadColour( "consoleInputForeground" ) );
         linkEntryText.setBackground( PreferenceLoader.loadColour( "consoleInputBackground" ) );
+      
+      	linkEntryText.addKeyListener( new KeyAdapter() {
+				public void keyPressed( KeyEvent e ) {
+					if ( (e.stateMask & SWT.CTRL) != 0  ) {
+						if (e.character == SWT.LF) // SWT.CR doesn't work
+							enterLinks( linkEntryText );	
+					}
+				}
+      		});
+      
         ToolBar linkEntryToolBar = new ToolBar( linkEntryViewForm, SWT.RIGHT | SWT.FLAT );
         ToolItem sendItem = new ToolItem( linkEntryToolBar, SWT.NONE );
         sendItem.setText( G2GuiResources.getString( "LE_BUTTON" ) );
@@ -186,6 +198,9 @@ public class LinkEntry {
 
 /*
 $Log: LinkEntry.java,v $
+Revision 1.16  2003/10/16 20:24:53  zet
+ctrl+cr
+
 Revision 1.15  2003/09/26 04:19:22  zet
 add dropTarget
 
