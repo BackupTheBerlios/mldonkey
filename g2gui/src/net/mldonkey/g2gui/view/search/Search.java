@@ -40,12 +40,15 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+
 
 /**
  * Search
  *
  * @author $user$
- * @version $Id: Search.java,v 1.1 2003/07/23 16:56:28 lemmstercvs01 Exp $ 
+ * @version $Id: Search.java,v 1.2 2003/07/23 19:49:17 zet Exp $ 
  *
  */
 public abstract class Search {
@@ -90,6 +93,17 @@ public abstract class Search {
 		gridData.horizontalSpan = 2;
 		text = new Text( group, SWT.SINGLE | SWT.BORDER );
 		text.setLayoutData( gridData );
+		text.addKeyListener( new KeyAdapter() {
+					public void keyPressed( KeyEvent e ) {
+						if ( e.character == SWT.CR ) {
+							performSearch(); 
+							
+						}
+					}		
+				} );	
+	}
+	
+	public void performSearch() {
 	}
 	
 	protected void createNetworkBox( Group group, String aString ) {
@@ -129,6 +143,9 @@ public abstract class Search {
 
 /*
 $Log: Search.java,v $
+Revision 1.2  2003/07/23 19:49:17  zet
+press enter
+
 Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
 initial commit
 

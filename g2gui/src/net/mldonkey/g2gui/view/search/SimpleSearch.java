@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.TabFolder;
  * SimpleSearch
  *
  * @author $user$
- * @version $Id: SimpleSearch.java,v 1.1 2003/07/23 16:56:28 lemmstercvs01 Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.2 2003/07/23 19:49:17 zet Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -63,6 +63,36 @@ public class SimpleSearch extends Search {
 	 */
 	public String getTabName() {
 		return "SimpleSearch";
+	}
+	
+	public void performSearch() {
+	
+		if ( ! text.getText().equals( "" ) ) {
+			/* generate a new search query */
+			SearchQuery query = new SearchQuery( core );
+				
+			/* the query string */
+			query.setSearchString( text.getText() );
+						
+			/* get the network id for this query */
+			NetworkInfo[] temp = core.getNetworkInfoMap().getNetworks();
+			for ( int i = 0; i < temp.length; i++ ) {
+				if ( temp[ i ].getNetworkName().equals( combo.getText() ) ) {
+					query.setNetwork( temp[ i ].getNetwork() );
+					break;										
+				}
+			}
+			/* which media is selected */							
+			if ( selectedMedia != null )
+			query.setMedia( selectedMedia );
+			/* now the query is ready to be send */
+			query.send();
+						
+			/* draw the empty search result */
+			new SearchResult( text.getText(), tab.getCTabFolder(), core, query.getSearchIdentifier() );	
+			text.setText("");
+		}
+		
 	}
 
 	/* (non-Javadoc)
@@ -147,32 +177,7 @@ public class SimpleSearch extends Search {
 			ok.setText( "Search" );
 			ok.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
-					/* verify the user submitted data */
-					if ( ! text.getText().equals( "" ) ) {
-						/* generate a new search query */
-						SearchQuery query = new SearchQuery( core );
-						
-						/* the query string */
-						query.setSearchString( text.getText() );
-						
-						/* get the network id for this query */
-						NetworkInfo[] temp = core.getNetworkInfoMap().getNetworks();
-						for ( int i = 0; i < temp.length; i++ ) {
-							if ( temp[ i ].getNetworkName().equals( combo.getText() ) ) {
-								query.setNetwork( temp[ i ].getNetwork() );
-								break;										
-							}
-						}
-						/* which media is selected */							
-						if ( selectedMedia != null )
-							query.setMedia( selectedMedia );
-
-						/* now the query is ready to be send */
-						query.send();
-						
-						/* draw the empty search result */
-						new SearchResult( text.getText(), tab.getCTabFolder(), core, query.getSearchIdentifier() );	
-					}
+					performSearch();
 				}		
 			});
 		return group;		
@@ -181,6 +186,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.2  2003/07/23 19:49:17  zet
+press enter
+
 Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
 initial commit
 
