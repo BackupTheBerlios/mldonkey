@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.16 2003/08/04 16:57:00 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.17 2003/08/19 12:45:17 lemmster Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -288,10 +288,46 @@ public class OptionsInfo extends Parent {
 	public String getPluginToAppear() {
 		return pluginToAppear;
 	}
+	
+	/**
+	 * The help string for this option.
+	 * Proto < 18 return the description
+	 * @return The option help text
+	 */
+	public String getOptionHelp() {
+		if ( parent.getProtoToUse() >= 18 )
+			return this.optionHelp;
+		return this.description;			
+	}
+	
+	/**
+	 * is this option advanced
+	 * Proto < 18 return always true
+	 * @return true if this option is advanced
+	 */
+	public boolean isAdvanced() {
+		if ( parent.getProtoToUse() >= 18 )
+			return this.advanced;
+		return true;
+	}
+	
+	/**
+	 * The default value for this option
+	 * Proto < 18 return value
+	 * @return the default value for this option
+	 */
+	public String defaultValue() {
+		if ( parent.getProtoToUse() >= 18 )
+			return this.defaultValue;
+		return this.value;	
+	}
 }
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.17  2003/08/19 12:45:17  lemmster
+support proto >=18
+
 Revision 1.16  2003/08/04 16:57:00  lemmstercvs01
 better way to set the value
 
