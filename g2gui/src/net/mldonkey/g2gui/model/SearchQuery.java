@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.27 2003/09/25 15:51:45 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.28 2003/09/25 16:14:40 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -99,6 +99,8 @@ public class SearchQuery implements Sendable {
 	 * Network (0=All)
 	 */
 	private int network;
+
+	private String workingPattern;
 	
 	/**
 	 * Default constructor for creating a empty SearchQuery
@@ -145,20 +147,20 @@ public class SearchQuery implements Sendable {
 		
 	 	for ( int i = 0; i < patterns.length; i++ ) {				
 				newQuery = new Query();
-				String pattern = patterns[i];
+				this.workingPattern = patterns[i];
 				
-				switch ( determineSearchType( pattern ) )	 {
+				switch ( determineSearchType() )	 {
 					case AND :					
 						newQuery.setNode( EnumQuery.KEYWORDS );
 						newQuery.setComment( "Search-pattern:" );
-						if ( pattern != null ){
-							newQuery.setDefaultValue( pattern );
+						if ( workingPattern != null ){
+							newQuery.setDefaultValue( workingPattern );
 							andQuerys.add( newQuery );
 						}
 						else if ( i < patterns.length ) {
 							i++;
-							pattern = patterns[ i ];
-							newQuery.setDefaultValue( pattern );
+							workingPattern = patterns[ i ];
+							newQuery.setDefaultValue( workingPattern );
 							andQuerys.add( newQuery );
 						}
 						/*if AND was last keyword, ignore */												
@@ -166,14 +168,14 @@ public class SearchQuery implements Sendable {
 					case ANDNOT :					
 						newQuery.setNode( EnumQuery.KEYWORDS );
 						newQuery.setComment( "Search-pattern:" );
-						if ( pattern != null ){
-							newQuery.setDefaultValue( pattern );
+						if ( workingPattern != null ){
+							newQuery.setDefaultValue( workingPattern );
 							andNotQuerys.add( newQuery );
 						}
 						else if ( i < patterns.length ) {
 							i++;
-							pattern = patterns[ i ];
-							newQuery.setDefaultValue( pattern );
+							workingPattern = patterns[ i ];
+							newQuery.setDefaultValue( workingPattern );
 							andNotQuerys.add( newQuery );
 						}
 						/*if ANDNOT was last keyword, ignore */												
@@ -181,46 +183,50 @@ public class SearchQuery implements Sendable {
 					case OR :
 						newQuery.setNode( EnumQuery.KEYWORDS );
 						newQuery.setComment( "Search-pattern:" );
-						if ( pattern != null ){
-							newQuery.setDefaultValue( pattern );
+						if ( workingPattern != null ){
+							System.out.println("pattern: "+workingPattern);
+							newQuery.setDefaultValue( workingPattern );
 							orQuerys.add( newQuery );
 						}
 						else if ( i < patterns.length ) {
+							System.out.println("pattern null: ");
 							i++;
-							pattern = patterns[ i ];
-							newQuery.setDefaultValue( pattern );
+							workingPattern = patterns[ i ];
+							System.out.println("new pattern: "+workingPattern);
+							newQuery.setDefaultValue( workingPattern );
 							orQuerys.add( newQuery );
 						}
 						/*if OR was last keyword, ignore */												
-						break;	
+						break;
 				} 
 			}
 	}
 	
-	private short determineSearchType( String pattern ) {
-		if ( pattern.charAt( 0 ) == '+' ){
+	private short determineSearchType() {
+		if ( workingPattern.charAt( 0 ) == '+' ){
 			/* strip first caracter: */
-			pattern = pattern.substring( 1 );			
+			workingPattern = workingPattern.substring( 1 );			
 			return AND;			
 		}			
-		else if ( pattern.charAt( 0 ) == '-' ){
+		else if ( workingPattern.charAt( 0 ) == '-' ){
 			/* strip first caracter: */
-			pattern = pattern.substring( 1 );
+			workingPattern = workingPattern.substring( 1 );
 			return ANDNOT;			
 		}
-		else if ( pattern.equals( "OR" ) ){
+		else if ( workingPattern.equals( "OR" ) ){
 			/* set pattern to "null", take this as sign to use the following pattern */
-			pattern = null;
+			workingPattern = null;
+			System.out.println("OR-query identified");
 			return OR;			
 		}
-		else if ( pattern.equals( "AND" ) ){
+		else if ( workingPattern.equals( "AND" ) ){
 			/* set pattern to "null", take this as sign to use the following pattern */
-			pattern = null;
+			workingPattern = null;
 			return AND;			
 		}
-		else if ( pattern.equals( "ANDNOT" ) ){
+		else if ( workingPattern.equals( "ANDNOT" ) ){
 			/* set pattern to "null", take this as sign to use the following pattern */
-			pattern = null;
+			workingPattern = null;
 			return ANDNOT;			
 		}							
 		else return AND;
@@ -412,7 +418,7 @@ public class SearchQuery implements Sendable {
 		 * and we can directly set the searchQuery /searchOptions
 		 */
 		 Query baseQuery = new Query();
-		 baseQuery.setNode( EnumQuery.AND );
+		 baseQuery.setNode( EnumQuery.OR );
 		 
 		 /*process OR-Entrys*/
 		 if ( orQuerys.size() > 0 ) {
@@ -556,6 +562,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.28  2003/09/25 16:14:40  dek
+bugfix, now it should work more naturally
+
 Revision 1.27  2003/09/25 15:51:45  dek
 changed search-behaviour (AND is default)
 explanation:
