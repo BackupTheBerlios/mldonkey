@@ -1489,7 +1489,26 @@ echo "$as_me: error: **** Could not find the compiler gcj needed for this softwa
    { (exit 1); exit 1; }; }
 fi
 GCJ_VERSION=`$ac_cv_path_GCJ -dumpversion`
-#TODO: add a check, that looks if compiler is recent enough
+#check for right version-number
+oldIFS="$IFS"
+IFS="."
+set version_dummy $GCJ_VERSION
+IFS="$oldIFS"
+GCJ_MAJOR=$2
+GCJ_MINOR=$3
+if test $GCJ_MAJOR -ge 3; then
+	if  test $GCJ_MINOR -ge 3; then
+	echo using gcj version $GCJ_MAJOR.$GCJ_MINOR
+	else
+	{ { echo "$as_me:$LINENO: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***" >&5
+echo "$as_me: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***" >&2;}
+   { (exit 1); exit 1; }; }
+	fi
+else
+{ { echo "$as_me:$LINENO: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***" >&5
+echo "$as_me: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***" >&2;}
+   { (exit 1); exit 1; }; }
+fi
 
 # Extract the first word of "find", so it can be a program name with args.
 set dummy find; ac_word=$2

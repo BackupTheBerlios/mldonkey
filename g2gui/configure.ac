@@ -43,7 +43,22 @@ if test -z $ac_cv_path_GCJ; then
    AC_MSG_ERROR([**** Could not find the compiler gcj needed for this software! ****])
 fi
 GCJ_VERSION=`$ac_cv_path_GCJ -dumpversion`
-#TODO: add a check, that looks if compiler is recent enough
+#check for right version-number
+oldIFS="$IFS"
+IFS="."
+set version_dummy $GCJ_VERSION
+IFS="$oldIFS"
+GCJ_MAJOR=$2
+GCJ_MINOR=$3
+if test $GCJ_MAJOR -ge 3; then
+	if  test $GCJ_MINOR -ge 3; then
+	echo using gcj version $GCJ_MAJOR.$GCJ_MINOR
+	else
+	AC_MSG_ERROR([**** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***])
+	fi
+else
+AC_MSG_ERROR([**** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***])
+fi
 
 AC_PATH_PROG([FIND],[find])
 if test -z $ac_cv_path_FIND; then
