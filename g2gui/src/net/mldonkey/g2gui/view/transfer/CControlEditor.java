@@ -10,8 +10,6 @@
  *******************************************************************************/
 package net.mldonkey.g2gui.view.transfer;
 
-//These are included (CTableTreeEditor/CControlEditor) to get around an NPE until it is fixed in SWT.
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -221,7 +219,10 @@ void resize () {
 	  // resizing the column takes the focus away
 	  // before we get here
 	editor.setBounds (computeBounds ());
-	if (hadFocus) editor.setFocus ();
+	if (hadFocus) {
+		if (editor == null || editor.isDisposed()) return;
+		editor.setFocus ();
+	}
 }
 void scroll (Event e) {
 	if (editor == null || editor.isDisposed()) return;
@@ -246,6 +247,7 @@ public void setEditor (Control editor) {
 	
 	this.editor = editor;
 	resize();
+	if (editor == null || editor.isDisposed()) return;
 	editor.setVisible(true);
 }
 }
