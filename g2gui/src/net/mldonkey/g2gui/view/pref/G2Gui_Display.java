@@ -68,25 +68,16 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 	 */
 	private void setHorizontalSpan( FieldEditor editor ) {
 		if ( editor instanceof ExtendedColorFieldEditor ) {
-			( 
-				( GridData ) ( ( ExtendedColorFieldEditor ) editor )
-					.getChangeControl( parent )
-					.getLayoutData() )
-					.horizontalSpan =
-				columns - 1;
-			( 
-				( GridData ) ( ( ExtendedColorFieldEditor ) editor )
-					.getChangeControl( parent )
-					.getLayoutData() )
-					.horizontalAlignment =
-				GridData.FILL;
+			(( GridData )
+				( ( ExtendedColorFieldEditor ) editor ).getChangeControl( parent ).getLayoutData() 
+						).horizontalSpan = columns - 1;
+			( ( GridData )
+				( ( ExtendedColorFieldEditor ) editor ).getChangeControl( parent ).getLayoutData()
+						).horizontalAlignment = GridData.FILL;
 		} else {
-			( 
-				( GridData ) ( ( StringFieldEditor ) editor )
-					.getTextControl( parent )
-					.getLayoutData() )
-					.horizontalSpan =
-				columns - 1;
+			( ( GridData ) 
+				( ( StringFieldEditor ) editor ).getTextControl( parent ).getLayoutData() 
+						 ).horizontalSpan = columns - 1;
 		}
 		( ( GridLayout ) parent.getLayout() ).numColumns = columns;
 	}
@@ -116,21 +107,19 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected void createFieldEditors() {
+		boolean advanced = getPreferenceStore().getBoolean( "advancedMode" );
 		parent = getFieldEditorParent();
-		setupEditor( 
-			new ExtendedColorFieldEditor( "consoleBackground", "Console window background colour", parent ) );
-				
-		setupEditor( new ExtendedColorFieldEditor( "consoleForeground", "Console window foreground colour",parent ) );
-				
-		setupEditor( new ExtendedColorFieldEditor( "consoleHighlight", "Console window highlight colour", parent ) );
-				
-		setupEditor( new ExtendedColorFieldEditor( "consoleInputBackground", "Console input background colour", parent ) );
-				
-		setupEditor( new ExtendedColorFieldEditor( "consoleInputForeground", "Console input foreground colour", parent ) );
-				
-		setupEditor( new ExtendedFontFieldEditor2( "consoleFontData", "Console window font", "Sample", parent ) );
-				
-		setupEditor( new BooleanFieldEditor( "displayAllServers", "Show only connected servers", parent ) );
+		if ( advanced ){		
+			setupEditor( new ExtendedColorFieldEditor( "consoleBackground", "Console window background colour", parent ) );
+			setupEditor( new ExtendedColorFieldEditor( "consoleForeground", "Console window foreground colour",parent ) );
+			setupEditor( new ExtendedColorFieldEditor( "consoleHighlight", "Console window highlight colour", parent ) );
+			setupEditor( new ExtendedColorFieldEditor( "consoleInputBackground", "Console input background colour", parent ) );
+			setupEditor( new ExtendedColorFieldEditor( "consoleInputForeground", "Console input foreground colour", parent ) );
+			setupEditor( new ExtendedFontFieldEditor2( "consoleFontData", "Console window font", "Sample", parent ) );
+		}	
+		
+		if ( advanced )
+			setupEditor( new BooleanFieldEditor( "displayAllServers", "Show only connected servers", parent ) );
 				
 		setupEditor( new BooleanFieldEditor( "displayHeaderBar", "Display header bar", parent ) );
 				
@@ -151,6 +140,9 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.14  2003/08/19 13:16:10  dek
+advanced-Mode introduced
+
 Revision 1.13  2003/08/18 14:51:58  dek
 some more jface-work
 
