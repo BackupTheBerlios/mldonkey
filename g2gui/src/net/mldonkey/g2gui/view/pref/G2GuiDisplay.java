@@ -29,12 +29,10 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiDisplay.java,v 1.3 2003/10/12 16:27:01 lemmster Exp $
+ * @version $Id: G2GuiDisplay.java,v 1.4 2003/10/15 22:06:13 zet Exp $
  */
 public class G2GuiDisplay extends PreferencePage {
 	/**
-	 * DOCUMENT ME!
-	 * 
 	 * @param string The name of the OptionsPage
 	 * @param i Style: SWT.XXXX
 	 */
@@ -49,43 +47,6 @@ public class G2GuiDisplay extends PreferencePage {
 		Composite composite = getFieldEditorParent();
 		
 		setupEditor( 
-			new ExtendedColorFieldEditor( 
-				"consoleBackground",
-				G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_OBK" ),
-				composite ) );
-
-		setupEditor( 
-			new ExtendedColorFieldEditor( 
-				"consoleForeground",
-				G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_OFG" ),
-				composite ) );
-
-		setupEditor( 
-			new ExtendedColorFieldEditor( 
-				"consoleHighlight",
-				G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_HL" ),
-				composite ) );
-
-		setupEditor( 
-			new ExtendedColorFieldEditor( 
-				"consoleInputBackground",
-				G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_IBK" ),
-				composite ) );
-
-		setupEditor( 
-			new ExtendedColorFieldEditor( 
-				"consoleInputForeground",
-				G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_IFG" ),
-				composite ) );
-
-		setupEditor( 
-			new ExtendedFontFieldEditor2( 
-				"consoleFontData",
-				G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_FONT" ),
-				G2GuiResources.getString( "PREF_DISPLAY_SAMPLE" ),
-				composite ) );
-				
-		setupEditor( 
 			new BooleanFieldEditor( 
 				"flatInterface",
 				G2GuiResources.getString( "PREF_DISPLAY_FLAT_INTERFACE" ),
@@ -95,12 +56,14 @@ public class G2GuiDisplay extends PreferencePage {
 			new BooleanFieldEditor( 
 				"useGradient",
 				G2GuiResources.getString( "PREF_DISPLAY_USE_GRADIENT" ),
-				composite ) );			
-				
+				composite ) );
 	}
 }
 /*
 $Log: G2GuiDisplay.java,v $
+Revision 1.4  2003/10/15 22:06:13  zet
+Split Console/Downloads pref pages.
+
 Revision 1.3  2003/10/12 16:27:01  lemmster
 minor changes
 
@@ -151,7 +114,7 @@ Revision 1.17  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.16  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.15  2003/08/19 22:02:15  zet
 localise

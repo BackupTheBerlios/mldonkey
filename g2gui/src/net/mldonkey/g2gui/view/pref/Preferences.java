@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.36 2003/10/01 20:56:27 lemmster Exp $
+ * @version $Id: Preferences.java,v 1.37 2003/10/15 22:06:13 zet Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -66,9 +66,20 @@ public class Preferences extends PreferenceManager {
 
 		/* display page */
         if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-            PreferencePage g2guiDisplay = new G2GuiDisplay( "Display", FieldEditorPreferencePage.GRID );
-            g2guiDisplay.setPreferenceStore( preferenceStore );
-            g2GuiRootNode.add( new PreferenceNode( "Display", g2guiDisplay ) );
+            PreferencePage preferencePage = new G2GuiDisplay( "Display", FieldEditorPreferencePage.GRID );
+            preferencePage.setPreferenceStore( preferenceStore );
+		   
+		    PreferenceNode g2guiDisplayNode = new PreferenceNode( "Display", preferencePage );
+		
+				preferencePage = new G2GuiDisplayConsole( "Console", FieldEditorPreferencePage.GRID );
+				preferencePage.setPreferenceStore( preferenceStore );
+				g2guiDisplayNode.add( new PreferenceNode( "Console" , preferencePage ) );
+          
+       			preferencePage = new G2GuiDisplayDownloads( "Downloads", FieldEditorPreferencePage.GRID );
+        		preferencePage.setPreferenceStore( preferenceStore );
+         		g2guiDisplayNode.add( new PreferenceNode( "Downloads", preferencePage ) );
+            
+			g2GuiRootNode.add( g2guiDisplayNode );
         }
         
         /* news page */
@@ -246,6 +257,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.37  2003/10/15 22:06:13  zet
+Split Console/Downloads pref pages.
+
 Revision 1.36  2003/10/01 20:56:27  lemmster
 add class hierarchy
 
@@ -291,7 +305,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
