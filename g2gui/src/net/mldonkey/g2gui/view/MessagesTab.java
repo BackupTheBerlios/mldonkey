@@ -65,14 +65,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.25 2003/08/30 23:38:14 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.26 2003/09/01 17:04:20 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
 
@@ -263,9 +262,8 @@ public class MessagesTab extends GuiTab implements Runnable {
 	public void update(final Observable arg0, final Object arg1) {
 		if (arg1 instanceof ClientMessage
 			|| arg0 instanceof ClientInfoIntMap) {
-			Shell shell = this.mainWindow.getShell();
-			if(!shell.isDisposed() && shell !=null && shell.getDisplay()!=null) {
-				shell.getDisplay().asyncExec(new Runnable() {
+			if(!cTabFolder.isDisposed()) {
+				cTabFolder.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						runUpdate(arg0, arg1);
 					}
@@ -463,6 +461,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.26  2003/09/01 17:04:20  zet
+*** empty log message ***
+
 Revision 1.25  2003/08/30 23:38:14  zet
 show selected tabtext in tab header
 
