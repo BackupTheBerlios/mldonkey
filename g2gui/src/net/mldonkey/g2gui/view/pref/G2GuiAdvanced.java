@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.15 2004/03/25 18:30:37 psy Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.16 2004/04/04 15:21:59 psy Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -61,23 +61,18 @@ public class G2GuiAdvanced extends PreferencePage {
 
 		Composite composite = getFieldEditorParent();
 		
-		if ( SWT.getPlatform().equals("win32") ) {
-			setupEditor( 
-				new BooleanFieldEditor( 
-					"closeToTray",
-					G2GuiResources.getString( "PREF_DISPLAY_CLOSE_TO_TRAY" ),
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"closeToTray",
+				G2GuiResources.getString( "PREF_DISPLAY_CLOSE_TO_TRAY" ),
+				composite ) );
+
+		setupEditor( 
+			new BooleanFieldEditor( 
+					"minimizeToTray",
+					G2GuiResources.getString( "PREF_DISPLAY_MIN_TO_TRAY" ),
 					composite ) );
-		
-		}	
-		if ( SWT.getPlatform().equals("win32") ) {
-			setupEditor( 
-				new BooleanFieldEditor( 
-						"minimizeToTray",
-						G2GuiResources.getString( "PREF_DISPLAY_MIN_TO_TRAY" ),
-						composite ) );
-			
-		}
-		
+	
 		setupEditor( 
 			new BooleanFieldEditor( 
 				"pollUpStats",
@@ -154,6 +149,9 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.16  2004/04/04 15:21:59  psy
+make systray-options available under linux
+
 Revision 1.15  2004/03/25 18:30:37  psy
 introduced http-preview
 
