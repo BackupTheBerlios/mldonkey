@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.22 2003/09/11 11:01:38 lemmster Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.23 2003/10/05 00:53:55 zet Exp $ 
  *
  */
 public class MessageBuffer {
@@ -115,7 +115,7 @@ public class MessageBuffer {
 	public int readSignedInt32() {
 		int result = 0;
 		for ( int i = 0; i < 4; i++ ) 
-			result |= ( ( int ) readByte() << ( i * 8 ) );
+			result |= ( ( int ) (readByte() & 0xFF) << ( i * 8 ) );
 		return result;
 	}
 	
@@ -253,6 +253,10 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.23  2003/10/05 00:53:55  zet
+read priority #s properly 
+requires latest core dev version (fixed bug in guiEncoding)
+
 Revision 1.22  2003/09/11 11:01:38  lemmster
 fixed ip addi order [bug #883]
 
@@ -266,7 +270,7 @@ Revision 1.19  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.17  2003/08/10 23:20:26  zet
 signed ints
