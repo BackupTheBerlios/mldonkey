@@ -78,7 +78,7 @@ import org.eclipse.swt.custom.CLabel;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.15 2003/08/11 11:27:11 lemmstercvs01 Exp $ 
+ * @version $Id: SearchResult.java,v 1.16 2003/08/11 12:16:10 dek Exp $ 
  *
  */
 //TODO add image handle, fake search, real links depending on network								   
@@ -153,23 +153,33 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	public void run() {
 		/* if the tab is already disposed, dont update */
 		if ( cTabItem.isDisposed() ) return;
-
+		
+		List list = ( List ) results.get( searchId );
 		if ( table == null ) {
 			/* remove the old label "searching..." */
 			label.dispose();
 			this.createTable();
-		
-			/* fill the table with content */
-			table.setInput(  this.results.get( searchId ) );
+			
+			
+			/* fill the table with content */			
+			try {
+				table.add( list.toArray() );				
+			} catch (RuntimeException e) {
+				System.out.println("search-result choking on too fast input: trying again");
+			}			
 			//this.modifyItems();
 			this.setColumnWidth();
 		} 
 		else {
 			/* has our result changed */
-			int temp = ( ( List ) results.get( searchId ) ).size();
-			if ( table.getTable().getItemCount() != temp ) {
-				table.refresh();
-			}
+				try {
+					table.add( list.toArray() );
+				} catch (RuntimeException e) {
+					System.out.println("search-result choking on too fast input: trying again");
+				}
+			/* clearing the list */
+			list.clear();
+				
 		}
 		/* are we active? set the statusline text */
 		if ( cTabFolder.getSelection() == cTabItem ) {
@@ -277,6 +287,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		
 		/* set the this table as the new CTabItem Control */
 		cTabItem.setControl( table.getTable() );
+		
 	}
 	
 	/**
@@ -639,6 +650,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.16  2003/08/11 12:16:10  dek
+hopefully solved crash at fast input
+
 Revision 1.15  2003/08/11 11:27:11  lemmstercvs01
 bugfix for closing searchresults
 
