@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.77 2004/03/26 18:11:03 dek Exp $
+ * @version $Id: G2Gui.java,v 1.78 2004/03/29 00:06:19 psy Exp $
  *
  */
 public class G2Gui {
@@ -351,6 +351,7 @@ public class G2Gui {
     		System.out.println("Connection fine, sending links!");
     		new DownloadSubmit( aLink, core, submitHost, submitPort );
     	}
+    	System.out.println("Shutting down.");
     }
 
     /**
@@ -658,6 +659,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.78  2004/03/29 00:06:19  psy
+cosmetics
+
 Revision 1.77  2004/03/26 18:11:03  dek
 some more profiling and mem-saving option (hopefully)  introduced
 
