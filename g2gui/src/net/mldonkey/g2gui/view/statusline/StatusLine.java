@@ -24,13 +24,14 @@ package net.mldonkey.g2gui.view.statusline;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-
 import org.eclipse.swt.widgets.Label;
 
 /**
@@ -39,10 +40,11 @@ import org.eclipse.swt.widgets.Label;
  * It has to be placed in a GridLayout, since it applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.6 2003/06/28 09:39:30 lemmstercvs01 Exp $ 
+ * @version $Id: StatusLine.java,v 1.7 2003/06/28 09:50:12 lemmstercvs01 Exp $ 
  *
  */
 public class StatusLine {
+	private static ResourceBundle res = ResourceBundle.getBundle("g2gui");
 	private CoreCommunication mldonkey;
 	private Composite statusline;
 	private List fields;
@@ -61,8 +63,8 @@ public class StatusLine {
 			
 		addField( new NetworkItem( this,mldonkey ) );
 		addField( new SpeedItem( this,mldonkey ) );
-		addField( new SimpleStatusLineItem( " other Information", SWT.NONE ) );
-		addField( new SimpleStatusLineItem( ".....", SWT.NONE ) );
+		addField( new SimpleStatusLineItem( res.getString( "SL_other" ), SWT.NONE ) );
+		addField( new SimpleStatusLineItem( res.getString( "SL_other2" ), SWT.NONE ) );
 	}
 
 	/**
@@ -106,14 +108,17 @@ public class StatusLine {
 	 * @param index which item to update
 	 * @param tooltip The tooltip to show
 	 */
-	protected void updateTooltip(int index, String tooltip) {
+	protected void updateTooltip( int index, String tooltip ) {
 		if ( !statusline.isDisposed() )
-			((Label)fields.get(index)).setToolTipText(tooltip);
+			( ( Label ) fields.get( index ) ).setToolTipText( tooltip );
 	}
 }
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.7  2003/06/28 09:50:12  lemmstercvs01
+ResourceBundle added
+
 Revision 1.6  2003/06/28 09:39:30  lemmstercvs01
 added isDisposed() check
 

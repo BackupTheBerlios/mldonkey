@@ -29,7 +29,7 @@ import org.eclipse.swt.SWT;
  * the statusline.
  *
  * @author $user$
- * @version $Id: StatusLineItem.java,v 1.2 2003/06/26 21:11:10 dek Exp $ 
+ * @version $Id: StatusLineItem.java,v 1.3 2003/06/28 09:50:12 lemmstercvs01 Exp $ 
  *
  */
 abstract class StatusLineItem {
@@ -46,13 +46,13 @@ abstract class StatusLineItem {
 	}
 
 	/**
-		 * @param content what this Label should show
-		 * @param alignment how it is aligned (SWT.LEFT,SWT.CENTER,SWT.RIGHT)
-		 */
-		public StatusLineItem(String content, int alignment) {
+	 * @param content what this Label should show
+	 * @param alignment how it is aligned (SWT.LEFT,SWT.CENTER,SWT.RIGHT)
+	 */
+	public StatusLineItem(String content, int alignment) {
 		this.content = content;
 		this.alignment = alignment;			
-		}
+	}
 
 	/**
 	 * @return
@@ -91,11 +91,13 @@ abstract class StatusLineItem {
 		this.position = i;
 		
 	}
-
 }
 
 /*
 $Log: StatusLineItem.java,v $
+Revision 1.3  2003/06/28 09:50:12  lemmstercvs01
+ResourceBundle added
+
 Revision 1.2  2003/06/26 21:11:10  dek
 speed is shown
 
