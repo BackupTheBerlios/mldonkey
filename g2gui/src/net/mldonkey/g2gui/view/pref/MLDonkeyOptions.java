@@ -23,20 +23,23 @@
 package net.mldonkey.g2gui.view.pref;
 
 
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.enum.EnumTagType;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * MLDonkeyOptions
  *
  * @author $user$
- * @version $Id: MLDonkeyOptions.java,v 1.5 2003/07/09 09:16:05 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.6 2003/07/10 13:56:07 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends PreferencePage {
@@ -56,49 +59,58 @@ public class MLDonkeyOptions extends PreferencePage {
 	/** (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createContents( Composite parent ) {
+	protected Control createContents( Composite parent ) {		
 		Iterator it = options.keySet().iterator();
-		while ( it.hasNext() ) {
-			
+		while ( it.hasNext() ) {			
 		
 			OptionsInfo option = ( OptionsInfo ) options.get( it.next() );
 			String description = option.getDescription();
 			String optionName = option.getKey();
 			String value = option.getValue();
 			EnumTagType type = option.getOptionType();
-			if ( description.equals( "" ) ||  description == null )
-				description = optionName;
-			if (value.equals("false") || value.equals("true"))
-				type = EnumTagType.BOOL;
 			
-			if (type == null)
+			/*This is some handling for all the Options, that do _not_
+			 * have a detailed description of their type inside:
+			 */
+			if ( description.equals( "" ) ||  description == null )
+				description = optionName;				
+			if ( value.equals( "false" ) || value.equals( "true" ) )
+				type = EnumTagType.BOOL;			
+			if ( type == null )
 				type = EnumTagType.STRING;
 				
 			
 			/*First check the Option, what kind of option it is: string or boolean
 			 * to known, which widget to use*/	
-			 if ( type.equals( EnumTagType.STRING ) ) {			
-				ExtendedStringFieldEditor temp = new ExtendedStringFieldEditor(
-											optionName, 
-											description, 
-											 parent );
-				temp.setStringValue( option.getValue() );
-				temp.setToolTipText( option.getKey() );				
-				fields.put( option.getKey(), temp );
-			 }
-			else if ( type.equals( EnumTagType.BOOL ) ) {			
+			if ( type.equals( EnumTagType.BOOL ) ) {			
 				ExtendedBooleanFieldEditor temp = new ExtendedBooleanFieldEditor(
 											optionName, 
 											description, 
 											parent );
-				temp.setSelection( new Boolean( option.getValue() ).booleanValue() );
+				temp.setSelection( new Boolean( value ).booleanValue() );
 				temp.setToolTipText( optionName );				
 				fields.put( optionName, temp );
 			}
+			else  {			
+			   ExtendedStringFieldEditor temp = new ExtendedStringFieldEditor(
+										   optionName, 
+										   description, 
+										   parent );
+			   temp.setStringValue( value );
+			   temp.setToolTipText( optionName );				
+			   fields.put( optionName, temp );
+			}		
 			 
 			 
 		}
 		
+		if ( options.size() == 0 ) {
+			Label noOptions = new Label ( parent, SWT.NONE );
+			noOptions.setText( "please select a subentry from the list" );
+			this.noDefaultAndApplyButton();
+		}
+		
+		parent.layout();
 		this.initialized = true;
 		return null;
 	}
@@ -107,9 +119,33 @@ public class MLDonkeyOptions extends PreferencePage {
 	 */
 	public void addOption( OptionsInfo option ) {
 		this.options.put( option.getKey(), option );
-		/*if this option has no description, we set its name as description*/
+		
 
 	}
+	
+	
+	/** is called, when "Restore Defaults" Button is pressed.
+	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
+	 */
+	protected void performDefaults() {		
+		super.performDefaults();
+		Iterator it = fields.keySet().iterator();
+		/*iterate oer all fields, and restore default-value if option has changed*/
+		while ( it.hasNext() ) {
+			String optionName = ( String ) it.next();
+			OptionsInfo option = ( OptionsInfo ) options.get( optionName );
+			IValueEditor field = ( IValueEditor ) fields.get( optionName );
+			/*has the value changed??*/
+			if ( field.hasChanged() ) {
+				/*Ok, option has changed, reset to default*/					
+				field.restoreDefault();
+				field.resetChangedStatus();
+			}
+								
+		}
+		
+	}
+
 	
 	/**
 	 * Is called, when the OKbutton of the Tab is pressed
@@ -142,6 +178,9 @@ public class MLDonkeyOptions extends PreferencePage {
 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.6  2003/07/10 13:56:07  dek
+empty-pages have no Default/apply-buttons anymore
+
 Revision 1.5  2003/07/09 09:16:05  dek
 general Options
 
