@@ -86,7 +86,7 @@ import java.util.List;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.35 2003/12/04 08:47:28 lemmy Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.36 2004/03/25 14:41:13 psy Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -281,14 +281,19 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         }
 
         if ((selectedFile != null) && (selectedFile.getDownloaded() > 0)) {
-            OptionsInfo option = (OptionsInfo) gView.getCore().getOptionsInfoMap().get("previewer");
-
+        	/* old preview method */
+        	OptionsInfo option = (OptionsInfo) gView.getCore().getOptionsInfoMap().get("previewer");
             if (option != null) {
                 String previewer = (String) option.getValue();
-
                 if (!previewer.equals(""))
                     menuManager.add(new PreviewAction());
             }
+            
+            /* new http-preview method */
+            if (!false) {
+            	menuManager.add(new NetPreviewAction());
+            }
+        
         }
 
         if ((selectedFile != null) && advancedMode) {
@@ -390,6 +395,21 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         }
     }
 
+    /**
+     * PreviewAction
+     */
+     private class NetPreviewAction extends Action {
+         public NetPreviewAction() {
+             super(G2GuiResources.getString("TT_DOWNLOAD_MENU_NETPREVIEW"));
+             setImageDescriptor(G2GuiResources.getImageDescriptor("preview"));
+         }
+
+         public void run() {
+             for (int i = 0; i < selectedFiles.size(); i++)
+                 ((FileInfo) selectedFiles.get(i)).preview();
+         }
+     }
+    
     /**
      * FileDetailAction
      */
@@ -506,9 +526,15 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         public void run() {
             MessageBox reallyCancel = new MessageBox(gView.getShell(),
                     SWT.YES | SWT.NO | SWT.ICON_QUESTION);
-
+            
+            String cancelFiles = "";
+            for (int i = 0; i < selectedFiles.size(); i++) {
+            	cancelFiles += ( (FileInfo) selectedFiles.get(i) ).getName() + "\n\n";
+            }
+            
             reallyCancel.setMessage(G2GuiResources.getString("TT_REALLY_CANCEL") +
-                ((selectedFiles.size() > 1) ? (" (" + selectedFiles.size() + " selected)") : ""));
+                ((selectedFiles.size() > 1) ? (" (" + selectedFiles.size() + " selected)") : "") + 
+				"\n\n" + cancelFiles);
 
             int answer = reallyCancel.open();
 
@@ -660,6 +686,10 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.36  2004/03/25 14:41:13  psy
+Added a list of files to the cancel-dialog
+Started to add the http-preview stuff...
+
 Revision 1.35  2003/12/04 08:47:28  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -830,7 +860,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.12  2003/08/22 14:30:45  lemmy
 verify chunks added
