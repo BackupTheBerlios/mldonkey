@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.23 2003/10/27 00:17:26 zet Exp $ 
+ * @version $Id: About.java,v 1.24 2003/11/08 15:16:31 vnc Exp $ 
  *
  */
 public class About extends Dialog {
@@ -74,8 +74,8 @@ public class About extends Dialog {
 	 * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
 	 */
 	protected void configureShell(Shell newShell) {
-	    super.configureShell( newShell );
-	    newShell.setText( "G2gui " + VersionInfo.getVersion() );
+		super.configureShell( newShell );
+		newShell.setText( "G2gui " + VersionInfo.getVersion() );
 	}
 	/**
 	 * @param parent the Control on which the contents should be created
@@ -129,7 +129,7 @@ public class About extends Dialog {
 		G2GuiResources.getString( "ABOUT_DEVEL" );
 		
 		String develHeader = G2GuiResources.getString( "ABOUT_DEVEL" ) + "\n";
-		String devels = "Dek, lemmy, VNC and z\n\n";
+		String devels = "Dek, lemmy, vnc and z\n\n";
 
 		String contributorHeader = G2GuiResources.getString( "ABOUT_CONTRIB" ) + "\n";
 		String contributors = "housetier, mitch, and vaste\n\n";
@@ -139,9 +139,7 @@ public class About extends Dialog {
 		String thank = 
 		  "  * The mldonkey core developers! (GPL)\n"
 		+ "  * The KDE project for icons (GPL)\n"
-		+ "  * The creator of the Noia KDE icon set for his/her icons (GPL)\n"
-		+ "  * The creator of the lush KDE icon set for his/her icons (GPL)\n"
-		+ "  * The creator of the Nuvola KDE icon set for his/her icons (GPL)\n"
+		+ "  * The creators of Noia, Lush and Nuvola KDE icon sets (GPL)\n"
 		+ "  * The emule-plus project for icons (CCL)\n"
 		+ "  * The Gnu/Trove and Regex project (GPL)\n"
 		+ "  * The whole Eclipse and SWT team (CPL)\n\n";
@@ -149,8 +147,8 @@ public class About extends Dialog {
 		
 		String moreThanksHeader = G2GuiResources.getString( "ABOUT_MORE_THANK" ) + "\n";
 		String moreThanks = 
-		  "  * The dude who made the java ssh2 for use in eclipse\n"
-		+ "  * The dude who invented Wikis and the creator of phpWiki\n"
+		  "  * JCraft's extssh2 for use in eclipse\n"
+		+ "  * The creators of phpWiki\n"
 		+ "  * The Freenode IRC network";		
 		
 		
@@ -257,7 +255,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.23 2003/10/27 00:17:26 zet Exp $ 
+	 * @version $Id: About.java,v 1.24 2003/11/08 15:16:31 vnc Exp $ 
 	 *
 	 */
 	public class Link {
@@ -309,6 +307,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.24  2003/11/08 15:16:31  vnc
+little credits cleanup
+
 Revision 1.23  2003/10/27 00:17:26  zet
 set titlebar text
 
