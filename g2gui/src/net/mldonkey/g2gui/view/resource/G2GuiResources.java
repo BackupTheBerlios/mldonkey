@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.47 2003/11/04 16:54:03 vnc Exp $
+ * @version $Id: G2GuiResources.java,v 1.48 2003/11/04 17:03:32 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -113,23 +113,23 @@ public class G2GuiResources {
      */
     public static Image getNetworkImage( EnumNetwork networkType ) {
         if ( networkType == EnumNetwork.DONKEY ) {
-            return getImage( "DKConnectedWhite" );
+            return getImage( "DKConnected" );
         } else if ( networkType == EnumNetwork.FT ) {
-            return getImage( "FTConnectedWhite" );
+            return getImage( "FTConnected" );
         } else if ( networkType == EnumNetwork.GNUT ) {
-            return getImage( "G1ConnectedWhite" );
+            return getImage( "G1Connected" );
         } else if ( networkType == EnumNetwork.GNUT2 ) {
-            return getImage( "G2ConnectedWhite" );
+            return getImage( "G2Connected" );
         } else if ( networkType == EnumNetwork.SOULSEEK ) {
-            return getImage( "SSConnectedWhite" );
+            return getImage( "SSConnected" );
         } else if ( networkType == EnumNetwork.DC ) {
-            return getImage( "DCConnectedWhite" );
+            return getImage( "DCConnected" );
         } else if ( networkType == EnumNetwork.BT ) {
-            return getImage( "BTConnectedWhite" );
+            return getImage( "BTConnected" );
         } else if ( networkType == EnumNetwork.MULTINET ) {
-            return getImage( "MULTIConnectedWhite" );
+            return getImage( "MULTIConnected" );
         } else {
-            return getImage( "UnknownConnectedWhite" );
+            return getImage( "UnknownConnected" );
         }
     }
 
@@ -299,20 +299,17 @@ public class G2GuiResources {
         String[] fileNames = { "directconnect", "edonkey2000", "gnutella", "gnutella2", "kazaa", "soulseek", "opennap", "unknown" };
 
         for ( int i = 0; i < shortNames.length; i++ ) {
-            reg.put( shortNames[ i ] + "Connected", createNTrans( fileNames[ i ] + "_connected.gif" ) );
-            reg.put( shortNames[ i ] + "Disconnected", createNTrans( fileNames[ i ] + "_disconnected.gif" ) );
-            reg.put( shortNames[ i ] + "Disabled", createNTrans( fileNames[ i ] + "_disabled.gif" ) );
-            reg.put( shortNames[ i ] + "BadConnected", createNTrans( fileNames[ i ] + "_badconnected.gif" ) );
-            reg.put( shortNames[ i ] + "ConnectedWhite", createNTrans( fileNames[ i ] + "_connected.gif", white ) );
+            reg.put( shortNames[ i ] + "Connected", createRawNImage( fileNames[ i ] + "_connected.gif" ) );
+            reg.put( shortNames[ i ] + "Disconnected", createRawNImage( fileNames[ i ] + "_disconnected.gif" ) );
+            reg.put( shortNames[ i ] + "Disabled", createRawNImage( fileNames[ i ] + "_disabled.gif" ) );
+            reg.put( shortNames[ i ] + "BadConnected", createRawNImage( fileNames[ i ] + "_badconnected.gif" ) );
         }
 
         /* some icons for networks without all states */
-        reg.put( "BTConnected", createNTrans( "bt_connected.gif" ) );
-        reg.put( "BTConnectedWhite", createNTrans( "bt_connected.gif", white ) );
-        reg.put( "BTDisabled", createNTrans( "bt_disabled.gif" ) );
-        reg.put( "MULTIConnected", createNTrans( "multinet_connected.gif" ) );
-        reg.put( "MULTIConnectedWhite", createNTrans( "multinet_connected.gif", white ) );
-        reg.put( "MULTIDisabled", createNTrans( "multinet_disabled.gif" ) );
+        reg.put( "BTConnected", createRawNImage( "bt_connected.gif" ) );
+        reg.put( "BTDisabled", createRawNImage( "bt_disabled.gif" ) );
+        reg.put( "MULTIConnected", createRawNImage( "multinet_connected.gif" ) );
+        reg.put( "MULTIDisabled", createRawNImage( "multinet_disabled.gif" ) );
     }
 
     /**
@@ -407,8 +404,8 @@ public class G2GuiResources {
     * @param filename
     * @return Image
     */
-    private static Image createNTrans( String filename ) {
-        return createTrans( networksDirectory + filename );
+    private static ImageDescriptor createRawNImage( String filename ) {
+        return createRawImage( networksDirectory + filename );
     }
 
     /**
@@ -432,6 +429,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.48  2003/11/04 17:03:32  zet
+update for trans
+
 Revision 1.47  2003/11/04 16:54:03  vnc
 changed network mini-icons from png to gif
 
@@ -554,7 +554,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: vnc $
+replace $user$ with $Author: zet $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
