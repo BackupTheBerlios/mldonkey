@@ -31,7 +31,7 @@ import java.net.Socket;
  * Message
  *
  * @author ${user}
- * @version $Id: Message.java,v 1.2 2003/06/09 23:02:49 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.3 2003/06/10 15:05:47 lemmstercvs01 Exp $ 
  *
  */
 public class Message {
@@ -105,6 +105,8 @@ public class Message {
 	 */
 	private byte[] content;
 	
+	private Message message;
+
 	/**
 	 * Generates a new message object
 	 * @param opCode the opcode for the message
@@ -357,50 +359,48 @@ public class Message {
 
 		for ( int i = 0; i < content.length; i++ ) {
 			if ( content[ i ] instanceof Byte ) {
-				Byte temp = new Byte( content[ i ].toString());
-				buffer[ buffer_walker++ ] = temp.byteValue();
+				byte temp = ( ( Byte ) content[ i ] ).byteValue();
+				buffer[ buffer_walker++ ] = temp;
 			}
 			if ( content[ i ] instanceof Short ) {
 				//converting Object to short (is there some nicer way?)				
-				byte[] helper = toBytes( new Short( content[ i ].toString() ) );
-				for ( int j = 0; j < helper.length; j++ ) {
-					buffer[ buffer_walker++ ] = helper[ j ];
-				}
+				byte[] helper = toBytes( ( ( Short ) content[ i ] ).shortValue() );
+				System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
+				buffer_walker += helper.length;
 			} 
 			else if ( content[ i ] instanceof Integer ) {
 				//converting Object to Int (is there some nicer way?)				
-				byte[] helper = toBytes( new Integer( content[ i ].toString() ) );
-				for ( int j = 0; j < helper.length; j++ ) {
-					buffer[ buffer_walker++ ] = helper[ j ];
-				}
+				byte[] helper = toBytes( ( ( Integer ) content[ i ] ).intValue() );
+				System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
+				buffer_walker += helper.length;
 			}
 			else if ( content[ i ] instanceof Long ) {
 				//converting Object to Int (is there some nicer way?)				
-				Long temp = new Long( content[ i ].toString() );
-				byte[] helper = toBytes( new Long( content[ i ].toString() ) );
-				for ( int j = 0; j < helper.length; j++ ) {
-					buffer[ buffer_walker++ ] = helper[ j ];
-				} 
+				byte[] helper = toBytes( ( ( Long ) content[ i ] ).longValue() );
+				System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
+				buffer_walker += helper.length;
 			}
 			else if ( content[ i ] instanceof String ) {
 				String temp = content[ i ].toString();
+
 				byte[] prefix = toBytes( ( short ) temp.length() );
-				byte[] helper = temp.getBytes();
 				buffer[ buffer_walker++ ] = prefix[ 0 ];
 				buffer[ buffer_walker++ ] = prefix[ 1 ];
-				for ( int j = 0; j < helper.length; j++ ) {
-					buffer[ buffer_walker++ ] = helper[ j ];
-				}
+
+				byte[] helper = temp.getBytes();
+				System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
+				buffer_walker += helper.length;
 			}
 			else if ( content[ i ].getClass().isArray() ) {
 				Object[] received;
 				/*
 				 * Hey, we've got a list, let's get to work
-				 * First of all, we type in List-header (number if _ROWS_ in the List)
+				 * First of all, we type in List-header (number of _ROWS_ in the List)
 				 */
 				if ( !list_head_written ) {
-					buffer[ buffer_walker++ ] = toBytes( listcount )[ 0 ];
-					buffer[ buffer_walker++ ] = toBytes( listcount )[ 1 ];
+					byte[] temp = toBytes( listcount );
+					System.arraycopy( temp, 0, buffer, buffer_walker, temp.length );
+					buffer_walker += temp.length;
 					list_head_written = true;
 				}
 				/*
@@ -410,39 +410,33 @@ public class Message {
 					received = ( Object[] ) content[ i ];
 					for ( int j = 0; j < received.length; j++ ) {
 						if ( received[ j ] instanceof Byte ) {
-							Byte temp = new Byte( received[ j ].toString() );
-							buffer[ buffer_walker++ ] = temp.byteValue();
+							buffer[ buffer_walker++ ] = ( ( Byte ) received[ j ] ).byteValue();
 						}
 						else if ( received[ j ] instanceof Short ) {
-							Short temp = new Short( received[ j ].toString() );
-							byte[] helper = toBytes( temp.shortValue() );
-							for ( int k = 0; k < helper.length; k++ ) {
-								buffer[ buffer_walker++ ] = helper[ k ];
-							}
+							byte[] helper = toBytes( ((Short)received[j]).shortValue() );
+							System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
+							buffer_walker += helper.length;
 						}
 						else if ( received[ j ] instanceof Integer ) {
-							Integer temp = new Integer( received[ j ].toString() );
-							byte[] helper = toBytes( temp.intValue() );
-							for ( int k = 0; k < helper.length; k++ ) {
-								buffer[ buffer_walker++ ] = helper[ k ];
-							}
+							byte[] helper = toBytes( ((Integer)received[j]).intValue() );
+							System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
+							buffer_walker += helper.length;
 						}
 						else if ( received[ j ] instanceof Long ) {
-							Long temp = new Long( received[j].toString() );
-							byte[] helper = toBytes( temp.longValue() );
-							for ( int k = 0; k < helper.length; k++ ) {
-								buffer[ buffer_walker++ ] = helper[ k ];
-							}
+							byte[] helper = toBytes( ((Long)received[j]).longValue() );
+							System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
+							buffer_walker += helper.length;
 						}
 						else if ( received[ j ] instanceof String ) {
 							String temp = received[ j ].toString();
+
 							byte[] prefix = toBytes( ( short ) temp.length() );
-							byte[] helper = temp.getBytes();
 							buffer[ buffer_walker++ ] = prefix[ 0 ];
 							buffer[ buffer_walker++ ] = prefix[ 1 ];
-							for ( int k = 0; k < helper.length; k++ ) {
-								buffer[ buffer_walker++ ] = helper[ k ];
-							}
+
+							byte[] helper = temp.getBytes();
+							System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
+							buffer_walker += helper.length;
 						}
 					}//End of processing Single List-Entry 
 				}//End of processing Array_ROW_
@@ -475,6 +469,9 @@ public class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.3  2003/06/10 15:05:47  lemmstercvs01
+use System.arraycopy() instead of for loops
+
 Revision 1.2  2003/06/09 23:02:49  lemmstercvs01
 fixed a bug in merge() - counter position modified
 
