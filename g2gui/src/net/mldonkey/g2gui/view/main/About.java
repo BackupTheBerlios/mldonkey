@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.17 2003/09/14 11:59:17 dek Exp $ 
+ * @version $Id: About.java,v 1.18 2003/09/14 12:13:22 dek Exp $ 
  *
  */
 public class About extends Dialog {
@@ -245,7 +245,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.17 2003/09/14 11:59:17 dek Exp $ 
+	 * @version $Id: About.java,v 1.18 2003/09/14 12:13:22 dek Exp $ 
 	 *
 	 */
 	public class Link {
@@ -297,8 +297,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
-Revision 1.17  2003/09/14 11:59:17  dek
-removed TODO
+Revision 1.18  2003/09/14 12:13:22  dek
+removed Todo
+
 
 Revision 1.16  2003/09/03 15:02:52  zet
 +the
