@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.11 2004/03/26 22:34:39 dek Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.12 2004/03/29 14:51:44 dek Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -227,7 +227,7 @@ public class G2GuiWinReg extends PreferencePage {
     	
     	p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell\\open]");
     	p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell\\open\\command]");
-    	p.println("@=\"\\\"" + exeFile + "\\\" \\\"-c\\\" \\\"" + prefFile + "\\\" \\\"-l\\\" \\\"%1\\\"\"");
+    	p.println("@=\"\\\"" + exeFile + "\\\" \\\"-c\\\" \\\"" + prefFile + "\\\"  \\\"%1\\\"\"");
     	
     }
     
@@ -350,6 +350,9 @@ public class G2GuiWinReg extends PreferencePage {
 
 /*
 $Log: G2GuiWinReg.java,v $
+Revision 1.12  2004/03/29 14:51:44  dek
+some mem-improvements
+
 Revision 1.11  2004/03/26 22:34:39  dek
 .torrents are now correctly stored in win-registry
 

@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.viewers.GSorter;
@@ -37,7 +38,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.14 2004/03/25 19:25:24 dek Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.15 2004/03/29 14:51:44 dek Exp $
  *
  */
 public class DownloadTableTreeSorter extends GSorter {
@@ -177,9 +178,9 @@ public class DownloadTableTreeSorter extends GSorter {
             case DownloadTableTreeView.ETA:
                 labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
 
-                if (labelProvider.getColumnText(e1, columnIndex).equals(""))
+                if (labelProvider.getColumnText(e1, columnIndex).equals(G2Gui.emptyString))
                     return 1;
-                else if (labelProvider.getColumnText(e2, columnIndex).equals(""))
+                else if (labelProvider.getColumnText(e2, columnIndex).equals(G2Gui.emptyString))
                     return -1;
                 else
 
@@ -242,6 +243,9 @@ public class DownloadTableTreeSorter extends GSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.15  2004/03/29 14:51:44  dek
+some mem-improvements
+
 Revision 1.14  2004/03/25 19:25:24  dek
 yet more profiling
 

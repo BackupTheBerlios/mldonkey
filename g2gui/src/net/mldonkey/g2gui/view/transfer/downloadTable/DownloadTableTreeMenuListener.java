@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.FileDetailDialog;
@@ -91,7 +92,7 @@ import java.io.File;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.40 2004/03/26 19:01:24 psy Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.41 2004/03/29 14:51:44 dek Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -290,14 +291,14 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         	OptionsInfo option = (OptionsInfo) gView.getCore().getOptionsInfoMap().get("previewer");
             if (option != null) {
                 String previewer = (String) option.getValue();
-                if (!previewer.equals(""))
+                if (!previewer.equals(G2Gui.emptyString))
                     menuManager.add(new PreviewAction());
             }
             
             /* new http-preview method */
             OptionsInfo http_port = (OptionsInfo) gView.getCore().getOptionsInfoMap().get("http_port");
 
-            if ( !PreferenceLoader.loadString("defaultPreviewer").equals("") && 
+            if ( !PreferenceLoader.loadString("defaultPreviewer").equals(G2Gui.emptyString) && 
 				new File(PreferenceLoader.getString("defaultPreviewer")).exists() &&
             	http_port != null && gView.getCore().getProtoToUse() >= 25) {
             	menuManager.add(new NetPreviewAction());
@@ -534,7 +535,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                     if (inputDialog.open() == InputDialog.OK) {
                         String newFileName = inputDialog.getValue();
 
-                        if (!newFileName.equals(""))
+                        if (!newFileName.equals(G2Gui.emptyString))
                             selectedFile.saveFileAs(newFileName);
                     }
                 } else
@@ -734,6 +735,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.41  2004/03/29 14:51:44  dek
+some mem-improvements
+
 Revision 1.40  2004/03/26 19:01:24  psy
 workaround for garbage windows gcc: java.io.IOException: GetFullPathName failed
 
@@ -920,7 +924,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmy
-replace $user$ with $Author: psy $
+replace $user$ with $Author: dek $
 
 Revision 1.12  2003/08/22 14:30:45  lemmy
 verify chunks added

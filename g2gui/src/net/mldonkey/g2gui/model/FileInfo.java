@@ -49,7 +49,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.93 2004/03/25 19:25:23 dek Exp $
+ * @version $Id: FileInfo.java,v 1.94 2004/03/29 14:51:44 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -890,7 +890,7 @@ public class FileInfo extends Parent implements Observer {
         String oldStringETA = stringETA;
         this.stringETA = RegExp.calcStringOfSeconds(this.etaSeconds);
 
-        if (stringETA.equals(""))
+        if (stringETA.equals(G2Gui.emptyString))
             stringETA = "-";
 
         if (!oldStringETA.equals(stringETA))
@@ -1132,6 +1132,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.94  2004/03/29 14:51:44  dek
+some mem-improvements
+
 Revision 1.93  2004/03/25 19:25:23  dek
 yet more profiling
 

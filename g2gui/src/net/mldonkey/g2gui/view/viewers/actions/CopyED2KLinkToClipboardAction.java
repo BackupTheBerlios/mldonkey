@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.viewers.actions;
 
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
@@ -36,7 +37,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * CopyED2KLinkToClipboardAction
  *
- * @version $Id: CopyED2KLinkToClipboardAction.java,v 1.6 2004/03/15 23:29:31 psy Exp $
+ * @version $Id: CopyED2KLinkToClipboardAction.java,v 1.7 2004/03/29 14:51:45 dek Exp $
  *
  */
 public class CopyED2KLinkToClipboardAction extends Action {
@@ -57,7 +58,7 @@ public class CopyED2KLinkToClipboardAction extends Action {
         String fileName;
 
         for (int i = 0; i < links.length; i++) {
-            if (!links[ i ].equals("")) {
+            if (!links[ i ].equals(G2Gui.emptyString)) {
                 if (useHTML) {
                     // 13 = "ed2k://|file|"
                     fileName = links[ i ].substring(13, links[ i ].indexOf("|", 13));
@@ -80,6 +81,9 @@ public class CopyED2KLinkToClipboardAction extends Action {
 
 /*
 $Log: CopyED2KLinkToClipboardAction.java,v $
+Revision 1.7  2004/03/29 14:51:45  dek
+some mem-improvements
+
 Revision 1.6  2004/03/15 23:29:31  psy
 *** empty log message ***
 

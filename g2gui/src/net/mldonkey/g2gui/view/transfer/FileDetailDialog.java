@@ -28,6 +28,7 @@ import java.util.Iterator;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -55,7 +56,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.14 2004/03/22 15:12:50 dek Exp $
+ * @version $Id: FileDetailDialog.java,v 1.15 2004/03/29 14:51:45 dek Exp $
  *
  */
 public class FileDetailDialog extends DetailDialog {
@@ -134,16 +135,16 @@ public class FileDetailDialog extends DetailDialog {
      * Tell the core to rename the file
      */
     private void renameFile() {
-        String newName = "";
+        String newName = G2Gui.emptyString;
 
-        if (!renameText.getText().equals("") && !renameText.getText().equals(fileInfo.getName())) {
+        if (!renameText.getText().equals(G2Gui.emptyString) && !renameText.getText().equals(fileInfo.getName())) {
             newName = renameText.getText();
         } else if ((renameList.getSelection().length > 0) &&
                 !renameList.getSelection()[ 0 ].equals(fileInfo.getName())) {
             newName = renameList.getSelection()[ 0 ];
         }
 
-        if (!newName.equals("")) {
+        if (!newName.equals(G2Gui.emptyString)) {
             fileInfo.setName(newName);
         }
     }
@@ -241,7 +242,7 @@ public class FileDetailDialog extends DetailDialog {
                 public void keyPressed(KeyEvent e) {
                     if (e.character == SWT.CR) {
                         renameFile();
-                        renameText.setText("");
+                        renameText.setText(G2Gui.emptyString);
                     }
                 }
             });
@@ -327,7 +328,7 @@ public class FileDetailDialog extends DetailDialog {
                         fileActionButton.setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_RESUME") +
                             " " + G2GuiResources.getString("TT_File"));
                     } else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED) {
-                        if (renameText.getText().equals("")) {
+                        if (renameText.getText().equals(G2Gui.emptyString)) {
                             fileInfo.saveFileAs(fileInfo.getName());
                         } else {
                             fileInfo.saveFileAs(renameText.getText());
@@ -385,6 +386,9 @@ public class FileDetailDialog extends DetailDialog {
 
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.15  2004/03/29 14:51:45  dek
+some mem-improvements
+
 Revision 1.14  2004/03/22 15:12:50  dek
 changed selection behaviour in detail-dialog
 

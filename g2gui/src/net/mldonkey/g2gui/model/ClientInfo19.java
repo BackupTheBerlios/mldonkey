@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.view.G2Gui;
 /**
  * ClientInfo19
  *
- * @version $Id: ClientInfo19.java,v 1.5 2004/03/25 19:25:23 dek Exp $ 
+ * @version $Id: ClientInfo19.java,v 1.6 2004/03/29 14:51:44 dek Exp $ 
  *
  */
 public class ClientInfo19 extends ClientInfo {
@@ -92,7 +92,7 @@ public class ClientInfo19 extends ClientInfo {
 		this.clientDownloadedString = RegExp.calcStringSize(clientDownloaded);
 
 		// Occasionally it seems the filename isn't reset to null when not uploading anymore
-		this.isUploader = !clientUploadFilename.equals("");
+		this.isUploader = !clientUploadFilename.equals(G2Gui.emptyString);
 		onChangedState(oldState);
 	}
 	/**
@@ -143,6 +143,9 @@ public class ClientInfo19 extends ClientInfo {
 
 /*
 $Log: ClientInfo19.java,v $
+Revision 1.6  2004/03/29 14:51:44  dek
+some mem-improvements
+
 Revision 1.5  2004/03/25 19:25:23  dek
 yet more profiling
 

@@ -30,6 +30,7 @@ import java.util.List;
 
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.enum.EnumTagType;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -54,7 +55,7 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.41 2003/12/23 03:40:05 psy Exp $
+ * @version $Id: MLDonkeyOptions.java,v 1.42 2004/03/29 14:51:44 dek Exp $
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -93,10 +94,10 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
             OptionsInfo temp = ( OptionsInfo ) it.next();
             if ( ( temp.getOptionType() == EnumTagType.BOOL ) || isBoolean( temp.getValue() ) ) {
                 String description = temp.getDescription();
-                if ( description.equals( "" ) )
+                if ( description.equals( G2Gui.emptyString ) )
                     description = temp.getKey();
                 String optionHelp = temp.getOptionHelp();
-                if ( optionHelp.equals( "" ) )
+                if ( optionHelp.equals( G2Gui.emptyString ) )
                     optionHelp = temp.getKey();
 
                 /*create a boolean-editor and add to page*/
@@ -105,10 +106,10 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
             }
             else if ( ( temp.getOptionType() == EnumTagType.INT ) || isInteger( temp.getValue() ) ) {
                 String description = temp.getDescription();
-                if ( description.equals( "" ) )
+                if ( description.equals( G2Gui.emptyString ) )
                     description = temp.getKey();
                 String optionHelp = temp.getOptionHelp();
-                if ( optionHelp.equals( "" ) )
+                if ( optionHelp.equals( G2Gui.emptyString ) )
                     optionHelp = temp.getKey();
 
                 /*create a IntegerFieldEditor and add to page
@@ -140,10 +141,10 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
             }
             else {
                 String description = temp.getDescription();
-                if ( description.equals( "" ) )
+                if ( description.equals( G2Gui.emptyString ) )
                     description = temp.getKey();
                 String optionHelp = temp.getOptionHelp();
-                if ( optionHelp.equals( "" ) )
+                if ( optionHelp.equals( G2Gui.emptyString ) )
                     optionHelp = temp.getKey();
 
                 // with a very long string, the pref pages looks bad. limit to inputFieldLength?
@@ -259,10 +260,10 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
             OptionsInfo optionsInfo1 = ( OptionsInfo ) o1;
             OptionsInfo optionsInfo2 = ( OptionsInfo ) o2;
             String optionDescription1 =
-                ( optionsInfo1.getDescription().equals( "" ) ? optionsInfo1.getKey()
+                ( optionsInfo1.getDescription().equals( G2Gui.emptyString ) ? optionsInfo1.getKey()
                                                                : optionsInfo1.getDescription() );
             String optionDescription2 =
-                ( optionsInfo2.getDescription().equals( "" ) ? optionsInfo2.getKey()
+                ( optionsInfo2.getDescription().equals( G2Gui.emptyString ) ? optionsInfo2.getKey()
                                                                : optionsInfo2.getDescription() );
             return optionDescription1.compareToIgnoreCase( optionDescription2 );
         }
@@ -278,6 +279,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.42  2004/03/29 14:51:44  dek
+some mem-improvements
+
 Revision 1.41  2003/12/23 03:40:05  psy
 a little javadoc
 

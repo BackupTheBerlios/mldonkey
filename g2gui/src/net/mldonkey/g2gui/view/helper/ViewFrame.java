@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view.helper;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GView;
@@ -45,7 +46,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * ViewFrame
  *
- * @version $Id: ViewFrame.java,v 1.7 2003/11/29 17:02:27 zet Exp $
+ * @version $Id: ViewFrame.java,v 1.8 2004/03/29 14:51:44 dek Exp $
  *
  */
 public class ViewFrame {
@@ -74,7 +75,7 @@ public class ViewFrame {
     }
 
     protected void setupPaneListener(ViewFrameListener viewFrameListener) {
-        menuManager = new MenuManager("");
+        menuManager = new MenuManager(G2Gui.emptyString);
         menuManager.setRemoveAllWhenShown(true);
         menuManager.addMenuListener(viewFrameListener);
 
@@ -160,6 +161,9 @@ public class ViewFrame {
 
 /*
 $Log: ViewFrame.java,v $
+Revision 1.8  2004/03/29 14:51:44  dek
+some mem-improvements
+
 Revision 1.7  2003/11/29 17:02:27  zet
 more viewframes.. will continue later.
 

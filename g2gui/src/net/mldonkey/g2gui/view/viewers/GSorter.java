@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view.viewers;
 
 import net.mldonkey.g2gui.model.Addr;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
 import org.eclipse.jface.viewers.Viewer;
@@ -34,7 +35,7 @@ import org.eclipse.swt.events.DisposeListener;
 /**
  * GSorter - Generic sorter
  *
- * @version $Id: GSorter.java,v 1.7 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: GSorter.java,v 1.8 2004/03/29 14:51:44 dek Exp $
  *
  */
 public class GSorter extends ViewerSorter implements DisposeListener {
@@ -58,7 +59,7 @@ public class GSorter extends ViewerSorter implements DisposeListener {
         String savedSort = PreferenceLoader.loadString(gViewer.getPreferenceString() +
                 "LastSortColumn");
 
-        if (!savedSort.equals("") && (gViewer.getColumnIDs().indexOf(savedSort) != -1)) {
+        if (!savedSort.equals(G2Gui.emptyString) && (gViewer.getColumnIDs().indexOf(savedSort) != -1)) {
             setColumnIndex(gViewer.getColumnIDs().indexOf(savedSort));
             setLastSort(PreferenceLoader.loadBoolean(gViewer.getPreferenceString() +
                     "LastSortOrder"));
@@ -72,10 +73,10 @@ public class GSorter extends ViewerSorter implements DisposeListener {
      * @return int
      */
     public int compareStrings(String aString1, String aString2) {
-        if (aString1.equals(""))
+        if (aString1.equals(G2Gui.emptyString))
             return 1;
 
-        if (aString2.equals(""))
+        if (aString2.equals(G2Gui.emptyString))
             return -1;
 
         return (lastSort ? aString1.compareToIgnoreCase(aString2)
@@ -213,6 +214,9 @@ public class GSorter extends ViewerSorter implements DisposeListener {
 
 /*
 $Log: GSorter.java,v $
+Revision 1.8  2004/03/29 14:51:44  dek
+some mem-improvements
+
 Revision 1.7  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

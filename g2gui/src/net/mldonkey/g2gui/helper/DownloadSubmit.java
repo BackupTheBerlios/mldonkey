@@ -54,7 +54,7 @@ import org.eclipse.swt.SWT;
  * DownloadSubmit
  *
  * @author $user$
- * @version $Id: DownloadSubmit.java,v 1.11 2004/03/29 00:07:16 psy Exp $ 
+ * @version $Id: DownloadSubmit.java,v 1.12 2004/03/29 14:51:45 dek Exp $ 
  *
  */
 public class DownloadSubmit implements Runnable {
@@ -236,7 +236,7 @@ public class DownloadSubmit implements Runnable {
 								out.println("Content-Type: application/x-bittorrent");
 								out.println("Content-Length: " + localfile.length());
 								/* after this empty line we can start the content-transmission */
-								out.println("");
+								out.println(G2Gui.emptyString);
 								
 								/* read the file-contents */
 								byte[] b = new byte[(int) localfile.length()];
@@ -371,6 +371,9 @@ public class DownloadSubmit implements Runnable {
 
 /*
 $Log: DownloadSubmit.java,v $
+Revision 1.12  2004/03/29 14:51:45  dek
+some mem-improvements
+
 Revision 1.11  2004/03/29 00:07:16  psy
 added matching and submission for http-links for the FileTP network
 

@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view.viewers;
 
+import net.mldonkey.g2gui.view.G2Gui;
+
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -39,7 +41,7 @@ import org.eclipse.swt.widgets.Widget;
  * CustomTableViewer
  *
  *
- * @version $Id: CustomTableViewer.java,v 1.4 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: CustomTableViewer.java,v 1.5 2004/03/29 14:51:44 dek Exp $
  *
  */
 public class CustomTableViewer extends TableViewer implements ICustomViewer {
@@ -94,7 +96,7 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
             // Also enter loop if no columns added.  See 1G9WWGZ: JFUIF:WINNT - TableViewer with 0 columns does not work
             for (int column = 0; (column < columnCount) || (column == 0); column++) {
                 // Similar code in TableTreeViewer.doUpdateItem()
-                String text = ""; //$NON-NLS-1$
+                String text = G2Gui.emptyString; //$NON-NLS-1$
                 Image image = null;
 
                 if (tprov != null) {
@@ -140,6 +142,9 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
 
 /*
 $Log: CustomTableViewer.java,v $
+Revision 1.5  2004/03/29 14:51:44  dek
+some mem-improvements
+
 Revision 1.4  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

@@ -35,6 +35,7 @@ import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumExtension;
 import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumRating;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.graphics.Image;
@@ -45,7 +46,7 @@ import org.eclipse.swt.program.Program;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.35 2004/03/21 21:23:53 dek Exp $
+ * @version $Id: ResultInfo.java,v 1.36 2004/03/29 14:51:44 dek Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -296,14 +297,14 @@ public class ResultInfo extends Parent {
      * @return The format
      */
     public String getFormat() {
-        if ( format != null && !format.equals("") )
+        if ( format != null && !format.equals(G2Gui.emptyString) )
         	return format;
         else {
         	int index = this.getName().lastIndexOf( "." );
         	if ( index != -1 )
         		return this.getName().substring( index + 1 ).toLowerCase();
         	else
-        		return "";
+        		return G2Gui.emptyString;
         }
     }
 
@@ -331,11 +332,11 @@ public class ResultInfo extends Parent {
     private String getName( int index ) {
     	// is the index vaild?
     	if ( names.length < index - 1 )
-    		return "";
+    		return G2Gui.emptyString;
 
     	String result = names[ index ]; 
     	if ( result == null )
-    		return "";
+    		return G2Gui.emptyString;
     	return result;
     }
     
@@ -456,9 +457,9 @@ public class ResultInfo extends Parent {
                 if ( aString.equals( "bitrate" ) )
                     return new Integer( this.tags[ i ].getValue() ).toString() + "kb";
             }
-            return "";
+            return G2Gui.emptyString;
         }
-        return "";
+        return G2Gui.emptyString;
     }
 
     /**
@@ -471,16 +472,16 @@ public class ResultInfo extends Parent {
                 if ( aString.equals( "length" ) )
                     return this.tags[ i ].getSValue();
             }
-            return "";
+            return G2Gui.emptyString;
         }
-        return "";
+        return G2Gui.emptyString;
     }
 
     /**
      * @return The Type
      */
     public String getType() {
-        if ( type != null && !type.equals( "" ) )
+        if ( type != null && !type.equals( G2Gui.emptyString ) )
         	return type;
         else {
         	Enum aEnum = (Enum) FILE_TYPES.get( getFormat() );
@@ -538,7 +539,7 @@ public class ResultInfo extends Parent {
             return "ed2k://|file|" + this.getNames()[ 0 ] + "|" + this.getSize() + "|" + this.getMd4()
                    + "|/";
         else
-            return "";
+            return G2Gui.emptyString;
     }
 
     /**
@@ -604,7 +605,7 @@ public class ResultInfo extends Parent {
     		result.append("\n");
     	}	
 
-    	if (!this.getFormat().equals("")) {
+    	if (!this.getFormat().equals(G2Gui.emptyString)) {
     		result.append(G2GuiResources.getString("ST_TT_FORMAT"));
     		result.append(this.getFormat());
     		result.append("\n");
@@ -624,12 +625,12 @@ public class ResultInfo extends Parent {
     	result.append(G2GuiResources.getString("ST_TT_SOURCES"));
     	
     	if (this.getType().equals("Audio")) {
-    		if (!this.getBitrate().equals("")) {
+    		if (!this.getBitrate().equals(G2Gui.emptyString)) {
     			result.append("\n");
     			result.append(G2GuiResources.getString("ST_TT_BITRATE"));
     			result.append(this.getBitrate());
     		}
-    		if (!this.getLength().equals("")) {
+    		if (!this.getLength().equals(G2Gui.emptyString)) {
     			result.append("\n");
     			result.append(G2GuiResources.getString("ST_TT_LENGTH"));
     			result.append(this.getLength());
@@ -712,6 +713,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.36  2004/03/29 14:51:44  dek
+some mem-improvements
+
 Revision 1.35  2004/03/21 21:23:53  dek
 some proto25 was still missing !!
 

@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.22 2004/03/26 20:21:49 psy Exp $
+ * @version $Id: GView.java,v 1.23 2004/03/29 14:51:44 dek Exp $
  *
  */
 public abstract class GView {
@@ -229,7 +229,7 @@ public abstract class GView {
      * @return true if String contains valid columnIDs, else false
      */
     public static boolean validColumnIDs(String selected, String allowed) {
-        if (selected.equals("") || (selected.length() > allowed.length()))
+        if (selected.equals(G2Gui.emptyString) || (selected.length() > allowed.length()))
             return false;
 
         for (int i = 0; i < selected.length(); i++) {
@@ -454,7 +454,7 @@ public abstract class GView {
         sViewer.setContentProvider(getTableContentProvider());
         sViewer.setLabelProvider(getTableLabelProvider());
 
-        MenuManager popupMenu = new MenuManager("");
+        MenuManager popupMenu = new MenuManager(G2Gui.emptyString);
         popupMenu.setRemoveAllWhenShown(true);
         popupMenu.addMenuListener(getTableMenuListener());
         table.setMenu(popupMenu.createContextMenu(getTable()));
@@ -537,6 +537,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.23  2004/03/29 14:51:44  dek
+some mem-improvements
+
 Revision 1.22  2004/03/26 20:21:49  psy
 do not save tablecolumns when restarting (because they are 0 on manual dispose)
 
