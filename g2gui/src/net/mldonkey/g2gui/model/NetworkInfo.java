@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.7 2003/07/04 18:35:02 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.8 2003/07/05 15:58:05 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo implements SimpleInformation {
@@ -104,35 +104,35 @@ public class NetworkInfo implements SimpleInformation {
 	}
 	
 	/**
-	 * @return a long
+	 * @return Traffic downloaded from this network
 	 */
 	public long getDownloaded() {
 		return downloaded;
 	}
 
 	/**
-	 * @return a boolean
+	 * @return The state of this network
 	 */
 	public boolean isEnabled() {
 		return enabled;
 	}
 
 	/**
-	 * @return an int
+	 * @return The network identifier
 	 */
 	public int getNetwork() {
 		return network;
 	}
 
 	/**
-	 * @return a string
+	 * @return The network name
 	 */
 	public String getNetworkName() {
 		return networkName;
 	}
 
 	/**
-	 * @return a long
+	 * @return Traffic uploaded to this network
 	 */
 	public long getUploaded() {
 		return uploaded;
@@ -147,7 +147,7 @@ public class NetworkInfo implements SimpleInformation {
 	}
 
 	/**
-	 * @return a string
+	 * @return The configfile for this network
 	 */
 	public String getConfigFile() {
 		return configFile;
@@ -176,6 +176,9 @@ public class NetworkInfo implements SimpleInformation {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.8  2003/07/05 15:58:05  lemmstercvs01
+javadoc improved
+
 Revision 1.7  2003/07/04 18:35:02  lemmstercvs01
 foobar
 

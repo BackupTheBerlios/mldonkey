@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: NetworkInfoIntMap.java,v 1.4 2003/07/04 18:35:02 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.5 2003/07/05 15:58:05 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap {
@@ -38,13 +38,6 @@ public class NetworkInfoIntMap extends InfoIntMap {
 	 */
 	public NetworkInfoIntMap( CoreCommunication communication ) {
 		super( communication );
-	}
-
-	/**
-	 * Creates a new THashMap
-	 */	
-	public NetworkInfoIntMap() {
-		super();
 	}
 	
 	/**
@@ -81,6 +74,9 @@ public class NetworkInfoIntMap extends InfoIntMap {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.5  2003/07/05 15:58:05  lemmstercvs01
+javadoc improved
+
 Revision 1.4  2003/07/04 18:35:02  lemmstercvs01
 foobar
 
