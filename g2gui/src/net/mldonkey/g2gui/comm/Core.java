@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.23 2003/06/18 13:31:30 dek Exp $ 
+ * @version $Id: Core.java,v 1.24 2003/06/18 13:49:54 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -255,7 +255,7 @@ public class Core extends Thread implements CoreCommunication {
 	 * @param anInterfaceUi
 	 * @return
 	 */
-	public boolean registerListener( net.mldonkey.snippets.InterFaceUI anInterFaceUI ) {
+	public boolean registerListener( net.mldonkey.g2gui.view.widgets.InterFaceUI anInterFaceUI ) {
 		if ( this.registeredListeners.contains( anInterFaceUI ) ) {
 			return false;
 		}
@@ -272,7 +272,7 @@ public class Core extends Thread implements CoreCommunication {
 	public void notifyListeners( Information anInformation ) {
 		Iterator itr = this.registeredListeners.iterator();
 		while ( itr.hasNext() ) {
-			net.mldonkey.snippets.InterFaceUI anInterFaceUI = ( net.mldonkey.snippets.InterFaceUI ) itr.next();
+			net.mldonkey.g2gui.view.widgets.InterFaceUI anInterFaceUI = ( net.mldonkey.g2gui.view.widgets.InterFaceUI ) itr.next();
 			anInterFaceUI.notify( anInformation );
 		}
 	}
@@ -302,6 +302,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.24  2003/06/18 13:49:54  lemmstercvs01
+interface location changed
+
 Revision 1.23  2003/06/18 13:31:30  dek
 foooooooooo, who cares ;-) ??
 
