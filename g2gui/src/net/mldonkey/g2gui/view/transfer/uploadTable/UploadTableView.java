@@ -22,14 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 
-import gnu.trove.TIntObjectIterator;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.SharedFileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
@@ -50,15 +42,24 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+
+import gnu.trove.TIntObjectIterator;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.2 2003/10/31 16:30:49 zet Exp $
+ * @version $Id: UploadTableView.java,v 1.3 2003/11/03 03:08:12 zet Exp $
  *
  */
 public class UploadTableView extends GTableView {
@@ -116,18 +117,22 @@ public class UploadTableView extends GTableView {
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
         public Object[] getElements(Object inputElement) {
-            SharedFileInfoIntMap sharedFiles = (SharedFileInfoIntMap) inputElement;
-            TIntObjectIterator it = sharedFiles.iterator();
-            SharedFileInfo[] result = new SharedFileInfo[ sharedFiles.size() ];
-            int i = 0;
+            synchronized (inputElement) {
+                SharedFileInfoIntMap sharedFiles = (SharedFileInfoIntMap) inputElement;
+                TIntObjectIterator it = sharedFiles.iterator();
+                SharedFileInfo[] result = new SharedFileInfo[ sharedFiles.size() ];
+                int i = 0;
 
-            while (it.hasNext()) { // java.util.ConcurrentModificationException
-                it.advance();
-                result[ i ] = (SharedFileInfo) it.value();
-                i++;
+                while (it.hasNext()) { // java.util.ConcurrentModificationException
+                    it.advance();
+                    result[ i ] = (SharedFileInfo) it.value();
+                    i++;
+                }
+
+                sharedFiles.clearAdded();
+
+                return result;
             }
-
-            return result;
         }
 
         /* (non-Javadoc)
@@ -161,19 +166,25 @@ public class UploadTableView extends GTableView {
                         }
 
                         synchronized (sharedFileInfoIntMap.getRemoved()) {
-                            getTableViewer().remove(sharedFileInfoIntMap.getRemoved().toArray());
-                            sharedFileInfoIntMap.clearRemoved();
+                            if (sharedFileInfoIntMap.getRemoved().size() > 0) {
+                                getTableViewer().remove(sharedFileInfoIntMap.getRemoved().toArray());
+                                sharedFileInfoIntMap.clearRemoved();
+                            }
                         }
 
                         synchronized (sharedFileInfoIntMap.getAdded()) {
-                            getTableViewer().add(sharedFileInfoIntMap.getAdded().toArray());
-                            sharedFileInfoIntMap.clearAdded();
+                            if (sharedFileInfoIntMap.getAdded().size() > 0) {
+                                getTableViewer().add(sharedFileInfoIntMap.getAdded().toArray());
+                                sharedFileInfoIntMap.clearAdded();
+                            }
                         }
 
                         synchronized (sharedFileInfoIntMap.getUpdated()) {
-                            getTableViewer().update(sharedFileInfoIntMap.getUpdated().toArray(),
-                                null);
-                            sharedFileInfoIntMap.clearUpdated();
+                            if (sharedFileInfoIntMap.getUpdated().size() > 0) {
+                                getTableViewer().update(sharedFileInfoIntMap.getUpdated().toArray(),
+                                    null);
+                                sharedFileInfoIntMap.clearUpdated();
+                            }
                         }
                     }
                 });
@@ -327,6 +338,9 @@ public class UploadTableView extends GTableView {
 
 /*
 $Log: UploadTableView.java,v $
+Revision 1.3  2003/11/03 03:08:12  zet
+synchronized
+
 Revision 1.2  2003/10/31 16:30:49  zet
 minor renames
 
