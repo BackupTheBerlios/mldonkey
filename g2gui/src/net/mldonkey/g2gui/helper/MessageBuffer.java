@@ -26,7 +26,7 @@ package net.mldonkey.g2gui.helper;
  * MessageBuffer
  *
  * @author $user$
- * @version $Id: MessageBuffer.java,v 1.5 2003/06/15 21:26:19 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.6 2003/06/15 21:32:58 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -151,7 +151,7 @@ public class MessageBuffer {
 		StringBuffer result = new StringBuffer();
 		for ( int i = 0; i < length; i++ ) {			
 			short temp = readInt8();			
-			if ( temp < 10 ) result.append( 0 );
+			if ( temp < 0xf ) result.append( 0 );
 			result.append( Integer.toHexString( temp ) );			
 		}
 		return result.toString();
@@ -190,6 +190,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.6  2003/06/15 21:32:58  dek
+finally working readbinary()????
+
 Revision 1.5  2003/06/15 21:26:19  dek
 fixed readBinary
 
