@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.1 2003/06/13 16:02:11 dek Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.2 2003/06/14 12:47:27 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo {
@@ -60,6 +60,10 @@ public class NetworkInfo {
 	 */
 	private long downloaded;
 	
+	/**
+	 * Reads a networkInfo object from the stream
+	 * @param messageBuffer The buffer to read from
+	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		/*
 		 *	PayLoad:
@@ -72,94 +76,94 @@ public class NetworkInfo {
 		 */
 		this.setNetwork( messageBuffer.readInt32() );
 		this.setNetworkName( messageBuffer.readString() );
-		this.setEnabled(messageBuffer.readInt8());
-		this.setConfigFile( messageBuffer.readString());
-		this.setUploaded(messageBuffer.readInt64());
-		this.setDownloaded(messageBuffer.readInt64());
+		this.setEnabled( messageBuffer.readInt8() );
+		this.setConfigFile( messageBuffer.readString() );
+		this.setUploaded( messageBuffer.readInt64() );
+		this.setDownloaded( messageBuffer.readInt64() );
 	}
 	
 	/**
-	 * @return
+	 * @return a long
 	 */
 	public long getDownloaded() {
 		return downloaded;
 	}
 
 	/**
-	 * @return
+	 * @return a boolean
 	 */
 	public boolean isEnabled() {
 		return enabled;
 	}
 
 	/**
-	 * @return
+	 * @return an int
 	 */
 	public int getNetwork() {
 		return network;
 	}
 
 	/**
-	 * @return
+	 * @return a string
 	 */
 	public String getNetworkName() {
 		return networkName;
 	}
 
 	/**
-	 * @return
+	 * @return a long
 	 */
 	public long getUploaded() {
 		return uploaded;
 	}
 
 	/**
-	 * @param l
+	 * @param l a long
 	 */
-	public void setDownloaded(long l) {
+	public void setDownloaded( long l ) {
 		downloaded = l;
 	}
 
 	/**
-	 * @param b
+	 * @param b a short
 	 */
-	public void setEnabled(short b) {
-		if (b==0) enabled = false;
-		if (b==1) enabled = true;		
+	public void setEnabled( short b ) {
+		if ( b == 0 ) enabled = false;
+		if ( b == 1 ) enabled = true;		
 	}
 
 	/**
-	 * @param i
+	 * @param i an int
 	 */
-	public void setNetwork(int i) {
+	public void setNetwork( int i ) {
 		network = i;
 	}
 
 	/**
-	 * @param string
+	 * @param string a string
 	 */
-	public void setNetworkName(String string) {
+	public void setNetworkName( String string ) {
 		networkName = string;
 	}
 
 	/**
-	 * @param l
+	 * @param l a long
 	 */
-	public void setUploaded(long l) {
+	public void setUploaded( long l ) {
 		uploaded = l;
 	}
 
 	/**
-	 * @return
+	 * @return a string
 	 */
 	public String getConfigFile() {
 		return configFile;
 	}
 
 	/**
-	 * @param string
+	 * @param string a string
 	 */
-	public void setConfigFile(String string) {
+	public void setConfigFile( String string )  {
 		configFile = string;
 	}
 
@@ -169,6 +173,9 @@ public class NetworkInfo {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.2  2003/06/14 12:47:27  lemmstercvs01
+checkstyle applied
+
 Revision 1.1  2003/06/13 16:02:11  dek
 this Class holds informationa about the different networks
 

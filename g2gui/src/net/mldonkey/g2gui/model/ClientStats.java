@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientStats
  *
  * @author markus
- * @version $Id: ClientStats.java,v 1.3 2003/06/13 11:03:41 lemmstercvs01 Exp $ 
+ * @version $Id: ClientStats.java,v 1.4 2003/06/14 12:47:27 lemmstercvs01 Exp $ 
  *
  */
 public class ClientStats implements Information {
@@ -221,10 +221,8 @@ public class ClientStats implements Information {
 	}
 
 	/**
-	 * Reads a ClientState object from an InputStream
-	 * @param inputStream Stream to read from
-	 * @return a ClientState object
-	 * @throws IOException Error if read from stream failed
+	 * Reads a ClientState object from a MessageBuffer
+	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		
@@ -245,6 +243,9 @@ public class ClientStats implements Information {
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.4  2003/06/14 12:47:27  lemmstercvs01
+checkstyle applied
+
 Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
 changed InputStream to MessageBuffer
 

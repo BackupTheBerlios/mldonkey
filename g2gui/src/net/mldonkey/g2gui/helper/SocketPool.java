@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.comm.Message;
  * SocketPool
  *
  * @author ${user}
- * @version $Id: SocketPool.java,v 1.7 2003/06/13 10:45:23 lemmstercvs01 Exp $ 
+ * @version $Id: SocketPool.java,v 1.8 2003/06/14 12:47:51 lemmstercvs01 Exp $ 
  *
  */
 public class SocketPool extends ObjectPool {
@@ -72,6 +72,8 @@ public class SocketPool extends ObjectPool {
 	 * Initialize the SocketPool by hostname and port
 	 * @param address The address to connect to
 	 * @param port The port to connect to
+	 * @param username The username for the core account
+	 * @param password The password for the core account
 	 */
 	public SocketPool( String address, int port, String username, String password ) {
 		super();
@@ -106,12 +108,12 @@ public class SocketPool extends ObjectPool {
 			coreProtocol = null;
 			
 			/* send the gui extensions (poll mode) */			
-			Object[] extension = { new Integer( 1 ), new Byte( ( byte ) 1 )};
+/*			Object[] extension = { new Integer( 1 ), new Byte( ( byte ) 1 )};
 			Object[][] a = { extension };
 			Message guiExtension = new EncodeMessage( Message.S_GUIEXTENSION, a );
 			guiExtension.sendMessage( socket );
 			guiExtension = null;
-
+*/
 			/* send the password/username */
 			String[] aString = { this.password, this.username };
 			Message password = new EncodeMessage( Message.S_PASSWORD, aString );
@@ -150,6 +152,9 @@ public class SocketPool extends ObjectPool {
 
 /*
 $Log: SocketPool.java,v $
+Revision 1.8  2003/06/14 12:47:51  lemmstercvs01
+checkstyle applied
+
 Revision 1.7  2003/06/13 10:45:23  lemmstercvs01
 send protocol, user/pass, gui extension in socketpool
 

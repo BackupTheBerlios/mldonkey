@@ -26,38 +26,43 @@ package net.mldonkey.g2gui.helper;
  * MessageBuffer
  *
  * @author $user$
- * @version $Id: MessageBuffer.java,v 1.3 2003/06/13 12:02:47 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.4 2003/06/14 12:47:51 lemmstercvs01 Exp $ 
  *
  */
 public class MessageBuffer {
-	int iterator;
-	byte[] buffer = null;
-	
-	public MessageBuffer(){
-		
+	/**
+	 * The iterator for the byte[]
+	 */
+	private int iterator;
+	/**
+	 * The byte[] containing the InputStream
+	 */
+	private byte[] buffer = null;
+
+	/**
+	 * Generates a new empty MessageBuffer
+	 */	
+	public MessageBuffer() {
 		this.iterator = 0;
-		
 	}
 
 	/**
-	 * @return
+	 * @return an int
 	 */
 	public int getIterator() {
 		return iterator;
 	}
 
 	/**
-	 * @param i
+	 * @param i an int
 	 */
-	public void setIterator(int i) {
+	public void setIterator( int i ) {
 		iterator = i;
 	}
 	
 	/**
 	 * Reads a Byte from an InputStream
-	 * @param inputStream Stream to read the byte from
-	 * @return	short
-	 * @throws IOException Error if read on inputStream failed
+	 * @return	byte a byte
 	 */
 	public byte readByte() {
 		byte result = this.buffer[iterator];
@@ -67,9 +72,10 @@ public class MessageBuffer {
 	}
 
 	/**
-	 * Reads a Int8 from MessageBuffer
+	 * Reads an Int8 from MessageBuffer
+	 * @return an int8
 	 */
-	public short  readInt8() {
+	public short readInt8() {
 		short result = ( short ) this.buffer[iterator];
 		if ( result < 0 ) {
 			result += 256;
@@ -79,13 +85,14 @@ public class MessageBuffer {
 	}
 	/**
 	 * Reads an int16 from from MessageBuffer
-	 
+	 * @return an int16
 	 */
-	public short readInt16(){		
+	public short readInt16() {		
 		return ( short ) ( readInt8() + 256 * readInt8() );		
 	}
 	/**
-	 * Reads an int32 from from MessageBuffer	 
+	 * Reads an int32 from from MessageBuffer	
+	 * @return a int32 
 	 */
 	public  int readInt32() {
 		return  ( readInt8() + 256
@@ -96,8 +103,9 @@ public class MessageBuffer {
 	}
 	/**
 	 * Reads a long from MessageBuffer
+	 * @return an int64
 	 */
-	public long readInt64(){
+	public long readInt64() {
 		return    ( readInt8() + 256
 				* ( readInt8() + 256 
 				* ( readInt8() + 256 
@@ -109,12 +117,13 @@ public class MessageBuffer {
 	}
 	/**
 	 * Reads a String from MessageBuffer
+	 * @return a string
 	 */
-	public  String readString() {
+	public String readString() {
 		int stringLength = readInt16();					
 		if ( stringLength > 0 ) {					
-			String result = new String(buffer,iterator,stringLength);			
-			this.iterator= this.iterator + stringLength;
+			String result = new String( buffer, iterator, stringLength );			
+			this.iterator = this.iterator + stringLength;
 			return result;
 		} 
 		else
@@ -122,9 +131,10 @@ public class MessageBuffer {
 	}
 	
 	/**
-	 * Reads a String[] from MessageBuffer	
+	 * Reads a String[] from MessageBuffer
+	 * @return a string[]
 	 */
-	public  String[] readStringList(){
+	public String[] readStringList() {
 		short listElem = readInt16();
 		String[] result = new String[ listElem ];
 		for ( int i = 0; i < listElem; i++ ) {
@@ -134,19 +144,22 @@ public class MessageBuffer {
 	}
 	/**
 	 * Creates a string from a binary message
+	 * @return a string
+	 * @param length The length to read
 	 */
-	public  String readBinary(int length ){
+	public String readBinary( int length ) {
 		StringBuffer result = new StringBuffer();
 		for ( int i = 0; i < length; i++ ) {
-			result.append( Integer.toHexString(readByte() ) );
+			result.append( Integer.toHexString( readByte() ) );
 		}
 		return result.toString();
 	}
 	
 	/**
-	 * Reads a int[] from MessageBuffer	
+	 * Reads a int[] from MessageBuffer
+	 * @return an int[]
 	 */
-	public  int[] readInt32List() {
+	public int[] readInt32List() {
 		short listElem = readInt16();
 		int[] result = new int[ listElem ];
 		for ( int i = 0; i < listElem; i++ ) {
@@ -157,16 +170,16 @@ public class MessageBuffer {
 	
 
 	/**
-	 * @return
+	 * @return a byte[]
 	 */
 	public byte[] getBuffer() {
 		return buffer;
 	}
 
 	/**
-	 * @param bs
+	 * @param bs a byte[]
 	 */
-	public void setBuffer(byte[] bs) {
+	public void setBuffer( byte[] bs ) {
 		iterator = 0;
 		buffer = bs;
 	}
@@ -175,6 +188,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.4  2003/06/14 12:47:51  lemmstercvs01
+checkstyle applied
+
 Revision 1.3  2003/06/13 12:02:47  dek
 cleaned up code
 

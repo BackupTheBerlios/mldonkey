@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * State
  *
  * @author markus
- * @version $Id: State.java,v 1.3 2003/06/13 11:03:41 lemmstercvs01 Exp $ 
+ * @version $Id: State.java,v 1.4 2003/06/14 12:47:27 lemmstercvs01 Exp $ 
  *
  */
 public class State implements Information {
@@ -66,9 +66,8 @@ public class State implements Information {
 	}
 	
 	/**
-	 * Reads a State from a stream
-	 * @param inputStream Stream to read from
-	 * @throws IOException Error if read on stream failed
+	 * Reads a State from a MessageBuffer
+	 * @param messageBuffer MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setState( ( byte ) messageBuffer.readByte() );
@@ -79,6 +78,9 @@ public class State implements Information {
 
 /*
 $Log: State.java,v $
+Revision 1.4  2003/06/14 12:47:27  lemmstercvs01
+checkstyle applied
+
 Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
 changed InputStream to MessageBuffer
 

@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * FileAddSource
  *
  * @author markus
- * @version $Id: FileAddSource.java,v 1.3 2003/06/13 11:03:41 lemmstercvs01 Exp $ 
+ * @version $Id: FileAddSource.java,v 1.4 2003/06/14 12:47:27 lemmstercvs01 Exp $ 
  *
  */
 public class FileAddSource implements Information {
@@ -81,10 +81,8 @@ public class FileAddSource implements Information {
 	}
 
 	/**
-	 * 
-	 * @param inputStream
-	 * @return
-	 * @throws IOException
+	 * Reads a FileAddSource object from a MessageBuffer
+	 * @param messageBuffer The MessageBuffer to read from 
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setId( messageBuffer.readInt32() );
@@ -95,6 +93,9 @@ public class FileAddSource implements Information {
 
 /*
 $Log: FileAddSource.java,v $
+Revision 1.4  2003/06/14 12:47:27  lemmstercvs01
+checkstyle applied
+
 Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
 changed InputStream to MessageBuffer
 
