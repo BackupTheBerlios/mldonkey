@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.view.G2Gui;
 /**
  * ClientInfo20
  *
- * @version $Id: ClientInfo20.java,v 1.10 2004/03/27 17:00:01 dek Exp $ 
+ * @version $Id: ClientInfo20.java,v 1.11 2004/03/27 17:04:17 dek Exp $ 
  *
  */
 public class ClientInfo20 extends ClientInfo19 {
@@ -100,18 +100,20 @@ public class ClientInfo20 extends ClientInfo19 {
 		int minutes = (int) (connectseconds - (3600*hours)) / 60;
 		int seconds = (int) (connectseconds - (3600*hours) - (minutes*60));
 		this.clientConnectTimePassedString = G2Gui.emptyString;
-
-		if (hours > 0) { 
-			this.clientConnectTimePassedString += hours + "h "; 
-		}
-		if ((minutes > 0) || (hours > 0)) { 
-			this.clientConnectTimePassedString += minutes + "m "; 
-		}
-		if ((seconds > 0) || (minutes > 0) || (hours > 0)) { 
-			this.clientConnectTimePassedString += seconds + "s"; 
-		} else {
-			this.clientConnectTimePassedString = "-";
-		}
+		
+		StringBuffer temp = new StringBuffer();			
+			if (hours > 0) { 
+				temp.append(hours).append('h').append(' '); 
+			}
+			if ((minutes > 0) || (hours > 0)) { 
+				temp.append(minutes).append('m').append(' '); 			
+			}
+			if ((seconds > 0) || (minutes > 0) || (hours > 0)) { 
+				temp.append(seconds).append('s').append(' '); 			
+			} else {
+				temp.append('-');
+			}
+		this.clientConnectTimePassedString = temp.toString();
 	}
 	public int getClientConnectTime() {
 		return clientConnectTime;
@@ -140,6 +142,9 @@ public class ClientInfo20 extends ClientInfo19 {
 
 /*
 $Log: ClientInfo20.java,v $
+Revision 1.11  2004/03/27 17:04:17  dek
+replaced string by stringbuffer for building-string ,you know Strings are special-objects in java ;-)
+
 Revision 1.10  2004/03/27 17:00:01  dek
 new date format in newer gui-Protos
 

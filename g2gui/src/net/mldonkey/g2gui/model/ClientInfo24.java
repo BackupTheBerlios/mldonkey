@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.view.G2Gui;
 /**
  * ClientInfo24.java
  *
- * @version $Id: ClientInfo24.java,v 1.1 2004/03/27 17:00:01 dek Exp $ 
+ * @version $Id: ClientInfo24.java,v 1.2 2004/03/27 17:04:17 dek Exp $ 
  *
  */
 public class ClientInfo24 extends ClientInfo21 {
@@ -67,17 +67,17 @@ public class ClientInfo24 extends ClientInfo21 {
 		
 		StringBuffer temp = new StringBuffer();		
 		
-		if (hours > 0) { 
-			temp.append(hours).append('h').append(' '); 
-		}
-		if ((minutes > 0) || (hours > 0)) { 
-			temp.append(minutes).append('m').append(' '); 			
-		}
-		if ((seconds > 0) || (minutes > 0) || (hours > 0)) { 
-			temp.append(seconds).append('s').append(' '); 			
-		} else {
-			temp.append('-');
-		}
+			if (hours > 0) { 
+				temp.append(hours).append('h').append(' '); 
+			}
+			if ((minutes > 0) || (hours > 0)) { 
+				temp.append(minutes).append('m').append(' '); 			
+			}
+			if ((seconds > 0) || (minutes > 0) || (hours > 0)) { 
+				temp.append(seconds).append('s').append(' '); 			
+			} else {
+				temp.append('-');
+			}
 		this.clientConnectTimePassedString = temp.toString();
 	}
 
@@ -86,6 +86,9 @@ public class ClientInfo24 extends ClientInfo21 {
 
 /*
  $Log: ClientInfo24.java,v $
+ Revision 1.2  2004/03/27 17:04:17  dek
+ replaced string by stringbuffer for building-string ,you know Strings are special-objects in java ;-)
+
  Revision 1.1  2004/03/27 17:00:01  dek
  new date format in newer gui-Protos
 
