@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Widget;
  * CustomTableViewer
  *
  *
- * @version $Id: CustomTableViewer.java,v 1.4 2003/08/31 14:20:09 zet Exp $ 
+ * @version $Id: CustomTableViewer.java,v 1.5 2003/08/31 15:30:41 zet Exp $ 
  *
  */
 public class CustomTableViewer extends TableViewer {
@@ -87,24 +87,26 @@ public class CustomTableViewer extends TableViewer {
 						image = lprov.getImage(element);
 					}
 				}
-				if (!text.equals(ti.getText(column))) {
+				// Only set text if it changes
+				if (!text.equals(ti.getText(column))) 
 					ti.setText(column, text);
-				}
-				if (ti.getImage(column) != image) {
+				// Apparently a problem to setImage to null if already null
+				if (ti.getImage(column) != image) 
 					ti.setImage(column, image);
-				}
 			}
 			if (prov instanceof IColorProvider) {
 				IColorProvider cprov = (IColorProvider) prov;
-				if (ti.getForeground() != cprov.getForeground(element)
-				//	&& cprov.getForeground(element) != null)
-					 ) {
-					ti.setForeground(cprov.getForeground(element));
+				if (ti.getForeground() != cprov.getForeground(element)) {
+					if ( cprov.getForeground(element) != null
+						|| ( !ti.getParent().getForeground().getRGB().equals( ti.getForeground().getRGB() )) ) {
+						ti.setForeground(cprov.getForeground(element));
+					}
 				}
-				if (ti.getBackground() != cprov.getBackground(element)
-				//	&& cprov.getBackground(element) != null) 
-					 ) {
-					ti.setBackground(cprov.getBackground(element));
+				if (ti.getBackground() != cprov.getBackground(element)) {
+					if ( cprov.getBackground(element) != null
+						|| ( !ti.getParent().getBackground().getRGB().equals( ti.getBackground().getRGB() )) ) {
+						ti.setBackground(cprov.getBackground(element));
+					}
 				}
 			}
 		}
@@ -115,6 +117,9 @@ public class CustomTableViewer extends TableViewer {
 }
 /*
 $Log: CustomTableViewer.java,v $
+Revision 1.5  2003/08/31 15:30:41  zet
+colorprovider
+
 Revision 1.4  2003/08/31 14:20:09  zet
 try this
 

@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Widget;
  * CustomTableTreeViewer
  *
  *
- * @version $Id: CustomTableTreeViewer.java,v 1.6 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: CustomTableTreeViewer.java,v 1.7 2003/08/31 15:30:41 zet Exp $ 
  *
  */
 public class CustomTableTreeViewer extends TableTreeViewer {
@@ -96,19 +96,26 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 		}
 		if (prov instanceof IColorProvider) {
 			IColorProvider cprov = (IColorProvider) prov;
-			if (ti.getForeground() != cprov.getForeground(element)
-				&& cprov.getForeground(element) != null) {
-				ti.setForeground(cprov.getForeground(element));
+			if (ti.getForeground() != cprov.getForeground(element)) {
+				if ( cprov.getForeground(element) != null
+					|| ( !ti.getParent().getForeground().getRGB().equals( ti.getForeground().getRGB() )) ) {
+					ti.setForeground(cprov.getForeground(element));
+				}
 			}
-			if (ti.getBackground() != cprov.getBackground(element) 
-				&& cprov.getBackground(element) != null) {
-				ti.setBackground(cprov.getBackground(element));
+			if (ti.getBackground() != cprov.getBackground(element)) {
+				if ( cprov.getBackground(element) != null
+					|| ( !ti.getParent().getBackground().getRGB().equals( ti.getBackground().getRGB() )) ) {
+					ti.setBackground(cprov.getBackground(element));
+				}
 			}
 		}
 	}
 }
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.7  2003/08/31 15:30:41  zet
+colorprovider
+
 Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
