@@ -8,7 +8,7 @@
  * G2GUI is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
  * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.18 2003/08/19 13:08:03 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.19 2003/08/19 18:09:31 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -46,19 +46,6 @@ public class Preferences extends PreferenceManager {
 	private boolean connected = false;	
 	private PreferenceDialog prefdialog;
 	private PreferenceStore preferenceStore;
-	private String[] wantedSections = {
-							"Identification",
-							"Bandwidth",
-							"Ports"
-							};
-	private String[] wantedPlugins = {
-							"Overnet",
-							"eDonkey",
-							"Fasttrack",
-							"Gnutella",
-							"BitTorrent"
-							};
-
 	/**
 	 * @param preferenceStore where to store the values at
 	 */
@@ -66,13 +53,13 @@ public class Preferences extends PreferenceManager {
 		this.preferenceStore = 	preferenceStore;
 		G2Gui g2gui = new G2Gui( "G2Gui", FieldEditorPreferencePage.FLAT );	
 		g2gui.setPreferenceStore( preferenceStore );		
-		PreferenceNode G2GuiRootNode = new PreferenceNode( "G2gui", g2gui );
+		PreferenceNode g2GuiRootNode = new PreferenceNode( "G2gui", g2gui );
 		
-			G2Gui_Display g2gui_display = new G2Gui_Display("Display", FieldEditorPreferencePage.FLAT);
+			G2Gui_Display g2gui_display = new G2Gui_Display( "Display", FieldEditorPreferencePage.FLAT );
 			g2gui_display.setPreferenceStore( preferenceStore );
 			
-			G2GuiRootNode.add(new PreferenceNode ("Display", g2gui_display));
-		addToRoot( G2GuiRootNode );		
+			g2GuiRootNode.add( new PreferenceNode ( "Display", g2gui_display ) );
+		addToRoot( g2GuiRootNode );		
 	}
 	
 	/**
@@ -86,7 +73,7 @@ public class Preferences extends PreferenceManager {
 				System.out.println( "initalizing Preferences Dialog failed due to IOException" );
 			}
 		prefdialog = new PreferenceDialog( shell, this ) {
-				/* (non-Javadoc)
+				/* ( non-Javadoc )
 				 * @see org.eclipse.jface.preference.PreferenceDialog#cancelPressed()
 				 */
 				protected void cancelPressed() {				
@@ -116,7 +103,7 @@ public class Preferences extends PreferenceManager {
 	private void createMLDonkeyOptions( boolean connected, CoreCommunication mldonkey ) {
 		OptionsInfoMap options = mldonkey.getOptionsInfoMap();
 		OptionsPreferenceStore optionsStore = new OptionsPreferenceStore();
-		optionsStore.setInput(options);
+		optionsStore.setInput( options );
 		Map sections = new HashMap();
 		Map plugins = new HashMap();
 		
@@ -125,12 +112,10 @@ public class Preferences extends PreferenceManager {
 		while ( it.hasNext() ) {					
 			OptionsInfo option = ( OptionsInfo ) options.get( it.next() );
 			
-			String section = option.getSectionToAppear();
-			String plugin = option.getPluginToAppear();
-						
+			String section = option.getSectionToAppear();			
+			String plugin = option.getPluginToAppear();						
 			
-			
-			if ( ( section == null ) && ( plugin == null ) && showOption(option) ) {				
+			if ( ( section == null ) && ( plugin == null ) && showOption( option ) ) {				
 				/* create the General-section, or if already done, only add the option */
 				if ( !sections.containsKey( "General" ) ) {
 					MLDonkeyOptions temp = new MLDonkeyOptions( "General", FieldEditorPreferencePage.FLAT );
@@ -141,31 +126,30 @@ public class Preferences extends PreferenceManager {
 				/*commented out the following, as it produces ton's of options in this tab
 				 * which made it unreadable	
 				 */
-				( ( MLDonkeyOptions  )sections.get( "General" ) ).addOption( option );				
+				( ( MLDonkeyOptions )sections.get( "General" ) ).addOption( option );				
 			}
 			
-			else if ( ( section != null ) && showOption(option) ) {				
-			/* create the section, or if already done, only add the option */
-				if ( !sections.containsKey( section ) ) {
+			else if ( ( section != null ) && showOption(option ) ) {								
+				/* create the section, or if already done, only add the option */
+				if ( !sections.containsKey( section ) ) {					
 					MLDonkeyOptions temp = new MLDonkeyOptions( section, FieldEditorPreferencePage.FLAT );
 					//myprefs.addToRoot( new PreferenceNode ( section, temp ) );
 					sections.put( section, temp );
 					temp.setPreferenceStore( optionsStore );
 					}
-				( ( MLDonkeyOptions  )sections.get( section ) ).addOption( option );
+				( ( MLDonkeyOptions )sections.get( section ) ).addOption( option );
 			}
 
-			else if ( ( plugin != null ) && showOption(option) ) {				
-			/* create the pluginSection, or if already done, only add the option */
-				if ( !plugins.containsKey( plugin ) ) {
+			else if ( ( plugin != null ) && showOption(option ) ) {				
+				/* create the pluginSection, or if already done, only add the option */
+				if ( !plugins.containsKey( plugin ) ) {					
 					/*only create the plugin, if it is possible at all...*/					
 					MLDonkeyOptions temp = new MLDonkeyOptions( plugin, FieldEditorPreferencePage.FLAT );					
 					plugins.put( plugin, temp );
 					temp.setPreferenceStore( optionsStore );					
 					}
-				( ( MLDonkeyOptions  )plugins.get( plugin ) ).addOption( option );			
-				//create the plugin, or if already done, only add the option
-				}
+				( ( MLDonkeyOptions )plugins.get( plugin ) ).addOption( option );				
+			}
 		}
 		/*Now we create the tree-structure, since we received all options*/
 		
@@ -173,37 +157,36 @@ public class Preferences extends PreferenceManager {
 		 /*
 		  * first the sections:
 		  */
-		//this creates only the sections defined in wantedSections[]		 
-		 for ( int i = 0; i < wantedSections.length; i++ ) {
-			if ( sections.containsKey( wantedSections[ i ] ) ) {
-				MLDonkeyOptions optionspage = ( MLDonkeyOptions ) sections.get( wantedSections[ i ] );
-				  addToRoot( new PreferenceNode ( wantedSections[ i ], optionspage ) );
-			}				
+		it = sections.values().iterator();
+		while ( it.hasNext() ) {			
+			MLDonkeyOptions page = ( MLDonkeyOptions )it.next();
+			addToRoot( ( new PreferenceNode ( "", page ) ) );			
 		}
 		 
 		 /*
 		  * and now the Plugins:
 		  */
-		  if (plugins.size() != 0){		 
+		if ( plugins.size() != 0 ) {		 
 			PreferenceNode pluginOptions = new PreferenceNode( "plugins", new MLDonkeyOptions( "Plugins", FieldEditorPreferencePage.FLAT ) );
 			addToRoot( pluginOptions );	
+			it = plugins.values().iterator();
+			while ( it.hasNext() ) {			
+					MLDonkeyOptions page = ( MLDonkeyOptions )it.next();
+					pluginOptions.add( ( new PreferenceNode ( "", page ) ) );			
+			}
 					
-			/*this creates only the sections defined in wantedPlugins[]	*/ 
-			   for ( int i = 0; i < wantedPlugins.length; i++ ) {
-				  if ( plugins.containsKey( wantedPlugins[ i ] ) ) {
-					  MLDonkeyOptions optionspage = ( MLDonkeyOptions ) plugins.get( wantedPlugins[ i ] );
-						 pluginOptions.add( new PreferenceNode ( wantedPlugins[ i ], optionspage ) );
-				  }				
-			  }	
-		  }	
+			
+		}	
 	}
 
-	private boolean showOption(OptionsInfo option) {
-		boolean showOption = (
-					(option.isAdvanced() && preferenceStore.getBoolean( "advancedMode" ))
-					|| (!option.isAdvanced() && !preferenceStore.getBoolean( "advancedMode" ))
-					);	
-		return showOption;
+	private boolean showOption( OptionsInfo option ) {
+		if ( preferenceStore.getBoolean( "advancedMode" ) ) {
+			return true;
+			}
+		else if ( option.isAdvanced() ) {			
+			return false;
+		}	
+		return true;		
 	}
 		
 		
@@ -236,6 +219,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.19  2003/08/19 18:09:31  dek
+fixed advanced / pro with new devel-core
+
 Revision 1.18  2003/08/19 13:08:03  dek
 advanced-Options included
 
@@ -249,13 +235,13 @@ Revision 1.15  2003/08/18 13:55:22  dek
 plugins-crash fixed
 
 Revision 1.14  2003/08/18 12:22:28  dek
-g2gui-pref-page is now fully JFace-approved ;-)
+g2gui-pref-page is now fully JFace-approved ;- )
 
 Revision 1.13  2003/08/17 21:22:34  dek
-reworked options, finally, it makes full use of the jFace framework ;-)
+reworked options, finally, it makes full use of the jFace framework ;- )
 
 Revision 1.12  2003/07/25 02:41:22  zet
-console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
+console window colour config in prefs / try different fontfieldeditor / pref page  ( any worse? )
 
 Revision 1.11  2003/07/10 19:27:28  dek
 some idle-race cleanup
@@ -279,7 +265,7 @@ Revision 1.5  2003/07/02 16:16:47  dek
 extensive Checkstyle applying
 
 Revision 1.4  2003/06/27 18:05:46  dek
-Client name is now an option, not saveable yet, but it's displayed ;-)
+Client name is now an option, not saveable yet, but it's displayed ;- )
 
 Revision 1.3  2003/06/26 12:04:44  dek
 pref-dialog accessible in main-window
