@@ -23,26 +23,20 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import gnu.trove.TIntObjectHashMap;
 
 /**
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: NetworkInfoMap.java,v 1.2 2003/06/16 17:43:55 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfoMap.java,v 1.3 2003/06/16 20:10:45 lemmstercvs01 Exp $ 
  *
  */
-public class NetworkInfoMap implements InfoCollection {
-	/**
-	 * Map containing option value pairs
-	 */
-	private TIntObjectHashMap networkInfoMap;
-	
+public class NetworkInfoMap extends InfoMap implements InfoCollection {
 	/**
 	 * Creates a new THashMap
 	 */	
 	public NetworkInfoMap() {
-		this.networkInfoMap = new TIntObjectHashMap();
+		super();
 	}
 	
 	/**
@@ -52,16 +46,16 @@ public class NetworkInfoMap implements InfoCollection {
 	public void readStream( MessageBuffer messageBuffer ) {
 		int id = messageBuffer.readInt32();
 		
-		if ( networkInfoMap.containsKey( id ) ) {
+		if ( this.infoMap.containsKey( id ) ) {
 			//update existing NetworkInfo-Object
-			NetworkInfo networkInfo = ( NetworkInfo ) networkInfoMap.get( id );
+			NetworkInfo networkInfo = ( NetworkInfo ) this.infoMap.get( id );
 			networkInfo.readStream( messageBuffer, id );
 		}
 		else {
 			//add a new NetworkInfo-Object to the Map
 			NetworkInfo networkInfo = new NetworkInfo();
 			networkInfo.readStream( messageBuffer, id );
-			this.networkInfoMap.put( id, networkInfo );
+			this.infoMap.put( id, networkInfo );
 		}
 	}
 	
@@ -78,6 +72,9 @@ public class NetworkInfoMap implements InfoCollection {
 
 /*
 $Log: NetworkInfoMap.java,v $
+Revision 1.3  2003/06/16 20:10:45  lemmstercvs01
+moved to the right place
+
 Revision 1.2  2003/06/16 17:43:55  lemmstercvs01
 checkstyle applied
 
