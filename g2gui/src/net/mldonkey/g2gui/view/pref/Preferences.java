@@ -38,13 +38,12 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.12 2003/07/25 02:41:22 zet Exp $ 
+ * @version $Id: Preferences.java,v 1.13 2003/08/17 21:22:34 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
 
-	private boolean connected = false;
-	private PreferenceManager myprefs;
+	private boolean connected = false;	
 	private PreferenceDialog prefdialog;
 	private PreferenceStore preferenceStore;
 	private String[] wantedSections = {
@@ -64,11 +63,10 @@ public class Preferences extends PreferenceManager {
 	 * @param preferenceStore where to store the values at
 	 */
 	public Preferences( PreferenceStore preferenceStore ) {	
-		this.preferenceStore = 	preferenceStore;
-		myprefs = new PreferenceManager();
+		this.preferenceStore = 	preferenceStore;		
 		PreferenceNode G2GuiRootNode = new PreferenceNode( "G2gui", new G2Gui( preferenceStore, connected ));
 		G2GuiRootNode.add(new PreferenceNode ("Display", new G2Gui_Display(preferenceStore, connected)));
-		myprefs.addToRoot( G2GuiRootNode );		
+		addToRoot( G2GuiRootNode );		
 	}
 	
 	/**
@@ -81,7 +79,7 @@ public class Preferences extends PreferenceManager {
 			} catch ( IOException e ) {
 				System.out.println( "initalizing Preferences Dialog failed due to IOException" );
 			}
-		prefdialog = new PreferenceDialog( shell, myprefs ) {
+		prefdialog = new PreferenceDialog( shell, this ) {
 				/* (non-Javadoc)
 				 * @see org.eclipse.jface.preference.PreferenceDialog#cancelPressed()
 				 */
@@ -111,23 +109,26 @@ public class Preferences extends PreferenceManager {
 	 */
 	private void createMLDonkeyOptions( boolean connected, CoreCommunication mldonkey ) {
 		OptionsInfoMap options = mldonkey.getOptionsInfoMap();
-		
+		OptionsPreferenceStore optionsStore = new OptionsPreferenceStore();
+		optionsStore.setInput(options);
 		Map sections = new HashMap();
 		Map plugins = new HashMap();
 		
 		/*now we iterate over the whole thing and create the preferencePages*/
 		Iterator it = options.keySet().iterator();
-		while ( it.hasNext() ) {		
-			OptionsInfo option = ( OptionsInfo ) options.get( it.next() );			
+		while ( it.hasNext() ) {					
+			OptionsInfo option = ( OptionsInfo ) options.get( it.next() );
+			
 			String section = option.getSectionToAppear();
 			String plugin = option.getPluginToAppear();
 			
 			if ( ( section == null ) && ( plugin == null ) ) {				
 				/* create the General-section, or if already done, only add the option */
 				if ( !sections.containsKey( "General" ) ) {
-					MLDonkeyOptions temp = new MLDonkeyOptions( "General" );
-					myprefs.addToRoot( new PreferenceNode ( "General", temp ) );
-					sections.put( "General", temp );					
+					MLDonkeyOptions temp = new MLDonkeyOptions( "General", FieldEditorPreferencePage.FLAT );
+					addToRoot( new PreferenceNode ( "General", temp ) );
+					sections.put( "General", temp );	
+					temp.setPreferenceStore( optionsStore );			
 					//temp.setVisible(false);					
 					}
 			
@@ -140,9 +141,10 @@ public class Preferences extends PreferenceManager {
 			else if ( section != null ) {				
 			/* create the section, or if already done, only add the option */
 				if ( !sections.containsKey( section ) ) {
-					MLDonkeyOptions temp = new MLDonkeyOptions( section );
+					MLDonkeyOptions temp = new MLDonkeyOptions( section, FieldEditorPreferencePage.FLAT );
 					//myprefs.addToRoot( new PreferenceNode ( section, temp ) );
 					sections.put( section, temp );
+					temp.setPreferenceStore( optionsStore );
 					}
 				( ( MLDonkeyOptions  )sections.get( section ) ).addOption( option );
 			}
@@ -151,8 +153,9 @@ public class Preferences extends PreferenceManager {
 			/* create the pluginSection, or if already done, only add the option */
 				if ( !plugins.containsKey( plugin ) ) {
 					/*only create the plugin, if it is possible at all...*/					
-					MLDonkeyOptions temp = new MLDonkeyOptions( plugin );					
-					plugins.put( plugin, temp );					
+					MLDonkeyOptions temp = new MLDonkeyOptions( plugin, FieldEditorPreferencePage.FLAT );					
+					plugins.put( plugin, temp );
+					temp.setPreferenceStore( optionsStore );					
 					}
 				( ( MLDonkeyOptions  )plugins.get( plugin ) ).addOption( option );			
 				//create the plugin, or if already done, only add the option
@@ -168,7 +171,7 @@ public class Preferences extends PreferenceManager {
 		 for ( int i = 0; i < wantedSections.length; i++ ) {
 			if ( sections.containsKey( wantedSections[ i ] ) ) {
 				MLDonkeyOptions optionspage = ( MLDonkeyOptions ) sections.get( wantedSections[ i ] );
-				   myprefs.addToRoot( new PreferenceNode ( wantedSections[ i ], optionspage ) );
+				  addToRoot( new PreferenceNode ( wantedSections[ i ], optionspage ) );
 			}				
 		}
 		 
@@ -189,8 +192,8 @@ public class Preferences extends PreferenceManager {
 		 /*
 		  * and now the Plugins:
 		  */
-		PreferenceNode pluginOptions = new PreferenceNode( "plugins", new MLDonkeyOptions( "Plugins" ) );
-			myprefs.addToRoot( pluginOptions );
+		PreferenceNode pluginOptions = new PreferenceNode( "plugins", new MLDonkeyOptions( "Plugins", FieldEditorPreferencePage.GRID ) );
+			addToRoot( pluginOptions );
 			
 			
 //this creates only the sections defined in wantedPlugins[]		 
@@ -228,15 +231,8 @@ public class Preferences extends PreferenceManager {
 			preferenceStore.save();
 			preferenceStore.load();
 		}
-	}	
-
-
-	/**
-	 * @return this classes preferenceManager
-	 */
-	public PreferenceManager getMyprefs() {
-		return myprefs;
 	}
+
 
 	/**
 	 * @return is our nice gui connected to a remot mldonkey, so that we can get remote-options?
@@ -249,6 +245,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.13  2003/08/17 21:22:34  dek
+reworked options, finally, it makes full use of the jFace framework ;-)
+
 Revision 1.12  2003/07/25 02:41:22  zet
 console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
 

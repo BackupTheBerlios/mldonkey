@@ -23,181 +23,111 @@
 package net.mldonkey.g2gui.view.pref;
 
 
-
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
+
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.enum.EnumTagType;
-import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.swt.SWT;
+
+import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 /**
  * MLDonkeyOptions
  *
- * @author $user$
- * @version $Id: MLDonkeyOptions.java,v 1.8 2003/07/26 17:54:14 zet Exp $ 
+ * @author  $Author: dek $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.9 2003/08/17 21:22:21 dek Exp $ 
  *
  */
-public class MLDonkeyOptions extends PreferencePage {
-	/*have this page's contents been created? important for saving, as this might cause an NPE*/
-	private boolean initialized = false;
+public class MLDonkeyOptions extends FieldEditorPreferencePage {
+	private Composite parent;
+
+
+	List options = new ArrayList();
 	
-	private Map options = new HashMap();
-	private Map fields = new HashMap();
-	/**
-	 * 
-	 * @param title the Title of this preferencePage, is displayed in the tree on the left side
-	 */
-	public MLDonkeyOptions( String title ) {
-		super( title );		
-	}
-	
-	/** (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
-	 */
-	protected Control createContents( Composite parent ) {	
-		
-		computeSize();
-
-		ScrolledComposite scrollParent =
-			   new ScrolledComposite(parent, SWT.V_SCROLL|SWT.H_SCROLL);
-		scrollParent.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		GridLayout layout = new GridLayout();
-		int numGridColumns = 2;
-		layout.numColumns = numGridColumns;
-			
-		Composite composite = new Composite(scrollParent, SWT.NONE);
-		composite.setLayout(layout);
-		scrollParent.setContent(composite);
-
-		Iterator it = options.keySet().iterator();
-		while ( it.hasNext() ) {			
-		
-			OptionsInfo option = ( OptionsInfo ) options.get( it.next() );
-			String description = option.getDescription();
-			String optionName = option.getKey();
-			String value = option.getValue();
-			EnumTagType type = option.getOptionType();
-			
-			/*This is some handling for all the Options, that do _not_
-			 * have a detailed description of their type inside:
-			 */
-			if ( description.equals( "" ) ||  description == null )
-				description = optionName;				
-			if ( value.equals( "false" ) || value.equals( "true" ) )
-				type = EnumTagType.BOOL;			
-			if ( type == null )
-				type = EnumTagType.STRING;
-				
-			
-			/*First check the Option, what kind of option it is: string or boolean
-			 * to known, which widget to use*/	
-			if ( type.equals( EnumTagType.BOOL ) ) {			
-				ExtendedBooleanFieldEditor temp = new ExtendedBooleanFieldEditor(
-											optionName, 
-											description, 
-											composite );
-				temp.setSelection( new Boolean( value ).booleanValue() );
-				temp.setToolTipText( optionName );	
-				temp.fillIntoGrid(composite, numGridColumns );			
-				fields.put( optionName, temp );
-			}
-			else  {			
-			   ExtendedStringFieldEditor temp = new ExtendedStringFieldEditor(
-										   optionName, 
-										   description, 
-										   composite );
-			   temp.setStringValue( value );
-			   temp.setToolTipText( optionName );				
-			   fields.put( optionName, temp );
-			}		
-			 
-			 
-		}
-		
-		if ( options.size() == 0 ) {
-			Label noOptions = new Label ( composite, SWT.NONE );
-			noOptions.setText( "please select a subentry from the list" );
-			this.noDefaultAndApplyButton();
-		}
-				
-		composite.setSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		parent.layout();
-		this.initialized = true;
-		return scrollParent;
-	}
-	/**
-	 * @param option This Option should be displayed on this preferencePage
-	 */
-	public void addOption( OptionsInfo option ) {
-		this.options.put( option.getKey(), option );
-		
-
-	}
-	
-	
-	/** is called, when "Restore Defaults" Button is pressed.
-	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
-	 */
-	protected void performDefaults() {		
-		super.performDefaults();
-		Iterator it = fields.keySet().iterator();
-		/*iterate oer all fields, and restore default-value if option has changed*/
-		while ( it.hasNext() ) {
-			String optionName = ( String ) it.next();
-			OptionsInfo option = ( OptionsInfo ) options.get( optionName );
-			IValueEditor field = ( IValueEditor ) fields.get( optionName );
-			/*has the value changed??*/
-			if ( field.hasChanged() ) {
-				/*Ok, option has changed, reset to default*/					
-				field.restoreDefault();
-				field.resetChangedStatus();
-			}
-								
-		}
-		
-	}
-
 	
 	/**
-	 * Is called, when the OKbutton of the Tab is pressed
-	 *  (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
+	 * @param title
+	 * @param style
 	 */
-	public boolean performOk() {	
-		/* only perform, if this tab has been initialized */
-		if ( initialized ) {
-			Iterator it = fields.keySet().iterator();
+	protected MLDonkeyOptions(String title, int style) {
+		super(title, style);
+				// TODO Auto-generated constructor stub
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
+	 */
+	protected void createFieldEditors() {
+		/*
+		 * I don't know why this method is called even before super.createContents 
+		 * returned the parent for these controls??? this is why i check for null and recall
+		 * it in this.createContents()
+		 */
+		if (parent != null){		
+			Iterator it = options.iterator();
 			while ( it.hasNext() ) {
-				String optionName = ( String ) it.next();
-				OptionsInfo option = ( OptionsInfo ) options.get( optionName );
-				IValueEditor field = ( IValueEditor ) fields.get( optionName );
-				/*has the value changed??*/
-				if ( field.hasChanged() ) {
-					/*Ok, option has changed, take it and send it to the mldonkey*/					
-					option.setValue( field.getValue() );
-					option.send();
-					field.resetChangedStatus();
-				}
-								
-			}			
-				
+				OptionsInfo temp = ( OptionsInfo ) it.next();
+				if ( temp.getOptionType() == EnumTagType.BOOL ) {
+					/*create a boolean-editor and add to page*/
+					BooleanFieldEditor bool =
+						new BooleanFieldEditor(
+												temp.getKey(),
+												temp.getDescription(),
+												parent) ;	
+					bool.getLabelControl( parent ).setToolTipText( temp.getKey() );				
+					bool.setPreferenceStore( this.getPreferenceStore() );				
+					addField( bool );
+					bool.fillIntoGrid( parent, 2 );	
+					bool.load();
+				} else {
+					StringFieldEditor string =
+						new StringFieldEditor( temp.getKey(),
+										 temp.getDescription(),
+										 parent );
+					string.getLabelControl( parent ).setToolTipText( temp.getKey() );
+					string.setPreferenceStore( this.getPreferenceStore() );						
+					addField( string );
+					string.fillIntoGrid( parent,2 );	
+					string.load();
+				}			
+			}
 		}
-		 
-		return super.performOk();		
 	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	 */
+	protected Control createContents(Composite myparent) {
+		parent = (Composite) super.createContents(myparent);
+		createFieldEditors();
+		
+		return parent;
+	}
+
+
+	/**
+	 * @param option
+	 */
+	public void addOption(OptionsInfo option) {
+		options.add(option);
+	}
+
+
+
+	
 }
 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.9  2003/08/17 21:22:21  dek
+reworked options, finally, it makes full use of the jFace framework ;-)
+
 Revision 1.8  2003/07/26 17:54:14  zet
 fix pref's illegal setParent, redo graphs, other
 
