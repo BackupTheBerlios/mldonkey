@@ -41,6 +41,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -60,10 +62,18 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Scale;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -74,7 +84,7 @@ import java.util.List;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.9 2003/10/05 00:55:29 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.10 2003/10/07 02:56:43 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -268,10 +278,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
             prioritySubMenu.add( new PriorityAction( EnumPriority.LOW ) );
 
             if ( advancedMode ) {
-                MenuManager customPrioritySubMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_CUSTOM" ) );
-                customPrioritySubMenu.add( new CustomPriorityAction( false ) );
-                customPrioritySubMenu.add( new CustomPriorityAction( true ) );
-                prioritySubMenu.add( customPrioritySubMenu );
+                prioritySubMenu.add( new Separator(  ) );
+                prioritySubMenu.add( new CustomPriorityAction( false ) );
+                prioritySubMenu.add( new CustomPriorityAction( true ) );
             }
 
             menuManager.add( prioritySubMenu );
@@ -566,15 +575,18 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
 
         public void run(  ) {
-            InputDialog inputDialog = new InputDialog( tableTreeViewer.getTableTree(  ).getShell(  ),
-                    G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY" ), G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY" ),
-                    "" + selectedFile.getPriority(  ), null );
+            String title = G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY" ) + " (" +
+                ( relative ? G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_CUSTOM_RELATIVE" )
+                           : G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_CUSTOM_ABSOLUTE" ) ) + ")";
 
-            if ( inputDialog.open(  ) == InputDialog.OK ) {
+            PriorityInputDialog priorityInputDialog = new PriorityInputDialog( tableTreeViewer.getTableTree(  ).getShell(  ), title, title,
+                    ( relative ? 0 : selectedFile.getPriority(  ) ), null );
+
+            if ( priorityInputDialog.open(  ) == PriorityInputDialog.OK ) {
                 int newPriority;
 
                 try {
-                    newPriority = Integer.parseInt( inputDialog.getValue(  ).trim(  ) );
+                    newPriority = Integer.parseInt( priorityInputDialog.getValue(  ).trim(  ) );
                 } catch ( NumberFormatException e ) {
                     newPriority = 0;
                 }
@@ -624,11 +636,59 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
             clipBoard.dispose(  );
         }
     }
+
+    /**
+     * PriorityInputDialog
+     */
+    private class PriorityInputDialog extends InputDialog {
+        int initialValue;
+
+        public PriorityInputDialog( Shell parentShell, String dialogTitle, String dialogMessage, int initialValue, IInputValidator validator ) {
+            super( parentShell, dialogTitle, dialogMessage, "" + initialValue, validator );
+            this.initialValue = initialValue;
+        }
+
+        protected Control createDialogArea( Composite parent ) {
+            Composite composite = (Composite) super.createDialogArea( parent );
+
+            final Text text = this.getText(  );
+            text.setTextLimit( 4 );
+
+            final Scale scale = new Scale( composite, SWT.HORIZONTAL );
+            scale.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+            scale.setMinimum( 0 );
+            scale.setMaximum( 200 );
+            scale.setIncrement( 1 );
+            scale.setPageIncrement( 5 );
+
+            if ( initialValue < -100 ) {
+                scale.setSelection( 0 );
+            } else if ( initialValue > 100 ) {
+                scale.setSelection( 200 );
+            } else {
+                scale.setSelection( initialValue + 100 );
+            }
+
+            scale.addSelectionListener( new SelectionListener(  ) {
+                    public void widgetDefaultSelected( SelectionEvent e ) {
+                    }
+
+                    public void widgetSelected( SelectionEvent e ) {
+                        text.setText( "" + ( scale.getSelection(  ) - 100 ) );
+                    }
+                } );
+
+            return composite;
+        }
+    }
 }
 
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.10  2003/10/07 02:56:43  zet
+add priority scale
+
 Revision 1.9  2003/10/05 00:55:29  zet
 set priority as any #
 
