@@ -43,7 +43,7 @@ import org.eclipse.swt.custom.CTabItem;
 /**
  * SearchPaneListener
  *
- * @version $Id: ResultPaneListener.java,v 1.8 2003/11/14 00:46:04 zet Exp $
+ * @version $Id: ResultPaneListener.java,v 1.9 2003/11/22 02:16:36 zet Exp $
  *
  */
 public class ResultPaneListener extends GPaneListener {
@@ -66,7 +66,7 @@ public class ResultPaneListener extends GPaneListener {
     public void menuAboutToShow(IMenuManager menuManager) {
         if (cTabFolder != null) {
             // check if a table exists in any tab
-            if (PreferenceLoader.loadBoolean("advanced")) {
+            if (PreferenceLoader.loadBoolean("advancedMode")) {
                 CTabItem[] cTabItems = cTabFolder.getItems();
 
                 for (int i = 0; i < cTabItems.length; i++) {
@@ -110,6 +110,9 @@ public class ResultPaneListener extends GPaneListener {
 
 /*
 $Log: ResultPaneListener.java,v $
+Revision 1.9  2003/11/22 02:16:36  zet
+advancedMode typo
+
 Revision 1.8  2003/11/14 00:46:04  zet
 sort by column menu item (for macOS)
 
