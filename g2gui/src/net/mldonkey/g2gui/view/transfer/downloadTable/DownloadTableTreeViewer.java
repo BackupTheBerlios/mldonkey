@@ -49,12 +49,11 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.20 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.21 2003/10/31 22:34:58 zet Exp $
  *
  */
 public class DownloadTableTreeViewer extends GTableTreeView implements ICellModifier,
     IDoubleClickListener {
-    public static final String ALL_COLUMNS = "ABCDEFGHIJKLMN";
     public static final String BASIC_COLUMNS = "ABCDFIK";
     public static final String NAME_COLUMN = "C";
     public static final String RATE_COLUMN = "I";
@@ -85,10 +84,10 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
      * @param mldonkey
      * @param page
      */
-    public DownloadTableTreeViewer(Composite parent, GView clientTableViewer,
+    public DownloadTableTreeViewer(Composite parent, GView clientTableView,
         final CoreCommunication core, TransferTab page) {
         super(parent, core);
-        this.clientView = clientTableViewer;
+        this.clientView = clientTableView;
         this.parent = parent;
 
         preferenceString = "download";
@@ -109,7 +108,7 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
         gSorter = new DownloadTableTreeSorter(this);
         tableTreeContentProvider = new DownloadTableTreeContentProvider(this);
         tableLabelProvider = new DownloadTableTreeLabelProvider(this);
-        tableTreeMenuListener = new DownloadTableTreeMenuListener(this, clientTableViewer);
+        tableTreeMenuListener = new DownloadTableTreeMenuListener(this, clientTableView);
 
         advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
@@ -143,14 +142,8 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
      * Create columns
      */
     public void createColumns() {
+        super.createColumns();
 		tableTreeViewer = getTableTreeViewer();
-        
-        if (advancedMode) {
-            loadColumnIDs();
-        } else {
-            columnIDs = BASIC_COLUMNS;
-        }
-        
         tableTreeViewer.setColumnProperties(columnLabels);
 
         if (cellEditors != null) {
@@ -167,8 +160,6 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
             cellEditors = new CellEditor[ columnIDs.length() ];
             cellEditors[ columnIDs.indexOf(NAME_COLUMN) ] = new TextCellEditor(getTable());
         }
-
-        super.createColumns();
     }
 
     /* (non-Javadoc)
@@ -313,6 +304,9 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.21  2003/10/31 22:34:58  zet
+minor
+
 Revision 1.20  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
