@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.2 2003/07/04 12:30:09 dek Exp $ 
+ * @version $Id: SearchResult.java,v 1.3 2003/07/06 07:29:47 lemmstercvs01 Exp $ 
  *
  */
 public class SearchResult implements SimpleInformation {
@@ -50,8 +50,8 @@ public class SearchResult implements SimpleInformation {
 		 * int32	The Search Identifier 
  		 * int32	The Result Identifier 
 		 */
-		this.setSearchID( messageBuffer.readInt32() );
-		this.setResultID( messageBuffer.readInt32() );
+		this.searchID = messageBuffer.readInt32();
+		this.resultID = messageBuffer.readInt32();
 	}
 
 	/**
@@ -67,24 +67,13 @@ public class SearchResult implements SimpleInformation {
 	public int getSearchID() {
 		return searchID;
 	}
-
-	/**
-	 * @param i an int
-	 */
-	private void setResultID( int i ) {
-		resultID = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	private void setSearchID( int i ) {
-		searchID = i;
-	}
 }
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.3  2003/07/06 07:29:47  lemmstercvs01
+javadoc improved
+
 Revision 1.2  2003/07/04 12:30:09  dek
 checkstyle
 

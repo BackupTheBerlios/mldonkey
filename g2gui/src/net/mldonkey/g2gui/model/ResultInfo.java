@@ -22,25 +22,27 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ResultInfo
  *
  * @author $user$
- * @version $Id: ResultInfo.java,v 1.3 2003/07/05 13:14:50 dek Exp $ 
+ * @version $Id: ResultInfo.java,v 1.4 2003/07/06 07:29:47 lemmstercvs01 Exp $ 
  *
  */
 public class ResultInfo implements SimpleInformation {
+	private CoreCommunication parent;
 	private String comment;
 	/**
 	 * Result ID
 	 */
 	private int resultID;
 	/**
-	 * Network ID
+	 * The Network this result comes from
 	 */
-	private int networkID;
+	private NetworkInfo networkID;
 	/**
 	 * Possible names
 	 */
@@ -70,6 +72,14 @@ public class ResultInfo implements SimpleInformation {
 	 */
 	private boolean history;
 	
+	/**
+	 * Creates a new ResultInfo
+	 * @param core The parent
+	 */
+	public ResultInfo( CoreCommunication core ) {
+		this.parent = core;
+	}
+	
 	/** (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -94,7 +104,6 @@ public class ResultInfo implements SimpleInformation {
 		return result;
 	}
 
-	
 	/**
 	 * Reads a ResulfInfo from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
@@ -112,18 +121,16 @@ public class ResultInfo implements SimpleInformation {
 		 * String		Comment 
 		 * int8			0 = Normal, 1 = Already Downloaded
 		 */
-		 
-		this.setResultID( messageBuffer.readInt32() );
+		this.resultID = messageBuffer.readInt32();
 		this.setNetworkID( messageBuffer.readInt32() );
-		this.setNames( messageBuffer.readStringList() );
-		this.setMd4( messageBuffer.readBinary( 16 ) );
-		this.setSize( messageBuffer.readInt32() );
-		this.setFormat( messageBuffer.readString() );
-		this.setType( messageBuffer.readString() );
-		this.setTags( messageBuffer.readTagList() );
-		this.setComment( messageBuffer.readString() );		
+		this.names = messageBuffer.readStringList();
+		this.md4 = messageBuffer.readBinary( 16 );
+		this.size = messageBuffer.readInt32();
+		this.format = messageBuffer.readString();
+		this.type = messageBuffer.readString();
+		this.tags = messageBuffer.readTagList();		
+		this.comment = messageBuffer.readString();		
 		this.setHistory( messageBuffer.readByte() ); 
-		//System.out.println("received resultInfo"+this);
 	}
 	/**
 	 * @param string file comment
@@ -165,7 +172,7 @@ public class ResultInfo implements SimpleInformation {
 	/**
 	 * @return The Network id
 	 */
-	public int getNetworkID() {
+	public NetworkInfo getNetworkID() {
 		return networkID;
 	}
 
@@ -198,13 +205,6 @@ public class ResultInfo implements SimpleInformation {
 	}
 
 	/**
-	 * @param string The format as a String
-	 */
-	private void setFormat( String string ) {
-		format = string;
-	}
-
-	/**
 	 * @param b The History as a byte
 	 */
 	private void setHistory( byte b ) {
@@ -215,57 +215,23 @@ public class ResultInfo implements SimpleInformation {
 	}
 
 	/**
-	 * @param string The md4 as a String
-	 */
-	private void setMd4( String string ) {
-		md4 = string;
-	}
-
-	/**
-	 * @param strings The possible Names as a String[]
-	 */
-	private void setNames( String[] strings ) {
-		names = strings;
-	}
-
-	/**
-	 * @param i The network id as an int
+	 * translate the int to networkinfo
+	 * @param i the int
 	 */
 	private void setNetworkID( int i ) {
-		networkID = i;
+		this.networkID =
+		( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
 	}
 
-	/**
-	 * @param i The result id as an int
-	 */
-	private void setResultID( int i ) {
-		resultID = i;
-	}
 
-	/**
-	 * @param i The size as an int
-	 */
-	private void setSize( int i ) {
-		size = i;
-	}
 
-	/**
-	 * @param tags The Metatags as a Tag[]
-	 */
-	private void setTags( Tag[] tags ) {
-		this.tags = tags;
-	}
-
-	/**
-	 * @param string The Type as a String
-	 */
-	private void setType( String string ) {
-		type = string;
-	}
 }
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.4  2003/07/06 07:29:47  lemmstercvs01
+javadoc improved
+
 Revision 1.3  2003/07/05 13:14:50  dek
 *** empty log message ***
 
