@@ -23,14 +23,11 @@ package net.mldonkey.g2gui.comm;
 import java.io.IOException;
 
 import net.mldonkey.g2gui.model.ConsoleMessage;
-import net.mldonkey.g2gui.model.Information;
-import net.mldonkey.g2gui.view.InterFaceUI;
-
 /**
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.9 2003/06/26 23:07:32 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.10 2003/06/27 10:40:09 lemmstercvs01 Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -47,21 +44,8 @@ public interface CoreCommunication {
 	void run() throws IOException;
 	
 	/**
-	 * Adds a listener to the list of listeners
-	 * @param anInterFaceUI The InterFaceUI to add
+	 * 
+	 * @return
 	 */
-	void registerListener( InterFaceUI anInterFaceUI );
-	/**
-	 * Tell all registered Listeners what has happened with:
-	 * @param info this info
-	 */
-	void notifyListeners( Information info );
-	
 	ConsoleMessage getConsoleMessage();
-	
-	/**
-	 * Removes a listener from the list of listeners
-	 * @param anInterFaceUI The InterFaceUI to remove
-	 */
-	void removeListener( InterFaceUI anInterFaceUI );
 }
