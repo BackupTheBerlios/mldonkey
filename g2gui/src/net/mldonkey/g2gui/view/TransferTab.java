@@ -74,7 +74,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.52 2003/08/31 01:46:33 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.53 2003/08/31 20:32:50 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -126,7 +126,7 @@ public class TransferTab extends GuiTab  {
 		popupMenu.setRemoveAllWhenShown( true );
 		popupMenu.addMenuListener( new DownloadPaneMenuListener( downloadTableTreeViewer.getTableTreeViewer(), mldonkey ) );
 		
-		ToolBar downloadToolBar = new ToolBar( downloadViewForm, SWT.NONE );
+		ToolBar downloadToolBar = new ToolBar( downloadViewForm, SWT.FLAT );
 		ToolItem sendItem = new ToolItem( downloadToolBar, SWT.FLAT );
 		sendItem.setImage( G2GuiResources.getImage( "DropDown" ) );
 		sendItem.addSelectionListener( new SelectionAdapter() {
@@ -354,6 +354,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.53  2003/08/31 20:32:50  zet
+active button states
+
 Revision 1.52  2003/08/31 01:46:33  zet
 localise
 

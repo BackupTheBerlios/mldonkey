@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * ToolButton A simple helper class made so that the coolbar can be redrawn
  *
  *
- * @version $Id: ToolButton.java,v 1.6 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: ToolButton.java,v 1.7 2003/08/31 20:32:50 zet Exp $
  * 
  */
 public class ToolButton {
@@ -51,7 +51,7 @@ public class ToolButton {
 	
 	public ToolButton (ToolBar parent, int style, int index) {
 		this.toolbar = parent;
-		this.toolItemStyle = SWT.NONE;  // SWT.RADIO
+		this.toolItemStyle = SWT.RADIO;  
 		if (index < 0) toolItem = new ToolItem(parent,  toolItemStyle);
 		else toolItem = new ToolItem(parent,  style, toolItemStyle);
 	}
@@ -88,7 +88,7 @@ public class ToolButton {
 		bigInactiveImage = image;
 	}
 	public void setActive(boolean toggle) {
-		// toolItem.setSelection(toggle); // looks bad with these non transparent .pngs
+		toolItem.setSelection(toggle); // looks bad with these non transparent .pngs
 		active = toggle;
 		resetImage();
 	}
@@ -117,6 +117,9 @@ public class ToolButton {
 
 /*
 $Log: ToolButton.java,v $
+Revision 1.7  2003/08/31 20:32:50  zet
+active button states
+
 Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 

@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-
+import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TableViewer;
@@ -79,7 +79,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.36 2003/08/31 13:38:38 lemmster Exp $ 
+ * @version $Id: SearchResult.java,v 1.37 2003/08/31 20:32:50 zet Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -262,7 +262,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		cTabItem.setImage( G2GuiResources.getImage( "SearchComplete" ) );
 		
 		/* create the result table */		
-		table = new TableViewer( cTabFolder, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
+		table = new CustomTableViewer( cTabFolder, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
 		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		table.getTable().setLinesVisible( true );
 		table.getTable().setHeaderVisible( true );
@@ -572,6 +572,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.37  2003/08/31 20:32:50  zet
+active button states
+
 Revision 1.36  2003/08/31 13:38:38  lemmster
 delayedRefresh() is working again
 
@@ -612,7 +615,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

@@ -29,7 +29,6 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -41,7 +40,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.30 2003/08/29 17:33:20 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.31 2003/08/31 20:32:50 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -69,7 +68,6 @@ public abstract class GuiTab implements Listener, Observer {
 	private boolean hasObserver;
 	
 	protected Composite subContent;
-	protected String tabName;
 	
 	/**
 	 * @param gui the gui, to which this tab belongs
@@ -176,17 +174,13 @@ public abstract class GuiTab implements Listener, Observer {
 	}
 	
 	public void createButton(String buttonName, String buttonText, String buttonToolTip) {
-		tabName = buttonText;
-		
-		Image big = G2GuiResources.getImage(buttonName);
-		Image small = G2GuiResources.getImage(buttonName + "Small");
 								
 		toolButton.setText(buttonText);
 		toolButton.setToolTipText(buttonToolTip);
-		toolButton.setBigActiveImage(big);
-		toolButton.setBigInactiveImage(big);
-		toolButton.setSmallActiveImage(small);
-		toolButton.setSmallInactiveImage(small);		
+		toolButton.setBigActiveImage(G2GuiResources.getImage(buttonName + "Active"));
+		toolButton.setBigInactiveImage(G2GuiResources.getImage(buttonName));
+		toolButton.setSmallActiveImage(G2GuiResources.getImage(buttonName + "SmallActive"));
+		toolButton.setSmallInactiveImage(G2GuiResources.getImage(buttonName + "Small"));		
 		toolButton.useSmallButtons(this.mainWindow.getCoolBar().isToolbarSmallButtons());
 		toolButton.setActive(false);
 		this.mainWindow.getCoolBar().getMainToolButtons().add( toolButton );	
@@ -197,6 +191,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.31  2003/08/31 20:32:50  zet
+active button states
+
 Revision 1.30  2003/08/29 17:33:20  zet
 remove headerbar
 

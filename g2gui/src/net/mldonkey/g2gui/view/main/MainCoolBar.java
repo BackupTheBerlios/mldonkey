@@ -40,7 +40,6 @@ import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -60,7 +59,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.6 2003/08/28 22:44:30 zet Exp $ 
+ * @version $Id: MainCoolBar.java,v 1.7 2003/08/31 20:32:50 zet Exp $ 
  *
  */
 public class MainCoolBar {
@@ -167,20 +166,18 @@ public class MainCoolBar {
 		final ToolButton prefButton = new ToolButton( miscTools, SWT.NONE );
 		prefButton.setText( G2GuiResources.getString( "TT_PreferencesButton" ) );
 		prefButton.setToolTipText( G2GuiResources.getString( "TT_PreferencesButtonToolTip" ) );
-		
-		Image bigImage = G2GuiResources.getImage( "PreferencesButton" );
-		Image smallImage = G2GuiResources.getImage( "PreferencesButtonSmall" );
 				
-		prefButton.setBigActiveImage( bigImage );
-		prefButton.setBigInactiveImage( bigImage );
-		prefButton.setSmallActiveImage( smallImage );
-		prefButton.setSmallInactiveImage( smallImage );
+		prefButton.setBigActiveImage( G2GuiResources.getImage( "PreferencesButtonActive" ) );
+		prefButton.setBigInactiveImage( G2GuiResources.getImage( "PreferencesButton" ) );
+		prefButton.setSmallActiveImage( G2GuiResources.getImage( "PreferencesButtonSmallActive" ) );
+		prefButton.setSmallInactiveImage( G2GuiResources.getImage( "PreferencesButtonSmall" ));
 		prefButton.useSmallButtons( toolbarSmallButtons );		
 		prefButton.setActive( false );
 		this.miscToolButtons.add( prefButton );	
 		
 		prefButton.addListener( SWT.Selection, new Listener() {
 			public void handleEvent( Event event ) {
+				prefButton.setActive( true );
 				mainTab.openPreferences();	
 				prefButton.setActive( false );
 			}
@@ -350,6 +347,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.7  2003/08/31 20:32:50  zet
+active button states
+
 Revision 1.6  2003/08/28 22:44:30  zet
 GridLayout helper class
 
