@@ -23,14 +23,12 @@
 package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.model.ClientInfo;
-import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
@@ -40,7 +38,7 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.2 2003/09/21 23:39:31 zet Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.3 2003/09/23 01:28:23 zet Exp $
  *
  */
 public class ClientTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -74,7 +72,7 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
 
         switch ( columnIndex ) {
         case 0:
-            return "" + getClientActivity( clientInfo );
+            return "" + clientInfo.getClientActivity( );
 
         case 1:
             return "" + clientInfo.getClientName(  );
@@ -83,26 +81,10 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
             return "" + clientInfo.getClientnetworkid(  ).getNetworkName(  );
 
         case 3:
-            return "" + getClientConnection( clientInfo );
+            return "" + clientInfo.getClientConnection( );
 
         default:
             return "";
-        }
-    }
-
-    public String getClientConnection( ClientInfo clientInfo ) {
-        if ( clientInfo.getClientKind(  ).getClientMode(  ) == EnumClientMode.FIREWALLED ) {
-            return "firewalled";
-        } else {
-            return "direct";
-        }
-    }
-
-    public String getClientActivity( ClientInfo clientInfo ) {
-        if ( ( clientInfo.getState(  ).getState(  ) == EnumState.CONNECTED_DOWNLOADING ) || ( clientInfo.getState(  ).getRank(  ) == 0 ) ) {
-            return "" + clientInfo.getState(  ).getState(  ).toString(  );
-        } else {
-            return "" + clientInfo.getState(  ).getState(  ).toString(  ) + " (Q: " + clientInfo.getState(  ).getRank(  ) + ")";
         }
     }
 
@@ -151,6 +133,9 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.3  2003/09/23 01:28:23  zet
+remove unneeded
+
 Revision 1.2  2003/09/21 23:39:31  zet
 displayTableColors preference
 
