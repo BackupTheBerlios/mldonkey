@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkCanvas.java,v 1.3 2003/08/04 20:11:57 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.4 2003/08/04 20:37:07 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -315,11 +315,14 @@ public class ChunkCanvas extends Canvas implements Observer {
 	
 	protected void resizeImage( ControlEvent e ) {
 		if ( image != null && imageData != null ) {
+						
 			if (getClientArea().width > minWidth && getClientArea().height > 0) {
+			
 				resizedImageData = imageData.scaledTo(
 					getClientArea().width, getClientArea().height);
+				
 			} 
-			
+	
 		}
 		
 	}
@@ -332,6 +335,10 @@ public class ChunkCanvas extends Canvas implements Observer {
 				
 		if ( image != null ) {
 			
+			if (resizedImageData == null) resizedImageData = imageData;
+			
+			
+				
 			int srcWidth = resizedImageData.width;			
 			int srcHeight = resizedImageData.height;	
 			int destWidth = e.width;
@@ -372,8 +379,12 @@ public class ChunkCanvas extends Canvas implements Observer {
 				e.y,
 				e.width,
 				e.height );
+		
+			
 			
 			bufferGC.dispose();
+
+			
 
 		} else { 
 			
@@ -423,7 +434,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 		if (!shell.isDisposed()
 			&& shell != null
 			&& shell.getDisplay() != null) {
-			shell.getDisplay().asyncExec(new Runnable() {
+			shell.getDisplay().syncExec(new Runnable() {
 				public void run() {
 					if (!shell.isDisposed()) {
 						if (!isDisposed())
@@ -440,6 +451,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.4  2003/08/04 20:37:07  zet
+try syncexec
+
 Revision 1.3  2003/08/04 20:11:57  zet
 null
 
