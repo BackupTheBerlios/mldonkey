@@ -23,7 +23,6 @@
 package net.mldonkey.g2gui.view.pref;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -47,11 +46,10 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.44 2003/11/28 00:57:45 zet Exp $
+ * @version $Id: Preferences.java,v 1.45 2003/12/03 22:19:11 lemmy Exp $
  *
  */
 public class Preferences extends PreferenceManager {
-    private boolean connected = false;
     private PreferenceDialog prefdialog;
     private PreferenceStore preferenceStore;
 
@@ -117,17 +115,10 @@ public class Preferences extends PreferenceManager {
      * @param mldonkey the Core we want to configure
      */
     public void open(Shell shell, CoreCommunication mldonkey) {
-        try {
-            initialize(preferenceStore);
-        } catch (IOException e) {
-            System.out.println("initalizing Preferences Dialog failed due to IOException");
-        }
-
         prefdialog = new PreferenceDialog(shell, this);
         PreferenceDialog.setDefaultImage(G2GuiResources.getImage("ProgramIcon"));
 
         if ((mldonkey != null) && (mldonkey.isConnected())) {
-            this.connected = true;
             createMLDonkeyOptions(mldonkey);
         }
 
@@ -261,34 +252,14 @@ public class Preferences extends PreferenceManager {
 
         return true;
     }
-
-    /**
-     * Initializes a preference Store. It creates the corresponding file , so that we can write and
-     * read from it without throwing wild exceptions around.
-     * @param preferenceStore the preferneceStore we want to initialize
-     * @throws IOException some nice IO-Exception if the initialization failed
-     */
-    public void initialize(PreferenceStore preferenceStore)
-        throws IOException {
-        try {
-            preferenceStore.load();
-        } catch (IOException e) {
-            preferenceStore.save();
-            preferenceStore.load();
-        }
-    }
-
-    /**
-     * @return is our nice gui connected to a remot mldonkey, so that we can get remote-options?
-     */
-    public boolean isConnected() {
-        return connected;
-    }
 }
 
 
 /*
 $Log: Preferences.java,v $
+Revision 1.45  2003/12/03 22:19:11  lemmy
+store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
+
 Revision 1.44  2003/11/28 00:57:45  zet
 use versioncheck
 
@@ -358,7 +329,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmy $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name

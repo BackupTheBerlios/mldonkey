@@ -43,7 +43,6 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -54,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.52 2003/11/30 20:02:06 lemmster Exp $
+ * @version $Id: G2Gui.java,v 1.53 2003/12/03 22:19:11 lemmy Exp $
  *
  */
 public class G2Gui {
@@ -67,7 +66,6 @@ public class G2Gui {
 	private static boolean advancedMode = false;
 
 	// our prefs
-    private static PreferenceStore preferenceStore;
     private static Preferences myPrefs;
 
 	// connection infos
@@ -87,7 +85,8 @@ public class G2Gui {
      * @param args Nothing to put inside
      */
     public static void main(String[] argv) {
-        display = new Display();
+    	String fileNotFound = "preference file not found on disk";
+    	display = new Display();
         List links = new ArrayList();
         
 		// parse args
@@ -101,7 +100,12 @@ public class G2Gui {
 				debug = true;
 			} else if ( argv.length > optind + 1 )	{
 				if (argv[optind].equals("-c")) {
-					PreferenceLoader.setPrefFile((String) argv[optind]); 
+					try {
+						PreferenceLoader.initialize((String) argv[optind]);
+					}
+					catch (IOException e) {
+						System.err.println(fileNotFound);
+					} 
 				} else if (argv[optind].equals("-l")) {
 					links.add( argv[++optind] );
 				} else if (argv[optind].equals("-H")) {
@@ -130,8 +134,12 @@ public class G2Gui {
 		}	
 			
 		G2GuiResources.initialize();
-		PreferenceLoader.initialize();
-        preferenceStore = PreferenceLoader.getPreferenceStore();
+		try {
+			PreferenceLoader.initialize();
+		}
+		catch (IOException e) {
+			System.err.println(fileNotFound);
+		}
 
         /*determine wether a new instance of G2gui is allowed: */
         if (PreferenceLoader.loadBoolean("allowMultipleInstances")
@@ -154,19 +162,12 @@ public class G2Gui {
      */
     private static void launch() {
         /* we are running, so we make this available to other instances */
-        PreferenceLoader.getPreferenceStore().setValue("running", true);
+        PreferenceLoader.setValue("running", true);
         PreferenceLoader.saveStore();
 
         Object waiterObject = new Object();
 
-        myPrefs = new Preferences(preferenceStore);
-
-        /* load the preferences */
-        try {
-            myPrefs.initialize(preferenceStore);
-        } catch (IOException e) {
-            System.err.println("loading the preference file failed");
-        }
+        myPrefs = new Preferences(PreferenceLoader.getPreferenceStore());
 
         shell = new Shell(display);
 
@@ -195,8 +196,8 @@ public class G2Gui {
 		Splash.increaseSplashBar("initializing connection");
 
         /* if the gui isnt set up yet launch the preference window */
-        if (!(preferenceStore.getBoolean("initialized"))) {
-            preferenceStore.setValue("initialized", true);
+        if (!(PreferenceLoader.getBoolean("initialized"))) {
+        	PreferenceLoader.setValue("initialized", true);
             Splash.setVisible(false);
             myPrefs.open(shell, null);
 
@@ -204,7 +205,7 @@ public class G2Gui {
             // if you don't create a new Preferenes() - Why?
             // a jface.Wizard would be better
             // temporary hack
-            myPrefs = new Preferences(preferenceStore);
+            myPrefs = new Preferences(PreferenceLoader.getPreferenceStore());
 			Splash.setVisible(true);
         }
 
@@ -238,7 +239,7 @@ public class G2Gui {
          * we are not running anymore, so we can allow another instance to
          * be started
          */
-        PreferenceLoader.getPreferenceStore().setValue("running", false);
+        PreferenceLoader.setValue("running", false);
         PreferenceLoader.saveStore();
     }
     
@@ -296,14 +297,14 @@ public class G2Gui {
     private static void readParams() {
     	// read the value as long as no cmd line params were specified
     	if ( port == 0 )
-    		port = preferenceStore.getInt("port");
+    		port = PreferenceLoader.getInt("port");
     	if ( hostname == null )
-    		hostname = preferenceStore.getString("hostname");
+    		hostname = PreferenceLoader.getString("hostname");
     	if ( username == null )
-    		username = preferenceStore.getString("username");
+    		username = PreferenceLoader.getString("username");
     	if ( password == null )
-    		password = preferenceStore.getString("password");
-   		advancedMode = preferenceStore.getBoolean("advancedMode");
+    		password = PreferenceLoader.getString("password");
+   		advancedMode = PreferenceLoader.getBoolean("advancedMode");
     }
     
     /**
@@ -416,7 +417,7 @@ public class G2Gui {
 				relaunchSelf();
 			}
 		} else {
-			myPrefs = new Preferences(preferenceStore);
+			myPrefs = new Preferences(PreferenceLoader.getPreferenceStore());
 			shell = new Shell();
 			myPrefs.open(shell, null);
 			relaunchSelf();
@@ -465,6 +466,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.53  2003/12/03 22:19:11  lemmy
+store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
+
 Revision 1.52  2003/11/30 20:02:06  lemmster
 check boundaries
 

@@ -22,6 +22,12 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -38,8 +44,6 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.DisposeEvent;
@@ -61,18 +65,11 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.4 2003/11/30 18:43:58 zet Exp $
+ * @version $Id: MainWindow.java,v 1.5 2003/12/03 22:19:11 lemmy Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -295,13 +292,11 @@ public class MainWindow implements ShellListener {
      * @param shell The shell to save the size from
      */
     public void saveSizeLocation(Shell shell) {
-        PreferenceStore p = PreferenceLoader.getPreferenceStore();
-
         if (shell.getMaximized())
-            p.setValue("windowMaximized", shell.getMaximized());
+        	PreferenceLoader.setValue("windowMaximized", shell.getMaximized());
         else {
-            PreferenceConverter.setValue(p, "windowBounds", shell.getBounds());
-            p.setValue("windowMaximized", shell.getMaximized());
+            PreferenceConverter.setValue(PreferenceLoader.getPreferenceStore(), "windowBounds", shell.getBounds());
+            PreferenceLoader.setValue("windowMaximized", shell.getMaximized());
         }
     }
 
@@ -462,6 +457,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.5  2003/12/03 22:19:11  lemmy
+store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
+
 Revision 1.4  2003/11/30 18:43:58  zet
 latest swt-fox fixes display.dispose() bug.
 

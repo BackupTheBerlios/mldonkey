@@ -43,7 +43,6 @@ import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.events.DisposeEvent;
 
 
@@ -51,7 +50,7 @@ import org.eclipse.swt.events.DisposeEvent;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.2 2003/11/28 01:06:21 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.3 2003/12/03 22:19:11 lemmy Exp $
  *
  */
 public class DownloadPaneMenuListener extends SashViewFrameListener {
@@ -138,15 +137,17 @@ public class DownloadPaneMenuListener extends SashViewFrameListener {
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
     public void widgetDisposed(DisposeEvent arg0) {
-        PreferenceStore p = PreferenceLoader.getPreferenceStore();
-        p.setValue("downloadsFilterPaused", FilterAction.isFiltered(gView, EnumFileState.PAUSED));
-        p.setValue("downloadsFilterQueued", FilterAction.isFiltered(gView, EnumFileState.QUEUED));
+    	PreferenceLoader.setValue("downloadsFilterPaused", FilterAction.isFiltered(gView, EnumFileState.PAUSED));
+    	PreferenceLoader.setValue("downloadsFilterQueued", FilterAction.isFiltered(gView, EnumFileState.QUEUED));
     }
 }
 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.3  2003/12/03 22:19:11  lemmy
+store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
+
 Revision 1.2  2003/11/28 01:06:21  zet
 not much- slowly expanding viewframe - will continue later
 

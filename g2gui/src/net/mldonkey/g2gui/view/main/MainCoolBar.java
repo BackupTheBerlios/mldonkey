@@ -34,7 +34,6 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -61,7 +60,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.23 2003/11/29 17:01:09 zet Exp $
+ * @version $Id: MainCoolBar.java,v 1.24 2003/12/03 22:19:35 lemmy Exp $
  *
  */
 public class MainCoolBar {
@@ -286,12 +285,11 @@ public class MainCoolBar {
      * resores the saved Layout and applies it to the coolBar
      */
     public void restoreLayout() {
-    	PreferenceStore p = PreferenceLoader.getPreferenceStore();
-    	p.setDefault( "coolBarSizes", "0-0|0-0|" );    	
-    	p.setDefault( "coolBarOrder", "0|1|" );
+    	PreferenceLoader.setDefault( "coolBarSizes", "0-0|0-0|" );    	
+    	PreferenceLoader.setDefault( "coolBarOrder", "0|1|" );
     	
-    	String sizesString = p.getString( "coolBarSizes" );
-    	String orderString = p.getString( "coolBarOrder" );
+    	String sizesString = PreferenceLoader.getString( "coolBarSizes" );
+    	String orderString = PreferenceLoader.getString( "coolBarOrder" );
     	
     	String[] sizes = RegExp.split( sizesString, '|' );
     	Point[] itemSizes = new Point[ sizes.length ];
@@ -319,16 +317,15 @@ public class MainCoolBar {
     	
     	layoutCoolBar();
     	coolbar.setItemLayout( order, wrap, itemSizes );
-    	if ( p.isDefault( "coolBarSizes" ) ) layoutCoolBar();
+    	if ( PreferenceLoader.isDefault( "coolBarSizes" ) ) layoutCoolBar();
     }
     
     /**
      *  saves the Layout of the coolbar when beein disposed
      */
     public void saveLayout() {
-    	PreferenceStore p = PreferenceLoader.getPreferenceStore();
-    	p.setValue( "coolbarLocked", isCoolbarLocked() );
-    	p.setValue( "toolbarSmallButtons", isToolbarSmallButtons() );
+    	PreferenceLoader.setValue( "coolbarLocked", isCoolbarLocked() );
+    	PreferenceLoader.setValue( "toolbarSmallButtons", isToolbarSmallButtons() );
     	
     	StringBuffer sizesBuffer = new StringBuffer();    	
     	
@@ -349,8 +346,8 @@ public class MainCoolBar {
     	 * the next startup
     	 */
     	if ( layoutChanged ) {
-    		p.setValue( "coolBarSizes", sizesBuffer.toString() );	    	
-    		p.setValue( "coolBarOrder", orderBuffer.toString() );
+    		PreferenceLoader.setValue( "coolBarSizes", sizesBuffer.toString() );	    	
+    		PreferenceLoader.setValue( "coolBarOrder", orderBuffer.toString() );
     	}
     	
     }
@@ -397,6 +394,9 @@ public class MainCoolBar {
 
 
 $Log: MainCoolBar.java,v $
+Revision 1.24  2003/12/03 22:19:35  lemmy
+store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
+
 Revision 1.23  2003/11/29 17:01:09  zet
 update for mainWindow
 

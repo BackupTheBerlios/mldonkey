@@ -38,7 +38,6 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -56,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ExecConsole : to spawn and watch an executable in a shell/console
  *
- * @version $Id: ExecConsole.java,v 1.5 2003/11/22 02:24:30 zet Exp $
+ * @version $Id: ExecConsole.java,v 1.6 2003/12/03 22:19:54 lemmy Exp $
  *
  */
 public class ExecConsole implements Observer {
@@ -86,8 +85,7 @@ public class ExecConsole implements Observer {
         shell.setLayout( WidgetFactory.createGridLayout( 1, 0, 0, 0, 0, false ) );
         shell.addDisposeListener( new DisposeListener() {
                 public synchronized void widgetDisposed( DisposeEvent e ) {
-                    PreferenceStore p = PreferenceLoader.getPreferenceStore();
-                    PreferenceConverter.setValue( p, "coreExecutableWindowBounds", shell.getBounds() );
+                    PreferenceConverter.setValue( PreferenceLoader.getPreferenceStore(), "coreExecutableWindowBounds", shell.getBounds() );
                 }
             } );
         shell.addListener( SWT.Close,
@@ -233,6 +231,9 @@ public class ExecConsole implements Observer {
 
 /*
 $Log: ExecConsole.java,v $
+Revision 1.6  2003/12/03 22:19:54  lemmy
+store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
+
 Revision 1.5  2003/11/22 02:24:30  zet
 widgetfactory & save sash postions/states between sessions
 

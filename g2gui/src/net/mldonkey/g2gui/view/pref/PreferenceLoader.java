@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.pref;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -49,7 +50,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.51 2003/11/29 13:03:54 lemmster Exp $
+ * @version $Id: PreferenceLoader.java,v 1.52 2003/12/03 22:19:11 lemmy Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -65,19 +66,29 @@ public class PreferenceLoader {
     /**
      * @return
      */
-    public static void initialize() {
-        if ( preferenceStore == null ) {
-        	setPrefFile( "g2gui.pref" );
-        }
-        
-        try {
-            preferenceStore.load();
-        }
-        catch ( IOException e ) {
-        }
-        preferenceStore = (PreferenceStore) setDefaults( preferenceStore );
+    public static void initialize() throws IOException {
+    	String userhome = System.getProperty("user.home");
+    	String fileSep = System.getProperty("file.separator");
+    	String pathToConf = userhome + fileSep + ".g2gui" + fileSep;
+    	initialize( pathToConf + "g2gui.pref" );
     }
 
+    public static void initialize( String file ) throws IOException {
+    	if ( preferenceStore == null ) {
+    		preferenceStore = new PreferenceStore( file );
+    	}
+    	
+    	try {
+    		preferenceStore.load();
+    	}
+    	catch ( IOException e ) {
+    		// no pref file is created -> lets create one (with the directory
+    		new File( new File( file ).getParent() ).mkdirs();
+    		preferenceStore.save();
+    	}
+    	preferenceStore = (PreferenceStore) setDefaults( preferenceStore );
+    }
+    
     /**
      * @param preferenceStore
      * @return
@@ -261,7 +272,7 @@ public class PreferenceLoader {
         return preferenceStore;
     }
 
-        public static void saveStore() {
+    public static void saveStore() {
         try {
             preferenceStore.save();
         }
@@ -273,10 +284,6 @@ public class PreferenceLoader {
         return preferenceStore.contains( preferenceString );
     }
 
-    public static void setPrefFile(String file) {
-		preferenceStore = new PreferenceStore( file );
-    }
-
 	public static void cleanUp() {
         Iterator fonts = fontArray.iterator();
         while ( fonts.hasNext() )
@@ -285,10 +292,57 @@ public class PreferenceLoader {
         while ( colors.hasNext() )
             ( ( Color ) colors.next() ).dispose();
     }
+
+	public static boolean getBoolean(String string) {
+		return getPreferenceStore().getBoolean(string);
+	}
+
+	public static void setValue(String string, boolean b) {
+		getPreferenceStore().setValue(string, b);
+	}
+
+	public static int getInt(String string) {
+		return getPreferenceStore().getInt(string);
+	}
+
+	public static String getString(String string) {
+		return getPreferenceStore().getString(string);
+	}
+
+	public static int getDefaultInt(String orientationPrefString) {
+		return getPreferenceStore().getDefaultInt(orientationPrefString);
+	}
+
+	public static void setValue(String orientationPrefString, int i) {
+		getPreferenceStore().setValue(orientationPrefString, i);
+	}
+
+	public static void setDefault(String string, String string2) {
+		getPreferenceStore().setDefault(string, string2);
+	}
+
+	public static void setValue(String string, String string2) {
+		getPreferenceStore().setValue(string, string2);
+	}
+
+	public static boolean isDefault(String string) {
+		return getPreferenceStore().isDefault(string);
+	}
+
+	public static void setDefault(String string, boolean b) {
+		getPreferenceStore().setDefault(string,b);
+	}
+
+	public static void setDefault(String string, int i) {
+		getPreferenceStore().setDefault(string, i);
+	}
 }
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.52  2003/12/03 22:19:11  lemmy
+store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
+
 Revision 1.51  2003/11/29 13:03:54  lemmster
 ToolTip complete reworked (to be continued)
 
@@ -414,7 +468,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: lemmy $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates

@@ -38,13 +38,12 @@ import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.events.DisposeEvent;
 
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.11 2003/11/29 01:51:53 zet Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.12 2003/12/03 22:19:11 lemmy Exp $ 
  *
  */
 public class ServerPaneListener extends ViewFrameListener {
@@ -112,14 +111,16 @@ public class ServerPaneListener extends ViewFrameListener {
 	 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
 	 */
 	public void widgetDisposed(DisposeEvent arg0) {
-		PreferenceStore p = PreferenceLoader.getPreferenceStore();
 		for ( int i = 0; i < this.states.length; i++ )
-			p.setValue( states[ i ].getPrefName(this), FilterAction.isFiltered( gView, states[ i ] ) ); 
+			PreferenceLoader.setValue( states[ i ].getPrefName(this), FilterAction.isFiltered( gView, states[ i ] ) ); 
 	}
 }
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.12  2003/12/03 22:19:11  lemmy
+store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
+
 Revision 1.11  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 

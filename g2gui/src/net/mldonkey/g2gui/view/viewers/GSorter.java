@@ -25,10 +25,8 @@ package net.mldonkey.g2gui.view.viewers;
 import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
@@ -36,14 +34,13 @@ import org.eclipse.swt.events.DisposeListener;
 /**
  * GSorter - Generic sorter
  *
- * @version $Id: GSorter.java,v 1.5 2003/12/01 16:39:25 zet Exp $
+ * @version $Id: GSorter.java,v 1.6 2003/12/03 22:19:11 lemmy Exp $
  *
  */
 public class GSorter extends ViewerSorter implements DisposeListener {
     protected int lastColumnIndex;
     protected int columnIndex;
     protected boolean lastSort;
-    protected PreferenceStore preferenceStore = PreferenceLoader.getPreferenceStore();
     protected GView gViewer;
     protected ICustomViewer cViewer;
 
@@ -200,10 +197,10 @@ public class GSorter extends ViewerSorter implements DisposeListener {
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
     public void widgetDisposed(DisposeEvent e) {
-        preferenceStore.setValue(gViewer.getPreferenceString() + "LastSortColumn",
+    	PreferenceLoader.setValue(gViewer.getPreferenceString() + "LastSortColumn",
             String.valueOf(gViewer.getColumnIDs().charAt(columnIndex)));
-        preferenceStore.setDefault(gViewer.getPreferenceString() + "LastSortOrder", true);
-        preferenceStore.setValue(gViewer.getPreferenceString() + "LastSortOrder", lastSort);
+    	PreferenceLoader.setDefault(gViewer.getPreferenceString() + "LastSortOrder", true);
+        PreferenceLoader.setValue(gViewer.getPreferenceString() + "LastSortOrder", lastSort);
     }
 
     /**
@@ -216,6 +213,9 @@ public class GSorter extends ViewerSorter implements DisposeListener {
 
 /*
 $Log: GSorter.java,v $
+Revision 1.6  2003/12/03 22:19:11  lemmy
+store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
+
 Revision 1.5  2003/12/01 16:39:25  zet
 set default sort order for specific columns
 

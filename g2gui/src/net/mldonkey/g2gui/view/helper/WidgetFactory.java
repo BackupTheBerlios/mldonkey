@@ -26,8 +26,6 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
@@ -47,7 +45,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * WidgetFactory
  *
- * @version $Id: WidgetFactory.java,v 1.2 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: WidgetFactory.java,v 1.3 2003/12/03 22:19:45 lemmy Exp $
  *
  */
 public class WidgetFactory {
@@ -119,8 +117,7 @@ public class WidgetFactory {
         int orientation = PreferenceLoader.loadInteger(orientationPrefString);
 
         if ((orientation != SWT.HORIZONTAL) && (orientation != SWT.VERTICAL)) {
-            PreferenceStore p = PreferenceLoader.getPreferenceStore();
-            orientation = p.getDefaultInt(orientationPrefString);
+            orientation = PreferenceLoader.getDefaultInt(orientationPrefString);
         }
 
         final SashForm sashForm = new SashForm(parent, orientation);
@@ -128,8 +125,7 @@ public class WidgetFactory {
 
         sashForm.addDisposeListener(new DisposeListener() {
                 public void widgetDisposed(DisposeEvent e) {
-                    PreferenceStore p = PreferenceLoader.getPreferenceStore();
-                    p.setValue(orientationPrefString, sashForm.getOrientation());
+                	PreferenceLoader.setValue(orientationPrefString, sashForm.getOrientation());
                 }
             });
 
@@ -170,8 +166,6 @@ public class WidgetFactory {
             sashForm.setMaximizedControl(sashForm.getChildren()[ maximizeControl ]);
         }
 
-        final PreferenceStore p = PreferenceLoader.getPreferenceStore();
-
         // Save the control size
         for (int i = 0; i < sashForm.getChildren().length; i++) {
             final Control control = sashForm.getChildren()[ i ];
@@ -181,7 +175,7 @@ public class WidgetFactory {
                         Control aControl = (Control) e.widget;
 
                         if ((aControl.getBounds().width > 0) && (aControl.getBounds().height > 0)) {
-                            PreferenceConverter.setValue(p, sashChildPrefString + childNumber,
+                            PreferenceConverter.setValue(PreferenceLoader.getPreferenceStore(), sashChildPrefString + childNumber,
                                 aControl.getBounds());
                         }
                     }
@@ -195,10 +189,8 @@ public class WidgetFactory {
      * @return true if all sashChildren preferences exist
      */
     public static boolean sashPrefsExist(SashForm sashForm, String prefString) {
-        PreferenceStore p = PreferenceLoader.getPreferenceStore();
-
         for (int i = 0; i < sashForm.getChildren().length; i++) {
-            if (!p.contains(prefString + "Child" + i)) {
+            if (!PreferenceLoader.contains(prefString + "Child" + i)) {
                 return false;
             }
         }
@@ -212,7 +204,6 @@ public class WidgetFactory {
      * @param control
      */
     public static void setMaximizedSashFormControl(SashForm sashForm, Control control) {
-        PreferenceStore p = PreferenceLoader.getPreferenceStore();
         String maximizedPrefString = null;
 
         if (sashForm.getData("prefString") != null) {
@@ -225,7 +216,7 @@ public class WidgetFactory {
             if (maximizedPrefString != null) {
                 for (int i = 0; i < sashForm.getChildren().length; i++) {
                     if (control == sashForm.getChildren()[ i ]) {
-                        p.setValue(maximizedPrefString, i);
+                        PreferenceLoader.setValue(maximizedPrefString, i);
 
                         break;
                     }
@@ -235,7 +226,7 @@ public class WidgetFactory {
             sashForm.setMaximizedControl(null);
 
             if (maximizedPrefString != null) {
-                p.setValue(maximizedPrefString, -1);
+                PreferenceLoader.setValue(maximizedPrefString, -1);
             }
         }
     }
@@ -244,6 +235,9 @@ public class WidgetFactory {
 
 /*
 $Log: WidgetFactory.java,v $
+Revision 1.3  2003/12/03 22:19:45  lemmy
+store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
+
 Revision 1.2  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

@@ -27,7 +27,6 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -53,7 +52,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.8 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: ColumnSelector.java,v 1.9 2003/12/03 22:19:11 lemmy Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -193,8 +192,7 @@ public class ColumnSelector extends Dialog {
      */
     public void savePrefs() {
         if (rightColumnIDs.length() > 1) {
-            PreferenceStore p = PreferenceLoader.getPreferenceStore();
-            p.setValue(prefOption, rightColumnIDs);
+            PreferenceLoader.setValue(prefOption, rightColumnIDs);
             PreferenceLoader.saveStore();
         }
     }
@@ -316,6 +314,9 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.9  2003/12/03 22:19:11  lemmy
+store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
+
 Revision 1.8  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
