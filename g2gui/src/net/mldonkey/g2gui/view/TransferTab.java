@@ -68,7 +68,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.65 2003/09/27 00:26:41 zet Exp $
+ * @version $Id: TransferTab.java,v 1.66 2003/09/27 12:30:40 dek Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -79,6 +79,7 @@ public class TransferTab extends GuiTab {
     private CustomTableViewer clientTableViewer = null;
     private Composite downloadComposite;
     private MenuManager popupMenuDL, popupMenuUL;
+	private UploadTableViewer uploadTableViewer;
 
     /**
      * @param gui where this tab belongs to
@@ -152,7 +153,7 @@ public class TransferTab extends GuiTab {
        	createUploadHeader( uploadsViewForm, mainSashForm, uploadsViewForm);
         Composite uploadersComposite = new Composite( uploadsViewForm, SWT.NONE );
         uploadersComposite.setLayout( new FillLayout() );
-        UploadTableViewer upload = new UploadTableViewer(uploadersComposite,mldonkey,this);
+        uploadTableViewer = new UploadTableViewer(uploadersComposite,mldonkey,this);
         uploadsViewForm.setContent( uploadersComposite );
     }
 	public void createUploadHeader( ViewForm parentViewForm, final SashForm mainSashForm, final Control uploadParent ) {
@@ -287,6 +288,7 @@ public class TransferTab extends GuiTab {
      */
     public void updateDisplay() {
         downloadTableTreeViewer.updateDisplay();
+        uploadTableViewer.updateDisplay();
         if ( clientTableViewer != null )
             clientTableViewer.getTable().setLinesVisible(
             	PreferenceLoader.loadBoolean( "displayGridLines" ) );
@@ -334,6 +336,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.66  2003/09/27 12:30:40  dek
+upload-Table has now same show-Gridlines-behaviour as download-Table
+
 Revision 1.65  2003/09/27 00:26:41  zet
 put menu back
 
@@ -431,7 +436,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

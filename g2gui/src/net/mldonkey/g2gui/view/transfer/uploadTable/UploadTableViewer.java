@@ -28,6 +28,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.SharedFileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.view.TransferTab;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.MenuManager;
@@ -49,14 +50,14 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.9 2003/09/27 00:02:37 dek Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.10 2003/09/27 12:30:40 dek Exp $ 
  *
  */
 public class UploadTableViewer {
 	/**
 	 * MyTableSorter
 	 *
-	 * @version $Id: UploadTableViewer.java,v 1.9 2003/09/27 00:02:37 dek Exp $ 
+	 * @version $Id: UploadTableViewer.java,v 1.10 2003/09/27 12:30:40 dek Exp $ 
 	 *
 	 */
 	
@@ -133,6 +134,14 @@ public class UploadTableViewer {
 		popupMenu.setRemoveAllWhenShown( true );
 		popupMenu.addMenuListener( tableMenuListener );
 		tableviewer.getTable().setMenu( popupMenu.createContextMenu( tableviewer.getTable() ) );
+		updateDisplay();
+	}
+	/**
+	 * 
+	 */
+	public void updateDisplay() {
+		tableviewer.getTable().setLinesVisible(
+						PreferenceLoader.loadBoolean( "displayGridLines" ) );
 		
 	}
 	
@@ -319,9 +328,13 @@ public class UploadTableViewer {
 			lastSort = i;
 		}
 	}
+
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.10  2003/09/27 12:30:40  dek
+upload-Table has now same show-Gridlines-behaviour as download-Table
+
 Revision 1.9  2003/09/27 00:02:37  dek
 bugfixes, merged right-mouse-click menues (nothing is uglier than one-item-menues)
 
