@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.19 2003/08/16 13:51:56 dek Exp $ 
+ * @version $Id: GuiTab.java,v 1.20 2003/08/16 13:55:32 dek Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -248,7 +248,6 @@ public abstract class GuiTab implements Listener, Observer {
 		if (createMe) {
 		
 			Color backgroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
-			
 			Color foregroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_WHITE);
 			
 			separator1 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
@@ -304,8 +303,8 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
-Revision 1.19  2003/08/16 13:51:56  dek
-ed2k-link handling-hack continued
+Revision 1.20  2003/08/16 13:55:32  dek
+foo
 
 Revision 1.18  2003/08/10 22:13:51  zet
 pageheader separator fixes
