@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.20 2003/08/31 01:48:25 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.21 2003/08/31 01:54:25 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -212,7 +212,7 @@ public class FileDetailDialog implements Observer {
 		if (fileInfo.getState().getState() == EnumFileState.PAUSED)
 			fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ));
 		else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADING)
-			fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ));
+			fileActionButton.setText("  " + G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ) + "  ");
 		else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
 			fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT" ));
 	
@@ -341,6 +341,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.21  2003/08/31 01:54:25  zet
+add spaces
+
 Revision 1.20  2003/08/31 01:48:25  zet
 *** empty log message ***
 
@@ -370,6 +373,9 @@ new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
+fix Revision 1.21  2003/08/31 01:54:25  zet
+fix add spaces
+fix
 fix Revision 1.20  2003/08/31 01:48:25  zet
 fix *** empty log message ***
 fix
