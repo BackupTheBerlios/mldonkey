@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.14 2003/07/16 19:39:46 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.15 2003/07/18 09:40:07 dek Exp $ 
  *
  */
 public class DownloadItem 
@@ -100,15 +100,15 @@ public class DownloadItem
 		/*
 		 * Now fill the columns with initial values, that never change...
 		 */
-		setText( 0, String.valueOf( fileInfo.getId() ) );
-		setText( 1, fileInfo.getNetwork().getNetworkName() );	
+		updateCell( 0, String.valueOf( fileInfo.getId() ) );
+		updateCell( 1, fileInfo.getNetwork().getNetworkName() );	
 			
 		Control oldEditor = editor.getEditor();
 				if ( oldEditor != null )
 					oldEditor.dispose();
 				this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo, 4 );
 		editor.setEditor ( chunks, this, 4 );				
-		setText( 7, String.valueOf( fileInfo.getSize() ) );
+		updateCell( 7, String.valueOf( fileInfo.getSize() ) );
 		
 		updateColumns();
 
@@ -142,14 +142,14 @@ public class DownloadItem
 		addDisposeListener( new DisposeListener() {
 			public void widgetDisposed( DisposeEvent e ) {
 				chunks.dispose();
+			//resetting the chunk-bar editor is a must 
+				editor.setEditor( null );
 				TIntObjectIterator it = namedclients.iterator();
 				while ( it.hasNext() ) {
 					while ( it.hasNext() ) {
 						it.advance();
 						ClientItem clientItem = ( ClientItem ) it.value();
-						clientItem.dispose();	
-						// resetting the chunk-bar editor is a must 
-						editor.setEditor( null );					
+						clientItem.dispose();
 					}
 				}				
 			}
@@ -196,7 +196,7 @@ public class DownloadItem
 		 */
 		//setText( 0, String.valueOf( fileInfo.getId() ) );
 		//setText( 1, fileInfo.getNetwork().getNetworkName() );
-		setText( 2, fileInfo.getName() );
+		updateCell( 2, fileInfo.getName() );
 		
 		if ( fileInfo.getState().getState() == EnumFileState.PAUSED )
 				setText( 3, "paused" );
@@ -209,13 +209,29 @@ public class DownloadItem
 			for ( int i = 0; i < temp.length; i++ ) {
 				if ( temp[ i ] == '2' ) numberOfAvailabelChunks++;
 			}
-		setText( 4, String.valueOf( numberOfAvailabelChunks ) );	
+			
+		updateCell( 4, String.valueOf( numberOfAvailabelChunks ) );
 		
-		setText( 5, String.valueOf( fileInfo.getPerc() ) );	
-		setText( 6, String.valueOf( fileInfo.getDownloaded() ) );		
+		updateCell( 5, String.valueOf( fileInfo.getPerc() ) );	
+		updateCell( 6, String.valueOf( fileInfo.getDownloaded() ) );		
 		//setText( 7, String.valueOf( fileInfo.getSize() ) );		
 		chunks.refresh();
 		
+	
+	}
+
+	/**
+	 * Sets the text of the specific Cell in this row and redraw it
+	 * @param column the column, in which this cell lives
+	 * @param text what do we want do display in this cell
+	 */
+	private void updateCell( int column, String text ) {
+		setText( column, text );		
+		int x = getBounds( column ).x;
+		int y = getBounds( column ).y;
+		int width = getBounds( column ).width;
+		int height = getBounds( column ).height;		
+		getParent().redraw( x, y, width, height, true );	
 	}
 	
 
@@ -371,6 +387,9 @@ public class DownloadItem
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.15  2003/07/18 09:40:07  dek
+finally got rid of the flickering?? dunno /* searching CRT to test */
+
 Revision 1.14  2003/07/16 19:39:46  dek
 fixed exception when items were expanded after a sort()
 

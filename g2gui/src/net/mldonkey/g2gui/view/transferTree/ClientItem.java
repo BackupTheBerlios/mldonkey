@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.12 2003/07/16 19:39:46 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.13 2003/07/18 09:40:07 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -82,7 +82,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 			oldEditor.dispose();
 		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, 6 );
 		editor.setEditor ( chunks, this, 4 );			
-		setText( 2, clientInfo.getClientName() );	
+		updateCell( 2, clientInfo.getClientName() );	
 		updateColums();	
 		addDisposeListener( new DisposeListener() {
 			public void widgetDisposed( DisposeEvent e ) {				
@@ -94,9 +94,22 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		
 	}
 	
+	/**
+	 * Sets the text of the specific Cell in this row and redraw it
+	 * @param column the column, in which this cell lives
+	 * @param text what do we want do display in this cell
+	 */
+	private void updateCell( int column, String text ) {
+		setText( column, text );		
+		int x = getBounds( column ).x;
+		int y = getBounds( column ).y;
+		int width = getBounds( column ).width;
+		int height = getBounds( column ).height;		
+		getParent().redraw( x, y, width, height, true );	
+	}
 	
 	/**
-	 * 
+	 * updates the whole row, in which this item is displayed
 	 */
 	private void updateColums() {
 		//"ID"|"Network"|"Filename"|"Rate"|"Chunks"|"%"|"Downloaded"|"Size"
@@ -107,7 +120,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		else {
 			connection = "direct";
 		}
-		setText( 3, connection );
+		updateCell( 3, connection );
 		
 		String state = "";
 		if ( clientInfo.getState().getState() == EnumState.CONNECTED )		
@@ -153,6 +166,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.13  2003/07/18 09:40:07  dek
+finally got rid of the flickering?? dunno /* searching CRT to test */
+
 Revision 1.12  2003/07/16 19:39:46  dek
 fixed exception when items were expanded after a sort()
 

@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * DownloadItemComparator
  *
  * @author $user$
- * @version $Id: FileInfoComparator.java,v 1.5 2003/07/16 18:16:53 dek Exp $ 
+ * @version $Id: FileInfoComparator.java,v 1.6 2003/07/18 09:40:07 dek Exp $ 
  *
  */
 public class FileInfoComparator implements Comparator {
@@ -62,43 +62,43 @@ public class FileInfoComparator implements Comparator {
 		int result = 0;
 		switch ( column ) {
 			case 0 :
-				Integer r1_0 = new Integer( row1.getId() );
-				Integer r2_0 = new Integer( row2.getId() );
-				result = r1_0.compareTo( r2_0 );
+				Integer r10 = new Integer( row1.getId() );
+				Integer r20 = new Integer( row2.getId() );
+				result = r10.compareTo( r20 );
 				break;
 			case 1 :
-				String r1_1 = row1.getNetwork().getNetworkName();
-				String r2_1 = row2.getNetwork().getNetworkName();
-				result = r1_1.compareToIgnoreCase( r2_1 );
+				String r11 = row1.getNetwork().getNetworkName();
+				String r21 = row2.getNetwork().getNetworkName();
+				result = r11.compareToIgnoreCase( r21 );
 				break;
 			case 2 :
-				String r1_2 = row1.getName();
-				String r2_2 = row2.getName();
-				result = r1_2.compareToIgnoreCase( r2_2 );
+				String r12 = row1.getName();
+				String r22 = row2.getName();
+				result = r12.compareToIgnoreCase( r22 );
 				break;
 			case 3 :
-				Float r1_3 = new Float( row1.getRate() );
-				Float r2_3 = new Float( row2.getRate() );
-				result = r1_3.compareTo( r2_3 );
+				Float r13 = new Float( row1.getRate() );
+				Float r23 = new Float( row2.getRate() );
+				result = r13.compareTo( r23 );
 				break;
 			case 4 :
 				//Sorting by # of available chunks...
 				result = 0;
 				break;
 			case 5 :
-				Float r1_5 = new Float( row1.getPerc() );
-				Float r2_5 = new Float( row2.getPerc() );
-				result = r1_5.compareTo( r2_5 );
+				Float r15 = new Float( row1.getPerc() );
+				Float r25 = new Float( row2.getPerc() );
+				result = r15.compareTo( r25 );
 				break;
 			case 6 :
-				Integer r1_6 = new Integer( row1.getDownloaded() );
-				Integer r2_6 = new Integer( row2.getDownloaded() );
-				result = r1_6.compareTo( r2_6 );
+				Integer r16 = new Integer( row1.getDownloaded() );
+				Integer r26 = new Integer( row2.getDownloaded() );
+				result = r16.compareTo( r26 );
 				break;
 			case 7 :
-				Integer r1_7 = new Integer( row1.getSize() );
-				Integer r2_7 = new Integer( row2.getSize() );
-				result = r1_7.compareTo( r2_7 );
+				Integer r17 = new Integer( row1.getSize() );
+				Integer r27 = new Integer( row2.getSize() );
+				result = r17.compareTo( r27 );
 				break;
 			
 			default :
@@ -110,6 +110,9 @@ public class FileInfoComparator implements Comparator {
 
 /*
 $Log: FileInfoComparator.java,v $
+Revision 1.6  2003/07/18 09:40:07  dek
+finally got rid of the flickering?? dunno /* searching CRT to test */
+
 Revision 1.5  2003/07/16 18:16:53  dek
 another flickering-test
 

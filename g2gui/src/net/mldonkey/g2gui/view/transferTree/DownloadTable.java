@@ -8,7 +8,7 @@
  * G2GUI is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * ( at your option ) any later version.
+ * (  at your option  ) any later version.
  *
  * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,24 +21,16 @@
  * 
  */
 package net.mldonkey.g2gui.view.transferTree;
-
-
-
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
-
-
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
-
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.*;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.events.MouseEvent;
@@ -47,34 +39,30 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
-
-
-
 /**
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.14 2003/07/17 14:59:23 lemmstercvs01 Exp $ 
+ * @version $Id: DownloadTable.java,v 1.15 2003/07/18 09:40:07 dek Exp $ 
  *
  */
-public class DownloadTable  implements Observer, Runnable {
+public class DownloadTable implements Observer, Runnable {
 	private int lastSortColumn = -1;
 	protected IItemHasMenue selectedItem;
 	private TransferTab page;
 	private FileInfoIntMap files;
 	private TableTree tableTree;
 	private TIntObjectHashMap downloads;
-	
-	private String[] columns = {
-							"ID",
-							"Network",
-							"Name",							
-							"Rate",
-							"Chunks",
-							"%",
-							"Downloaded",
-							"Size"
-							};
+	private String[] columns =
+		{
+			"ID",
+			"Network",
+			"Name",
+			"Rate",
+			"Chunks",
+			"%",
+			"Downloaded",
+			"Size" };
 	/**
 	 * 
 	 * Creates a new DonwloadTable inside the composite parent, speaking with CoreCommunication
@@ -83,40 +71,41 @@ public class DownloadTable  implements Observer, Runnable {
 	 * @param mldonkey this object's master, from which this object gets the data
 	 * @param page the TransferPage, where this table is located
 	 */
-	public DownloadTable( Composite parent, CoreCommunication mldonkey, TransferTab page ) {
-		this.page = page;	
-		downloads = new TIntObjectHashMap();	
-		 tableTree = new TableTree( parent, SWT.FULL_SELECTION );
-			Table table = tableTree.getTable();
-			table.setLinesVisible( false );
-			table.setHeaderVisible( true );	
-									
-			for ( int i = 0; i < columns.length; i++ ) {
-				//"ID"|"Network"|"Filename"|"Rate"|"Chunks"|"%"|"Downloaded"|"Size"
-				TableColumn column = new TableColumn( table, SWT.NONE );
-							column.setText( columns[ i ] );							
-				final int columnIndex = i;
-				column.addSelectionListener( new SelectionAdapter() {
-					public void widgetSelected( SelectionEvent e ) {
-						sort( columnIndex );
-					}
-				} );
-			}
+	public DownloadTable( 
+		Composite parent,
+		CoreCommunication mldonkey,
+		TransferTab page ) 
+		{
 			
-			table.addMouseListener( new MouseListener () {
-				public void mouseDown( MouseEvent e ) {
-						Point pt = new Point( e.x, e.y );
-						DownloadTable.this.selectedItem = ( IItemHasMenue ) tableTree.getItem( pt );				    	
+		this.page = page;
+		downloads = new TIntObjectHashMap();
+		tableTree = new TableTree( parent, SWT.FULL_SELECTION );
+		Table table = tableTree.getTable();
+		table.setLinesVisible( false );
+		table.setHeaderVisible( true );
+		for ( int i = 0; i < columns.length; i++ ) {
+			//"ID"|"Network"|"Filename"|"Rate"|"Chunks"|"%"|"Downloaded"|"Size"
+			TableColumn column = new TableColumn( table, SWT.NONE );
+			column.setText( columns[ i ] );
+			final int columnIndex = i;
+			column.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent e ) {
+					sort( columnIndex );
 				}
-				public void mouseDoubleClick( MouseEvent e ) { }
-				public void mouseUp( MouseEvent e ) { }
 			} );
-			table.setMenu( createRightMouse() );
-			mldonkey.addObserver( this );			
+		}
+		table.addMouseListener( new MouseListener() {
+			public void mouseDown( MouseEvent e ) {
+				Point pt = new Point( e.x, e.y );
+				DownloadTable.this.selectedItem =
+					( IItemHasMenue ) tableTree.getItem( pt );
+			}
+			public void mouseDoubleClick( MouseEvent e ) { }
+			public void mouseUp( MouseEvent e ) { }
+		} );
+		table.setMenu( createRightMouse() );
+		mldonkey.addObserver( this );
 	}
-
-
-
 	/**
 	 * @param columnIndex
 	 */
@@ -125,7 +114,6 @@ public class DownloadTable  implements Observer, Runnable {
 		Object[] items = downloads.getValues();
 		FileInfo[] files = new FileInfo[ items.length ];
 		int[] expanded = new int[ items.length ];
-		
 		for ( int i = 0; i < items.length; i++ ) {
 			files[ i ] = ( ( DownloadItem ) items[ i ] ).getFileInfo();
 			// to save the expanded-status, we save all expanded fileIds:
@@ -136,29 +124,27 @@ public class DownloadTable  implements Observer, Runnable {
 		tableTree.removeAll();
 		Arrays.sort( files, new FileInfoComparator( columnIndex ) );
 		tableTree.redraw();
-		
 		if ( lastSortColumn != columnIndex ) {
 			for ( int i = 0; i < files.length; i++ ) {
 				DownloadItem newItem =
 					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
-				downloads.put( files[ i ].getId(), newItem );				
+				downloads.put( files[ i ].getId(), newItem );
 			}
 			lastSortColumn = columnIndex;
 		} else {
 			// reverse order if the current column is selected again
 			int j = files.length - 1;
-			for ( int i = files.length - 1; i >= 0 ; i-- ) {
+			for ( int i = files.length - 1; i >= 0; i-- ) {
 				DownloadItem newItem =
 					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
-				downloads.put( files[ i ].getId(), newItem );				
+				downloads.put( files[ i ].getId(), newItem );
 				lastSortColumn = -1;
 			}
 		}
-				
 		// Now expand the previous expanded items:
 		for ( int i = 0; i < expanded.length; i++ ) {
-			if ( expanded[ i ] != -1 ) {			
-				( ( DownloadItem )downloads.get( expanded[ i ] ) ).setExpanded( true );
+			if ( expanded[ i ] != -1 ) {
+				( ( DownloadItem ) downloads.get( expanded[ i ] ) ).setExpanded( true );
 			}
 		}
 		tableTree.setRedraw( true );
@@ -174,107 +160,98 @@ public class DownloadTable  implements Observer, Runnable {
 		 * no item has been selected 
 		 */
 		Shell shell = tableTree.getShell();
-		final Menu menu = new Menu( shell, SWT.POP_UP );		
+		final Menu menu = new Menu( shell, SWT.POP_UP );
 		menu.addListener( SWT.Show, new Listener() {
 			public void handleEvent( Event event ) {
 				if ( DownloadTable.this.selectedItem != null ) {
 					MenuItem[] menuItems = menu.getItems();
 					menu.setDefaultItem( null );
 					for ( int i = 0; i < menuItems.length; i++ ) {
-						menuItems[i].dispose();
+						menuItems[ i ].dispose();
 					}
 					DownloadTable.this.selectedItem.createMenu( menu );
-				}
-				else {
+				} else {
 					MenuItem[] menuItems = menu.getItems();
 					menu.setDefaultItem( null );
 					for ( int i = 0; i < menuItems.length; i++ ) {
-						menuItems[i].dispose();
+						menuItems[ i ].dispose();
 					}
 					MenuItem menuItem = new MenuItem( menu, SWT.PUSH );
 					menuItem.setText( " No entry selected " );
-					menuItem.setEnabled( false );					
+					menuItem.setEnabled( false );
 				}
 			}
 		} );
 		return menu;
 	}
-
-
-
-	/** ( non-Javadoc )
-	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
+	/** (  non-Javadoc  )
+	 * @see java.util.Observer#update(  java.util.Observable, java.lang.Object  )
 	 */
 	public void update( Observable o, Object arg ) {
 		if ( arg instanceof FileInfoIntMap ) {
 			files = ( FileInfoIntMap ) arg;
 			if ( page.isActive() ) {
-				tableTree.getDisplay().syncExec( this );
+				if ( !tableTree.isDisposed() )
+					tableTree.getDisplay().syncExec( this );
 			}
 		}
 	}
-
-
-
-	/** ( non-Javadoc )u
+	/** (  non-Javadoc  )u
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		tableTree.setRedraw( false );		
-			TIntObjectIterator it = files.iterator();
-			while ( it.hasNext() ) {
-				it.advance();
-				FileInfo fileInfo = ( FileInfo ) it.value();
-				/* only process downloading and paused files
-				 * remove canceled files from table*/
-				if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING 
-					|| fileInfo.getState().getState() == EnumFileState.PAUSED ) 
-					{					
-					if ( downloads.containsKey( fileInfo.getId() ) ) {
-						downloads.get( fileInfo.getId() );
-						DownloadItem existingItem =
-									( DownloadItem ) downloads.get( fileInfo.getId() );						
-						//existingItem.update();
-					}
-					else {					
+		TIntObjectIterator it = files.iterator();
+		while ( it.hasNext() ) {
+			it.advance();
+			FileInfo fileInfo = ( FileInfo ) it.value();
+			/* only process downloading and paused files
+			 * remove canceled files from table*/
+			if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING
+				|| fileInfo.getState().getState() == EnumFileState.PAUSED ) 
+				{
+				if ( downloads.containsKey( fileInfo.getId() ) ) {
+					downloads.get( fileInfo.getId() );
+					DownloadItem existingItem =
+						( DownloadItem ) downloads.get( fileInfo.getId() );
+					//existingItem.update();
+				} else {
 					DownloadItem newItem =
 						new DownloadItem( tableTree, SWT.NONE, fileInfo );
 					downloads.put( fileInfo.getId(), newItem );
-					TableColumn[] cols = tableTree.getTable().getColumns();					
-						for ( int i = 0; i < cols.length; i++ ) {
-							cols[i].pack();
-						}								
-					}	
-				}	
-				else if ( downloads.containsKey( fileInfo.getId() ) ) {	
-					/* remove this file from the downloadList if contained*/					
-						( ( DownloadItem ) downloads.get( fileInfo.getId() ) ).dispose();
-						downloads.remove( fileInfo.getId() );												
-					
+					TableColumn[] cols = tableTree.getTable().getColumns();
+					for ( int i = 0; i < cols.length; i++ ) {
+						cols[ i ].pack();
+					}
 				}
-				else {
-				 /* we really don't care about this one...*/
-				}
-		}
-		
-		/*only update the items, that have changed, using the FileInfoIntMap from
-		 * Core to get infos, whih files have changed
-		 */		
-		for ( int i = 0; i < files.getIds().size(); i++ ) {
-			if ( downloads.contains( ( ( Integer ) files.getIds().get( i ) ).intValue() ) ){			
-			DownloadItem changedItem = 
-						( DownloadItem ) downloads.get( 
-							( ( Integer ) files.getIds().get( i ) ).intValue()
-						);	
-			changedItem.update();
+			} else if ( downloads.containsKey( fileInfo.getId() ) ) {
+				/* remove this file from the downloadList if contained*/
+				 ( ( DownloadItem ) downloads.get( fileInfo.getId() ) ).dispose();
+				downloads.remove( fileInfo.getId() );
+			} else {
+				/* we really don't care about this one...*/
 			}
 		}
-		files.clearIds();	
-		tableTree.setRedraw( true );
+		/*only update the items, that have changed, using the FileInfoIntMap from
+		 * Core to get infos, whih files have changed
+		 */
+		for ( int i = 0; i < files.getIds().size(); i++ ) {
+			if ( downloads
+				.contains( ( ( Integer ) files.getIds().get( i ) ).intValue() ) ) 
+				{
+					DownloadItem changedItem =
+						( DownloadItem ) downloads.get( 
+							( ( Integer ) files.getIds().get( i ) ).intValue() );
+					changedItem.update();
+				}
+		}
+		files.clearIds();
 	}
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.15  2003/07/18 09:40:07  dek
+finally got rid of the flickering?? dunno /* searching CRT to test */
+
 Revision 1.14  2003/07/17 14:59:23  lemmstercvs01
 foobar
 
