@@ -25,7 +25,6 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -34,7 +33,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.14 2003/10/12 16:27:01 lemmster Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.15 2003/10/21 03:11:45 zet Exp $ 
  *
  */
 public class G2GuiPref extends PreferencePage {
@@ -81,8 +80,8 @@ public class G2GuiPref extends PreferencePage {
 				addField( passwordField );
 				passwordField.load();
 		
-			FileFieldEditor executableField =
-					new FileFieldEditor( "coreExecutable", 
+			GCJFileFieldEditor executableField =
+					new GCJFileFieldEditor( "coreExecutable", 
 						G2GuiResources.getString( "PREF_CORE_EXEC" ), true, composite );
 					executableField.setPreferenceStore( this.getPreferenceStore() );
 					addField( executableField );
@@ -113,6 +112,9 @@ public class G2GuiPref extends PreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.15  2003/10/21 03:11:45  zet
+circumvent gcj bug
+
 Revision 1.14  2003/10/12 16:27:01  lemmster
 minor changes
 
@@ -150,7 +152,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.1  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
