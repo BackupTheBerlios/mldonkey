@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  * @author $user$
- * @version $Id: ResultInfo.java,v 1.7 2003/07/23 17:01:24 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfo.java,v 1.8 2003/07/23 23:49:22 lemmstercvs01 Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -54,6 +54,10 @@ public class ResultInfo extends Parent {
 	 * Size
 	 */
 	private int size;
+	/**
+	 * The size rounded with metric unit
+	 */
+	private String stringSize;
 	/**
 	 * Format
 	 */
@@ -124,21 +128,48 @@ public class ResultInfo extends Parent {
 		this.setNetworkID( messageBuffer.readInt32() );
 		this.names = messageBuffer.readStringList();
 		this.md4 = messageBuffer.readBinary( 16 );
-		this.size = messageBuffer.readInt32();
+		this.size = messageBuffer.readInt32() / 1024;
 		this.format = messageBuffer.readString();
 		this.type = messageBuffer.readString();
 		this.tags = messageBuffer.readTagList();		
 		this.comment = messageBuffer.readString();		
 		this.setHistory( messageBuffer.readByte() ); 
+
+		this.stringSize = this.calcStringSize( this.getSize() );
 	}
+
+	/**
+	 * creates a String from the size
+	 * @param size The size
+	 * @return a string represantation of this size
+	 */	
+	private String calcStringSize( int size ) {
+		double temp = 0;
+		String unit = null;
+		if ( size > 1000000 ) {
+			temp = ( size / 1024.0 / 1024.0 );			
+			unit = "GB";
+		}
+		else if ( size > 1000 ) {
+			temp = ( size / 1024.0 );
+			unit = "MB";		
+		}
+		else {
+			temp = size;
+			unit = "KB";
+		}
+		/* round */
+		temp = ( double )( ( int )( temp * 100 ) ) / 100;
+		
+		return new String( temp + " " + unit );
+	}
+	
 	/**
 	 * @param string file comment
 	 */
 	private void setComment( String string ) {
 		this.comment = string;
-		
 	}
-
 
 	/**
 	 * @return The format
@@ -236,10 +267,19 @@ public class ResultInfo extends Parent {
 		networkID = info;
 	}
 
+	/**
+	 * @return The size rounded with metric unit
+	 */
+	public String getStringSize() {
+		return stringSize;
+	}
 }
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.8  2003/07/23 23:49:22  lemmstercvs01
+stringSize for better display design added
+
 Revision 1.7  2003/07/23 17:01:24  lemmstercvs01
 added getComment() and setNetworkID(Networkinfo info)
 
