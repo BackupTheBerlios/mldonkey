@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Advanced.java,v 1.3 2003/09/19 14:25:55 zet Exp $
+ * @version $Id: G2Gui_Advanced.java,v 1.4 2003/09/21 23:40:01 zet Exp $
  */
 public class G2Gui_Advanced extends FieldEditorPreferencePage {
 
@@ -189,6 +189,12 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 				"maintainSortOrder",
 				G2GuiResources.getString( "PREF_DISPLAY_SORT_ORDER" ),
 				parent ) );
+				
+		setupEditor( 
+				new BooleanFieldEditor( 
+				"displayTableColors",
+				G2GuiResources.getString( "PREF_DISPLAY_TABLE_COLORS" ),
+				parent ) );
 
 		IntegerFieldEditor updateDelayEditor = new IntegerFieldEditor ( 
 				"updateDelay",
@@ -200,6 +206,9 @@ public class G2Gui_Advanced extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Advanced.java,v $
+Revision 1.4  2003/09/21 23:40:01  zet
+displayTableColors preference
+
 Revision 1.3  2003/09/19 14:25:55  zet
 min to systray option
 

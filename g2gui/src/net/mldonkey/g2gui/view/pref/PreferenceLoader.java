@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.25 2003/09/20 01:29:21 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.26 2003/09/21 23:40:01 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
@@ -106,6 +106,7 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "displayChunkGraphs", false );
         preferenceStore.setDefault( "displayGridLines", true );
         preferenceStore.setDefault( "tableCellEditors", false );
+        preferenceStore.setDefault( "displayTableColors" , true );
         preferenceStore.setDefault( "coreExecutable", "" );
         preferenceStore.setDefault( "useCombo", false );
         preferenceStore.setDefault( "minimizeOnClose", true );
@@ -212,6 +213,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.26  2003/09/21 23:40:01  zet
+displayTableColors preference
+
 Revision 1.25  2003/09/20 01:29:21  zet
 *** empty log message ***
 

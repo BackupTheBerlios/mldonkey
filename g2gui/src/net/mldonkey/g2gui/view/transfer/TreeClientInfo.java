@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -18,53 +18,61 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.transfer;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 
+
 /**
- * 
+ *
  * TreeClientInfo
  *
  *
- * @version $Id: TreeClientInfo.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
+ * @version $Id: TreeClientInfo.java,v 1.2 2003/09/21 23:39:31 zet Exp $
  *
  */
 public class TreeClientInfo {
+    private FileInfo fileInfo;
+    private ClientInfo clientInfo;
 
-	private FileInfo fileInfo;
-	private ClientInfo clientInfo;
-	
-	public TreeClientInfo(FileInfo fileInfo, ClientInfo clientInfo) {
-		this.fileInfo = fileInfo;
-		this.clientInfo = clientInfo;
-	}
-	public FileInfo getFileInfo() {
-		return fileInfo;
-	}
-	public ClientInfo getClientInfo() {
-		return clientInfo;
-	}
-	
-	public boolean equals( Object o ) {
-			if (o instanceof TreeClientInfo) {
-				ClientInfo c = (ClientInfo) ((TreeClientInfo)o).getClientInfo();
-				FileInfo f = (FileInfo) ((TreeClientInfo)o).getFileInfo();
-				if (c.equals(this.getClientInfo()) && f.equals(this.getFileInfo()))
-					return true;
-				else
-					return false;
-			} else {
-				return false;
-			}
-		}
+    public TreeClientInfo( FileInfo fileInfo, ClientInfo clientInfo ) {
+        this.fileInfo = fileInfo;
+        this.clientInfo = clientInfo;
+    }
 
+    public FileInfo getFileInfo(  ) {
+        return fileInfo;
+    }
+
+    public ClientInfo getClientInfo(  ) {
+        return clientInfo;
+    }
+
+    public boolean equals( Object o ) {
+        if ( o instanceof TreeClientInfo ) {
+            ClientInfo c = (ClientInfo) ( (TreeClientInfo) o ).getClientInfo(  );
+            FileInfo f = (FileInfo) ( (TreeClientInfo) o ).getFileInfo(  );
+
+            if ( c.equals( this.getClientInfo(  ) ) && f.equals( this.getFileInfo(  ) ) ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
+
+
 /*
 $Log: TreeClientInfo.java,v $
+Revision 1.2  2003/09/21 23:39:31  zet
+displayTableColors preference
+
 Revision 1.1  2003/09/20 14:39:21  zet
 move transfer package
 

@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * g2gui Team
- * 
- * 
+ *
+ *
  * This file is part of g2gui.
  *
  * g2gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with g2gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
@@ -31,200 +31,180 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
+
 /**
  * DownloadTableTreeSorterAdvanced
  *
- * @version $Id: DownloadTableTreeSorterAdvanced.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
+ * @version $Id: DownloadTableTreeSorterAdvanced.java,v 1.2 2003/09/21 23:39:31 zet Exp $
  *
  */
 public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ViewerSorter#isSorterProperty(java.lang.Object, java.lang.String)
-	 */
-	public boolean isSorterProperty(Object element, String property) {
-		if (element instanceof FileInfo
-			&& maintainSortOrder) {
-				
-			switch (columnIndex) {	
-				case 4: 
-					return (property.equals(FileInfo.CHANGED_DOWNLOADED) ? true : false);
-						
-				case 5: 
-					return (property.equals(FileInfo.CHANGED_PERCENT) ? true : false);	
-	
-				case 7:
-					return (property.equals(FileInfo.CHANGED_AVAIL) ? true : false);
-					
-				case 8: 
-					return (property.equals(FileInfo.CHANGED_RATE) ? true : false);
-	
-				case 10: 
-					return (property.equals(FileInfo.CHANGED_ETA) ? true : false);
-	
-				case 12: 
-					return (property.equals(FileInfo.CHANGED_LAST) ? true : false);
-	
-				default: 
-					return false;
-			}
-		}
-		return false;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-	 */
-	public int compare(Viewer viewer, Object e1, Object e2) {
-		int cat1 = category(e1);
-		int cat2 = category(e2);
-		if (cat1 != cat2)
-			return cat1 - cat2;
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ViewerSorter#isSorterProperty(java.lang.Object, java.lang.String)
+     */
+    public boolean isSorterProperty( Object element, String property ) {
+        if ( element instanceof FileInfo && maintainSortOrder ) {
+            switch ( columnIndex ) {
+            case 4:
+                return ( property.equals( FileInfo.CHANGED_DOWNLOADED ) ? true : false );
 
-		// fill in all columns
-		if (e1 instanceof FileInfo) {
-			FileInfo fileInfo1 = (FileInfo) e1;
-			FileInfo fileInfo2 = (FileInfo) e2;
+            case 5:
+                return ( property.equals( FileInfo.CHANGED_PERCENT ) ? true : false );
 
-			switch (columnIndex) {
-				case 0 : // id
-					return compareIntegers(
-						fileInfo1.getId(),
-						fileInfo2.getId());
+            case 7:
+                return ( property.equals( FileInfo.CHANGED_AVAIL ) ? true : false );
 
-				case 1 : // network name
-					return compareStrings(
-						fileInfo1.getNetwork().getNetworkName(),
-						fileInfo2.getNetwork().getNetworkName());
+            case 8:
+                return ( property.equals( FileInfo.CHANGED_RATE ) ? true : false );
 
-				case 2 : // filesize
-					return compareStrings(
-						fileInfo1.getName(),
-						fileInfo2.getName());
+            case 10:
+                return ( property.equals( FileInfo.CHANGED_ETA ) ? true : false );
 
-				case 3 : // size
-					return compareLongs(
-						fileInfo1.getSize(),
-						fileInfo2.getSize());
+            case 12:
+                return ( property.equals( FileInfo.CHANGED_LAST ) ? true : false );
 
-				case 4 : // downloaded
-					return compareLongs(
-						fileInfo1.getDownloaded(),
-						fileInfo2.getDownloaded());
+            default:
+                return false;
+            }
+        }
 
-				case 5 : // percent
-					return compareDoubles(
-						fileInfo1.getPerc(),
-						fileInfo2.getPerc());
-					
-				case 6 : // sources getSources() is 0 ?
-					return compareIntegers(
-						fileInfo1.getClientInfos().size(),
-						fileInfo2.getClientInfos().size());		
+        return false;
+    }
 
-				case 7: // relative availability
-					return compareIntegers(
-						fileInfo1.getRelativeAvail(),
-						fileInfo2.getRelativeAvail());
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
+    public int compare( Viewer viewer, Object e1, Object e2 ) {
+        int cat1 = category( e1 );
+        int cat2 = category( e2 );
 
-				case 8 : // rate - paused/queued on the bottom
-						if (fileInfo1.getState().getState() == EnumFileState.DOWNLOADED)
-							return -1;
-						else if (fileInfo2.getState().getState() == EnumFileState.DOWNLOADED)
-							return 1;
-						else if (fileInfo1.getState().getState() == EnumFileState.QUEUED)
-							return 2;
-						else if (fileInfo2.getState().getState() == EnumFileState.QUEUED)
-							return -2;
-						else if (fileInfo1.getState().getState() == EnumFileState.PAUSED)
-							return 3;
-						else if (fileInfo2.getState().getState() == EnumFileState.PAUSED)
-							return -3;
-						
-						else 
-							return compareDoubles(
-								fileInfo1.getRate(),
-								fileInfo2.getRate());
-							
-				case 9 : // numChunks
-					return compareIntegers(
-						fileInfo1.getNumChunks(),
-						fileInfo2.getNumChunks());
-		
-				case 10 : // eta - nulls on the bottom
-				
-					labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
-					if (labelProvider.getColumnText(e1, columnIndex).equals("")) 
-						return 1;
-					else if (labelProvider.getColumnText(e2, columnIndex).equals("")) 
-						return -1;
-					else 
-						return compareLongs(
-						fileInfo1.getETA(),
-						fileInfo2.getETA());
-					
-					
-				case 11: // priority
-					if (fileInfo1.getPriority() == EnumPriority.LOW)
-						return (lastSort ? -1 : 1);
-					else if (fileInfo1.getPriority() == EnumPriority.HIGH)
-						return (lastSort ? 1 : -1);	
-					else {
-						if (fileInfo2.getPriority() == EnumPriority.LOW)
-							return (lastSort ? 1 : -1);
-						else return (lastSort ? -1 : 1);
-					}
-			
-				case 12: // last
-					return compareIntegers(fileInfo1.getOffset(), fileInfo2.getOffset());
-				case 13: // age
-					return compareLongs (Long.parseLong(fileInfo1.getAge()), 
-										Long.parseLong(fileInfo2.getAge()));		
-				default :
-					return 0;
+        if ( cat1 != cat2 ) {
+            return cat1 - cat2;
+        }
 
-			}
-		} else {
-			TreeClientInfo treeClientInfo1 = (TreeClientInfo) e1;
-			TreeClientInfo treeClientInfo2 = (TreeClientInfo) e2;
-								
-			switch (columnIndex) {
+        // fill in all columns
+        if ( e1 instanceof FileInfo ) {
+            FileInfo fileInfo1 = (FileInfo) e1;
+            FileInfo fileInfo2 = (FileInfo) e2;
 
-				case 1 : // id
-					return compareIntegers(
-						treeClientInfo1.getClientInfo().getClientid(),
-						treeClientInfo2.getClientInfo().getClientid());
+            switch ( columnIndex ) {
+            case 0: // id
+                return compareIntegers( fileInfo1.getId(  ), fileInfo2.getId(  ) );
 
-				case 2 : // name
-					return compareStrings(
-						treeClientInfo1.getClientInfo().getClientName(),
-						treeClientInfo2.getClientInfo().getClientName());
-					
-				case 3 : // direct/firewall
-					labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
-					return compareStrings(labelProvider.getColumnText(e1, columnIndex),
-								labelProvider.getColumnText(e2, columnIndex));
+            case 1: // network name
+                return compareStrings( fileInfo1.getNetwork(  ).getNetworkName(  ), fileInfo2.getNetwork(  ).getNetworkName(  ) );
 
-				case 4 : // rank
-					return compareIntegers(
-						treeClientInfo1.getClientInfo().getState().getRank(),
-						treeClientInfo2.getClientInfo().getState().getRank());
-					
-				case 8: // numChunks 
-				
-					return compareIntegers(treeClientInfo1.getClientInfo().getNumChunks( treeClientInfo1.getFileInfo() ),
-											treeClientInfo2.getClientInfo().getNumChunks( treeClientInfo2.getFileInfo() ) );
-				default :
-					return 0;
-			}
+            case 2: // filesize
+                return compareStrings( fileInfo1.getName(  ), fileInfo2.getName(  ) );
 
-		}
+            case 3: // size
+                return compareLongs( fileInfo1.getSize(  ), fileInfo2.getSize(  ) );
 
-	}
-	
+            case 4: // downloaded
+                return compareLongs( fileInfo1.getDownloaded(  ), fileInfo2.getDownloaded(  ) );
+
+            case 5: // percent
+                return compareDoubles( fileInfo1.getPerc(  ), fileInfo2.getPerc(  ) );
+
+            case 6: // sources getSources() is 0 ?
+                return compareIntegers( fileInfo1.getClientInfos(  ).size(  ), fileInfo2.getClientInfos(  ).size(  ) );
+
+            case 7: // relative availability
+                return compareIntegers( fileInfo1.getRelativeAvail(  ), fileInfo2.getRelativeAvail(  ) );
+
+            case 8: // rate - paused/queued on the bottom
+
+                if ( fileInfo1.getState(  ).getState(  ) == EnumFileState.DOWNLOADED ) {
+                    return -1;
+                } else if ( fileInfo2.getState(  ).getState(  ) == EnumFileState.DOWNLOADED ) {
+                    return 1;
+                } else if ( fileInfo1.getState(  ).getState(  ) == EnumFileState.QUEUED ) {
+                    return 2;
+                } else if ( fileInfo2.getState(  ).getState(  ) == EnumFileState.QUEUED ) {
+                    return -2;
+                } else if ( fileInfo1.getState(  ).getState(  ) == EnumFileState.PAUSED ) {
+                    return 3;
+                } else if ( fileInfo2.getState(  ).getState(  ) == EnumFileState.PAUSED ) {
+                    return -3;
+                }
+                else {
+                    return compareDoubles( fileInfo1.getRate(  ), fileInfo2.getRate(  ) );
+                }
+
+            case 9: // numChunks
+                return compareIntegers( fileInfo1.getNumChunks(  ), fileInfo2.getNumChunks(  ) );
+
+            case 10: // eta - nulls on the bottom
+                labelProvider = (ITableLabelProvider) ( (TableTreeViewer) viewer ).getLabelProvider(  );
+
+                if ( labelProvider.getColumnText( e1, columnIndex ).equals( "" ) ) {
+                    return 1;
+                } else if ( labelProvider.getColumnText( e2, columnIndex ).equals( "" ) ) {
+                    return -1;
+                } else {
+                    return compareLongs( fileInfo1.getETA(  ), fileInfo2.getETA(  ) );
+                }
+
+            case 11: // priority
+
+                if ( fileInfo1.getPriority(  ) == EnumPriority.LOW ) {
+                    return ( lastSort ? ( -1 ) : 1 );
+                } else if ( fileInfo1.getPriority(  ) == EnumPriority.HIGH ) {
+                    return ( lastSort ? 1 : ( -1 ) );
+                } else {
+                    if ( fileInfo2.getPriority(  ) == EnumPriority.LOW ) {
+                        return ( lastSort ? 1 : ( -1 ) );
+                    } else {
+                        return ( lastSort ? ( -1 ) : 1 );
+                    }
+                }
+
+            case 12: // last
+                return compareIntegers( fileInfo1.getOffset(  ), fileInfo2.getOffset(  ) );
+
+            case 13: // age
+                return compareLongs( Long.parseLong( fileInfo1.getAge(  ) ), Long.parseLong( fileInfo2.getAge(  ) ) );
+
+            default:
+                return 0;
+            }
+        } else {
+            TreeClientInfo treeClientInfo1 = (TreeClientInfo) e1;
+            TreeClientInfo treeClientInfo2 = (TreeClientInfo) e2;
+
+            switch ( columnIndex ) {
+            case 1: // id
+                return compareIntegers( treeClientInfo1.getClientInfo(  ).getClientid(  ), treeClientInfo2.getClientInfo(  ).getClientid(  ) );
+
+            case 2: // name
+                return compareStrings( treeClientInfo1.getClientInfo(  ).getClientName(  ), treeClientInfo2.getClientInfo(  ).getClientName(  ) );
+
+            case 3: // direct/firewall
+                labelProvider = (ITableLabelProvider) ( (TableTreeViewer) viewer ).getLabelProvider(  );
+
+                return compareStrings( labelProvider.getColumnText( e1, columnIndex ), labelProvider.getColumnText( e2, columnIndex ) );
+
+            case 4: // rank
+                return compareIntegers( treeClientInfo1.getClientInfo(  ).getState(  ).getRank(  ),
+                    treeClientInfo2.getClientInfo(  ).getState(  ).getRank(  ) );
+
+            case 8: // numChunks 
+                return compareIntegers( treeClientInfo1.getClientInfo(  ).getNumChunks( treeClientInfo1.getFileInfo(  ) ),
+                    treeClientInfo2.getClientInfo(  ).getNumChunks( treeClientInfo2.getFileInfo(  ) ) );
+
+            default:
+                return 0;
+            }
+        }
+    }
 }
+
+
 /*
 $Log: DownloadTableTreeSorterAdvanced.java,v $
+Revision 1.2  2003/09/21 23:39:31  zet
+displayTableColors preference
+
 Revision 1.1  2003/09/20 14:39:21  zet
 move transfer package
 

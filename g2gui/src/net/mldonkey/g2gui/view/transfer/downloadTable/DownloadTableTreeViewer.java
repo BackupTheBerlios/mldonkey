@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
@@ -41,6 +41,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.custom.TableTreeItem;
@@ -54,286 +55,307 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.2 2003/09/21 23:39:31 zet Exp $
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
-
-	private CustomTableTreeViewer tableTreeViewer;
-	private TableTree tableTree;
-	private Table table;
-	private Shell shell;
-	private DownloadTableTreeSorter downloadTableTreeSorter;
-	private DownloadTableTreeContentProvider tableTreeContentProvider;
-	private FileInfo selectedFile = null;
-	private MenuManager popupMenu;
-	private DownloadTableTreeMenuListener tableTreeMenuListener;
-	private static boolean displayChunkGraphs = false;
-	private boolean advancedMode = false;
-	private CoreCommunication mldonkey;
-	private CellEditor[] cellEditors;
-	private TableViewer clientTableViewer;
-	
+    private static boolean displayChunkGraphs = false;
+    private static int CHUNKS_COLUMN = 9;
+    private CustomTableTreeViewer tableTreeViewer;
+    private TableTree tableTree;
+    private Table table;
+    private Shell shell;
+    private DownloadTableTreeSorter downloadTableTreeSorter;
+    private DownloadTableTreeContentProvider tableTreeContentProvider;
+    private DownloadTableTreeLabelProvider treeLabelProvider;
+    private FileInfo selectedFile = null;
+    private MenuManager popupMenu;
+    private DownloadTableTreeMenuListener tableTreeMenuListener;
+    private boolean advancedMode = false;
+    private CoreCommunication mldonkey;
+    private CellEditor[] cellEditors;
+    private TableViewer clientTableViewer;
 	private String[] COLUMN_LABELS;
+	
 	private final String[] COLUMN_LABELS_ADVANCED =
-		{	"TT_Download_Id",
-			"TT_Download_Network",
-			"TT_Download_Name",
-			"TT_Download_Size",
-			"TT_Download_Downloaded", 
-			"TT_Download_%",
-			"TT_Download_Sources",
-			"TT_Download_Avail",
-			"TT_Download_Rate",
-			"TT_Download_Chunks",
-			"TT_Download_ETA",
-			"TT_Download_Priority",	
-			"TT_Download_Last",
-			"TT_Download_Age"
-		};
+		 {	 "TT_Download_Id",
+			 "TT_Download_Network",
+			 "TT_Download_Name",
+			 "TT_Download_Size",
+			 "TT_Download_Downloaded", 
+			 "TT_Download_%",
+			 "TT_Download_Sources",
+			 "TT_Download_Avail",
+			 "TT_Download_Rate",
+			 "TT_Download_Chunks",
+			 "TT_Download_ETA",
+			 "TT_Download_Priority",	
+			 "TT_Download_Last",
+			 "TT_Download_Age"
+		 };
+		 
 	private final String[] COLUMN_LABELS_BASIC =
-		{	"TT_Download_Id",
-			"TT_Download_Network",
-			"TT_Download_Name",
-			"TT_Download_Size",
-			"TT_Download_%",
-			"TT_Download_Rate",
-			"TT_Download_ETA",
-		};
+		 {	 "TT_Download_Id",
+			 "TT_Download_Network",
+			 "TT_Download_Name",
+			 "TT_Download_Size",
+			 "TT_Download_%",
+			 "TT_Download_Rate",
+			 "TT_Download_ETA",
+		 };
 
 	private int[] COLUMN_DEFAULT_WIDTHS;
 	private final int[] COLUMN_DEFAULT_WIDTHS_ADVANCED =
-		{ 50, 50, 250, 75, 75, 50, 50, 50, 50, 75, 75, 50, 75, 75};
+		 { 50, 50, 250, 75, 75, 50, 50, 50, 50, 75, 75, 50, 75, 75};
 	private final int[] COLUMN_DEFAULT_WIDTHS_BASIC =
-		{ 50, 50, 250, 75, 50, 75, 75 };	
+		 { 50, 50, 250, 75, 50, 75, 75 };	
 
 	private int[] COLUMN_ALIGNMENT;
 	private final int[] COLUMN_ALIGNMENT_ADVANCED =
-		{
-			SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, 
-			SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT
-		};
+		 {
+			 SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, 
+			 SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT
+		 };
 		
 	private final int[] COLUMN_ALIGNMENT_BASIC =
-		{
-			SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT
-		};	
+		 {
+			 SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT
+		 };	
 		
-	private static int CHUNKS_COLUMN = 9;
-		
-	/**
-	 * 
-	 * Creates a new Viewer inside the composite parent
-	 * @param parent 
-	 * @param mldonkey 
-	 * @param page 
-	 */
-	public DownloadTableTreeViewer( Composite parent, TableViewer clientTableViewer, final CoreCommunication mldonkey, TransferTab page ) 
-	{
-		this.clientTableViewer = clientTableViewer;
-		this.shell = parent.getShell();
-		this.mldonkey = mldonkey;
-		if (PreferenceLoader.loadBoolean("advancedMode")) {
-			advancedMode = true;
-			COLUMN_LABELS = COLUMN_LABELS_ADVANCED;
-			COLUMN_DEFAULT_WIDTHS = COLUMN_DEFAULT_WIDTHS_ADVANCED;
-			COLUMN_ALIGNMENT = COLUMN_ALIGNMENT_ADVANCED;
-			displayChunkGraphs = PreferenceLoader.loadBoolean("displayChunkGraphs");
-		} else {
-			COLUMN_LABELS = COLUMN_LABELS_BASIC;
-			COLUMN_DEFAULT_WIDTHS = COLUMN_DEFAULT_WIDTHS_BASIC;
-			COLUMN_ALIGNMENT = COLUMN_ALIGNMENT_BASIC;
-		}
-		createTableTreeViewer(parent, mldonkey);
-	}
-	
-	public void createTableTreeViewer(Composite parent, final CoreCommunication mldonkey) {
-			
-		tableTreeViewer = new CustomTableTreeViewer ( parent, SWT.MULTI | SWT.FULL_SELECTION );
-		tableTree = tableTreeViewer.getTableTree();
-		table = tableTree.getTable();
-		
-		tableTree.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
-		tableTreeViewer.setColumnProperties(COLUMN_LABELS);
-		table.setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
-		table.setHeaderVisible( true );
-		
-		cellEditors = new CellEditor[COLUMN_LABELS.length];
-		cellEditors[2] = new TextCellEditor(table);
-				
-		for (int i = 0; i < COLUMN_LABELS.length; i++) {
-			PreferenceStore p = PreferenceLoader.getPreferenceStore();
-			TableColumn tableColumn = new TableColumn(table, COLUMN_ALIGNMENT[ i ]);
-			p.setDefault(COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ]);
-			tableColumn.setText ( G2GuiResources.getString( COLUMN_LABELS[ i ] )  );
-			tableColumn.setWidth(p.getInt(COLUMN_LABELS [ i ] ));
-			if (p.getDefaultInt(COLUMN_LABELS[ i ]) == 0) {
-				p.setDefault(COLUMN_LABELS [ i ] + "_Resizable", false);
-			} else {
-				p.setDefault(COLUMN_LABELS [ i ] + "_Resizable", true);
-			}
-			tableColumn.setData(COLUMN_LABELS[ i ]);
-			tableColumn.setResizable(p.getBoolean(COLUMN_LABELS [ i ] + "_Resizable"));
-						
-			final int columnIndex = i;
-			tableColumn.addDisposeListener(new DisposeListener() {
-				public synchronized void widgetDisposed( DisposeEvent e ) {
-					PreferenceStore p = PreferenceLoader.getPreferenceStore();
-					TableColumn thisColumn = ( TableColumn ) e.widget;
-					p.setValue(COLUMN_LABELS [ columnIndex ] , thisColumn.getWidth() );
-					p.setValue(COLUMN_LABELS [ columnIndex ] + "_Resizable" , thisColumn.getResizable() );
-				}
-			} );
-		
-			tableColumn.addListener( SWT.Selection, new Listener() {
-				public void handleEvent( Event e ) {
-					downloadTableTreeSorter.setColumnIndex( columnIndex );
-					tableTreeViewer.refresh();
-					tableTreeContentProvider.updateAllEditors();
-				}	
-			} ); 
-								 
-		}
-		
-		/*this is to expand/collapse the selected item on double-click*/
-		tableTreeViewer.addDoubleClickListener(new IDoubleClickListener(){
-			public void doubleClick(DoubleClickEvent e) {
-			
-				IStructuredSelection sSel = (IStructuredSelection) e.getSelection();
-				Object o = sSel.getFirstElement();
-				if (o instanceof FileInfo) {
-					FileInfo fileInfo = (FileInfo) o;
-					if (tableTreeViewer.getExpandedState(fileInfo)) 
-						tableTreeViewer.collapseToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
-					else 
-						tableTreeViewer.expandToLevel(fileInfo,AbstractTreeViewer.ALL_LEVELS);	
-					tableTreeContentProvider.updateAllEditors();		
-				
-				} else if (o instanceof TreeClientInfo) {
-					TreeClientInfo treeClientInfo = (TreeClientInfo) o;
-					new ClientDetailDialog(treeClientInfo.getFileInfo(), treeClientInfo.getClientInfo(), mldonkey);
-				}
-			}
-		});
-		DownloadTableTreeLabelProvider treeLabelProvider;
-		
-		if (PreferenceLoader.loadBoolean("advancedMode")) {
-			treeLabelProvider = new DownloadTableTreeLabelProviderAdvanced();
-		} else {
-			treeLabelProvider = new DownloadTableTreeLabelProviderBasic();
-		}
-		treeLabelProvider.setTableTreeViewer(tableTreeViewer);
-		tableTreeViewer.setLabelProvider(treeLabelProvider);
-		
-		tableTreeContentProvider = new DownloadTableTreeContentProvider();
-		tableTreeContentProvider.setUpdateDelay(PreferenceLoader.loadInteger("updateDelay"));
-		tableTreeContentProvider.setDownloadTableTreeViewer(this);
-		tableTreeViewer.setContentProvider(tableTreeContentProvider);
-		tableTreeViewer.setUseHashlookup(true);
-		
-		tableTree.addTreeListener(tableTreeContentProvider);
-			
-		tableTreeMenuListener = new DownloadTableTreeMenuListener(tableTreeViewer, clientTableViewer, mldonkey);
-		
-		tableTreeViewer.addSelectionChangedListener(tableTreeMenuListener);
-	
-		popupMenu = new MenuManager();
-		popupMenu.setRemoveAllWhenShown(true);
-		popupMenu.addMenuListener(tableTreeMenuListener);
-						
-		tableTree.setMenu(popupMenu.createContextMenu(tableTree));
-		
-		if (advancedMode) {
-			downloadTableTreeSorter = new DownloadTableTreeSorterAdvanced();
-		} else {
-			downloadTableTreeSorter = new DownloadTableTreeSorterBasic();
-		}
-		
-		downloadTableTreeSorter.setMaintainSortOrder( PreferenceLoader.loadBoolean("maintainSortOrder"));
-		tableTreeViewer.setSorter(downloadTableTreeSorter);	
-		tableTreeViewer.setInput( mldonkey.getFileInfoIntMap() );
-		mldonkey.getFileInfoIntMap().addObserver( tableTreeContentProvider );
-		tableTreeContentProvider.updateAllEditors();
-		
-		if (PreferenceLoader.loadBoolean("tableCellEditors")) {
-			tableTreeViewer.setCellEditors(cellEditors);
-			tableTreeViewer.setCellModifier(this);
-		}		
-	}
-	public CustomTableTreeViewer getTableTreeViewer() {
-		return tableTreeViewer;
-		
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
-	 */
-	public boolean canModify(Object element, String property) {
-		if (element instanceof FileInfo) 
-			return true;
-		return false;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
-	 */
-	public Object getValue(Object element, String property) {
-		FileInfo fileInfo = (FileInfo) element;
-		return fileInfo.getName();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
-	 */
-	public void modify(Object element, String property, Object value) {
-		
-		TableTreeItem item = (TableTreeItem) element;
-		FileInfo fileInfo = (FileInfo) item.getData();
-		String newName = ((String) value).trim();
-		if (newName.length() > 0) fileInfo.setName(newName);
-			
-	}
-	public static boolean displayChunkGraphs() {
-		return displayChunkGraphs;
-	}
-		
-	public static int getChunksColumn() {
-		return CHUNKS_COLUMN;
-	}
-	public void updateDisplay() {
-		table.setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
-		
-		if (PreferenceLoader.loadBoolean("tableCellEditors")) {
-			tableTreeViewer.setCellEditors(cellEditors);
-			tableTreeViewer.setCellModifier(this);
-		} else {
-			tableTreeViewer.setCellEditors(null);
-			tableTreeViewer.setCellModifier(null);		
-		}
-		
-		tableTreeContentProvider.closeAllEditors();
-		if (advancedMode) {
-			displayChunkGraphs = PreferenceLoader.loadBoolean("displayChunkGraphs");
-		}
-		tableTreeViewer.refresh();
-		tableTreeContentProvider.setUpdateDelay(PreferenceLoader.loadInteger("updateDelay"));
-		tableTreeContentProvider.updateAllEditors();
-		if (tableTreeViewer.getSorter() != null)
-			((DownloadTableTreeSorter) tableTreeViewer.getSorter()).setMaintainSortOrder( PreferenceLoader.loadBoolean("maintainSortOrder"));
-	
-	}
+    /**
+     *
+     * Creates a new Viewer inside the composite parent
+     * @param parent
+     * @param mldonkey
+     * @param page
+     */
+    public DownloadTableTreeViewer( Composite parent, TableViewer clientTableViewer, final CoreCommunication mldonkey, TransferTab page ) {
+        this.clientTableViewer = clientTableViewer;
+        this.shell = parent.getShell(  );
+        this.mldonkey = mldonkey;
 
-	public void updateClientsTable(boolean b) {
-		tableTreeMenuListener.updateClientsTable(b);
-	}
+        if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+            advancedMode = true;
+            COLUMN_LABELS = COLUMN_LABELS_ADVANCED;
+            COLUMN_DEFAULT_WIDTHS = COLUMN_DEFAULT_WIDTHS_ADVANCED;
+            COLUMN_ALIGNMENT = COLUMN_ALIGNMENT_ADVANCED;
+            displayChunkGraphs = PreferenceLoader.loadBoolean( "displayChunkGraphs" );
+        } else {
+            COLUMN_LABELS = COLUMN_LABELS_BASIC;
+            COLUMN_DEFAULT_WIDTHS = COLUMN_DEFAULT_WIDTHS_BASIC;
+            COLUMN_ALIGNMENT = COLUMN_ALIGNMENT_BASIC;
+        }
+
+        createTableTreeViewer( parent, mldonkey );
+    }
+
+    public void createTableTreeViewer( Composite parent, final CoreCommunication mldonkey ) {
+        tableTreeViewer = new CustomTableTreeViewer( parent, SWT.MULTI | SWT.FULL_SELECTION );
+        tableTree = tableTreeViewer.getTableTree(  );
+        table = tableTree.getTable(  );
+
+        tableTree.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+        tableTreeViewer.setColumnProperties( COLUMN_LABELS );
+        table.setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
+        table.setHeaderVisible( true );
+
+        cellEditors = new CellEditor[ COLUMN_LABELS.length ];
+        cellEditors[ 2 ] = new TextCellEditor( table );
+
+        for ( int i = 0; i < COLUMN_LABELS.length; i++ ) {
+            PreferenceStore p = PreferenceLoader.getPreferenceStore(  );
+            TableColumn tableColumn = new TableColumn( table, COLUMN_ALIGNMENT[ i ] );
+            p.setDefault( COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ] );
+            tableColumn.setText( G2GuiResources.getString( COLUMN_LABELS[ i ] ) );
+            tableColumn.setWidth( p.getInt( COLUMN_LABELS[ i ] ) );
+
+            if ( p.getDefaultInt( COLUMN_LABELS[ i ] ) == 0 ) {
+                p.setDefault( COLUMN_LABELS[ i ] + "_Resizable", false );
+            } else {
+                p.setDefault( COLUMN_LABELS[ i ] + "_Resizable", true );
+            }
+
+            tableColumn.setData( COLUMN_LABELS[ i ] );
+            tableColumn.setResizable( p.getBoolean( COLUMN_LABELS[ i ] + "_Resizable" ) );
+
+            final int columnIndex = i;
+            tableColumn.addDisposeListener( new DisposeListener(  ) {
+                    public synchronized void widgetDisposed( DisposeEvent e ) {
+                        PreferenceStore p = PreferenceLoader.getPreferenceStore(  );
+                        TableColumn thisColumn = (TableColumn) e.widget;
+                        p.setValue( COLUMN_LABELS[ columnIndex ], thisColumn.getWidth(  ) );
+                        p.setValue( COLUMN_LABELS[ columnIndex ] + "_Resizable", thisColumn.getResizable(  ) );
+                    }
+                } );
+
+            tableColumn.addListener( SWT.Selection,
+                new Listener(  ) {
+                    public void handleEvent( Event e ) {
+                        downloadTableTreeSorter.setColumnIndex( columnIndex );
+                        tableTreeViewer.refresh(  );
+                        tableTreeContentProvider.updateAllEditors(  );
+                    }
+                } );
+        }
+
+        /*this is to expand/collapse the selected item on double-click*/
+        tableTreeViewer.addDoubleClickListener( new IDoubleClickListener(  ) {
+                public void doubleClick( DoubleClickEvent e ) {
+                    IStructuredSelection sSel = (IStructuredSelection) e.getSelection(  );
+                    Object o = sSel.getFirstElement(  );
+
+                    if ( o instanceof FileInfo ) {
+                        FileInfo fileInfo = (FileInfo) o;
+
+                        if ( tableTreeViewer.getExpandedState( fileInfo ) ) {
+                            tableTreeViewer.collapseToLevel( fileInfo, AbstractTreeViewer.ALL_LEVELS );
+                        } else {
+                            tableTreeViewer.expandToLevel( fileInfo, AbstractTreeViewer.ALL_LEVELS );
+                        }
+
+                        tableTreeContentProvider.updateAllEditors(  );
+                    } else if ( o instanceof TreeClientInfo ) {
+                        TreeClientInfo treeClientInfo = (TreeClientInfo) o;
+                        new ClientDetailDialog( treeClientInfo.getFileInfo(  ), treeClientInfo.getClientInfo(  ), mldonkey );
+                    }
+                }
+            } );
+
+        if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+            treeLabelProvider = new DownloadTableTreeLabelProviderAdvanced(  );
+        } else {
+            treeLabelProvider = new DownloadTableTreeLabelProviderBasic(  );
+        }
+
+        treeLabelProvider.displayColors( PreferenceLoader.loadBoolean( "displayTableColors" ) );
+        treeLabelProvider.setTableTreeViewer( tableTreeViewer );
+        tableTreeViewer.setLabelProvider( treeLabelProvider );
+
+        tableTreeContentProvider = new DownloadTableTreeContentProvider(  );
+        tableTreeContentProvider.setUpdateDelay( PreferenceLoader.loadInteger( "updateDelay" ) );
+        tableTreeContentProvider.setDownloadTableTreeViewer( this );
+        tableTreeViewer.setContentProvider( tableTreeContentProvider );
+        tableTreeViewer.setUseHashlookup( true );
+
+        tableTree.addTreeListener( tableTreeContentProvider );
+
+        tableTreeMenuListener = new DownloadTableTreeMenuListener( tableTreeViewer, clientTableViewer, mldonkey );
+
+        tableTreeViewer.addSelectionChangedListener( tableTreeMenuListener );
+
+        popupMenu = new MenuManager(  );
+        popupMenu.setRemoveAllWhenShown( true );
+        popupMenu.addMenuListener( tableTreeMenuListener );
+
+        tableTree.setMenu( popupMenu.createContextMenu( tableTree ) );
+
+        if ( advancedMode ) {
+            downloadTableTreeSorter = new DownloadTableTreeSorterAdvanced(  );
+        } else {
+            downloadTableTreeSorter = new DownloadTableTreeSorterBasic(  );
+        }
+
+        downloadTableTreeSorter.setMaintainSortOrder( PreferenceLoader.loadBoolean( "maintainSortOrder" ) );
+        tableTreeViewer.setSorter( downloadTableTreeSorter );
+        tableTreeViewer.setInput( mldonkey.getFileInfoIntMap(  ) );
+        mldonkey.getFileInfoIntMap(  ).addObserver( tableTreeContentProvider );
+        tableTreeContentProvider.updateAllEditors(  );
+
+        if ( PreferenceLoader.loadBoolean( "tableCellEditors" ) ) {
+            tableTreeViewer.setCellEditors( cellEditors );
+            tableTreeViewer.setCellModifier( this );
+        }
+    }
+
+    public CustomTableTreeViewer getTableTreeViewer(  ) {
+        return tableTreeViewer;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
+     */
+    public boolean canModify( Object element, String property ) {
+        if ( element instanceof FileInfo ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
+     */
+    public Object getValue( Object element, String property ) {
+        FileInfo fileInfo = (FileInfo) element;
+
+        return fileInfo.getName(  );
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
+     */
+    public void modify( Object element, String property, Object value ) {
+        TableTreeItem item = (TableTreeItem) element;
+        FileInfo fileInfo = (FileInfo) item.getData(  );
+        String newName = ( (String) value ).trim(  );
+
+        if ( newName.length(  ) > 0 ) {
+            fileInfo.setName( newName );
+        }
+    }
+
+    public static boolean displayChunkGraphs(  ) {
+        return displayChunkGraphs;
+    }
+
+    public static int getChunksColumn(  ) {
+        return CHUNKS_COLUMN;
+    }
+
+    public void updateDisplay(  ) {
+        table.setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
+
+        if ( PreferenceLoader.loadBoolean( "tableCellEditors" ) ) {
+            tableTreeViewer.setCellEditors( cellEditors );
+            tableTreeViewer.setCellModifier( this );
+        } else {
+            tableTreeViewer.setCellEditors( null );
+            tableTreeViewer.setCellModifier( null );
+        }
+
+        treeLabelProvider.displayColors( PreferenceLoader.loadBoolean( "displayTableColors" ) );
+
+        tableTreeContentProvider.closeAllEditors(  );
+
+        if ( advancedMode ) {
+            displayChunkGraphs = PreferenceLoader.loadBoolean( "displayChunkGraphs" );
+        }
+
+        tableTreeViewer.refresh(  );
+        tableTreeContentProvider.setUpdateDelay( PreferenceLoader.loadInteger( "updateDelay" ) );
+        tableTreeContentProvider.updateAllEditors(  );
+
+        if ( tableTreeViewer.getSorter(  ) != null ) {
+            ( (DownloadTableTreeSorter) tableTreeViewer.getSorter(  ) ).setMaintainSortOrder( PreferenceLoader.loadBoolean( "maintainSortOrder" ) );
+        }
+    }
+
+    public void updateClientsTable( boolean b ) {
+        tableTreeMenuListener.updateClientsTable( b );
+    }
 }
+
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.2  2003/09/21 23:39:31  zet
+displayTableColors preference
+
 Revision 1.1  2003/09/20 14:39:21  zet
 move transfer package
 
