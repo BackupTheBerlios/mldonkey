@@ -140,7 +140,7 @@ function g2submitHandleMouseIntercept(evt) {
 
 function g2submitGetProtocol(node) {
     var href = node.getAttribute("href");
-
+	href = g2submitMakeAbsoluteURL(href);
 	var protocol = href.substring(0, href.indexOf(':')).toLowerCase();
     var extension = href.substring(href.lastIndexOf('.'),href.length).toLowerCase();
     // debug helper
@@ -153,6 +153,26 @@ function g2submitGetProtocol(node) {
         return protocol;
 	}
 
+}
+
+function g2submitMakeAbsoluteURL(href) {
+    if (href.indexOf("://") == -1) {
+        // convert to absolute URL
+        var base = g2submit_document.URL;
+        if (base.charAt(base.length - 1) == '/') {
+            href = base + href;
+        }
+        else {
+            if (href.charAt(0) == '/') {
+                href = base.substring(0,
+                    base.indexOf('/', base.indexOf("//") + 2)) + href;
+            }
+            else {
+                href = base.substring(0, base.lastIndexOf('/')) + '/' + href;
+            }
+        }
+	}
+	return href;
 }
 
 function g2submit_unescape(str) {
@@ -175,6 +195,8 @@ function g2submitED2KClient() {
     }
 }
 
+
+
 function g2submitTorrentClient() {
 	if (g2submit_link_node) {
         var href = g2submit_link_node.getAttribute("href");
@@ -182,22 +204,7 @@ function g2submitTorrentClient() {
             g2submitError("url is empty");
         }
         else {
-            if (href.indexOf("://") == -1) {
-                // convert to absolute URL
-                var base = g2submit_document.URL;
-                if (base.charAt(base.length - 1) == '/') {
-                    href = base + href;
-                }
-                else {
-                    if (href.charAt(0) == '/') {
-                        href = base.substring(0,
-                            base.indexOf('/', base.indexOf("//") + 2)) + href;
-                    }
-                    else {
-                        href = base.substring(0, base.lastIndexOf('/')) + '/' + href;
-                    }
-                }
-            }
+            href = g2submitMakeAbsoluteURL(href);
 	    }
         var esc = {
             'l': href
@@ -215,22 +222,7 @@ function g2submitHttpClient() {
             g2submitError("url is empty");
         }
         else {
-            if (href.indexOf("://") == -1) {
-                // convert to absolute URL
-                var base = g2submit_document.URL;
-                if (base.charAt(base.length - 1) == '/') {
-                    href = base + href;
-                }
-                else {
-                    if (href.charAt(0) == '/') {
-                        href = base.substring(0,
-                            base.indexOf('/', base.indexOf("//") + 2)) + href;
-                    }
-                    else {
-                        href = base.substring(0, base.lastIndexOf('/')) + '/' + href;
-                    }
-                }
-            }
+            href = g2submitMakeAbsoluteURL(href);
 	    }
         var esc = {
             'l': href
