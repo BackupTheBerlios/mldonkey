@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.model.Download;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
+import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -47,13 +48,15 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Table;
 
 /**
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.5 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.6 2003/08/25 16:02:50 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -84,6 +87,16 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 				( ResultTableContentProvider ) this.tableViewer.getContentProvider();
 		this.selectedResults = new ArrayList();
 		this.clipboard = new Clipboard( tableViewer.getTable().getDisplay() );
+		
+		/* add a mouse-listener to catch double-clicks */
+		tableViewer.getTable().addMouseListener( new MouseListener() {
+			public void mouseDoubleClick( MouseEvent e ) {
+				downloadSelected();
+			}
+			public void mouseDown( MouseEvent e ) { }
+			public void mouseUp( MouseEvent e ) { }
+		} );
+		
 	}
 
 	/* (non-Javadoc)
@@ -185,21 +198,28 @@ Yet			menuManager.add( webManager );
 		}
 	}
 	
+	private void downloadSelected() {				
+		Download download = new Download( core );
+		for ( int i = 0; i < selectedResults.size(); i++ ) {
+			ResultInfo result = ( ResultInfo ) selectedResults.get( i );
+			download.setPossibleNames( result.getNames() );	
+			download.setResultID( result.getResultID() );
+			download.setForce( false );
+			download.send();
+		}
+		download = null;
+		String statusline = "Started download: " + selectedResults.size();
+		SearchTab parent = ( SearchTab ) cTabItem.getParent().getData();
+		parent.getMainTab().getStatusline().update( statusline );
+	}
+		
 	private class DownloadAction extends Action {
 		public DownloadAction() {
 			super();
 			setText( G2GuiResources.getString( "ST_DOWNLOAD" ) );
 		}
 		public void run() {
-			Download download = new Download( core );
-			for ( int i = 0; i < selectedResults.size(); i++ ) {
-				ResultInfo result = ( ResultInfo ) selectedResults.get( i );
-				download.setPossibleNames( result.getNames() );	
-				download.setResultID( result.getResultID() );
-				download.setForce( false );
-				download.send();
-			}
-			download = null;
+			downloadSelected();
 		}
 	}
 	
@@ -285,6 +305,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.6  2003/08/25 16:02:50  zet
+remove duplicate code, move dblclick to menulistener
+
 Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 

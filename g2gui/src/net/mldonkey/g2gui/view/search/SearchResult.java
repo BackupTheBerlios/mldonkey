@@ -30,7 +30,6 @@ import java.util.Observer;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.model.Download;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.view.MainTab;
@@ -51,7 +50,6 @@ import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -77,7 +75,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.28 2003/08/24 02:34:16 zet Exp $ 
+ * @version $Id: SearchResult.java,v 1.29 2003/08/25 16:02:50 zet Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -270,14 +268,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			}
 		} );
 		
-		/* add a mouse-listener to catch double-clicks */
-		table.getTable().addMouseListener( new MouseListener() {
-			public void mouseDoubleClick( MouseEvent e ) {
-				downloadSelected();
-			}
-			public void mouseDown( MouseEvent e ) { }
-			public void mouseUp( MouseEvent e ) { }
-		} );
+		
 		
 		/*
 		 * add a menulistener to set the first item to default
@@ -301,19 +292,6 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		/* set the this table as the new CTabItem Control */
 		cTabItem.setControl( table.getTable() );
 		
-	}
-	
-	private void downloadSelected() {				
-		TableItem[] currentItems = table.getTable().getSelection();
-		Download download = new Download( core );
-		for ( int i = 0; i < currentItems.length;	 i ++ ) {
-			ResultInfo result = ( ResultInfo ) currentItems[ i ].getData();
-			download.setPossibleNames( result.getNames() );	
-			download.setResultID( result.getResultID() );
-			download.setForce( false );
-			download.send();
-		}
-		download = null;
 	}
 	
 	/**
@@ -548,6 +526,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.29  2003/08/25 16:02:50  zet
+remove duplicate code, move dblclick to menulistener
+
 Revision 1.28  2003/08/24 02:34:16  zet
 update sorter properly
 
