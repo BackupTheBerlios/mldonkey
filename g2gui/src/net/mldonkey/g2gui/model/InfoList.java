@@ -30,14 +30,14 @@ import java.util.List;
  * InfoList
  *
  * @author $user$
- * @version $Id: InfoList.java,v 1.5 2003/06/16 13:18:59 lemmstercvs01 Exp $ 
+ * @version $Id: InfoList.java,v 1.6 2003/06/16 15:32:43 lemmstercvs01 Exp $ 
  *
  */
 public abstract class InfoList implements InfoCollection {
 	/**
 	 * the addsomeoptionlist 
 	 */
-	private List infoList;
+	protected List infoList;
 	
 	/**
 	 * Creates an empty AddSomeOptionList object
@@ -57,6 +57,9 @@ public abstract class InfoList implements InfoCollection {
 
 /*
 $Log: InfoList.java,v $
+Revision 1.6  2003/06/16 15:32:43  lemmstercvs01
+changed some modifiers
+
 Revision 1.5  2003/06/16 13:18:59  lemmstercvs01
 checkstyle applied
 

@@ -28,16 +28,27 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * InfoList
  * 
  * @author ${user}
- * @version $$Id: InfoCollection.java,v 1.1 2003/06/15 16:18:41 lemmstercvs01 Exp $$ 
+ * @version $$Id: InfoCollection.java,v 1.2 2003/06/16 15:32:43 lemmstercvs01 Exp $$ 
  */
 public interface InfoCollection {
 	
-	public abstract void readStream( MessageBuffer messageBuffer );
-
-	public abstract void update( MessageBuffer messageBuffer );
+	/**
+	 * Reads a InfoCollection from a MessageBuffer
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	void readStream( MessageBuffer messageBuffer );
+	
+	/**
+	 * Updates a InfoCollection from a MessageBuffer
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	void update( MessageBuffer messageBuffer );
 }
 /*
 $$Log: InfoCollection.java,v $
+$Revision 1.2  2003/06/16 15:32:43  lemmstercvs01
+$changed some modifiers
+$
 $Revision 1.1  2003/06/15 16:18:41  lemmstercvs01
 $new interface introduced
 $
