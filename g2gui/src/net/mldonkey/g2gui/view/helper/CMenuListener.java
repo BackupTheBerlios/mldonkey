@@ -39,10 +39,10 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * MenuListener
  *
- * @version $Id: MenuListener.java,v 1.2 2003/09/18 10:04:57 lemmster Exp $
+ * @version $Id: CMenuListener.java,v 1.1 2003/09/23 14:47:53 zet Exp $
  *
  */
-public abstract class MenuListener implements IMenuListener {
+public abstract class CMenuListener implements IMenuListener {
     protected CoreCommunication core;
     protected StructuredViewer tableViewer;
 
@@ -51,7 +51,7 @@ public abstract class MenuListener implements IMenuListener {
 	 * @param viewer The Viewer which is the parent of this objs
 	 * @param core The parent core3
 	 */
-    public MenuListener( StructuredViewer viewer, CoreCommunication core ) {
+    public CMenuListener( StructuredViewer viewer, CoreCommunication core ) {
         this.tableViewer = viewer;
         this.core = core;
     }
@@ -126,7 +126,10 @@ public abstract class MenuListener implements IMenuListener {
 }
 
 /*
-$Log: MenuListener.java,v $
+$Log: CMenuListener.java,v $
+Revision 1.1  2003/09/23 14:47:53  zet
+rename MenuListener to avoid conflict with swt MenuListener
+
 Revision 1.2  2003/09/18 10:04:57  lemmster
 checkstyle
 

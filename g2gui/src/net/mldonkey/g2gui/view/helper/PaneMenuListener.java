@@ -31,10 +31,10 @@ import org.eclipse.jface.viewers.StructuredViewer;
 /**
  * PaneMenuListener
  *
- * @version $Id: PaneMenuListener.java,v 1.2 2003/09/18 10:04:57 lemmster Exp $ 
+ * @version $Id: PaneMenuListener.java,v 1.3 2003/09/23 14:47:53 zet Exp $ 
  *
  */
-public class PaneMenuListener extends MenuListener implements IMenuListener {
+public class PaneMenuListener extends CMenuListener implements IMenuListener {
 
 	/**
 	 * Creates a new PaneMenuListener
@@ -56,6 +56,9 @@ public class PaneMenuListener extends MenuListener implements IMenuListener {
 
 /*
 $Log: PaneMenuListener.java,v $
+Revision 1.3  2003/09/23 14:47:53  zet
+rename MenuListener to avoid conflict with swt MenuListener
+
 Revision 1.2  2003/09/18 10:04:57  lemmster
 checkstyle
 

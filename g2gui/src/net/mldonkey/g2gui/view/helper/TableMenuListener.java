@@ -60,10 +60,10 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.10 2003/09/18 10:04:57 lemmster Exp $
+ * @version $Id: TableMenuListener.java,v 1.11 2003/09/23 14:47:53 zet Exp $
  *
  */
-public abstract class TableMenuListener extends MenuListener {
+public abstract class TableMenuListener extends CMenuListener {
     protected ViewerFilter incrementalViewerFilter;
 
     /**
@@ -556,6 +556,9 @@ public abstract class TableMenuListener extends MenuListener {
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.11  2003/09/23 14:47:53  zet
+rename MenuListener to avoid conflict with swt MenuListener
+
 Revision 1.10  2003/09/18 10:04:57  lemmster
 checkstyle
 
