@@ -28,7 +28,6 @@ import gnu.regexp.REMatch;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -41,7 +40,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.14 2003/08/09 15:32:14 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.15 2003/08/09 15:32:45 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -321,6 +320,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.15  2003/08/09 15:32:45  dek
+removed unused import
+
 Revision 1.14  2003/08/09 15:32:14  dek
 added gnu.regexp for compiling with gcj
 you can get it at:
