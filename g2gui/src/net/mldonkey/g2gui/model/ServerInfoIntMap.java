@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.5 2003/07/04 18:35:02 lemmstercvs01 Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.6 2003/07/06 20:09:21 dek Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -65,7 +65,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 	public void readStream( MessageBuffer messageBuffer ) {
 		int id = messageBuffer.readInt32();
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
-		if ( this.infoIntMap.containsKey( id ) ) {
+		if ( this.get( id ) != null ) {
 			this.get( id ).readStream( messageBuffer );
 		}
 		else {
@@ -111,6 +111,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.6  2003/07/06 20:09:21  dek
+NPE fixed
+
 Revision 1.5  2003/07/04 18:35:02  lemmstercvs01
 foobar
 
