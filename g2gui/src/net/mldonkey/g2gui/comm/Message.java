@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.11 2003/06/14 12:48:57 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.12 2003/06/14 17:41:19 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -71,6 +71,14 @@ public abstract class Message {
 	 * Receive FileAddSource (value is 10)
 	 */
 	public static final short R_FILE_ADD_SOURCE = 10;
+	/**
+	 * Receive ClientInfo (value is 15)
+	 */
+	public static final short R_CLIENT_INFO = 15; 
+	/**
+	 * Receive ClientState (value is 16)
+	 */
+	public static final short R_CLIENT_STATE = 16;
 	/**
 	 * Receive Console (value is 19)
 	 */
@@ -234,6 +242,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.12  2003/06/14 17:41:19  lemmstercvs01
+added some opcodes
+
 Revision 1.11  2003/06/14 12:48:57  lemmstercvs01
 checkstyle applied, added a opcode, removed abstract methods
 

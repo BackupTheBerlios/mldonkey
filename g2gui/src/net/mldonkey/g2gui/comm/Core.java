@@ -23,7 +23,8 @@
 package net.mldonkey.g2gui.comm;
 
 
-import java.io.BufferedInputStream;
+import gnu.trove.TIntObjectHashMap;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -35,10 +36,10 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.10 2003/06/13 16:01:36 dek Exp $ 
+ * @version $Id: Core.java,v 1.11 2003/06/14 17:41:33 lemmstercvs01 Exp $ 
  *
  */
-public class Core {
+public class Core extends Thread {
 	/**
 	 * 
 	 */
@@ -69,13 +70,18 @@ public class Core {
 	 */
 	private NetworkInfo networkinfo = new NetworkInfo();
 	
+	/**
+	 * 
+	 */
+	private TIntObjectHashMap clientInfoMap = new TIntObjectHashMap();
+	
 	
 	/**
 	 * Core()
 	 * 
-	 * @param connection_ the socket, where the whole thing takes place
+	 * @param connection the socket, where the whole thing takes place
 	 */
-	public Core( Socket connection ) throws IOException {
+	public Core( Socket connection ) {
 		this.connection = connection;
 		this.run();
 	}
@@ -103,41 +109,37 @@ public class Core {
 		this.connect();		
 		MessageBuffer messageBuffer = new MessageBuffer();		
 		int messageLength;
-		int position=0;
+		int position = 0;
 		short opCode;		
 		InputStream i;
 		try {
-				i = connection.getInputStream();
+			i = connection.getInputStream();
 			
-			BufferedInputStream bufferstream = new BufferedInputStream(i);		
 			byte[] content;
 		 		
 			while ( connected ) {											
-					/* getting length of message */
-						messageLength = Message.readInt32( i );							
-						content = new byte[messageLength];
-						position=0;
-						/* read out the message from stream, re-read if no bytes are waiting, 
-						 * untill message is completly read (thx to Jmoule for this idea ;-)
-						 */ 
-						while (position<messageLength)
-							 position+=i.read(content,position,(int)messageLength-position);
-						position=0;					
-						messageBuffer.setBuffer(content);
-						opCode = messageBuffer.readInt16();
-						/* decode the message content */			
-						this.decodeMessage( opCode, messageBuffer);
-								
+				/* getting length of message */
+				messageLength = Message.readInt32( i );							
+				content = new byte[messageLength];
+				position = 0;
+				/* read out the message from stream, re-read if no bytes are waiting, 
+				 * untill message is completly read (thx to Jmoule for this idea ;-)
+				 */ 
+				while ( position < messageLength )
+					position += i.read( content, position, ( int ) messageLength - position );
+				
+				position = 0;					
+				messageBuffer.setBuffer( content );
+				opCode = messageBuffer.readInt16();
+				
+				/* decode the message content */			
+				this.decodeMessage( opCode, messageBuffer );
 			}			
-		} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}			
-		}
+		} catch ( IOException e ) {
+			e.printStackTrace();
+		}			
+	}
 					
-		
-	
-
 	/**
 	 * @param opcode
 	 * @param connection
@@ -148,109 +150,59 @@ public class Core {
 		{
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
-					/*
-					 *	PayLoad:
-					 *	int32	The maximal protocol version accepted by the core 
-					 */
 					coreProtocol = messageBuffer.readInt32();
-
 					/* send a request for FileInfoList */					
 					this.requestFileInfoList();
-										
 					break;
-			case Message.R_NETWORK_INFO :
-					/*
-					 *	PayLoad:
-					 *	int32	Network identifier (used in other messages for this network) 
-					 *	String	Network name 
-					 *	int8	Enabled(1) or Disabled(0) 
-					 *	String	Name of network config file 
-					 *	int64	Number of bytes uploaded on network 
-					 *	int64	Number of bytes downloaded on network
-					 */
 
+			case Message.R_NETWORK_INFO :
+					break;
+					
 			case Message.R_OPTIONS_INFO :				
-					/*
-					 *	PayLoad:
-					 *	List of (String,String)	The list of options with their current value 
-					 */
 					break;
 				
 			case Message.R_FILE_UPDATE_AVAILABILITY :				
-					/*
-					 *	PayLoad:
-					 *	int32	File Number
-					 *	int32	client_num
-					 *	String	Availability				
-					 */
 					break;
-				
 
 			case Message.R_FILE_ADD_SOURCE :				
-					/*
-					 *	PayLoad:
-					 *	int32	The File Identifier 
-					 *	int32	The Source/Client Identifier 
-					 */
 					this.fileAddSources.readStream( messageBuffer );
 					break;
-			
-			case Message.R_BAD_PASSWORD :
-					/*
-					 * No Payload:
-					 * Just display a message and stop receiving
-					 */
-					System.out.println("Bad Password");						
-					this.disconnect();
+					
+			case Message.R_CLIENT_INFO :
+					ClientInfo clientInfo =  new ClientInfo();
+					clientInfo.readStream( messageBuffer );
+					this.clientInfoMap.put( clientInfo.getClientid(), clientInfo );
 					break;
 					
+			case Message.R_CLIENT_STATE :
+					int i = messageBuffer.readInt32();
+					( ( ClientInfo ) this.clientInfoMap.get( i ) ).update( messageBuffer );
+					break;		
+					
+			case Message.R_BAD_PASSWORD :
+					System.out.println( "Bad Password" );						
+					this.disconnect();
+					break;
+
+			case Message.R_FILE_DOWNLOAD_UPDATE :
+					this.fileInfoList.update( messageBuffer );
+					break;	
+					
 			case Message.R_CLIENT_STATS :				
-					/*
-					 *	PayLoad:
-					 *	int64	Total uploaded 
-					 *	int64	Total downloaded 
-					 *	int64	Total shared 
-					 *	int32	Number of shared files 
-					 *	int32	Tcp Upload Rate 
-					 *	int32	Tcp Download Rate 
-					 *	int32	Udp Upload Rate 
-					 *	int32	Udp Download Rate 
-					 *	int32	Number of current downloads 
-					 *	int32	Number of downloads finished 
-					 *	List of int32  	 Connected Networks 
-					 */
 					clientStats.readStream( messageBuffer );
-					System.out.println(clientStats.toString() );
 					break;				
 
 			case Message.R_CONSOLE :				
-					/*
-					 *	PayLoad:
-					 *	String	Data, the core wants to be displayed on the console 
-					 */
 					String payloadText = messageBuffer.readString();
 					System.out.println( payloadText );
 					break;
 				
-
-
-					
 			case Message.R_DOWNLOADING_LIST :
-					/*
-					 * Payload:
-					 * a List of running Downloads (FileInfo)
-					 */
-					 this.fileInfoList.readStream( messageBuffer );
-					// this.requestFileInfoList();
-					 break;
+					this.fileInfoList.readStream( messageBuffer );
+					break;
 					 
 			case Message.R_DOWNLOADED_LIST :
-					/*
-					 * Payload:
-					 * a List of complete Downloads (FileInfo)
-					 */
 					 break;
-		 
 
 			default :				
 					System.out.println( "unknown OP-Code : " + opcode + "!" );
@@ -258,15 +210,27 @@ public class Core {
 		}
 	}
 	
+	/**
+	 * Sends a FileInfoList request to the core
+	 */
 	public void requestFileInfoList() {
 		Message downloadingFiles = new EncodeMessage( Message.S_GETDOWNLOADING_FILES );
 		downloadingFiles.sendMessage( connection );
 		downloadingFiles = null;
 	}
+	
+/*	public void requestFileDownloadUpdate() {
+		Message downloadUpdate = new EncodeMessage( Message.S_FILE_DOWNLOAD_UPDATE );
+		downloadUpdate.sendMessage( connection );
+		downloadUpdate = null;
+	}*/
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.11  2003/06/14 17:41:33  lemmstercvs01
+added some opcodes
+
 Revision 1.10  2003/06/13 16:01:36  dek
 OpCode NetworkInfo added
 
