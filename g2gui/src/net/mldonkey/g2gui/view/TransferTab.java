@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -30,6 +31,7 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.view.download.FileInfoTableContentProvider;
 import net.mldonkey.g2gui.view.download.FileInfoTableLabelProvider;
+import net.mldonkey.g2gui.view.download.RowComparator;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -54,13 +56,14 @@ import org.eclipse.swt.widgets.TableItem;
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.10 2003/06/27 22:04:45 lemmstercvs01 Exp $ 
+ * @version $Id: TransferTab.java,v 1.11 2003/06/30 07:32:24 lemmstercvs01 Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements Observer {
 	private static ResourceBundle res = ResourceBundle.getBundle("g2gui");
 	private TableViewer table;
 	private TableItem item;
+	private int lastSortColumn = -1;
 
 	/**
 	 * @param gui gui the parent Gui
@@ -98,7 +101,7 @@ public class TransferTab extends G2guiTab implements Observer {
 							 res.getString( "TT_Field3" ),
 							 res.getString( "TT_Field4" ),
  							 res.getString( "TT_Field5" ),
- 							 res.getString( "TT_Field6") };
+ 							 res.getString( "TT_Field6" ) };
 
 		int[] anInt = { 25, 300, 40, 70, 70, 40, 70 };
 		TableColumn column = null;
@@ -106,6 +109,14 @@ public class TransferTab extends G2guiTab implements Observer {
 			column = new TableColumn( table.getTable(), SWT.LEFT );
 			column.setText( aString[ i ] );
 			column.setWidth( anInt[ i ] );
+			
+			/* listen for table sorting */
+			final int columnIndex = i;
+			column.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent e ) {
+					sort( columnIndex );
+				}
+			});
 		}
 		
 		/* listen for right mouse click on item */
@@ -189,7 +200,7 @@ public class TransferTab extends G2guiTab implements Observer {
 		menuItem.setText( res.getString( "TT_Menu4" ) );
 			Menu copy = new Menu( menu );
 			MenuItem copyItem = new MenuItem( copy, SWT.PUSH );
-			copyItem.setText( "TODO" );
+			copyItem.setText( "" );
 			copyItem.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent e ) {
 				}
@@ -200,8 +211,13 @@ public class TransferTab extends G2guiTab implements Observer {
 		menu.addListener( SWT.Show, new Listener () {
 			/* create submenu for "Rename to" */
 			public void handleEvent( Event event ) {
-				MenuItem renameItem = null;
+				/* remove the old items */
+				MenuItem[] renameMenu = rename.getItems();
+				for ( int i = 0; i < renameMenu.length; i++ ) {
+					renameMenu[ i ].dispose();
+				}
 				/* create a menuItem for all names in fileinfo */
+				MenuItem renameItem = null;
 				FileInfo fileInfo = ( ( FileInfo ) item.getData() );
 				String[] names = fileInfo.getNames();
 				for ( int i = 0; i < names.length; i++ ) {
@@ -215,13 +231,44 @@ public class TransferTab extends G2guiTab implements Observer {
 				}
 			}
 		});
-		// TODO add events
+		// TODO add events for rightClick menu
 		return menu;
 	}
+	
+	/**
+	 * 
+	 * @param column
+	 */
+	private void sort(int column) {
+		if( table.getTable().getItemCount() <= 1 ) return;
+			TableItem[] items = table.getTable().getItems();
+			String[][] data = new String[ items.length ][ table.getTable().getColumnCount() ];
+			for ( int i = 0; i < items.length; i++ )
+				for ( int j = 0; j < table.getTable().getColumnCount(); j++ )
+					data[ i ][ j ] = items[ i ].getText(j);
+
+			Arrays.sort( data, new RowComparator( column ) );
+
+			if ( lastSortColumn != column ) {
+				for ( int i = 0; i < data.length; i++ )
+					items[ i ].setText( data[ i ] );
+				lastSortColumn = column;
+			}
+			else {
+			// reverse order if the current column is selected again
+			int j = data.length -1;
+			for ( int i = 0; i < data.length; i++ )
+				items[ i ].setText( data[ j-- ] );
+			lastSortColumn = -1;
+			}	
+	}	
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.11  2003/06/30 07:32:24  lemmstercvs01
+sorting of columns added (buggy)
+
 Revision 1.10  2003/06/27 22:04:45  lemmstercvs01
 ResourceBundle introduced
 
