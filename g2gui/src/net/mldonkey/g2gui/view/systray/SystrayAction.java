@@ -28,7 +28,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Shell;
 
  /**
- * @version $Id: SystrayAction.java,v 1.3 2004/03/11 12:35:39 dek Exp $ 
+ * @version $Id: SystrayAction.java,v 1.4 2004/03/11 13:11:43 dek Exp $ 
  *
  */
 public abstract class SystrayAction extends Action {
@@ -38,8 +38,7 @@ public abstract class SystrayAction extends Action {
 	protected Shell shell;
 	
 	protected SystrayAction(SystemTray tray, String title) {
-		super();
-		setText(title);		
+		super(title);			
 		parent = tray.getParent();
 		shell = parent.getShell();
 	}
@@ -48,6 +47,9 @@ public abstract class SystrayAction extends Action {
 }
 /*
  $Log: SystrayAction.java,v $
+ Revision 1.4  2004/03/11 13:11:43  dek
+ Submenu for traymenu + some OO
+
  Revision 1.3  2004/03/11 12:35:39  dek
  exteranlized strings
 

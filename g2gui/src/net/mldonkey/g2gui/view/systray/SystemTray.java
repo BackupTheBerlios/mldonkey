@@ -37,6 +37,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MenuAdapter;
+import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
@@ -44,7 +46,7 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
  /**
- * @version $Id: SystemTray.java,v 1.10 2004/03/11 12:35:39 dek Exp $ 
+ * @version $Id: SystemTray.java,v 1.11 2004/03/11 13:11:43 dek Exp $ 
  *
  */
 public class SystemTray implements SystemTrayIconListener,Observer {
@@ -96,8 +98,17 @@ public class SystemTray implements SystemTrayIconListener,Observer {
 					menu.setVisible(false);
 					return;
 					}
-				menu = popupMenu.createContextMenu(parent.getShell());
+				 menu = popupMenu.createContextMenu(parent.getShell());
 				menu.setLocation(x-2, y-2);
+				
+				menu.addMenuListener(new MenuAdapter() {
+					public void menuShown(MenuEvent e) {
+						/* set the default menue entry, this makes problems with motif
+						 * if nothing in the table has been selected */
+						if (menu.getItem(0)!= null)
+							menu.setDefaultItem(menu.getItem(0));
+					}
+				});
 				menu.setVisible(true);
 			}
 		});
@@ -163,18 +174,36 @@ public class SystemTray implements SystemTrayIconListener,Observer {
 
 		IMenuListener manager = new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
+				String toggle="";
+				if ( parent.getShell().isVisible() ) toggle = G2GuiResources.getString("TRAY_TOGGLE_HIDE");
+					else toggle = G2GuiResources.getString("TRAY_TOGGLE_SHOW"); 
+				manager.add(new ToggleAction(SystemTray.this,toggle));
+				
+			
+				MenuManager settingsSubMenu = new MenuManager(G2GuiResources.getString(
+					"TRAY_SETTINGS"));
+					settingsSubMenu.add(
+							new CloseToTrayAction(
+									SystemTray.this,
+									G2GuiResources.getString("TRAY_CLOSE_TO")));
+					settingsSubMenu.add(
+							new MinimizeToTrayAction(
+									SystemTray.this,
+									G2GuiResources.getString("TRAY_MINIMIZE_TO")));
+				manager.add(settingsSubMenu);
+				
 				manager.add(new Separator());
+				
 				manager.add(
-						new CloseToTrayAction (
-								SystemTray.this,G2GuiResources.getString("TRAY_CLOSE_TO")));
-				manager.add(new MinimizeToTrayAction(SystemTray.this,G2GuiResources.getString("TRAY_MINIMIZE_TO")));
-				manager.add(new ToggleAction(SystemTray.this,G2GuiResources.getString("TRAY_TOGGLE")));
-				manager.add(new Separator());
-				manager.add(new ExitAction(SystemTray.this,G2GuiResources.getString("TRAY_EXIT")));
+					new ExitAction(
+						SystemTray.this,
+						G2GuiResources.getString("TRAY_EXIT")));
+				
+				
 
 			}
 		};
-		popupMenu = new MenuManager("");
+		popupMenu = new MenuManager("");		
 		popupMenu.setRemoveAllWhenShown(true);
 		popupMenu.addMenuListener(manager);
 
@@ -221,7 +250,10 @@ public class SystemTray implements SystemTrayIconListener,Observer {
 			
 			final String transferRates =
 					 "\nDL:" + decimalFormat.format(medianDownRate) + 
-					 " / UL:" + decimalFormat.format(medianUpRate  );			
+					 " / UL:" + decimalFormat.format(medianUpRate  );	
+			
+			if (parent.getShell().isDisposed()) 
+				return;
 			
 			parent.getShell().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -247,6 +279,9 @@ public class SystemTray implements SystemTrayIconListener,Observer {
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.11  2004/03/11 13:11:43  dek
+ Submenu for traymenu + some OO
+
  Revision 1.10  2004/03/11 12:35:39  dek
  exteranlized strings
 

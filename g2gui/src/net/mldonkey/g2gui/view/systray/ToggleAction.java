@@ -22,27 +22,22 @@
  */
 package net.mldonkey.g2gui.view.systray;
 
-import net.mldonkey.g2gui.view.MainWindow;
 
 
 
 
  /**
- * @version $Id: ToggleAction.java,v 1.4 2004/03/11 12:35:39 dek Exp $ 
+ * @version $Id: ToggleAction.java,v 1.5 2004/03/11 13:11:43 dek Exp $ 
  *
  */
 class ToggleAction extends SystrayAction {
 	
-	private MainWindow parent;
-	private boolean isVisible=true;
-	
 	public ToggleAction(SystemTray tray,String title) {
 		super(tray,title);
-		isVisible=shell.isVisible();
-		setChecked(isVisible);
 	}
+	
 	public void run() {		
-		shell.setVisible(!isVisible);		
+		shell.setVisible(!shell.isVisible());		
 		shell.setFocus();
 		shell.forceActive();
 		shell.setMinimized(false);
@@ -51,6 +46,9 @@ class ToggleAction extends SystrayAction {
 }
 /*
  $Log: ToggleAction.java,v $
+ Revision 1.5  2004/03/11 13:11:43  dek
+ Submenu for traymenu + some OO
+
  Revision 1.4  2004/03/11 12:35:39  dek
  exteranlized strings
 

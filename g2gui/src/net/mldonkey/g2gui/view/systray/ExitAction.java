@@ -22,26 +22,21 @@
  */
 package net.mldonkey.g2gui.view.systray;
 
-import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
-
 
 
  /**
- * @version $Id: ExitAction.java,v 1.3 2004/03/11 12:35:39 dek Exp $ 
+ * @version $Id: ExitAction.java,v 1.4 2004/03/11 13:11:43 dek Exp $ 
  *
  */
 class ExitAction extends SystrayAction {	
 	
 	public ExitAction(SystemTray tray,String title) {
-		super(tray, title);
-		PreferenceLoader.setValue("forceClose",false);		
-		setImageDescriptor(G2GuiResources.getImageDescriptor("X"));
+		super(tray, title);			
+		//setImageDescriptor(G2GuiResources.getImageDescriptor("X"));
 	}
 	
 	
-	public void run() {
-		PreferenceLoader.setValue("forceClose",true);
+	public void run() {		
 		parent.getMinimizer().forceClose();
 		shell.close();
 	}
@@ -49,6 +44,9 @@ class ExitAction extends SystrayAction {
 }
 /*
  $Log: ExitAction.java,v $
+ Revision 1.4  2004/03/11 13:11:43  dek
+ Submenu for traymenu + some OO
+
  Revision 1.3  2004/03/11 12:35:39  dek
  exteranlized strings
 
