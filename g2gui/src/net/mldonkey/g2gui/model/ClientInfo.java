@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.5 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
+ * @version $Id: ClientInfo.java,v 1.6 2003/06/30 07:20:09 lemmstercvs01 Exp $ 
  *
  */
 public class ClientInfo implements SimpleInformation {
@@ -212,15 +212,7 @@ public class ClientInfo implements SimpleInformation {
 		this.getClientKind().readStream( messageBuffer );
 		this.getState().readStream( messageBuffer );
 		this.setClientType( messageBuffer.readByte() );
-
-		short listElem = messageBuffer.readInt16();
-		tag = new Tag[ listElem ];
-		for ( int i = 0; i < listElem; i++ ) {
-			Tag aTag = new Tag();
-			aTag.readStream( messageBuffer );
-			this.tag[ i ] = aTag;
-		}
-
+		this.setTag( messageBuffer.readTagList() );
 		this.setClientName( messageBuffer.readString() );
 		this.setClientRate( messageBuffer.readInt32() );
 		this.setClientChatPort( messageBuffer.readInt32() );
@@ -238,6 +230,9 @@ public class ClientInfo implements SimpleInformation {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.6  2003/06/30 07:20:09  lemmstercvs01
+changed to readTagList()
+
 Revision 1.5  2003/06/24 09:29:57  lemmstercvs01
 Enum more improved
 

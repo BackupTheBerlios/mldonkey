@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.4 2003/06/18 13:30:56 dek Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.5 2003/06/30 07:20:09 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo implements SimpleInformation {
 	/**
@@ -253,15 +253,7 @@ public class ServerInfo implements SimpleInformation {
 		this.getServerAddress().readStream( messageBuffer );
 		this.setServerPort( messageBuffer.readInt16() );
 		this.setServerScore( messageBuffer.readInt32() );
-		
-		short listElem = messageBuffer.readInt16();
-		serverMetadata = new Tag[ listElem ];
-		for ( int i = 0; i < listElem; i++ ) {
-			Tag aTag = new Tag();
-			aTag.readStream( messageBuffer );
-			this.serverMetadata[ i ] = aTag;
-		}
-		
+		this.setServerMetadata( messageBuffer.readTagList() );		
 		this.setNumOfUsers( messageBuffer.readInt32() );
 		this.setNumOfFilesShared( messageBuffer.readInt32() );
 		this.getConnectionState().readStream( messageBuffer );
@@ -280,6 +272,9 @@ public class ServerInfo implements SimpleInformation {
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.5  2003/06/30 07:20:09  lemmstercvs01
+$changed to readTagList()
+$
 $Revision 1.4  2003/06/18 13:30:56  dek
 $Improved Communication Layer view <--> model by introducing a super-interface
 $
