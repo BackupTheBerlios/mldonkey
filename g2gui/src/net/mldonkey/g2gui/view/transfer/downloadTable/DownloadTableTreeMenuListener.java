@@ -37,6 +37,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.transfer.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
 import net.mldonkey.g2gui.view.transfer.FileDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.transfer.UniformResourceLocator;
@@ -51,8 +52,8 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -84,7 +85,7 @@ import org.eclipse.swt.widgets.Text;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.16 2003/10/15 18:33:35 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.17 2003/10/15 21:13:21 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -94,7 +95,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     private List selectedClients = new ArrayList();
     private List selectedFiles = new ArrayList();
     private CustomTableTreeViewer tableTreeViewer;
-    private TableViewer clientTableViewer;
+    private CustomTableViewer clientTableViewer;
+    private DownloadTableTreeViewer downloadTableTreeViewer;
     private DownloadTableTreeContentProvider tableTreeContentProvider;
     private CoreCommunication core;
     private boolean createClientTable = false;
@@ -103,8 +105,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     private final int WS_BITZI = 2;
     private final int WS_FILEDONKEY = 3;
 
-    public DownloadTableTreeMenuListener( final CustomTableTreeViewer tableTreeViewer, TableViewer clientTableViewer, CoreCommunication mldonkey ) {
-        this.tableTreeViewer = tableTreeViewer;
+    public DownloadTableTreeMenuListener( DownloadTableTreeViewer downloadTableTreeViewer, CustomTableViewer clientTableViewer, CoreCommunication mldonkey ) {
+        this.downloadTableTreeViewer = downloadTableTreeViewer;
+        this.tableTreeViewer = downloadTableTreeViewer.getTableTreeViewer();
         this.clientTableViewer = clientTableViewer;
         this.core = mldonkey;
         tableTreeContentProvider = (DownloadTableTreeContentProvider) tableTreeViewer.getContentProvider();
@@ -294,6 +297,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         if ( ( selectedFile != null ) && advancedMode ) {
             menuManager.add( new PreviewAction() );
             menuManager.add( new VerifyChunksAction() );
+            menuManager.add( new ToggleClientsAction() );
         }
 
         if ( ( selectedClient != null ) && advancedMode ) {
@@ -661,7 +665,33 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
             clipBoard.dispose();
         }
     }
-   
+	/**
+	 * ToggleClientsAction - nice and ugly
+	 */
+	private class ToggleClientsAction extends Action {
+
+	   private SashForm sashForm;
+	   private boolean show;
+		
+	   public ToggleClientsAction( ) {
+			super();
+			sashForm = (SashForm) tableTreeViewer.getTableTree().getTable().getParent().getParent().getParent().getParent();
+			show = (sashForm.getWeights()[1] == 0);
+			setText( (show ? G2GuiResources.getString( "MISC_SHOW" ) : G2GuiResources.getString( "MISC_HIDE") ) + " " + G2GuiResources.getString( "TT_Clients") );
+			setImageDescriptor( show ? G2GuiResources.getImageDescriptor( "plus" ) : G2GuiResources.getImageDescriptor( "minus" )  );
+	   }
+
+	   public void run() {
+	   	
+			SashForm sashForm = (SashForm) tableTreeViewer.getTableTree().getTable().getParent().getParent().getParent().getParent();
+			if ( show ) {
+				sashForm.setWeights(new int[] { 2, 1 } );
+			} else {
+				sashForm.setWeights(new int[] { 1, 0 } );
+				downloadTableTreeViewer.updateClientsTable( false );
+			}
+	   }
+    }
     
     /**
      * WebServiceAction
@@ -753,6 +783,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.17  2003/10/15 21:13:21  zet
+show/hide clients from rtclk menu
+
 Revision 1.16  2003/10/15 18:33:35  zet
 icons
 

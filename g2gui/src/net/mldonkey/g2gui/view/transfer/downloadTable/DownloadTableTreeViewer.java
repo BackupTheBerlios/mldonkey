@@ -29,6 +29,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.transfer.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
 import org.eclipse.jface.action.MenuManager;
@@ -39,7 +40,6 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.5 2003/10/12 15:58:29 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.6 2003/10/15 21:13:21 zet Exp $
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListener {
@@ -130,7 +130,7 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
     private boolean manualDispose = false;
     private CoreCommunication mldonkey;
     private CellEditor[] cellEditors = null;
-    private TableViewer clientTableViewer;
+    private CustomTableViewer clientTableViewer;
     private String columnIDs;
 
     /**
@@ -139,7 +139,7 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
      * @param mldonkey
      * @param page
      */
-    public DownloadTableTreeViewer( Composite parent, TableViewer clientTableViewer, final CoreCommunication mldonkey, TransferTab page ) {
+    public DownloadTableTreeViewer( Composite parent, CustomTableViewer clientTableViewer, final CoreCommunication mldonkey, TransferTab page ) {
         this.clientTableViewer = clientTableViewer;
         this.shell = parent.getShell();
         this.mldonkey = mldonkey;
@@ -176,7 +176,7 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 
         tableTreeViewer.addDoubleClickListener( this );
 
-        tableTreeMenuListener = new DownloadTableTreeMenuListener( tableTreeViewer, clientTableViewer, mldonkey );
+        tableTreeMenuListener = new DownloadTableTreeMenuListener( this, clientTableViewer, mldonkey );
 
         tableTreeViewer.addSelectionChangedListener( tableTreeMenuListener );
 
@@ -419,6 +419,9 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.6  2003/10/15 21:13:21  zet
+show/hide clients from rtclk menu
+
 Revision 1.5  2003/10/12 15:58:29  zet
 rewrite downloads table & more..
 
