@@ -22,11 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
@@ -50,12 +45,17 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
+
 
 /**
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.4 2003/10/19 16:40:37 zet Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.5 2003/11/01 18:46:02 zet Exp $
  *
  */
 public class ClientDetailDialog implements Observer, DisposeListener {
@@ -75,7 +75,8 @@ public class ClientDetailDialog implements Observer, DisposeListener {
     int width = leftColumn + rightColumn + 30;
     int height = 420;
 
-    public ClientDetailDialog( FileInfo fileInfo, final ClientInfo clientInfo, final CoreCommunication core ) {
+    public ClientDetailDialog(FileInfo fileInfo, final ClientInfo clientInfo,
+        final CoreCommunication core) {
         this.fileInfo = fileInfo;
         this.clientInfo = clientInfo;
         this.core = core;
@@ -86,39 +87,46 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      * Create dialog contents
      */
     public void createContents() {
-        shell = new Shell( SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
-        shell.addDisposeListener( this );
-        
-		Rectangle parentBounds = desktop.getActiveShell().getBounds();
+        shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
+        shell.addDisposeListener(this);
 
-		int tlx = parentBounds.x + (parentBounds.width / 2) - ( width / 2);
-		int tly = parentBounds.y + (parentBounds.height / 2) - ( height / 2);
+        Rectangle parentBounds;
 
-		tlx = Math.min( (desktop.getClientArea().width - width), Math.max( 0, tlx) );
-		tly = Math.min( (desktop.getClientArea().height - height), Math.max( 0, tly) );
+        // for win32-fox
+        if (SWT.getPlatform().equals("fox")) {
+            parentBounds = shell.getDisplay().getBounds();
+        } else {
+            parentBounds = desktop.getActiveShell().getBounds();
+        }
 
-		shell.setBounds( tlx, tly , width, height );
+        int tlx = (parentBounds.x + (parentBounds.width / 2)) - (width / 2);
+        int tly = (parentBounds.y + (parentBounds.height / 2)) - (height / 2);
 
-        shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
+        tlx = Math.min((desktop.getClientArea().width - width), Math.max(0, tlx));
+        tly = Math.min((desktop.getClientArea().height - height), Math.max(0, tly));
 
-        shell.setText( G2GuiResources.getString( "TT_Client" ) + " " + clientInfo.getClientid() + " " +
-            G2GuiResources.getString( "TT_Details" ).toLowerCase() );
+        shell.setBounds(tlx, tly, width, height);
 
-        GridLayout gridLayout = CGridLayout.createGL( 1, 5, 5, 0, 5, false );
+        shell.setImage(G2GuiResources.getImage("ProgramIcon"));
 
-        shell.setLayout( gridLayout );
-        shell.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        shell.setText(G2GuiResources.getString("TT_Client") + " " + clientInfo.getClientid() + " " +
+            G2GuiResources.getString("TT_Details").toLowerCase());
 
-        createGeneralGroup( shell );
+        GridLayout gridLayout = CGridLayout.createGL(1, 5, 5, 0, 5, false);
 
-        createChunkGroup( shell, G2GuiResources.getString( "TT_DOWNLOAD_CD_LOCAL_CHUNKS" ), null );
-        createChunkGroup( shell, G2GuiResources.getString( "TT_DOWNLOAD_CD_CLIENT_CHUNKS" ), clientInfo );
+        shell.setLayout(gridLayout);
+        shell.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        createButtons( shell );
+        createGeneralGroup(shell);
+
+        createChunkGroup(shell, G2GuiResources.getString("TT_DOWNLOAD_CD_LOCAL_CHUNKS"), null);
+        createChunkGroup(shell, G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_CHUNKS"), clientInfo);
+
+        createButtons(shell);
 
         updateLabels();
-        fileInfo.addObserver( this );
-        clientInfo.addObserver( this );
+        fileInfo.addObserver(this);
+        clientInfo.addObserver(this);
         shell.pack();
         shell.open();
     }
@@ -128,19 +136,22 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      *
      * Create general client information
      */
-    public void createGeneralGroup( Shell parent ) {
-        Group clientGeneral = new Group( parent, SWT.SHADOW_ETCHED_OUT );
-        clientGeneral.setText( G2GuiResources.getString( "TT_DOWNLOAD_CD_CLIENT_INFO" ) );
+    public void createGeneralGroup(Shell parent) {
+        Group clientGeneral = new Group(parent, SWT.SHADOW_ETCHED_OUT);
+        clientGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_INFO"));
 
-        clientGeneral.setLayout( CGridLayout.createGL( 4, 5, 2, 0, 0, false ) );
+        clientGeneral.setLayout(CGridLayout.createGL(4, 5, 2, 0, 0, false));
 
-        clName = createLine( clientGeneral, G2GuiResources.getString( "TT_DOWNLOAD_CD_NAME" ), true );
-        clNetwork = createLine( clientGeneral, G2GuiResources.getString( "TT_DOWNLOAD_CD_NETWORK" ), false );
-        clRating = createLine( clientGeneral, G2GuiResources.getString( "TT_DOWNLOAD_CD_RATING" ), false );
-        clActivity = createLine( clientGeneral, G2GuiResources.getString( "TT_DOWNLOAD_CD_ACTIVITY" ), false );
-        clKind = createLine( clientGeneral, G2GuiResources.getString( "TT_DOWNLOAD_CD_KIND" ), false );
+        clName = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NAME"), true);
+        clNetwork = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NETWORK"),
+                false);
+        clRating = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_RATING"),
+                false);
+        clActivity = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_ACTIVITY"),
+                false);
+        clKind = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_KIND"), false);
 
-        clientGeneral.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        clientGeneral.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     }
 
     /**
@@ -150,33 +161,34 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      *
      * Create chunk group (clientInfo=null to display fileInfo chunks)
      */
-    public void createChunkGroup( Shell shell, String text, ClientInfo clientInfo ) {
-        Group chunkGroup = new Group( shell, SWT.SHADOW_ETCHED_OUT );
+    public void createChunkGroup(Shell shell, String text, ClientInfo clientInfo) {
+        Group chunkGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT);
 
         String totalChunks = "";
 
         // clientInfo.getFileAvail is not synched. TIntObjHash.. 
-        if ( clientInfo == null ) {
+        if (clientInfo == null) {
             totalChunks = " (" + fileInfo.getAvail().length() + ")";
         }
 
-        chunkGroup.setText( text + totalChunks );
-        chunkGroup.setLayout( CGridLayout.createGL( 1, 5, 5, 0, 0, false ) );
-        chunkGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        chunkGroup.setText(text + totalChunks);
+        chunkGroup.setLayout(CGridLayout.createGL(1, 5, 5, 0, 0, false));
+        chunkGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        ChunkCanvas chunkCanvas = new ChunkCanvas( chunkGroup, SWT.NO_BACKGROUND, clientInfo, fileInfo, null );
+        ChunkCanvas chunkCanvas = new ChunkCanvas(chunkGroup, SWT.NO_BACKGROUND, clientInfo,
+                fileInfo, null);
 
-        if ( clientInfo == null ) {
-            fileInfo.addObserver( chunkCanvas );
+        if (clientInfo == null) {
+            fileInfo.addObserver(chunkCanvas);
         } else {
-            clientInfo.addObserver( chunkCanvas );
+            clientInfo.addObserver(chunkCanvas);
         }
 
-        chunkCanvases.add( chunkCanvas );
+        chunkCanvases.add(chunkCanvas);
 
-        GridData canvasGD = new GridData( GridData.FILL_HORIZONTAL );
+        GridData canvasGD = new GridData(GridData.FILL_HORIZONTAL);
         canvasGD.heightHint = 28;
-        chunkCanvas.setLayoutData( canvasGD );
+        chunkCanvas.setLayoutData(canvasGD);
     }
 
     /**
@@ -185,36 +197,37 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      * Create dialog buttons
      *
      */
-    private void createButtons( Shell parent ) {
-        Composite buttonComposite = new Composite( parent, SWT.NONE );
-        buttonComposite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        buttonComposite.setLayout( CGridLayout.createGL( 2, 0, 0, 5, 0, false ) );
+    private void createButtons(Shell parent) {
+        Composite buttonComposite = new Composite(parent, SWT.NONE);
+        buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        buttonComposite.setLayout(CGridLayout.createGL(2, 0, 0, 5, 0, false));
 
-        final Button addFriendButton = new Button( buttonComposite, SWT.NONE );
-        addFriendButton.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END ) );
-        addFriendButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
+        final Button addFriendButton = new Button(buttonComposite, SWT.NONE);
+        addFriendButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL |
+                GridData.HORIZONTAL_ALIGN_END));
+        addFriendButton.setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_ADD_FRIEND"));
 
-        if ( clientInfo.getClientType() == EnumClientType.FRIEND ) {
-            addFriendButton.setEnabled( false );
+        if (clientInfo.getClientType() == EnumClientType.FRIEND) {
+            addFriendButton.setEnabled(false);
         }
 
-        addFriendButton.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent s ) {
-                    ClientInfo.addFriend( core, clientInfo.getClientid() );
-                    addFriendButton.setText( G2GuiResources.getString( "BTN_OK" ) );
-                    addFriendButton.setEnabled( false );
+        addFriendButton.addSelectionListener(new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent s) {
+                    ClientInfo.addFriend(core, clientInfo.getClientid());
+                    addFriendButton.setText(G2GuiResources.getString("BTN_OK"));
+                    addFriendButton.setEnabled(false);
                 }
-            } );
+            });
 
-        Button closeButton = new Button( buttonComposite, SWT.NONE );
+        Button closeButton = new Button(buttonComposite, SWT.NONE);
         closeButton.setFocus();
-        closeButton.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
-        closeButton.setText( G2GuiResources.getString( "BTN_CLOSE" ) );
-        closeButton.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent s ) {
+        closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+        closeButton.setText(G2GuiResources.getString("BTN_CLOSE"));
+        closeButton.addSelectionListener(new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent s) {
                     shell.close();
                 }
-            } );
+            });
     }
 
     /**
@@ -226,25 +239,25 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      * Create a Label/CLabel combination for information display
      *
      */
-    private CLabel createLine( Composite composite, String label, boolean longlabel ) {
-        Label aLabel = new Label( composite, SWT.NONE );
-        aLabel.setText( label );
+    private CLabel createLine(Composite composite, String label, boolean longlabel) {
+        Label aLabel = new Label(composite, SWT.NONE);
+        aLabel.setText(label);
 
         GridData lGD = new GridData();
         lGD.widthHint = leftColumn;
-        aLabel.setLayoutData( lGD );
+        aLabel.setLayoutData(lGD);
 
-        CLabel aCLabel = new CLabel( composite, SWT.NONE );
+        CLabel aCLabel = new CLabel(composite, SWT.NONE);
         GridData clGD = new GridData();
 
-        if ( longlabel ) {
+        if (longlabel) {
             clGD.widthHint = rightColumn;
             clGD.horizontalSpan = 3;
         } else {
             clGD.widthHint = leftColumn;
         }
 
-        aCLabel.setLayoutData( clGD );
+        aCLabel.setLayoutData(clGD);
 
         return aCLabel;
     }
@@ -253,11 +266,11 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      * Update labels
      */
     public void updateLabels() {
-        updateLabel( clName, clientInfo.getClientName() );
-        updateLabel( clRating, "" + clientInfo.getClientRating() );
-        updateLabel( clActivity, clientInfo.getClientActivity() );
-        updateLabel( clKind, clientInfo.getClientConnection() );
-        updateLabel( clNetwork, clientInfo.getClientnetworkid().getNetworkName() );
+        updateLabel(clName, clientInfo.getClientName());
+        updateLabel(clRating, "" + clientInfo.getClientRating());
+        updateLabel(clActivity, clientInfo.getClientActivity());
+        updateLabel(clKind, clientInfo.getClientConnection());
+        updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
     }
 
     /**
@@ -267,14 +280,14 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      * Update a label
      *
      */
-    public void updateLabel( CLabel cLabel, String string ) {
-        if ( !cLabel.isDisposed() ) {
-            cLabel.setText( string );
+    public void updateLabel(CLabel cLabel, String string) {
+        if (!cLabel.isDisposed()) {
+            cLabel.setText(string);
 
-            if ( string.length() > 10 ) {
-                cLabel.setToolTipText( string );
+            if (string.length() > 10) {
+                cLabel.setToolTipText(string);
             } else {
-                cLabel.setToolTipText( "" );
+                cLabel.setToolTipText("");
             }
         }
     }
@@ -282,33 +295,36 @@ public class ClientDetailDialog implements Observer, DisposeListener {
     /* (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
-    public void update( Observable o, Object arg ) {
-        if ( o instanceof FileInfo && !shell.isDisposed() ) {
-            shell.getDisplay().asyncExec( new Runnable() {
+    public void update(Observable o, Object arg) {
+        if (o instanceof FileInfo && !shell.isDisposed()) {
+            shell.getDisplay().asyncExec(new Runnable() {
                     public void run() {
                         updateLabels();
                     }
-                } );
+                });
         }
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
-    public synchronized void widgetDisposed( DisposeEvent e ) {
+    public synchronized void widgetDisposed(DisposeEvent e) {
         Iterator i = chunkCanvases.iterator();
 
-        while ( i.hasNext() )
-            ( (ChunkCanvas) i.next() ).dispose();
+        while (i.hasNext())
+            ((ChunkCanvas) i.next()).dispose();
 
-        clientInfo.deleteObserver( this );
-        fileInfo.deleteObserver( this );
+        clientInfo.deleteObserver(this);
+        fileInfo.deleteObserver(this);
     }
 }
 
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.5  2003/11/01 18:46:02  zet
+swt-fox workaround
+
 Revision 1.4  2003/10/19 16:40:37  zet
 centre
 
