@@ -35,8 +35,8 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 /**
  * ClientInfo
  *
- * @author $Author: zet $
- * @version $Id: ClientInfo.java,v 1.19 2003/08/22 23:25:15 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ClientInfo.java,v 1.20 2003/08/23 10:02:02 lemmster Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -259,21 +259,21 @@ public class ClientInfo extends Parent {
 
 	// static to save mem
 	public static void addFriend(CoreCommunication core, int id) {
-		EncodeMessage addFriend =
+		Message addFriend =
 			new EncodeMessage( Message.S_ADD_CLIENT_FRIEND, new Integer(id) );
 		addFriend.sendMessage( core.getConnection() );
 		addFriend = null;
 	}
 
 	public static void removeFriend(CoreCommunication core, int id) {
-		EncodeMessage removeFriend =
+		Message removeFriend =
 			new EncodeMessage( Message.S_REMOVE_FRIEND, new Integer(id) );
 		removeFriend.sendMessage( core.getConnection() );
 		removeFriend = null;
 	}
 
 	public static void removeAllFriends(CoreCommunication core) {
-		EncodeMessage removeAllFriends =
+		Message removeAllFriends =
 			new EncodeMessage( Message.S_REMOVE_ALL_FRIENDS );
 		removeAllFriends.sendMessage( core.getConnection() );
 		removeAllFriends = null;
@@ -283,11 +283,14 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.20  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * NetworkInfo
  *
  * @author $Author: lemmster $
- * @version $Id: NetworkInfo.java,v 1.23 2003/08/22 21:03:15 lemmster Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.24 2003/08/23 10:02:02 lemmster Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -408,7 +408,7 @@ public class NetworkInfo extends Parent {
 			temp[ 1 ] = disable;
 		else 
 			temp[ 1 ] = enable;
-		EncodeMessage netinfo =
+		Message netinfo =
 			new EncodeMessage( Message.S_ENABLE_NETWORK, temp );
 		netinfo.sendMessage( this.parent.getConnection() );
 		netinfo = null;
@@ -557,8 +557,11 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.24  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.23  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/21 13:13:10  lemmster
 cleanup in networkitem

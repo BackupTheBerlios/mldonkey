@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $Author: lemmster $
- * @version $Id: OptionsInfo.java,v 1.20 2003/08/19 21:02:16 lemmster Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.21 2003/08/23 10:02:02 lemmster Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -210,7 +210,7 @@ public class OptionsInfo extends Parent {
 	 */
 	public void send() {
 		String[] payLoad = { this.getKey(), this.getValue() };
-		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SET_OPTION, payLoad );
+		Message consoleMessage = new EncodeMessage( Message.S_SET_OPTION, payLoad );
 		consoleMessage.sendMessage( this.parent.getConnection() );
 	}
 
@@ -325,6 +325,9 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.21  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.20  2003/08/19 21:02:16  lemmster
 show all options in simple mode proto < 18
 

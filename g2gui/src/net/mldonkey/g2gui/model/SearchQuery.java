@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  * @author $Author: lemmster $
- * @version $Id: SearchQuery.java,v 1.16 2003/08/22 21:03:14 lemmster Exp $ 
+ * @version $Id: SearchQuery.java,v 1.17 2003/08/23 10:02:02 lemmster Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -274,7 +274,7 @@ public class SearchQuery implements Sendable {
 		content.add( new Integer( network ) );
 		
 		/* create the message content */
-		EncodeMessage consoleMessage =
+		Message consoleMessage =
 			new EncodeMessage( Message.S_SEARCH_QUERY, content.toArray() );
 		consoleMessage.sendMessage( this.getParent().getConnection() );
 	}
@@ -320,8 +320,11 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.17  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.16  2003/08/22 21:03:14  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: lemmster $
 
 Revision 1.15  2003/08/09 15:32:45  dek
 removed unused import

@@ -77,7 +77,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  * @author $Author: lemmster $
- * @version $Id: SearchResult.java,v 1.24 2003/08/23 08:30:07 lemmster Exp $ 
+ * @version $Id: SearchResult.java,v 1.25 2003/08/23 10:02:02 lemmster Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -367,7 +367,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		
 		/* tell the core to forget the search */
 		Object[] temp = { new Integer( searchId ), new Byte( ( byte ) 1 ) };
-		EncodeMessage message = new EncodeMessage( Message.S_CLOSE_SEARCH, temp );
+		Message message = new EncodeMessage( Message.S_CLOSE_SEARCH, temp );
 		message.sendMessage( core.getConnection() );
 		message = null;
 					
@@ -554,6 +554,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.25  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 

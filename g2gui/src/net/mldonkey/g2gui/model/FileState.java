@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  * @author $Author: lemmster $
- * @version $Id: FileState.java,v 1.13 2003/08/22 21:03:14 lemmster Exp $ 
+ * @version $Id: FileState.java,v 1.14 2003/08/23 10:02:02 lemmster Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -104,7 +104,7 @@ public class FileState implements SimpleInformation {
 	 * @param The new file state (paused,...)
 	 */
 	protected void setState( EnumFileState state, int id, CoreCommunication core ) {
-		EncodeMessage sendState = null;
+		Message sendState = null;
 		Object[] content = new Object[ 2 ];
 		short opcode = Message.S_SWITCH_DOWNLOAD;
 		content[ 0 ] = new Integer( id );
@@ -144,8 +144,11 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.14  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.13  2003/08/22 21:03:14  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/07/04 12:29:39  dek
 checkstyle

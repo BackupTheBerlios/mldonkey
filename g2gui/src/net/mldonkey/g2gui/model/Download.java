@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.comm.Message;
  * Download
  *
  * @author $Author: lemmster $
- * @version $Id: Download.java,v 1.7 2003/08/22 21:03:15 lemmster Exp $ 
+ * @version $Id: Download.java,v 1.8 2003/08/23 10:02:02 lemmster Exp $ 
  *
  */
 public class Download implements Sendable {
@@ -85,7 +85,7 @@ public class Download implements Sendable {
 		temp[ 0 ] = possibleNames;
 		temp[ 1 ] = new Integer( resultID );
 		temp[ 2 ] = new Byte( ( byte ) force );
-		EncodeMessage message = new EncodeMessage( Message.S_DOWNLOAD, temp );
+		Message message = new EncodeMessage( Message.S_DOWNLOAD, temp );
 		message.sendMessage( this.core.getConnection() );
 		message = null;
 	}
@@ -93,8 +93,11 @@ public class Download implements Sendable {
 
 /*
 $Log: Download.java,v $
+Revision 1.8  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: lemmster $
 
 Revision 1.6  2003/07/23 16:56:28  lemmstercvs01
 initial commit

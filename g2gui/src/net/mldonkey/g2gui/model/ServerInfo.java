@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author $Author: lemmster $
- * @version $Id: ServerInfo.java,v 1.18 2003/08/22 21:03:15 lemmster Exp $
+ * @version $Id: ServerInfo.java,v 1.19 2003/08/23 10:02:02 lemmster Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -245,7 +245,7 @@ public class ServerInfo extends Parent {
 	 */
 	public void setState( EnumState enum ) {
 		Integer anInt = new Integer( this.getServerId() );
-		EncodeMessage state = null;
+		Message state = null;
 		/* connect server */
 		if ( enum == EnumState.CONNECTING ) {
 			state =	new EncodeMessage( Message.S_CONNECT_SERVER, anInt );
@@ -314,8 +314,11 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.19  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: lemmster $
 
 Revision 1.17  2003/08/11 11:22:53  lemmstercvs01
 avoid npes

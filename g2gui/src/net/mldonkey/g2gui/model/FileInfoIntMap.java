@@ -37,8 +37,8 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
 /**
  * FileInfoList
  *
- * @author $Author: zet $
- * @version $Id: FileInfoIntMap.java,v 1.23 2003/08/22 23:25:15 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: FileInfoIntMap.java,v 1.24 2003/08/23 10:02:02 lemmster Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -144,7 +144,7 @@ public class FileInfoIntMap extends InfoIntMap {
 	 * @param url The url of the new download
 	 */
 	public void add( String url ) {
-		EncodeMessage dllink =
+		Message dllink =
 			new EncodeMessage( Message.S_DLLINK, url );
 		dllink.sendMessage( this.parent.getConnection() );
 		dllink = null;	
@@ -192,11 +192,14 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.24  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.23  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.22  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.21  2003/08/15 22:05:58  zet
 *** empty log message ***

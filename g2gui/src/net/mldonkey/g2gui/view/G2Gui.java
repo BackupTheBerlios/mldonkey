@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $Author: lemmster $
- * @version $Id: G2Gui.java,v 1.22 2003/08/22 10:28:22 lemmster Exp $ 
+ * @version $Id: G2Gui.java,v 1.23 2003/08/23 10:02:02 lemmster Exp $ 
  *
  */
 public class G2Gui {
@@ -272,7 +272,7 @@ public class G2Gui {
 	private static void sendDownloadLink( String[] args ) {
 		//TODO creating message and send it out		
 		Object[] content = args;		
-		EncodeMessage link = new EncodeMessage( Message.S_DLLINK, content );		
+		Message link = new EncodeMessage( Message.S_DLLINK, content );		
 		link.sendMessage( socket );
 	}
 
@@ -345,6 +345,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.23  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.22  2003/08/22 10:28:22  lemmster
 catch wrong "allowed_ips" values (connection denied)
 

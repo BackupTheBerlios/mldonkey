@@ -53,7 +53,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  * @author $Author: lemmster $
- * @version $Id: Core.java,v 1.87 2003/08/22 19:51:09 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.88 2003/08/23 10:02:02 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -397,7 +397,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		output.add( new Integer(1) );
 		output.add( new Byte( ( byte )1 ) ); 
 		
-		EncodeMessage pushmode = new EncodeMessage(Message.S_GUIEXTENSION,output.toArray());
+		Message pushmode = new EncodeMessage(Message.S_GUIEXTENSION,output.toArray());
 		pushmode.sendMessage(getConnection());			
 		}
 		
@@ -520,6 +520,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.88  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.87  2003/08/22 19:51:09  lemmster
 added just javadoc
 

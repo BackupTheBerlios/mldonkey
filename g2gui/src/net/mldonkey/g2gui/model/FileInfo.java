@@ -43,8 +43,8 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
 /**
  * Download
  *
- * @author $Author: zet $
- * @version $Id: FileInfo.java,v 1.40 2003/08/22 23:25:15 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: FileInfo.java,v 1.41 2003/08/23 10:02:02 lemmster Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -556,7 +556,7 @@ public class FileInfo extends Parent implements Observer {
 	public void setName( String string ) {
 		string = "rename " + this.getId() + " \""+ string + "\"";
 		/* create the message content */
-		EncodeMessage consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, string );
+		Message consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, string );
 		consoleMessage.sendMessage( this.parent.getConnection() );
 		consoleMessage = null;
 	}
@@ -580,7 +580,7 @@ public class FileInfo extends Parent implements Observer {
 		obj[ 1 ] = content;		
 		
 		/* create and send the message */
-		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, obj );
+		Message consoleMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, obj );
 		consoleMessage.sendMessage( this.parent.getConnection() );
 		content = null;
 		obj = null;
@@ -598,7 +598,7 @@ public class FileInfo extends Parent implements Observer {
 	 * Verify all chunks of this fileinfo
 	 */
 	public void verifyChunks() {
-		EncodeMessage chunks =
+		Message chunks =
 			new EncodeMessage( Message.S_VERIFY_ALL_CHUNKS, new Integer( this.getId() ) );
 		chunks.sendMessage( this.parent.getConnection() );
 	}
@@ -611,7 +611,7 @@ public class FileInfo extends Parent implements Observer {
 		obj[ 0 ] = new Integer( this.getId() );
 		obj[ 1 ] = name;
 					
-		EncodeMessage saveAs =
+		Message saveAs =
 			new EncodeMessage( Message.S_SAVE_FILE_AS, obj );
 		saveAs.sendMessage( this.parent.getConnection() );
 		obj = null;
@@ -699,11 +699,14 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.41  2003/08/23 10:02:02  lemmster
+use supertype where possible
+
 Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)
