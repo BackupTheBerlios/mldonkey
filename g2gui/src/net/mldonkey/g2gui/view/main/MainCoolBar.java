@@ -8,7 +8,7 @@
  * G2Gui is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
  * G2Gui is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.21 2003/11/25 17:17:51 dek Exp $
+ * @version $Id: MainCoolBar.java,v 1.22 2003/11/25 17:24:30 dek Exp $
  *
  */
 public class MainCoolBar {
@@ -358,40 +358,35 @@ public class MainCoolBar {
     protected void udateLayoutStore() {
     	itemsizes = coolbar.getItemSizes();
     	order = coolbar.getItemOrder();
+    	layoutChanged = true;
     }
 
 
     private void addListeners() {
-    	/*update order on change of order ;-)*/
+    	/*save the Layout, if anyone even clicks in coolBar*/
     	
-    	coolbar.addMouseListener(new MouseListener(){
+    	coolbar.addMouseListener( new MouseListener(){
 
-    		public void mouseDoubleClick(MouseEvent e) {
-    			order = coolbar.getItemOrder();
-    			itemsizes = coolbar.getItemSizes();
-    			layoutChanged = true;
+    		public void mouseDoubleClick( MouseEvent e ) {
+    			udateLayoutStore();    			
     		}
 
-    		public void mouseDown(MouseEvent e) {
-    			order = coolbar.getItemOrder();
-    			itemsizes = coolbar.getItemSizes();  
-    			layoutChanged = true;
+    		public void mouseDown( MouseEvent e ) {
+    			udateLayoutStore();    			
     		}
 
-    		public void mouseUp(MouseEvent e) {
-    			order = coolbar.getItemOrder();
-    			itemsizes = coolbar.getItemSizes(); 
-    			layoutChanged = true;
+    		public void mouseUp( MouseEvent e ) {
+    			udateLayoutStore();    			
     		}
 				
-			});
+			} );
     	
-    	coolbar.addDisposeListener(new DisposeListener(){
+    	coolbar.addDisposeListener( new DisposeListener(){
 
-			public void widgetDisposed(DisposeEvent e) {
+			public void widgetDisposed( DisposeEvent e ) {
 				saveLayout();
 				
-			}});
+			}} );
 
     }
 
@@ -402,13 +397,16 @@ public class MainCoolBar {
 
 
 $Log: MainCoolBar.java,v $
+Revision 1.22  2003/11/25 17:24:30  dek
+some refactoring and minor checkstyle
+
 Revision 1.21  2003/11/25 17:17:51  dek
 Cool-Bar saving finally works
 
 Revision 1.20  2003/11/25 17:06:50  dek
 yet another test for coolBar
 
-removed some testing-comments, so don't care if they are missing ;-)
+removed some testing-comments, so don't care if they are missing ;- )
 
 Revision 1.12  2003/11/23 17:58:03  lemmster
 removed dead/unused code
@@ -417,7 +415,7 @@ Revision 1.11  2003/11/22 02:24:30  zet
 widgetfactory & save sash postions/states between sessions
 
 Revision 1.10  2003/10/11 21:32:32  zet
-remove hand cursor (looks weird on gtk)
+remove hand cursor ( looks weird on gtk )
 
 Revision 1.9  2003/09/18 10:12:53  lemmster
 checkstyle
