@@ -29,7 +29,7 @@ import org.eclipse.swt.graphics.Color;
  * knows when it was started
  * 
  *
- * @version $Id: Graph.java,v 1.12 2003/09/14 22:22:55 zet Exp $
+ * @version $Id: Graph.java,v 1.13 2003/09/16 01:18:52 zet Exp $
  */
 public class Graph {
 	
@@ -61,7 +61,7 @@ public class Graph {
 	}
 	
 	public int findMax( int width ) {
-		int max = 0;
+		int max = 20;
 		int searchPoint = insertAt - 1;
 		
 		if (width > amount) width = amount;
@@ -127,6 +127,9 @@ public class Graph {
 }
 /*
 $Log: Graph.java,v $
+Revision 1.13  2003/09/16 01:18:52  zet
+min size/check bounds
+
 Revision 1.12  2003/09/14 22:22:55  zet
 *** empty log message ***
 

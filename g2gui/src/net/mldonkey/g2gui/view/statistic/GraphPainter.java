@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Display;
  * GraphPainter
  *
  *
- * @version $Id: GraphPainter.java,v 1.29 2003/09/14 22:22:55 zet Exp $ 
+ * @version $Id: GraphPainter.java,v 1.30 2003/09/16 01:18:52 zet Exp $ 
  *
  */
 public class GraphPainter {
@@ -63,7 +63,10 @@ public class GraphPainter {
 	}
 	
 	public void paint() {
-			
+		
+		// might help with rare: java.lang.IllegalArgumentException: Argument not valid	?
+		if (parent.getBounds().height < 5 || parent.getBounds().width < 5) return;	
+		
 		Display display = parent.getDisplay();
 		
 		Color black = display.getSystemColor(SWT.COLOR_BLACK);
@@ -164,6 +167,9 @@ public class GraphPainter {
 }
 /*
 $Log: GraphPainter.java,v $
+Revision 1.30  2003/09/16 01:18:52  zet
+min size/check bounds
+
 Revision 1.29  2003/09/14 22:22:55  zet
 *** empty log message ***
 
