@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.21 2003/09/14 09:40:31 lemmster Exp $
+ * @version $Id: PreferenceLoader.java,v 1.22 2003/09/15 22:06:19 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
@@ -100,6 +100,7 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "searchFilterPornography", false );
         preferenceStore.setDefault( "searchFilterProfanity", false );
         preferenceStore.setDefault( "maintainSortOrder", false );
+        preferenceStore.setDefault( "updateDelay", 0 );
         preferenceStore.setDefault( "displayAllServers", true );
         preferenceStore.setDefault( "displayNodes", false );
         preferenceStore.setDefault( "displayChunkGraphs", false );
@@ -257,6 +258,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.22  2003/09/15 22:06:19  zet
+split preferences
+
 Revision 1.21  2003/09/14 09:40:31  lemmster
 save column width
 
@@ -291,7 +295,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates

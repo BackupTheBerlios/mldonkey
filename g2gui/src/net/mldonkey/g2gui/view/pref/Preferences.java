@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.33 2003/09/15 14:47:44 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.34 2003/09/15 22:06:19 zet Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -61,10 +61,16 @@ public class Preferences extends PreferenceManager {
 		g2gui.setPreferenceStore( preferenceStore );		
 		PreferenceNode g2GuiRootNode = new PreferenceNode( "G2gui", g2gui );
 		
-			G2Gui_Display g2gui_display = new G2Gui_Display( "Display", FieldEditorPreferencePage.GRID );
-			g2gui_display.setPreferenceStore( preferenceStore );
+			if ( PreferenceLoader.loadBoolean("advancedMode") ) {
+				G2Gui_Display g2gui_display = new G2Gui_Display( "Display", FieldEditorPreferencePage.GRID );
+				g2gui_display.setPreferenceStore( preferenceStore );
+				g2GuiRootNode.add( new PreferenceNode ( "Display", g2gui_display ) );
+			}
 			
-			g2GuiRootNode.add( new PreferenceNode ( "Display", g2gui_display ) );
+			G2Gui_Advanced g2gui_advanced = new G2Gui_Advanced( "Advanced", FieldEditorPreferencePage.GRID );
+			g2gui_advanced.setPreferenceStore( preferenceStore );
+			g2GuiRootNode.add( new PreferenceNode ( "Advanced", g2gui_advanced ) );
+
 		addToRoot( g2GuiRootNode );		
 	}
 	
@@ -241,6 +247,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.34  2003/09/15 22:06:19  zet
+split preferences
+
 Revision 1.33  2003/09/15 14:47:44  dek
 Preferences: renamed "General" / "Other" to "Advanced" and put it on the end of the list (only visible in advanced-mode)
 
@@ -277,7 +286,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
