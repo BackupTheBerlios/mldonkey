@@ -22,16 +22,13 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ClientStats
  *
  * @author markus
- * @version $Id: ClientStats.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+ * @version $Id: ClientStats.java,v 1.3 2003/06/13 11:03:41 lemmstercvs01 Exp $ 
  *
  */
 public class ClientStats implements Information {
@@ -229,25 +226,28 @@ public class ClientStats implements Information {
 	 * @return a ClientState object
 	 * @throws IOException Error if read from stream failed
 	 */
-	public void readStream( InputStream inputStream ) throws IOException {
+	public void readStream( MessageBuffer messageBuffer ) {
 		
-		this.setTotalUp( Message.readInt64( inputStream ) );
-		this.setTotalDown( Message.readInt64( inputStream ) );
-		this.setTotalShared( Message.readInt64( inputStream ) );
-		this.setNumOfShare( Message.readInt32( inputStream ) );
-		this.setTcpUpRate( Message.readInt32( inputStream ) );
-		this.setTcpDownRate( Message.readInt32( inputStream ) );
-		this.setUdpUpRate( Message.readInt32( inputStream ) );
-		this.setUdpDownRate( Message.readInt32( inputStream ) );
-		this.setNumCurrDownload( Message.readInt32( inputStream ) );
-		this.setNumDownloadFinished(  Message.readInt32( inputStream ) );
-		this.setConnectedNetworks( Message.readInt32List( inputStream ) );
+		this.setTotalUp( messageBuffer.readInt64() );
+		this.setTotalDown( messageBuffer.readInt64() );
+		this.setTotalShared( messageBuffer.readInt64() );
+		this.setNumOfShare( messageBuffer.readInt32() );
+		this.setTcpUpRate( messageBuffer.readInt32() );
+		this.setTcpDownRate( messageBuffer.readInt32() );
+		this.setUdpUpRate( messageBuffer.readInt32() );
+		this.setUdpDownRate( messageBuffer.readInt32() );
+		this.setNumCurrDownload( messageBuffer.readInt32() );
+		this.setNumDownloadFinished( messageBuffer.readInt32() );
+		this.setConnectedNetworks( messageBuffer.readInt32List() );
 	}
 
 }
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
+changed InputStream to MessageBuffer
+
 Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
 lots of changes
 

@@ -22,16 +22,13 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.3 2003/06/13 11:03:41 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements Information {
@@ -374,37 +371,40 @@ public class FileInfo implements Information {
 	 * @return Download
 	 * @throws IOException Error if read on stream failed
 	 */
-	public void readStream( InputStream inputStream ) throws IOException {
-		this.setId( Message.readInt32( inputStream ) );
-		this.setNetwork( Message.readInt32( inputStream ) );
-		this.setNames( Message.readStringList( inputStream ) );
-		this.setMd4( Message.readBinary( inputStream, 16 ) );
-		this.setSize( Message.readInt32( inputStream ) );
-		this.setDownloaded( Message.readInt32( inputStream ) );
-		this.setSources( Message.readInt32( inputStream ) );
-		this.setClients( Message.readInt32( inputStream ) );
+	public void readStream( MessageBuffer messageBuffer ) {
+		this.setId( messageBuffer.readInt32() );
+		this.setNetwork( messageBuffer.readInt32() );
+		this.setNames( messageBuffer.readStringList() );
+		this.setMd4( messageBuffer.readBinary( 16 ) );
+		this.setSize( messageBuffer.readInt32() );
+		this.setDownloaded( messageBuffer.readInt32() );
+		this.setSources( messageBuffer.readInt32() );
+		this.setClients( messageBuffer.readInt32() );
 		
 		/* File State */
-		this.getState().readStream( inputStream );
+		this.getState().readStream( messageBuffer );
 		
-		this.setChunks( Message.readString( inputStream ) );
-		this.setAvail( Message.readString( inputStream ) );
-		this.setRate( new Float( Message.readString( inputStream ) ).floatValue() );
-		this.setChunkage( Message.readStringList( inputStream ) );
-		this.setAge( Message.readString( inputStream ) );
+		this.setChunks( messageBuffer.readString() );
+		this.setAvail( messageBuffer.readString() );
+		this.setRate( new Float( messageBuffer.readString() ).floatValue() );
+		this.setChunkage( messageBuffer.readStringList() );
+		this.setAge( messageBuffer.readString() );
 		
 		/* File Format */
-		this.getFormat().readStream( inputStream );
+		this.getFormat().readStream( messageBuffer );
 		
-		this.setName( Message.readString( inputStream ) );
-		this.setOffset( Message.readInt32( inputStream ) );
-		this.setPriority( Message.readInt32( inputStream ) );
+		this.setName( messageBuffer.readString() );
+		this.setOffset( messageBuffer.readInt32() );
+		this.setPriority( messageBuffer.readInt32() );
 	}
 
 }
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
+changed InputStream to MessageBuffer
+
 Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
 lots of changes
 

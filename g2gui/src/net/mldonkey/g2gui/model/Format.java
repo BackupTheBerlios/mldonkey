@@ -22,16 +22,13 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * Format
  *
  * @author markus
- * @version $Id: Format.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+ * @version $Id: Format.java,v 1.3 2003/06/13 11:03:41 lemmstercvs01 Exp $ 
  *
  */
 public class Format implements Information {
@@ -281,33 +278,36 @@ public class Format implements Information {
 	 * @param inputStream Stream to read from
 	 * @throws IOException Error if read on stream failed
 	 */
-	public void readStream( InputStream inputStream ) throws IOException {
-		this.setFormat( (  byte ) Message.readByte( inputStream ) );
+	public void readStream( MessageBuffer messageBuffer ) {
+		this.setFormat( ( byte ) messageBuffer.readByte() );
 		if ( this.getFormat() == 1 ) {
-			this.setExtension( Message.readString( inputStream ) );
-			this.setKind( Message.readString( inputStream ) );
+			this.setExtension( messageBuffer.readString() );
+			this.setKind( messageBuffer.readString() );
 		}
 		else if ( this.getFormat() == 2 ) {
-			this.setCodec( Message.readString( inputStream ) );
-			this.setVwidth( Message.readInt32( inputStream ) );
-			this.setVheight( Message.readInt32( inputStream ) );
-			this.setVfps( Message.readInt32( inputStream ) );
-			this.setVrate( Message.readInt32( inputStream ) );
+			this.setCodec( messageBuffer.readString() );
+			this.setVwidth( messageBuffer.readInt32() );
+			this.setVheight( messageBuffer.readInt32() );
+			this.setVfps( messageBuffer.readInt32() );
+			this.setVrate( messageBuffer.readInt32() );
 		}
 		else if ( this.getFormat() == 3 ) {
-			this.setTitle( Message.readString( inputStream ) );
-			this.setArtist( Message.readString( inputStream ) );
-			this.setAlbum( Message.readString( inputStream ) );	
-			this.setYear( Message.readString( inputStream ) );
-			this.setComment( Message.readString( inputStream ) );
-			this.setTracknum( Message.readInt32( inputStream ) );
-			this.setGenre( Message.readInt32( inputStream ) );
+			this.setTitle( messageBuffer.readString() );
+			this.setArtist( messageBuffer.readString() );
+			this.setAlbum( messageBuffer.readString() );	
+			this.setYear( messageBuffer.readString() );
+			this.setComment( messageBuffer.readString() );
+			this.setTracknum( messageBuffer.readInt32() );
+			this.setGenre( messageBuffer.readInt32() );
 		}
 	}
 }
 
 /*
 $Log: Format.java,v $
+Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
+changed InputStream to MessageBuffer
+
 Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
 lots of changes
 

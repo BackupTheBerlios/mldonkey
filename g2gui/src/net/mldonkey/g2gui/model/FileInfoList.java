@@ -22,18 +22,16 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoList.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoList.java,v 1.3 2003/06/13 11:03:41 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoList implements Information {
@@ -49,8 +47,8 @@ public class FileInfoList implements Information {
 	 * @return a List filled with complete Downloads
 	 * @throws IOException Error if read from stream failed
 	 */
-	public void readStream( InputStream inputStream ) throws IOException {
-		short listElem = Message.readInt16( inputStream );
+	public void readStream( MessageBuffer messageBuffer ) {
+		short listElem = messageBuffer.readInt16();
 
 		/* trim the list to a correct size */		
 		if ( this.fileInfoList.size() < listElem ) {
@@ -64,13 +62,16 @@ public class FileInfoList implements Information {
 		}
 		
 		for ( int i = 0; i < listElem; i++ ) {
-			( ( FileInfo ) this.fileInfoList.get( i ) ).readStream( inputStream );
+			( ( FileInfo ) this.fileInfoList.get( i ) ).readStream( messageBuffer );
 		}
 	}
 }
 
 /*
 $Log: FileInfoList.java,v $
+Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
+changed InputStream to MessageBuffer
+
 Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
 lots of changes
 

@@ -22,22 +22,24 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.io.IOException;
-import java.io.InputStream;
+import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * Information
  *
  * @author markus
- * @version $Id: Information.java,v 1.1 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+ * @version $Id: Information.java,v 1.2 2003/06/13 11:03:41 lemmstercvs01 Exp $ 
  *
  */
 public interface Information {
-	public void readStream( InputStream inputStream ) throws IOException;
+	public void readStream( MessageBuffer messageBuffer );
 }
 
 /*
 $Log: Information.java,v $
+Revision 1.2  2003/06/13 11:03:41  lemmstercvs01
+changed InputStream to MessageBuffer
+
 Revision 1.1  2003/06/12 22:23:06  lemmstercvs01
 lots of changes
 

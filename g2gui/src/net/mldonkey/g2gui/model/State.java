@@ -22,16 +22,13 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * State
  *
  * @author markus
- * @version $Id: State.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+ * @version $Id: State.java,v 1.3 2003/06/13 11:03:41 lemmstercvs01 Exp $ 
  *
  */
 public class State implements Information {
@@ -73,15 +70,18 @@ public class State implements Information {
 	 * @param inputStream Stream to read from
 	 * @throws IOException Error if read on stream failed
 	 */
-	public void readStream( InputStream inputStream ) throws IOException {
-		this.setState( ( byte ) Message.readByte( inputStream ) );
+	public void readStream( MessageBuffer messageBuffer ) {
+		this.setState( ( byte ) messageBuffer.readByte() );
 		if ( this.getState() == 6 )
-			this.setReason( Message.readString( inputStream ) );			
+			this.setReason( messageBuffer.readString() );			
 	}
 }
 
 /*
 $Log: State.java,v $
+Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
+changed InputStream to MessageBuffer
+
 Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
 lots of changes
 
