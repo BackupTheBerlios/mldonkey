@@ -48,7 +48,7 @@ import java.util.Map;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.40 2003/11/06 15:12:44 zet Exp $
+ * @version $Id: Preferences.java,v 1.41 2003/11/07 08:20:07 lemmster Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -91,13 +91,8 @@ public class Preferences extends PreferenceManager {
             g2GuiRootNode.add(g2guiDisplayNode);
         }
 
-        /* news page */
-        PreferencePage preferencePage = new G2GuiNews("News", FieldEditorPreferencePage.GRID);
-        preferencePage.setPreferenceStore(preferenceStore);
-        g2GuiRootNode.add(new PreferenceNode("News", preferencePage));
-
         /* advanced page */
-        preferencePage = new G2GuiAdvanced("Advanced", FieldEditorPreferencePage.GRID);
+		PreferencePage preferencePage = new G2GuiAdvanced("Advanced", FieldEditorPreferencePage.GRID);
         preferencePage.setPreferenceStore(preferenceStore);
         g2GuiRootNode.add(new PreferenceNode("Advanced", preferencePage));
 
@@ -293,6 +288,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.41  2003/11/07 08:20:07  lemmster
+remove rss4j dependency (newstab)
+
 Revision 1.40  2003/11/06 15:12:44  zet
 check getProperty length
 
@@ -350,7 +348,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
