@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.20 2003/09/04 16:59:55 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.21 2003/09/04 21:40:44 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -245,6 +245,44 @@ public class SearchQuery implements Sendable {
 		searchOptions.addQuery( minSize );
 	}
 	/**
+	 * expects an input in following form: XX.YY (""|kb|Mb|Tb)
+	 * @param value the float value
+	 * @param unit ""|kb|Mb|Tb
+	 */
+	public void setMinSize( String value, String unit ) throws NumberFormatException {
+		this.setMinSize( convertToInt( value, unit ) );
+
+	}
+	
+	/**
+	 * expects an input in following form: XX.YY (""|kb|Mb|Tb)
+	 * @param value the float value
+	 * @param unit ""|kb|Mb|Tb
+	 */
+	public void setMaxSize( String value, String unit ) throws NumberFormatException {
+		this.setMaxSize( convertToInt( value, unit ) );
+	}
+	
+	private long convertToInt( String value, String unit ) throws NumberFormatException {
+		int factor = 1;
+		
+		if ( unit.equalsIgnoreCase( "kb" ) )
+			factor = 1024;
+		else if ( unit.equalsIgnoreCase( "mb" ) )
+			factor = 1024 * 1024;
+		else if ( unit.equalsIgnoreCase( "tb" ) )
+			factor = 1024 * 1024 * 1024;
+		else if ( unit.equalsIgnoreCase( "" ) ) {		
+			NumberFormatException ex = new NumberFormatException( "no valid unit given" );
+			throw ex;
+		}		
+		Float size = Float.valueOf( value );
+				
+		return ( size.longValue() * factor );
+		
+	}
+	
+	/**
 	 * Setting the file-format of search-results
 	 * @param format_ the file-format (.avi, .mp3, .zip, .gif)
 	 */
@@ -380,6 +418,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.21  2003/09/04 21:40:44  dek
+setXXSize with value and unit present (untested)
+
 Revision 1.20  2003/09/04 16:59:55  dek
 bugfix Album != title !!!
 
