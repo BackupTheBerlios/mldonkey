@@ -1,5 +1,6 @@
-2003/09/22: lemmy
+2003/09/23: lemmy
 	* Statusline: Display manage nodes for FT/Gnut/Gnut2
+	* Server: Tables colors switchable
 2003/09/22: lemmy
 	* Server: Integer columns right- instead of left-aligned [bug #934]
 	* Search: Show number of sources in avail column

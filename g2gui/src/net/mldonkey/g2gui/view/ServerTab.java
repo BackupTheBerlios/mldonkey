@@ -67,11 +67,12 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.34 2003/09/22 20:02:34 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.35 2003/09/23 11:46:25 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	private boolean oldValue = PreferenceLoader.loadBoolean( "displayAllServers" );
+	private boolean oldValue2 = PreferenceLoader.loadBoolean( "displayTableColors" );
 	private boolean ascending = false;;
 	private TableColumn tableColumn;
 	private Combo combo;
@@ -425,12 +426,22 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			}
 			this.oldValue = temp;
 		}
+		/* displayTableColors changed? */
+		boolean temp2 = PreferenceLoader.loadBoolean( "displayTableColors" );
+		if ( oldValue2 != temp2 ) {
+			( ( ServerTableLabelProvider ) table.getLabelProvider() ).setColors( temp2 );
+			table.refresh();
+			this.oldValue2 = temp2;
+		}
 		super.updateDisplay();
 	}
 }
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.35  2003/09/23 11:46:25  lemmster
+displayTableColors for servertab
+
 Revision 1.34  2003/09/22 20:02:34  lemmster
 right column align for integers [bug #934]
 

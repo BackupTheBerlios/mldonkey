@@ -26,6 +26,7 @@ import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.IColorProvider;
@@ -38,10 +39,11 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: ServerTableLabelProvider.java,v 1.4 2003/09/18 11:26:07 lemmster Exp $ 
+ * @version $Id: ServerTableLabelProvider.java,v 1.5 2003/09/23 11:46:25 lemmster Exp $ 
  *
  */
 public class ServerTableLabelProvider implements ITableLabelProvider, IColorProvider {
+	private boolean colors = PreferenceLoader.loadBoolean( "displayTableColors" );
 	private Color connectColor = new Color( null, 41, 174, 57 );
 	private Color connectingColor = new Color( null, 255, 165, 0 );
 	private Color disconnectColor = new Color( null, 192, 192, 192 );
@@ -140,14 +142,17 @@ public class ServerTableLabelProvider implements ITableLabelProvider, IColorProv
 	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
 	 */
 	public Color getForeground( Object arg0 ) {
-			ServerInfo server = ( ServerInfo ) arg0;
-			if ( server.isConnected() ) 
-				return connectColor;
-			if ( server.getConnectionState().getState() == EnumState.CONNECTING )
-				return connectingColor;
-			if ( server.getConnectionState().getState() == EnumState.NOT_CONNECTED )
-				return disconnectColor;		
-			return null;
+		if ( !colors ) return null;
+
+		ServerInfo server = ( ServerInfo ) arg0;
+		if ( server.isConnected() ) 
+			return connectColor;
+		if ( server.getConnectionState().getState() == EnumState.CONNECTING )
+			return connectingColor;
+		if ( server.getConnectionState().getState() == EnumState.NOT_CONNECTED )
+			return disconnectColor;		
+
+		return null;
 	}
 
 	/* (non-Javadoc)
@@ -156,10 +161,20 @@ public class ServerTableLabelProvider implements ITableLabelProvider, IColorProv
 	public Color getBackground( Object element ) {
 		return null;
 	}
+
+	/**
+	 * @param colors Should a color for each tableitem be used
+	 */
+	public void setColors( boolean colors ) {
+		this.colors = colors;
+	}
 }
 
 /*
 $Log: ServerTableLabelProvider.java,v $
+Revision 1.5  2003/09/23 11:46:25  lemmster
+displayTableColors for servertab
+
 Revision 1.4  2003/09/18 11:26:07  lemmster
 checkstyle
 
