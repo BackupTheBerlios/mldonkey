@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.21 2003/10/22 20:38:35 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.22 2003/10/24 21:26:11 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -164,6 +164,7 @@ Yet			menuManager.add( webManager );
 				webServicesMenu.add( new WebServicesAction( WebServicesAction.FILEDONKEY, selectedResult.getMd4() ) ) ;
 				webServicesMenu.add( new WebServicesAction( WebServicesAction.JIGLE, selectedResult.getMd4() ) ) ;
 				webServicesMenu.add( new WebServicesAction( WebServicesAction.SHAREREACTOR, selectedResult.getLink() ) );
+				webServicesMenu.add( new WebServicesAction( WebServicesAction.DONKEY_FAKES, selectedResult.getLink() ) );
 			
 			menuManager.add( webServicesMenu );
 			
@@ -338,6 +339,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.22  2003/10/24 21:26:11  zet
+add donkey fakes web service
+
 Revision 1.21  2003/10/22 20:38:35  zet
 common actions
 

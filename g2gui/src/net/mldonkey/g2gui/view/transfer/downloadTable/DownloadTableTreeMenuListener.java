@@ -35,12 +35,13 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.transfer.FileDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.transfer.UniformResourceLocator;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.actions.AddClientAsFriendAction;
+import net.mldonkey.g2gui.view.viewers.actions.ClientDetailAction;
 import net.mldonkey.g2gui.view.viewers.actions.CopyED2KLinkToClipboardAction;
 import net.mldonkey.g2gui.view.viewers.actions.ToggleClientsAction;
 import net.mldonkey.g2gui.view.viewers.actions.WebServicesAction;
@@ -85,7 +86,7 @@ import org.eclipse.swt.widgets.Text;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.22 2003/10/22 20:38:35 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.23 2003/10/24 21:26:30 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -299,11 +300,17 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
 
         if ((selectedClient != null) && advancedMode) {
-            menuManager.add(new AddFriendAction());
+            
+            ClientInfo[] clientInfoArray = new ClientInfo[ selectedClients.size() ];
+            for (int i = 0; i < selectedClients.size(); i++ ) {
+                TreeClientInfo treeClientInfo = (TreeClientInfo) selectedClients.get(i);
+                clientInfoArray[ i ] = treeClientInfo.getClientInfo();
+            }
+            menuManager.add(new AddClientAsFriendAction(core, clientInfoArray));
         }
 
         if (selectedClient != null) {
-            menuManager.add(new ClientDetailAction());
+            menuManager.add(new ClientDetailAction(selectedClient.getFileInfo(), selectedClient.getClientInfo(), core));
         }
 
         if (selectedFile != null) {
@@ -325,6 +332,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
             webServicesMenu.add(new WebServicesAction(WebServicesAction.FILEDONKEY, selectedFile.getMd4()));
             webServicesMenu.add(new WebServicesAction(WebServicesAction.JIGLE, selectedFile.getMd4()));
             webServicesMenu.add(new WebServicesAction(WebServicesAction.SHAREREACTOR, selectedFile.getED2K()));
+			webServicesMenu.add(new WebServicesAction(WebServicesAction.DONKEY_FAKES, selectedFile.getED2K()));
             menuManager.add(webServicesMenu);
         }
     }
@@ -391,37 +399,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
         public void run() {
             new FileDetailDialog(selectedFile);
-        }
-    }
-
-    /**
-     * AddFriendAction
-     */
-    private class AddFriendAction extends Action {
-        public AddFriendAction() {
-            super(G2GuiResources.getString("TT_DOWNLOAD_MENU_ADD_FRIEND"));
-            setImageDescriptor(G2GuiResources.getImageDescriptor("MessagesButtonSmallTrans"));
-        }
-
-        public void run() {
-            for (int i = 0; i < selectedClients.size(); i++) {
-                TreeClientInfo selectedClientInfo = (TreeClientInfo) selectedClients.get(i);
-                ClientInfo.addFriend(core, selectedClientInfo.getClientInfo().getClientid());
-            }
-        }
-    }
-
-    /**
-     * ClientDetailAction
-     */
-    private class ClientDetailAction extends Action {
-        public ClientDetailAction() {
-            super(G2GuiResources.getString("TT_DOWNLOAD_MENU_CLIENT_DETAILS"));
-            setImageDescriptor(G2GuiResources.getImageDescriptor("info"));
-        }
-
-        public void run() {
-            new ClientDetailDialog(selectedClient.getFileInfo(), selectedClient.getClientInfo(), core);
         }
     }
 
@@ -687,6 +664,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.23  2003/10/24 21:26:30  zet
+add donkey fakes web service
+
 Revision 1.22  2003/10/22 20:38:35  zet
 common actions
 

@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * g2gui Team
- * 
- * 
+ *
+ *
  * This file is part of g2gui.
  *
  * g2gui is free software; you can redistribute it and/or modify
@@ -18,75 +18,106 @@
  * You should have received a copy of the GNU General Public License
  * along with g2gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
+
 import org.eclipse.swt.program.Program;
+
 
 /**
  * WebServicesAction
  *
- * @version $Id: WebServicesAction.java,v 1.1 2003/10/22 16:28:52 zet Exp $ 
+ * @version $Id: WebServicesAction.java,v 1.2 2003/10/24 21:26:20 zet Exp $
  *
  */
 public class WebServicesAction extends Action {
-    
     public static final int JIGLE = 0;
     public static final int BITZI = 1;
     public static final int FILEDONKEY = 2;
     public static final int SHAREREACTOR = 3;
-    
+    public static final int DONKEY_FAKES = 4;
     private String string;
-	private int type;
-    
-	public WebServicesAction( int type, String string ) {
-		super();
-		this.type = type;
-		this.string = string;
-		switch (type) {
-			case JIGLE:
-				setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_JIGLE_LOOKUP" ) );
-				setImageDescriptor( G2GuiResources.getImageDescriptor( "Jigle" ) );
-				break;
-			case BITZI: 
-				setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_BITZI_LOOKUP" ) );
-				setImageDescriptor( G2GuiResources.getImageDescriptor( "Bitzi" ) );
-				break;
-			case FILEDONKEY:
-				setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_FILEDONKEY_LOOKUP" ) );
-				setImageDescriptor( G2GuiResources.getImageDescriptor( "edonkey" ) );
-				break;
-			case SHAREREACTOR:
-				setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_SR_FAKECHECK" ) );
-				setImageDescriptor( G2GuiResources.getImageDescriptor( "ShareReactor" ) );
-				break;
-		}
-	}
-    	
-	public void run() {
-		switch (type) {
-			case JIGLE:
-				Program.launch("http://www.jigle.com/search?p=ed2k:" + string );
-				break;
-			case BITZI: 
-				Program.launch("http://bitzi.com/lookup/" + string );
-				break;	
-			case FILEDONKEY:
-				Program.launch("http://www.filedonkey.com/file.html?md4=" + string );	
-				break;
-			case SHAREREACTOR:
-				Program.launch("http://www.sharereactor.com/fakesearch.php?search=" + string );	
-				break;   
-		}	
-	}
+    private int type;
+
+    public WebServicesAction(int type, String string) {
+        super();
+        this.type = type;
+        this.string = string;
+
+        switch (type) {
+        case JIGLE:
+            setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_JIGLE_LOOKUP"));
+            setImageDescriptor(G2GuiResources.getImageDescriptor("Jigle"));
+
+            break;
+
+        case BITZI:
+            setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_BITZI_LOOKUP"));
+            setImageDescriptor(G2GuiResources.getImageDescriptor("Bitzi"));
+
+            break;
+
+        case FILEDONKEY:
+            setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_FILEDONKEY_LOOKUP"));
+            setImageDescriptor(G2GuiResources.getImageDescriptor("edonkey"));
+
+            break;
+
+        case SHAREREACTOR:
+            setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_SR_FAKECHECK"));
+            setImageDescriptor(G2GuiResources.getImageDescriptor("ShareReactor"));
+
+            break;
+
+        case DONKEY_FAKES:
+            setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_DONKEY_FAKES"));
+            setImageDescriptor(G2GuiResources.getImageDescriptor("edonkey"));
+
+            break;
+        }
+    }
+
+    public void run() {
+        switch (type) {
+        case JIGLE:
+            Program.launch("http://www.jigle.com/search?p=ed2k:" + string);
+
+            break;
+
+        case BITZI:
+            Program.launch("http://bitzi.com/lookup/" + string);
+
+            break;
+
+        case FILEDONKEY:
+            Program.launch("http://www.filedonkey.com/file.html?md4=" + string);
+
+            break;
+
+        case SHAREREACTOR:
+            Program.launch("http://www.sharereactor.com/fakesearch.php?search=" + string);
+
+            break;
+
+        case DONKEY_FAKES:
+            Program.launch("http://donkeyfakes.gambri.net/fakecheck/update/fakecheck.php?ed2k=" + string);
+
+            break;
+        }
+    }
 }
+
 
 /*
 $Log: WebServicesAction.java,v $
+Revision 1.2  2003/10/24 21:26:20  zet
+add donkey fakes web service
+
 Revision 1.1  2003/10/22 16:28:52  zet
 common actions
 
