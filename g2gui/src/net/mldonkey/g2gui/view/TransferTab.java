@@ -73,7 +73,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Main
  *
  *
- * @version $Id: TransferTab.java,v 1.42 2003/08/29 17:33:20 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.43 2003/08/29 17:45:35 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -111,7 +111,7 @@ public class TransferTab extends GuiTab  {
 		ViewForm downloadViewForm = new ViewForm( mainSashForm, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		
 		downloadCLabel = new CLabel(downloadViewForm, SWT.LEFT );	
-		downloadCLabel.setText(G2GuiResources.getString("TT_TransfersButton"));
+		downloadCLabel.setText(G2GuiResources.getString("TT_Downloads"));
 		downloadCLabel.setImage(G2GuiResources.getImage("TransfersButtonSmallTitlebar"));
 		downloadCLabel.setBackground(new Color[]{downloadViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 									downloadViewForm.getBackground()},
@@ -154,17 +154,18 @@ public class TransferTab extends GuiTab  {
 		
 				
 		// When we have uploaders:		
-		ViewForm uploadersViewForm = new ViewForm( mainSashForm, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
-		uploadersViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));	
+		ViewForm uploadsViewForm = new ViewForm( mainSashForm, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		uploadsViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));	
 			
-		CLabel uploadersCLabel = new CLabel(uploadersViewForm, SWT.LEFT );	
-		uploadersCLabel.setText("Uploaders");
-		uploadersCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		uploadersCLabel.setBackground(new Color[]{uploadersViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-										uploadersViewForm.getBackground()},
+		CLabel uploadsCLabel = new CLabel(uploadsViewForm, SWT.LEFT );	
+		uploadsCLabel.setText(G2GuiResources.getString("TT_Uploads"));
+		uploadsCLabel.setImage(G2GuiResources.getImage("TransfersButtonSmallTitlebar"));
+		uploadsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		uploadsCLabel.setBackground(new Color[]{uploadsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+										uploadsViewForm.getBackground()},
 										new int[] {100});	
 		
-		Composite uploadersComposite = new Composite( uploadersViewForm, SWT.NONE );
+		Composite uploadersComposite = new Composite( uploadsViewForm, SWT.NONE );
 		uploadersComposite.setLayout(new FillLayout());
 		Button b = new Button(uploadersComposite, SWT.NONE);
 		b.setText("Try \"uploaders\" or \"upstats\" command in console until gui protocol sends upload information.");
@@ -174,8 +175,8 @@ public class TransferTab extends GuiTab  {
 			}
 		});
 		
-		uploadersViewForm.setTopLeft(uploadersCLabel);
-		uploadersViewForm.setContent(uploadersComposite);
+		uploadsViewForm.setTopLeft(uploadsCLabel);
+		uploadsViewForm.setContent(uploadersComposite);
 		
 		mainSashForm.setWeights( new int[] {1441,0});
 		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, clientTableViewer, mldonkey, this );
@@ -299,7 +300,7 @@ public class TransferTab extends GuiTab  {
 			if(!shell.isDisposed() && shell !=null && shell.getDisplay()!=null) {
 				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						downloadCLabel.setText(G2GuiResources.getString("TT_TransfersButton") + ": " + text);
+						downloadCLabel.setText(G2GuiResources.getString("TT_Downloads") + ": " + text);
 					}
 				});
 			}
@@ -323,6 +324,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.43  2003/08/29 17:45:35  zet
+localise text
+
 Revision 1.42  2003/08/29 17:33:20  zet
 remove headerbar
 
