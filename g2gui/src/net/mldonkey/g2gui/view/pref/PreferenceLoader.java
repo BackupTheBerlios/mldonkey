@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.45 2003/11/20 14:02:17 lemmster Exp $
+ * @version $Id: PreferenceLoader.java,v 1.46 2003/11/21 22:02:42 vnc Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -108,7 +108,7 @@ public class PreferenceLoader {
                                         JFaceResources.getTextFont().getFontData() );
              
 		PreferenceConverter.setDefault( preferenceStore, "downloadsBackgroundColor", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );               
-        PreferenceConverter.setDefault( preferenceStore, "downloadsAvailableFileColor", display.getSystemColor( SWT.COLOR_RED ).getRGB() );
+        PreferenceConverter.setDefault( preferenceStore, "downloadsAvailableFileColor", display.getSystemColor( SWT.COLOR_BLACK ).getRGB() );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsUnAvailableFileColor", new RGB(128,128,128) );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsDownloadedFileColor", display.getSystemColor( SWT.COLOR_BLUE ).getRGB() );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsQueuedFileColor", display.getSystemColor( SWT.COLOR_GRAY ).getRGB() );
@@ -118,10 +118,10 @@ public class PreferenceLoader {
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove0FileColor", new RGB(0,110,0) );
         PreferenceConverter.setDefault( preferenceStore, "downloadsFontData", JFaceResources.getDefaultFont().getFontData() );     
                  
-		PreferenceConverter.setDefault( preferenceStore, "graphUploadsColor1", display.getSystemColor( SWT.COLOR_RED ).getRGB() );
-		PreferenceConverter.setDefault( preferenceStore, "graphUploadsColor2", new RGB(125,0,0) );
-		PreferenceConverter.setDefault( preferenceStore, "graphDownloadsColor1", display.getSystemColor( SWT.COLOR_BLUE ).getRGB() );
-		PreferenceConverter.setDefault( preferenceStore, "graphDownloadsColor2", new RGB(0,0,125) );
+		PreferenceConverter.setDefault( preferenceStore, "graphUploadsColor1", display.getSystemColor( SWT.COLOR_BLUE ).getRGB() );
+		PreferenceConverter.setDefault( preferenceStore, "graphUploadsColor2", new RGB(0,0,125) );
+		PreferenceConverter.setDefault( preferenceStore, "graphDownloadsColor1", display.getSystemColor( SWT.COLOR_GREEN ).getRGB() );
+		PreferenceConverter.setDefault( preferenceStore, "graphDownloadsColor2", new RGB(0,125,0) );
 		PreferenceConverter.setDefault( preferenceStore, "graphBackgroundColor", display.getSystemColor( SWT.COLOR_BLACK ).getRGB() );
 		PreferenceConverter.setDefault( preferenceStore, "graphGridColor", new RGB(0,128,64) );
 		PreferenceConverter.setDefault( preferenceStore, "graphTextColor", display.getSystemColor( SWT.COLOR_WHITE ).getRGB() );
@@ -278,6 +278,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.46  2003/11/21 22:02:42  vnc
+color-adjustments to fit the general theme (green==downloads)
+
 Revision 1.45  2003/11/20 14:02:17  lemmster
 G2Gui cleanup
 
@@ -385,7 +388,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: vnc $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates
