@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.3 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ColumnSelector.java,v 1.4 2003/11/02 21:14:21 zet Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -123,8 +123,27 @@ public class ColumnSelector extends Dialog {
      * @param parent
      */
     public void createLists(Composite parent) {
+        int max_characters = 0;
+        int tmpi;
+
+        for (int i = 0; i < columnLegend.length; i++) {
+            if ((tmpi = G2GuiResources.getString(columnLegend[ i ]).length()) > max_characters) {
+                max_characters = tmpi;
+            }
+        }
+
+        // calculate width/height based on font size
+        GC gc = new GC(parent);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        int heightHint = (gc.getFontMetrics().getHeight() + 7) * allColumnIDs.length();
+        int widthHint = (gc.getFontMetrics().getAverageCharWidth() * max_characters) + 15;
+        gc.dispose();
+
+        gd.heightHint = heightHint;
+        gd.widthHint = widthHint;
+
         leftList = new List(parent, SWT.BORDER | SWT.MULTI);
-        leftList.setLayoutData(new GridData(GridData.FILL_BOTH));
+        leftList.setLayoutData(gd);
 
         Composite arrowComposite = new Composite(parent, SWT.NONE);
         arrowComposite.setLayout(CGridLayout.createGL(1, 5, 5, 0, 5, false));
@@ -152,12 +171,9 @@ public class ColumnSelector extends Dialog {
 
         rightList = new List(parent, SWT.BORDER | SWT.MULTI);
 
-        // set height in pixels
-        GC gc = new GC(parent);
-        GridData gd = new GridData(GridData.FILL_BOTH);
-        int height = gc.getFontMetrics().getHeight() + 7;
-        gc.dispose();
-        gd.heightHint = (allColumnIDs.length() * height);
+        gd = new GridData(GridData.FILL_BOTH);
+        gd.heightHint = heightHint;
+        gd.widthHint = widthHint;
 
         rightList.setLayoutData(gd);
     }
@@ -179,7 +195,6 @@ public class ColumnSelector extends Dialog {
     public void refreshLists() {
         refreshList(leftColumnIDs, leftList);
         refreshList(rightColumnIDs, rightList);
-        leftList.getParent().layout();
     }
 
     /**
@@ -247,6 +262,9 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.4  2003/11/02 21:14:21  zet
+setwidth
+
 Revision 1.3  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
