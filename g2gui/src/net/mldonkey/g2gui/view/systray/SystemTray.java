@@ -45,7 +45,7 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
 /**
- * @version $Id: SystemTray.java,v 1.12 2004/03/11 13:15:23 dek Exp $
+ * @version $Id: SystemTray.java,v 1.13 2004/03/11 13:16:14 dek Exp $
  *  
  */
 public class SystemTray implements SystemTrayIconListener, Observer {
@@ -286,18 +286,25 @@ public class SystemTray implements SystemTrayIconListener, Observer {
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.13  2004/03/11 13:16:14  dek
+ lod-appendix looks now right
+
  Revision 1.12  2004/03/11 13:15:23  dek
  *** empty log message ***
 
- Revision 1.11 2004/03/11 13:11:43 dek Submenu for
- traymenu + some OO
+ Revision 1.11 2004/03/11 13:11:43 dek 
+ Submenu for traymenu + some OO
  
- Revision 1.10 2004/03/11 12:35:39 dek exteranlized strings
+ Revision 1.10 2004/03/11 12:35:39 dek 
+ exteranlized strings
  
- Revision 1.9 2004/03/10 11:08:29 dek Systray s now running in gui thread
+ Revision 1.9 2004/03/10 11:08:29 dek 
+ Systray s now running in gui thread
  
- Revision 1.8 2004/03/10 10:36:07 dek javadoc comments -> normal comments
+ Revision 1.8 2004/03/10 10:36:07 dek 
+ javadoc comments -> normal comments
  
- Revision 1.7 2004/03/10 10:31:44 dek added header and footer
+ Revision 1.7 2004/03/10 10:31:44 dek 
+ added header and footer
   
 */
