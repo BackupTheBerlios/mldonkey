@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.Tag;
-import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -39,7 +39,7 @@ import org.eclipse.swt.graphics.Image;
  * ResultTableLabelProvider
  *
  * @author $user$
- * @version $Id: ResultTableLabelProvider.java,v 1.10 2003/08/16 20:57:57 dek Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.11 2003/08/17 23:13:42 zet Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -55,7 +55,7 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 	public Image getColumnImage( Object arg0, int arg1 ) {
 		if (arg0 instanceof ResultInfo && arg1 == 0) {
 			ResultInfo resultInfo = ( ResultInfo ) arg0;
-			return MainTab.getNetworkImage( resultInfo.getNetwork().getNetworkType() );
+			return G2GuiResources.getNetworkImage( resultInfo.getNetwork().getNetworkType() );
 		}
 		return null;
 	}
@@ -170,6 +170,9 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.11  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.10  2003/08/16 20:57:57  dek
 searching works now without errors AGAIN ;-)
 

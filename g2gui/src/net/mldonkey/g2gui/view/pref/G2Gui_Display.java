@@ -6,10 +6,16 @@
  */
 package net.mldonkey.g2gui.view.pref;
 
-import org.eclipse.jface.preference.*;
+import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.layout.*;
 
 /**
  * @author  
@@ -30,7 +36,6 @@ public class G2Gui_Display extends PreferencePage  {
 	public G2Gui_Display(PreferenceStore preferenceStore, boolean connected) {
 		super( "Display" );
 		setPreferenceStore(preferenceStore);
-		
 		preferenceStore = PreferenceLoader.setDefaults(preferenceStore);
 				
 	}
@@ -164,6 +169,9 @@ public class G2Gui_Display extends PreferencePage  {
 
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.11  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.10  2003/08/17 16:57:55  zet
 *** empty log message ***
 

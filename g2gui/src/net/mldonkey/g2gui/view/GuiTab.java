@@ -26,6 +26,7 @@ import java.util.Observer;
 import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
 import org.eclipse.swt.SWT;
@@ -45,7 +46,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.20 2003/08/16 13:55:32 dek Exp $ 
+ * @version $Id: GuiTab.java,v 1.21 2003/08/17 23:13:42 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -226,8 +227,8 @@ public abstract class GuiTab implements Listener, Observer {
 	public void createButton(String buttonName, String buttonText, String buttonToolTip) {
 		tabName = buttonText;
 		
-		Image big = MainTab.getImageFromRegistry(buttonName);
-		Image small = MainTab.getImageFromRegistry(buttonName + "Small");
+		Image big = G2GuiResources.getImage(buttonName);
+		Image small = G2GuiResources.getImage(buttonName + "Small");
 								
 		toolButton.setText(buttonText);
 		toolButton.setToolTipText(buttonToolTip);
@@ -303,6 +304,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.21  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.20  2003/08/16 13:55:32  dek
 foo
 

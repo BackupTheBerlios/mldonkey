@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view.friends;
 
 import net.mldonkey.g2gui.model.ClientInfo;
-import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -43,7 +43,7 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 	 
 	 // Will transparent .pngs ever work?
 	public Image getColumnImage( Object element, int columnIndex ) {
-		return MainTab.getImageFromRegistry("MessagesButtonSmallWhite");
+		return G2GuiResources.getImage("MessagesButtonSmallWhite");
 	}
 
 	/* (non-Javadoc)
@@ -108,6 +108,9 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 
 /*
 $Log: TableLabelProvider.java,v $
+Revision 1.3  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.2  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 

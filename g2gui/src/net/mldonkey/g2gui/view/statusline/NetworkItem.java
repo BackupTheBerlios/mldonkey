@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.ServerTab;
 import net.mldonkey.g2gui.view.StatusLine;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -40,9 +41,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -57,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.14 2003/08/11 11:26:20 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkItem.java,v 1.15 2003/08/17 23:13:42 zet Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -200,31 +199,7 @@ public class NetworkItem implements Observer {
 		}
 		return null;
 	}
-	
-	/**
-	 * Creates a Transparent imageobject with a given .png|.gif Image-Object
-	 * be aware, the the scr-image is disposed, so dont' use it any further
-	 * 
-	 * @param src the non-transparent image we want to process
-	 * @param control where is our image laid in, to check for the background-color
-	 * @return the transparent image
-	 */
-	private Image createTransparentImage( Image src, Control control ) {
-		int width = src.getBounds().width;
-		int height = src.getBounds().height;
 		
-		Image result = new Image( control.getDisplay(), new Rectangle( 0, 0, width, height ) );		
-		GC gc = new GC( result );
-		gc.setBackground( control.getBackground(  ) );
-		gc.fillRectangle( 0, 0, width, height );							
-		gc.drawImage( src, 0, 0 );
-			
-		src.dispose();		
-		gc.dispose();		
-
-		return result;
-	} 
-	
 	/**
 	 * set the proper image for the network
 	 * @param networkInfo The network info to create the image for
@@ -234,229 +209,38 @@ public class NetworkItem implements Observer {
 		/* enabled or disabled image */
 		enabled = ( ( NetworkInfo ) cLabel.getData() ).isEnabled();
 	
-		/* donkey */
-		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.DONKEY ) {
-			if ( enabled ) { // enabled
+		// we have icons for these:
+		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.DONKEY 
+			|| networkInfo.getNetworkType() == NetworkInfo.Enum.FT
+			|| networkInfo.getNetworkType() == NetworkInfo.Enum.GNUT
+			|| networkInfo.getNetworkType() == NetworkInfo.Enum.GNUT2
+			|| networkInfo.getNetworkType() == NetworkInfo.Enum.SOULSEEK 
+			|| networkInfo.getNetworkType() == NetworkInfo.Enum.DC ) {
+	
+			if (enabled){	
+			
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED" ) ).booleanValue();
 				if ( connected || core.getProtoToUse() < 18 ) // connected to servers
-					image = new Image( composite.getDisplay(),
-									"icons/edonkey2000_connected.png" );
+					return G2GuiResources.getImage(networkInfo.getNetworkShortName() + "Connected");
 				else // not connected to servers 
-					image = new Image( composite.getDisplay(),
-									"icons/edonkey2000_disconnected.png" );
-			}
-			else // disabled
-				image = new Image( composite.getDisplay(),
-								"icons/edonkey2000_disabled.png" );
-			
-			/* generate the image transparent and return the image */
-			image = this.createTransparentImage( image, composite );
-			return image;
-		}
+					return G2GuiResources.getImage(networkInfo.getNetworkShortName() + "Disconnected"); 
+			} else 	
+				return G2GuiResources.getImage(networkInfo.getNetworkShortName() + "Disabled");					
 	
-		/* overnet */
-/*		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.OV ) {
-			if ( enabled ) { // enabled
-				connected = ( ( Boolean ) label.getData( "CONNECTED") ).booleanValue();
-				if ( connected || core.getProtoToUse() < 18 ) {
-					image = new Image( composite.getDisplay(),
-									"icons/overnet_connected.png" );
-				}
-				else {
-					image = new Image( composite.getDisplay(),
-									"icons/overnet_disconnected.png" );
-				}
-			}
-			else { // disabled
-				image = new Image( composite.getDisplay(),
-								"icons/overnet_disabled.png" );
-			}
-			
-			/* generate the image transparent and return the image */
-/*			image = this.createTransparentImage( image, composite );
-			return image;
-		}
-
-		/* fasttrack */
-		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.FT ) {
-			if ( enabled ) { // enabled
-				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
-				if ( connected || core.getProtoToUse() < 18 ) {
-					image = new Image( composite.getDisplay(),
-									"icons/kazaa_connected.png" );
-				}
-				else {
-					image = new Image( composite.getDisplay(),
-									"icons/kazaa_disconnected.png" );
-				}
-			}
-			else { // disabled
-				image = new Image( composite.getDisplay(),
-								"icons/kazaa_disabled.png" );
-			}
-			/* generate the image transparent and return the image */
-			image = this.createTransparentImage( image, composite );
-			return image;
-		}
-
-		/* gnutella2 */
-		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.GNUT2 ) {
-			if ( enabled ) { // enabled
-				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
-				if ( connected || core.getProtoToUse() < 18 ) {
-					image = new Image( composite.getDisplay(),
-									"icons/gnutella_connected.png" );
-				}
-				else {
-					image = new Image( composite.getDisplay(),
-									"icons/gnutella_disconnected.png" );
-				}
-			}
-			else { // disabled
-				image = new Image( composite.getDisplay(),
-								"icons/gnutella_disabled.png" );
-			}
-			/* generate the image transparent and return the image */
-			image = this.createTransparentImage( image, composite );
-			return image;
-		}
-
-		/* gnutella */
-		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.GNUT ) {
-			if ( enabled ) { // enabled
-				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
-				if ( connected || core.getProtoToUse() < 18 ) {
-					image = new Image( composite.getDisplay(),
-									"icons/gnutella_connected.png" );
-				}
-				else {
-					image = new Image( composite.getDisplay(),
-									"icons/gnutella_disconnected.png" );
-				}
-			}
-			else { // disabled
-				image = new Image( composite.getDisplay(),
-								"icons/gnutella_disabled.png" );
-			}
-			
-			/* generate the image transparent and return the image */
-			image = this.createTransparentImage( image, composite );
-			return image;
-		}
-
-		/* soulseek */
-		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.SOULSEEK ) {
-			if ( enabled ) { // enabled
-				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
-				if ( connected || core.getProtoToUse() < 18 ) {
-					image = new Image( composite.getDisplay(),
-									"icons/soulseek_connected.png" );
-				}
-				else {
-					image = new Image( composite.getDisplay(),
-									"icons/soulseek_disconnected.png" );
-				}
-			}
-			else { // disabled
-				image = new Image( composite.getDisplay(),
-								"icons/soulseek_disabled.png" );
-			}
-					
-			/* generate the image transparent and return the image */
-			image = this.createTransparentImage( image, composite );
-			return image;
-		}
-
-		/* bittorrent */
-/*		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.BT ) {
-			if ( enabled ) { // enabled
-				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
-				if ( connected || core.getProtoToUse() < 18 ) {
-					image = new Image( composite.getDisplay(),
-									"icons/bittorrent_connected.png" );
-				}
-				else {
-					image = new Image( composite.getDisplay(),
-									"icons/bittorrent_disconnected.png" );
-				}
-			}
-			else { // disabled
-				image = new Image( composite.getDisplay(),
-								"icons/bittorrent_disabled.png" );
-			}
-			
-			/* generate the image transparent and return the image */
-/*			image = this.createTransparentImage( image, composite );
-			return image;
-		}
-
-		/* direct connect */
-		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.DC ) {
-			if ( enabled ) { // enabled
-				connected = ( ( Boolean ) cLabel.getData( "CONNECTED") ).booleanValue();
-				if ( connected || core.getProtoToUse() < 18 ) {
-					image = new Image( composite.getDisplay(),
-									"icons/directconnect_connected.png" );
-				}
-				else {
-					image = new Image( composite.getDisplay(),
-									"icons/directconnect_disconnected.png" );
-				}
-			}
-			else { // disabled
-				image = new Image( composite.getDisplay(),
-								"icons/directconnect_disabled.png" );
-			}
-			
-			/* generate the image transparent and return the image */
-			image = this.createTransparentImage( image, composite );
-			return image;
-		}
-
-		/* open napster */
-/*		if ( networkInfo.getNetworkType() == NetworkInfo.Enum.OPENNP ) {
-			if ( enabled ) { // enabled
-				connected = ( ( Boolean ) label.getData( "CONNECTED") ).booleanValue();
-				if ( connected || core.getProtoToUse() < 18 ) {
-					image = new Image( composite.getDisplay(),
-									"icons/openNap_connected.png" );
-				}
-				else {
-					image = new Image( composite.getDisplay(),
-									"icons/openNap_disconnected.png" );
-				}
-			}
-			else { // disabled
-				image = new Image( composite.getDisplay(),
-								"icons/openNap_disabled.png" );
-			}
-			
-			/* generate the image transparent and return the image */
-/*			image = this.createTransparentImage( image, composite );
-			return image;
-		} 
-		/* default (unknown network) */
-//		else {
-			if ( enabled ) { // enabled
+		// but not for these:
+		} else {
+		
+			if ( enabled ) { 
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED" ) ).booleanValue();
-				if ( connected || core.getProtoToUse() < 18 ) {
-					image = new Image( composite.getDisplay(),
-									"icons/unknown_connected.png" );
-				}
-				else {
-					image = new Image( composite.getDisplay(),
-									"icons/unknown_disconnected.png" );
-				}
+				if ( connected || core.getProtoToUse() < 18 ) 
+					return G2GuiResources.getImage("UnknownConnected");
+				else 
+					return G2GuiResources.getImage("UnknownDisconnected");
 			}
-			else { // disabled
-				image = new Image( composite.getDisplay(),
-								"icons/unknown_disabled.png" );
-			}
-			
-			/* generate the image transparent and return the image */
-			image = this.createTransparentImage( image, composite );
-			return image;
-//		}
+			else 
+				return G2GuiResources.getImage("UnknownDisabled");
+	
+		}		
 	}
 	
 	/**
@@ -515,6 +299,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.15  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.14  2003/08/11 11:26:20  lemmstercvs01
 added some images
 

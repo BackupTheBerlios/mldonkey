@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -79,7 +80,7 @@ public class ClientDetailDialog implements Observer {
 								  (desktop.getBounds().height - height) / 2,
 								  width, height);
 								  
-		shell.setImage(MainTab.getImageFromRegistry("ProgramIcon"));
+		shell.setImage(G2GuiResources.getImage("ProgramIcon"));
 		
 		shell.setText( "Client " + clientInfo.getClientid() + " details");						  
 								  

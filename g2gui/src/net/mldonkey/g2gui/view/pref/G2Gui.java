@@ -23,19 +23,14 @@
 package net.mldonkey.g2gui.view.pref;
 import java.io.IOException;
 import org.eclipse.jface.preference.*;
-//import org.eclipse.swt.graphics.Font;
-//import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
-
-
 
 /**
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.18 2003/07/25 14:47:28 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.19 2003/08/17 23:13:42 zet Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {	
@@ -90,13 +85,7 @@ public class G2Gui extends PreferencePage  {
 			passwordField.getTextControl( shell ).setEchoChar ( '*' );			
 			passwordField.setStringValue( preferenceStore.getString( "password" ) );
 			computeColumn( passwordField.getNumberOfControls() );
-/*
-		consoleTabFontField = new ExtendedFontFieldEditor ( "consoleFont", "Font for Console Window", "Sample", shell );
-			Font font = loadFont();
-				if (font != null)
-					consoleTabFontField.setFont(font);
-			computeColumn( consoleTabFontField.getNumberOfControls() );		
-		*/	
+
 		arrangeFields();
 		return null;
 	}
@@ -109,7 +98,6 @@ public class G2Gui extends PreferencePage  {
 		setHorizontalSpan( portField );
 		setHorizontalSpan( userNameField );
 		setHorizontalSpan( passwordField );
-	//	consoleTabFontField.adjustForNumColumns( columns );
 	}
 
 	/**
@@ -129,24 +117,6 @@ public class G2Gui extends PreferencePage  {
 		( ( org.eclipse.swt.layout.GridLayout )controlshell.getLayout() ).numColumns = columns;
 		
 	}
-/*
-	private Font loadFont() {
-		Font font;
-		this.preferenceStore = new PreferenceStore( "g2gui.pref" );
-			try { preferenceStore.load(); } catch ( IOException e ) { }		
-		String[] font_array = preferenceStore.getString( "consoleFont" ).split( ":" );			
-		if ( preferenceStore.getString( "consoleFont" ).equals( "" ) )
-			font_array = null;						
-		if ( font_array != null ) {
-			font = new Font( null,
-					 new FontData( font_array[ 0 ], 
-							Integer.parseInt( font_array[ 1 ] ), 
-							Integer.parseInt( font_array[ 2 ] ) ) ) ;
-		}
-		else  font = null;
-		return font;
-	} */
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
@@ -160,10 +130,6 @@ public class G2Gui extends PreferencePage  {
 		preferenceStore.setValue( "username", userNameField.getStringValue() );
 		preferenceStore.setValue( "port", portField.getStringValue() );
 		preferenceStore.setValue( "password", passwordField.getStringValue() );
-	//	preferenceStore.setValue( "consoleFont", consoleTabFontField.toString() );	
-
-		
-		
 		
 		/* any more options go in here, you got the syntax??*/
 		
@@ -176,7 +142,6 @@ public class G2Gui extends PreferencePage  {
 		return super.performOk();		
 		
 	}
-
 
 	protected void performApply() {		
 		super.performApply();
@@ -201,6 +166,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.19  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.18  2003/07/25 14:47:28  zet
 replace string.split
 

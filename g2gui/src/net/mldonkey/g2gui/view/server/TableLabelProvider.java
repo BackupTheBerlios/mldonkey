@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
-import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -39,7 +39,7 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  * @author $Author: zet $
- * @version $Id: TableLabelProvider.java,v 1.7 2003/08/14 12:57:03 zet Exp $ 
+ * @version $Id: TableLabelProvider.java,v 1.8 2003/08/17 23:13:42 zet Exp $ 
  *
  */
 public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -52,7 +52,7 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 	public Image getColumnImage( Object element, int columnIndex ) {
 		if (element instanceof ServerInfo && columnIndex == 0) {
 			ServerInfo server = ( ServerInfo ) element;
-			return MainTab.getNetworkImage( server.getNetwork().getNetworkType() );
+			return G2GuiResources.getNetworkImage( server.getNetwork().getNetworkType() );
 		}
 		return null;
 	}
@@ -156,6 +156,9 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 
 /*
 $Log: TableLabelProvider.java,v $
+Revision 1.8  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.7  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 

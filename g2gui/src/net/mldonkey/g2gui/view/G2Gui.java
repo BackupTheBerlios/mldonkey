@@ -34,10 +34,12 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.ObjectPool;
 import net.mldonkey.g2gui.helper.SocketPool;
 import net.mldonkey.g2gui.view.pref.Preferences;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -52,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.11 2003/08/17 17:30:20 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.12 2003/08/17 23:13:42 zet Exp $ 
  *
  */
 public class G2Gui {
@@ -77,7 +79,6 @@ public class G2Gui {
 	private static FormData formData;
 	private static Rectangle shellRect, displayRect;
 	private static Label label;
-	private static Image image;
 	
 	/**
 	 * Starts a new Core and launch the Gui
@@ -89,6 +90,10 @@ public class G2Gui {
 		/* initializing */		
 		display = new Display();
 		shell = new Shell( display );
+		
+		ImageRegistry reg = G2GuiResources.getImageRegistry();
+		reg.put("splashScreen", ImageDescriptor.createFromFile(G2Gui.class, "images/splash.png") );	
+		
 		preferenceStore = new PreferenceStore( "g2gui.pref" );
 		myPrefs = new Preferences( preferenceStore );
 		splashShell = new Shell( shell, SWT.ON_TOP );	
@@ -102,9 +107,8 @@ public class G2Gui {
 				
 			/* build the splash */
 			progressBar.setMaximum( count[0] );
-			image = new Image( display, "icons/splash.png" );
 			label = new Label( splashShell, SWT.NONE );
-			label.setImage( image );
+			label.setImage( G2GuiResources.getImage("splashScreen") );
 			FormLayout layout = new FormLayout();
 			splashShell.setLayout( layout );
 			formData = new FormData();
@@ -149,7 +153,6 @@ public class G2Gui {
 		}
 		catch ( UnknownHostException e ) {
 			splashShell.dispose();
-			image.dispose();
 			box.setText( res.getString( "G2_INVALID_ADDRESS") );
 			box.setMessage( res.getString( "G2_ILLEGAL_ADDRESS" ) );
 			box.open();
@@ -158,7 +161,6 @@ public class G2Gui {
 		}
 		catch ( IOException e ) {
 			splashShell.dispose();
-			image.dispose();
 			box.setText( res.getString( "G2_IOEXCEPTION") );
 			box.setMessage( res.getString( "G2_CORE_NOT_RUNNING" ) );
 			box.open();
@@ -246,7 +248,6 @@ public class G2Gui {
 	 */
 	public static void badPasswordHandling(String[] args) {
 		splashShell.dispose();
-		image.dispose();
 		/* raise a warning msg */
 		box = new MessageBox( shell, SWT.ICON_WARNING | SWT.OK );
 		box.setText( res.getString( "G2_LOGIN_INVALID" ) );
@@ -272,12 +273,6 @@ public class G2Gui {
 	}
 
 	/**
-	 * @return The splashShell image
-	 */
-	public static Image getImage() {
-		return image;
-	}
-	/**
 	 * @return The splashShell
 	 */
 	public static Shell getSplashShell() {
@@ -293,6 +288,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.12  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.11  2003/08/17 17:30:20  zet
 remove splashscreen from taskbar
 

@@ -36,9 +36,11 @@ import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
@@ -74,13 +76,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.swt.custom.CLabel;
 
 /**
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.18 2003/08/17 09:34:35 dek Exp $ 
+ * @version $Id: SearchResult.java,v 1.19 2003/08/17 23:13:42 zet Exp $ 
  *
  */
 //TODO add image handle, fake search, real links depending on network								   
@@ -93,7 +94,6 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	private ResultInfoIntMap results;
 	private TableViewer table;
 	private Label label;
-	private Image image;
 	private CTabItem cTabItem;
 	private TableColumn tableColumn;
 	private String statusline;
@@ -201,8 +201,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		cTabItem = new CTabItem( cTabFolder, SWT.FLAT );
 		cTabItem.setText( searchString );
 		cTabItem.setToolTipText( bundle.getString( "SR_SEARCHINGFOR" ) + searchString );
-		image = new Image( cTabFolder.getDisplay(), "icons/search_small.png" );
-		cTabItem.setImage( MainTab.createTransparentImage( image, cTabItem.getParent() ) );
+		cTabItem.setImage( G2GuiResources.getImage("SearchSmall") );
 		cTabItem.setData( this );
 
 		/* for the search delay, just draw a label */ 
@@ -232,9 +231,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 */
 	private void createTable() {
 		/* set a new image for the ctabitem to show we found results */
-		cTabItem.getImage().dispose(); // dispose the old image first
-		image = new Image( cTabFolder.getDisplay(), "icons/search_complete.png" );
-		cTabItem.setImage( MainTab.createTransparentImage( image, cTabItem.getParent() ) );
+		cTabItem.setImage( G2GuiResources.getImage("SearchComplete") );
+		
 		/* create the result table */		
 		table = new TableViewer( cTabFolder, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
 		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -601,8 +599,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 						if ( p != null ) {
 							ImageData data = p.getImageData();
 							if ( data != null )
-								if ( MainTab.getImageFromRegistry( p.getName() ) == null ) 
-									MainTab.put( p.getName(), new Image( null, data ) );
+								if ( G2GuiResources.getImage( p.getName() ) == null ) 
+									G2GuiResources.getImageRegistry().put( p.getName(), new Image( null, data ) );
 						}			
 				
 						String imageText = aResult.getNames()[ 0 ];
@@ -630,7 +628,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 						
 						/* load the image only if we have a associated programm */
 						if ( p != null )
-							tipLabelImage.setImage( MainTab.getImageFromRegistry( p.getName() ) );
+							tipLabelImage.setImage( G2GuiResources.getImage( p.getName() ) );
 						else
 							tipLabelImage.setImage( null );	
 
@@ -667,6 +665,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.19  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.18  2003/08/17 09:34:35  dek
 double-click starts download of selected items
 

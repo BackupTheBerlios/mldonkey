@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -82,7 +83,7 @@ public class FileDetailDialog implements Observer {
 								  (desktop.getBounds().height - height) / 2,
 								  width, height);
 								  
-		shell.setImage(MainTab.getImageFromRegistry("ProgramIcon"));
+		shell.setImage(G2GuiResources.getImage("ProgramIcon"));
 		shell.setText( "File " + fileInfo.getId() + " details");						  
 								  
 		GridLayout gridLayout = new GridLayout();

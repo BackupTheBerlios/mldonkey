@@ -29,10 +29,10 @@ import java.util.Observer;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.StatusLine;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Composite;
  * SpeedItem
  *
  * @author $user$
- * @version $Id: SpeedItem.java,v 1.13 2003/08/15 22:05:58 zet Exp $ 
+ * @version $Id: SpeedItem.java,v 1.14 2003/08/17 23:13:42 zet Exp $ 
  *
  */
 public class SpeedItem implements Observer {	
@@ -80,13 +80,13 @@ public class SpeedItem implements Observer {
 	
 		/* down rate */	
 		cLabelDown = new CLabel( composite, SWT.RIGHT );
-		cLabelDown.setImage( new Image( composite.getDisplay(), "icons/down.png" ) );
+		cLabelDown.setImage( G2GuiResources.getImage("DownArrow") );
 		cLabelDown.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
 		
 		/* up rate */
 		cLabelUp = new CLabel( composite, SWT.NONE );
-		cLabelUp.setImage( new Image( composite.getDisplay(), "icons/up.png" ) );
+		cLabelUp.setImage( G2GuiResources.getImage("UpArrow") );
 		cLabelUp.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 	}
 
@@ -113,6 +113,9 @@ public class SpeedItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.14  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.13  2003/08/15 22:05:58  zet
 *** empty log message ***
 

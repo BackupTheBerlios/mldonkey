@@ -34,12 +34,13 @@ import java.util.ResourceBundle;
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
-import net.mldonkey.g2gui.model.NetworkInfo.Enum;
 import net.mldonkey.g2gui.view.pref.Preferences;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -78,7 +79,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.37 2003/08/17 13:19:41 dek Exp $ 
+ * @version $Id: MainTab.java,v 1.38 2003/08/17 23:13:42 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -128,7 +129,6 @@ public class MainTab implements Listener, Observer, ShellListener {
 		/* close the splashShell from G2Gui.java */
 		G2Gui.increaseBar( "" );
 		G2Gui.getSplashShell().dispose();
-		G2Gui.getImage().dispose();
 		
 		/* set the old size of this window - must be after pack() */
 		setSizeLocation( shell );
@@ -166,7 +166,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 		GridData gridData;	
 		mainComposite = new Composite( parent, SWT.NONE );
 				
-		parent.setImage (getImageFromRegistry("ProgramIcon"));
+		parent.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
 				
 		createMenuBar( parent );					
 				
@@ -440,8 +440,8 @@ public class MainTab implements Listener, Observer, ShellListener {
 		prefButton.setText(bundle.getString("TT_PreferencesButton"));
 		prefButton.setToolTipText(bundle.getString("TT_PreferencesButtonToolTip"));
 		
-		Image bigImage = MainTab.getImageFromRegistry("PreferencesButton");
-		Image smallImage = MainTab.getImageFromRegistry("PreferencesButtonSmall");
+		Image bigImage = G2GuiResources.getImage("PreferencesButton");
+		Image smallImage = G2GuiResources.getImage("PreferencesButtonSmall");
 				
 		prefButton.setBigActiveImage(bigImage);
 		prefButton.setBigInactiveImage(bigImage);
@@ -627,79 +627,64 @@ public class MainTab implements Listener, Observer, ShellListener {
 		}
 	}
 	
-	// find something better
+
 	private void createImageRegistry () {
-		
+		ImageRegistry reg = G2GuiResources.getImageRegistry();
 		Color white = thisShell.getDisplay().getSystemColor(SWT.COLOR_WHITE);
 		
-		/*following lines are for transparent icon also in title-bar of app
-		 * maybe hacky, but it works*/
-		ImageData source = new ImageData("icons/mld_logo_48x48.gif");
+		// hack to use transparent .gif in titlebar
+		ImageData source = ImageDescriptor.createFromFile(G2Gui.class, "images/mld_logo_48x48.gif").getImageData();
 		ImageData mask = source.getTransparencyMask();
 		Image icon = new Image(thisShell.getDisplay(), source,mask);		
-		imageRegistry.put("ProgramIcon",icon);	
+		reg.put("ProgramIcon",icon);	
 		
-		/*it was done like this before:*/
-		//imageRegistry.put("ProgramIcon", createTrans("mld_logo_48x48.png"));	
+		//reg.put("ProgramIcon", createTrans("mld_logo_48x48.png"));	
 		
-		imageRegistry.put("PreferencesButton", createTrans("preferences.png"));
-		imageRegistry.put("PreferencesButtonSmall", createTrans("preferences-16.png"));
+		String[] buttonNames = { "Preferences", "Statistics", "Console",
+									"Transfers", "Search", "Server", "Messages" };
+		String[] buttonFiles = { "preferences", "statistics", "console",
+									"transfer3a", "search", "server", "messages" };							
+									
+		for (int i=0; i < buttonNames.length; i++) {
+			reg.put(buttonNames[i] + "Button", createTrans(buttonFiles[i] + ".png"));
+			reg.put(buttonNames[i] + "ButtonSmall", createTrans(buttonFiles[i] + "-16.png"));
+		}
 		
-		imageRegistry.put("StatisticsButton", createTrans("statistics.png"));
-		imageRegistry.put("StatisticsButtonSmall", createTrans("statistics-16.png"));
-	
-		imageRegistry.put("ConsoleButton", createTrans("console.png"));
-		imageRegistry.put("ConsoleButtonSmall", createTrans("console-16.png"));
-	
-		imageRegistry.put("TransfersButton", createTrans("transfer3a.png"));
-		imageRegistry.put("TransfersButtonSmall", createTrans("transfer3a-16.png"));
+		String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "Unknown" };
+		String[] fileNames = { "directconnect", "edonkey2000", "gnutella", "gnutella",
+								"kazaa", "soulseek", "unknown" };
+								
+		for (int i = 0; i < shortNames.length; i++) {
+			reg.put( shortNames[i] + "Connected", createTrans( fileNames[i] + "_connected.png" ) );
+			reg.put( shortNames[i] + "Disconnected", createTrans( fileNames[i] + "_disconnected.png" ) );
+			reg.put( shortNames[i] + "Disabled", createTrans( fileNames[i] + "_disabled.png" ) );
+		//	reg.put( shortNames[i] + "BadConnected", createTrans( fileNames[i] + "_badconnected.png" ) );
+		}
+			
+		reg.put( "MessagesButtonSmallWhite", createTrans( "messages-16.png", white ) );
 		
-		imageRegistry.put("SearchButton", createTrans("search.png"));
-		imageRegistry.put("SearchButtonSmall", createTrans("search-16.png"));
+		reg.put( "DCConnectedWhite", createTrans( "directconnect_connected.png" , white ) );
+		reg.put( "DKConnectedWhite", createTrans( "edonkey2000_connected.png" , white ) );
+		reg.put( "G1ConnectedWhite", createTrans( "gnutella_connected.png" , white ) );
+		reg.put( "G2ConnectedWhite", createTrans( "gnutella_connected.png" , white ) );
+		reg.put( "FTConnectedWhite", createTrans( "kazaa_connected.png" , white ) );
+		reg.put( "SSConnectedWhite", createTrans( "soulseek_connected.png" , white ) );
+		reg.put( "UnknownConnectedWhite", createTrans( "unknown_connected.png" , white ) );		
+			
+		reg.put( "DownArrow", createTrans( "down.png" ) );
+		reg.put( "UpArrow", createTrans( "down.png" ) );
 		
-		imageRegistry.put( "ServerButton", createTrans( "server.png" ) );
-		imageRegistry.put( "ServerButtonSmall", createTrans( "server-16.png" ) ); 
+		reg.put( "SearchSmall", createTrans( "search_small.png" )) ;
+		reg.put( "SearchComplete", createTrans( "search_complete.png" )) ;
 		
-		imageRegistry.put( "MessagesButton", createTrans( "messages.png" ) );
-		imageRegistry.put( "MessagesButtonSmall", createTrans( "messages-16.png" ) );
-		imageRegistry.put( "MessagesButtonSmallWhite", createTrans( "messages-16.png", white ) );
-		
-		imageRegistry.put( "DirectConnectConnectedWhite", createTrans( "directconnect_connected.png" , white ) );
-		imageRegistry.put( "EDonkey2000ConnectedWhite", createTrans( "edonkey2000_connected.png" , white ) );
-		imageRegistry.put( "GnutellaConnectedWhite", createTrans( "gnutella_connected.png" , white ) );
-		imageRegistry.put( "KazaaConnectedWhite", createTrans( "kazaa_connected.png" , white ) );
-		imageRegistry.put( "SoulseekConnectedWhite", createTrans( "soulseek_connected.png" , white ) );
-		imageRegistry.put( "UnknownConnectedWhite", createTrans( "unknown_connected.png" , white ) );	
 	}
-	// transparent pngs just don't work on swt 
+	// transparent pngs just don't work with swt 
 	private Image createTrans(String filename) {
 		return createTrans( filename, thisShell.getBackground());
 	}
 	private Image createTrans(String filename, Color color) {
-		String imagePath = "icons/";
-		return createTransparentImage( new Image( null, imagePath + filename ), color);
+		return createTransparentImage( ImageDescriptor.createFromFile(MainTab.class, "images/" + filename).createImage(), color);
 	}
-	public static Image getImageFromRegistry (String key) {
-		if ( key == null ) return null;
-		return imageRegistry.get(key);
-	}
-	public static void put( String key, Image image ) {
-		imageRegistry.put( key, image );
-	}	
-	public static Image getNetworkImage(Enum networkType) {
-		if (networkType == Enum.DONKEY)
-			return getImageFromRegistry("EDonkey2000ConnectedWhite");
-		if (networkType == Enum.FT)
-			return getImageFromRegistry("KazaaConnectedWhite");
-		if (networkType == Enum.GNUT)
-			return getImageFromRegistry("GnutellaConnectedWhite");
-		if (networkType == Enum.SOULSEEK)
-			return getImageFromRegistry("SoulseekConnectedWhite");
-		if (networkType == Enum.DC)
-			return getImageFromRegistry("DirectConnectConnectedWhite");
-		return getImageFromRegistry("UnknownConnectedWhite");
-	}	
-	
 	public static Shell getShell() {
 		return thisShell;
 	}
@@ -732,6 +717,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.38  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.37  2003/08/17 13:19:41  dek
 transparent gif as shell-icon
 

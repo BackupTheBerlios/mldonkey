@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.11 2003/08/17 19:16:36 vnc Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.12 2003/08/17 23:13:42 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -95,7 +95,7 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	public Image getColumnImage(Object arg0, int arg1) {
 		if (arg0 instanceof FileInfo && arg1 == 1) {
 			FileInfo fileInfo = (FileInfo) arg0;
-			return MainTab.getNetworkImage( fileInfo.getNetwork().getNetworkType() );
+			return G2GuiResources.getNetworkImage( fileInfo.getNetwork().getNetworkType() );
 		}
 		return null;
 	}
@@ -226,6 +226,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.12  2003/08/17 23:13:42  zet
+centralize resources, move images
+
 Revision 1.11  2003/08/17 19:16:36  vnc
 cosmetics: added "%" sign
 
