@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: ResultTableSorter.java,v 1.12 2003/10/22 01:37:45 zet Exp $
+ * @version $Id: ResultTableSorter.java,v 1.13 2003/10/22 14:38:32 dek Exp $
  *
  */
 public class ResultTableSorter extends GTableSorter {
@@ -75,6 +75,9 @@ public class ResultTableSorter extends GTableSorter {
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.13  2003/10/22 14:38:32  dek
+removed malformed UTF-8 char gcj complains about (was only in comment)
+
 Revision 1.12  2003/10/22 01:37:45  zet
 add column selector to server/search (might not be finished yet..)
 
@@ -85,13 +88,13 @@ Revision 1.10  2003/09/18 10:39:21  lemmster
 checkstyle
 
 Revision 1.9  2003/09/17 20:07:44  lemmster
-avoid NPE´s in search
+avoid NPEs in search
 
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.6  2003/08/16 20:59:09  dek
 searching works now without errors AGAIN ;-)

@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.18 2003/10/22 01:37:45 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.19 2003/10/22 14:38:32 dek Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -408,6 +408,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.19  2003/10/22 14:38:32  dek
+removed malformed UTF-8 char gcj complains about (was only in comment)
+
 Revision 1.18  2003/10/22 01:37:45  zet
 add column selector to server/search (might not be finished yet..)
 
@@ -424,7 +427,7 @@ Revision 1.14  2003/09/18 10:39:21  lemmster
 checkstyle
 
 Revision 1.13  2003/09/17 20:07:44  lemmster
-avoid NPE´s in search
+avoid NPEs in search
 
 Revision 1.12  2003/09/16 10:29:40  lemmster
 open msgbox just once [bug #909]

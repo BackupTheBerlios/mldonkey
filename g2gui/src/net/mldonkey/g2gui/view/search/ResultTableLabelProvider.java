@@ -37,7 +37,7 @@ import org.eclipse.swt.graphics.Image;
  * ResultTableLabelProvider
  *
  *
- * @version $Id: ResultTableLabelProvider.java,v 1.19 2003/10/22 01:37:45 zet Exp $
+ * @version $Id: ResultTableLabelProvider.java,v 1.20 2003/10/22 14:38:32 dek Exp $
  *
  */
 public class ResultTableLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -135,11 +135,14 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.20  2003/10/22 14:38:32  dek
+removed malformed UTF-8 char gcj complains about (was only in comment)
+
 Revision 1.19  2003/10/22 01:37:45  zet
 add column selector to server/search (might not be finished yet..)
 
 Revision 1.18  2003/09/17 20:07:44  lemmster
-avoid NPE´s in search
+avoid NPEs in search
 
 Revision 1.17  2003/09/01 11:09:43  lemmster
 show downloading files
@@ -151,7 +154,7 @@ Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.14  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer

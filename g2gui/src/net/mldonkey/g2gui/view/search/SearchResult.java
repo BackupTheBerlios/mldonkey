@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Label;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.56 2003/10/22 01:37:45 zet Exp $
+ * @version $Id: SearchResult.java,v 1.57 2003/10/22 14:38:32 dek Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -302,6 +302,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 }
 /*
 $Log: SearchResult.java,v $
+Revision 1.57  2003/10/22 14:38:32  dek
+removed malformed UTF-8 char gcj complains about (was only in comment)
+
 Revision 1.56  2003/10/22 01:37:45  zet
 add column selector to server/search (might not be finished yet..)
 
@@ -343,7 +346,7 @@ Revision 1.44  2003/09/18 07:45:09  lemmster
 fix [bug # 933]
 
 Revision 1.43  2003/09/17 20:07:44  lemmster
-avoid NPE´s in search
+avoid NPEs in search
 
 Revision 1.42  2003/09/16 09:24:11  lemmster
 adjust source rating
@@ -403,7 +406,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates
