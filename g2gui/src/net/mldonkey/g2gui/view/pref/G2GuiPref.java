@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.20 2004/01/08 21:42:12 psy Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.21 2004/01/28 22:15:34 psy Exp $ 
  *
  */
 public class G2GuiPref extends PreferencePage {
@@ -53,9 +53,11 @@ public class G2GuiPref extends PreferencePage {
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected void createFieldEditors() {
+		
 		Composite composite = getFieldEditorParent();
 			StringFieldEditor hostNameField =
 					new StringFieldEditor( "hostname", "Hostname", composite );
+					
 				hostNameField.setPreferenceStore( this.getPreferenceStore() );
 				hostNameField.fillIntoGrid( composite, 2 );
 				addField( hostNameField );
@@ -124,6 +126,12 @@ public class G2GuiPref extends PreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.21  2004/01/28 22:15:34  psy
+* Properly handle disconnections from the core
+* Fast inline-reconnect
+* Ask for automatic relaunch if options have been changed which require it
+* Improved the local core-controller
+
 Revision 1.20  2004/01/08 21:42:12  psy
 introducing boolean isWin32()
 

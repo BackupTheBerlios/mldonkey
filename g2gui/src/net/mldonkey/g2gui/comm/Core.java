@@ -57,7 +57,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.122 2004/01/23 22:12:45 psy Exp $ 
+ * @version $Id: Core.java,v 1.123 2004/01/28 22:15:34 psy Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -274,12 +274,17 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * reconnects to mldonkey after connection-loss
 	 */
-	public void reconnect() {		
-		if (G2Gui.debug) System.out.println("Reconnect");
-		this.connection = G2Gui.initializeSocket( pollModeEnabled );		
-		this.connected = true;
-		Thread restarted = new Thread( this );
-		restarted.start();
+	public boolean reconnect() {		
+		if (G2Gui.debug) System.out.println("Inline Reconnect");
+		Socket newsocket = G2Gui.initializeSocket(); 
+		if (newsocket != null) {
+			this.connection = newsocket;
+			this.connected = true;
+			Thread restarted = new Thread( this );
+			restarted.start();
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -650,10 +655,17 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public ModelFactory getModelFactory() {
 		return this.modelFactory;
 	}
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.123  2004/01/28 22:15:34  psy
+* Properly handle disconnections from the core
+* Fast inline-reconnect
+* Ask for automatic relaunch if options have been changed which require it
+* Improved the local core-controller
+
 Revision 1.122  2004/01/23 22:12:45  psy
 reconnection and local core probing improved, continuing work...
 

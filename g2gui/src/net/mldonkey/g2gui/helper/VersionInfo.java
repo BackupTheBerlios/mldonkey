@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.helper;
 /**
  * VersionInfo returns just a String with our current g2gui version number.
  *
- * @version $Id: VersionInfo.java,v 1.5 2003/12/04 08:47:28 lemmy Exp $ 
+ * @version $Id: VersionInfo.java,v 1.6 2004/01/28 22:15:35 psy Exp $ 
  *
  */
 public class VersionInfo {
@@ -33,12 +33,18 @@ public class VersionInfo {
 	 * @return Our version number
 	 */
 	public static String getVersion() {
-		return "0.2.1";
+		return "0.3.0-CVS";
 	}
 }
 
 /*
 $Log: VersionInfo.java,v $
+Revision 1.6  2004/01/28 22:15:35  psy
+* Properly handle disconnections from the core
+* Fast inline-reconnect
+* Ask for automatic relaunch if options have been changed which require it
+* Improved the local core-controller
+
 Revision 1.5  2003/12/04 08:47:28  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

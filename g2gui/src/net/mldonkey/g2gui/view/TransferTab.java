@@ -40,7 +40,7 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.104 2004/01/22 21:28:03 psy Exp $
+ * @version $Id: TransferTab.java,v 1.105 2004/01/28 22:15:34 psy Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -112,12 +112,18 @@ public class TransferTab extends GuiTab {
         super.setInActive();
         getCore().stopTimer();
     }
-    
+ 
 }
 
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.105  2004/01/28 22:15:34  psy
+* Properly handle disconnections from the core
+* Fast inline-reconnect
+* Ask for automatic relaunch if options have been changed which require it
+* Improved the local core-controller
+
 Revision 1.104  2004/01/22 21:28:03  psy
 renamed "uploads" to "shares" and moved it to a tab of its own.
 "uploaders" are now called "uploads" for improved naming-consistency

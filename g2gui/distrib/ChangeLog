@@ -1,3 +1,9 @@
+2004/01/28
+	* Properly handle disconnections from the core
+	* Fast inline-reconnect
+	* Ask for automatic relaunch if options have been changed which require it
+	* Improved the local core-controller
+
 2004/01/22: vnc
 	* New Tab: Shares
 		Displays all your shared files and some statistics

@@ -1,26 +1,30 @@
-G2gui's TODO-list (last update: 22.01.04)
+G2gui's TODO-list (last update: 28.01.04)
 =================
 
-----------------
-| Major things |
-----------------
+ ------------------
+| Important things |
+ ------------------
+* Make local core-controller relaunch-compatible, without killing the running core.
+  Alternatively kill the core and restart it?
+
+* Fix big memleak when relaunching g2gui after a pref-change. MainWindow does not seem to 
+  be disposed properly (important!)
+
+* Remove duplicate code of initializeSocket(..) in G2Gui.java 
 
 * Fix damaged dynamic-column behaviour under linux (important!)
 
-* Fix core-connection-loss crash
-  - The (to be extended/fixed) relaunch() method should be called
-    when the core goes down. A small countdown-window counts down
-    from 10 to 0 and tries to connect again (like implemented in teamspeak).
-    Label: "x seconds until reconnection attempt...\n Reconnect now?"
-    Buttons: <OK> (reconnects immediately) <CANCEL> (goes back to pref-window)
+* PreferenceLoader.*Relaunching() is a bit sub-optimal (move to G2Gui.java?)
 
-* G2gui relaunch() after some preferences-changes ("*needs restart" candidates)
-  - Neededs an extended cleanup-part to make it work
+* Servercount in networkItem tooltip is wrong,
+  connecting servers currently are counted as connected ones
 
 
-------------------------
+
+
+ ----------------------
 | Feature Enhancements |
-------------------------
+ ----------------------
 * Introduce the mighty link-extractor
   - Gets a tab of its own
   - Rips websites
@@ -32,9 +36,9 @@ G2gui's TODO-list (last update: 22.01.04)
     * a big submit- and clear-button
 
 
--------------
+ -----------
 | Cosmetics |
--------------
+ -----------
 * Increase space between text in table (devein)
 
 * Expanded Transfers should make more of a "block" appearance

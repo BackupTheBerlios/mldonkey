@@ -29,6 +29,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.Enum;
@@ -51,19 +52,28 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.56 2004/01/08 21:53:58 psy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.57 2004/01/28 22:15:34 psy Exp $
  */
 public class PreferenceLoader {
-    private static PreferenceStore preferenceStore;
+    private static boolean restart = false;
+	private static PreferenceStore preferenceStore;
     private static Map fontMap = new Hashtable();
     private static Map colorMap = new Hashtable();
     private static List fontArray = new ArrayList();
     private static List colorArray = new ArrayList();
 
+    private static HashMap critPrefsMap = new HashMap();
+    // critical preferences which need a restart after change
+    private static final String critPrefsList[] = {"hostname", "username", "password", "port", 
+    		"advancedMode", "flatInterface", "useGraident", "pollUpStats", "displayNodes", 
+			"dragAndDrop", "coreExecutable"};
+    // our current state, are we in the progress of relaunching?
+    private static boolean relaunching = false;
+    
     // prevent instantiation
     private PreferenceLoader() {
     }
-
+    
     /**
      * @return
      */
@@ -90,6 +100,9 @@ public class PreferenceLoader {
     		System.out.println("Created new configfile.");
     	}
     	preferenceStore = (PreferenceStore) setDefaults( preferenceStore );
+    	
+    	// save the critical preferences in a hashmap for later use with needsRestart()
+    	saveCritPrefs();
     }
     
     /**
@@ -304,7 +317,15 @@ public class PreferenceLoader {
         Iterator colors = colorArray.iterator();
         while ( colors.hasNext() )
             ( ( Color ) colors.next() ).dispose();
-    }
+        
+        fontMap.clear();
+        colorMap.clear();
+        fontArray.clear();
+        colorArray.clear(); 
+        critPrefsMap.clear();
+		
+        preferenceStore = null;
+	}
 
 	public static boolean getBoolean(String string) {
 		return getPreferenceStore().getBoolean(string);
@@ -367,10 +388,60 @@ public class PreferenceLoader {
 		}
 		return ints;
 	}
+
+	/**
+	 * This method stores the critical preferences (which need a restart on change)
+	 * into our temporary map. This method is intended to be called after a request for
+	 * restart after changing crittical preferences has been denied by the user.
+	 *
+	 */
+	public static void saveCritPrefs() {
+		critPrefsMap.clear();
+		for (int i = 0; i < critPrefsList.length; i++)
+			critPrefsMap.put(critPrefsList[i], preferenceStore.getString(critPrefsList[i]));	
+	}
+	
+	/**
+	 * This method checks if a "critical option" which needs a restart has been changed since the
+	 * initialiuation of the preferenceStore
+	 * @return true if a restart is necessary for changes to take effact, false if not
+	 */
+	public static boolean needsRelaunch() {
+		for (int i = 0; i < critPrefsList.length; i++) {
+			if (critPrefsMap.get(critPrefsList[i]) != preferenceStore.getString(critPrefsList[i]) ) {
+				System.out.println("An critPref changed: " + critPrefsMap.get(critPrefsList[i]) + 
+						" to " + preferenceStore.getString(critPrefsList[i]));
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Are we in the progress of relaunching g2gui?
+	 * @return true if yes, false if not
+	 */
+	public static boolean isRelaunching() {
+		return relaunching;
+	}
+	
+	/**
+	 * Set the relaunching state
+	 * @param b true if we're relaunching, false if not
+	 */
+	public static void setRelaunching(boolean b) {
+		relaunching = b;
+	}
 }
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.57  2004/01/28 22:15:34  psy
+* Properly handle disconnections from the core
+* Fast inline-reconnect
+* Ask for automatic relaunch if options have been changed which require it
+* Improved the local core-controller
+
 Revision 1.56  2004/01/08 21:53:58  psy
 default for displayFontAA=false
 

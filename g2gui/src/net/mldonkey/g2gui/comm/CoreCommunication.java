@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
  * CoreCommunication
  *
  *
- * @version $Id: CoreCommunication.java,v 1.46 2003/12/04 08:47:31 lemmy Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.47 2004/01/28 22:15:34 psy Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -68,7 +68,8 @@ public interface CoreCommunication extends Runnable {
 	 * reconnect()
 	 * reconnects the Core if socket was lost (for example)
 	 */
-	void reconnect();
+	//void reconnect();
+	boolean reconnect();
 	
 	/**
 	 * Sends the password message to the core. 
@@ -179,6 +180,12 @@ public interface CoreCommunication extends Runnable {
 }
 /*
 $Log: CoreCommunication.java,v $
+Revision 1.47  2004/01/28 22:15:34  psy
+* Properly handle disconnections from the core
+* Fast inline-reconnect
+* Ask for automatic relaunch if options have been changed which require it
+* Improved the local core-controller
+
 Revision 1.46  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

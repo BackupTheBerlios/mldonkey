@@ -64,15 +64,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
+import org.eclipse.swt.widgets.MessageBox;
 
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.7 2004/01/22 21:28:03 psy Exp $
+ * @version $Id: MainWindow.java,v 1.8 2004/01/28 22:15:34 psy Exp $
  */
 public class MainWindow implements ShellListener {
-    private String titleBarText = "g2gui alpha";
+    private String titleBarText;
     private StatusLine statusline;
     private Shell shell;
     private CoreCommunication mldonkey;
@@ -89,7 +89,8 @@ public class MainWindow implements ShellListener {
      * @param shell were do we live?
      */
     public MainWindow(CoreCommunication core, final Shell shell) {
-        this.registeredTabs = new ArrayList();
+        this.titleBarText = "g2gui alpha (" + G2Gui.getConnectionString() + ")";
+    	this.registeredTabs = new ArrayList();
         this.mldonkey = core;
         this.shell = shell;
 
@@ -109,7 +110,7 @@ public class MainWindow implements ShellListener {
         /* set the old size of this window - must be after pack() */
         setSizeLocation(shell);
 
-        // what do we do when the close button is selected
+        /* what do we do when the close button is selected */
         shell.addListener(SWT.Close,
             new Listener() {
                 public void handleEvent(Event event) {
@@ -121,6 +122,7 @@ public class MainWindow implements ShellListener {
         /* things we should do if we dispose */
         shell.addDisposeListener(new DisposeListener() {
                 public synchronized void widgetDisposed(DisposeEvent e) {
+                    System.out.println("Disposing MainWindow");
                     /* save the size of this window */
                     saveSizeLocation(shell);
 
@@ -132,19 +134,21 @@ public class MainWindow implements ShellListener {
                         aTab.dispose();
                     }
 
-                    // If we have created the core, kill it
-                    if (G2Gui.getCoreConsole() != null) {
+                    /* If we have created the core, kill it */
+                    if (G2Gui.getCoreConsole() != null && !PreferenceLoader.isRelaunching()) {
                         Message killCore = new EncodeMessage(Message.S_KILL_CORE);
                         killCore.sendMessage(mldonkey);
                         G2Gui.getCoreConsole().dispose();
                     }
 
-                    // disconnect from core
+                    /* disconnect from core */
                     mldonkey.disconnect();
-
-                    // save preferences
+                    
+                    /* save preferences */
                     PreferenceLoader.saveStore();
-                    PreferenceLoader.cleanUp();
+                    
+                    /* do not call cleanup here yet
+                    PreferenceLoader.cleanUp(); */ 
                 }
             });
 
@@ -154,19 +158,20 @@ public class MainWindow implements ShellListener {
                     display.sleep();
             }
         } catch (Exception e) {
-            if (G2Gui.debug)
-                e.printStackTrace();
+            if (G2Gui.debug) {
+                System.out.println(e);
+            	e.printStackTrace();
+            }
             else {
-                // getCause() seems always to be null unfortunately
+                /* getCause() seems always to be null unfortunately */
                 StringWriter sw = new StringWriter();
                 e.printStackTrace(new PrintWriter(sw, true));
 
                 ErrorDialog errorDialog = new ErrorDialog(new Shell(display), sw.toString());
-                errorDialog.open();
-            }
+                errorDialog.open(); 
+            } 
         }
 
-        display.close();
     }
 
     /* ( non-Javadoc )
@@ -260,20 +265,45 @@ public class MainWindow implements ShellListener {
         activeTab = activatedTab;
     }
 
+
     /**
-     * Create the preference window
+     * Creates the preference window
+     * @return true if restart will be done, false if not
      */
-    public void openPreferences() {
-        Shell prefshell = new Shell();
+    public boolean openPreferences() {
+    	Shell prefshell = new Shell(shell.getDisplay());
         Preferences myprefs = new Preferences(PreferenceLoader.getPreferenceStore());
-        myprefs.open(prefshell, mldonkey);
-
+        //TODO: properly dispose
+        myprefs.open(prefshell, mldonkey); 
+        
+        // did the user change a restart-critical pref? do a relaunch if yes
+        if (PreferenceLoader.needsRelaunch()) {
+       		MessageBox box = new MessageBox( shell , SWT.ICON_WARNING | SWT.YES | SWT.NO );
+       		box.setMessage( G2GuiResources.getString("PREF_DORESTART") );		
+       		if(box.open() == SWT.YES)  {
+       			PreferenceLoader.setRelaunching(true);
+       		} else {
+       			// the use denied our restart-request, do not ask again for these changes
+       			PreferenceLoader.saveCritPrefs();
+       		}
+        }
+        	
+        // lets update our tabs with new options
         Iterator itr = registeredTabs.iterator();
-
         while (itr.hasNext()) {
             GuiTab aTab = (GuiTab) itr.next();
             aTab.updateDisplay();
+        } 
+        
+        // if we want to do a relaunch, return the proper values
+        if (PreferenceLoader.isRelaunching()) { 
+        	System.out.println("A restart is necessary! sayeth MainWindow...");
+        	G2Gui.relaunchSelf();
+        	// this return true is very important to not provoke an SWTException in the caller
+        	// Have a look there... maybe needs something better 
+        	return true;
         }
+        return false;
     }
 
     /**
@@ -459,6 +489,12 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.8  2004/01/28 22:15:34  psy
+* Properly handle disconnections from the core
+* Fast inline-reconnect
+* Ask for automatic relaunch if options have been changed which require it
+* Improved the local core-controller
+
 Revision 1.7  2004/01/22 21:28:03  psy
 renamed "uploads" to "shares" and moved it to a tab of its own.
 "uploaders" are now called "uploads" for improved naming-consistency

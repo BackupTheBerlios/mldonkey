@@ -27,7 +27,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 /**
  * ProtocolVersionFactory
  *
- * @version $Id: ModelFactory.java,v 1.2 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: ModelFactory.java,v 1.3 2004/01/28 22:15:35 psy Exp $ 
  *
  */
 public class ModelFactory {
@@ -184,10 +184,24 @@ public class ModelFactory {
 	public SearchQuery getSearchQuery() {
 		return new SearchQuery( core );
 	}
+
+	/**
+	 * Sets ModelFactory.factory to null. This is very useful to get rid of the old
+	 * Factory when reconnecting. Otherwise, old downloads and similiar ghosts will appear.
+	 */
+	public static void reset() {
+		factory = null;
+	}
 }
 
 /*
 $Log: ModelFactory.java,v $
+Revision 1.3  2004/01/28 22:15:35  psy
+* Properly handle disconnections from the core
+* Fast inline-reconnect
+* Ask for automatic relaunch if options have been changed which require it
+* Improved the local core-controller
+
 Revision 1.2  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

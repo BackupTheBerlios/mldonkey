@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.comm;
 
-import net.mldonkey.g2gui.view.*;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import java.io.IOException;
@@ -37,7 +36,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * DisconnectListener
  *
- * @version $Id: DisconnectListener.java,v 1.6 2004/01/23 22:12:45 psy Exp $ 
+ * @version $Id: DisconnectListener.java,v 1.7 2004/01/28 22:15:34 psy Exp $ 
  *
  */
 public class DisconnectListener implements Observer, Runnable {
@@ -53,7 +52,6 @@ public class DisconnectListener implements Observer, Runnable {
 	 * @param core handles all the connections to mldonkey
 	 */
 	public DisconnectListener( CoreCommunication core, Shell shell ) {
-		if (G2Gui.debug) System.out.println("Adding DisconnectListener");
 		this.core = core;
 		this.shell = shell;
 		core.addObserver( this );		
@@ -63,11 +61,13 @@ public class DisconnectListener implements Observer, Runnable {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, final Object arg ) {
-		if ( arg instanceof IOException )
+		if ( arg instanceof IOException ) 
 			Display.getDefault().syncExec( this );
 		if ( result == SWT.YES ) {			
-			synchronized ( core ) {				
-				core.reconnect();				
+			synchronized ( core ) {			
+				while (!core.reconnect() && result == SWT.YES) {
+					Display.getDefault().syncExec( this );
+				}
 			}
 		}
 	}
@@ -87,13 +87,18 @@ public class DisconnectListener implements Observer, Runnable {
 			result = box.open();
 		}
 	}
-	
 }
 
 
 
 /*
 $Log: DisconnectListener.java,v $
+Revision 1.7  2004/01/28 22:15:34  psy
+* Properly handle disconnections from the core
+* Fast inline-reconnect
+* Ask for automatic relaunch if options have been changed which require it
+* Improved the local core-controller
+
 Revision 1.6  2004/01/23 22:12:45  psy
 reconnection and local core probing improved, continuing work...
 

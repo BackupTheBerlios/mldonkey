@@ -30,6 +30,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.mldonkey.g2gui.model.ModelFactory;
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.DisconnectListener;
@@ -56,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.62 2004/01/23 22:12:46 psy Exp $
+ * @version $Id: G2Gui.java,v 1.63 2004/01/28 22:15:34 psy Exp $
  *
  */
 public class G2Gui {
@@ -220,17 +221,18 @@ public class G2Gui {
 
         myPrefs = new Preferences(PreferenceLoader.getPreferenceStore());
 
+        // create our main shell for displaying stuff
         shell = new Shell(display);
-
+        
         // should the core be spawned by the gui?
         // if yes, set hostname to localhost
 		boolean runCore = false;
-		if (!PreferenceLoader.loadString("coreExecutable").equals("")) {
+		if (!PreferenceLoader.loadString("coreExecutable").equals("") && !PreferenceLoader.isRelaunching()) {
+			if (debug) System.out.println("Setting hostname=localhost");
 			runCore = true;
-			hostname = "localhost";
+			PreferenceLoader.setValue("hostname", "localhost");
 		}
 			
-
 		// create the splash
         if (PreferenceLoader.loadBoolean("splashScreen"))
             if ( runCore )
@@ -262,8 +264,13 @@ public class G2Gui {
             // temporary hack
             myPrefs = new Preferences(PreferenceLoader.getPreferenceStore());
 			Splash.setVisible(true);
+			display.update();
         }
-
+        
+        // we're almost done with restarting, so set it to false
+        PreferenceLoader.setRelaunching(false);
+        
+        // read parameters from our preferencestore
         readParams();
         if (debug) System.out.println("Host: " + hostname + ":" + port + " User: " + username);
 
@@ -272,6 +279,7 @@ public class G2Gui {
 
         PreferenceLoader.saveStore();
 
+        
         core = startCore( waiterObject, socket, false );
         
 		// handle some errors the core can cause
@@ -290,14 +298,18 @@ public class G2Gui {
             new MainWindow(core, shell);
         }
 
+        // disconnect the core
         core.disconnect();
-
+        
         /*
          * we are not running anymore, so we can allow another instance to
          * be started
          */
         PreferenceLoader.setValue("running", false);
+
+        /* save our preferences */
         PreferenceLoader.saveStore();
+        if (debug) System.out.println("G2gui shut down.");
     }
     
     /**
@@ -349,7 +361,6 @@ public class G2Gui {
         		G2GuiResources.getString("G2_ILLEGAL_ADDRESS"), mode, true);			
             return null;
         } catch (IOException e) {
-			if (debug) System.out.println("while initializing socket: " + e);
         	errorHandling(G2GuiResources.getString("G2_IOEXCEPTION"),
         		G2GuiResources.getString("G2_CORE_NOT_RUNNING") + hostname + ":" + port + 
         		G2GuiResources.getString("G2_CORE_NOT_RUNNING2"), mode, true);
@@ -358,6 +369,21 @@ public class G2Gui {
         return aSocket;  
 	}
 
+    // TODO: this is duplicate code, make this one throw something in the future
+    public static Socket initializeSocket() {
+    	// create the socket connection to the core and handle the errors
+    	Socket aSocket = null;
+    	try {
+    		ObjectPool socketPool = new SocketPool(hostname, port);
+    		aSocket = (Socket) socketPool.checkOut();
+    	} catch (UnknownHostException e) {
+      		return null;
+    	} catch (IOException e) {
+      		return null;
+    	}  
+    	return aSocket;  
+    }
+    
     /**
      * reads the prefs from the preferenceStore if its not read from the cmd line
      */
@@ -418,16 +444,30 @@ public class G2Gui {
     }
 
     /**
-     * relaunch the main method with killing the old one
+     * relaunch the launch method with killing the old one
      */
-    private static void relaunchSelf() {
-        closeApp();
-        hostname = null;
+    public static void relaunchSelf() {
+    	//getCoreConsole()
+    	shell.dispose();
+    	PreferenceLoader.cleanUp();
+    	
+    	/* reset the factory to get rid of old lists and data */
+    	ModelFactory.reset();
+    	
+    	/* reset connection values, to take them from the PreferenceStore later */
+    	hostname = null;
         username = null;
         password = null;
         port = 0;
 
-        // when we wanted to submit a link, do not forget it
+        try {
+    		PreferenceLoader.initialize();
+    	}
+    	catch (IOException e) {
+    		System.err.println("PreferenceLoader could not be initialized: " + e);
+    	}
+ 
+        /* when we wanted to submit a link, do not forget it */
         if ( links.size() > 0 ) {
         	launch( links );
         } else {
@@ -446,7 +486,7 @@ public class G2Gui {
     	Splash.dispose();
     	if (debug) System.out.println("Error: Bad password!");
 
-    	// raise a warning message
+    	/* raise a warning message */
      	errorHandling(G2GuiResources.getString("G2_LOGIN_INVALID"),
     			G2GuiResources.getString("G2_USER_PASS"),
     			false, false);
@@ -459,7 +499,7 @@ public class G2Gui {
         Splash.dispose();
         if (debug) System.out.println("Error: Connection to core has been denied!");
         
-        // raise a warning message
+        /* raise a warning message */
         errorHandling(G2GuiResources.getString("G2_CONNECTION_DENIED"), 
         		G2GuiResources.getString("G2_CONNECTION_ATTEMPT_DENIED"),
         		false, false);
@@ -476,17 +516,16 @@ public class G2Gui {
      * 
      */
     private static void errorHandling(String errorText, String errorMsg, boolean mode, boolean severe) {
-		if (!mode) {
+    	if (!mode) {
 			Splash.dispose();
 			int icon = SWT.ICON_WARNING;
 			if (severe) icon = SWT.ICON_ERROR;
 			MessageBox box = new MessageBox(shell, icon | SWT.OK | SWT.CANCEL);
 			box.setText(errorText);
-			box.setMessage(G2GuiResources.getString("G2_CONNECTION_ERROR_HEADER") + " \"" +
-				username + "@" + hostname + ":" + port + "\"\n\n" + errorMsg);
+			box.setMessage(G2GuiResources.getString("G2_CONNECTION_ERROR_HEADER") + " " + 
+					getConnectionString() + "\n\n" + errorMsg);
 	
 			int rc = box.open();
-	
 			if (rc == SWT.CANCEL) {
 				closeApp();
 			} else if ( myPrefs.open(shell, null) == 0 ) {
@@ -514,21 +553,21 @@ public class G2Gui {
 			execConsole = new ExecConsole();
 			if (debug) System.out.println("Starting local core");
 			
-			// try 20 times with 1 sec delays to connect the core 
+			/* try 20 times with 1 sec delays to connect the core */ 
 			int counter = 0;
 			boolean connected = false;
 			while (!connected & counter++ < 20) {
-				// try to establish a connection to the core-port
+				/* try to establish a connection to the core-port */
 				try {
 					Socket socket = new Socket(InetAddress.getByName("localhost"), 4001);
 					connected = true;
-					// close the socket again directly after successful connect
+					/* close the socket again directly after successful connect */
 					try {
 						socket.close();
 					} catch (IOException e1) {
 						if (debug) System.out.println("While closing probesocket: " + e1);
 					}
-				// if no core has been found, we catch the exception and sleep 1 second
+				/* if no core has been found, we catch the exception and sleep 1 second */
 				} catch (IOException e2) {
 					System.out.println("trying...");
 					try {
@@ -538,7 +577,10 @@ public class G2Gui {
 					}
 				}
 			}
-			if (debug) System.out.println("Local core successfully started!");
+			if (debug) {
+				if (connected) System.out.println("Local core successfully started.");
+				else System.out.println("Local core failed to start!");
+			}
 		}
 	}
 
@@ -562,11 +604,25 @@ public class G2Gui {
     public static ExecConsole getCoreConsole() {
         return execConsole;
     }
+
+    /**
+     * returns a human-readable text of the connection info
+     * @return String in the format username@hostname:port
+     */
+    public static String getConnectionString() {
+    	return username + "@" + hostname + ":" + port;
+    }
 }
 
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.63  2004/01/28 22:15:34  psy
+* Properly handle disconnections from the core
+* Fast inline-reconnect
+* Ask for automatic relaunch if options have been changed which require it
+* Improved the local core-controller
+
 Revision 1.62  2004/01/23 22:12:46  psy
 reconnection and local core probing improved, continuing work...
 
