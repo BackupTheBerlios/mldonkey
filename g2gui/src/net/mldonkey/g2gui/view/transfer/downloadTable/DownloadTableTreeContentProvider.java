@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
@@ -46,7 +47,7 @@ import java.util.Set;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.11 2003/11/09 02:18:37 zet Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.12 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class DownloadTableTreeContentProvider extends GTableTreeContentProvider implements Observer {
@@ -294,25 +295,25 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
 
         if (totalActive > 0) {
             newText += (" " + G2GuiResources.getString("TT_Active").toLowerCase() + " (" +
-            FileInfo.calcStringSize(activeDownloaded) + " / " +
-            FileInfo.calcStringSize(activeTotal) + ")");
+			RegExp.calcStringSize(activeDownloaded) + " / " +
+			RegExp.calcStringSize(activeTotal) + ")");
         }
 
         if (totalPaused > 0) {
             newText += (", " + G2GuiResources.getString("TT_Status0") + ": " + totalPaused + " (" +
-            FileInfo.calcStringSize(pausedDownloaded) + " / " +
-            FileInfo.calcStringSize(pausedTotal) + ")");
+			RegExp.calcStringSize(pausedDownloaded) + " / " +
+			RegExp.calcStringSize(pausedTotal) + ")");
         }
 
         if (totalQueued > 0) {
             newText += (", " + G2GuiResources.getString("TT_Queued") + ": " + totalQueued + " (" +
-            FileInfo.calcStringSize(queuedDownloaded) + " / " +
-            FileInfo.calcStringSize(queuedTotal) + ")");
+			RegExp.calcStringSize(queuedDownloaded) + " / " +
+			RegExp.calcStringSize(queuedTotal) + ")");
         }
 
         if (totalDownloaded > 0) {
             newText += (", " + G2GuiResources.getString("TT_Downloaded") + ": " + totalDownloaded +
-            " (" + FileInfo.calcStringSize(downloadedTotal) + ")");
+            " (" + RegExp.calcStringSize(downloadedTotal) + ")");
         }
 
         if (!oldCLabelText.equals(newText)) {
@@ -396,6 +397,9 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.12  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.11  2003/11/09 02:18:37  zet
 put some info in the headers
 
@@ -477,7 +481,7 @@ Revision 1.13  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.12  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.11  2003/08/21 00:59:57  zet
 doubleclick expand

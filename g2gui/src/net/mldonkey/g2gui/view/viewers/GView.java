@@ -56,7 +56,7 @@ import java.util.Map;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.7 2003/11/14 00:46:04 zet Exp $
+ * @version $Id: GView.java,v 1.8 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public abstract class GView {
@@ -192,10 +192,10 @@ public abstract class GView {
         Menu menu = getTable().getMenu();
         menu.addMenuListener(new MenuAdapter() {
                 public void menuShown(MenuEvent e) {
-                    Menu menu = getTable().getMenu();
+                    Menu aMenu = getTable().getMenu();
 
                     if (!((StructuredViewer) getViewer()).getSelection().isEmpty()) {
-                        menu.setDefaultItem(menu.getItem(0));
+                        aMenu.setDefaultItem(aMenu.getItem(0));
                     }
                 }
             });
@@ -384,6 +384,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.8  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.7  2003/11/14 00:46:04  zet
 sort by column menu item (for macOS)
 

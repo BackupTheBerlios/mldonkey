@@ -24,22 +24,20 @@ package net.mldonkey.g2gui.model;
 
 import gnu.regexp.RE;
 import gnu.regexp.REException;
-
-import java.text.DecimalFormat;
-
-import org.eclipse.swt.graphics.Image;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumRating;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
+import org.eclipse.swt.graphics.Image;
 
 /**
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.27 2003/11/10 08:54:47 lemmster Exp $
+ * @version $Id: ResultInfo.java,v 1.28 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -246,7 +244,7 @@ public class ResultInfo extends Parent {
         this.tags = messageBuffer.readTagList();
         this.comment = messageBuffer.readString();
         this.setHistory( messageBuffer.readByte() );
-        this.stringSize = this.calcStringSize( this.getSize() );
+        this.stringSize = RegExp.calcStringSize( this.getSize() );
         for ( int i = 0; i < names.length; i++ ) {
             if ( ( profanityFilterRE != null ) && ( profanityFilterRE.getMatch( names[ i ] ) != null ) ) {
                 containsProfanity = true;
@@ -269,30 +267,6 @@ public class ResultInfo extends Parent {
         }
         
         this.setRating();
-    }
-
-    /**
-     * creates a String from the size
-     * @param size The size
-     * @return a string represantation of this size
-     */
-    private String calcStringSize( long size ) {
-        float k = 1024f;
-        float m = k * k;
-        float g = m * k;
-        float t = g * k;
-        float fsize = ( float ) size;
-        DecimalFormat df = new DecimalFormat( "0.##" );
-        if ( fsize > t )
-            return new String( df.format( fsize / t ) + " TB" );
-        else if ( fsize > g )
-            return new String( df.format( fsize / g ) + " GB" );
-        else if ( fsize > m )
-            return new String( df.format( fsize / m ) + " MB" );
-        else if ( fsize > k )
-            return new String( df.format( fsize / k ) + " KB" );
-        else
-            return new String( size + "" );
     }
 
     /**
@@ -568,6 +542,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.28  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.27  2003/11/10 08:54:47  lemmster
 rating filter in searchresult
 

@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * OtherComplexSearch
  *
- * @version $Id: OtherComplexSearch.java,v 1.6 2003/11/22 02:24:29 zet Exp $ 
+ * @version $Id: OtherComplexSearch.java,v 1.7 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class OtherComplexSearch extends ComplexSearch {
@@ -134,7 +134,6 @@ public class OtherComplexSearch extends ComplexSearch {
 		super.performSearch();
 
 		/* draw the empty search result */
-		String aString = inputText.getText();
 		new SearchResult( aText, tab.getCTabFolder(),
 			 core, query.getSearchIdentifier(), this.tab );
 	}
@@ -142,6 +141,9 @@ public class OtherComplexSearch extends ComplexSearch {
 
 /*
 $Log: OtherComplexSearch.java,v $
+Revision 1.7  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.6  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

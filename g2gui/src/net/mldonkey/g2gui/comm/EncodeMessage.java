@@ -28,7 +28,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * EncodeMessage
  *
- * @version $Id: EncodeMessage.java,v 1.13 2003/11/05 00:09:50 zet Exp $
+ * @version $Id: EncodeMessage.java,v 1.14 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class EncodeMessage extends Message {
@@ -120,17 +120,17 @@ public class EncodeMessage extends Message {
      * @param content object array which represense the payload
      * @return a byte array
      */
-    private byte[] createContent(Object[] content) {
+    private byte[] createContent(Object[] aContent) {
         /* Cycle through content array */
-        for (int i = 0; i < content.length; i++) {
+        for (int i = 0; i < aContent.length; i++) {
             /* Write raw byteArray */
-            if (content[ i ] instanceof byte[]) {
-                byte[] byteArray = (byte[]) content[i];
-				this.byteArray.write(byteArray, 0, byteArray.length);
+            if (aContent[ i ] instanceof byte[]) {
+                byte[] aByteArray = (byte[]) aContent[i];
+				this.byteArray.write(aByteArray, 0, aByteArray.length);
             }
             /* If content object is an array, cycle through it */
-            else if (content[ i ].getClass().isArray()) {
-                Object[] objectArray = (Object[]) content[ i ];
+            else if (aContent[ i ].getClass().isArray()) {
+                Object[] objectArray = (Object[]) aContent[ i ];
 
                 /* Append the (short) array length to the message */
                 appendNumber(new Short((short) objectArray.length));
@@ -142,7 +142,7 @@ public class EncodeMessage extends Message {
             }
             /* Append the content to the message */
             else {
-                appendObject(content[ i ]);
+                appendObject(aContent[ i ]);
             }
         }
 
@@ -242,6 +242,9 @@ public class EncodeMessage extends Message {
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.14  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.13  2003/11/05 00:09:50  zet
 write raw byte arrays
 
@@ -266,7 +269,7 @@ Revision 1.7  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.6  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.5  2003/08/04 19:22:21  zet
 trial tabletreeviewer

@@ -44,7 +44,7 @@ import java.util.List;
  * ClientTableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.13 2003/11/10 18:57:33 zet Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.14 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class ClientTableMenuListener extends GTableMenuListener implements ISelectionChangedListener,
@@ -81,7 +81,7 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
             o = it.next();
 
             if (o instanceof ClientInfo) {
-                selectedClients.add((ClientInfo) o);
+                selectedClients.add(o);
             }
         }
     }
@@ -107,6 +107,9 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.14  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.13  2003/11/10 18:57:33  zet
 use jface dialogs
 

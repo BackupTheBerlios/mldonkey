@@ -22,21 +22,6 @@
  */
 package net.mldonkey.g2gui.model;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.comm.EncodeMessage;
-import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.helper.MessageBuffer;
-import net.mldonkey.g2gui.model.enum.Enum;
-import net.mldonkey.g2gui.model.enum.EnumExtension;
-import net.mldonkey.g2gui.model.enum.EnumFileState;
-import net.mldonkey.g2gui.model.enum.EnumNetwork;
-import net.mldonkey.g2gui.model.enum.EnumPriority;
-import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
-
-import java.text.DecimalFormat;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,19 +32,28 @@ import java.util.Observer;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.helper.RegExp;
+import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumExtension;
+import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.model.enum.EnumNetwork;
+import net.mldonkey.g2gui.model.enum.EnumPriority;
+import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
+
 
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.73 2003/11/20 23:30:29 dek Exp $
+ * @version $Id: FileInfo.java,v 1.74 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
-    /**
-     * Decimal format for calcStringSize
-     */
-    private static final DecimalFormat df = new DecimalFormat("0.#");
-
     /**
      * Static strings used internally for tableviewer updates
      */
@@ -308,7 +302,7 @@ public class FileInfo extends Parent implements Observer {
                 if ((chunks.charAt(i) == '0') || (chunks.charAt(i) == '1')) {
                     neededChunks++;
 
-                    if ((int) avail.charAt(i) > 0) {
+                    if (avail.charAt(i) > 0) {
                         availChunks++;
                     }
                 }
@@ -585,7 +579,7 @@ public class FileInfo extends Parent implements Observer {
         this.name = messageBuffer.readString();
         setOffset(messageBuffer.readInt32());
         this.setPriority(messageBuffer.readSignedInt32());
-        this.stringSize = calcStringSize(this.getSize());
+        this.stringSize = RegExp.calcStringSize(this.getSize());
         updateETA();
         this.stringAge = calcStringOfSeconds((System.currentTimeMillis() / 1000) -
                 Long.parseLong(this.age));
@@ -706,12 +700,12 @@ public class FileInfo extends Parent implements Observer {
 
             for (int i = 0; i < listElem; i++) {
                 int networkID = messageBuffer.readInt32();
-                NetworkInfo network = parent.getNetworkInfoMap().get(networkID);
+                NetworkInfo aNetwork = parent.getNetworkInfoMap().get(networkID);
 
                 /* multinet avail is the overall avail */
-                if (network.getNetworkType() != EnumNetwork.MULTINET) {					
+                if (aNetwork.getNetworkType() != EnumNetwork.MULTINET) {					
 					this.avail = messageBuffer.readString();
-                    this.avails.put(network, avail);
+                    this.avails.put(aNetwork, avail);
                 } else {
                     this.avail = messageBuffer.readString();
                 }
@@ -748,7 +742,7 @@ public class FileInfo extends Parent implements Observer {
         this.downloaded = i;
 
         String oldStringDownloaded = stringDownloaded;
-        this.stringDownloaded = calcStringSize(this.getDownloaded());
+        this.stringDownloaded = RegExp.calcStringSize(this.getDownloaded());
 
         if (!oldStringDownloaded.equals(stringDownloaded)) {
             changedProperties.add(CHANGED_DOWNLOADED);
@@ -909,8 +903,8 @@ public class FileInfo extends Parent implements Observer {
      * Verify all chunks of this fileinfo
      */
     public void verifyChunks() {
-        Message chunks = new EncodeMessage(Message.S_VERIFY_ALL_CHUNKS, new Integer(this.getId()));
-        chunks.sendMessage(this.parent);
+        Message chunksMsg = new EncodeMessage(Message.S_VERIFY_ALL_CHUNKS, new Integer(this.getId()));
+        chunksMsg.sendMessage(this.parent);
     }
 
     /**
@@ -924,40 +918,15 @@ public class FileInfo extends Parent implements Observer {
     /**
      * @param name Save file as (name)
      */
-    public void saveFileAs(String name) {
+    public void saveFileAs(String aName) {
         Object[] obj = new Object[ 2 ];
         obj[ 0 ] = new Integer(this.getId());
-        obj[ 1 ] = name;
+        obj[ 1 ] = aName;
 
         Message saveAs = new EncodeMessage(Message.S_SAVE_FILE_AS, obj);
         saveAs.sendMessage(this.parent);
         obj = null;
         saveAs = null;
-    }
-
-    /**
-     * creates a String from the size
-     * @param size The size
-     * @return a string represantation of this size
-     */
-    public static String calcStringSize(long size) {
-        float k = 1024f;
-        float m = k * k;
-        float g = m * k;
-        float t = g * k;
-        float fsize = (float) size;
-
-        if (fsize >= t) {
-            return new String(df.format(fsize / t) + " TB");
-        } else if (fsize >= g) {
-            return new String(df.format(fsize / g) + " GB");
-        } else if (fsize >= m) {
-            return new String(df.format(fsize / m) + " MB");
-        } else if (fsize >= k) {
-            return new String(df.format(fsize / k) + " KB");
-        } else {
-            return new String(size + "");
-        }
     }
 
     /**
@@ -989,7 +958,6 @@ public class FileInfo extends Parent implements Observer {
         rest = rest - (hours * 60 * 60);
 
         long minutes = rest / 60;
-        long seconds = rest - (minutes * 60);
 
         if (days > 99) {
             return "";
@@ -1120,7 +1088,6 @@ public class FileInfo extends Parent implements Observer {
      */
     public TreeClientInfo findTreeClientInfo(ClientInfo clientInfo) {
         Iterator i = treeClientInfoSet.iterator();
-        TreeClientInfo foundTreeClientInfo = null;
 
         while (i.hasNext()) {
             TreeClientInfo treeClientInfo = (TreeClientInfo) i.next();
@@ -1137,6 +1104,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.74  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.73  2003/11/20 23:30:29  dek
 fixed bug with new core (protoVersion >17)
 
@@ -1242,7 +1212,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)

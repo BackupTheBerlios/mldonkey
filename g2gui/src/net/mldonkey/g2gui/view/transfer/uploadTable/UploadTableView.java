@@ -31,8 +31,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.ClientStats;
-import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.6 2003/11/22 02:24:30 zet Exp $
+ * @version $Id: UploadTableView.java,v 1.7 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class UploadTableView extends GTableView implements Observer {
@@ -129,7 +129,7 @@ public class UploadTableView extends GTableView implements Observer {
 
                         headerCLabel.setText(G2GuiResources.getString("TT_Uploads") + ": " +
                             clientStats.getNumOfShare() + " (" +
-                            FileInfo.calcStringSize(clientStats.getTotalUp()) + ")");
+						RegExp.calcStringSize(clientStats.getTotalUp()) + ")");
                     }
                 });
         }
@@ -339,7 +339,7 @@ public class UploadTableView extends GTableView implements Observer {
                 o = it.next();
 
                 if (o instanceof SharedFileInfo) {
-                    selectedFiles.add((SharedFileInfo) o);
+                    selectedFiles.add(o);
                 }
             }
         }
@@ -371,6 +371,9 @@ public class UploadTableView extends GTableView implements Observer {
 
 /*
 $Log: UploadTableView.java,v $
+Revision 1.7  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.6  2003/11/22 02:24:30  zet
 widgetfactory & save sash postions/states between sessions
 

@@ -31,7 +31,6 @@ import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -54,11 +53,10 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.11 2003/11/22 02:24:30 zet Exp $
+ * @version $Id: MainCoolBar.java,v 1.12 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class MainCoolBar {
-    private static PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
     private boolean toolbarSmallButtons;
     private boolean coolbarLocked = true;
     private Shell shell;
@@ -134,15 +132,13 @@ public class MainCoolBar {
         Iterator toolButtonIterator = mainToolButtons.iterator();
         while ( toolButtonIterator.hasNext() ) {
             ToolButton tmp = ( ToolButton ) toolButtonIterator.next();
-            if ( tmp instanceof ToolButton )
-                tmp.useSmallButtons( toolbarSmallButtons );
+            tmp.useSmallButtons( toolbarSmallButtons );
             tmp.resetItem( mainTools );
         }
         toolButtonIterator = miscToolButtons.iterator();
         while ( toolButtonIterator.hasNext() ) {
             ToolButton tmp = ( ToolButton ) toolButtonIterator.next();
-            if ( tmp instanceof ToolButton )
-                tmp.useSmallButtons( toolbarSmallButtons );
+            tmp.useSmallButtons( toolbarSmallButtons );
             tmp.resetItem( miscTools );
         }
         layoutCoolBar();
@@ -174,7 +170,7 @@ public class MainCoolBar {
      * @param coolBar 
      * @return 
      */
-    private Menu createToolBarRMMenu( CoolBar coolBar ) {
+    private Menu createToolBarRMMenu() {
         Menu menu = new Menu( shell, SWT.POP_UP );
         /* lock CoolBar */
         final MenuItem lockItem = new MenuItem( menu, SWT.CHECK );
@@ -213,7 +209,7 @@ public class MainCoolBar {
     }
 
     protected void createToolBars() {
-        Menu toolmenu = createToolBarRMMenu( coolbar );
+        Menu toolmenu = createToolBarRMMenu();
         mainTools = new ToolBar( coolbar, ( toolbarSmallButtons ? SWT.RIGHT : 0 ) | SWT.FLAT );
         mainTools.setMenu( toolmenu );
         miscTools = new ToolBar( coolbar, ( toolbarSmallButtons ? SWT.RIGHT : 0 ) | SWT.FLAT );
@@ -222,7 +218,7 @@ public class MainCoolBar {
 
     public void createCoolItems() {
         for ( int i = 0; i < 2; i++ ) {
-            CoolItem item = new CoolItem( coolbar, SWT.NONE );
+            new CoolItem( coolbar, SWT.NONE );
         }
         CoolItem[] items = coolbar.getItems();
         CoolItem mainCoolItem = items[ 0 ];
@@ -278,6 +274,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.12  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.11  2003/11/22 02:24:30  zet
 widgetfactory & save sash postions/states between sessions
 

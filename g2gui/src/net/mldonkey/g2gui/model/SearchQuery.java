@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.31 2003/10/31 07:24:01 zet Exp $ 
+ * @version $Id: SearchQuery.java,v 1.32 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -61,11 +61,6 @@ public class SearchQuery implements Sendable {
 	private List orQuerys = new ArrayList();
 	
 	
-	/**
-	 * The String we want to search
-	 */
-	private String searchString;	
-	 
 	/**
 	 * The CoreCommunication
 	 */	
@@ -137,7 +132,6 @@ public class SearchQuery implements Sendable {
 	 * @param searchString simple String, with space-separated Search-patterns
 	 */
 	public void setSearchString( String searchString ) {
-		this.searchString = searchString;
 		String[] patterns = RegExp.split( searchString, ' ' );
 		/* now we have to generate a query-Object for each search pattern */
 		Query newQuery;
@@ -531,6 +525,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.32  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.31  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
@@ -595,7 +592,7 @@ Revision 1.17  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.16  2003/08/22 21:03:14  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.15  2003/08/09 15:32:45  dek
 removed unused import

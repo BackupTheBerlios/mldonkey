@@ -26,8 +26,6 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.viewers.GSorter;
 
-import org.eclipse.jface.viewers.ContentViewer;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -35,7 +33,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ClientTableSorter
  *
- * @version $Id: ClientTableSorter.java,v 1.8 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ClientTableSorter.java,v 1.9 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class ClientTableSorter extends GSorter {
@@ -71,7 +69,6 @@ public class ClientTableSorter extends GSorter {
             String s1;
             String s2;
 
-            IBaseLabelProvider prov = ((ContentViewer) viewer).getLabelProvider();
             ClientTableLabelProvider lprov = (ClientTableLabelProvider) ((TableViewer) viewer).getLabelProvider();
 
             s1 = lprov.getColumnText(obj1, columnIndex);
@@ -85,6 +82,9 @@ public class ClientTableSorter extends GSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.9  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.8  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.pref;
 
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
+import net.mldonkey.g2gui.view.G2Gui;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -35,11 +36,10 @@ import org.eclipse.jface.util.IPropertyChangeListener;
  * as mldonkey itself cares for wrong values...
  *
  *
- * @version $Id: OptionsPreferenceStore.java,v 1.12 2003/09/18 10:23:48 lemmster Exp $
+ * @version $Id: OptionsPreferenceStore.java,v 1.13 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class OptionsPreferenceStore implements IPreferenceStore {
-    private boolean debug = false;
     private OptionsInfoMap input;
 
     /* ( non-Javadoc )
@@ -62,7 +62,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * firePropertyChangeEvent( java.lang.String, java.lang.Object, java.lang.Object )
      */
     public void firePropertyChangeEvent( String name, Object oldValue, Object newValue ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "firePropertyChangeEvent" );
     }
 
@@ -80,7 +80,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultBoolean( java.lang.String )
      */
     public boolean getDefaultBoolean( String name ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "getDefaultBoolean: " + name );
         return new Boolean( ( ( OptionsInfo ) input.get( name ) ).getDefaultValue() ).booleanValue();
     }
@@ -89,7 +89,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultDouble( java.lang.String )
      */
     public double getDefaultDouble( String name ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "getDefaultDouble" );
         return 0;
     }
@@ -98,7 +98,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultFloat( java.lang.String )
      */
     public float getDefaultFloat( String name ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "getDefaultFloat" );
         return 0;
     }
@@ -107,7 +107,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultInt( java.lang.String )
      */
     public int getDefaultInt( String name ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "getDefaultInt: " + name );
         String stringValue = ( ( OptionsInfo ) input.get( name ) ).getDefaultValue();
         return new Integer( stringValue ).intValue();
@@ -117,7 +117,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultLong( java.lang.String )
      */
     public long getDefaultLong( String name ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "getDefaultLong: " + name );
         return 0;
     }
@@ -126,7 +126,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultString( java.lang.String )
      */
     public String getDefaultString( String name ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "getDefaultString: " + name );
         return ( ( OptionsInfo ) input.get( name ) ).getDefaultValue();
     }
@@ -171,7 +171,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#isDefault( java.lang.String )
      */
     public boolean isDefault( String name ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "isDefault ??" );
         return false;
     }
@@ -187,7 +187,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#putValue( java.lang.String, java.lang.String )
      */
     public void putValue( String name, String value ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "putStringValue" );
     }
 
@@ -196,7 +196,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * removePropertyChangeListener( org.eclipse.jface.util.IPropertyChangeListener )
      */
     public void removePropertyChangeListener( IPropertyChangeListener listener ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "removePropertyChangeListener" );
     }
 
@@ -204,7 +204,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, double )
      */
     public void setDefault( String name, double value ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "setDoubleDefault" );
     }
 
@@ -212,7 +212,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, float )
      */
     public void setDefault( String name, float value ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "setFloatDefault" );
     }
 
@@ -220,7 +220,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, int )
      */
     public void setDefault( String name, int value ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "setIntDefault" );
     }
 
@@ -228,7 +228,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, long )
      */
     public void setDefault( String name, long value ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "setLongDefault" );
     }
 
@@ -236,7 +236,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, java.lang.String )
      */
     public void setDefault( String name, String defaultObject ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "setDefault: defaultObject:" + defaultObject );
     }
 
@@ -244,7 +244,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, boolean )
      */
     public void setDefault( String name, boolean value ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "setDefault" );
     }
 
@@ -252,7 +252,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#setToDefault( java.lang.String )
      */
     public void setToDefault( String name ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "setToDefault:" + name );
         setValue( name, getDefaultString( name ) );
     }
@@ -261,7 +261,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#setValue( java.lang.String, double )
      */
     public void setValue( String name, double value ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "setDoubleValue" );
     }
 
@@ -269,7 +269,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#setValue( java.lang.String, float )
      */
     public void setValue( String name, float value ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "setFloatValue" );
     }
 
@@ -284,7 +284,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      * @see org.eclipse.jface.preference.IPreferenceStore#setValue( java.lang.String, long )
      */
     public void setValue( String name, long value ) {
-        if ( debug )
+        if ( G2Gui.debug )
             System.out.println( "setValue" );
     }
 
@@ -295,7 +295,7 @@ public class OptionsPreferenceStore implements IPreferenceStore {
         String oldValue = getString( name );
         if ( ( oldValue == null ) || !oldValue.equals( value ) ) {
             ( ( OptionsInfo ) input.get( name ) ).setValue( value );
-            if ( debug )
+            if ( G2Gui.debug )
                 System.out.println( "setting value: " + name + " : " + value );
         }
     }
@@ -305,7 +305,6 @@ public class OptionsPreferenceStore implements IPreferenceStore {
      */
     public void setValue( String name, boolean value ) {
         String temp;
-        boolean oldValue = getBoolean( name );
         if ( value )
             temp = "true";
         else
@@ -325,6 +324,9 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 
 /*
 $Log: OptionsPreferenceStore.java,v $
+Revision 1.13  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.12  2003/09/18 10:23:48  lemmster
 checkstyle
 

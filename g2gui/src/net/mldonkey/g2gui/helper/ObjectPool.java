@@ -32,7 +32,7 @@ import java.util.List;
  * ObjectPool
  *
  *
- * @version $Id: ObjectPool.java,v 1.6 2003/09/02 09:24:36 lemmster Exp $ 
+ * @version $Id: ObjectPool.java,v 1.7 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public abstract class ObjectPool {
@@ -79,20 +79,18 @@ public abstract class ObjectPool {
 	 * @throws IOException When an IOException occure
 	 */	
 	public synchronized Object checkOut() throws UnknownHostException, IOException {
-		Object obj = null;
+		Object elem = null;
 		
 		/* iterate over the list to find an obj */
 		Iterator itr = this.unused.iterator();
 		while ( itr.hasNext() ) {
-			Object elem = itr.next();
+			elem = itr.next();
 			/* if we found an obj */
 			if ( !( elem == null ) ) {
 				/* remove the obj from our unused list */
 				this.unused.remove( elem );
 				/* add the obj to our used list */
 				this.used.add( elem );
-				
-				obj = ( Object ) elem;
 				
 				/* check if there are enough obj left in unused 
 				 * if false, generate spawn -1 new obj */
@@ -105,7 +103,7 @@ public abstract class ObjectPool {
 				break;
 			}
 		}
-		return obj;
+		return elem;
 	}
 
 	
@@ -130,6 +128,9 @@ public abstract class ObjectPool {
 
 /*
 $Log: ObjectPool.java,v $
+Revision 1.7  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.6  2003/09/02 09:24:36  lemmster
 checkstyle
 

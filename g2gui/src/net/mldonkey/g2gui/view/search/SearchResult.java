@@ -32,7 +32,6 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.view.GuiTab;
-import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -53,12 +52,11 @@ import org.eclipse.swt.widgets.Label;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.64 2003/11/15 11:44:04 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.65 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
     private GuiTab searchTab;
-    private MainTab mainTab;
     private CTabFolder cTabFolder;
     private String searchString;
     private CoreCommunication core;
@@ -324,6 +322,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.65  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.64  2003/11/15 11:44:04  lemmster
 fix: [Bug #1089] 0.2 similair stop search crash
 

@@ -42,11 +42,10 @@ import org.eclipse.jface.viewers.TableViewer;
 /**
  * TableMenuListener
  *
- * @version $Id: FriendsTableMenuListener.java,v 1.9 2003/11/14 19:06:39 zet Exp $
+ * @version $Id: FriendsTableMenuListener.java,v 1.10 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class FriendsTableMenuListener implements ISelectionChangedListener, IMenuListener {
-    private FriendsTableContentProvider tableContentProvider;
     private TableViewer tableViewer;
     private CoreCommunication core;
     private List selectedClients = new ArrayList();
@@ -63,7 +62,6 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
         this.tableViewer = tableViewer;
         this.core = core;
         this.messagesTab = messagesTab;
-        this.tableContentProvider = ( FriendsTableContentProvider ) this.tableViewer.getContentProvider();
     }
 
     /* (non-Javadoc)
@@ -76,7 +74,7 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
         for ( Iterator it = sSel.iterator(); it.hasNext();) {
             o = it.next();
             if ( o instanceof ClientInfo )
-                selectedClients.add( ( ClientInfo ) o );
+                selectedClients.add( o );
         }
     }
 
@@ -163,6 +161,9 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 
 /*
 $Log: FriendsTableMenuListener.java,v $
+Revision 1.10  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.9  2003/11/14 19:06:39  zet
 use Dialog / fix #1087 (fox)
 

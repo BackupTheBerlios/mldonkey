@@ -40,7 +40,7 @@ import org.eclipse.jface.viewers.Viewer;
  * TableContentProvider
  *
  *
- * @version $Id: FriendsTableContentProvider.java,v 1.6 2003/09/18 09:54:45 lemmster Exp $
+ * @version $Id: FriendsTableContentProvider.java,v 1.7 2003/11/23 17:58:03 lemmster Exp $
  */
 public class FriendsTableContentProvider implements IStructuredContentProvider, Observer {
     private static Object[] EMPTY_ARRAY = new Object[ 0 ];
@@ -84,8 +84,8 @@ public class FriendsTableContentProvider implements IStructuredContentProvider, 
      * @see org.eclipse.jface.viewers.IContentProvider#
      * inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
-    public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) {
-        this.viewer = ( TableViewer ) viewer;
+    public void inputChanged( Viewer aViewer, Object oldInput, Object newInput ) {
+        this.viewer = ( TableViewer ) aViewer;
     }
 
     /* (non-Javadoc)
@@ -98,7 +98,7 @@ public class FriendsTableContentProvider implements IStructuredContentProvider, 
             viewer.getTable().getDisplay().asyncExec( new Runnable() {
                     public void run() {
                         if ( viewer != null )
-                            viewer.update( ( ClientInfo ) o, null );
+                            viewer.update( o, null );
                     }
                 } );
         }
@@ -107,6 +107,9 @@ public class FriendsTableContentProvider implements IStructuredContentProvider, 
 
 /*
 $Log: FriendsTableContentProvider.java,v $
+Revision 1.7  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.6  2003/09/18 09:54:45  lemmster
 checkstyle
 

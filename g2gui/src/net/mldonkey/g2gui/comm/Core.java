@@ -45,7 +45,6 @@ import net.mldonkey.g2gui.model.OptionsInfoMap;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.model.RoomInfoIntMap;
-import net.mldonkey.g2gui.model.SearchResult;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.model.SimpleInformation;
@@ -57,7 +56,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.112 2003/11/20 17:51:53 dek Exp $ 
+ * @version $Id: Core.java,v 1.113 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -117,8 +116,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * Store the simple informations from the core here
 	 */
 	private SimpleInformation clientStats = new ClientStats( this ),
-							   consoleMessage = new ConsoleMessage(),
-							   searchResult = new SearchResult();
+							   consoleMessage = new ConsoleMessage();
 	/**
 	 * Store the complex informations from the core here
 	 */
@@ -196,7 +194,6 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		
 		MessageBuffer messageBuffer = new MessageBuffer( this );		
 		int messageLength;
-		int position = 0;
 		short opCode;		
 		BufferedInputStream i;
 		try {
@@ -273,7 +270,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private synchronized void decodeMessage( short opcode, int messageLength, MessageBuffer messageBuffer, boolean pollModeEnabled ) {
+	private void decodeMessage( short opcode, int messageLength, MessageBuffer messageBuffer, boolean pollModeEnabled ) {
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
 					coreProtocol = messageBuffer.readInt32();
@@ -284,7 +281,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					else
 						this.usingVersion = PROTOCOL_VERSION;
 					this.sendPullmode( pollModeEnabled );
-					this.sendPassword( this.username, this.password );	
+					this.sendPassword();	
 					break;
 					
 			case Message.R_DEFINE_SEARCH :
@@ -486,10 +483,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		/* send the core protocol version */
 		Object[] temp = new Object[ 1 ];
 		temp[ 0 ] = new Integer( PROTOCOL_VERSION );
-		Message coreProtocol =
+		Message coreProtocolMsg =
 					new EncodeMessage( Message.S_COREPROTOCOL, temp );
-		coreProtocol.sendMessage( this );
-		coreProtocol = null;		
+		coreProtocolMsg.sendMessage( this );
+		coreProtocolMsg = null;		
 	}
 	
 	/**
@@ -557,9 +554,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#sendPassword(java.lang.String, java.lang.String)
 	 */
-	public void sendPassword(String username, String password) {
+	public void sendPassword() {
 		/* send the password/username */
-		String[] aString = { password, username };
+		String[] aString = { this.password, this.username };
 		Message message = new EncodeMessage( Message.S_PASSWORD, aString );
 		message.sendMessage( this );
 		message = null;
@@ -634,6 +631,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.113  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.112  2003/11/20 17:51:53  dek
 moved disconnect-listener out of core
 

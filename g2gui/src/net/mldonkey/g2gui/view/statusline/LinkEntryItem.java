@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.view.statusline;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -38,7 +37,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntryItem
  *
- * @version $Id: LinkEntryItem.java,v 1.7 2003/10/22 15:46:06 dek Exp $
+ * @version $Id: LinkEntryItem.java,v 1.8 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class LinkEntryItem {
@@ -53,7 +52,7 @@ public class LinkEntryItem {
 	 * @param statusLine 
 	 * @param mldonkey 
 	 */
-    public LinkEntryItem( StatusLine statusLine, CoreCommunication mldonkey ) {
+    public LinkEntryItem( StatusLine statusLine ) {
         this.linkEntryComposite = statusLine.getLinkEntryComposite();
         this.statusLine = statusLine;
         this.composite = statusLine.getStatusline();
@@ -94,6 +93,9 @@ public class LinkEntryItem {
 
 /*
 $Log: LinkEntryItem.java,v $
+Revision 1.8  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.7  2003/10/22 15:46:06  dek
 flattened status bar
 

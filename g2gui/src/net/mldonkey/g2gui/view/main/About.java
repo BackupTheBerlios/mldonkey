@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.25 2003/11/09 13:24:02 lemmster Exp $ 
+ * @version $Id: About.java,v 1.26 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class About extends Dialog {
@@ -59,7 +59,6 @@ public class About extends Dialog {
 	private Link activeLink;
 	private final Cursor handCursor = new Cursor( Display.getDefault(), SWT.CURSOR_HAND );
 	private List linklist = new ArrayList();	
-	private Composite myShell;
 	private Color background = Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND );
 
 	/**
@@ -255,7 +254,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.25 2003/11/09 13:24:02 lemmster Exp $ 
+	 * @version $Id: About.java,v 1.26 2003/11/23 17:58:03 lemmster Exp $ 
 	 *
 	 */
 	public class Link {
@@ -264,7 +263,6 @@ public class About extends Dialog {
 		private int length = 0;
 		private int offset = 0;
 		private String linkText;
-		private StyledText parent = null;
 		private Color blue = Display.getCurrent().getSystemColor( SWT.COLOR_BLUE );
 
 		/**
@@ -274,8 +272,7 @@ public class About extends Dialog {
 		 *  		of the text in the widget
 		 * @param length the length of the text
 		 */
-		public Link( StyledText parent, String link, int offset, int length ) {
-				this.parent = parent;
+		public Link( String link, int offset, int length ) {
 				this.linkText = link;
 				this.offset = offset;
 				this.length = length;			
@@ -292,7 +289,6 @@ public class About extends Dialog {
 		 */
 		public void addToStyledText( StyledText parent ) {
 			this.offset = parent.getText().length();
-			this.parent = parent;
 			parent.setText( parent.getText() + linkText );	
 			parent.setStyleRange( new StyleRange( offset, length, blue, parent.getBackground() ) );		
 		}
@@ -307,6 +303,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.26  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.25  2003/11/09 13:24:02  lemmster
 typo in credits
 

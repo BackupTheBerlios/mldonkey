@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.25 2003/10/28 11:07:32 lemmster Exp $
+ * @version $Id: ServerInfoIntMap.java,v 1.26 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -131,7 +131,7 @@ public class ServerInfoIntMap extends InfoIntMap {
      */
     public void update( MessageBuffer messageBuffer ) {
         int id = messageBuffer.readInt32();
-        ServerInfo server = ( ServerInfo ) this.get( id );
+        ServerInfo server = this.get( id );
         if ( server != null ) {
             server.update( messageBuffer );
 
@@ -464,6 +464,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.26  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.25  2003/10/28 11:07:32  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"

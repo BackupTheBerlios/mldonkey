@@ -22,12 +22,12 @@
  */
 package net.mldonkey.g2gui.view.statistic;
 
+import gnu.trove.TIntArrayList;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -37,23 +37,19 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Shell;
-
-import gnu.trove.TIntArrayList;
 
 
 /**
  * GraphHistory
  *
- * @version $Id: GraphHistory.java,v 1.3 2003/11/06 14:59:06 lemmster Exp $
+ * @version $Id: GraphHistory.java,v 1.4 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class GraphHistory implements PaintListener {
 	//TODO move strings into resource bundle
     private Shell shell;
     private Graph graph;
-    private Canvas canvas;
     private TIntArrayList maxList;
     private TIntArrayList avgList;
 	
@@ -112,7 +108,7 @@ public class GraphHistory implements PaintListener {
             gc.drawLine( i, 0, i, height + 1 );
 
         // horizontal lines					
-        for ( int i = (int) height + 1; i > 0; i -= 20 )
+        for ( int i = height + 1; i > 0; i -= 20 )
             gc.drawLine( 0, i, width + 1, i );
 
         // looks worse when under the grid     
@@ -162,8 +158,8 @@ public class GraphHistory implements PaintListener {
 
             xCoord = i * barWidth;
 
-            maxValueY = (float) ( maxValue / 10 );
-            avgValueY = (float) ( avgValue / 10 );
+            maxValueY = maxValue / 10;
+            avgValueY = avgValue / 10;
 
             maxValueY = maxValueY * zoom;
             avgValueY = avgValueY * zoom;
@@ -184,6 +180,9 @@ public class GraphHistory implements PaintListener {
 
 /*
 $Log: GraphHistory.java,v $
+Revision 1.4  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.3  2003/11/06 14:59:06  lemmster
 clean up
 

@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.7 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: ColumnSelector.java,v 1.8 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -121,7 +121,7 @@ public class ColumnSelector extends Dialog {
         Label aLabel = new Label(parent, SWT.NONE);
         aLabel.setText("Available");
 
-        Label bLabel = new Label(parent, SWT.NONE);
+        new Label(parent, SWT.NONE);
 
         Label cLabel = new Label(parent, SWT.NONE);
         cLabel.setText("In Use");
@@ -316,6 +316,9 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.8  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.7  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

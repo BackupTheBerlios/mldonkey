@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientStats
  *
  *
- * @version $Id: ClientStats.java,v 1.16 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ClientStats.java,v 1.17 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class ClientStats extends Parent {
@@ -176,21 +176,21 @@ public class ClientStats extends Parent {
 		int listElem = messageBuffer.readInt16();
 
 		if ( listElem < 0 ) //check, if this is a big unsigned int, and fix it:
-			listElem = ( int )( Short.MAX_VALUE * 2 + listElem ) + 2;
+			listElem = Short.MAX_VALUE * 2 + listElem + 2;
 
 		NetworkInfo[] temp = new NetworkInfo[ listElem ];
 		for ( int i = 0; i < listElem; i++ ) {
 			int key = messageBuffer.readInt32();
 			/* if proto >=18, the number of connected server is send too */
 			if ( parent.getProtoToUse() >= 18 ) {
-				NetworkInfo network = ( NetworkInfo ) this.parent.getNetworkInfoMap()
+				NetworkInfo network = this.parent.getNetworkInfoMap()
 										.get( key );
 				this.parent.getNetworkInfoMap().setConnectedServers( 
 										messageBuffer.readInt32(), network );
 				temp[ i ] = network;
 			}
 			else {
-				temp[ i ] = ( NetworkInfo ) this.parent.getNetworkInfoMap().get( key );
+				temp[ i ] = this.parent.getNetworkInfoMap().get( key );
 			}
 		}
 		this.connectedNetworks = temp;
@@ -211,11 +211,14 @@ public class ClientStats extends Parent {
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.17  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.16  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.15  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.14  2003/08/02 09:55:16  lemmstercvs01
 observers changed

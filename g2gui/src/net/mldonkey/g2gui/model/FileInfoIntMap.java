@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  *
- * @version $Id: FileInfoIntMap.java,v 1.30 2003/10/16 19:57:43 zet Exp $
+ * @version $Id: FileInfoIntMap.java,v 1.31 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -112,7 +112,7 @@ public class FileInfoIntMap extends InfoIntMap {
             /* go 4bytes back in the MessageBuffer */
             messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
             if ( this.infoIntMap.containsKey( id ) ) {
-                FileInfo fileInfo = ( FileInfo ) this.get( id );
+                FileInfo fileInfo = this.get( id );
                 fileInfo.readStream( messageBuffer );
             }
             else {
@@ -200,6 +200,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.31  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.30  2003/10/16 19:57:43  zet
 commitAll
 
@@ -226,7 +229,7 @@ Revision 1.23  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.22  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.21  2003/08/15 22:05:58  zet
 *** empty log message ***

@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * WidgetFactory
  *
- * @version $Id: WidgetFactory.java,v 1.1 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: WidgetFactory.java,v 1.2 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class WidgetFactory {
@@ -178,11 +178,11 @@ public class WidgetFactory {
             final int childNumber = i;
             control.addControlListener(new ControlAdapter() {
                     public void controlResized(ControlEvent e) {
-                        Control control = (Control) e.widget;
+                        Control aControl = (Control) e.widget;
 
-                        if ((control.getBounds().width > 0) && (control.getBounds().height > 0)) {
+                        if ((aControl.getBounds().width > 0) && (aControl.getBounds().height > 0)) {
                             PreferenceConverter.setValue(p, sashChildPrefString + childNumber,
-                                ((Control) e.widget).getBounds());
+                                aControl.getBounds());
                         }
                     }
                 });
@@ -244,6 +244,9 @@ public class WidgetFactory {
 
 /*
 $Log: WidgetFactory.java,v $
+Revision 1.2  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.1  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

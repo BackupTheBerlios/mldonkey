@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.6 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.7 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -158,7 +158,7 @@ public class G2GuiWinReg extends PreferencePage {
         Runtime rt = Runtime.getRuntime();
 
         try {
-            Process p = rt.exec(cmd);
+            rt.exec(cmd);
         } catch (Exception e) {
             System.err.println("updateRegistry: " + e);
         }
@@ -255,6 +255,9 @@ public class G2GuiWinReg extends PreferencePage {
 
 /*
 $Log: G2GuiWinReg.java,v $
+Revision 1.7  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.6  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

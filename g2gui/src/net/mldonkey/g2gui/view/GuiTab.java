@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.36 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: GuiTab.java,v 1.37 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public abstract class GuiTab implements Listener, Observer {
@@ -68,7 +68,6 @@ public abstract class GuiTab implements Listener, Observer {
      * The master Gui
      */
     private MainTab gui;
-    private boolean hasObserver;
     protected Composite subContent;
 
     /**
@@ -196,6 +195,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.37  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.36  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -239,7 +241,7 @@ Revision 1.24  2003/08/23 01:57:36  zet
 use JFace headerfont
 
 Revision 1.23  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/18 01:42:24  zet
 centralize resource bundle

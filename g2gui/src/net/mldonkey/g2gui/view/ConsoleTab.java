@@ -46,14 +46,12 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.50 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: ConsoleTab.java,v 1.51 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {
-    private String[] consoleFont;
     private ConsoleMessage consoleMessage;
     private CoreCommunication core;
-    private Composite parent;
     private Console console;
 
     /**
@@ -70,8 +68,6 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
      * @see net.mldonkey.g2gui.view.widgets.Gui.G2guiTab#createContents( org.eclipse.swt.widgets.Composite )
      */
     protected void createContents(Composite parent) {
-        this.parent = parent;
-
         ViewForm consoleViewForm = WidgetFactory.createViewForm(parent);
         Composite consoleComposite = new Composite(consoleViewForm, SWT.NONE);
         consoleComposite.setLayout(new FillLayout());
@@ -160,6 +156,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.51  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.50  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -209,7 +208,7 @@ Revision 1.38  2003/08/23 09:56:15  lemmster
 use supertype instead of Core
 
 Revision 1.37  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.36  2003/08/18 01:42:24  zet
 centralize resource bundle

@@ -26,6 +26,7 @@ import gnu.regexp.RE;
 import gnu.regexp.REException;
 import gnu.regexp.REMatch;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +34,15 @@ import java.util.List;
 /**
  * RegExp
  *
- * @version $Id: RegExp.java,v 1.1 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: RegExp.java,v 1.2 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class RegExp {
+	/**
+	 * Decimal format for calcStringSize
+	 */
+	private static final DecimalFormat df = new DecimalFormat("0.#");
+
     /**
      * @param aString
      * @param delimiter
@@ -86,11 +92,39 @@ public class RegExp {
 
         return regex.substituteAll(input, replaceWith);
     }
+
+	/**
+	 * creates a String from the size
+	 * @param size The size
+	 * @return a string represantation of this size
+	 */
+	public static String calcStringSize(long size) {
+		float k = 1024f;
+		float m = k * k;
+		float g = m * k;
+		float t = g * k;
+		float fsize = size;
+
+		if (fsize >= t) {
+			return new String(df.format(fsize / t) + " TB");
+		} else if (fsize >= g) {
+			return new String(df.format(fsize / g) + " GB");
+		} else if (fsize >= m) {
+			return new String(df.format(fsize / m) + " MB");
+		} else if (fsize >= k) {
+			return new String(df.format(fsize / k) + " KB");
+		} else {
+			return new String(size + "");
+		}
+	}
 }
 
 
 /*
 $Log: RegExp.java,v $
+Revision 1.2  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.1  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

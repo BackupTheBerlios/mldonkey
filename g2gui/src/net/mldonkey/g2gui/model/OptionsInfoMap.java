@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumNetwork;
  * OptionsInfo
  *
  *
- * @version $Id: OptionsInfoMap.java,v 1.23 2003/10/28 11:07:32 lemmster Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.24 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -79,8 +79,8 @@ public class OptionsInfoMap extends InfoMap {
 	public void readGeneralOptionDetails( MessageBuffer messageBuffer ) {
 		/* read the name of option and reset the iterator */
 		int itr = messageBuffer.getIterator();
-		String sectionToAppear = messageBuffer.readString();
-		String description = messageBuffer.readString();
+		messageBuffer.readString();
+		messageBuffer.readString();
 		String nameOfOption = messageBuffer.readString();
 		messageBuffer.setIterator( itr );
 
@@ -94,8 +94,6 @@ public class OptionsInfoMap extends InfoMap {
 			this.infoMap.put( nameOfOption, option );
 		}
 		/* we dont need the strings anymomre */
-		sectionToAppear = null;
-		description = null;
 		nameOfOption = null;
 
 		this.setChanged();
@@ -110,8 +108,8 @@ public class OptionsInfoMap extends InfoMap {
 	public void readPluginOptionDetails( MessageBuffer messageBuffer ) {
 		/* read the name of option and reset the iterator */
 		int itr = messageBuffer.getIterator();
-		String pluginToAppear = messageBuffer.readString();
-		String description = messageBuffer.readString();
+		messageBuffer.readString();
+		messageBuffer.readString();
 		String nameOfOption = messageBuffer.readString();
 		messageBuffer.setIterator( itr );
 
@@ -125,8 +123,6 @@ public class OptionsInfoMap extends InfoMap {
 			this.infoMap.put( nameOfOption, option );
 		}
 		/* we dont need the strings anymore */
-		pluginToAppear = null;
-		description = null;
 		nameOfOption = null;
 
 		this.setChanged();
@@ -228,6 +224,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.24  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.23  2003/10/28 11:07:32  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"

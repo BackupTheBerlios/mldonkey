@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.view.statusline;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -40,20 +39,17 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * CoreConsoleItem
  *
- * @version $Id: CoreConsoleItem.java,v 1.5 2003/10/31 22:06:38 zet Exp $
+ * @version $Id: CoreConsoleItem.java,v 1.6 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class CoreConsoleItem {
-    private StatusLine statusLine;
     private Composite composite;
-    private boolean linkEntryToggle = false;
 
     /**
      * @param statusLine
      * @param mldonkey
      */
-    public CoreConsoleItem(StatusLine statusLine, CoreCommunication mldonkey) {
-        this.statusLine = statusLine;
+    public CoreConsoleItem(StatusLine statusLine) {
         this.composite = statusLine.getStatusline();
         createContents();
     }
@@ -78,6 +74,9 @@ public class CoreConsoleItem {
 
 /*
 $Log: CoreConsoleItem.java,v $
+Revision 1.6  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.5  2003/10/31 22:06:38  zet
 fix status line when spawning a core
 

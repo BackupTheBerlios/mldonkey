@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
  * CoreCommunication
  *
  *
- * @version $Id: CoreCommunication.java,v 1.42 2003/11/20 17:51:53 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.43 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -75,7 +75,7 @@ public interface CoreCommunication extends Runnable {
 	 * @param username The username
 	 * @param password The password
 	 */
-	void sendPassword( String username, String password );
+	void sendPassword();
 		
 	/**
 	 * @return the ConsoleMessage(-Buffer)
@@ -168,6 +168,9 @@ public interface CoreCommunication extends Runnable {
 }
 /*
 $Log: CoreCommunication.java,v $
+Revision 1.43  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.42  2003/11/20 17:51:53  dek
 moved disconnect-listener out of core
 

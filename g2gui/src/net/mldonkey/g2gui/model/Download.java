@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.comm.Message;
  * Download
  *
  *
- * @version $Id: Download.java,v 1.12 2003/09/18 15:29:25 zet Exp $ 
+ * @version $Id: Download.java,v 1.13 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class Download implements Sendable {
@@ -88,7 +88,7 @@ public class Download implements Sendable {
 		Object[] temp = new Object[ 3 ];
 		temp[ 0 ] = possibleNames;
 		temp[ 1 ] = new Integer( resultID );
-		temp[ 2 ] = new Byte( ( byte ) force );
+		temp[ 2 ] = new Byte( force );
 		Message message = new EncodeMessage( Message.S_DOWNLOAD, temp );
 		message.sendMessage( this.core );
 		message = null;
@@ -97,6 +97,9 @@ public class Download implements Sendable {
 
 /*
 $Log: Download.java,v $
+Revision 1.13  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.12  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
@@ -114,7 +117,7 @@ Revision 1.8  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.6  2003/07/23 16:56:28  lemmstercvs01
 initial commit

@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * ColumnSelectorAction
  *
- * @version $Id: ColumnSelectorAction.java,v 1.6 2003/11/08 18:26:02 zet Exp $
+ * @version $Id: ColumnSelectorAction.java,v 1.7 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class ColumnSelectorAction extends Action {
@@ -68,7 +68,7 @@ public class ColumnSelectorAction extends Action {
             CTabItem cTabItem = cTabFolder.getItems()[ i ];
 
             if (cTabItem.getData("gView") != null) {
-                gViewList.add((GView) cTabItem.getData("gView"));
+                gViewList.add(cTabItem.getData("gView"));
             }
         }
     }
@@ -99,6 +99,9 @@ public class ColumnSelectorAction extends Action {
 
 /*
 $Log: ColumnSelectorAction.java,v $
+Revision 1.7  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.6  2003/11/08 18:26:02  zet
 use GView instead of GTableViewer
 

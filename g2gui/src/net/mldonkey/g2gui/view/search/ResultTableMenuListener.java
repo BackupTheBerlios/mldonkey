@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.30 2003/11/15 11:44:04 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.31 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -95,7 +95,7 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 		for ( Iterator it = sSel.iterator(); it.hasNext();) {
 			o = it.next();
 			if ( o instanceof ResultInfo ) 
-				selectedResults.add( ( ResultInfo ) o );
+				selectedResults.add( o );
 		}
 	}
 
@@ -298,6 +298,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.31  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.30  2003/11/15 11:44:04  lemmster
 fix: [Bug #1089] 0.2 similair stop search crash
 

@@ -43,14 +43,12 @@ import org.eclipse.swt.widgets.Composite;
  * SpeedItem
  *
  *
- * @version $Id: SpeedItem.java,v 1.25 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: SpeedItem.java,v 1.26 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class SpeedItem implements Observer {
 	private static final DecimalFormat decimalFormat = new DecimalFormat( "0.##" );
-    private CoreCommunication core;
     private Composite composite;
-    private StatusLine statusline;
     private CLabel cLabelDown;
     private CLabel cLabelUp;
     private int speedLength = 0;
@@ -63,8 +61,6 @@ public class SpeedItem implements Observer {
 	 */
     public SpeedItem( StatusLine statusline, CoreCommunication mldonkey ) {
         this.composite = statusline.getStatusline();
-        this.statusline = statusline;
-        this.core = mldonkey;
         this.createContent();
         mldonkey.getClientStats().addObserver( this );
         mldonkey.addObserver( this );
@@ -161,6 +157,9 @@ public class SpeedItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.26  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.25  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -192,7 +191,7 @@ Revision 1.16  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.15  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.14  2003/08/17 23:13:42  zet
 centralize resources, move images

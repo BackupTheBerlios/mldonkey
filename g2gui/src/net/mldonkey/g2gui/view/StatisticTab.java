@@ -24,8 +24,8 @@ package net.mldonkey.g2gui.view;
 
 import java.util.Observable;
 
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.ClientStats;
-import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.43 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.44 2003/11/23 17:58:03 lemmster Exp $
  */
 public class StatisticTab extends PaneGuiTab {
     private GraphControl uploadsGraphControl;
@@ -194,11 +194,11 @@ public class StatisticTab extends PaneGuiTab {
                         }
 
                         uploadsHeaderCLabel.setText(G2GuiResources.getString("TT_Uploads") + ": " +
-                            FileInfo.calcStringSize(clientStats.getTotalUp()) + " " +
+							RegExp.calcStringSize(clientStats.getTotalUp()) + " " +
                             G2GuiResources.getString("TT_Total"));
 
                         downloadsHeaderCLabel.setText(G2GuiResources.getString("TT_Downloads") +
-                            ": " + FileInfo.calcStringSize(clientStats.getTotalDown()) + " " +
+                            ": " + RegExp.calcStringSize(clientStats.getTotalDown()) + " " +
                             G2GuiResources.getString("TT_Total"));
                     }
                 });
@@ -229,6 +229,9 @@ public class StatisticTab extends PaneGuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.44  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.43  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -309,7 +312,7 @@ Revision 1.18  2003/08/23 01:12:43  zet
 remove todos
 
 Revision 1.17  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle

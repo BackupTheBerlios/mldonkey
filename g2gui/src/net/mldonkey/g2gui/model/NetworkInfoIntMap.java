@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.enum.EnumNetwork;
  * OptionsInfo
  *
  *
- * @version $Id: NetworkInfoIntMap.java,v 1.16 2003/10/28 11:07:32 lemmster Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.17 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
@@ -149,7 +149,7 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 	protected void setConnectedServers( int i, NetworkInfo aNetwork ) {
 		/* null isnt a valid input */
 		if ( aNetwork == null ) return;
-		NetworkInfo network = ( NetworkInfo ) this.get( aNetwork.getNetwork() );
+		NetworkInfo network = this.get( aNetwork.getNetwork() );
 		/* only update the networkinfo when the number of connected server has changed */
 		if ( network.getConnectedServers() != i ) {
 			network.setConnectedServers( i );
@@ -161,6 +161,9 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.17  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.16  2003/10/28 11:07:32  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"

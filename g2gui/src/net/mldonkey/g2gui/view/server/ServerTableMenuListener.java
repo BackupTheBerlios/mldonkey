@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Shell;
  * ServerTableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.18 2003/11/05 00:10:32 zet Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.19 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class ServerTableMenuListener extends TableMenuListener { 
@@ -105,7 +105,7 @@ public class ServerTableMenuListener extends TableMenuListener {
         for ( Iterator it = sSel.iterator(); it.hasNext(); ) {
             o = it.next();
             if ( o instanceof ServerInfo )
-                selectedServers.add( ( ServerInfo ) o );
+                selectedServers.add( o );
         }
     }
 
@@ -250,7 +250,6 @@ public class ServerTableMenuListener extends TableMenuListener {
                                    G2GuiResources.getString( "TML_FOOBAR2" ), new MyInputValidator() );
             dialog.open();
             if ( dialog.getReturnCode() == IDialogConstants.OK_ID ) {
-                String text = dialog.getValue();
                 String[] strings = RegExp.split( dialog.getValue(), ':' );
                 InetAddress inetAddress = null;
                 try {
@@ -514,6 +513,9 @@ public class ServerTableMenuListener extends TableMenuListener {
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.19  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.18  2003/11/05 00:10:32  zet
 check if port < Short.MAX (fix illegalnumberexception)
 

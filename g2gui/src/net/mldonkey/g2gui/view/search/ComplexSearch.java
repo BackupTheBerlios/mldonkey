@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.18 2003/09/26 14:35:54 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.19 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -216,7 +216,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
                     Combo aCombo = ( Combo ) e.widget;
                     String aString = aCombo.getText();
                     try {
-                        int i = Integer.parseInt( aString );
+                        Integer.parseInt( aString );
                     }
                     catch ( NumberFormatException nE ) {
                         if ( aString.length() > 1 )
@@ -354,7 +354,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
         try {
             if ( aText.getText() != null )
                 aString = aText.getText();
-            float f = Float.parseFloat( aString + e.text );
+            Float.parseFloat( aString + e.text );
         }
         catch ( NumberFormatException nE ) {
             e.doit = false;
@@ -405,6 +405,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.19  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.18  2003/09/26 14:35:54  lemmster
 check for null
 

@@ -71,7 +71,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.33 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.34 2003/11/23 17:58:03 lemmster Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
     private CoreCommunication core;
@@ -152,9 +152,9 @@ public class MessagesTab extends GuiTab implements Runnable {
                 }
 
                 public void menuShown(MenuEvent e) {
-                    Menu menu = tableViewer.getTable().getMenu();
-                    MenuItem[] items = menu.getItems();
-                    menu.setDefaultItem(items[ (items.length - 1) ]);
+                    Menu aMenu = tableViewer.getTable().getMenu();
+                    MenuItem[] items = aMenu.getItems();
+                    aMenu.setDefaultItem(items[ (items.length - 1) ]);
                 }
             });
 
@@ -321,7 +321,6 @@ public class MessagesTab extends GuiTab implements Runnable {
      * @param textMessage
      */
     public void sendTabMessage(int id, String textMessage) {
-        ClientInfo clientInfo = core.getClientInfoIntMap().get(id);
         CTabItem cTabItem = (CTabItem) openTabs.get(new Integer(id));
         Console console = (Console) cTabItem.getData("console");
         console.append(textMessage + console.getLineDelimiter());
@@ -466,6 +465,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.34  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.33  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -542,7 +544,7 @@ Revision 1.9  2003/08/23 09:47:52  lemmster
 just rename
 
 Revision 1.8  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.7  2003/08/20 22:18:56  zet
 Viewer updates

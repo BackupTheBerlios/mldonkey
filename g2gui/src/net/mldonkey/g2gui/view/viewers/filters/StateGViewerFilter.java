@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * StateGViewerFilter
  *
- * @version $Id: StateGViewerFilter.java,v 1.8 2003/11/10 08:54:47 lemmster Exp $
+ * @version $Id: StateGViewerFilter.java,v 1.9 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class StateGViewerFilter extends GViewerFilter {
@@ -101,7 +101,7 @@ public class StateGViewerFilter extends GViewerFilter {
      * @return boolean
      */
     public static boolean matches(GView gViewer, Enum enum) {
-	    GViewerFilter filter = (GViewerFilter) gViewer.getFilter( StateGViewerFilter.class );
+	    GViewerFilter filter = gViewer.getFilter( StateGViewerFilter.class );
 	    if (filter.matches(enum))
      	   return true;
         return false;
@@ -111,6 +111,9 @@ public class StateGViewerFilter extends GViewerFilter {
 
 /*
 $Log: StateGViewerFilter.java,v $
+Revision 1.9  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.8  2003/11/10 08:54:47  lemmster
 rating filter in searchresult
 

@@ -34,13 +34,12 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * DisconnectListener
  *
- * @version $Id: DisconnectListener.java,v 1.3 2003/11/20 17:51:53 dek Exp $ 
+ * @version $Id: DisconnectListener.java,v 1.4 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class DisconnectListener implements Observer, Runnable {
 
 	private CoreCommunication core;
-	private Object waiterObj;
 	private int result;
 	private Shell shell;
 
@@ -82,6 +81,9 @@ public class DisconnectListener implements Observer, Runnable {
 
 /*
 $Log: DisconnectListener.java,v $
+Revision 1.4  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.3  2003/11/20 17:51:53  dek
 moved disconnect-listener out of core
 

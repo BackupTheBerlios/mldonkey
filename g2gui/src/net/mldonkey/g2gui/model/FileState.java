@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  *
- * @version $Id: FileState.java,v 1.16 2003/09/18 15:29:25 zet Exp $ 
+ * @version $Id: FileState.java,v 1.17 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -96,7 +96,7 @@ public class FileState implements SimpleInformation {
 	 * @param messageBuffer MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
-		this.setState( ( byte ) messageBuffer.readByte() );
+		this.setState( messageBuffer.readByte() );
 		if ( this.getState() == EnumFileState.ABORTED )
 			this.reason = messageBuffer.readString();			
 	}
@@ -144,6 +144,9 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.17  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.16  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
@@ -155,7 +158,7 @@ Revision 1.14  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.13  2003/08/22 21:03:14  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/07/04 12:29:39  dek
 checkstyle

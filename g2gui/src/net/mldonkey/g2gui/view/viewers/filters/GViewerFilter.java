@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.view.viewers.GView;
 /**
  * GViewerFilter
  *
- * @version $Id: GViewerFilter.java,v 1.3 2003/11/06 13:52:33 lemmster Exp $ 
+ * @version $Id: GViewerFilter.java,v 1.4 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public abstract class GViewerFilter extends ViewerFilter {
@@ -63,7 +63,9 @@ public abstract class GViewerFilter extends ViewerFilter {
 	}
 	
 	public boolean matches( NetworkInfo network ) {
-		return false;
+		return this.aMatcher.matches( network.getNetworkType() );
+		//TODO why was this false?
+		//return false;
 	}
         
 	public int count() {
@@ -78,6 +80,9 @@ public abstract class GViewerFilter extends ViewerFilter {
 
 /*
 $Log: GViewerFilter.java,v $
+Revision 1.4  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.3  2003/11/06 13:52:33  lemmster
 filters back working
 

@@ -43,7 +43,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
@@ -54,14 +53,13 @@ import org.eclipse.swt.widgets.ToolItem;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.30 2003/11/22 02:24:29 zet Exp $ 
+ * @version $Id: NetworkItem.java,v 1.31 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class NetworkItem implements Observer {
 	private CoreCommunication core;
 	private StatusLine statusline;
 	private Composite composite;
-	private GridLayout gridLayout;
 	private GuiTab serverTab;
 	private ToolBar toolBar;
 
@@ -202,6 +200,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.31  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.30  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

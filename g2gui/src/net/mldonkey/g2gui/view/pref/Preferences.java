@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.42 2003/11/09 16:44:32 zet Exp $
+ * @version $Id: Preferences.java,v 1.43 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -127,7 +127,7 @@ public class Preferences extends PreferenceManager {
 
         if ((mldonkey != null) && (mldonkey.isConnected())) {
             this.connected = true;
-            createMLDonkeyOptions(connected, mldonkey);
+            createMLDonkeyOptions(mldonkey);
         }
 
         //myprefs.addToRoot( new PreferenceNode
@@ -142,7 +142,7 @@ public class Preferences extends PreferenceManager {
      * @param connected are we connected to the Core
      * @param mldonkey the Core were i get all my options from
      */
-    private void createMLDonkeyOptions(boolean connected, CoreCommunication mldonkey) {
+    private void createMLDonkeyOptions(CoreCommunication mldonkey) {
         OptionsInfoMap options = mldonkey.getOptionsInfoMap();
         OptionsPreferenceStore optionsStore = new OptionsPreferenceStore();
         optionsStore.setInput(options);
@@ -290,6 +290,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.43  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.42  2003/11/09 16:44:32  zet
 check for existence of g2gui.exe
 
@@ -353,7 +356,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name

@@ -49,7 +49,7 @@ import java.util.Observer;
  * ChunkView
  *
  *
- * @version $Id: ChunkCanvas.java,v 1.4 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: ChunkCanvas.java,v 1.5 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -301,7 +301,7 @@ public class ChunkCanvas extends Canvas implements Observer {
             } else if (numChunkSources == 0) {
                 toColor = red;
             } else {
-                int colorIntensity = 255 - ((int) ((float) numChunkSources * factor) * 25);
+                int colorIntensity = 255 - ((int) (numChunkSources * factor) * 25);
                 intenseColor = new Color(null, 0, colorIntensity, 255);
                 toColor = intenseColor;
             }
@@ -495,6 +495,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.5  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.4  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -535,7 +538,7 @@ Revision 1.13  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.12  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.11  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

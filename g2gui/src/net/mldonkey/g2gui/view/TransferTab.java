@@ -22,7 +22,8 @@
  */
 package net.mldonkey.g2gui.view;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
+import java.util.Observable;
+
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -43,18 +44,15 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import java.util.Observable;
-
 
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.93 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: TransferTab.java,v 1.94 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class TransferTab extends TableGuiTab {
     private boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
-    private CoreCommunication core;
     private GView clientTableView = null;
     private GView uploadTableView = null;
 
@@ -244,6 +242,9 @@ public class TransferTab extends TableGuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.94  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.93  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -433,7 +434,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

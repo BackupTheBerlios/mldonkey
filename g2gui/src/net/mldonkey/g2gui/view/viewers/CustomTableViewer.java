@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Widget;
  * CustomTableViewer
  *
  *
- * @version $Id: CustomTableViewer.java,v 1.2 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: CustomTableViewer.java,v 1.3 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class CustomTableViewer extends TableViewer implements ICustomViewer {
@@ -89,7 +89,7 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
             }
 
             int columnCount = this.getTable().getColumnCount();
-            TableItem ti = (TableItem) item;
+            TableItem ti = item;
 
             // Also enter loop if no columns added.  See 1G9WWGZ: JFUIF:WINNT - TableViewer with 0 columns does not work
             for (int column = 0; (column < columnCount) || (column == 0); column++) {
@@ -140,6 +140,9 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
 
 /*
 $Log: CustomTableViewer.java,v $
+Revision 1.3  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.2  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

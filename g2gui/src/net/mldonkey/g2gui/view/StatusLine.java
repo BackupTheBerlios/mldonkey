@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.20 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: StatusLine.java,v 1.21 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class StatusLine {
@@ -98,12 +98,12 @@ public class StatusLine {
         addSeparator(statusLineComposite);
 
         if (spawnedCore) {
-            new CoreConsoleItem(this, this.core);
+            new CoreConsoleItem(this);
             addSeparator(statusLineComposite);
         }
 
         /* the toggle for linkEntry */
-        new LinkEntryItem(this, this.core);
+        new LinkEntryItem(this);
 
         addSeparator(statusLineComposite);
 
@@ -190,6 +190,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.21  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.20  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -224,7 +227,7 @@ Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.9  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.8  2003/08/18 01:42:24  zet
 centralize resource bundle

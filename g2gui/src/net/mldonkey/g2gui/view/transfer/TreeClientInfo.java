@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * TreeClientInfo
  *
  *
- * @version $Id: TreeClientInfo.java,v 1.4 2003/11/11 02:31:42 zet Exp $
+ * @version $Id: TreeClientInfo.java,v 1.5 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class TreeClientInfo {
@@ -54,8 +54,8 @@ public class TreeClientInfo {
 
     public boolean equals(Object o) {
         if (o instanceof TreeClientInfo) {
-            ClientInfo c = (ClientInfo) ((TreeClientInfo) o).getClientInfo();
-            FileInfo f = (FileInfo) ((TreeClientInfo) o).getFileInfo();
+            ClientInfo c = ((TreeClientInfo) o).getClientInfo();
+            FileInfo f = ((TreeClientInfo) o).getFileInfo();
 
             if (c.equals(this.getClientInfo()) && f.equals(this.getFileInfo())) {
                 return true;
@@ -79,6 +79,9 @@ public class TreeClientInfo {
 
 /*
 $Log: TreeClientInfo.java,v $
+Revision 1.5  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.4  2003/11/11 02:31:42  zet
 cleanup
 

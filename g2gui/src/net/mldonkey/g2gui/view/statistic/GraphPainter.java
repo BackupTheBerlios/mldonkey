@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Composite;
  * GraphPainter
  *
  *
- * @version $Id: GraphPainter.java,v 1.35 2003/11/22 02:24:30 zet Exp $
+ * @version $Id: GraphPainter.java,v 1.36 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class GraphPainter {
@@ -82,16 +82,14 @@ public class GraphPainter {
             parent.getClientArea().height);
 
         int startx = 1;
-        int k = startx;
 
         int bottomSpace = drawBoardBuffer.getFontMetrics().getHeight() + 2;
-        float height = (float) (parent.getClientArea().height - bottomSpace);
+        float height = parent.getClientArea().height - bottomSpace;
 
         int width = parent.getClientArea().width;
         int graphWidth = width - startx;
         float zoom = 0;
-        float valueY = 0;
-        float maximum = (float) (graph.findMax(width) / 10);
+        float maximum = graph.findMax(width) / 10;
         zoom = (height - 10f) / maximum;
 
         // draw graph gradiant lines (switch outside the for loop)
@@ -134,7 +132,7 @@ public class GraphPainter {
         double value = (double) graph.getNewestPoint() / 100;
         String boxString = String.valueOf(value) + " kb/s";
 
-        int linePosition = (int) (height - ((float) (graph.getNewestPoint() / 10) * zoom));
+        int linePosition = (int) (height - ((graph.getNewestPoint() / 10) * zoom));
         int linePositionEnd = linePosition;
         int textPosition = linePosition - 6;
 
@@ -174,7 +172,7 @@ public class GraphPainter {
                 positionInArray = Graph.MAX_POINTS - 1;
             }
 
-            valueY = (float) (graph.getPointAt(positionInArray) / 10);
+            valueY = graph.getPointAt(positionInArray) / 10;
             valueY = height - (valueY * zoom);
 
             drawBoardBuffer.fillGradientRectangle(k, (int) height + 1, 1, (int) (valueY - height),
@@ -195,7 +193,7 @@ public class GraphPainter {
                 positionInArray = Graph.MAX_POINTS - 1;
             }
 
-            valueY = (float) (graph.getPointAt(positionInArray) / 10);
+            valueY = graph.getPointAt(positionInArray) / 10;
             valueY = height - (valueY * zoom);
 
             drawBoardBuffer.drawLine(k, (int) height + 1, k, (int) (valueY));
@@ -217,7 +215,7 @@ public class GraphPainter {
                 positionInArray = Graph.MAX_POINTS - 1;
             }
 
-            valueY = (float) (graph.getPointAt(positionInArray) / 10);
+            valueY = graph.getPointAt(positionInArray) / 10;
             valueY = height - (valueY * zoom);
 
             if (lastY == -1) {
@@ -246,6 +244,9 @@ public class GraphPainter {
 
 /*
 $Log: GraphPainter.java,v $
+Revision 1.36  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.35  2003/11/22 02:24:30  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -271,7 +272,7 @@ Revision 1.26  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.25  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.24  2003/08/18 13:42:43  zet
 *** empty log message ***

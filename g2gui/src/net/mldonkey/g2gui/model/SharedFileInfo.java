@@ -24,21 +24,17 @@ package net.mldonkey.g2gui.model;
 
 import gnu.regexp.RE;
 import gnu.regexp.REException;
-
-import java.text.DecimalFormat;
-
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.helper.RegExp;
 
 /**
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.16 2003/09/30 15:28:36 dek Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.17 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
-	
-	private static DecimalFormat df = new DecimalFormat( "0.#" );
 	/**
 	 * Shared File Identifier
 	 */
@@ -156,7 +152,7 @@ public class SharedFileInfo implements SimpleInformation {
 		
 		// only calculate this once, not on every getUploadedString...
 		// use a main calcStringSize() function. Why duplicate code?
-		stringOfBytesUploaded = FileInfo.calcStringSize( numOfBytesUploaded );
+		stringOfBytesUploaded = RegExp.calcStringSize( numOfBytesUploaded );
 	}
 
 	/**
@@ -178,7 +174,7 @@ public class SharedFileInfo implements SimpleInformation {
 				hasChanged = true;
 				this.numOfBytesUploaded = myUpload;
 				this.numOfQueriesForFile = myRequests;
-				stringOfBytesUploaded = FileInfo.calcStringSize( numOfBytesUploaded );			
+				stringOfBytesUploaded = RegExp.calcStringSize( numOfBytesUploaded );			
 			}			
 		return hasChanged;
 	}	
@@ -244,6 +240,9 @@ public class SharedFileInfo implements SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.17  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.16  2003/09/30 15:28:36  dek
 on some updates the wrong update() was called, as the core sometimes 
 sends a complete SharedInfo, not only an update, now everything is fine
@@ -283,7 +282,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved

@@ -36,7 +36,7 @@ import org.eclipse.jface.action.Action;
 /**
  * GAction
  *
- * @version $Id: FilterAction.java,v 1.6 2003/11/06 13:52:33 lemmster Exp $ 
+ * @version $Id: FilterAction.java,v 1.7 2003/11/23 17:58:03 lemmster Exp $ 
  *
  */
 public abstract class FilterAction extends Action {
@@ -73,29 +73,29 @@ public abstract class FilterAction extends Action {
 	}
 
 	protected boolean isFiltered( NetworkInfo aNetworkInfo ) {
-		GViewerFilter filter = (GViewerFilter) gViewer.getFilter( NetworkGViewerFilter.class );
+		GViewerFilter filter = gViewer.getFilter( NetworkGViewerFilter.class );
 		if ( filter.matches( aNetworkInfo ) )
 			return true;
 		return false;
 	}
 
 	public static boolean isFiltered( GView aGViewer, Enum state ) {
-		GViewerFilter filter = ( GViewerFilter ) aGViewer.getFilter( StateGViewerFilter.class );
+		GViewerFilter filter = aGViewer.getFilter( StateGViewerFilter.class );
 		return isFiltered( state, filter );
 	}
 
 	protected boolean isFiltered( Enum state ) {
-		GViewerFilter filter = ( GViewerFilter ) gViewer.getFilter( StateGViewerFilter.class );
+		GViewerFilter filter = gViewer.getFilter( StateGViewerFilter.class );
 		return isFiltered( state, filter );
 	}
 	
 	protected static boolean isFiltered( GView aGViewer, EnumExtension extension ) {
-		GViewerFilter filter = ( GViewerFilter ) aGViewer.getFilter( FileExtensionGViewerFilter.class );
+		GViewerFilter filter = aGViewer.getFilter( FileExtensionGViewerFilter.class );
 		return isFiltered( extension, filter );
 	}
 
 	protected boolean isFiltered( EnumExtension extension ) {
-		GViewerFilter filter = ( GViewerFilter ) gViewer.getFilter( FileExtensionGViewerFilter.class );
+		GViewerFilter filter = gViewer.getFilter( FileExtensionGViewerFilter.class );
 		return isFiltered( extension, filter );
 	}
 	
@@ -108,6 +108,9 @@ public abstract class FilterAction extends Action {
 
 /*
 $Log: FilterAction.java,v $
+Revision 1.7  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.6  2003/11/06 13:52:33  lemmster
 filters back working
 

@@ -22,6 +22,10 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.ClientInfo;
@@ -39,7 +43,6 @@ import net.mldonkey.g2gui.view.viewers.actions.ClientDetailAction;
 import net.mldonkey.g2gui.view.viewers.actions.CopyED2KLinkToClipboardAction;
 import net.mldonkey.g2gui.view.viewers.actions.ToggleClientsAction;
 import net.mldonkey.g2gui.view.viewers.actions.WebServicesAction;
-import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
 
 import org.eclipse.jface.action.Action;
@@ -51,7 +54,6 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -77,16 +79,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 
 /**
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.31 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.32 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -97,7 +95,6 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
     private List selectedClients = new ArrayList();
     private List selectedFiles = new ArrayList();
     private GView clientView;
-    private GTableContentProvider tableTreeContentProvider;
     private boolean createClientTable = false;
     private boolean myDrag = false;
 
@@ -111,7 +108,6 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
     public void initialize() {
         super.initialize();
-        tableTreeContentProvider = (DownloadTableTreeContentProvider) ((DownloadTableTreeView) gView).getTableContentProvider();
 
         /*this is to delete the selection, if one clicks in an empty row of the table*/
         gView.getTable().addMouseListener(new MouseAdapter() {
@@ -218,9 +214,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             o = it.next();
 
             if (o instanceof FileInfo) {
-                selectedFiles.add((FileInfo) o);
+                selectedFiles.add(o);
             } else if (o instanceof TreeClientInfo) {
-                selectedClients.add((TreeClientInfo) o);
+                selectedClients.add(o);
             }
         }
     }
@@ -301,7 +297,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
         if ((selectedFile != null) && advancedMode) {
             menuManager.add(new VerifyChunksAction());
-            menuManager.add(new ToggleClientsAction((DownloadTableTreeView) gView));
+            menuManager.add(new ToggleClientsAction(gView));
         }
 
         if ((selectedClient != null) && advancedMode) {
@@ -681,6 +677,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.32  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.31  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -839,7 +838,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/22 14:30:45  lemmster
 verify chunks added

@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableView.java,v 1.5 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: ResultTableView.java,v 1.6 2003/11/23 17:58:03 lemmster Exp $
  *
  */
 public class ResultTableView extends GTableView {
@@ -227,7 +227,6 @@ public class ResultTableView extends GTableView {
                         if (widget instanceof TableItem) {
                             TableItem tableItem = (TableItem) widget;
                             ResultInfo aResult = (ResultInfo) tableItem.getData();
-                            Image image = null;
                             Program p;
 
                             if (!aResult.getFormat().equals("")) {
@@ -327,6 +326,9 @@ public class ResultTableView extends GTableView {
 
 /*
 $Log: ResultTableView.java,v $
+Revision 1.6  2003/11/23 17:58:03  lemmster
+removed dead/unused code
+
 Revision 1.5  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
