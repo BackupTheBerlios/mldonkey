@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.*;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.3 2003/06/28 09:50:00 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkItem.java,v 1.4 2003/07/04 17:48:57 dek Exp $ 
  *
  */
 public class NetworkItem extends StatusLineItem implements Observer {
@@ -77,8 +77,8 @@ public class NetworkItem extends StatusLineItem implements Observer {
 													 + networks.length + " "
 													 + res.getString( "NI_Networks" ) );
 						String toolTipText = "";									
-						TIntObjectIterator it = ( ( NetworkInfoIntMap ) core.getNetworkinfoMap() ).iterator();
-						int collsize = core.getNetworkinfoMap().size();
+						TIntObjectIterator it = ( ( NetworkInfoIntMap ) core.getNetworkInfoMap() ).iterator();
+						int collsize = core.getNetworkInfoMap().size();
 						for ( ; collsize-- > 0;) {
 							it.advance();
 							if ( ( (NetworkInfo ) it.value() ).isEnabled() )	{	
@@ -96,6 +96,9 @@ public class NetworkItem extends StatusLineItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.4  2003/07/04 17:48:57  dek
+refactor
+
 Revision 1.3  2003/06/28 09:50:00  lemmstercvs01
 hasNext() optimized
 
