@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ViewFrameListener
  *
- * @version $Id: ViewFrameListener.java,v 1.11 2004/02/24 14:21:19 psy Exp $
+ * @version $Id: ViewFrameListener.java,v 1.12 2004/03/31 19:13:55 psy Exp $
  *
  */
 public abstract class ViewFrameListener implements IMenuListener, DisposeListener {
@@ -126,16 +126,18 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
      */
     protected void saveFilterState( Enum[] states ) {
     	for ( int i = 0; i < states.length; i++ )
-    		PreferenceLoader.setValue( states[ i ].getPrefName(this), FilterAction.isFiltered( gView, states[ i ] ) ); 
+    		PreferenceLoader.setValue( states[ i ].getPrefName(this), 
+    				FilterAction.isFiltered( gView, states[ i ] ) ); 
     }
     
     /**
      * Saves the bestfit column to the pref file
      */
     protected void saveBestFit() {
-    	if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
+    	if ( gView != null && gView.getDynColListenerIsOn() != -1 )
     		/* save with an offset because if no value is set, 0 is returned */
-    		PreferenceLoader.setValue( this.getClass().getName() + "BestFit", gView.getColumnControlListenerIsOn() + 10);
+    		PreferenceLoader.setValue( this.getClass().getName() + "BestFit", 
+    				gView.getDynColListenerIsOn() + 10);
     }
 
     /**
@@ -182,6 +184,9 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
 
 /*
 $Log: ViewFrameListener.java,v $
+Revision 1.12  2004/03/31 19:13:55  psy
+improved dynamic column handling
+
 Revision 1.11  2004/02/24 14:21:19  psy
 improved setBestFit() to check if the column actually exists
 

@@ -30,23 +30,23 @@ import net.mldonkey.g2gui.view.viewers.GView;
 /**
  * FavoriteColumnAction
  *
- * @version $Id: BestFitColumnAction.java,v 1.2 2004/02/05 20:44:43 psy Exp $ 
+ * @version $Id: BestFitColumnAction.java,v 1.3 2004/03/31 19:13:55 psy Exp $ 
  *
  */
 public class BestFitColumnAction extends ColumnAction implements ControlListener {
 	public BestFitColumnAction(GView gView, int column) {
 		super(gView,column);
-		setChecked( gView.getColumnControlListenerIsOn() == column );
+		setChecked( gView.getDynColListenerIsOn() == column );
 	}
 
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.viewers.actions.ColumnAction#run()
 	 */
 	public void run() {
-		if ( gView.getColumnControlListenerIsOn() == column )
-			this.gView.addControlListener( null );
+		if ( gView.getDynColListenerIsOn() == column )
+			this.gView.addDynColListener( null );
 		else
-			this.gView.addControlListener( this );
+			this.gView.addDynColListener( this ); 
 	}
 
 	/* (non-Javadoc)
@@ -68,6 +68,9 @@ public class BestFitColumnAction extends ColumnAction implements ControlListener
 }
 /*
 $Log: BestFitColumnAction.java,v $
+Revision 1.3  2004/03/31 19:13:55  psy
+improved dynamic column handling
+
 Revision 1.2  2004/02/05 20:44:43  psy
 hopefully fixed dynamic column behaviour under gtk by introducing a
 bogus column.

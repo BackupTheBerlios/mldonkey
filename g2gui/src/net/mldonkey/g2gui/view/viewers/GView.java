@@ -59,13 +59,15 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.23 2004/03/29 14:51:44 dek Exp $
+ * @version $Id: GView.java,v 1.24 2004/03/31 19:13:55 psy Exp $
  *
  */
 public abstract class GView {
     private BestFitColumnAction myCListener;
 	private int[] columnWidths;
     
+	protected boolean adjustingCols = false;
+	
 	protected boolean manualDispose;
     protected CoreCommunication core;
     protected String[] columnLabels;
@@ -79,7 +81,7 @@ public abstract class GView {
     protected StructuredViewer sViewer;
     protected ViewFrame viewFrame;
     protected boolean isActive;
-
+    
     public abstract GTableContentProvider getTableContentProvider();
 
     public abstract GTableMenuListener getTableMenuListener();
@@ -132,24 +134,32 @@ public abstract class GView {
      * @param listener
      */
     public void addDisposeListener(ViewFrameListener listener) {
-        getTable().addDisposeListener(listener);
+    	getTable().addDisposeListener(listener);
     }
     
-    public void addControlListener( BestFitColumnAction cListener ) {
+    public void addDynColListener( BestFitColumnAction cListener ) {
+    	/* remove our old listener in any case */
     	if ( myCListener != null )
     		this.getTable().removeControlListener( myCListener );
 
+    	/* if the new listener isn't null, add it */
     	myCListener = cListener;
-    	if ( myCListener != null )
+    	if ( myCListener != null ) {
     		this.getTable().addControlListener( myCListener );
+    		this.getTable().getHorizontalBar().setVisible(false);
+    		this.getTable().getVerticalBar().setVisible(true);
+    	} else {
+    		this.getTable().getHorizontalBar().setVisible(true);
+    	}
     }
     
-    public int getColumnControlListenerIsOn() {
+    public int getDynColListenerIsOn() {
     	if ( myCListener != null )
     		return this.myCListener.getColumnId();
     	return -1;
     }
 
+    
     /**
      * @param aClass
      * @return GViewerFilter
@@ -368,7 +378,8 @@ public abstract class GView {
             tableColumn.addListener(SWT.Resize,
             	new Listener() {
             	public void handleEvent(Event e) {
-            		/* something */
+            		if ( !adjustingCols && getDynColListenerIsOn() != -1) 
+            			setColumnWidth(getDynColListenerIsOn());
             	}
             }); 
         }
@@ -394,27 +405,28 @@ public abstract class GView {
     }
     
     public void setColumnWidth( int dynColumnId ) {
+    	adjustingCols = true;
+
     	Table table = getTable();
     	if ( !table.isDisposed() ) {
     		/* adjust the right offset to prevent the horizontal scrollbar
-    		 * from appearing
-    		 */
-    		int rightOffset = table.getVerticalBar().isVisible() ? 25 : 10;
-    		int totalWidth = table.getSize().x - rightOffset;
+    		 * from appearing */
+    		int totalWidth = table.getSize().x - table.getVerticalBar().getSize().x - 5;
+     		if (VersionCheck.isMotif()) totalWidth -= 5;
     		
     		TableColumn[] columns = table.getColumns();
     		
     		/* only cycle through "real" columns and not our gtk bogus column */
-    		int realColumns = getRealColumnCount();
-    		for ( int i = 0; i < realColumns; i++ ) {
+    		for ( int i = 0; i < getRealColumnCount(); i++ ) {
     			/* make sure to not substract the dynamic column from totalWidth */ 
     			if ( i != dynColumnId )
     				totalWidth -= columns[ i ].getWidth();
     		}
 
-    		//TODO find reason for IllegalArgumentException
     		/* make sure that columns cannot vanish */
-    		if (totalWidth < 10) totalWidth = 10;
+    		if (totalWidth < 10) {
+    			totalWidth = 10;
+    		}
     		table.getColumn( dynColumnId ).setWidth( totalWidth );
    		
     		/* when using GTK, we have our additional right column
@@ -422,10 +434,13 @@ public abstract class GView {
     		 * even if we assign it a size of 1.
     		 */ 
     		if (VersionCheck.isGtk())
-    			table.getColumn(columns.length-1).setWidth(1);
+    			table.getColumn(columns.length-1).setWidth(5);
+    	
     	}
+    	adjustingCols = false;
     }
 
+    
     /**
      * createContents
      */
@@ -442,7 +457,8 @@ public abstract class GView {
         
         Table table = getTable();
         table.setLayoutData(new GridData(GridData.FILL_BOTH));
-
+        //new GridData(GridData.)
+        
         createColumns();
         updateDisplay();
 
@@ -537,6 +553,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.24  2004/03/31 19:13:55  psy
+improved dynamic column handling
+
 Revision 1.23  2004/03/29 14:51:44  dek
 some mem-improvements
 
