@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.25 2003/09/14 03:37:24 zet Exp $ 
+ * @version $Id: ClientInfo.java,v 1.26 2003/09/18 03:52:12 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -80,8 +80,9 @@ public class ClientInfo extends Parent {
 	private int clientChatPort;
 	/**
 	 * Availability of a file (int fileId, String availability)
+	 * small initial capacity
 	 */
-	private THash avail = new TIntObjectHashMap();
+	private THash avail = new TIntObjectHashMap( 1 );
 
 	/**
 	 * @return The client chat port
@@ -307,6 +308,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.26  2003/09/18 03:52:12  zet
+smaller map initial capacities
+
 Revision 1.25  2003/09/14 03:37:24  zet
 changedProperties in model
 

@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.54 2003/09/16 15:56:13 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.55 2003/09/18 03:52:12 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -155,7 +155,7 @@ public class FileInfo extends Parent implements Observer {
 	/**
 	 * A weak keyset of clients associated with this file
 	 */
-	private Map clientInfos = Collections.synchronizedMap( new WeakHashMap() );
+	private Map clientInfos = Collections.synchronizedMap( new WeakHashMap( 4 ) );
 
 	private String stringSize="";
 	private String stringDownloaded="";
@@ -534,9 +534,9 @@ public class FileInfo extends Parent implements Observer {
 	private void setAvailability( MessageBuffer messageBuffer ) {
 
 		if (parent.getProtoToUse() > 17) {
-			this.avails = new HashMap();
+			
 			int listElem = messageBuffer.readInt16();
-
+			this.avails = new HashMap( listElem );
 			for (int i = 0; i < listElem; i++) {
 				int networkID = messageBuffer.readInt32();
 				NetworkInfo network = parent.getNetworkInfoMap().get(networkID);
@@ -786,6 +786,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.55  2003/09/18 03:52:12  zet
+smaller map initial capacities
+
 Revision 1.54  2003/09/16 15:56:13  zet
 (int) perc
 
