@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * CustomTableTreeViewer
  *
  *
- * @version $Id: CustomTableTreeViewer.java,v 1.3 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: CustomTableTreeViewer.java,v 1.4 2003/10/14 23:27:06 zet Exp $
  *
  */
 public class CustomTableTreeViewer extends TableTreeViewer {
@@ -79,8 +79,10 @@ public class CustomTableTreeViewer extends TableTreeViewer {
     }
 
     public void nudgeColumn() {
-        TableColumn c = this.getTableTree().getTable().getColumn( chunksColumn );
-        c.setWidth( c.getWidth() );
+    	if ( activeEditors ) {
+        	TableColumn c = this.getTableTree().getTable().getColumn( chunksColumn );
+        	c.setWidth( c.getWidth() );
+    	}
     }
 
     public void closeAllTTE() {
@@ -297,6 +299,9 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.4  2003/10/14 23:27:06  zet
+minor
+
 Revision 1.3  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 
