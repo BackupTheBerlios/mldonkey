@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.RGB;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.58 2003/11/09 21:49:26 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.59 2003/11/10 08:18:21 lemmster Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -150,51 +150,6 @@ public class G2GuiResources {
             return G2GuiResources.getImage("epNoNeeded");
         } else {
             return G2GuiResources.getImage("epUnknown");
-        }
-    }
-
-    /**
-     * Get rating string
-     * @param availability int
-     * @return string
-     */
-    public static String getRatingString(int availability) {
-        String result = "";
-
-        if (availability > 100) {
-            result += G2GuiResources.getString("RTLP_EXCELLENT");
-        } else if (availability > 50) {
-            result += G2GuiResources.getString("RTLP_VERYHIGH");
-        } else if (availability > 10) {
-            result += G2GuiResources.getString("RTLP_HIGH");
-        } else if (availability > 5) {
-            result += G2GuiResources.getString("RTLP_NORMAL");
-        } else {
-            result += G2GuiResources.getString("RTLP_LOW");
-        }
-
-        return (result + " (" + availability + ")");
-    }
-
-    /**
-     * Get rating image
-     * @param availability int
-     * @return Image
-     *
-     */
-    public static Image getRatingImage(int availability) {
-        if (availability < 0) {
-            return G2GuiResources.getImage("epRatingFake");
-        } else if (availability > 100) {
-            return G2GuiResources.getImage("epRatingExcellent");
-        } else if (availability > 50) {
-            return G2GuiResources.getImage("epRatingExcellent");
-        } else if (availability > 10) {
-            return G2GuiResources.getImage("epRatingGood");
-        } else if (availability > 5) {
-            return G2GuiResources.getImage("epRatingFair");
-        } else {
-            return G2GuiResources.getImage("epRatingPoor");
         }
     }
 
@@ -377,6 +332,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.59  2003/11/10 08:18:21  lemmster
+move logic into model(controller)
+
 Revision 1.58  2003/11/09 21:49:26  zet
 uploads arrow
 
@@ -529,7 +487,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
