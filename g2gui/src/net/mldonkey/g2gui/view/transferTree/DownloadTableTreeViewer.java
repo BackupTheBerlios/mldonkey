@@ -32,7 +32,10 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
@@ -51,7 +54,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.6 2003/08/14 12:57:03 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.7 2003/08/17 16:32:41 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -176,7 +179,18 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			} ); 
 								 
 		}
-		
+		tableTreeViewer.addDoubleClickListener(new IDoubleClickListener(){
+			public void doubleClick(DoubleClickEvent e) {
+				IStructuredSelection sSel = (IStructuredSelection) e.getSelection();
+				Object o = sSel.getFirstElement();
+				if (o instanceof FileInfo) {
+					new FileDetailDialog((FileInfo) o);
+				} else if (o instanceof TreeClientInfo) {
+					TreeClientInfo treeClientInfo = (TreeClientInfo) o;
+					new ClientDetailDialog(treeClientInfo.getFileInfo(), treeClientInfo.getClientInfo());
+				}
+			}
+		});
 		DownloadTableTreeLabelProvider treeLabelProvider = new DownloadTableTreeLabelProvider();
 		treeLabelProvider.setTableTreeViewer(tableTreeViewer);
 		tableTreeViewer.setLabelProvider(treeLabelProvider);
@@ -276,6 +290,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.7  2003/08/17 16:32:41  zet
+doubleclick
+
 Revision 1.6  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 
