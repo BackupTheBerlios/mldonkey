@@ -25,9 +25,9 @@ package net.mldonkey.g2gui.view.search;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
-import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.filters.WordViewerFilter;
 import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.swt.SWT;
@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableView.java,v 1.1 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ResultTableView.java,v 1.2 2003/11/06 20:02:39 lemmster Exp $
  *
  */
 public class ResultTableView extends GTableView {
@@ -110,9 +110,9 @@ public class ResultTableView extends GTableView {
 		
         // add optional filters
         if (PreferenceLoader.loadBoolean("searchFilterPornography")) {
-            sViewer.addFilter(new WordFilter(WordFilter.PORNOGRAPHY_FILTER_TYPE));
+            sViewer.addFilter(new WordViewerFilter(WordViewerFilter.PORNOGRAPHY_FILTER_TYPE));
         } else if (PreferenceLoader.loadBoolean("searchFilterProfanity")) {
-            sViewer.addFilter(new WordFilter(WordFilter.PROFANITY_FILTER_TYPE));
+            sViewer.addFilter(new WordViewerFilter(WordViewerFilter.PROFANITY_FILTER_TYPE));
         }
 
         /* add a menuListener to make the first menu item bold */
@@ -324,6 +324,10 @@ public class ResultTableView extends GTableView {
 
 /*
 $Log: ResultTableView.java,v $
+Revision 1.2  2003/11/06 20:02:39  lemmster
+move WordFilter
+fix AllFilterAction
+
 Revision 1.1  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

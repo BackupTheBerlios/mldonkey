@@ -22,12 +22,16 @@
  */
 package net.mldonkey.g2gui.view.viewers.actions;
 
+import org.eclipse.jface.viewers.ViewerFilter;
+
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.search.ResultTableView;
 import net.mldonkey.g2gui.view.viewers.GView;
+import net.mldonkey.g2gui.view.viewers.filters.WordViewerFilter;
 /**
  * AllFilterAction
  *
- * @version $Id: AllFilterAction.java,v 1.6 2003/11/06 13:52:33 lemmster Exp $ 
+ * @version $Id: AllFilterAction.java,v 1.7 2003/11/06 20:02:39 lemmster Exp $ 
  *
  */
 public class AllFilterAction extends FilterAction {
@@ -41,13 +45,25 @@ public class AllFilterAction extends FilterAction {
 	}
 
 	public void run() {
-		gViewer.resetFilters();
+		// remove all viewerfilters except the wordfilter from the searchtable
+		if ( gViewer instanceof ResultTableView ) {
+			ViewerFilter[] filters = gViewer.getFilters();
+			for ( int i = 0; i < filters.length; i++ ) {
+				if ( !( filters[ i ] instanceof WordViewerFilter ) )
+					gViewer.removeFilter( filters[ i ] );
+			}
+		}
+		else
+			gViewer.resetFilters();
 	}
-
 }
 
 /*
 $Log: AllFilterAction.java,v $
+Revision 1.7  2003/11/06 20:02:39  lemmster
+move WordFilter
+fix AllFilterAction
+
 Revision 1.6  2003/11/06 13:52:33  lemmster
 filters back working
 
