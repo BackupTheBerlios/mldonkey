@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.21 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ClientInfo.java,v 1.22 2003/08/24 02:22:12 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -257,7 +257,6 @@ public class ClientInfo extends Parent {
 		this.notifyObservers( this );
 	}
 
-	// static to save mem
 	public static void addFriend(CoreCommunication core, int id) {
 		Message addFriend =
 			new EncodeMessage( Message.S_ADD_CLIENT_FRIEND, new Integer(id) );
@@ -283,6 +282,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.22  2003/08/24 02:22:12  zet
+*** empty log message ***
+
 Revision 1.21  2003/08/23 15:21:37  zet
 remove @author
 
