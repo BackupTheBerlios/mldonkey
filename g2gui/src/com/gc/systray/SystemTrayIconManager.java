@@ -35,8 +35,12 @@ public class SystemTrayIconManager {
     public static final int mouseLeftDoubleClick = 2;
     /**
      * Defines the mouse double right click
-     */
-    public static final int mouseRightDoubleClick = 3;
+     */    
+    public static final int mouseRightDoubleClick = 6;
+    /**
+     * Defines mouse-movement on Tray-Icon
+     */    
+    public static final int mouseMove = 3;
 
     private int image;
     private String tooltip;
@@ -119,7 +123,7 @@ public class SystemTrayIconManager {
              * depending on button type call listener's
              *  mouseClickLeftButton
              *  ...
-             */
+             */          
             switch (buttonType) {
                 case (mouseLeftClick):
                     listener.mouseClickedLeftButton(x,y, this);
