@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.61 2003/08/24 18:06:41 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.62 2003/08/24 18:26:03 zet Exp $ 
  *
  */
 public class MainTab implements Observer, ShellListener {
@@ -108,16 +108,16 @@ public class MainTab implements Observer, ShellListener {
 				/* save the size of this window */
 				saveSizeLocation( mainShell );
 				
-				/* save the preferences */
-				PreferenceLoader.saveStore();
-				PreferenceLoader.cleanUp();
-				
 				/* set all tabs to inactive */
 				Iterator itr = registeredTabs.iterator();
 				while ( itr.hasNext() ) {
 					GuiTab aTab = ( GuiTab ) itr.next();
 					aTab.dispose();
 				}
+				/* save the preferences */
+				PreferenceLoader.saveStore();
+				PreferenceLoader.cleanUp();
+				
 				coolBar.getHandCursor().dispose();
 				/* kill the core communication */
 				( ( CoreCommunication )mldonkey ).disconnect();				
@@ -386,6 +386,9 @@ public class MainTab implements Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.62  2003/08/24 18:26:03  zet
+save prefs after disposal of tabs
+
 Revision 1.61  2003/08/24 18:06:41  zet
 PreferenceLoader.cleanup
 
