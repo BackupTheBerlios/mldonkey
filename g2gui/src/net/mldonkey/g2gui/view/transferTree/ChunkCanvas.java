@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkCanvas.java,v 1.2 2003/08/04 19:30:56 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.3 2003/08/04 20:11:57 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -220,7 +220,8 @@ public class ChunkCanvas extends Canvas implements Observer {
 		darkGray.dispose();
 		
 		imageData = image.getImageData();
-		resizedImageData = imageData;
+		if (resizedImageData == null) resizedImageData = imageData;
+	
 	}
 
 	/**
@@ -295,7 +296,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 		imageGC.dispose();	
 		
 		imageData = image.getImageData();
-		resizedImageData = imageData;
+		if (resizedImageData == null) resizedImageData = imageData;
 	}
 
 	/**
@@ -317,8 +318,10 @@ public class ChunkCanvas extends Canvas implements Observer {
 			if (getClientArea().width > minWidth && getClientArea().height > 0) {
 				resizedImageData = imageData.scaledTo(
 					getClientArea().width, getClientArea().height);
-			}
+			} 
+			
 		}
+		
 	}
 	/**
 	 * @param e
@@ -357,6 +360,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 			bufferGC.drawLine(srcWidth-1,1,srcWidth-1,1);
 			bufferGC.drawLine(srcWidth-1,srcHeight-1,srcWidth-1,srcHeight-1);	
 			bufferGC.dispose();
+			
 			
 			canvasGC.drawImage(
 				bufferImage,
@@ -424,7 +428,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 					if (!shell.isDisposed()) {
 						if (!isDisposed())
 							refresh();
-					}
+						}
 				}
 			});
 		}
@@ -436,6 +440,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.3  2003/08/04 20:11:57  zet
+null
+
 Revision 1.2  2003/08/04 19:30:56  zet
 null?
 
