@@ -28,7 +28,6 @@ import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.helper.CCLabel;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.search.CompositeSearch;
@@ -45,6 +44,7 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -60,11 +60,11 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.22 2003/09/03 22:15:27 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.23 2003/09/04 02:35:24 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
-	private Composite tabFolderPage;
+	private SashForm mainSash;
 	private GridLayout gridLayout;
 	private Group group;
 	private CTabFolder tabFolder;
@@ -114,14 +114,14 @@ public class SearchTab extends GuiTab {
 	 * @see net.mldonkey.g2gui.view.GuiTab#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected void createContents( Composite parent ) {
-		/* Create a two column page */		
-		tabFolderPage = new Composite( parent, SWT.NONE );
-		GridLayout gridLayout = CGridLayout.createGL(2,0,0,3,0,false);
-		tabFolderPage.setLayout( gridLayout );
-	
+		/* Create a sashForm */	
+		mainSash = new SashForm( parent, SWT.HORIZONTAL );
+		
 		/* Create the "Left" and "Right" columns */
 		this.createLeftGroup ();
 		this.createRightGroup ();
+		
+		mainSash.setWeights(new int[] {1,5});
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class SearchTab extends GuiTab {
 	private void createLeftGroup() {
 		
 		ViewForm searchViewForm = 
-				new ViewForm( tabFolderPage , SWT.BORDER | 
+				new ViewForm( mainSash , SWT.BORDER | 
 					( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
 		GridData gd = new GridData( GridData.FILL_VERTICAL );
 		gd.widthHint = 150;
@@ -168,7 +168,7 @@ public class SearchTab extends GuiTab {
 		/* right group */
 		
 		ViewForm searchResultsViewForm = 
-			new ViewForm( tabFolderPage , SWT.BORDER |
+			new ViewForm( mainSash , SWT.BORDER |
 				 ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
 		searchResultsViewForm.setLayoutData (new GridData( GridData.FILL_BOTH ) );
 		
@@ -289,6 +289,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.23  2003/09/04 02:35:24  zet
+try a sash ?
+
 Revision 1.22  2003/09/03 22:15:27  lemmster
 advanced search introduced; not working and far from complete. just to see the design
 
@@ -317,7 +320,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose
