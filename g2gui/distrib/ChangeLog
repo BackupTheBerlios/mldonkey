@@ -1,3 +1,7 @@
+2004/01/08: vnc
+	* Added option in prefs to control g2gui's font-antialiasing under linux. 
+	 	This speeds up g2gui-gtk2 around 20-30%.
+
 2003/12/23: vnc
 	* Improved commandline and connection settings errorhandling
 		try "g2gui --help" for options		
