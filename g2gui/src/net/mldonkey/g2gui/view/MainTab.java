@@ -33,6 +33,7 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.VersionInfo;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.Splash;
 import net.mldonkey.g2gui.view.main.MainCoolBar;
 import net.mldonkey.g2gui.view.main.MainMenuBar;
 import net.mldonkey.g2gui.view.main.Minimizer;
@@ -69,7 +70,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.90 2003/11/14 19:41:46 zet Exp $
+ * @version $Id: MainTab.java,v 1.91 2003/11/20 14:02:17 lemmster Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -93,18 +94,18 @@ public class MainTab implements ShellListener {
         this.mldonkey = core;
         this.shell = shell;
 
-        final Shell mainShell = shell;
         Display display = shell.getDisplay();
         shell.addShellListener(this);
         minimizer = new Minimizer(shell, core, titleBarText);
         minimizer.setTitleBarText();
         shell.setLayout(new FillLayout());
+		Splash.increaseSplashBar("creating tabs");
         createContents(shell);
         shell.pack();
 
         /* close the splashShell from G2Gui.java */
-        G2Gui.increaseBar("");
-        G2Gui.getSplashShell().dispose();
+        Splash.increaseSplashBar("view successfully started");
+        Splash.dispose();
 
         /* set the old size of this window - must be after pack() */
         setSizeLocation(shell);
@@ -122,7 +123,7 @@ public class MainTab implements ShellListener {
         shell.addDisposeListener(new DisposeListener() {
                 public synchronized void widgetDisposed(DisposeEvent e) {
                     /* save the size of this window */
-                    saveSizeLocation(mainShell);
+                    saveSizeLocation(shell);
 
                     /* set all tabs to inactive */
                     Iterator itr = registeredTabs.iterator();
@@ -462,6 +463,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.91  2003/11/20 14:02:17  lemmster
+G2Gui cleanup
+
 Revision 1.90  2003/11/14 19:41:46  zet
 include ver info in bug report dialog
 

@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.44 2003/11/12 16:16:33 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.45 2003/11/20 14:02:17 lemmster Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -65,13 +65,17 @@ public class PreferenceLoader {
     /**
      * @return
      */
-    static void loadStore() {
+    public static void initialize() {
+        if ( preferenceStore == null ) {
+        	setPrefFile( "g2gui.pref" );
+        }
+        
         try {
             preferenceStore.load();
         }
         catch ( IOException e ) {
         }
-        preferenceStore = ( PreferenceStore ) setDefaults( preferenceStore );
+        preferenceStore = (PreferenceStore) setDefaults( preferenceStore );
     }
 
     /**
@@ -191,7 +195,7 @@ public class PreferenceLoader {
                 fontArray.add( newFont );
                 fontMap.put( preferenceString, newFont );
             }
-            return ( Font ) fontMap.get( preferenceString );
+            return (Font) fontMap.get( preferenceString );
         }
         return null;
     }
@@ -245,8 +249,8 @@ public class PreferenceLoader {
 	public static PreferenceStore getPreferenceStore() {
         return preferenceStore;
     }
-   
-    public static void saveStore() {
+
+        public static void saveStore() {
         try {
             preferenceStore.save();
         }
@@ -258,16 +262,10 @@ public class PreferenceLoader {
         return preferenceStore.contains( preferenceString );
     }
 
-    public static void initialize() {
-    	preferenceStore = new PreferenceStore( "g2gui.pref" );
-        loadStore();
-    }
-    
-    public static void initialize(String file) {
+    public static void setPrefFile(String file) {
 		preferenceStore = new PreferenceStore( file );
-		loadStore();
     }
-    
+
 	public static void cleanUp() {
         Iterator fonts = fontArray.iterator();
         while ( fonts.hasNext() )
@@ -280,6 +278,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.45  2003/11/20 14:02:17  lemmster
+G2Gui cleanup
+
 Revision 1.44  2003/11/12 16:16:33  zet
 set intial window size
 
@@ -384,7 +385,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates

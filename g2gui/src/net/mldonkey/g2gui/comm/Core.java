@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
@@ -49,13 +50,14 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.model.SimpleInformation;
 import net.mldonkey.g2gui.model.UserInfo;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
 /**
  * Core
  *
  *
- * @version $Id: Core.java,v 1.108 2003/11/07 09:25:42 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.109 2003/11/20 14:02:17 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -214,12 +216,17 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			}
 		}	
 		catch ( SocketException e ) {
-			/* expect the core denies our connection attempt */
-			connected = false;
-			this.connectionDenied = true;
-			synchronized ( waiterObj ) {
-				waiterObj.notify();
+			if ( !initialized ) {
+				/* expect the core denies our connection attempt */
+				connected = false;
+				this.connectionDenied = true;	
+				synchronized ( waiterObj ) {
+					waiterObj.notify();
+				}
 			}
+			// for the moment, just print the error. next step -> reconnect
+			else
+				e.printStackTrace();
 		}
 		catch ( IOException e ) {
 			onIOException( e );
@@ -312,7 +319,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					int fileIdentifier = messageBuffer.readInt32();
 					int clientIdentifier = messageBuffer.readInt32();
 					/*check for null-objects...*/
-					if ( ( ( FileInfoIntMap  )this.fileInfoMap   ).contains( fileIdentifier   ) )					
+					if ( ( ( FileInfoIntMap )this.fileInfoMap   ).contains( fileIdentifier ) )					
 						if ( ( ( ClientInfoIntMap )this.clientInfoList ).get( clientIdentifier ) != null ) {						
 						/*everything's fine, we can execute:*/
 							( ( FileInfoIntMap ) this.fileInfoMap ).get( fileIdentifier )
@@ -408,8 +415,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;		
 					
 			case Message.R_SERVER_INFO :
-					if ( advancedMode )
+					if ( advancedMode ) {
 						this.serverInfoMap.readStream( messageBuffer );
+					}	
 					break;
 							
 			case Message.R_DOWNLOADING_LIST :
@@ -433,8 +441,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					}
 					break;
 
-			default :				
-					System.out.println( "unknown opcode: " + opcode + " length: " + messageLength );
+			default :
+					if ( G2Gui.debug )		
+						System.out.println( "unknown opcode: " + opcode + " length: " + messageLength );
 					break;				
 		}
 	}
@@ -444,7 +453,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 */
 	private void sendPullmode( boolean pollmodeEnabled ) {
 		if ( pollmodeEnabled ) {			
-			ArrayList output = new ArrayList();
+			List output = new ArrayList();
 			/*Header: We have only one entry*/
 			output.add( new Short( ( short )1 ) );
 			
@@ -611,6 +620,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.109  2003/11/20 14:02:17  lemmster
+G2Gui cleanup
+
 Revision 1.108  2003/11/07 09:25:42  lemmster
 small javadoc fix
 
