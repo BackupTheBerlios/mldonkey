@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * DownloadTableTreeSorterAdvanced
  *
- * @version $Id: DownloadTableTreeSorterAdvanced.java,v 1.2 2003/09/21 23:39:31 zet Exp $
+ * @version $Id: DownloadTableTreeSorterAdvanced.java,v 1.3 2003/09/23 03:32:09 zet Exp $
  *
  */
 public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
@@ -106,8 +106,8 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
             case 5: // percent
                 return compareDoubles( fileInfo1.getPerc(  ), fileInfo2.getPerc(  ) );
 
-            case 6: // sources getSources() is 0 ?
-                return compareIntegers( fileInfo1.getClientInfos(  ).size(  ), fileInfo2.getClientInfos(  ).size(  ) );
+            case 6: // sources 
+                return compareIntegers( fileInfo1.getSources( ), fileInfo2.getSources(  ) );
 
             case 7: // relative availability
                 return compareIntegers( fileInfo1.getRelativeAvail(  ), fileInfo2.getRelativeAvail(  ) );
@@ -202,6 +202,9 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
 
 /*
 $Log: DownloadTableTreeSorterAdvanced.java,v $
+Revision 1.3  2003/09/23 03:32:09  zet
+*** empty log message ***
+
 Revision 1.2  2003/09/21 23:39:31  zet
 displayTableColors preference
 
