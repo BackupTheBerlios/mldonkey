@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Composite;
  * SpeedItem
  *
  *
- * @version $Id: SpeedItem.java,v 1.17 2003/08/28 22:44:30 zet Exp $ 
+ * @version $Id: SpeedItem.java,v 1.18 2003/09/13 22:24:17 zet Exp $ 
  *
  */
 public class SpeedItem implements Observer {	
@@ -52,6 +52,7 @@ public class SpeedItem implements Observer {
 	private StatusLine statusline;
 	private CLabel cLabelDown, cLabelUp;
 	private static final DecimalFormat decimalFormat = new DecimalFormat( "0.##" );
+	private int speedLength = 0;
 	/**
 	 * @param string
 	 * @param i
@@ -102,7 +103,12 @@ public class SpeedItem implements Observer {
 				/* not the tooltip */
 				cLabelDown.setToolTipText( "TCP: " + decimalFormat.format(stats.getTcpDownRate()) + " kb/s | UDP: " + decimalFormat.format(stats.getUdpDownRate()) + " kb/s | Total: " + decimalFormat.format(stats.getTcpDownRate() + stats.getUdpDownRate()) + " kb/s" );
 				cLabelUp.setToolTipText( "TCP: " + decimalFormat.format(stats.getTcpUpRate()) + " kb/s | UDP: " + decimalFormat.format(stats.getUdpUpRate()) + " kb/s | Total: " + decimalFormat.format(stats.getTcpUpRate() + stats.getUdpUpRate()) + " kb/s");
-				cLabelUp.getParent().getParent().layout();
+			
+				// only run Layout() if needed.. it seems to be an expensive call
+				if (speedLength < cLabelDown.getText().length() + cLabelUp.getText().length()) {
+					cLabelUp.getParent().getParent().layout();
+					speedLength = cLabelDown.getText().length() + cLabelUp.getText().length();
+				}
 			}
 		} );
 	}
@@ -110,6 +116,9 @@ public class SpeedItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.18  2003/09/13 22:24:17  zet
+Layout() only when necessary
+
 Revision 1.17  2003/08/28 22:44:30  zet
 GridLayout helper class
 
