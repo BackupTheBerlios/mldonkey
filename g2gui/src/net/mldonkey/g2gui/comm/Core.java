@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.46 2003/07/01 13:42:05 dek Exp $ 
+ * @version $Id: Core.java,v 1.47 2003/07/01 17:09:33 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -328,10 +328,21 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#search(java.lang.String)
+	 */
+	public void search(String searchstring) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.47  2003/07/01 17:09:33  dek
+search(String) was added, without any function yet
+
 Revision 1.46  2003/07/01 13:42:05  dek
 removed someting useless in setOptions
 
