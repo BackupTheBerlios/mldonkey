@@ -1,3 +1,11 @@
+2003/12/07:
+	* Code cleanup in the transfer section
+	* Tables: [Bug #1156] Allow a certain column to be 100% by pref
+	* Search: [Bug #1162] Search tab's pane position always reset to default
+
+2003/12/04: lemmy
+	* Store g2gui.pref file in the users home directory ~/.g2gui
+
 2003/12/01: lemmy
 	* Compelete rewrite of the protocol version handling (future-proof)
 	* Search: Cosmetic changes on the ToolTip
