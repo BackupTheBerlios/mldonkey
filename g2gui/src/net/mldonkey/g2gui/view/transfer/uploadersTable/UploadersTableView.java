@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadersTableView.java,v 1.1 2003/11/26 07:43:15 zet Exp $
+ * @version $Id: UploadersTableView.java,v 1.2 2003/11/26 16:05:37 zet Exp $
  *
  */
 public class UploadersTableView extends GTableView {
@@ -140,7 +140,7 @@ public class UploadersTableView extends GTableView {
             synchronized (objectWeakMap) {
                 objectWeakMap.clearAllLists();
 
-                return objectWeakMap.getWeakMap().keySet().toArray();
+                return objectWeakMap.getKeySet().toArray();
             }
         }
 
@@ -380,6 +380,9 @@ public class UploadersTableView extends GTableView {
 
 /*
 $Log: UploadersTableView.java,v $
+Revision 1.2  2003/11/26 16:05:37  zet
+minor
+
 Revision 1.1  2003/11/26 07:43:15  zet
 quick attempt at an uploaders table w/proto 19 - still in progress...
 
