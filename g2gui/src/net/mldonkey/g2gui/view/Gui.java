@@ -42,10 +42,14 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.12 2003/06/27 18:20:44 dek Exp $ 
+ * @version $Id: Gui.java,v 1.13 2003/06/30 21:40:09 dek Exp $ 
  *
  */
-public class Gui implements IG2gui, Listener {
+public class Gui implements IG2gui, Listener {	
+	private ToolBar miscTools;
+	private CoolItem miscCoolItem;
+	private CoolItem mainCoolItem;
+	private ToolBar mainTools;
 	private StatusLine statusline;
 	private Composite miscButtonRow;
 	private Composite buttonRow;
@@ -133,39 +137,11 @@ public class Gui implements IG2gui, Listener {
 			mainLayout.marginHeight = 0;
 			mainComposite.setLayout( mainLayout );
 			
-		this.buttonRow = new Composite( mainComposite, SWT.NONE );
-				gridData = new GridData();
-				gridData.grabExcessHorizontalSpace = true;
-				gridData.horizontalAlignment = GridData.CENTER;
-			buttonRow.setLayoutData( gridData );		
-			RowLayout buttonRowLayout = new RowLayout();			
-			buttonRowLayout.spacing =0;
-			buttonRowLayout.pack = true;
-			buttonRowLayout.justify = true;		
-			buttonRow.setLayout( buttonRowLayout );		
-		
-		tabButtonRow = new Composite( buttonRow, SWT.NONE );
-			RowLayout tabButtonRowLayout = new RowLayout();
-			tabButtonRowLayout.justify = true;
-			tabButtonRowLayout.pack = false;
-			tabButtonRowLayout.spacing = 5;		
-			tabButtonRow.setLayout( tabButtonRowLayout );
+		createCoolBar(mainComposite);				
 			
-		miscButtonRow = new Composite( buttonRow, SWT.NONE );
-			RowLayout miscButtonRowLayout = new RowLayout();
-			miscButtonRowLayout.justify = true;
-			miscButtonRowLayout.pack = true;
-			miscButtonRowLayout.spacing = 5;		
-			miscButtonRow.setLayout( miscButtonRowLayout );				
-			
-		
-		Label spacer = new Label(miscButtonRow,SWT.SEPARATOR|SWT.VERTICAL|SWT.SHADOW_OUT);
-		spacer.setLayoutData(new RowData(4,24));
-			
-			
-		Button preferences = new Button(miscButtonRow,SWT.FLAT);
-			preferences.setText("Preferences");
-			preferences.addListener(SWT.Selection, new Listener(){
+		ToolItem pref = new ToolItem(miscTools,SWT.NONE);		
+			pref.setText("Preferences");
+			pref.addListener(SWT.Selection, new Listener(){
 				public void handleEvent(Event event) {	
 					Shell prefshell = new Shell();
 					Preferences myprefs = new Preferences(new PreferenceStore("g2gui.pref"));					
@@ -174,13 +150,60 @@ public class Gui implements IG2gui, Listener {
 		
 		pageContainer = new Composite( mainComposite, SWT.NONE);
 		pageContainer.setLayout( new PageLayout() );						
-		gridData = new GridData( GridData.FILL_BOTH );			
+		gridData = new GridData( GridData.FILL_BOTH );
+			gridData.grabExcessHorizontalSpace = true;
+			gridData.grabExcessVerticalSpace = true;			
 			pageContainer.setLayoutData( gridData );
 						
 		addTabs();		
-		statusline = new StatusLine(mainComposite,mldonkey);					
+		statusline = new StatusLine(mainComposite,mldonkey);
+				
+		layoutCoolBar();				
 
 	}
+	private void createCoolBar(Composite parent) {
+		GridData gridData;
+		
+		Composite coolBarPanel = new Composite(parent,SWT.NONE);
+		coolBarPanel.setLayout(new FillLayout());
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		coolBarPanel.setLayoutData(gridData);
+		
+		CoolBar coolBar = new CoolBar (coolBarPanel, SWT.FLAT);		
+			gridData = new GridData(GridData.FILL_VERTICAL);
+			gridData.grabExcessHorizontalSpace = true;		
+			gridData.horizontalAlignment = GridData.BEGINNING;
+			coolBar.setLayoutData(gridData);
+				for (int i=0; i<2; i++) { 			
+					CoolItem item = new CoolItem (coolBar, SWT.NONE);
+					}
+		CoolItem[] items = coolBar.getItems ();
+					
+		this.mainTools = new ToolBar(coolBar,SWT.FLAT);			
+			mainCoolItem = items [0];
+			mainCoolItem.setControl (mainTools);
+			
+		this.miscTools = new ToolBar(coolBar,SWT.FLAT);
+			miscCoolItem = items [1];
+			miscCoolItem.setControl (miscTools);		
+	}
+	
+	private void layoutCoolBar() {
+		int CoolBarWidth = this.mainComposite.getBounds().width;	
+		//int CoolBarWidth = 0;
+		int CoolBarHeight = 0;
+		for (int i = 0; i < mainTools.getItems().length; i++) {
+			if (mainTools.getItems()[i].getBounds().height > CoolBarHeight)
+				CoolBarHeight = mainTools.getItems()[i].getBounds().height;	
+			if (mainTools.getItems()[i].getBounds().width > CoolBarWidth)	
+				CoolBarWidth = mainTools.getItems()[i].getBounds().width;
+			}
+			
+		CoolBarWidth = CoolBarWidth*mainTools.getItemCount();		
+		this.mainCoolItem.setSize (mainCoolItem.computeSize (CoolBarWidth,CoolBarHeight));	
+	}
+
+	
 
 	/**
 	 * Here do we add the tabs, they must extend G2GuiTab. They are responsible 
@@ -239,10 +262,20 @@ public class Gui implements IG2gui, Listener {
 	public CoreCommunication getCore() {		
 		return mldonkey;
 	}
+	/**
+	 * @return
+	 */
+	public ToolBar getMainTools() {
+		return mainTools;
+	}
+
 }
 
 /*
 $Log: Gui.java,v $
+Revision 1.13  2003/06/30 21:40:09  dek
+CoolBar created
+
 Revision 1.12  2003/06/27 18:20:44  dek
 für preferences
 

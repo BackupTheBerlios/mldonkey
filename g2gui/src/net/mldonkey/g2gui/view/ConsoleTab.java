@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.6 2003/06/30 19:11:57 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.7 2003/06/30 21:40:09 dek Exp $ 
  *
  */
 public class ConsoleTab extends G2guiTab implements Observer, ControlListener, Runnable {	
@@ -56,8 +56,8 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 	 */
 	public ConsoleTab(IG2gui gui) {
 		super(gui);
-		this.core = gui.getCore();
-		this.button.setText("Console");
+		this.core = gui.getCore();		
+		this.toolItem.setText("Console");		
 		createContents( this.content );
 		( ( Core ) core ).addObserver( this );
 		this.preferenceStore = new PreferenceStore("g2gui.pref");
@@ -148,6 +148,9 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.7  2003/06/30 21:40:09  dek
+CoolBar created
+
 Revision 1.6  2003/06/30 19:11:57  dek
 at work: setting the font to the one selected in the preference-dialog
 

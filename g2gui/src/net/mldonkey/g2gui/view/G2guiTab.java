@@ -24,22 +24,22 @@ package net.mldonkey.g2gui.view;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * G2guiTab
  *
  * @author $user$
- * @version $Id: G2guiTab.java,v 1.2 2003/06/26 14:08:03 dek Exp $ 
+ * @version $Id: G2guiTab.java,v 1.3 2003/06/30 21:40:09 dek Exp $ 
  *
  */
-public abstract class G2guiTab implements Listener{
-	protected Button button;
+public abstract class G2guiTab implements Listener{	
 	protected Composite content;
 	protected IG2gui mainWindow;
+	protected ToolItem toolItem;
 	
 	
 	
@@ -47,23 +47,17 @@ public abstract class G2guiTab implements Listener{
 	 * @param gui
 	 */
 	public G2guiTab(IG2gui gui) {
-		this.mainWindow = gui;
-		this.button = new Button(gui.getButtonRow(),SWT.FLAT);
-		this.button.addListener(SWT.Selection,this);
+		this.mainWindow = gui;		
 		this.content = new Composite(gui.getPageContainer(),SWT.NONE);
 		this.content.setLayout(new FillLayout());
 		this.content.setVisible(false);
+		toolItem = new ToolItem(((Gui)gui).getMainTools(),SWT.PUSH);		
+		this.toolItem.addListener(SWT.Selection,this);
 		gui.registerTab(this);		
 	}
 		
 	protected abstract void createContents(Composite parent);
-	
-	/**
-	 * @return
-	 */
-	public Button getButton() {
-		return button;
-	}
+		
 
 	/**
 	 * @return
@@ -78,6 +72,9 @@ public abstract class G2guiTab implements Listener{
 }
 /*
 $Log: G2guiTab.java,v $
+Revision 1.3  2003/06/30 21:40:09  dek
+CoolBar created
+
 Revision 1.2  2003/06/26 14:08:03  dek
 statusline created
 
