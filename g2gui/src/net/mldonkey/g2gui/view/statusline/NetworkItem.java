@@ -28,6 +28,8 @@ import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
+import net.mldonkey.g2gui.view.GuiTab;
+import net.mldonkey.g2gui.view.ServerTab;
 import net.mldonkey.g2gui.view.StatusLine;
 
 import org.eclipse.swt.SWT;
@@ -55,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.12 2003/08/04 19:22:08 zet Exp $ 
+ * @version $Id: NetworkItem.java,v 1.13 2003/08/10 12:59:01 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -67,7 +69,9 @@ public class NetworkItem implements Observer {
 	private GridLayout gridLayout;
 	private Image image;
 	private CLabel cLabel, anotherCLabel;
+	private MenuItem item;
 	private boolean enabled;
+	private GuiTab serverTab;
 
 
 	/**
@@ -82,7 +86,16 @@ public class NetworkItem implements Observer {
 		
 		this.createContent();
 
-		this.core.getNetworkInfoMap().addObserver( this );	
+		this.core.getNetworkInfoMap().addObserver( this );
+		
+		/* get the servertab */
+		GuiTab[] tabs = statusline.getMainTab().getTabs();
+		for ( int i = 0; i < tabs.length; i++ ) {
+			GuiTab tab = tabs[ i ];
+			if ( tab instanceof ServerTab ) {
+				this.serverTab = tab;
+			}
+		}
 	}
 
 	/**
@@ -104,7 +117,7 @@ public class NetworkItem implements Observer {
 			cLabel = new CLabel( composite, SWT.NONE );
 			cLabel.setData( network );
 			cLabel.setMenu( this.createRightClickMenu() );
-			cLabel.setText( network.getNetworkShortName() );
+//			cLabel.setText( network.getNetworkShortName() );
 			/* set the network name and status as tooltip */
 			cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
 			/* by default, the network is not connected */
@@ -454,18 +467,17 @@ public class NetworkItem implements Observer {
 		Shell shell = composite.getShell();
 		Menu menu = new Menu( shell , SWT.POP_UP );
 	
-		MenuItem item;
-		final MenuItem stateItem;
-	
 		/* change the menu for bittorrent (doesnt have servers) */
 		if ( ( ( NetworkInfo ) cLabel.getData() ).hasServers() ) {
 		
-			/* disconnect Server */
+			/* manage Server */
 			item = new MenuItem( menu, SWT.PUSH );
 			item.setText( "manage server" );
 			item.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent e ) {
-					//TODO open servertab
+					statusline.getMainTab().setActive( serverTab );
+					NetworkInfo network = ( NetworkInfo ) anotherCLabel.getData();
+					( ( ServerTab ) serverTab ).setFilter( network.getNetworkType() );
 				}
 			} );
 	
@@ -473,7 +485,7 @@ public class NetworkItem implements Observer {
 		}
 	
 		/* disable/enable the network */
-		stateItem = new MenuItem( menu, SWT.PUSH );
+		final MenuItem stateItem = new MenuItem( menu, SWT.PUSH );
 		stateItem.setText( "enable" );
 		stateItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
@@ -484,12 +496,17 @@ public class NetworkItem implements Observer {
 			
 		/* disable or enable? */
 		menu.addListener( SWT.Show, new Listener () {
+			private MenuItem item = NetworkItem.this.item;
 			public void handleEvent( Event event ) {
 				NetworkInfo networkInfo = ( NetworkInfo ) anotherCLabel.getData();
-				if ( networkInfo.isEnabled() )
+				if ( networkInfo.isEnabled() ) {
 					stateItem.setText( "Disable" );
-				else
+					item.setEnabled( true );
+				}
+				else {
 					stateItem.setText( "Enable" );						
+					item.setEnabled( false );
+				}
 			}
 		} );
 		return menu;
@@ -498,6 +515,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.13  2003/08/10 12:59:01  lemmstercvs01
+"manage servers" in NetworkItem implemented
+
 Revision 1.12  2003/08/04 19:22:08  zet
 trial tabletreeviewer
 

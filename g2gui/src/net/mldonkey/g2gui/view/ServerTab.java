@@ -26,6 +26,7 @@ import java.util.Observable;
 import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.view.server.TableContentProvider;
@@ -35,6 +36,7 @@ import net.mldonkey.g2gui.view.server.TableSorter;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -56,7 +58,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  * @author $user$
- * @version $Id: ServerTab.java,v 1.7 2003/08/08 02:46:31 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.8 2003/08/10 12:59:01 lemmstercvs01 Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -312,15 +314,34 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+	 * @see org.eclipse.swt.events.DisposeListener#
+	 * widgetDisposed(org.eclipse.swt.events.DisposeEvent)
 	 */
 	public void widgetDisposed(DisposeEvent e) {
 		this.core.getServerInfoIntMap().deleteObserver( this );
+	}
+	
+	/**
+	 * Adds a <code>ViewerFilter</code> to the <code>TableViewer</code> by
+	 * removing all present <code>TabelMenuListener.NetworkFilter</code> 
+	 * from the table.
+	 * @param enum
+	 */
+	public void setFilter( NetworkInfo.Enum enum ) {
+		ViewerFilter[] filters = table.getFilters();
+		for ( int i = 0; i < filters.length; i++ ) {
+			if ( filters[ i ] instanceof TableMenuListener.NetworkFilter )
+				table.removeFilter( filters[ i ] );
+		}
+		table.addFilter( new TableMenuListener.NetworkFilter( enum ) );
 	}
 }
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.8  2003/08/10 12:59:01  lemmstercvs01
+"manage servers" in NetworkItem implemented
+
 Revision 1.7  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 

@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.6 2003/08/02 19:32:43 zet Exp $ 
+ * @version $Id: StatusLine.java,v 1.7 2003/08/10 12:59:01 lemmstercvs01 Exp $ 
  *
  */
 public class StatusLine {
@@ -50,17 +50,20 @@ public class StatusLine {
 	private CoreCommunication core;
 	private Composite composite;
 	private Label label;
+	private MainTab mainTab;
+	private GridLayout gridLayout;
 
 	/**
 	 * Creates a new StatusLine obj
 	 * @param parent The parent obj Composite to display in
 	 * @param mldonkey The CoreCommunication to connect with
 	 */
-	public StatusLine( Composite parent, CoreCommunication core ) {
-		this.core = core;
-		this.composite = new Composite( parent, SWT.NONE );	
+	public StatusLine( MainTab mainTab ) {
+		this.mainTab = mainTab;
+		this.core = mainTab.getCore();
+		this.composite = new Composite( mainTab.getMainComposite(), SWT.NONE );	
 		
-		GridLayout gridLayout = new GridLayout();
+		gridLayout = new GridLayout();
 		gridLayout.numColumns = 3;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
@@ -76,10 +79,10 @@ public class StatusLine {
 		/* the middle field */
 		Composite middle = new Composite( composite, SWT.BORDER );
 		middle.setLayout( new FillLayout() );	
-		middle.setLayoutData( new GridData ( GridData.FILL_BOTH ));
-			
+		middle.setLayoutData( new GridData ( GridData.FILL_BOTH ) );
+
 		label = new Label(middle, SWT.NONE);
-		label.setText ( "");
+		label.setText ( "" );
 		
 		/* the right field */
 		new SpeedItem( this, this.core );
@@ -109,10 +112,19 @@ public class StatusLine {
 	public Composite getStatusline() {
 		return composite;
 	}
+	/**
+	 * @return The maintab we are started from
+	 */
+	public MainTab getMainTab() {
+		return mainTab;
+	}
 }
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.7  2003/08/10 12:59:01  lemmstercvs01
+"manage servers" in NetworkItem implemented
+
 Revision 1.6  2003/08/02 19:32:43  zet
 marginwidths
 

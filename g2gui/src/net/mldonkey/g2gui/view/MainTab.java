@@ -75,7 +75,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.31 2003/08/09 19:53:40 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.32 2003/08/10 12:59:01 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -99,6 +99,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 	private Menu mainMenuBar;	
 	private CoolBar coolbar;
 	private ToolBar miscTools, mainTools;
+	private GuiTab[] tabs;
 	
 	/**
 	 * @param core the most important thing of the gui: were do i get my data from
@@ -202,7 +203,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 		gridData.grabExcessVerticalSpace = true;			
 		pageContainer.setLayoutData( gridData );						
 
-		statusline = new StatusLine( mainComposite, mldonkey );
+		statusline = new StatusLine( this );
 		layoutCoolBar( coolbar );
 	} 
 	
@@ -459,11 +460,13 @@ public class MainTab implements Listener, Observer, ShellListener {
 	 * for the content and their button.
 	 */
 	private void addTabs() {
-		new TransferTab( this );
-		new SearchTab( this );
-		new ServerTab( this );
-		new ConsoleTab( this );
-		new StatisticTab( this );
+		this.tabs = new GuiTab[ 5 ];
+		tabs[ 0 ] =	new TransferTab( this );
+		tabs[ 1 ] =	new SearchTab( this );
+		tabs[ 2 ] =	new ServerTab( this );
+		tabs[ 3 ] =	new ConsoleTab( this );
+		tabs[ 4 ] =	new StatisticTab( this );
+
 		/*setting TransferTab active if registered*/
 		Iterator tabIterator = registeredTabs.iterator();
 		while ( tabIterator.hasNext() ) {
@@ -670,10 +673,23 @@ public class MainTab implements Listener, Observer, ShellListener {
 	public void shellIconified (ShellEvent e) {
 		this.mldonkey.getClientStats().addObserver(this);
 	}
+	/**
+	 * @return
+	 */
+	public Composite getMainComposite() {
+		return mainComposite;
+	}
+	
+	public GuiTab[] getTabs() {
+		return this.tabs;
+	}	
 } 
 
 /*
 $Log: MainTab.java,v $
+Revision 1.32  2003/08/10 12:59:01  lemmstercvs01
+"manage servers" in NetworkItem implemented
+
 Revision 1.31  2003/08/09 19:53:40  zet
 feedback menuitem
 

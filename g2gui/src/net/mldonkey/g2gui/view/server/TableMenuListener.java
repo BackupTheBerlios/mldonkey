@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * TableMenuListener
  *
  * @author $user$
- * @version $Id: TableMenuListener.java,v 1.8 2003/08/09 16:03:45 dek Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.9 2003/08/10 12:59:12 lemmstercvs01 Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -526,7 +526,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		}	
 	}		
 	
-	private class NetworkFilter extends ViewerFilter {
+	public static class NetworkFilter extends ViewerFilter {
 		private NetworkInfo.Enum networkType;
 		
 		public NetworkFilter( NetworkInfo.Enum enum ) {
@@ -665,6 +665,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.9  2003/08/10 12:59:12  lemmstercvs01
+"manage servers" in NetworkItem implemented
+
 Revision 1.8  2003/08/09 16:03:45  dek
 added gnu.regexp for compiling with gcj
 you can get it at:
