@@ -66,7 +66,7 @@ public class GraphPainter implements IPaintable {
 			g2d.setColor(graphColor);
 			int valueY = (int)(graphs[which].getLast().getValue()*10);
 			g2d.drawLine(0,valueY,control.getBounds().width,valueY);
-			System.out.println("Male Graph" + which +" hat den wert" + valueY);
+			//System.out.println("Male Graph" + which +" hat den wert" + valueY);
 			which++;
 			
 		}

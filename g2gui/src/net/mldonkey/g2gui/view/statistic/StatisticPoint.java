@@ -22,12 +22,8 @@ public class StatisticPoint {
 		
 			value = value_;
 			createTime = System.currentTimeMillis();
-			System.out.println("statistic Point created");
-		}
-	
-
-
-	
+			
+		}	
 
 	
 	public long getTime()

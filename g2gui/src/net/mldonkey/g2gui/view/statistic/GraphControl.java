@@ -42,14 +42,9 @@ private GraphCanvas graphCanvas;
 		
 		this.setSize(400,200);
 		
-		
-		
-		
 		graphPainter.setGraph(downloadGraph);
 		graphPainter.setGraph(uploadGraph);
 
-
-		
 		System.out.println("The Image Canvas:" + graphCanvas.getBounds());
 		graphCanvas.paintImage();
 		
@@ -78,7 +73,7 @@ private GraphCanvas graphCanvas;
 
 	public void redraw()
 	{
-		System.out.println("redraw on ImageLabel is called");
+
 		//imageCanvas.redraw();
 		
 	}
