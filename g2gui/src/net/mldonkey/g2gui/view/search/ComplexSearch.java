@@ -32,22 +32,23 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Slider;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 /**
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.2 2003/09/04 12:17:01 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.3 2003/09/04 16:06:45 lemmster Exp $
  *
  */
-public abstract class ComplexSearch extends Search {
+public abstract class ComplexSearch extends Search implements Listener {
     protected Text maxText;
     protected Text minText;
     protected Combo extensionCombo;
-    protected Slider resultSlider;
+    protected Combo resultCombo;
 
     /**
      * @param core
@@ -92,14 +93,16 @@ public abstract class ComplexSearch extends Search {
 	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
 	 */
 	public void performSearch() {
-		query.setMaxSize( new Long( maxText.getText() ).longValue() );
-		query.setMinSize( new Long( minText.getText() ).longValue() );
-		query.setMaxSearchResults( new Integer( resultSlider.getSelection() ).intValue() );
-		query.setFormat( extensionCombo.getItem( extensionCombo.getSelectionIndex() ) );
+		if ( !maxText.getText().equals( "" ) )
+			query.setMaxSize( new Long( maxText.getText() ).longValue() );
+		if ( !minText.getText().equals( "" ) )
+			query.setMinSize( new Long( minText.getText() ).longValue() );
+		if ( !resultCombo.getItem( resultCombo.getSelectionIndex() ).equals( "" ) )
+			query.setMaxSearchResults( 
+				new Integer( resultCombo.getItem( resultCombo.getSelectionIndex()) ).intValue() );
+		if ( !extensionCombo.getItem( extensionCombo.getSelectionIndex() ).equals( "" ) )
+			query.setFormat( extensionCombo.getItem( extensionCombo.getSelectionIndex() ) );
 
-		/* the query string */
-		query.setSearchString( text.getText() );
-					
 		/* get the network id for this query */
 		Object obj = combo.getData( combo.getItem( combo.getSelectionIndex() ) );
 		if ( obj != null ) { // if != All
@@ -125,7 +128,7 @@ public abstract class ComplexSearch extends Search {
      * @param group DOCUMENT ME!
      * @param items DOCUMENT ME!
      */
-    protected Control[] createExtensionAndResultBox( Composite group, String[] items ) {
+    protected Combo[] createExtensionAndResultCombo( Composite group, String[] items ) {
         /* the max result label */
         GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 1;
@@ -138,7 +141,7 @@ public abstract class ComplexSearch extends Search {
         gridData.horizontalSpan = 1;
         label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
-        label.setText( "Max Search Results" );
+        label.setText( "Max Results" );
 
         /* the extension box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -151,12 +154,15 @@ public abstract class ComplexSearch extends Search {
         /* the max result box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 1;
-		resultSlider = new Slider( group, SWT.HORIZONTAL );
-		resultSlider.setLayoutData( gridData );
-		resultSlider.setMaximum( 10 );
-		resultSlider.setMinimum( 0 );
-		
-		return new Control[] { extensionCombo, resultSlider };
+        String[] resultItems = { "50", "100", "200", "400" };
+		resultCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
+		resultCombo.setLayoutData( gridData );
+		resultCombo.setItems( resultItems );
+		resultCombo.select( 0 );
+		/* only allow digits for this combo */
+		resultCombo.addListener( SWT.Verify, this );
+
+		return new Combo[] { extensionCombo, resultCombo };
     }
 
     /**
@@ -177,22 +183,39 @@ public abstract class ComplexSearch extends Search {
 		label.setLayoutData( gridData );
 		label.setText( "Min Size" );
         
-		/* the max size slider */
+		/* the max size text */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         maxText = new Text( group, SWT.SINGLE | SWT.BORDER );
         maxText.setLayoutData( gridData );
+		maxText.addListener( SWT.Verify, this );
 
-        /* the min size slider */
+        /* the min size text */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
 		minText = new Text( group, SWT.SINGLE | SWT.BORDER );
 		minText.setLayoutData( gridData );
+		minText.addListener( SWT.Verify, this );
 		
 		return new Text[] { maxText, minText };
     }
+    
+    public void handleEvent( Event e ) {
+		String aString = e.text;
+		char[] chars = new char[ aString.length() ];
+		aString.getChars( 0, chars.length, chars, 0 );
+		for ( int i = 0; i < chars.length; i++ ) {
+			if ( !( '0' <= chars[ i ] && chars[ i ] <= '9' ) ) {
+				e.doit = false;
+				return;
+			}
+		}
+   }
 }
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.3  2003/09/04 16:06:45  lemmster
+working in progress
+
 Revision 1.2  2003/09/04 12:17:01  lemmster
 lots of changes
 

@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.23 2003/09/04 02:35:24 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.24 2003/09/04 16:06:45 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -95,19 +95,16 @@ public class SearchTab extends GuiTab {
 		if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
 			List aList = new ArrayList();
 			aList.add( new MusicComplexSearch( core, this ) );
-			aList.add( new VideoComplexSearch( core, this ) );
-			aList.add( new OtherComplexSearch( core, this ) );
+//			aList.add( new VideoComplexSearch( core, this ) );
+//			aList.add( new OtherComplexSearch( core, this ) );
 			
 			return new Search[] {
 				new SimpleSearch( core, this ),
 				new CompositeSearch( core, this, aList )
 			};
 		}
-		else {
-			return new Search[] {
-				new SimpleSearch( core, this ),
-			};	
-		}
+		else
+			return new Search[] { new SimpleSearch( core, this ) };	
 	}
 
 	/* (non-Javadoc)
@@ -121,7 +118,7 @@ public class SearchTab extends GuiTab {
 		this.createLeftGroup ();
 		this.createRightGroup ();
 		
-		mainSash.setWeights(new int[] {1,5});
+		mainSash.setWeights( new int[] { 1, 5 } );
 	}
 
 	/**
@@ -289,6 +286,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.24  2003/09/04 16:06:45  lemmster
+working in progress
+
 Revision 1.23  2003/09/04 02:35:24  zet
 try a sash ?
 
@@ -320,7 +320,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

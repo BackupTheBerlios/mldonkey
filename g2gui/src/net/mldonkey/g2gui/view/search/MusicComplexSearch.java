@@ -30,21 +30,23 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Slider;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.2 2003/09/04 12:17:01 lemmster Exp $ 
+ * @version $Id: MusicComplexSearch.java,v 1.3 2003/09/04 16:06:45 lemmster Exp $ 
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
 	private Text artistText, albumText;
+	private Combo bitrateCombo;
 	
 	/**
 	 * @param core
@@ -74,16 +76,32 @@ public class MusicComplexSearch extends ComplexSearch {
 		artistText = this.createInputBox( composite, "Artist" );
 		albumText = this.createInputBox( composite, "Album" );
 		
+		/* the bitrate label */
+		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
+		gridData.horizontalSpan = 2;
+		Label label = new Label( composite, SWT.NONE );
+		label.setLayoutData( gridData );
+		label.setText( "Bitrate" );
+		
+		/* the bitrate combo */
+		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		gridData.horizontalSpan = 2;
+		String[] bitrateItems = { "whatever", "96kb", "128kb", "196kb" };
+		bitrateCombo = new Combo( composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+		bitrateCombo.setLayoutData( gridData );
+		bitrateCombo.setItems( bitrateItems );
+		bitrateCombo.select( 0 );
+		
 		/* the network combo */
 		this.combo = 
 			this.createNetworkCombo( composite, G2GuiResources.getString( "SS_NETWORK" ) );
 
 		/* the result and size controls */
 		String[] items = { "mp3", "ogg", "wav", "midi" };
-		Control[] controls =
-			this.createExtensionAndResultBox( composite, items );
-		this.extensionCombo = ( Combo ) controls[ 0 ];
-		this.resultSlider = ( Slider ) controls[ 1 ];
+		Combo[] combos =
+			this.createExtensionAndResultCombo( composite, items );
+		this.extensionCombo = ( Combo ) combos[ 0 ];
+		this.resultCombo = ( Combo ) combos[ 1 ];
 
 		/* the min and max size text fields */
 		Text[] texts =
@@ -105,22 +123,36 @@ public class MusicComplexSearch extends ComplexSearch {
 	 */
 	public void update( Observable o, Object arg ) {
 		super.update( o, arg );
-		/* update the other text */
-		 if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
-			 artistText.setEnabled( false );
-			 albumText.setEnabled( false );
-		 }
-		 else {
-			artistText.setEnabled( true );
-			albumText.setEnabled( true );
-		 }
+		if ( artistText.isDisposed() ) return;
+		
+		artistText.getDisplay().asyncExec( new Runnable() {
+			public void run() {
+				/* update the other text */
+				 if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
+					 artistText.setEnabled( false );
+					 albumText.setEnabled( false );
+				 }
+				 else {
+					artistText.setEnabled( true );
+					albumText.setEnabled( true );
+				 }
+			}
+		} );
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
 	 */
 	public void performSearch() {
-		if ( text.getText().equals( "" ) ) return;
+		if ( text.getText().equals( "" )
+		&& artistText.getText().equals( "" )
+		&& albumText.getText().equals( "" ) ) return;
+		
+		query.setMp3Title( text.getText() );
+		query.setMp3Album( albumText.getText() );
+		query.setMp3Artist( artistText.getText() );
+		query.setMp3Bitrate(
+			bitrateCombo.getItem( bitrateCombo.getSelectionIndex() ) );
 		super.performSearch();
 	}
 
@@ -128,6 +160,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.3  2003/09/04 16:06:45  lemmster
+working in progress
+
 Revision 1.2  2003/09/04 12:17:01  lemmster
 lots of changes
 

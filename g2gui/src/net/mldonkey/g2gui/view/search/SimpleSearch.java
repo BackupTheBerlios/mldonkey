@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.12 2003/09/04 12:17:01 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.13 2003/09/04 16:06:45 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -149,7 +149,7 @@ public class SimpleSearch extends Search {
 			} );
 
 			Object[] obj =
-				this.createSearchButton( composite );
+				this.createSearchButton( group );
 			this.stackLayout = ( StackLayout ) obj[ 0 ];
 			this.composite = ( Composite ) obj[ 1 ];
 
@@ -190,6 +190,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.13  2003/09/04 16:06:45  lemmster
+working in progress
+
 Revision 1.12  2003/09/04 12:17:01  lemmster
 lots of changes
 
