@@ -26,7 +26,7 @@ package net.mldonkey.g2gui.model;
  * Download
  *
  * @author markus
- * @version $Id: Download.java,v 1.2 2003/06/11 15:32:33 lemmstercvs01 Exp $ 
+ * @version $Id: Download.java,v 1.3 2003/06/12 07:40:04 lemmstercvs01 Exp $ 
  *
  */
 public class Download {
@@ -58,6 +58,10 @@ public class Download {
 	 * Number of sources
 	 */
 	private int sources;
+	/**
+	 * Number of clients
+	 */
+	private int clients;
 	/**
 	 * Chunks
 	 */
@@ -337,10 +341,27 @@ public class Download {
 		this.state = state;
 	}
 
+	/**
+	 * @return an int
+	 */
+	public int getClients() {
+		return clients;
+	}
+
+	/**
+	 * @param i an int
+	 */
+	public void setClients( int i ) {
+		clients = i;
+	}
+
 }
 
 /*
 $Log: Download.java,v $
+Revision 1.3  2003/06/12 07:40:04  lemmstercvs01
+added number of clients
+
 Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
 still in progress
 
