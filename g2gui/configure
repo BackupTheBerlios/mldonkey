@@ -272,7 +272,7 @@ PACKAGE_VERSION='VERSION'
 PACKAGE_STRING='FULL-PACKAGE-NAME VERSION'
 PACKAGE_BUGREPORT='BUG-REPORT-ADDRESS'
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os WGET TAR BZIP2 GCJ FIND LD SRC_DIR RUNTIME_DIR RES_DIR PLATFORM_TARGETS SWT_DIR OBJ_DIR PACKAGE_DIR LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os WGET TAR BZIP2 GCJ FIND LD SED SRC_DIR RUNTIME_DIR RES_DIR MAGIC PLATFORM_TARGETS SWT_DIR OBJ_DIR PACKAGE_DIR LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1451,7 +1451,12 @@ fi;
 
 # Checks for programs.
 
+#take gcj from commandline ./configure (...) gcj=/path/to/gcj (...)
 
+
+if test ! -z $gcj; then
+ac_cv_path_GCJ=$gcj
+fi
 
 # Extract the first word of "gcj", so it can be a program name with args.
 set dummy gcj; ac_word=$2
@@ -1611,6 +1616,52 @@ if test -z $ac_cv_path_LD; then
 echo "$as_me: error: **** Could not find the program 'ld' needed to compile this software! ****" >&2;}
    { (exit 1); exit 1; }; }
 fi
+
+# Extract the first word of "sed", so it can be a program name with args.
+set dummy sed; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_SED+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $SED in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_SED="$SED" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_SED="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  ;;
+esac
+fi
+SED=$ac_cv_path_SED
+
+if test -n "$SED"; then
+  echo "$as_me:$LINENO: result: $SED" >&5
+echo "${ECHO_T}$SED" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+if test -z $ac_cv_path_SED; then
+   { { echo "$as_me:$LINENO: error: **** Could not find the program 'sed' needed to compile this software! ****" >&5
+echo "$as_me: error: **** Could not find the program 'sed' needed to compile this software! ****" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
 
 
 # Checks for libraries.
@@ -1946,6 +1997,8 @@ case $host in
 	swt_dir=swt-win32
 	obj_dir=obj-$host
 	platform_targets=icon.o
+	MAGIC="#no magic"
+
 	;;
 
 	*)
@@ -1956,6 +2009,8 @@ case $host in
     host=$(echo $(uname) | tr A-Z a-z)
 	swt_dir=swt-$host-$widget_set
 	obj_dir=obj-$widget_set
+	MAGIC=$(magic)
+
 	echo "SWT widget-set : $widget_set"
 	echo "SWT dir prefix : $swt_dir"
 	;;
@@ -2685,9 +2740,11 @@ s,@BZIP2@,$BZIP2,;t t
 s,@GCJ@,$GCJ,;t t
 s,@FIND@,$FIND,;t t
 s,@LD@,$LD,;t t
+s,@SED@,$SED,;t t
 s,@SRC_DIR@,$SRC_DIR,;t t
 s,@RUNTIME_DIR@,$RUNTIME_DIR,;t t
 s,@RES_DIR@,$RES_DIR,;t t
+s,@MAGIC@,$MAGIC,;t t
 s,@PLATFORM_TARGETS@,$PLATFORM_TARGETS,;t t
 s,@SWT_DIR@,$SWT_DIR,;t t
 s,@OBJ_DIR@,$OBJ_DIR,;t t
