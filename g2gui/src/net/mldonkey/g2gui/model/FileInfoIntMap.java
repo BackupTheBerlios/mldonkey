@@ -22,6 +22,10 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import gnu.trove.TIntObjectIterator;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -34,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.9 2003/07/04 12:28:46 dek Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.10 2003/07/04 13:29:15 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -162,6 +166,7 @@ public class FileInfoIntMap extends InfoIntMap {
 	 * Needs manual refresh() of the tableviewer.
 	 */
 	public void removeObsolete() {
+		List temp = new ArrayList();
 		TIntObjectIterator itr = this.iterator();
 		int collsize = this.size();
 		for ( ; collsize-- > 0;) {
@@ -169,16 +174,22 @@ public class FileInfoIntMap extends InfoIntMap {
 			FileInfo aFileInfo = ( FileInfo ) itr.value();
 			/* if EnumFileState.DOWNLOADED, remove the fileinfo from this */
 			if ( aFileInfo.getState().getState() == EnumFileState.DOWNLOADED
-				|| aFileInfo.getState().getState() == EnumFileState.CANCELLED )
-				{
-				this.infoIntMap.remove( itr.key() );
-				}
+				|| aFileInfo.getState().getState() == EnumFileState.CANCELLED ) {
+				temp.add( new Integer( itr.key() ) );
+			}
+		}
+		Iterator itr2 = temp.iterator();
+		while ( itr2.hasNext() ) {
+			this.remove( ( ( Integer ) itr2.next() ).intValue() );
 		}
 	}
 }
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.10  2003/07/04 13:29:15  lemmstercvs01
+removeObsolete() fixed
+
 Revision 1.9  2003/07/04 12:28:46  dek
 checkstyle
 
