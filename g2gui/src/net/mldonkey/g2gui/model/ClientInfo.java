@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.32 2003/11/26 07:42:07 zet Exp $
+ * @version $Id: ClientInfo.java,v 1.33 2003/11/26 07:46:36 zet Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -92,29 +92,29 @@ public class ClientInfo extends Parent {
     /**
      * Client Software
      */
-    private String clientSoftware;
+    private String clientSoftware = "";
 
     /**
      * Client downloaded bytes
      */
-    private long clientDownloaded;
+    private long clientDownloaded = 0;
     private String clientDownloadedString = "";
 
     /**
      * Client uploaded bytes
      */
-    private long clientUploaded;
+    private long clientUploaded = 0;
     private String clientUploadedString = "";
 
     /**
      * Client IP address
      */
-    private String clientSockAddr;
+    private String clientSockAddr = "";
 
     /**
      * Filename being uploaded to client
      */
-    private String clientUploadFilename;
+    private String clientUploadFilename = "";
 
     /**
      * true if clientUploadFileName != ""
@@ -458,6 +458,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.33  2003/11/26 07:46:36  zet
+init variables (maybe needed w proto < 19?)
+
 Revision 1.32  2003/11/26 07:42:07  zet
 protocolVersion 19/timer
 
