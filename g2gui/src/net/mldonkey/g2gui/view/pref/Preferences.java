@@ -32,11 +32,12 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.3 2003/06/26 12:04:44 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.4 2003/06/27 18:05:46 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
 
+	private boolean connected = false;
 	private PreferenceManager myprefs;
 	private PreferenceDialog prefdialog;
 	private PreferenceStore preferenceStore;
@@ -47,29 +48,29 @@ public class Preferences extends PreferenceManager {
 	 */
 	public Preferences(PreferenceStore preferenceStore) {	
 		this.preferenceStore = 	preferenceStore;
-		myprefs = new PreferenceManager();		
-		myprefs.addToRoot(new PreferenceNode("G2gui", new G2Gui(preferenceStore)));
-		myprefs.addToRoot(new PreferenceNode("mldonkey", new General(preferenceStore)));
-		myprefs.addToRoot(new PreferenceNode("eDonkey", new Edonkey(preferenceStore)));		
-
-		
+		myprefs = new PreferenceManager();
+		myprefs.addToRoot(new PreferenceNode("G2gui", new G2Gui(preferenceStore,connected)));		
 	}
 	
 	public void open(Shell shell, CoreCommunication mldonkey) {
 		try {
-			initialize(preferenceStore);
-		} catch (IOException e) {
-			System.out.println("initalizing Preferences Dialog failed due to IOException");
-		}
-		prefdialog = new PreferenceDialog(shell, myprefs){
-			/* (non-Javadoc)
-			 * @see org.eclipse.jface.preference.PreferenceDialog#cancelPressed()
-			 */
-			protected void cancelPressed() {				
-				prefdialog.close();
+				initialize(preferenceStore);
+			} catch (IOException e) {
+				System.out.println("initalizing Preferences Dialog failed due to IOException");
 			}
-			};
-	
+		prefdialog = new PreferenceDialog(shell, myprefs){
+				/* (non-Javadoc)
+				 * @see org.eclipse.jface.preference.PreferenceDialog#cancelPressed()
+				 */
+				protected void cancelPressed() {				
+					prefdialog.close();
+				}
+				};
+		if ( ( mldonkey != null ) && (mldonkey.isConnected() ) ) {
+			this.connected = true;
+		}		
+		myprefs.addToRoot(new PreferenceNode("mldonkey", new General(preferenceStore,connected, mldonkey)));
+		myprefs.addToRoot(new PreferenceNode("eDonkey", new Edonkey(preferenceStore,connected)));		
 		prefdialog.open();
 	}
 
@@ -90,10 +91,20 @@ public class Preferences extends PreferenceManager {
 		return myprefs;
 	}
 
+	/**
+	 * @return is our nice gui connected to a remot mldonkey, so that we can get remote-options?
+	 */
+	public boolean isConnected() {
+		return connected;
+	}
+
 }
 
 /*
 $Log: Preferences.java,v $
+Revision 1.4  2003/06/27 18:05:46  dek
+Client name is now an option, not saveable yet, but it's displayed ;-)
+
 Revision 1.3  2003/06/26 12:04:44  dek
 pref-dialog accessible in main-window
 

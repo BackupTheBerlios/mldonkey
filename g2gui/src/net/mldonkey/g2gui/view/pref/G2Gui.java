@@ -33,18 +33,20 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.4 2003/06/26 12:06:12 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.5 2003/06/27 18:05:46 dek Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {
+	private boolean connected;
 	StringFieldEditor hostname,username,password;
 	IntegerFieldEditor port;
 	PreferenceStore preferenceStore;
 	/**
 	 * @param preferenceStore
 	 */
-	public G2Gui(PreferenceStore preferenceStore_) {
-		super("G2gui");		
+	public G2Gui(PreferenceStore preferenceStore_, boolean connected) {
+		super("G2gui");
+		this.connected = connected;		
 		this.preferenceStore = preferenceStore_;
 		preferenceStore.setDefault("hostname","localhost");
 		preferenceStore.setDefault("username","admin");
@@ -127,6 +129,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.5  2003/06/27 18:05:46  dek
+Client name is now an option, not saveable yet, but it's displayed ;-)
+
 Revision 1.4  2003/06/26 12:06:12  dek
 removed debugging output
 

@@ -22,28 +22,50 @@
  */
 package net.mldonkey.g2gui.view.pref;
 
-import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.OptionsInfo;
+import net.mldonkey.g2gui.model.OptionsInfoMap;
+
+import org.eclipse.jface.preference.*;
+import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.widgets.*;
+
 
 
 /**
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.2 2003/06/26 14:09:20 dek Exp $ 
+ * @version $Id: General.java,v 1.3 2003/06/27 18:05:46 dek Exp $ 
  *
  */
 public class General extends PreferencePage {
+	private OptionsInfoMap options;
+	private CoreCommunication mldonkey;
+	private boolean connected;
 	private PreferenceStore preferenceStore;
+	private StringFieldEditor username;
 
 	/**
 	 * @param preferenceStore
 	 */
-	public General( PreferenceStore preferenceStore_ ) {
+	public General( PreferenceStore preferenceStore_, boolean connected, CoreCommunication mldonkey ) {
 		super( "General Settings" );
-		this.preferenceStore = preferenceStore_;		
+		this.connected = connected;
+		this.preferenceStore = preferenceStore_;
+		this.mldonkey = mldonkey;
+		if (connected){
+			this.options = mldonkey.getOptions();		
+			BusyIndicator.showWhile(null,new Runnable(){			
+			public void run() {
+				while (!(options.keySet().contains("client_name"))){					
+					}				
+				}});
+			preferenceStore.setDefault("client_name",
+				( ( OptionsInfo ) options.get( "client_name" ) ).getValue());			
+		}
+		else preferenceStore.setDefault("client_name","<no Connection to mldonkey>");
+		
 
 	}
 
@@ -52,6 +74,11 @@ public class General extends PreferencePage {
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createContents( Composite shell ) {
+		
+		username = new StringFieldEditor("client_name", "Client Name",shell);
+			username.setEnabled(connected,shell);
+			username.setStringValue(preferenceStore.getDefaultString("client_name"));
+			username.setStringValue(preferenceStore.getString("client_name"));	
 		return null;
 	}
 
@@ -59,6 +86,9 @@ public class General extends PreferencePage {
 
 /*
 $Log: General.java,v $
+Revision 1.3  2003/06/27 18:05:46  dek
+Client name is now an option, not saveable yet, but it's displayed ;-)
+
 Revision 1.2  2003/06/26 14:09:20  dek
 checkstyle
 

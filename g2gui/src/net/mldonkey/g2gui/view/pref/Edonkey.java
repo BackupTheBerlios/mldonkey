@@ -33,17 +33,19 @@ import org.eclipse.swt.widgets.Control;
  * Edonkey
  *
  * @author $user$
- * @version $Id: Edonkey.java,v 1.2 2003/06/26 14:09:20 dek Exp $ 
+ * @version $Id: Edonkey.java,v 1.3 2003/06/27 18:05:46 dek Exp $ 
  *
  */
 public class Edonkey extends PreferencePage {
+	private boolean connected;
 	private PreferenceStore preferenceStore;
 	/**
 	 * @param preferenceStore
 	 */
-	public Edonkey( PreferenceStore preferenceStore_ ) {
+	public Edonkey( PreferenceStore preferenceStore_ , boolean connected) {
 		super( "eDonkey" );
 		this.preferenceStore = preferenceStore_;
+		this.connected = connected;
 
 	}
 
@@ -56,6 +58,9 @@ public class Edonkey extends PreferencePage {
 
 /*
 $Log: Edonkey.java,v $
+Revision 1.3  2003/06/27 18:05:46  dek
+Client name is now an option, not saveable yet, but it's displayed ;-)
+
 Revision 1.2  2003/06/26 14:09:20  dek
 checkstyle
 
