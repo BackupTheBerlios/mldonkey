@@ -38,7 +38,7 @@ import org.eclipse.swt.graphics.Color;
  * ResultTableLabelProvider
  *
  * @author $user$
- * @version $Id: ResultTableLabelProvider.java,v 1.4 2003/07/31 04:11:00 zet Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.5 2003/08/08 23:33:49 zet Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -112,7 +112,9 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 	 */
-	public void dispose() { }
+	public void dispose() {
+		alreadyDownloadedColor.dispose();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#
@@ -144,6 +146,9 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.5  2003/08/08 23:33:49  zet
+dispose color
+
 Revision 1.4  2003/07/31 04:11:00  zet
 searchresult changes
 
