@@ -52,18 +52,20 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 
 /**
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.31 2003/09/25 17:58:41 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.32 2003/09/25 20:45:06 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -156,12 +158,31 @@ public class SearchTab extends GuiTab {
 			tabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
 				
 		Search[] searchTabs = this.createTab();
+		Control aControl;
 		for ( int i = 0; i < searchTabs.length; i++ ) {
 			CTabItem item = new CTabItem( tabFolder, SWT.NONE );
+			
 			item.setText( searchTabs[ i ].getTabName() );
-			item.setControl( searchTabs[ i ].createTabFolderPage( tabFolder ) );
+			aControl = searchTabs[ i ].createTabFolderPage( tabFolder );
+			if (i == 0) item.setControl( aControl );
+			item.setData( "myControl", aControl );
 			item.setData( searchTabs[ i ] );			
 		}
+		
+		// setControl on selection
+        tabFolder.addSelectionListener(new SelectionListener() {
+            public void widgetDefaultSelected(SelectionEvent e) {}
+            public void widgetSelected(SelectionEvent e) {
+                for (int i = 0; i < tabFolder.getItems().length; i++) {
+                    tabFolder.getItems()[i].setControl(null);
+                }
+
+                CTabItem cTabItem = (CTabItem) e.item;
+                cTabItem.setControl( (Control) cTabItem.getData( "myControl" ) );
+                tabFolder.getParent().layout();
+            }
+        });
+		
 		tabFolder.setSelection( 0 );
 
 		gridLayout = new GridLayout();
@@ -388,6 +409,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.32  2003/09/25 20:45:06  zet
+remove that annoying empty space.........
+
 Revision 1.31  2003/09/25 17:58:41  lemmster
 fixed crash bug
 
@@ -443,7 +467,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose
