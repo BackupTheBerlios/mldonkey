@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.16 2003/11/04 22:58:47 zet Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.17 2003/11/11 17:31:10 zet Exp $ 
  *
  */
 public class G2GuiPref extends PreferencePage {
@@ -112,6 +112,7 @@ public class G2GuiPref extends PreferencePage {
 				// Make this a little more obvious
 				Button b = advancedModeEditor.getChangeControl( composite );
 				b.setFont( JFaceResources.getBannerFont());
+				b.setToolTipText( G2GuiResources.getString("PREF_ADVANCED_TOOLTIP"));
 				b.setForeground( composite.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 				
 			( ( GridLayout )composite.getLayout() ).numColumns = 2;
@@ -119,6 +120,9 @@ public class G2GuiPref extends PreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.17  2003/11/11 17:31:10  zet
+tooltip
+
 Revision 1.16  2003/11/04 22:58:47  zet
 Make "advanced user" option more noticeable
 
