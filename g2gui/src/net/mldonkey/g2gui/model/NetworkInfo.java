@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.11 2003/07/28 08:18:17 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.12 2003/07/30 19:26:19 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -117,6 +117,17 @@ public class NetworkInfo extends Parent {
 	 */
 	public boolean isEnabled() {
 		return enabled;
+	}
+	
+	/**
+	 * @return Does this network use servers
+	 */
+	public boolean hasServers() {
+		/* bittorrent has no servers */
+		if ( this.networkType == Enum.BT ) 
+			return false;
+		/* all others do */	
+		return true;	
 	}
 
 	/**
@@ -250,6 +261,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.12  2003/07/30 19:26:19  lemmstercvs01
+hasServers() added, use it to exclude networks in servertab without servers
+
 Revision 1.11  2003/07/28 08:18:17  lemmstercvs01
 added NetworkInfo.Enum to differ the networks
 
