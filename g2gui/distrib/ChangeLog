@@ -1,3 +1,6 @@
+2003/11/13: z
+	* Pane menu: Add "Sort" option for macOS (until SWT fixes table header clicks)
+
 2003/11/12: z
 	* Transfer: Fix rate colors #1081
 	* Preferences: Fix Linux file browsing (* not *.*) #1079
