@@ -33,21 +33,21 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * GTableTreeContentProvider - convenience class
  *
- * @version $Id: GTableTreeContentProvider.java,v 1.3 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: GTableTreeContentProvider.java,v 1.4 2003/10/31 16:30:49 zet Exp $
  *
  */
 public class GTableTreeContentProvider extends GTableContentProvider implements ITreeContentProvider {
     protected CustomTableTreeViewer tableTreeViewer;
 
-    public GTableTreeContentProvider( GView gViewer) {
-        super(gViewer);
+    public GTableTreeContentProvider(GView gView) {
+        super(gView);
     }
 
     /**
      * after viewer creation
      */
     public void initialize() {
-        tableTreeViewer = ((GTableTreeView) gViewer).getTableTreeViewer();
+        tableTreeViewer = ((GTableTreeView) gView).getTableTreeViewer();
     }
 
     /* (non-Javadoc)
@@ -84,6 +84,9 @@ public class GTableTreeContentProvider extends GTableContentProvider implements 
 
 /*
 $Log: GTableTreeContentProvider.java,v $
+Revision 1.4  2003/10/31 16:30:49  zet
+minor renames
+
 Revision 1.3  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Shell;
  * ServerTableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.16 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.17 2003/10/31 16:30:49 zet Exp $
  *
  */
 public class ServerTableMenuListener extends TableMenuListener { 
@@ -85,7 +85,7 @@ public class ServerTableMenuListener extends TableMenuListener {
     
     public void initialize() {
         super.initialize();
-        this.core = gViewer.getCore();
+        this.core = gView.getCore();
         this.serverInfoMap = this.core.getServerInfoIntMap();
         this.selectedServers = new ArrayList();
     }
@@ -508,6 +508,9 @@ public class ServerTableMenuListener extends TableMenuListener {
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.17  2003/10/31 16:30:49  zet
+minor renames
+
 Revision 1.16  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.1 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: UploadTableView.java,v 1.2 2003/10/31 16:30:49 zet Exp $
  *
  */
 public class UploadTableView extends GTableView {
@@ -319,7 +319,7 @@ public class UploadTableView extends GTableView {
                 menuManager.add(clipboardMenu);
             }
 
-            menuManager.add(new RefreshUploadsAction(gViewer));
+            menuManager.add(new RefreshUploadsAction(gView));
         }
     }
 }
@@ -327,6 +327,9 @@ public class UploadTableView extends GTableView {
 
 /*
 $Log: UploadTableView.java,v $
+Revision 1.2  2003/10/31 16:30:49  zet
+minor renames
+
 Revision 1.1  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -85,7 +85,7 @@ import org.eclipse.swt.widgets.Text;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.26 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.27 2003/10/31 16:30:49 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -108,16 +108,16 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
     public void initialize() {
         super.initialize();
-        tableTreeContentProvider = (DownloadTableTreeContentProvider) ((DownloadTableTreeViewer) gViewer).getTableContentProvider();
+        tableTreeContentProvider = (DownloadTableTreeContentProvider) ((DownloadTableTreeViewer) gView).getTableContentProvider();
 
         /*this is to delete the selection, if one clicks in an empty row of the table*/
-        gViewer.getTable().addMouseListener(new MouseAdapter() {
+        gView.getTable().addMouseListener(new MouseAdapter() {
                 public void mouseDown(MouseEvent e) {
                     Table table = (Table) e.widget;
                     TableItem item = table.getItem(new Point(e.x, e.y));
 
                     if (item == null) {
-                        gViewer.getTable().deselectAll();
+                        gView.getTable().deselectAll();
                         selectedFiles.clear();
                         selectedClients.clear();
                         selectedClient = null;
@@ -135,7 +135,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
      * Activate drag and drop
      */
     public void activateDragAndDrop() {
-        DragSource dragSource = new DragSource(gViewer.getTable(), DND.DROP_COPY | DND.DROP_LINK);
+        DragSource dragSource = new DragSource(gView.getTable(), DND.DROP_COPY | DND.DROP_LINK);
         dragSource.setTransfer(new Transfer[] { TextTransfer.getInstance() });
 
         dragSource.addDragListener(new DragSourceAdapter() {
@@ -157,7 +157,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                 }
             });
 
-        DropTarget dropTarget = new DropTarget(gViewer.getTable(),
+        DropTarget dropTarget = new DropTarget(gView.getTable(),
                 DND.DROP_COPY | DND.DROP_DEFAULT | DND.DROP_LINK);
         final UniformResourceLocator uRL = UniformResourceLocator.getInstance();
         final TextTransfer textTransfer = TextTransfer.getInstance();
@@ -181,7 +181,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                     }
 
                     Message dllLink = new EncodeMessage(Message.S_DLLINK, event.data);
-                    dllLink.sendMessage(gViewer.getCore());
+                    dllLink.sendMessage(gView.getCore());
                 }
             });
     }
@@ -300,7 +300,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         if ((selectedFile != null) && advancedMode) {
             menuManager.add(new PreviewAction());
             menuManager.add(new VerifyChunksAction());
-            menuManager.add(new ToggleClientsAction((DownloadTableTreeViewer) gViewer));
+            menuManager.add(new ToggleClientsAction((DownloadTableTreeViewer) gView));
         }
 
         if ((selectedClient != null) && advancedMode) {
@@ -311,12 +311,12 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                 clientInfoArray[ i ] = treeClientInfo.getClientInfo();
             }
 
-            menuManager.add(new AddClientAsFriendAction(gViewer.getCore(), clientInfoArray));
+            menuManager.add(new AddClientAsFriendAction(gView.getCore(), clientInfoArray));
         }
 
         if (selectedClient != null) {
             menuManager.add(new ClientDetailAction(selectedClient.getFileInfo(),
-                    selectedClient.getClientInfo(), gViewer.getCore()));
+                    selectedClient.getClientInfo(), gView.getCore()));
         }
 
         if (selectedFile != null) {
@@ -468,7 +468,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                 }
             } else {
                 if (manualInput) {
-                    InputDialog inputDialog = new InputDialog(gViewer.getShell(),
+                    InputDialog inputDialog = new InputDialog(gView.getShell(),
                             G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_AS"),
                             G2GuiResources.getString("TT_DOWNLOAD_MENU_COMMIT_AS"),
                             selectedFile.getName(), null);
@@ -517,7 +517,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         }
 
         public void run() {
-            MessageBox reallyCancel = new MessageBox(gViewer.getShell(),
+            MessageBox reallyCancel = new MessageBox(gView.getShell(),
                     SWT.YES | SWT.NO | SWT.ICON_QUESTION);
 
             reallyCancel.setMessage(G2GuiResources.getString("TT_REALLY_CANCEL") +
@@ -534,7 +534,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                     }
 
                     // this conceptually breaks core/gui synchronicity and should be removed ASAP.
-                    gViewer.getCore().getResultInfoIntMap().setDownloading(fileInfo, false);
+                    gView.getCore().getResultInfoIntMap().setDownloading(fileInfo, false);
                 }
             }
         }
@@ -602,7 +602,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                           : G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_CUSTOM_ABSOLUTE")) +
                 ")";
 
-            PriorityInputDialog priorityInputDialog = new PriorityInputDialog(gViewer.getShell(),
+            PriorityInputDialog priorityInputDialog = new PriorityInputDialog(gView.getShell(),
                     title, title, (relative ? 0 : selectedFile.getPriority()), null);
 
             if (priorityInputDialog.open() == PriorityInputDialog.OK) {
@@ -679,6 +679,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.27  2003/10/31 16:30:49  zet
+minor renames
+
 Revision 1.26  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -44,7 +44,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * ClientTableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.11 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.12 2003/10/31 16:30:49 zet Exp $
  *
  */
 public class ClientTableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -64,7 +64,7 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
      */
     public void initialize() {
         super.initialize();
-        this.core = gViewer.getCore();
+        this.core = gView.getCore();
     }
 
     /* (non-Javadoc)
@@ -105,6 +105,9 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.12  2003/10/31 16:30:49  zet
+minor renames
+
 Revision 1.11  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.28 2003/10/31 16:02:57 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.29 2003/10/31 16:30:49 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -80,8 +80,8 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	
 	public void initialize() {
 	    super.initialize();
-	    this.cTabItem = ((ResultTableView) gViewer).getCTabItem();
-	    this.core = gViewer.getCore();
+	    this.cTabItem = ((ResultTableView) gView).getCTabItem();
+	    this.core = gView.getCore();
 		this.resultInfoMap = this.core.getResultInfoIntMap();
 	}
 	
@@ -305,6 +305,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.29  2003/10/31 16:30:49  zet
+minor renames
+
 Revision 1.28  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
