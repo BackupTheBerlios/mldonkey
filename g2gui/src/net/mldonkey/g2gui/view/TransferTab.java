@@ -68,7 +68,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.30 2003/08/20 22:18:56 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.31 2003/08/21 10:12:10 dek Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -190,7 +190,7 @@ public class TransferTab extends GuiTab  {
 					clientTableViewer.setSorter ( newTS );
 				}	
 			} ); 
-		};
+		}
 			
 		clientTableViewer.setContentProvider(new TableContentProvider());
 		clientTableViewer.setLabelProvider(new TableLabelProvider());
@@ -288,6 +288,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.31  2003/08/21 10:12:10  dek
+removed empty expression
+
 Revision 1.30  2003/08/20 22:18:56  zet
 Viewer updates
 
