@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.19 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.20 2003/11/26 05:40:06 zet Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -365,7 +365,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable o, Object arg ) {
-    	if ( resultCombo.isDisposed() || resultCombo == null ) return;
+    	if ( resultCombo == null || resultCombo.isDisposed() ) return;
        	resultCombo.getDisplay().asyncExec( new Runnable() {
                 public void run() {
                 	if ( resultCombo.isDisposed() ) return;
@@ -405,6 +405,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.20  2003/11/26 05:40:06  zet
+fix npe
+
 Revision 1.19  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
