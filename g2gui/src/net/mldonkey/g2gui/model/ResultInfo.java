@@ -33,15 +33,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * ResultInfo
  *
- * @author $Author: zet $
- * @version $Id: ResultInfo.java,v 1.15 2003/08/26 22:44:03 zet Exp $ 
  *
- */
-/**
- * ResultInfo
- *
- *
- * @version $Id: ResultInfo.java,v 1.15 2003/08/26 22:44:03 zet Exp $ 
+ * @version $Id: ResultInfo.java,v 1.16 2003/08/28 00:12:10 zet Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -101,13 +94,17 @@ public class ResultInfo extends Parent {
 			profanityFilterRE = new RE( 
 				"fuck|shit" 
 				, RE.REG_ICASE );
-		}  catch ( REException e ) { }
+		}  catch ( REException e ) {
+			profanityFilterRE = null;
+		}
 		try {
 			pornographyFilterRE = new RE( 
 				"fuck|shit|porn|pr0n|pussy|xxx|sex|erotic|anal|lolita|sluts|fetish"
 				+ "|naked|incest|bondage|masturbat|blow.*job|barely.*legal" 
 				, RE.REG_ICASE );
-		} catch ( REException e ) {	}
+		} catch ( REException e ) {
+			pornographyFilterRE = null;		
+		}
 		
 	}
 	
@@ -175,11 +172,13 @@ public class ResultInfo extends Parent {
 		this.stringSize = this.calcStringSize( this.getSize() );
 		
 		for ( int i = 0; i < names.length; i++ ) {
-			if (profanityFilterRE.getMatch(names[ i ]) != null) {
+			if (profanityFilterRE != null 
+				&& profanityFilterRE.getMatch(names[ i ]) != null) {
 				containsProfanity = true;
 				if (containsPornography) break;
 			}
-			if (pornographyFilterRE.getMatch(names[ i ]) != null) {
+			if (pornographyFilterRE != null 
+				&& pornographyFilterRE.getMatch(names[ i ]) != null) {
 				containsPornography = true;
 				if (containsProfanity) break;
 			}
@@ -344,6 +343,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.16  2003/08/28 00:12:10  zet
+chk for null
+
 Revision 1.15  2003/08/26 22:44:03  zet
 basic filtering
 
