@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.33 2003/08/06 17:09:48 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.34 2003/08/06 17:45:18 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -371,7 +371,7 @@ public class FileInfo extends Parent implements Observer {
 		
 		/* File Format */
 		this.getFormat().readStream( messageBuffer );
-		
+		String oldname = this.name;
 		this.name = messageBuffer.readString();
 		this.offset = messageBuffer.readInt32();
 		this.setPriority( messageBuffer.readInt32() );
@@ -485,13 +485,10 @@ public class FileInfo extends Parent implements Observer {
 	 * @param string The new name for this file
 	 */
 	public void setName( String string ) {
-		Object[] content = new Object[ 2 ];
-		content[ 0 ] = new Integer( this.getId() );
-		content[ 1 ] = string;
+		string = "rename " + this.getId() + " \""+ string + "\"";
 		/* create the message content */
-		EncodeMessage consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, content );
+		EncodeMessage consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, string );
 		consoleMessage.sendMessage( this.parent.getConnection() );
-		content = null;
 		consoleMessage = null;
 	}
 
@@ -615,6 +612,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.34  2003/08/06 17:45:18  zet
+fix rename
+
 Revision 1.33  2003/08/06 17:09:48  zet
 string types added
 
