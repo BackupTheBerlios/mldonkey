@@ -28,7 +28,6 @@ import gnu.regexp.REException;
 import java.util.Observable;
 import java.util.Observer;
 
-import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -45,7 +44,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  * @author $Author: lemmster $
- * @version $Id: ConsoleTab.java,v 1.37 2003/08/22 21:06:48 lemmster Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.38 2003/08/23 09:56:15 lemmster Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -105,7 +104,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 	 */
 	public void handleEvent(Event event) {
 		super.handleEvent(event);
-		if (core.isConnected()) {
+		if ( core.isConnected() ) {
 			console.append(
 				replaceAll(	core.getConsoleMessage().getConsoleMessage(),
 							"\n",
@@ -119,7 +118,8 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 		RE regex = null;			
 		try {
 			 regex = new RE( toBeReplaced );
-		} catch ( REException e ) {			
+		}
+		catch ( REException e ) {			
 			e.printStackTrace();
 		}		
 		String result = regex.substituteAll( input, replaceWith );	
@@ -136,10 +136,10 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 		console.setDisplayFont( PreferenceLoader.loadFont( "consoleFontData" ) );
 		console.setInputFont( PreferenceLoader.loadFont( "consoleFontData" ) );
 		console.setHighlightColor( PreferenceLoader.loadColour( "consoleHighlight" ) );
-		console.setDisplayBackground ( PreferenceLoader.loadColour( "consoleBackground" ) );
-		console.setDisplayForeground ( PreferenceLoader.loadColour( "consoleForeground" ) );
-		console.setInputBackground ( PreferenceLoader.loadColour( "consoleInputBackground" ) );
-		console.setInputForeground ( PreferenceLoader.loadColour( "consoleInputForeground" ) );
+		console.setDisplayBackground( PreferenceLoader.loadColour( "consoleBackground" ) );
+		console.setDisplayForeground( PreferenceLoader.loadColour( "consoleForeground" ) );
+		console.setInputBackground( PreferenceLoader.loadColour( "consoleInputBackground" ) );
+		console.setInputForeground( PreferenceLoader.loadColour( "consoleInputForeground" ) );
 	}
 	
 	
@@ -147,11 +147,13 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
 	 */
 	public void update( Observable o, Object arg ) {
-		if (o instanceof Console) {
+		if ( o instanceof Console ) {
 			String[] command = new String[ 1 ] ;
-			command[ 0 ] = (String) arg ;
-			( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage( ( ( Core ) core ).getConnection() );
-		} else if (o instanceof ConsoleMessage) {
+			command[ 0 ] = ( String ) arg ;
+			( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage(
+				 ( ( CoreCommunication ) core ).getConnection() );
+		}
+		else if ( o instanceof ConsoleMessage ) {
 			this.consoleMessage = ( ConsoleMessage ) arg;
 			content.getDisplay().syncExec( this );
 		}
@@ -168,8 +170,11 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.38  2003/08/23 09:56:15  lemmster
+use supertype instead of Core
+
 Revision 1.37  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: lemmster $
 
 Revision 1.36  2003/08/18 01:42:24  zet
 centralize resource bundle

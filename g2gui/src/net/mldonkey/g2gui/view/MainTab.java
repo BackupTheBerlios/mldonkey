@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -82,8 +81,8 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * Gui
  *
- * @author $Author: zet $
- * @version $Id: MainTab.java,v 1.51 2003/08/22 23:25:15 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: MainTab.java,v 1.52 2003/08/23 09:56:15 lemmster Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -153,7 +152,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 				}
 				handCursor.dispose();
 				/* kill the core communication */
-				( ( Core )mldonkey ).disconnect();				
+				( ( CoreCommunication )mldonkey ).disconnect();				
 			}
 		} );
 		while ( !shell.isDisposed () ) {
@@ -787,6 +786,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.52  2003/08/23 09:56:15  lemmster
+use supertype instead of Core
+
 Revision 1.51  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
