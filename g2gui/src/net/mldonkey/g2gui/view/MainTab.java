@@ -31,6 +31,7 @@ import java.util.List;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.VersionInfo;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.main.MainCoolBar;
 import net.mldonkey.g2gui.view.main.MainMenuBar;
@@ -68,7 +69,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.89 2003/11/13 00:21:59 zet Exp $
+ * @version $Id: MainTab.java,v 1.90 2003/11/14 19:41:46 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -423,7 +424,9 @@ public class MainTab implements ShellListener {
             textInfo.setLayoutData(new GridData(GridData.FILL_BOTH));
             textInfo.setText("Please help us to improve this product!\n" +
                 "Please submit a bug report detailing exactly what you were doing when this happened!\n" +
-                "http://developer.berlios.de/bugs/?group_id=610\n\n" + "StackTrace:\n\n" + string);
+                "http://developer.berlios.de/bugs/?group_id=610\n\n" + 
+                SWT.getPlatform() + "/" + SWT.getVersion() + "/" +  VersionInfo.getVersion() + "\n" +
+                "StackTrace:\n\n" + string);
 
             return composite;
         }
@@ -459,6 +462,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.90  2003/11/14 19:41:46  zet
+include ver info in bug report dialog
+
 Revision 1.89  2003/11/13 00:21:59  zet
 *** empty log message ***
 
