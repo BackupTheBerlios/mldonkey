@@ -30,7 +30,7 @@ import java.net.Socket;
 /**
  * Message
  *
- * @version $Id: Message.java,v 1.41 2003/11/28 13:11:10 zet Exp $
+ * @version $Id: Message.java,v 1.42 2003/12/04 08:47:31 lemmy Exp $
  *
  */
 public abstract class Message {
@@ -447,6 +447,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.42  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.41  2003/11/28 13:11:10  zet
 support patch 2372
 
@@ -464,7 +467,7 @@ Revision 1.37  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.36  2003/09/18 08:56:27  lemmster
+Revision 1.36  2003/09/18 08:56:27  lemmy
 checkstyle
 
 Revision 1.35  2003/09/18 03:59:37  zet
@@ -477,7 +480,7 @@ to get notice of changes in # of requests and # of uploaded bytes
 Revision 1.33  2003/09/16 01:18:31  zet
 try to handle socket disconnection in a central location
 
-Revision 1.32  2003/09/02 09:24:36  lemmster
+Revision 1.32  2003/09/02 09:24:36  lemmy
 checkstyle
 
 Revision 1.31  2003/08/24 16:54:38  dek
@@ -487,8 +490,8 @@ all the room-stuff
 Revision 1.30  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.29  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+Revision 1.29  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.28  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
@@ -496,64 +499,64 @@ try to remove dup clientInfos, add friends/basic messaging
 Revision 1.27  2003/08/10 23:20:41  zet
 signed ints
 
-Revision 1.26  2003/08/02 09:32:07  lemmstercvs01
+Revision 1.26  2003/08/02 09:32:07  lemmy
 javadoc fixed
 
-Revision 1.25  2003/08/01 13:46:24  lemmstercvs01
+Revision 1.25  2003/08/01 13:46:24  lemmy
 opcodes added
 
-Revision 1.24  2003/07/23 17:01:55  lemmstercvs01
+Revision 1.24  2003/07/23 17:01:55  lemmy
 added S_DOWNLOAD (opcode 50)
 
-Revision 1.23  2003/07/04 11:04:24  lemmstercvs01
+Revision 1.23  2003/07/04 11:04:24  lemmy
 added some opcodes
 
-Revision 1.22  2003/07/03 21:13:04  lemmstercvs01
+Revision 1.22  2003/07/03 21:13:04  lemmy
 some opcodes added
 
-Revision 1.21  2003/06/29 17:38:49  lemmstercvs01
+Revision 1.21  2003/06/29 17:38:49  lemmy
 opcodes added, "bad password" fixed
 
 Revision 1.20  2003/06/21 13:20:36  dek
 work on optiontree continued - one can already change client_name in General-leaf
 
-Revision 1.19  2003/06/16 21:47:41  lemmstercvs01
+Revision 1.19  2003/06/16 21:47:41  lemmy
 opcode 3 added
 
-Revision 1.18  2003/06/16 20:08:38  lemmstercvs01
+Revision 1.18  2003/06/16 20:08:38  lemmy
 opcode 13 added
 
 Revision 1.17  2003/06/16 18:43:05  dek
 opcode 51 added
 
-Revision 1.16  2003/06/15 19:37:01  lemmstercvs01
+Revision 1.16  2003/06/15 19:37:01  lemmy
 fixed a bug in readInt32()
 
-Revision 1.15  2003/06/15 16:18:58  lemmstercvs01
+Revision 1.15  2003/06/15 16:18:58  lemmy
 some opcodes added
 
-Revision 1.14  2003/06/15 09:58:30  lemmstercvs01
+Revision 1.14  2003/06/15 09:58:30  lemmy
 some opcodes added
 
-Revision 1.13  2003/06/14 19:30:50  lemmstercvs01
+Revision 1.13  2003/06/14 19:30:50  lemmy
 some opcodes added
 
-Revision 1.12  2003/06/14 17:41:19  lemmstercvs01
+Revision 1.12  2003/06/14 17:41:19  lemmy
 added some opcodes
 
-Revision 1.11  2003/06/14 12:48:57  lemmstercvs01
+Revision 1.11  2003/06/14 12:48:57  lemmy
 checkstyle applied, added a opcode, removed abstract methods
 
-Revision 1.10  2003/06/13 11:23:24  lemmstercvs01
+Revision 1.10  2003/06/13 11:23:24  lemmy
 modified readInt32, deleted all other readXX()
 
-Revision 1.9  2003/06/13 08:47:41  lemmstercvs01
+Revision 1.9  2003/06/13 08:47:41  lemmy
 changed String to StringBuffer in readBinary()
 
-Revision 1.8  2003/06/12 18:14:41  lemmstercvs01
+Revision 1.8  2003/06/12 18:14:41  lemmy
 some abstract methodes added
 
-Revision 1.7  2003/06/12 10:45:44  lemmstercvs01
+Revision 1.7  2003/06/12 10:45:44  lemmy
 R_BAD_PASSWORD added
 
 Revision 1.6  2003/06/12 10:40:06  dek
@@ -562,19 +565,19 @@ readByte() --> readInt8 | readByte returns now: byte
 Revision 1.5  2003/06/11 23:25:49  dek
 fixed readInt32 /readInt64
 
-Revision 1.4  2003/06/11 20:43:45  lemmstercvs01
+Revision 1.4  2003/06/11 20:43:45  lemmy
 setMd4() fixed
 
-Revision 1.3  2003/06/11 16:41:19  lemmstercvs01
+Revision 1.3  2003/06/11 16:41:19  lemmy
 still a problem in setMd4()
 
-Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
+Revision 1.2  2003/06/11 15:32:33  lemmy
 still in progress
 
-Revision 1.1  2003/06/11 12:56:10  lemmstercvs01
+Revision 1.1  2003/06/11 12:56:10  lemmy
 moved from model -> comm
 
-Revision 1.4  2003/06/10 16:22:19  lemmstercvs01
+Revision 1.4  2003/06/10 16:22:19  lemmy
 create a class hierarchy for message
 
 */

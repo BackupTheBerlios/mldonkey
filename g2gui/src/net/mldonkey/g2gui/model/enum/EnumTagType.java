@@ -26,7 +26,7 @@ package net.mldonkey.g2gui.model.enum;
  * EnumTagType
  *
  *
- * @version $Id: EnumTagType.java,v 1.5 2003/10/28 11:07:32 lemmster Exp $ 
+ * @version $Id: EnumTagType.java,v 1.6 2003/12/04 08:47:29 lemmy Exp $ 
  *
  */
 public class EnumTagType extends Enum {
@@ -81,23 +81,26 @@ public class EnumTagType extends Enum {
 
 /*
 $Log: EnumTagType.java,v $
-Revision 1.5  2003/10/28 11:07:32  lemmster
+Revision 1.6  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.5  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.3  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.3  2003/08/22 21:04:27  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.2  2003/08/02 09:27:39  lemmstercvs01
+Revision 1.2  2003/08/02 09:27:39  lemmy
 added support for proto > 16
 
-Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
+Revision 1.1  2003/06/24 09:29:33  lemmy
 Enum more improved
 
-Revision 1.1  2003/06/24 09:16:13  lemmstercvs01
+Revision 1.1  2003/06/24 09:16:13  lemmy
 better Enum added
 
 */

@@ -30,7 +30,7 @@ import java.net.UnknownHostException;
  * SocketPool
  *
  *
- * @version $Id: SocketPool.java,v 1.14 2003/09/02 09:24:36 lemmster Exp $ 
+ * @version $Id: SocketPool.java,v 1.15 2003/12/04 08:47:28 lemmy Exp $ 
  *
  */
 public class SocketPool extends ObjectPool {
@@ -116,44 +116,47 @@ public class SocketPool extends ObjectPool {
 
 /*
 $Log: SocketPool.java,v $
-Revision 1.14  2003/09/02 09:24:36  lemmster
+Revision 1.15  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.14  2003/09/02 09:24:36  lemmy
 checkstyle
 
 Revision 1.13  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.12  2003/08/21 10:55:01  lemmster
-$user$ -> $Author: lemmster $
+Revision 1.12  2003/08/21 10:55:01  lemmy
+$user$ -> $Author: lemmy $
 
-Revision 1.11  2003/08/04 14:38:13  lemmstercvs01
+Revision 1.11  2003/08/04 14:38:13  lemmy
 splashscreen and error handling added
 
-Revision 1.10  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.10  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.9  2003/06/19 08:41:21  lemmstercvs01
+Revision 1.9  2003/06/19 08:41:21  lemmy
 just one socket is opened at start
 
-Revision 1.8  2003/06/14 12:47:51  lemmstercvs01
+Revision 1.8  2003/06/14 12:47:51  lemmy
 checkstyle applied
 
-Revision 1.7  2003/06/13 10:45:23  lemmstercvs01
+Revision 1.7  2003/06/13 10:45:23  lemmy
 send protocol, user/pass, gui extension in socketpool
 
-Revision 1.6  2003/06/12 22:23:06  lemmstercvs01
+Revision 1.6  2003/06/12 22:23:06  lemmy
 lots of changes
 
 Revision 1.5  2003/06/12 18:19:29  dek
 *** empty log message ***
 
-Revision 1.4  2003/06/12 13:09:52  lemmstercvs01
+Revision 1.4  2003/06/12 13:09:52  lemmy
 ObjectPool, DownloadPool, GuiMessagePool added;
 class hierarchy under ObjectPool created
 
-Revision 1.3  2003/06/11 15:32:33  lemmstercvs01
+Revision 1.3  2003/06/11 15:32:33  lemmy
 still in progress
 
-Revision 1.2  2003/06/09 17:33:21  lemmstercvs01
+Revision 1.2  2003/06/09 17:33:21  lemmy
 checkstyle applied
 
 */

@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.RGB;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.61 2003/11/29 17:01:52 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.62 2003/12/04 08:47:31 lemmy Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -332,13 +332,16 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.62  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.61  2003/11/29 17:01:52  zet
 update for mainWindow
 
 Revision 1.60  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
-Revision 1.59  2003/11/10 08:18:21  lemmster
+Revision 1.59  2003/11/10 08:18:21  lemmy
 move logic into model(controller)
 
 Revision 1.58  2003/11/09 21:49:26  zet
@@ -377,10 +380,10 @@ changed network mini-icons from png to gif
 Revision 1.46  2003/10/31 16:35:08  zet
 typo
 
-Revision 1.45  2003/10/31 13:17:10  lemmster
+Revision 1.45  2003/10/31 13:17:10  lemmy
 dropdown.gif added
 
-Revision 1.44  2003/10/28 11:07:32  lemmster
+Revision 1.44  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
@@ -414,19 +417,19 @@ split images directory
 Revision 1.34  2003/10/15 04:16:37  zet
 add images
 
-Revision 1.33  2003/09/27 10:24:54  lemmster
+Revision 1.33  2003/09/27 10:24:54  lemmy
 news items added
 
-Revision 1.32  2003/09/22 20:25:04  lemmster
+Revision 1.32  2003/09/22 20:25:04  lemmy
 show # sources in search result avail table
 
-Revision 1.31  2003/09/22 20:20:09  lemmster
+Revision 1.31  2003/09/22 20:20:09  lemmy
 show # sources in search result avail table
 
 Revision 1.30  2003/09/18 23:09:48  zet
 *** empty log message ***
 
-Revision 1.29  2003/09/18 10:26:28  lemmster
+Revision 1.29  2003/09/18 10:26:28  lemmy
 checkstyle
 
 Revision 1.28  2003/09/17 14:40:31  zet
@@ -435,7 +438,7 @@ redcross
 Revision 1.27  2003/09/16 20:21:59  zet
 opennap
 
-Revision 1.26  2003/09/16 09:24:11  lemmster
+Revision 1.26  2003/09/16 09:24:11  lemmy
 adjust source rating
 
 Revision 1.25  2003/09/13 22:23:20  zet
@@ -450,7 +453,7 @@ ico
 Revision 1.22  2003/09/03 14:49:07  zet
 optionally spawn core from gui
 
-Revision 1.21  2003/09/02 09:25:55  lemmster
+Revision 1.21  2003/09/02 09:25:55  lemmy
 jalopy run
 
 Revision 1.20  2003/09/01 00:51:49  zet
@@ -486,16 +489,16 @@ localise/update friendstab
 Revision 1.8  2003/08/25 12:24:09  zet
 Toggleable link entry.  It should parse links from pasted HTML as well.
 
-Revision 1.7  2003/08/23 15:49:28  lemmster
+Revision 1.7  2003/08/23 15:49:28  lemmy
 fix for prefs and refactoring
 
 Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+Revision 1.5  2003/08/22 21:10:57  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.4  2003/08/21 11:19:15  lemmster
+Revision 1.4  2003/08/21 11:19:15  lemmy
 added bt and multinet image
 
 Revision 1.3  2003/08/20 14:58:43  zet

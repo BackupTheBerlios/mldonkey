@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.26 2003/12/01 14:22:17 lemmster Exp $
+ * @version $Id: ServerInfo.java,v 1.27 2003/12/04 08:47:25 lemmy Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -331,80 +331,83 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
-Revision 1.26  2003/12/01 14:22:17  lemmster
+Revision 1.27  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.26  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.25  2003/11/29 13:01:32  lemmster
+Revision 1.25  2003/11/29 13:01:32  lemmy
 Addr.getString() renamed to the more natural word name Addr.toString()
 
-Revision 1.24  2003/10/28 11:07:32  lemmster
+Revision 1.24  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
-Revision 1.23  2003/09/24 09:35:57  lemmster
+Revision 1.23  2003/09/24 09:35:57  lemmy
 serverlink in menulistener
 
 Revision 1.22  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.21  2003/09/18 09:16:47  lemmster
+Revision 1.21  2003/09/18 09:16:47  lemmy
 checkstyle
 
 Revision 1.20  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.19  2003/08/23 10:02:02  lemmster
+Revision 1.19  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
-Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.18  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.17  2003/08/11 11:22:53  lemmstercvs01
+Revision 1.17  2003/08/11 11:22:53  lemmy
 avoid npes
 
-Revision 1.16  2003/08/07 12:35:31  lemmstercvs01
+Revision 1.16  2003/08/07 12:35:31  lemmy
 cleanup, more efficient
 
-Revision 1.15  2003/08/06 20:56:49  lemmstercvs01
+Revision 1.15  2003/08/06 20:56:49  lemmy
 cleanup, more efficient
 
-Revision 1.14  2003/08/06 17:38:38  lemmstercvs01
+Revision 1.14  2003/08/06 17:38:38  lemmy
 some actions still missing. but it should work for the moment
 
-Revision 1.13  2003/08/06 09:46:42  lemmstercvs01
+Revision 1.13  2003/08/06 09:46:42  lemmy
 toString() added, some bugfixes
 
-Revision 1.12  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.12  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.11  2003/07/30 19:29:36  lemmstercvs01
+Revision 1.11  2003/07/30 19:29:36  lemmy
 public short getServerPort() -> public int getServerPort() to fix negativ ports
 
-Revision 1.10  2003/07/29 09:47:13  lemmstercvs01
+Revision 1.10  2003/07/29 09:47:13  lemmy
 networkid -> networkInfo, no servename -> "<unknown>"
 
-Revision 1.9  2003/07/06 08:57:09  lemmstercvs01
+Revision 1.9  2003/07/06 08:57:09  lemmy
 getParent() removed
 
-Revision 1.8  2003/07/06 08:49:33  lemmstercvs01
+Revision 1.8  2003/07/06 08:49:33  lemmy
 better oo added
 
-Revision 1.7  2003/07/06 07:45:26  lemmstercvs01
+Revision 1.7  2003/07/06 07:45:26  lemmy
 checkstyle applied
 
-Revision 1.6  2003/07/04 18:35:02  lemmstercvs01
+Revision 1.6  2003/07/04 18:35:02  lemmy
 foobar
 
-Revision 1.5  2003/06/30 07:20:09  lemmstercvs01
+Revision 1.5  2003/06/30 07:20:09  lemmy
 changed to readTagList()
 
 Revision 1.4  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
-Revision 1.3  2003/06/16 20:08:38  lemmstercvs01
+Revision 1.3  2003/06/16 20:08:38  lemmy
 opcode 13 added
 
-Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
+Revision 1.2  2003/06/14 20:30:44  lemmy
 cosmetic changes
 */

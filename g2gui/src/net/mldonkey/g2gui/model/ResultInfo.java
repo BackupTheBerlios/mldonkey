@@ -45,7 +45,7 @@ import org.eclipse.swt.program.Program;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.31 2003/12/01 14:22:17 lemmster Exp $
+ * @version $Id: ResultInfo.java,v 1.32 2003/12/04 08:47:25 lemmy Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -704,22 +704,25 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
-Revision 1.31  2003/12/01 14:22:17  lemmster
+Revision 1.32  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.31  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.30  2003/11/30 09:31:26  lemmster
+Revision 1.30  2003/11/30 09:31:26  lemmy
 ToolTip complete reworked (complete)
 
-Revision 1.29  2003/11/29 13:03:54  lemmster
+Revision 1.29  2003/11/29 13:03:54  lemmy
 ToolTip complete reworked (to be continued)
 
-Revision 1.28  2003/11/23 17:58:03  lemmster
+Revision 1.28  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.27  2003/11/10 08:54:47  lemmster
+Revision 1.27  2003/11/10 08:54:47  lemmy
 rating filter in searchresult
 
-Revision 1.26  2003/11/10 08:35:13  lemmster
+Revision 1.26  2003/11/10 08:35:13  lemmy
 move getRating... into ResultInfo
 
 Revision 1.25  2003/10/22 23:42:57  zet
@@ -728,25 +731,25 @@ fake regexp
 Revision 1.24  2003/10/13 19:54:32  zet
 remove high ascii
 
-Revision 1.23  2003/09/18 09:16:47  lemmster
+Revision 1.23  2003/09/18 09:16:47  lemmy
 checkstyle
 
-Revision 1.22  2003/09/17 20:07:44  lemmster
+Revision 1.22  2003/09/17 20:07:44  lemmy
 avoid NPEs in search
 
-Revision 1.21  2003/09/15 15:32:09  lemmster
+Revision 1.21  2003/09/15 15:32:09  lemmy
 reset state of canceled downloads from search [bug #908]
 
-Revision 1.20  2003/09/08 12:38:00  lemmster
+Revision 1.20  2003/09/08 12:38:00  lemmy
 show bitrate/length for audio files in tooltip
 
-Revision 1.19  2003/08/31 12:22:27  lemmster
+Revision 1.19  2003/08/31 12:22:27  lemmy
 added boolean downloading
 
-Revision 1.18  2003/08/28 12:41:04  lemmster
+Revision 1.18  2003/08/28 12:41:04  lemmy
 initialize with false
 
-Revision 1.17  2003/08/28 11:54:41  lemmster
+Revision 1.17  2003/08/28 11:54:41  lemmy
 use getter methode for profanity/pornogaphic
 
 Revision 1.16  2003/08/28 00:12:10  zet
@@ -758,8 +761,8 @@ basic filtering
 Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.13  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.13  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.12  2003/08/14 12:45:46  dek
 searching works now without errors
@@ -767,34 +770,34 @@ searching works now without errors
 Revision 1.11  2003/07/31 04:07:43  zet
 size is now a long
 
-Revision 1.10  2003/07/25 22:34:52  lemmstercvs01
+Revision 1.10  2003/07/25 22:34:52  lemmy
 lots of changes
 
-Revision 1.9  2003/07/24 16:07:05  lemmstercvs01
+Revision 1.9  2003/07/24 16:07:05  lemmy
 renamed getNetworkID() to getNetwork()
 
-Revision 1.8  2003/07/23 23:49:22  lemmstercvs01
+Revision 1.8  2003/07/23 23:49:22  lemmy
 stringSize for better display design added
 
-Revision 1.7  2003/07/23 17:01:24  lemmstercvs01
+Revision 1.7  2003/07/23 17:01:24  lemmy
 added getComment() and setNetworkID(Networkinfo info)
 
-Revision 1.6  2003/07/06 08:49:33  lemmstercvs01
+Revision 1.6  2003/07/06 08:49:33  lemmy
 better oo added
 
-Revision 1.5  2003/07/06 07:45:26  lemmstercvs01
+Revision 1.5  2003/07/06 07:45:26  lemmy
 checkstyle applied
 
-Revision 1.4  2003/07/06 07:29:47  lemmstercvs01
+Revision 1.4  2003/07/06 07:29:47  lemmy
 javadoc improved
 
 Revision 1.3  2003/07/05 13:14:50  dek
 *** empty log message ***
 
-Revision 1.2  2003/07/05 12:52:19  lemmstercvs01
+Revision 1.2  2003/07/05 12:52:19  lemmy
 bugfix in readStream()
 
-Revision 1.1  2003/06/30 07:19:47  lemmstercvs01
+Revision 1.1  2003/06/30 07:19:47  lemmy
 initial commit (untested)
 
 */

@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.45 2003/12/03 22:19:11 lemmy Exp $
+ * @version $Id: Preferences.java,v 1.46 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -257,19 +257,22 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.46  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.45  2003/12/03 22:19:11  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
 Revision 1.44  2003/11/28 00:57:45  zet
 use versioncheck
 
-Revision 1.43  2003/11/23 17:58:03  lemmster
+Revision 1.43  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.42  2003/11/09 16:44:32  zet
 check for existence of g2gui.exe
 
-Revision 1.41  2003/11/07 08:20:07  lemmster
+Revision 1.41  2003/11/07 08:20:07  lemmy
 remove rss4j dependency (newstab)
 
 Revision 1.40  2003/11/06 15:12:44  zet
@@ -284,10 +287,10 @@ graph prefs
 Revision 1.37  2003/10/15 22:06:13  zet
 Split Console/Downloads pref pages.
 
-Revision 1.36  2003/10/01 20:56:27  lemmster
+Revision 1.36  2003/10/01 20:56:27  lemmy
 add class hierarchy
 
-Revision 1.35  2003/09/18 10:23:48  lemmster
+Revision 1.35  2003/09/18 10:23:48  lemmy
 checkstyle
 
 Revision 1.34  2003/09/15 22:06:19  zet
@@ -328,7 +331,7 @@ prefDialog is not resizable any more, and we have IntEditors for int-values
 Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.22  2003/08/22 21:10:57  lemmster
+Revision 1.22  2003/08/22 21:10:57  lemmy
 replace $user$ with $Author: lemmy $
 
 Revision 1.21  2003/08/20 11:51:52  dek
@@ -391,7 +394,7 @@ pref-dialog accessible in main-window
 Revision 1.2  2003/06/25 10:42:36  dek
 peferenences dialog at first start
 
-Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
+Revision 1.1  2003/06/24 20:44:54  lemmy
 refactored
 
 Revision 1.1  2003/06/23 18:57:05  dek

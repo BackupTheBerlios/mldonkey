@@ -34,7 +34,7 @@ import gnu.trove.THashMap;
  * InfoMap
  *
  *
- * @version $Id: InfoMap.java,v 1.10 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: InfoMap.java,v 1.11 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public abstract class InfoMap extends Observable implements InfoCollection {
@@ -106,7 +106,10 @@ public abstract class InfoMap extends Observable implements InfoCollection {
 
 /*
 $Log: InfoMap.java,v $
-Revision 1.10  2003/12/01 14:22:17  lemmster
+Revision 1.11  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.10  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.9  2003/10/22 21:02:11  zet
@@ -115,10 +118,10 @@ use this()
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.7  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.6  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.6  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
 Revision 1.5  2003/06/20 15:15:22  dek
@@ -127,10 +130,10 @@ humm, some interface-changes, hope, it didn't break anything ;-)
 Revision 1.4  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
-Revision 1.3  2003/06/17 12:10:17  lemmstercvs01
+Revision 1.3  2003/06/17 12:10:17  lemmy
 some methods added
 
-Revision 1.2  2003/06/16 21:48:38  lemmstercvs01
+Revision 1.2  2003/06/16 21:48:38  lemmy
 class hierarchy changed
 
 */

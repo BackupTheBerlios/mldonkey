@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.16 2003/11/13 00:45:28 zet Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.17 2003/12/04 08:47:28 lemmy Exp $
  *
  */
 public class DownloadTableTreeLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -271,6 +271,9 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.17  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.16  2003/11/13 00:45:28  zet
 fix #1081
 
@@ -280,7 +283,7 @@ rename to View
 Revision 1.14  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.13  2003/10/31 10:42:47  lemmster
+Revision 1.13  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -350,8 +353,8 @@ Revision 1.16  2003/08/23 01:04:03  zet
 Revision 1.15  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.14  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+Revision 1.14  2003/08/22 21:16:36  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer

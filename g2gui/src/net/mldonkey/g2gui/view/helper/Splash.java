@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * SplashShell
  *
- * @version $Id: Splash.java,v 1.1 2003/11/20 14:02:17 lemmster Exp $ 
+ * @version $Id: Splash.java,v 1.2 2003/12/04 08:47:31 lemmy Exp $ 
  *
  */
 public class Splash {
@@ -135,7 +135,10 @@ public class Splash {
 
 /*
 $Log: Splash.java,v $
-Revision 1.1  2003/11/20 14:02:17  lemmster
+Revision 1.2  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.1  2003/11/20 14:02:17  lemmy
 G2Gui cleanup
 
 */

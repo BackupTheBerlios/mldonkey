@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Widget;
  * CustomTableViewer
  *
  *
- * @version $Id: CustomTableViewer.java,v 1.3 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: CustomTableViewer.java,v 1.4 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class CustomTableViewer extends TableViewer implements ICustomViewer {
@@ -140,7 +140,10 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
 
 /*
 $Log: CustomTableViewer.java,v $
-Revision 1.3  2003/11/23 17:58:03  lemmster
+Revision 1.4  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.3  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.2  2003/10/31 07:24:01  zet

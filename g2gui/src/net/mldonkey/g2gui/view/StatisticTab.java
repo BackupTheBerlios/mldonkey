@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.49 2003/11/29 19:28:38 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.50 2003/12/04 08:47:27 lemmy Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
@@ -159,6 +159,9 @@ public class StatisticTab extends GuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.50  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.49  2003/11/29 19:28:38  zet
 minor string move
 
@@ -175,7 +178,7 @@ update for mainWindow
 Revision 1.45  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 
-Revision 1.44  2003/11/23 17:58:03  lemmster
+Revision 1.44  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.43  2003/11/22 02:24:29  zet
@@ -196,11 +199,11 @@ update for transparent gifs
 Revision 1.38  2003/10/31 16:02:17  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.37  2003/10/31 13:20:31  lemmster
+Revision 1.37  2003/10/31 13:20:31  lemmy
 added PaneGuiTab and TableGuiTab
 added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
 
-Revision 1.36  2003/10/29 16:56:21  lemmster
+Revision 1.36  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 Revision 1.35  2003/10/22 01:36:59  zet
@@ -230,7 +233,7 @@ basic graph hourly history
 Revision 1.27  2003/09/20 01:24:25  zet
 *** empty log message ***
 
-Revision 1.26  2003/09/18 09:44:57  lemmster
+Revision 1.26  2003/09/18 09:44:57  lemmy
 checkstyle
 
 Revision 1.25  2003/09/16 01:58:25  zet
@@ -257,8 +260,8 @@ remove @author
 Revision 1.18  2003/08/23 01:12:43  zet
 remove todos
 
-Revision 1.17  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+Revision 1.17  2003/08/22 21:06:48  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle

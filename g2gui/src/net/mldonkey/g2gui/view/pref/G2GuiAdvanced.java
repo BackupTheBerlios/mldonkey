@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.10 2003/11/29 13:03:54 lemmster Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.11 2003/12/04 08:47:27 lemmy Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -149,7 +149,10 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
-Revision 1.10  2003/11/29 13:03:54  lemmster
+Revision 1.11  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.10  2003/11/29 13:03:54  lemmy
 ToolTip complete reworked (to be continued)
 
 Revision 1.9  2003/11/27 20:45:51  zet
@@ -164,23 +167,23 @@ filebrowser
 Revision 1.6  2003/11/27 15:33:24  zet
 defWebBrowser
 
-Revision 1.5  2003/11/09 23:09:57  lemmster
+Revision 1.5  2003/11/09 23:09:57  lemmy
 remove "Show connected Servers only"
 added filter saving in searchtab
 
 Revision 1.4  2003/10/16 22:02:45  zet
 move some options
 
-Revision 1.3  2003/10/12 16:27:01  lemmster
+Revision 1.3  2003/10/12 16:27:01  lemmy
 minor changes
 
 Revision 1.2  2003/10/08 01:12:16  zet
 useGradient preference
 
-Revision 1.1  2003/10/01 20:56:27  lemmster
+Revision 1.1  2003/10/01 20:56:27  lemmy
 add class hierarchy
 
-Revision 1.7  2003/09/29 17:44:40  lemmster
+Revision 1.7  2003/09/29 17:44:40  lemmy
 switch for search tooltips
 
 Revision 1.6  2003/09/27 00:36:54  zet
@@ -195,7 +198,7 @@ displayTableColors preference
 Revision 1.3  2003/09/19 14:25:55  zet
 min to systray option
 
-Revision 1.2  2003/09/18 10:23:48  lemmster
+Revision 1.2  2003/09/18 10:23:48  lemmy
 checkstyle
 
 Revision 1.1  2003/09/15 22:06:19  zet

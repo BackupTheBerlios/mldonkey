@@ -38,7 +38,7 @@ import java.util.Iterator;
  * ClientInfoList
  *
  *
- * @version $Id: ClientInfoIntMap.java,v 1.15 2003/12/01 14:22:17 lemmster Exp $
+ * @version $Id: ClientInfoIntMap.java,v 1.16 2003/12/04 08:47:25 lemmy Exp $
  */
 public class ClientInfoIntMap extends InfoIntMap {
     /**
@@ -175,7 +175,10 @@ public class ClientInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ClientInfoIntMap.java,v $
-Revision 1.15  2003/12/01 14:22:17  lemmster
+Revision 1.16  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.15  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.14  2003/11/27 00:12:10  zet
@@ -187,7 +190,7 @@ minor
 Revision 1.12  2003/11/26 07:42:06  zet
 protocolVersion 19/timer
 
-Revision 1.11  2003/09/18 09:16:47  lemmster
+Revision 1.11  2003/09/18 09:16:47  lemmy
 checkstyle
 
 Revision 1.10  2003/09/13 22:22:59  zet
@@ -196,8 +199,8 @@ weak sets
 Revision 1.9  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.8  2003/08/22 21:03:15  lemmster
-replace user with Author: lemmster
+Revision 1.8  2003/08/22 21:03:15  lemmy
+replace user with Author: lemmy
 
 Revision 1.7  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
@@ -205,19 +208,19 @@ fix nullpointer in clientInfo, add icons to tables
 Revision 1.6  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 
-Revision 1.5  2003/08/01 13:48:04  lemmstercvs01
+Revision 1.5  2003/08/01 13:48:04  lemmy
 removed debug
 
-Revision 1.4  2003/07/06 09:33:50  lemmstercvs01
+Revision 1.4  2003/07/06 09:33:50  lemmy
 int networkid -> networkinfo networkid
 
 Revision 1.3  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
-Revision 1.2  2003/06/19 08:40:47  lemmstercvs01
+Revision 1.2  2003/06/19 08:40:47  lemmy
 checkstyle applied
 
-Revision 1.1  2003/06/16 21:47:19  lemmstercvs01
+Revision 1.1  2003/06/16 21:47:19  lemmy
 just refactored (name changed)
 
 Revision 1.10  2003/06/16 20:13:06  dek
@@ -232,19 +235,19 @@ refactored cleanTable
 Revision 1.7  2003/06/16 17:46:57  dek
 added clean(messageBuffer);
 
-Revision 1.6  2003/06/16 13:18:59  lemmstercvs01
+Revision 1.6  2003/06/16 13:18:59  lemmy
 checkstyle applied
 
-Revision 1.5  2003/06/15 16:18:41  lemmstercvs01
+Revision 1.5  2003/06/15 16:18:41  lemmy
 new interface introduced
 
-Revision 1.4  2003/06/15 13:14:06  lemmstercvs01
+Revision 1.4  2003/06/15 13:14:06  lemmy
 fixed a bug in put()
 
-Revision 1.3  2003/06/14 23:04:08  lemmstercvs01
+Revision 1.3  2003/06/14 23:04:08  lemmy
 change from interface to abstract superclass
 
-Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
+Revision 1.2  2003/06/14 20:30:44  lemmy
 cosmetic changes
 
 */

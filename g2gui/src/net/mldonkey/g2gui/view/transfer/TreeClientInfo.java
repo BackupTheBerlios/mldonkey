@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * TreeClientInfo
  *
  *
- * @version $Id: TreeClientInfo.java,v 1.5 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: TreeClientInfo.java,v 1.6 2003/12/04 08:47:32 lemmy Exp $
  *
  */
 public class TreeClientInfo {
@@ -79,7 +79,10 @@ public class TreeClientInfo {
 
 /*
 $Log: TreeClientInfo.java,v $
-Revision 1.5  2003/11/23 17:58:03  lemmster
+Revision 1.6  2003/12/04 08:47:32  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.5  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.4  2003/11/11 02:31:42  zet
@@ -97,7 +100,7 @@ move transfer package
 Revision 1.8  2003/09/18 14:11:01  zet
 revert
 
-Revision 1.6  2003/09/08 19:49:16  lemmster
+Revision 1.6  2003/09/08 19:49:16  lemmy
 just repaired the log
 
 Revision 1.5  2003/08/23 15:21:37  zet
@@ -106,6 +109,6 @@ remove @author
 Revision 1.4  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.3  2003/08/22 21:22:58  lemmster
+Revision 1.3  2003/08/22 21:22:58  lemmy
 
 */

@@ -30,7 +30,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * FileExtensionFilter
  *
- * @version $Id: FileExtensionGViewerFilter.java,v 1.1 2003/11/06 13:52:32 lemmster Exp $ 
+ * @version $Id: FileExtensionGViewerFilter.java,v 1.2 2003/12/04 08:47:30 lemmy Exp $ 
  *
  */
 public class FileExtensionGViewerFilter extends GViewerFilter {
@@ -55,7 +55,10 @@ public class FileExtensionGViewerFilter extends GViewerFilter {
 
 /*
 $Log: FileExtensionGViewerFilter.java,v $
-Revision 1.1  2003/11/06 13:52:32  lemmster
+Revision 1.2  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.1  2003/11/06 13:52:32  lemmy
 filters back working
 
 Revision 1.2  2003/10/31 07:24:01  zet
@@ -69,7 +72,7 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.1  2003/10/29 16:56:21  lemmster
+Revision 1.1  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 */

@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.Viewer;
  * FriendsTableSorter
  *
  *
- * @version $Id: FriendsTableSorter.java,v 1.6 2003/11/29 19:46:19 zet Exp $
+ * @version $Id: FriendsTableSorter.java,v 1.7 2003/12/04 08:47:29 lemmy Exp $
  *
  */
 public class FriendsTableSorter extends GSorter {
@@ -73,6 +73,9 @@ public class FriendsTableSorter extends GSorter {
 
 /*
 $Log: FriendsTableSorter.java,v $
+Revision 1.7  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.6  2003/11/29 19:46:19  zet
 add state column (like mlgui)
 
@@ -82,13 +85,13 @@ small viewframe updates
 Revision 1.4  2003/09/20 01:20:26  zet
 *** empty log message ***
 
-Revision 1.3  2003/09/18 09:54:45  lemmster
+Revision 1.3  2003/09/18 09:54:45  lemmy
 checkstyle
 
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.1  2003/08/23 09:47:46  lemmster
+Revision 1.1  2003/08/23 09:47:46  lemmy
 just rename
 
 Revision 1.1  2003/08/12 04:10:29  zet

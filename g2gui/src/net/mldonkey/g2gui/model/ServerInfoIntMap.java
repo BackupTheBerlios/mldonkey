@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.28 2003/12/01 14:22:17 lemmster Exp $
+ * @version $Id: ServerInfoIntMap.java,v 1.29 2003/12/04 08:47:25 lemmy Exp $
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -429,16 +429,19 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
-Revision 1.28  2003/12/01 14:22:17  lemmster
+Revision 1.29  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.28  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.27  2003/11/29 13:01:11  lemmster
+Revision 1.27  2003/11/29 13:01:11  lemmy
 Addr.getString() renamed to the more natural word name Addr.toString()
 
-Revision 1.26  2003/11/23 17:58:03  lemmster
+Revision 1.26  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.25  2003/10/28 11:07:32  lemmster
+Revision 1.25  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
@@ -446,25 +449,25 @@ Revision 1.24  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.23  2003/09/18 09:16:47  lemmster
+Revision 1.23  2003/09/18 09:16:47  lemmy
 checkstyle
 
-Revision 1.22  2003/09/14 09:59:02  lemmster
+Revision 1.22  2003/09/14 09:59:02  lemmy
 fix  0 server in mouse-popup [bug #869]
 
-Revision 1.21  2003/09/14 09:01:15  lemmster
+Revision 1.21  2003/09/14 09:01:15  lemmy
 show nodes on request
 
-Revision 1.20  2003/09/12 16:29:02  lemmster
+Revision 1.20  2003/09/12 16:29:02  lemmy
 ignore FT/GNU/GNUT2 servers in proto >=18 as long as the core sends them
 
 Revision 1.19  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.18  2003/08/22 19:00:25  lemmster
+Revision 1.18  2003/08/22 19:00:25  lemmy
 support for connectMore with network id
 
-Revision 1.17  2003/08/11 19:25:04  lemmstercvs01
+Revision 1.17  2003/08/11 19:25:04  lemmy
 bugfix at CleanTable
 
 Revision 1.16  2003/08/09 13:51:42  dek
@@ -476,67 +479,67 @@ you can get it at:
 
 ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz
 
-Revision 1.14  2003/08/07 12:35:31  lemmstercvs01
+Revision 1.14  2003/08/07 12:35:31  lemmy
 cleanup, more efficient
 
-Revision 1.13  2003/08/06 20:56:49  lemmstercvs01
+Revision 1.13  2003/08/06 20:56:49  lemmy
 cleanup, more efficient
 
-Revision 1.12  2003/08/06 18:53:19  lemmstercvs01
+Revision 1.12  2003/08/06 18:53:19  lemmy
 changed renamed to modified (conflict with observable)
 
-Revision 1.11  2003/08/06 17:38:38  lemmstercvs01
+Revision 1.11  2003/08/06 17:38:38  lemmy
 some actions still missing. but it should work for the moment
 
-Revision 1.10  2003/08/06 09:47:29  lemmstercvs01
+Revision 1.10  2003/08/06 09:47:29  lemmy
 toString() added, some bugfixes
 
-Revision 1.9  2003/08/05 13:43:18  lemmstercvs01
+Revision 1.9  2003/08/05 13:43:18  lemmy
 added some messages
 
-Revision 1.8  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.8  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.7  2003/07/30 19:28:42  lemmstercvs01
+Revision 1.7  2003/07/30 19:28:42  lemmy
 several changes
 
 Revision 1.6  2003/07/06 20:09:21  dek
 NPE fixed
 
-Revision 1.5  2003/07/04 18:35:02  lemmstercvs01
+Revision 1.5  2003/07/04 18:35:02  lemmy
 foobar
 
-Revision 1.4  2003/06/27 10:35:53  lemmstercvs01
+Revision 1.4  2003/06/27 10:35:53  lemmy
 removed unneeded calls
 
-Revision 1.3  2003/06/26 17:57:46  lemmstercvs01
+Revision 1.3  2003/06/26 17:57:46  lemmy
 added workaround for bug in core proto
 
 Revision 1.2  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
-Revision 1.1  2003/06/16 21:47:19  lemmstercvs01
+Revision 1.1  2003/06/16 21:47:19  lemmy
 just refactored (name changed)
 
 Revision 1.8  2003/06/16 20:12:47  dek
 debugging code removed
 
-Revision 1.7  2003/06/16 20:08:38  lemmstercvs01
+Revision 1.7  2003/06/16 20:08:38  lemmy
 opcode 13 added
 
 Revision 1.6  2003/06/16 18:05:26  dek
 refactored cleanTable
 
-Revision 1.5  2003/06/16 17:42:59  lemmstercvs01
+Revision 1.5  2003/06/16 17:42:59  lemmy
 minor changes in readStream()
 
-Revision 1.4  2003/06/16 13:18:59  lemmstercvs01
+Revision 1.4  2003/06/16 13:18:59  lemmy
 checkstyle applied
 
-Revision 1.3  2003/06/15 16:18:41  lemmstercvs01
+Revision 1.3  2003/06/15 16:18:41  lemmy
 new interface introduced
 
-Revision 1.2  2003/06/14 23:04:08  lemmstercvs01
+Revision 1.2  2003/06/14 23:04:08  lemmy
 change from interface to abstract superclass
 
 */

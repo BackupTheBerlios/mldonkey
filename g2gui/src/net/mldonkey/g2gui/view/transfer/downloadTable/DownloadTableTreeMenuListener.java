@@ -86,7 +86,7 @@ import java.util.List;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.34 2003/12/01 13:28:16 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.35 2003/12/04 08:47:28 lemmy Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -660,13 +660,16 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.35  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.34  2003/12/01 13:28:16  zet
 add port info
 
 Revision 1.33  2003/11/25 01:13:13  zet
 include filesize for webservice>jigle lookup
 
-Revision 1.32  2003/11/23 17:58:03  lemmster
+Revision 1.32  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.31  2003/11/22 02:24:29  zet
@@ -687,7 +690,7 @@ minor renames
 Revision 1.26  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.25  2003/10/31 10:42:47  lemmster
+Revision 1.25  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -778,7 +781,7 @@ revert
 Revision 1.30  2003/09/16 16:58:03  zet
 commit as
 
-Revision 1.29  2003/09/15 15:32:09  lemmster
+Revision 1.29  2003/09/15 15:32:09  lemmy
 reset state of canceled downloads from search [bug #908]
 
 Revision 1.28  2003/09/14 03:37:43  zet
@@ -820,16 +823,16 @@ remove @author
 Revision 1.16  2003/08/23 15:13:00  zet
 remove reference to static MainTab methods
 
-Revision 1.15  2003/08/23 09:46:18  lemmster
+Revision 1.15  2003/08/23 09:46:18  lemmy
 superclass TableMenuListener added
 
 Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+Revision 1.13  2003/08/22 21:16:36  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.12  2003/08/22 14:30:45  lemmster
+Revision 1.12  2003/08/22 14:30:45  lemmy
 verify chunks added
 
 Revision 1.11  2003/08/21 00:59:57  zet
@@ -841,7 +844,7 @@ Viewer updates
 Revision 1.9  2003/08/20 14:58:43  zet
 sources clientinfo viewer
 
-Revision 1.8  2003/08/19 12:14:16  lemmster
+Revision 1.8  2003/08/19 12:14:16  lemmy
 first try of simple/advanced mode
 
 Revision 1.7  2003/08/18 01:42:24  zet

@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ExecConsole : to spawn and watch an executable in a shell/console
  *
- * @version $Id: ExecConsole.java,v 1.6 2003/12/03 22:19:54 lemmy Exp $
+ * @version $Id: ExecConsole.java,v 1.7 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class ExecConsole implements Observer {
@@ -231,6 +231,9 @@ public class ExecConsole implements Observer {
 
 /*
 $Log: ExecConsole.java,v $
+Revision 1.7  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.6  2003/12/03 22:19:54  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
@@ -243,7 +246,7 @@ Revision 1.4  2003/09/20 22:07:40  zet
 Revision 1.3  2003/09/20 01:22:17  zet
 *** empty log message ***
 
-Revision 1.2  2003/09/18 09:54:45  lemmster
+Revision 1.2  2003/09/18 09:54:45  lemmy
 checkstyle
 
 Revision 1.1  2003/09/03 14:49:07  zet

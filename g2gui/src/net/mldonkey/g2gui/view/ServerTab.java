@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Composite;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.54 2003/11/29 19:28:38 zet Exp $
+ * @version $Id: ServerTab.java,v 1.55 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class ServerTab extends GuiTab implements Runnable {
@@ -175,6 +175,9 @@ public class ServerTab extends GuiTab implements Runnable {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.55  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.54  2003/11/29 19:28:38  zet
 minor string move
 
@@ -194,7 +197,7 @@ a few more viewframe changes.. will continue later.
 Revision 1.49  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
-Revision 1.48  2003/11/09 23:09:57  lemmster
+Revision 1.48  2003/11/09 23:09:57  lemmy
 remove "Show connected Servers only"
 added filter saving in searchtab
 
@@ -204,29 +207,29 @@ update for transparent gifs
 Revision 1.46  2003/10/31 16:02:17  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.45  2003/10/31 13:20:31  lemmster
+Revision 1.45  2003/10/31 13:20:31  lemmy
 added PaneGuiTab and TableGuiTab
 added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
 
-Revision 1.44  2003/10/31 10:42:47  lemmster
+Revision 1.44  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to gView... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class gView do the job
 Use supertype/interface where possible to keep the design flexible!
 
-Revision 1.43  2003/10/29 16:56:21  lemmster
+Revision 1.43  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
-Revision 1.42  2003/10/28 11:07:32  lemmster
+Revision 1.42  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
 Revision 1.41  2003/10/22 01:36:59  zet
 add column selector to server/search (might not be finished yet..)
 
-Revision 1.40  2003/10/21 17:06:27  lemmster
+Revision 1.40  2003/10/21 17:06:27  lemmy
 fix manage servers from statusline
 
-Revision 1.39  2003/10/21 17:00:45  lemmster
+Revision 1.39  2003/10/21 17:00:45  lemmy
 class hierarchy for tableviewer
 
 Revision 1.38  2003/10/12 14:56:19  zet
@@ -238,37 +241,37 @@ Don't TableColumn.setWidth(0) on gtk
 Revision 1.36  2003/09/27 12:33:32  dek
 server-Table has now same show-Gridlines-behaviour as download-Table
 
-Revision 1.35  2003/09/23 11:46:25  lemmster
+Revision 1.35  2003/09/23 11:46:25  lemmy
 displayTableColors for servertab
 
-Revision 1.34  2003/09/22 20:02:34  lemmster
+Revision 1.34  2003/09/22 20:02:34  lemmy
 right column align for integers [bug #934]
 
 Revision 1.33  2003/09/20 14:39:48  zet
 move transfer package
 
-Revision 1.32  2003/09/18 09:44:57  lemmster
+Revision 1.32  2003/09/18 09:44:57  lemmy
 checkstyle
 
 Revision 1.31  2003/09/16 02:12:30  zet
 match the menus with transfertab
 
-Revision 1.30  2003/09/14 13:44:22  lemmster
+Revision 1.30  2003/09/14 13:44:22  lemmy
 set statusline only on active
 
-Revision 1.29  2003/09/14 13:24:30  lemmster
+Revision 1.29  2003/09/14 13:24:30  lemmy
 add header button to servertab
 
-Revision 1.28  2003/09/14 10:01:24  lemmster
+Revision 1.28  2003/09/14 10:01:24  lemmy
 save column width [bug #864]
 
-Revision 1.27  2003/09/14 09:42:51  lemmster
+Revision 1.27  2003/09/14 09:42:51  lemmy
 save column width
 
-Revision 1.26  2003/09/14 09:40:31  lemmster
+Revision 1.26  2003/09/14 09:40:31  lemmy
 save column width
 
-Revision 1.25  2003/09/11 13:39:19  lemmster
+Revision 1.25  2003/09/11 13:39:19  lemmy
 check for disposed
 
 Revision 1.24  2003/08/29 22:11:47  zet
@@ -292,55 +295,55 @@ GTK layout cleanups, slight typo refactoring
 Revision 1.18  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.17  2003/08/23 15:01:32  lemmster
+Revision 1.17  2003/08/23 15:01:32  lemmy
 update the header
 
-Revision 1.16  2003/08/23 14:58:38  lemmster
+Revision 1.16  2003/08/23 14:58:38  lemmy
 cleanup of MainTab, transferTree.* broken
 
-Revision 1.15  2003/08/23 10:33:36  lemmster
+Revision 1.15  2003/08/23 10:33:36  lemmy
 updateDisplay() only on displayAllServers change
 
-Revision 1.14  2003/08/23 09:46:18  lemmster
+Revision 1.14  2003/08/23 09:46:18  lemmy
 superclass TableMenuListener added
 
-Revision 1.13  2003/08/23 08:30:07  lemmster
+Revision 1.13  2003/08/23 08:30:07  lemmy
 added defaultItem to the table
 
 Revision 1.12  2003/08/20 22:18:56  zet
 Viewer updates
 
-Revision 1.11  2003/08/20 21:34:22  lemmster
+Revision 1.11  2003/08/20 21:34:22  lemmy
 additive filters
 
 Revision 1.10  2003/08/18 01:42:24  zet
 centralize resource bundle
 
-Revision 1.9  2003/08/11 19:25:04  lemmstercvs01
+Revision 1.9  2003/08/11 19:25:04  lemmy
 bugfix at CleanTable
 
-Revision 1.8  2003/08/10 12:59:01  lemmstercvs01
+Revision 1.8  2003/08/10 12:59:01  lemmy
 "manage servers" in NetworkItem implemented
 
 Revision 1.7  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 
-Revision 1.6  2003/08/07 13:25:37  lemmstercvs01
+Revision 1.6  2003/08/07 13:25:37  lemmy
 ResourceBundle added
 
-Revision 1.5  2003/08/07 12:35:31  lemmstercvs01
+Revision 1.5  2003/08/07 12:35:31  lemmy
 cleanup, more efficient
 
-Revision 1.4  2003/08/06 20:56:49  lemmstercvs01
+Revision 1.4  2003/08/06 20:56:49  lemmy
 cleanup, more efficient
 
-Revision 1.3  2003/08/06 17:38:38  lemmstercvs01
+Revision 1.3  2003/08/06 17:38:38  lemmy
 some actions still missing. but it should work for the moment
 
-Revision 1.2  2003/08/05 15:35:24  lemmstercvs01
+Revision 1.2  2003/08/05 15:35:24  lemmy
 minor: column width changed
 
-Revision 1.1  2003/08/05 13:50:10  lemmstercvs01
+Revision 1.1  2003/08/05 13:50:10  lemmy
 initial commit
 
 */

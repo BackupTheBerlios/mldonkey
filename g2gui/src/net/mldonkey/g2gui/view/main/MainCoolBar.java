@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.24 2003/12/03 22:19:35 lemmy Exp $
+ * @version $Id: MainCoolBar.java,v 1.25 2003/12/04 08:47:31 lemmy Exp $
  *
  */
 public class MainCoolBar {
@@ -394,6 +394,9 @@ public class MainCoolBar {
 
 
 $Log: MainCoolBar.java,v $
+Revision 1.25  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.24  2003/12/03 22:19:35  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
@@ -411,7 +414,7 @@ yet another test for coolBar
 
 removed some testing-comments, so don't care if they are missing ;- )
 
-Revision 1.12  2003/11/23 17:58:03  lemmster
+Revision 1.12  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.11  2003/11/22 02:24:30  zet
@@ -420,7 +423,7 @@ widgetfactory & save sash postions/states between sessions
 Revision 1.10  2003/10/11 21:32:32  zet
 remove hand cursor ( looks weird on gtk )
 
-Revision 1.9  2003/09/18 10:12:53  lemmster
+Revision 1.9  2003/09/18 10:12:53  lemmy
 checkstyle
 
 Revision 1.8  2003/09/01 00:44:21  zet
@@ -432,19 +435,19 @@ active button states
 Revision 1.6  2003/08/28 22:44:30  zet
 GridLayout helper class
 
-Revision 1.5  2003/08/23 16:18:44  lemmster
+Revision 1.5  2003/08/23 16:18:44  lemmy
 fixed locked/button size
 
 Revision 1.4  2003/08/23 15:55:23  zet
 remove unneeded import
 
-Revision 1.3  2003/08/23 15:49:28  lemmster
+Revision 1.3  2003/08/23 15:49:28  lemmy
 fix for prefs and refactoring
 
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.1  2003/08/23 14:58:38  lemmster
+Revision 1.1  2003/08/23 14:58:38  lemmy
 cleanup of MainTab, transferTree.* broken
 
 */

@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.enum.EnumNetwork;
  * OptionsInfo
  *
  *
- * @version $Id: NetworkInfoIntMap.java,v 1.18 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.19 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
@@ -161,65 +161,68 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
-Revision 1.18  2003/12/01 14:22:17  lemmster
+Revision 1.19  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.18  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.17  2003/11/23 17:58:03  lemmster
+Revision 1.17  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.16  2003/10/28 11:07:32  lemmster
+Revision 1.16  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
-Revision 1.15  2003/09/19 17:51:39  lemmster
+Revision 1.15  2003/09/19 17:51:39  lemmy
 minor bugfix
 
 Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.13  2003/08/20 10:04:58  lemmster
+Revision 1.13  2003/08/20 10:04:58  lemmy
 inputbox disabled when zero searchable networks are enabled
 
-Revision 1.12  2003/08/19 14:33:48  lemmster
+Revision 1.12  2003/08/19 14:33:48  lemmy
 update NetworkInfo only on change
 
-Revision 1.11  2003/08/05 13:53:46  lemmstercvs01
+Revision 1.11  2003/08/05 13:53:46  lemmy
 setConnectedServer() accepts null
 
-Revision 1.10  2003/08/02 09:55:16  lemmstercvs01
+Revision 1.10  2003/08/02 09:55:16  lemmy
 observers changed
 
-Revision 1.9  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.9  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.8  2003/07/31 14:09:09  lemmstercvs01
+Revision 1.8  2003/07/31 14:09:09  lemmy
 synchronized(...) added
 
-Revision 1.7  2003/07/28 08:17:41  lemmstercvs01
+Revision 1.7  2003/07/28 08:17:41  lemmy
 added getByEnum()
 
 Revision 1.6  2003/07/07 20:01:35  dek
 some useful method introduced: Networkitem[] getNetworks()
 
-Revision 1.5  2003/07/05 15:58:05  lemmstercvs01
+Revision 1.5  2003/07/05 15:58:05  lemmy
 javadoc improved
 
-Revision 1.4  2003/07/04 18:35:02  lemmstercvs01
+Revision 1.4  2003/07/04 18:35:02  lemmy
 foobar
 
 Revision 1.3  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
-Revision 1.2  2003/06/17 12:06:51  lemmstercvs01
+Revision 1.2  2003/06/17 12:06:51  lemmy
 wrong implementers removed
 
-Revision 1.1  2003/06/16 21:47:19  lemmstercvs01
+Revision 1.1  2003/06/16 21:47:19  lemmy
 just refactored (name changed)
 
-Revision 1.3  2003/06/16 20:10:45  lemmstercvs01
+Revision 1.3  2003/06/16 20:10:45  lemmy
 moved to the right place
 
-Revision 1.2  2003/06/16 17:43:55  lemmstercvs01
+Revision 1.2  2003/06/16 17:43:55  lemmy
 checkstyle applied
 
 Revision 1.1  2003/06/16 15:05:20  dek

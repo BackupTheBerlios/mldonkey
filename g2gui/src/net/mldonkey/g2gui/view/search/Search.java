@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Label;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.35 2003/11/30 21:52:55 zet Exp $
+ * @version $Id: Search.java,v 1.36 2003/12/04 08:47:29 lemmy Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -339,64 +339,67 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.36  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.35  2003/11/30 21:52:55  zet
 yet another npe..
 
-Revision 1.34  2003/11/24 08:56:22  lemmster
+Revision 1.34  2003/11/24 08:56:22  lemmy
 fix [Bug #1132] search combo retains duplicates (better solution)
 
-Revision 1.33  2003/11/23 19:22:35  lemmster
+Revision 1.33  2003/11/23 19:22:35  lemmy
 fixed: [ Bug #1119] Search field a combo holding previous searches
 
-Revision 1.32  2003/11/16 10:26:25  lemmster
+Revision 1.32  2003/11/16 10:26:25  lemmy
 fix: [Bug #1080] Searchbox should get focused when switching to servertab
 
 Revision 1.31  2003/10/20 16:23:30  zet
 fix npe
 
-Revision 1.30  2003/09/24 05:53:00  lemmster
+Revision 1.30  2003/09/24 05:53:00  lemmy
 CTabFolder -> Composite
 
-Revision 1.29  2003/09/21 09:57:17  lemmster
+Revision 1.29  2003/09/21 09:57:17  lemmy
 update the inputText only on change
 
-Revision 1.28  2003/09/19 15:19:14  lemmster
+Revision 1.28  2003/09/19 15:19:14  lemmy
 reworked
 
-Revision 1.27  2003/09/18 10:39:21  lemmster
+Revision 1.27  2003/09/18 10:39:21  lemmy
 checkstyle
 
-Revision 1.26  2003/09/08 11:54:22  lemmster
+Revision 1.26  2003/09/08 11:54:22  lemmy
 added download button
 
-Revision 1.25  2003/09/08 10:25:26  lemmster
+Revision 1.25  2003/09/08 10:25:26  lemmy
 OtherComplexSearch added, rest improved
 
-Revision 1.24  2003/09/07 08:21:50  lemmster
+Revision 1.24  2003/09/07 08:21:50  lemmy
 resourcebundle added
 
 Revision 1.23  2003/09/05 23:49:07  zet
 1 line per search option
 
-Revision 1.22  2003/09/05 14:22:10  lemmster
+Revision 1.22  2003/09/05 14:22:10  lemmy
 working version
 
-Revision 1.21  2003/09/04 22:04:07  lemmster
+Revision 1.21  2003/09/04 22:04:07  lemmy
 use always a new searchquery
 
-Revision 1.20  2003/09/04 21:57:21  lemmster
+Revision 1.20  2003/09/04 21:57:21  lemmy
 still buggy, but enough for today
 
-Revision 1.19  2003/09/04 12:17:01  lemmster
+Revision 1.19  2003/09/04 12:17:01  lemmy
 lots of changes
 
-Revision 1.18  2003/09/03 22:15:27  lemmster
+Revision 1.18  2003/09/03 22:15:27  lemmy
 advanced search introduced; not working and far from complete. just to see the design
 
-Revision 1.17  2003/09/01 11:09:43  lemmster
+Revision 1.17  2003/09/01 11:09:43  lemmy
 show downloading files
 
-Revision 1.16  2003/08/31 12:32:04  lemmster
+Revision 1.16  2003/08/31 12:32:04  lemmy
 major changes to search
 
 Revision 1.15  2003/08/29 19:09:25  dek
@@ -411,28 +414,28 @@ use JFace font registry
 Revision 1.12  2003/08/22 14:33:06  vaste
 temporarily changed font to monospaced as an example (ugly hack)
 
-Revision 1.11  2003/08/20 10:04:41  lemmster
+Revision 1.11  2003/08/20 10:04:41  lemmy
 inputbox disabled when zero searchable networks are enabled
 
-Revision 1.10  2003/08/19 15:03:43  lemmster
+Revision 1.10  2003/08/19 15:03:43  lemmy
 bugfix in update
 
 Revision 1.9  2003/08/18 01:42:24  zet
 centralize resource bundle
 
-Revision 1.8  2003/08/11 19:03:53  lemmstercvs01
+Revision 1.8  2003/08/11 19:03:53  lemmy
 update networkcombo when a networkinfo status changes
 
-Revision 1.7  2003/07/30 19:32:02  lemmstercvs01
+Revision 1.7  2003/07/30 19:32:02  lemmy
 using hasServers() instead of direct compare
 
-Revision 1.6  2003/07/28 08:19:20  lemmstercvs01
+Revision 1.6  2003/07/28 08:19:20  lemmy
 get NetworkInfo by Enum instead of NetworkName
 
-Revision 1.5  2003/07/27 18:45:47  lemmstercvs01
+Revision 1.5  2003/07/27 18:45:47  lemmy
 lots of changes
 
-Revision 1.4  2003/07/24 16:20:10  lemmstercvs01
+Revision 1.4  2003/07/24 16:20:10  lemmy
 lots of changes
 
 Revision 1.3  2003/07/24 02:22:46  zet
@@ -441,7 +444,7 @@ doesn't crash if no core is running
 Revision 1.2  2003/07/23 19:49:17  zet
 press enter
 
-Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
+Revision 1.1  2003/07/23 16:56:28  lemmy
 initial commit
 
 */

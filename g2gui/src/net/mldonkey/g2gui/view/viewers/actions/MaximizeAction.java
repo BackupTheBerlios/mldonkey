@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * MaximizeAction
  *
- * @version $Id: MaximizeAction.java,v 1.3 2003/11/22 02:24:30 zet Exp $
+ * @version $Id: MaximizeAction.java,v 1.4 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class MaximizeAction extends SashAction {
@@ -60,13 +60,16 @@ public class MaximizeAction extends SashAction {
 
 /*
 $Log: MaximizeAction.java,v $
+Revision 1.4  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.3  2003/11/22 02:24:30  zet
 widgetfactory & save sash postions/states between sessions
 
 Revision 1.2  2003/11/15 21:15:29  zet
 Label restore action
 
-Revision 1.1  2003/10/29 16:56:21  lemmster
+Revision 1.1  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 */

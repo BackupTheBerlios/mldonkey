@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Composite;
  * GraphCanvas
  *
  *
- * @version $Id: GraphCanvas.java,v 1.12 2003/10/17 15:36:01 zet Exp $
+ * @version $Id: GraphCanvas.java,v 1.13 2003/12/04 08:47:28 lemmy Exp $
  */
 public class GraphCanvas extends Canvas {
     private Composite parent;
@@ -111,6 +111,9 @@ public class GraphCanvas extends Canvas {
 
 /*
 $Log: GraphCanvas.java,v $
+Revision 1.13  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.12  2003/10/17 15:36:01  zet
 graph colour prefs
 
@@ -120,8 +123,8 @@ basic graph hourly history
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.7  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author: zet $
+Revision 1.7  2003/08/22 21:13:11  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.6  2003/07/26 05:42:39  zet
 cleanup

@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.5 2003/12/03 22:19:11 lemmy Exp $
+ * @version $Id: MainWindow.java,v 1.6 2003/12/04 08:47:27 lemmy Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -457,6 +457,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.6  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.5  2003/12/03 22:19:11  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
@@ -485,13 +488,13 @@ coolBar-Layout is now saved and restored
 Revision 1.94  2003/11/24 15:24:30  zet
 remove unneeded typecast
 
-Revision 1.93  2003/11/24 08:29:11  lemmster
+Revision 1.93  2003/11/24 08:29:11  lemmy
 ErrorDialog shows up only when started without "-d"
 
 Revision 1.92  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
-Revision 1.91  2003/11/20 14:02:17  lemmster
+Revision 1.91  2003/11/20 14:02:17  lemmy
 G2Gui cleanup
 
 Revision 1.90  2003/11/14 19:41:46  zet
@@ -550,13 +553,13 @@ Revision 1.73  2003/09/18 15:30:46  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.72  2003/09/18 09:44:57  lemmster
+Revision 1.72  2003/09/18 09:44:57  lemmy
 checkstyle
 
 Revision 1.71  2003/09/16 01:12:25  zet
 // isConnected()
 
-Revision 1.70  2003/09/13 11:02:45  lemmster
+Revision 1.70  2003/09/13 11:02:45  lemmy
 use List instead of GuiTab[] in addTabs()
 
 Revision 1.69  2003/09/08 18:27:42  zet
@@ -595,40 +598,40 @@ combine the preference stores
 Revision 1.58  2003/08/23 23:50:26  zet
 add build # to titlebar
 
-Revision 1.57  2003/08/23 16:18:44  lemmster
+Revision 1.57  2003/08/23 16:18:44  lemmy
 fixed locked/button size
 
-Revision 1.56  2003/08/23 15:49:28  lemmster
+Revision 1.56  2003/08/23 15:49:28  lemmy
 fix for prefs and refactoring
 
 Revision 1.55  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.54  2003/08/23 15:15:11  lemmster
+Revision 1.54  2003/08/23 15:15:11  lemmy
 addTabs() proper
 
-Revision 1.52  2003/08/23 09:56:15  lemmster
+Revision 1.52  2003/08/23 09:56:15  lemmy
 use supertype instead of Core
 
 Revision 1.51  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.50  2003/08/21 16:26:15  lemmster
+Revision 1.50  2003/08/21 16:26:15  lemmy
 changed links in menubar
 
 Revision 1.49  2003/08/21 16:07:16  zet
 pref button
 
-Revision 1.48  2003/08/21 13:13:10  lemmster
+Revision 1.48  2003/08/21 13:13:10  lemmy
 cleanup in networkitem
 
-Revision 1.47  2003/08/21 11:19:15  lemmster
+Revision 1.47  2003/08/21 11:19:15  lemmy
 added bt and multinet image
 
 Revision 1.46  2003/08/21 10:11:46  dek
 removed umlaut for comling java-file with gcj
 
-Revision 1.45  2003/08/20 22:16:33  lemmster
+Revision 1.45  2003/08/20 22:16:33  lemmy
 badconnect is display too. added some icons
 
 Revision 1.44  2003/08/20 16:14:17  zet
@@ -637,7 +640,7 @@ menuitems
 Revision 1.43  2003/08/20 14:58:43  zet
 sources clientinfo viewer
 
-Revision 1.42  2003/08/19 12:14:16  lemmster
+Revision 1.42  2003/08/19 12:14:16  lemmy
 first try of simple/advanced mode
 
 Revision 1.41  2003/08/18 06:00:28  zet
@@ -664,10 +667,10 @@ fix nullpointer in clientInfo, add icons to tables
 Revision 1.34  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 
-Revision 1.33  2003/08/10 19:31:15  lemmstercvs01
+Revision 1.33  2003/08/10 19:31:15  lemmy
 try to fix the root handle bug
 
-Revision 1.32  2003/08/10 12:59:01  lemmstercvs01
+Revision 1.32  2003/08/10 12:59:01  lemmy
 "manage servers" in NetworkItem implemented
 
 Revision 1.31  2003/08/09 19:53:40  zet
@@ -676,25 +679,25 @@ feedback menuitem
 Revision 1.30  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 
-Revision 1.29  2003/08/05 13:49:44  lemmstercvs01
+Revision 1.29  2003/08/05 13:49:44  lemmy
 support for servertab added
 
-Revision 1.28  2003/08/04 14:38:55  lemmstercvs01
+Revision 1.28  2003/08/04 14:38:55  lemmy
 splashscreen and error handling added (resending on badpassword doenst work atm)
 
 Revision 1.27  2003/08/02 17:19:22  zet
 only print stats in titlebar while minimized (stats overkill)
 
-Revision 1.26  2003/08/01 17:21:18  lemmstercvs01
+Revision 1.26  2003/08/01 17:21:18  lemmy
 reworked observer/observable design, added multiversion support
 
 Revision 1.25  2003/07/31 17:11:07  zet
 getShell
 
-Revision 1.24  2003/07/29 10:10:14  lemmstercvs01
+Revision 1.24  2003/07/29 10:10:14  lemmy
 moved icon folder out of src/
 
-Revision 1.23  2003/07/29 09:39:24  lemmstercvs01
+Revision 1.23  2003/07/29 09:39:24  lemmy
 change modifier of statusline
 
 Revision 1.22  2003/07/28 17:41:32  zet
@@ -718,7 +721,7 @@ check isDisposed
 Revision 1.16  2003/07/26 23:10:14  zet
 update titlebar with rates
 
-Revision 1.15  2003/07/26 21:43:46  lemmstercvs01
+Revision 1.15  2003/07/26 21:43:46  lemmy
 createTransparentImage modifier changed to public
 
 Revision 1.14  2003/07/26 00:51:43  zet
@@ -736,7 +739,7 @@ program icon
 Revision 1.10  2003/07/24 02:22:46  zet
 doesn't crash if no core is running
 
-Revision 1.9  2003/07/23 17:06:45  lemmstercvs01
+Revision 1.9  2003/07/23 17:06:45  lemmy
 add new SearchTab(this)
 
 Revision 1.8  2003/07/23 04:08:07  zet
@@ -751,16 +754,16 @@ setSizeLocation after pack
 Revision 1.5  2003/07/18 09:44:35  dek
 using the right setActive, when choosing default-tab
 
-Revision 1.4  2003/07/18 04:34:22  lemmstercvs01
+Revision 1.4  2003/07/18 04:34:22  lemmy
 checkstyle applied
 
-Revision 1.3  2003/07/17 15:10:35  lemmstercvs01
+Revision 1.3  2003/07/17 15:10:35  lemmy
 foobar
 
-Revision 1.2  2003/07/17 15:02:28  lemmstercvs01
+Revision 1.2  2003/07/17 15:02:28  lemmy
 changed visibility of createTransparentImage()
 
-Revision 1.1  2003/07/17 14:58:37  lemmstercvs01
+Revision 1.1  2003/07/17 14:58:37  lemmy
 refactored
 
 Revision 1.33  2003/07/15 13:30:27  dek
@@ -830,19 +833,19 @@ CoolBar created
 Revision 1.12  2003/06/27 18:20:44  dek
 preferences
 
-Revision 1.11  2003/06/27 17:14:32  lemmstercvs01
+Revision 1.11  2003/06/27 17:14:32  lemmy
 removed unneeded importer
 
 Revision 1.10  2003/06/27 13:40:50  dek
 *** empty log message ***
 
-Revision 1.9  2003/06/27 11:34:56  lemmstercvs01
+Revision 1.9  2003/06/27 11:34:56  lemmy
 unnecessary importer removed
 
 Revision 1.8  2003/06/27 11:23:48  dek
 gui is no more children of applicationwindow
 
-Revision 1.7  2003/06/26 21:31:29  lemmstercvs01
+Revision 1.7  2003/06/26 21:31:29  lemmy
 unnecessary importer removed
 
 Revision 1.6  2003/06/26 21:11:10  dek
@@ -860,7 +863,7 @@ Console-Tab reworked
 Revision 1.2  2003/06/24 20:58:36  dek
 removed border from Content-Composite
 
-Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
+Revision 1.1  2003/06/24 20:44:54  lemmy
 refactored
 
 Revision 1.3  2003/06/24 19:18:45  dek

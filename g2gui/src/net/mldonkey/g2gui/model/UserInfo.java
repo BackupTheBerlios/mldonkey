@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * UserInfo
  *
  *
- * @version $Id: UserInfo.java,v 1.5 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: UserInfo.java,v 1.6 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class UserInfo extends SimpleInformation {
@@ -199,19 +199,22 @@ public class UserInfo extends SimpleInformation {
 
 /*
 $Log: UserInfo.java,v $
-Revision 1.5  2003/12/01 14:22:17  lemmster
+Revision 1.6  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.5  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.3  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.3  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.2  2003/07/04 10:26:03  lemmstercvs01
+Revision 1.2  2003/07/04 10:26:03  lemmy
 minor: just checkstyle
 
-Revision 1.1  2003/06/30 07:19:47  lemmstercvs01
+Revision 1.1  2003/06/30 07:19:47  lemmy
 initial commit (untested)
 
 */

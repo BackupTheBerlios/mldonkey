@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.22 2003/11/29 17:01:00 zet Exp $
+ * @version $Id: StatusLine.java,v 1.23 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class StatusLine {
@@ -190,10 +190,13 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.23  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.22  2003/11/29 17:01:00  zet
 update for mainWindow
 
-Revision 1.21  2003/11/23 17:58:03  lemmster
+Revision 1.21  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.20  2003/11/22 02:24:29  zet
@@ -211,7 +214,7 @@ flattened status bar
 Revision 1.16  2003/10/17 03:36:50  zet
 use toolbar
 
-Revision 1.15  2003/09/18 09:44:57  lemmster
+Revision 1.15  2003/09/18 09:44:57  lemmy
 checkstyle
 
 Revision 1.14  2003/09/03 14:49:07  zet
@@ -229,13 +232,13 @@ Toggleable link entry.  It should parse links from pasted HTML as well.
 Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.9  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+Revision 1.9  2003/08/22 21:06:48  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.8  2003/08/18 01:42:24  zet
 centralize resource bundle
 
-Revision 1.7  2003/08/10 12:59:01  lemmstercvs01
+Revision 1.7  2003/08/10 12:59:01  lemmy
 "manage servers" in NetworkItem implemented
 
 Revision 1.6  2003/08/02 19:32:43  zet
@@ -244,22 +247,22 @@ marginwidths
 Revision 1.5  2003/08/02 12:56:47  zet
 size statusline
 
-Revision 1.4  2003/07/31 14:10:58  lemmstercvs01
+Revision 1.4  2003/07/31 14:10:58  lemmy
 reworked
 
-Revision 1.3  2003/07/29 09:41:56  lemmstercvs01
+Revision 1.3  2003/07/29 09:41:56  lemmy
 still in progress, removed networkitem for compatibility
 
-Revision 1.2  2003/07/18 04:34:22  lemmstercvs01
+Revision 1.2  2003/07/18 04:34:22  lemmy
 checkstyle applied
 
-Revision 1.1  2003/07/17 14:58:37  lemmstercvs01
+Revision 1.1  2003/07/17 14:58:37  lemmy
 refactored
 
-Revision 1.7  2003/06/28 09:50:12  lemmstercvs01
+Revision 1.7  2003/06/28 09:50:12  lemmy
 ResourceBundle added
 
-Revision 1.6  2003/06/28 09:39:30  lemmstercvs01
+Revision 1.6  2003/06/28 09:39:30  lemmy
 added isDisposed() check
 
 Revision 1.5  2003/06/27 13:37:28  dek

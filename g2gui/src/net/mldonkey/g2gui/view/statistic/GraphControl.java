@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  * GraphControl
  *
  *
- * @version $Id: GraphControl.java,v 1.17 2003/10/17 15:36:01 zet Exp $
+ * @version $Id: GraphControl.java,v 1.18 2003/12/04 08:47:28 lemmy Exp $
  *
  */
 public class GraphControl extends Composite {
@@ -81,6 +81,9 @@ public class GraphControl extends Composite {
 
 /*
 $Log: GraphControl.java,v $
+Revision 1.18  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.17  2003/10/17 15:36:01  zet
 graph colour prefs
 
@@ -96,8 +99,8 @@ add shadow
 Revision 1.11  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.10  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author: zet $
+Revision 1.10  2003/08/22 21:13:11  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.9  2003/07/26 17:54:14  zet
 fix pref's illegal setParent, redo graphs, other

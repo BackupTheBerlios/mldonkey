@@ -34,7 +34,7 @@ import org.eclipse.jface.viewers.Viewer;
  * ServerTableSorter
  *
  *
- * @version $Id: ServerTableSorter.java,v 1.10 2003/12/01 16:39:41 zet Exp $
+ * @version $Id: ServerTableSorter.java,v 1.11 2003/12/04 08:47:31 lemmy Exp $
  *
  */
 public class ServerTableSorter extends GSorter {
@@ -148,6 +148,9 @@ public class ServerTableSorter extends GSorter {
 
 /*
 $Log: ServerTableSorter.java,v $
+Revision 1.11  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.10  2003/12/01 16:39:41  zet
 *** empty log message ***
 
@@ -157,7 +160,7 @@ set default sort order for specific columns
 Revision 1.8  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.7  2003/10/31 13:16:32  lemmster
+Revision 1.7  2003/10/31 13:16:32  lemmy
 Rename Viewer -> Page
 Constructors changed
 
@@ -175,28 +178,28 @@ discovered sync errors and NPEs in upload table... will continue later.
 Revision 1.5  2003/10/22 01:37:55  zet
 add column selector to server/search (might not be finished yet..)
 
-Revision 1.4  2003/10/21 17:00:45  lemmster
+Revision 1.4  2003/10/21 17:00:45  lemmy
 class hierarchy for tableviewer
 
-Revision 1.3  2003/09/18 11:26:07  lemmster
+Revision 1.3  2003/09/18 11:26:07  lemmy
 checkstyle
 
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.1  2003/08/23 09:46:18  lemmster
+Revision 1.1  2003/08/23 09:46:18  lemmy
 superclass TableMenuListener added
 
-Revision 1.4  2003/08/11 19:25:04  lemmstercvs01
+Revision 1.4  2003/08/11 19:25:04  lemmy
 bugfix at CleanTable
 
-Revision 1.3  2003/08/07 12:35:31  lemmstercvs01
+Revision 1.3  2003/08/07 12:35:31  lemmy
 cleanup, more efficient
 
-Revision 1.2  2003/08/06 17:38:38  lemmstercvs01
+Revision 1.2  2003/08/06 17:38:38  lemmy
 some actions still missing. but it should work for the moment
 
-Revision 1.1  2003/08/05 13:50:10  lemmstercvs01
+Revision 1.1  2003/08/05 13:50:10  lemmy
 initial commit
 
 */

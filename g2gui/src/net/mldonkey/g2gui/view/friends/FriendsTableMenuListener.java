@@ -41,7 +41,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 /**
  * TableMenuListener
  *
- * @version $Id: FriendsTableMenuListener.java,v 1.11 2003/11/29 14:29:27 zet Exp $
+ * @version $Id: FriendsTableMenuListener.java,v 1.12 2003/12/04 08:47:29 lemmy Exp $
  *
  */
 public class FriendsTableMenuListener extends GTableMenuListener implements ISelectionChangedListener {
@@ -162,10 +162,13 @@ public class FriendsTableMenuListener extends GTableMenuListener implements ISel
 
 /*
 $Log: FriendsTableMenuListener.java,v $
+Revision 1.12  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.11  2003/11/29 14:29:27  zet
 small viewframe updates
 
-Revision 1.10  2003/11/23 17:58:03  lemmster
+Revision 1.10  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.9  2003/11/14 19:06:39  zet
@@ -180,7 +183,7 @@ icons
 Revision 1.6  2003/09/20 01:20:26  zet
 *** empty log message ***
 
-Revision 1.5  2003/09/18 09:54:45  lemmster
+Revision 1.5  2003/09/18 09:54:45  lemmy
 checkstyle
 
 Revision 1.4  2003/08/30 14:25:57  zet
@@ -192,7 +195,7 @@ Add friend by ip
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.1  2003/08/23 09:47:46  lemmster
+Revision 1.1  2003/08/23 09:47:46  lemmy
 just rename
 
 Revision 1.2  2003/08/18 01:42:24  zet

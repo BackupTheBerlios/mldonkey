@@ -34,7 +34,7 @@ import org.eclipse.swt.events.DisposeListener;
 /**
  * GSorter - Generic sorter
  *
- * @version $Id: GSorter.java,v 1.6 2003/12/03 22:19:11 lemmy Exp $
+ * @version $Id: GSorter.java,v 1.7 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class GSorter extends ViewerSorter implements DisposeListener {
@@ -213,6 +213,9 @@ public class GSorter extends ViewerSorter implements DisposeListener {
 
 /*
 $Log: GSorter.java,v $
+Revision 1.7  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.6  2003/12/03 22:19:11  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
@@ -225,7 +228,7 @@ coalesce addr use
 Revision 1.3  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.2  2003/10/31 10:42:47  lemmster
+Revision 1.2  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!

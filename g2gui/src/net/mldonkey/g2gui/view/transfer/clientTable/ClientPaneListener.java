@@ -42,7 +42,7 @@ import org.eclipse.jface.action.Separator;
 /**
  * ClientPaneListener
  *
- * @version $Id: ClientPaneListener.java,v 1.10 2003/11/28 01:06:21 zet Exp $
+ * @version $Id: ClientPaneListener.java,v 1.11 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class ClientPaneListener extends SashViewFrameListener {
@@ -107,6 +107,9 @@ public class ClientPaneListener extends SashViewFrameListener {
 
 /*
 $Log: ClientPaneListener.java,v $
+Revision 1.11  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.10  2003/11/28 01:06:21  zet
 not much- slowly expanding viewframe - will continue later
 
@@ -125,11 +128,11 @@ sort by column menu item (for macOS)
 Revision 1.5  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.4  2003/10/31 13:16:32  lemmster
+Revision 1.4  2003/10/31 13:16:32  lemmy
 Rename Viewer -> Page
 Constructors changed
 
-Revision 1.3  2003/10/31 10:42:47  lemmster
+Revision 1.3  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -145,7 +148,7 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.1  2003/10/29 16:56:21  lemmster
+Revision 1.1  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 */

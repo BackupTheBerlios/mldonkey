@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * RegExp
  *
- * @version $Id: RegExp.java,v 1.3 2003/11/30 23:42:56 zet Exp $
+ * @version $Id: RegExp.java,v 1.4 2003/12/04 08:47:28 lemmy Exp $
  *
  */
 public class RegExp {
@@ -147,10 +147,13 @@ public class RegExp {
 
 /*
 $Log: RegExp.java,v $
+Revision 1.4  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.3  2003/11/30 23:42:56  zet
 updates for latest mldonkey cvs
 
-Revision 1.2  2003/11/23 17:58:03  lemmster
+Revision 1.2  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.1  2003/10/31 07:24:01  zet

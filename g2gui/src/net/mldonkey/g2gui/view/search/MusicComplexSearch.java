@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.23 2003/12/01 16:13:50 zet Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.24 2003/12/04 08:47:29 lemmy Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -216,73 +216,76 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.24  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.23  2003/12/01 16:13:50  zet
 npe #939429342
 
-Revision 1.22  2003/12/01 14:23:02  lemmster
+Revision 1.22  2003/12/01 14:23:02  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.21  2003/11/27 15:33:33  zet
 npe
 
-Revision 1.20  2003/11/24 08:56:22  lemmster
+Revision 1.20  2003/11/24 08:56:22  lemmy
 fix [Bug #1132] search combo retains duplicates (better solution)
 
-Revision 1.19  2003/11/24 08:37:24  lemmster
+Revision 1.19  2003/11/24 08:37:24  lemmy
 fix [Bug #1132] search combo retains duplicates
 
-Revision 1.18  2003/11/23 19:22:35  lemmster
+Revision 1.18  2003/11/23 19:22:35  lemmy
 fixed: [ Bug #1119] Search field a combo holding previous searches
 
 Revision 1.17  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
-Revision 1.16  2003/09/19 15:19:14  lemmster
+Revision 1.16  2003/09/19 15:19:14  lemmy
 reworked
 
-Revision 1.15  2003/09/18 10:39:21  lemmster
+Revision 1.15  2003/09/18 10:39:21  lemmy
 checkstyle
 
-Revision 1.14  2003/09/08 13:00:20  lemmster
+Revision 1.14  2003/09/08 13:00:20  lemmy
 added tooltip
 
-Revision 1.13  2003/09/08 12:37:39  lemmster
+Revision 1.13  2003/09/08 12:37:39  lemmy
 fix typo
 
-Revision 1.12  2003/09/08 11:54:23  lemmster
+Revision 1.12  2003/09/08 11:54:23  lemmy
 added download button
 
-Revision 1.11  2003/09/08 10:25:26  lemmster
+Revision 1.11  2003/09/08 10:25:26  lemmy
 OtherComplexSearch added, rest improved
 
 Revision 1.10  2003/09/07 16:18:04  zet
 combo
 
-Revision 1.9  2003/09/07 08:21:50  lemmster
+Revision 1.9  2003/09/07 08:21:50  lemmy
 resourcebundle added
 
 Revision 1.8  2003/09/05 23:49:07  zet
 1 line per search option
 
-Revision 1.7  2003/09/05 16:50:19  lemmster
+Revision 1.7  2003/09/05 16:50:19  lemmy
 set search button correctly, verify input for result count
 
-Revision 1.6  2003/09/05 14:22:10  lemmster
+Revision 1.6  2003/09/05 14:22:10  lemmy
 working version
 
-Revision 1.5  2003/09/04 22:04:07  lemmster
+Revision 1.5  2003/09/04 22:04:07  lemmy
 use always a new searchquery
 
-Revision 1.4  2003/09/04 21:57:21  lemmster
+Revision 1.4  2003/09/04 21:57:21  lemmy
 still buggy, but enough for today
 
-Revision 1.3  2003/09/04 16:06:45  lemmster
+Revision 1.3  2003/09/04 16:06:45  lemmy
 working in progress
 
-Revision 1.2  2003/09/04 12:17:01  lemmster
+Revision 1.2  2003/09/04 12:17:01  lemmy
 lots of changes
 
-Revision 1.1  2003/09/03 22:15:27  lemmster
+Revision 1.1  2003/09/03 22:15:27  lemmy
 advanced search introduced; not working and far from complete. just to see the design
 
 */

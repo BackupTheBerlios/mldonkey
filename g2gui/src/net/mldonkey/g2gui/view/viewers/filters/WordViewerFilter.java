@@ -30,7 +30,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * WordViewerFilter
  *
- * @version $Id: WordViewerFilter.java,v 1.1 2003/11/06 20:02:39 lemmster Exp $ 
+ * @version $Id: WordViewerFilter.java,v 1.2 2003/12/04 08:47:30 lemmy Exp $ 
  *
  */
 public class WordViewerFilter extends ViewerFilter {
@@ -59,11 +59,14 @@ public class WordViewerFilter extends ViewerFilter {
 }
 /*
 $Log: WordViewerFilter.java,v $
-Revision 1.1  2003/11/06 20:02:39  lemmster
+Revision 1.2  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.1  2003/11/06 20:02:39  lemmy
 move WordFilter
 fix AllFilterAction
 
-Revision 1.2  2003/09/18 10:04:57  lemmster
+Revision 1.2  2003/09/18 10:04:57  lemmy
 checkstyle
 
 Revision 1.1  2003/08/29 00:54:42  zet

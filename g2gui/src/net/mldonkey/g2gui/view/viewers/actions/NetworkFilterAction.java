@@ -34,7 +34,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * NetworkFilterAction
  *
- * @version $Id: NetworkFilterAction.java,v 1.6 2003/11/06 13:52:33 lemmster Exp $ 
+ * @version $Id: NetworkFilterAction.java,v 1.7 2003/12/04 08:47:30 lemmy Exp $ 
  *
  */
 public class NetworkFilterAction extends FilterAction {
@@ -76,16 +76,19 @@ public class NetworkFilterAction extends FilterAction {
 
 /*
 $Log: NetworkFilterAction.java,v $
-Revision 1.6  2003/11/06 13:52:33  lemmster
+Revision 1.7  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.6  2003/11/06 13:52:33  lemmy
 filters back working
 
-Revision 1.5  2003/11/04 21:06:35  lemmster
+Revision 1.5  2003/11/04 21:06:35  lemmy
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 
 Revision 1.4  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.3  2003/10/31 10:42:47  lemmster
+Revision 1.3  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -101,7 +104,7 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.1  2003/10/29 16:56:21  lemmster
+Revision 1.1  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 */

@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  *
- * @version $Id: Console.java,v 1.18 2003/10/21 21:13:09 dek Exp $
+ * @version $Id: Console.java,v 1.19 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class Console extends Observable implements ControlListener {
@@ -260,6 +260,9 @@ public class Console extends Observable implements ControlListener {
 
 /*
 $Log: Console.java,v $
+Revision 1.19  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.18  2003/10/21 21:13:09  dek
 small cosmetic fix
 
@@ -272,7 +275,7 @@ added Command-History to Console
 Revision 1.15  2003/09/20 01:22:17  zet
 *** empty log message ***
 
-Revision 1.14  2003/09/18 09:54:45  lemmster
+Revision 1.14  2003/09/18 09:54:45  lemmy
 checkstyle
 
 Revision 1.13  2003/09/16 16:19:03  zet
@@ -293,8 +296,8 @@ update style bits
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+Revision 1.7  2003/08/22 21:10:57  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.6  2003/08/18 06:00:01  zet
 fix null pointer (I'm not even sure it is real..)

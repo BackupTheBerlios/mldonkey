@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.18 2003/11/13 01:00:15 zet Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.19 2003/12/04 08:47:27 lemmy Exp $ 
  *
  */
 public class G2GuiPref extends PreferencePage {
@@ -124,6 +124,9 @@ public class G2GuiPref extends PreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.19  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.18  2003/11/13 01:00:15  zet
 fix #1079
 
@@ -136,10 +139,10 @@ Make "advanced user" option more noticeable
 Revision 1.15  2003/10/21 03:11:45  zet
 circumvent gcj bug
 
-Revision 1.14  2003/10/12 16:27:01  lemmster
+Revision 1.14  2003/10/12 16:27:01  lemmy
 minor changes
 
-Revision 1.13  2003/10/01 20:56:27  lemmster
+Revision 1.13  2003/10/01 20:56:27  lemmy
 add class hierarchy
 
 Revision 1.12  2003/09/28 13:10:31  dek
@@ -148,7 +151,7 @@ Added Option, wether multiple Instances of G2Gui are allowed or not[bug #867]
 Revision 1.11  2003/09/26 04:19:06  zet
 drag&drop
 
-Revision 1.10  2003/09/18 10:23:48  lemmster
+Revision 1.10  2003/09/18 10:23:48  lemmy
 checkstyle
 
 Revision 1.9  2003/09/03 18:22:45  dek
@@ -172,8 +175,8 @@ all content is now within a group, do you like it, or should i revert changes?
 Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.2  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+Revision 1.2  2003/08/22 21:10:57  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.1  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
@@ -181,7 +184,7 @@ renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
 Revision 1.26  2003/08/19 17:12:56  zet
 set defaults
 
-Revision 1.25  2003/08/19 12:14:15  lemmster
+Revision 1.25  2003/08/19 12:14:15  lemmy
 first try of simple/advanced mode
 
 Revision 1.24  2003/08/18 14:51:58  dek
@@ -211,7 +214,7 @@ Revision 1.17  2003/07/25 02:56:52  zet
 Revision 1.16  2003/07/25 02:41:22  zet
 console window colour config in prefs / try different fontfieldeditor / pref page  ( any worse? )
 
-Revision 1.15  2003/07/03 16:27:51  lemmstercvs01
+Revision 1.15  2003/07/03 16:27:51  lemmy
 nonsense importer removed
 
 Revision 1.14  2003/07/03 10:23:20  dek
@@ -253,7 +256,7 @@ pref-dialog accessible in main-window
 Revision 1.2  2003/06/25 10:42:36  dek
 peferenences dialog at first start
 
-Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
+Revision 1.1  2003/06/24 20:44:54  lemmy
 refactored
 
 Revision 1.1  2003/06/23 18:57:05  dek

@@ -32,7 +32,7 @@ import java.util.List;
  * ObjectPool
  *
  *
- * @version $Id: ObjectPool.java,v 1.7 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: ObjectPool.java,v 1.8 2003/12/04 08:47:28 lemmy Exp $ 
  *
  */
 public abstract class ObjectPool {
@@ -128,25 +128,28 @@ public abstract class ObjectPool {
 
 /*
 $Log: ObjectPool.java,v $
-Revision 1.7  2003/11/23 17:58:03  lemmster
+Revision 1.8  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.7  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.6  2003/09/02 09:24:36  lemmster
+Revision 1.6  2003/09/02 09:24:36  lemmy
 checkstyle
 
 Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.4  2003/08/21 10:53:50  lemmster
-$user$ -> $Author: lemmster $
+Revision 1.4  2003/08/21 10:53:50  lemmy
+$user$ -> $Author: lemmy $
 
 Revision 1.3  2003/08/21 10:13:14  dek
 removed " malformed UTF-8 character" (only in comment)
 
-Revision 1.2  2003/08/04 14:38:13  lemmstercvs01
+Revision 1.2  2003/08/04 14:38:13  lemmy
 splashscreen and error handling added
 
-Revision 1.1  2003/06/12 13:09:52  lemmstercvs01
+Revision 1.1  2003/06/12 13:09:52  lemmy
 ObjectPool, DownloadPool, GuiMessagePool added;
 class hierarchy under ObjectPool created
 

@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.14 2003/12/03 22:19:11 lemmy Exp $
+ * @version $Id: GView.java,v 1.15 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public abstract class GView {
@@ -393,6 +393,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.15  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.14  2003/12/03 22:19:11  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
@@ -411,31 +414,31 @@ prevent column widths of 0
 Revision 1.9  2003/11/24 21:13:39  zet
 default viewer font
 
-Revision 1.8  2003/11/23 17:58:03  lemmster
+Revision 1.8  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.7  2003/11/14 00:46:04  zet
 sort by column menu item (for macOS)
 
-Revision 1.6  2003/11/09 22:31:51  lemmster
+Revision 1.6  2003/11/09 22:31:51  lemmy
 fixed 'show all' bug
 
 Revision 1.5  2003/11/07 02:24:03  zet
 push sViewer into GView
 
-Revision 1.4  2003/11/06 14:59:06  lemmster
+Revision 1.4  2003/11/06 14:59:06  lemmy
 clean up
 
-Revision 1.3  2003/11/06 13:52:33  lemmster
+Revision 1.3  2003/11/06 13:52:33  lemmy
 filters back working
 
-Revision 1.2  2003/11/04 21:06:35  lemmster
+Revision 1.2  2003/11/04 21:06:35  lemmy
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 
 Revision 1.1  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.1  2003/10/31 10:42:47  lemmster
+Revision 1.1  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!

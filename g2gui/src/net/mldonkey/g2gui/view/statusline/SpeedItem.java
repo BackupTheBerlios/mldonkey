@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Composite;
  * SpeedItem
  *
  *
- * @version $Id: SpeedItem.java,v 1.26 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: SpeedItem.java,v 1.27 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class SpeedItem implements Observer {
@@ -157,7 +157,10 @@ public class SpeedItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
-Revision 1.26  2003/11/23 17:58:03  lemmster
+Revision 1.27  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.26  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.25  2003/11/22 02:24:29  zet
@@ -172,7 +175,7 @@ flattened status bar
 Revision 1.22  2003/10/17 03:36:26  zet
 not much
 
-Revision 1.21  2003/09/18 11:37:24  lemmster
+Revision 1.21  2003/09/18 11:37:24  lemmy
 checkstyle
 
 Revision 1.20  2003/09/17 14:46:30  zet
@@ -190,8 +193,8 @@ GridLayout helper class
 Revision 1.16  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.15  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.15  2003/08/22 21:13:11  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.14  2003/08/17 23:13:42  zet
 centralize resources, move images
@@ -205,16 +208,16 @@ layout each time
 Revision 1.11  2003/08/02 12:56:57  zet
 size statusline
 
-Revision 1.10  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.10  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.9  2003/07/31 14:11:06  lemmstercvs01
+Revision 1.9  2003/07/31 14:11:06  lemmy
 reworked
 
-Revision 1.8  2003/07/17 14:58:56  lemmstercvs01
+Revision 1.8  2003/07/17 14:58:56  lemmy
 refactored
 
-Revision 1.7  2003/06/28 09:37:18  lemmstercvs01
+Revision 1.7  2003/06/28 09:37:18  lemmy
 syncExec() -> asyncExec()
 
 Revision 1.6  2003/06/27 13:37:28  dek
@@ -223,13 +226,13 @@ tooltips added
 Revision 1.5  2003/06/27 13:21:12  dek
 added connected Networks
 
-Revision 1.4  2003/06/27 11:34:00  lemmstercvs01
+Revision 1.4  2003/06/27 11:34:00  lemmy
 foobar
 
-Revision 1.3  2003/06/27 11:07:52  lemmstercvs01
+Revision 1.3  2003/06/27 11:07:52  lemmy
 CoreCommunications implements addObserver(Observer)
 
-Revision 1.2  2003/06/27 10:36:17  lemmstercvs01
+Revision 1.2  2003/06/27 10:36:17  lemmy
 changed notify to observer/observable
 
 Revision 1.1  2003/06/26 21:11:10  dek

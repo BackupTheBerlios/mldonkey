@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.28 2003/12/01 14:21:55 lemmster Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.29 2003/12/04 08:47:28 lemmy Exp $ 
  *
  */
 public class MessageBuffer {
@@ -275,7 +275,10 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
-Revision 1.28  2003/12/01 14:21:55  lemmster
+Revision 1.29  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.28  2003/12/01 14:21:55  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.27  2003/12/01 13:20:20  zet
@@ -284,7 +287,7 @@ readunsigned16
 Revision 1.26  2003/10/13 19:30:57  zet
 only check proto version on instantiation
 
-Revision 1.25  2003/10/13 08:28:09  lemmster
+Revision 1.25  2003/10/13 08:28:09  lemmy
 use readSignednt32() depending of the core protocol version
 
 Revision 1.24  2003/10/12 21:17:31  zet
@@ -294,20 +297,20 @@ Revision 1.23  2003/10/05 00:53:55  zet
 read priority #s properly 
 requires latest core dev version (fixed bug in guiEncoding)
 
-Revision 1.22  2003/09/11 11:01:38  lemmster
+Revision 1.22  2003/09/11 11:01:38  lemmy
 fixed ip addi order [bug #883]
 
-Revision 1.21  2003/09/11 10:47:29  lemmster
+Revision 1.21  2003/09/11 10:47:29  lemmy
 ip addresses in correct order
 
-Revision 1.20  2003/09/02 09:24:36  lemmster
+Revision 1.20  2003/09/02 09:24:36  lemmy
 checkstyle
 
 Revision 1.19  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.18  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.17  2003/08/10 23:20:26  zet
 signed ints
@@ -315,7 +318,7 @@ signed ints
 Revision 1.16  2003/08/06 16:07:51  dek
 reverted....
 
-Revision 1.14  2003/07/06 07:39:49  lemmstercvs01
+Revision 1.14  2003/07/06 07:39:49  lemmy
 checkstyle applied
 
 Revision 1.13  2003/07/02 16:23:30  dek
@@ -330,10 +333,10 @@ bugfix for bugfix ;-)
 Revision 1.10  2003/07/01 13:28:38  dek
 fixed negative array-size (was a problem with a (short) Overflow
 
-Revision 1.9  2003/06/30 07:20:44  lemmstercvs01
+Revision 1.9  2003/06/30 07:20:44  lemmy
 readTagList(), readInetAddress() added
 
-Revision 1.8  2003/06/16 21:48:09  lemmstercvs01
+Revision 1.8  2003/06/16 21:48:09  lemmy
 debug statement removed
 
 Revision 1.7  2003/06/15 21:44:57  dek
@@ -342,7 +345,7 @@ seems as if i fixed all bugs in readBinary, lemmy, please test ;-)
 Revision 1.5  2003/06/15 21:26:19  dek
 fixed readBinary
 
-Revision 1.4  2003/06/14 12:47:51  lemmstercvs01
+Revision 1.4  2003/06/14 12:47:51  lemmy
 checkstyle applied
 
 Revision 1.3  2003/06/13 12:02:47  dek

@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Shell;
  * ServerTableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.19 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.20 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class ServerTableMenuListener extends TableMenuListener { 
@@ -513,7 +513,10 @@ public class ServerTableMenuListener extends TableMenuListener {
 
 /*
 $Log: ServerTableMenuListener.java,v $
-Revision 1.19  2003/11/23 17:58:03  lemmster
+Revision 1.20  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.19  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.18  2003/11/05 00:10:32  zet
@@ -525,7 +528,7 @@ minor renames
 Revision 1.16  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.15  2003/10/31 13:16:32  lemmster
+Revision 1.15  2003/10/31 13:16:32  lemmy
 Rename Viewer -> Page
 Constructors changed
 
@@ -540,62 +543,62 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.13  2003/10/29 16:56:21  lemmster
+Revision 1.13  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
-Revision 1.12  2003/10/28 11:07:32  lemmster
+Revision 1.12  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
 Revision 1.11  2003/10/22 01:37:55  zet
 add column selector to server/search (might not be finished yet..)
 
-Revision 1.10  2003/10/21 17:00:45  lemmster
+Revision 1.10  2003/10/21 17:00:45  lemmy
 class hierarchy for tableviewer
 
-Revision 1.9  2003/09/24 09:35:57  lemmster
+Revision 1.9  2003/09/24 09:35:57  lemmy
 serverlink in menulistener
 
-Revision 1.8  2003/09/18 11:31:03  lemmster
+Revision 1.8  2003/09/18 11:31:03  lemmy
 checkstyle
 
-Revision 1.7  2003/09/18 11:26:07  lemmster
+Revision 1.7  2003/09/18 11:26:07  lemmy
 checkstyle
 
-Revision 1.6  2003/09/16 10:17:07  lemmster
+Revision 1.6  2003/09/16 10:17:07  lemmy
 add server to favorites disabled
 
-Revision 1.5  2003/09/14 13:24:30  lemmster
+Revision 1.5  2003/09/14 13:24:30  lemmy
 add header button to servertab
 
-Revision 1.4  2003/09/14 11:38:50  lemmster
+Revision 1.4  2003/09/14 11:38:50  lemmy
 connectMore in right click menu
 
-Revision 1.3  2003/09/08 15:43:34  lemmster
+Revision 1.3  2003/09/08 15:43:34  lemmy
 work in progress
 
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.1  2003/08/23 09:46:18  lemmster
+Revision 1.1  2003/08/23 09:46:18  lemmy
 superclass TableMenuListener added
 
-Revision 1.14  2003/08/22 19:00:25  lemmster
+Revision 1.14  2003/08/22 19:00:25  lemmy
 support for connectMore with network id
 
-Revision 1.13  2003/08/22 00:11:07  lemmster
+Revision 1.13  2003/08/22 00:11:07  lemmy
 filter: display only networks with server
 
-Revision 1.12  2003/08/20 21:34:22  lemmster
+Revision 1.12  2003/08/20 21:34:22  lemmy
 additive filters
 
 Revision 1.11  2003/08/18 01:42:24  zet
 centralize resource bundle
 
-Revision 1.10  2003/08/11 19:25:04  lemmstercvs01
+Revision 1.10  2003/08/11 19:25:04  lemmy
 bugfix at CleanTable
 
-Revision 1.9  2003/08/10 12:59:12  lemmstercvs01
+Revision 1.9  2003/08/10 12:59:12  lemmy
 "manage servers" in NetworkItem implemented
 
 Revision 1.8  2003/08/09 16:03:45  dek
@@ -616,19 +619,19 @@ you can get it at:
 
 ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz
 
-Revision 1.5  2003/08/07 13:25:37  lemmstercvs01
+Revision 1.5  2003/08/07 13:25:37  lemmy
 ResourceBundle added
 
-Revision 1.4  2003/08/07 12:35:31  lemmstercvs01
+Revision 1.4  2003/08/07 12:35:31  lemmy
 cleanup, more efficient
 
-Revision 1.3  2003/08/06 09:42:34  lemmstercvs01
+Revision 1.3  2003/08/06 09:42:34  lemmy
 manual refresh for testing
 
-Revision 1.2  2003/08/05 15:34:51  lemmstercvs01
+Revision 1.2  2003/08/05 15:34:51  lemmy
 network filter added
 
-Revision 1.1  2003/08/05 13:50:10  lemmstercvs01
+Revision 1.1  2003/08/05 13:50:10  lemmy
 initial commit
 
 */

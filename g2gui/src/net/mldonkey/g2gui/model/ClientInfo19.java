@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.enum.Enum;
 /**
  * ClientInfo19
  *
- * @version $Id: ClientInfo19.java,v 1.1 2003/12/01 14:42:57 lemmster Exp $ 
+ * @version $Id: ClientInfo19.java,v 1.2 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class ClientInfo19 extends ClientInfo {
@@ -142,7 +142,10 @@ public class ClientInfo19 extends ClientInfo {
 
 /*
 $Log: ClientInfo19.java,v $
-Revision 1.1  2003/12/01 14:42:57  lemmster
+Revision 1.2  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.1  2003/12/01 14:42:57  lemmy
 ProtocolVersion handling completely rewritten
 
 */

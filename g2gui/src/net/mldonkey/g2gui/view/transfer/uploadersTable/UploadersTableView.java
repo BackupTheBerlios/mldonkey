@@ -57,7 +57,7 @@ import java.util.Observer;
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadersTableView.java,v 1.9 2003/12/01 16:39:25 zet Exp $
+ * @version $Id: UploadersTableView.java,v 1.10 2003/12/04 08:47:31 lemmy Exp $
  *
  */
 public class UploadersTableView extends GTableView {
@@ -414,6 +414,9 @@ public class UploadersTableView extends GTableView {
 
 /*
 $Log: UploadersTableView.java,v $
+Revision 1.10  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.9  2003/12/01 16:39:25  zet
 set default sort order for specific columns
 
@@ -423,13 +426,13 @@ add port info
 Revision 1.7  2003/11/30 23:42:56  zet
 updates for latest mldonkey cvs
 
-Revision 1.6  2003/11/29 13:01:11  lemmster
+Revision 1.6  2003/11/29 13:01:11  lemmy
 Addr.getString() renamed to the more natural word name Addr.toString()
 
 Revision 1.5  2003/11/28 22:37:59  zet
 coalesce addr use
 
-Revision 1.4  2003/11/28 08:23:28  lemmster
+Revision 1.4  2003/11/28 08:23:28  lemmy
 use Addr instead of String
 
 Revision 1.3  2003/11/27 21:42:33  zet

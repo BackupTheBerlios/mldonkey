@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Listener;
  * 
  * ToolTipHandler
  * 
- * @version $Id: ToolTipHandler.java,v 1.2 2003/11/30 09:31:26 lemmster Exp $
+ * @version $Id: ToolTipHandler.java,v 1.3 2003/12/04 08:47:29 lemmy Exp $
  */
 class ToolTipHandler implements Listener {
 	private ToolTip solid, liquid;
@@ -123,10 +123,13 @@ class ToolTipHandler implements Listener {
 }
 /*
 $Log: ToolTipHandler.java,v $
-Revision 1.2  2003/11/30 09:31:26  lemmster
+Revision 1.3  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.2  2003/11/30 09:31:26  lemmy
 ToolTip complete reworked (complete)
 
-Revision 1.1  2003/11/29 13:03:54  lemmster
+Revision 1.1  2003/11/29 13:03:54  lemmy
 ToolTip complete reworked (to be continued)
 
 */

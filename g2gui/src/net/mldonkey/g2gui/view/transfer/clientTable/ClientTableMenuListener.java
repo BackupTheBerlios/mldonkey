@@ -43,7 +43,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * ClientTableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.15 2003/11/27 21:42:33 zet Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.16 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class ClientTableMenuListener extends GTableMenuListener implements ISelectionChangedListener,
@@ -96,10 +96,13 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.16  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.15  2003/11/27 21:42:33  zet
 integrate ViewFrame a little more.. more to come.
 
-Revision 1.14  2003/11/23 17:58:03  lemmster
+Revision 1.14  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.13  2003/11/10 18:57:33  zet
@@ -111,7 +114,7 @@ minor renames
 Revision 1.11  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.10  2003/10/31 13:16:32  lemmster
+Revision 1.10  2003/10/31 13:16:32  lemmy
 Rename Viewer -> Page
 Constructors changed
 

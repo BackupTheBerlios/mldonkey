@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntryItem
  *
- * @version $Id: LinkEntryItem.java,v 1.8 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: LinkEntryItem.java,v 1.9 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class LinkEntryItem {
@@ -93,7 +93,10 @@ public class LinkEntryItem {
 
 /*
 $Log: LinkEntryItem.java,v $
-Revision 1.8  2003/11/23 17:58:03  lemmster
+Revision 1.9  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.8  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.7  2003/10/22 15:46:06  dek
@@ -108,7 +111,7 @@ not much..
 Revision 1.4  2003/09/20 01:36:19  zet
 *** empty log message ***
 
-Revision 1.3  2003/09/18 11:37:24  lemmster
+Revision 1.3  2003/09/18 11:37:24  lemmy
 checkstyle
 
 Revision 1.2  2003/08/28 16:07:48  zet

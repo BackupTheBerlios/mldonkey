@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.10 2003/12/01 14:22:45 lemmster Exp $
+ * @version $Id: FileDetailDialog.java,v 1.11 2003/12/04 08:47:32 lemmy Exp $
  *
  */
 public class FileDetailDialog extends DetailDialog {
@@ -395,7 +395,10 @@ public class FileDetailDialog extends DetailDialog {
 
 /*
 $Log: FileDetailDialog.java,v $
-Revision 1.10  2003/12/01 14:22:45  lemmster
+Revision 1.11  2003/12/04 08:47:32  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.10  2003/12/01 14:22:45  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.9  2003/11/22 02:24:29  zet
@@ -443,7 +446,7 @@ multi network avails
 Revision 1.27  2003/09/12 15:08:06  zet
 fix: [ Bug #897 ]
 
-Revision 1.26  2003/09/08 19:48:00  lemmster
+Revision 1.26  2003/09/08 19:48:00  lemmy
 just repaired the log
 
 Revision 1.25  2003/09/04 18:14:56  zet
@@ -488,6 +491,6 @@ Revision 1.12  2003/08/23 01:00:02  zet
 Revision 1.11  2003/08/22 22:49:22  vaste
 new todos (name + close button)
 
-Revision 1.10  2003/08/22 21:22:58  lemmster
+Revision 1.10  2003/08/22 21:22:58  lemmy
 
 */

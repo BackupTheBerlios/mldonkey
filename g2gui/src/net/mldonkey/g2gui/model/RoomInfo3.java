@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * RoomInfo3
  *
- * @version $Id: RoomInfo3.java,v 1.1 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: RoomInfo3.java,v 1.2 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class RoomInfo3 extends RoomInfo {
@@ -76,7 +76,10 @@ public class RoomInfo3 extends RoomInfo {
 
 /*
 $Log: RoomInfo3.java,v $
-Revision 1.1  2003/12/01 14:22:17  lemmster
+Revision 1.2  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.1  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
 */

@@ -60,7 +60,7 @@ import java.util.Observer;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.10 2003/12/01 16:39:25 zet Exp $
+ * @version $Id: UploadTableView.java,v 1.11 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class UploadTableView extends GTableView implements Observer {
@@ -364,6 +364,9 @@ public class UploadTableView extends GTableView implements Observer {
 
 /*
 $Log: UploadTableView.java,v $
+Revision 1.11  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.10  2003/12/01 16:39:25  zet
 set default sort order for specific columns
 
@@ -373,7 +376,7 @@ integrate ViewFrame a little more.. more to come.
 Revision 1.8  2003/11/24 01:33:27  zet
 move some classes
 
-Revision 1.7  2003/11/23 17:58:03  lemmster
+Revision 1.7  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.6  2003/11/22 02:24:30  zet
@@ -394,11 +397,11 @@ minor renames
 Revision 1.1  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.1  2003/10/31 13:16:33  lemmster
+Revision 1.1  2003/10/31 13:16:33  lemmy
 Rename Viewer -> Page
 Constructors changed
 
-Revision 1.17  2003/10/31 10:42:47  lemmster
+Revision 1.17  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -420,7 +423,7 @@ common actions
 Revision 1.14  2003/10/22 01:38:45  zet
 add column selector
 
-Revision 1.13  2003/10/21 17:00:45  lemmster
+Revision 1.13  2003/10/21 17:00:45  lemmy
 class hierarchy for tableviewer
 
 Revision 1.12  2003/10/16 20:56:50  zet

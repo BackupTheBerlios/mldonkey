@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.52 2003/12/03 22:19:11 lemmy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.53 2003/12/04 08:47:27 lemmy Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -340,10 +340,13 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.53  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.52  2003/12/03 22:19:11  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
-Revision 1.51  2003/11/29 13:03:54  lemmster
+Revision 1.51  2003/11/29 13:03:54  lemmy
 ToolTip complete reworked (to be continued)
 
 Revision 1.50  2003/11/27 15:33:24  zet
@@ -361,19 +364,19 @@ widgetfactory & save sash postions/states between sessions
 Revision 1.46  2003/11/21 22:02:42  vnc
 color-adjustments to fit the general theme (green==downloads)
 
-Revision 1.45  2003/11/20 14:02:17  lemmster
+Revision 1.45  2003/11/20 14:02:17  lemmy
 G2Gui cleanup
 
 Revision 1.44  2003/11/12 16:16:33  zet
 set intial window size
 
-Revision 1.43  2003/11/11 17:14:35  lemmster
+Revision 1.43  2003/11/11 17:14:35  lemmy
 default filters for servertab
 
-Revision 1.42  2003/11/10 09:58:38  lemmster
+Revision 1.42  2003/11/10 09:58:38  lemmy
 return false by default instead of true in loadBoolean(someString)
 
-Revision 1.41  2003/11/09 23:09:57  lemmster
+Revision 1.41  2003/11/09 23:09:57  lemmy
 remove "Show connected Servers only"
 added filter saving in searchtab
 
@@ -401,7 +404,7 @@ sashes
 Revision 1.33  2003/10/08 01:12:15  zet
 useGradient preference
 
-Revision 1.32  2003/09/29 17:44:40  lemmster
+Revision 1.32  2003/09/29 17:44:40  lemmy
 switch for search tooltips
 
 Revision 1.31  2003/09/28 13:10:31  dek
@@ -428,16 +431,16 @@ Revision 1.25  2003/09/20 01:29:21  zet
 Revision 1.24  2003/09/19 14:25:55  zet
 min to systray option
 
-Revision 1.23  2003/09/18 10:23:48  lemmster
+Revision 1.23  2003/09/18 10:23:48  lemmy
 checkstyle
 
 Revision 1.22  2003/09/15 22:06:19  zet
 split preferences
 
-Revision 1.21  2003/09/14 09:40:31  lemmster
+Revision 1.21  2003/09/14 09:40:31  lemmy
 save column width
 
-Revision 1.20  2003/09/14 09:01:15  lemmster
+Revision 1.20  2003/09/14 09:01:15  lemmy
 show nodes on request
 
 Revision 1.19  2003/09/07 16:12:33  zet
@@ -467,7 +470,7 @@ remove @author
 Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.10  2003/08/22 21:10:57  lemmster
+Revision 1.10  2003/08/22 21:10:57  lemmy
 replace $user$ with $Author: lemmy $
 
 Revision 1.9  2003/08/19 21:44:35  zet
@@ -488,7 +491,7 @@ Use system default colours
 Revision 1.4  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 
-Revision 1.3  2003/08/11 11:27:46  lemmstercvs01
+Revision 1.3  2003/08/11 11:27:46  lemmy
 display only connected servers added
 
 Revision 1.2  2003/08/08 21:11:15  zet

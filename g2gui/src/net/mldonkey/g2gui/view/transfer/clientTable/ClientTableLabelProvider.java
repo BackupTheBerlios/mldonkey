@@ -35,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
  *
  * ClientTableLabelProvider
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.16 2003/12/01 13:28:16 zet Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.17 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class ClientTableLabelProvider extends GTableLabelProvider implements ITableLabelProvider {
@@ -107,19 +107,22 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.17  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.16  2003/12/01 13:28:16  zet
 add port info
 
 Revision 1.15  2003/11/30 23:42:56  zet
 updates for latest mldonkey cvs
 
-Revision 1.14  2003/11/29 13:01:11  lemmster
+Revision 1.14  2003/11/29 13:01:11  lemmy
 Addr.getString() renamed to the more natural word name Addr.toString()
 
 Revision 1.13  2003/11/28 22:37:53  zet
 coalesce addr use
 
-Revision 1.12  2003/11/28 08:23:28  lemmster
+Revision 1.12  2003/11/28 08:23:28  lemmy
 use Addr instead of String
 
 Revision 1.11  2003/11/26 07:43:15  zet
@@ -128,7 +131,7 @@ quick attempt at an uploaders table w/proto 19 - still in progress...
 Revision 1.10  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.9  2003/10/31 13:16:33  lemmster
+Revision 1.9  2003/10/31 13:16:33  lemmy
 Rename Viewer -> Page
 Constructors changed
 
@@ -170,8 +173,8 @@ revert
 Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.2  2003/08/22 21:17:25  lemmster
-replace $user$ with $Author: zet $
+Revision 1.2  2003/08/22 21:17:25  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.1  2003/08/20 14:58:43  zet
 sources clientinfo viewer

@@ -28,7 +28,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * EncodeMessage
  *
- * @version $Id: EncodeMessage.java,v 1.14 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: EncodeMessage.java,v 1.15 2003/12/04 08:47:31 lemmy Exp $
  *
  */
 public class EncodeMessage extends Message {
@@ -242,7 +242,10 @@ public class EncodeMessage extends Message {
 
 /*
 $Log: EncodeMessage.java,v $
-Revision 1.14  2003/11/23 17:58:03  lemmster
+Revision 1.15  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.14  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.13  2003/11/05 00:09:50  zet
@@ -256,7 +259,7 @@ Revision 1.11  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.10  2003/09/18 08:56:27  lemmster
+Revision 1.10  2003/09/18 08:56:27  lemmy
 checkstyle
 
 Revision 1.9  2003/09/18 04:41:19  zet
@@ -268,43 +271,43 @@ rewrite to use ByteBuffer -- easier to read, and fixes sending of StringLists
 Revision 1.7  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.6  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.6  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.5  2003/08/04 19:22:21  zet
 trial tabletreeviewer
 
-Revision 1.4  2003/07/24 10:33:13  lemmstercvs01
+Revision 1.4  2003/07/24 10:33:13  lemmy
 bugfix in msglength calc of a String[]
 
-Revision 1.3  2003/07/03 21:12:50  lemmstercvs01
+Revision 1.3  2003/07/03 21:12:50  lemmy
 new EncodeMessage(short, Object) added
 
-Revision 1.2  2003/06/13 11:03:06  lemmstercvs01
+Revision 1.2  2003/06/13 11:03:06  lemmy
 changed OutputStream to BufferedOutputStream
 
-Revision 1.1  2003/06/12 22:23:06  lemmstercvs01
+Revision 1.1  2003/06/12 22:23:06  lemmy
 lots of changes
 
-Revision 1.3  2003/06/12 13:20:26  lemmstercvs01
+Revision 1.3  2003/06/12 13:20:26  lemmy
 minor changes to provide GuiMessagePool
 
-Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
+Revision 1.2  2003/06/11 15:32:33  lemmy
 still in progress
 
-Revision 1.1  2003/06/11 12:56:10  lemmstercvs01
+Revision 1.1  2003/06/11 12:56:10  lemmy
 moved from model -> comm
 
-Revision 1.1  2003/06/10 16:22:19  lemmstercvs01
+Revision 1.1  2003/06/10 16:22:19  lemmy
 create a class hierarchy for message
 
-Revision 1.3  2003/06/10 15:05:47  lemmstercvs01
+Revision 1.3  2003/06/10 15:05:47  lemmy
 use System.arraycopy() instead of for loops
 
-Revision 1.2  2003/06/09 23:02:49  lemmstercvs01
+Revision 1.2  2003/06/09 23:02:49  lemmy
 fixed a bug in merge() - counter position modified
 
-Revision 1.1  2003/06/09 21:15:10  lemmstercvs01
+Revision 1.1  2003/06/09 21:15:10  lemmy
 initial release
 
 */

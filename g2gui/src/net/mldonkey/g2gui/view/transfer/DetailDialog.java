@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * DetailDialog
  *
- * @version $Id: DetailDialog.java,v 1.3 2003/12/01 14:22:45 lemmster Exp $
+ * @version $Id: DetailDialog.java,v 1.4 2003/12/04 08:47:32 lemmy Exp $
  *
  */
 public abstract class DetailDialog extends Dialog implements Observer {
@@ -180,7 +180,10 @@ public abstract class DetailDialog extends Dialog implements Observer {
 
 /*
 $Log: DetailDialog.java,v $
-Revision 1.3  2003/12/01 14:22:45  lemmster
+Revision 1.4  2003/12/04 08:47:32  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.3  2003/12/01 14:22:45  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.2  2003/11/22 02:24:29  zet

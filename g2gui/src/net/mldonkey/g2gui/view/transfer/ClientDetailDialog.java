@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.13 2003/12/01 13:28:16 zet Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.14 2003/12/04 08:47:32 lemmy Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
@@ -217,16 +217,19 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.14  2003/12/04 08:47:32  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.13  2003/12/01 13:28:16  zet
 add port info
 
-Revision 1.12  2003/11/29 13:01:11  lemmster
+Revision 1.12  2003/11/29 13:01:11  lemmy
 Addr.getString() renamed to the more natural word name Addr.toString()
 
 Revision 1.11  2003/11/28 22:37:09  zet
 getString
 
-Revision 1.10  2003/11/28 08:23:28  lemmster
+Revision 1.10  2003/11/28 08:23:28  lemmy
 use Addr instead of String
 
 Revision 1.9  2003/11/26 07:43:15  zet
@@ -304,6 +307,6 @@ Revision 1.10  2003/08/23 01:00:10  zet
 Revision 1.9  2003/08/22 22:54:04  vaste
 new todo (close button)
 
-Revision 1.8  2003/08/22 21:22:58  lemmster
+Revision 1.8  2003/08/22 21:22:58  lemmy
 
 */

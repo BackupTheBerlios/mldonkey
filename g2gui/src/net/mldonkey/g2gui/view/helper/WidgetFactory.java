@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * WidgetFactory
  *
- * @version $Id: WidgetFactory.java,v 1.3 2003/12/03 22:19:45 lemmy Exp $
+ * @version $Id: WidgetFactory.java,v 1.4 2003/12/04 08:47:31 lemmy Exp $
  *
  */
 public class WidgetFactory {
@@ -235,10 +235,13 @@ public class WidgetFactory {
 
 /*
 $Log: WidgetFactory.java,v $
+Revision 1.4  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.3  2003/12/03 22:19:45  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
-Revision 1.2  2003/11/23 17:58:03  lemmster
+Revision 1.2  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.1  2003/11/22 02:24:29  zet

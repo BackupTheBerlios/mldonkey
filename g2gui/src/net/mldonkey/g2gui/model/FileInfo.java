@@ -48,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.83 2003/12/01 14:22:17 lemmster Exp $
+ * @version $Id: FileInfo.java,v 1.84 2003/12/04 08:47:25 lemmy Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -986,13 +986,16 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
-Revision 1.83  2003/12/01 14:22:17  lemmster
+Revision 1.84  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.83  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.82  2003/11/30 23:42:56  zet
 updates for latest mldonkey cvs
 
-Revision 1.81  2003/11/29 13:05:25  lemmster
+Revision 1.81  2003/11/29 13:05:25  lemmy
 ToolTip complete reworked (to be continued)
 
 Revision 1.80  2003/11/29 12:49:22  zet
@@ -1010,7 +1013,7 @@ re-added comment...
 Revision 1.75  2003/11/23 20:21:05  dek
 MULTINET can overwirte avail
 
-Revision 1.74  2003/11/23 17:58:03  lemmster
+Revision 1.74  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.73  2003/11/20 23:30:29  dek
@@ -1019,10 +1022,10 @@ fixed bug with new core (protoVersion >17)
 Revision 1.72  2003/11/08 22:47:06  zet
 update client table header
 
-Revision 1.71  2003/11/06 13:52:33  lemmster
+Revision 1.71  2003/11/06 13:52:33  lemmy
 filters back working
 
-Revision 1.70  2003/10/28 11:07:32  lemmster
+Revision 1.70  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
@@ -1066,7 +1069,7 @@ Revision 1.57  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.56  2003/09/18 09:16:47  lemmster
+Revision 1.56  2003/09/18 09:16:47  lemmy
 checkstyle
 
 Revision 1.55  2003/09/18 03:52:12  zet
@@ -1105,20 +1108,20 @@ localise
 Revision 1.44  2003/08/24 20:37:51  zet
 minor
 
-Revision 1.43  2003/08/24 14:27:36  lemmster
+Revision 1.43  2003/08/24 14:27:36  lemmy
 mutlinet avail is overall avail
 
 Revision 1.42  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.41  2003/08/23 10:02:02  lemmster
+Revision 1.41  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
 Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.39  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)
@@ -1138,19 +1141,19 @@ fix rename
 Revision 1.33  2003/08/06 17:09:48  zet
 string types added
 
-Revision 1.32  2003/08/05 15:38:29  lemmstercvs01
+Revision 1.32  2003/08/05 15:38:29  lemmy
 set obj=null after message is send
 
-Revision 1.31  2003/08/05 08:55:04  lemmstercvs01
+Revision 1.31  2003/08/05 08:55:04  lemmy
 setPrio() fixed
 
 Revision 1.30  2003/08/04 19:21:52  zet
 trial tabletreeviewer
 
-Revision 1.29  2003/08/04 16:56:16  lemmstercvs01
+Revision 1.29  2003/08/04 16:56:16  lemmy
 use the correct opcode for msg sending
 
-Revision 1.28  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.28  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
 Revision 1.27  2003/07/31 17:10:14  zet
@@ -1162,89 +1165,89 @@ added comment for calculating the signed long out of the unsigned int
 Revision 1.25  2003/07/21 17:30:11  dek
 filesize is not negative anymore, since it is converted to long
 
-Revision 1.24  2003/07/18 04:34:22  lemmstercvs01
+Revision 1.24  2003/07/18 04:34:22  lemmy
 checkstyle applied
 
 Revision 1.23  2003/07/11 08:39:46  dek
 String should be compared with .equals, not with ==
 (in this.equals())
 
-Revision 1.22  2003/07/07 15:09:28  lemmstercvs01
+Revision 1.22  2003/07/07 15:09:28  lemmy
 HashSet() instead of ArrayList()
 
-Revision 1.21  2003/07/06 12:47:22  lemmstercvs01
+Revision 1.21  2003/07/06 12:47:22  lemmy
 bugfix for fileUpdateAvailability
 
-Revision 1.20  2003/07/06 12:31:45  lemmstercvs01
+Revision 1.20  2003/07/06 12:31:45  lemmy
 fileUpdateAvailability added
 
-Revision 1.19  2003/07/06 11:56:36  lemmstercvs01
+Revision 1.19  2003/07/06 11:56:36  lemmy
 fileAddSource added
 
-Revision 1.18  2003/07/06 08:57:09  lemmstercvs01
+Revision 1.18  2003/07/06 08:57:09  lemmy
 getParent() removed
 
-Revision 1.17  2003/07/06 08:49:33  lemmstercvs01
+Revision 1.17  2003/07/06 08:49:33  lemmy
 better oo added
 
-Revision 1.16  2003/07/05 15:46:52  lemmstercvs01
+Revision 1.16  2003/07/05 15:46:52  lemmy
 javadoc improved
 
-Revision 1.15  2003/07/05 11:33:08  lemmstercvs01
+Revision 1.15  2003/07/05 11:33:08  lemmy
 id -> List ids
 
-Revision 1.14  2003/07/04 18:35:02  lemmstercvs01
+Revision 1.14  2003/07/04 18:35:02  lemmy
 foobar
 
-Revision 1.13  2003/07/04 11:04:14  lemmstercvs01
+Revision 1.13  2003/07/04 11:04:14  lemmy
 add some opcodes
 
-Revision 1.12  2003/07/03 21:16:16  lemmstercvs01
+Revision 1.12  2003/07/03 21:16:16  lemmy
 setName() and setPriority() added, Priority from int to Enum
 
-Revision 1.11  2003/07/03 16:01:51  lemmstercvs01
+Revision 1.11  2003/07/03 16:01:51  lemmy
 setState() works now to set the filestate on the mldonkey side
 
 Revision 1.10  2003/07/02 16:25:30  dek
 Checkstyle
 
-Revision 1.9  2003/06/29 17:51:44  lemmstercvs01
+Revision 1.9  2003/06/29 17:51:44  lemmy
 added some doku
 
-Revision 1.8  2003/06/26 09:10:54  lemmstercvs01
+Revision 1.8  2003/06/26 09:10:54  lemmy
 added field for percent, store rate rounded
 
-Revision 1.7  2003/06/25 00:57:49  lemmstercvs01
+Revision 1.7  2003/06/25 00:57:49  lemmy
 equals methode added
 
 Revision 1.6  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
-Revision 1.5  2003/06/14 17:41:03  lemmstercvs01
+Revision 1.5  2003/06/14 17:41:03  lemmy
 foobar
 
-Revision 1.4  2003/06/14 12:47:40  lemmstercvs01
+Revision 1.4  2003/06/14 12:47:40  lemmy
 update() added
 
-Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
+Revision 1.3  2003/06/13 11:03:41  lemmy
 changed InputStream to MessageBuffer
 
-Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
+Revision 1.2  2003/06/12 22:23:06  lemmy
 lots of changes
 
-Revision 1.1  2003/06/12 18:14:04  lemmstercvs01
+Revision 1.1  2003/06/12 18:14:04  lemmy
 initial commit
 
-Revision 1.4  2003/06/12 10:36:04  lemmstercvs01
+Revision 1.4  2003/06/12 10:36:04  lemmy
 toString() added
 
-Revision 1.3  2003/06/12 07:40:04  lemmstercvs01
+Revision 1.3  2003/06/12 07:40:04  lemmy
 added number of clients
 
-Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
+Revision 1.2  2003/06/11 15:32:33  lemmy
 still in progress
 
-Revision 1.1  2003/06/11 12:54:44  lemmstercvs01
+Revision 1.1  2003/06/11 12:54:44  lemmy
 initial commit
 
 */

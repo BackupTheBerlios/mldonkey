@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Composite;
  * GraphPainter
  *
  *
- * @version $Id: GraphPainter.java,v 1.36 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: GraphPainter.java,v 1.37 2003/12/04 08:47:28 lemmy Exp $
  *
  */
 public class GraphPainter {
@@ -244,7 +244,10 @@ public class GraphPainter {
 
 /*
 $Log: GraphPainter.java,v $
-Revision 1.36  2003/11/23 17:58:03  lemmster
+Revision 1.37  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.36  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.35  2003/11/22 02:24:30  zet
@@ -271,8 +274,8 @@ add shadow
 Revision 1.26  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.25  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.25  2003/08/22 21:13:11  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.24  2003/08/18 13:42:43  zet
 *** empty log message ***

@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.comm.Message;
  * Download
  *
  *
- * @version $Id: Download.java,v 1.14 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: Download.java,v 1.15 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class Download implements Sendable {
@@ -97,10 +97,13 @@ public class Download implements Sendable {
 
 /*
 $Log: Download.java,v $
-Revision 1.14  2003/12/01 14:22:17  lemmster
+Revision 1.15  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.14  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.13  2003/11/23 17:58:03  lemmster
+Revision 1.13  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.12  2003/09/18 15:29:25  zet
@@ -110,19 +113,19 @@ handle IOException rather than throwing it away
 Revision 1.11  2003/09/18 03:51:27  zet
 reverse setforce
 
-Revision 1.10  2003/09/02 09:26:52  lemmster
+Revision 1.10  2003/09/02 09:26:52  lemmy
 checkstyle
 
 Revision 1.9  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.8  2003/08/23 10:02:02  lemmster
+Revision 1.8  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
-Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.7  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.6  2003/07/23 16:56:28  lemmstercvs01
+Revision 1.6  2003/07/23 16:56:28  lemmy
 initial commit
 
 */

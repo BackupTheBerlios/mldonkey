@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.enum.EnumNetwork;
 /**
  * FileInfo18
  *
- * @version $Id: FileInfo18.java,v 1.1 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: FileInfo18.java,v 1.2 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class FileInfo18 extends FileInfo {
@@ -100,7 +100,10 @@ public class FileInfo18 extends FileInfo {
 
 /*
 $Log: FileInfo18.java,v $
-Revision 1.1  2003/12/01 14:22:17  lemmster
+Revision 1.2  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.1  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
 */

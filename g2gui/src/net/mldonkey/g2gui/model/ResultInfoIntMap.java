@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfoIntMap
  *
  *
- * @version $Id: ResultInfoIntMap.java,v 1.10 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: ResultInfoIntMap.java,v 1.11 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class ResultInfoIntMap extends InfoIntMap {
@@ -149,34 +149,37 @@ public class ResultInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ResultInfoIntMap.java,v $
-Revision 1.10  2003/12/01 14:22:17  lemmster
+Revision 1.11  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.10  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.9  2003/10/22 21:10:31  zet
 use a synchronized list
 
-Revision 1.8  2003/09/18 09:16:47  lemmster
+Revision 1.8  2003/09/18 09:16:47  lemmy
 checkstyle
 
-Revision 1.7  2003/09/15 15:32:09  lemmster
+Revision 1.7  2003/09/15 15:32:09  lemmy
 reset state of canceled downloads from search [bug #908]
 
 Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.5  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.5  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.4  2003/08/01 17:30:18  lemmstercvs01
+Revision 1.4  2003/08/01 17:30:18  lemmy
 search works again
 
-Revision 1.3  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.3  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.2  2003/07/23 23:08:56  lemmstercvs01
+Revision 1.2  2003/07/23 23:08:56  lemmy
 searching for the same string twice added
 
-Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
+Revision 1.1  2003/07/23 16:56:28  lemmy
 initial commit
 
 */

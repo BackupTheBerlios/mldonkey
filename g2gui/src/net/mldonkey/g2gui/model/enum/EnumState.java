@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * EnumState
  *
  *
- * @version $Id: EnumState.java,v 1.9 2003/10/28 11:07:32 lemmster Exp $ 
+ * @version $Id: EnumState.java,v 1.10 2003/12/04 08:47:29 lemmy Exp $ 
  *
  */
 public class EnumState extends Enum {
@@ -101,35 +101,38 @@ public class EnumState extends Enum {
 
 /*
 $Log: EnumState.java,v $
-Revision 1.9  2003/10/28 11:07:32  lemmster
+Revision 1.10  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.9  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
-Revision 1.8  2003/09/18 09:18:01  lemmster
+Revision 1.8  2003/09/18 09:18:01  lemmy
 checkstyle
 
 Revision 1.7  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.6  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.6  2003/08/22 21:04:27  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.5  2003/08/18 01:42:24  zet
 centralize resource bundle
 
-Revision 1.4  2003/08/07 13:25:37  lemmstercvs01
+Revision 1.4  2003/08/07 13:25:37  lemmy
 ResourceBundle added
 
-Revision 1.3  2003/08/06 09:44:54  lemmstercvs01
+Revision 1.3  2003/08/06 09:44:54  lemmy
 toString() added
 
-Revision 1.2  2003/07/30 19:30:21  lemmstercvs01
+Revision 1.2  2003/07/30 19:30:21  lemmy
 compareTo(EnumState enum) added
 
-Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
+Revision 1.1  2003/06/24 09:29:33  lemmy
 Enum more improved
 
-Revision 1.1  2003/06/24 09:16:13  lemmstercvs01
+Revision 1.1  2003/06/24 09:16:13  lemmy
 better Enum added
 
 */

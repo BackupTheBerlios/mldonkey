@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Display;
  * ResultTableLabelProvider
  *
  *
- * @version $Id: ResultTableLabelProvider.java,v 1.25 2003/11/10 08:35:13 lemmster Exp $
+ * @version $Id: ResultTableLabelProvider.java,v 1.26 2003/12/04 08:47:29 lemmy Exp $
  *
  */
 public class ResultTableLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -137,13 +137,16 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ResultTableLabelProvider.java,v $
-Revision 1.25  2003/11/10 08:35:13  lemmster
+Revision 1.26  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.25  2003/11/10 08:35:13  lemmy
 move getRating... into ResultInfo
 
 Revision 1.24  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.23  2003/10/31 13:16:33  lemmster
+Revision 1.23  2003/10/31 13:16:33  lemmy
 Rename Viewer -> Page
 Constructors changed
 
@@ -167,20 +170,20 @@ removed malformed UTF-8 char gcj complains about (was only in comment)
 Revision 1.19  2003/10/22 01:37:45  zet
 add column selector to server/search (might not be finished yet..)
 
-Revision 1.18  2003/09/17 20:07:44  lemmster
+Revision 1.18  2003/09/17 20:07:44  lemmy
 avoid NPEs in search
 
-Revision 1.17  2003/09/01 11:09:43  lemmster
+Revision 1.17  2003/09/01 11:09:43  lemmy
 show downloading files
 
-Revision 1.16  2003/08/31 12:32:04  lemmster
+Revision 1.16  2003/08/31 12:32:04  lemmy
 major changes to search
 
 Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.14  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.14  2003/08/22 21:10:57  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer
@@ -203,7 +206,7 @@ fix nullpointer in clientInfo, add icons to tables
 Revision 1.7  2003/08/14 12:44:44  dek
 searching works now without errors
 
-Revision 1.6  2003/08/12 07:26:03  lemmstercvs01
+Revision 1.6  2003/08/12 07:26:03  lemmy
 checkstyle applied
 
 Revision 1.5  2003/08/08 23:33:49  zet
@@ -212,13 +215,13 @@ dispose color
 Revision 1.4  2003/07/31 04:11:00  zet
 searchresult changes
 
-Revision 1.3  2003/07/27 18:45:47  lemmstercvs01
+Revision 1.3  2003/07/27 18:45:47  lemmy
 lots of changes
 
-Revision 1.2  2003/07/24 16:20:10  lemmstercvs01
+Revision 1.2  2003/07/24 16:20:10  lemmy
 lots of changes
 
-Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
+Revision 1.1  2003/07/23 16:56:28  lemmy
 initial commit
 
 */

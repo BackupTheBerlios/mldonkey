@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * Graph
  *
- * @version $Id: Graph.java,v 1.18 2003/10/17 15:36:02 zet Exp $
+ * @version $Id: Graph.java,v 1.19 2003/12/04 08:47:28 lemmy Exp $
  */
 public class Graph implements Runnable {
     public static final short MAX_POINTS = 1600;
@@ -217,6 +217,9 @@ public class Graph implements Runnable {
 
 /*
 $Log: Graph.java,v $
+Revision 1.19  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.18  2003/10/17 15:36:02  zet
 graph colour prefs
 
@@ -238,8 +241,8 @@ use int array instead of creating stat point objects
 Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.9  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author: zet $
+Revision 1.9  2003/08/22 21:13:11  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.8  2003/08/09 00:42:18  zet
 dispose colors

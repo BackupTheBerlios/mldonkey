@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.32 2003/11/27 21:59:48 lemmster Exp $ 
+ * @version $Id: NetworkItem.java,v 1.33 2003/12/04 08:47:27 lemmy Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -202,16 +202,19 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
-Revision 1.32  2003/11/27 21:59:48  lemmster
+Revision 1.33  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.32  2003/11/27 21:59:48  lemmy
 don't display virtual networks anymore
 
-Revision 1.31  2003/11/23 17:58:03  lemmster
+Revision 1.31  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.30  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
-Revision 1.29  2003/10/31 10:44:41  lemmster
+Revision 1.29  2003/10/31 10:44:41  lemmy
 use addSelectionListener(...) instead of addListener(SWT.Selection...)
 
 Revision 1.28  2003/10/22 15:46:06  dek
@@ -220,16 +223,16 @@ flattened status bar
 Revision 1.27  2003/10/17 03:36:43  zet
 use toolbar
 
-Revision 1.26  2003/09/18 11:37:24  lemmster
+Revision 1.26  2003/09/18 11:37:24  lemmy
 checkstyle
 
-Revision 1.25  2003/09/14 09:18:02  lemmster
+Revision 1.25  2003/09/14 09:18:02  lemmy
 tooltip for multinet
 
-Revision 1.24  2003/09/13 11:02:45  lemmster
+Revision 1.24  2003/09/13 11:02:45  lemmy
 use List instead of GuiTab[] in addTabs()
 
-Revision 1.23  2003/09/12 16:28:21  lemmster
+Revision 1.23  2003/09/12 16:28:21  lemmy
 ResourceBundle added
 
 Revision 1.22  2003/08/28 22:44:30  zet
@@ -238,16 +241,16 @@ GridLayout helper class
 Revision 1.21  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.20  2003/08/21 13:13:10  lemmster
+Revision 1.20  2003/08/21 13:13:10  lemmy
 cleanup in networkitem
 
-Revision 1.19  2003/08/20 22:16:33  lemmster
+Revision 1.19  2003/08/20 22:16:33  lemmy
 badconnect is display too. added some icons
 
-Revision 1.18  2003/08/19 14:34:36  lemmster
+Revision 1.18  2003/08/19 14:34:36  lemmy
 dont dispose() the image if its from the imageregistry
 
-Revision 1.17  2003/08/19 12:14:16  lemmster
+Revision 1.17  2003/08/19 12:14:16  lemmy
 first try of simple/advanced mode
 
 Revision 1.16  2003/08/18 01:42:24  zet
@@ -256,10 +259,10 @@ centralize resource bundle
 Revision 1.15  2003/08/17 23:13:42  zet
 centralize resources, move images
 
-Revision 1.14  2003/08/11 11:26:20  lemmstercvs01
+Revision 1.14  2003/08/11 11:26:20  lemmy
 added some images
 
-Revision 1.13  2003/08/10 12:59:01  lemmstercvs01
+Revision 1.13  2003/08/10 12:59:01  lemmy
 "manage servers" in NetworkItem implemented
 
 Revision 1.12  2003/08/04 19:22:08  zet
@@ -268,19 +271,19 @@ trial tabletreeviewer
 Revision 1.11  2003/08/03 17:38:54  zet
 check instanceof
 
-Revision 1.10  2003/08/02 19:47:54  lemmstercvs01
+Revision 1.10  2003/08/02 19:47:54  lemmy
 finally working
 
-Revision 1.9  2003/08/02 09:55:16  lemmstercvs01
+Revision 1.9  2003/08/02 09:55:16  lemmy
 observers changed
 
-Revision 1.8  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.8  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.7  2003/07/31 14:11:06  lemmstercvs01
+Revision 1.7  2003/07/31 14:11:06  lemmy
 reworked
 
-Revision 1.6  2003/07/17 14:58:56  lemmstercvs01
+Revision 1.6  2003/07/17 14:58:56  lemmy
 refactored
 
 Revision 1.5  2003/07/06 13:19:39  dek
@@ -289,7 +292,7 @@ small change
 Revision 1.4  2003/07/04 17:48:57  dek
 refactor
 
-Revision 1.3  2003/06/28 09:50:00  lemmstercvs01
+Revision 1.3  2003/06/28 09:50:00  lemmy
 hasNext() optimized
 
 Revision 1.2  2003/06/27 13:37:28  dek

@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  *
- * @version $Id: OptionsInfo.java,v 1.25 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.26 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public abstract class OptionsInfo extends Parent {
@@ -208,50 +208,53 @@ public abstract class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
-Revision 1.25  2003/12/01 14:22:17  lemmster
+Revision 1.26  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.25  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.24  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.23  2003/09/18 09:16:47  lemmster
+Revision 1.23  2003/09/18 09:16:47  lemmy
 checkstyle
 
 Revision 1.22  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.21  2003/08/23 10:02:02  lemmster
+Revision 1.21  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
-Revision 1.20  2003/08/19 21:02:16  lemmster
+Revision 1.20  2003/08/19 21:02:16  lemmy
 show all options in simple mode proto < 18
 
-Revision 1.19  2003/08/19 12:47:57  lemmster
-$user$ -> $Author: lemmster $
+Revision 1.19  2003/08/19 12:47:57  lemmy
+$user$ -> $Author: lemmy $
 
-Revision 1.18  2003/08/19 12:46:02  lemmster
+Revision 1.18  2003/08/19 12:46:02  lemmy
 typo fixed
 
-Revision 1.17  2003/08/19 12:45:17  lemmster
+Revision 1.17  2003/08/19 12:45:17  lemmy
 support proto >=18
 
-Revision 1.16  2003/08/04 16:57:00  lemmstercvs01
+Revision 1.16  2003/08/04 16:57:00  lemmy
 better way to set the value
 
-Revision 1.15  2003/08/03 20:00:14  lemmstercvs01
+Revision 1.15  2003/08/03 20:00:14  lemmy
 bugfix
 
-Revision 1.14  2003/08/02 10:02:52  lemmstercvs01
+Revision 1.14  2003/08/02 10:02:52  lemmy
 bugfix in readStream()
 
-Revision 1.13  2003/08/02 09:32:23  lemmstercvs01
+Revision 1.13  2003/08/02 09:32:23  lemmy
 setOption added
 
-Revision 1.12  2003/08/02 09:27:39  lemmstercvs01
+Revision 1.12  2003/08/02 09:27:39  lemmy
 added support for proto > 16
 
-Revision 1.11  2003/07/09 08:54:29  lemmstercvs01
+Revision 1.11  2003/07/09 08:54:29  lemmy
 void setKey() added
 
 Revision 1.10  2003/07/09 08:48:58  dek
@@ -266,7 +269,7 @@ removed debugging System.out.....
 Revision 1.7  2003/07/07 15:32:43  dek
 made Option-handling more natural
 
-Revision 1.6  2003/07/06 08:49:33  lemmstercvs01
+Revision 1.6  2003/07/06 08:49:33  lemmy
 better oo added
 
 Revision 1.5  2003/07/04 18:03:13  dek
@@ -278,7 +281,7 @@ humm, some interface-changes, hope, it didn't break anything ;-)
 Revision 1.3  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
-Revision 1.2  2003/06/15 16:18:41  lemmstercvs01
+Revision 1.2  2003/06/15 16:18:41  lemmy
 new interface introduced
 
 */

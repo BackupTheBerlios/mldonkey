@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.19 2003/11/29 17:01:09 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.20 2003/12/04 08:47:31 lemmy Exp $ 
  *
  */
 public class MainMenuBar {
@@ -217,6 +217,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.20  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.19  2003/11/29 17:01:09  zet
 update for mainWindow
 
@@ -245,7 +248,7 @@ Revision 1.11  2003/09/18 15:29:46  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.10  2003/09/18 10:12:53  lemmster
+Revision 1.10  2003/09/18 10:12:53  lemmy
 checkstyle
 
 Revision 1.9  2003/09/16 15:12:07  zet
@@ -269,7 +272,7 @@ first sketch of an about-dialog, feel free to extend ;-)
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.1  2003/08/23 14:58:38  lemmster
+Revision 1.1  2003/08/23 14:58:38  lemmy
 cleanup of MainTab, transferTree.* broken
 
 */

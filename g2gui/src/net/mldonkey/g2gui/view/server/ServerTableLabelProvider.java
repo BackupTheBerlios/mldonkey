@@ -38,7 +38,7 @@ import org.eclipse.swt.graphics.Image;
  * ServerTableLabelProvider
  *
  *
- * @version $Id: ServerTableLabelProvider.java,v 1.11 2003/11/29 13:01:11 lemmster Exp $
+ * @version $Id: ServerTableLabelProvider.java,v 1.12 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class ServerTableLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -158,13 +158,16 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ServerTableLabelProvider.java,v $
-Revision 1.11  2003/11/29 13:01:11  lemmster
+Revision 1.12  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.11  2003/11/29 13:01:11  lemmy
 Addr.getString() renamed to the more natural word name Addr.toString()
 
 Revision 1.10  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.9  2003/10/31 13:16:32  lemmster
+Revision 1.9  2003/10/31 13:16:32  lemmy
 Rename Viewer -> Page
 Constructors changed
 
@@ -185,19 +188,19 @@ add column selector to server/search (might not be finished yet..)
 Revision 1.6  2003/10/12 00:21:34  zet
 dispose colors
 
-Revision 1.5  2003/09/23 11:46:25  lemmster
+Revision 1.5  2003/09/23 11:46:25  lemmy
 displayTableColors for servertab
 
-Revision 1.4  2003/09/18 11:26:07  lemmster
+Revision 1.4  2003/09/18 11:26:07  lemmy
 checkstyle
 
-Revision 1.3  2003/09/14 10:19:48  lemmster
+Revision 1.3  2003/09/14 10:19:48  lemmy
 different colors for the server state (forum request)
 
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.1  2003/08/23 09:46:18  lemmster
+Revision 1.1  2003/08/23 09:46:18  lemmy
 superclass TableMenuListener added
 
 Revision 1.9  2003/08/18 01:42:24  zet
@@ -209,22 +212,22 @@ centralize resources, move images
 Revision 1.7  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 
-Revision 1.6  2003/08/11 19:25:04  lemmstercvs01
+Revision 1.6  2003/08/11 19:25:04  lemmy
 bugfix at CleanTable
 
-Revision 1.5  2003/08/07 13:25:37  lemmstercvs01
+Revision 1.5  2003/08/07 13:25:37  lemmy
 ResourceBundle added
 
-Revision 1.4  2003/08/07 12:35:31  lemmstercvs01
+Revision 1.4  2003/08/07 12:35:31  lemmy
 cleanup, more efficient
 
-Revision 1.3  2003/08/06 18:53:45  lemmstercvs01
+Revision 1.3  2003/08/06 18:53:45  lemmy
 missed enum added
 
-Revision 1.2  2003/08/06 17:38:38  lemmstercvs01
+Revision 1.2  2003/08/06 17:38:38  lemmy
 some actions still missing. but it should work for the moment
 
-Revision 1.1  2003/08/05 13:50:10  lemmstercvs01
+Revision 1.1  2003/08/05 13:50:10  lemmy
 initial commit
 
 */

@@ -57,7 +57,7 @@ import java.util.Observable;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.41 2003/11/29 19:28:38 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.42 2003/12/04 08:47:27 lemmy Exp $
  */
 public class MessagesTab extends GuiTab {
     private CTabFolder cTabFolder;
@@ -370,6 +370,9 @@ public class MessagesTab extends GuiTab {
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.42  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.41  2003/11/29 19:28:38  zet
 minor string move
 
@@ -386,13 +389,13 @@ update for mainWindow
 Revision 1.37  2003/11/29 14:29:27  zet
 small viewframe updates
 
-Revision 1.36  2003/11/28 13:24:17  lemmster
+Revision 1.36  2003/11/28 13:24:17  lemmy
 useGradient in headerbars
 
 Revision 1.35  2003/11/26 07:42:22  zet
 small changes
 
-Revision 1.34  2003/11/23 17:58:03  lemmster
+Revision 1.34  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.33  2003/11/22 02:24:29  zet
@@ -410,7 +413,7 @@ move transfer package
 Revision 1.29  2003/09/20 01:26:36  zet
 *** empty log message ***
 
-Revision 1.28  2003/09/18 09:44:57  lemmster
+Revision 1.28  2003/09/18 09:44:57  lemmy
 checkstyle
 
 Revision 1.27  2003/09/03 14:49:07  zet
@@ -464,14 +467,14 @@ localise/update friendstab
 Revision 1.11  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.10  2003/08/23 14:58:38  lemmster
+Revision 1.10  2003/08/23 14:58:38  lemmy
 cleanup of MainTab, transferTree.* broken
 
-Revision 1.9  2003/08/23 09:47:52  lemmster
+Revision 1.9  2003/08/23 09:47:52  lemmy
 just rename
 
-Revision 1.8  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+Revision 1.8  2003/08/22 21:06:48  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.7  2003/08/20 22:18:56  zet
 Viewer updates

@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * AddFriend
  *
- * @version $Id: AddFriend.java,v 1.10 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: AddFriend.java,v 1.11 2003/12/04 08:47:29 lemmy Exp $
  */
 public class AddFriend extends Dialog {
     private CoreCommunication core;
@@ -133,6 +133,9 @@ public class AddFriend extends Dialog {
 
 /*
 $Log: AddFriend.java,v $
+Revision 1.11  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.10  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -149,7 +152,7 @@ Revision 1.6  2003/09/18 15:29:46  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.5  2003/09/18 09:54:45  lemmster
+Revision 1.5  2003/09/18 09:54:45  lemmy
 checkstyle
 
 Revision 1.4  2003/08/31 15:40:12  zet

@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.9 2003/12/03 22:19:11 lemmy Exp $
+ * @version $Id: ColumnSelector.java,v 1.10 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -314,10 +314,13 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.10  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.9  2003/12/03 22:19:11  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
-Revision 1.8  2003/11/23 17:58:03  lemmster
+Revision 1.8  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.7  2003/11/22 02:24:29  zet

@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * DisconnectListener
  *
- * @version $Id: DisconnectListener.java,v 1.4 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: DisconnectListener.java,v 1.5 2003/12/04 08:47:31 lemmy Exp $ 
  *
  */
 public class DisconnectListener implements Observer, Runnable {
@@ -81,7 +81,10 @@ public class DisconnectListener implements Observer, Runnable {
 
 /*
 $Log: DisconnectListener.java,v $
-Revision 1.4  2003/11/23 17:58:03  lemmster
+Revision 1.5  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.4  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.3  2003/11/20 17:51:53  dek

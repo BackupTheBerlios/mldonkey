@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.13 2003/11/27 21:42:33 zet Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.14 2003/12/04 08:47:28 lemmy Exp $
  *
  */
 public class DownloadTableTreeContentProvider extends GTableTreeContentProvider implements Observer {
@@ -376,10 +376,13 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.14  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.13  2003/11/27 21:42:33  zet
 integrate ViewFrame a little more.. more to come.
 
-Revision 1.12  2003/11/23 17:58:03  lemmster
+Revision 1.12  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.11  2003/11/09 02:18:37  zet
@@ -462,8 +465,8 @@ remove reference to static MainTab methods
 Revision 1.13  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.12  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+Revision 1.12  2003/08/22 21:16:36  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.11  2003/08/21 00:59:57  zet
 doubleclick expand

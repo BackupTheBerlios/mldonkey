@@ -32,7 +32,7 @@ import org.eclipse.jface.action.Action;
 /**
  * ToggleClientsAction
  *
- * @version $Id: ToggleClientsAction.java,v 1.6 2003/10/31 22:41:59 zet Exp $
+ * @version $Id: ToggleClientsAction.java,v 1.7 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class ToggleClientsAction extends Action {
@@ -60,13 +60,16 @@ public class ToggleClientsAction extends Action {
 
 /*
 $Log: ToggleClientsAction.java,v $
+Revision 1.7  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.6  2003/10/31 22:41:59  zet
 rename to View
 
 Revision 1.5  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.4  2003/10/31 10:42:47  lemmster
+Revision 1.4  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -82,7 +85,7 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.2  2003/10/29 16:56:21  lemmster
+Revision 1.2  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 Revision 1.1  2003/10/22 17:17:30  zet

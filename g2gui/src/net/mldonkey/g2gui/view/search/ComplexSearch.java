@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.20 2003/11/26 05:40:06 zet Exp $
+ * @version $Id: ComplexSearch.java,v 1.21 2003/12/04 08:47:29 lemmy Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -405,28 +405,31 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.21  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.20  2003/11/26 05:40:06  zet
 fix npe
 
-Revision 1.19  2003/11/23 17:58:03  lemmster
+Revision 1.19  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.18  2003/09/26 14:35:54  lemmster
+Revision 1.18  2003/09/26 14:35:54  lemmy
 check for null
 
-Revision 1.17  2003/09/24 05:53:00  lemmster
+Revision 1.17  2003/09/24 05:53:00  lemmy
 CTabFolder -> Composite
 
-Revision 1.16  2003/09/21 09:57:01  lemmster
+Revision 1.16  2003/09/21 09:57:01  lemmy
 protected -> private
 
-Revision 1.15  2003/09/19 15:19:14  lemmster
+Revision 1.15  2003/09/19 15:19:14  lemmy
 reworked
 
-Revision 1.14  2003/09/18 10:39:21  lemmster
+Revision 1.14  2003/09/18 10:39:21  lemmy
 checkstyle
 
-Revision 1.13  2003/09/11 12:37:35  lemmster
+Revision 1.13  2003/09/11 12:37:35  lemmy
 fixed crash with combo boxes [bug #886]
 
 Revision 1.12  2003/09/10 14:54:37  zet
@@ -435,37 +438,37 @@ still a null (with useCombo)..
 Revision 1.11  2003/09/10 14:47:43  zet
 nullpointer
 
-Revision 1.10  2003/09/08 10:25:26  lemmster
+Revision 1.10  2003/09/08 10:25:26  lemmy
 OtherComplexSearch added, rest improved
 
 Revision 1.9  2003/09/07 19:50:06  zet
 use min/max combo
 
-Revision 1.8  2003/09/07 08:21:50  lemmster
+Revision 1.8  2003/09/07 08:21:50  lemmy
 resourcebundle added
 
 Revision 1.7  2003/09/05 23:49:07  zet
 1 line per search option
 
-Revision 1.6  2003/09/05 16:50:19  lemmster
+Revision 1.6  2003/09/05 16:50:19  lemmy
 set search button correctly, verify input for result count
 
-Revision 1.5  2003/09/05 14:22:10  lemmster
+Revision 1.5  2003/09/05 14:22:10  lemmy
 working version
 
-Revision 1.4  2003/09/04 21:57:21  lemmster
+Revision 1.4  2003/09/04 21:57:21  lemmy
 still buggy, but enough for today
 
-Revision 1.3  2003/09/04 16:06:45  lemmster
+Revision 1.3  2003/09/04 16:06:45  lemmy
 working in progress
 
-Revision 1.2  2003/09/04 12:17:01  lemmster
+Revision 1.2  2003/09/04 12:17:01  lemmy
 lots of changes
 
-Revision 1.1  2003/09/03 22:15:27  lemmster
+Revision 1.1  2003/09/03 22:15:27  lemmy
 advanced search introduced; not working and far from complete. just to see the design
 
-Revision 1.8  2003/09/01 11:09:43  lemmster
+Revision 1.8  2003/09/01 11:09:43  lemmy
 show downloading files
 
 Revision 1.7  2003/08/29 19:09:25  dek
@@ -474,19 +477,19 @@ new look'n feel
 Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.5  2003/08/20 10:04:41  lemmster
+Revision 1.5  2003/08/20 10:04:41  lemmy
 inputbox disabled when zero searchable networks are enabled
 
 Revision 1.4  2003/08/18 01:42:24  zet
 centralize resource bundle
 
-Revision 1.3  2003/08/11 19:03:53  lemmstercvs01
+Revision 1.3  2003/08/11 19:03:53  lemmy
 update networkcombo when a networkinfo status changes
 
-Revision 1.2  2003/07/24 16:20:10  lemmstercvs01
+Revision 1.2  2003/07/24 16:20:10  lemmy
 lots of changes
 
-Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
+Revision 1.1  2003/07/23 16:56:28  lemmy
 initial commit
 
 */

@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * InfoList
  * 
  *
- * @version $Id: InfoCollection.java,v 1.7 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: InfoCollection.java,v 1.8 2003/12/04 08:47:25 lemmy Exp $
  */
 public interface InfoCollection extends Information {
 	
@@ -65,30 +65,33 @@ public interface InfoCollection extends Information {
 }
 /*
 $Log: InfoCollection.java,v $
+Revision 1.8  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.7  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.6  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+Revision 1.6  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.5  2003/08/02 09:55:55  lemmstercvs01
+Revision 1.5  2003/08/02 09:55:55  lemmy
 observers changed
 
 Revision 1.4  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
-Revision 1.3  2003/06/17 12:10:17  lemmstercvs01
+Revision 1.3  2003/06/17 12:10:17  lemmy
 some methods added
 
-Revision 1.2  2003/06/16 15:32:43  lemmstercvs01
+Revision 1.2  2003/06/16 15:32:43  lemmy
 changed some modifiers
 
-Revision 1.1  2003/06/15 16:18:41  lemmstercvs01
+Revision 1.1  2003/06/15 16:18:41  lemmy
 new interface introduced
 
-Revision 1.3  2003/06/14 23:04:08  lemmstercvs01
+Revision 1.3  2003/06/14 23:04:08  lemmy
 change from interface to abstract superclass
 
-Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
+Revision 1.2  2003/06/14 20:30:44  lemmy
 cosmetic changes
 */

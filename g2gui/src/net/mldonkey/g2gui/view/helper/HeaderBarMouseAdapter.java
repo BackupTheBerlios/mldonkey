@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Menu;
 /**
  * HeaderBarMouseAdapter - A helper for header bar mouse events & menus
  *
- * @version $Id: HeaderBarMouseAdapter.java,v 1.4 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: HeaderBarMouseAdapter.java,v 1.5 2003/12/04 08:47:31 lemmy Exp $
  *
  */
 public class HeaderBarMouseAdapter extends MouseAdapter {
@@ -79,6 +79,9 @@ public class HeaderBarMouseAdapter extends MouseAdapter {
 
 /*
 $Log: HeaderBarMouseAdapter.java,v $
+Revision 1.5  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.4  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
@@ -93,7 +96,7 @@ discovered sync errors and NPEs in upload table... will continue later.
 Revision 1.3  2003/09/20 01:27:31  zet
 *** empty log message ***
 
-Revision 1.2  2003/09/18 10:04:57  lemmster
+Revision 1.2  2003/09/18 10:04:57  lemmy
 checkstyle
 
 Revision 1.1  2003/09/16 02:12:07  zet

@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.view.viewers.GView;
 /**
  * GViewerFilter
  *
- * @version $Id: GViewerFilter.java,v 1.4 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: GViewerFilter.java,v 1.5 2003/12/04 08:47:30 lemmy Exp $ 
  *
  */
 public abstract class GViewerFilter extends ViewerFilter {
@@ -80,16 +80,19 @@ public abstract class GViewerFilter extends ViewerFilter {
 
 /*
 $Log: GViewerFilter.java,v $
-Revision 1.4  2003/11/23 17:58:03  lemmster
+Revision 1.5  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.4  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.3  2003/11/06 13:52:33  lemmster
+Revision 1.3  2003/11/06 13:52:33  lemmy
 filters back working
 
-Revision 1.2  2003/11/04 21:06:35  lemmster
+Revision 1.2  2003/11/04 21:06:35  lemmy
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
 
-Revision 1.1  2003/10/29 16:56:21  lemmster
+Revision 1.1  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 */

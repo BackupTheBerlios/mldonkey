@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumNetwork;
  * OptionsInfo
  *
  *
- * @version $Id: OptionsInfoMap.java,v 1.26 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.27 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -227,47 +227,50 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
-Revision 1.26  2003/12/01 14:22:17  lemmster
+Revision 1.27  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.26  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.25  2003/11/23 19:56:55  lemmster
+Revision 1.25  2003/11/23 19:56:55  lemmy
 temporarily workaround until the core comes up with a better solution
 
-Revision 1.24  2003/11/23 17:58:03  lemmster
+Revision 1.24  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.23  2003/10/28 11:07:32  lemmster
+Revision 1.23  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
 Revision 1.22  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.21  2003/08/21 20:24:37  lemmster
+Revision 1.21  2003/08/21 20:24:37  lemmy
 adjustment for the latest devel core
 
-Revision 1.20  2003/08/21 13:13:10  lemmster
+Revision 1.20  2003/08/21 13:13:10  lemmy
 cleanup in networkitem
 
-Revision 1.19  2003/08/20 22:41:08  lemmster
+Revision 1.19  2003/08/20 22:41:08  lemmy
 bugfix for getMaxConnectedServers()
 
-Revision 1.18  2003/08/20 22:20:08  lemmster
+Revision 1.18  2003/08/20 22:20:08  lemmy
 badconnect is display too. added some icons
 
-Revision 1.17  2003/08/04 16:57:00  lemmstercvs01
+Revision 1.17  2003/08/04 16:57:00  lemmy
 better way to set the value
 
-Revision 1.16  2003/08/03 20:00:14  lemmstercvs01
+Revision 1.16  2003/08/03 20:00:14  lemmy
 bugfix
 
-Revision 1.15  2003/08/02 09:27:39  lemmstercvs01
+Revision 1.15  2003/08/02 09:27:39  lemmy
 added support for proto > 16
 
-Revision 1.14  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.14  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.13  2003/07/09 08:55:19  lemmstercvs01
+Revision 1.13  2003/07/09 08:55:19  lemmy
 bugfix for missing optionInfos
 
 Revision 1.12  2003/07/07 18:30:29  dek
@@ -276,16 +279,16 @@ saving options now also works
 Revision 1.11  2003/07/07 15:32:43  dek
 made Option-handling more natural
 
-Revision 1.10  2003/07/06 08:49:33  lemmstercvs01
+Revision 1.10  2003/07/06 08:49:33  lemmy
 better oo added
 
 Revision 1.9  2003/07/01 13:31:42  dek
 now it does read out the complete Optionslist, not only the first half...
 
-Revision 1.8  2003/06/27 10:35:53  lemmstercvs01
+Revision 1.8  2003/06/27 10:35:53  lemmy
 removed unneeded calls
 
-Revision 1.7  2003/06/24 09:15:27  lemmstercvs01
+Revision 1.7  2003/06/24 09:15:27  lemmy
 checkstyle applied
 
 Revision 1.6  2003/06/21 13:20:36  dek
@@ -294,19 +297,19 @@ work on optiontree continued - one can already change client_name in General-lea
 Revision 1.5  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
-Revision 1.4  2003/06/17 12:06:51  lemmstercvs01
+Revision 1.4  2003/06/17 12:06:51  lemmy
 wrong implementers removed
 
-Revision 1.3  2003/06/16 21:48:38  lemmstercvs01
+Revision 1.3  2003/06/16 21:48:38  lemmy
 class hierarchy changed
 
-Revision 1.2  2003/06/16 13:18:59  lemmstercvs01
+Revision 1.2  2003/06/16 13:18:59  lemmy
 checkstyle applied
 
-Revision 1.1  2003/06/15 16:18:41  lemmstercvs01
+Revision 1.1  2003/06/15 16:18:41  lemmy
 new interface introduced
 
-Revision 1.1  2003/06/14 23:07:20  lemmstercvs01
+Revision 1.1  2003/06/14 23:07:20  lemmy
 added opcode 1
 
 */

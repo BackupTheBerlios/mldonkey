@@ -36,7 +36,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
  * as mldonkey itself cares for wrong values...
  *
  *
- * @version $Id: OptionsPreferenceStore.java,v 1.13 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: OptionsPreferenceStore.java,v 1.14 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class OptionsPreferenceStore implements IPreferenceStore {
@@ -324,10 +324,13 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 
 /*
 $Log: OptionsPreferenceStore.java,v $
-Revision 1.13  2003/11/23 17:58:03  lemmster
+Revision 1.14  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.13  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.12  2003/09/18 10:23:48  lemmster
+Revision 1.12  2003/09/18 10:23:48  lemmy
 checkstyle
 
 Revision 1.11  2003/08/26 08:41:17  dek
@@ -342,8 +345,8 @@ prefDialog is not resizable any more, and we have IntEditors for int-values
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.7  2003/08/22 21:10:57  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.6  2003/08/19 13:08:54  dek
 minor fix

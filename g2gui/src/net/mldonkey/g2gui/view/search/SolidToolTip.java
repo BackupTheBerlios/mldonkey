@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * SolidToolTip
  *
- * @version $Id: SolidToolTip.java,v 1.3 2003/12/01 08:45:37 lemmster Exp $ 
+ * @version $Id: SolidToolTip.java,v 1.4 2003/12/04 08:47:29 lemmy Exp $ 
  *
  */
 public class SolidToolTip extends ToolTip {
@@ -169,13 +169,16 @@ public class SolidToolTip extends ToolTip {
 
 /*
 $Log: SolidToolTip.java,v $
-Revision 1.3  2003/12/01 08:45:37  lemmster
+Revision 1.4  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.3  2003/12/01 08:45:37  lemmy
 cosmetic
 
-Revision 1.2  2003/11/30 09:31:26  lemmster
+Revision 1.2  2003/11/30 09:31:26  lemmy
 ToolTip complete reworked (complete)
 
-Revision 1.1  2003/11/29 13:03:54  lemmster
+Revision 1.1  2003/11/29 13:03:54  lemmy
 ToolTip complete reworked (to be continued)
 
 */

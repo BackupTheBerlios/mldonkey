@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  *
- * @version $Id: FileInfoIntMap.java,v 1.32 2003/12/01 14:22:17 lemmster Exp $
+ * @version $Id: FileInfoIntMap.java,v 1.33 2003/12/04 08:47:25 lemmy Exp $
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -200,10 +200,13 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
-Revision 1.32  2003/12/01 14:22:17  lemmster
+Revision 1.33  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.32  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.31  2003/11/23 17:58:03  lemmster
+Revision 1.31  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.30  2003/10/16 19:57:43  zet
@@ -219,20 +222,20 @@ Revision 1.27  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.26  2003/09/18 09:16:47  lemmster
+Revision 1.26  2003/09/18 09:16:47  lemmy
 checkstyle
 
 Revision 1.25  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.24  2003/08/23 10:02:02  lemmster
+Revision 1.24  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
 Revision 1.23  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.22  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.22  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.21  2003/08/15 22:05:58  zet
 *** empty log message ***
@@ -243,88 +246,88 @@ show queued files
 Revision 1.19  2003/08/04 19:21:52  zet
 trial tabletreeviewer
 
-Revision 1.18  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.18  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.17  2003/07/30 19:27:01  lemmstercvs01
+Revision 1.17  2003/07/30 19:27:01  lemmy
 ids.removeAll( ids ) -> ids.clear()
 
-Revision 1.16  2003/07/07 15:08:39  lemmstercvs01
+Revision 1.16  2003/07/07 15:08:39  lemmy
 removeObsolete() finally fixed
 
-Revision 1.15  2003/07/06 07:45:26  lemmstercvs01
+Revision 1.15  2003/07/06 07:45:26  lemmy
 checkstyle applied
 
-Revision 1.14  2003/07/05 15:43:48  lemmstercvs01
+Revision 1.14  2003/07/05 15:43:48  lemmy
 javadoc improved
 
-Revision 1.13  2003/07/05 15:38:20  lemmstercvs01
+Revision 1.13  2003/07/05 15:38:20  lemmy
 debug removed
 
-Revision 1.12  2003/07/05 11:33:08  lemmstercvs01
+Revision 1.12  2003/07/05 11:33:08  lemmy
 id -> List ids
 
-Revision 1.10  2003/07/04 13:29:15  lemmstercvs01
+Revision 1.10  2003/07/04 13:29:15  lemmy
 removeObsolete() fixed
 
 Revision 1.9  2003/07/04 12:28:46  dek
 checkstyle
 
-Revision 1.8  2003/07/04 12:15:17  lemmstercvs01
+Revision 1.8  2003/07/04 12:15:17  lemmy
 removeObsolete renamed/modified
 
-Revision 1.7  2003/07/04 11:04:14  lemmstercvs01
+Revision 1.7  2003/07/04 11:04:14  lemmy
 add some opcodes
 
-Revision 1.6  2003/07/03 19:21:11  lemmstercvs01
+Revision 1.6  2003/07/03 19:21:11  lemmy
 javadoc added
 
-Revision 1.5  2003/07/03 16:01:51  lemmstercvs01
+Revision 1.5  2003/07/03 16:01:51  lemmy
 setState() works now to set the filestate on the mldonkey side
 
 Revision 1.4  2003/07/02 16:26:51  dek
 minor checkstyle
 
-Revision 1.3  2003/06/27 17:15:16  lemmstercvs01
+Revision 1.3  2003/06/27 17:15:16  lemmy
 added private int id for easier table update
 
 Revision 1.2  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
-Revision 1.1  2003/06/16 21:47:19  lemmstercvs01
+Revision 1.1  2003/06/16 21:47:19  lemmy
 just refactored (name changed)
 
-Revision 1.11  2003/06/16 12:13:26  lemmstercvs01
+Revision 1.11  2003/06/16 12:13:26  lemmy
 opcode 52 added
 
-Revision 1.10  2003/06/15 20:37:23  lemmstercvs01
+Revision 1.10  2003/06/15 20:37:23  lemmy
 fixed a bug in a bugfix ;)
 
-Revision 1.9  2003/06/15 20:15:50  lemmstercvs01
+Revision 1.9  2003/06/15 20:15:50  lemmy
 added a workaround in update() for a core bug
 
-Revision 1.8  2003/06/15 16:18:41  lemmstercvs01
+Revision 1.8  2003/06/15 16:18:41  lemmy
 new interface introduced
 
-Revision 1.7  2003/06/14 23:04:08  lemmstercvs01
+Revision 1.7  2003/06/14 23:04:08  lemmy
 change from interface to abstract superclass
 
-Revision 1.6  2003/06/14 19:30:41  lemmstercvs01
+Revision 1.6  2003/06/14 19:30:41  lemmy
 interface added
 
-Revision 1.5  2003/06/14 17:41:03  lemmstercvs01
+Revision 1.5  2003/06/14 17:41:03  lemmy
 foobar
 
-Revision 1.4  2003/06/14 12:47:40  lemmstercvs01
+Revision 1.4  2003/06/14 12:47:40  lemmy
 update() added
 
-Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
+Revision 1.3  2003/06/13 11:03:41  lemmy
 changed InputStream to MessageBuffer
 
-Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
+Revision 1.2  2003/06/12 22:23:06  lemmy
 lots of changes
 
-Revision 1.1  2003/06/12 18:16:20  lemmstercvs01
+Revision 1.1  2003/06/12 18:16:20  lemmy
 initial commit
 
 */

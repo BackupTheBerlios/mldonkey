@@ -43,7 +43,7 @@ import java.util.Observer;
  *
  * ClientTableContentProvider
  *
- * @version $Id: ClientTableContentProvider.java,v 1.12 2003/11/29 01:51:53 zet Exp $
+ * @version $Id: ClientTableContentProvider.java,v 1.13 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class ClientTableContentProvider extends GTableContentProvider implements Observer {
@@ -142,6 +142,9 @@ public class ClientTableContentProvider extends GTableContentProvider implements
 
 /*
 $Log: ClientTableContentProvider.java,v $
+Revision 1.13  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.12  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 
@@ -160,7 +163,7 @@ update client table header
 Revision 1.7  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.6  2003/10/31 13:16:33  lemmster
+Revision 1.6  2003/10/31 13:16:33  lemmy
 Rename Viewer -> Page
 Constructors changed
 
@@ -199,8 +202,8 @@ remove @author
 Revision 1.3  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.2  2003/08/22 21:17:25  lemmster
-replace $user$ with $Author: zet $
+Revision 1.2  2003/08/22 21:17:25  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.1  2003/08/20 14:58:43  zet
 sources clientinfo viewer

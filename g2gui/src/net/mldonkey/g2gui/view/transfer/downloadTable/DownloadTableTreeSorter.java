@@ -37,7 +37,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.12 2003/12/01 17:02:05 zet Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.13 2003/12/04 08:47:28 lemmy Exp $
  *
  */
 public class DownloadTableTreeSorter extends GSorter {
@@ -242,6 +242,9 @@ public class DownloadTableTreeSorter extends GSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.13  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.12  2003/12/01 17:02:05  zet
 *** empty log message ***
 
@@ -254,7 +257,7 @@ rename to View
 Revision 1.9  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.8  2003/10/31 10:42:47  lemmster
+Revision 1.8  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -306,8 +309,8 @@ remove @author
 Revision 1.9  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.8  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+Revision 1.8  2003/08/22 21:16:36  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.7  2003/08/16 20:03:34  zet
 downloaded at top

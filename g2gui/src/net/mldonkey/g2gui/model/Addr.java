@@ -32,7 +32,7 @@ import java.net.UnknownHostException;
  * Addr
  *
  *
- * @version $Id: Addr.java,v 1.21 2003/12/01 14:31:37 lemmster Exp $
+ * @version $Id: Addr.java,v 1.22 2003/12/04 08:47:25 lemmy Exp $
  */
 public class Addr extends SimpleInformation {
 	/**
@@ -188,7 +188,10 @@ public class Addr extends SimpleInformation {
 
 /*
 $Log: Addr.java,v $
-Revision 1.21  2003/12/01 14:31:37  lemmster
+Revision 1.22  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.21  2003/12/01 14:31:37  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.20  2003/12/01 13:20:31  zet
@@ -198,31 +201,31 @@ Revision 1.19  2003/11/30 18:56:39  zet
 don't store empty addresses as localhost
 return "" in toString() for an unknown address
 
-Revision 1.18  2003/11/29 13:01:11  lemmster
+Revision 1.18  2003/11/29 13:01:11  lemmy
 Addr.getString() renamed to the more natural word name Addr.toString()
 
 Revision 1.17  2003/11/28 22:36:46  zet
 getString
 
-Revision 1.16  2003/11/28 08:23:28  lemmster
+Revision 1.16  2003/11/28 08:23:28  lemmy
 use Addr instead of String
 
 Revision 1.15  2003/11/07 15:12:14  zet
 fix log
 
-Revision 1.14  2003/10/20 19:30:13  lemmster
+Revision 1.14  2003/10/20 19:30:13  lemmy
 fixed Bug #1006
 
-Revision 1.13  2003/09/02 09:24:36  lemmster
+Revision 1.13  2003/09/02 09:24:36  lemmy
 checkstyle
 
 Revision 1.12  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.11  2003/08/22 21:03:15  lemmster
-replace user with Author: lemmster
+Revision 1.11  2003/08/22 21:03:15  lemmy
+replace user with Author: lemmy
 
-Revision 1.10  2003/08/11 11:23:06  lemmstercvs01
+Revision 1.10  2003/08/11 11:23:06  lemmy
 fix sort by string
 
 Revision 1.9  2003/08/09 13:42:24  dek
@@ -231,24 +234,24 @@ you can get it at:
 
 ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz
 
-Revision 1.8  2003/08/06 17:36:06  lemmstercvs01
+Revision 1.8  2003/08/06 17:36:06  lemmy
 save a string address as string and not as InetAddress anymore (speed!!)
 
-Revision 1.7  2003/07/30 19:27:49  lemmstercvs01
+Revision 1.7  2003/07/30 19:27:49  lemmy
 address is always an InetAddress instead of just a String
 
-Revision 1.6  2003/07/05 20:04:10  lemmstercvs01
+Revision 1.6  2003/07/05 20:04:10  lemmy
 javadoc improved
 
-Revision 1.5  2003/07/04 10:26:03  lemmstercvs01
+Revision 1.5  2003/07/04 10:26:03  lemmy
 minor: just checkstyle
 
-Revision 1.4  2003/06/30 07:21:27  lemmstercvs01
+Revision 1.4  2003/06/30 07:21:27  lemmy
 changed ip from int to InetAddress
 
 Revision 1.3  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
-Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
+Revision 1.2  2003/06/14 20:30:44  lemmy
 cosmetic changes
 */

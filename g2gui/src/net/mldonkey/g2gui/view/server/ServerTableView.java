@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTableView.java,v 1.4 2003/11/29 01:51:53 zet Exp $ 
+ * @version $Id: ServerTableView.java,v 1.5 2003/12/04 08:47:30 lemmy Exp $ 
  *
  */
 public class ServerTableView extends GTableView {
@@ -118,27 +118,30 @@ public class ServerTableView extends GTableView {
 
 /*
 $Log: ServerTableView.java,v $
+Revision 1.5  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.4  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 
-Revision 1.3  2003/11/09 23:09:57  lemmster
+Revision 1.3  2003/11/09 23:09:57  lemmy
 remove "Show connected Servers only"
 added filter saving in searchtab
 
-Revision 1.2  2003/11/06 13:52:33  lemmster
+Revision 1.2  2003/11/06 13:52:33  lemmy
 filters back working
 
 Revision 1.1  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.1  2003/10/31 13:16:32  lemmster
+Revision 1.1  2003/10/31 13:16:32  lemmy
 Rename Viewer -> Page
 Constructors changed
 
-Revision 1.9  2003/10/31 11:04:40  lemmster
+Revision 1.9  2003/10/31 11:04:40  lemmy
 translate todo
 
-Revision 1.8  2003/10/31 10:42:47  lemmster
+Revision 1.8  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -154,14 +157,14 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.6  2003/10/29 16:56:21  lemmster
+Revision 1.6  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
-Revision 1.5  2003/10/28 11:07:32  lemmster
+Revision 1.5  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
-Revision 1.4  2003/10/26 11:07:33  lemmster
+Revision 1.4  2003/10/26 11:07:33  lemmy
 fixed zero width for description
 
 Revision 1.3  2003/10/22 02:25:24  zet
@@ -170,7 +173,7 @@ Revision 1.3  2003/10/22 02:25:24  zet
 Revision 1.2  2003/10/22 01:37:55  zet
 add column selector to server/search (might not be finished yet..)
 
-Revision 1.1  2003/10/21 17:00:45  lemmster
+Revision 1.1  2003/10/21 17:00:45  lemmy
 class hierarchy for tableviewer
 
 */

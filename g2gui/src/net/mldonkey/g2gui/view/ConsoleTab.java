@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.56 2003/11/29 19:28:38 zet Exp $
+ * @version $Id: ConsoleTab.java,v 1.57 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {
@@ -145,6 +145,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.57  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.56  2003/11/29 19:28:38  zet
 minor string move
 
@@ -161,7 +164,7 @@ update for mainWindow
 Revision 1.52  2003/11/28 01:06:21  zet
 not much- slowly expanding viewframe - will continue later
 
-Revision 1.51  2003/11/23 17:58:03  lemmster
+Revision 1.51  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.50  2003/11/22 02:24:29  zet
@@ -185,7 +188,7 @@ Revision 1.47  2003/09/18 15:30:27  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.46  2003/09/18 09:44:57  lemmster
+Revision 1.46  2003/09/18 09:44:57  lemmy
 checkstyle
 
 Revision 1.45  2003/08/29 22:11:47  zet
@@ -209,11 +212,11 @@ update style bits
 Revision 1.39  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.38  2003/08/23 09:56:15  lemmster
+Revision 1.38  2003/08/23 09:56:15  lemmy
 use supertype instead of Core
 
-Revision 1.37  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+Revision 1.37  2003/08/22 21:06:48  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.36  2003/08/18 01:42:24  zet
 centralize resource bundle
@@ -242,7 +245,7 @@ central PreferenceLoader, abstract Console
 Revision 1.29  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 
-Revision 1.28  2003/08/01 17:21:18  lemmstercvs01
+Revision 1.28  2003/08/01 17:21:18  lemmy
 reworked observer/observable design, added multiversion support
 
 Revision 1.27  2003/07/27 22:39:36  zet
@@ -275,10 +278,10 @@ looks better with icons
 Revision 1.18  2003/07/22 18:10:15  zet
 console linedelimiter
 
-Revision 1.17  2003/07/18 04:34:22  lemmstercvs01
+Revision 1.17  2003/07/18 04:34:22  lemmy
 checkstyle applied
 
-Revision 1.16  2003/07/17 14:58:44  lemmstercvs01
+Revision 1.16  2003/07/17 14:58:44  lemmy
 refactored
 
 Revision 1.15  2003/07/15 14:43:30  dek
@@ -314,7 +317,7 @@ at work: setting the font to the one selected in the preference-dialog
 Revision 1.5  2003/06/27 11:12:53  dek
 works now
 
-Revision 1.4  2003/06/27 10:36:17  lemmstercvs01
+Revision 1.4  2003/06/27 10:36:17  lemmy
 changed notify to observer/observable
 
 Revision 1.3  2003/06/25 21:28:16  dek
@@ -323,7 +326,7 @@ cosmetic change, made console-output read-only
 Revision 1.2  2003/06/25 18:04:53  dek
 Console-Tab reworked
 
-Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
+Revision 1.1  2003/06/24 20:44:54  lemmy
 refactored
 
 Revision 1.1  2003/06/24 20:33:23  dek

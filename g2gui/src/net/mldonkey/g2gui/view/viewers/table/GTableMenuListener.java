@@ -32,7 +32,7 @@ import org.eclipse.jface.action.IMenuManager;
 /**
  * GenericTableMenuListener
  *
- * @version $Id: GTableMenuListener.java,v 1.4 2003/10/31 16:30:49 zet Exp $
+ * @version $Id: GTableMenuListener.java,v 1.5 2003/12/04 08:47:31 lemmy Exp $
  *
  */
 public abstract class GTableMenuListener implements IMenuListener {
@@ -61,13 +61,16 @@ public abstract class GTableMenuListener implements IMenuListener {
 
 /*
 $Log: GTableMenuListener.java,v $
+Revision 1.5  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.4  2003/10/31 16:30:49  zet
 minor renames
 
 Revision 1.3  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.2  2003/10/31 10:42:47  lemmster
+Revision 1.2  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!

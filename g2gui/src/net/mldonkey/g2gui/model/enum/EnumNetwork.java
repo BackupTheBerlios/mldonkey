@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.model.enum;
 /**
  * EnumNetwork
  *
- * @version $Id: EnumNetwork.java,v 1.1 2003/10/28 11:07:32 lemmster Exp $ 
+ * @version $Id: EnumNetwork.java,v 1.2 2003/12/04 08:47:29 lemmy Exp $ 
  *
  */
 public class EnumNetwork extends Enum {
@@ -80,7 +80,10 @@ public class EnumNetwork extends Enum {
 
 /*
 $Log: EnumNetwork.java,v $
-Revision 1.1  2003/10/28 11:07:32  lemmster
+Revision 1.2  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.1  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 

@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableView.java,v 1.8 2003/12/01 13:28:16 zet Exp $
+ * @version $Id: ClientTableView.java,v 1.9 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class ClientTableView extends GTableView {
@@ -96,6 +96,9 @@ public class ClientTableView extends GTableView {
 
 /*
 $Log: ClientTableView.java,v $
+Revision 1.9  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.8  2003/12/01 13:28:16  zet
 add port info
 
@@ -120,11 +123,11 @@ update client table header
 Revision 1.1  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.1  2003/10/31 13:16:33  lemmster
+Revision 1.1  2003/10/31 13:16:33  lemmy
 Rename Viewer -> Page
 Constructors changed
 
-Revision 1.8  2003/10/31 10:42:47  lemmster
+Revision 1.8  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!

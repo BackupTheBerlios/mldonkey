@@ -50,7 +50,7 @@ import org.eclipse.swt.events.DisposeEvent;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.3 2003/12/03 22:19:11 lemmy Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.4 2003/12/04 08:47:28 lemmy Exp $
  *
  */
 public class DownloadPaneMenuListener extends SashViewFrameListener {
@@ -145,6 +145,9 @@ public class DownloadPaneMenuListener extends SashViewFrameListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.4  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.3  2003/12/03 22:19:11  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
@@ -163,7 +166,7 @@ Label restore action
 Revision 1.24  2003/11/14 00:46:04  zet
 sort by column menu item (for macOS)
 
-Revision 1.23  2003/11/06 13:52:33  lemmster
+Revision 1.23  2003/11/06 13:52:33  lemmy
 filters back working
 
 Revision 1.22  2003/11/03 01:50:46  zet
@@ -172,11 +175,11 @@ remove expand/collapse
 Revision 1.21  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.20  2003/10/31 13:16:32  lemmster
+Revision 1.20  2003/10/31 13:16:32  lemmy
 Rename Viewer -> Page
 Constructors changed
 
-Revision 1.19  2003/10/31 10:42:47  lemmster
+Revision 1.19  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to gView... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class gView do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -192,10 +195,10 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.17  2003/10/29 16:56:43  lemmster
+Revision 1.17  2003/10/29 16:56:43  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
-Revision 1.16  2003/10/28 12:35:12  lemmster
+Revision 1.16  2003/10/28 12:35:12  lemmy
 moved NetworkInfo.Enum -> enum.EnumNetwork;
 added Enum.MaskMatcher
 

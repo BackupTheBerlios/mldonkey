@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
  * ChunkView
  *
  *
- * @version $Id: ChunkCanvas.java,v 1.6 2003/12/01 14:22:45 lemmster Exp $
+ * @version $Id: ChunkCanvas.java,v 1.7 2003/12/04 08:47:32 lemmy Exp $
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -493,10 +493,13 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
-Revision 1.6  2003/12/01 14:22:45  lemmster
+Revision 1.7  2003/12/04 08:47:32  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.6  2003/12/01 14:22:45  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.5  2003/11/23 17:58:03  lemmster
+Revision 1.5  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.4  2003/11/22 02:24:29  zet
@@ -538,8 +541,8 @@ some cleaning up, but didn't find a solution for the scrolling-resize of the bar
 Revision 1.13  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.12  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.12  2003/08/22 21:16:36  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.11  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

@@ -43,7 +43,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.12 2003/12/03 22:19:11 lemmy Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.13 2003/12/04 08:47:30 lemmy Exp $ 
  *
  */
 public class ServerPaneListener extends ViewFrameListener {
@@ -118,6 +118,9 @@ public class ServerPaneListener extends ViewFrameListener {
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.13  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.12  2003/12/03 22:19:11  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
@@ -127,27 +130,27 @@ a few more viewframe changes.. will continue later.
 Revision 1.10  2003/11/14 00:46:04  zet
 sort by column menu item (for macOS)
 
-Revision 1.9  2003/11/10 09:58:50  lemmster
+Revision 1.9  2003/11/10 09:58:50  lemmy
 save filter state
 
-Revision 1.8  2003/11/10 08:11:47  lemmster
+Revision 1.8  2003/11/10 08:11:47  lemmy
 removed debug
 
-Revision 1.7  2003/11/09 23:10:07  lemmster
+Revision 1.7  2003/11/09 23:10:07  lemmy
 remove "Show connected Servers only"
 added filter saving in searchtab
 
-Revision 1.6  2003/11/06 13:52:33  lemmster
+Revision 1.6  2003/11/06 13:52:33  lemmy
 filters back working
 
 Revision 1.5  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.4  2003/10/31 13:16:32  lemmster
+Revision 1.4  2003/10/31 13:16:32  lemmy
 Rename Viewer -> Page
 Constructors changed
 
-Revision 1.3  2003/10/31 10:42:47  lemmster
+Revision 1.3  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to gView... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class gView do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -163,7 +166,7 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.1  2003/10/29 16:56:21  lemmster
+Revision 1.1  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 */

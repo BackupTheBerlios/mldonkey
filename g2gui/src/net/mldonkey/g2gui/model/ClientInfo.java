@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.39 2003/12/01 16:17:53 zet Exp $
+ * @version $Id: ClientInfo.java,v 1.40 2003/12/04 08:47:25 lemmy Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -442,13 +442,16 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.40  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.39  2003/12/01 16:17:53  zet
 *** empty log message ***
 
-Revision 1.38  2003/12/01 16:04:52  lemmster
+Revision 1.38  2003/12/01 16:04:52  lemmy
 removed broken cvs tag
 
-Revision 1.37  2003/12/01 14:43:45  lemmster
+Revision 1.37  2003/12/01 14:43:45  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.36  2003/12/01 13:28:02  zet
@@ -457,7 +460,7 @@ updates for ipaddr
 Revision 1.35  2003/11/30 23:42:56  zet
 updates for latest mldonkey cvs
 
-Revision 1.34  2003/11/28 08:23:28  lemmster
+Revision 1.34  2003/11/28 08:23:28  lemmy
 use Addr instead of String
 
 Revision 1.33  2003/11/26 07:46:36  zet
@@ -479,7 +482,7 @@ Revision 1.28  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.27  2003/09/18 09:16:47  lemmster
+Revision 1.27  2003/09/18 09:16:47  lemmy
 checkstyle
 
 Revision 1.26  2003/09/18 03:52:12  zet
@@ -491,7 +494,7 @@ changedProperties in model
 Revision 1.24  2003/09/13 22:22:59  zet
 weak sets
 
-Revision 1.23  2003/09/02 09:24:36  lemmster
+Revision 1.23  2003/09/02 09:24:36  lemmy
 checkstyle
 
 Revision 1.22  2003/08/24 02:22:12  zet
@@ -500,14 +503,14 @@ Revision 1.22  2003/08/24 02:22:12  zet
 Revision 1.21  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.20  2003/08/23 10:02:02  lemmster
+Revision 1.20  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
 Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+Revision 1.18  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
@@ -536,28 +539,28 @@ availability is strange: it doesn't seem to make it's way to clients...
 Revision 1.9  2003/07/12 13:53:21  dek
 some new methods, to be able to show the information
 
-Revision 1.8  2003/07/06 12:47:22  lemmstercvs01
+Revision 1.8  2003/07/06 12:47:22  lemmy
 bugfix for fileUpdateAvailability
 
-Revision 1.7  2003/07/06 09:33:50  lemmstercvs01
+Revision 1.7  2003/07/06 09:33:50  lemmy
 int networkid -> networkinfo networkid
 
-Revision 1.6  2003/06/30 07:20:09  lemmstercvs01
+Revision 1.6  2003/06/30 07:20:09  lemmy
 changed to readTagList()
 
-Revision 1.5  2003/06/24 09:29:57  lemmstercvs01
+Revision 1.5  2003/06/24 09:29:57  lemmy
 Enum more improved
 
-Revision 1.4  2003/06/24 09:16:48  lemmstercvs01
+Revision 1.4  2003/06/24 09:16:48  lemmy
 better Enum added
 
 Revision 1.3  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
-Revision 1.2  2003/06/16 15:33:03  lemmstercvs01
+Revision 1.2  2003/06/16 15:33:03  lemmy
 some kind of enum added
 
-Revision 1.1  2003/06/14 17:40:40  lemmstercvs01
+Revision 1.1  2003/06/14 17:40:40  lemmy
 initial commit
 
 */

@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.26 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: About.java,v 1.27 2003/12/04 08:47:31 lemmy Exp $ 
  *
  */
 public class About extends Dialog {
@@ -254,7 +254,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.26 2003/11/23 17:58:03 lemmster Exp $ 
+	 * @version $Id: About.java,v 1.27 2003/12/04 08:47:31 lemmy Exp $ 
 	 *
 	 */
 	public class Link {
@@ -303,10 +303,13 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
-Revision 1.26  2003/11/23 17:58:03  lemmster
+Revision 1.27  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.26  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.25  2003/11/09 13:24:02  lemmster
+Revision 1.25  2003/11/09 13:24:02  lemmy
 typo in credits
 
 Revision 1.24  2003/11/08 15:16:31  vnc
@@ -318,13 +321,13 @@ set titlebar text
 Revision 1.22  2003/10/19 03:55:37  zet
 add swt info
 
-Revision 1.21  2003/10/09 09:59:19  lemmster
+Revision 1.21  2003/10/09 09:59:19  lemmy
 get the version number from the centralized class VersionInfo
 
 Revision 1.20  2003/10/08 22:24:23  zet
 include a version #
 
-Revision 1.19  2003/09/23 05:30:40  lemmster
+Revision 1.19  2003/09/23 05:30:40  lemmy
 fixed typo
 
 Revision 1.18  2003/09/14 12:13:22  dek

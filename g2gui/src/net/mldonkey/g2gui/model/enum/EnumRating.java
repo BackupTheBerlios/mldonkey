@@ -27,7 +27,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 /**
  * EnumRating
  *
- * @version $Id: EnumRating.java,v 1.2 2003/11/10 08:54:47 lemmster Exp $ 
+ * @version $Id: EnumRating.java,v 1.3 2003/12/04 08:47:29 lemmy Exp $ 
  *
  */
 public class EnumRating extends Enum {
@@ -58,10 +58,13 @@ public class EnumRating extends Enum {
 
 /*
 $Log: EnumRating.java,v $
-Revision 1.2  2003/11/10 08:54:47  lemmster
+Revision 1.3  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.2  2003/11/10 08:54:47  lemmy
 rating filter in searchresult
 
-Revision 1.1  2003/11/10 08:35:13  lemmster
+Revision 1.1  2003/11/10 08:35:13  lemmy
 move getRating... into ResultInfo
 
 */

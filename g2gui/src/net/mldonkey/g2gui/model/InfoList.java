@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
  * InfoList
  *
  *
- * @version $Id: InfoList.java,v 1.12 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: InfoList.java,v 1.13 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public abstract class InfoList extends Observable implements InfoCollection {
@@ -80,31 +80,34 @@ public abstract class InfoList extends Observable implements InfoCollection {
 
 /*
 $Log: InfoList.java,v $
-Revision 1.12  2003/12/01 14:22:17  lemmster
+Revision 1.13  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.12  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.11  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.10  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.10  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.9  2003/08/02 09:55:55  lemmstercvs01
+Revision 1.9  2003/08/02 09:55:55  lemmy
 observers changed
 
 Revision 1.8  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
-Revision 1.7  2003/06/17 12:10:17  lemmstercvs01
+Revision 1.7  2003/06/17 12:10:17  lemmy
 some methods added
 
-Revision 1.6  2003/06/16 15:32:43  lemmstercvs01
+Revision 1.6  2003/06/16 15:32:43  lemmy
 changed some modifiers
 
-Revision 1.5  2003/06/16 13:18:59  lemmstercvs01
+Revision 1.5  2003/06/16 13:18:59  lemmy
 checkstyle applied
 
-Revision 1.4  2003/06/15 16:18:41  lemmstercvs01
+Revision 1.4  2003/06/15 16:18:41  lemmy
 new interface introduced
 
 */

@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * VideoComplexSearch
  *
- * @version $Id: VideoComplexSearch.java,v 1.3 2003/09/18 11:18:46 lemmster Exp $ 
+ * @version $Id: VideoComplexSearch.java,v 1.4 2003/12/04 08:47:29 lemmy Exp $ 
  *
  */
 public class VideoComplexSearch extends ComplexSearch {
@@ -62,13 +62,16 @@ public class VideoComplexSearch extends ComplexSearch {
 
 /*
 $Log: VideoComplexSearch.java,v $
-Revision 1.3  2003/09/18 11:18:46  lemmster
+Revision 1.4  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.3  2003/09/18 11:18:46  lemmy
 checkstyle
 
-Revision 1.2  2003/09/04 12:17:01  lemmster
+Revision 1.2  2003/09/04 12:17:01  lemmy
 lots of changes
 
-Revision 1.1  2003/09/03 22:15:27  lemmster
+Revision 1.1  2003/09/03 22:15:27  lemmy
 advanced search introduced; not working and far from complete. just to see the design
 
 */

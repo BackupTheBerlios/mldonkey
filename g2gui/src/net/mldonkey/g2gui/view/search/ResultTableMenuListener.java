@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.34 2003/12/01 14:23:02 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.35 2003/12/04 08:47:29 lemmy Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -298,7 +298,10 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
-Revision 1.34  2003/12/01 14:23:02  lemmster
+Revision 1.35  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.34  2003/12/01 14:23:02  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.33  2003/11/29 17:02:27  zet
@@ -307,10 +310,10 @@ more viewframes.. will continue later.
 Revision 1.32  2003/11/25 01:13:13  zet
 include filesize for webservice>jigle lookup
 
-Revision 1.31  2003/11/23 17:58:03  lemmster
+Revision 1.31  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.30  2003/11/15 11:44:04  lemmster
+Revision 1.30  2003/11/15 11:44:04  lemmy
 fix: [Bug #1089] 0.2 similair stop search crash
 
 Revision 1.29  2003/10/31 16:30:49  zet
@@ -319,7 +322,7 @@ minor renames
 Revision 1.28  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.27  2003/10/31 13:16:33  lemmster
+Revision 1.27  2003/10/31 13:16:33  lemmy
 Rename Viewer -> Page
 Constructors changed
 
@@ -334,10 +337,10 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.25  2003/10/29 16:56:21  lemmster
+Revision 1.25  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
-Revision 1.24  2003/10/28 11:24:12  lemmster
+Revision 1.24  2003/10/28 11:24:12  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
@@ -359,34 +362,34 @@ removed malformed UTF-8 char gcj complains about (was only in comment)
 Revision 1.18  2003/10/22 01:37:45  zet
 add column selector to server/search (might not be finished yet..)
 
-Revision 1.17  2003/10/21 17:00:45  lemmster
+Revision 1.17  2003/10/21 17:00:45  lemmy
 class hierarchy for tableviewer
 
-Revision 1.16  2003/09/23 19:57:03  lemmster
+Revision 1.16  2003/09/23 19:57:03  lemmy
 copy to... works with multiple files now
 
-Revision 1.15  2003/09/19 15:19:14  lemmster
+Revision 1.15  2003/09/19 15:19:14  lemmy
 reworked
 
-Revision 1.14  2003/09/18 10:39:21  lemmster
+Revision 1.14  2003/09/18 10:39:21  lemmy
 checkstyle
 
-Revision 1.13  2003/09/17 20:07:44  lemmster
+Revision 1.13  2003/09/17 20:07:44  lemmy
 avoid NPEs in search
 
-Revision 1.12  2003/09/16 10:29:40  lemmster
+Revision 1.12  2003/09/16 10:29:40  lemmy
 open msgbox just once [bug #909]
 
-Revision 1.11  2003/09/15 15:32:09  lemmster
+Revision 1.11  2003/09/15 15:32:09  lemmy
 reset state of canceled downloads from search [bug #908]
 
-Revision 1.10  2003/09/08 15:43:34  lemmster
+Revision 1.10  2003/09/08 15:43:34  lemmy
 work in progress
 
-Revision 1.9  2003/09/08 11:54:23  lemmster
+Revision 1.9  2003/09/08 11:54:23  lemmy
 added download button
 
-Revision 1.8  2003/08/31 12:32:04  lemmster
+Revision 1.8  2003/08/31 12:32:04  lemmy
 major changes to search
 
 Revision 1.7  2003/08/29 00:54:42  zet
@@ -398,16 +401,16 @@ remove duplicate code, move dblclick to menulistener
 Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.4  2003/08/23 10:34:33  lemmster
+Revision 1.4  2003/08/23 10:34:33  lemmy
 isSearchable() added
 
-Revision 1.3  2003/08/23 09:46:18  lemmster
+Revision 1.3  2003/08/23 09:46:18  lemmy
 superclass TableMenuListener added
 
-Revision 1.2  2003/08/22 19:29:16  lemmster
+Revision 1.2  2003/08/22 19:29:16  lemmy
 additiv filters
 
-Revision 1.1  2003/08/20 10:05:46  lemmster
+Revision 1.1  2003/08/20 10:05:46  lemmy
 MenuListener added
 
 */

@@ -36,7 +36,7 @@ import java.util.List;
  * SharedFileInfoList
  *
  *
- * @version $Id: SharedFileInfoIntMap.java,v 1.10 2003/12/01 16:53:36 zet Exp $
+ * @version $Id: SharedFileInfoIntMap.java,v 1.11 2003/12/04 08:47:25 lemmy Exp $
  *
  */
 public class SharedFileInfoIntMap extends InfoIntMap {
@@ -195,10 +195,13 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: SharedFileInfoIntMap.java,v $
+Revision 1.11  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.10  2003/12/01 16:53:36  zet
 add reshare option
 
-Revision 1.9  2003/12/01 14:22:17  lemmster
+Revision 1.9  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.8  2003/11/28 14:36:54  zet
@@ -217,7 +220,7 @@ changed refresh() -> update() to avoid flickering table
 Revision 1.4  2003/09/25 14:24:11  dek
 sharedFile no has Network (not only networkID)
 
-Revision 1.2  2003/09/18 09:16:47  lemmster
+Revision 1.2  2003/09/18 09:16:47  lemmy
 checkstyle
 
 Revision 1.1  2003/09/17 13:49:09  dek
@@ -227,16 +230,16 @@ to get notice of changes in # of requests and # of uploaded bytes
 Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+Revision 1.4  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
+Revision 1.3  2003/07/05 20:04:02  lemmy
 javadoc improved
 
 Revision 1.2  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
-Revision 1.1  2003/06/15 16:17:26  lemmstercvs01
+Revision 1.1  2003/06/15 16:17:26  lemmy
 opcode 48 added
 
 */

@@ -41,7 +41,7 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.102 2003/11/29 20:16:30 zet Exp $
+ * @version $Id: TransferTab.java,v 1.103 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -119,6 +119,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.103  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.102  2003/11/29 20:16:30  zet
 stop/start timer on tab (de)activation
 
@@ -144,7 +147,7 @@ quick attempt at an uploaders table w/proto 19 - still in progress...
 Revision 1.95  2003/11/24 01:33:27  zet
 move some classes
 
-Revision 1.94  2003/11/23 17:58:03  lemmster
+Revision 1.94  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.93  2003/11/22 02:24:29  zet
@@ -174,11 +177,11 @@ rename to View
 Revision 1.85  2003/10/31 16:02:17  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.84  2003/10/31 13:20:31  lemmster
+Revision 1.84  2003/10/31 13:20:31  lemmy
 added PaneGuiTab and TableGuiTab
 added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
 
-Revision 1.83  2003/10/31 10:42:47  lemmster
+Revision 1.83  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -194,7 +197,7 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.81  2003/10/29 16:56:21  lemmster
+Revision 1.81  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 Revision 1.80  2003/10/22 17:17:30  zet
@@ -257,7 +260,7 @@ move transfer package
 Revision 1.59  2003/09/20 01:23:18  zet
 *** empty log message ***
 
-Revision 1.58  2003/09/18 13:01:23  lemmster
+Revision 1.58  2003/09/18 13:01:23  lemmy
 checkstyle
 
 Revision 1.57  2003/09/16 02:12:17  zet
@@ -329,14 +332,14 @@ update sorter properly
 Revision 1.35  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.34  2003/08/23 14:58:38  lemmster
+Revision 1.34  2003/08/23 14:58:38  lemmy
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+Revision 1.32  2003/08/22 21:06:48  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression
@@ -380,7 +383,7 @@ looks better with icons
 Revision 1.18  2003/07/18 09:58:00  dek
 checkstyle
 
-Revision 1.17  2003/07/17 14:58:37  lemmstercvs01
+Revision 1.17  2003/07/17 14:58:37  lemmy
 refactored
 
 Revision 1.3  2003/07/15 18:14:47  dek

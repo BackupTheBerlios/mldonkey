@@ -27,7 +27,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 /**
  * EnumExtension
  *
- * @version $Id: EnumExtension.java,v 1.1 2003/11/06 13:52:33 lemmster Exp $ 
+ * @version $Id: EnumExtension.java,v 1.2 2003/12/04 08:47:29 lemmy Exp $ 
  *
  */
 public class EnumExtension extends Enum {
@@ -64,7 +64,10 @@ public class EnumExtension extends Enum {
 
 /*
 $Log: EnumExtension.java,v $
-Revision 1.1  2003/11/06 13:52:33  lemmster
+Revision 1.2  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.1  2003/11/06 13:52:33  lemmy
 filters back working
 
 */

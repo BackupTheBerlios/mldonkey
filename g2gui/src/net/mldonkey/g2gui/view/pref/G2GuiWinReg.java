@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.7 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.8 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -255,13 +255,16 @@ public class G2GuiWinReg extends PreferencePage {
 
 /*
 $Log: G2GuiWinReg.java,v $
-Revision 1.7  2003/11/23 17:58:03  lemmster
+Revision 1.8  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.7  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.6  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
-Revision 1.5  2003/11/20 14:05:15  lemmster
+Revision 1.5  2003/11/20 14:05:15  lemmy
 link need the "-l" prefix by now
 
 Revision 1.4  2003/11/09 17:11:45  zet

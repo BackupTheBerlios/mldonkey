@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * GraphHistory
  *
- * @version $Id: GraphHistory.java,v 1.4 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: GraphHistory.java,v 1.5 2003/12/04 08:47:28 lemmy Exp $
  *
  */
 public class GraphHistory implements PaintListener {
@@ -180,10 +180,13 @@ public class GraphHistory implements PaintListener {
 
 /*
 $Log: GraphHistory.java,v $
-Revision 1.4  2003/11/23 17:58:03  lemmster
+Revision 1.5  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.4  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.3  2003/11/06 14:59:06  lemmster
+Revision 1.3  2003/11/06 14:59:06  lemmy
 clean up
 
 Revision 1.2  2003/10/17 15:47:14  zet

@@ -35,7 +35,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * NetworkInfo
  *
  *
- * @version $Id: NetworkInfo.java,v 1.31 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.32 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -423,10 +423,13 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
-Revision 1.31  2003/12/01 14:22:17  lemmster
+Revision 1.32  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.31  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.30  2003/10/28 11:07:32  lemmster
+Revision 1.30  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
@@ -434,10 +437,10 @@ Revision 1.29  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.28  2003/09/18 09:16:47  lemmster
+Revision 1.28  2003/09/18 09:16:47  lemmy
 checkstyle
 
-Revision 1.27  2003/09/14 09:59:02  lemmster
+Revision 1.27  2003/09/14 09:59:02  lemmy
 fix  0 server in mouse-popup [bug #869]
 
 Revision 1.26  2003/08/24 16:55:37  dek
@@ -446,58 +449,58 @@ toString added, returns network Name
 Revision 1.25  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.24  2003/08/23 10:02:02  lemmster
+Revision 1.24  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
-Revision 1.23  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.23  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.22  2003/08/21 13:13:10  lemmster
+Revision 1.22  2003/08/21 13:13:10  lemmy
 cleanup in networkitem
 
-Revision 1.21  2003/08/20 22:20:08  lemmster
+Revision 1.21  2003/08/20 22:20:08  lemmy
 badconnect is display too. added some icons
 
-Revision 1.20  2003/08/19 12:15:05  lemmster
+Revision 1.20  2003/08/19 12:15:05  lemmy
 support for proto=18
 
-Revision 1.19  2003/08/11 11:23:49  lemmstercvs01
+Revision 1.19  2003/08/11 11:23:49  lemmy
 added GNUT and FT to networks without servers and added isSearchable()
 
-Revision 1.18  2003/08/10 10:19:58  lemmstercvs01
+Revision 1.18  2003/08/10 10:19:58  lemmy
 return ONP instead of OFT in getNetworkShortName()
 
-Revision 1.17  2003/08/06 09:45:52  lemmstercvs01
+Revision 1.17  2003/08/06 09:45:52  lemmy
 remove servers from serverinfointmap if network switches to off
 
-Revision 1.16  2003/08/04 15:06:24  lemmstercvs01
+Revision 1.16  2003/08/04 15:06:24  lemmy
 bugfix
 
-Revision 1.15  2003/08/02 09:55:16  lemmstercvs01
+Revision 1.15  2003/08/02 09:55:16  lemmy
 observers changed
 
-Revision 1.14  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.14  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.13  2003/07/31 14:08:54  lemmstercvs01
+Revision 1.13  2003/07/31 14:08:54  lemmy
 added gnutella2, edited setEnable(), added getNetworkShortName()
 
-Revision 1.12  2003/07/30 19:26:19  lemmstercvs01
+Revision 1.12  2003/07/30 19:26:19  lemmy
 hasServers() added, use it to exclude networks in servertab without servers
 
-Revision 1.11  2003/07/28 08:18:17  lemmstercvs01
+Revision 1.11  2003/07/28 08:18:17  lemmy
 added NetworkInfo.Enum to differ the networks
 
-Revision 1.10  2003/07/06 08:49:33  lemmstercvs01
+Revision 1.10  2003/07/06 08:49:33  lemmy
 better oo added
 
-Revision 1.9  2003/07/06 07:45:26  lemmstercvs01
+Revision 1.9  2003/07/06 07:45:26  lemmy
 checkstyle applied
 
-Revision 1.8  2003/07/05 15:58:05  lemmstercvs01
+Revision 1.8  2003/07/05 15:58:05  lemmy
 javadoc improved
 
-Revision 1.7  2003/07/04 18:35:02  lemmstercvs01
+Revision 1.7  2003/07/04 18:35:02  lemmy
 foobar
 
 Revision 1.6  2003/06/18 13:30:56  dek
@@ -509,10 +512,10 @@ checkstyle applied
 Revision 1.4  2003/06/16 15:21:01  dek
 *** empty log message ***
 
-Revision 1.3  2003/06/14 17:41:03  lemmstercvs01
+Revision 1.3  2003/06/14 17:41:03  lemmy
 foobar
 
-Revision 1.2  2003/06/14 12:47:27  lemmstercvs01
+Revision 1.2  2003/06/14 12:47:27  lemmy
 checkstyle applied
 
 Revision 1.1  2003/06/13 16:02:11  dek

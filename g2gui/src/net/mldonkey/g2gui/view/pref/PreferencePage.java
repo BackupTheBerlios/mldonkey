@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * GuiPreferences
  *
- * @version $Id: PreferencePage.java,v 1.2 2003/10/12 16:27:01 lemmster Exp $ 
+ * @version $Id: PreferencePage.java,v 1.3 2003/12/04 08:47:27 lemmy Exp $ 
  *
  */
 public abstract class PreferencePage extends FieldEditorPreferencePage {
@@ -117,10 +117,13 @@ public abstract class PreferencePage extends FieldEditorPreferencePage {
 
 /*
 $Log: PreferencePage.java,v $
-Revision 1.2  2003/10/12 16:27:01  lemmster
+Revision 1.3  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.2  2003/10/12 16:27:01  lemmy
 minor changes
 
-Revision 1.1  2003/10/01 20:56:27  lemmster
+Revision 1.1  2003/10/01 20:56:27  lemmy
 add class hierarchy
 
 */

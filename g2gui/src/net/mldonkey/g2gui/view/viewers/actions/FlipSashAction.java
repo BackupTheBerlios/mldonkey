@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 /**
  * FlipSashAction
  *
- * @version $Id: FlipSashAction.java,v 1.1 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: FlipSashAction.java,v 1.2 2003/12/04 08:47:30 lemmy Exp $ 
  *
  */
 public class FlipSashAction extends SashAction {
@@ -48,7 +48,10 @@ public class FlipSashAction extends SashAction {
 
 /*
 $Log: FlipSashAction.java,v $
-Revision 1.1  2003/10/29 16:56:21  lemmster
+Revision 1.2  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.1  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 */

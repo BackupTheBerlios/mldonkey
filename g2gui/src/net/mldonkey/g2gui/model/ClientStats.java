@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientStats
  *
  *
- * @version $Id: ClientStats.java,v 1.18 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: ClientStats.java,v 1.19 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class ClientStats extends Parent {
@@ -201,31 +201,34 @@ public class ClientStats extends Parent {
 
 /*
 $Log: ClientStats.java,v $
-Revision 1.18  2003/12/01 14:22:17  lemmster
+Revision 1.19  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.18  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.17  2003/11/23 17:58:03  lemmster
+Revision 1.17  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.16  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.15  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.15  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.14  2003/08/02 09:55:16  lemmstercvs01
+Revision 1.14  2003/08/02 09:55:16  lemmy
 observers changed
 
-Revision 1.13  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.13  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.12  2003/07/06 10:05:17  lemmstercvs01
+Revision 1.12  2003/07/06 10:05:17  lemmy
 int[] connectedNetworks -> NetworkInfo[] connectedNetworks
 
 Revision 1.11  2003/07/02 16:24:14  dek
 Checkstyle
 
-Revision 1.10  2003/06/27 17:12:36  lemmstercvs01
+Revision 1.10  2003/06/27 17:12:36  lemmy
 removed unneeded fields
 
 Revision 1.9  2003/06/27 13:38:38  dek
@@ -243,16 +246,16 @@ humm, some interface-changes, hope, it didn't break anything ;-)
 Revision 1.5  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
-Revision 1.4  2003/06/14 12:47:27  lemmstercvs01
+Revision 1.4  2003/06/14 12:47:27  lemmy
 checkstyle applied
 
-Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
+Revision 1.3  2003/06/13 11:03:41  lemmy
 changed InputStream to MessageBuffer
 
-Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
+Revision 1.2  2003/06/12 22:23:06  lemmy
 lots of changes
 
-Revision 1.1  2003/06/11 12:54:44  lemmstercvs01
+Revision 1.1  2003/06/11 12:54:44  lemmy
 initial commit
 
 */

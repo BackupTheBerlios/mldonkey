@@ -28,7 +28,7 @@ import org.eclipse.swt.custom.SashForm;
 /**
  * SashAction
  *
- * @version $Id: SashAction.java,v 1.1 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: SashAction.java,v 1.2 2003/12/04 08:47:30 lemmy Exp $ 
  *
  */
 public abstract class SashAction extends Action {
@@ -41,7 +41,10 @@ public abstract class SashAction extends Action {
 
 /*
 $Log: SashAction.java,v $
-Revision 1.1  2003/10/29 16:56:21  lemmster
+Revision 1.2  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.1  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 */

@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.RegExp;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.18 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.19 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class SharedFileInfo extends SimpleInformation {
@@ -243,10 +243,13 @@ public class SharedFileInfo extends SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
-Revision 1.18  2003/12/01 14:22:17  lemmster
+Revision 1.19  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.18  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.17  2003/11/23 17:58:03  lemmster
+Revision 1.17  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.16  2003/09/30 15:28:36  dek
@@ -277,7 +280,7 @@ first sketch of upload-Table not yet added to transferTab.
 Revision 1.8  2003/09/25 14:24:11  dek
 sharedFile no has Network (not only networkID)
 
-Revision 1.7  2003/09/18 09:16:47  lemmster
+Revision 1.7  2003/09/18 09:16:47  lemmy
 checkstyle
 
 Revision 1.6  2003/09/17 13:49:09  dek
@@ -287,16 +290,16 @@ to get notice of changes in # of requests and # of uploaded bytes
 Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.4  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
+Revision 1.3  2003/07/05 20:04:02  lemmy
 javadoc improved
 
 Revision 1.2  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
-Revision 1.1  2003/06/15 16:17:26  lemmstercvs01
+Revision 1.1  2003/06/15 16:17:26  lemmy
 opcode 48 added
 
 */

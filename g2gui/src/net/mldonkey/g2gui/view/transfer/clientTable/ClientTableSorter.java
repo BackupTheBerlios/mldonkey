@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ClientTableSorter
  *
- * @version $Id: ClientTableSorter.java,v 1.14 2003/12/01 16:39:25 zet Exp $
+ * @version $Id: ClientTableSorter.java,v 1.15 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class ClientTableSorter extends GSorter {
@@ -118,6 +118,9 @@ public class ClientTableSorter extends GSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.15  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.14  2003/12/01 16:39:25  zet
 set default sort order for specific columns
 
@@ -133,13 +136,13 @@ coalesce addr use
 Revision 1.10  2003/11/26 07:43:15  zet
 quick attempt at an uploaders table w/proto 19 - still in progress...
 
-Revision 1.9  2003/11/23 17:58:03  lemmster
+Revision 1.9  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.8  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.7  2003/10/31 13:16:32  lemmster
+Revision 1.7  2003/10/31 13:16:32  lemmy
 Rename Viewer -> Page
 Constructors changed
 
@@ -172,7 +175,7 @@ move transfer package
 Revision 1.7  2003/09/18 14:11:01  zet
 revert
 
-Revision 1.5  2003/09/08 19:50:31  lemmster
+Revision 1.5  2003/09/08 19:50:31  lemmy
 just repaired the log
 
 Revision 1.4  2003/08/23 15:21:37  zet

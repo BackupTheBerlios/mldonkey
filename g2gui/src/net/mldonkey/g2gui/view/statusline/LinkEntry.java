@@ -60,7 +60,7 @@ import gnu.regexp.REMatch;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.20 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: LinkEntry.java,v 1.21 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class LinkEntry {
@@ -191,6 +191,9 @@ public class LinkEntry {
 
 /*
 $Log: LinkEntry.java,v $
+Revision 1.21  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.20  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
@@ -224,7 +227,7 @@ Revision 1.13  2003/09/18 15:30:17  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.12  2003/09/18 11:37:24  lemmster
+Revision 1.12  2003/09/18 11:37:24  lemmy
 checkstyle
 
 Revision 1.11  2003/08/30 23:37:51  zet

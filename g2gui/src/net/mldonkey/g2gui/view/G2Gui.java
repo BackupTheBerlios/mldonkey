@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.53 2003/12/03 22:19:11 lemmy Exp $
+ * @version $Id: G2Gui.java,v 1.54 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class G2Gui {
@@ -466,13 +466,16 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.54  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.53  2003/12/03 22:19:11  lemmy
 store g2gui.pref in ~/.g2gui/g2gui.pref instead of the program directory
 
-Revision 1.52  2003/11/30 20:02:06  lemmster
+Revision 1.52  2003/11/30 20:02:06  lemmy
 check boundaries
 
-Revision 1.51  2003/11/30 18:49:08  lemmster
+Revision 1.51  2003/11/30 18:49:08  lemmy
 better link handling, handle more than one link simultaneously
 
 Revision 1.50  2003/11/30 18:14:55  dek
@@ -496,7 +499,7 @@ missed one small thing
 Revision 1.44  2003/11/20 15:42:04  dek
 reconnect started
 
-Revision 1.43  2003/11/20 14:02:17  lemmster
+Revision 1.43  2003/11/20 14:02:17  lemmy
 G2Gui cleanup
 
 Revision 1.42  2003/11/10 20:55:37  zet
@@ -539,7 +542,7 @@ Revision 1.30  2003/09/18 15:30:27  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.29  2003/09/18 09:44:57  lemmster
+Revision 1.29  2003/09/18 09:44:57  lemmy
 checkstyle
 
 Revision 1.28  2003/09/08 18:25:45  zet
@@ -557,10 +560,10 @@ combine the preference stores
 Revision 1.24  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.23  2003/08/23 10:02:02  lemmster
+Revision 1.23  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
-Revision 1.22  2003/08/22 10:28:22  lemmster
+Revision 1.22  2003/08/22 10:28:22  lemmy
 catch wrong "allowed_ips" values (connection denied)
 
 Revision 1.21  2003/08/20 14:26:19  dek
@@ -576,7 +579,7 @@ PreferenceLoader updates
 Revision 1.18  2003/08/19 15:39:40  dek
 changed some statements for build-in link-handling
 
-Revision 1.17  2003/08/19 12:14:16  lemmster
+Revision 1.17  2003/08/19 12:14:16  lemmy
 first try of simple/advanced mode
 
 Revision 1.16  2003/08/18 22:22:02  zet
@@ -603,28 +606,28 @@ ed2k-link handling-hack continued
 Revision 1.9  2003/08/15 22:39:53  dek
 ed2k-link handling-hack started
 
-Revision 1.8  2003/08/07 13:25:37  lemmstercvs01
+Revision 1.8  2003/08/07 13:25:37  lemmy
 ResourceBundle added
 
-Revision 1.7  2003/08/06 17:41:20  lemmstercvs01
+Revision 1.7  2003/08/06 17:41:20  lemmy
 some fixes
 
-Revision 1.6  2003/08/04 14:38:55  lemmstercvs01
+Revision 1.6  2003/08/04 14:38:55  lemmy
 splashscreen and error handling added (resending on badpassword doenst work atm)
 
-Revision 1.5  2003/08/03 19:09:51  lemmstercvs01
+Revision 1.5  2003/08/03 19:09:51  lemmy
 better error handling
 
-Revision 1.4  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.4  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.3  2003/07/18 04:34:22  lemmstercvs01
+Revision 1.3  2003/07/18 04:34:22  lemmy
 checkstyle applied
 
-Revision 1.2  2003/07/17 15:10:35  lemmstercvs01
+Revision 1.2  2003/07/17 15:10:35  lemmy
 foobar
 
-Revision 1.1  2003/07/17 14:58:37  lemmstercvs01
+Revision 1.1  2003/07/17 14:58:37  lemmy
 refactored
 
 Revision 1.9  2003/07/13 12:50:01  dek
@@ -636,7 +639,7 @@ Checkstyle, JavaDocs still have to be added
 Revision 1.7  2003/06/27 11:23:48  dek
 gui is no more children of applicationwindow
 
-Revision 1.6  2003/06/27 10:39:37  lemmstercvs01
+Revision 1.6  2003/06/27 10:39:37  lemmy
 core is now Runnable
 
 Revision 1.5  2003/06/26 21:11:10  dek
@@ -651,10 +654,10 @@ Console-Tab reworked
 Revision 1.2  2003/06/25 10:42:36  dek
 peferenences dialog at first start
 
-Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
+Revision 1.1  2003/06/24 20:44:54  lemmy
 refactored
 
-Revision 1.1  2003/06/24 20:13:14  lemmstercvs01
+Revision 1.1  2003/06/24 20:13:14  lemmy
 initial commit
 
 */

@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Label;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.66 2003/11/29 17:02:27 zet Exp $
+ * @version $Id: SearchResult.java,v 1.67 2003/12/04 08:47:29 lemmy Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -322,23 +322,26 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.67  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.66  2003/11/29 17:02:27  zet
 more viewframes.. will continue later.
 
-Revision 1.65  2003/11/23 17:58:03  lemmster
+Revision 1.65  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
-Revision 1.64  2003/11/15 11:44:04  lemmster
+Revision 1.64  2003/11/15 11:44:04  lemmy
 fix: [Bug #1089] 0.2 similair stop search crash
 
 Revision 1.63  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.62  2003/10/31 13:16:33  lemmster
+Revision 1.62  2003/10/31 13:16:33  lemmy
 Rename Viewer -> Page
 Constructors changed
 
-Revision 1.61  2003/10/31 10:42:47  lemmster
+Revision 1.61  2003/10/31 10:42:47  lemmy
 Renamed GViewer, GTableViewer and GTableTreeViewer to gView... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class gView do the job
 Use supertype/interface where possible to keep the design flexible!
@@ -366,68 +369,68 @@ removed malformed UTF-8 char gcj complains about (was only in comment)
 Revision 1.56  2003/10/22 01:37:45  zet
 add column selector to server/search (might not be finished yet..)
 
-Revision 1.55  2003/10/21 17:00:45  lemmster
+Revision 1.55  2003/10/21 17:00:45  lemmy
 class hierarchy for tableviewer
 
-Revision 1.54  2003/09/29 17:44:40  lemmster
+Revision 1.54  2003/09/29 17:44:40  lemmy
 switch for search tooltips
 
 Revision 1.53  2003/09/27 13:30:22  dek
 all tables have now show-Gridlines-behaviour as descibed in  preferences
 
-Revision 1.52  2003/09/25 17:58:41  lemmster
+Revision 1.52  2003/09/25 17:58:41  lemmy
 fixed crash bug
 
-Revision 1.51  2003/09/22 20:20:09  lemmster
+Revision 1.51  2003/09/22 20:20:09  lemmy
 show # sources in search result avail table
 
-Revision 1.50  2003/09/22 20:07:22  lemmster
+Revision 1.50  2003/09/22 20:07:22  lemmy
 right column align for integers [bug #934]
 
 Revision 1.49  2003/09/20 14:38:51  zet
 move transfer package
 
-Revision 1.48  2003/09/19 17:51:39  lemmster
+Revision 1.48  2003/09/19 17:51:39  lemmy
 minor bugfix
 
-Revision 1.47  2003/09/19 15:19:14  lemmster
+Revision 1.47  2003/09/19 15:19:14  lemmy
 reworked
 
 Revision 1.46  2003/09/18 15:30:05  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.45  2003/09/18 10:39:21  lemmster
+Revision 1.45  2003/09/18 10:39:21  lemmy
 checkstyle
 
-Revision 1.44  2003/09/18 07:45:09  lemmster
+Revision 1.44  2003/09/18 07:45:09  lemmy
 fix [bug # 933]
 
-Revision 1.43  2003/09/17 20:07:44  lemmster
+Revision 1.43  2003/09/17 20:07:44  lemmy
 avoid NPEs in search
 
-Revision 1.42  2003/09/16 09:24:11  lemmster
+Revision 1.42  2003/09/16 09:24:11  lemmy
 adjust source rating
 
-Revision 1.41  2003/09/15 15:32:09  lemmster
+Revision 1.41  2003/09/15 15:32:09  lemmy
 reset state of canceled downloads from search [bug #908]
 
-Revision 1.40  2003/09/08 12:38:00  lemmster
+Revision 1.40  2003/09/08 12:38:00  lemmy
 show bitrate/length for audio files in tooltip
 
-Revision 1.39  2003/09/08 11:54:23  lemmster
+Revision 1.39  2003/09/08 11:54:23  lemmy
 added download button
 
-Revision 1.38  2003/09/01 11:18:51  lemmster
+Revision 1.38  2003/09/01 11:18:51  lemmy
 show downloading files
 
 Revision 1.37  2003/08/31 20:32:50  zet
 active button states
 
-Revision 1.36  2003/08/31 13:38:38  lemmster
+Revision 1.36  2003/08/31 13:38:38  lemmy
 delayedRefresh() is working again
 
-Revision 1.35  2003/08/31 12:32:04  lemmster
+Revision 1.35  2003/08/31 12:32:04  lemmy
 major changes to search
 
 Revision 1.34  2003/08/29 17:33:20  zet
@@ -439,7 +442,7 @@ Move wordFilter public
 Revision 1.32  2003/08/28 22:44:30  zet
 GridLayout helper class
 
-Revision 1.31  2003/08/28 11:54:41  lemmster
+Revision 1.31  2003/08/28 11:54:41  lemmy
 use getter methode for profanity/pornogaphic
 
 Revision 1.30  2003/08/26 22:44:03  zet
@@ -454,22 +457,22 @@ update sorter properly
 Revision 1.27  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.26  2003/08/23 14:58:38  lemmster
+Revision 1.26  2003/08/23 14:58:38  lemmy
 cleanup of MainTab, transferTree.* broken
 
-Revision 1.25  2003/08/23 10:02:02  lemmster
+Revision 1.25  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
-Revision 1.24  2003/08/23 08:30:07  lemmster
+Revision 1.24  2003/08/23 08:30:07  lemmy
 added defaultItem to the table
 
-Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+Revision 1.23  2003/08/22 21:10:57  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates
 
-Revision 1.21  2003/08/20 10:05:56  lemmster
+Revision 1.21  2003/08/20 10:05:56  lemmy
 MenuListener added
 
 Revision 1.20  2003/08/18 01:42:24  zet
@@ -487,46 +490,46 @@ searching works now without errors
 Revision 1.16  2003/08/11 12:16:10  dek
 hopefully solved crash at fast input
 
-Revision 1.15  2003/08/11 11:27:11  lemmstercvs01
+Revision 1.15  2003/08/11 11:27:11  lemmy
 bugfix for closing searchresults
 
-Revision 1.14  2003/08/10 19:31:15  lemmstercvs01
+Revision 1.14  2003/08/10 19:31:15  lemmy
 try to fix the root handle bug
 
-Revision 1.13  2003/08/10 10:27:38  lemmstercvs01
+Revision 1.13  2003/08/10 10:27:38  lemmy
 bugfix and new image on table create
 
 Revision 1.12  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 
-Revision 1.11  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.11  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.10  2003/07/31 14:20:00  lemmstercvs01
+Revision 1.10  2003/07/31 14:20:00  lemmy
 statusline reworked
 
 Revision 1.9  2003/07/31 04:10:28  zet
 searchresult changes
 
-Revision 1.7  2003/07/29 10:11:48  lemmstercvs01
+Revision 1.7  2003/07/29 10:11:48  lemmy
 moved icon folder out of src/
 
-Revision 1.6  2003/07/29 09:44:45  lemmstercvs01
+Revision 1.6  2003/07/29 09:44:45  lemmy
 added support for the statusline
 
-Revision 1.5  2003/07/27 18:45:47  lemmstercvs01
+Revision 1.5  2003/07/27 18:45:47  lemmy
 lots of changes
 
 Revision 1.4  2003/07/27 16:38:41  vnc
 cosmetics in tooltip
 
-Revision 1.3  2003/07/25 22:34:51  lemmstercvs01
+Revision 1.3  2003/07/25 22:34:51  lemmy
 lots of changes
 
-Revision 1.2  2003/07/24 16:20:10  lemmstercvs01
+Revision 1.2  2003/07/24 16:20:10  lemmy
 lots of changes
 
-Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
+Revision 1.1  2003/07/23 16:56:28  lemmy
 initial commit
 
 */

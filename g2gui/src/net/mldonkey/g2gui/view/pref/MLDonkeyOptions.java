@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.39 2003/09/18 10:23:48 lemmster Exp $
+ * @version $Id: MLDonkeyOptions.java,v 1.40 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -277,7 +277,10 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 
 /*
 $Log: MLDonkeyOptions.java,v $
-Revision 1.39  2003/09/18 10:23:48  lemmster
+Revision 1.40  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.39  2003/09/18 10:23:48  lemmy
 checkstyle
 
 Revision 1.38  2003/09/11 16:12:27  dek
@@ -326,7 +329,7 @@ now integegerFields have the same width as StringInputFields
 Revision 1.23  2003/08/24 18:41:46  zet
 try to remove horizontal scrollbars from prefs
 
-Revision 1.22  2003/08/24 14:28:31  lemmster
+Revision 1.22  2003/08/24 14:28:31  lemmy
 organize imports
 
 Revision 1.21  2003/08/24 11:30:57  dek

@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Control;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.48 2003/11/29 19:28:38 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.49 2003/12/04 08:47:27 lemmy Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -405,6 +405,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.49  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.48  2003/11/29 19:28:38  zet
 minor string move
 
@@ -418,16 +421,16 @@ minor cleanup
 Revision 1.45  2003/11/29 17:01:00  zet
 update for mainWindow
 
-Revision 1.44  2003/11/28 13:36:17  lemmster
+Revision 1.44  2003/11/28 13:36:17  lemmy
 useGradient in headerbars
 
-Revision 1.43  2003/11/28 13:24:17  lemmster
+Revision 1.43  2003/11/28 13:24:17  lemmy
 useGradient in headerbars
 
 Revision 1.42  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
-Revision 1.41  2003/11/16 10:26:25  lemmster
+Revision 1.41  2003/11/16 10:26:25  lemmy
 fix: [Bug #1080] Searchbox should get focused when switching to servertab
 
 Revision 1.40  2003/11/04 20:38:27  zet
@@ -436,11 +439,11 @@ update for transparent gifs
 Revision 1.39  2003/10/31 16:02:17  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
-Revision 1.38  2003/10/31 13:20:31  lemmster
+Revision 1.38  2003/10/31 13:20:31  lemmy
 added PaneGuiTab and TableGuiTab
 added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
 
-Revision 1.37  2003/10/29 16:56:21  lemmster
+Revision 1.37  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 Revision 1.36  2003/10/28 00:35:58  zet
@@ -452,40 +455,40 @@ add column selector to server/search (might not be finished yet..)
 Revision 1.34  2003/09/27 13:30:22  dek
 all tables have now show-Gridlines-behaviour as descibed in  preferences
 
-Revision 1.33  2003/09/26 07:13:41  lemmster
+Revision 1.33  2003/09/26 07:13:41  lemmy
 checkstyle!
 
 Revision 1.32  2003/09/25 20:45:06  zet
 remove that annoying empty space.........
 
-Revision 1.31  2003/09/25 17:58:41  lemmster
+Revision 1.31  2003/09/25 17:58:41  lemmy
 fixed crash bug
 
-Revision 1.30  2003/09/22 19:50:07  lemmster
+Revision 1.30  2003/09/22 19:50:07  lemmy
 searchbutton a little bit more beautiful.
 
-Revision 1.29  2003/09/19 17:51:39  lemmster
+Revision 1.29  2003/09/19 17:51:39  lemmy
 minor bugfix
 
-Revision 1.28  2003/09/19 15:19:14  lemmster
+Revision 1.28  2003/09/19 15:19:14  lemmy
 reworked
 
-Revision 1.27  2003/09/18 09:44:57  lemmster
+Revision 1.27  2003/09/18 09:44:57  lemmy
 checkstyle
 
-Revision 1.26  2003/09/08 10:25:26  lemmster
+Revision 1.26  2003/09/08 10:25:26  lemmy
 OtherComplexSearch added, rest improved
 
 Revision 1.25  2003/09/05 23:49:07  zet
 1 line per search option
 
-Revision 1.24  2003/09/04 16:06:45  lemmster
+Revision 1.24  2003/09/04 16:06:45  lemmy
 working in progress
 
 Revision 1.23  2003/09/04 02:35:24  zet
 try a sash ?
 
-Revision 1.22  2003/09/03 22:15:27  lemmster
+Revision 1.22  2003/09/03 22:15:27  lemmy
 advanced search introduced; not working and far from complete. just to see the design
 
 Revision 1.21  2003/09/03 14:59:23  zet
@@ -494,10 +497,10 @@ remove margin
 Revision 1.20  2003/09/03 14:47:54  zet
 add headers
 
-Revision 1.19  2003/09/01 11:09:43  lemmster
+Revision 1.19  2003/09/01 11:09:43  lemmy
 show downloading files
 
-Revision 1.18  2003/08/31 12:32:04  lemmster
+Revision 1.18  2003/08/31 12:32:04  lemmy
 major changes to search
 
 Revision 1.17  2003/08/29 19:09:25  dek
@@ -509,11 +512,11 @@ remove headerbar
 Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.14  2003/08/23 14:58:38  lemmster
+Revision 1.14  2003/08/23 14:58:38  lemmy
 cleanup of MainTab, transferTree.* broken
 
-Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+Revision 1.13  2003/08/22 21:06:48  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose
@@ -521,34 +524,34 @@ remove image.dispose
 Revision 1.11  2003/08/18 01:42:24  zet
 centralize resource bundle
 
-Revision 1.10  2003/08/10 10:27:38  lemmstercvs01
+Revision 1.10  2003/08/10 10:27:38  lemmy
 bugfix and new image on table create
 
 Revision 1.9  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 
-Revision 1.8  2003/07/31 14:23:57  lemmstercvs01
+Revision 1.8  2003/07/31 14:23:57  lemmy
 statusline reworked
 
-Revision 1.7  2003/07/29 10:10:22  lemmstercvs01
+Revision 1.7  2003/07/29 10:10:22  lemmy
 moved icon folder out of src/
 
-Revision 1.6  2003/07/29 09:56:52  lemmstercvs01
+Revision 1.6  2003/07/29 09:56:52  lemmy
 some importers removed
 
-Revision 1.5  2003/07/29 09:42:46  lemmstercvs01
+Revision 1.5  2003/07/29 09:42:46  lemmy
 added support for the statusline
 
 Revision 1.4  2003/07/27 22:39:36  zet
 small buttons toggle (in popup) for main cool menu
 
-Revision 1.3  2003/07/27 18:45:47  lemmstercvs01
+Revision 1.3  2003/07/27 18:45:47  lemmy
 lots of changes
 
-Revision 1.2  2003/07/24 16:20:10  lemmstercvs01
+Revision 1.2  2003/07/24 16:20:10  lemmy
 lots of changes
 
-Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
+Revision 1.1  2003/07/23 16:56:28  lemmy
 initial commit
 
 */

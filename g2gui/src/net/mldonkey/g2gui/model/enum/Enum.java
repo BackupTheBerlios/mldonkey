@@ -27,7 +27,7 @@ package net.mldonkey.g2gui.model.enum;
  * Enum
  *
  *
- * @version $Id: Enum.java,v 1.9 2003/11/11 17:14:35 lemmster Exp $
+ * @version $Id: Enum.java,v 1.10 2003/12/04 08:47:29 lemmy Exp $
  *
  */
 public abstract class Enum {
@@ -129,13 +129,16 @@ public abstract class Enum {
 
 /*
 $Log: Enum.java,v $
-Revision 1.9  2003/11/11 17:14:35  lemmster
+Revision 1.10  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.9  2003/11/11 17:14:35  lemmy
 default filters for servertab
 
-Revision 1.8  2003/11/10 09:56:51  lemmster
+Revision 1.8  2003/11/10 09:56:51  lemmy
 save filter state
 
-Revision 1.7  2003/10/31 11:01:16  lemmster
+Revision 1.7  2003/10/31 11:01:16  lemmy
 TestCase for EnumMaskMatcher
 
 Revision 1.6  2003/10/31 07:24:01  zet
@@ -149,23 +152,23 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.5  2003/10/29 16:54:42  lemmster
+Revision 1.5  2003/10/29 16:54:42  lemmy
 use int instead of List for internal counter
 
-Revision 1.4  2003/10/28 11:07:32  lemmster
+Revision 1.4  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
 Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.2  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.2  2003/08/22 21:04:27  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
+Revision 1.1  2003/06/24 09:29:33  lemmy
 Enum more improved
 
-Revision 1.1  2003/06/24 09:16:13  lemmstercvs01
+Revision 1.1  2003/06/24 09:16:13  lemmy
 better Enum added
 
 */

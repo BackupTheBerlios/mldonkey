@@ -26,7 +26,7 @@ package net.mldonkey.g2gui.model.enum;
  * EnumPriority
  *
  *
- * @version $Id: EnumPriority.java,v 1.6 2003/10/28 11:07:32 lemmster Exp $ 
+ * @version $Id: EnumPriority.java,v 1.7 2003/12/04 08:47:29 lemmy Exp $ 
  *
  */
 public class EnumPriority extends Enum {
@@ -60,7 +60,10 @@ public class EnumPriority extends Enum {
 
 /*
 $Log: EnumPriority.java,v $
-Revision 1.6  2003/10/28 11:07:32  lemmster
+Revision 1.7  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.6  2003/10/28 11:07:32  lemmy
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
 
@@ -70,13 +73,13 @@ very high & low priorities
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.3  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.3  2003/08/22 21:04:27  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.2  2003/07/04 11:41:49  lemmstercvs01
+Revision 1.2  2003/07/04 11:41:49  lemmy
 bugfix
 
-Revision 1.1  2003/07/03 21:12:03  lemmstercvs01
+Revision 1.1  2003/07/03 21:12:03  lemmy
 initial commit
 
 */

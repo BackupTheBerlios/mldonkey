@@ -32,7 +32,7 @@ import gnu.trove.TIntObjectIterator;
  * InfoMap
  *
  *
- * @version $Id: InfoIntMap.java,v 1.10 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: InfoIntMap.java,v 1.11 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public abstract class InfoIntMap extends Observable implements InfoCollection {
@@ -88,7 +88,10 @@ public abstract class InfoIntMap extends Observable implements InfoCollection {
 
 /*
 $Log: InfoIntMap.java,v $
-Revision 1.10  2003/12/01 14:22:17  lemmster
+Revision 1.11  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.10  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.9  2003/10/22 21:02:11  zet
@@ -97,28 +100,28 @@ use this()
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.7  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.6  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.6  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.5  2003/07/23 17:04:51  lemmstercvs01
+Revision 1.5  2003/07/23 17:04:51  lemmy
 added containsKey(int key)
 
-Revision 1.4  2003/07/06 07:45:26  lemmstercvs01
+Revision 1.4  2003/07/06 07:45:26  lemmy
 checkstyle applied
 
 Revision 1.3  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
-Revision 1.2  2003/06/17 12:10:17  lemmstercvs01
+Revision 1.2  2003/06/17 12:10:17  lemmy
 some methods added
 
-Revision 1.1  2003/06/16 21:47:19  lemmstercvs01
+Revision 1.1  2003/06/16 21:47:19  lemmy
 just refactored (name changed)
 
-Revision 1.1  2003/06/15 16:18:41  lemmstercvs01
+Revision 1.1  2003/06/15 16:18:41  lemmy
 new interface introduced
 
 */

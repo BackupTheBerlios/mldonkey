@@ -52,7 +52,7 @@ import java.util.List;
  * CustomTableTreeViewer
  *
  *
- * @version $Id: CustomTableTreeViewer.java,v 1.6 2003/11/29 20:37:04 zet Exp $
+ * @version $Id: CustomTableTreeViewer.java,v 1.7 2003/12/04 08:47:30 lemmy Exp $
  *
  */
 public class CustomTableTreeViewer extends TableTreeViewer implements ICustomViewer {
@@ -309,13 +309,16 @@ public class CustomTableTreeViewer extends TableTreeViewer implements ICustomVie
 
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.7  2003/12/04 08:47:30  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.6  2003/11/29 20:37:04  zet
 try nudge in refresh instead of internalrefresh
 
 Revision 1.5  2003/11/28 20:51:52  zet
 small method move
 
-Revision 1.4  2003/11/23 17:58:03  lemmster
+Revision 1.4  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.3  2003/11/22 20:00:00  zet

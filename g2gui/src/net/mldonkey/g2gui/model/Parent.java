@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumExtension;
  * Parent
  *
  *
- * @version $Id: Parent.java,v 1.7 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: Parent.java,v 1.8 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public abstract class Parent extends SimpleInformation {
@@ -109,25 +109,28 @@ public abstract class Parent extends SimpleInformation {
 
 /*
 $Log: Parent.java,v $
-Revision 1.7  2003/12/01 14:22:17  lemmster
+Revision 1.8  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.7  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.6  2003/11/29 13:03:54  lemmster
+Revision 1.6  2003/11/29 13:03:54  lemmy
 ToolTip complete reworked (to be continued)
 
 Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.4  2003/08/22 21:03:15  lemmy
+replace $user$ with $Author: lemmy $
 
-Revision 1.3  2003/08/21 13:13:10  lemmster
+Revision 1.3  2003/08/21 13:13:10  lemmy
 cleanup in networkitem
 
-Revision 1.2  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.2  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.1  2003/07/06 08:49:34  lemmstercvs01
+Revision 1.1  2003/07/06 08:49:34  lemmy
 better oo added
 
 */

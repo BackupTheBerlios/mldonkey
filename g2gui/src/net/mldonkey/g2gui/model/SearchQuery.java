@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.33 2003/12/01 14:22:17 lemmster Exp $ 
+ * @version $Id: SearchQuery.java,v 1.34 2003/12/04 08:47:25 lemmy Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -524,10 +524,13 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
-Revision 1.33  2003/12/01 14:22:17  lemmster
+Revision 1.34  2003/12/04 08:47:25  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.33  2003/12/01 14:22:17  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.32  2003/11/23 17:58:03  lemmster
+Revision 1.32  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.31  2003/10/31 07:24:01  zet
@@ -541,7 +544,7 @@ rework viewers heirarchy
 filter clients table properly
 discovered sync errors and NPEs in upload table... will continue later.
 
-Revision 1.30  2003/09/27 10:43:13  lemmster
+Revision 1.30  2003/09/27 10:43:13  lemmy
 OurTools added for static helper methods
 
 Revision 1.29  2003/09/25 16:15:58  dek
@@ -590,11 +593,11 @@ added setter
 Revision 1.18  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.17  2003/08/23 10:02:02  lemmster
+Revision 1.17  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
-Revision 1.16  2003/08/22 21:03:14  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.16  2003/08/22 21:03:14  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.15  2003/08/09 15:32:45  dek
 removed unused import
@@ -608,7 +611,7 @@ ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz
 Revision 1.13  2003/07/25 14:46:50  zet
 replace string.split
 
-Revision 1.12  2003/07/23 17:01:40  lemmstercvs01
+Revision 1.12  2003/07/23 17:01:40  lemmy
 modified setMedia()
 
 Revision 1.11  2003/07/21 16:25:10  dek
@@ -617,13 +620,13 @@ setMedia(AUDIO | VIDEO) added
 Revision 1.10  2003/07/06 14:13:22  dek
 "one-word-searching" now also works, only little bug
 
-Revision 1.9  2003/07/06 08:49:33  lemmstercvs01
+Revision 1.9  2003/07/06 08:49:33  lemmy
 better oo added
 
-Revision 1.8  2003/07/06 07:45:26  lemmstercvs01
+Revision 1.8  2003/07/06 07:45:26  lemmy
 checkstyle applied
 
-Revision 1.7  2003/07/06 07:36:42  lemmstercvs01
+Revision 1.7  2003/07/06 07:36:42  lemmy
 EnumQuery added
 
 Revision 1.6  2003/07/05 14:04:12  dek

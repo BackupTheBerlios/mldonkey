@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
  * CoreCommunication
  *
  *
- * @version $Id: CoreCommunication.java,v 1.45 2003/12/01 14:21:55 lemmster Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.46 2003/12/04 08:47:31 lemmy Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -179,13 +179,16 @@ public interface CoreCommunication extends Runnable {
 }
 /*
 $Log: CoreCommunication.java,v $
-Revision 1.45  2003/12/01 14:21:55  lemmster
+Revision 1.46  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.45  2003/12/01 14:21:55  lemmy
 ProtocolVersion handling completely rewritten
 
 Revision 1.44  2003/11/29 20:16:30  zet
 stop/start timer on tab (de)activation
 
-Revision 1.43  2003/11/23 17:58:03  lemmster
+Revision 1.43  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.42  2003/11/20 17:51:53  dek
@@ -204,7 +207,7 @@ Revision 1.38  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.37  2003/09/02 10:00:33  lemmster
+Revision 1.37  2003/09/02 10:00:33  lemmy
 getDefineSearch()
 
 Revision 1.36  2003/08/24 16:54:07  dek
@@ -214,9 +217,9 @@ all the room-stuff
 Revision 1.35  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.34  2003/08/22 20:54:05  lemmster
+Revision 1.34  2003/08/22 20:54:05  lemmy
 fix for the fix ;o
 
-Revision 1.33  2003/08/22 20:53:00  lemmster
+Revision 1.33  2003/08/22 20:53:00  lemmy
 just include the log
  */

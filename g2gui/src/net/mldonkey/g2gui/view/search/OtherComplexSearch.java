@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * OtherComplexSearch
  *
- * @version $Id: OtherComplexSearch.java,v 1.11 2003/12/01 14:23:02 lemmster Exp $ 
+ * @version $Id: OtherComplexSearch.java,v 1.12 2003/12/04 08:47:29 lemmy Exp $ 
  *
  */
 public class OtherComplexSearch extends ComplexSearch {
@@ -142,37 +142,40 @@ public class OtherComplexSearch extends ComplexSearch {
 
 /*
 $Log: OtherComplexSearch.java,v $
-Revision 1.11  2003/12/01 14:23:02  lemmster
+Revision 1.12  2003/12/04 08:47:29  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.11  2003/12/01 14:23:02  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.10  2003/11/24 08:56:22  lemmster
+Revision 1.10  2003/11/24 08:56:22  lemmy
 fix [Bug #1132] search combo retains duplicates (better solution)
 
-Revision 1.9  2003/11/24 08:37:24  lemmster
+Revision 1.9  2003/11/24 08:37:24  lemmy
 fix [Bug #1132] search combo retains duplicates
 
-Revision 1.8  2003/11/23 19:22:35  lemmster
+Revision 1.8  2003/11/23 19:22:35  lemmy
 fixed: [ Bug #1119] Search field a combo holding previous searches
 
-Revision 1.7  2003/11/23 17:58:03  lemmster
+Revision 1.7  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.6  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
-Revision 1.5  2003/09/19 15:19:14  lemmster
+Revision 1.5  2003/09/19 15:19:14  lemmy
 reworked
 
-Revision 1.4  2003/09/18 10:39:21  lemmster
+Revision 1.4  2003/09/18 10:39:21  lemmy
 checkstyle
 
-Revision 1.3  2003/09/08 11:54:22  lemmster
+Revision 1.3  2003/09/08 11:54:22  lemmy
 added download button
 
-Revision 1.2  2003/09/08 10:25:26  lemmster
+Revision 1.2  2003/09/08 10:25:26  lemmy
 OtherComplexSearch added, rest improved
 
-Revision 1.1  2003/09/03 22:15:27  lemmster
+Revision 1.1  2003/09/03 22:15:27  lemmy
 advanced search introduced; not working and far from complete. just to see the design
 
 */

@@ -57,7 +57,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.119 2003/12/01 14:21:55 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.120 2003/12/04 08:47:31 lemmy Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -650,10 +650,13 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
-Revision 1.119  2003/12/01 14:21:55  lemmster
+Revision 1.120  2003/12/04 08:47:31  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.119  2003/12/01 14:21:55  lemmy
 ProtocolVersion handling completely rewritten
 
-Revision 1.118  2003/11/30 18:49:08  lemmster
+Revision 1.118  2003/11/30 18:49:08  lemmy
 better link handling, handle more than one link simultaneously
 
 Revision 1.117  2003/11/29 20:16:30  zet
@@ -668,7 +671,7 @@ minor
 Revision 1.114  2003/11/26 07:41:43  zet
 protocolVersion 19/timer
 
-Revision 1.113  2003/11/23 17:58:03  lemmster
+Revision 1.113  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.112  2003/11/20 17:51:53  dek
@@ -680,13 +683,13 @@ minor checkstyle and removed unescessary type-cast
 Revision 1.110  2003/11/20 15:39:26  dek
 reconnect started
 
-Revision 1.109  2003/11/20 14:02:17  lemmster
+Revision 1.109  2003/11/20 14:02:17  lemmy
 G2Gui cleanup
 
-Revision 1.108  2003/11/07 09:25:42  lemmster
+Revision 1.108  2003/11/07 09:25:42  lemmy
 small javadoc fix
 
-Revision 1.107  2003/10/13 08:28:09  lemmster
+Revision 1.107  2003/10/13 08:28:09  lemmy
 use readSignednt32() depending of the core protocol version
 
 Revision 1.106  2003/10/12 15:55:18  zet
@@ -712,7 +715,7 @@ Revision 1.100  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
 
-Revision 1.99  2003/09/18 08:56:27  lemmster
+Revision 1.99  2003/09/18 08:56:27  lemmy
 checkstyle
 
 Revision 1.98  2003/09/17 14:40:13  zet
@@ -731,10 +734,10 @@ null check
 Revision 1.94  2003/09/08 18:25:16  zet
 *** empty log message ***
 
-Revision 1.93  2003/09/02 10:00:33  lemmster
+Revision 1.93  2003/09/02 10:00:33  lemmy
 getDefineSearch()
 
-Revision 1.92  2003/09/02 09:24:36  lemmster
+Revision 1.92  2003/09/02 09:24:36  lemmy
 checkstyle
 
 Revision 1.91  2003/08/26 19:28:40  dek
@@ -747,20 +750,20 @@ all the room-stuff
 Revision 1.89  2003/08/23 15:21:37  zet
 remove @author
 
-Revision 1.88  2003/08/23 10:02:02  lemmster
+Revision 1.88  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
-Revision 1.87  2003/08/22 19:51:09  lemmster
+Revision 1.87  2003/08/22 19:51:09  lemmy
 added just javadoc
 
-Revision 1.86  2003/08/22 10:28:22  lemmster
+Revision 1.86  2003/08/22 10:28:22  lemmy
 catch wrong "allowed_ips" values (connection denied)
 
 Revision 1.85  2003/08/20 14:26:19  dek
 work on build-in-link handler, now sendig out poll-mode request, 
 not only creating it...
 
-Revision 1.84  2003/08/19 12:14:16  lemmster
+Revision 1.84  2003/08/19 12:14:16  lemmy
 first try of simple/advanced mode
 
 Revision 1.83  2003/08/16 20:15:21  dek
@@ -778,28 +781,28 @@ try to remove dup clientInfos, add friends/basic messaging
 Revision 1.79  2003/08/08 13:09:34  zet
 cosmetic
 
-Revision 1.78  2003/08/04 14:38:13  lemmstercvs01
+Revision 1.78  2003/08/04 14:38:13  lemmy
 splashscreen and error handling added
 
-Revision 1.77  2003/08/03 19:12:47  lemmstercvs01
+Revision 1.77  2003/08/03 19:12:47  lemmy
 DisposeListener and DisposeEvent removed (needed somewhere?)
 
-Revision 1.76  2003/08/03 19:09:39  lemmstercvs01
+Revision 1.76  2003/08/03 19:09:39  lemmy
 better error handling
 
-Revision 1.75  2003/08/02 10:07:57  lemmstercvs01
+Revision 1.75  2003/08/02 10:07:57  lemmy
 synchronized readded
 
-Revision 1.74  2003/08/02 09:58:34  lemmstercvs01
+Revision 1.74  2003/08/02 09:58:34  lemmy
 synchronized on decodeMessage() removed
 
-Revision 1.73  2003/08/01 17:21:19  lemmstercvs01
+Revision 1.73  2003/08/01 17:21:19  lemmy
 reworked observer/observable design, added multiversion support
 
-Revision 1.72  2003/07/31 14:09:39  lemmstercvs01
+Revision 1.72  2003/07/31 14:09:39  lemmy
 notify observers on networkinfo
 
-Revision 1.71  2003/07/28 17:16:51  lemmstercvs01
+Revision 1.71  2003/07/28 17:16:51  lemmy
 getServerInfoIntMap() added
 
 Revision 1.70  2003/07/27 22:39:36  zet
@@ -811,13 +814,13 @@ doesn't crash if no core is running
 Revision 1.68  2003/07/23 17:39:59  vnc
 made core instance connect properly under linux
 
-Revision 1.67  2003/07/23 17:04:26  lemmstercvs01
+Revision 1.67  2003/07/23 17:04:26  lemmy
 modified SEARCH_RESULT and RESULT_INFO
 
 Revision 1.66  2003/07/22 16:03:24  zet
 There is no IOException if core is not open
 
-Revision 1.65  2003/07/17 15:10:22  lemmstercvs01
+Revision 1.65  2003/07/17 15:10:22  lemmy
 remove this.connect() in run()
 
 Revision 1.64  2003/07/15 18:16:40  dek
@@ -838,28 +841,28 @@ small change
 Revision 1.59  2003/07/06 16:40:03  dek
 NPE fixed
 
-Revision 1.58  2003/07/06 12:47:22  lemmstercvs01
+Revision 1.58  2003/07/06 12:47:22  lemmy
 bugfix for fileUpdateAvailability
 
-Revision 1.57  2003/07/06 12:31:45  lemmstercvs01
+Revision 1.57  2003/07/06 12:31:45  lemmy
 fileUpdateAvailability added
 
-Revision 1.56  2003/07/06 11:56:36  lemmstercvs01
+Revision 1.56  2003/07/06 11:56:36  lemmy
 fileAddSource added
 
-Revision 1.55  2003/07/06 10:04:39  lemmstercvs01
+Revision 1.55  2003/07/06 10:04:39  lemmy
 clientstats() -> clienstats( this )
 
-Revision 1.54  2003/07/06 08:50:12  lemmstercvs01
+Revision 1.54  2003/07/06 08:50:12  lemmy
 ResultInfo() -> ResultInfo( this )
 
-Revision 1.53  2003/07/05 15:37:48  lemmstercvs01
+Revision 1.53  2003/07/05 15:37:48  lemmy
 UserInfo added
 
 Revision 1.52  2003/07/05 14:04:12  dek
 all in order for searching
 
-Revision 1.51  2003/07/04 17:46:28  lemmstercvs01
+Revision 1.51  2003/07/04 17:46:28  lemmy
 removed obsolet methods
 
 Revision 1.50  2003/07/02 17:12:11  dek
@@ -883,7 +886,7 @@ sending optionslist to observers when changed
 Revision 1.44  2003/07/01 13:13:27  dek
 decode Message is synchronized to prevent it from sending notify()s to disposed gui
 
-Revision 1.43  2003/06/30 07:24:19  lemmstercvs01
+Revision 1.43  2003/06/30 07:24:19  lemmy
 some opcodes added
 
 Revision 1.42  2003/06/29 18:33:30  dek
@@ -910,10 +913,10 @@ consoleMessageFix
 Revision 1.35  2003/06/27 11:56:23  dek
 sending out consolemesages to observers
 
-Revision 1.34  2003/06/27 10:41:19  lemmstercvs01
+Revision 1.34  2003/06/27 10:41:19  lemmy
 changed notify to observer/observable
 
-Revision 1.33  2003/06/26 23:07:32  lemmstercvs01
+Revision 1.33  2003/06/26 23:07:32  lemmy
 added removeListeners()
 
 Revision 1.32  2003/06/26 17:34:40  dek
@@ -922,7 +925,7 @@ added client-Stat to Information-broadcast
 Revision 1.31  2003/06/25 18:04:53  dek
 Console-Tab reworked
 
-Revision 1.30  2003/06/24 20:52:49  lemmstercvs01
+Revision 1.30  2003/06/24 20:52:49  lemmy
 refactored
 
 Revision 1.29  2003/06/21 13:20:36  dek
@@ -931,31 +934,31 @@ work on optiontree continued - one can already change client_name in General-lea
 Revision 1.28  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
-Revision 1.27  2003/06/19 08:40:00  lemmstercvs01
+Revision 1.27  2003/06/19 08:40:00  lemmy
 checkstyle applied
 
 Revision 1.26  2003/06/18 19:45:55  dek
 added getConnection
 
-Revision 1.25  2003/06/18 14:14:17  lemmstercvs01
+Revision 1.25  2003/06/18 14:14:17  lemmy
 running :)
 
-Revision 1.24  2003/06/18 13:49:54  lemmstercvs01
+Revision 1.24  2003/06/18 13:49:54  lemmy
 interface location changed
 
 Revision 1.23  2003/06/18 13:31:30  dek
 foooooooooo, who cares ;-) ??
 
-Revision 1.22  2003/06/17 13:27:32  lemmstercvs01
+Revision 1.22  2003/06/17 13:27:32  lemmy
 added listener managment for the view
 
-Revision 1.21  2003/06/17 12:11:02  lemmstercvs01
+Revision 1.21  2003/06/17 12:11:02  lemmy
 this.run() in constructor removed, getter method for fileInfoList added
 
-Revision 1.20  2003/06/16 21:47:41  lemmstercvs01
+Revision 1.20  2003/06/16 21:47:41  lemmy
 opcode 3 added
 
-Revision 1.19  2003/06/16 20:08:38  lemmstercvs01
+Revision 1.19  2003/06/16 20:08:38  lemmy
 opcode 13 added
 
 Revision 1.18  2003/06/16 18:05:12  dek
@@ -964,22 +967,22 @@ refactored cleanTable
 Revision 1.17  2003/06/16 15:26:21  dek
 NetworkInfoMap added
 
-Revision 1.16  2003/06/16 12:13:26  lemmstercvs01
+Revision 1.16  2003/06/16 12:13:26  lemmy
 opcode 52 added
 
-Revision 1.15  2003/06/15 16:19:29  lemmstercvs01
+Revision 1.15  2003/06/15 16:19:29  lemmy
 some opcodes added
 
-Revision 1.14  2003/06/15 09:58:30  lemmstercvs01
+Revision 1.14  2003/06/15 09:58:30  lemmy
 some opcodes added
 
-Revision 1.13  2003/06/14 23:03:26  lemmstercvs01
+Revision 1.13  2003/06/14 23:03:26  lemmy
 added opcode 1
 
-Revision 1.12  2003/06/14 19:31:02  lemmstercvs01
+Revision 1.12  2003/06/14 19:31:02  lemmy
 some opcodes added
 
-Revision 1.11  2003/06/14 17:41:33  lemmstercvs01
+Revision 1.11  2003/06/14 17:41:33  lemmy
 added some opcodes
 
 Revision 1.10  2003/06/13 16:01:36  dek
@@ -991,25 +994,25 @@ Jippieh, problem finally solved. Thx to Jmoule for the inspiration
 Revision 1.8  2003/06/13 13:09:45  dek
 including many debug-output
 
-Revision 1.7  2003/06/13 12:03:33  lemmstercvs01
+Revision 1.7  2003/06/13 12:03:33  lemmy
 changed to use MessageBuffer
 
-Revision 1.6  2003/06/12 22:23:06  lemmstercvs01
+Revision 1.6  2003/06/12 22:23:06  lemmy
 lots of changes
 
 Revision 1.5  2003/06/12 18:22:56  dek
 *** empty log message ***
 
-Revision 1.4  2003/06/12 18:16:00  lemmstercvs01
+Revision 1.4  2003/06/12 18:16:00  lemmy
 DownloadList -> FileInfoList
 
-Revision 1.3  2003/06/12 10:37:56  lemmstercvs01
+Revision 1.3  2003/06/12 10:37:56  lemmy
 added some opcodes
 
-Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
+Revision 1.2  2003/06/11 15:32:33  lemmy
 still in progress
 
-Revision 1.1  2003/06/11 12:56:10  lemmstercvs01
+Revision 1.1  2003/06/11 12:56:10  lemmy
 moved from model -> comm
 
 Revision 1.6  2003/06/10 16:43:17  dek

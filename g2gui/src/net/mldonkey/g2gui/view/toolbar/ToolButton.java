@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * ToolButton A simple helper class made so that the coolbar can be redrawn
  *
  *
- * @version $Id: ToolButton.java,v 1.12 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: ToolButton.java,v 1.13 2003/12/04 08:47:32 lemmy Exp $
  *
  */
 public class ToolButton {
@@ -141,7 +141,10 @@ public class ToolButton {
 
 /*
 $Log: ToolButton.java,v $
-Revision 1.12  2003/11/23 17:58:03  lemmster
+Revision 1.13  2003/12/04 08:47:32  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.12  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.11  2003/10/31 23:29:52  zet
@@ -150,7 +153,7 @@ no text on fox
 Revision 1.10  2003/09/18 14:14:29  zet
 revert
 
-Revision 1.9  2003/09/18 11:38:17  lemmster
+Revision 1.9  2003/09/18 11:38:17  lemmy
 checkstyle
 
 Revision 1.8  2003/09/01 00:44:21  zet
@@ -165,8 +168,8 @@ remove @author
 Revision 1.5  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
-Revision 1.4  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: lemmster $
+Revision 1.4  2003/08/22 21:16:36  lemmy
+replace $user$ with $Author: lemmy $
 
 Revision 1.3  2003/08/21 16:04:24  zet
 try setSelection..

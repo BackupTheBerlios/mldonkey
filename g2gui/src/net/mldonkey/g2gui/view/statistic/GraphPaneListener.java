@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * GraphPaneListener
  *
- * @version $Id: GraphPaneListener.java,v 1.4 2003/11/29 01:51:53 zet Exp $
+ * @version $Id: GraphPaneListener.java,v 1.5 2003/12/04 08:47:28 lemmy Exp $
  *
  */
 public class GraphPaneListener extends SashViewFrameListener {
@@ -107,17 +107,20 @@ public class GraphPaneListener extends SashViewFrameListener {
 
 /*
 $Log: GraphPaneListener.java,v $
+Revision 1.5  2003/12/04 08:47:28  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
 Revision 1.4  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 
 Revision 1.3  2003/11/15 21:15:29  zet
 Label restore action
 
-Revision 1.2  2003/10/31 13:16:33  lemmster
+Revision 1.2  2003/10/31 13:16:33  lemmy
 Rename Viewer -> Page
 Constructors changed
 
-Revision 1.1  2003/10/29 16:56:21  lemmster
+Revision 1.1  2003/10/29 16:56:21  lemmy
 added reasonable class hierarchy for panelisteners, viewers...
 
 */

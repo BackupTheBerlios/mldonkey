@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * CoreConsoleItem
  *
- * @version $Id: CoreConsoleItem.java,v 1.6 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: CoreConsoleItem.java,v 1.7 2003/12/04 08:47:27 lemmy Exp $
  *
  */
 public class CoreConsoleItem {
@@ -74,7 +74,10 @@ public class CoreConsoleItem {
 
 /*
 $Log: CoreConsoleItem.java,v $
-Revision 1.6  2003/11/23 17:58:03  lemmster
+Revision 1.7  2003/12/04 08:47:27  lemmy
+replaced "lemmstercvs01" and "lemmster" with "lemmy"
+
+Revision 1.6  2003/11/23 17:58:03  lemmy
 removed dead/unused code
 
 Revision 1.5  2003/10/31 22:06:38  zet
@@ -86,7 +89,7 @@ not much..
 Revision 1.3  2003/09/20 01:36:19  zet
 *** empty log message ***
 
-Revision 1.2  2003/09/18 11:37:24  lemmster
+Revision 1.2  2003/09/18 11:37:24  lemmy
 checkstyle
 
 Revision 1.1  2003/09/03 14:49:07  zet
