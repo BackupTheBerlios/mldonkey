@@ -25,28 +25,17 @@ package net.mldonkey.g2gui.comm;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-
+import net.mldonkey.g2gui.helper.ObjectPool;
 import net.mldonkey.g2gui.model.*;
 
 /**
  * CoreMessage
  *
  * @author markus
- * @version $Id: CoreMessage.java,v 1.6 2003/06/12 10:36:58 lemmstercvs01 Exp $ 
+ * @version $Id: CoreMessage.java,v 1.7 2003/06/12 18:15:20 lemmstercvs01 Exp $ 
  *
  */
 public class CoreMessage extends Message {
-	
-	/**
-	 * Don´t use, just a placeholder
-	 * @param connection DONT USE
-	 * @return boolean ALWAYS FALSE
-	 */
-	public boolean sendMessage( Socket connection ) {
-		return false;
-	}
 	
 	/**
 	 * Reads a Download from an InputStream
@@ -54,8 +43,7 @@ public class CoreMessage extends Message {
 	 * @return Download
 	 * @throws IOException Error if read on stream failed
 	 */
-	public static Download readDownload( InputStream inputStream ) throws IOException {
-		Download aDownload = new Download();
+	public static FileInfo readDownload( InputStream inputStream, FileInfo aDownload ) throws IOException {
 		aDownload.setId( readInt32( inputStream ) );
 		aDownload.setNetwork( readInt32( inputStream ) );
 		aDownload.setNames( readStringList( inputStream ) );
@@ -117,11 +105,11 @@ public class CoreMessage extends Message {
 	 * @return a List filled with complete Downloads
 	 * @throws IOException Error if read from stream failed
 	 */
-	public static List readDownloadingList( InputStream inputStream ) throws IOException {
-		List result =  new ArrayList();
+	public static FileInfoList readDownloadingList( InputStream inputStream, ObjectPool aPool ) throws IOException {
+		FileInfoList result =  new FileInfoList();
 		short listElem = readInt16( inputStream );
 		for ( int i = 0; i < listElem; i++ ) {
-			result.add( readDownload( inputStream ) );
+			result.add( readDownload( inputStream, ( FileInfo ) aPool.checkOut() ) );
 		}
 		return result;
 	}
@@ -132,8 +120,8 @@ public class CoreMessage extends Message {
 	 * @return a List filled with complete Downloads
 	 * @throws IOException Error ir read from stream failed
 	 */
-	public static List readDownloadedList( InputStream inputStream ) throws IOException {
-		return readDownloadingList( inputStream );
+	public static FileInfoList readDownloadedList( InputStream inputStream, ObjectPool aPool ) throws IOException {
+		return readDownloadingList( inputStream, aPool );
 	}
 	
 	/**
@@ -166,10 +154,35 @@ public class CoreMessage extends Message {
 		fileAddSource.setSourceid( readInt32( inputStream ) );
 		return fileAddSource;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.Message#setMessage(short, java.lang.Object[])
+	 */
+	public void setMessage(short opCode, Object[] content) {
+		// do nothing
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.Message#setMessage(short)
+	 */
+	public void setMessage(short opCode) {
+		// do nothing
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.Message#sendMessage(java.net.Socket)
+	 */
+	public boolean sendMessage(Socket connection) {
+		// do nothing
+		return false;
+	}
 }
 
 /*
 $Log: CoreMessage.java,v $
+Revision 1.7  2003/06/12 18:15:20  lemmstercvs01
+changed SocketPool to ObjectPool
+
 Revision 1.6  2003/06/12 10:36:58  lemmstercvs01
 FileAddSource added
 
