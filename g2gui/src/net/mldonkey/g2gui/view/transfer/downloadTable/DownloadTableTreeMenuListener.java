@@ -91,7 +91,7 @@ import java.io.File;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.38 2004/03/25 19:17:18 psy Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.39 2004/03/25 19:33:58 psy Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -297,7 +297,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             /* new http-preview method */
             OptionsInfo http_port = (OptionsInfo) gView.getCore().getOptionsInfoMap().get("http_port");
             if ( new File(PreferenceLoader.getString("defaultPreviewer")).exists() &&
-            		http_port != null ) {
+            		http_port != null && gView.getCore().getProtoToUse() >= 25) {
             	menuManager.add(new NetPreviewAction());
             }
         
@@ -336,7 +336,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                         "TT_DOWNLOAD_MENU_COPYTO"));
             clipboardMenu.add(new CopyED2KLinkToClipboardAction(false, linkList));
             clipboardMenu.add(new CopyED2KLinkToClipboardAction(true, linkList));
-            clipboardMenu.add(new CopyPreviewLinkToClipboardAction(generatePreviewURL(), fileIDList));
+            if ( gView.getCore().getProtoToUse() >= 25 ) 
+            	clipboardMenu.add(new CopyPreviewLinkToClipboardAction(generatePreviewURL(), fileIDList));
             menuManager.add(clipboardMenu);
         }
 
@@ -430,8 +431,6 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
     }
 
 
-
-    
     /**
      * NetPreviewAction
      */
@@ -733,6 +732,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.39  2004/03/25 19:33:58  psy
+added core-proto check (need 25+ to support http-preview)
+
 Revision 1.38  2004/03/25 19:17:18  psy
 added copy preview link to clipboard action
 
