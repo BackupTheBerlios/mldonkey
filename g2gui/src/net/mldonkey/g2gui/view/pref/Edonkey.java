@@ -33,14 +33,17 @@ import org.eclipse.swt.widgets.Control;
  * Edonkey
  *
  * @author $user$
- * @version $Id: Edonkey.java,v 1.3 2003/06/27 18:05:46 dek Exp $ 
+ * @version $Id: Edonkey.java,v 1.4 2003/07/02 15:55:14 dek Exp $ 
  *
  */
 public class Edonkey extends PreferencePage {
 	private boolean connected;
 	private PreferenceStore preferenceStore;
+	
+
 	/**
-	 * @param preferenceStore
+	 * @param preferenceStore_ where this class saves its settings
+	 * @param connected are we connected to remote mldonkey?
 	 */
 	public Edonkey( PreferenceStore preferenceStore_ , boolean connected) {
 		super( "eDonkey" );
@@ -58,6 +61,9 @@ public class Edonkey extends PreferencePage {
 
 /*
 $Log: Edonkey.java,v $
+Revision 1.4  2003/07/02 15:55:14  dek
+checkstyle
+
 Revision 1.3  2003/06/27 18:05:46  dek
 Client name is now an option, not saveable yet, but it's displayed ;-)
 

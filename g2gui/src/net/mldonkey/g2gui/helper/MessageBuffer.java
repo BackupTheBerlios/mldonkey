@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  * @author $user$
- * @version $Id: MessageBuffer.java,v 1.11 2003/07/01 14:31:47 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.12 2003/07/02 15:54:03 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -169,8 +169,8 @@ public class MessageBuffer {
 	public int[] readInt32List() {
 		int listElem = readInt16();
 			//check, if this is a big unsigned int, and fix it:
-			if (listElem < 0)
-				listElem = (int)(Short.MAX_VALUE*2 + listElem)+2;
+			if ( listElem < 0 )
+				listElem = ( int )( Short.MAX_VALUE*2 + listElem )+2;
 		int[] result = new int[ listElem ];
 		for ( int i = 0; i < listElem; i++ ) {
 			result[ i ] = readInt32(); 
@@ -239,6 +239,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.12  2003/07/02 15:54:03  dek
+checkstyle
+
 Revision 1.11  2003/07/01 14:31:47  dek
 bugfix for bugfix ;-)
 

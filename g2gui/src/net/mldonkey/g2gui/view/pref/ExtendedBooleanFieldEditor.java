@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  * ExtendedBooleanFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedBooleanFieldEditor.java,v 1.2 2003/06/30 19:11:10 dek Exp $ 
+ * @version $Id: ExtendedBooleanFieldEditor.java,v 1.3 2003/07/02 15:55:50 dek Exp $ 
  *
  */
 public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
@@ -46,16 +46,16 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 	 */
 	public ExtendedBooleanFieldEditor( String name, String labelText, Composite shell ) {
 		super( name, labelText, shell );
-		temp = new Composite( shell,SWT.NONE );
+		temp = new Composite( shell, SWT.NONE );
 			GridData gridData = new GridData();
-			gridData.horizontalSpan=2;
+			gridData.horizontalSpan = 2;
 			
-			gridData.horizontalAlignment=GridData.BEGINNING;
+			gridData.horizontalAlignment = GridData.BEGINNING;
 		temp.setLayoutData( gridData );
 		temp.setLayout(new GridLayout() );
 		
 		//Now we tell our parent, that we like to have it the 2 column-way
-			( ( GridLayout ) shell.getLayout() ).numColumns=2;	
+			( ( GridLayout ) shell.getLayout() ).numColumns = 2;	
 					
 		//now put this whole control inside this nice composite			
 			this.getChangeControl( shell ).setParent( temp );		
@@ -64,7 +64,7 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 	/**
 	 * @param selected is this BooleanField checked or not
 	 */
-	public void setSelection(boolean selected){
+	public void setSelection( boolean selected ) {
 		getChangeControl( temp ).setSelection( selected );
 		
 	}
@@ -115,6 +115,9 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 
 /*
 $Log: ExtendedBooleanFieldEditor.java,v $
+Revision 1.3  2003/07/02 15:55:50  dek
+checkstyle
+
 Revision 1.2  2003/06/30 19:11:10  dek
 work in progress, committing before i make a huge mistake
 
