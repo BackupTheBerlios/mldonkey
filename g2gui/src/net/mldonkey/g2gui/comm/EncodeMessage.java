@@ -24,10 +24,11 @@ package net.mldonkey.g2gui.comm;
 
 import java.io.ByteArrayOutputStream;
 
+
 /**
  * EncodeMessage
  *
- * @version $Id: EncodeMessage.java,v 1.12 2003/09/18 23:24:07 zet Exp $
+ * @version $Id: EncodeMessage.java,v 1.13 2003/11/05 00:09:50 zet Exp $
  *
  */
 public class EncodeMessage extends Message {
@@ -35,24 +36,25 @@ public class EncodeMessage extends Message {
      * The message opcode
      */
     private short opCode;
+
     /**
      * The message length
      */
     private int length;
-    
+
     /**
      * The message header
      */
     private byte[] header;
-    
+
     /**
      * The message content
      */
-	private byte[] content;
+    private byte[] content;
 
-	/**
-	 * A dynamically sized byteArray
-	 */
+    /**
+     * A dynamically sized byteArray
+     */
     private ByteArrayOutputStream byteArray;
 
     /**
@@ -60,14 +62,16 @@ public class EncodeMessage extends Message {
      * @param opCode the opcode for the message
      * @param content an object array with the message content
      */
-    public EncodeMessage( short opCode, Object[] content ) {
+    public EncodeMessage(short opCode, Object[] content) {
         this.opCode = opCode;
         this.length = 2;
         this.byteArray = new ByteArrayOutputStream();
-        if ( content != null ) {
-            this.content = createContent( content );
+
+        if (content != null) {
+            this.content = createContent(content);
             this.length += this.content.length;
         }
+
         this.header = createHeader();
     }
 
@@ -76,66 +80,73 @@ public class EncodeMessage extends Message {
      * @param opCode the opcode for the message
      * @param content an object as message content
      */
-    public EncodeMessage( short opCode, Object content ) {
-        this( opCode, new Object[] { content } );
+    public EncodeMessage(short opCode, Object content) {
+        this(opCode, new Object[] { content });
     }
 
     /**
      * Generates a new message object without content
      * @param opCode the opcode for the message
      */
-    public EncodeMessage( short opCode ) {
-        this( opCode, null );
+    public EncodeMessage(short opCode) {
+        this(opCode, null);
     }
 
     /**
      * Reads the message into the socket
      * @param connection a socket connection
      */
-    public void sendMessage( CoreCommunication core ) {
-		core.sendMessage( this.header, this.content );
-      	this.byteArray.reset();
+    public void sendMessage(CoreCommunication core) {
+        core.sendMessage(this.header, this.content);
+        this.byteArray.reset();
     }
-    
-	/**
-	 * @return byte[]
-	 * 
-	 * Create and return the header based on the content size
-	 */
-	private byte[] createHeader() {
-		byte[] byteBuffer = new byte[6];
-		
-		byteBuffer = toBytes( new Integer(this.length), byteBuffer, 0 );
-		byteBuffer = toBytes( new Short( this.opCode), byteBuffer, 4 );
-		return byteBuffer;
-	}
+
+    /**
+     * @return byte[]
+     *
+     * Create and return the header based on the content size
+     */
+    private byte[] createHeader() {
+        byte[] byteBuffer = new byte[ 6 ];
+
+        byteBuffer = toBytes(new Integer(this.length), byteBuffer, 0);
+        byteBuffer = toBytes(new Short(this.opCode), byteBuffer, 4);
+
+        return byteBuffer;
+    }
 
     /**
      * Creates the message payload from a given object array
      * @param content object array which represense the payload
      * @return a byte array
      */
-    private byte[] createContent( Object[] content ) {
+    private byte[] createContent(Object[] content) {
         /* Cycle through content array */
-        for ( int i = 0; i < content.length; i++ ) {
+        for (int i = 0; i < content.length; i++) {
+            /* Write raw byteArray */
+            if (content[ i ] instanceof byte[]) {
+                byte[] byteArray = (byte[]) content[i];
+				this.byteArray.write(byteArray, 0, byteArray.length);
+            }
             /* If content object is an array, cycle through it */
-            if ( content[ i ].getClass().isArray() ) {
-                Object[] objectArray = ( Object[] ) content[ i ];
+            else if (content[ i ].getClass().isArray()) {
+                Object[] objectArray = (Object[]) content[ i ];
 
                 /* Append the (short) array length to the message */
-                appendNumber( new Short( ( short ) objectArray.length ) );
+                appendNumber(new Short((short) objectArray.length));
+
                 /* Append the array contents to the message */
-                for ( int j = 0; j < objectArray.length; j++ ) {
-                    appendObject( objectArray[ j ] );
+                for (int j = 0; j < objectArray.length; j++) {
+                    appendObject(objectArray[ j ]);
                 }
             }
             /* Append the content to the message */
-            else
-                appendObject( content[ i ] );
+            else {
+                appendObject(content[ i ]);
+            }
         }
-        
+
         return byteArray.toByteArray();
-        
     }
 
     /**
@@ -143,17 +154,17 @@ public class EncodeMessage extends Message {
      *
      * Append an object to the content
      */
-    private void appendObject( Object object ) {
-        if ( object instanceof Byte )
-            this.byteArray.write( ( ( Byte ) object ).byteValue() );
-        else if ( object instanceof Number )
-            appendNumber( ( Number ) object );
-        else if ( object instanceof String ) {
-            String string = ( String ) object;
+    private void appendObject(Object object) {
+        if (object instanceof Byte) {
+            this.byteArray.write(((Byte) object).byteValue());
+        } else if (object instanceof Number) {
+            appendNumber((Number) object);
+        } else if (object instanceof String) {
+            String string = (String) object;
 
             /* Append the (short) length of the string, and then the string */
-            appendNumber( new Short( ( short ) string.length() ) );
-            this.byteArray.write( string.getBytes(), 0, string.length() );
+            appendNumber(new Short((short) string.length()));
+            this.byteArray.write(string.getBytes(), 0, string.length());
         }
     }
 
@@ -163,72 +174,79 @@ public class EncodeMessage extends Message {
      * Append a number to the content in LITTLE_ENDIAN
      * must be one of: Short, Integer, or Long
      */
-    private void appendNumber ( Number number ) {
-    	byte[] byteBuffer;
-    	
-    	if ( number instanceof Short ) {
-    		byteBuffer = new byte[2];
-			byteBuffer = toBytes( (Short) number, byteBuffer, 0 );
-		}
-		else if ( number instanceof Integer ) {
-			byteBuffer = new byte[4];
-			byteBuffer = toBytes( (Integer) number, byteBuffer, 0 );
-		}
-		else {
-			byteBuffer = new byte[8];
-			byteBuffer = toBytes( (Long) number, byteBuffer, 0 );
-		}
-    	
-		this.byteArray.write( byteBuffer, 0, byteBuffer.length );
+    private void appendNumber(Number number) {
+        byte[] byteBuffer;
+
+        if (number instanceof Short) {
+            byteBuffer = new byte[ 2 ];
+            byteBuffer = toBytes((Short) number, byteBuffer, 0);
+        } else if (number instanceof Integer) {
+            byteBuffer = new byte[ 4 ];
+            byteBuffer = toBytes((Integer) number, byteBuffer, 0);
+        } else {
+            byteBuffer = new byte[ 8 ];
+            byteBuffer = toBytes((Long) number, byteBuffer, 0);
+        }
+
+        this.byteArray.write(byteBuffer, 0, byteBuffer.length);
     }
-    
+
     // for gcj
-	private static byte[] toBytes( Short aShort, byte[] byteBuffer, int offset ) {
-		 short value = aShort.shortValue();
-		 for ( int j = 0; j < 2; j++ ) {
-			  byteBuffer[ j + offset ] = ( byte ) ( value % 256 );
-			  value = ( short ) ( value / 256 );
-		 }
-		 return byteBuffer;
-	}
-	private static byte[] toBytes( Integer i, byte[] byteBuffer, int offset ) {
-		 int anInt = i.intValue();
-		 byteBuffer[ 0 + offset ] = (byte) (anInt & 0xFF);
-		 byteBuffer[ 1 + offset ] = (byte) ((anInt & 0xFFFF) >> 8);
-		 byteBuffer[ 2 + offset ] = (byte) ((anInt & 0xFFFFFF) >> 16);
-		 byteBuffer[ 3 + offset ] = (byte) ((anInt & 0x7FFFFFFF) >> 24);
-		 return byteBuffer;
-	}
-	private static byte[] toBytes( Long aLong, byte[] byteBuffer, int offset  ) {
-		 long temp = aLong.longValue();
-		 for ( int j = 0; j < 8; j++ ) {
-			  byteBuffer[ j + offset ] = ( byte ) ( temp % 256 );
-			  temp = temp / 256;
-		 }
-		 return byteBuffer;
-	}
-   
-	/**
-	 * @return header
-	 */
-    
-    public byte[] getHeader() {
-    	return header;
+    private static byte[] toBytes(Short aShort, byte[] byteBuffer, int offset) {
+        short value = aShort.shortValue();
+
+        for (int j = 0; j < 2; j++) {
+            byteBuffer[ j + offset ] = (byte) (value % 256);
+            value = (short) (value / 256);
+        }
+
+        return byteBuffer;
     }
-    
+
+    private static byte[] toBytes(Integer i, byte[] byteBuffer, int offset) {
+        int anInt = i.intValue();
+        byteBuffer[ 0 + offset ] = (byte) (anInt & 0xFF);
+        byteBuffer[ 1 + offset ] = (byte) ((anInt & 0xFFFF) >> 8);
+        byteBuffer[ 2 + offset ] = (byte) ((anInt & 0xFFFFFF) >> 16);
+        byteBuffer[ 3 + offset ] = (byte) ((anInt & 0x7FFFFFFF) >> 24);
+
+        return byteBuffer;
+    }
+
+    private static byte[] toBytes(Long aLong, byte[] byteBuffer, int offset) {
+        long temp = aLong.longValue();
+
+        for (int j = 0; j < 8; j++) {
+            byteBuffer[ j + offset ] = (byte) (temp % 256);
+            temp = temp / 256;
+        }
+
+        return byteBuffer;
+    }
+
+    /**
+     * @return header
+     */
+    public byte[] getHeader() {
+        return header;
+    }
+
     /**
      * @return content
      */
     public byte[] getContent() {
-    	return content;
+        return content;
     }
-    
 }
+
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.13  2003/11/05 00:09:50  zet
+write raw byte arrays
+
 Revision 1.12  2003/09/18 23:24:07  zet
-use bufferedinputstream 
+use bufferedinputstream
 & mods for the annoying gcj project
 
 Revision 1.11  2003/09/18 15:29:25  zet
