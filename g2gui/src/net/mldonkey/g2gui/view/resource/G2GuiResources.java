@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.RGB;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.63 2004/01/22 21:28:03 psy Exp $
+ * @version $Id: G2GuiResources.java,v 1.64 2004/02/17 21:23:53 psy Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -125,6 +125,8 @@ public class G2GuiResources {
             return getImage("DCConnected");
         } else if (networkType == EnumNetwork.BT) {
             return getImage("BTConnected");
+        } else if (networkType == EnumNetwork.FILETP) {
+        	return getImage("FILEConnected");
         } else if (networkType == EnumNetwork.MULTINET) {
             return getImage("MULTIConnected");
         } else {
@@ -265,6 +267,9 @@ public class G2GuiResources {
         /* some icons for networks without all states */
         reg.put("BTConnected", createRawNImage("bt_connected.gif"));
         reg.put("BTDisabled", createRawNImage("bt_disabled.gif"));
+        reg.put("FILEConnected", createRawNImage("unknown_connected.gif"));
+        reg.put("FILEDisabled", createRawNImage("unknown_disabled.gif"));
+        
         reg.put("MULTIConnected", createRawNImage("multinet_connected.gif"));
         reg.put("MULTIDisabled", createRawNImage("multinet_disabled.gif"));
     }
@@ -332,6 +337,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.64  2004/02/17 21:23:53  psy
+added FileTP as a new network
+
 Revision 1.63  2004/01/22 21:28:03  psy
 renamed "uploads" to "shares" and moved it to a tab of its own.
 "uploaders" are now called "uploads" for improved naming-consistency

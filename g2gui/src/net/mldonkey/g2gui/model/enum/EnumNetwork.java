@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.model.enum;
 /**
  * EnumNetwork
  *
- * @version $Id: EnumNetwork.java,v 1.3 2003/12/17 13:06:04 lemmy Exp $ 
+ * @version $Id: EnumNetwork.java,v 1.4 2004/02/17 21:23:53 psy Exp $ 
  *
  */
 public class EnumNetwork extends Enum {
@@ -70,6 +70,12 @@ public class EnumNetwork extends Enum {
 	 * MultiNet
 	 */
 	public static EnumNetwork MULTINET = new EnumNetwork( 512, "MultiNet" );
+
+	/**
+	 * FileTP
+	 */
+	public static EnumNetwork FILETP = new EnumNetwork( 1024, "FileTP" );
+	
 	
 	/**
 	 * Creates a new EnumNetworkNetwork
@@ -90,6 +96,9 @@ public class EnumNetwork extends Enum {
 
 /*
 $Log: EnumNetwork.java,v $
+Revision 1.4  2004/02/17 21:23:53  psy
+added FileTP as a new network
+
 Revision 1.3  2003/12/17 13:06:04  lemmy
 save all panelistener states correctly to the prefstore
 

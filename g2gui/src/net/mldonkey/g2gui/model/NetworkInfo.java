@@ -35,7 +35,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * NetworkInfo
  *
  *
- * @version $Id: NetworkInfo.java,v 1.33 2003/12/04 09:32:16 lemmy Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.34 2004/02/17 21:23:53 psy Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -255,6 +255,8 @@ public class NetworkInfo extends Parent {
 			return "DC";
 		else if ( this.networkType == EnumNetwork.OPENNP )
 			return "ONP";
+		else if ( this.networkType == EnumNetwork.FILETP )
+			return "FILE";
 		else if ( this.networkType == EnumNetwork.MULTINET )
 			return "MULTI"; 
 		else
@@ -340,6 +342,8 @@ public class NetworkInfo extends Parent {
 			networkType = EnumNetwork.OPENNP;
 		else if ( string.equals( "MultiNet" ) )
 			networkType = EnumNetwork.MULTINET;
+		else if ( string.equals( "FileTP" ) )
+			networkType = EnumNetwork.FILETP;
 		else if ( string.equals( "Global Shares" ) )
 			networkType = EnumNetwork.MULTINET;
 	}
@@ -427,6 +431,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.34  2004/02/17 21:23:53  psy
+added FileTP as a new network
+
 Revision 1.33  2003/12/04 09:32:16  lemmy
 set the correct networktype for new gnutella2 and global shares
 
@@ -460,7 +467,7 @@ Revision 1.24  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
 Revision 1.23  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.22  2003/08/21 13:13:10  lemmy
 cleanup in networkitem
