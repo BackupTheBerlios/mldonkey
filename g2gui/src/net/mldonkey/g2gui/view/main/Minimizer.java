@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Shell;
  * A temp class to help use swt TrayIcon on win32 only
  * https://bugs.eclipse.org/bugs/show_bug.cgi?id=30834
  *
- * @version $Id: Minimizer.java,v 1.3 2003/09/18 10:12:53 lemmster Exp $
+ * @version $Id: Minimizer.java,v 1.4 2003/09/25 00:51:23 zet Exp $
  */
 public class Minimizer implements Observer {
 	private static final DecimalFormat decimalFormat = new DecimalFormat( "0.#" );
@@ -46,11 +46,9 @@ public class Minimizer implements Observer {
     private String titleBarText;
 
 	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param shell DOCUMENT ME!
-	 * @param core DOCUMENT ME!
-	 * @param titleBarText DOCUMENT ME!
+	 * @param shell 
+	 * @param core 
+	 * @param titleBarText 
 	 */
     public Minimizer( Shell shell, CoreCommunication core, String titleBarText ) {
         this.shell = shell;
@@ -58,44 +56,25 @@ public class Minimizer implements Observer {
         this.titleBarText = titleBarText;
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void setTitleBarText() {
         shell.setText( titleBarText + " " + G2GuiResources.getString( "BUILD_INFORMATION" ) );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public boolean close() {
         return true;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param systemTray DOCUMENT ME!
-     */
-    public void minimize( boolean systemTray ) {
+    public void minimize( ) {
         core.getClientStats().addObserver( this );
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void restore() {
         core.getClientStats().deleteObserver( this );
         setTitleBarText();
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param arg0 DOCUMENT ME!
-     * @param receivedInfo DOCUMENT ME!
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable arg0, Object receivedInfo ) {
         final ClientStats clientInfo = ( ClientStats ) receivedInfo;
@@ -117,6 +96,9 @@ public class Minimizer implements Observer {
 
 /*
 $Log: Minimizer.java,v $
+Revision 1.4  2003/09/25 00:51:23  zet
+not much
+
 Revision 1.3  2003/09/18 10:12:53  lemmster
 checkstyle
 

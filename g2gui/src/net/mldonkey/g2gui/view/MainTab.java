@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.73 2003/09/18 15:30:46 zet Exp $
+ * @version $Id: MainTab.java,v 1.74 2003/09/25 00:51:23 zet Exp $
  *
  */
 public class MainTab implements ShellListener {
@@ -354,12 +354,15 @@ public class MainTab implements ShellListener {
      * shellIconified(org.eclipse.swt.events.ShellEvent)
      */
     public void shellIconified( ShellEvent e ) {
-        minimizer.minimize( true );
+        minimizer.minimize( );
     }
 }
 
 /*
 $Log: MainTab.java,v $
+Revision 1.74  2003/09/25 00:51:23  zet
+not much
+
 Revision 1.73  2003/09/18 15:30:46  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
