@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.TableItem;
  * DownloadTable
  *
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.15 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.16 2003/08/23 19:44:12 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -68,17 +68,19 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	private TableTree tableTree;
 	private Table table;
 	private Shell shell;
-	private DownloadTableTreeSorter downloadTableTreeSorter = new DownloadTableTreeSorter();
+	private DownloadTableTreeSorter downloadTableTreeSorter;
 	private DownloadTableTreeContentProvider tableTreeContentProvider;
 	private FileInfo selectedFile = null;
 	private MenuManager popupMenu;
 	private DownloadTableTreeMenuListener tableTreeMenuListener;
-	private static boolean displayChunkGraphs;
+	private static boolean displayChunkGraphs = false;
+	private boolean advancedMode = false;
 	private CoreCommunication mldonkey;
 	private CellEditor[] cellEditors;
 	private TableViewer clientTableViewer;
 	
-	private final String[] COLUMN_LABELS =
+	private String[] COLUMN_LABELS;
+	private final String[] COLUMN_LABELS_ADVANCED =
 		{	"TT_Download_Id",
 			"TT_Download_Network",
 			"TT_Download_Name",
@@ -93,26 +95,33 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			"TT_Download_Last",
 			"TT_Download_Age"
 		};
-	
-	private final int[] COLUMN_DEFAULT_WIDTHS =
-		{ 50, 50, 250, 75, 75, 50, 50, 50, 75, 75, 50, 75, 75};
-
-	private final int[] COLUMN_ALIGNMENT =
-		{
-			SWT.LEFT,
-			SWT.LEFT,
-			SWT.LEFT,
-			SWT.RIGHT,
-			SWT.RIGHT,
-			SWT.RIGHT,
-			SWT.RIGHT,
-			SWT.RIGHT,
-			SWT.LEFT,
-			SWT.RIGHT,
-			SWT.LEFT,
-			SWT.RIGHT,
-			SWT.RIGHT
+	private final String[] COLUMN_LABELS_BASIC =
+		{	"TT_Download_Id",
+			"TT_Download_Network",
+			"TT_Download_Name",
+			"TT_Download_Size",
+			"TT_Download_%",
+			"TT_Download_Rate",
+			"TT_Download_ETA",
 		};
+
+	private int[] COLUMN_DEFAULT_WIDTHS;
+	private final int[] COLUMN_DEFAULT_WIDTHS_ADVANCED =
+		{ 50, 50, 250, 75, 75, 50, 50, 50, 75, 75, 50, 75, 75};
+	private final int[] COLUMN_DEFAULT_WIDTHS_BASIC =
+		{ 50, 50, 250, 75, 50, 75, 75 };	
+
+	private int[] COLUMN_ALIGNMENT;
+	private final int[] COLUMN_ALIGNMENT_ADVANCED =
+		{
+			SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, 
+			SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT
+		};
+		
+	private final int[] COLUMN_ALIGNMENT_BASIC =
+		{
+			SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT
+		};	
 		
 	private static int CHUNKS_COLUMN = 8;
 		
@@ -128,7 +137,17 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		this.clientTableViewer = clientTableViewer;
 		this.shell = parent.getShell();
 		this.mldonkey = mldonkey;
-		displayChunkGraphs = PreferenceLoader.loadBoolean("displayChunkGraphs");
+		if (PreferenceLoader.loadBoolean("advancedMode")) {
+			advancedMode = true;
+			COLUMN_LABELS = COLUMN_LABELS_ADVANCED;
+			COLUMN_DEFAULT_WIDTHS = COLUMN_DEFAULT_WIDTHS_ADVANCED;
+			COLUMN_ALIGNMENT = COLUMN_ALIGNMENT_ADVANCED;
+			displayChunkGraphs = PreferenceLoader.loadBoolean("displayChunkGraphs");
+		} else {
+			COLUMN_LABELS = COLUMN_LABELS_BASIC;
+			COLUMN_DEFAULT_WIDTHS = COLUMN_DEFAULT_WIDTHS_BASIC;
+			COLUMN_ALIGNMENT = COLUMN_ALIGNMENT_BASIC;
+		}
 		createTableTreeViewer(parent, mldonkey);
 	}
 	
@@ -172,7 +191,11 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			tableColumn.addListener( SWT.Selection, new Listener() {
 				public void handleEvent( Event e ) {
 					// duplicate to reset the sorter 
-					DownloadTableTreeSorter dTTS = new DownloadTableTreeSorter();
+					DownloadTableTreeSorter dTTS;
+					if (advancedMode)
+						dTTS = new DownloadTableTreeSorterAdvanced();
+					else 
+						dTTS = new DownloadTableTreeSorterBasic();
 					dTTS.setLastColumnIndex( downloadTableTreeSorter.getLastColumnIndex() );
 					dTTS.setLastSort( downloadTableTreeSorter.getLastSort() );
 					dTTS.setMaintainSortOrder( downloadTableTreeSorter.getMaintainSortOrder() );
@@ -220,7 +243,13 @@ public class DownloadTableTreeViewer implements ICellModifier {
 				}
 			}
 		});
-		DownloadTableTreeLabelProvider treeLabelProvider = new DownloadTableTreeLabelProvider();
+		DownloadTableTreeLabelProvider treeLabelProvider;
+		
+		if (PreferenceLoader.loadBoolean("advancedMode")) {
+			treeLabelProvider = new DownloadTableTreeLabelProviderAdvanced();
+		} else {
+			treeLabelProvider = new DownloadTableTreeLabelProviderBasic();
+		}
 		treeLabelProvider.setTableTreeViewer(tableTreeViewer);
 		tableTreeViewer.setLabelProvider(treeLabelProvider);
 		
@@ -242,6 +271,12 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		popupMenu.addMenuListener(tableTreeMenuListener);
 						
 		tableTree.setMenu(popupMenu.createContextMenu(tableTree));
+		
+		if (advancedMode) {
+			downloadTableTreeSorter = new DownloadTableTreeSorterAdvanced();
+		} else {
+			downloadTableTreeSorter = new DownloadTableTreeSorterBasic();
+		}
 		
 		downloadTableTreeSorter.setMaintainSortOrder( PreferenceLoader.loadBoolean("maintainSortOrder"));
 		tableTreeViewer.setSorter(downloadTableTreeSorter);	
@@ -292,7 +327,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	}
 	public void updateDisplay() {
 		table.setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
-		boolean newChunkValue = PreferenceLoader.loadBoolean("displayChunkGraphs");
 		
 		if (PreferenceLoader.loadBoolean("tableCellEditors")) {
 			tableTreeViewer.setCellEditors(cellEditors);
@@ -302,9 +336,12 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			tableTreeViewer.setCellModifier(null);		
 		}
 		
-		//tableTreeContentProvider.closeAllEditors();
+		tableTreeContentProvider.closeAllEditors();
+		System.out.println("yes");
+		if (advancedMode) {
+			displayChunkGraphs = PreferenceLoader.loadBoolean("displayChunkGraphs");
+		}
 		tableTreeViewer.refresh();
-		displayChunkGraphs = newChunkValue;
 		tableTreeContentProvider.updateAllEditors();
 		if (tableTreeViewer.getSorter() != null)
 			((DownloadTableTreeSorter) tableTreeViewer.getSorter()).setMaintainSortOrder( PreferenceLoader.loadBoolean("maintainSortOrder"));
@@ -318,6 +355,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.16  2003/08/23 19:44:12  zet
+split transfer table to basic/advanced modes
+
 Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 

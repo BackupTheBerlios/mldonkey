@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTableTreeContentProvider
  *
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.16 2003/08/23 15:24:03 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.17 2003/08/23 19:44:12 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -520,6 +520,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 		
 		// in rare circumstances, the tabletreeeditor isn't updated.. this appeared to
 		// help, but who knows...
+		
 		TableColumn c = tableTreeViewer.getTableTree().getTable().getColumn(CHUNKS_COLUMN);
 		c.setWidth(c.getWidth());
 	
@@ -544,6 +545,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.17  2003/08/23 19:44:12  zet
+split transfer table to basic/advanced modes
+
 Revision 1.16  2003/08/23 15:24:03  zet
 *** empty log message ***
 

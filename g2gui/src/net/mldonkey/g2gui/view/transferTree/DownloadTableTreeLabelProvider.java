@@ -29,9 +29,7 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
-import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -42,27 +40,34 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.17 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.18 2003/08/23 19:44:12 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
 	
-	private Color unAvailableFileColor = new Color(null, 255,0,0);
-	private Color availableFileColor = new Color(null, 255,165,0);
-	private Color downloadedFileColor = new Color(null, 0,0,255);
-	private Color queuedFileColor = new Color(null, 192,192,192);
-	private Color pausedFileColor = new Color(null, 255, 0, 0);
-	private Color rateAbove20Color = new Color(null, 35, 214, 0);
-	private Color rateAbove10Color = new Color(null, 30, 170, 2);
-	private Color rateAbove0Color = new Color(null, 24, 142, 4);
-	private DecimalFormat df = new DecimalFormat( "0.0" );
-	private DecimalFormat dfp = new DecimalFormat( "0" );
+	protected Color unAvailableFileColor = new Color(null, 255,0,0);
+	protected Color availableFileColor = new Color(null, 255,165,0);
+	protected Color downloadedFileColor = new Color(null, 0,0,255);
+	protected Color queuedFileColor = new Color(null, 192,192,192);
+	protected Color pausedFileColor = new Color(null, 255, 0, 0);
+	protected Color rateAbove20Color = new Color(null, 35, 214, 0);
+	protected Color rateAbove10Color = new Color(null, 30, 170, 2);
+	protected Color rateAbove0Color = new Color(null, 24, 142, 4);
+	protected DecimalFormat df = new DecimalFormat( "0.0" );
+	protected DecimalFormat dfp = new DecimalFormat( "0" );
 	
-	private CustomTableTreeViewer tableTreeViewer;
+	protected CustomTableTreeViewer tableTreeViewer;
 	
 	public Color getBackground (Object arg0) {
 			return null;
+	}
+	
+	public Image getColumnImage(Object object, int column) {
+		return null;
+	}
+	
+	public String getColumnText(Object object, int column) {
+		return "";
 	}
 	
 	public Color getForeground(Object arg0) {
@@ -91,97 +96,7 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 		return null;
 	}
 	
-	public Image getColumnImage(Object arg0, int arg1) {
-		if (arg0 instanceof FileInfo && arg1 == 1) {
-			FileInfo fileInfo = (FileInfo) arg0;
-			return G2GuiResources.getNetworkImage( fileInfo.getNetwork().getNetworkType() );
-		} else if (arg0 instanceof TreeClientInfo) {
-			ClientInfo clientInfo = ((TreeClientInfo) arg0).getClientInfo();
-			if (arg1 == 1)
-				return G2GuiResources.getNetworkImage( clientInfo.getClientnetworkid().getNetworkType() );
-			else if (arg1 == 2)
-				return G2GuiResources.getClientImage( (EnumState) clientInfo.getState().getState() );
-			else 
-				return null;
-		}
-		
-		return null;
-	}
-	// The full row is redrawn on each update()/refresh()
-	// *&@%#%*# jface
-	public String getColumnText(Object arg0, int arg1) {
-			
-		if (arg0 instanceof FileInfo) {
-			FileInfo fileInfo = (FileInfo) arg0;
-		
-			switch(arg1) {
-			case 0: // id
-				return ""+fileInfo.getId();
-			case 1: // network
-				return ""+fileInfo.getNetwork().getNetworkName();
-			case 2: // name
-				return ""+fileInfo.getName();
-			case 3: // size
-				return ""+fileInfo.getStringSize();
-			case 4: // downloaded
-				return ""+fileInfo.getStringDownloaded();
-			case 5: // percent
-				return ""+dfp.format(fileInfo.getPerc()) + "%";
-			case 6: // # sources  fileInfo.getSources() is always 0 
-				return ""+fileInfo.getClientInfos().size();		
-			case 7: // rate
-				if (fileInfo.getState().getState() == EnumFileState.PAUSED)
-					return "Paused";
-				else if (fileInfo.getState().getState() == EnumFileState.QUEUED)
-					return "Queued";
-				else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
-					return "Downloaded";	
-				else 
-					return "" + df.format(fileInfo.getRawRate() / 1000f);
-			case 8: // chunks
-				return ""+fileInfo.getNumChunks();
-			case 9: // eta
-				return ""+getFileETA(fileInfo);
-			case 10: // priority
-				if (fileInfo.getPriority() == EnumPriority.HIGH) 
-					return "High";
-				else if (fileInfo.getPriority() == EnumPriority.NORMAL)
-					return "Normal";
-				else if (fileInfo.getPriority() == EnumPriority.LOW)
-					return "Low";
-				else 
-					return "???";
-			case 11: // last
-				return fileInfo.getStringOffset();
-			case 12: // age
-				return fileInfo.getStringAge();
-			default: 
-				return "";
-			} 
-		
-		} else if (arg0 instanceof TreeClientInfo) {
-			TreeClientInfo treeClientInfo = ( TreeClientInfo ) arg0;
-			
-			switch(arg1) {
-				case 1: // id
-					return ""+treeClientInfo.getClientInfo().getClientid();
-				case 2: // client name
-					return ""+treeClientInfo.getClientInfo().getClientName();
-				case 3: // client connection
-					return ""+getClientConnection(treeClientInfo.getClientInfo());
-				case 4: // client activity
-					return ""+getClientActivity(treeClientInfo.getClientInfo());
-				case 8: // num chunks
-					return ""+treeClientInfo.getClientInfo().getNumChunks( treeClientInfo.getFileInfo() );
-					
-				default: 
-					return "";
-			}
-		} 
-		else 
-			return "";
-		
-	}
+
 	public String getFileETA (FileInfo fileInfo) {
 		
 		if ( fileInfo.getState().getState() == EnumFileState.QUEUED
@@ -234,6 +149,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.18  2003/08/23 19:44:12  zet
+split transfer table to basic/advanced modes
+
 Revision 1.17  2003/08/23 15:21:37  zet
 remove @author
 
