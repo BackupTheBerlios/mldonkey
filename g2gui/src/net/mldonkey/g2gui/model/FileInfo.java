@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.31 2003/08/05 08:55:04 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.32 2003/08/05 15:38:29 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -501,6 +501,7 @@ public class FileInfo extends Parent implements Observer {
 		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, obj );
 		consoleMessage.sendMessage( this.parent.getConnection() );
 		content = null;
+		obj = null;
 		consoleMessage = null;
 	}
 
@@ -593,6 +594,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.32  2003/08/05 15:38:29  lemmstercvs01
+set obj=null after message is send
+
 Revision 1.31  2003/08/05 08:55:04  lemmstercvs01
 setPrio() fixed
 
