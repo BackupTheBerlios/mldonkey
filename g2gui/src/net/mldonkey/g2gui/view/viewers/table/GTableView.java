@@ -26,33 +26,28 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
 import net.mldonkey.g2gui.view.viewers.GView;
 
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 
 /**
  * Generic Table Viewer
  *
- * @version $Id: GTableView.java,v 1.3 2003/11/06 13:52:33 lemmster Exp $
+ * @version $Id: GTableView.java,v 1.4 2003/11/07 02:24:03 zet Exp $
  *
  */
 public class GTableView extends GView {
-    protected GTableLabelProvider tableLabelProvider;
     protected GTableContentProvider tableContentProvider;
     protected GTableMenuListener tableMenuListener;
-    protected StructuredViewer sViewer;
 
     public GTableView(Composite parent, CoreCommunication core) {
         this.core = core;
     }
 
     /**
-     * Create the contents
      * @param parent
      */
     protected void createContents(Composite parent) {
@@ -60,11 +55,11 @@ public class GTableView extends GView {
         super.createContents();
     }
 
-    /**
-     * @return CustomTableViewer
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.viewers.IGViewer#getTable()
      */
-    protected CustomTableViewer getTableViewer() {
-        return (CustomTableViewer) sViewer;
+    public Table getTable() {
+        return ((TableViewer) sViewer).getTable();
     }
 
     /* (non-Javadoc)
@@ -81,69 +76,20 @@ public class GTableView extends GView {
         return tableMenuListener;
     }
 
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.GViewer#getTableLabelProvider()
+    /**
+     * @return CustomTableViewer (convenience)
      */
-    public GTableLabelProvider getTableLabelProvider() {
-        return tableLabelProvider;
-    }
-
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.IGViewer#getTable()
-     */
-    public Table getTable() {
-        return ( (TableViewer) sViewer ).getTable();
-    }
-
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.GViewer#addFilter(org.eclipse.jface.viewers.ViewerFilter)
-     */
-    public void addFilter(ViewerFilter viewerFilter) {
-    	super.addFilter( viewerFilter );
-        this.sViewer.addFilter(viewerFilter);
-    }
-
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.GViewer#removeFilter(org.eclipse.jface.viewers.ViewerFilter)
-     */
-    public void removeFilter(ViewerFilter viewerFilter) {
-		super.removeFilter( viewerFilter );
-        this.sViewer.removeFilter(viewerFilter);
-    }
-
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.GViewer#refresh()
-     */
-    public void refresh() {
-        this.sViewer.refresh();
-    }
-
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.GViewer#getShell()
-     */
-    public Shell getShell() {
-        return this.getTable().getShell();
-    }
-
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.GViewer#getViewer()
-     */
-    public StructuredViewer getViewer() {
-        return this.sViewer;
-    }
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GView#getFilters()
-	 */
-    public ViewerFilter[] getFilters() {
-        return this.sViewer.getFilters();
+    protected CustomTableViewer getTableViewer() {
+        return (CustomTableViewer) sViewer;
     }
 }
 
 
 /*
 $Log: GTableView.java,v $
+Revision 1.4  2003/11/07 02:24:03  zet
+push sViewer into GView
+
 Revision 1.3  2003/11/06 13:52:33  lemmster
 filters back working
 

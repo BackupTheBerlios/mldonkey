@@ -26,83 +26,43 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
-import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
 
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableTreeViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 
 /**
  * GTableTreeViewer
  *
- * @version $Id: GTableTreeView.java,v 1.4 2003/11/06 13:52:33 lemmster Exp $
+ * @version $Id: GTableTreeView.java,v 1.5 2003/11/07 02:24:03 zet Exp $
  *
  */
 public class GTableTreeView extends GView {
-    protected GTableLabelProvider tableLabelProvider;
     protected GTableTreeContentProvider tableTreeContentProvider;
     protected GTableMenuListener tableTreeMenuListener;
-    protected StructuredViewer sViewer;
 
     public GTableTreeView(Composite parent, CoreCommunication core) {
         this.core = core;
     }
 
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.IGViewer#addFilter(org.eclipse.jface.viewers.ViewerFilter)
-     */
-    public void addFilter(ViewerFilter viewerFilter) {
-		super.addFilter( viewerFilter );
-    	sViewer.addFilter(viewerFilter);
-    }
-
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.IGViewer#removeFilter(org.eclipse.jface.viewers.ViewerFilter)
-     */
-    public void removeFilter(ViewerFilter viewerFilter) {
-		super.removeFilter( viewerFilter );
-        sViewer.removeFilter(viewerFilter);
-    }
-
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.IGViewer#refresh()
-     */
-    public void refresh() {
-        sViewer.refresh();
+    /**
+    * Create the contents
+    * @param parent
+    */
+    protected void createContents(Composite parent) {
+        sViewer = new CustomTableTreeViewer(parent, SWT.FULL_SELECTION | SWT.MULTI);
+        super.createContents();
     }
 
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.viewers.IGViewer#getTable()
      */
     public Table getTable() {
-        return  ( (TableTreeViewer) sViewer).getTableTree().getTable();
-    }
-
-    /**
-     * @return CustomTableTreeViewer (convenience)
-     */
-    protected CustomTableTreeViewer getTableTreeViewer() {
-        return (CustomTableTreeViewer) sViewer;
-    }
-
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.IGViewer#getShell()
-     */
-    public Shell getShell() {
-        return this.getTable().getShell();
-    }
-
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.IGViewer#getViewer()
-     */
-    public StructuredViewer getViewer() {
-        return sViewer;
+        return ((TableTreeViewer) sViewer).getTableTree().getTable();
     }
 
     /* (non-Javadoc)
@@ -119,34 +79,20 @@ public class GTableTreeView extends GView {
         return tableTreeMenuListener;
     }
 
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.GViewer#getTableLabelProvider()
-     */
-    public GTableLabelProvider getTableLabelProvider() {
-        return tableLabelProvider;
-    }
-
     /**
-      * Create the contents
-      * @param parent
-      */
-    protected void createContents(Composite parent) {
-        sViewer = new CustomTableTreeViewer(parent, SWT.FULL_SELECTION | SWT.MULTI);
-        super.createContents();
+     * @return CustomTableTreeViewer (convenience)
+     */
+    protected CustomTableTreeViewer getTableTreeViewer() {
+        return (CustomTableTreeViewer) sViewer;
     }
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.viewers.GView#getFilters()
-	 */
-	public ViewerFilter[] getFilters() {
-		return sViewer.getFilters();
-	}
 }
 
 
 /*
 $Log: GTableTreeView.java,v $
+Revision 1.5  2003/11/07 02:24:03  zet
+push sViewer into GView
+
 Revision 1.4  2003/11/06 13:52:33  lemmster
 filters back working
 

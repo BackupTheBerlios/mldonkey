@@ -22,9 +22,6 @@
  */
 package net.mldonkey.g2gui.view.viewers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -38,6 +35,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -51,11 +49,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.4 2003/11/06 14:59:06 lemmster Exp $
+ * @version $Id: GView.java,v 1.5 2003/11/07 02:24:03 zet Exp $
  *
  */
 public abstract class GView {
@@ -68,6 +69,14 @@ public abstract class GView {
     protected String columnIDs;
     protected String preferenceString;
     protected GSorter gSorter;
+    protected GTableLabelProvider tableLabelProvider;
+    protected StructuredViewer sViewer;
+
+    public abstract GTableContentProvider getTableContentProvider();
+
+    public abstract GTableMenuListener getTableMenuListener();
+
+    public abstract Table getTable();
 
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.viewers.IGViewer#getAllColumnIDs()
@@ -97,6 +106,13 @@ public abstract class GView {
         return preferenceString;
     }
 
+    /**
+     * @return GTableLabelProvider
+     */
+    public GTableLabelProvider getTableLabelProvider() {
+        return tableLabelProvider;
+    }
+
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.viewers.IGViewer#getCore()
      */
@@ -104,58 +120,62 @@ public abstract class GView {
         return core;
     }
 
-    public abstract GTableContentProvider getTableContentProvider();
-
-    public abstract GTableMenuListener getTableMenuListener();
-
-    public abstract GTableLabelProvider getTableLabelProvider();
-    
-	public abstract StructuredViewer getViewer();
-	
-	public abstract Table getTable();
-	
-	public abstract void refresh();
-	
-	public abstract Shell getShell();
-	
-	public abstract ViewerFilter[] getFilters();
-	
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.viewers.IGViewer#addDisposeListener(net.mldonkey.g2gui.view.viewers.GPaneListener)
      */
     public void addDisposeListener(GPaneListener listener) {
         getTable().addDisposeListener(listener);
     }
-    
-	public GViewerFilter getFilter( Class aClass ) {
-		Map aMap = (Map) this.getViewer().getData( GViewerFilter.class.getName() );
-		if ( aMap.containsKey( aClass.getName() ) ) {
-			return (GViewerFilter) aMap.get( aClass.getName() );
-		}
-		return new AlwaysFalseGViewerFilter( this );
-	}
-	
-	public void removeFilter( ViewerFilter aViewerFilter ) {
-		//check if the ViewerFilter is our AlwaysFalseFilter
-		if ( aViewerFilter instanceof GViewerFilter ) {
-			GViewerFilter filter = (GViewerFilter) aViewerFilter;
-			if ( !filter.isNotAlwaysFalse() )
-				return;
-		}
-		Map aMap = (Map) getViewer().getData( GViewerFilter.class.getName() );
-		aMap.remove( aViewerFilter );    	
-	}
-		
-	public void addFilter( ViewerFilter aViewerFilter ) {
-		if ( aViewerFilter instanceof GViewerFilter ) {
-			GViewerFilter filter = (GViewerFilter) aViewerFilter;
-			if ( !filter.isNotAlwaysFalse() )
-				return;
-		}
-		Map aMap = (Map) getViewer().getData( GViewerFilter.class.getName() );
-		aMap.put( aViewerFilter.getClass().getName(), aViewerFilter );
-	}
-	
+
+    /**
+     * @param aClass
+     * @return GViewerFilter
+     */
+    public GViewerFilter getFilter(Class aClass) {
+        Map aMap = (Map) this.getViewer().getData(GViewerFilter.class.getName());
+
+        if (aMap.containsKey(aClass.getName())) {
+            return (GViewerFilter) aMap.get(aClass.getName());
+        }
+
+        return new AlwaysFalseGViewerFilter(this);
+    }
+
+    /**
+     * @param aViewerFilter
+     */
+    public void removeFilter(ViewerFilter aViewerFilter) {
+        //check if the ViewerFilter is our AlwaysFalseFilter
+        if (aViewerFilter instanceof GViewerFilter) {
+            GViewerFilter filter = (GViewerFilter) aViewerFilter;
+
+            if (!filter.isNotAlwaysFalse()) {
+                return;
+            }
+        }
+
+        Map aMap = (Map) getViewer().getData(GViewerFilter.class.getName());
+        aMap.remove(aViewerFilter);
+        sViewer.removeFilter(aViewerFilter);
+    }
+
+    /**
+     * @param aViewerFilter
+     */
+    public void addFilter(ViewerFilter aViewerFilter) {
+        if (aViewerFilter instanceof GViewerFilter) {
+            GViewerFilter filter = (GViewerFilter) aViewerFilter;
+
+            if (!filter.isNotAlwaysFalse()) {
+                return;
+            }
+        }
+
+        Map aMap = (Map) getViewer().getData(GViewerFilter.class.getName());
+        aMap.put(aViewerFilter.getClass().getName(), aViewerFilter);
+        sViewer.addFilter(aViewerFilter);
+    }
+
     /**
      * updateDisplay (after preference changes)
      */
@@ -271,7 +291,7 @@ public abstract class GView {
      * createContents
      */
     protected void createContents() {
-		getViewer().setData( GViewerFilter.class.getName(), new HashMap() );
+        sViewer.setData(GViewerFilter.class.getName(), new HashMap());
 
         for (int i = 0; i < columnLabels.length; i++) {
             allColumns += String.valueOf((char) (ColumnSelector.MAGIC_NUMBER + i));
@@ -288,17 +308,15 @@ public abstract class GView {
         gSorter.initialize();
         getTableMenuListener().initialize();
 
-        ICustomViewer cViewer = (ICustomViewer) getViewer();
-
-        cViewer.setContentProvider(getTableContentProvider());
-        cViewer.setLabelProvider(getTableLabelProvider());
+        sViewer.setContentProvider(getTableContentProvider());
+        sViewer.setLabelProvider(getTableLabelProvider());
 
         MenuManager popupMenu = new MenuManager("");
         popupMenu.setRemoveAllWhenShown(true);
         popupMenu.addMenuListener(getTableMenuListener());
         table.setMenu(popupMenu.createContextMenu(getTable()));
 
-        cViewer.setSorter(gSorter);
+        sViewer.setSorter(gSorter);
     }
 
     /* (non-Javadoc)
@@ -317,18 +335,49 @@ public abstract class GView {
         updateDisplay();
     }
 
-	/**
-	 * Discards this viewer's filters and triggers refiltering and resorting
-	 * of the elements.
-	 */
-	public void resetFilters() {
-		getViewer().resetFilters();
-	}
+    /**
+     * Discards this viewer's filters and triggers refiltering and resorting
+     * of the elements.
+     */
+    public void resetFilters() {
+        getViewer().resetFilters();
+    }
+
+    /**
+     * @return ViewerFilter[]
+     */
+    public ViewerFilter[] getFilters() {
+        return sViewer.getFilters();
+    }
+
+    /**
+     * @return StructuredViewer
+     */
+    public StructuredViewer getViewer() {
+        return this.sViewer;
+    }
+
+    /**
+     * @return Shell
+     */
+    public Shell getShell() {
+        return getTable().getShell();
+    }
+
+    /**
+     * StructuredViewer#refresh
+     */
+    public void refresh() {
+        this.sViewer.refresh();
+    }
 }
 
 
 /*
 $Log: GView.java,v $
+Revision 1.5  2003/11/07 02:24:03  zet
+push sViewer into GView
+
 Revision 1.4  2003/11/06 14:59:06  lemmster
 clean up
 
