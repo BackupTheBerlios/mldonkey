@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * DetailDialog
  *
- * @version $Id: DetailDialog.java,v 1.2 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: DetailDialog.java,v 1.3 2003/12/01 14:22:45 lemmster Exp $
  *
  */
 public abstract class DetailDialog extends Dialog implements Observer {
@@ -113,8 +113,8 @@ public abstract class DetailDialog extends Dialog implements Observer {
         if (networkInfo == null) {
             totalChunks = (clientInfo == null) ? (" (" + fileInfo.getAvail().length() + ")") : "";
         } else {
-            if (fileInfo.getAvails().get(networkInfo) instanceof String) {
-                totalChunks = " (" + ((String) fileInfo.getAvails().get(networkInfo)).length() +
+        	if (fileInfo.hasAvails() ) {
+                totalChunks = " (" + ((String) fileInfo.getAvails(networkInfo)).length() +
                     ")";
             }
         }
@@ -180,6 +180,9 @@ public abstract class DetailDialog extends Dialog implements Observer {
 
 /*
 $Log: DetailDialog.java,v $
+Revision 1.3  2003/12/01 14:22:45  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.2  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

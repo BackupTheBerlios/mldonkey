@@ -32,14 +32,14 @@ import net.mldonkey.g2gui.model.enum.EnumNetwork;
  * OptionsInfo
  *
  *
- * @version $Id: OptionsInfoMap.java,v 1.25 2003/11/23 19:56:55 lemmster Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.26 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
 	/**
 	 * @param communication my parent
 	 */
-	public OptionsInfoMap( CoreCommunication communication ) {
+	OptionsInfoMap( CoreCommunication communication ) {
 		super( communication );
 	}
 	
@@ -54,7 +54,7 @@ public class OptionsInfoMap extends InfoMap {
 		 */
 		short listElem = messageBuffer.readInt16();		
 		for ( int i = 0; i < ( listElem ); i++ ) {			
-			OptionsInfo optionsInfo = new OptionsInfo( this.parent );
+			OptionsInfo optionsInfo = parent.getModelFactory().getOptionsInfo();
 			optionsInfo.readStream( messageBuffer );
 			/*now we must take care, wether the option already exists, so that we don't
 			 * overwrite this option*/
@@ -89,7 +89,7 @@ public class OptionsInfoMap extends InfoMap {
 			option.addSectionToAppear( messageBuffer );
 		}
 		else {
-			OptionsInfo option = new OptionsInfo( this.parent );
+			OptionsInfo option = parent.getModelFactory().getOptionsInfo();
 			option.addSectionToAppear( messageBuffer );
 			this.infoMap.put( nameOfOption, option );
 		}
@@ -118,7 +118,7 @@ public class OptionsInfoMap extends InfoMap {
 			option.addPluginToAppear( messageBuffer );
 		}
 		else {
-			OptionsInfo option = new OptionsInfo( this.parent );
+			OptionsInfo option = parent.getModelFactory().getOptionsInfo();
 			option.addPluginToAppear( messageBuffer );
 			this.infoMap.put( nameOfOption, option );
 		}
@@ -158,8 +158,6 @@ public class OptionsInfoMap extends InfoMap {
 	 * @return max_connected_servers/ultrapeers
 	 */
 	public int getMaxConnectedServers( NetworkInfo network ) {
-		if ( parent.getProtoToUse() < 18 ) return 0;
-	
 		try {
 			/* does this networkinfo has servers/supernodes */
 			if ( network.hasServers() || network.hasSupernodes() ) {
@@ -229,6 +227,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.26  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.25  2003/11/23 19:56:55  lemmster
 temporarily workaround until the core comes up with a better solution
 

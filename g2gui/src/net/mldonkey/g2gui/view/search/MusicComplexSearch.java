@@ -25,7 +25,6 @@ package net.mldonkey.g2gui.view.search;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -42,7 +41,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.21 2003/11/27 15:33:33 zet Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.22 2003/12/01 14:23:02 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -189,7 +188,7 @@ public class MusicComplexSearch extends ComplexSearch {
 		this.artistText.add( artist, 0 );
 		
 		/* create an empty query */
-        query = new SearchQuery( core );
+        query = core.getModelFactory().getSearchQuery();
 
 		/* set our input fields */
         query.setMp3Title( input );
@@ -215,6 +214,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.22  2003/12/01 14:23:02  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.21  2003/11/27 15:33:33  zet
 npe
 

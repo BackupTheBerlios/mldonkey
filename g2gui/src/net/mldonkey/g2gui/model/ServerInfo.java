@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.25 2003/11/29 13:01:32 lemmster Exp $
+ * @version $Id: ServerInfo.java,v 1.26 2003/12/01 14:22:17 lemmster Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -186,7 +186,7 @@ public class ServerInfo extends Parent {
 	 * Creates a new serverinfo object 
 	 * @param core The parent objct
 	 */
-	public ServerInfo( CoreCommunication core ) {
+	ServerInfo( CoreCommunication core ) {
 		super( core );
 	}
 
@@ -331,6 +331,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.26  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.25  2003/11/29 13:01:32  lemmster
 Addr.getString() renamed to the more natural word name Addr.toString()
 

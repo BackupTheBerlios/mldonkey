@@ -23,7 +23,6 @@
 package net.mldonkey.g2gui.view.search;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -39,7 +38,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * OtherComplexSearch
  *
- * @version $Id: OtherComplexSearch.java,v 1.10 2003/11/24 08:56:22 lemmster Exp $ 
+ * @version $Id: OtherComplexSearch.java,v 1.11 2003/12/01 14:23:02 lemmster Exp $ 
  *
  */
 public class OtherComplexSearch extends ComplexSearch {
@@ -123,7 +122,7 @@ public class OtherComplexSearch extends ComplexSearch {
 		this.inputText.add( aText, 0 );
 
 		/* create an empty query */
-		query = new SearchQuery( core );
+		query = core.getModelFactory().getSearchQuery();
 
 		/* set our input fields */
 		query.setSearchString( aText );
@@ -143,6 +142,9 @@ public class OtherComplexSearch extends ComplexSearch {
 
 /*
 $Log: OtherComplexSearch.java,v $
+Revision 1.11  2003/12/01 14:23:02  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.10  2003/11/24 08:56:22  lemmster
 fix [Bug #1132] search combo retains duplicates (better solution)
 

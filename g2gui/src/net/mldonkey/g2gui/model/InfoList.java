@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
  * InfoList
  *
  *
- * @version $Id: InfoList.java,v 1.11 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: InfoList.java,v 1.12 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
 public abstract class InfoList extends Observable implements InfoCollection {
@@ -48,14 +48,14 @@ public abstract class InfoList extends Observable implements InfoCollection {
 	/**
 	 * Creates an empty AddSomeOptionList object
 	 */
-	public InfoList() {
+	InfoList() {
 		this.infoList = new ArrayList();
 	}
 	/**
 	 * Creates an empty AddSomeOptionList object and registers parent
 	 * @param core This lists parent, which can be notified on changes
 	 */
-	public InfoList( CoreCommunication core ) {
+	InfoList( CoreCommunication core ) {
 		this.infoList = new ArrayList();
 		this.parent = core;
 	}
@@ -80,11 +80,14 @@ public abstract class InfoList extends Observable implements InfoCollection {
 
 /*
 $Log: InfoList.java,v $
+Revision 1.12  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.11  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.10  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.9  2003/08/02 09:55:55  lemmstercvs01
 observers changed

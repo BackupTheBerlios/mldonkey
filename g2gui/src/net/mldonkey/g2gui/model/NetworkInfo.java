@@ -35,18 +35,18 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * NetworkInfo
  *
  *
- * @version $Id: NetworkInfo.java,v 1.30 2003/10/28 11:07:32 lemmster Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.31 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
 	/**
 	 * File network identifier
 	 */
-	private int network;
+	protected int network;
 	/**
 	 * Network name 
 	 */	
-	private String	networkName;
+	protected String networkName;
 	/**
 	 *Network activated?
 	 */	
@@ -54,60 +54,20 @@ public class NetworkInfo extends Parent {
 	/**
 	 * Name of network config file 
 	 */	
-	private String configFile;
+	protected String configFile;
 	/**
 	 * Number of bytes uploaded on network 
 	 */	
-	private long uploaded;
+	protected long uploaded;
 	/**
 	 * Number of bytes downloaded on network
 	 */
-	private long downloaded;
+	protected long downloaded;
 	/**
 	 * Represents the network type
 	 */
 	private EnumNetwork networkType;
 
-	/* all fields below are for gui proto >=18 */
-
-	/**
-	 * The number of servers we are currently
-	 * connected to and the prev value
-	 */
-	private int connectedServers;
-	/**
-	 * NetworkHasServers (well known servers) 
-	 */	
-	private boolean networkHasServers;
-	/**
-	 * NetworkHasRooms (rooms to chat with other users)
-	 */
-	private boolean networkHasRooms;
-	/**
-	 * NetworkHasMultinet (files can be downloaded from several networks)
-	 */
-	private boolean networkHasMultinet;
-	/**
-	 * VirtualNetwork (not a real network)
-	 */
-	private boolean virtualNetwork;
-	/**
-	 * NetworkHasSearch (searches can be issued)
-	 */
-	private boolean networkHasSearch;
-	/**
-	 * NetworkHasChat (chat between two users) 
-	 */
-	private boolean networkHasChat;
-	/**
-	 * NetworkHasSupernodes (peers can become servers) 
-	 */
-	private boolean networkHasSupernodes;
-	/**
-	 * NetworkHasUpload (upload is implemented)
-	 */
-	private boolean networkHasUpload;
-	
 	/**
 	 * disable
 	 */
@@ -121,7 +81,7 @@ public class NetworkInfo extends Parent {
 	 * Creates a new NetworkInfo
 	 * @param core The parent
 	 */
-	public NetworkInfo( CoreCommunication core ) {
+	NetworkInfo( CoreCommunication core ) {
 		super( core );
 	}
 	
@@ -158,43 +118,6 @@ public class NetworkInfo extends Parent {
 		this.uploaded = messageBuffer.readInt64();
 		this.downloaded = messageBuffer.readInt64();
 		
-		if ( parent.getProtoToUse() >= 18 ) {
-			this.connectedServers = messageBuffer.readInt32();
-			
-			/* read the int16 list */
-			short listElems = messageBuffer.readInt16();
-			for ( int i = 0; i < listElems; i++ ) {
-				short listElem = messageBuffer.readInt16();
-				switch ( listElem ) {
-					case 0 :
-						this.networkHasServers = true;
-						break;
-					case 1 :
-						this.networkHasRooms = true;
-						break;
-					case 2 :
-						this.networkHasMultinet = true;
-						break;
-					case 3 :
-						this.virtualNetwork = true;
-						break;
-					case 4 :
-						this.networkHasSearch = true;
-						break;
-					case 5 :
-						this.networkHasChat = true;
-						break;
-					case 6 :
-						this.networkHasSupernodes = true;
-						break;
-					case 7 :
-						this.networkHasUpload = true;
-						break;
-				}
-	
-			}
-		}
-		
 		/* set the networktype by networkname */
 		this.setNetworkType( this.networkName );
 
@@ -220,16 +143,14 @@ public class NetworkInfo extends Parent {
 	 * @return VirtualNetwork (not a real network)
 	 */
 	public boolean isVirtual() {
-		return this.virtualNetwork;
+		// proto < 18 has no virtual networks
+		return false;
 	}
 	/**
 	 * @return NetworkHasRooms (rooms to chat with other users)
 	 */	
 	public boolean hasRooms() {
-		if ( parent.getProtoToUse() >= 18 )
-			return this.hasRooms();
-
-		/* proto < 18, soulseek and directconnect have rooms */
+		/* soulseek and directconnect have rooms */
 		if ( this.networkType == EnumNetwork.SOULSEEK
 		|| this.networkType == EnumNetwork.DC ) 
 			return true;
@@ -239,8 +160,6 @@ public class NetworkInfo extends Parent {
 	 * @return NetworkHasMultinet (files can be downloaded from several networks)
 	 */
 	public boolean isMultinet() {
-		if ( parent.getProtoToUse() >= 18 )
-			return this.networkHasMultinet;
 		/* no multinet proto < 18 */
 		return false;
 	}
@@ -248,9 +167,6 @@ public class NetworkInfo extends Parent {
 	 * @return NetworkHasChat (chat between two users)
 	 */
 	public boolean hasChat() {
-		if ( parent.getProtoToUse() >= 18 )
-			return this.networkHasChat;
-
 		if ( this.networkType == EnumNetwork.DONKEY
 		|| this.networkType == EnumNetwork.OV )
 			return true;
@@ -260,9 +176,6 @@ public class NetworkInfo extends Parent {
 	 * @return NetworkHasSupernodes (peers can become servers)
 	 */
 	public boolean hasSupernodes() {
-		/* proto >= 18 sends hasServers */
-		if ( parent.getProtoToUse() >= 18 )
-			return this.networkHasSupernodes;
 		/* proto < 18 */
 		if ( this.networkType == EnumNetwork.FT
 		|| this.networkType == EnumNetwork.GNUT
@@ -274,9 +187,6 @@ public class NetworkInfo extends Parent {
 	 * @return NetworkHasUpload (upload is implemented)
 	 */
 	public boolean hasUpload() {
-		if ( parent.getProtoToUse() >= 18 )
-			return this.networkHasUpload;
-			
 		if ( this.networkType == EnumNetwork.DONKEY
 		|| this.networkType == EnumNetwork.OV
 		|| this.networkType == EnumNetwork.BT
@@ -289,10 +199,6 @@ public class NetworkInfo extends Parent {
 	 * @return Does this network use servers
 	 */
 	public boolean hasServers() {
-		/* proto >= 18 sends hasServers */
-		if ( parent.getProtoToUse() >= 18 )
-			return this.networkHasServers;
-
 		/* proto < 18 */
 		/* have no servers */
 		if ( this.networkType == EnumNetwork.BT
@@ -307,9 +213,6 @@ public class NetworkInfo extends Parent {
 	 * @return true on searchable
 	 */
 	public boolean isSearchable() {
-		/* proto >= 18 sends hasServers */
-		if ( parent.getProtoToUse() >= 18 )
-			return this.networkHasSearch;
 		/* proto < 18 */
 		if ( this.networkType == EnumNetwork.BT )
 			return false;
@@ -369,16 +272,13 @@ public class NetworkInfo extends Parent {
 	 * @return The number of connected Servers
 	 */
 	public int getConnectedServers() {
-		if ( parent.getProtoToUse() >= 18 )
-			return connectedServers;
-		else
-			return parent.getServerInfoIntMap().getConnected( this );	
+		return parent.getServerInfoIntMap().getConnected( this );	
 	}
 
 	/**
 	 * @param b a short
 	 */
-	private void setEnabled( short b ) {
+	protected void setEnabled( short b ) {
 		if ( b == 0 ) enabled = false;
 		if ( b == 1 ) enabled = true;		
 	}
@@ -417,7 +317,7 @@ public class NetworkInfo extends Parent {
 	/**
 	 * @param string the network name, to deceide which network
 	 */
-	private void setNetworkType( String string ) {
+	protected void setNetworkType( String string ) {
 		if ( string.equals( "Donkey" ) )
 			networkType = EnumNetwork.DONKEY;
 		else if ( string.equals( "Fasttrack" ) )
@@ -444,7 +344,7 @@ public class NetworkInfo extends Parent {
 	 * @param i The new amount of connected servers for this network
 	 */
 	protected void setConnectedServers( int i ) {
-		this.connectedServers = i;
+		// just ignore: proto < 18 has no connected servers
 	}
 
 	/**
@@ -523,6 +423,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.31  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.30  2003/10/28 11:07:32  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"

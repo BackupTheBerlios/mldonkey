@@ -22,6 +22,9 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
@@ -41,15 +44,12 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-import java.util.Observable;
-import java.util.Observer;
-
 
 /**
  * ChunkView
  *
  *
- * @version $Id: ChunkCanvas.java,v 1.5 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: ChunkCanvas.java,v 1.6 2003/12/01 14:22:45 lemmster Exp $
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -233,10 +233,8 @@ public class ChunkCanvas extends Canvas implements Observer {
         this.chunks = fileInfo.getChunks();
 
         if (networkInfo != null) {
-            Object tmpAvail = fileInfo.getAvails().get(networkInfo);
-
-            if (tmpAvail instanceof String) {
-                this.avail = (String) tmpAvail;
+        	if ( fileInfo.hasAvails() ) {
+                this.avail = fileInfo.getAvails(networkInfo);
             } else {
                 this.avail = fileInfo.getAvail();
             }
@@ -495,6 +493,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.6  2003/12/01 14:22:45  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.5  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

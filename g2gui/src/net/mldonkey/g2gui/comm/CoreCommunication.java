@@ -29,6 +29,7 @@ import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.model.ConsoleMessage;
 import net.mldonkey.g2gui.model.DefineSearchMap;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
+import net.mldonkey.g2gui.model.ModelFactory;
 import net.mldonkey.g2gui.model.NetworkInfoIntMap;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
@@ -40,7 +41,7 @@ import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
  * CoreCommunication
  *
  *
- * @version $Id: CoreCommunication.java,v 1.44 2003/11/29 20:16:30 zet Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.45 2003/12/01 14:21:55 lemmster Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -118,11 +119,13 @@ public interface CoreCommunication extends Runnable {
 	 */
 	ClientStats getClientStats();
 	/**
-	 * 
 	 * @return the Shared Files Map
 	 */
 	SharedFileInfoIntMap getSharedFileInfoIntMap();
-	
+	/**
+	 * @return The model factory where we get model objs
+	 */
+	ModelFactory getModelFactory();
 	/**
 	 * Gets the socket the core is conntected through with mldonkey
 	 * @return The socket
@@ -176,6 +179,9 @@ public interface CoreCommunication extends Runnable {
 }
 /*
 $Log: CoreCommunication.java,v $
+Revision 1.45  2003/12/01 14:21:55  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.44  2003/11/29 20:16:30  zet
 stop/start timer on tab (de)activation
 

@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.model.ConsoleMessage;
 import net.mldonkey.g2gui.model.DefineSearchMap;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
-import net.mldonkey.g2gui.model.InfoCollection;
+import net.mldonkey.g2gui.model.ModelFactory;
 import net.mldonkey.g2gui.model.NetworkInfoIntMap;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
 import net.mldonkey.g2gui.model.ResultInfo;
@@ -49,7 +49,6 @@ import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.model.RoomInfoIntMap;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
-import net.mldonkey.g2gui.model.SimpleInformation;
 import net.mldonkey.g2gui.model.UserInfo;
 import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -58,7 +57,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.118 2003/11/30 18:49:08 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.119 2003/12/01 14:21:55 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -67,7 +66,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * the core denies our connection attempt
 	 */
 	private boolean connectionDenied;
-	
+	/**
+	 * A Factory where we get Model objects
+	 */
+	private ModelFactory modelFactory;
 	/**
 	 * Should we use poll or push mode
 	 */
@@ -118,24 +120,6 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	private Timer timer;
 	
 	/**
-	 * Store the simple informations from the core here
-	 */
-	private SimpleInformation clientStats = new ClientStats( this ),
-							   consoleMessage = new ConsoleMessage();
-	/**
-	 * Store the complex informations from the core here
-	 */
-	private InfoCollection clientInfoList = new ClientInfoIntMap( this ),
-					 fileInfoMap          = new FileInfoIntMap( this ),
-					 serverInfoMap        = new ServerInfoIntMap( this ),
-					 sharedFileInfoList   = new SharedFileInfoIntMap( this ),	
-					 optionsInfoMap       = new OptionsInfoMap( this ),
-					 networkinfoMap       = new NetworkInfoIntMap( this ),
-					 defineSearchMap      = new DefineSearchMap( this ),
-					 resultInfoMap		  = new ResultInfoIntMap( this ),
-					 roomInfoIntMap       = new RoomInfoIntMap( this );					 
-
-	/**
 	 * Some helper maps
 	 */
 	private TIntObjectHashMap userInfo = new TIntObjectHashMap(),
@@ -154,7 +138,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	}
 	
 	/**
-	 * disConnects the Core from mldonkey @remote	 * 
+	 * disConnects the Core from mldonkey @remote
 	 */
 	public void disconnect() {		
 		this.connected = false;
@@ -314,21 +298,22 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					else
 						this.usingVersion = PROTOCOL_VERSION;
 					this.sendPullmode( pollModeEnabled );
-					this.sendPassword();	
+					this.sendPassword();
+					this.modelFactory = ModelFactory.getFactory( this.usingVersion, this );
 					break;
 					
 			case Message.R_DEFINE_SEARCH :
-					this.defineSearchMap.readStream( messageBuffer );
+					this.getModelFactory().getDefineSearchMap().readStream( messageBuffer );
 					break;		
 
 			case Message.R_RESULT_INFO :
-					ResultInfo result = new ResultInfo( this );
+					ResultInfo result = getModelFactory().getResultInfo();
 					result.readStream( messageBuffer );
 					this.resultInfo.put( result.getResultID(), result );
 					break;
 					
 			case Message.R_SEARCH_RESULT :
-					this.resultInfoMap.readStream( messageBuffer );		
+					this.getModelFactory().getResultInfoIntMap().readStream( messageBuffer );		
 					break;
 					
 			case Message.R_OPTIONS_INFO :
@@ -343,16 +328,16 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 							waiterObj.notify();
 						}
 						initialized = true;
-					}	
-					this.optionsInfoMap.readStream( messageBuffer );			
+					}
+					this.getModelFactory().getOptionsInfoMap().readStream( messageBuffer );			
 					break;
 				
 			case Message.R_FILE_UPDATE_AVAILABILITY :
 					int fileId = messageBuffer.readInt32();
 					int clientId = messageBuffer.readInt32();
 					String availability = messageBuffer.readString();
-					if ( ( ( ClientInfoIntMap ) this.clientInfoList ).containsKey( clientId ) )
-						( ( ClientInfoIntMap ) this.clientInfoList ).get( clientId )
+					if ( ( ( ClientInfoIntMap ) this.getModelFactory().getClientInfoIntMap() ).containsKey( clientId ) )
+						( ( ClientInfoIntMap ) this.getModelFactory().getClientInfoIntMap() ).get( clientId )
 							.putAvail( fileId, availability );
 					break;
 
@@ -361,43 +346,44 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					int fileIdentifier = messageBuffer.readInt32();
 					int clientIdentifier = messageBuffer.readInt32();
 					/*check for null-objects...*/
-					if ( ( ( FileInfoIntMap )this.fileInfoMap   ).contains( fileIdentifier ) )					
-						if ( ( ( ClientInfoIntMap )this.clientInfoList ).get( clientIdentifier ) != null ) {						
+					if ( ( ( FileInfoIntMap )this.getModelFactory().getFileInfoIntMap()   ).contains( fileIdentifier ) )					
+						if ( ( ( ClientInfoIntMap )this.getModelFactory().getClientInfoIntMap() ).get( clientIdentifier ) != null ) {						
 						/*everything's fine, we can execute:*/
-							( ( FileInfoIntMap ) this.fileInfoMap ).get( fileIdentifier )
-								.addClientInfo( ( ( ClientInfoIntMap ) this.clientInfoList )
+							( ( FileInfoIntMap ) this.getModelFactory().getFileInfoIntMap() ).get( fileIdentifier )
+								.addClientInfo( ( ( ClientInfoIntMap ) this.getModelFactory().getClientInfoIntMap() )
 									.get( clientIdentifier ) );
 						}
 					break;
 			
 					
 			case Message.R_SERVER_STATE :
-					if ( advancedMode )
-						this.serverInfoMap.update( messageBuffer );
+					if ( advancedMode ) {
+						this.getModelFactory().getServerInfoIntMap().update( messageBuffer );
+					}
 					break;		
 					
 			case Message.R_CLIENT_INFO :
-					this.clientInfoList.readStream( messageBuffer );
+				this.getModelFactory().getClientInfoIntMap().readStream( messageBuffer );
 					break;
 			
 			case Message.R_ADD_SECTION_OPTION :
-					( ( OptionsInfoMap )this.optionsInfoMap ).readGeneralOptionDetails( messageBuffer );
+					( ( OptionsInfoMap )this.getModelFactory().getOptionsInfoMap() ).readGeneralOptionDetails( messageBuffer );
 					break;
 					
 			case Message.R_ADD_PLUGIN_OPTION :
-					( ( OptionsInfoMap )this.optionsInfoMap ).readPluginOptionDetails( messageBuffer );
+					( ( OptionsInfoMap )this.getModelFactory().getOptionsInfoMap() ).readPluginOptionDetails( messageBuffer );
 					break;		
 					
 			case Message.R_CLIENT_STATE :
-					this.clientInfoList.update( messageBuffer );
+					this.getModelFactory().getClientInfoIntMap().update( messageBuffer );
 					break;	
 					
 			case Message.R_ROOM_INFO :
-					this.roomInfoIntMap.readStream( messageBuffer );			
+					this.getModelFactory().getRoomInfoIntMap().readStream( messageBuffer );			
 					break;		
 					
 			case Message.R_SHARED_FILE_UPLOAD :
-					this.sharedFileInfoList.update( messageBuffer );	
+					this.getModelFactory().getSharedFileInfoIntMap().update( messageBuffer );	
 					break;
 					
 			case Message.R_BAD_PASSWORD :
@@ -408,11 +394,11 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;
 										
 			case Message.R_SHARED_FILE_INFO :
-					this.sharedFileInfoList.readStream( messageBuffer );
+					this.getModelFactory().getSharedFileInfoIntMap().readStream( messageBuffer );
 					break;		
 
 			case Message.R_FILE_DOWNLOAD_UPDATE :
-					this.fileInfoMap.update( messageBuffer );
+					this.getModelFactory().getFileInfoIntMap().update( messageBuffer );
 					break;	
 					
 			case Message.R_CLIENT_STATS :
@@ -428,55 +414,50 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 						}
 						initialized = true;
 					}
-					clientStats.readStream( messageBuffer );
-					
-					/*
-					 * If we reiceive this info, we request Upload-Stats					 * 
-					 */
-					//if ( pollUpStats ) 
-					//	requestUpstats();
+					this.getModelFactory().getClientStats().readStream( messageBuffer );
 					break;	
 					
 			case Message.R_DOWNLOAD :
-					( ( FileInfoIntMap )this.fileInfoMap ).add( messageBuffer );
+					( ( FileInfoIntMap )this.getModelFactory().getFileInfoIntMap() ).add( messageBuffer );
 					break;					
 
 			case Message.R_CONSOLE :	
-					if ( advancedMode )
-						this.consoleMessage.readStream( messageBuffer );
+					if ( advancedMode ) {
+						this.getModelFactory().getConsoleMessage().readStream( messageBuffer );
+					}
 					break;
 				
 			case Message.R_NETWORK_INFO :
-					this.networkinfoMap.readStream( messageBuffer );
+					this.getModelFactory().getNetworkInfoIntMap().readStream( messageBuffer );
 					break;
 					
 			case Message.R_USER_INFO :
-					UserInfo user = new UserInfo();
+					UserInfo user = this.getModelFactory().getUserInfo();
 					user.readStream( messageBuffer );
 					this.userInfo.put( user.getUserId(), user );
 					break;		
 					
 			case Message.R_SERVER_INFO :
 					if ( advancedMode ) {
-						this.serverInfoMap.readStream( messageBuffer );
+						this.getModelFactory().getServerInfoIntMap().readStream( messageBuffer );
 					}	
 					break;
 							
 			case Message.R_DOWNLOADING_LIST :
-					this.fileInfoMap.readStream( messageBuffer );
+					this.getModelFactory().getFileInfoIntMap().readStream( messageBuffer );
 					break;
 					 
 			case Message.R_DOWNLOADED_LIST :
 					 break;
 					 
 			case Message.R_CLEAN_TABLE :
-					( ( ClientInfoIntMap )this.clientInfoList ).clean( messageBuffer );
-					( ( ServerInfoIntMap )this.serverInfoMap ).clean( messageBuffer );
+					( ( ClientInfoIntMap )this.getModelFactory().getClientInfoIntMap() ).clean( messageBuffer );
+					( ( ServerInfoIntMap )this.getModelFactory().getServerInfoIntMap() ).clean( messageBuffer );
 					break;
 					
 			case Message.R_MESSAGE_FROM_CLIENT :
 					if ( advancedMode ) {
-						ClientMessage clientMessage = new ClientMessage( this );
+						ClientMessage clientMessage = this.getModelFactory().getClientMessage();
 						clientMessage.readStream( messageBuffer );
 						this.setChanged();
 						this.notifyObservers( clientMessage );
@@ -546,21 +527,21 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getFileInfoIntMap()
 	 */
 	public FileInfoIntMap getFileInfoIntMap() {
-		return ( FileInfoIntMap ) this.fileInfoMap;
+		return ( FileInfoIntMap ) this.getModelFactory().getFileInfoIntMap();
 	}
 
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getOptions()
 	 */
 	public OptionsInfoMap getOptionsInfoMap() {
-		return ( OptionsInfoMap ) optionsInfoMap;
+		return ( OptionsInfoMap ) this.getModelFactory().getOptionsInfoMap();
 	}
 
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getServerInfoIntMap()
 	 */
 	public ServerInfoIntMap getServerInfoIntMap() {
-		return ( ServerInfoIntMap ) this.serverInfoMap;
+		return ( ServerInfoIntMap ) this.getModelFactory().getServerInfoIntMap();
 	}
 
 
@@ -575,7 +556,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getClientStats()
 	 */
 	public ClientStats getClientStats() {
-		return ( ClientStats ) this.clientStats;
+		return (ClientStats) this.getModelFactory().getClientStats();
 	}
 
 	/* (non-Javadoc)
@@ -607,21 +588,21 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getResultInfoIntMap()
 	 */
 	public ResultInfoIntMap getResultInfoIntMap() {
-		return ( ResultInfoIntMap ) this.resultInfoMap;
+		return ( ResultInfoIntMap ) this.getModelFactory().getResultInfoIntMap();
 	}
 
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getNetworkInfoMap()
 	 */
 	public NetworkInfoIntMap getNetworkInfoMap() {
-		return ( NetworkInfoIntMap ) networkinfoMap;
+		return ( NetworkInfoIntMap ) this.getModelFactory().getNetworkInfoIntMap();
 	}
 
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getConsoleMessage()
 	 */
 	public ConsoleMessage getConsoleMessage() {
-		return ( ConsoleMessage ) this.consoleMessage;
+		return ( ConsoleMessage ) this.getModelFactory().getConsoleMessage();
 	}
 
 	/* (non-Javadoc)
@@ -635,36 +616,43 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getRoomInfoIntMap()
 	 */
 	public RoomInfoIntMap getRoomInfoIntMap() {		
-		return ( RoomInfoIntMap ) this.roomInfoIntMap;
+		return ( RoomInfoIntMap ) this.getModelFactory().getRoomInfoIntMap();
 	}
 
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getDefineSearch()
 	 */
 	public DefineSearchMap getDefineSearch() {
-		return ( DefineSearchMap ) this.defineSearchMap;
+		return ( DefineSearchMap ) this.getModelFactory().getDefineSearchMap();
 	}
 
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getClientInfoIntMap()
 	 */
 	public ClientInfoIntMap getClientInfoIntMap() {
-		return ( ClientInfoIntMap ) this.clientInfoList;
+		return ( ClientInfoIntMap ) this.getModelFactory().getClientInfoIntMap();
 	}
 	/*
 	 * (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getSharedFileInfoIntMap()
 	 */
 	public SharedFileInfoIntMap getSharedFileInfoIntMap() {
-		return ( SharedFileInfoIntMap ) sharedFileInfoList;
+		return ( SharedFileInfoIntMap ) this.getModelFactory().getSharedFileInfoIntMap();
 	}
 
-
-
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getModelFactory()
+	 */
+	public ModelFactory getModelFactory() {
+		return this.modelFactory;
+	}
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.119  2003/12/01 14:21:55  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.118  2003/11/30 18:49:08  lemmster
 better link handling, handle more than one link simultaneously
 

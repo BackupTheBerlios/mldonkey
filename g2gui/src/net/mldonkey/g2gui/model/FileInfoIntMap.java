@@ -38,14 +38,14 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  *
- * @version $Id: FileInfoIntMap.java,v 1.31 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: FileInfoIntMap.java,v 1.32 2003/12/01 14:22:17 lemmster Exp $
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
     /**
      * @param communication my parent
      */
-    public FileInfoIntMap( CoreCommunication communication ) {
+    FileInfoIntMap( CoreCommunication communication ) {
         super( communication );
     }
 
@@ -79,7 +79,7 @@ public class FileInfoIntMap extends InfoIntMap {
         this.infoIntMap.clear();
         /* insert the new FileInfo objects */
         for ( int i = 0; i < listElem; i++ ) {
-            FileInfo fileInfo = new FileInfo( this.parent );
+            FileInfo fileInfo = parent.getModelFactory().getFileInfo();
             fileInfo.readStream( messageBuffer );
             this.put( fileInfo.getId(), fileInfo );
         }
@@ -116,7 +116,7 @@ public class FileInfoIntMap extends InfoIntMap {
                 fileInfo.readStream( messageBuffer );
             }
             else {
-                FileInfo fileInfo = new FileInfo( this.parent );
+                FileInfo fileInfo = parent.getModelFactory().getFileInfo();
                 fileInfo.readStream( messageBuffer );
                 this.put( fileInfo.getId(), fileInfo );
                 this.setChanged();
@@ -200,6 +200,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.32  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.31  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

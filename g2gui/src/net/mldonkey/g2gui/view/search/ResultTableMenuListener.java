@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.33 2003/11/29 17:02:27 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.34 2003/12/01 14:23:02 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -176,7 +176,7 @@ Yet			menuManager.add( webManager );
 	 * downloads the selected files and creates error msgs if needed
 	 */
 	void downloadSelected() {				
-		Download download = new Download( gView.getCore() );
+		Download download = gView.getCore().getModelFactory().getDownload();
 		String anErrorString = new String();
 		int counter = 0;
 		
@@ -298,6 +298,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.34  2003/12/01 14:23:02  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.33  2003/11/29 17:02:27  zet
 more viewframes.. will continue later.
 

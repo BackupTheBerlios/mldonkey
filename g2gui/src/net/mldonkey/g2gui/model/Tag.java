@@ -29,10 +29,10 @@ import net.mldonkey.g2gui.model.enum.*;
  * Tag
  *
  *
- * @version $Id: Tag.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: Tag.java,v 1.9 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
-public class Tag implements SimpleInformation {
+public class Tag extends SimpleInformation {
 	
 	/**
 	 * Tag Name
@@ -50,6 +50,10 @@ public class Tag implements SimpleInformation {
 	 * Tag Value (if type = 2)
 	 */
 	private String sValue;
+	
+	Tag() {
+		//prevent outer package instanciation
+	}
 	
 	/**
 	 * @return Tag name
@@ -111,11 +115,14 @@ public class Tag implements SimpleInformation {
 
 /*
 $Log: Tag.java,v $
+Revision 1.9  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.6  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved

@@ -24,8 +24,6 @@ package net.mldonkey.g2gui.model;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.EnumExtension;
@@ -34,10 +32,10 @@ import net.mldonkey.g2gui.model.enum.EnumExtension;
  * Parent
  *
  *
- * @version $Id: Parent.java,v 1.6 2003/11/29 13:03:54 lemmster Exp $ 
+ * @version $Id: Parent.java,v 1.7 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
-public abstract class Parent extends Observable implements SimpleInformation {
+public abstract class Parent extends SimpleInformation {
 	/**
 	 * The CoreCommunication parent
 	 */
@@ -51,7 +49,7 @@ public abstract class Parent extends Observable implements SimpleInformation {
 	 * Creates a new SimpleInformation
 	 * @param core The parent CoreCommunication
 	 */
-	public Parent( CoreCommunication core ) {
+	Parent( CoreCommunication core ) {
 		this.parent = core;
 	}
 	/**
@@ -111,6 +109,9 @@ public abstract class Parent extends Observable implements SimpleInformation {
 
 /*
 $Log: Parent.java,v $
+Revision 1.7  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.6  2003/11/29 13:03:54  lemmster
 ToolTip complete reworked (to be continued)
 

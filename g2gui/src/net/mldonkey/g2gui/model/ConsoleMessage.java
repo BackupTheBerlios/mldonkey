@@ -22,22 +22,24 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.util.Observable;
-
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ConsoleMessage
  * 
  *
- * @version $Id: ConsoleMessage.java,v 1.12 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: ConsoleMessage.java,v 1.13 2003/12/01 14:22:17 lemmster Exp $
  */
-public class ConsoleMessage extends Observable implements SimpleInformation {
+public class ConsoleMessage extends SimpleInformation {
 	
 	/**
 	 * String the core wants to display on the console
 	 */
 	private String consoleMessage;
+	
+	ConsoleMessage() {
+		//prevent outer package instanciation
+	}
 	
 	/**
 	 * @return a string
@@ -77,11 +79,14 @@ public class ConsoleMessage extends Observable implements SimpleInformation {
 }
 /*
 $Log: ConsoleMessage.java,v $
+Revision 1.13  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.12  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.11  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.10  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support

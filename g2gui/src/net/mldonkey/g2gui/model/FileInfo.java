@@ -22,6 +22,14 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Set;
+import java.util.TreeSet;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -31,26 +39,16 @@ import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumExtension;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
-import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
-
 
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.82 2003/11/30 23:42:56 zet Exp $
+ * @version $Id: FileInfo.java,v 1.83 2003/12/01 14:22:17 lemmster Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -128,14 +126,8 @@ public class FileInfo extends Parent implements Observer {
     /**
      * Availibility
      */
-    private String avail;
+    protected String avail;
     private int relativeAvail = 0;
-
-    /**
-     * Availibility for each network
-     * only in protocol > 17
-     */
-    private Map avails;
 
     /**
      * Download rate
@@ -219,7 +211,7 @@ public class FileInfo extends Parent implements Observer {
      * Creates a new fileinfo object
      * @param core The CoreCommunication parent
      */
-    public FileInfo(CoreCommunication core) {
+    FileInfo(CoreCommunication core) {
         super(core);
     }
 
@@ -235,6 +227,18 @@ public class FileInfo extends Parent implements Observer {
      */
     public String getAvail() {
         return avail;
+    }
+    
+    public boolean hasAvails() {
+    	return false;
+    }
+    
+    public String getAvails( NetworkInfo network ) {
+    	return "";
+    }
+    
+    public Set getAllAvailNetworks() {
+    	return new TreeSet();
     }
 
     /**
@@ -270,13 +274,6 @@ public class FileInfo extends Parent implements Observer {
 
         if (oldRelativeAvail != relativeAvail)
             changedProperties.add(CHANGED_AVAIL);
-    }
-
-    /**
-     * @return The file availability map
-     */
-    public Map getAvails() {
-        return avails;
     }
 
     /**
@@ -644,38 +641,8 @@ public class FileInfo extends Parent implements Observer {
      *
      * read a list of int32(networkid) and string(avail)
      */
-    private void setAvailability(MessageBuffer messageBuffer) {
-        if (parent.getProtoToUse() > 17) {
-            int listElem = messageBuffer.readInt16();
-            this.avails = new HashMap(listElem);
-
-            boolean foundMultiNet = false;
-
-            for (int i = 0; i < listElem; i++) {
-                int networkID = messageBuffer.readInt32();
-                NetworkInfo aNetwork = parent.getNetworkInfoMap().get(networkID);
-
-                /* multinet avail is the overall avail */
-                if (aNetwork.getNetworkType() == EnumNetwork.MULTINET) {
-                    this.avail = messageBuffer.readString();
-                    foundMultiNet = true;
-                } else {
-                    /*
-                     * Set this.avail until multiNet is found.
-                     * if you only check for null, it will not be updated
-                     * by subsequent updates.
-                     */
-                    String tempAvail = messageBuffer.readString();
-
-                    if (!foundMultiNet)
-                        this.avail = tempAvail;
-
-                    this.avails.put(aNetwork, tempAvail);
-                }
-            }
-        } else
-            this.avail = messageBuffer.readString();
-
+    protected void setAvailability(MessageBuffer messageBuffer) {
+        this.avail = messageBuffer.readString();
         setRelativeAvail();
     }
 
@@ -795,21 +762,12 @@ public class FileInfo extends Parent implements Observer {
      * @param string The new name for this file
      */
     public void setName(String string) {
-        if (parent.getProtoToUse() > 19) {
-            Object[] obj = new Object[ 2 ];
-            obj[ 0 ] = new Integer(this.getId());
-            obj[ 1 ] = string;
+        string = "rename " + this.getId() + " \"" + string + "\"";
 
-            Message renameMessage = new EncodeMessage(Message.S_RENAME_FILE, obj);
-            renameMessage.sendMessage(this.parent);
-        } else {
-            string = "rename " + this.getId() + " \"" + string + "\"";
-
-            /* create the message content */
-            Message consoleMessage = new EncodeMessage(Message.S_CONSOLEMSG, string);
-            consoleMessage.sendMessage(this.parent);
-            consoleMessage = null;
-        }
+        /* create the message content */
+        Message consoleMessage = new EncodeMessage(Message.S_CONSOLEMSG, string);
+        consoleMessage.sendMessage(this.parent);
+        consoleMessage = null;
     }
 
     /**
@@ -1028,6 +986,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.83  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.82  2003/11/30 23:42:56  zet
 updates for latest mldonkey cvs
 
@@ -1157,7 +1118,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)

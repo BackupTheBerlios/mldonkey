@@ -29,10 +29,10 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  *
- * @version $Id: State.java,v 1.12 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: State.java,v 1.13 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
-public class State implements SimpleInformation {
+public class State extends SimpleInformation {
 	
 	/**
 	 * Connections State
@@ -42,6 +42,10 @@ public class State implements SimpleInformation {
 	 * Client Rank
 	 */
 	private int rank;
+	
+	State() {
+		//prevent outer package instanciation
+	}
 	
 	/**
 	 * @return The current rank
@@ -105,11 +109,14 @@ public class State implements SimpleInformation {
 
 /*
 $Log: State.java,v $
+Revision 1.13  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.12  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.11  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.10  2003/07/05 16:04:34  lemmstercvs01
 javadoc improved

@@ -32,7 +32,7 @@ import gnu.trove.TIntObjectIterator;
  * InfoMap
  *
  *
- * @version $Id: InfoIntMap.java,v 1.9 2003/10/22 21:02:11 zet Exp $ 
+ * @version $Id: InfoIntMap.java,v 1.10 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
 public abstract class InfoIntMap extends Observable implements InfoCollection {
@@ -48,14 +48,14 @@ public abstract class InfoIntMap extends Observable implements InfoCollection {
 	/**
 	 * Generates a empty ServerInfoList object
 	 */
-	public InfoIntMap() {
+	InfoIntMap() {
 		this.infoIntMap = new TIntObjectHashMap();
 	}
 	
 	/**
 	 * @param communication my parent
 	 */	
-	public InfoIntMap( CoreCommunication communication ) {	
+	InfoIntMap( CoreCommunication communication ) {	
 	    this();
 		this.parent = communication;
 	}
@@ -88,6 +88,9 @@ public abstract class InfoIntMap extends Observable implements InfoCollection {
 
 /*
 $Log: InfoIntMap.java,v $
+Revision 1.10  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.9  2003/10/22 21:02:11  zet
 use this()
 
@@ -95,7 +98,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.6  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support

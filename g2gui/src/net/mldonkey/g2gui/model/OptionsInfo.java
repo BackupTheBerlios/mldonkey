@@ -32,52 +32,40 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  *
- * @version $Id: OptionsInfo.java,v 1.24 2003/09/18 15:29:25 zet Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.25 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
-public class OptionsInfo extends Parent {
+public abstract class OptionsInfo extends Parent {
 	/**
 	 * The option type
 	 */
-	private EnumTagType optionType;
+	protected EnumTagType optionType;
 	/**
 	 * The optino description
 	 */
-	private String description = "";
+	protected String description = "";
 	/**
 	 * The section to appear
 	 */
-	private String sectionToAppear;
+	protected String sectionToAppear;
 	/**
 	 * The pluginToAppear
 	 */
-	private String pluginToAppear;
+	protected String pluginToAppear;
 	/**
 	 * Options Name
 	 */
-	private String key;
+	protected String key;
 	/**
 	 * Options Value
 	 */
-	private String value;
-	/**
-	 * The option defaultValue
-	 */
-	private String defaultValue;
-	/**
-	 * The HelpText to this optionsinfo
-	 */
-	private String optionHelp;
-	/**
-	 * Advanced option;
-	 */
-	private boolean advanced;
+	protected String value;
 	
 	/**
 	 * Creates a new optionsinfo
 	 * @param core The corecommunication
 	 */
-	public OptionsInfo( CoreCommunication core ) {
+	OptionsInfo( CoreCommunication core ) {
 		super( core );
 	}
 	
@@ -125,71 +113,14 @@ public class OptionsInfo extends Parent {
 	 * Reads the sectionToAppear from the MessageBuffer
 	 * @param messageBuffer MessageBuffer to read from
 	 */
-	public void addSectionToAppear( MessageBuffer messageBuffer ) {
-		/*
-		 * String Name of Option 
-		 * String Description 
-		 * String Section where Option should appear 
-		 * String Type of Option ("Bool", "Filename", ...) 
-		 * String Option Help 
-		 * String Current Option Value 
-		 * String Option Default Value 
-		 * int8 Advanced (0 -> simple, 1 -> advanced) 
-		 */		
-		this.sectionToAppear = messageBuffer.readString();
-		this.description = messageBuffer.readString();
-		this.key = messageBuffer.readString();
-		if ( this.parent.getProtoToUse() > 16 ) {
-			this.setOptionType( messageBuffer.readString() );
-			this.optionHelp = messageBuffer.readString();
-			this.value = messageBuffer.readString();
-			this.defaultValue = messageBuffer.readString();
-			this.setAdvanced( messageBuffer.readByte() );
-		}
-		else
-			this.setOptionType( messageBuffer.readByte() );
-	}
-
+	public abstract void addSectionToAppear( MessageBuffer messageBuffer );
+	
 	/**
 	 * Reads the pluginToAppear from the MessageBuffer
 	 * @param messageBuffer MessageBuffer to read from
 	 */
-	public void addPluginToAppear( MessageBuffer messageBuffer ) {
-		/*
-		 * String Name of Option 
-		 * String Description 
-		 * String Plugin where Option should appear 
-		 * String Type of Option ("Bool", "Filename", ...) 
-		 * String Option Help 
-		 * String Current Option Value 
-		 * String Option Default Value 
-		 * int8 Advanced (0 -> simple, 1 -> advanced) 
-		 */		
-		this.pluginToAppear = messageBuffer.readString();
-		this.description = messageBuffer.readString();
-		this.key = messageBuffer.readString();
-		if ( this.parent.getProtoToUse() > 16 ) {
-			this.setOptionType( messageBuffer.readString() );
-			this.optionHelp = messageBuffer.readString();
-			this.value = messageBuffer.readString();
-			this.defaultValue = messageBuffer.readString();
-			this.setAdvanced( messageBuffer.readByte() );
-		}
-		else
-			this.setOptionType( messageBuffer.readByte() );
-	}
-	
-	/**
-	 * Advanced or Beginner Option
-	 * @param b the byte
-	 */
-	private void setAdvanced( byte b ) {
-		if ( b == 0 )
-			this.advanced = false;
-		else
-			this.advanced = true;
-	}
-	
+	public abstract void addPluginToAppear( MessageBuffer messageBuffer );	
+
 	/**
 	 * return a string representation of this object
 	 * @return a string
@@ -214,48 +145,6 @@ public class OptionsInfo extends Parent {
 		consoleMessage.sendMessage( this.parent );
 	}
 
-	/**
-	 * @param optionType what kind of option do we have: String, Int od Boolean
-	 */
-	private void setOptionType( byte optionType ) {		
-			if ( optionType == 0 )
-				this.optionType = EnumTagType.STRING;
-			else if ( optionType == 1 )
-				this.optionType = EnumTagType.BOOL;
-			else if ( optionType == 2 )
-				this.optionType = EnumTagType.FILE;
-	}
-	
-	/**
-	 * Sets the EnumTagType by String (proto > 17)
-	 * @param aString The string representation of the TagType
-	 */
-	private void setOptionType( String aString ) {
-		if ( aString.equals( "String" ) )
-			this.optionType = EnumTagType.STRING;
-		else if ( aString.equals( "Ip List" ) )
-			this.optionType = EnumTagType.IP_LIST;
-		else if ( aString.equals( "Int" ) )
-			this.optionType = EnumTagType.INT;
-		else if ( aString.equals( "Bool" ) )
-			this.optionType = EnumTagType.BOOL;
-		else if ( aString.equals( "Ip" ) )
-			this.optionType = EnumTagType.IP;	
-		else if ( aString.equals( "Addr" ) )
-			this.optionType = EnumTagType.ADDR;
-		else if ( aString.equals( "Integer" ) )
-			this.optionType = EnumTagType.INT;
-		else if ( aString.equals( "Float" ) )
-			this.optionType = EnumTagType.FLOAT;
-		else if ( aString.equals( "Md4" ) )
-			this.optionType = EnumTagType.MD4;
-		else if ( aString.equals( "Sha1" ) )			
-			this.optionType = EnumTagType.SHA1;
-		else {
-			this.optionType = EnumTagType.STRING;						
-			System.out.println( "Unknown EnumTagType: " + aString );					
-		}
-	}
 
 	/**
 	 * @return Some more detailed Information about this option
@@ -295,8 +184,6 @@ public class OptionsInfo extends Parent {
 	 * @return The option help text
 	 */
 	public String getOptionHelp() {
-		if ( parent.getProtoToUse() >= 18 )
-			return this.optionHelp;
 		return this.description;			
 	}
 	
@@ -306,8 +193,6 @@ public class OptionsInfo extends Parent {
 	 * @return true if this option is advanced
 	 */
 	public boolean isAdvanced() {
-		if ( parent.getProtoToUse() >= 18 )
-			return this.advanced;
 		return false;
 	}
 	
@@ -317,14 +202,15 @@ public class OptionsInfo extends Parent {
 	 * @return the default value for this option
 	 */
 	public String getDefaultValue() {
-		if ( parent.getProtoToUse() >= 18 )
-			return this.defaultValue;
-		return this.value;	
+		return "";
 	}
 }
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.25  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.24  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
@@ -342,7 +228,7 @@ Revision 1.20  2003/08/19 21:02:16  lemmster
 show all options in simple mode proto < 18
 
 Revision 1.19  2003/08/19 12:47:57  lemmster
-$user$ -> $Author: zet $
+$user$ -> $Author: lemmster $
 
 Revision 1.18  2003/08/19 12:46:02  lemmster
 typo fixed

@@ -24,7 +24,6 @@ package net.mldonkey.g2gui.view.search;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
-import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -40,7 +39,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.26 2003/11/24 08:56:22 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.27 2003/12/01 14:23:02 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -100,7 +99,7 @@ public class SimpleSearch extends Search {
 			String aText = this.inputText.getText();
 			this.inputText.add( aText, 0 );
 
-			query = new SearchQuery( core );
+			query = core.getModelFactory().getSearchQuery();
 			/* the query string */
 			query.setSearchString( aText );
 					
@@ -130,6 +129,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.27  2003/12/01 14:23:02  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.26  2003/11/24 08:56:22  lemmster
 fix [Bug #1132] search combo retains duplicates (better solution)
 

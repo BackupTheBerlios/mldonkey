@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.32 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: SearchQuery.java,v 1.33 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -98,8 +98,7 @@ public class SearchQuery implements Sendable {
 	 * Default constructor for creating a empty SearchQuery
 	 * @param core The CoreCommunication parent
 	 */
-
-	public SearchQuery( CoreCommunication core ) {
+	SearchQuery( CoreCommunication core ) {
 		this.parent = core;
 		/* create a unique searchIdentifier */
 		searchIdentifier = counter + 1;
@@ -525,6 +524,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.33  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.32  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

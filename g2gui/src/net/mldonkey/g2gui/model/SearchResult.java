@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.5 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: SearchResult.java,v 1.6 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
-public class SearchResult implements SimpleInformation {
+public class SearchResult extends SimpleInformation {
 	
 	/**
 	 * The Search Identifier
@@ -42,6 +42,10 @@ public class SearchResult implements SimpleInformation {
 	 */
 	private int resultID;
 
+	SearchResult() {
+		//prevent outer package instanciation
+	}
+	
 	/** (non-Javadoc)
 	 * @see net.mldonkey.g2gui.model.Information#readStream(net.mldonkey.g2gui.helper.MessageBuffer)
 	 */
@@ -71,11 +75,14 @@ public class SearchResult implements SimpleInformation {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.6  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.3  2003/07/06 07:29:47  lemmstercvs01
 javadoc improved

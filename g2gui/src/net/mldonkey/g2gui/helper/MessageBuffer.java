@@ -32,14 +32,10 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.27 2003/12/01 13:20:20 zet Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.28 2003/12/01 14:21:55 lemmster Exp $ 
  *
  */
 public class MessageBuffer {
-	/**
-	 * If core.getProtoToUse() > proto 16
-	 */
-	private boolean newCore;
 	/**
 	 * The iterator for the byte[]
 	 */
@@ -48,12 +44,16 @@ public class MessageBuffer {
 	 * The byte[] containing the InputStream
 	 */
 	private byte[] buffer = null;
-
+	/**
+	 * The core communcation obj
+	 */
+	private CoreCommunication core;
+	
 	/**
 	 * Generates a new empty MessageBuffer
 	 */	
 	public MessageBuffer( CoreCommunication aCore ) {
-		this.newCore = aCore.getProtoToUse() > 16;
+		this.core = aCore;
 		this.iterator = 0;
 	}
 
@@ -134,7 +134,7 @@ public class MessageBuffer {
 	public int readSignedInt32() {
 		int result = 0;
 		for ( int i = 0; i < 4; i++ ) 
-			if ( newCore )
+			if ( core.getProtoToUse() > 16 )
 				result |= ( ( int ) ( readByte() & 0xFF ) << ( i * 8 ) );
 			else
 				result |= ( ( int ) ( readByte() ) << ( i * 8 ) );
@@ -222,7 +222,7 @@ public class MessageBuffer {
 		short listElem = this.readInt16();
 		Tag[] result = new Tag[ listElem ];
 		for ( int i = 0; i < listElem; i++ ) {
-			Tag aTag = new Tag();
+			Tag aTag = core.getModelFactory().getTag();
 			aTag.readStream( this );
 			result[ i ] = aTag;
 		}
@@ -275,6 +275,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.28  2003/12/01 14:21:55  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.27  2003/12/01 13:20:20  zet
 readunsigned16
 
@@ -304,7 +307,7 @@ Revision 1.19  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.17  2003/08/10 23:20:26  zet
 signed ints

@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.27 2003/11/29 13:01:11 lemmster Exp $
+ * @version $Id: ServerInfoIntMap.java,v 1.28 2003/12/01 14:22:17 lemmster Exp $
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -55,7 +55,7 @@ public class ServerInfoIntMap extends InfoIntMap {
     /**
      * @param communication my parent
      */
-    public ServerInfoIntMap( CoreCommunication communication ) {
+    ServerInfoIntMap( CoreCommunication communication ) {
         super( communication );
     }
 
@@ -276,18 +276,9 @@ public class ServerInfoIntMap extends InfoIntMap {
      * @param network The <code>NetworkInfo</code> we want more connections for
      */
     public void connectMore( NetworkInfo network ) {
-        if ( parent.getProtoToUse() < 18 ) {
-            Message message = new EncodeMessage( Message.S_CONNECT_MORE );
-            message.sendMessage( this.parent );
-            message = null;
-        }
-
-        //TODO we are waiting for the new opcode to send connectMore with the networkid
-        else {
-            Message message = new EncodeMessage( Message.S_CONNECT_MORE );
-            message.sendMessage( this.parent );
-            message = null;
-        }
+        Message message = new EncodeMessage( Message.S_CONNECT_MORE );
+        message.sendMessage( this.parent );
+        message = null;
     }
 
     /**
@@ -438,6 +429,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.28  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.27  2003/11/29 13:01:11  lemmster
 Addr.getString() renamed to the more natural word name Addr.toString()
 

@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.comm.Message;
  * MessageVersion
  *
  *
- * @version $Id: MessageVersion.java,v 1.6 2003/09/18 15:29:25 zet Exp $ 
+ * @version $Id: MessageVersion.java,v 1.7 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
 public class MessageVersion implements Sendable {
@@ -50,7 +50,7 @@ public class MessageVersion implements Sendable {
 	 * Creates a new MessageVersion object
 	 * @param core The parent core obj
 	 */	
-	public MessageVersion( CoreCommunication core ) {
+	MessageVersion( CoreCommunication core ) {
 		this.versions = new ArrayList();
 		this.core = core;
 	}
@@ -89,6 +89,9 @@ public class MessageVersion implements Sendable {
 
 /*
 $Log: MessageVersion.java,v $
+Revision 1.7  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.6  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
@@ -100,7 +103,7 @@ Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.3  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.2  2003/08/02 09:54:17  lemmstercvs01
 replaced socket with corecommunication

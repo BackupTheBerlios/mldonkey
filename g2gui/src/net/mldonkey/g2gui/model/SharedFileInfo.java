@@ -31,10 +31,10 @@ import net.mldonkey.g2gui.helper.RegExp;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.17 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.18 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
-public class SharedFileInfo implements SimpleInformation {
+public class SharedFileInfo extends SimpleInformation {
 	/**
 	 * Shared File Identifier
 	 */
@@ -69,7 +69,10 @@ public class SharedFileInfo implements SimpleInformation {
 	 */
 	private String md4;
 	private NetworkInfo network;
-	
+
+	SharedFileInfo() {
+		//prevent outer package instanciation
+	}
 	/**
 	 * @return The file md4
 	 */
@@ -240,6 +243,9 @@ public class SharedFileInfo implements SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.18  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.17  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

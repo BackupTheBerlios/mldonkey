@@ -31,10 +31,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * UserInfo
  *
  *
- * @version $Id: UserInfo.java,v 1.4 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: UserInfo.java,v 1.5 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
-public class UserInfo implements SimpleInformation {
+public class UserInfo extends SimpleInformation {
 	/**
 	 * User Identifier
 	 */
@@ -64,6 +64,10 @@ public class UserInfo implements SimpleInformation {
 	 */
 	private int serverId;
 
+	UserInfo() {
+		//prevent outer package instanciation
+	}
+	
 	/**
 	 * Reads a Query object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
@@ -195,11 +199,14 @@ public class UserInfo implements SimpleInformation {
 
 /*
 $Log: UserInfo.java,v $
+Revision 1.5  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.3  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.2  2003/07/04 10:26:03  lemmstercvs01
 minor: just checkstyle

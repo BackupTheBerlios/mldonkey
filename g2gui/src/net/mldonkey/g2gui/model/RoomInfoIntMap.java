@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * RoomInfoIntMap
  *
  * @author $user$
- * @version $Id: RoomInfoIntMap.java,v 1.1 2003/08/24 16:54:07 dek Exp $ 
+ * @version $Id: RoomInfoIntMap.java,v 1.2 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
 public class RoomInfoIntMap extends InfoIntMap {
@@ -38,7 +38,7 @@ public class RoomInfoIntMap extends InfoIntMap {
 	/**
 	 * @param communication my parent
 	 */
-	public RoomInfoIntMap( CoreCommunication communication ) {
+	RoomInfoIntMap( CoreCommunication communication ) {
 		super( communication );
 	}
 
@@ -67,7 +67,7 @@ public class RoomInfoIntMap extends InfoIntMap {
 		}
 		else {
 			//add a new NetworkInfo-Object to the Map
-			roomInfo = new RoomInfo( this.parent );
+			roomInfo = parent.getModelFactory().getRoomInfo();
 			roomInfo.readStream( messageBuffer );
 			synchronized ( this ) {
 				this.infoIntMap.put( roomNumber, roomInfo );
@@ -89,6 +89,9 @@ public class RoomInfoIntMap extends InfoIntMap {
 
 /*
 $Log: RoomInfoIntMap.java,v $
+Revision 1.2  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.1  2003/08/24 16:54:07  dek
 RoomInfo is now read from stream to Map, ready for use to implement
 all the room-stuff

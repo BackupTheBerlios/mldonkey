@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * DefineSearchMap
  *
  *
- * @version $Id: DefineSearchMap.java,v 1.6 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: DefineSearchMap.java,v 1.7 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
 public class DefineSearchMap extends InfoMap {
@@ -37,7 +37,7 @@ public class DefineSearchMap extends InfoMap {
 	/**
 	 * @param communication my parent
 	 */
-	public DefineSearchMap( CoreCommunication communication ) {
+	DefineSearchMap( CoreCommunication communication ) {
 		super( communication );
 	}
 	
@@ -66,11 +66,14 @@ public class DefineSearchMap extends InfoMap {
 
 /*
 $Log: DefineSearchMap.java,v $
+Revision 1.7  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.4  2003/07/06 09:38:10  lemmstercvs01
 useless constructor removed

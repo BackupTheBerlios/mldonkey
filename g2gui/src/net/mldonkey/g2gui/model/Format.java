@@ -29,10 +29,10 @@ import net.mldonkey.g2gui.model.enum.*;
  * Format
  *
  *
- * @version $Id: Format.java,v 1.13 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: Format.java,v 1.14 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
-public class Format implements SimpleInformation {
+public class Format extends SimpleInformation {
 	private Enum format;
 
 	private String extension;
@@ -63,6 +63,10 @@ public class Format implements SimpleInformation {
 
 	private int genre;
 
+	Format() {
+		//prevent outer package instanciation
+	}
+	
 	/**
 	 * @return Mp3 Album (present only if File Format = EnumFormat.MP3)
 	 */
@@ -215,6 +219,9 @@ public class Format implements SimpleInformation {
 
 /*
 $Log: Format.java,v $
+Revision 1.14  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.13  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

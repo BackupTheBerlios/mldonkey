@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfoList
  *
  *
- * @version $Id: SharedFileInfoIntMap.java,v 1.8 2003/11/28 14:36:54 zet Exp $
+ * @version $Id: SharedFileInfoIntMap.java,v 1.9 2003/12/01 14:22:17 lemmster Exp $
  *
  */
 public class SharedFileInfoIntMap extends InfoIntMap {
@@ -45,7 +45,7 @@ public class SharedFileInfoIntMap extends InfoIntMap {
     /**
      * @param communication my parent
      */
-    public SharedFileInfoIntMap(CoreCommunication communication) {
+    SharedFileInfoIntMap(CoreCommunication communication) {
         super(communication);
     }
 
@@ -183,6 +183,9 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: SharedFileInfoIntMap.java,v $
+Revision 1.9  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.8  2003/11/28 14:36:54  zet
 sync
 
@@ -210,7 +213,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved

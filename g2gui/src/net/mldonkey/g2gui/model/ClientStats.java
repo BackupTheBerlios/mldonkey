@@ -29,28 +29,28 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientStats
  *
  *
- * @version $Id: ClientStats.java,v 1.17 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: ClientStats.java,v 1.18 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
 public class ClientStats extends Parent {
 
-	private long totalUp;
-	private long totalDown;
-	private long totalShared;
-	private int numOfShare;
-	private float tcpUpRate;
-	private float tcpDownRate;
-	private float udpUpRate;
-	private float udpDownRate;
-	private int numCurrDownload;
-	private int numDownloadFinished;
-	private NetworkInfo[] connectedNetworks;
+	protected long totalUp;
+	protected long totalDown;
+	protected long totalShared;
+	protected int numOfShare;
+	protected float tcpUpRate;
+	protected float tcpDownRate;
+	protected float udpUpRate;
+	protected float udpDownRate;
+	protected int numCurrDownload;
+	protected int numDownloadFinished;
+	protected NetworkInfo[] connectedNetworks;
 	
 	/**
 	 * Creates a new ClientStats object
 	 * @param core The parent corecommunication
 	 */
-	public ClientStats( CoreCommunication core ) {
+	ClientStats( CoreCommunication core ) {
 		super( core );
 	}
 	
@@ -181,17 +181,7 @@ public class ClientStats extends Parent {
 		NetworkInfo[] temp = new NetworkInfo[ listElem ];
 		for ( int i = 0; i < listElem; i++ ) {
 			int key = messageBuffer.readInt32();
-			/* if proto >=18, the number of connected server is send too */
-			if ( parent.getProtoToUse() >= 18 ) {
-				NetworkInfo network = this.parent.getNetworkInfoMap()
-										.get( key );
-				this.parent.getNetworkInfoMap().setConnectedServers( 
-										messageBuffer.readInt32(), network );
-				temp[ i ] = network;
-			}
-			else {
-				temp[ i ] = this.parent.getNetworkInfoMap().get( key );
-			}
+			temp[ i ] = this.parent.getNetworkInfoMap().get( key );
 		}
 		this.connectedNetworks = temp;
 		this.setChanged();
@@ -211,6 +201,9 @@ public class ClientStats extends Parent {
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.18  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.17  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

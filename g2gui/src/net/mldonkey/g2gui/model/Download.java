@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.comm.Message;
  * Download
  *
  *
- * @version $Id: Download.java,v 1.13 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: Download.java,v 1.14 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
 public class Download implements Sendable {
@@ -55,7 +55,7 @@ public class Download implements Sendable {
 	 * Creates a new download
 	 * @param core The parent core obj
 	 */
-	public Download( CoreCommunication core ) {
+	Download( CoreCommunication core ) {
 		this.core = core;		
 	}
 
@@ -97,6 +97,9 @@ public class Download implements Sendable {
 
 /*
 $Log: Download.java,v $
+Revision 1.14  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.13  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

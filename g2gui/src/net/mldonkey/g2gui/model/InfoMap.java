@@ -34,7 +34,7 @@ import gnu.trove.THashMap;
  * InfoMap
  *
  *
- * @version $Id: InfoMap.java,v 1.9 2003/10/22 21:02:11 zet Exp $ 
+ * @version $Id: InfoMap.java,v 1.10 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
 public abstract class InfoMap extends Observable implements InfoCollection {
@@ -47,7 +47,7 @@ public abstract class InfoMap extends Observable implements InfoCollection {
 	/**
 	 * Creates a new THashMap
 	 */	
-	public InfoMap() {
+	InfoMap() {
 		this.infoMap = new THashMap();
 	}
 	
@@ -56,7 +56,7 @@ public abstract class InfoMap extends Observable implements InfoCollection {
 	 * @param core This lists parent, which can be notified on changes
 	 */
 	
-	public InfoMap( CoreCommunication core ) {
+	InfoMap( CoreCommunication core ) {
 	    this();
 		this.parent = core;
 	}
@@ -106,6 +106,9 @@ public abstract class InfoMap extends Observable implements InfoCollection {
 
 /*
 $Log: InfoMap.java,v $
+Revision 1.10  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.9  2003/10/22 21:02:11  zet
 use this()
 
@@ -113,7 +116,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.6  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support

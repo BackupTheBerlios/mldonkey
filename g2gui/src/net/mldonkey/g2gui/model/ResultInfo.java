@@ -45,7 +45,7 @@ import org.eclipse.swt.program.Program;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.30 2003/11/30 09:31:26 lemmster Exp $
+ * @version $Id: ResultInfo.java,v 1.31 2003/12/01 14:22:17 lemmster Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -199,7 +199,7 @@ public class ResultInfo extends Parent {
      * Creates a new ResultInfo
      * @param core The parent
      */
-    public ResultInfo( CoreCommunication core ) {
+    ResultInfo( CoreCommunication core ) {
         super( core );
     }
 
@@ -704,6 +704,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.31  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.30  2003/11/30 09:31:26  lemmster
 ToolTip complete reworked (complete)
 

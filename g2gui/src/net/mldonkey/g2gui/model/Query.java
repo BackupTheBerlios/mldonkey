@@ -34,10 +34,10 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * Query
  *
  *
- * @version $Id: Query.java,v 1.18 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: Query.java,v 1.19 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
-public class Query implements SimpleInformation {
+public class Query extends SimpleInformation {
 	/**
 	 * The Type of this tree node
 	 */
@@ -74,7 +74,7 @@ public class Query implements SimpleInformation {
 	/**
 	 * creates an empty Query-Object
 	 */
-	public Query() {
+	Query() {
 		this.queries = new ArrayList();
 	}
 	/**
@@ -383,11 +383,14 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.19  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.18  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.17  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.16  2003/07/10 10:59:21  dek
 toString() created (still very raw-output, but one can see, what's inside..)

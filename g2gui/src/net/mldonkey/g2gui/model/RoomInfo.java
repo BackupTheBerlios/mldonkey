@@ -29,21 +29,20 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * RoomInfo
  *
  * @author $user$
- * @version $Id: RoomInfo.java,v 1.2 2003/09/18 09:16:47 lemmster Exp $
+ * @version $Id: RoomInfo.java,v 1.3 2003/12/01 14:22:17 lemmster Exp $
  *
  */
 public class RoomInfo extends Parent {
-    private Enum roomstate;
-    private int numerOfUsers;
-    private String RoomName;
-    private NetworkInfo network;
-    private int roomNumber;
+    protected Enum roomstate;
+    protected String RoomName;
+    protected NetworkInfo network;
+    protected int roomNumber;
 
     /**
      * Creates a new RoomInfo
      * @param core The parent
      */
-    public RoomInfo( CoreCommunication core ) {
+    RoomInfo( CoreCommunication core ) {
         super( core );
     }
 
@@ -76,10 +75,6 @@ public class RoomInfo extends Parent {
             this.roomstate = Enum.UNKNOWN;
             break;
         }
-        if ( parent.getProtoToUse() < 3 )
-            this.numerOfUsers = 0;
-        else
-            this.numerOfUsers = messageBuffer.readInt32();
     }
 
     /**
@@ -113,6 +108,9 @@ public class RoomInfo extends Parent {
 
 /*
 $Log: RoomInfo.java,v $
+Revision 1.3  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.2  2003/09/18 09:16:47  lemmster
 checkstyle
 

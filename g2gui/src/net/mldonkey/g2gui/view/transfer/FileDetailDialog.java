@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.9 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: FileDetailDialog.java,v 1.10 2003/12/01 14:22:45 lemmster Exp $
  *
  */
 public class FileDetailDialog extends DetailDialog {
@@ -108,8 +108,8 @@ public class FileDetailDialog extends DetailDialog {
         createChunkGroup(composite, G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS_INFO"), null);
 
         // Other network chunks
-        if (fileInfo.getAvails() != null) {
-            Iterator i = fileInfo.getAvails().keySet().iterator();
+        if (fileInfo.hasAvails()) {
+            Iterator i = fileInfo.getAllAvailNetworks().iterator();
 
             while (i.hasNext()) {
                 NetworkInfo networkInfo = (NetworkInfo) i.next();
@@ -395,6 +395,9 @@ public class FileDetailDialog extends DetailDialog {
 
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.10  2003/12/01 14:22:45  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.9  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

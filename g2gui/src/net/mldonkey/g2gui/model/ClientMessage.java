@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.comm.Message;
 
 /**
  *
- * @version $Id: ClientMessage.java,v 1.6 2003/09/18 15:29:25 zet Exp $	
+ * @version $Id: ClientMessage.java,v 1.7 2003/12/01 14:22:17 lemmster Exp $	
  */
 public class ClientMessage extends Parent {
 
@@ -39,7 +39,7 @@ public class ClientMessage extends Parent {
 	/**
 	 * @param core The parent <code>Core</code>
 	 */
-	public ClientMessage( CoreCommunication core ) {
+	ClientMessage( CoreCommunication core ) {
 		super( core );
 	}
 	/**
@@ -85,6 +85,9 @@ public class ClientMessage extends Parent {
 
 /*
 $Log: ClientMessage.java,v $
+Revision 1.7  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.6  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
@@ -99,7 +102,7 @@ Revision 1.3  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.2  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging

@@ -38,7 +38,7 @@ import java.util.Iterator;
  * ClientInfoList
  *
  *
- * @version $Id: ClientInfoIntMap.java,v 1.14 2003/11/27 00:12:10 zet Exp $
+ * @version $Id: ClientInfoIntMap.java,v 1.15 2003/12/01 14:22:17 lemmster Exp $
  */
 public class ClientInfoIntMap extends InfoIntMap {
     /**
@@ -54,15 +54,8 @@ public class ClientInfoIntMap extends InfoIntMap {
     /**
      * @param communication my parent
      */
-    public ClientInfoIntMap(CoreCommunication communication) {
+    ClientInfoIntMap(CoreCommunication communication) {
         super(communication);
-    }
-
-    /**
-     * Creates a new ClientInfoList
-     */
-    public ClientInfoIntMap() {
-        super();
     }
 
     /**
@@ -77,7 +70,7 @@ public class ClientInfoIntMap extends InfoIntMap {
         if (this.containsKey(clientID))
             clientInfo = this.get(clientID);
         else
-            clientInfo = new ClientInfo(this.parent);
+            clientInfo = parent.getModelFactory().getClientInfo();
 
         clientInfo.readStream(clientID, messageBuffer);
         this.put(clientInfo.getClientid(), clientInfo);
@@ -182,6 +175,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ClientInfoIntMap.java,v $
+Revision 1.15  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.14  2003/11/27 00:12:10  zet
 sync
 

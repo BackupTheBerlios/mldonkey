@@ -32,10 +32,10 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  *
- * @version $Id: FileState.java,v 1.17 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: FileState.java,v 1.18 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
-public class FileState implements SimpleInformation {
+public class FileState extends SimpleInformation {
 	
 	/**
 	 * The EnumFileState
@@ -55,6 +55,10 @@ public class FileState implements SimpleInformation {
 	 */
 	private static Byte resume = new Byte( ( byte ) 1 );
 
+	FileState() {
+		//prevent outer package instanciation
+	}
+	
 	/**
 	 * @return The reason for the state
 	 * 			(only if state is ABORTED)
@@ -144,6 +148,9 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.18  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.17  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

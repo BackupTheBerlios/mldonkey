@@ -22,30 +22,39 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.Observable;
+
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * Information
  *
  *
- * @version $Id: SimpleInformation.java,v 1.4 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: SimpleInformation.java,v 1.5 2003/12/01 14:22:17 lemmster Exp $ 
  *
  */
-public interface SimpleInformation extends Information {
+public abstract class SimpleInformation extends Observable implements Information {
 	/**
 	 * Reads an object from a MessageBuffer object
 	 * @param messageBuffer MessageBuffer to read from
 	 */
-	void readStream( MessageBuffer messageBuffer );
+	public abstract void readStream( MessageBuffer messageBuffer );
+	
+	SimpleInformation() {
+		//prevent outer package instanciation
+	}
 }
 
 /*
 $Log: SimpleInformation.java,v $
+Revision 1.5  2003/12/01 14:22:17  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.3  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.2  2003/07/06 08:49:03  lemmstercvs01
 refactored
