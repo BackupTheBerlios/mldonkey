@@ -29,11 +29,11 @@ import org.eclipse.swt.graphics.Color;
  * knows when it was started
  * 
  *
- * @version $Id: Graph.java,v 1.11 2003/09/13 22:23:55 zet Exp $
+ * @version $Id: Graph.java,v 1.12 2003/09/14 22:22:55 zet Exp $
  */
 public class Graph {
 	
-	static final short MAX_POINTS = 1600;
+	public static final short MAX_POINTS = 1600;
 
 	private int[] iPoints = new int[MAX_POINTS];
 	private int insertAt = 0; 
@@ -41,18 +41,15 @@ public class Graph {
 	private String graphName;
 	private Color graphColor1, graphColor2;
 	
-	int amount, maxValue, avgValue;
-	long createTime, sumValue;
+	private int amount, maxValue, avgValue;
+	private long sumValue;
 	
 	public Graph(String name, Color color1, Color color2)
 	{
-	
 		graphName = name;
 		graphColor1 = color1;
 		graphColor2 = color2;
-		
 		sumValue = avgValue = maxValue = 0;
-		createTime = System.currentTimeMillis();
 	}
 	
 	public int getInsertAt() {
@@ -67,7 +64,7 @@ public class Graph {
 		int max = 0;
 		int searchPoint = insertAt - 1;
 		
-		if (insertAt == 0) searchPoint = MAX_POINTS - 1;
+		if (width > amount) width = amount;
 		
 		for (int i = 0; i < width ; i++) {
 			if (searchPoint < 0) searchPoint = MAX_POINTS - 1;
@@ -83,8 +80,7 @@ public class Graph {
 		return iPoints[newestPoint];
 	}
 	
-	public void addPoint(int value)
-	{
+	public void addPoint(int value) {
 		if (insertAt > MAX_POINTS - 1)
 			insertAt = 0;
 		
@@ -97,34 +93,33 @@ public class Graph {
 		
 	}
 	
-	public int getAmount()
-	{
+	public int getAmount() {
 		return amount;
 	}
-	public Color getGraphColor1()
-	{
+	
+	public Color getGraphColor1() {
 		return graphColor1;
 	}
-	public Color getGraphColor2()
-	{
+	public Color getGraphColor2() {
 		return graphColor2;
 	}
-	public int getMax() 
-	{
+	
+	public int getMax() {
 		return maxValue;
 	}
-	public String getName() 
-	{
+	
+	public String getName() {
 		return graphName;
 	}
-	public int getAvg() 
-	{
+	
+	public int getAvg() {
 		return avgValue;
 	}
 	
 	public Color getColor1() {
 		return graphColor1;
 	}
+	
 	public Color getColor2() {
 		return graphColor2;
 	}
@@ -132,6 +127,9 @@ public class Graph {
 }
 /*
 $Log: Graph.java,v $
+Revision 1.12  2003/09/14 22:22:55  zet
+*** empty log message ***
+
 Revision 1.11  2003/09/13 22:23:55  zet
 use int array instead of creating stat point objects
 

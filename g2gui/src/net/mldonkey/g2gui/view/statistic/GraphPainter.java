@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Display;
  * GraphPainter
  *
  *
- * @version $Id: GraphPainter.java,v 1.28 2003/09/13 22:23:55 zet Exp $ 
+ * @version $Id: GraphPainter.java,v 1.29 2003/09/14 22:22:55 zet Exp $ 
  *
  */
 public class GraphPainter {
@@ -84,34 +84,29 @@ public class GraphPainter {
 		int k = startx;
 		
 		int bottomSpace = drawBoardBuffer.getFontMetrics().getHeight() + 2;
-		float maximum = 20f;
 		float height = (float) (parent.getClientArea().height - bottomSpace);
 		
 		int width = parent.getClientArea().width;
 		int graphWidth = width - startx;
 		float zoom = 0, valueY = 0;
-		
-		drawBoardBuffer.setBackground(graph.getColor1());
-		drawBoardBuffer.setForeground(graph.getColor2());
-		
-		maximum = (float) (graph.findMax( width ) / 10);		
-	
+		float maximum = (float) (graph.findMax( width ) / 10);		
 		zoom = (height-10f) / maximum ;  
 				
 		// draw graph gradient lines
-		int position = graph.getInsertAt() - 1;
-		for (k=startx; k < width; k++) {
-			if (position < 0) {
-				if (graph.getAmount() > k) {
-					position = Graph.MAX_POINTS - 1;
-				} else {
-					break;
-				}
+		drawBoardBuffer.setBackground(graph.getColor1());
+		drawBoardBuffer.setForeground(graph.getColor2());
+		
+		int positionInArray = graph.getInsertAt() - 1;
+		int validPoints = (Graph.MAX_POINTS > graph.getAmount() ? graph.getAmount(): Graph.MAX_POINTS);
+		
+		for (k=startx; k < width && validPoints > 0; k++, validPoints--) {
+			if (positionInArray < 0) {
+				positionInArray = Graph.MAX_POINTS - 1;
 			}
-			valueY = (float) (graph.getPointAt(position)/10);
+			valueY = (float) (graph.getPointAt(positionInArray)/10);
 			valueY = height - (valueY * zoom);
 			drawBoardBuffer.fillGradientRectangle(k,(int)height+1,1,(int)(valueY-height),true);
-			position--;
+			positionInArray--;
 		}
 					
 		// draw grid
@@ -169,6 +164,9 @@ public class GraphPainter {
 }
 /*
 $Log: GraphPainter.java,v $
+Revision 1.29  2003/09/14 22:22:55  zet
+*** empty log message ***
+
 Revision 1.28  2003/09/13 22:23:55  zet
 use int array instead of creating stat point objects
 
