@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.view.search.*;
  * SearchTab
  *
  * @author $user$
- * @version $Id: SearchTab.java,v 1.6 2003/07/29 09:56:52 lemmstercvs01 Exp $ 
+ * @version $Id: SearchTab.java,v 1.7 2003/07/29 10:10:22 lemmstercvs01 Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -185,7 +185,7 @@ public class SearchTab extends GuiTab {
 	public void update( Observable o, Object arg ) { }
 	
 	/**
-	 * The string for the statusline
+	 *@return The string for the statusline
 	 */
 	public String getStatusText() {
 		/* we have items */
@@ -214,6 +214,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.7  2003/07/29 10:10:22  lemmstercvs01
+moved icon folder out of src/
+
 Revision 1.6  2003/07/29 09:56:52  lemmstercvs01
 some importers removed
 

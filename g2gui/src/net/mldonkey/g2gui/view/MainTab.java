@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.23 2003/07/29 09:39:24 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.24 2003/07/29 10:10:14 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener, Observer {
@@ -590,8 +590,8 @@ public class MainTab implements Listener, Observer {
 	// transparent pngs on gtk still require this, but it is noticable on win :(
 	// will all buttons require the same background colour as thisShell? not sure yet...
 	private Image createTrans(String filename) {
-		String imagePath = "src/icons/";
-		return createTransparentImage(new Image(null, imagePath + filename), thisShell);
+		String imagePath = "icons/";
+		return createTransparentImage( new Image( null, imagePath + filename ), thisShell);
 	}
 	public static Image getImageFromRegistry (String key) {
 		return imageRegistry.get(key);
@@ -600,6 +600,9 @@ public class MainTab implements Listener, Observer {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.24  2003/07/29 10:10:14  lemmstercvs01
+moved icon folder out of src/
+
 Revision 1.23  2003/07/29 09:39:24  lemmstercvs01
 change modifier of statusline
 

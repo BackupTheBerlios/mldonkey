@@ -78,7 +78,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.6 2003/07/29 09:44:45 lemmstercvs01 Exp $ 
+ * @version $Id: SearchResult.java,v 1.7 2003/07/29 10:11:48 lemmstercvs01 Exp $ 
  *
  */
 //TODO search timeout, add resource bundle, add image handle, fake search, real links depending on network								   
@@ -194,7 +194,7 @@ public class SearchResult implements Observer, Runnable {
 		cTabItem = new CTabItem( cTabFolder, SWT.FLAT );
 		cTabItem.setText( searchString );
 		cTabItem.setToolTipText( bundle.getString( "SR_SEARCHINGFOR" ) + searchString );
-		image = new Image( cTabFolder.getDisplay(), "src/icons/search_small.png" );
+		image = new Image( cTabFolder.getDisplay(), "icons/search_small.png" );
 		cTabItem.setImage( MainTab.createTransparentImage( image, cTabItem.getParent() ) );
 		cTabItem.setData( this );
 
@@ -632,6 +632,9 @@ public class SearchResult implements Observer, Runnable {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.7  2003/07/29 10:11:48  lemmstercvs01
+moved icon folder out of src/
+
 Revision 1.6  2003/07/29 09:44:45  lemmstercvs01
 added support for the statusline
 
