@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.19 2003/06/16 20:08:38 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.20 2003/06/16 21:47:41 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -58,14 +58,15 @@ public class Core extends Thread implements CoreCommunication {
 	/**
 	 * 
 	 */
-	private InfoCollection clientInfoList = new ClientInfoList(),
-					 fileInfoMap = new FileInfoList(),
-					 serverInfoMap = new ServerInfoList(),
+	private InfoCollection clientInfoList = new ClientInfoIntMap(),
+					 fileInfoMap = new FileInfoIntMap(),
+					 serverInfoMap = new ServerInfoIntMap(),
 					 addSectionOptionList = new AddSomeOptionList(),
 					 addPluginOptionList = new AddSomeOptionList(),
 					 sharedFileInfoList = new SharedFileInfoList(),	
 					 optionsInfoMap = new OptionsInfoMap(),
-					 networkinfoMap = new NetworkInfoMap();
+					 networkinfoMap = new NetworkInfoIntMap(),
+					 defineSearchMap = new DefineSearchMap();
 
 	/**
 	 * 
@@ -151,6 +152,10 @@ public class Core extends Thread implements CoreCommunication {
 					/* send a request for FileInfoList */					
 					this.requestFileInfoList();
 					break;
+					
+			case Message.R_DEFINE_SEARCH :
+					this.defineSearchMap.readStream( messageBuffer );
+					break;		
 
 			case Message.R_OPTIONS_INFO :
 					this.optionsInfoMap.readStream( messageBuffer );				
@@ -201,7 +206,7 @@ public class Core extends Thread implements CoreCommunication {
 					break;	
 					
 			case Message.R_DOWNLOAD :
-					( ( FileInfoList )this.fileInfoMap ).add( messageBuffer );
+					( ( FileInfoIntMap )this.fileInfoMap ).add( messageBuffer );
 					break;					
 
 			case Message.R_CONSOLE :				
@@ -224,8 +229,8 @@ public class Core extends Thread implements CoreCommunication {
 					 break;
 					 
 			case Message.R_CLEAN_TABLE :
-					( ( ClientInfoList )this.clientInfoList ).clean( messageBuffer );
-					( ( ServerInfoList )this.serverInfoMap ).clean( messageBuffer );
+					( ( ClientInfoIntMap )this.clientInfoList ).clean( messageBuffer );
+					( ( ServerInfoIntMap )this.serverInfoMap ).clean( messageBuffer );
 					break;
 
 			default :				
@@ -254,6 +259,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.20  2003/06/16 21:47:41  lemmstercvs01
+opcode 3 added
+
 Revision 1.19  2003/06/16 20:08:38  lemmstercvs01
 opcode 13 added
 

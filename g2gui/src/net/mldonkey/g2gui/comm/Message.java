@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.18 2003/06/16 20:08:38 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.19 2003/06/16 21:47:41 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -63,6 +63,10 @@ public abstract class Message {
 	 * Receive Options Info (value is 1)
 	 */
 	public static final short R_OPTIONS_INFO = 1;
+	/**
+	 * Receive Define Search (value is 3)
+	 */
+	public static final short R_DEFINE_SEARCH = 3;
 	/**
 	 * Receive File Update Availability (value is 9)
 	 */
@@ -271,6 +275,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.19  2003/06/16 21:47:41  lemmstercvs01
+opcode 3 added
+
 Revision 1.18  2003/06/16 20:08:38  lemmstercvs01
 opcode 13 added
 
