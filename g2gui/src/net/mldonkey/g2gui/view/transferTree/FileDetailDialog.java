@@ -27,6 +27,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -51,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.15 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.16 2003/08/28 22:44:30 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -84,28 +85,17 @@ public class FileDetailDialog implements Observer {
 								  
 		shell.setImage(G2GuiResources.getImage("ProgramIcon"));
 		shell.setText( "File " + fileInfo.getId() + " details");						  
-								  
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 1;
-		gridLayout.marginWidth = 5;
-		gridLayout.marginHeight = 5;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 5;
-		
+				
+		GridLayout gridLayout = CGridLayout.createGL(1,5,5,0,5,false);
 		shell.setLayout( gridLayout );
 		shell.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		// General
 		Group fileGeneral = new Group(shell, SWT.SHADOW_ETCHED_OUT );
 		fileGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_FILE_INFO"));
-		GridLayout generalGridLayout = new GridLayout();
-		generalGridLayout.numColumns = 4;
-		generalGridLayout.marginWidth = 5;
-		generalGridLayout.marginHeight = 2;
-		generalGridLayout.horizontalSpacing = 0;
-		generalGridLayout.verticalSpacing = 0;
 		
-		fileGeneral.setLayout(generalGridLayout);
+		gridLayout = CGridLayout.createGL(4,5,2,0,0,false);
+		fileGeneral.setLayout(gridLayout);
 		
 		clFileName = createLine(fileGeneral, G2GuiResources.getString("TT_DOWNLOAD_FD_FILENAME"), true);
 		clHash = createLine(fileGeneral, G2GuiResources.getString("TT_DOWNLOAD_FD_HASH"), true);
@@ -117,14 +107,9 @@ public class FileDetailDialog implements Observer {
 		// Transfer		
 		Group fileTransfer = new Group(shell, SWT.SHADOW_ETCHED_OUT );
 		fileTransfer.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_TRANSFER_INFO"));
-		GridLayout transferGridLayout = new GridLayout();
-		transferGridLayout.numColumns = 4;
-		transferGridLayout.marginWidth = 5;
-		transferGridLayout.marginHeight = 2;
-		transferGridLayout.horizontalSpacing = 0;
-		transferGridLayout.verticalSpacing = 0;
-	
-		fileTransfer.setLayout(transferGridLayout);
+		
+		gridLayout = CGridLayout.createGL(4,5,2,0,0,false);
+		fileTransfer.setLayout(gridLayout);
  
 		clSources = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_SOURCES"), false);
 		clChunks = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS"), false);
@@ -140,10 +125,9 @@ public class FileDetailDialog implements Observer {
 		// Chunk	
 		Group chunkGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
 		chunkGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS_INFO"));
-		GridLayout chunkGridLayout = new GridLayout();
-		chunkGridLayout.numColumns = 1;
-		chunkGridLayout.marginWidth = 5;
-		chunkGroup.setLayout(chunkGridLayout);
+		
+		gridLayout = CGridLayout.createGL(1,5,5,0,0,false);
+		chunkGroup.setLayout(gridLayout);
 			
 		chunkGroup.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) ) ;
 					
@@ -157,12 +141,8 @@ public class FileDetailDialog implements Observer {
 		Group renameGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
 		renameGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_ALTERNATIVE_FILENAMES"));
 		
-		
-		GridLayout renameGridLayout = new GridLayout();
-		renameGridLayout.numColumns = 1;
-		renameGridLayout.marginWidth = 5;
-		renameGridLayout.marginHeight = 2;
-		renameGroup.setLayout(renameGridLayout);
+		gridLayout = CGridLayout.createGL(1,5,2,0,0,false);
+		renameGroup.setLayout(gridLayout);
 	
 		renameGroup.setLayoutData(  new GridData(GridData.FILL_HORIZONTAL));
 				
@@ -183,13 +163,9 @@ public class FileDetailDialog implements Observer {
 		});
 	
 		Composite rename = new Composite(shell, SWT.NONE);
-		GridLayout renameCGridLayout = new GridLayout();
-		renameCGridLayout.numColumns = 2;
-		renameCGridLayout.marginWidth = 0;
-		renameCGridLayout.marginHeight = 0;
-		renameCGridLayout.horizontalSpacing = 4;
-
-		rename.setLayout( renameCGridLayout );
+		
+		gridLayout = CGridLayout.createGL(2,0,0,4,0,false);
+		rename.setLayout( gridLayout );
 		rename.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
 				
 		renameText = new Text(rename, SWT.BORDER);
@@ -315,6 +291,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.16  2003/08/28 22:44:30  zet
+GridLayout helper class
+
 Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 
@@ -332,6 +311,9 @@ new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
+fix Revision 1.16  2003/08/28 22:44:30  zet
+fix GridLayout helper class
+fix
 fix Revision 1.15  2003/08/23 15:21:37  zet
 fix remove @author
 fix

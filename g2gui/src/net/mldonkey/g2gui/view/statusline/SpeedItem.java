@@ -29,6 +29,7 @@ import java.util.Observer;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.StatusLine;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -41,7 +42,7 @@ import org.eclipse.swt.widgets.Composite;
  * SpeedItem
  *
  *
- * @version $Id: SpeedItem.java,v 1.16 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: SpeedItem.java,v 1.17 2003/08/28 22:44:30 zet Exp $ 
  *
  */
 public class SpeedItem implements Observer {	
@@ -71,11 +72,7 @@ public class SpeedItem implements Observer {
 	 */
 	private void createContent() {
 		composite = new Composite( composite, SWT.BORDER );
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		gridLayout.makeColumnsEqualWidth = true;
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
+		GridLayout gridLayout = CGridLayout.createGL(2,0,0,0,0,true);
 		composite.setLayout( gridLayout );
 	
 		/* down rate */	
@@ -113,6 +110,9 @@ public class SpeedItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.17  2003/08/28 22:44:30  zet
+GridLayout helper class
+
 Revision 1.16  2003/08/23 15:21:37  zet
 remove @author
 

@@ -34,6 +34,7 @@ import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
@@ -78,7 +79,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.31 2003/08/28 11:54:41 lemmster Exp $ 
+ * @version $Id: SearchResult.java,v 1.32 2003/08/28 22:44:30 zet Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -411,10 +412,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			final Display display = parent.getDisplay();
 	
 			tipShell = new Shell( parent.getShell(), SWT.ON_TOP );
-			GridLayout gridLayout = new GridLayout();
-			gridLayout.numColumns = 1;
-			gridLayout.marginWidth = 2;
-			gridLayout.marginHeight = 2;
+			GridLayout gridLayout = CGridLayout.createGL(1,2,2,0,0,false);
 			tipShell.setLayout( gridLayout );
 	
 			tipShell.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
@@ -567,6 +565,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.32  2003/08/28 22:44:30  zet
+GridLayout helper class
+
 Revision 1.31  2003/08/28 11:54:41  lemmster
 use getter methode for profanity/pornogaphic
 
@@ -592,7 +593,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

@@ -31,6 +31,7 @@ import java.util.Observer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.main.MainCoolBar;
 import net.mldonkey.g2gui.view.main.MainMenuBar;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -57,7 +58,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.63 2003/08/25 23:38:26 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.64 2003/08/28 22:44:30 zet Exp $ 
  *
  */
 public class MainTab implements Observer, ShellListener {
@@ -140,12 +141,8 @@ public class MainTab implements Observer, ShellListener {
 				
 		new MainMenuBar( this );		
 				
-		GridLayout mainLayout = new GridLayout();
-		mainLayout.numColumns = 1;
-		mainLayout.marginWidth = 0;
-		mainLayout.marginHeight = 0;
-		mainLayout.verticalSpacing = 1;
-		mainComposite.setLayout( mainLayout ); 
+		GridLayout gridLayout = CGridLayout.createGL(1,0,0,0,1,false);
+		mainComposite.setLayout( gridLayout ); 
 			
 		Label horLine = new Label( mainComposite, SWT.HORIZONTAL | SWT.SEPARATOR );
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -386,6 +383,9 @@ public class MainTab implements Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.64  2003/08/28 22:44:30  zet
+GridLayout helper class
+
 Revision 1.63  2003/08/25 23:38:26  zet
 decimalformat
 

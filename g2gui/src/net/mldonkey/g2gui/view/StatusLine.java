@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.statusline.LinkEntry;
 import net.mldonkey.g2gui.view.statusline.LinkEntryItem;
 import net.mldonkey.g2gui.view.statusline.NetworkItem;
@@ -42,7 +43,7 @@ import org.eclipse.swt.widgets.Composite;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.12 2003/08/28 16:07:48 zet Exp $ 
+ * @version $Id: StatusLine.java,v 1.13 2003/08/28 22:44:30 zet Exp $ 
  *
  */
 public class StatusLine {
@@ -63,12 +64,7 @@ public class StatusLine {
 		this.core = mainTab.getCore();
 		
 		mainComposite = new Composite( mainTab.getMainComposite(), SWT.NONE);
-		gridLayout = new GridLayout();
-		gridLayout.numColumns = 1;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 0;
+		gridLayout = CGridLayout.createGL(1,0,0,0,0,false); 
 		
 		mainComposite.setLayout(gridLayout);
 		mainComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -82,12 +78,7 @@ public class StatusLine {
 				
 		this.composite = new Composite( mainComposite, SWT.NONE );	
 		
-		gridLayout = new GridLayout();
-		gridLayout.numColumns = 4;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 0;
-			
+		gridLayout = CGridLayout.createGL(4,0,0,0,0,false); 
 		this.composite.setLayout( gridLayout);
 		composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );	
 			
@@ -120,14 +111,7 @@ public class StatusLine {
 	public void createLinkEntry( Composite parent ) {
 		
 		linkEntryComposite = new Composite( mainComposite, SWT.NONE );
-				
-		gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 0;
-
+		gridLayout = CGridLayout.createGL(2,0,0,0,0,false);
 		linkEntryComposite.setLayout(gridLayout);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = 0;
@@ -175,6 +159,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.13  2003/08/28 22:44:30  zet
+GridLayout helper class
+
 Revision 1.12  2003/08/28 16:07:48  zet
 update linkentry
 

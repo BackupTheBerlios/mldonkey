@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view;
 
 import java.util.Observer;
 
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
@@ -45,7 +46,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.27 2003/08/24 18:28:24 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.28 2003/08/28 22:44:30 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -84,24 +85,17 @@ public abstract class GuiTab implements Listener, Observer {
 	public GuiTab( MainTab gui ) {
 		this.mainWindow = gui;		
 		this.content = new Composite( gui.getPageContainer(), SWT.NONE );
-		GridLayout contentGD = new GridLayout();
-		contentGD.marginHeight = 0;
-		contentGD.marginWidth = 0;
-		contentGD.verticalSpacing = 0;
-		contentGD.horizontalSpacing = 0;
 		
-		this.content.setLayout( contentGD );
+		GridLayout gridLayout = CGridLayout.createGL(1,0,0,0,0,false);
+		
+		this.content.setLayout( gridLayout );
 		this.content.setLayoutData( new GridData(GridData.FILL_BOTH));
 		this.content.setVisible( false );
 		
 		this.pageHeaderPlaceHolder = new Composite( content, SWT.NONE );
-		contentGD = new GridLayout();
-		contentGD.marginHeight = 0;
-		contentGD.marginWidth = 0;
-		contentGD.verticalSpacing = 0;
-		contentGD.horizontalSpacing = 0;
-		contentGD.numColumns = 1;
-		this.pageHeaderPlaceHolder.setLayout( contentGD );
+		gridLayout = CGridLayout.createGL(1,0,0,0,0,false);
+		
+		this.pageHeaderPlaceHolder.setLayout( gridLayout );
 		this.pageHeaderPlaceHolder.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		createHeader( pageHeaderPlaceHolder, PreferenceLoader.loadBoolean("displayHeaderBar") );
@@ -252,13 +246,8 @@ public abstract class GuiTab implements Listener, Observer {
 			separator2 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
 			separator2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	
-			GridLayout layout = new GridLayout();
-			layout.numColumns = 2;
-			layout.marginWidth = 10;
-			layout.marginHeight = 0;
-			layout.horizontalSpacing = 0;
-			layout.verticalSpacing = 0;
-			pageHeader.setLayout(layout);
+			GridLayout gridLayout = CGridLayout.createGL(2,10,0,0,0,false);
+			pageHeader.setLayout(gridLayout);
 			pageHeader.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			
 			leftLabel = new CLabel(pageHeader, SWT.NONE);
@@ -299,6 +288,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.28  2003/08/28 22:44:30  zet
+GridLayout helper class
+
 Revision 1.27  2003/08/24 18:28:24  zet
 thinner header bar
 

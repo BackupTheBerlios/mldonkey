@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
@@ -59,7 +60,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.5 2003/08/23 16:18:44 lemmster Exp $ 
+ * @version $Id: MainCoolBar.java,v 1.6 2003/08/28 22:44:30 zet Exp $ 
  *
  */
 public class MainCoolBar {
@@ -94,11 +95,7 @@ public class MainCoolBar {
 	 */	
 	private void createContent( Composite parent ) {
 		composite = new Composite( parent, SWT.NONE);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 0;
+		GridLayout gridLayout = CGridLayout.createGL(1,0,0,0,0,false);
 		composite.setLayout ( gridLayout );
 		composite.setLayoutData( new GridData ( GridData.FILL_HORIZONTAL ) );
  
@@ -353,6 +350,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.6  2003/08/28 22:44:30  zet
+GridLayout helper class
+
 Revision 1.5  2003/08/23 16:18:44  lemmster
 fixed locked/button size
 

@@ -32,6 +32,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
@@ -45,13 +46,16 @@ import net.mldonkey.g2gui.view.transferTree.clientTable.TableSorter;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -69,7 +73,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Main
  *
  *
- * @version $Id: TransferTab.java,v 1.38 2003/08/25 22:17:12 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.39 2003/08/28 22:44:30 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -103,27 +107,16 @@ public class TransferTab extends GuiTab  {
 		final SashForm mainSashForm = new SashForm( parent, SWT.VERTICAL );
 		Composite downloadComposite;
 		
-		
 		if (PreferenceLoader.loadBoolean("advancedMode")) {
 					
 			SashForm downloadSashForm = new SashForm( mainSashForm, SWT.HORIZONTAL );
 			
-		
-			
-			
 			downloadComposite = new Composite( downloadSashForm, SWT.BORDER );
-			GridLayout gridLayout = new GridLayout();
-			gridLayout.numColumns = 1;
-			gridLayout.marginHeight = 0;
-			gridLayout.marginWidth = 0;
+			GridLayout gridLayout = CGridLayout.createGL(1,0,0,0,0,false);
 			downloadComposite.setLayout( gridLayout );
 		
 			Composite downloadClients = new Composite(downloadSashForm, SWT.BORDER );
-			gridLayout = new GridLayout();
-			gridLayout.numColumns = 1;
-			gridLayout.marginHeight = 0;
-			gridLayout.marginWidth = 0;
-			gridLayout.verticalSpacing = 0;
+			gridLayout = CGridLayout.createGL(1,0,0,0,0,false);
 			downloadClients.setLayout( gridLayout );
 			
 			downloadClients.addControlListener(new ControlAdapter() {
@@ -146,15 +139,28 @@ public class TransferTab extends GuiTab  {
 		
 				
 		// When we have uploaders:		
-		Composite upload = new Composite( mainSashForm, SWT.BORDER );
-		upload.setLayout(new FillLayout());
-		Button b = new Button(upload, SWT.NONE);
+		ViewForm uploadersViewForm = new ViewForm( mainSashForm, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		uploadersViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));	
+			
+		CLabel uploadersCLabel = new CLabel(uploadersViewForm, SWT.LEFT );	
+		uploadersCLabel.setText("Uploaders");
+		uploadersCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		uploadersCLabel.setBackground(new Color[]{uploadersViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+										uploadersViewForm.getBackground()},
+										new int[] {100});	
+		
+		Composite uploadersComposite = new Composite( uploadersViewForm, SWT.NONE );
+		uploadersComposite.setLayout(new FillLayout());
+		Button b = new Button(uploadersComposite, SWT.NONE);
 		b.setText("Try \"uploaders\" or \"upstats\" command in console until gui protocol sends upload information.");
 		b.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 				mainSashForm.setWeights( new int[] {100,0});
 			}
 		});
+		
+		uploadersViewForm.setTopLeft(uploadersCLabel);
+		uploadersViewForm.setContent(uploadersComposite);
 		
 		mainSashForm.setWeights( new int[] {1441,0});
 		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, clientTableViewer, mldonkey, this );
@@ -208,11 +214,7 @@ public class TransferTab extends GuiTab  {
 		clientTableViewer.setSorter(new TableSorter());
 		
 		Composite bottomBar = new Composite(parent, SWT.NONE);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 1;
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.verticalSpacing = 0;
+		GridLayout gridLayout = CGridLayout.createGL(1,0,0,0,0,false);
 		bottomBar.setLayout( gridLayout );
 		bottomBar.setLayoutData( new GridData(GridData.FILL_HORIZONTAL));
 		
@@ -305,6 +307,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.39  2003/08/28 22:44:30  zet
+GridLayout helper class
+
 Revision 1.38  2003/08/25 22:17:12  zet
 *** empty log message ***
 

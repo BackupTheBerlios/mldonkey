@@ -49,7 +49,6 @@ import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -64,7 +63,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.19 2003/08/25 20:38:26 vnc Exp $ 
+ * @version $Id: ServerTab.java,v 1.20 2003/08/28 22:44:30 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -74,7 +73,6 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	private Combo combo;
 	private GridData gridData;
 	private Label label;
-	private GridLayout gridLayout;
 	private CoreCommunication core;
 	private ServerInfoIntMap servers;
 	private CustomTableViewer table;
@@ -411,6 +409,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.20  2003/08/28 22:44:30  zet
+GridLayout helper class
+
 Revision 1.19  2003/08/25 20:38:26  vnc
 GTK layout cleanups, slight typo refactoring
 

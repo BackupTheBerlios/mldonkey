@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.ServerTab;
 import net.mldonkey.g2gui.view.StatusLine;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
@@ -45,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.21 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: NetworkItem.java,v 1.22 2003/08/28 22:44:30 zet Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -86,10 +87,7 @@ public class NetworkItem implements Observer {
 		NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
 
 		composite = new Composite( composite, SWT.BORDER );
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = networks.length;
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
+		GridLayout gridLayout = CGridLayout.createGL(networks.length,0,0,0,0,false);
 		composite.setLayout( gridLayout );
 		
 		/* sets the enabled/disabled image for each known network */
@@ -174,6 +172,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.22  2003/08/28 22:44:30  zet
+GridLayout helper class
+
 Revision 1.21  2003/08/23 15:21:37  zet
 remove @author
 
