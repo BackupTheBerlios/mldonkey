@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  * @author 
- * @version $Id: Console.java,v 1.4 2003/08/14 12:57:03 zet Exp $ 
+ * @version $Id: Console.java,v 1.5 2003/08/16 05:08:21 zet Exp $ 
  *
  */
 public class Console extends Observable implements ControlListener  {	
@@ -164,8 +164,7 @@ public class Console extends Observable implements ControlListener  {
 	}
 	public void dispose() {
 		// If these were loaded from the PreferenceLoader, is this necessary? 
-		infoDisplay.getFont().dispose();
-		input.getFont().dispose();
+		
 		infoDisplay.getBackground().dispose();
 		infoDisplay.getForeground().dispose();
 		input.getBackground().dispose();
@@ -178,6 +177,9 @@ public class Console extends Observable implements ControlListener  {
 
 /*
 $Log: Console.java,v $
+Revision 1.5  2003/08/16 05:08:21  zet
+fix gtk crash when closing a message tab
+
 Revision 1.4  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 
