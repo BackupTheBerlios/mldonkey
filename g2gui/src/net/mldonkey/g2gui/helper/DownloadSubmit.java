@@ -46,12 +46,12 @@ import java.util.List;
 import net.mldonkey.g2gui.view.*;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
-
+import net.mldonkey.g2gui.helper.RegExp;
 /**
  * DownloadSubmit
  *
  * @author $user$
- * @version $Id: DownloadSubmit.java,v 1.1 2004/03/01 21:00:31 psy Exp $ 
+ * @version $Id: DownloadSubmit.java,v 1.2 2004/03/01 21:50:07 psy Exp $ 
  *
  */
 public class DownloadSubmit implements Runnable {
@@ -191,8 +191,8 @@ public class DownloadSubmit implements Runnable {
 						if (string.startsWith("GET")) {
 							
 							/* which file does the other side request? */
-							if (string.split(" ").length > 1) 
-								GETfile = string.split(" ")[1];
+							if (RegExp.split(string, ' ').length > 1)  
+								GETfile = RegExp.split(string, ' ')[1];
 							
 							/* remove our added trailing ".torrent" */
 							GETfile = GETfile.substring(0, GETfile.length() - ".torrent".length());
@@ -272,7 +272,7 @@ public class DownloadSubmit implements Runnable {
 				String temp = addr.getHostAddress();
 				
 				/* check if this is a usable IP for serving our torrent */
-				if ( temp.split(":").length > 1 || addr.isLoopbackAddress() ) {
+				if ( RegExp.split(temp, ':').length > 1 || addr.isLoopbackAddress() ) {
 					if (G2Gui.debug) System.out.println("BAD adress: " + temp);
 				} else {
 					if (G2Gui.debug) System.out.println("GOOD adress: " + temp);
@@ -287,6 +287,9 @@ public class DownloadSubmit implements Runnable {
 
 /*
 $Log: DownloadSubmit.java,v $
+Revision 1.2  2004/03/01 21:50:07  psy
+replaced java's split()-method with our own one
+
 Revision 1.1  2004/03/01 21:00:31  psy
 * Moved linksubmitter from G2gui.java to DownloadSubmit.java
 * added .torrent http-server
