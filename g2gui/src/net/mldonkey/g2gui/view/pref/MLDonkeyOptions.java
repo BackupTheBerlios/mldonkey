@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.30 2003/08/29 15:19:52 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.31 2003/08/29 15:35:58 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -68,10 +68,11 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	 
-	protected void setupEditor( FieldEditor e ) {
+	private void setupEditor( FieldEditor e , String optionHelp ) {
 		e.setPreferencePage( this );
 		e.setPreferenceStore( getPreferenceStore() );
-		e.getLabelControl(parent).setToolTipText("hallo");
+		e.getLabelControl( parent ).setToolTipText( optionHelp );
+		
 		e.load();
 		addField( e );
 	}
@@ -91,7 +92,7 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 					optionHelp = temp.getKey();
 				/*create a boolean-editor and add to page*/
 				setupEditor( new BooleanFieldEditor( 
-						temp.getKey(), description, BooleanFieldEditor.SEPARATE_LABEL, parent ) );
+						temp.getKey(), description, BooleanFieldEditor.SEPARATE_LABEL, parent ), optionHelp );
 			} 
 			else if ( temp.getOptionType() == EnumTagType.INT || isInteger( temp.getValue() ) ) {
 				String description = temp.getDescription();
@@ -123,7 +124,7 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 						}
 						textField.setLayoutData( gd );
 					}
-				} );
+				}, optionHelp );
 			} 
 			else {
 				String description = temp.getDescription();
@@ -133,11 +134,12 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 				if ( optionHelp.equals( "" ) )
 					optionHelp = temp.getKey();
 				// with a very long string, the pref pages looks bad. limit to inputFieldLength?
-				setupEditor( new StringFieldEditor( temp.getKey(), description, inputFieldLength, parent ) );
+				setupEditor( new StringFieldEditor( temp.getKey(), description, inputFieldLength, parent ), optionHelp );
 			}
 		}
 
 	}
+
 	/**
 	 * @param string
 	 * @return
@@ -224,6 +226,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 } 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.31  2003/08/29 15:35:58  dek
+re-added tooltip-Help
+
 Revision 1.30  2003/08/29 15:19:52  dek
 some more JFace-cleaning up, i didn't even believe jface would make things sooo easy..:-)
 
