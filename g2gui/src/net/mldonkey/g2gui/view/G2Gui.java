@@ -49,6 +49,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
@@ -56,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.38 2003/10/08 18:11:35 zet Exp $
+ * @version $Id: G2Gui.java,v 1.39 2003/10/19 16:39:36 zet Exp $
  *
  */
 public class G2Gui {
@@ -196,7 +197,9 @@ public class G2Gui {
             progressBar.setLayoutData( formData );
           	splashShell.pack();
 			
-			Rectangle displayBounds = display.getBounds();
+			Monitor primary = display.getPrimaryMonitor ();
+			Rectangle displayBounds = primary.getBounds ();
+			
 			Rectangle splashImageBounds = splashImage.getBounds();
 		   	
 		   	splashShell.setBounds(
@@ -452,6 +455,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.39  2003/10/19 16:39:36  zet
+Centre splash on multi monitor displays
+
 Revision 1.38  2003/10/08 18:11:35  zet
 use display.update()
 
