@@ -22,47 +22,60 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.ArrayList;
+
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
+
 /**
  * SearchQuery is needed to transmit a search to the mldonkey. It needs to be created, and then filled
  * with setter(). When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.1 2003/07/04 14:06:41 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.2 2003/07/04 16:54:30 dek Exp $ 
  *
  */
 public class SearchQuery {
+	private byte search;
+	private String searchString;
 	private final byte AND = 0;
 	private final byte OR = 1;
 	private final byte ANDNOT = 2;
 	
 	 
-	/*
+	/**
+	 * The CoreCommunication
+	 */	
+	private CoreCommunication parent;
+	
+	/**
 	 * static counter to be sure to generate a unique search identifier for every new search
 	 */
 	private static int counter = 0;
 	
-	/*
+	/**
 	 * every search needs a unique search-identifier
 	 */
 	private int searchIdentifier;
 	
-	/*
+	/**
 	 * what do we want to search, this is the field we have to fill
 	 * (Query where default fields are filled with the values entered by the user)
 	 */
 	private Query searchQuery;
 	
-	/* 
+	/** 
 	 * Maximal number of results (used ?) 
 	 */
 	private int maxSearchResults;
 	
-	/*
+	/**
 	 * Search type (0=local, 1=remote, 2=subscription) 
 	 */
 	private byte searchType;
 	
-	/*
+	/**
 	 * Network (0=All)
 	 */
 	private int network;
@@ -70,9 +83,11 @@ public class SearchQuery {
 	
 	/**
 	 * Default constructor for creating a empty SearchQuery
-	 * 
+	 * @param core The CoreCommunication parent
 	 */
-	public SearchQuery() {
+
+	public SearchQuery( CoreCommunication core ) {
+		this.parent = core;
 		/* create a unique searchIdentifier */
 		searchIdentifier = counter + 1;
 		counter++;
@@ -87,6 +102,14 @@ public class SearchQuery {
 		 * could be changed by setter-method
 		 */
 		searchQuery.setNode( AND );
+		search = AND;
+		
+		/*
+		 * default is searching in all networks:
+		 */
+		 network = 0;
+		 
+		 
 		
 	}
 	/**
@@ -101,6 +124,7 @@ public class SearchQuery {
 	 * @param searchString simple String, with space-separated Search-patterns
 	 */
 	public void setSearchString( String searchString ) {
+		this.searchString = searchString;
 		String[] patterns = searchString.split( " " );
 		/* now we have to generate a query-Object for each search pattern */
 		Query[] queries = new Query[patterns.length];
@@ -171,15 +195,68 @@ public class SearchQuery {
 	 * @param type The Type of this search
 	 */
 	public void setSearchType( byte type ) {
-		if ( ( type == AND ) || ( type == OR )  )
+		if ( ( type == AND ) || ( type == OR )  ) {		
 				searchQuery.setNode( type );
+				this.search = type;
+		}
+				
 	}
 	
+	/**
+	 * sends out the search-query and hopefully get any results....
+	 * 
+	 */
+	public void send() {
+		ArrayList content = new ArrayList();
+		content.add( new Integer( searchIdentifier ) );
+		
+//		/* now we need to get the Query sorted out in kind of Objects[] */
+//			Object[] tempArray = this.searchQuery.toObjectArray();
+//			for ( int i = 0; i < tempArray.length; i++ ) {
+//				content.add( tempArray [ i ] );
+//			}
+
+		/* did we succeed, don't know yet, must doing some testing,
+		 * something must be wrong, as mldonkey says: 
+		 * 		decoding gui proto[16]: exception Invalid_argument("out-of-bound array or string access"), opcode 42
+		 *		ascii: [ *(0)(1)(0)(0)(0)(0)(1)(0)(0)(0)(0)(0)(1)(0)(0)(0)(0)]
+		 *		dec: [(42)(0)(1)(0)(0)(0)(0)(1)(0)(0)(0)(0)(0)(1)(0)(0)(0)(0)]
+		 *
+		 *So i do it the most simple way, which works indeed ;-)
+		*/
+		content.add( new Byte( ( byte )4 ) );
+		content.add( "Comment" );
+		content.add( this.searchString );
+		
+		
+		content.add( new Integer( maxSearchResults ) );
+		content.add( new Byte( searchType ) );
+		content.add( new Integer( network ) );
+		
+
+		/* create the message content */
+		
+		Object[] temp = content.toArray();
+		EncodeMessage consoleMessage = new EncodeMessage( ( short )42, content.toArray() );
+		consoleMessage.sendMessage( this.getParent().getConnection() );
+		//content = null;
+		//consoleMessage = null;
+	}
+
+	/**
+	 * @return our master, the coreCommunication-interface
+	 */
+	public CoreCommunication getParent() {
+		return parent;
+	}
 
 }
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.2  2003/07/04 16:54:30  dek
+searching works ( with workaround)
+
 Revision 1.1  2003/07/04 14:06:41  dek
 first sketch of a search-query. still missing: convertig it to message and send out the thing
 
