@@ -27,6 +27,7 @@ import java.util.Observer;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.model.NetworkInfo;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
@@ -47,7 +48,7 @@ import org.eclipse.swt.widgets.Display;
  * ChunkView
  *
  *
- * @version $Id: ChunkCanvas.java,v 1.18 2003/08/30 01:21:05 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.20 2003/09/14 16:25:06 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -80,6 +81,8 @@ public class ChunkCanvas extends Canvas implements Observer {
 	private final short isClientInfo = 2;
 	private final int initialHeight = 18;
 	
+	private NetworkInfo networkInfo;
+	
 	/**
 	 * creates a chunkview-Object for the given clientInfo
 	 * @param parent here does the object live
@@ -87,11 +90,12 @@ public class ChunkCanvas extends Canvas implements Observer {
 	 * @param clientInfo the source of this chunkviews information
 	 * @param fileInfo for this fileInfo we want to display the Information	 
 	 */
-	public ChunkCanvas( Composite parent, int style, ClientInfo clientInfo, FileInfo fileInfo ) {			
+	public ChunkCanvas( Composite parent, int style, ClientInfo clientInfo, FileInfo fileInfo, NetworkInfo networkInfo ) {			
 		super( parent, style );	
 			
 		this.clientInfo = clientInfo;
 		this.fileInfo = fileInfo;
+		this.networkInfo = networkInfo;
 		this.type = ( clientInfo == null ? isFileInfo : isClientInfo );
 		
 		createImage();		
@@ -175,7 +179,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 			toColor = blue;
 			
 			// we have it
-			if ( chunks.charAt( i ) == '2' ) {
+			if ( chunks.length() == avail.length() && chunks.charAt( i ) == '2' ) {
 				toColor = darkGray;	
 			} // doesn't have it
 			else if ( avail.charAt( i ) == '0' ) {			
@@ -214,7 +218,16 @@ public class ChunkCanvas extends Canvas implements Observer {
 	private void createFileInfoImage() {
 		
 		this.chunks = fileInfo.getChunks();
-		this.avail = fileInfo.getAvail();
+		if (networkInfo != null) {
+			Object tmpAvail = fileInfo.getAvails().get(networkInfo);
+			if (tmpAvail instanceof String) {
+				this.avail = (String) tmpAvail;
+			} else {
+				this.avail = fileInfo.getAvail();
+			}
+		} else {
+			this.avail = fileInfo.getAvail();
+		}
 		int length = 0;
 		
 		Display thisDisplay = Display.getCurrent();
@@ -257,9 +270,10 @@ public class ChunkCanvas extends Canvas implements Observer {
 			numChunkSources = avail.charAt( i ) ;
 			Color intenseColor = null;
 				
-			if ( chunks.charAt( i ) == '2' ) 			
+			// this old "chunks" field doesn't fit well into multi network transfers...
+			if ( chunks.length() == avail.length() && chunks.charAt( i ) == '2' ) 			
 				toColor = darkGray;
-			else if ( chunks.charAt( i ) == '3' ) 		
+			else if ( chunks.length() == avail.length() && chunks.charAt( i ) == '3' ) 		
 				toColor = yellow;
 			else if ( numChunkSources == 0 ) 
 				toColor = red;
@@ -445,6 +459,12 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.20  2003/09/14 16:25:06  zet
+*** empty log message ***
+
+Revision 1.19  2003/09/14 16:23:56  zet
+multi network avails
+
 Revision 1.18  2003/08/30 01:21:05  zet
 remove unused
 
