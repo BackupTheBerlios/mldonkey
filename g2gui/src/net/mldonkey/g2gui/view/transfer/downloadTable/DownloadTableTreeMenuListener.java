@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.TableItem;
  * 
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.2 2003/09/20 17:46:11 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -372,6 +372,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	 			FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
 	 			if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
 		  			fileInfo.setState(EnumFileState.CANCELLED);
+		  			// this conceptually breaks core/gui synchronicity and should be removed ASAP.
 		  			mldonkey.getResultInfoIntMap().setDownloading( fileInfo, false );
 	 			}
 			}
@@ -446,6 +447,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.2  2003/09/20 17:46:11  zet
+*** empty log message ***
+
 Revision 1.1  2003/09/20 14:39:21  zet
 move transfer package
 
