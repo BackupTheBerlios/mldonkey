@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.15 2003/07/05 11:33:08 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.16 2003/07/05 15:46:52 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements SimpleInformation {
@@ -42,10 +42,6 @@ public class FileInfo implements SimpleInformation {
 	 * The CoreCommunication
 	 */
 	private CoreCommunication parent;
-	/**
-	 * Does this object change?
-	 */
-	private boolean changed = false;
 	/**
 	 * File identifier
 	 */
@@ -305,7 +301,6 @@ public class FileInfo implements SimpleInformation {
 		this.setPriority( messageBuffer.readInt32() );
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
-		this.setChanged();
 	}
 	
 	/**
@@ -320,7 +315,6 @@ public class FileInfo implements SimpleInformation {
 		this.offset = messageBuffer.readInt32();
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
-		this.setChanged();
 	}
 	
 	/**
@@ -328,7 +322,7 @@ public class FileInfo implements SimpleInformation {
 	 * @param d The double to round
 	 * @return a rounden double
 	 */
-	public static double round( double d ) {
+	private static double round( double d ) {
 		d = ( double )( ( int )( d * 100 + 0.5 ) ) / 100;
 		return d;
 	}
@@ -343,28 +337,6 @@ public class FileInfo implements SimpleInformation {
 			return true;
 		else
 			return false;
-	}
-	
-	/**
-	 * Changed status of this object
-	 * @return true if changed, otherwise false
-	 */
-	public boolean isChanged() {
-		return changed;
-	}
-	
-	/**
-	 * set the change status
-	 */
-	private void setChanged() {
-		this.changed = true;	
-	}
-	
-	/**
-	 * clear the change status
-	 */
-	public void clearChanged() {
-		this.changed = false;
 	}
 	
 	/**
@@ -404,7 +376,7 @@ public class FileInfo implements SimpleInformation {
 	}
 
 	/**
-	 * @param enum The new priority for this file
+	 * @param enum The new priority for this file (LOW/NORMAL/HIGH)
 	 */
 	public void setPriority( EnumPriority enum ) {
 		Integer content;
@@ -439,6 +411,9 @@ public class FileInfo implements SimpleInformation {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.16  2003/07/05 15:46:52  lemmstercvs01
+javadoc improved
+
 Revision 1.15  2003/07/05 11:33:08  lemmstercvs01
 id -> List ids
 

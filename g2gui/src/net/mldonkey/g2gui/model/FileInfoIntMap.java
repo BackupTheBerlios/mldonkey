@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.13 2003/07/05 15:38:20 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.14 2003/07/05 15:43:48 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -54,13 +54,6 @@ public class FileInfoIntMap extends InfoIntMap {
 		super( communication );
 	}
 
-	/**
-	 * Generates a empty FileInfoList object
-	 */
-	public FileInfoIntMap() {
-		super();
-	}
-	
 	/**
 	 * Store a key/value pair in this object
 	 * @param key The Key
@@ -131,7 +124,7 @@ public class FileInfoIntMap extends InfoIntMap {
 	}
 	
 	/**
-	 * Get a FileInfo object from this object by there id
+	 * Get a FileInfo object from this object by id
 	 * @param id The FileInfo id
 	 * @return The FileInfo object
 	 */
@@ -140,12 +133,18 @@ public class FileInfoIntMap extends InfoIntMap {
 	}
 	
 	/**
+	 * A list of fileinfo ids, which changed since last update.
+	 * Use clearIds() after update
+	 * Need manual refresh() of the tableviewer
 	 * @return The fileinfo id which changed last
 	 */
 	public List getIds() {
 		return ids;
 	}
 	
+	/**
+	 * Removes all entries in ids
+	 */
 	public void clearIds() {
 		synchronized ( this.ids ) {
 			this.ids.removeAll( ids );
@@ -164,8 +163,8 @@ public class FileInfoIntMap extends InfoIntMap {
 	}
 	
 	/**
-	 * Removes a download from this map
-	 * @param key The fileinfo id
+	 * Change the of a fileinfo to cancelled
+	 * @param key The fileinfo id to change
 	 */
 	public void remove( int key ) {
 		this.get( key ).setState( EnumFileState.CANCELLED );
@@ -200,6 +199,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.14  2003/07/05 15:43:48  lemmstercvs01
+javadoc improved
+
 Revision 1.13  2003/07/05 15:38:20  lemmstercvs01
 debug removed
 
