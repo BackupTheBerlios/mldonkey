@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreMessage
  *
  * @author markus
- * @version $Id: CoreMessage.java,v 1.5 2003/06/12 07:40:22 lemmstercvs01 Exp $ 
+ * @version $Id: CoreMessage.java,v 1.6 2003/06/12 10:36:58 lemmstercvs01 Exp $ 
  *
  */
 public class CoreMessage extends Message {
@@ -159,11 +159,20 @@ public class CoreMessage extends Message {
 		
 		return clientStats;
 	}
-
+	
+	public static FileAddSource readFileAddSource( InputStream inputStream ) throws IOException {
+		FileAddSource fileAddSource =  new FileAddSource();
+		fileAddSource.setId( readInt32( inputStream ) );
+		fileAddSource.setSourceid( readInt32( inputStream ) );
+		return fileAddSource;
+	}
 }
 
 /*
 $Log: CoreMessage.java,v $
+Revision 1.6  2003/06/12 10:36:58  lemmstercvs01
+FileAddSource added
+
 Revision 1.5  2003/06/12 07:40:22  lemmstercvs01
 fixed bug in file info decoding
 
