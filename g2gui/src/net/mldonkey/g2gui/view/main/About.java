@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.24 2003/11/08 15:16:31 vnc Exp $ 
+ * @version $Id: About.java,v 1.25 2003/11/09 13:24:02 lemmster Exp $ 
  *
  */
 public class About extends Dialog {
@@ -132,7 +132,7 @@ public class About extends Dialog {
 		String devels = "Dek, lemmy, vnc and z\n\n";
 
 		String contributorHeader = G2GuiResources.getString( "ABOUT_CONTRIB" ) + "\n";
-		String contributors = "housetier, mitch, and vaste\n\n";
+		String contributors = "housetier, mitch and vaste\n\n";
 		
 		
 		String thankHeader = G2GuiResources.getString( "ABOUT_THANK" ) + "\n";
@@ -255,7 +255,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.24 2003/11/08 15:16:31 vnc Exp $ 
+	 * @version $Id: About.java,v 1.25 2003/11/09 13:24:02 lemmster Exp $ 
 	 *
 	 */
 	public class Link {
@@ -307,6 +307,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.25  2003/11/09 13:24:02  lemmster
+typo in credits
+
 Revision 1.24  2003/11/08 15:16:31  vnc
 little credits cleanup
 
