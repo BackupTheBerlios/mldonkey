@@ -31,7 +31,7 @@ import java.net.Socket;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.4 2003/06/10 16:24:20 dek Exp $ 
+ * @version $Id: Core.java,v 1.5 2003/06/10 16:29:25 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -121,17 +121,17 @@ public class Core extends Thread implements CoreCommunication {
 					Object[] temp = new Object[ 1 ];
 					temp[ 0 ] = new Integer( 16 );
 					Message coreProtocolReply =
-						new Message( Message.S_COREPROTOCOL, temp );
+						new GuiMessage( Message.S_COREPROTOCOL, temp );			
 					coreProtocolReply.sendMessage( connection );
 
 					Object[] extension = { new Integer( 1 ), new Byte( ( byte ) 1 )};
 					Object[][] a = { extension };
 					Message guiExtension =
-						new Message( Message.S_GUIEXTENSION, a );
+						new GuiMessage( Message.S_GUIEXTENSION, a );
 					guiExtension.sendMessage( connection );
 
 					String[] aString = { this.password, this.username };
-					Message password = new Message( Message.S_PASSWORD, aString );
+					Message password = new GuiMessage( Message.S_PASSWORD, aString );
 					password.sendMessage( connection );
 					break;
 				
@@ -273,6 +273,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.5  2003/06/10 16:29:25  dek
+let's rock: everything is working ;-)
+
 Revision 1.4  2003/06/10 16:24:20  dek
 Checkstyle-cleaned
 

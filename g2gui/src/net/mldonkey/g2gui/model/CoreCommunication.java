@@ -20,21 +20,19 @@
  
 package net.mldonkey.g2gui.model;
 
-import java.net.Socket;
-
 /**
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.1 2003/06/09 21:15:32 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.2 2003/06/10 16:29:25 dek Exp $ 
  *
  */
-public interface CoreCommunication{
+public interface CoreCommunication {
 	/**
 	 * connect()
 	 *
 	 * @author $user$
-	 * @version $Id: CoreCommunication.java,v 1.1 2003/06/09 21:15:32 dek Exp $ 
+	 * @version $Id: CoreCommunication.java,v 1.2 2003/06/10 16:29:25 dek Exp $ 
 	 * Connects this object to given mldonkey-core @remote 
 	 *
 	 */	
@@ -43,20 +41,11 @@ public interface CoreCommunication{
 		 * run()
 		 *
 		 * @author $user$
-		 * @version $Id: CoreCommunication.java,v 1.1 2003/06/09 21:15:32 dek Exp $ 
+		 * @version $Id: CoreCommunication.java,v 1.2 2003/06/10 16:29:25 dek Exp $ 
 		 * starts the Core-Thread and begins to receive messages 
 		 *
 		 */	
 	void run();
-	/**
-		 * getConnection()
-		 *
-		 * @author $user$
-		 * @version $Id: CoreCommunication.java,v 1.1 2003/06/09 21:15:32 dek Exp $ 
-		 * 
-		 *	returns the socket beeing used atm
-		 */	
-	public Socket getConnection();
 	
 	
 	
