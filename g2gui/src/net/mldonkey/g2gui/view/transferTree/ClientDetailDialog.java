@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.17 2003/08/31 01:46:33 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.18 2003/08/31 01:48:25 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -143,7 +143,7 @@ public class ClientDetailDialog implements Observer {
 		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		buttonComposite.setLayout(CGridLayout.createGL(2,0,0,5,0,false));
 
-		final Button addFriendButton = new Button( buttonComposite, SWT.FLAT );
+		final Button addFriendButton = new Button( buttonComposite, SWT.NONE );
 		addFriendButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));
 		addFriendButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ));
 		addFriendButton.addSelectionListener( new SelectionAdapter() {
@@ -264,6 +264,9 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.18  2003/08/31 01:48:25  zet
+*** empty log message ***
+
 Revision 1.17  2003/08/31 01:46:33  zet
 localise
 

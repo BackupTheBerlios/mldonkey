@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.19 2003/08/31 01:46:33 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.20 2003/08/31 01:48:25 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -206,7 +206,7 @@ public class FileDetailDialog implements Observer {
 		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		buttonComposite.setLayout(CGridLayout.createGL(2,0,0,5,0,false));
 
-		final Button fileActionButton = new Button( buttonComposite, SWT.FLAT );
+		final Button fileActionButton = new Button( buttonComposite, SWT.NONE );
 		fileActionButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));
 		
 		if (fileInfo.getState().getState() == EnumFileState.PAUSED)
@@ -341,6 +341,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.20  2003/08/31 01:48:25  zet
+*** empty log message ***
+
 Revision 1.19  2003/08/31 01:46:33  zet
 localise
 
@@ -367,6 +370,9 @@ new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
+fix Revision 1.20  2003/08/31 01:48:25  zet
+fix *** empty log message ***
+fix
 fix Revision 1.19  2003/08/31 01:46:33  zet
 fix localise
 fix
