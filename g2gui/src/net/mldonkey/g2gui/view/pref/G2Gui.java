@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.21 2003/08/18 12:31:53 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.22 2003/08/18 12:33:37 dek Exp $ 
  *
  */
 public class G2Gui extends FieldEditorPreferencePage  {	
@@ -47,16 +47,23 @@ public class G2Gui extends FieldEditorPreferencePage  {
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createContents( Composite myparent ) {		
-		this.parent = ( Composite ) super.createContents(myparent);			
-		getPreferenceStore().setDefault( "hostname", "localhost" );
-		getPreferenceStore().setDefault( "username", "admin" );
-		getPreferenceStore().setDefault( "password", "" );
-		getPreferenceStore().setDefault( "port", "4001" );	
-		
-		createFieldEditors();
-		
+		this.parent = ( Composite ) super.createContents(myparent);	
+		createFieldEditors();		
 		return parent;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#setPreferenceStore(org.eclipse.jface.preference.IPreferenceStore)
+	 */
+	public void setPreferenceStore(IPreferenceStore store) {		
+		super.setPreferenceStore(store);
+		
+		store.setDefault( "hostname", "localhost" );
+		store.setDefault( "username", "admin" );
+		store.setDefault( "password", "" );
+		store.setDefault( "port", "4001" );	
+	}
+
 
 	
 
@@ -97,6 +104,9 @@ public class G2Gui extends FieldEditorPreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.22  2003/08/18 12:33:37  dek
+moved default-value declaration to right place...
+
 Revision 1.21  2003/08/18 12:31:53  dek
 changed default-hostname to localhost
 
