@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.20 2003/08/18 12:22:28 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.21 2003/08/18 12:31:53 dek Exp $ 
  *
  */
 public class G2Gui extends FieldEditorPreferencePage  {	
@@ -48,7 +48,7 @@ public class G2Gui extends FieldEditorPreferencePage  {
 	 */
 	protected Control createContents( Composite myparent ) {		
 		this.parent = ( Composite ) super.createContents(myparent);			
-		getPreferenceStore().setDefault( "hostname", "192.168.1.100" );
+		getPreferenceStore().setDefault( "hostname", "localhost" );
 		getPreferenceStore().setDefault( "username", "admin" );
 		getPreferenceStore().setDefault( "password", "" );
 		getPreferenceStore().setDefault( "port", "4001" );	
@@ -97,6 +97,9 @@ public class G2Gui extends FieldEditorPreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.21  2003/08/18 12:31:53  dek
+changed default-hostname to localhost
+
 Revision 1.20  2003/08/18 12:22:28  dek
 g2gui-pref-page is now fully JFace-approved ;-)
 
