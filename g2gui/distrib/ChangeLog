@@ -30,7 +30,8 @@
 	* Comm: Handle disconnection from core more cleanly & update statusLine
 	* Main: Add menuItem: File>Kill core 
 	* Console: Add rightClick menuItems: SelectAll & Clear
-	* Transfer: Add relative availability % [#866]
+	* Transfer: Add relative availability % column [#866]
+	* Transfer: Add number of active sources column
 	* Transfer: Add table update delay option ( larger delay == lower CPU )
 	* Transfer: Add FileDetail chunk graphs for all active networks	
 	* Transfer: Fix FileDetail buttons [#897], move header menu
