@@ -1,3 +1,8 @@
+2003/11/12: z
+	* Transfer: Fix rate colors #1081
+	* Preferences: Fix Linux file browsing (* not *.*) #1079
+	* Windows Tray: Fix icon on exit #1082
+
 2003/11/11:
 	*** Release version 0.2.0 ***
 
