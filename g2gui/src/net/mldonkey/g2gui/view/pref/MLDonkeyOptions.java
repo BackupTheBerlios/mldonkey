@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.24 2003/08/25 13:14:57 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.25 2003/08/25 13:21:35 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -73,12 +73,12 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		 * it in this.createContents()
 		 */
 		
-			Collections.sort(options, new optionsComparator());
+			Collections.sort( options, new optionsComparator() );
 			Iterator it = options.iterator();
 			while ( it.hasNext() ) {
 				parent = getFieldEditorParent();
 				OptionsInfo temp = ( OptionsInfo ) it.next();
-				if ( temp.getOptionType() == EnumTagType.BOOL || isboolean( temp.getValue() )) {
+				if ( temp.getOptionType() == EnumTagType.BOOL || isboolean( temp.getValue() ) ) {
 					String description = temp.getDescription();
 						if ( description.equals( "" ) )	description = temp.getKey();
 					String optionHelp = temp.getOptionHelp();					
@@ -152,8 +152,8 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	 * @param string
 	 * @return
 	 */
-	private boolean isboolean(String string) {
-		if ( string.equalsIgnoreCase("true")|| string.equalsIgnoreCase("false") )
+	private boolean isboolean( String string ) {
+		if ( string.equalsIgnoreCase( "true" ) || string.equalsIgnoreCase( "false" ) )
 			return true;
 		else return false;
 	}
@@ -166,7 +166,7 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		
 		sc = new ScrolledComposite( myparent, SWT.H_SCROLL | SWT.V_SCROLL );
 		
-		sc.setLayoutData( new GridData(GridData.FILL_BOTH) );
+		sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 			sc.setLayout( new FillLayout() );
 		
 		Composite parent = ( Composite ) super.createContents( sc );
@@ -181,7 +181,7 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 		parent.layout();
 		
-		return parent;
+		return parent; 
 	}
 	/**
 	 * @param option this option should appear on this preference-page
@@ -191,19 +191,27 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	}
 	
 	public class optionsComparator implements Comparator {
-		
-		public int compare(Object o1, Object o2) {
+		/**
+		 * returns wich option is larger than the other one
+		 * @param o1 first Option to compare
+		 * @param o2 second Option to compare
+		 * @return which option is larger, 1|2, returns 0 when equal
+		 */
+		public int compare( Object o1, Object o2 ) {
 			OptionsInfo optionsInfo1 = ( OptionsInfo ) o1;
 			OptionsInfo optionsInfo2 = ( OptionsInfo ) o2;
 			String optionDescription1 = ( optionsInfo1.getDescription().equals( "" ) ? optionsInfo1.getKey() : optionsInfo1.getDescription() );
 			String optionDescription2 = ( optionsInfo2.getDescription().equals( "" ) ? optionsInfo2.getKey() : optionsInfo2.getDescription() );
-			return optionDescription1.compareToIgnoreCase(optionDescription2);
+			return optionDescription1.compareToIgnoreCase( optionDescription2 );
 		}
 		
 	}
-}
+} 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.25  2003/08/25 13:21:35  dek
+checkstyle
+
 Revision 1.24  2003/08/25 13:14:57  dek
 now integegerFields have the same width as StringInputFields
 

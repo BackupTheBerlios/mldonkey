@@ -13,7 +13,7 @@ import org.eclipse.jface.preference.ColorFieldEditor;
  * ExtendedColorFieldEditor
  *
  *
- * @version $Id: ExtendedColorFieldEditor.java,v 1.4 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: ExtendedColorFieldEditor.java,v 1.5 2003/08/25 13:17:25 dek Exp $
  */
 public class ExtendedColorFieldEditor extends ColorFieldEditor {
 	
@@ -24,20 +24,29 @@ public class ExtendedColorFieldEditor extends ColorFieldEditor {
 	 * @param composite where the whole thing takes place
 	 */
 	public ExtendedColorFieldEditor( String name, String labelText, Composite composite ) {
-		super(name, labelText, composite);
+		super( name, labelText, composite );
 	}
-	
-	public Button getChangeControl(Composite parent) {
-		return super.getChangeControl(parent);
+	/**
+	 * @param parent of this control
+	 * @return the "Change" button
+	 */
+	public Button getChangeControl( Composite parent ) {
+		return super.getChangeControl( parent );
 	}
 }
 /*
 $Log: ExtendedColorFieldEditor.java,v $
+Revision 1.5  2003/08/25 13:17:25  dek
+checkstyle
+
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.3  2003/08/22 21:22:58  lemmster
 fix $Log: ExtendedColorFieldEditor.java,v $
+fix Revision 1.5  2003/08/25 13:17:25  dek
+fix checkstyle
+fix
 fix Revision 1.4  2003/08/23 15:21:37  zet
 fix remove @author
 fix
