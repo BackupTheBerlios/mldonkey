@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.27 2003/09/16 20:21:59 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.28 2003/09/17 14:40:31 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -243,6 +243,7 @@ public class G2GuiResources {
         reg.put( "UpArrowBlue", createRawImage( "up_blue.gif" ) );
         reg.put( "SearchSmall", createTrans( "search_small.png" ) );
         reg.put( "SearchComplete", createTrans( "search_complete.png" ) );
+        reg.put( "RedCrossSmall", createTrans( "red_cross-12.png" ) );
         reg.put( "X", createRawImage( "x.gif" ) );
         reg.put( "DropDown", createRawImage( "dropdown.gif" ) );
         reg.put( "epUnknown", createImageDescriptor( "ep_unknown.gif" ) );
@@ -363,6 +364,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.28  2003/09/17 14:40:31  zet
+redcross
+
 Revision 1.27  2003/09/16 20:21:59  zet
 opennap
 
