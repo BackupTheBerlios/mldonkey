@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientStats
  *
  * @author markus
- * @version $Id: ClientStats.java,v 1.6 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: ClientStats.java,v 1.7 2003/06/26 21:11:35 dek Exp $ 
  *
  */
 public class ClientStats implements SimpleInformation {
@@ -47,10 +47,10 @@ public class ClientStats implements SimpleInformation {
 	private long totalDown;
 	private long totalShared;
 	private int numOfShare;
-	private int tcpUpRate;
-	private int tcpDownRate;
-	private int udpUpRate;
-	private int udpDownRate;
+	private float tcpUpRate;
+	private float tcpDownRate;
+	private float udpUpRate;
+	private float udpDownRate;
 	private int numCurrDownload;
 	private int numDownloadFinished;
 	private int[] connectedNetworks;
@@ -100,14 +100,14 @@ public class ClientStats implements SimpleInformation {
 	/**
 	 * @return an int
 	 */
-	public int getTcpDownRate() {
+	public float getTcpDownRate() {
 		return tcpDownRate;
 	}
 
 	/**
 	 * @return an int
 	 */
-	public int getTcpUpRate() {
+	public float getTcpUpRate() {
 		return tcpUpRate;
 	}
 
@@ -135,14 +135,14 @@ public class ClientStats implements SimpleInformation {
 	/**
 	 * @return an int
 	 */
-	public int getUdpDownRate() {
+	public float getUdpDownRate() {
 		return udpDownRate;
 	}
 
 	/**
 	 * @return an int
 	 */
-	public int getUdpUpRate() {
+	public float getUdpUpRate() {
 		return udpUpRate;
 	}
 
@@ -170,14 +170,14 @@ public class ClientStats implements SimpleInformation {
 	/**
 	 * @param i an int
 	 */
-	public void setTcpDownRate( int i ) {
+	public void setTcpDownRate( float i ) {
 		tcpDownRate = i;
 	}
 
 	/**
 	 * @param i an int
 	 */
-	public void setTcpUpRate( int i ) {
+	public void setTcpUpRate( float i ) {
 		tcpUpRate = i;
 	}
 
@@ -205,14 +205,14 @@ public class ClientStats implements SimpleInformation {
 	/**
 	 * @param i an int
 	 */
-	public void setUdpDownRate( int i ) {
+	public void setUdpDownRate( float i ) {
 		udpDownRate = i;
 	}
 
 	/**
 	 * @param i an int
 	 */
-	public void setUdpUpRate( int i ) {
+	public void setUdpUpRate( float i ) {
 		udpUpRate = i;
 	}
 
@@ -234,25 +234,37 @@ public class ClientStats implements SimpleInformation {
 	 * Reads a ClientState object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	public void readStream( MessageBuffer messageBuffer ) {
-		
+	public void readStream( MessageBuffer messageBuffer ) {		
 		this.setTotalUp( messageBuffer.readInt64() );
 		this.setTotalDown( messageBuffer.readInt64() );
 		this.setTotalShared( messageBuffer.readInt64() );
 		this.setNumOfShare( messageBuffer.readInt32() );
-		this.setTcpUpRate( messageBuffer.readInt32() );
-		this.setTcpDownRate( messageBuffer.readInt32() );
+		this.setTcpUpRate( round( messageBuffer.readInt32()/1023 ) );		
+		this.setTcpDownRate( round( messageBuffer.readInt32()/1023 ) );
 		this.setUdpUpRate( messageBuffer.readInt32() );
 		this.setUdpDownRate( messageBuffer.readInt32() );
 		this.setNumCurrDownload( messageBuffer.readInt32() );
 		this.setNumDownloadFinished( messageBuffer.readInt32() );
-		this.setConnectedNetworks( messageBuffer.readInt32List() );
+		this.setConnectedNetworks( messageBuffer.readInt32List() );		
+	}
+	
+	/**
+	 * Rounds a double to two decimal places
+	 * @param d The double to round
+	 * @return a rounden double
+	 */
+	public static float round( float d ) {
+		d = ( float )( Math.round( d * 100 ) ) / 100;
+		return d;
 	}
 
 }
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.7  2003/06/26 21:11:35  dek
+TCP UP/DOWN rounded to 2 decimals
+
 Revision 1.6  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
