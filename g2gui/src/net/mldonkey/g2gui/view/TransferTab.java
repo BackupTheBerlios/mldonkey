@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.TableItem;
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.11 2003/06/30 07:32:24 lemmstercvs01 Exp $ 
+ * @version $Id: TransferTab.java,v 1.12 2003/06/30 21:39:04 dek Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements Observer {
@@ -70,7 +70,7 @@ public class TransferTab extends G2guiTab implements Observer {
 	 */
 	public TransferTab( IG2gui gui ) {
 		super( gui );
-		this.button.setText( res.getString( "TT_Button" ) );
+		this.toolItem.setText( res.getString( "TT_Button" ) );
 		createContents( this.content );
 
 		gui.getCore().addObserver( this );
@@ -266,6 +266,9 @@ public class TransferTab extends G2guiTab implements Observer {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.12  2003/06/30 21:39:04  dek
+CoolBar
+
 Revision 1.11  2003/06/30 07:32:24  lemmstercvs01
 sorting of columns added (buggy)
 
