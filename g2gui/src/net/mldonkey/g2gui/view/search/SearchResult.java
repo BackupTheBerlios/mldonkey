@@ -78,7 +78,7 @@ import org.eclipse.swt.custom.CLabel;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.13 2003/08/10 10:27:38 lemmstercvs01 Exp $ 
+ * @version $Id: SearchResult.java,v 1.14 2003/08/10 19:31:15 lemmstercvs01 Exp $ 
  *
  */
 //TODO add image handle, fake search, real links depending on network								   
@@ -555,7 +555,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 						Program p;
 						
 						if ( !aResult.getFormat().equals( "" ) )
-								p = Program.findProgram( aResult.getFormat() );
+							p = Program.findProgram( aResult.getFormat() );
+
 						else {
 							String temp = aResult.getNames()[ 0 ];
 							int index = temp.lastIndexOf( "." );
@@ -570,19 +571,24 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 						
 						if ( p != null ) {
 							ImageData data = p.getImageData();
-							if ( data != null ) 
-								image = new Image( null, data );
+							if ( data != null )
+								if ( MainTab.getImageFromRegistry( p.getName() ) == null ) 
+									MainTab.put( p.getName(), new Image( null, data ) );
 						}			
 				
 						String imageText = aResult.getNames()[ 0 ];
 						String aString = "";
 						if ( !aResult.getFormat().equals( "" ) )
-							aString += bundle.getString( "ST_TT_FORMAT" ) + aResult.getFormat() + "\n";
-							aString += bundle.getString( "ST_TT_LINK" ) + aResult.getLink() + "\n";
+							aString += bundle.getString( "ST_TT_FORMAT" )
+										+ aResult.getFormat() + "\n";
+							aString += bundle.getString( "ST_TT_LINK" )
+										+ aResult.getLink() + "\n";
 							aString += bundle.getString( "ST_TT_NETWORK" )
-															 + aResult.getNetwork().getNetworkName() + "\n";
-							aString += bundle.getString( "ST_TT_SIZE" ) + aResult.getStringSize() + "\n";
-							aString += bundle.getString( "ST_TT_SOURCES" ) + aResult.getTags()[ 0 ].getValue();
+										+ aResult.getNetwork().getNetworkName() + "\n";
+							aString += bundle.getString( "ST_TT_SIZE" )
+										+ aResult.getStringSize() + "\n";
+							aString += bundle.getString( "ST_TT_SOURCES" )
+										+ aResult.getTags()[ 0 ].getValue();
 						if ( !aResult.getHistory() )
 							aString = aString + "\n" + bundle.getString( "ST_TT_DOWNLOADED" );
 						
@@ -592,8 +598,13 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 							tipLabelText.setText( aString );
 						else
 							tipLabelText.setText( "" );
-							
-						tipLabelImage.setImage( image ); // accepts null;
+						
+						/* load the image only if we have a associated programm */
+						if ( p != null )
+							tipLabelImage.setImage( MainTab.getImageFromRegistry( p.getName() ) );
+						else
+							tipLabelImage.setImage( null );	
+
 						tipLabelImage.setText ( imageText ); 
 					
 					/* pack/layout the tooltip */
@@ -627,6 +638,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.14  2003/08/10 19:31:15  lemmstercvs01
+try to fix the root handle bug
+
 Revision 1.13  2003/08/10 10:27:38  lemmstercvs01
 bugfix and new image on table create
 

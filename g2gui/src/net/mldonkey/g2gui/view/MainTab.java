@@ -75,7 +75,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.32 2003/08/10 12:59:01 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.33 2003/08/10 19:31:15 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -653,8 +653,12 @@ public class MainTab implements Listener, Observer, ShellListener {
 		return createTransparentImage( new Image( null, imagePath + filename ), thisShell);
 	}
 	public static Image getImageFromRegistry (String key) {
+		if ( key == null ) return null;
 		return imageRegistry.get(key);
 	}
+	public static void put( String key, Image image ) {
+		imageRegistry.put( key, image );
+	}	
 	public static Shell getShell() {
 		return thisShell;
 	}
@@ -687,6 +691,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.33  2003/08/10 19:31:15  lemmstercvs01
+try to fix the root handle bug
+
 Revision 1.32  2003/08/10 12:59:01  lemmstercvs01
 "manage servers" in NetworkItem implemented
 
