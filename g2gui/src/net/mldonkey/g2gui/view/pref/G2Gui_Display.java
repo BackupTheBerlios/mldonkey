@@ -51,7 +51,7 @@ public class G2Gui_Display extends PreferencePage  {
 		consoleInputForeground = new ExtendedColorFieldEditor("consoleInputForeground", "Console input foreground colour", shell);
 		setupEditor(consoleInputForeground);
 	
-		consoleFontData = new ExtendedFontFieldEditor2("consoleFontData", "Console window font:", "Sample",  shell);
+		consoleFontData = new ExtendedFontFieldEditor2("consoleFontData", "Console window font", "Sample",  shell);
 		setupEditor(consoleFontData);
 		
 		arrangeFields();

@@ -45,7 +45,7 @@ import org.eclipse.swt.graphics.Color;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.4 2003/07/25 02:41:22 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.5 2003/07/25 03:00:05 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -154,7 +154,9 @@ public abstract class GuiTab implements Listener, Observer {
 		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
 		try { preferenceStore.load(); } catch ( IOException e ) { }		
 	
+		if (preferenceStore.contains( preferenceString )) 	
 		return new Font (null, new FontData ( preferenceStore.getString( preferenceString ) ) ); 
+		return null;
 	}
 	protected Color loadColour (String preferenceString ) {
 			PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
@@ -178,6 +180,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.5  2003/07/25 03:00:05  zet
+*** empty log message ***
+
 Revision 1.4  2003/07/25 02:41:22  zet
 console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
 

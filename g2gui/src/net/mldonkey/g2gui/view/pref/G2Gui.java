@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.16 2003/07/25 02:41:22 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.17 2003/07/25 02:56:52 zet Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {	
@@ -160,7 +160,7 @@ public class G2Gui extends PreferencePage  {
 		preferenceStore.setValue( "username", userNameField.getStringValue() );
 		preferenceStore.setValue( "port", portField.getStringValue() );
 		preferenceStore.setValue( "password", passwordField.getStringValue() );
-		preferenceStore.setValue( "consoleFont", consoleTabFontField.toString() );	
+	//	preferenceStore.setValue( "consoleFont", consoleTabFontField.toString() );	
 
 		
 		
@@ -201,6 +201,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.17  2003/07/25 02:56:52  zet
+*** empty log message ***
+
 Revision 1.16  2003/07/25 02:41:22  zet
 console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
 
