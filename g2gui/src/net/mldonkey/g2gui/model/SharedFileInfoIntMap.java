@@ -22,19 +22,21 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.MessageBuffer;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.helper.MessageBuffer;
 
 
 /**
  * SharedFileInfoList
  *
  *
- * @version $Id: SharedFileInfoIntMap.java,v 1.9 2003/12/01 14:22:17 lemmster Exp $
+ * @version $Id: SharedFileInfoIntMap.java,v 1.10 2003/12/01 16:53:36 zet Exp $
  *
  */
 public class SharedFileInfoIntMap extends InfoIntMap {
@@ -69,9 +71,9 @@ public class SharedFileInfoIntMap extends InfoIntMap {
             /* go 4bytes back in the MessageBuffer */
             messageBuffer.setIterator(messageBuffer.getIterator() - 4);
 
-            if (this.infoIntMap.contains(fileID)) {
+            if (this.infoIntMap.contains(fileID))
                 this.detailedUpdate(messageBuffer);
-            } else {
+            else {
                 SharedFileInfo sharedFileInfo = new SharedFileInfo();
                 sharedFileInfo.readStream(messageBuffer);
                 this.infoIntMap.put(fileID, sharedFileInfo);
@@ -178,11 +180,24 @@ public class SharedFileInfoIntMap extends InfoIntMap {
     public void clearUpdated() {
         updatedFiles.clear();
     }
+
+    /**
+     * set a reshare request to the core
+     */
+    public void reshare() {
+        /* create the message content */
+        Message consoleMessage = new EncodeMessage(Message.S_CONSOLEMSG, "reshare");
+        consoleMessage.sendMessage(this.parent);
+        consoleMessage = null;
+    }
 }
 
 
 /*
 $Log: SharedFileInfoIntMap.java,v $
+Revision 1.10  2003/12/01 16:53:36  zet
+add reshare option
+
 Revision 1.9  2003/12/01 14:22:17  lemmster
 ProtocolVersion handling completely rewritten
 
@@ -213,7 +228,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved

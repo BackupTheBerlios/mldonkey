@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * UploadsViewFrame
  *
- * @version $Id: UploadViewFrame.java,v 1.3 2003/11/30 03:31:57 zet Exp $
+ * @version $Id: UploadViewFrame.java,v 1.4 2003/12/01 16:53:36 zet Exp $
  *
  */
 public class UploadViewFrame extends SashViewFrame {
@@ -95,6 +95,13 @@ public class UploadViewFrame extends SashViewFrame {
                     }
                 }
             });
+
+        addToolItem("TT_UT_RESHARE", "rotate",
+            new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent s) {
+                    getCore().getSharedFileInfoIntMap().reshare();
+                }
+            });
     }
 
     private class ShareInputDialog extends InputDialog {
@@ -142,6 +149,9 @@ public class UploadViewFrame extends SashViewFrame {
 
 /*
 $Log: UploadViewFrame.java,v $
+Revision 1.4  2003/12/01 16:53:36  zet
+add reshare option
+
 Revision 1.3  2003/11/30 03:31:57  zet
 temporary share/unshare dialogs
 
