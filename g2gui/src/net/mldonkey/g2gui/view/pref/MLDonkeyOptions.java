@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Control;
  * MLDonkeyOptions
  *
  * @author $user$
- * @version $Id: MLDonkeyOptions.java,v 1.4 2003/07/09 08:30:37 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.5 2003/07/09 09:16:05 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends PreferencePage {
@@ -65,21 +65,28 @@ public class MLDonkeyOptions extends PreferencePage {
 			String description = option.getDescription();
 			String optionName = option.getKey();
 			String value = option.getValue();
-			if ( description.equals( "" ) )
+			EnumTagType type = option.getOptionType();
+			if ( description.equals( "" ) ||  description == null )
 				description = optionName;
+			if (value.equals("false") || value.equals("true"))
+				type = EnumTagType.BOOL;
+			
+			if (type == null)
+				type = EnumTagType.STRING;
+				
 			
 			/*First check the Option, what kind of option it is: string or boolean
 			 * to known, which widget to use*/	
-			 if ( option.getOptionType().equals( EnumTagType.STRING ) ) {			
+			 if ( type.equals( EnumTagType.STRING ) ) {			
 				ExtendedStringFieldEditor temp = new ExtendedStringFieldEditor(
-											 option.getKey(), 
-											 option.getDescription(), 
+											optionName, 
+											description, 
 											 parent );
 				temp.setStringValue( option.getValue() );
 				temp.setToolTipText( option.getKey() );				
 				fields.put( option.getKey(), temp );
 			 }
-			else if ( option.getOptionType().equals( EnumTagType.BOOL ) ) {			
+			else if ( type.equals( EnumTagType.BOOL ) ) {			
 				ExtendedBooleanFieldEditor temp = new ExtendedBooleanFieldEditor(
 											optionName, 
 											description, 
@@ -135,6 +142,9 @@ public class MLDonkeyOptions extends PreferencePage {
 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.5  2003/07/09 09:16:05  dek
+general Options
+
 Revision 1.4  2003/07/09 08:30:37  dek
 removed setter
 

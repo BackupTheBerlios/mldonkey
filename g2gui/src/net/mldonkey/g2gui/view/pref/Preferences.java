@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.9 2003/07/08 16:59:23 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.10 2003/07/09 09:16:05 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -110,16 +110,16 @@ public class Preferences extends PreferenceManager {
 			
 			if ( ( section == null ) && ( plugin == null ) ) {				
 				/* create the General-section, or if already done, only add the option */
-				if ( !sections.containsKey( "General" ) ) {
-					MLDonkeyOptions temp = new MLDonkeyOptions( "General" );
-					myprefs.addToRoot( new PreferenceNode ( "General", temp ) );
-					sections.put( "General", temp );
+				if ( !sections.containsKey( "aGeneral" ) ) {
+					MLDonkeyOptions temp = new MLDonkeyOptions( "aGeneral" );
+					myprefs.addToRoot( new PreferenceNode ( "aGeneral", temp ) );
+					sections.put( "aGeneral", temp );
 					}
 			
 			/*commented out the following, as it produces ton's of options in this tab
 			 * which made it unreadable	
 			 */
-			//	( ( MLDonkeyOptions  )sections.get( "aaaGeneral" ) ).addOption( option );
+			( ( MLDonkeyOptions  )sections.get( "aGeneral" ) ).addOption( option );
 				
 			}
 			else if ( section != null ) {				
@@ -206,6 +206,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.10  2003/07/09 09:16:05  dek
+general Options
+
 Revision 1.9  2003/07/08 16:59:23  dek
 now the booleanValues are checkBoxes
 
