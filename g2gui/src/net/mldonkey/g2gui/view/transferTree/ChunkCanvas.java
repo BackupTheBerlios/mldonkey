@@ -8,9 +8,9 @@
  * G2GUI is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
- * G2GUI is distributed in the hope that it will be useful,
+ * G2GUI is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -40,6 +40,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -48,11 +49,15 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ChunkView
  *
- * @author $Author: zet $
- * @version $Id: ChunkCanvas.java,v 1.13 2003/08/22 23:25:15 zet Exp $ 
+ * @author $Author: dek $
+ * @version $Id: ChunkCanvas.java,v 1.14 2003/08/23 14:18:17 dek Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
+
+	protected Point tempStore;
+
+	protected boolean moved;
 
 	private String avail;
 
@@ -67,7 +72,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 	private ImageData resizedImageData;
 	
 	/**
-	 * this type of Chunkview,<br>
+	 * this type of Chunkview, <br>
 	 *   "1" for fileInfo<br>
 	 *   "2" for clientInfo<br>
 	 */
@@ -90,17 +95,16 @@ public class ChunkCanvas extends Canvas implements Observer {
 	/**
 	 * creates a chunkview-Object for the given clientInfo
 	 * @param parent here does the object live
-	 * @param style this style do we prefer (not used atm)
+	 * @param style this style do we prefer ( not used atm )
 	 * @param clientInfo the source of this chunkviews information
-	 * @param fileInfo for this fileInfo we want to display the Information
-	 * @param column the column in which the widget appears
+	 * @param fileInfo for this fileInfo we want to display the Information	 
 	 */
 	public ChunkCanvas( Composite parent, int style, ClientInfo clientInfo, FileInfo fileInfo ) {			
-		super( parent, style );
+		super( parent, style );	
 			
 		this.clientInfo = clientInfo;
 		this.fileInfo = fileInfo;
-		this.type = (clientInfo == null ? isFileInfo : isClientInfo);
+		this.type = ( clientInfo == null ? isFileInfo : isClientInfo );
 		
 		createImage();		
 	
@@ -109,30 +113,31 @@ public class ChunkCanvas extends Canvas implements Observer {
 				ChunkCanvas.this.widgetDisposed( e );		
 			}
 		} );
+		
 		addPaintListener( new PaintListener() {
 			public void paintControl( PaintEvent e ) {
-				synchronized( this ) {
+				synchronized ( this ) {					
 					ChunkCanvas.this.paintControl( e );
 				}
 			}
 		} );
-		addControlListener(new ControlListener() {
-			public void controlResized(ControlEvent e) {
-				synchronized( this ) {
-					ChunkCanvas.this.resizeImage(e);
+		
+		addControlListener( new ControlListener() {
+			public void controlResized( ControlEvent e ) {
+				synchronized ( this ) {
+					ChunkCanvas.this.resizeImage( e );
 				}
 			} 
-			public void controlMoved(ControlEvent e) {
-			}
+			public void controlMoved( ControlEvent e ) { }
 		} );
+
 	
 	}
 	/**
 	 * creates a chunkview-Object for the given FileInfo
 	 * @param parent here does the object live
-	 * @param style this style do we prefer (not used atm)
-	 * @param fileInfo  and the source of all the information
-	 * @param column the column in which the widget appears
+	 * @param style this style do we prefer ( not used atm )
+	 * @param fileInfo  and the source of all the information	
 	 */
 	public ChunkCanvas( Composite parent, int style, final FileInfo fileInfo ) {	
 		this( parent, style, null, fileInfo );
@@ -166,8 +171,8 @@ public class ChunkCanvas extends Canvas implements Observer {
 		if ( avail != null ) 
 			length = avail.length();
 		
-		if (length == 0) {
-			if (image != null) image.dispose();
+		if ( length == 0 ) {
+			if ( image != null ) image.dispose();
 			return;
 		} 
 			
@@ -176,9 +181,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 		Color red = thisDisplay.getSystemColor( SWT.COLOR_RED );
 		Color black = thisDisplay.getSystemColor( SWT.COLOR_BLACK );
 		Color yellow = thisDisplay.getSystemColor( SWT.COLOR_YELLOW );	
-		Color blue = new Color (null, 0, 150, 255);
-		Color silver = new Color (null, 226, 225, 221);
-		Color darkGray = new Color (null, 107, 81, 9);
+		Color blue = new Color ( null, 0, 150, 255 );
+		Color silver = new Color ( null, 226, 225, 221 );
+		Color darkGray = new Color ( null, 107, 81, 9 );
 		
 		Color fromColor = black;
 		Color toColor;
@@ -206,13 +211,13 @@ public class ChunkCanvas extends Canvas implements Observer {
 				toColor = yellow;				
 			}	
 			
-			imageGC.setBackground (toColor);
-			imageGC.setForeground (fromColor);
-			imageGC.fillGradientRectangle(i, 0, 1, initialHeight / 2, true);
+			imageGC.setBackground ( toColor );
+			imageGC.setForeground ( fromColor );
+			imageGC.fillGradientRectangle( i, 0, 1, initialHeight / 2, true );
 			
-			imageGC.setForeground(toColor);
-			imageGC.setBackground(fromColor);
-			imageGC.fillGradientRectangle(i, initialHeight / 2, 1, initialHeight / 2, true);				
+			imageGC.setForeground( toColor );
+			imageGC.setBackground( fromColor );
+			imageGC.fillGradientRectangle( i, initialHeight / 2, 1, initialHeight / 2, true );				
 		}	
 		
 		imageGC.dispose();	
@@ -221,8 +226,8 @@ public class ChunkCanvas extends Canvas implements Observer {
 		darkGray.dispose();
 		
 		imageData = image.getImageData();
-		if (resizedImageData == null) resizedImageData = imageData;
-		resizeImage(null);
+		if ( resizedImageData == null ) resizedImageData = imageData;
+		resizeImage( null );
 	
 	}
 
@@ -241,7 +246,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 		Color red = thisDisplay.getSystemColor( SWT.COLOR_RED );
 		Color black = thisDisplay.getSystemColor( SWT.COLOR_BLACK );
 		Color yellow = thisDisplay.getSystemColor( SWT.COLOR_YELLOW );	
-		Color darkGray = new Color (null, 107, 81, 9) ;
+		Color darkGray = new Color ( null, 107, 81, 9 ) ;
 		
 		Color fromColor = black;
 		Color toColor;
@@ -249,21 +254,20 @@ public class ChunkCanvas extends Canvas implements Observer {
 		if ( avail.length() != 0 ) 
 				length = avail.length();
 
-		if (length == 0) return;
+		if ( length == 0 ) return;
 
 				
 		int numChunkSources;	
 		int highestNumSources = 0;
 		float factor = 1f;
 	
-		for (int i = 0; i < avail.length(); i++) 
-		{
+		for ( int i = 0; i < avail.length(); i++ ) {
 			numChunkSources = avail.charAt( i );
-			if (numChunkSources > highestNumSources)
+			if ( numChunkSources > highestNumSources )
 				highestNumSources = numChunkSources;
 			
 		}
-		if (highestNumSources > 0) 
+		if ( highestNumSources > 0 ) 
 			factor = 10f / highestNumSources; 
 	
 		if ( image != null ) image.dispose();
@@ -281,29 +285,29 @@ public class ChunkCanvas extends Canvas implements Observer {
 				toColor = darkGray;
 			else if ( chunks.charAt( i ) == '3' ) 		
 				toColor = yellow;
-			else if (numChunkSources == 0) 
+			else if ( numChunkSources == 0 ) 
 				toColor = red;
 			else {
-				int colorIntensity = 255 - ( int ) ((float) numChunkSources * factor) * 25;
-				intenseColor = new Color(null, 0, colorIntensity, 255);
+				int colorIntensity = 255 - ( int ) ( ( float ) numChunkSources * factor ) * 25;
+				intenseColor = new Color( null, 0, colorIntensity, 255 );
 				toColor = intenseColor;
 			}			
-			imageGC.setBackground (toColor);
-			imageGC.setForeground (fromColor);
-			imageGC.fillGradientRectangle(i, 0, 1, initialHeight / 2, true);
+			imageGC.setBackground ( toColor );
+			imageGC.setForeground ( fromColor );
+			imageGC.fillGradientRectangle( i, 0, 1, initialHeight / 2, true );
 			
-			imageGC.setForeground(toColor);
-			imageGC.setBackground(fromColor);
-			imageGC.fillGradientRectangle(i, initialHeight / 2, 1, initialHeight / 2, true);	
+			imageGC.setForeground( toColor );
+			imageGC.setBackground( fromColor );
+			imageGC.fillGradientRectangle( i, initialHeight / 2, 1, initialHeight / 2, true );	
 			
-			if (intenseColor != null) intenseColor.dispose();
+			if ( intenseColor != null ) intenseColor.dispose();
 		}	
 		darkGray.dispose();
 		imageGC.dispose();	
 
 		imageData = image.getImageData();
-		if (resizedImageData == null) resizedImageData = imageData;
-		resizeImage(null);
+		if ( resizedImageData == null ) resizedImageData = imageData;
+		resizeImage( null );
 	}
 
 	/**
@@ -311,25 +315,25 @@ public class ChunkCanvas extends Canvas implements Observer {
 	 */
 	protected void widgetDisposed( DisposeEvent e ) {
 	
-		if (image != null && !image.isDisposed()) image.dispose();
-		if (type==isFileInfo) {
-			fileInfo.deleteObserver(this);
+		if ( image != null && !image.isDisposed() ) image.dispose();
+		if ( type == isFileInfo ) {
+			fileInfo.deleteObserver( this );
 		} else { 
-			clientInfo.deleteObserver(this);
+			clientInfo.deleteObserver( this );
 		}
 	}
 	
 	protected void resizeImage( ControlEvent e ) {
-		if ( image != null && imageData != null ) {
-					
-			if (getClientArea().width > 0 && getClientArea().height > 0) {
-					resizedImageData = imageData.scaledTo(
-						getClientArea().width, getClientArea().height);
+		if ( image != null && imageData != null ) {					
+			if ( getClientArea().width > 0 && getClientArea().height > 0 ) {
+					resizedImageData = imageData.scaledTo( 
+						getClientArea().width, getClientArea().height );
 			} 
 	
 		}
 		
 	}
+
 	/**
 	 * @param e
 	 */
@@ -338,59 +342,47 @@ public class ChunkCanvas extends Canvas implements Observer {
 		GC canvasGC = e.gc;
 		
 		// does this help? probably not...	
-		if (canvasGC == null) return;	
+		if ( canvasGC == null ) return;	
 
 		if ( image != null ) {
-		
-			int srcWidth = resizedImageData.width;			
-			int srcHeight = resizedImageData.height;	
-			int destWidth = e.width;
-			int destHeight = e.height;			
-			Image bufferImage = new Image(null, resizedImageData);			
+			int srcWidth   = e.width, 
+				srcHeight  = e.height, 
+				srcX       = e.x, 
+				srcY       = e.y, 
+				destWidth  = e.width, 
+				destHeight = e.height, 
+				destX      = e.x, 
+				destY      = e.y ;
+					
+			Image bufferImage = new Image( null, resizedImageData );			
 						
-			GC bufferGC = new GC( bufferImage );
-	
-			// progress bar				
-			if ( type == isFileInfo ) {
-				Color green1 = new Color(null, 15, 136, 0 );
-				Color green2 = new Color(null, 41, 187, 26);
-				int pix =  ( int ) ( ( fileInfo.getPerc() / 100 ) * ( double ) (srcWidth - 1) ) ;
-				bufferGC.setBackground( green1 );
-				bufferGC.setForeground( green2 );
-				bufferGC.fillGradientRectangle(0,0,pix,4,false);
-				green1.dispose();
-				green2.dispose();
-			}
-			// spacer in background colour	
-			bufferGC.setForeground(getParent().getBackground());
-			bufferGC.drawLine(0,0,srcWidth-1, 0);
+			GC bufferGC = new GC( bufferImage );	
+			if ( type == isFileInfo ) createProgressBar( resizedImageData.width, bufferGC );			
+			roundCorners( resizedImageData.width, resizedImageData.height, bufferGC );	
+			
+			boolean fits = true;
+			if ( srcX + srcWidth > bufferImage.getBounds().width ) fits = false;
+			if ( srcY + srcHeight > bufferImage.getBounds().height ) fits = false;
+			
+			try {
+				if ( fits )	
+			canvasGC.drawImage( 
+				bufferImage, 
+				srcX, 
+				srcY, 
+				srcWidth, 
+				srcHeight, 
+				destX, 
+				destY, 
+				destWidth, 
+				destHeight );
+			
+			} catch ( Exception x ) {
 				
-			// round the corners
-			bufferGC.drawLine(0,1,0,1);
-			bufferGC.drawLine(0,srcHeight-1,0,srcHeight-1);
-			bufferGC.drawLine(srcWidth-1,1,srcWidth-1,1);
-			bufferGC.drawLine(srcWidth-1,srcHeight-1,srcWidth-1,srcHeight-1);	
-			bufferGC.dispose();
-			
-			try {		
-			
-			canvasGC.drawImage(
-				bufferImage,
-				e.x,
-				e.y,
-				e.width,
-				e.height,
-				e.x,
-				e.y,
-				e.width,
-				e.height );
-			
-			} catch (Exception x) {
-				
-				System.out.println("e.width: " + e.width +
-									" e.height: " + e.height + 
-									" bw: " + bufferImage.getBounds().width +
-									" bh: " + bufferImage.getBounds().height ); 
+				System.out.println( "e.width: " + e.width 				
+								+ " e.height: " + e.height 
+								+ " bw: " + bufferImage.getBounds().width 
+								+ " bh: " + bufferImage.getBounds().height ); 
 				x.printStackTrace();
 				
 			}
@@ -400,12 +392,34 @@ public class ChunkCanvas extends Canvas implements Observer {
 		} else { 
 
 
-			canvasGC.setBackground(getParent().getBackground());
-			canvasGC.fillRectangle(e.x, e.y, e.width, e.height);
+			canvasGC.setBackground( getParent().getBackground() );
+			canvasGC.fillRectangle( e.x, e.y, e.width, e.height );
 					
 		}
 		
 		canvasGC.dispose();
+	}
+	private void roundCorners( int srcWidth, int srcHeight, GC bufferGC ) {
+		// spacer in background colour	
+		bufferGC.setForeground( getParent().getBackground() );
+		bufferGC.drawLine( 0, 0, srcWidth - 1, 0 );
+			
+		// round the corners
+		bufferGC.drawLine( 0, 1, 0, 1 );
+		bufferGC.drawLine( 0, srcHeight - 1, 0, srcHeight - 1 );
+		bufferGC.drawLine( srcWidth - 1, 1, srcWidth - 1, 1 );
+		bufferGC.drawLine( srcWidth - 1, srcHeight - 1, srcWidth - 1, srcHeight - 1 );	
+		bufferGC.dispose();		
+	}
+	private void createProgressBar( int srcWidth, GC bufferGC ) {		
+			Color green1 = new Color( null, 15, 136, 0 );
+			Color green2 = new Color( null, 41, 187, 26 );
+			int pix =  ( int ) ( ( fileInfo.getPerc() / 100 ) * ( double ) ( srcWidth - 1 ) ) ;
+			bufferGC.setBackground( green1 );
+			bufferGC.setForeground( green2 );
+			bufferGC.fillGradientRectangle( 0, 0, pix, 4, false );
+			green1.dispose();
+			green2.dispose();		
 	}
 
 
@@ -420,7 +434,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 		}		
 		else if ( type == isClientInfo ) {
 			String tempAvail = clientInfo.getFileAvailability( fileInfo );
-			if ( avail == null && tempAvail != null) 
+			if ( avail == null && tempAvail != null ) 
 				result = true;
 			else if ( avail != null && tempAvail != null )				
 				 result = tempAvail.hashCode() != avail.hashCode();
@@ -431,12 +445,12 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 
 	/**
-	 * redraws this widget, with refreshed Information from FileInfo (if changed)
+	 * redraws this widget, with refreshed Information from FileInfo ( if changed )
 	 */
 	public void refresh() {	
 		if ( this.hasChanged() ) {	
 			
-			synchronized ( this ) {
+			 synchronized ( this ) {
 				createImage();
 			}
 			this.redraw();
@@ -445,25 +459,25 @@ public class ChunkCanvas extends Canvas implements Observer {
 	}
 
 	// runs in gui thread	
-	public void update(Observable o, Object obj) {
+	public void update( Observable o, Object obj ) {
 		final Shell shell = MainTab.getShell();
-		if (!shell.isDisposed()
+		if ( !shell.isDisposed()
 			&& shell != null
-			&& shell.getDisplay() != null) {
-			shell.getDisplay().asyncExec(new Runnable() {
+			&& shell.getDisplay() != null ) {
+			shell.getDisplay().asyncExec( new Runnable() {
 				public void run() {
-					if (!shell.isDisposed()) {
-						if (!isDisposed())
+					if ( !shell.isDisposed() ) {
+						if ( !isDisposed() )
 							refresh();
 						}
 				}
-			});
+			} );
 		}
 	}
 
 
 	public int getHash() {
-		if (type == isClientInfo) 
+		if ( type == isClientInfo ) 
 			return clientInfo.hashCode();
 		else
 			return fileInfo.hashCode();
@@ -472,11 +486,14 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.14  2003/08/23 14:18:17  dek
+some cleaning up, but didn't find a solution for the scrolling-resize of the bar.. so nothing changed in functionality
+
 Revision 1.13  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.12  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.11  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
@@ -497,7 +514,7 @@ Revision 1.6  2003/08/04 21:05:22  zet
 back to async
 
 Revision 1.5  2003/08/04 20:46:08  zet
-synchronized
+synchronized 
 
 Revision 1.4  2003/08/04 20:37:07  zet
 try syncexec
