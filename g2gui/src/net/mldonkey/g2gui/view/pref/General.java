@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view.pref;
 
+import java.util.ResourceBundle;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
@@ -36,18 +38,19 @@ import org.eclipse.swt.widgets.*;
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.6 2003/06/29 20:23:41 dek Exp $ 
+ * @version $Id: General.java,v 1.7 2003/06/30 17:29:54 dek Exp $ 
  *
  */
-public class General extends PreferencePage {
-	private BooleanFieldEditor autoCommitField;
+public class General extends PreferencePage {	
+	private ExtendedBooleanFieldEditor autoCommitField;
 	private IntegerFieldEditor maxHardDownloadRateField;
 	private StringFieldEditor maxHardUploadRateField;
+	private static ResourceBundle res = ResourceBundle.getBundle("g2gui");
 	OptionsInfoMap options;
 	String 	clientName,
 			maxHardUploadRate,
 			maxHardDownloadRate;
-			
+	boolean autoCommit;
 	CoreCommunication mldonkey;
 	boolean connected;	
 	public StringFieldEditor clientNameField;
@@ -56,7 +59,8 @@ public class General extends PreferencePage {
 	 * @param preferenceStore
 	 */
 	public General( PreferenceStore preferenceStore_, boolean connected, CoreCommunication mldonkey ) {
-		super( "General Settings" );		
+		super( "General Settings" );	
+		
 		this.connected = connected;		
 		this.mldonkey = mldonkey;
 		
@@ -74,12 +78,19 @@ public class General extends PreferencePage {
 				( ( OptionsInfo ) options.get( "max_hard_upload_rate" ) ).getValue();
 			
 			maxHardDownloadRate = 	
-				( ( OptionsInfo ) options.get( "max_hard_download_rate" ) ).getValue();	
+				( ( OptionsInfo ) options.get( "max_hard_download_rate" ) ).getValue();
+			
+			Boolean hell = new Boolean("false");
+			
+			autoCommit = ( new Boolean (
+				( ( OptionsInfo ) options.get( "auto_commit" ) ).getValue() ) 
+										).booleanValue();
+			
 		}
 		else {
-			clientName = "<no Connection to mldonkey>";
-			maxHardUploadRate = "<no Connection to mldonkey>";
-			maxHardDownloadRate = "<no Connection to mldonkey>";
+			clientName = res.getString("OPTIONS_NOT_CONNECTED");
+			maxHardUploadRate = res.getString("OPTIONS_NOT_CONNECTED");
+			maxHardDownloadRate = res.getString("OPTIONS_NOT_CONNECTED");
 		}
 		
 		
@@ -88,13 +99,28 @@ public class General extends PreferencePage {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createContents( Composite shell ) {					
-		createClientNameField(shell);
-		createDownloadRateField(shell);
-		createUploadRateField(shell);
-		this.autoCommitField = new BooleanFieldEditor("auto_commit","Auto Commit",1, shell);
+	protected Control createContents( Composite shell ) {
+		
+		 	createClientNameField(shell);
+			createDownloadRateField(shell);
+			createUploadRateField(shell);
+			createAutoCommitField(shell);
+		
+		
+				
+
+				
+		 				
+		
 		
 		return null;
+	}
+	
+	private void createAutoCommitField(Composite shell) {
+		this.autoCommitField = new ExtendedBooleanFieldEditor("auto_commit","Auto Commit", shell);
+			autoCommitField.setEnabled(connected,shell);
+			autoCommitField.setSelection(autoCommit);
+			autoCommitField.setToolTipText("Uncheck if you don't want mldonkey to automatically put completed files in incoming directory");
 	}
 	
 	
@@ -130,10 +156,7 @@ public class General extends PreferencePage {
 			clientNameField.getLabelControl(shell).setToolTipText("Small name of client");			
 	}
 	
-	/* take care, that this tab has been initalized and then update mldonkey only with the
-	 * options that have changed
-	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
-	 */
+
 	public boolean performOk(){	
 		/* only perform, if this tab has been 
 		 * initialized (checked by the existance of the clientNameField)
@@ -144,10 +167,19 @@ public class General extends PreferencePage {
 		 	 * for setting options, that have not changed.
 		 	 */		 	 
 			if (!clientName.equals(clientNameField.getStringValue()))
-		 		{mldonkey.setOption("client_name",clientNameField.getStringValue());
-		 		}
-		 	/*any more settings in here, got the syntax?*/	
+		 		mldonkey.setOption("client_name",clientNameField.getStringValue());
 		 		
+			if (!maxHardUploadRate.equals(maxHardUploadRateField.getStringValue()))
+				mldonkey.setOption("max_hard_upload_rate",maxHardUploadRateField.getStringValue());
+				
+			if (!maxHardDownloadRate.equals(maxHardDownloadRateField.getStringValue()))
+				mldonkey.setOption("max_hard_download_rate",maxHardDownloadRateField.getStringValue());
+				
+			if (autoCommitField.HasChanged())
+				mldonkey.setOption("auto_commit",autoCommitField.getValue());
+				
+		 	/*any more settings in here, got the syntax?*/	
+			
 		 }		
 		return super.performOk();		
 	}
@@ -156,10 +188,23 @@ public class General extends PreferencePage {
 		super.performApply();
 		
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
+	 */
+	protected void createFieldEditors() {
+		
+		
+		
+		
+	}
 }
 
 /*
 $Log: General.java,v $
+Revision 1.7  2003/06/30 17:29:54  dek
+Saving all the options in General works now (not validated for strings/int/yet)
+
 Revision 1.6  2003/06/29 20:23:41  dek
 how the hell do i get the value out of a booleanFieldeditor???
 
