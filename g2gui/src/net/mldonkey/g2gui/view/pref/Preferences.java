@@ -22,6 +22,12 @@
  */
 package net.mldonkey.g2gui.view.pref;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
@@ -33,22 +39,15 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
-
-import java.io.IOException;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 
 /**
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.41 2003/11/07 08:20:07 lemmster Exp $
+ * @version $Id: Preferences.java,v 1.42 2003/11/09 16:44:32 zet Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -97,9 +96,12 @@ public class Preferences extends PreferenceManager {
         g2GuiRootNode.add(new PreferenceNode("Advanced", preferencePage));
 
         /* windows registry page */
-        if (SWT.getPlatform().equals("win32") ||
+        
+        String g2guiexe = System.getProperty("user.dir") + System.getProperty("file.separator") + "g2gui.exe";
+        
+        if ((SWT.getPlatform().equals("win32") ||
                 ((System.getProperty("os.name").length() > 7) &&
-                System.getProperty("os.name").substring(0, 7).equals("Windows"))) {
+                System.getProperty("os.name").substring(0, 7).equals("Windows"))) && new File(g2guiexe).exists()) {
             preferencePage = new G2GuiWinReg("Windows Registry", FieldEditorPreferencePage.NONE);
             preferencePage.setPreferenceStore(preferenceStore);
             g2GuiRootNode.add(new PreferenceNode("Windows Registry", preferencePage));
@@ -288,6 +290,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.42  2003/11/09 16:44:32  zet
+check for existence of g2gui.exe
+
 Revision 1.41  2003/11/07 08:20:07  lemmster
 remove rss4j dependency (newstab)
 
@@ -348,7 +353,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
