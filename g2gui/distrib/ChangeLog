@@ -1,3 +1,7 @@
+2003/12/20: vnc
+	* Servers: Show total server count in statusline
+	* Transfer: Display connection-duration for uploaders instead of timestamp
+
 2003/12/07:
 	* Code cleanup in the transfer section
 	* Tables: [Bug #1156] Allow a certain column to be 100% by pref
