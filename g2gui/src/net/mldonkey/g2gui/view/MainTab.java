@@ -54,6 +54,7 @@ import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -77,7 +78,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.36 2003/08/15 22:05:58 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.37 2003/08/17 13:19:41 dek Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -631,8 +632,16 @@ public class MainTab implements Listener, Observer, ShellListener {
 		
 		Color white = thisShell.getDisplay().getSystemColor(SWT.COLOR_WHITE);
 		
-		imageRegistry.put("ProgramIcon", createTrans("mld_logo_48x48.png"));
-	
+		/*following lines are for transparent icon also in title-bar of app
+		 * maybe hacky, but it works*/
+		ImageData source = new ImageData("icons/mld_logo_48x48.gif");
+		ImageData mask = source.getTransparencyMask();
+		Image icon = new Image(thisShell.getDisplay(), source,mask);		
+		imageRegistry.put("ProgramIcon",icon);	
+		
+		/*it was done like this before:*/
+		//imageRegistry.put("ProgramIcon", createTrans("mld_logo_48x48.png"));	
+		
 		imageRegistry.put("PreferencesButton", createTrans("preferences.png"));
 		imageRegistry.put("PreferencesButtonSmall", createTrans("preferences-16.png"));
 		
@@ -723,6 +732,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.37  2003/08/17 13:19:41  dek
+transparent gif as shell-icon
+
 Revision 1.36  2003/08/15 22:05:58  zet
 *** empty log message ***
 
