@@ -20,6 +20,7 @@
 	* Statusline: Display proper tooltip for network items
 	* Search: Fix crash on AdvancedSearch [bug #886]
 	* Search: Reset state of canceled downloads from search [bug #908]
+			  (just gui solution until core stores the state of a result)
 	* Search: Fix button search tab crash [bug #993]
 2003/09/15+: z
 	* Comm: Rewrote EncodeMessage to fix core communication bugs [#874] [#907]
