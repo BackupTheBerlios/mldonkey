@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  * @author markus
- * @version $Id: FileState.java,v 1.6 2003/07/03 16:01:51 lemmstercvs01 Exp $ 
+ * @version $Id: FileState.java,v 1.7 2003/07/03 16:12:39 lemmstercvs01 Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -102,7 +102,7 @@ public class FileState implements SimpleInformation {
 	/**
 	 * @param The new file state (paused,...)
 	 */
-	public void setState( EnumFileState state, int id, CoreCommunication core ) {
+	protected void setState( EnumFileState state, int id, CoreCommunication core ) {
 		EncodeMessage sendState = null;
 		Object[] content = new Object[ 2 ];
 		content[ 0 ] = new Integer( id );
@@ -129,6 +129,9 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.7  2003/07/03 16:12:39  lemmstercvs01
+setState() to protected. not needed outside model.*
+
 Revision 1.6  2003/07/03 16:01:51  lemmstercvs01
 setState() works now to set the filestate on the mldonkey side
 
