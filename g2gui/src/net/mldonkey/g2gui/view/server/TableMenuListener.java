@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * TableMenuListener
  *
  * @author $user$
- * @version $Id: TableMenuListener.java,v 1.2 2003/08/05 15:34:51 lemmstercvs01 Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.3 2003/08/06 09:42:34 lemmstercvs01 Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -159,6 +159,10 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		}
 		
 		menuManager.add( filterSubMenu );
+
+		menuManager.add( new Separator() );
+
+		menuManager.add( new RefreshAction() );
 	}
 	
 	public boolean isFiltered( NetworkInfo.Enum networkType ) {
@@ -372,10 +376,27 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			return true;
 		}
 	}
+	
+	private class RefreshAction extends Action {
+		public RefreshAction() {
+			super();
+			setText( "manual refresh" );
+		}
+		public void run() {
+			tableViewer.getTable().getDisplay().asyncExec( new Runnable() {
+				public void run() {
+					tableViewer.refresh();
+				}
+			} );
+		}		
+	}	
 }
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.3  2003/08/06 09:42:34  lemmstercvs01
+manual refresh for testing
+
 Revision 1.2  2003/08/05 15:34:51  lemmstercvs01
 network filter added
 
