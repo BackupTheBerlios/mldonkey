@@ -26,7 +26,7 @@ package net.mldonkey.g2gui.helper;
  * MessageBuffer
  *
  * @author $user$
- * @version $Id: MessageBuffer.java,v 1.1 2003/06/13 10:43:30 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.2 2003/06/13 12:01:07 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -62,13 +62,14 @@ public class MessageBuffer {
 	public byte readByte() {
 		byte result = this.buffer[iterator];
 		iterator++;	
+		
 		return result;
 	}
 
 	/**
 	 * Reads a Int8 from MessageBuffer
 	 */
-	public short readInt8() {
+	public short  readInt8() {
 		short result = ( short ) this.buffer[iterator];
 		if ( result < 0 ) {
 			result += 256;
@@ -80,8 +81,8 @@ public class MessageBuffer {
 	 * Reads an int16 from from MessageBuffer
 	 
 	 */
-	public  short readInt16( ){
-		return ( short ) ( readInt8() + 256 * readInt8() );
+	public short readInt16(){		
+		return ( short ) ( readInt8() + 256 * readInt8() );		
 	}
 	/**
 	 * Reads an int32 from from MessageBuffer	 
@@ -91,6 +92,7 @@ public class MessageBuffer {
 			  * ( readInt8() + 256
 			  * ( readInt8() + 256
 			  * ( readInt8() ) ) ) );
+		
 	}
 	/**
 	 * Reads a long from MessageBuffer
@@ -109,14 +111,33 @@ public class MessageBuffer {
 	 * Reads a String from MessageBuffer
 	 */
 	public  String readString() {
-		int stringLength = readInt16();
+		int stringLength = readInt16();		
+		byte[] content = new byte[ stringLength ];				
 		if ( stringLength > 0 ) {					
-			String result = new String( buffer, iterator, stringLength );
+			String result = new String(buffer,iterator,stringLength);			
+			this.iterator= this.iterator + stringLength;
+			return result;
+		} 
+		else
+			return ( "" );
+			
+		
+	}
+	
+	
+/*
+ 	public static String readString( InputStream inputStream ) throws IOException {
+		int value = readInt16( inputStream );
+		if ( value > 0 ) {
+			byte[] content = new byte[ value ];
+			inputStream.read( content, 0, value );
+			String result = new String( content, 0, value );
 			return ( result );
 		} 
 		else
 			return ( "" );
 	}
+ */
 	
 	/**
 	 * Reads a String[] from MessageBuffer	
@@ -172,6 +193,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.2  2003/06/13 12:01:07  dek
+bugFixed
+
 Revision 1.1  2003/06/13 10:43:30  dek
 introduced MessageBuffer for performance issues
 
