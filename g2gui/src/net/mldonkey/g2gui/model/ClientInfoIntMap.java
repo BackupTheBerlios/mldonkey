@@ -28,8 +28,11 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.helper.ObjectWeakMap;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
+import net.mldonkey.g2gui.view.G2Gui;
 
 import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectIterator;
+import gnu.trove.TObjectProcedure;
 
 import java.util.Iterator;
 
@@ -38,7 +41,7 @@ import java.util.Iterator;
  * ClientInfoList
  *
  *
- * @version $Id: ClientInfoIntMap.java,v 1.16 2003/12/04 08:47:25 lemmy Exp $
+ * @version $Id: ClientInfoIntMap.java,v 1.17 2003/12/15 19:57:24 dek Exp $
  */
 public class ClientInfoIntMap extends InfoIntMap {
     /**
@@ -129,9 +132,65 @@ public class ClientInfoIntMap extends InfoIntMap {
             if (this.containsKey(clientID)) // necessary check
 
                 tempClientInfoList.put(clientID, this.get(clientID));
+             /* only have useless clients in Map afterwards: */
+            	infoIntMap.remove(clientID);
         }
-
+        
+        /*now iterate over useless clients in infoIntMap to remove them from all files*/
+        
+        TIntObjectHashMap files;
+        if (G2Gui.debug){
+	        /*
+	         * ONLY DEGUGGING
+	         */
+	        
+	        files = parent.getModelFactory().getFileInfoIntMap().infoIntMap;
+	        files.forEachValue(new TObjectProcedure(){
+	
+				public boolean execute(Object arg0) {
+					FileInfo file =(FileInfo) arg0; 
+					System.out.println("before clean: \t"+file.getName()+"\t"+file.getSources());
+					return true;
+				}});
+	        
+	        /*
+	         * DEBUGGIN FINISHED
+	         */
+        }
+        
+        
+        infoIntMap.forEachValue(new TObjectProcedure(){
+			public boolean execute(Object clientObj) {				
+				ClientInfo client = (ClientInfo) clientObj;				
+				TIntObjectHashMap files = parent.getModelFactory().getFileInfoIntMap().infoIntMap;
+				TIntObjectIterator iterator = files.iterator();
+				for (int i = files.size(); i-- > 0;) {    
+					iterator.advance();     
+					( ( FileInfo ) iterator.value()).removeClientInfo(client);					
+				} 
+				return true;
+			}});
+        
+        /*now eversthing is done, useful clean list becomes default*/
         this.infoIntMap = tempClientInfoList;
+        
+        if (G2Gui.debug){
+	        /*
+	         * ONLY DEGUGGING
+	         */
+	        files = parent.getModelFactory().getFileInfoIntMap().infoIntMap;       
+	        files.forEachValue(new TObjectProcedure(){
+	
+	        	public boolean execute(Object arg0) {
+	        		FileInfo file =(FileInfo) arg0; 
+	        		System.out.println("after clean: \t"+file.getName()+"\t"+file.getSources());
+	        		return true;
+	        	}});
+	        /*
+	         * DEBUGGIN FINISHED
+	         */
+        }
+        
     }
 
     /**
@@ -175,6 +234,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ClientInfoIntMap.java,v $
+Revision 1.17  2003/12/15 19:57:24  dek
+'Sources-Leak' reduced
+
 Revision 1.16  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
