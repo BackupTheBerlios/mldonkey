@@ -68,7 +68,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * TableMenuListener
  *
  * @author $Author: lemmster $
- * @version $Id: TableMenuListener.java,v 1.12 2003/08/20 21:34:22 lemmster Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.13 2003/08/22 00:11:07 lemmster Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -170,7 +170,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		
 		for ( int i = 0; i < networks.length; i++ ) {
 			NetworkInfo network = networks[ i ];
-			if ( network.isEnabled() ) {
+			if ( network.isEnabled() && network.hasServers() ) {
 				NetworkFilterAction nFA = new NetworkFilterAction( network.getNetworkName(), network.getNetworkType() );
 				if ( isFiltered( network.getNetworkType() ) ) nFA.setChecked( true );
 				filterSubMenu.add( nFA );
@@ -731,6 +731,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.13  2003/08/22 00:11:07  lemmster
+filter: display only networks with server
+
 Revision 1.12  2003/08/20 21:34:22  lemmster
 additive filters
 
