@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.search;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
+import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -42,7 +43,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.13 2003/09/04 16:06:45 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.14 2003/09/04 22:04:07 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -161,6 +162,7 @@ public class SimpleSearch extends Search {
 	 */
 	public void performSearch() {
 		if ( ! text.getText().equals( "" ) ) {
+			query = new SearchQuery( core );
 			/* the query string */
 			query.setSearchString( text.getText() );
 					
@@ -190,6 +192,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.14  2003/09/04 22:04:07  lemmster
+use always a new searchquery
+
 Revision 1.13  2003/09/04 16:06:45  lemmster
 working in progress
 

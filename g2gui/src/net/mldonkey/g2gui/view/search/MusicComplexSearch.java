@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view.search;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -41,7 +42,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.4 2003/09/04 21:57:21 lemmster Exp $ 
+ * @version $Id: MusicComplexSearch.java,v 1.5 2003/09/04 22:04:07 lemmster Exp $ 
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -152,6 +153,8 @@ public class MusicComplexSearch extends ComplexSearch {
 		&& artistText.getText().equals( "" )
 		&& albumText.getText().equals( "" ) ) return;
 		
+		query = new SearchQuery( core );
+		
 		query.setMp3Title( text.getText() );
 		query.setMp3Album( albumText.getText() );
 		query.setMp3Artist( artistText.getText() );
@@ -173,6 +176,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.5  2003/09/04 22:04:07  lemmster
+use always a new searchquery
+
 Revision 1.4  2003/09/04 21:57:21  lemmster
 still buggy, but enough for today
 

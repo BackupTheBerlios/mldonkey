@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.20 2003/09/04 21:57:21 lemmster Exp $
+ * @version $Id: Search.java,v 1.21 2003/09/04 22:04:07 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -78,7 +78,6 @@ public abstract class Search implements Observer {
         this.core = core;
         this.tab = tab;
         this.core.getNetworkInfoMap().addObserver( this );
-        this.query = new SearchQuery( core );
     }
 
     /**
@@ -285,6 +284,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.21  2003/09/04 22:04:07  lemmster
+use always a new searchquery
+
 Revision 1.20  2003/09/04 21:57:21  lemmster
 still buggy, but enough for today
 
