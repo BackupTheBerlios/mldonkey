@@ -48,7 +48,7 @@ import org.eclipse.swt.events.DisposeListener;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.26 2003/07/29 04:10:56 zet Exp $ 
+ * @version $Id: DownloadTable.java,v 1.27 2003/08/02 02:46:45 zet Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
@@ -119,7 +119,7 @@ public class DownloadTable implements Observer, Runnable {
 			public void mouseUp( MouseEvent e ) { }
 		} );
 		table.setMenu( createRightMouse() );
-		mldonkey.addObserver( this );
+		mldonkey.getFileInfoIntMap().addObserver( this );
 	}
 	/**
 	 * @param columnIndex
@@ -323,6 +323,9 @@ public class DownloadTable implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.27  2003/08/02 02:46:45  zet
+change observer
+
 Revision 1.26  2003/07/29 04:10:56  zet
 chunks - half done - commit before I lose it again..
 
