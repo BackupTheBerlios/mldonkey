@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.26 2003/08/24 14:45:22 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.27 2003/08/24 18:41:46 zet Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -52,11 +52,11 @@ public class Preferences extends PreferenceManager {
 	 */
 	public Preferences( PreferenceStore preferenceStore ) {	
 		this.preferenceStore = 	preferenceStore;
-		G2GuiPref g2gui = new G2GuiPref( "G2Gui", FieldEditorPreferencePage.FLAT );	
+		G2GuiPref g2gui = new G2GuiPref( "G2Gui", FieldEditorPreferencePage.GRID );	
 		g2gui.setPreferenceStore( preferenceStore );		
 		PreferenceNode g2GuiRootNode = new PreferenceNode( "G2gui", g2gui );
 		
-			G2Gui_Display g2gui_display = new G2Gui_Display( "Display", FieldEditorPreferencePage.FLAT );
+			G2Gui_Display g2gui_display = new G2Gui_Display( "Display", FieldEditorPreferencePage.GRID );
 			g2gui_display.setPreferenceStore( preferenceStore );
 			
 			g2GuiRootNode.add( new PreferenceNode ( "Display", g2gui_display ) );
@@ -120,7 +120,7 @@ public class Preferences extends PreferenceManager {
 			if ( ( section == null ) && ( plugin == null ) && showOption( option ) ) {				
 				/* create the General-section, or if already done, only add the option */
 				if ( !sections.containsKey( "General" ) ) {
-					MLDonkeyOptions temp = new MLDonkeyOptions( "General", FieldEditorPreferencePage.FLAT );
+					MLDonkeyOptions temp = new MLDonkeyOptions( "General", FieldEditorPreferencePage.GRID );
 					sections.put( "General", temp );	
 					temp.setPreferenceStore( optionsStore );			
 					}			
@@ -133,7 +133,7 @@ public class Preferences extends PreferenceManager {
 			else if ( ( section != null ) && showOption(option ) ) {								
 				/* create the section, or if already done, only add the option */
 				if ( !sections.containsKey( section ) ) {					
-					MLDonkeyOptions temp = new MLDonkeyOptions( section, FieldEditorPreferencePage.FLAT );
+					MLDonkeyOptions temp = new MLDonkeyOptions( section, FieldEditorPreferencePage.GRID );
 					//myprefs.addToRoot( new PreferenceNode ( section, temp ) );
 					sections.put( section, temp );
 					temp.setPreferenceStore( optionsStore );
@@ -145,7 +145,7 @@ public class Preferences extends PreferenceManager {
 				/* create the pluginSection, or if already done, only add the option */
 				if ( !plugins.containsKey( plugin ) ) {					
 					/*only create the plugin, if it is possible at all...*/					
-					MLDonkeyOptions temp = new MLDonkeyOptions( plugin, FieldEditorPreferencePage.FLAT );					
+					MLDonkeyOptions temp = new MLDonkeyOptions( plugin, FieldEditorPreferencePage.GRID );					
 					plugins.put( plugin, temp );
 					temp.setPreferenceStore( optionsStore );					
 					}
@@ -172,7 +172,7 @@ public class Preferences extends PreferenceManager {
 		if ( plugins.size() != 0 ) {		 
 			IPreferenceNode pluginOptions = find( "Networks" );
 			if ( pluginOptions == null ){
-				pluginOptions = new PreferenceNode( "Networks", new MLDonkeyOptions( "Networks", FieldEditorPreferencePage.FLAT ) );
+				pluginOptions = new PreferenceNode( "Networks", new MLDonkeyOptions( "Networks", FieldEditorPreferencePage.GRID ) );
 				addToRoot( pluginOptions );	
 			}
 				
@@ -227,6 +227,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.27  2003/08/24 18:41:46  zet
+try to remove horizontal scrollbars from prefs
+
 Revision 1.26  2003/08/24 14:45:22  dek
 put plugins below Networks-treeItem, seems to be more logic to me
 
@@ -241,7 +244,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name

@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Control;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.22 2003/08/24 14:28:31 lemmster Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.23 2003/08/24 18:41:46 zet Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -68,10 +68,11 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		 * returned the parent for these controls??? this is why i check for null and recall
 		 * it in this.createContents()
 		 */
-		parent = getFieldEditorParent();
+		
 			Collections.sort(options, new optionsComparator());
 			Iterator it = options.iterator();
 			while ( it.hasNext() ) {
+				parent = getFieldEditorParent();
 				OptionsInfo temp = ( OptionsInfo ) it.next();
 				if ( temp.getOptionType() == EnumTagType.BOOL || isboolean( temp.getValue() )) {
 					String description = temp.getDescription();
@@ -98,7 +99,7 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 					IntegerFieldEditor integer = new IntegerFieldEditor( temp.getKey(), description, parent, 25 );
 						integer.getLabelControl( parent ).setToolTipText( optionHelp );
 						integer.setPreferenceStore( this.getPreferenceStore() );					
-						integer.fillIntoGrid( parent, 2 );
+						//integer.fillIntoGrid( parent, 2 );
 						integer.load();
 					addField( integer );
 				} 
@@ -108,10 +109,10 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 					String optionHelp = temp.getOptionHelp();					
 						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
 					// with a very long string, the pref pages looks bad. limit to 25?
-					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, parent ); 
+					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, 25, parent ); 
 						string.getLabelControl( parent ).setToolTipText( optionHelp );					
 						string.setPreferenceStore( this.getPreferenceStore() );
-						string.fillIntoGrid( parent, 2 );
+						//string.fillIntoGrid( parent, 2 );
 						string.load();
 					addField( string );
 				}
@@ -176,6 +177,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.23  2003/08/24 18:41:46  zet
+try to remove horizontal scrollbars from prefs
+
 Revision 1.22  2003/08/24 14:28:31  lemmster
 organize imports
 
