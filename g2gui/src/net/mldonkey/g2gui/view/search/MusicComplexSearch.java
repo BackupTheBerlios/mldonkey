@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.22 2003/12/01 14:23:02 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.23 2003/12/01 16:13:50 zet Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -155,6 +155,8 @@ public class MusicComplexSearch extends ComplexSearch {
             return;
         artistText.getDisplay().asyncExec( new Runnable() {
             public void run() {
+				if ( artistText == null || artistText.isDisposed() )
+					return;
                 /* update the other text */
                 if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
                     artistText.setEnabled( false );
@@ -214,6 +216,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.23  2003/12/01 16:13:50  zet
+npe #939429342
+
 Revision 1.22  2003/12/01 14:23:02  lemmster
 ProtocolVersion handling completely rewritten
 
