@@ -28,10 +28,16 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.5 2003/06/24 09:18:51 lemmstercvs01 Exp $ 
+ * @version $Id: Query.java,v 1.6 2003/07/04 13:27:50 dek Exp $ 
  *
  */
 public class Query implements SimpleInformation {
+	
+	/**
+	 * The Type of this tree node
+	 */
+	private byte node;
+	
 	/**
 	 * Queries for AND or OR or Hidden
 	 */
@@ -76,7 +82,7 @@ public class Query implements SimpleInformation {
    	 	 * String	Comment (present ONLY IF Node Type = 4,5,6,7,8,9,10,11 or 12) 
    	 	 * String	Default Value (present ONLY IF Node Type = 4,5,6,7,8,9,10,11 or 12) 
 		 */
-		byte node = messageBuffer.readByte();
+		node = messageBuffer.readByte();
 
 		if ( node == 0 || node == 1 || node == 13 ) {
 			short listElem = messageBuffer.readInt16();
@@ -205,10 +211,56 @@ public class Query implements SimpleInformation {
 		defaultValue = string;
 	}
 
+	/**
+	 * @return this querys type :
+	 *  0 : And(x,y,...) -> x AND y AND ... 
+	 *  1 : Or(x,y,...) -> x OR y OR ... 
+	 *  2 : Andnot(x,y) -> x AND NOT y 
+	 *  3 : Module (name, query) -> fields of 'query' to be display in a frame 'name' 
+	 *  4 : Keywords(comment, default) -> a text field, display 'comment' in front, and default value is 'default' 
+	 *  5 : Minsize(comment, default) 
+	 *  6 : Maxsize(comment, default) 
+	 *  7 : Format(comment, default) 
+	 *  8 : Media(comment, default) 
+	 *  9 : Mp3 Artist(comment, default) 
+	 *  10 : Mp3 Title(comment, default) 
+	 *  11 : Mp3 Album(comment, default) 
+	 *  12 : Mp3 Bitrate(comment, default) 
+	 *  13 : Hidden(fields) -> A list of fields whose values cannot be changed by the 
+	 */
+	public byte getNode() {
+		return node;
+	}
+
+	/**
+	 * set this querys type :
+	 *  0 : And(x,y,...) -> x AND y AND ... 
+	 *  1 : Or(x,y,...) -> x OR y OR ... 
+	 *  2 : Andnot(x,y) -> x AND NOT y 
+	 *  3 : Module (name, query) -> fields of 'query' to be display in a frame 'name' 
+	 *  4 : Keywords(comment, default) -> a text field, display 'comment' in front, and default value is 'default' 
+	 *  5 : Minsize(comment, default) 
+	 *  6 : Maxsize(comment, default) 
+	 *  7 : Format(comment, default) 
+	 *  8 : Media(comment, default) 
+	 *  9 : Mp3 Artist(comment, default) 
+	 *  10 : Mp3 Title(comment, default) 
+	 *  11 : Mp3 Album(comment, default) 
+	 *  12 : Mp3 Bitrate(comment, default) 
+	 *  13 : Hidden(fields) -> A list of fields whose values cannot be changed by the 
+	 * @param b the typ to set
+	 */
+	public void setNode( byte b ) {
+		node = b;
+	}
+
 }
 
 /*
 $Log: Query.java,v $
+Revision 1.6  2003/07/04 13:27:50  dek
+inserted attribute node-type
+
 Revision 1.5  2003/06/24 09:18:51  lemmstercvs01
 typo fixed
 
