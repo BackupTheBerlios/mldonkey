@@ -32,12 +32,11 @@ import org.eclipse.swt.widgets.Composite;
  * ExtendedBooleanFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedBooleanFieldEditor.java,v 1.1 2003/06/30 17:29:54 dek Exp $ 
+ * @version $Id: ExtendedBooleanFieldEditor.java,v 1.2 2003/06/30 19:11:10 dek Exp $ 
  *
  */
 public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 	private boolean hasChanged;
-
 	private Composite temp;
 
 	/**
@@ -116,6 +115,9 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 
 /*
 $Log: ExtendedBooleanFieldEditor.java,v $
+Revision 1.2  2003/06/30 19:11:10  dek
+work in progress, committing before i make a huge mistake
+
 Revision 1.1  2003/06/30 17:29:54  dek
 Saving all the options in General works now (not validated for strings/int/yet)
 

@@ -22,20 +22,27 @@
  */
 package net.mldonkey.g2gui.view.pref;
 import java.io.IOException;
-
 import org.eclipse.jface.preference.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+
+
 
 
 /**
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.6 2003/06/29 18:58:57 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.7 2003/06/30 19:11:10 dek Exp $ 
  *
  */
-public class G2Gui extends PreferencePage  {
+public class G2Gui extends PreferencePage  {	
+	private Composite controlshell;
+
+	private int columns=0;
+
+	private FontFieldEditor consoleTabFontField;
+	
 	private boolean connected;
 	StringFieldEditor hostNameField,userNameField,passwordField;
 	IntegerFieldEditor portField;
@@ -57,27 +64,66 @@ public class G2Gui extends PreferencePage  {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createContents(Composite shell) {		
-				
+	protected Control createContents(Composite shell) {	
+		this.controlshell = shell;
 		hostNameField = new StringFieldEditor("hostname", "Hostname",shell);	
 			hostNameField.setStringValue(preferenceStore.getDefaultString("hostname"));
-			hostNameField.setStringValue(preferenceStore.getString("hostname"));			
+			hostNameField.setStringValue(preferenceStore.getString("hostname"));
+			computeColumn(hostNameField.getNumberOfControls());					
 			
 		portField = new IntegerFieldEditor("port","Port",shell);
 			portField.setStringValue(preferenceStore.getDefaultString("port"));
-			portField.setStringValue(preferenceStore.getString("port"));
+			portField.setStringValue(preferenceStore.getString("port"));			
+			computeColumn(portField.getNumberOfControls());
 
 		userNameField = new StringFieldEditor("username", "Username",shell);
 			userNameField.setStringValue(preferenceStore.getDefaultString("username"));
-			userNameField.setStringValue(preferenceStore.getString("username"));
+			userNameField.setStringValue(preferenceStore.getString("username"));			
+			computeColumn(userNameField.getNumberOfControls());
 
 		passwordField = new StringFieldEditor("password", "Password",shell);
 			passwordField.getTextControl(shell).setEchoChar ('*');			
 			passwordField.setStringValue(preferenceStore.getString("password"));
+			computeColumn(passwordField.getNumberOfControls());
 
+			consoleTabFontField = new FontFieldEditor("consoleFont", "Font for Console Window","MLdonkey",shell);
+			computeColumn(consoleTabFontField.getNumberOfControls());
+		
+			
+		arrangeFields();
 		return null;
 	}
 	
+	/**
+	 * 
+	 */
+	private void arrangeFields() {
+		setHorizontalSpan(hostNameField);
+		setHorizontalSpan(portField);
+		setHorizontalSpan(userNameField);
+		setHorizontalSpan(passwordField);
+	}
+
+	/**
+	 * @param i
+	 */
+	private void computeColumn(int i) {
+		if (columns<i) columns = i;
+		System.out.println(i+" - " +columns);
+		
+	}
+
+	/**
+	 * @param hostNameField
+	 */
+	private void setHorizontalSpan(StringFieldEditor editor) {
+		((org.eclipse.swt.layout.GridData)
+			editor.getTextControl(controlshell).getLayoutData()
+			      ).horizontalSpan = columns-1;
+		((org.eclipse.swt.layout.GridLayout)controlshell.getLayout()).numColumns = columns;
+		
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
@@ -91,6 +137,12 @@ public class G2Gui extends PreferencePage  {
 		preferenceStore.setValue("username",userNameField.getStringValue());
 		preferenceStore.setValue("port",portField.getIntValue());
 		preferenceStore.setValue("password",passwordField.getStringValue());
+		
+		/*the next one gets the wrong thing, have to find out, how to obtain the selected
+		 * font out of the fontDialog, maybe subclassing the thing??
+		 */
+		
+		preferenceStore.setValue("ConsoleFont",consoleTabFontField.getFieldEditorFontName());
 		/* any more options go in here, you got the syntax??*/
 		
 			try {
@@ -127,6 +179,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.7  2003/06/30 19:11:10  dek
+work in progress, committing before i make a huge mistake
+
 Revision 1.6  2003/06/29 18:58:57  dek
 saving values to disk/mldonkey starts working
 
