@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.12 2003/09/26 11:55:48 dek Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.13 2003/09/26 17:00:54 zet Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -59,6 +59,11 @@ public class SharedFileInfo implements SimpleInformation {
 	 * Number of bytes uploaded
 	 */
 	private long numOfBytesUploaded;
+	/**
+	 * String representation of bytes uploaded
+	 */
+	private String stringOfBytesUploaded = "";
+
 	/**
 	 * Number of Queries for this File
 	 */
@@ -148,6 +153,10 @@ public class SharedFileInfo implements SimpleInformation {
 		this.numOfBytesUploaded = messageBuffer.readInt64();
 		this.numOfQueriesForFile = messageBuffer.readInt32();
 		this.md4 = messageBuffer.readBinary( 16 );
+		
+		// only calculate this once, not on every getUploadedString...
+		// use a main calcStringSize() function. Why duplicate code?
+		stringOfBytesUploaded = FileInfo.calcStringSize( numOfBytesUploaded );
 	}
 
 	/**
@@ -182,33 +191,11 @@ public class SharedFileInfo implements SimpleInformation {
 	}
 	
 	/**
-	 * creates a String from the size
-	 * @param size The size
-	 * @return a string represantation of this size
-	 */
-	public static String calcStringSize( long size ) {
-		float k = 1024f;
-		float m = k * k;
-		float g = m * k;
-		float t = g * k;
-		float fsize = ( float ) size;
-		if ( fsize >= t )
-			return new String( df.format( fsize / t ) + " TB" );
-		else if ( fsize >= g )
-			return new String( df.format( fsize / g ) + " GB" );
-		else if ( fsize >= m )
-			return new String( df.format( fsize / m ) + " MB" );
-		else if ( fsize >= k )
-			return new String( df.format( fsize / k ) + " KB" );
-		else
-			return new String( size + "" );
-	}
-	/**
 	 * 
 	 * @return String representation of Upload
 	 */
 	public String getUploadedString() {
-		return SharedFileInfo.calcStringSize( numOfBytesUploaded );
+		return stringOfBytesUploaded;
 	}
 
 	/**
@@ -232,6 +219,9 @@ public class SharedFileInfo implements SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.13  2003/09/26 17:00:54  zet
+remove duplicate code, calc string once per update
+
 Revision 1.12  2003/09/26 11:55:48  dek
 right-mouse menue for upload-Table
 
@@ -258,7 +248,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved
