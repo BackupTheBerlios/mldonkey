@@ -40,7 +40,7 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.1 2003/08/04 19:22:08 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.2 2003/08/06 17:14:17 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -110,6 +110,10 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 					return "Low";
 				else 
 					return "???";
+			case 11: // last
+				return fileInfo.getStringOffset();
+			case 12: // age
+				return fileInfo.getStringAge();
 			default: 
 				return "";
 			} 
@@ -176,6 +180,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.2  2003/08/06 17:14:17  zet
+2 new columns
+
 Revision 1.1  2003/08/04 19:22:08  zet
 trial tabletreeviewer
 

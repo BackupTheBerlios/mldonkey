@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  * @author $user$
- * @version $Id: DownloadTableTreeSorter.java,v 1.1 2003/08/04 19:22:08 zet Exp $ 
+ * @version $Id: DownloadTableTreeSorter.java,v 1.2 2003/08/06 17:15:24 zet Exp $ 
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
@@ -131,7 +131,7 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 						fileInfo2.getETA());
 						
 						
-				case 10: 
+				case 10: // priority
 					if (fileInfo1.getPriority() == EnumPriority.LOW)
 						return -1;
 					else if (fileInfo1.getPriority() == EnumPriority.HIGH)
@@ -142,7 +142,11 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 						else return -1;
 					}
 				
-				// priority 		
+				case 11: // last
+					return compareIntegers(fileInfo1.getOffset(), fileInfo2.getOffset());
+				case 12: // age
+					return compareLongs (Long.parseLong(fileInfo1.getAge()), 
+										Long.parseLong(fileInfo2.getAge()));		
 				default :
 					return 0;
 
@@ -243,6 +247,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.2  2003/08/06 17:15:24  zet
+2 new columns
+
 Revision 1.1  2003/08/04 19:22:08  zet
 trial tabletreeviewer
 
