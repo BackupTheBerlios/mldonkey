@@ -48,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.62 2003/09/25 00:51:03 zet Exp $
+ * @version $Id: FileInfo.java,v 1.63 2003/09/26 04:18:53 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -800,6 +800,13 @@ public class FileInfo extends Parent implements Observer {
         return etaSeconds;
     }
 
+	public String getED2K() {
+		return "ed2k://|file|" + this.getName() 
+				+ "|" + this.getSize() 
+				+ "|" + this.getMd4() 
+				+ "|/";
+	}
+
     /* (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
@@ -821,6 +828,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.63  2003/09/26 04:18:53  zet
+getEd2k
+
 Revision 1.62  2003/09/25 00:51:03  zet
 reset active sources on clean_tables
 
