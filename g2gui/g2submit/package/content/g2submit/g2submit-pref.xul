@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!--
+The contents of this file are subject to the Mozilla Public
+License Version 1.1 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a copy of
+the License at http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS
+IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+implied. See the License for the specific language governing
+rights and limitations under the License.
+
+Alternatively, the contents of this file may be used under the
+terms of the GNU General Public License Version 2 or later (the
+"GPL"), in which case the provisions of the GPL are applicable
+instead of those above.
+
+Copyright (C) 2002 Tomas Styblo <tripie@cpan.org>
+-->
+
+<?xml-stylesheet href="chrome://communicator/skin/" type="text/css"?>
+<?xul-overlay href="chrome://communicator/content/communicatorOverlay.xul"?>
+<?xul-overlay href="chrome://communicator/content/pref/platformPrefOverlay.xul"?>
+
+
+<page xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    id="g2submit-pref"
+    onload="initG2submitPrefPanel();"
+    headertitle="MLdonkey G2 Submit Preferences">
+
+    <script type="application/x-javascript" src="chrome://g2submit/content/g2submit-pref.js"/>
+
+  <groupbox id="prefG2guiGeneral">
+	  <caption label="MLdonkey G2 Submit / Link Catcher Plugin"/>
+      <description><html:img src="mld_logo_48x48_crome.gif" align="left" hspace="10" ></html:img>
+        You need to set the absolute path to your favourite program for
+		handling links ('g2gui' for example).<html:br />
+        <html:b>%r</html:b>&#160;is the link variable. Windows g2gui.exe needs the additial -c switch to specify g2gui.pref
+		</description>
+
+  <groupbox id="prefG2guiLinuxExample">
+      <caption label="Linux Example"/>
+      <description><html:img src="fileicon.png" align="left" hspace="10" ></html:img>
+        /home/user/g2gui/g2gui %r
+	  </description>
+  </groupbox>
+
+  <groupbox id="prefG2guiWindowsExample">
+      <caption label="Windows Example"/>
+      <description><html:img src="fileicon.png" align="left" hspace="10" ></html:img>
+        c:\progr~1\g2gui\g2gui.exe %r -c c:\progr~1\g2gui\g2gui.pref
+	  </description>
+  </groupbox>
+
+  </groupbox>
+
+  <groupbox id="prefG2guiCommands">
+      <caption label="Path Configuration" />
+      <grid>
+          <columns>
+              <column />
+              <column flex="1" />
+              <column />
+              <column flex="1" />
+          </columns>
+          <rows>
+              <row>
+                  <!-- <label value="Edonkey2000:" /> -->
+                 <description>
+				    Edonkey:
+             	  </description>
+				  <textbox size="40" id="prefG2submitED2KClient"
+                      prefstring="g2submit.command.ed2k"
+                      onblur="changeG2submitPrefs();" />
+                  <checkbox id="prefG2submitInterceptED2K"
+                      label="enable ed2k:// clicks"
+                      prefstring="g2submit.intercept.ed2k"
+                      oncommand="changeG2submitPrefs();" />
+              </row>
+              <row>
+                 <description>
+				    Torrent:
+             	  </description>
+                       <textbox size="40" id="prefG2submitTorrentClient"
+                        prefstring="g2submit.command.torrent"
+                        onblur="changeG2submitPrefs();" />
+                  <checkbox id="prefG2submitInterceptTorrent"
+                      label="enable .torrent clicks"
+                      prefstring="g2submit.intercept.torrent"
+                      oncommand="changeG2submitPrefs();" />
+			  </row>
+              <row>
+                 <description>
+				    Sig2dat:
+             	  </description>
+                       <textbox size="40" id="prefG2submitSig2datClient"
+                        prefstring="g2submit.command.sig2dat"
+                        onblur="changeG2submitPrefs();" />
+                  <checkbox id="prefG2submitInterceptSig2dat"
+                      label="enable sig2dat:// clicks"
+                      prefstring="g2submit.intercept.sig2dat"
+                      oncommand="changeG2submitPrefs();" />
+			  </row>
+              <row>
+                 <description>
+				    Magnet:
+             	  </description>
+                       <textbox size="40" id="prefG2submitMagnetClient"
+                        prefstring="g2submit.command.magnet"
+                        onblur="changeG2submitPrefs();" />
+                  <checkbox id="prefG2submitInterceptMagnet"
+                      label="enable magnet:// clicks"
+                      prefstring="g2submit.intercept.magnet"
+                      oncommand="changeG2submitPrefs();" />
+			  </row>
+		  </rows>
+      </grid>
+  </groupbox>
+
+<description><html:a target="_new" style="color: blue" href="http://mldonkey.berlios.de/">MLdonkey G2 Submit</html:a>&#160;Version: 0.2 by vnc (G2gui Team). Based on&#160;<html:a target="_new" style="color: blue" href="http://mozex.mozdev.org/">mozex</html:a>&#160;(C) Tomas Styblo &lt;tripie@cpan.org&gt;</description>
+
+
+</page>
+

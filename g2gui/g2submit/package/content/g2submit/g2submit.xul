@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+The contents of this file are subject to the Mozilla Public
+License Version 1.1 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a copy of
+the License at http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS
+IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+implied. See the License for the specific language governing
+rights and limitations under the License.
+
+Alternatively, the contents of this file may be used under the
+terms of the GNU General Public License Version 2 or later (the
+"GPL"), in which case the provisions of the GPL are applicable
+instead of those above.
+
+Copyright (C) 2002 Tomas Styblo <tripie@cpan.org>
+-->
+
+<overlay id="g2submit"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+    <script type="application/x-javascript" src="chrome://g2submit/content/g2submit-pref.js"/>
+    <script type="application/x-javascript" src="g2submit.js"/>
+    <popup id="contentAreaContextMenu">
+        <menu id="g2submit-menu" label="G2 Submit " accesskey="x">
+            <menupopup>
+				<menuitem id="g2submit-link-ed2k" label="submit ed2k => G2gui"
+                    oncommand="g2submitED2KClient()"/>
+                <menuitem id="g2submit-link-torrent" label="submit torrent => G2gui"
+                    oncommand="g2submitTorrentClient()"/>
+				<menuitem id="g2submit-link-sig2dat" label="submit sig2dat => G2gui"
+                    oncommand="g2submitSig2datClient()"/>
+                <menuitem id="g2submit-link-magnet" label="submit magnet => G2gui"
+                    oncommand="g2submitMagnetClient()"/>
+		</menupopup>
+        </menu>
+    </popup>
+</overlay>
+
