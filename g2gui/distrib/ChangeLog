@@ -1,5 +1,5 @@
 2003/11/21: vnc
-	* Fixed big CPU-leak caused by StatisticsTab
+	* StatisticTab: fixed [Bug #1107] Big CPU-leak caused by StatisticsTab
 
 2003/11/16: lemmy
 	* Search: fixed [Bug #1080] Searchbox should get focused when switching to searchtab
@@ -8,7 +8,7 @@
 	* G2submit added, a mozilla link-submit plugin (xpi) based on mozex
 	
 2003/11/15: lemmy
-	* Search: fixed [Bug #1089] 0.2 similair stop search crash
+	* Search: fixed [Bug #1089] 0.2 similar stop search crash
 
 2003/11/13: z
 	* Pane menu: Add "Sort" option for macOS (until SWT fixes table header clicks)
