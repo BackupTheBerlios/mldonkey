@@ -55,7 +55,7 @@ import net.mldonkey.g2gui.helper.RegExp;
  * DownloadSubmit
  *
  * @author $user$
- * @version $Id: DownloadSubmit.java,v 1.8 2004/03/04 18:00:33 psy Exp $ 
+ * @version $Id: DownloadSubmit.java,v 1.9 2004/03/06 17:12:51 psy Exp $ 
  *
  */
 public class DownloadSubmit implements Runnable {
@@ -196,7 +196,7 @@ public class DownloadSubmit implements Runnable {
 			try {
 				server = new ServerSocket(submitPort + i);
 
-				String link = "http://" + getMyIP() + ":" + server.getLocalPort() + "/" + localfile.getName() + ".torrent";
+				String link = "http://" + getMyIP() + ":" + server.getLocalPort() + "/g2gui-prepared.torrent";
 				if (G2Gui.debug) System.out.println("INTERNAL HTTPD: " + link + " (waiting max " + SERVETIME + " seconds)");
 				
 				sendLink(link);
@@ -209,7 +209,7 @@ public class DownloadSubmit implements Runnable {
 					Socket socket = server.accept();
 					/* we got connected, proceed... */
 					try {
-						String GETfile = "";
+						String requestedFile = "";
 						
 						if (G2Gui.debug) System.out.println("CONNECT: " + socket.toString());
 						BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -221,29 +221,22 @@ public class DownloadSubmit implements Runnable {
 							
 							/* which file does the other side request? */
 							if (RegExp.split(string, ' ').length > 1)  
-								GETfile = RegExp.split(string, ' ')[1];
+								requestedFile = RegExp.split(string, ' ')[1];
+
+							if (G2Gui.debug) System.out.println("REQUEST: " + requestedFile + ", sending now: " + localfile);
 							
-							/* remove our added trailing ".torrent" */
-							GETfile = GETfile.substring(0, GETfile.length() - ".torrent".length());
-							
-							/* locate our local file */
-							String LocalPath = new File(localfile.getParent()).toString();
-							File file = new File((LocalPath != null ? LocalPath : "") + 
-									hexDecode(new File(GETfile).getAbsoluteFile().toString()));
-							if (G2Gui.debug) System.out.println("REQUEST: " + GETfile + ", we should have it at: " + file);
-							
-							if (file.exists()) {
+							if (localfile.exists()) {
 								out.println("HTTP/1.1 200 OK");
 								out.println("Server: G2gui Inbuilt Torrent Proxy");
 								out.println("Content-Type: application/x-bittorrent");
-								out.println("Content-Length: " + file.length());
+								out.println("Content-Length: " + localfile.length());
 								/* after this empty line we can start the content-transmission */
 								out.println("");
 								
 								/* read the file-contents */
-								byte[] b = new byte[(int) file.length()];
+								byte[] b = new byte[(int) localfile.length()];
 								try {
-									FileInputStream fis = new FileInputStream(file);
+									FileInputStream fis = new FileInputStream(localfile);
 									fis.read(b);
 									fis.close();
 								} 
@@ -320,6 +313,9 @@ public class DownloadSubmit implements Runnable {
 
 /*
 $Log: DownloadSubmit.java,v $
+Revision 1.9  2004/03/06 17:12:51  psy
+removed filename-checks, we don't really need them and they made problems with gcj hex-en-/de-coding
+
 Revision 1.8  2004/03/04 18:00:33  psy
 *** empty log message ***
 
