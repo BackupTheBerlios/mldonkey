@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntryItem
  *
- * @version $Id: LinkEntryItem.java,v 1.6 2003/10/17 03:36:43 zet Exp $
+ * @version $Id: LinkEntryItem.java,v 1.7 2003/10/22 15:46:06 dek Exp $
  *
  */
 public class LinkEntryItem {
@@ -64,7 +64,7 @@ public class LinkEntryItem {
      * Create contents
      */
     public void createContents() {
-        Composite linkComposite = new Composite( composite, SWT.BORDER );
+        Composite linkComposite = new Composite( composite, SWT.NONE );
         linkComposite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER  | GridData.FILL_VERTICAL ) );
         linkComposite.setLayout( new FillLayout() );
         
@@ -94,6 +94,9 @@ public class LinkEntryItem {
 
 /*
 $Log: LinkEntryItem.java,v $
+Revision 1.7  2003/10/22 15:46:06  dek
+flattened status bar
+
 Revision 1.6  2003/10/17 03:36:43  zet
 use toolbar
 

@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.27 2003/10/17 03:36:43 zet Exp $ 
+ * @version $Id: NetworkItem.java,v 1.28 2003/10/22 15:46:06 dek Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -92,7 +92,7 @@ public class NetworkItem implements Observer {
 	 */
 	private void createContent() {
 		
-		Composite aComposite = new Composite( composite, SWT.BORDER );
+		Composite aComposite = new Composite( composite, SWT.NONE );
 		aComposite.setLayout(CGridLayout.createGL(1,0,0,0,0,false));
 		aComposite.setLayoutData( new GridData(GridData.FILL_VERTICAL));
 		toolBar = new ToolBar( aComposite, SWT.FLAT ) ;
@@ -202,6 +202,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.28  2003/10/22 15:46:06  dek
+flattened status bar
+
 Revision 1.27  2003/10/17 03:36:43  zet
 use toolbar
 

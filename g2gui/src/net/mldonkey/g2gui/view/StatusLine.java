@@ -37,6 +37,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * Statusline, This class handles all the Information that should be visible all the time in a
@@ -45,7 +46,7 @@ import org.eclipse.swt.widgets.Composite;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.16 2003/10/17 03:36:50 zet Exp $
+ * @version $Id: StatusLine.java,v 1.17 2003/10/22 15:46:06 dek Exp $
  *
  */
 public class StatusLine {
@@ -62,9 +63,10 @@ public class StatusLine {
      * @param mainTab The <code>MainTab></code> we display our content in
      */
     public StatusLine( MainTab mainTab ) {
+		GridData gd;
         this.mainTab = mainTab;
         this.core = mainTab.getCore();
-        mainComposite = new Composite( mainTab.getMainComposite(), SWT.NONE );
+        mainComposite = new Composite( mainTab.getMainComposite(), SWT.BORDER );
         gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 0, false );
         mainComposite.setLayout( gridLayout );
         mainComposite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
@@ -78,29 +80,55 @@ public class StatusLine {
         /* the linkEntry */
         new LinkEntry( this, this.core, linkEntryComposite );
         this.composite = new Composite( mainComposite, SWT.NONE );
-        int numColumns = 4;
+        int numColumns = 7;
 
         if ( ( G2Gui.getCoreConsole() != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) )
-            numColumns = 5;
+            numColumns = 8;
         gridLayout = CGridLayout.createGL( numColumns, 0, 0, 0, 0, false );
 
         this.composite.setLayout( gridLayout );
         composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-        /* the left field */
+        /*
+         *  the left field 
+         */
         new NetworkItem( this, this.core );
-        if ( ( G2Gui.getCoreConsole() != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) )
+		Label separator0 = new Label(composite, SWT.SEPARATOR |SWT.VERTICAL);
+		gd = new GridData (GridData.FILL_VERTICAL);		
+			/*heightHint of 0 is nescessary that this Label don't blow up the status-line*/
+		gd.heightHint = 0;
+		separator0.setLayoutData( gd );
+        
+        if ( ( G2Gui.getCoreConsole() != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) ){
             new CoreConsoleItem( this, this.core );
+			Label separator = new Label(composite, SWT.SEPARATOR |SWT.VERTICAL);
+			gd = new GridData (GridData.FILL_VERTICAL);		
+			/*heightHint of 0 is nescessary that this Label don't blow up the status-line*/
+			gd.heightHint = 0;
+			separator.setLayoutData( gd );
+        }
 
         /* the toggle for linkEntry */
         new LinkEntryItem( this, this.core );
-
+		
+		Label separator1 = new Label(composite, SWT.SEPARATOR |SWT.VERTICAL);
+		gd = new GridData (GridData.FILL_VERTICAL);		
+		/*heightHint of 0 is nescessary that this Label don't blow up the status-line*/
+		gd.heightHint = 0;
+		separator1.setLayoutData( gd );
+		
         /* the fill field */
-        Composite middle = new Composite( composite, SWT.BORDER );
+        Composite middle = new Composite( composite, SWT.NONE );
         middle.setLayout( new FillLayout() );
         middle.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         label = new CLabel( middle, SWT.BORDER );
         label.setText( "" );
+        
+		Label separator2 = new Label(composite, SWT.SEPARATOR |SWT.VERTICAL);
+		gd = new GridData (GridData.FILL_VERTICAL);		
+		/*heightHint of 0 is nescessary that this Label don't blow up the status-line*/
+		gd.heightHint = 0;
+		separator2.setLayoutData( gd );
 
         /* the right field */
         new SpeedItem( this, this.core );
@@ -161,6 +189,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.17  2003/10/22 15:46:06  dek
+flattened status bar
+
 Revision 1.16  2003/10/17 03:36:50  zet
 use toolbar
 
@@ -183,7 +214,7 @@ Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.9  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.8  2003/08/18 01:42:24  zet
 centralize resource bundle

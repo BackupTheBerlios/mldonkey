@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Composite;
  * SpeedItem
  *
  *
- * @version $Id: SpeedItem.java,v 1.22 2003/10/17 03:36:26 zet Exp $
+ * @version $Id: SpeedItem.java,v 1.23 2003/10/22 15:46:06 dek Exp $
  *
  */
 public class SpeedItem implements Observer {
@@ -76,7 +76,7 @@ public class SpeedItem implements Observer {
      * Create the content layout
      */
     private void createContent() {
-        composite = new Composite( composite, SWT.BORDER );
+        composite = new Composite( composite, SWT.NONE );
         composite.setLayoutData(new GridData( GridData.FILL_VERTICAL ) );
         GridLayout gridLayout = CGridLayout.createGL( 2, 0, 0, 0, 0, false );
         composite.setLayout( gridLayout );
@@ -162,6 +162,9 @@ public class SpeedItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.23  2003/10/22 15:46:06  dek
+flattened status bar
+
 Revision 1.22  2003/10/17 03:36:26  zet
 not much
 
@@ -184,7 +187,7 @@ Revision 1.16  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.15  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.14  2003/08/17 23:13:42  zet
 centralize resources, move images
