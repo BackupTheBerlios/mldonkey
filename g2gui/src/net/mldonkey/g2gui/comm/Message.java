@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.6 2003/06/12 10:40:06 dek Exp $ 
+ * @version $Id: Message.java,v 1.7 2003/06/12 10:45:44 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -48,7 +48,7 @@ public abstract class Message {
 	 */
 	public static final short S_GUIEXTENSION = 47;
 	/**
-	 * 
+	 * Send Get Downloading Files (value is 45)
 	 */
 	public static final short S_GETDOWNLOADING_FILES = 45;
 	/**
@@ -79,6 +79,10 @@ public abstract class Message {
 	 * Receive NetworkInfo (value is 20)
 	 */	
 	public static final short R_NETWORK_INFO = 20;
+	/**
+	 * Receive Bad Password (value is 45)
+	 */
+	public static final short R_BAD_PASSWORD = 45;
 	/**
 	 * Receive ClientStats (value is 49)
 	 */
@@ -333,6 +337,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.7  2003/06/12 10:45:44  lemmstercvs01
+R_BAD_PASSWORD added
+
 Revision 1.6  2003/06/12 10:40:06  dek
 readByte() --> readInt8 | readByte returns now: byte
 
