@@ -21,13 +21,12 @@
  * 
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.SharedFileInfo;
-import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
-import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.GTableMenuListener;
+import net.mldonkey.g2gui.view.viewers.GTableViewer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -42,11 +41,10 @@ import org.eclipse.swt.dnd.Transfer;
 /**
  * UploadTableMenuListener
  *
- * @version $Id: UploadTableMenuListener.java,v 1.4 2003/10/21 17:00:45 lemmster Exp $ 
+ * @version $Id: UploadTableMenuListener.java,v 1.5 2003/10/22 01:38:45 zet Exp $ 
  *
  */
-class UploadTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
-	private SharedFileInfoIntMap sharedFileInfoMap;
+class UploadTableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
 	private SharedFileInfo selectedFile;
 
 	/**
@@ -54,11 +52,10 @@ class UploadTableMenuListener extends TableMenuListener implements ISelectionCha
 	 * @param tableViewer The TableViewer
 	 * @param core The CoreCommunication supporting this with data
 	 */
-	public UploadTableMenuListener( CoreCommunication core ) {
-		super( core );
-		setTableViewer( tableViewer );
-		this.sharedFileInfoMap = this.core.getSharedFileInfoIntMap();
+	public UploadTableMenuListener( GTableViewer gTableViewer ) {
+		super(gTableViewer);
 	}
+	
 	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged( org.eclipse.jface.viewers.SelectionChangedEvent )
 	 */
@@ -85,6 +82,7 @@ class UploadTableMenuListener extends TableMenuListener implements ISelectionCha
 			super();
 			setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COPYTO" ) );
 		}
+		// tdo: select multi
 		public void run() {
 			Clipboard clipboard =
 				new Clipboard( ( ( TableViewer ) tableViewer ).getTable().getDisplay() );
@@ -106,12 +104,15 @@ class UploadTableMenuListener extends TableMenuListener implements ISelectionCha
 
 	   public void run(  ) {
 			Message refresh = new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
-			refresh.sendMessage( core );
+			refresh.sendMessage( gTableViewer.getCore() );
 	   }
    }
 }
 /*
 $Log: UploadTableMenuListener.java,v $
+Revision 1.5  2003/10/22 01:38:45  zet
+add column selector
+
 Revision 1.4  2003/10/21 17:00:45  lemmster
 class hierarchy for tableviewer
 

@@ -30,14 +30,12 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.SharedFileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.view.TransferTab;
-import net.mldonkey.g2gui.view.helper.OurTableSorter;
-import net.mldonkey.g2gui.view.helper.OurTableViewer;
-import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.GTableContentProvider;
+import net.mldonkey.g2gui.view.viewers.GTableLabelProvider;
+import net.mldonkey.g2gui.view.viewers.GTableSorter;
+import net.mldonkey.g2gui.view.viewers.GTableViewer;
 
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -45,61 +43,55 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.13 2003/10/21 17:00:45 lemmster Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.14 2003/10/22 01:38:45 zet Exp $ 
  *
  */
-public class UploadTableViewer extends OurTableViewer {
+public class UploadTableViewer extends GTableViewer {
 	private SharedFileInfoIntMap sharedFileInfoIntMap;
-	
+	private static final int NETWORK = 0;
+	private static final int BYTES = 1;
+	private static final int REQUESTS = 2;
+	private static final int NAME = 3;
 	/**
 	 * @param parent the place where this table lives
 	 * @param mldonkey the source of our data
 	 * @param tab We live on this tab
 	 */
-	public UploadTableViewer( Composite aComposite, CoreCommunication aCore, TransferTab tab ) {
-		super( aComposite, aCore );
-
-		this.tableColumns = new String[] { "TT_UPLOAD_NETWORK", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES","TT_UPLOAD_NAME" };
-		this.tableWidth = new int[] { 50, 50, 50, 50 };
-		this.tableAlign = new int[] { SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT };
+	public UploadTableViewer( Composite parent, CoreCommunication aCore, TransferTab tab ) {
+		super( parent, aCore );
+		
+		preferenceString = "upload";
+		columnLabels = new String[] { "TT_UPLOAD_NETWORK", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES","TT_UPLOAD_NAME" };
+		columnDefaultWidths = new int[] { 50, 50, 50, 50 };
+		columnAlignment = new int[] { SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT };
  
-		this.swtLayout = SWT.FULL_SELECTION;
-		this.contentProvider = new UploadContentProvider();
-		this.labelProvider = new UploadLabelProvider();
-		this.tableSorter = new UploadTableSorter();
-		this.menuListener = new UploadTableMenuListener( core );
+		tableSorter = new UploadTableSorter( this );
+		tableContentProvider = new UploadContentProvider( this );
+		tableLabelProvider = new UploadLabelProvider( this );
+		tableMenuListener = new UploadTableMenuListener( this );
 
 		this.sharedFileInfoIntMap = core.getSharedFileInfoIntMap();
-		this.create();		
+		createContents( parent );		
 	}
 	
 	/**
 	 * @param parent
 	 */
-	protected void create() {
-		super.create();
-
-		this.createTableColumns();
-	
-		this.setInput( this.sharedFileInfoIntMap );
-
-		updateDisplay();
-	}
-	/**
-	 * refreshes the Display with values from preference-Store.
-	 * This method is called, when preference-Sotre is closed, that means, something
-	 * might have benn changed.
-	 */
-	public void updateDisplay() {
-		getTableViewer().getTable().setLinesVisible(
-						PreferenceLoader.loadBoolean( "displayGridLines" ) );
-		
+	protected void createContents( Composite parent ) {
+		super.createContents(parent);
+		tableViewer.setInput( this.sharedFileInfoIntMap );
+		tableViewer.addSelectionChangedListener((UploadTableMenuListener) tableMenuListener);
 	}
 	
-	public class UploadContentProvider implements IStructuredContentProvider, Observer {
+	public class UploadContentProvider extends GTableContentProvider implements Observer {
 		/* ( non-Javadoc )
 		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements( java.lang.Object )
 		 */
+	    
+	    public UploadContentProvider( UploadTableViewer uTableViewer ) {
+	        super(uTableViewer);
+	    }
+	    
 		public Object[] getElements( Object inputElement ) {
 			SharedFileInfoIntMap sharedFiles = ( SharedFileInfoIntMap ) inputElement;
 			TIntObjectIterator it = sharedFiles.iterator();
@@ -112,8 +104,6 @@ public class UploadTableViewer extends OurTableViewer {
 			}
 			return result;
 		}
-
-		public void dispose() { }
 
 		public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) {
 			SharedFileInfoIntMap oldI = ( SharedFileInfoIntMap ) oldInput;
@@ -150,50 +140,42 @@ public class UploadTableViewer extends OurTableViewer {
 		}
 	}
 	
-	public class UploadLabelProvider implements ITableLabelProvider {
+	public class UploadLabelProvider extends GTableLabelProvider  {
 
-		public void addListener( ILabelProviderListener listener ) { }
-
-		public void dispose() { }
-
-		public boolean isLabelProperty( Object element, String property ) {
-			return false;
-		}
-
-		public void removeListener( ILabelProviderListener listener ) { }
-
+	    public UploadLabelProvider( UploadTableViewer uTableViewer ) {
+	        super(uTableViewer);
+	    }
+	    
 		public Image getColumnImage( Object element, int columnIndex ) {
-			if ( columnIndex == 0 ) {
-				SharedFileInfo file = ( SharedFileInfo ) element;
-				return G2GuiResources.getNetworkImage( file.getNetwork().getNetworkType() );
+			switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+				case UploadTableViewer.NETWORK : 
+					SharedFileInfo file = ( SharedFileInfo ) element;
+					return G2GuiResources.getNetworkImage( file.getNetwork().getNetworkType() );
+				default :
+					return null;
 			}
-			return null;
 		}
 
 		public String getColumnText( Object element, int columnIndex ) {
 			SharedFileInfo info = ( SharedFileInfo ) element;
-			
-			switch ( columnIndex ) {
-				case 0 :
-					return "" + info.getNetwork().getNetworkName();					
-				case 1 :
-					return "" + info.getUploadedString();			
-				case 2 :
-					return "" + String.valueOf( info.getNumOfQueriesForFile() );			
-				case 3 :
-					return "" + info.getName();			
+			switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+				case UploadTableViewer.NETWORK : 
+					return info.getNetwork().getNetworkName();					
+				case UploadTableViewer.BYTES :
+					return info.getUploadedString();			
+				case UploadTableViewer.REQUESTS :
+					return "" + info.getNumOfQueriesForFile();			
+				case UploadTableViewer.NAME :
+					return info.getName();			
 				default :
 					return "";			
 			}			
 		}
 	}
-	public class UploadTableSorter extends OurTableSorter {
-		/**
-		 * @param aSorterName
-		 * @param aColumnIndex
-		 */
-		public UploadTableSorter() {
-			super( "UploadSorter", 8 );
+	public class UploadTableSorter extends GTableSorter {
+
+		public UploadTableSorter( UploadTableViewer uTableViewer ) {
+			super( uTableViewer);
 		}
 		
 		/*
@@ -203,50 +185,36 @@ public class UploadTableViewer extends OurTableViewer {
 		public int compare( Viewer viewer, Object obj1, Object obj2 ) {
 			SharedFileInfo sharedFile1 = ( SharedFileInfo ) obj1;
 			SharedFileInfo sharedFile2 = ( SharedFileInfo ) obj2;
-			int result = 0;
-			String aString1 = "" ;
-			String aString2 = "" ;
-			Long aLong1 = new Long( 0 );
-			Long aLong2 = new Long( 0 );
 			
-			switch ( columnIndex ) {				
-				case 0 :	/*network*/	
-					aString1 = sharedFile1.getNetwork().getNetworkName();
-					aString2 = sharedFile2.getNetwork().getNetworkName();
-					result = compareStrings( aString1, aString2 );
-					break;				
-				case 1 :/*upload*/
-					aLong1 = new Long( sharedFile1.getNumOfBytesUploaded() );
-					aLong2 = new Long( sharedFile2.getNumOfBytesUploaded() );
-					if ( lastSort )
-						result = aLong1.compareTo( aLong2 );
-					else 
-						result = aLong2.compareTo( aLong1 );								
-					break;				
-				case 2 :/*queries*/	
-					aLong1 = new Long( sharedFile1.getNumOfQueriesForFile() );
-					aLong2 = new Long( sharedFile2.getNumOfQueriesForFile() );
-					if ( lastSort )
-						result = aLong1.compareTo( aLong2 );
-					else 
-						result = aLong2.compareTo( aLong1 );			
-					break;
-				case 3 : /*filename*/	
-					aString1 = sharedFile1.getName();
-					aString2 = sharedFile2.getName();
-					result = compareStrings( aString1, aString2 );
-					break;						
-					
-				default :
-					break;
+			switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+			    
+				case UploadTableViewer.NETWORK : 
+				    return compareStrings( sharedFile1.getNetwork().getNetworkName(), 
+				            				sharedFile2.getNetwork().getNetworkName());
+				
+				case UploadTableViewer.BYTES :
+				    return compareLongs( sharedFile1.getNumOfBytesUploaded(),
+				            				sharedFile2.getNumOfBytesUploaded() );
+				    
+				case UploadTableViewer.REQUESTS :
+				    return compareLongs( sharedFile1.getNumOfQueriesForFile(),
+				            				sharedFile2.getNumOfQueriesForFile() );
+				    
+				case UploadTableViewer.NAME :
+				    return compareStrings( sharedFile1.getName(), sharedFile2.getName() );
+				  
+				default:
+					return 0;
 			}
-			return result;
 			
 		}
 	}
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.14  2003/10/22 01:38:45  zet
+add column selector
+
 Revision 1.13  2003/10/21 17:00:45  lemmster
 class hierarchy for tableviewer
 
