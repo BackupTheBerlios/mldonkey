@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Composite;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkView.java,v 1.2 2003/07/13 20:12:39 dek Exp $ 
+ * @version $Id: ChunkView.java,v 1.3 2003/07/13 20:28:51 dek Exp $ 
  *
  */
 public class ChunkView extends Canvas {
@@ -95,6 +95,7 @@ public class ChunkView extends Canvas {
 				
 		byte[] temp = avail.getBytes();		
 		
+		if ( image != null ) image.dispose();
 		image = new Image( getDisplay(), length, 127 );
 		GC gc = new GC( image );
 		for ( int i = 0; i < avail.length(); i++ ) {		
@@ -102,7 +103,7 @@ public class ChunkView extends Canvas {
 			gc.setForeground( blue );	
 			
 			//this availability is so low, we can assume, it is not available:			
-			if ( temp[ i ] <= 5 ) {			
+			if ( temp[ i ] == 0 ) {			
 				gc.setForeground( red );
 				height = 127;
 			}
@@ -129,15 +130,26 @@ public class ChunkView extends Canvas {
 	 * @param e
 	 */
 	protected void paintControl( PaintEvent e ) {
-		GC gc = e.gc;	
-		if ( image != null ) {		
-			gc.drawImage( image ,
-							0, 0,
-							image.getBounds().width,
-							image.getBounds().height,
-							1, 1,
-							e.width,
-							e.height );		
+		GC gc = e.gc;
+		int width = e.width;
+		int height = e.height;
+		if ( width >= 2 ) {
+			width = e.width - 2;
+		}
+		if ( e.height >= 2 ) {
+			height = e.height - 2;
+		}
+		if ( image != null ) {
+			gc.drawImage(
+				image,
+				0,
+				0,
+				image.getBounds().width,
+				image.getBounds().height,
+				1,
+				1,
+				width,
+				height );
 		}
 		gc.dispose();
 	}
@@ -147,14 +159,18 @@ public class ChunkView extends Canvas {
 	/**
 	 * redraws this widget, with refreshed Information from FileInfo (if changed)
 	 */
-	public void refresh() {
-		// TODO Auto-generated method stub
+	public void refresh() {		
+		createImage();
+		
 		
 	}
 }
 
 /*
 $Log: ChunkView.java,v $
+Revision 1.3  2003/07/13 20:28:51  dek
+now, everytime a new chunkview is created, but now everything displayed is recent information
+
 Revision 1.2  2003/07/13 20:12:39  dek
 fixed Exception and applied checkstyle
 
