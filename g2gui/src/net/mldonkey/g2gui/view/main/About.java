@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.11 2003/08/31 15:48:23 zet Exp $ 
+ * @version $Id: About.java,v 1.12 2003/09/01 12:42:32 dek Exp $ 
  *
  */
 public class About {
@@ -140,7 +140,7 @@ public class About {
 		about.setBackground( background );
 		
 		String develHeader = "Original developers ( code & icons ):\n";
-		String devels = "Dek, Lemmy, VNC, and z\n\n";
+		String devels = "Dek, lemmy, VNC, and z\n\n";
 		
 		String contributorHeader = "Other contributors and testers:\n";
 		String contributors = "housetier, mitch, and vaste\n\n";
@@ -268,7 +268,7 @@ public class About {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.11 2003/08/31 15:48:23 zet Exp $ 
+	 * @version $Id: About.java,v 1.12 2003/09/01 12:42:32 dek Exp $ 
 	 *
 	 */
 	public class Link {
@@ -320,6 +320,9 @@ public class About {
 }
 /*
 $Log: About.java,v $
+Revision 1.12  2003/09/01 12:42:32  dek
+lemmy now in lowercase ;-)
+
 Revision 1.11  2003/08/31 15:48:23  zet
 add core devs
 
