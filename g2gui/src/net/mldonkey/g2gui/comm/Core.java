@@ -31,13 +31,14 @@ import java.util.List;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.*;
-import net.mldonkey.g2gui.view.InterFaceUI;
+
+
 
 /**
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.22 2003/06/17 13:27:32 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.23 2003/06/18 13:31:30 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -60,7 +61,8 @@ public class Core extends Thread implements CoreCommunication {
 	/**
 	 * 
 	 */
-	private Information fileAddSources = new FileAddSource(),
+	
+	private SimpleInformation fileAddSources = new FileAddSource(),
 						clientStats = new ClientStats(),
 						consoleMessage = new ConsoleMessage();
 	/**
@@ -151,7 +153,7 @@ public class Core extends Thread implements CoreCommunication {
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private void decodeMessage( short opcode, MessageBuffer messageBuffer ) throws IOException 
+	synchronized private void  decodeMessage( short opcode, MessageBuffer messageBuffer ) throws IOException 
 		{
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
@@ -216,8 +218,10 @@ public class Core extends Thread implements CoreCommunication {
 					this.notifyListeners( fileInfoMap );
 					break;					
 
-			case Message.R_CONSOLE :				
-					this.consoleMessage.readStream( messageBuffer );
+			case Message.R_CONSOLE :	
+					this.consoleMessage.readStream( messageBuffer );	
+					notifyListeners(consoleMessage);	
+								
 					break;
 				
 			case Message.R_NETWORK_INFO :
@@ -251,7 +255,7 @@ public class Core extends Thread implements CoreCommunication {
 	 * @param anInterfaceUi
 	 * @return
 	 */
-	public boolean registerListener( InterFaceUI anInterFaceUI ) {
+	public boolean registerListener( net.mldonkey.snippets.InterFaceUI anInterFaceUI ) {
 		if ( this.registeredListeners.contains( anInterFaceUI ) ) {
 			return false;
 		}
@@ -260,16 +264,16 @@ public class Core extends Thread implements CoreCommunication {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param anInformation
 	 */
-	public void notifyListeners( InfoCollection anInfoCollection ) {
+	public void notifyListeners( Information anInformation ) {
 		Iterator itr = this.registeredListeners.iterator();
 		while ( itr.hasNext() ) {
-			InterFaceUI anInterFaceUI = ( InterFaceUI ) itr.next();
-			anInterFaceUI.notify( anInfoCollection );
+			net.mldonkey.snippets.InterFaceUI anInterFaceUI = ( net.mldonkey.snippets.InterFaceUI ) itr.next();
+			anInterFaceUI.notify( anInformation );
 		}
 	}
 
@@ -280,10 +284,27 @@ public class Core extends Thread implements CoreCommunication {
 		return fileInfoMap;
 	}
 
+	/**
+	 * @return
+	 */
+	public SimpleInformation getConsoleMessage() {
+		return consoleMessage;
+	}
+
+	/**
+	 * @param information
+	 */
+	public void setConsoleMessage(SimpleInformation information) {
+		consoleMessage = information;
+	}
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.23  2003/06/18 13:31:30  dek
+foooooooooo, who cares ;-) ??
+
 Revision 1.22  2003/06/17 13:27:32  lemmstercvs01
 added listener managment for the view
 

@@ -26,7 +26,7 @@ import java.io.IOException;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.3 2003/06/18 13:31:30 dek Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -34,7 +34,7 @@ public interface CoreCommunication {
 	 * connect()
 	 *
 	 * @author $user$
-	 * @version $Id: CoreCommunication.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+	 * @version $Id: CoreCommunication.java,v 1.3 2003/06/18 13:31:30 dek Exp $ 
 	 * Connects this object to given mldonkey-core @remote 
 	 *
 	 */	
@@ -43,11 +43,13 @@ public interface CoreCommunication {
 	 * run()
 	 *
 	 * @author $user$
-	 * @version $Id: CoreCommunication.java,v 1.2 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+	 * @version $Id: CoreCommunication.java,v 1.3 2003/06/18 13:31:30 dek Exp $ 
 	 * starts the Core-Thread and begins to receive messages 
 	 *
 	 */	
 	void run() throws IOException;
+	
+	boolean registerListener( net.mldonkey.snippets.InterFaceUI anInterFaceUI );
 	
 	
 	
