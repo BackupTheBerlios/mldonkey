@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.console;
 
 import java.text.SimpleDateFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Observable;
 
@@ -50,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  *
- * @version $Id: Console.java,v 1.15 2003/09/20 01:22:17 zet Exp $
+ * @version $Id: Console.java,v 1.16 2003/10/07 15:46:54 dek Exp $
  *
  */
 public class Console extends Observable implements ControlListener {
@@ -60,6 +61,9 @@ public class Console extends Observable implements ControlListener {
     private int clientId = 0;
     private Color highlightColor = null;
     private final int MAX_LINES = 1000;
+    private ArrayList commandHistory = new ArrayList();
+    private int numOfCommands = 0;
+    private int recentCommand = 0;
 
 	/**
 	 * @param parent The parent composite to draw in
@@ -133,8 +137,36 @@ public class Console extends Observable implements ControlListener {
                                                                    infoDisplay.getBackground() ) );
                         setChanged();
                         notifyObservers( input.getText() );
+                        commandHistory.add( numOfCommands, input.getText() );
+                        /*
+                         * Add the command to history and increase counter for
+                         * command history
+                         */
+						numOfCommands++;
+						recentCommand = numOfCommands - 1;
+                        
                         input.setText( "" );
                     }
+                    /*next two cases are for brwosing through command-history*/                     
+                   else if ( e.keyCode == SWT.ARROW_UP ) {
+					if ( numOfCommands != 0 ) {	
+						/*additional +" " is nescessary, because ARROW_UP also steps one char back*/					
+						input.setText( ( String ) commandHistory.get( recentCommand ) + " " );
+						/*set the cursor at the end of the line*/
+						input.setSelection( input.getText().length() );
+						if ( recentCommand > 0 )					                	
+							recentCommand--; 	
+					}			
+                   }
+				   else if ( e.keyCode == SWT.ARROW_DOWN ) {				   
+				   	if ( recentCommand < commandHistory.size() - 1 ) {						
+						recentCommand++;
+						input.setText( ( String ) commandHistory.get( recentCommand ) );
+						/*set the cursor at the end of the line*/
+						input.setSelection( input.getText().length() );
+				   	}
+				   }
+				   
                 }
             } );
     }
@@ -226,6 +258,9 @@ public class Console extends Observable implements ControlListener {
 
 /*
 $Log: Console.java,v $
+Revision 1.16  2003/10/07 15:46:54  dek
+added Command-History to Console
+
 Revision 1.15  2003/09/20 01:22:17  zet
 *** empty log message ***
 
@@ -251,7 +286,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.6  2003/08/18 06:00:01  zet
 fix null pointer (I'm not even sure it is real..)
