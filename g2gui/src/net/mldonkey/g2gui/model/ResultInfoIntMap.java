@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.model;
 import gnu.trove.TIntObjectIterator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,7 +37,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfoIntMap
  *
  *
- * @version $Id: ResultInfoIntMap.java,v 1.8 2003/09/18 09:16:47 lemmster Exp $ 
+ * @version $Id: ResultInfoIntMap.java,v 1.9 2003/10/22 21:10:31 zet Exp $ 
  *
  */
 public class ResultInfoIntMap extends InfoIntMap {
@@ -85,7 +86,7 @@ public class ResultInfoIntMap extends InfoIntMap {
 			( ( List ) this.infoIntMap.get( searchID ) ).add( result );
 		}
 		else {
-			List aList = new ArrayList();
+			List aList = Collections.synchronizedList( new ArrayList() );
 			aList.add( result );
 			this.put( searchID, aList );
 		}
@@ -148,6 +149,9 @@ public class ResultInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ResultInfoIntMap.java,v $
+Revision 1.9  2003/10/22 21:10:31  zet
+use a synchronized list
+
 Revision 1.8  2003/09/18 09:16:47  lemmster
 checkstyle
 
@@ -158,7 +162,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.4  2003/08/01 17:30:18  lemmstercvs01
 search works again
