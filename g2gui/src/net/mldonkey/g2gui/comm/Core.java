@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.16 2003/06/16 12:13:26 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.17 2003/06/16 15:26:21 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -52,8 +52,7 @@ public class Core extends Thread implements CoreCommunication {
 	/**
 	 * 
 	 */
-	private Information networkinfo = new NetworkInfo(),
-						fileAddSources = new FileAddSource(),
+	private Information fileAddSources = new FileAddSource(),
 						clientStats = new ClientStats(),
 						consoleMessage = new ConsoleMessage();
 	/**
@@ -65,7 +64,8 @@ public class Core extends Thread implements CoreCommunication {
 					 addSectionOptionList = new AddSomeOptionList(),
 					 addPluginOptionList = new AddSomeOptionList(),
 					 sharedFileInfoList = new SharedFileInfoList(),	
-					 optionsInfoMap = new OptionsInfoMap();
+					 optionsInfoMap = new OptionsInfoMap(),
+					 networkinfoMap = new NetworkInfoMap();
 
 	/**
 	 * 
@@ -127,7 +127,7 @@ public class Core extends Thread implements CoreCommunication {
 				
 				position = 0;					
 				messageBuffer.setBuffer( content );
-				opCode = messageBuffer.readInt16();
+				opCode = messageBuffer.readInt16();		
 				
 				/* decode the message content */			
 				this.decodeMessage( opCode, messageBuffer );
@@ -205,6 +205,7 @@ public class Core extends Thread implements CoreCommunication {
 					break;
 				
 			case Message.R_NETWORK_INFO :
+					this.networkinfoMap.readStream( messageBuffer );
 					break;
 					
 			case Message.R_SERVER_INFO :
@@ -242,6 +243,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.17  2003/06/16 15:26:21  dek
+NetworkInfoMap added
+
 Revision 1.16  2003/06/16 12:13:26  lemmstercvs01
 opcode 52 added
 
