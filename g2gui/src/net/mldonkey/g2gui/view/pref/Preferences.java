@@ -31,6 +31,7 @@ import java.util.Map;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
+import net.mldonkey.g2gui.view.helper.VersionCheck;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -39,7 +40,6 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 
@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.43 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: Preferences.java,v 1.44 2003/11/28 00:57:45 zet Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -91,17 +91,18 @@ public class Preferences extends PreferenceManager {
         }
 
         /* advanced page */
-		PreferencePage preferencePage = new G2GuiAdvanced("Advanced", FieldEditorPreferencePage.GRID);
+        PreferencePage preferencePage = new G2GuiAdvanced("Advanced", FieldEditorPreferencePage.GRID);
         preferencePage.setPreferenceStore(preferenceStore);
         g2GuiRootNode.add(new PreferenceNode("Advanced", preferencePage));
 
         /* windows registry page */
-        
-        String g2guiexe = System.getProperty("user.dir") + System.getProperty("file.separator") + "g2gui.exe";
-        
-        if ((SWT.getPlatform().equals("win32") ||
-                ((System.getProperty("os.name").length() > 7) &&
-                System.getProperty("os.name").substring(0, 7).equals("Windows"))) && new File(g2guiexe).exists()) {
+        String g2guiexe = System.getProperty("user.dir") + System.getProperty("file.separator") +
+            "g2gui.exe";
+
+        String platform = VersionCheck.getSWTPlatform();
+
+        if (("win32".equals(platform) || "win32-fox".equals(platform)) &&
+                new File(g2guiexe).exists()) {
             preferencePage = new G2GuiWinReg("Windows Registry", FieldEditorPreferencePage.NONE);
             preferencePage.setPreferenceStore(preferenceStore);
             g2GuiRootNode.add(new PreferenceNode("Windows Registry", preferencePage));
@@ -241,9 +242,8 @@ public class Preferences extends PreferenceManager {
         }
 
         /*and now add the advanced-field at the very bottom of the list*/
-        if (advanced != null) {
+        if (advanced != null)
             addToRoot((new PreferenceNode("Advanced", advanced)));
-        }
     }
 
     /**
@@ -254,11 +254,10 @@ public class Preferences extends PreferenceManager {
      * @return DOCUMENT ME!
      */
     private boolean showOption(OptionsInfo option) {
-        if (preferenceStore.getBoolean("advancedMode")) {
+        if (preferenceStore.getBoolean("advancedMode"))
             return true;
-        } else if (option.isAdvanced()) {
+        else if (option.isAdvanced())
             return false;
-        }
 
         return true;
     }
@@ -290,6 +289,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.44  2003/11/28 00:57:45  zet
+use versioncheck
+
 Revision 1.43  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
@@ -356,7 +358,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
