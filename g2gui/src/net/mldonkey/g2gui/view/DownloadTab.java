@@ -121,7 +121,7 @@ public class DownloadTab
 	public void run() {
 		if(table.getInput()==null) table.setInput(fileInfoMap);
 		if(fileInfoMap.contains(fileInfoMap.getId())) table.update(fileInfoMap.get(fileInfoMap.getId()),null);
-		table.refresh();
+		else table.refresh();
 	}
 
 	public void update(Observable arg0, Object arg1) {
