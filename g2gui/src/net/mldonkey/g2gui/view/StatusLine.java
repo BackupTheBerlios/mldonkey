@@ -39,36 +39,39 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 /**
- * Statusline, This class handles all the Information that should be visible all the time in a so called Status-line.
- * It is an own implementation of this widget, as the JFace-Statusline is way too complicated for our simple needs.
- * It has to be placed in a GridLayout, since it applies a GridData object for its appearance.
+ * Statusline, This class handles all the Information that should be visible all the time in a 
+ * so called Status-line. It is an own implementation of this widget, as the JFace-Statusline
+ * is way too complicated for our simple needs. It has to be placed in a GridLayout, since it
+ * applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.1 2003/07/17 14:58:37 lemmstercvs01 Exp $ 
+ * @version $Id: StatusLine.java,v 1.2 2003/07/18 04:34:22 lemmstercvs01 Exp $ 
  *
  */
 public class StatusLine {
-	private static ResourceBundle res = ResourceBundle.getBundle("g2gui");
+	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private CoreCommunication mldonkey;
 	private Composite statusline;
 	private List fields;
 	private int counter = 0;
 
 	/**
-	 * @param mainComposite the Composite where this status-line finds its place fpr living
+	 * Creates a new StatusLine obj
+	 * @param parent The parent obj Composite to display in
+	 * @param mldonkey The CoreCommunication to connect with
 	 */
-	public StatusLine( Composite parent,CoreCommunication mldonkey ) {
+	public StatusLine( Composite parent, CoreCommunication mldonkey ) {
 		
 		this.fields = new ArrayList();	
 		this.mldonkey = mldonkey;
 		
 		this.statusline = new Composite( parent, SWT.NONE );			
-		this.statusline.setLayout(new FillLayout());
+		this.statusline.setLayout( new FillLayout() );
 		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );	
 		statusline.setLayoutData( gridData );		
 			
-		addField( new NetworkItem( this,mldonkey ) );
-		addField( new SpeedItem( this,mldonkey ) );
+		addField( new NetworkItem( this, mldonkey ) );
+		addField( new SpeedItem( this, mldonkey ) );
 		addField( new SimpleStatusLineItem( res.getString( "SL_other" ), SWT.NONE ) );
 		addField( new SimpleStatusLineItem( res.getString( "SL_other2" ), SWT.NONE ) );
 	}
@@ -85,20 +88,19 @@ public class StatusLine {
 	}
 	
 	/**
-	 * 
-	 * @param index
-	 * @param content
+	 * Updates a String at a specific position
+	 * @param index Index where to update
+	 * @param content The new String to display
 	 */
-	public void update( int index, String content ){		
+	public void update( int index, String content ) {		
 		if ( !statusline.isDisposed() )
 			( ( Label ) fields.get( index ) ).setText( content );					
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * @return All our StatusLineItems as an Array
 	 */
-	public StatusLineItem[] getItems(){		
+	public StatusLineItem[] getItems() {		
 		return ( StatusLineItem[] ) fields.toArray();
 	}
 
@@ -122,6 +124,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.2  2003/07/18 04:34:22  lemmstercvs01
+checkstyle applied
+
 Revision 1.1  2003/07/17 14:58:37  lemmstercvs01
 refactored
 

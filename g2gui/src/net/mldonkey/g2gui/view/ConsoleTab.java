@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.16 2003/07/17 14:58:44 lemmstercvs01 Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.17 2003/07/18 04:34:22 lemmstercvs01 Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -62,7 +62,7 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 		this.core = gui.getCore();		
 		this.toolItem.setText( "Console" );		
 		createContents( this.content );
-		toolItem.setImage(inActiveIm);
+		toolItem.setImage( inActiveIm );
 	} 
 	
 	/* ( non-Javadoc )
@@ -116,7 +116,7 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 	 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
 	 */
 	public void handleEvent( Event event ) {
-		super.handleEvent(event);		
+		super.handleEvent( event );		
 		infoDisplay.append( core.getConsoleMessage().getConsoleMessage() );
 		core.getConsoleMessage().reset();
 		infoDisplay.setFont( loadFont() );
@@ -163,6 +163,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.17  2003/07/18 04:34:22  lemmstercvs01
+checkstyle applied
+
 Revision 1.16  2003/07/17 14:58:44  lemmstercvs01
 refactored
 

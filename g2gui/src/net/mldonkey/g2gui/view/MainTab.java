@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.3 2003/07/17 15:10:35 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.4 2003/07/18 04:34:22 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -90,7 +90,7 @@ public class MainTab implements Listener {
 				
 				/* set all tabs to inactive */
 				Iterator itr = registeredTabs.iterator();
-				while( itr.hasNext() ) {
+				while ( itr.hasNext() ) {
 					GuiTab aTab = ( GuiTab ) itr.next();
 					aTab.dispose();
 				}
@@ -98,7 +98,7 @@ public class MainTab implements Listener {
 				/* kill the core communication */
 				( ( Core )mldonkey ).disconnect();				
 			}
-		});
+		} );
 		while ( !shell.isDisposed () ) {
 			if ( !display.readAndDispatch () ) display.sleep ();
 		} 
@@ -142,7 +142,7 @@ public class MainTab implements Listener {
 				Preferences myprefs = new Preferences( new PreferenceStore( "g2gui.pref" ) );					
 				myprefs.open( prefshell, mldonkey );
 			}
-		});
+		} );
 		
 		pageContainer = new Composite( mainComposite, SWT.NONE );			
 		pageContainer.setLayout( new StackLayout() );
@@ -163,7 +163,7 @@ public class MainTab implements Listener {
 	 * Create the MenuBar
 	 * @param shell The shell to create the MenuBar in
 	 */
-	private void createMenuBar (final Shell shell) {
+	private void createMenuBar( final Shell shell ) {
 		mainMenuBar = new Menu( shell, SWT.BAR );
 		shell.setMenuBar( mainMenuBar );
 		
@@ -191,7 +191,8 @@ public class MainTab implements Listener {
 		item.addListener( SWT.Selection, new Listener() {
 			public void handleEvent( Event event ) {	
 				Shell prefshell = new Shell();
-				Preferences myprefs = new Preferences( new PreferenceStore( "g2gui.pref" ) );					
+				Preferences myprefs =
+					new Preferences( new PreferenceStore( "g2gui.pref" ) );					
 				myprefs.open( prefshell, mldonkey );
 			}
 		} );
@@ -227,9 +228,9 @@ public class MainTab implements Listener {
 	} 
 	
 	/**
-	 * 
-	 * @param parent
-	 * @return
+	 * Creates a new Coolbar obj
+	 * @param parent The parent Composite to display in
+	 * @return a new CoolBar obj
 	 */
 	private CoolBar createCoolBar( final Composite parent ) {
 		GridData gridData;
@@ -245,7 +246,7 @@ public class MainTab implements Listener {
 			public void controlResized( ControlEvent e ) { 
 				parent.getParent().layout(); 
 			}
-		});
+		} );
 			
 		coolBar.setLayoutData( gridData );
 		Menu toolmenu = createToolBarRMMenu( coolBar );
@@ -312,7 +313,7 @@ public class MainTab implements Listener {
 	 * for the content and their button.
 	 */
 	private void addTabs() {
-		new TransferTab(this);
+		new TransferTab( this );
 		new ConsoleTab( this );
 		/*setting TransferTab active if registered*/
 		Iterator tabIterator = registeredTabs.iterator();
@@ -325,8 +326,8 @@ public class MainTab implements Listener {
 	} 
 
 	/**
-	 * 
-	 * @param newTab
+	 * Registers a new Tab to this MainWindow
+	 * @param newTab The GuiTab to register to this MainWindow
 	 */
 	public void registerTab( GuiTab newTab ) {
 		registeredTabs.add( newTab );		
@@ -340,16 +341,15 @@ public class MainTab implements Listener {
 	} 
 
 	/**
-	 * 
-	 * @return
+	 * @return The PageContainer Composite
 	 */
 	public Composite getPageContainer() {		
 		return pageContainer;
 	} 
 
 	/**
-	 * 
-	 * @param activatedTab
+	 * Sets the given tab to the current active page
+	 * @param activatedTab The tab to set active
 	 */
 	public void setActive( GuiTab activatedTab ) {		
 		if ( activeTab != null ) {
@@ -370,7 +370,7 @@ public class MainTab implements Listener {
 	} 
 	
 	/**
-	 * @return
+	 * @return The MainToolBar
 	 */
 	public ToolBar getMainTools() {
 		return mainTools;
@@ -378,14 +378,15 @@ public class MainTab implements Listener {
 
 	/**
 	 * The Gui's Title
-	 * @param title the text to appear in the title-bar
+	 * @param shell The shell to set the title on
+	 * @param title The text to appear in the title-bar
 	 */
-	public void setTitleBar(Shell shell, String title ) {
+	public void setTitleBar( Shell shell, String title ) {
 		shell.setText( title );
 	} 
 	
 	/**
-	 *
+	 * Reads the preference store file from disk
 	 */
 	public void createInternalPrefStore() {
 		try {			
@@ -395,7 +396,7 @@ public class MainTab implements Listener {
 	}
 
 	/**
-	 *
+	 * Reads the preference store file to disk
 	 */
 	public void saveInternalPrefStore() {
 		try {
@@ -407,23 +408,23 @@ public class MainTab implements Listener {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * The preference store file
+	 * @return A PreferenceStore file with our Information
 	 */
 	public PreferenceStore getStore() {
 		return internalPrefStore;
 	}
 	
 	/**
-	 * 
-	 * @param shell
+	 * Sets the size to the old value of the given shell obj
+	 * @param shell The shell to set the size from
 	 */
 	public void setSizeLocation( Shell shell ) {
 		int windowW = internalPrefStore.getInt( "windowWidth" );
 		int windowH = internalPrefStore.getInt( "windowHeight" );
-		int windowPX = internalPrefStore.getInt ( "windowX" );
-		int windowPY = internalPrefStore.getInt ( "windowY" );
-		boolean windowMaximized = internalPrefStore.getBoolean ("windowMaximized");
+		int windowPX = internalPrefStore.getInt( "windowX" );
+		int windowPY = internalPrefStore.getInt( "windowY" );
+		boolean windowMaximized = internalPrefStore.getBoolean( "windowMaximized" );
 
 		if (internalPrefStore.contains( "windowX" ) ) {
 			if( windowMaximized )
@@ -434,25 +435,28 @@ public class MainTab implements Listener {
 		}
 	
 	/**
-	 * 
-	 * @param shell
+	 * Saves the size of the shell to a file
+	 * @param shell The shell to save the size from
 	 */
 	public void saveSizeLocation( Shell shell ) {
 		Rectangle shellBounds = shell.getBounds();
-		if( shell.getMaximized() )
-			internalPrefStore.setValue( "windowMaximized", shell.getMaximized());
+		if ( shell.getMaximized() )
+			internalPrefStore.setValue( "windowMaximized", shell.getMaximized() );
 		else {
 			internalPrefStore.setValue( "windowWidth", shellBounds.width );	
 			internalPrefStore.setValue( "windowHeight", shellBounds.height );
 			internalPrefStore.setValue( "windowX", shellBounds.x );
-			internalPrefStore.setValue( "windowY", shellBounds.y);
-			internalPrefStore.setValue( "windowMaximized", shell.getMaximized());
+			internalPrefStore.setValue( "windowY", shellBounds.y );
+			internalPrefStore.setValue( "windowMaximized", shell.getMaximized() );
 		}
 	}
 } 
 
 /*
 $Log: MainTab.java,v $
+Revision 1.4  2003/07/18 04:34:22  lemmstercvs01
+checkstyle applied
+
 Revision 1.3  2003/07/17 15:10:35  lemmstercvs01
 foobar
 

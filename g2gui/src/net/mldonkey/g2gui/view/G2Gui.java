@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.view;
 
-
 import java.io.IOException;
 import java.net.Socket;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -36,7 +35,7 @@ import net.mldonkey.g2gui.view.pref.Preferences;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.2 2003/07/17 15:10:35 lemmstercvs01 Exp $ 
+ * @version $Id: G2Gui.java,v 1.3 2003/07/18 04:34:22 lemmstercvs01 Exp $ 
  *
  */
 public class G2Gui {
@@ -45,7 +44,7 @@ public class G2Gui {
 	
 	/**
 	 * Starts a new Core and launch the Gui
-	 * @param args
+	 * @param args Nothing to put inside
 	 */
 	public static void main( String[] args ) {
 		Shell shell = new Shell( new Display() );
@@ -71,7 +70,7 @@ public class G2Gui {
 	}
 
 	/**
-	 * @return a Core
+	 * @return The parent CoreCommuncation obj
 	 */
 	public static Core getMldonkey() {
 		return mldonkey;
@@ -80,6 +79,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.3  2003/07/18 04:34:22  lemmstercvs01
+checkstyle applied
+
 Revision 1.2  2003/07/17 15:10:35  lemmstercvs01
 foobar
 

@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.23 2003/07/11 08:39:46 dek Exp $ 
+ * @version $Id: FileInfo.java,v 1.24 2003/07/18 04:34:22 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo extends Parent {
@@ -324,11 +324,17 @@ public class FileInfo extends Parent {
 	/**
 	 * Put the client into this list of clientinfos
 	 * @param clientInfo The clientInfo to put into this map
+	 * @return true if adding is successful
 	 */
 	public boolean addClientInfo( ClientInfo clientInfo ) {
 		return this.clientInfos.add( clientInfo );
 	}
 	
+	/**
+	 * Removes a clientinfo from this list of clientinfos
+	 * @param clientInfo The clientinfo obj to remove
+	 * @return true if removing is successful
+	 */
 	public boolean removeClientInfo( ClientInfo clientInfo ) {
 		return this.clientInfos.remove( clientInfo );
 	}
@@ -427,6 +433,9 @@ public class FileInfo extends Parent {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.24  2003/07/18 04:34:22  lemmstercvs01
+checkstyle applied
+
 Revision 1.23  2003/07/11 08:39:46  dek
 String should be compared with .equals, not with ==
 (in this.equals())
