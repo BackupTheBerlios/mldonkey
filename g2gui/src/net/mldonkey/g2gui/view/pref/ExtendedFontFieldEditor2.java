@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.*;
  * ExtendedFontFieldEditor
  *
  *
- * @version $Id: ExtendedFontFieldEditor2.java,v 1.7 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ExtendedFontFieldEditor2.java,v 1.8 2003/09/08 18:32:39 zet Exp $ 
  *
  */
 public class ExtendedFontFieldEditor2 extends FontFieldEditor {
@@ -64,10 +64,10 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 			fontButton.addSelectionListener(
 					new SelectionListener() {
 						public void widgetSelected( SelectionEvent e ) {
-							fontDialog.setFontData(chosenFont[0]);
+							fontDialog.setFontList(chosenFont);
 							fontDialog.open();
-							if (fontDialog.getFontData() != null ) {
-								font = new Font( null, fontDialog.getFontData() );	
+							if (fontDialog.getFontList()[0] != null ) {
+								font = new Font( null, fontDialog.getFontList() );	
 								chosenFont = font.getFontData();						
 								fontSample.setFont( font );
 								fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
@@ -176,6 +176,9 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 
 /*
 $Log: ExtendedFontFieldEditor2.java,v $
+Revision 1.8  2003/09/08 18:32:39  zet
+remove fontData
+
 Revision 1.7  2003/08/23 15:21:37  zet
 remove @author
 
