@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.78 2003/08/04 14:38:13 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.79 2003/08/08 13:09:34 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -170,7 +170,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 				opCode = messageBuffer.readInt16();		
 				
 				/* decode the message content */			
-				this.decodeMessage( opCode, messageBuffer );
+				this.decodeMessage( opCode, messageLength, messageBuffer );
 			}
 		}	
 		catch ( SocketException e ) {
@@ -190,7 +190,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private synchronized void decodeMessage( short opcode, MessageBuffer messageBuffer ) {
+	private synchronized void decodeMessage( short opcode, int messageLength, MessageBuffer messageBuffer ) {
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
 					coreProtocol = messageBuffer.readInt32();
@@ -331,7 +331,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;
 
 			default :				
-					System.out.println( "unknown OP-Code : " + opcode + "!" );
+					System.out.println( "unknown opcode: " + opcode + " length: " + messageLength);
 					break;				
 		}
 	}
@@ -442,6 +442,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.79  2003/08/08 13:09:34  zet
+cosmetic
+
 Revision 1.78  2003/08/04 14:38:13  lemmstercvs01
 splashscreen and error handling added
 
