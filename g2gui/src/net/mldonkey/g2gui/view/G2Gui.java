@@ -35,6 +35,7 @@ import net.mldonkey.g2gui.comm.DisconnectListener;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.ObjectPool;
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.helper.SocketPool;
 import net.mldonkey.g2gui.view.console.ExecConsole;
 import net.mldonkey.g2gui.view.helper.Splash;
@@ -53,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.51 2003/11/30 18:49:08 lemmster Exp $
+ * @version $Id: G2Gui.java,v 1.52 2003/11/30 20:02:06 lemmster Exp $
  *
  */
 public class G2Gui {
@@ -85,34 +86,38 @@ public class G2Gui {
      * Starts a new Core and launch the Gui
      * @param args Nothing to put inside
      */
-    public static void main(String[] args) {
+    public static void main(String[] argv) {
         display = new Display();
         List links = new ArrayList();
         
 		// parse args
 		int optind;
-		for (optind = 0; optind < args.length; optind++) {
-			if (args[optind].equals("-c")) {
-				PreferenceLoader.setPrefFile(args[++optind]); 
-			} else if (args[optind].equals("-l")) {
-				links.add( args[++optind] );
-			} else if (args[optind].equals("-d")) {
-				debug = true;
-			} else if (args[optind].equals("-h")) {
-				hostname = args[++optind];
-			} else if (args[optind].equals("-p")) {
-				port = new Integer( args[++optind] ).intValue();
-			} else if (args[optind].equals("-U")) {
-				username = args[++optind];
-			} else if (args[optind].equals("-P")) {
-				password = args[++optind];
-			} else if (args[optind].equals("--")) {
-				optind++;
-				break;
-			} else if (args[optind].startsWith("-h") || args[optind].startsWith("--h")) {
+		for (optind = 0; optind < argv.length; optind++) {
+			if (argv[optind].startsWith("-h") || argv[optind].startsWith("--h")) {
 				System.out.println(
-					"Usage: g2gui [[-c path/to/pref] | [-l link] [-h host] [-p port] [-U user] [-P passwd]]");
+				"Usage: g2gui [[-c path/to/pref] | [-l link] [-H host:port] [-U user] [-P passwd]]");
 				System.exit(1);
+			} else if (argv[optind].equals("-d")) {
+				debug = true;
+			} else if ( argv.length > optind + 1 )	{
+				if (argv[optind].equals("-c")) {
+					PreferenceLoader.setPrefFile((String) argv[optind]); 
+				} else if (argv[optind].equals("-l")) {
+					links.add( argv[++optind] );
+				} else if (argv[optind].equals("-H")) {
+					String[] strings = RegExp.split(argv[++optind], ':');
+					if ( strings.length == 2 ) {
+						hostname = strings[0];
+						port = port = new Integer( strings[1] ).intValue();
+					}
+				} else if (argv[optind].equals("-U")) {
+					username = argv[++optind];
+				} else if (argv[optind].equals("-P")) {
+					password = argv[++optind];
+				} else if (argv[optind].equals("--")) {
+					optind++;
+					break;
+				}
 			} else {
 				break;
 			}
@@ -277,7 +282,9 @@ public class G2Gui {
         	errorHandling(G2GuiResources.getString("G2_INVALID_ADDRESS"),G2GuiResources.getString("G2_ILLEGAL_ADDRESS"), mode);			
             return null;
         } catch (IOException e) {
-			errorHandling(G2GuiResources.getString("G2_IOEXCEPTION"),G2GuiResources.getString("G2_CORE_NOT_RUNNING"), mode);
+			errorHandling(G2GuiResources.getString("G2_IOEXCEPTION"),
+        			G2GuiResources.getString("G2_CORE_NOT_RUNNING") + hostname + ":" + port + 
+        			G2GuiResources.getString("G2_CORE_NOT_RUNNING2"), mode);
 			return null;
         }  
         return aSocket;  
@@ -458,6 +465,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.52  2003/11/30 20:02:06  lemmster
+check boundaries
+
 Revision 1.51  2003/11/30 18:49:08  lemmster
 better link handling, handle more than one link simultaneously
 
