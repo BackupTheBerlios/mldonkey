@@ -22,8 +22,8 @@
  */
 package net.mldonkey.g2gui.model;
 
-import gnu.trove.THash;
-import gnu.trove.THashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.20 2003/07/06 12:31:45 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.21 2003/07/06 12:47:22 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo extends Parent {
@@ -120,7 +120,7 @@ public class FileInfo extends Parent {
 	/**
 	 * Which clients this file have
 	 */
-	private THash clientInfos = new THashMap();
+	private List clientInfos = new ArrayList();
 
 	/**
 	 * @return time when download started
@@ -240,7 +240,7 @@ public class FileInfo extends Parent {
 	/**
 	 * @return The clients serving this file
 	 */
-	public THash getClientInfos() {
+	public List getClientInfos() {
 		return clientInfos;
 	}
 
@@ -322,12 +322,11 @@ public class FileInfo extends Parent {
 	}
 	
 	/**
-	 * Put the client/availability of a client into the map of clientinfos
+	 * Put the client into this list of clientinfos
 	 * @param clientInfo The clientInfo to put into this map
-	 * @param avail The availability of this file of the client
 	 */
-	public void putClientInfo( ClientInfo clientInfo, String avail ) {
-		( ( THashMap ) this.clientInfos ).put( clientInfo, avail );
+	public boolean addClientInfo( ClientInfo clientInfo ) {
+		return this.clientInfos.add( clientInfo );
 	}
 	
 	/**
@@ -424,6 +423,9 @@ public class FileInfo extends Parent {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.21  2003/07/06 12:47:22  lemmstercvs01
+bugfix for fileUpdateAvailability
+
 Revision 1.20  2003/07/06 12:31:45  lemmstercvs01
 fileUpdateAvailability added
 

@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.trove.THash;
+import gnu.trove.THashMap;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.*;
@@ -30,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.7 2003/07/06 09:33:50 lemmstercvs01 Exp $ 
+ * @version $Id: ClientInfo.java,v 1.8 2003/07/06 12:47:22 lemmstercvs01 Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -70,6 +72,10 @@ public class ClientInfo extends Parent {
 	 * Client Chat Port (mlchat)
 	 */
 	private int clientChatPort;
+	/**
+	 * Availability of a file
+	 */
+	private THash avail = new THashMap();
 
 	/**
 	 * @return The client chat port
@@ -177,10 +183,22 @@ public class ClientInfo extends Parent {
 	public void update( MessageBuffer messageBuffer ) {
 		this.getState().update( messageBuffer );
 	}
+	
+	/**
+	 * Adds the availability of a file into this list of availability
+	 * @param fileInfo The file 
+	 * @param avail The availability of this file
+	 */
+	public void putAvail( FileInfo fileInfo, String avail ) {
+		( ( THashMap) this.avail ).put( fileInfo, avail );
+	}
 }
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.8  2003/07/06 12:47:22  lemmstercvs01
+bugfix for fileUpdateAvailability
+
 Revision 1.7  2003/07/06 09:33:50  lemmstercvs01
 int networkid -> networkinfo networkid
 

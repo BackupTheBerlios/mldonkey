@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.57 2003/07/06 12:31:45 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.58 2003/07/06 12:47:22 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -202,15 +202,15 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;
 				
 			case Message.R_FILE_UPDATE_AVAILABILITY :
-					( ( FileInfoIntMap ) this.fileInfoMap ).get( messageBuffer.readInt32() ).putClientInfo( 
-						( ( ClientInfoIntMap ) this.clientInfoList ).get( messageBuffer.readInt32() ), // The Clientinfo
-						 messageBuffer.readString() ); // The availability
+					FileInfo file = ( ( FileInfoIntMap ) this.fileInfoMap ).get( messageBuffer.readInt32() );
+					( ( ClientInfoIntMap ) this.clientInfoList ).get( messageBuffer.readInt32() )
+						.putAvail( file, messageBuffer.readString() );
 					break;
 
 			case Message.R_FILE_ADD_SOURCE :
 					( ( FileInfoIntMap ) this.fileInfoMap ).get( messageBuffer.readInt32() )
-						.putClientInfo( ( ( ClientInfoIntMap ) this.clientInfoList )
-							.get( messageBuffer.readInt32() ), null );
+						.addClientInfo( ( ( ClientInfoIntMap ) this.clientInfoList )
+							.get( messageBuffer.readInt32() ) );
 					break;
 					
 			case Message.R_SERVER_STATE : 
@@ -328,6 +328,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.58  2003/07/06 12:47:22  lemmstercvs01
+bugfix for fileUpdateAvailability
+
 Revision 1.57  2003/07/06 12:31:45  lemmstercvs01
 fileUpdateAvailability added
 
