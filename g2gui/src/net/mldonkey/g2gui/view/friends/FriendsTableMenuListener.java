@@ -38,13 +38,13 @@ import org.eclipse.jface.viewers.TableViewer;
 /**
  * TableMenuListener
  *
- * @author $Author: zet $
- * @version $Id: TableMenuListener.java,v 1.2 2003/08/18 01:42:24 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: FriendsTableMenuListener.java,v 1.1 2003/08/23 09:47:46 lemmster Exp $ 
  *
  */
-public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
+public class FriendsTableMenuListener implements ISelectionChangedListener, IMenuListener {
 
-	private TableContentProvider tableContentProvider;
+	private FriendsTableContentProvider tableContentProvider;
 	private TableViewer tableViewer;
 	private CoreCommunication core;
 	private ClientInfo selectedClientInfo;
@@ -55,12 +55,12 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	 * @param The parent TableViewer
 	 * @param The CoreCommunication supporting this with data
 	 */
-	public TableMenuListener( TableViewer tableViewer, CoreCommunication core, MessagesTab messagesTab ) {
+	public FriendsTableMenuListener( TableViewer tableViewer, CoreCommunication core, MessagesTab messagesTab ) {
 		super();
 		this.tableViewer = tableViewer;
 		this.core = core;
 		this.messagesTab = messagesTab;
-		this.tableContentProvider = ( TableContentProvider ) this.tableViewer.getContentProvider();
+		this.tableContentProvider = ( FriendsTableContentProvider ) this.tableViewer.getContentProvider();
 	}
 
 	/* (non-Javadoc)
@@ -123,7 +123,10 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 }
 
 /*
-$Log: TableMenuListener.java,v $
+$Log: FriendsTableMenuListener.java,v $
+Revision 1.1  2003/08/23 09:47:46  lemmster
+just rename
+
 Revision 1.2  2003/08/18 01:42:24  zet
 centralize resource bundle
 

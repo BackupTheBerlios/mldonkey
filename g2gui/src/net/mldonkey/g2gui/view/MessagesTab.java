@@ -34,10 +34,10 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.ClientInfoIntMap;
 import net.mldonkey.g2gui.model.ClientMessage;
 import net.mldonkey.g2gui.view.console.Console;
-import net.mldonkey.g2gui.view.friends.TableContentProvider;
-import net.mldonkey.g2gui.view.friends.TableLabelProvider;
-import net.mldonkey.g2gui.view.friends.TableMenuListener;
-import net.mldonkey.g2gui.view.friends.TableSorter;
+import net.mldonkey.g2gui.view.friends.FriendsTableContentProvider;
+import net.mldonkey.g2gui.view.friends.FriendsTableLabelProvider;
+import net.mldonkey.g2gui.view.friends.FriendsTableMenuListener;
+import net.mldonkey.g2gui.view.friends.FriendsTableSorter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  * @author $Author: lemmster $
- * @version $Id: MessagesTab.java,v 1.8 2003/08/22 21:06:48 lemmster Exp $
+ * @version $Id: MessagesTab.java,v 1.9 2003/08/23 09:47:52 lemmster Exp $
  */
 public class MessagesTab extends GuiTab {
 
@@ -126,16 +126,16 @@ public class MessagesTab extends GuiTab {
 	public void createFriendsTable() {
 		tableViewer = new CustomTableViewer(friendsComposite, SWT.NONE);
 
-		tableViewer.setContentProvider(new TableContentProvider());
-		tableViewer.setLabelProvider(new TableLabelProvider());
+		tableViewer.setContentProvider(new FriendsTableContentProvider());
+		tableViewer.setLabelProvider(new FriendsTableLabelProvider());
 		
-		TableMenuListener tableMenuListener = new TableMenuListener( tableViewer, core, this );
+		FriendsTableMenuListener tableMenuListener = new FriendsTableMenuListener( tableViewer, core, this );
 		tableViewer.addSelectionChangedListener( tableMenuListener );
 		MenuManager popupMenu = new MenuManager( "" );
 		popupMenu.setRemoveAllWhenShown( true );
 		popupMenu.addMenuListener( tableMenuListener );			
 		tableViewer.getTable().setMenu( popupMenu.createContextMenu( tableViewer.getTable() ) );
-		tableViewer.setSorter(new TableSorter());
+		tableViewer.setSorter(new FriendsTableSorter());
 				
 		tableViewer.setInput(core.getClientInfoIntMap().getFriendsList());
 		setRightLabel();
@@ -428,8 +428,11 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.9  2003/08/23 09:47:52  lemmster
+just rename
+
 Revision 1.8  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: lemmster $
 
 Revision 1.7  2003/08/20 22:18:56  zet
 Viewer updates

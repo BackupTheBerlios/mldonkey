@@ -20,9 +20,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.server;
+package net.mldonkey.g2gui.view.friends;
 
-import net.mldonkey.g2gui.model.ServerInfoIntMap;
+import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -30,17 +30,15 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * TableContentProvider
  *
- * @author $Author: lemmstercvs01 $
- * @version $Id: TableContentProvider.java,v 1.2 2003/08/11 19:25:04 lemmstercvs01 Exp $ 
- *
+ * @author $Author: lemmster $
+ * @version $Id: FriendsTableContentProvider.java,v 1.1 2003/08/23 09:47:46 lemmster Exp $
  */
-public class TableContentProvider implements IStructuredContentProvider {
+public class FriendsTableContentProvider implements IStructuredContentProvider {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
 	public Object[] getElements( Object inputElement ) {
-		ServerInfoIntMap servers = ( ServerInfoIntMap ) inputElement;
-		return servers.getServers();
+		return ((List) inputElement).toArray();
 	}
 
 	/* (non-Javadoc)
@@ -56,11 +54,16 @@ public class TableContentProvider implements IStructuredContentProvider {
 }
 
 /*
-$Log: TableContentProvider.java,v $
-Revision 1.2  2003/08/11 19:25:04  lemmstercvs01
-bugfix at CleanTable
+$Log: FriendsTableContentProvider.java,v $
+Revision 1.1  2003/08/23 09:47:46  lemmster
+just rename
 
-Revision 1.1  2003/08/05 13:50:10  lemmstercvs01
-initial commit
+Revision 1.2  2003/08/22 21:10:57  lemmster
+replace $user$ with $Author: lemmster $
+
+Revision 1.1  2003/08/12 04:10:29  zet
+try to remove dup clientInfos, add friends/basic messaging
+
+
 
 */

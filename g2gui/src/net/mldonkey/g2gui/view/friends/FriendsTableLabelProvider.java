@@ -35,9 +35,9 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  * @author $Author: lemmster $
- * @version $Id: TableLabelProvider.java,v 1.4 2003/08/22 21:10:57 lemmster Exp $
+ * @version $Id: FriendsTableLabelProvider.java,v 1.1 2003/08/23 09:47:46 lemmster Exp $
  */
-public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
+public class FriendsTableLabelProvider implements ITableLabelProvider, IColorProvider {
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
@@ -109,9 +109,12 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 }
 
 /*
-$Log: TableLabelProvider.java,v $
+$Log: FriendsTableLabelProvider.java,v $
+Revision 1.1  2003/08/23 09:47:46  lemmster
+just rename
+
 Revision 1.4  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: lemmster $
 
 Revision 1.3  2003/08/17 23:13:42  zet
 centralize resources, move images

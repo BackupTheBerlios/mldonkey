@@ -30,11 +30,11 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * TableSorter
  *
- * @author $Author: zet $
- * @version $Id: TableSorter.java,v 1.1 2003/08/12 04:10:29 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: FriendsTableSorter.java,v 1.1 2003/08/23 09:47:46 lemmster Exp $ 
  *
  */
-public class TableSorter extends ViewerSorter {
+public class FriendsTableSorter extends ViewerSorter {
 	
 	private boolean lastSort = true;
 	private int columnIndex = 0;
@@ -42,7 +42,7 @@ public class TableSorter extends ViewerSorter {
 	/**
 	 * Creates a new viewer sorter
 	 */
-	public TableSorter() {
+	public FriendsTableSorter() {
 		super();
 	}
 
@@ -71,7 +71,10 @@ public class TableSorter extends ViewerSorter {
 }
 
 /*
-$Log: TableSorter.java,v $
+$Log: FriendsTableSorter.java,v $
+Revision 1.1  2003/08/23 09:47:46  lemmster
+just rename
+
 Revision 1.1  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 
