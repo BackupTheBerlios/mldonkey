@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.TableItem;
  * DownloadTable
  *
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.17 2003/08/23 22:47:03 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.18 2003/08/24 02:34:16 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -190,21 +190,8 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		
 			tableColumn.addListener( SWT.Selection, new Listener() {
 				public void handleEvent( Event e ) {
-					// duplicate to reset the sorter 
-					DownloadTableTreeSorter dTTS;
-					if (advancedMode)
-						dTTS = new DownloadTableTreeSorterAdvanced();
-					else 
-						dTTS = new DownloadTableTreeSorterBasic();
-					dTTS.setLastColumnIndex( downloadTableTreeSorter.getLastColumnIndex() );
-					dTTS.setLastSort( downloadTableTreeSorter.getLastSort() );
-					dTTS.setMaintainSortOrder( downloadTableTreeSorter.getMaintainSortOrder() );
-					downloadTableTreeSorter = dTTS;
-					// set the column to sort
 					downloadTableTreeSorter.setColumnIndex( columnIndex );
-					// close all child editors and sort
-				//	tableTreeContentProvider.closeAllEditors();
-					tableTreeViewer.setSorter( downloadTableTreeSorter );
+					tableTreeViewer.refresh();
 					tableTreeContentProvider.updateAllEditors();
 				}	
 			} ); 
@@ -354,6 +341,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.18  2003/08/24 02:34:16  zet
+update sorter properly
+
 Revision 1.17  2003/08/23 22:47:03  zet
 remove println
 

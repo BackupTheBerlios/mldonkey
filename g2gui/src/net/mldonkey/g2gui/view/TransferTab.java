@@ -68,7 +68,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Main
  *
  *
- * @version $Id: TransferTab.java,v 1.35 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.36 2003/08/24 02:34:16 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -182,12 +182,8 @@ public class TransferTab extends GuiTab  {
 			} );
 			tableColumn.addListener( SWT.Selection, new Listener() {
 				public void handleEvent( Event e ) {
-					TableSorter oldTS = (TableSorter) clientTableViewer.getSorter();
-					TableSorter newTS = new TableSorter();
-					newTS.setLastSort(oldTS.getLastSort());
-					newTS.setLastColumnIndex(oldTS.getLastColumnIndex());
-					newTS.setColumnIndex( columnIndex );
-					clientTableViewer.setSorter ( newTS );
+					((TableSorter) clientTableViewer.getSorter()).setColumnIndex( columnIndex );
+					clientTableViewer.refresh();
 				}	
 			} ); 
 		}
@@ -300,6 +296,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.36  2003/08/24 02:34:16  zet
+update sorter properly
+
 Revision 1.35  2003/08/23 15:21:37  zet
 remove @author
 

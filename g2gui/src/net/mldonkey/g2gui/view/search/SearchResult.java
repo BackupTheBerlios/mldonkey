@@ -77,7 +77,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.27 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: SearchResult.java,v 1.28 2003/08/24 02:34:16 zet Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -257,14 +257,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			final int columnIndex = i;
 			tableColumn.addListener( SWT.Selection, new Listener() {
 				public void handleEvent( Event e ) {
-					// duplicate to reset the sorter 
-					ResultTableSorter rTS = new ResultTableSorter();
-					rTS.setLastColumnIndex( resultTableSorter.getLastColumnIndex() );
-					rTS.setLastSort( resultTableSorter.getLastSort() );
-					resultTableSorter = rTS;
-					// set the column to sort
-					resultTableSorter.setColumnIndex( columnIndex );
-					table.setSorter( resultTableSorter );
+					resultTableSorter.setColumnIndex( columnIndex ); 
+					table.refresh();
 				}	
 			} ); 
 		}
@@ -554,6 +548,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.28  2003/08/24 02:34:16  zet
+update sorter properly
+
 Revision 1.27  2003/08/23 15:21:37  zet
 remove @author
 
