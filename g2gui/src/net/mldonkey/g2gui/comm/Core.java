@@ -29,7 +29,6 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
@@ -39,7 +38,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.82 2003/08/16 13:51:09 dek Exp $ 
+ * @version $Id: Core.java,v 1.83 2003/08/16 20:15:21 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -477,6 +476,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.83  2003/08/16 20:15:21  dek
+removed unused import
+
 Revision 1.82  2003/08/16 13:51:09  dek
 ed2k-link handling-hack continued
 
