@@ -34,6 +34,7 @@ import net.mldonkey.g2gui.view.statusline.*;
 
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
@@ -45,10 +46,11 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.26 2003/07/06 18:57:21 dek Exp $ 
+ * @version $Id: Gui.java,v 1.27 2003/07/06 19:18:08 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
+	private StackLayout pageContainerLayout;
 	private ToolBar miscTools;
 	private CoolItem miscCoolItem;
 	private CoolItem mainCoolItem;
@@ -66,45 +68,6 @@ public class Gui implements IG2gui, Listener {
 	private Shell mainShell;
 	private PreferenceStore internalPrefStore = new PreferenceStore("g2gui-internal.pref");
 	
-	
-		/**
-		 * Layout for the page container.
-		 * This class is from the JFace-Package, i hope they don't
-		 * mind
-		 */
-		private class StackLayout extends Layout {
-			public void layout( Composite composite, boolean force ) {
-				Rectangle rect = composite.getClientArea();
-				Control[] children = composite.getChildren();
-				for ( int i = 0; i < children.length; i++ ) {
-					children[ i ].setSize( rect.width, rect.height );
-				} 
-			} 
-			public Point computeSize( Composite composite, int wHint, int hHint, boolean force ) {
-				if ( wHint != SWT.DEFAULT && hHint != SWT.DEFAULT )
-					return new Point( wHint, hHint );
-				
-				int x = 100;
-				int y = 200;
-
-				Control[] children = composite.getChildren();
-				for ( int i = 0; i < children.length; i++ ) {
-					Point size =
-						children[ i ].computeSize( SWT.DEFAULT, SWT.DEFAULT, force );
-					x = Math.max( x, size.x );
-					y = Math.max( y, size.y );
-				} 
-				if ( wHint != SWT.DEFAULT )
-					x = wHint;
-				if ( hHint != SWT.DEFAULT )
-					y = hHint;
-				return new Point( x, y );
-			} 
-		} 
-
-
-
-
 	/**
 	 * @param core the most important thing of the gui: were do i get my data from
 	 * @param shell were do we live?
@@ -171,7 +134,9 @@ public class Gui implements IG2gui, Listener {
 			} } );
 		
 		pageContainer = new Composite( mainComposite, SWT.NONE );
-		pageContainer.setLayout( new StackLayout() );						
+		this.pageContainerLayout = new StackLayout();
+		pageContainer.setLayout( pageContainerLayout );
+							
 		gridData = new GridData( GridData.FILL_BOTH );
 			gridData.grabExcessHorizontalSpace = true;
 			gridData.grabExcessVerticalSpace = true;			
@@ -388,7 +353,8 @@ public class Gui implements IG2gui, Listener {
 	 */
 	public void setActive( G2guiTab activatedTab ) {		
 		if ( activeTab != null ) activeTab.getContent().setVisible( false );
-		activatedTab.getContent().setVisible( true );
+		pageContainerLayout.topControl = activatedTab.getContent();
+		//activatedTab.getContent().setVisible( true );
 		pageContainer.layout();
 		activeTab = activatedTab;	
 	} 
@@ -464,6 +430,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.27  2003/07/06 19:18:08  dek
+hey, there is already a StackLayout....
+
 Revision 1.26  2003/07/06 18:57:21  dek
 *** empty log message ***
 
