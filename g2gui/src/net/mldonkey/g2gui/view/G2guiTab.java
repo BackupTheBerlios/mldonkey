@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: G2guiTab.java,v 1.3 2003/06/30 21:40:09 dek Exp $ 
+ * @version $Id: G2guiTab.java,v 1.4 2003/07/01 21:21:27 dek Exp $ 
  *
  */
 public abstract class G2guiTab implements Listener{	
@@ -54,6 +54,7 @@ public abstract class G2guiTab implements Listener{
 		toolItem = new ToolItem(((Gui)gui).getMainTools(),SWT.PUSH);		
 		this.toolItem.addListener(SWT.Selection,this);
 		gui.registerTab(this);		
+		mainWindow.setActive(this);
 	}
 		
 	protected abstract void createContents(Composite parent);
@@ -72,6 +73,9 @@ public abstract class G2guiTab implements Listener{
 }
 /*
 $Log: G2guiTab.java,v $
+Revision 1.4  2003/07/01 21:21:27  dek
+*** empty log message ***
+
 Revision 1.3  2003/06/30 21:40:09  dek
 CoolBar created
 
