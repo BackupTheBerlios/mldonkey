@@ -23,11 +23,12 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ResultInfo35.java
  *
- * @version $Id: ResultInfo25.java,v 1.1 2004/03/21 21:20:26 dek Exp $ 
+ * @version $Id: ResultInfo25.java,v 1.2 2004/03/21 21:23:53 dek Exp $ 
  *
  */
 public class ResultInfo25 extends ResultInfo {
@@ -37,7 +38,15 @@ public class ResultInfo25 extends ResultInfo {
 	 */
 	ResultInfo25(CoreCommunication core) {
 		super(core);
-		// TODO Auto-generated constructor stub
+		
+	}
+	
+	/**
+	 * @param messageBuffer
+	 */
+	protected void setSize(MessageBuffer messageBuffer) {
+		this.size = messageBuffer.readInt64();
+		
 	}
 
 }
@@ -45,6 +54,9 @@ public class ResultInfo25 extends ResultInfo {
 
 /*
  $Log: ResultInfo25.java,v $
+ Revision 1.2  2004/03/21 21:23:53  dek
+ some proto25 was still missing !!
+
  Revision 1.1  2004/03/21 21:20:26  dek
  some proto25 was still missing
 

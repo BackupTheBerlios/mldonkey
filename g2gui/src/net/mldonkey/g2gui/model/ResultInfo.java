@@ -45,7 +45,7 @@ import org.eclipse.swt.program.Program;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.34 2004/03/21 21:20:26 dek Exp $
+ * @version $Id: ResultInfo.java,v 1.35 2004/03/21 21:23:53 dek Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -77,7 +77,7 @@ public class ResultInfo extends Parent {
     /**
      * Size
      */
-    private int size;
+    protected long size;
 
     /**
      * The size rounded with metric unit
@@ -712,6 +712,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.35  2004/03/21 21:23:53  dek
+some proto25 was still missing !!
+
 Revision 1.34  2004/03/21 21:20:26  dek
 some proto25 was still missing
 
