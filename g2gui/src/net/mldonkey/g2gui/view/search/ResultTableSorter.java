@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  * @author $user$
- * @version $Id: ResultTableSorter.java,v 1.3 2003/07/31 04:11:10 zet Exp $ 
+ * @version $Id: ResultTableSorter.java,v 1.4 2003/07/31 11:55:39 zet Exp $ 
  *
  */
 public class ResultTableSorter extends ViewerSorter {
@@ -80,15 +80,13 @@ public class ResultTableSorter extends ViewerSorter {
 			case 0: // network name
 				aString1 = result1.getNetwork().getNetworkName();
 				aString2 = result2.getNetwork().getNetworkName();
-				return (lastSort ? aString1.compareToIgnoreCase( aString2 )
-								: aString2.compareToIgnoreCase( aString1 ) );
-								
+				return compareStrings( aString1, aString2 );
+												
 			case 1: // filename
 				aString1 = result1.getNames()[ 0 ];
 				aString2 = result2.getNames()[ 0 ];
-				return ( lastSort ? aString1.compareToIgnoreCase( aString2 )
-						 		: aString2.compareToIgnoreCase( aString1 ) );
-						 		
+				return compareStrings( aString1, aString2 );
+						 	
 			case 2: // filesize
 				Long aLong1 = new Long( result1.getSize() );
 				Long aLong2 = new Long( result2.getSize() );
@@ -98,15 +96,13 @@ public class ResultTableSorter extends ViewerSorter {
 			case 3: // format 
 				aString1 = result1.getFormat();
 				aString2 = result2.getFormat();
-				return ( lastSort ? aString1.compareToIgnoreCase( aString2 ) 
-								: aString2.compareToIgnoreCase( aString1 ) );
-		
+				return compareStrings( aString1, aString2 ); 
+								
 			case 4: // media
 				aString1 = result1.getType();
 				aString2 = result2.getType();
-				return ( lastSort ? aString1.compareToIgnoreCase( aString2 )
-								: aString2.compareToIgnoreCase( aString1 ) );
-		
+				return compareStrings( aString1, aString2 );
+										
 			case 5: // availability 
 				Integer anInt1 = new Integer ( result1.getTags()[ 0 ].getValue() );
 				Integer anInt2 = new Integer ( result2.getTags()[ 0 ].getValue() );
@@ -118,6 +114,16 @@ public class ResultTableSorter extends ViewerSorter {
 		}
 	}
 	
+	// always leave empty strings at the bottom
+	public int compareStrings(String aString1, String aString2) {
+		if (aString1.equals ( "" )) return 1;
+		if (aString2.equals ( "" )) return -1;
+		return ( lastSort ? aString1.compareToIgnoreCase( aString2 )
+						: aString2.compareToIgnoreCase( aString1 ) );
+		
+	}
+	
+	
 	/**
 	 * Sets the column index
 	 * @param i The column index to sort
@@ -127,10 +133,10 @@ public class ResultTableSorter extends ViewerSorter {
 		if (columnIndex == lastColumnIndex)
 			lastSort = !lastSort;
 		else {
-			if (i == 0 || i == 1)
-				lastSort = true;
-			else
+			if (i == 2)
 				lastSort = false;
+			else
+				lastSort = true;
 		}
 		lastColumnIndex = columnIndex;
 	}
@@ -151,6 +157,9 @@ public class ResultTableSorter extends ViewerSorter {
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.4  2003/07/31 11:55:39  zet
+sort with empty strings at bottom
+
 Revision 1.3  2003/07/31 04:11:10  zet
 searchresult changes
 
