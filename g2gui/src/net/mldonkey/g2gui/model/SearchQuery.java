@@ -22,6 +22,10 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.regexp.RE;
+import gnu.regexp.REException;
+import gnu.regexp.REMatch;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -37,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.13 2003/07/25 14:46:50 zet Exp $ 
+ * @version $Id: SearchQuery.java,v 1.14 2003/08/09 15:32:14 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -138,7 +142,7 @@ public class SearchQuery implements Sendable {
 	 */
 	public void setSearchString( String searchString ) {
 		this.searchString = searchString;
-		String[] patterns = Pattern.compile(" ").split(searchString,0);
+		String[] patterns = split(searchString,' ');
 		/* now we have to generate a query-Object for each search pattern */
 		Query newQuery;
 		
@@ -289,10 +293,40 @@ public class SearchQuery implements Sendable {
 	public int getSearchIdentifier() {
 		return searchIdentifier;
 	}
+	
+	private String[] split( String searchString, char delimiter ) {
+			RE regex = null;
+			String expression = "([^" + delimiter + "])*";		
+			try {
+				regex = new RE( expression );
+			} catch ( REException e ) {
+				e.printStackTrace();
+			}
+			ArrayList patterns = new ArrayList();		
+			REMatch[] matches = regex.getAllMatches( searchString );
+			for ( int i = 0; i < matches.length; i++ ) {
+				String match = matches[ i ].toString();			
+				if ( !match.equals( "" ) )
+					patterns.add( match );
+			}
+			Object[] temp = patterns.toArray();
+			String[] result = new String[ temp.length ];
+			for ( int i = 0; i < temp.length; i++ ) {
+				result[ i ] = ( String ) temp[ i ];
+			}
+			return result;
+		}
+	
 }
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.14  2003/08/09 15:32:14  dek
+added gnu.regexp for compiling with gcj
+you can get it at:
+
+ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz
+
 Revision 1.13  2003/07/25 14:46:50  zet
 replace string.split
 

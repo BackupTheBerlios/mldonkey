@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.server;
 
 import gnu.regexp.RE;
 import gnu.regexp.REException;
+import gnu.regexp.REMatch;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -69,7 +70,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * TableMenuListener
  *
  * @author $user$
- * @version $Id: TableMenuListener.java,v 1.6 2003/08/09 13:51:02 dek Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.7 2003/08/09 15:35:04 dek Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -283,8 +284,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 										new MyInputValidator() );
 			dialog.open();
 			if ( dialog.getReturnCode() == IDialogConstants.OK_ID ) {
-				String text = dialog.getValue();
-				String[] strings = dialog.getValue().split( ":" );
+				String text = dialog.getValue();				
+				
+				String[] strings = split(dialog.getValue(), ':' );
 				InetAddress inetAddress = null;
 				try {
 					inetAddress = InetAddress.getByName( strings[0] );
@@ -299,6 +301,29 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 				core.getServerInfoIntMap().add( dialog.getCombo(), inetAddress, new Short( strings[ 1 ] ).shortValue() );							
 			}
 		}
+				
+		private String[] split( String searchString, char delimiter ) {
+				RE regex = null;
+				String expression = "([^" + delimiter + "])*";		
+				try {
+					regex = new RE( expression );
+				} catch ( REException e ) {
+					e.printStackTrace();
+				}
+				ArrayList patterns = new ArrayList();		
+				REMatch[] matches = regex.getAllMatches( searchString );
+				for ( int i = 0; i < matches.length; i++ ) {
+					String match = matches[ i ].toString();			
+					if ( !match.equals( "" ) )
+						patterns.add( match );
+				}
+				Object[] temp = patterns.toArray();
+				String[] result = new String[ temp.length ];
+				for ( int i = 0; i < temp.length; i++ ) {
+					result[ i ] = ( String ) temp[ i ];
+				}
+				return result;
+			}
 		
 		private class MyInputValidator implements IInputValidator {
 			/* (non-Javadoc)
@@ -637,6 +662,12 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.7  2003/08/09 15:35:04  dek
+added gnu.regexp for compiling with gcj
+you can get it at:
+
+ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz
+
 Revision 1.6  2003/08/09 13:51:02  dek
 added gnu.regexp for compiling with gcj
 you can get it at:
