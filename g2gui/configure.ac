@@ -43,6 +43,8 @@ AC_ARG_WITH(motif,
 
 # Checks for programs.
 
+
+
 AC_PATH_PROG([GCJ],[gcj])
 if test -z $ac_cv_path_GCJ; then
    AC_MSG_ERROR([**** Could not find the compiler gcj needed for this software! ****])
@@ -71,6 +73,11 @@ fi
 AC_PATH_PROG([FIND],[find])
 if test -z $ac_cv_path_FIND; then
    AC_MSG_ERROR([**** Could not find the program find needed for this software! ****])
+fi
+
+AC_PATH_PROG([LD],[ld])
+if test -z $ac_cv_path_LD; then
+   AC_MSG_ERROR([**** Could not find the program 'ld' needed to compile this software! ****])
 fi
 
 
