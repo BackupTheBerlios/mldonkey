@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -43,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.20 2003/07/02 19:03:51 dek Exp $ 
+ * @version $Id: Gui.java,v 1.21 2003/07/02 19:25:41 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -100,8 +101,10 @@ public class Gui implements IG2gui, Listener {
 
 
 
+
 	/**
-	 * @param arg0 You know, what a shell is, right?
+	 * @param core the most important thing of the gui: were do i get my data from
+	 * @param shell were do we live?
 	 */
 	public Gui( CoreCommunication core, Shell shell ) {
 		mainShell = shell;	
@@ -164,7 +167,7 @@ public class Gui implements IG2gui, Listener {
 			gridData.grabExcessVerticalSpace = true;			
 			pageContainer.setLayoutData( gridData );
 						
-		addTabs();		
+		addTabs();				
 		statusline = new StatusLine( mainComposite, mldonkey );
 				
 		layoutCoolBar( coolbar );				
@@ -242,28 +245,7 @@ public class Gui implements IG2gui, Listener {
 		final CoolBar coolBar = new CoolBar ( parent, SWT.FLAT );
 			gridData = new GridData( GridData.FILL_HORIZONTAL );
 			coolBar.setLayoutData( gridData );
-		Menu toolmenu = createToolBarRMMenu(coolBar);
-			
-		/* this ControlListener has to take care of the fact,
-		 *  that a CoolBar also can me multi-lined 
-		 */	
-		coolBar.addControlListener( new ControlListener() {	
-				public void controlMoved( ControlEvent e ) {				
-				}
-	
-				public void controlResized( ControlEvent e ) {
-					
-					Point size = coolBar.computeSize(SWT.DEFAULT,SWT.DEFAULT);					
-					//System.out.println(size);
-					//coolBar.setSize(size);
-					//((GridData)coolBar.getLayoutData()).widthHint = size.x;
-					
-					//((GridData)coolBar.getLayoutData()).heightHint = size.y;
-					
-				} } )	;
-				
-
-				
+		Menu toolmenu = createToolBarRMMenu( coolBar );
 				for ( int i = 0; i < 2; i++ ) { 			
 					CoolItem item = new CoolItem ( coolBar, SWT.NONE );
 					} 
@@ -301,7 +283,7 @@ public class Gui implements IG2gui, Listener {
 			public void widgetSelected( SelectionEvent e ) {
 				thiscoolBar.setLocked( lockItem.getSelection() );
 			}
-		});
+		} );
 		
 		
 		return menu;
@@ -344,7 +326,16 @@ public class Gui implements IG2gui, Listener {
 	 */
 	private void addTabs() {
 		new TransferTab( this );
-		new ConsoleTab( this );		
+		new ConsoleTab( this );
+		/*setting TransferTab active if registered*/
+		Iterator tabIterator = registeredTabs.iterator();
+			while ( tabIterator.hasNext() ) {
+				G2guiTab tempTab = ( G2guiTab )  tabIterator.next();
+				if ( tempTab instanceof TransferTab ) {									
+					 this.setActive( tempTab );					 
+					 }
+					 					
+			}		
 	} 
 	
 	
@@ -381,7 +372,7 @@ public class Gui implements IG2gui, Listener {
 	/* ( non-Javadoc )
 	 * @see net.mldonkey.g2gui.view.widgets.Gui.IG2gui#setActive( net.mldonkey.g2gui.view.widgets.Gui.G2guiTab )
 	 */
-	public void setActive( G2guiTab activatedTab ) {
+	public void setActive( G2guiTab activatedTab ) {		
 		if ( activeTab != null ) activeTab.getContent().setVisible( false );
 		activatedTab.getContent().setVisible( true );
 		pageContainer.layout();
@@ -409,6 +400,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.21  2003/07/02 19:25:41  dek
+transferTab is now default ;-)
+
 Revision 1.20  2003/07/02 19:03:51  dek
 Right-mouse-menue for lockable ToolBar
 
