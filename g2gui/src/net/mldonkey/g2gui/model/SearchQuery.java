@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.21 2003/09/04 21:40:44 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.22 2003/09/04 21:45:32 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -248,6 +248,7 @@ public class SearchQuery implements Sendable {
 	 * expects an input in following form: XX.YY (""|kb|Mb|Tb)
 	 * @param value the float value
 	 * @param unit ""|kb|Mb|Tb
+	 * @throws NumberFormatException wrong format of value or unit
 	 */
 	public void setMinSize( String value, String unit ) throws NumberFormatException {
 		this.setMinSize( convertToInt( value, unit ) );
@@ -258,6 +259,7 @@ public class SearchQuery implements Sendable {
 	 * expects an input in following form: XX.YY (""|kb|Mb|Tb)
 	 * @param value the float value
 	 * @param unit ""|kb|Mb|Tb
+	 * @throws NumberFormatException wrong format of value or unit
 	 */
 	public void setMaxSize( String value, String unit ) throws NumberFormatException {
 		this.setMaxSize( convertToInt( value, unit ) );
@@ -272,13 +274,15 @@ public class SearchQuery implements Sendable {
 			factor = 1024 * 1024;
 		else if ( unit.equalsIgnoreCase( "tb" ) )
 			factor = 1024 * 1024 * 1024;
-		else if ( unit.equalsIgnoreCase( "" ) ) {		
+		else if ( unit.equalsIgnoreCase( "" ) )
+			factor = 1;
+		else {		
 			NumberFormatException ex = new NumberFormatException( "no valid unit given" );
 			throw ex;
 		}		
-		Float size = Float.valueOf( value );
+		float size = Float.parseFloat( value );
 				
-		return ( size.longValue() * factor );
+		return ( long ) ( size * factor );
 		
 	}
 	
@@ -418,6 +422,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.22  2003/09/04 21:45:32  dek
+added line for no unit ;-)
+
 Revision 1.21  2003/09/04 21:40:44  dek
 setXXSize with value and unit present (untested)
 
