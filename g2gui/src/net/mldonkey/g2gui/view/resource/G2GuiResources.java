@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.32 2003/09/22 20:25:04 lemmster Exp $
+ * @version $Id: G2GuiResources.java,v 1.33 2003/09/27 10:24:54 lemmster Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -191,9 +191,9 @@ public class G2GuiResources {
 		reg.put( "G2GuiICO" , createRawImage ( "g2gui.ico" ) );
         
         String[] buttonNames =
-        { "Preferences", "Statistics", "Console", "Transfers", "Search", "Servers", "Messages" };
+        { "Preferences", "Statistics", "Console", "Transfers", "Search", "Servers", "Messages", "News" };
         String[] buttonFiles =
-        { "preferences", "statistics", "console", "transfer3a", "search", "server", "messages" };
+        { "preferences", "statistics", "console", "transfer3a", "search", "server", "messages", "news" };
 
         // still thinking about Active state buttons...							
         for ( int i = 0; i < buttonNames.length; i++ ) {
@@ -318,6 +318,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.33  2003/09/27 10:24:54  lemmster
+news items added
+
 Revision 1.32  2003/09/22 20:25:04  lemmster
 show # sources in search result avail table
 
