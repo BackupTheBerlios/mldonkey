@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.5 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.6 2003/06/21 13:20:36 dek Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -74,6 +74,14 @@ public class OptionsInfoMap extends InfoMap {
 	public void update( MessageBuffer messageBuffer ) {
 		// do nothing!
 	}
+	/**
+	 * When an option is updated, this is to be called
+	 * @param name optionname
+	 * @param value value
+	 */
+	public void update( String name, String value ) {
+		(( OptionsInfo )infoMap.get(name)).setValue(value);
+	}
 	
 	/**
 	 * String representation of this object
@@ -91,6 +99,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.6  2003/06/21 13:20:36  dek
+work on optiontree continued - one can already change client_name in General-leaf
+
 Revision 1.5  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 

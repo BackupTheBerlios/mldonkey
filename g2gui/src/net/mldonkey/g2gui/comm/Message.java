@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.19 2003/06/16 21:47:41 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.20 2003/06/21 13:20:36 dek Exp $ 
  *
  */
 public abstract class Message {
@@ -39,6 +39,10 @@ public abstract class Message {
 	 * Send CoreProtocol (value is 0)
 	 */
 	public static final short S_COREPROTOCOL = 0;
+	/**
+	 * Send SetOption (value is 29)
+	 */
+	public static final short S_SET_OPTION = 28;	
 	/**
 	 * Send Console Message (value is 29)
 	 */
@@ -275,6 +279,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.20  2003/06/21 13:20:36  dek
+work on optiontree continued - one can already change client_name in General-leaf
+
 Revision 1.19  2003/06/16 21:47:41  lemmstercvs01
 opcode 3 added
 

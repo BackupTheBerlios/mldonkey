@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.widgets.InterFaceUI;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.28 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: Core.java,v 1.29 2003/06/21 13:20:36 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -275,11 +275,26 @@ public class Core extends Thread implements CoreCommunication {
 		if ( ! ( this.registeredListeners.contains( anInterFaceUI ) ) ) 
 			this.registeredListeners.add( anInterFaceUI );
 	}
+	
+
+	/**
+	 * @param name Option-Name
+	 * @param value OptionValue
+	 */
+	public void setOption( String name, String value ) {
+		
+		String[] content = { name, value };		
+		EncodeMessage setOption = new EncodeMessage( Message.S_SET_OPTION, content );
+		setOption.sendMessage( connection );		
+	}
 
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.29  2003/06/21 13:20:36  dek
+work on optiontree continued - one can already change client_name in General-leaf
+
 Revision 1.28  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
