@@ -23,7 +23,15 @@
 package net.mldonkey.g2gui.view.pref;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.OptionsInfo;
+import net.mldonkey.g2gui.model.OptionsInfoMap;
 
 import org.eclipse.jface.preference.*;
 import org.eclipse.swt.widgets.Shell;
@@ -32,7 +40,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.5 2003/07/02 16:16:47 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.6 2003/07/07 17:38:14 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -71,7 +79,10 @@ public class Preferences extends PreferenceManager {
 				};
 		if ( ( mldonkey != null ) && ( mldonkey.isConnected() ) ) {
 			this.connected = true;
-		}		
+		}	
+		
+		createMLDonkeyOptions(connected, mldonkey);
+			
 		myprefs.addToRoot( new PreferenceNode
 				( "mldonkey", new General( preferenceStore, connected, mldonkey ) ) );
 				
@@ -80,6 +91,51 @@ public class Preferences extends PreferenceManager {
 					
 		prefdialog.open();
 	}
+
+	/**
+	 * @param connected are we connected to the Core
+	 * @param mldonkey the Core were i get all my options from
+	 */
+	private void createMLDonkeyOptions( boolean connected, CoreCommunication mldonkey ) {
+		OptionsInfoMap options = mldonkey.getOptionsInfoMap();
+		PreferenceNode pluginOptions = new PreferenceNode( "plugins",new MLDonkeyOptions("Plugins") );
+			myprefs.addToRoot( pluginOptions );
+		
+		Map sections = new HashMap();
+		Map plugins = new HashMap();
+		
+		/*now we iterate over the whole thing and create the preferencePages*/
+		Iterator it = options.keySet().iterator();
+		while ( it.hasNext() ) {		
+			OptionsInfo option = ( OptionsInfo ) options.get( it.next() );			
+			String section = option.getSectionToAppear();
+			String plugin = option.getPluginToAppear();
+			
+			if ( section != null ) {				
+				//create the section, or if already done, only add the option
+				if ( !sections.containsKey( section ) ) {
+					MLDonkeyOptions temp = new MLDonkeyOptions( section );
+					myprefs.addToRoot( new PreferenceNode ( section, temp ) );
+					sections.put( section, temp );
+					}
+				( ( MLDonkeyOptions  )sections.get( section ) ).addOption( option );
+			}
+			if ( plugin != null ) {
+				if ( !plugins.containsKey( plugin ) ) {
+					MLDonkeyOptions temp = new MLDonkeyOptions( plugin );
+					//myprefs.addToRoot( new PreferenceNode ( plugin, temp ) );
+					pluginOptions.add( new PreferenceNode ( plugin, temp ) );
+					plugins.put( plugin, temp );
+					}
+				( ( MLDonkeyOptions  )plugins.get( plugin ) ).addOption( option );			
+				//create the plugin, or if already done, only add the option
+				}
+			
+		}
+	}
+		
+		
+	
 
 	/**
 	 * Initializes a preference Store. It creates the corresponding file , so that we can write and
@@ -115,6 +171,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.6  2003/07/07 17:38:14  dek
+now, one can take a look at all Core-options, not saving yet, but is in work
+
 Revision 1.5  2003/07/02 16:16:47  dek
 extensive Checkstyle applying
 
