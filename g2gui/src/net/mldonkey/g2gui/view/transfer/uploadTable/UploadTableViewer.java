@@ -49,14 +49,14 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.7 2003/09/26 17:02:03 zet Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.8 2003/09/26 17:03:26 zet Exp $ 
  *
  */
 public class UploadTableViewer {
 	/**
 	 * MyTableSorter
 	 *
-	 * @version $Id: UploadTableViewer.java,v 1.7 2003/09/26 17:02:03 zet Exp $ 
+	 * @version $Id: UploadTableViewer.java,v 1.8 2003/09/26 17:03:26 zet Exp $ 
 	 *
 	 */
 	
@@ -211,7 +211,6 @@ public class UploadTableViewer {
 
 		public String getColumnText( Object element, int columnIndex ) {
 			SharedFileInfo info = ( SharedFileInfo ) element;
-			String result = "";
 			/*
 			 * { "TT_Download_Network", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES","TT_Download_Name" };
 			 */
@@ -324,6 +323,9 @@ public class UploadTableViewer {
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.8  2003/09/26 17:03:26  zet
+remove unneeded String result
+
 Revision 1.7  2003/09/26 17:02:03  zet
 reorder case statements
 return instead of falling through
