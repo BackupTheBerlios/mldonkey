@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Composite;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkView.java,v 1.1 2003/07/13 12:48:28 dek Exp $ 
+ * @version $Id: ChunkView.java,v 1.2 2003/07/13 20:12:39 dek Exp $ 
  *
  */
 public class ChunkView extends Canvas {
@@ -59,13 +59,14 @@ public class ChunkView extends Canvas {
 	public ChunkView( Composite parent, int style, FileInfo fileInfo ) {	
 		super( parent, style );
 		this.fileinfo = fileInfo;	
-		createImage();
+		createImage();		
 		addDisposeListener( new DisposeListener() {
 			public void widgetDisposed( DisposeEvent e ) {		
 				ChunkView.this.widgetDisposed( e );		
 				}
 			} );
-
+	
+		
 		addPaintListener( new PaintListener() {
 			public void paintControl( PaintEvent e ) {
 				ChunkView.this.paintControl( e );
@@ -117,9 +118,6 @@ public class ChunkView extends Canvas {
 		
 	}
 
-
-
-
 	/**
 	 * @param e
 	 */
@@ -157,6 +155,9 @@ public class ChunkView extends Canvas {
 
 /*
 $Log: ChunkView.java,v $
+Revision 1.2  2003/07/13 20:12:39  dek
+fixed Exception and applied checkstyle
+
 Revision 1.1  2003/07/13 12:48:28  dek
 chunk-bar begins to work
 

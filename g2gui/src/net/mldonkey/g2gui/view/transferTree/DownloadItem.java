@@ -8,9 +8,9 @@
  * G2GUI is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
- * G2GUI is distributed in the hope that it will be useful,
+ * G2GUI is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -21,6 +21,10 @@
  * 
  */
 package net.mldonkey.g2gui.view.transferTree;
+
+
+
+import java.util.Iterator;
 
 import gnu.trove.TIntObjectHashMap;
 
@@ -38,7 +42,7 @@ import org.eclipse.swt.widgets.Control;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.6 2003/07/13 17:13:08 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.7 2003/07/13 20:12:39 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem {
@@ -55,32 +59,32 @@ public class DownloadItem extends TableTreeItem {
 	 * @param i
 	 * @param fileInfo
 	 */
-	public DownloadItem(TableTree parent, int style, FileInfo fileInfo) {
-		super(parent, style);
+	public DownloadItem( TableTree parent, int style, FileInfo fileInfo ) {
+		super( parent, style );
 		this.tableTree = parent;
 		this.fileInfo = fileInfo;
 		
-		TableTreeEditor editor = new TableTreeEditor(this.getParent());		
+		TableTreeEditor editor = new TableTreeEditor( this.getParent() );		
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
 		Control oldEditor = editor.getEditor();
-			if (oldEditor != null)
+			if ( oldEditor != null )
 			oldEditor.dispose();
-		this.chunks = new ChunkView(this.getParent().getTable(),SWT.NONE,fileInfo);
-		editor.setEditor (chunks, this, 6);
+		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo );
+		editor.setEditor ( chunks, this, 6 );
 		
 		updateColumns();
 
-		Object[] temp = fileInfo.getClientInfos().toArray();
-		for (int i = 0; i < temp.length; i++) {	
-			ClientInfo clientInfo =  (ClientInfo) temp[ i ];
+		Iterator it =  fileInfo.getClientInfos().iterator();		
+		while ( it.hasNext() ) {
+		ClientInfo clientInfo =  ( ClientInfo )it.next();
 			
-	//			Here comes the question, wether we want to add this clientInfo, or not?? at the moment,
+	//			Here comes the question, wether we want to add this clientInfo, or not?? at the moment, 
 	//			all clientInfos are accepted
 				
-					if (( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
+					if ( ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
 						|| ( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED )	
-						){				
+						 ) {				
 							if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
 								namedclients.get( clientInfo.getClientid() );
 								ClientItem existingItem =
@@ -105,15 +109,15 @@ public class DownloadItem extends TableTreeItem {
 	
 	void update() {
 		updateColumns();		
-		Object[] temp =  fileInfo.getClientInfos().toArray();
-		for (int i = 0; i < temp.length; i++) {	
-		ClientInfo clientInfo =  (ClientInfo) temp[ i ];
+		Iterator it =  fileInfo.getClientInfos().iterator();		
+		while ( it.hasNext() ) {
+		ClientInfo clientInfo =  ( ClientInfo )it.next();
 		
-		// Here comes the question, wether we want to add this clientInfo, or not?? at the moment,
+		// Here comes the question, wether we want to add this clientInfo, or not?? at the moment, 
 		// all clientInfos are accepted
-						if (( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )	
+						if ( ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )	
 						|| ( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED )								 
-						){				
+						 ) {				
 							if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
 								namedclients.get( clientInfo.getClientid() );
 								ClientItem existingItem =
@@ -153,16 +157,16 @@ public class DownloadItem extends TableTreeItem {
 	 * @param style
 	 * @param index
 	 */
-	public DownloadItem(TableTree parent, int style, int index) {
-		super(parent, style, index);
+	public DownloadItem( TableTree parent, int style, int index ) {
+		super( parent, style, index );
 		// TODO Auto-generated constructor stub
 	}
 	/**
 	 * @param parent
 	 * @param style
 	 */
-	public DownloadItem(TableTreeItem parent, int style) {
-		super(parent, style);
+	public DownloadItem( TableTreeItem parent, int style ) {
+		super( parent, style );
 		// TODO Auto-generated constructor stub
 	}
 	/**
@@ -170,8 +174,8 @@ public class DownloadItem extends TableTreeItem {
 	 * @param style
 	 * @param index
 	 */
-	public DownloadItem(TableTreeItem parent, int style, int index) {
-		super(parent, style, index);
+	public DownloadItem( TableTreeItem parent, int style, int index ) {
+		super( parent, style, index );
 		// TODO Auto-generated constructor stub
 	}
 	/**
@@ -183,14 +187,14 @@ public class DownloadItem extends TableTreeItem {
 
 
 /*
- * 		TableTreeEditor editor = new TableTreeEditor(this.getParent());		
+ * 		TableTreeEditor editor = new TableTreeEditor( this.getParent() );		
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
 		Control oldEditor = editor.getEditor();
-			if (oldEditor != null)
+			if ( oldEditor != null )
 			oldEditor.dispose();
-		Control chunks = new ChunkView(this.getParent().getTable(),SWT.NONE);
-		editor.setEditor (chunks, this, 5);
+		Control chunks = new ChunkView( this.getParent().getTable(), SWT.NONE );
+		editor.setEditor ( chunks, this, 5 );
 
  *
  */
@@ -198,6 +202,9 @@ public class DownloadItem extends TableTreeItem {
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.7  2003/07/13 20:12:39  dek
+fixed Exception and applied checkstyle
+
 Revision 1.6  2003/07/13 17:13:08  dek
 NPE fixed
 
