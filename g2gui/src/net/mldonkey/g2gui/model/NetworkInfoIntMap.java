@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: NetworkInfoIntMap.java,v 1.1 2003/06/16 21:47:19 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.2 2003/06/17 12:06:51 lemmstercvs01 Exp $ 
  *
  */
-public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
+public class NetworkInfoIntMap extends InfoIntMap {
 	/**
 	 * Creates a new THashMap
 	 */	
@@ -72,6 +72,9 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.2  2003/06/17 12:06:51  lemmstercvs01
+wrong implementers removed
+
 Revision 1.1  2003/06/16 21:47:19  lemmstercvs01
 just refactored (name changed)
 

@@ -30,10 +30,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.3 2003/06/16 21:48:38 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.4 2003/06/17 12:06:51 lemmstercvs01 Exp $ 
  *
  */
-public class OptionsInfoMap extends InfoMap implements InfoCollection {
+public class OptionsInfoMap extends InfoMap {
 	/**
 	 * Creates a new THashMap
 	 */	
@@ -81,6 +81,9 @@ public class OptionsInfoMap extends InfoMap implements InfoCollection {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.4  2003/06/17 12:06:51  lemmstercvs01
+wrong implementers removed
+
 Revision 1.3  2003/06/16 21:48:38  lemmstercvs01
 class hierarchy changed
 
