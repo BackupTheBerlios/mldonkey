@@ -27,7 +27,6 @@ import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.model.NetworkInfo.Enum;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -36,7 +35,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
@@ -44,11 +42,12 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.23 2003/09/08 17:26:23 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.24 2003/09/08 18:26:48 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
     private static final ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
+	private static final String imagesDirectory = "images/";
 
     private G2GuiResources() {
     }
@@ -192,15 +191,13 @@ public class G2GuiResources {
         Color white = Display.getCurrent().getSystemColor( SWT.COLOR_WHITE );
         Color titlebar = Display.getCurrent().getSystemColor( SWT.COLOR_TITLE_BACKGROUND );
 
-        // hack to use transparent .gif in titlebar
-        ImageData source =
-            ImageDescriptor.createFromFile( G2Gui.class, "images/mld_logo_48x48.gif" ).getImageData();
-        ImageData mask = source.getTransparencyMask();
-        Image icon = new Image( Display.getCurrent(), source, mask );
-        imageRegistry.put( "ProgramIcon", icon );
-        imageRegistry.put( "G2GuiLogo", createTrans( "mld_logo_48x48.png" ) );
-		imageRegistry.put( "G2GuiLogoSmall", createTrans( "mld_logo_12x12.png" ) );
-		imageRegistry.put( "G2GuiICO" , ImageDescriptor.createFromFile( MainTab.class, "images/g2gui.ico" ) );
+		ImageRegistry reg = G2GuiResources.getImageRegistry();
+		
+		reg.put( "splashScreen" , createRawImage( "splash.png") );
+        reg.put( "ProgramIcon", createRawImage( "mld_logo_48x48.gif" ) );
+        reg.put( "G2GuiLogo", createTrans( "mld_logo_48x48.png" ) );
+		reg.put( "G2GuiLogoSmall", createTrans( "mld_logo_12x12.png" ) );
+		reg.put( "G2GuiICO" , createRawImage ( "g2gui.ico" ) );
         
         String[] buttonNames =
         { "Preferences", "Statistics", "Console", "Transfers", "Search", "Servers", "Messages" };
@@ -209,57 +206,54 @@ public class G2GuiResources {
 
         // still thinking about Active state buttons...							
         for ( int i = 0; i < buttonNames.length; i++ ) {
-            imageRegistry.put( buttonNames[ i ] + "Button", createTrans( buttonFiles[ i ] + ".png" ) );
-            imageRegistry.put( buttonNames[ i ] + "ButtonActive", createActive( buttonFiles[ i ] + ".png" ) );
-            imageRegistry.put( buttonNames[ i ] + "ButtonSmall", createTrans( buttonFiles[ i ] + "-16.png" ) );
-            imageRegistry.put( buttonNames[ i ] + "ButtonSmallActive",
+            reg.put( buttonNames[ i ] + "Button", createTrans( buttonFiles[ i ] + ".png" ) );
+            reg.put( buttonNames[ i ] + "ButtonActive", createActive( buttonFiles[ i ] + ".png" ) );
+            reg.put( buttonNames[ i ] + "ButtonSmall", createTrans( buttonFiles[ i ] + "-16.png" ) );
+            reg.put( buttonNames[ i ] + "ButtonSmallActive",
                                createActive( buttonFiles[ i ] + "-16.png" ) );
-            imageRegistry.put( buttonNames[ i ] + "ButtonSmallTitlebar",
+            reg.put( buttonNames[ i ] + "ButtonSmallTitlebar",
                                createTrans( buttonFiles[ i ] + "-16.png", titlebar ) );
         }
         String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "ONP", "Unknown" };
         String[] fileNames =
         { "directconnect", "edonkey2000", "gnutella", "gnutella2", "kazaa", "soulseek", "unknown", "unknown" };
         for ( int i = 0; i < shortNames.length; i++ ) {
-            imageRegistry.put( shortNames[ i ] + "Connected", createTrans( fileNames[ i ] + "_connected.png" ) );
-            imageRegistry.put( shortNames[ i ] + "Disconnected",
+            reg.put( shortNames[ i ] + "Connected", createTrans( fileNames[ i ] + "_connected.png" ) );
+            reg.put( shortNames[ i ] + "Disconnected",
                                createTrans( fileNames[ i ] + "_disconnected.png" ) );
-            imageRegistry.put( shortNames[ i ] + "Disabled", createTrans( fileNames[ i ] + "_disabled.png" ) );
-            imageRegistry.put( shortNames[ i ] + "BadConnected",
+            reg.put( shortNames[ i ] + "Disabled", createTrans( fileNames[ i ] + "_disabled.png" ) );
+            reg.put( shortNames[ i ] + "BadConnected",
                                createTrans( fileNames[ i ] + "_badconnected.png" ) );
-            imageRegistry.put( shortNames[ i ] + "ConnectedWhite",
+            reg.put( shortNames[ i ] + "ConnectedWhite",
                                createTrans( fileNames[ i ] + "_connected.png", white ) );
         }
 
         /* some icons for networks without all states */
-        imageRegistry.put( "BTConnected", createTrans( "bt_connected.png" ) );
-        imageRegistry.put( "BTConnectedWhite", createTrans( "bt_connected.png", white ) );
-        imageRegistry.put( "BTDisabled", createTrans( "bt_disabled.png" ) );
-        imageRegistry.put( "MULTIConnected", createTrans( "multinet_connected.png" ) );
-        imageRegistry.put( "MULTIConnectedWhite", createTrans( "multinet_connected.png", white ) );
-        imageRegistry.put( "MULTIDisabled", createTrans( "multinet_disabled.png" ) );
-        imageRegistry.put( "MessagesButtonSmallTrans",
-                           ImageDescriptor.createFromFile( MainTab.class, "images/messages-16.gif" ) );
-        imageRegistry.put( "MessagesButtonSmallTransBW",
-                           ImageDescriptor.createFromFile( MainTab.class, "images/messages-16-bw.gif" ) );
-        imageRegistry.put( "DownArrow", createTrans( "down.png" ) );
-        imageRegistry.put( "UpArrow", createTrans( "up.png" ) );
-        imageRegistry.put( "UpArrowBlue",
-                           ImageDescriptor.createFromFile( MainTab.class, "images/up_blue.gif" ) );
-        imageRegistry.put( "SearchSmall", createTrans( "search_small.png" ) );
-        imageRegistry.put( "SearchComplete", createTrans( "search_complete.png" ) );
-        imageRegistry.put( "X", ImageDescriptor.createFromFile( MainTab.class, "images/x.gif" ) );
-        imageRegistry.put( "DropDown", ImageDescriptor.createFromFile( MainTab.class, "images/dropdown.gif" ) );
-        imageRegistry.put( "epUnknown", createImageDescriptor( "ep_unknown.gif" ) );
-        imageRegistry.put( "epTransferring", createImageDescriptor( "ep_transferring.gif" ) );
-        imageRegistry.put( "epNoNeeded", createImageDescriptor( "ep_noneeded.gif" ) );
-        imageRegistry.put( "epConnecting", createImageDescriptor( "ep_connecting.gif" ) );
-        imageRegistry.put( "epAsking", createImageDescriptor( "ep_asking.gif" ) );
-        imageRegistry.put( "epRatingPoor", createImageDescriptor( "ep_rating_poor.gif" ) );
-        imageRegistry.put( "epRatingFair", createImageDescriptor( "ep_rating_fair.gif" ) );
-        imageRegistry.put( "epRatingGood", createImageDescriptor( "ep_rating_good.gif" ) );
-        imageRegistry.put( "epRatingExcellent", createImageDescriptor( "ep_rating_excellent.gif" ) );
-        imageRegistry.put( "downloaded", createTrans( "downloaded_arrow.png" ) );
+        reg.put( "BTConnected", createTrans( "bt_connected.png" ) );
+        reg.put( "BTConnectedWhite", createTrans( "bt_connected.png", white ) );
+        reg.put( "BTDisabled", createTrans( "bt_disabled.png" ) );
+        reg.put( "MULTIConnected", createTrans( "multinet_connected.png" ) );
+        reg.put( "MULTIConnectedWhite", createTrans( "multinet_connected.png", white ) );
+        reg.put( "MULTIDisabled", createTrans( "multinet_disabled.png" ) );
+        reg.put( "MessagesButtonSmallTrans", createRawImage( "messages-16.gif") );
+        reg.put( "MessagesButtonSmallTransBW", createRawImage( "messages-16-bw.gif" ) );
+        reg.put( "DownArrow", createTrans( "down.png" ) );
+        reg.put( "UpArrow", createTrans( "up.png" ) );
+        reg.put( "UpArrowBlue", createRawImage( "up_blue.gif" ) );
+        reg.put( "SearchSmall", createTrans( "search_small.png" ) );
+        reg.put( "SearchComplete", createTrans( "search_complete.png" ) );
+        reg.put( "X", createRawImage( "x.gif" ) );
+        reg.put( "DropDown", createRawImage( "dropdown.gif" ) );
+        reg.put( "epUnknown", createImageDescriptor( "ep_unknown.gif" ) );
+        reg.put( "epTransferring", createImageDescriptor( "ep_transferring.gif" ) );
+        reg.put( "epNoNeeded", createImageDescriptor( "ep_noneeded.gif" ) );
+        reg.put( "epConnecting", createImageDescriptor( "ep_connecting.gif" ) );
+        reg.put( "epAsking", createImageDescriptor( "ep_asking.gif" ) );
+        reg.put( "epRatingPoor", createImageDescriptor( "ep_rating_poor.gif" ) );
+        reg.put( "epRatingFair", createImageDescriptor( "ep_rating_fair.gif" ) );
+        reg.put( "epRatingGood", createImageDescriptor( "ep_rating_good.gif" ) );
+        reg.put( "epRatingExcellent", createImageDescriptor( "ep_rating_excellent.gif" ) );
+        reg.put( "downloaded", createTrans( "downloaded_arrow.png" ) );
     }
 
     /**
@@ -325,7 +319,10 @@ public class G2GuiResources {
     private static Image createTrans( String filename ) {
         return createTrans( filename, Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND ) );
     }
-
+    private static ImageDescriptor createRawImage ( String filename ) {
+    	
+    	return ImageDescriptor.createFromFile( MainTab.class, imagesDirectory + filename );
+    }
     /**
      * DOCUMENT ME!
      *
@@ -335,7 +332,7 @@ public class G2GuiResources {
      * @return DOCUMENT ME!
      */
     private static Image createTrans( String filename, Color color ) {
-        return createTransparentImage( ImageDescriptor.createFromFile( MainTab.class, "images/" + filename )
+        return createTransparentImage( ImageDescriptor.createFromFile( MainTab.class, imagesDirectory + filename )
                                                       .createImage(), color );
     }
 
@@ -347,7 +344,7 @@ public class G2GuiResources {
      * @return DOCUMENT ME!
      */
     private static ImageDescriptor createImageDescriptor( String filename ) {
-        return ImageDescriptor.createFromFile( MainTab.class, "images/" + filename );
+        return ImageDescriptor.createFromFile( MainTab.class, imagesDirectory + filename );
     }
 
     /**
@@ -365,6 +362,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.24  2003/09/08 18:26:48  zet
+init in g2gui
+
 Revision 1.23  2003/09/08 17:26:23  zet
 ico
 
