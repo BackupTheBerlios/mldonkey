@@ -1,7 +1,10 @@
-2004/01/29
+2004/02/03: vnc
+	* Fixed dynamic-column behaviour under GTK
+
+2004/01/29: lemmy
 	* Removed duplicated code from G2Gui.initializeSocket(...)
 
-2004/01/28
+2004/01/28: vnc
 	* Properly handle disconnections from the core
 	* Fast inline-reconnect
 	* Ask for automatic relaunch if options have been changed which require it

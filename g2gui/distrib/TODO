@@ -1,11 +1,12 @@
-G2gui's TODO-list (last update: 30.01.04)
+G2gui's TODO-list (last update: 03.02.04)
 =================
+Things with "!" will be implemented/fixed next
 
  ------------------
 | Important things |
  ------------------
 
-* Make local core-controller relaunch-compatible, without killing the running core.
+! Make local core-controller relaunch-compatible, without killing the running core.
   Alternatively kill the core and restart it?
   * PreferenceLoader.*Relaunching() is a bit sub-optimal
   
@@ -17,17 +18,15 @@ G2gui's TODO-list (last update: 30.01.04)
 
 * Get the subsearch right
 
-* Servercount in networkItem tooltip is wrong,
-  connecting servers currently are counted as connected ones
-
 * The mousewheel does not scroll in motif but produces clicks/doubleclicks!
   Very irritating and you accidently download stuff from the results-list etc.
-
-* Implement a global hotkey/command for column-packing
 
  ----------------------
 | Feature Enhancements |
  ----------------------
+! Implement .torrent proxy
+
+* Implement a global hotkey/command for column-packing
 
 * Introduce the mighty link-extractor
   - Gets a tab of its own
@@ -40,9 +39,12 @@ G2gui's TODO-list (last update: 30.01.04)
     * a big submit- and clear-button
 
 
- -----------
-| Cosmetics |
- -----------
+ -------------------------
+| Cosmetics and small bugs|
+ -------------------------
+* Servercount in networkItem tooltip is wrong,
+  connecting servers currently are counted as connected ones
+
 * Increase space between text in table (devein)
 
 * Expanded Transfers should make more of a "block" appearance
