@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.9 2003/09/16 15:12:07 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.10 2003/09/18 10:12:53 lemmster Exp $ 
  *
  */
 public class MainMenuBar {
@@ -49,6 +49,11 @@ public class MainMenuBar {
 	private Menu mainMenuBar, subMenu;
 	private MenuItem menuItem;
 
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param mainTab DOCUMENT ME!
+	 */
 	public MainMenuBar( MainTab mainTab ) {
 		this.mainTab = mainTab;
 		this.shell = mainTab.getShell();
@@ -66,17 +71,17 @@ public class MainMenuBar {
 		menuItem.setMenu ( fileMenu );
 
 		// Build the fileMenu dynamically 
-		fileMenu.addMenuListener(new MenuListener() {
-			public void menuHidden(MenuEvent e) {}
-			public void menuShown(MenuEvent e) {
+		fileMenu.addMenuListener( new MenuListener() {
+			public void menuHidden( MenuEvent e ) { }
+			public void menuShown( MenuEvent e ) {
 				MenuItem [] menuItems = fileMenu.getItems ();
-				for (int i=0; i<menuItems.length; i++) {
-					menuItems [i].dispose ();
+				for ( int i = 0; i < menuItems.length; i++ ) {
+					menuItems[ i ].dispose();
 				}
 				
 				// File>Kill core if connected && gui has not spawned the core
-				if (mainTab.getCore().isConnected()
-					&& G2Gui.getCoreConsole() == null) {
+				if ( mainTab.getCore().isConnected()
+					&& G2Gui.getCoreConsole() == null ) {
 				
 					menuItem = new MenuItem ( fileMenu, SWT.PUSH );
 					menuItem.addListener ( SWT.Selection, new Listener () {
@@ -99,7 +104,7 @@ public class MainMenuBar {
 				menuItem.setAccelerator ( SWT.CTRL + 'W' );
 				
 			}
-		});
+		} );
 
 		// Tools			
 		menuItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
@@ -132,7 +137,8 @@ public class MainMenuBar {
 			// Help>FAQ
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
 			menuItem.addListener( SWT.Selection, 
-				new URLListener( "http://openfacts.berlios.de/index-en.phtml?title=MLdonkey-World,_home_of_G2gui" )
+				new URLListener( 
+					"http://openfacts.berlios.de/index-en.phtml?title=MLdonkey-World,_home_of_G2gui" )
 			);
 			menuItem.setText( "FAQ" );
 			
@@ -147,7 +153,7 @@ public class MainMenuBar {
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
 			menuItem.addListener( SWT.Selection, new Listener() {
 				public void handleEvent( Event event ) {	
-					About about = new About(shell);
+					About about = new About( shell );
 					about.open();
 				}
 			} );
@@ -158,11 +164,21 @@ public class MainMenuBar {
 	 * Small listener class to launch URLs
 	 */
 	public class URLListener implements Listener {
-		String url;
-		public URLListener(String url) {
+		private String url;
+		/**
+		 * DOCUMENT ME!
+		 * 
+		 * @param url DOCUMENT ME!
+		 */
+		public URLListener( String url ) {
 			this.url = url;
 		}
-		public void handleEvent ( Event event ) {
+		/**
+		 * DOCUMENT ME!
+		 * 
+		 * @param event DOCUMENT ME!
+		 */
+		public void handleEvent( Event event ) {
 			Program.launch( url );
 		}
 	}
@@ -171,6 +187,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.10  2003/09/18 10:12:53  lemmster
+checkstyle
+
 Revision 1.9  2003/09/16 15:12:07  zet
 *** empty log message ***
 

@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.main;
 
@@ -59,295 +59,334 @@ import org.eclipse.swt.widgets.ToolItem;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.8 2003/09/01 00:44:21 zet Exp $ 
+ * @version $Id: MainCoolBar.java,v 1.9 2003/09/18 10:12:53 lemmster Exp $
  *
  */
 public class MainCoolBar {
-	private static PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
-	private final Cursor handCursor = new Cursor( Display.getDefault(), SWT.CURSOR_HAND );
-	private boolean toolbarSmallButtons;
-	private boolean coolbarLocked = true;
-	private Shell shell;
-	private MainTab mainTab;
-	private Composite composite;
-	private CoolBar coolbar;
-	private ToolBar miscTools, mainTools;
-	private List miscToolButtons;
-	private List mainToolButtons;
+    private static PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
+    private final Cursor handCursor = new Cursor( Display.getDefault(), SWT.CURSOR_HAND );
+    private boolean toolbarSmallButtons;
+    private boolean coolbarLocked = true;
+    private Shell shell;
+    private MainTab mainTab;
+    private Composite composite;
+    private CoolBar coolbar;
+    private ToolBar miscTools;
+    private ToolBar mainTools;
+    private List miscToolButtons;
+    private List mainToolButtons;
 
 	/**
+	 * DOCUMENT ME!
 	 * 
-	 * @param mainTab
+	 * @param mainTab DOCUMENT ME!
+	 * @param size DOCUMENT ME!
+	 * @param locked DOCUMENT ME!
 	 */
-	public MainCoolBar( MainTab mainTab, boolean size, boolean locked ) {
-		this.toolbarSmallButtons = size;
-		this.coolbarLocked = locked;
-		this.mainTab = mainTab;
-		this.shell = mainTab.getShell();
-		this.mainToolButtons = new ArrayList();
-		this.miscToolButtons = new ArrayList();
-		this.createContent( mainTab.getMainComposite() );
-	}
-	
-	/**
-	 * @param composite
-	 */	
-	private void createContent( Composite parent ) {
-		composite = new Composite( parent, SWT.NONE);
-		GridLayout gridLayout = CGridLayout.createGL(1,0,0,0,0,false);
-		composite.setLayout ( gridLayout );
-		composite.setLayoutData( new GridData ( GridData.FILL_HORIZONTAL ) );
- 
-		createCoolBar();
-		createToolBars();
-		createCoolItems();
-		createMiscTools();
+    public MainCoolBar( MainTab mainTab, boolean size, boolean locked ) {
+        this.toolbarSmallButtons = size;
+        this.coolbarLocked = locked;
+        this.mainTab = mainTab;
+        this.shell = mainTab.getShell();
+        this.mainToolButtons = new ArrayList();
+        this.miscToolButtons = new ArrayList();
+        this.createContent( mainTab.getMainComposite() );
+    }
 
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param parent DOCUMENT ME!
+     */
+    private void createContent( Composite parent ) {
+        composite = new Composite( parent, SWT.NONE );
+        GridLayout gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 0, false );
+        composite.setLayout( gridLayout );
+        composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        createCoolBar();
+        createToolBars();
+        createCoolItems();
+        createMiscTools();
+    }
 
-	/**
-	 * Creates a new Coolbar obj
-	 * @param parent The parent Composite to display in
-	 * @return a new CoolBar obj
-	 */
-	private void createCoolBar() {
-		coolbar = new CoolBar ( this.composite, SWT.FLAT );
-	
-		coolbar.addControlListener( new ControlListener() {
-			public void controlMoved( ControlEvent e ) {
-				composite.getParent().layout();
-			}
-			public void controlResized( ControlEvent e ) { 
-				composite.getParent().layout(); 
-			}
-		} );
-		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
-		coolbar.setLayoutData( gridData );
-	}
+    /**
+     * Creates a new Coolbar obj
+     * @param parent The parent Composite to display in
+     * @return a new CoolBar obj
+     */
+    private void createCoolBar() {
+        coolbar = new CoolBar( this.composite, SWT.FLAT );
+        coolbar.addControlListener( new ControlListener() {
+                public void controlMoved( ControlEvent e ) {
+                    composite.getParent().layout();
+                }
 
-	/**
-	 * 
-	 * @param toggle
-	 */
-	private void toggleSmallButtons( boolean toggle ) {
-		toolbarSmallButtons = !toolbarSmallButtons;
-		
-		coolbar.dispose();
-		mainTools.dispose();
-		miscTools.dispose();
-		
-		createCoolBar();
-		createToolBars();
-		createCoolItems();
-					
-		Iterator toolButtonIterator = mainToolButtons.iterator();	
-		while ( toolButtonIterator.hasNext() ) {
-			ToolButton tmp = ( ToolButton )  toolButtonIterator.next();
-			if ( tmp instanceof ToolButton )									
-				 tmp.useSmallButtons(toolbarSmallButtons);
-			tmp.resetItem(mainTools);
-		 
-		}	
-		toolButtonIterator = miscToolButtons.iterator();	
-		while ( toolButtonIterator.hasNext() ) {
-			ToolButton tmp = ( ToolButton )  toolButtonIterator.next();
-			if ( tmp instanceof ToolButton )									
-				 tmp.useSmallButtons( toolbarSmallButtons );
-			tmp.resetItem( miscTools );
-		}	
-		layoutCoolBar();
-	}
-	
-	/**
-	 * 
-	 *
-	 */
-	private void createMiscTools() {
-		final ToolButton prefButton = new ToolButton( miscTools, SWT.NONE );
-		prefButton.setText( G2GuiResources.getString( "TT_PreferencesButton" ) );
-		prefButton.setToolTipText( G2GuiResources.getString( "TT_PreferencesButtonToolTip" ) );
-				
-		prefButton.setBigActiveImage( G2GuiResources.getImage( "PreferencesButtonActive" ) );
-		prefButton.setBigInactiveImage( G2GuiResources.getImage( "PreferencesButton" ) );
-		prefButton.setSmallActiveImage( G2GuiResources.getImage( "PreferencesButtonSmallActive" ) );
-		prefButton.setSmallInactiveImage( G2GuiResources.getImage( "PreferencesButtonSmall" ));
-		prefButton.useSmallButtons( toolbarSmallButtons );		
-		prefButton.setActive( false );
-		prefButton.resetImage();
-		this.miscToolButtons.add( prefButton );	
-		
-		prefButton.addListener( SWT.Selection, new Listener() {
-			public void handleEvent( Event event ) {
-				prefButton.setActive( true );
-				mainTab.openPreferences();	
-				prefButton.setActive( false );
-			}
-		} );
-	}
+                public void controlResized( ControlEvent e ) {
+                    composite.getParent().layout();
+                }
+            } );
 
-	/**
-	 * creates a right-mouse-menue
-	 * @return a right-Mouse menue
-	 */
-	private Menu createToolBarRMMenu( CoolBar coolBar ) {
-		Menu menu = new Menu( shell , SWT.POP_UP );
+        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
+        coolbar.setLayoutData( gridData );
+    }
 
-		/* lock CoolBar */
-		final MenuItem lockItem = new MenuItem( menu, SWT.CHECK );
-		lockItem.setText( "Lock the Toolbars" );
-		lockItem.setSelection(coolbarLocked);
-		lockItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent e ) {
-				coolbar.setLocked( lockItem.getSelection() );
-				coolbarLocked = lockItem.getSelection() ;
-			}
-		} );
-		
-		/* toggle small buttons */
-		final MenuItem toggleButtonsItem = new MenuItem( menu, SWT.CHECK );
-		toggleButtonsItem.setText( "Small buttons" );
-		toggleButtonsItem.setSelection(toolbarSmallButtons);
-		toggleButtonsItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent e ) {
-				toggleSmallButtons( toggleButtonsItem.getSelection() );
-			}
-		} );
-		return menu;
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param toggle DOCUMENT ME!
+     */
+    private void toggleSmallButtons( boolean toggle ) {
+        toolbarSmallButtons = !toolbarSmallButtons;
+        coolbar.dispose();
+        mainTools.dispose();
+        miscTools.dispose();
+        createCoolBar();
+        createToolBars();
+        createCoolItems();
+        Iterator toolButtonIterator = mainToolButtons.iterator();
+        while ( toolButtonIterator.hasNext() ) {
+            ToolButton tmp = ( ToolButton ) toolButtonIterator.next();
+            if ( tmp instanceof ToolButton )
+                tmp.useSmallButtons( toolbarSmallButtons );
+            tmp.resetItem( mainTools );
+        }
+        toolButtonIterator = miscToolButtons.iterator();
+        while ( toolButtonIterator.hasNext() ) {
+            ToolButton tmp = ( ToolButton ) toolButtonIterator.next();
+            if ( tmp instanceof ToolButton )
+                tmp.useSmallButtons( toolbarSmallButtons );
+            tmp.resetItem( miscTools );
+        }
+        layoutCoolBar();
+    }
 
-	/**
-	 * 
-	 * @param coolBar
-	 */
-	public void layoutCoolBar() {
-		// This seems to work in xp/gtk - z			
-		for ( int j = 0; j < coolbar.getItemCount(); j++ ) {	
-			CoolItem tempCoolItem = coolbar.getItem( j );		
-			ToolBar tempToolBar =  ( ToolBar ) tempCoolItem.getControl();
-			Point pSize = tempToolBar.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-			pSize = tempCoolItem.computeSize( pSize.x, pSize.y );
-			tempCoolItem.setSize( pSize );
-			tempCoolItem.setMinimumSize( pSize );
-		}
-		coolbar.setLocked( coolbarLocked );
-	} 
-	
-	/**
-	 * 
-	 *
-	 */
-	protected void createToolBars() {
-		Menu toolmenu = createToolBarRMMenu( coolbar );
-		
-		mainTools = new ToolBar( coolbar, ( toolbarSmallButtons ? SWT.RIGHT : 0) | SWT.FLAT ) ;	
-		mainTools.addMouseTrackListener( new ToolBarMouseTrackListener( mainTools ) );				
-		mainTools.setMenu( toolmenu );
-			
-		miscTools = new ToolBar( coolbar, ( toolbarSmallButtons ? SWT.RIGHT : 0) | SWT.FLAT ) ;	
-		miscTools.addMouseTrackListener (new ToolBarMouseTrackListener( miscTools ) );
-		miscTools.setMenu( toolmenu );
-	}
-	
-	/**
-	 * 
-	 *
-	 */
-	public void createCoolItems () {
-		for ( int i = 0; i < 2; i++ ){
-			CoolItem item = new CoolItem( coolbar, SWT.NONE );
-		}
-					
-		CoolItem[] items = coolbar.getItems ();
-						
-		CoolItem mainCoolItem = items[ 0 ];
-		mainCoolItem.setControl( mainTools );
-				
-		CoolItem miscCoolItem = items[ 1 ];
-		miscCoolItem.setControl( miscTools );		
-	} 
+    /**
+     * DOCUMENT ME!
+     */
+    private void createMiscTools() {
+        final ToolButton prefButton = new ToolButton( miscTools, SWT.NONE );
+        prefButton.setText( G2GuiResources.getString( "TT_PreferencesButton" ) );
+        prefButton.setToolTipText( G2GuiResources.getString( "TT_PreferencesButtonToolTip" ) );
+        prefButton.setBigActiveImage( G2GuiResources.getImage( "PreferencesButtonActive" ) );
+        prefButton.setBigInactiveImage( G2GuiResources.getImage( "PreferencesButton" ) );
+        prefButton.setSmallActiveImage( G2GuiResources.getImage( "PreferencesButtonSmallActive" ) );
+        prefButton.setSmallInactiveImage( G2GuiResources.getImage( "PreferencesButtonSmall" ) );
+        prefButton.useSmallButtons( toolbarSmallButtons );
+        prefButton.setActive( false );
+        prefButton.resetImage();
+        this.miscToolButtons.add( prefButton );
+        prefButton.addListener( SWT.Selection,
+                                new Listener() {
+                public void handleEvent( Event event ) {
+                    prefButton.setActive( true );
+                    mainTab.openPreferences();
+                    prefButton.setActive( false );
+                }
+            } );
+    }
 
-	/**
-	 * @return
-	 */
-	public boolean isCoolbarLocked() {
-		return coolbarLocked;
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param coolBar DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    private Menu createToolBarRMMenu( CoolBar coolBar ) {
+        Menu menu = new Menu( shell, SWT.POP_UP );
+        /* lock CoolBar */
+        final MenuItem lockItem = new MenuItem( menu, SWT.CHECK );
+        lockItem.setText( "Lock the Toolbars" );
+        lockItem.setSelection( coolbarLocked );
+        lockItem.addSelectionListener( new SelectionAdapter() {
+                public void widgetSelected( SelectionEvent e ) {
+                    coolbar.setLocked( lockItem.getSelection() );
+                    coolbarLocked = lockItem.getSelection();
+                }
+            } );
 
-	/**
-	 * @return
-	 */
-	public List getMainToolButtons() {
-		return mainToolButtons;
-	}
+        /* toggle small buttons */
+        final MenuItem toggleButtonsItem = new MenuItem( menu, SWT.CHECK );
+        toggleButtonsItem.setText( "Small buttons" );
+        toggleButtonsItem.setSelection( toolbarSmallButtons );
+        toggleButtonsItem.addSelectionListener( new SelectionAdapter() {
+                public void widgetSelected( SelectionEvent e ) {
+                    toggleSmallButtons( toggleButtonsItem.getSelection() );
+                }
+            } );
+        return menu;
+    }
 
-	/**
-	 * @return
-	 */
-	public boolean isToolbarSmallButtons() {
-		return toolbarSmallButtons;
-	}
+    /**
+     * DOCUMENT ME!
+     */
+    public void layoutCoolBar() {
+        // This seems to work in xp/gtk - z			
+        for ( int j = 0; j < coolbar.getItemCount(); j++ ) {
+            CoolItem tempCoolItem = coolbar.getItem( j );
+            ToolBar tempToolBar = ( ToolBar ) tempCoolItem.getControl();
+            Point pSize = tempToolBar.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+            pSize = tempCoolItem.computeSize( pSize.x, pSize.y );
+            tempCoolItem.setSize( pSize );
+            tempCoolItem.setMinimumSize( pSize );
+        }
+        coolbar.setLocked( coolbarLocked );
+    }
 
-	/**
-	 * @return
-	 */
-	public ToolBar getMainTools() {
-		return mainTools;
-	}
+    /**
+     * DOCUMENT ME!
+     */
+    protected void createToolBars() {
+        Menu toolmenu = createToolBarRMMenu( coolbar );
+        mainTools = new ToolBar( coolbar, ( toolbarSmallButtons ? SWT.RIGHT : 0 ) | SWT.FLAT );
+        mainTools.addMouseTrackListener( new ToolBarMouseTrackListener( mainTools ) );
+        mainTools.setMenu( toolmenu );
+        miscTools = new ToolBar( coolbar, ( toolbarSmallButtons ? SWT.RIGHT : 0 ) | SWT.FLAT );
+        miscTools.addMouseTrackListener( new ToolBarMouseTrackListener( miscTools ) );
+        miscTools.setMenu( toolmenu );
+    }
 
-	/**
-	 * @return
-	 */
-	public Cursor getHandCursor() {
-		return handCursor;
-	}
+    /**
+     * DOCUMENT ME!
+     */
+    public void createCoolItems() {
+        for ( int i = 0; i < 2; i++ ) {
+            CoolItem item = new CoolItem( coolbar, SWT.NONE );
+        }
+        CoolItem[] items = coolbar.getItems();
+        CoolItem mainCoolItem = items[ 0 ];
+        mainCoolItem.setControl( mainTools );
+        CoolItem miscCoolItem = items[ 1 ];
+        miscCoolItem.setControl( miscTools );
+    }
 
-	/**
-	 * @param b
-	 */
-	public void setCoolbarLocked( boolean b ) {
-		coolbarLocked = b;
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public boolean isCoolbarLocked() {
+        return coolbarLocked;
+    }
 
-	/**
-	 * @param b
-	 */
-	public void setToolbarSmallButtons( boolean b ) {
-		toolbarSmallButtons = b;
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public List getMainToolButtons() {
+        return mainToolButtons;
+    }
 
-	/**
-	 * 
-	 * ToolBarMouseTrackListener
-	 *
-	 */
-	public class ToolBarMouseTrackListener implements MouseTrackListener {
-		ToolBar toolBar;
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public boolean isToolbarSmallButtons() {
+        return toolbarSmallButtons;
+    }
 
-		public ToolBarMouseTrackListener( final ToolBar toolBar ) {
-			this.toolBar = toolBar;
-		}
-		public void checkForItem( MouseEvent event ) {
-			Point pt = new Point( event.x, event.y );
-			ToolBar t = ( ToolBar ) event.widget;
-			if ( t.getItem( pt ) instanceof ToolItem )
-				toolBar.setCursor( handCursor );
-			else
-				toolBar.setCursor( null );
-		}
-		public void mouseHover( MouseEvent event ) {
-			checkForItem( event );
-		}
-		public void mouseEnter( MouseEvent event ) {
-			checkForItem( event );
-		}
-		public void mouseExit( MouseEvent event ) {
-			toolBar.setCursor( null );
-		}
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public ToolBar getMainTools() {
+        return mainTools;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public Cursor getHandCursor() {
+        return handCursor;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param b DOCUMENT ME!
+     */
+    public void setCoolbarLocked( boolean b ) {
+        coolbarLocked = b;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param b DOCUMENT ME!
+     */
+    public void setToolbarSmallButtons( boolean b ) {
+        toolbarSmallButtons = b;
+    }
+
+    /**
+     *
+     * ToolBarMouseTrackListener
+     *
+     */
+    public class ToolBarMouseTrackListener implements MouseTrackListener {
+        private ToolBar toolBar;
+
+		/**
+		 * Creates a new ToolBarMouseTrackListener
+		 * @param toolBar DOCUMENT ME!
+		 */
+        public ToolBarMouseTrackListener( final ToolBar toolBar ) {
+            this.toolBar = toolBar;
+        }
+
+        /**
+         * DOCUMENT ME!
+         *
+         * @param event DOCUMENT ME!
+         */
+        public void checkForItem( MouseEvent event ) {
+            Point pt = new Point( event.x, event.y );
+            ToolBar t = ( ToolBar ) event.widget;
+            if ( t.getItem( pt ) instanceof ToolItem )
+                toolBar.setCursor( handCursor );
+            else
+                toolBar.setCursor( null );
+        }
+
+        /**
+         * DOCUMENT ME!
+         *
+         * @param event DOCUMENT ME!
+         */
+        public void mouseHover( MouseEvent event ) {
+            checkForItem( event );
+        }
+
+        /**
+         * DOCUMENT ME!
+         *
+         * @param event DOCUMENT ME!
+         */
+        public void mouseEnter( MouseEvent event ) {
+            checkForItem( event );
+        }
+
+        /**
+         * DOCUMENT ME!
+         *
+         * @param event DOCUMENT ME!
+         */
+        public void mouseExit( MouseEvent event ) {
+            toolBar.setCursor( null );
+        }
+    }
 }
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.9  2003/09/18 10:12:53  lemmster
+checkstyle
+
 Revision 1.8  2003/09/01 00:44:21  zet
 use hotimage
 
