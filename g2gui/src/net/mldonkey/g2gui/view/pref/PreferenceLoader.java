@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.61 2004/03/23 19:58:41 psy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.62 2004/03/23 20:21:37 psy Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -82,7 +82,7 @@ public class PreferenceLoader {
     	String userhome = System.getProperty("user.home");
     	String fileSep = System.getProperty("file.separator");
     	String pathToConf = userhome + fileSep + ".g2gui" + fileSep;
-    	initialize( VersionCheck.isWin32() ? "" : pathToConf + "g2gui.pref" );
+    	initialize( ( VersionCheck.isWin32() ? "" : pathToConf ) + "g2gui.pref" );
     }
 
     public static void initialize( String file ) throws IOException {
@@ -440,6 +440,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.62  2004/03/23 20:21:37  psy
+fixed little mistake
+
 Revision 1.61  2004/03/23 19:58:41  psy
 under windows, use cwd for g2gui.pref storage
 
