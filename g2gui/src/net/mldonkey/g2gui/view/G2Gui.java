@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.view.pref.Preferences;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.1 2003/07/17 14:58:37 lemmstercvs01 Exp $ 
+ * @version $Id: G2Gui.java,v 1.2 2003/07/17 15:10:35 lemmstercvs01 Exp $ 
  *
  */
 public class G2Gui {
@@ -53,12 +53,11 @@ public class G2Gui {
 		Preferences myprefs = new Preferences( preferenceStore );
 		try {
 			myprefs.initialize( preferenceStore );
-		} catch ( IOException e ) {			
-			
-		}		
+		}
+		catch ( IOException e ) { }		
 		if ( !( preferenceStore.getBoolean( "initialized" ) ) ) {					
 			myprefs.open( shell, null );
-			}
+		}
 		int port = preferenceStore.getInt( "port" );
 		String hostname = preferenceStore.getString( "hostname" );
 		String username = preferenceStore.getString( "username" );
@@ -69,11 +68,6 @@ public class G2Gui {
 			
 		MainTab g2gui = new MainTab( mldonkey, shell );
 		mldonkey.disconnect();
-		try {
-			mldonkey.getConnection().close();
-		} catch (IOException e1) {
-			System.out.println("wasn't able to close socket...");
-		}
 	}
 
 	/**
@@ -86,6 +80,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.2  2003/07/17 15:10:35  lemmstercvs01
+foobar
+
 Revision 1.1  2003/07/17 14:58:37  lemmstercvs01
 refactored
 

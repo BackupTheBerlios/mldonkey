@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.1 2003/07/17 14:58:37 lemmstercvs01 Exp $ 
+ * @version $Id: GuiTab.java,v 1.2 2003/07/17 15:10:35 lemmstercvs01 Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -91,6 +91,13 @@ public abstract class GuiTab implements Listener, Observer {
 	 * @param parent The parent composite
 	 */	
 	protected abstract void createContents( Composite parent );
+	
+	/**
+	 * To call if the MainWindow dispose
+	 */
+	public void dispose() {
+		this.gui.getCore().deleteObserver( this );
+	}
 
 	/**
 	 * is called from the gui, when this tab is set to background 
@@ -136,6 +143,9 @@ public abstract class GuiTab implements Listener, Observer {
 }
 /*
 $Log: GuiTab.java,v $
+Revision 1.2  2003/07/17 15:10:35  lemmstercvs01
+foobar
+
 Revision 1.1  2003/07/17 14:58:37  lemmstercvs01
 refactored
 

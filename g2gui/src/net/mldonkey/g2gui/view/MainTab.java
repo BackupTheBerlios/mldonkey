@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.2 2003/07/17 15:02:28 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.3 2003/07/17 15:10:35 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -92,7 +92,7 @@ public class MainTab implements Listener {
 				Iterator itr = registeredTabs.iterator();
 				while( itr.hasNext() ) {
 					GuiTab aTab = ( GuiTab ) itr.next();
-					aTab.setInActive();
+					aTab.dispose();
 				}
 				
 				/* kill the core communication */
@@ -314,7 +314,6 @@ public class MainTab implements Listener {
 	private void addTabs() {
 		new TransferTab(this);
 		new ConsoleTab( this );
-		new StatisticTab( this );
 		/*setting TransferTab active if registered*/
 		Iterator tabIterator = registeredTabs.iterator();
 		while ( tabIterator.hasNext() ) {
@@ -454,6 +453,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.3  2003/07/17 15:10:35  lemmstercvs01
+foobar
+
 Revision 1.2  2003/07/17 15:02:28  lemmstercvs01
 changed visibility of createTransparentImage()
 
