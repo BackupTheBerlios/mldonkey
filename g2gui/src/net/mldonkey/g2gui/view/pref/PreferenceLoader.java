@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.16 2003/08/28 18:27:32 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.17 2003/09/03 14:49:07 zet Exp $
  */
 public class PreferenceLoader {
 
@@ -99,6 +99,9 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( "displayGridLines", true );
 		preferenceStore.setDefault( "tableCellEditors", false );
 		preferenceStore.setDefault( "displayHeaderBar", true );
+		
+		preferenceStore.setDefault( "coreExecutable", "" );
+		
 		return preferenceStore;
 	}
 	
@@ -177,6 +180,12 @@ public class PreferenceLoader {
 		return 0;
 	}
 	
+	static public String loadString(String preferenceString ) {
+		if (preferenceStore.contains( preferenceString ))
+			return preferenceStore.getString( preferenceString );
+		return "";
+	}
+	
 	static public PreferenceStore getPreferenceStore() {
 		return preferenceStore;
 	}
@@ -204,6 +213,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.17  2003/09/03 14:49:07  zet
+optionally spawn core from gui
+
 Revision 1.16  2003/08/28 18:27:32  zet
 configurable flat interface
 

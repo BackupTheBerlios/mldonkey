@@ -1,0 +1,81 @@
+/*
+ * Copyright 2003
+ * G2GUI Team
+ * 
+ * 
+ * This file is part of G2GUI.
+ *
+ * G2GUI is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * G2GUI is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with G2GUI; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ */
+package net.mldonkey.g2gui.view.statusline;
+
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.G2Gui;
+import net.mldonkey.g2gui.view.StatusLine;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+
+/**
+ * CoreConsoleItem
+ *
+ * @version $Id: CoreConsoleItem.java,v 1.1 2003/09/03 14:49:07 zet Exp $ 
+ *
+ */
+public class CoreConsoleItem {
+
+	private StatusLine statusLine;
+	private Composite composite;
+	private boolean linkEntryToggle = false;
+
+	public CoreConsoleItem( StatusLine statusLine, CoreCommunication mldonkey ) {
+		this.statusLine = statusLine;
+		this.composite = statusLine.getStatusline();
+		createContents();
+	}
+
+	public void createContents() {
+			
+		Composite linkComposite = new Composite(composite, SWT.BORDER );
+		linkComposite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER));
+		linkComposite.setLayout( new FillLayout() );
+
+		CLabel link = new CLabel( linkComposite, SWT.BORDER );
+		link.setImage ( G2GuiResources.getImage("G2GuiLogoSmall") );
+		link.setToolTipText(G2GuiResources.getString("CORE_CONSOLE_TOOLTIP"));
+		link.addMouseListener(new MouseListener() {
+			public void mouseDown(MouseEvent e) {
+				G2Gui.getCoreConsole().getShell().open();
+			}
+			public void mouseUp(MouseEvent e) {}
+			public void mouseDoubleClick(MouseEvent e) {}
+		
+		});
+	}
+}
+/*
+$Log: CoreConsoleItem.java,v $
+Revision 1.1  2003/09/03 14:49:07  zet
+optionally spawn core from gui
+
+
+*/

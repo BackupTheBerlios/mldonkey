@@ -24,6 +24,8 @@ package net.mldonkey.g2gui.view;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.statusline.CoreConsoleItem;
 import net.mldonkey.g2gui.view.statusline.LinkEntry;
 import net.mldonkey.g2gui.view.statusline.LinkEntryItem;
 import net.mldonkey.g2gui.view.statusline.NetworkItem;
@@ -43,7 +45,7 @@ import org.eclipse.swt.widgets.Composite;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.13 2003/08/28 22:44:30 zet Exp $ 
+ * @version $Id: StatusLine.java,v 1.14 2003/09/03 14:49:07 zet Exp $ 
  *
  */
 public class StatusLine {
@@ -78,12 +80,20 @@ public class StatusLine {
 				
 		this.composite = new Composite( mainComposite, SWT.NONE );	
 		
-		gridLayout = CGridLayout.createGL(4,0,0,0,0,false); 
+		int numColumns = 4;
+
+		if (G2Gui.getCoreConsole() != null && PreferenceLoader.loadBoolean("advancedMode"))
+			numColumns = 5;
+
+		gridLayout = CGridLayout.createGL(numColumns,0,0,0,0,false); 
 		this.composite.setLayout( gridLayout);
 		composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );	
 			
 		/* the left field */
 		new NetworkItem( this, this.core );
+
+		if (G2Gui.getCoreConsole() != null && PreferenceLoader.loadBoolean("advancedMode"))
+			new CoreConsoleItem( this, this.core );
 
 		// the toggle for linkEntry
 		new LinkEntryItem( this, this.core );
@@ -159,6 +169,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.14  2003/09/03 14:49:07  zet
+optionally spawn core from gui
+
 Revision 1.13  2003/08/28 22:44:30  zet
 GridLayout helper class
 

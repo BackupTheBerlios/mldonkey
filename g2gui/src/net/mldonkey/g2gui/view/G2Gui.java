@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -32,6 +33,7 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.ObjectPool;
 import net.mldonkey.g2gui.helper.SocketPool;
+import net.mldonkey.g2gui.view.console.ExecConsole;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -51,10 +53,10 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Starts the hole thing
+ * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.25 2003/08/24 16:37:04 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.26 2003/09/03 14:49:07 zet Exp $ 
  *
  */
 public class G2Gui {
@@ -80,6 +82,7 @@ public class G2Gui {
 	private static FormData formData;
 	private static Rectangle shellRect, displayRect;
 	private static Label label;
+	private static ExecConsole execConsole = null;
 	
 	/**
 	 * Starts a new Core and launch the Gui
@@ -92,6 +95,24 @@ public class G2Gui {
 		PreferenceLoader.initialize();
 		preferenceStore = PreferenceLoader.getPreferenceStore();
 		launch( args );
+	}
+	
+	/**
+	 * spawn core
+	 */
+	public static void spawnCore() {
+		
+		File coreEXE = new File( PreferenceLoader.loadString("coreExecutable") );
+		
+		if ( execConsole == null && coreEXE.exists() && coreEXE.isFile() ) {
+			execConsole = new ExecConsole();
+			try {
+				// wait while the core loads and opens the gui port? something better?
+				Thread.sleep( 7777 );
+			} catch ( InterruptedException e ) {
+			
+			}
+		}
 	}
 	
 	public static void launch( String[] args ) {
@@ -135,7 +156,7 @@ public class G2Gui {
 			int y = ( displayRect.height - shellRect.height ) / 2;
 			splashShell.setLocation( x, y );
 			splashShell.open(); 
-			
+			spawnCore();
 			increaseBar( "Starting the model" );
 		}
 	
@@ -164,7 +185,9 @@ public class G2Gui {
 		try {
 			socketPool = new SocketPool( hostname, port );
 			socket = ( Socket ) socketPool.checkOut();
+		
 		}
+		
 		catch ( UnknownHostException e ) {
 			if ( notProcessingLink ) {
 				splashShell.dispose();
@@ -221,12 +244,12 @@ public class G2Gui {
 		
 			core = new Core( socket, username, password, waiterObject, pollMode, advancedMode );
 			core.connect();
+			
 			mldonkey = new Thread( core );
 			mldonkey.setDaemon( true );
 			mldonkey.start();
-			
 			try {
-				waiterObject.wait();
+				waiterObject.wait();  
 			}
 			catch ( InterruptedException e1 ) { }
 		}
@@ -342,10 +365,19 @@ public class G2Gui {
 	public static CoreCommunication getMldonkey() {
 		return core;
 	}
+	
+	public static ExecConsole getCoreConsole() {
+		return execConsole;
+	}
+	
+	
 }
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.26  2003/09/03 14:49:07  zet
+optionally spawn core from gui
+
 Revision 1.25  2003/08/24 16:37:04  zet
 combine the preference stores
 

@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.21 2003/09/02 09:25:55 lemmster Exp $
+ * @version $Id: G2GuiResources.java,v 1.22 2003/09/03 14:49:07 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -199,6 +199,8 @@ public class G2GuiResources {
         Image icon = new Image( Display.getCurrent(), source, mask );
         imageRegistry.put( "ProgramIcon", icon );
         imageRegistry.put( "G2GuiLogo", createTrans( "mld_logo_48x48.png" ) );
+		imageRegistry.put( "G2GuiLogoSmall", createTrans( "mld_logo_12x12.png" ) );
+        
         String[] buttonNames =
         { "Preferences", "Statistics", "Console", "Transfers", "Search", "Servers", "Messages" };
         String[] buttonFiles =
@@ -362,6 +364,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.22  2003/09/03 14:49:07  zet
+optionally spawn core from gui
+
 Revision 1.21  2003/09/02 09:25:55  lemmster
 jalopy run
 
@@ -405,7 +410,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image

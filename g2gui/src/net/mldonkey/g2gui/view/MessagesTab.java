@@ -62,7 +62,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableItem;
@@ -71,7 +70,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.26 2003/09/01 17:04:20 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.27 2003/09/03 14:49:07 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
 
@@ -207,8 +206,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 		
 		cTabFolder.setBorderVisible(false);
 		cTabFolder.setLayoutData( new FillLayout() );
-		Display display = cTabFolder.getDisplay();
-		cTabFolder.setSelectionBackground(new Color[]{display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+		cTabFolder.setSelectionBackground(new Color[]{cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 											cTabFolder.getBackground() },
 							 			 	new int[] {75});
 		cTabFolder.setSelectionForeground(cTabFolder.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
@@ -461,6 +459,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.27  2003/09/03 14:49:07  zet
+optionally spawn core from gui
+
 Revision 1.26  2003/09/01 17:04:20  zet
 *** empty log message ***
 

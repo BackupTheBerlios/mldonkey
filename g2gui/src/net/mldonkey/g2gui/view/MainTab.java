@@ -30,6 +30,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.main.MainCoolBar;
@@ -58,7 +60,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.64 2003/08/28 22:44:30 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.65 2003/09/03 14:49:07 zet Exp $ 
  *
  */
 public class MainTab implements Observer, ShellListener {
@@ -89,12 +91,9 @@ public class MainTab implements Observer, ShellListener {
 		Display display = shell.getDisplay();
 		shell.addShellListener( this );
 		G2GuiResources.initialize();
-		
 		setTitleBarText( shell ); 
 		shell.setLayout( new FillLayout() );
-		
 		createContents( shell );
-					
 		shell.pack ();
 		/* close the splashShell from G2Gui.java */
 		G2Gui.increaseBar( "" );
@@ -115,13 +114,22 @@ public class MainTab implements Observer, ShellListener {
 					GuiTab aTab = ( GuiTab ) itr.next();
 					aTab.dispose();
 				}
-				/* save the preferences */
+			
+				coolBar.getHandCursor().dispose();
+				
+				// If we have created the core, kill it
+				if (G2Gui.getCoreConsole() != null) {
+					Message killCore = new EncodeMessage( Message.S_KILL_CORE );
+					killCore.sendMessage( mldonkey.getConnection() );
+					G2Gui.getCoreConsole().dispose();
+				}
+				
+				// disconnect from core
+				( ( CoreCommunication )mldonkey ).disconnect();	
+				
+				// save preferences
 				PreferenceLoader.saveStore();
 				PreferenceLoader.cleanUp();
-				
-				coolBar.getHandCursor().dispose();
-				/* kill the core communication */
-				( ( CoreCommunication )mldonkey ).disconnect();				
 			}
 		} );
 		while ( !shell.isDisposed () ) {
@@ -383,6 +391,9 @@ public class MainTab implements Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.65  2003/09/03 14:49:07  zet
+optionally spawn core from gui
+
 Revision 1.64  2003/08/28 22:44:30  zet
 GridLayout helper class
 

@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  *
- * @version $Id: Console.java,v 1.10 2003/08/26 14:28:26 zet Exp $ 
+ * @version $Id: Console.java,v 1.11 2003/09/03 14:49:07 zet Exp $ 
  *
  */
 public class Console extends Observable implements ControlListener  {	
@@ -56,6 +56,7 @@ public class Console extends Observable implements ControlListener  {
 	private Text input;
 	private int clientId = 0;
 	private Color highlightColor = null;
+	private final int MAX_LINES = 1000;
 
 	/**
 	 * @param gui the main gui, which takes care of all our tabs
@@ -75,13 +76,13 @@ public class Console extends Observable implements ControlListener  {
 		infoDisplay = new StyledText( parent, style | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
 	
 		Menu popupMenu = new Menu(infoDisplay);
-		  MenuItem copyItem = new MenuItem(popupMenu, SWT.PUSH);
-		  copyItem.setText("Copy");
-		  copyItem.addListener(SWT.Selection, new Listener() {
-		   public void handleEvent(Event event) {
-			infoDisplay.copy();
-		   }
-		  });
+		MenuItem copyItem = new MenuItem(popupMenu, SWT.PUSH);
+		copyItem.setText("Copy");
+		copyItem.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				infoDisplay.copy();
+			}
+		});
 		
 		infoDisplay.setMenu(popupMenu);
 	
@@ -132,6 +133,10 @@ public class Console extends Observable implements ControlListener  {
 	}
 
 	public void append(String message) {
+		if (infoDisplay.getLineCount() > MAX_LINES) {
+			infoDisplay.replaceTextRange(0, infoDisplay.getOffsetAtLine(5), "");
+		}
+		
 		infoDisplay.append( message );
 		infoDisplay.update();
 		// workaround for GTK2 bug, to focus the bottom
@@ -184,6 +189,9 @@ public class Console extends Observable implements ControlListener  {
 
 /*
 $Log: Console.java,v $
+Revision 1.11  2003/09/03 14:49:07  zet
+optionally spawn core from gui
+
 Revision 1.10  2003/08/26 14:28:26  zet
 add Copy menuitem
 
