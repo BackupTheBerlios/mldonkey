@@ -57,7 +57,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.110 2003/11/20 15:39:26 dek Exp $ 
+ * @version $Id: Core.java,v 1.111 2003/11/20 15:54:50 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -181,7 +181,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		this.pollModeEnabled = pollModeEnabled;
 		this.advancedMode = advancedMode;
 		this.pollUpStats = PreferenceLoader.loadBoolean( "pollUpStats" );
-		this.disconnectListener = new DisconnectListener( this, waiterObj );
+		this.disconnectListener = new DisconnectListener( this );
 	}
 
 	/**
@@ -632,6 +632,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.111  2003/11/20 15:54:50  dek
+minor checkstyle and removed unescessary type-cast
+
 Revision 1.110  2003/11/20 15:39:26  dek
 reconnect started
 

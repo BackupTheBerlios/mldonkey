@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * DisconnectListener
  *
- * @version $Id: DisconnectListener.java,v 1.1 2003/11/20 15:39:55 dek Exp $ 
+ * @version $Id: DisconnectListener.java,v 1.2 2003/11/20 15:54:50 dek Exp $ 
  *
  */
 public class DisconnectListener implements Observer, Runnable {
@@ -44,12 +44,11 @@ public class DisconnectListener implements Observer, Runnable {
 	private int result;
 
 	/**
-	 * @param core
+	 * @param core handles all the connections to mldonkey
 	 */
-	public DisconnectListener(CoreCommunication core, Object waiterObj) {
+	public DisconnectListener( CoreCommunication core ) {
 		this.core = core;
-		core.addObserver( this );
-		this.waiterObj = waiterObj;		
+		core.addObserver( this );		
 	}
 
 	/* (non-Javadoc)
@@ -57,10 +56,10 @@ public class DisconnectListener implements Observer, Runnable {
 	 */
 	public void update( Observable o, final Object arg ) {
 		if ( arg instanceof IOException )
-			Display.getDefault().syncExec( this);
-		if (result == SWT.YES){			
-			synchronized ( core ){				
-				((Core)core).reconnect();				
+			Display.getDefault().syncExec( this );
+		if ( result == SWT.YES ) {			
+			synchronized ( core ) {				
+				core.reconnect();				
 			}
 		}
 	}
@@ -71,8 +70,8 @@ public class DisconnectListener implements Observer, Runnable {
 	 */
 	public void run() {		
 		Shell errorShell = new Shell();
-		MessageBox box = new MessageBox( errorShell , SWT.ICON_ERROR | SWT.YES | SWT.NO);
-		box.setMessage("disconnected : reconnect ?");
+		MessageBox box = new MessageBox( errorShell , SWT.ICON_ERROR | SWT.YES | SWT.NO );
+		box.setMessage( "disconnected : reconnect ?" );
 		errorShell.dispose();	
 		result = box.open();		
 	}
@@ -83,6 +82,9 @@ public class DisconnectListener implements Observer, Runnable {
 
 /*
 $Log: DisconnectListener.java,v $
+Revision 1.2  2003/11/20 15:54:50  dek
+minor checkstyle and removed unescessary type-cast
+
 Revision 1.1  2003/11/20 15:39:55  dek
 A class that does some things on disconnection (mainly reconnecting atm)
 
