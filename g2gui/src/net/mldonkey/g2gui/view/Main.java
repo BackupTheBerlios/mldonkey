@@ -8,7 +8,7 @@
  * G2Gui is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
  * G2Gui is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.view.pref.Preferences;
  * G2GuiTest
  *
  * @author $user$
- * @version $Id: Main.java,v 1.7 2003/06/27 11:23:48 dek Exp $ 
+ * @version $Id: Main.java,v 1.8 2003/07/02 17:06:29 dek Exp $ 
  *
  */
 public class Main {
@@ -47,27 +47,27 @@ public class Main {
 	 * Starts a new Core and launch the Gui
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		Shell shell = new Shell(new Display());
-		PreferenceStore preferenceStore = new PreferenceStore("g2gui.pref");
-		Preferences myprefs = new Preferences(preferenceStore);
+	public static void main( String[] args ) {
+		Shell shell = new Shell( new Display() );
+		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
+		Preferences myprefs = new Preferences( preferenceStore );
 		try {
-			myprefs.initialize(preferenceStore);
-		} catch (IOException e) {			
+			myprefs.initialize( preferenceStore );
+		} catch ( IOException e ) {			
 			
 		}		
-		if (!(preferenceStore.getBoolean("initialized"))){					
-			myprefs.open(shell,null);
+		if ( !( preferenceStore.getBoolean( "initialized" ) ) ) {					
+			myprefs.open( shell, null );
 			}
-		int port = preferenceStore.getInt("port");
-		String hostname = preferenceStore.getString("hostname");
-		String username = preferenceStore.getString("username");
-		String password = preferenceStore.getString("password");
+		int port = preferenceStore.getInt( "port" );
+		String hostname = preferenceStore.getString( "hostname" );
+		String username = preferenceStore.getString( "username" );
+		String password = preferenceStore.getString( "password" );
 
 		SocketPool socketPool = new SocketPool( hostname, port, username, password );
-		mldonkey = mldonkey  = new Core( ( Socket ) socketPool.checkOut() );
+		mldonkey  = new Core( ( Socket ) socketPool.checkOut() );
 			
-		Gui g2gui = new Gui(mldonkey,shell);
+		Gui g2gui = new Gui( mldonkey, shell );
 		mldonkey.disconnect();
 	}
 
@@ -81,6 +81,9 @@ public class Main {
 
 /*
 $Log: Main.java,v $
+Revision 1.8  2003/07/02 17:06:29  dek
+Checkstyle, JavaDocs still have to be added
+
 Revision 1.7  2003/06/27 11:23:48  dek
 gui is no more children of applicationwindow
 
