@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.*;
 
@@ -31,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  * @author markus
- * @version $Id: FileState.java,v 1.8 2003/07/03 18:43:19 lemmstercvs01 Exp $ 
+ * @version $Id: FileState.java,v 1.9 2003/07/03 21:15:06 lemmstercvs01 Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -105,7 +106,7 @@ public class FileState implements SimpleInformation {
 	protected void setState( EnumFileState state, int id, CoreCommunication core ) {
 		EncodeMessage sendState = null;
 		Object[] content = new Object[ 2 ];
-		short opcode = 23;
+		short opcode = Message.S_SWITCH_DOWNLOAD;
 		content[ 0 ] = new Integer( id );
 			
 		/* unpause */
@@ -121,7 +122,7 @@ public class FileState implements SimpleInformation {
 		/* cancel */
 		else if ( state == EnumFileState.CANCELLED ) {
 			/* to cancel the dl we need a different opcode */
-			opcode = 11;
+			opcode = Message.S_REMOVE_DOWNLOAD;
 			content = new Object[ 1 ];
 			content[ 0 ] = new Integer( id );
 		}
@@ -136,6 +137,9 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.9  2003/07/03 21:15:06  lemmstercvs01
+opcodes now from Message
+
 Revision 1.8  2003/07/03 18:43:19  lemmstercvs01
 cancel should work. untested
 
