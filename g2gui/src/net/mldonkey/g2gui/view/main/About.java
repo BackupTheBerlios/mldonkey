@@ -33,10 +33,11 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.1 2003/08/25 20:27:56 dek Exp $ 
+ * @version $Id: About.java,v 1.2 2003/08/26 09:19:31 dek Exp $ 
  *
  */
 public class About {
+	//TODO filling about-Dialog with content
 	private Shell shell;
 	
 
@@ -81,6 +82,9 @@ public class About {
 }
 /*
 $Log: About.java,v $
+Revision 1.2  2003/08/26 09:19:31  dek
+added todo-item
+
 Revision 1.1  2003/08/25 20:27:56  dek
 first sketch of an about-dialog, feel free to extend ;-)
 
