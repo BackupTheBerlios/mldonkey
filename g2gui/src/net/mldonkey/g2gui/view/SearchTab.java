@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.32 2003/09/25 20:45:06 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.33 2003/09/26 07:13:41 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -164,25 +164,26 @@ public class SearchTab extends GuiTab {
 			
 			item.setText( searchTabs[ i ].getTabName() );
 			aControl = searchTabs[ i ].createTabFolderPage( tabFolder );
-			if (i == 0) item.setControl( aControl );
+			if ( i == 0 ) 
+				item.setControl( aControl );
 			item.setData( "myControl", aControl );
 			item.setData( searchTabs[ i ] );			
 		}
 		
-		// setControl on selection
-        tabFolder.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected(SelectionEvent e) {}
-            public void widgetSelected(SelectionEvent e) {
-                for (int i = 0; i < tabFolder.getItems().length; i++) {
-                    tabFolder.getItems()[i].setControl(null);
-                }
+		/* setControl on selection */
+        tabFolder.addSelectionListener( new SelectionListener() {
+            public void widgetDefaultSelected( SelectionEvent e ) { }
+            public void widgetSelected( SelectionEvent e ) {
+				CTabItem cTabItem = ( CTabItem ) e.item;
+				cTabItem.setControl( ( Control ) cTabItem.getData( "myControl" ) );
 
-                CTabItem cTabItem = (CTabItem) e.item;
-                cTabItem.setControl( (Control) cTabItem.getData( "myControl" ) );
-                tabFolder.getParent().layout();
+                for ( int i = 0; i < tabFolder.getItems().length; i++ ) {
+                	if ( tabFolder.getItems()[ i ] != e.item ) 
+	                    tabFolder.getItems()[ i ].setControl( null );
+                }
+				tabFolder.getParent().layout();
             }
-        });
-		
+        } );
 		tabFolder.setSelection( 0 );
 
 		gridLayout = new GridLayout();
@@ -409,6 +410,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.33  2003/09/26 07:13:41  lemmster
+checkstyle!
+
 Revision 1.32  2003/09/25 20:45:06  zet
 remove that annoying empty space.........
 
@@ -467,7 +471,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose
