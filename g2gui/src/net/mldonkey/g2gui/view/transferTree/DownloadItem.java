@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.22 2003/07/21 15:12:39 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.23 2003/07/22 23:28:15 zet Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem implements IItemHasMenue, SelectionListener {
@@ -198,7 +198,7 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 		}
 	}
 	void update() {
-		synchronized ( fileInfo.getClientInfos().iterator() ) {
+		synchronized ( fileInfo.getClientInfos() ) {
 			updateColumns();
 			Iterator it = fileInfo.getClientInfos().iterator();
 			while ( it.hasNext() ) {
@@ -405,6 +405,9 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 }
 /*
 $Log: DownloadItem.java,v $
+Revision 1.23  2003/07/22 23:28:15  zet
+stat graph - no flicker on windows and other craziness
+
 Revision 1.22  2003/07/21 15:12:39  dek
 concurrent thread-exceptions solved??
 

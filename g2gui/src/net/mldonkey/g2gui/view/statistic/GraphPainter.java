@@ -66,8 +66,12 @@ public class GraphPainter {
 	public void paint() {
 		//setting the Canvas Background to the parents Background
 		
-		drawBoard.setBackground(new Color(null,255,255,255));
-		drawBoard.fillRectangle(0,0,parent.getBounds().width,parent.getBounds().height);
+		Image imageBuffer = new Image(null, parent.getBounds());
+		GC drawBoardBuffer = new GC(imageBuffer);
+		drawBoardBuffer.setBackground(new Color(null,50,50,50));
+		drawBoardBuffer.setForeground(new Color(null,0,0,0));
+						
+		drawBoardBuffer.fillGradientRectangle(0,0,parent.getBounds().width,parent.getBounds().height, true);
 		//g2d.setColor(green);
 		
 		int which = 0;
@@ -81,7 +85,10 @@ public class GraphPainter {
 
 			
 			Color graphColor = new Color(null,red,blue,green);
-			drawBoard.setForeground(graphColor);
+			drawBoardBuffer.setBackground(graphColor);
+			drawBoardBuffer.setForeground(new Color(null, red > 100 ? red - 100 : red,
+														  blue > 100 ? blue - 100 : blue, 
+														  green > 100 ? green - 100 : green));
 			int width = parent.getBounds().width;
 			int height = parent.getBounds().height-20;
 			int fac = 0;
@@ -103,23 +110,32 @@ public class GraphPainter {
 				
 				} 
 				fac = height/maximum; 
-				//System.out.println("valueY" + valueY + " - Maximum:"+ maximum);
+				
 				valueY = height - valueY*fac;
 				
-				drawBoard.drawLine(k,height,k,valueY);
+				//drawBoardBuffer.drawLine(k,height,k,valueY);
+				
+				drawBoardBuffer.fillGradientRectangle(k,height,1,valueY-height,true);
 				actualPoint = actualPoint.getPrev();
 				k++;
 
 			}
-			drawBoard.setForeground(new Color(null,0,0,0));
-			drawBoard.drawLine(startx,height+1,width-40,height+1);
-			drawBoard.drawLine(startx,0,startx,height+20);
-			for (int dummy=0;dummy<10;dummy++)
-			{
-				int value = dummy*2;
-				drawBoard.drawText("  " + value,0,height-8-fac*value*10);
-			}
+			drawBoardBuffer.setForeground(new Color(null,0,128,64));
+			drawBoardBuffer.drawLine(startx,height+1,width-40,height+1);
 			
+			for (int i = 0; i < 10; i++) 
+				drawBoardBuffer.drawLine(startx+i*(width/20),0,startx+i*(width/20),height+20);
+		
+				
+			for (int dummy=height/10;dummy<height;dummy=dummy+height/10)
+				drawBoardBuffer.drawLine(20,height-dummy,width/2,height-dummy);
+			
+			
+			// TODO: fix this
+			for (int dummy=0; dummy<1; dummy++) {
+			int value=dummy*2;
+			drawBoardBuffer.drawText("  " + value,0,height-8-fac*value*10, true);
+			}
 			
 			double vv = (double)graphs[which].getLast().getValue()/100;
 			
@@ -127,24 +143,24 @@ public class GraphPainter {
 			//System.out.println("wert:" + (height-(int)vv));
 			int textPosition = height - graphs[which].getLast().getValue()/10*fac;
 			Color aimColor = new Color(null,0,0,0);
-			drawBoard.setForeground(aimColor);
-			drawBoard.setBackground(new Color(null,255,255,255));
-			drawBoard.fillRoundRectangle(startx+10,textPosition-3,90,20,7,7);
-			drawBoard.drawRoundRectangle(startx+10,textPosition-3,90,20,7,7);
-			drawBoard.drawText("wert: " +vv,startx+20,textPosition);
-			drawBoard.drawLine(startx+10,textPosition,startx,height - graphs[which].getLast().getValue()/10*fac);
+			drawBoardBuffer.setForeground(aimColor);
+			drawBoardBuffer.setBackground(new Color(null,255,255,255));
+			drawBoardBuffer.fillRoundRectangle(startx+10,textPosition-3,80,20,7,7);
+			drawBoardBuffer.drawRoundRectangle(startx+10,textPosition-3,80,20,7,7);
+			drawBoardBuffer.drawText(vv + " KB/s",startx+20,textPosition);
+			drawBoardBuffer.drawLine(startx+10,textPosition,startx,height - graphs[which].getLast().getValue()/10*fac);
 	
 		
 			which++;
 			
 			
-		}
+		};
 		
 		
-		
-		
-		
-		
+		drawBoard.drawImage(imageBuffer, 0,0);
+		imageBuffer.dispose();
+		drawBoardBuffer.dispose();
+			
 		
 	}
 

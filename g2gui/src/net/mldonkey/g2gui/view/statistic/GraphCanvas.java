@@ -32,7 +32,7 @@ public class GraphCanvas extends Canvas {
 	
 	public GraphCanvas(Composite parent_)
 	 {
-	super(parent_,SWT.NONE);
+	super(parent_,SWT.NO_BACKGROUND);
 		parent = parent_;
 		gp = new GraphPainter(parent);
 
