@@ -25,11 +25,13 @@ package net.mldonkey.g2gui.model;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
+import java.text.DecimalFormat;
+
 /**
  * ResultInfo
  *
  * @author $user$
- * @version $Id: ResultInfo.java,v 1.10 2003/07/25 22:34:52 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfo.java,v 1.11 2003/07/31 04:07:43 zet Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -128,7 +130,7 @@ public class ResultInfo extends Parent {
 		this.setNetworkID( messageBuffer.readInt32() );
 		this.names = messageBuffer.readStringList();
 		this.md4 = messageBuffer.readBinary( 16 );
-		this.size = messageBuffer.readInt32() / 1024;
+		this.size = messageBuffer.readInt32();
 		this.format = messageBuffer.readString();
 		this.type = messageBuffer.readString();
 		this.tags = messageBuffer.readTagList();		
@@ -143,25 +145,26 @@ public class ResultInfo extends Parent {
 	 * @param size The size
 	 * @return a string represantation of this size
 	 */	
-	private String calcStringSize( int size ) {
-		double temp = 0;
-		String unit = null;
-		if ( size > 1000000 ) {
-			temp = ( size / 1024.0 / 1024.0 );			
-			unit = "GB";
-		}
-		else if ( size > 1000 ) {
-			temp = ( size / 1024.0 );
-			unit = "MB";		
-		}
-		else {
-			temp = size;
-			unit = "KB";
-		}
-		/* round */
-		temp = ( double )( ( int )( temp * 100 ) ) / 100;
+	private String calcStringSize( long size ) {
+		float k = 1024f;
+		float m = k * k;
+		float g = m * k;
+		float t = g * k;
 		
-		return new String( temp + " " + unit );
+		float fsize = (float) size;
+		
+		DecimalFormat df = new DecimalFormat( "0.##" );
+			
+		if ( fsize > t ) 
+			return new String ( df.format(fsize / t) + " TB" );
+		else if ( fsize > g ) 
+			return new String ( df.format(fsize / g) + " GB" );	
+		else if ( fsize > m ) 
+			return new String ( df.format(fsize / m) + " MB" );
+		else if ( fsize > k ) 
+			return new String ( df.format(fsize / k) + " KB" );
+		else
+			return new String ( size + "" );	
 	}
 	
 	/**
@@ -216,8 +219,10 @@ public class ResultInfo extends Parent {
 	/**
 	 * @return The size
 	 */
-	public int getSize() {
-		return size;
+	public long getSize() {
+		// convert to long
+		long result = ( size & 0xFFFFFFFFL );
+		return result;
 	}
 
 	/**
@@ -290,6 +295,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.11  2003/07/31 04:07:43  zet
+size is now a long
+
 Revision 1.10  2003/07/25 22:34:52  lemmstercvs01
 lots of changes
 
