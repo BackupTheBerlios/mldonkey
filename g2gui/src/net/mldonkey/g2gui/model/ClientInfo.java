@@ -28,14 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.3 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: ClientInfo.java,v 1.4 2003/06/24 09:16:48 lemmstercvs01 Exp $ 
  *
  */
 public class ClientInfo implements SimpleInformation {
-	
-	public static final byte SOURCE = 0;
-	public static final byte FRIEND = 1;
-	public static final byte BROWSED = 2;
 	
 	/**
 	 * Client Id
@@ -56,7 +52,7 @@ public class ClientInfo implements SimpleInformation {
 	/**
 	 * Client Type
 	 */
-	private byte clientType;
+	private EnumClientType clientType;
 	/**
 	 * List of Tags
 	 */
@@ -119,7 +115,7 @@ public class ClientInfo implements SimpleInformation {
 	/**
 	 * @return a byte
 	 */
-	public byte getClientType() {
+	public EnumClientType getClientType() {
 		return clientType;
 	}
 
@@ -183,12 +179,12 @@ public class ClientInfo implements SimpleInformation {
 	 * @param b a byte
 	 */
 	public void setClientType( byte b ) {
-		if ( b == SOURCE )
-			clientType = SOURCE;
-		else if ( b == FRIEND )
-			clientType = FRIEND;
-		else if ( b == BROWSED )
-			clientType = BROWSED;		
+		if ( b == 0 )
+			clientType = EnumClientType.SOURCE;
+		else if ( b == 1 )
+			clientType = EnumClientType.FRIEND;
+		else if ( b == 2 )
+			clientType = EnumClientType.BROWSED;		
 	}
 
 	/**
@@ -241,6 +237,9 @@ public class ClientInfo implements SimpleInformation {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.4  2003/06/24 09:16:48  lemmstercvs01
+better Enum added
+
 Revision 1.3  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 

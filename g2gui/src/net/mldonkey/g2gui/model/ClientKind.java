@@ -28,18 +28,14 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientKind
  *
  * @author markus
- * @version $Id: ClientKind.java,v 1.3 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: ClientKind.java,v 1.4 2003/06/24 09:16:48 lemmstercvs01 Exp $ 
  *
  */
 public class ClientKind implements SimpleInformation {
-	
-	public static final byte DIRECT = 0;
-	public static final byte FIREWALLED = 1;
-	
 	/**
 	 * Client Type (direct/firewalled)
 	 */
-	private byte clientType;
+	private EnumClientMode clientMode;
 	/**
 	 * Ip Address (present only if client type = 0)
 	 */
@@ -74,8 +70,8 @@ public class ClientKind implements SimpleInformation {
 	/**
 	 * @return a byte
 	 */
-	public byte getClientType() {
-		return clientType;
+	public EnumClientMode getClientMode() {
+		return clientMode;
 	}
 
 	/**
@@ -109,11 +105,11 @@ public class ClientKind implements SimpleInformation {
 	/**
 	 * @param b a byte
 	 */
-	public void setClientType( byte b ) {
-		if ( b == DIRECT )
-			clientType = DIRECT;
-		else if ( b == FIREWALLED )
-			clientType = FIREWALLED;
+	public void setClientMode( byte b ) {
+		if ( b == 0 )
+			clientMode = EnumClientMode.DIRECT;
+		else if ( b == 1 )
+			clientMode = EnumClientMode.FIREWALLED;
 	}
 
 	/**
@@ -135,8 +131,8 @@ public class ClientKind implements SimpleInformation {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
-		this.setClientType( messageBuffer.readByte() );
-		if ( this.getClientType() == DIRECT ) {
+		this.setClientMode( messageBuffer.readByte() );
+		if ( this.getClientMode() == EnumClientMode.DIRECT ) {
 			this.setIpAddress( messageBuffer.readInt32() );
 			this.setPort( messageBuffer.readInt16() );
 		}
@@ -145,13 +141,13 @@ public class ClientKind implements SimpleInformation {
 			this.setClientHash( messageBuffer.readBinary( 16 ) );
 		}
 	}
-	
-	
-
 }
 
 /*
 $Log: ClientKind.java,v $
+Revision 1.4  2003/06/24 09:16:48  lemmstercvs01
+better Enum added
+
 Revision 1.3  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 
