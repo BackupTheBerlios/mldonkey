@@ -92,7 +92,7 @@ import java.io.File;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.41 2004/03/29 14:51:44 dek Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.42 2004/03/31 10:01:09 psy Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -386,7 +386,10 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
      	OptionsInfo http_port = 
      		(OptionsInfo) gView.getCore().getOptionsInfoMap().get("http_port");
     	
-     	String url = "http://" + PreferenceLoader.getString("hostname") + ":" + 
+     	String url = "http://" + PreferenceLoader.getString("username") + 
+     		(PreferenceLoader.getString("password").length() > 0 ? ":" +
+     				PreferenceLoader.getString("password") : "") 
+			+ "@" + PreferenceLoader.getString("hostname") + ":" + 
 			http_port.getValue() + "/preview_download?q=";
      	
      	return url; 
@@ -735,6 +738,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.42  2004/03/31 10:01:09  psy
+equip preview-URL with username and password
+
 Revision 1.41  2004/03/29 14:51:44  dek
 some mem-improvements
 
@@ -924,7 +930,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmy
-replace $user$ with $Author: dek $
+replace $user$ with $Author: psy $
 
 Revision 1.12  2003/08/22 14:30:45  lemmy
 verify chunks added
