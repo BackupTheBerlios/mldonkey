@@ -14,17 +14,22 @@
 	* Search: Fix crash on AdvancedSearch [bug #886]
 	* Search: Reset state of canceled downloads from search [bug #908]
 	* Search: Fix button search tab crash [bug #993]
-2003/09/15: z
+2003/09/15+: z
+	* Comm: Rewrote EncodeMessage to fix core communication bugs [#874] [#907]
+	* Comm: Handle disconnection from core more cleanly & update statusLine
 	* Main: Add menuItem: File>Kill core 
 	* Console: Add rightClick menuItems: SelectAll & Clear
 	* Transfer: Add relative availability % [#866]
-	* Transfer: Add table update delay option
+	* Transfer: Add table update delay option ( larger delay == lower CPU )
 	* Transfer: Add FileDetail chunk graphs for all active networks	
 	* Transfer: Fix FileDetail buttons [#897], move header menu
-	* Transfer: Fix display of files >2gb [#916]
-	* Transfer: Add menuItem: Commit as (filename selection)
+	* Transfer: Fix display of files >2gb [#916] [#918]
+	* Transfer: Add rightClick menuItem: Commit as (filename selection)
+	* Transfer: Add preference option to disable colors in table 
+	* Transfer: Change filesources to weakly reference # clients [#865]
 	* Statistics: Add header doubleClick to maximize a graph [#916]
 	* Statistics: Add basic hourly graph history (access in graph menu)
-	* Statistics: Doubleclick graph to cycle b/t flat/line/gradient style
+	* Statistics: Add doubleClick on graph action to cycle between 
+					flat|line|gradient style (gradient == highest CPU)
 	* Win TrayIcon: Add preference option to disable minimize on close [#947]
 	* Win TrayIcon: continue updating toolTip UL/DL rates while gui is visible
