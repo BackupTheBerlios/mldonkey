@@ -62,7 +62,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.17 2003/11/24 21:06:02 dek Exp $
+ * @version $Id: MainCoolBar.java,v 1.18 2003/11/24 21:17:06 dek Exp $
  *
  */
 public class MainCoolBar {
@@ -337,8 +337,7 @@ public class MainCoolBar {
     	
     	coolbar.setItemLayout( order, null, itemSizes );
     	
-    	if ( p.isDefault("coolBarSizes") ){
-    		System.out.println("coolbar is default");
+    	if ( p.isDefault("coolBarSizes") ){    		
     		layoutCoolBar();
     	}
     }
@@ -370,6 +369,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.18  2003/11/24 21:17:06  dek
+removed System.out....
+
 Revision 1.17  2003/11/24 21:06:02  dek
 gtk workaround works by now?
 
