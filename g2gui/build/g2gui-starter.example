@@ -21,9 +21,9 @@ fi
 
 
 ## Jar package
-if [ -e g2gui.jar ]; then
+if [ -e lib/g2gui.jar ]; then
         echo "Starting MLdonkey G2gui (java)..."
-        java -Djava.library.path=lib -jar g2gui.jar $1 $2 $3 $4 $5 $6 $7 $8 $9
+        java -Djava.library.path=lib -jar g2gui.jar "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
 ## Binary package
 elif [ -e g2gui-bin ]; then
         echo "Starting MLdonkey G2gui (native)..."
