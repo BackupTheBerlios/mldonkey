@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.43 2003/11/11 17:14:35 lemmster Exp $
+ * @version $Id: PreferenceLoader.java,v 1.44 2003/11/12 16:16:33 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -87,6 +87,8 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "flatInterface", false );
         preferenceStore.setDefault( "useGraident", true );
         preferenceStore.setDefault( "splashScreen", true );
+        
+        PreferenceConverter.setDefault( preferenceStore, "windowBounds", new Rectangle(0,0,640,480) );
         
         PreferenceConverter.setDefault( preferenceStore, "consoleBackground",
                                         display.getSystemColor( SWT.COLOR_LIST_BACKGROUND ).getRGB() );
@@ -278,6 +280,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.44  2003/11/12 16:16:33  zet
+set intial window size
+
 Revision 1.43  2003/11/11 17:14:35  lemmster
 default filters for servertab
 
@@ -379,7 +384,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates
