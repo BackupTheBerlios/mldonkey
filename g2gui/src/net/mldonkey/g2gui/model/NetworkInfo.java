@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * NetworkInfo
  *
  *
- * @version $Id: NetworkInfo.java,v 1.25 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.26 2003/08/24 16:55:37 dek Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -551,12 +551,24 @@ public class NetworkInfo extends Parent {
 		 */
 		private Enum() { }
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return networkName;
+		
+	}
+
 }
 
 
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.26  2003/08/24 16:55:37  dek
+toString added, returns network Name
+
 Revision 1.25  2003/08/23 15:21:37  zet
 remove @author
 
@@ -564,7 +576,7 @@ Revision 1.24  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.23  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.22  2003/08/21 13:13:10  lemmster
 cleanup in networkitem
