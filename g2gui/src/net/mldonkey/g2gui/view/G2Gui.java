@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.6 2003/08/04 14:38:55 lemmstercvs01 Exp $ 
+ * @version $Id: G2Gui.java,v 1.7 2003/08/06 17:41:20 lemmstercvs01 Exp $ 
  *
  */
 public class G2Gui {
@@ -87,7 +87,7 @@ public class G2Gui {
 		waiterObject = new Object();
 		box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
 		progressBar = new ProgressBar( splashShell, SWT.NONE );
-		count = new int[] { 2 };
+		count = new int[] { 3 };
 
 		/* build the splash */
 		progressBar.setMaximum( count[0] );
@@ -96,10 +96,6 @@ public class G2Gui {
 		label.setImage( image );
 		FormLayout layout = new FormLayout();
 		splashShell.setLayout( layout );
-		formData = new FormData ();
-		formData.right = new FormAttachment( 100, 0 );
-		formData.bottom = new FormAttachment( 100, 0 );
-		label.setLayoutData( formData );
 		formData = new FormData();
 		formData.left = new FormAttachment( 0, 5 );
 		formData.right = new FormAttachment( 100, -5 );
@@ -111,7 +107,7 @@ public class G2Gui {
 		int x = ( displayRect.width - shellRect.width ) / 2;
 		int y = ( displayRect.height - shellRect.height ) / 2;
 		splashShell.setLocation( x, y );
-		splashShell.open();
+//		splashShell.open(); //TODO disabled for developing
 
 		increaseBar( "Starting the model" );
 
@@ -140,16 +136,22 @@ public class G2Gui {
 			socket = ( Socket ) socketPool.checkOut();
 		}
 		catch ( UnknownHostException e ) {
+			splashShell.dispose();
+			image.dispose();
 			box.setText( "Invalid Host Address" );
 			box.setMessage( "Illegal Host Address" );
 			box.open();
 			myPrefs.open( shell, null );
+			relaunchSelf();
 		}
 		catch ( IOException e ) {
+			splashShell.dispose();
+			image.dispose();
 			box.setText( "IOException" );
 			box.setMessage( "Core is not running on this Host/Port" );
 			box.open();
 			myPrefs.open( shell, null );
+			relaunchSelf();
 		}
 		
 		/* launch the model */
@@ -183,6 +185,15 @@ public class G2Gui {
 		core.disconnect();
 	}
 	
+	/**
+	 * relaunch the main method with killing the old one
+	 */
+	private static void relaunchSelf() {
+		shell.dispose();
+		display.dispose();
+		G2Gui.main( null );
+	}
+	
 	
 	/**
 	 * Raise an messagebox on badpassword exception
@@ -191,8 +202,6 @@ public class G2Gui {
 	public static void badPasswordHandling() {
 		splashShell.dispose();
 		image.dispose();
-		
-//		splashShell.setVisible( false );
 		/* raise a warning msg */
 		box = new MessageBox( shell, SWT.ICON_WARNING | SWT.OK );
 		box.setText( "Login invalid" );
@@ -200,19 +209,15 @@ public class G2Gui {
 		box.open();
 		/* dont launch the gui but launch the password box */
 		myPrefs.open( shell, null );
-		/* fetch the username and password from the pref again */
-		username = preferenceStore.getString( "username" );
-		password = preferenceStore.getString( "password" );
 		/* send the password again */
-		core.sendPassword( username, password );
-//		splashShell.setVisible( true );		
+		relaunchSelf();
 	}
 
 	/**
 	 * Increse the ProgressBar and updates the label text
 	 * @param aString The new label text
 	 */	
-	private static void increaseBar( final String aString ) {
+	static void increaseBar( final String aString ) {
 		display.syncExec( new Runnable() {
 			public void run() {
 				int selection = progressBar.getSelection();
@@ -243,6 +248,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.7  2003/08/06 17:41:20  lemmstercvs01
+some fixes
+
 Revision 1.6  2003/08/04 14:38:55  lemmstercvs01
 splashscreen and error handling added (resending on badpassword doenst work atm)
 
