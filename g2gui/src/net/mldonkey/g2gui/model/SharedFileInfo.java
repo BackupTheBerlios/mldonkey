@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  * @author $user$
- * @version $Id: SharedFileInfo.java,v 1.2 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.3 2003/07/05 20:04:02 lemmstercvs01 Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -62,101 +62,52 @@ public class SharedFileInfo implements SimpleInformation {
 	private String md4;
 	
 	/**
-	 * @return a string
+	 * @return The file md4
 	 */
 	public String getMd4() {
 		return md4;
 	}
 
 	/**
-	 * @return an int
+	 * @return The network identifier of this file
 	 */
 	public int getNetworkId() {
 		return networkId;
 	}
 
 	/**
-	 * @return a long
+	 * @return number of bytes uploaded of this file
 	 */
 	public long getNumOfBytesUploaded() {
 		return numOfBytesUploaded;
 	}
 
 	/**
-	 * @return an int
+	 * @return Number of queries for this file
 	 */
 	public int getNumOfQueriesForFile() {
 		return numOfQueriesForFile;
 	}
 
 	/**
-	 * @return an int
+	 * @return The file identifier
 	 */
 	public int getSharedFileId() {
 		return sharedFileId;
 	}
 
 	/**
-	 * @return a string
+	 * @return The name of this file
 	 */
 	public String getSharedFileName() {
 		return sharedFileName;
 	}
 
 	/**
-	 * @return an int
+	 * @return The size of this file
 	 */
 	public int getShareFileSize() {
 		return shareFileSize;
-	}
-
-	/**
-	 * @param string a string
-	 */
-	public void setMd4( String string ) {
-		md4 = string;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setNetworkId( int i ) {
-		networkId = i;
-	}
-
-	/**
-	 * @param l a long
-	 */
-	public void setNumOfBytesUploaded( long l ) {
-		numOfBytesUploaded = l;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setNumOfQueriesForFile( int i ) {
-		numOfQueriesForFile = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setSharedFileId( int i ) {
-		sharedFileId = i;
-	}
-
-	/**
-	 * @param string a string
-	 */
-	public void setSharedFileName( String string ) {
-		sharedFileName = string;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setShareFileSize( int i ) {
-		shareFileSize = i;
 	}
 
 	/**
@@ -173,18 +124,21 @@ public class SharedFileInfo implements SimpleInformation {
 		 * int32  	 Number of Queries for that File 
 		 * char[16]  	 Md4 
 		 */
-		this.setSharedFileId( messageBuffer.readInt32() );
-		this.setNetworkId( messageBuffer.readInt32() );
-		this.setSharedFileName( messageBuffer.readString() );
-		this.setShareFileSize( messageBuffer.readInt32() );
-		this.setNumOfBytesUploaded( messageBuffer.readInt64() );
-		this.setNumOfQueriesForFile( messageBuffer.readInt32() );
-		this.setMd4( messageBuffer.readBinary( 16 ) );
+		this.sharedFileId = messageBuffer.readInt32();
+		this.networkId = messageBuffer.readInt32();
+		this.sharedFileName = messageBuffer.readString();
+		this.shareFileSize = messageBuffer.readInt32();
+		this.numOfBytesUploaded = messageBuffer.readInt64();
+		this.numOfQueriesForFile = messageBuffer.readInt32();
+		this.md4 = messageBuffer.readBinary( 16 );
 	}
 }
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
+javadoc improved
+
 Revision 1.2  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 

@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * Tag
  *
  * @author markus
- * @version $Id: Tag.java,v 1.5 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
+ * @version $Id: Tag.java,v 1.6 2003/07/05 20:04:02 lemmstercvs01 Exp $ 
  *
  */
 public class Tag implements SimpleInformation {
@@ -52,51 +52,37 @@ public class Tag implements SimpleInformation {
 	private String sValue;
 	
 	/**
-	 * @return a string
+	 * @return Tag name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @return a string
+	 * @return Tag value (if != EnumType.STRING)
 	 */
 	public String getSValue() {
 		return sValue;
 	}
 
 	/**
-	 * @return a byte
+	 * @return Tag type
 	 */
 	public Enum getType() {
 		return type;
 	}
 
 	/**
-	 * @return an int
+	 * @return Tag value
 	 */
 	public int getValue() {
 		return value;
 	}
 
 	/**
-	 * @param string a string
-	 */
-	public void setName( String string ) {
-		name = string;
-	}
-
-	/**
-	 * @param string a string
-	 */
-	public void setSValue( String string ) {
-		sValue = string;
-	}
-
-	/**
 	 * @param b a byte
 	 */
-	public void setType( byte b ) {
+	private void setType( byte b ) {
 		if ( b == 0 )
 			type = EnumType.UNSIGNED_INT;
 		else if ( b == 1 )
@@ -106,33 +92,28 @@ public class Tag implements SimpleInformation {
 		else if ( b == 3 )
 			type = EnumType.IPADDRESS;
 	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setValue( int i ) {
-		value = i;
-	}
 	
 	/**
 	 * Reads a Tag object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
-		this.setName( messageBuffer.readString() );
+		this.name = messageBuffer.readString();
 		this.setType( messageBuffer.readByte() );
 		if ( this.getType() != EnumType.STRING ) {
-			this.setValue( messageBuffer.readInt32() );
+			this.value = messageBuffer.readInt32();
 		}
 		else {
-			this.setSValue( messageBuffer.readString() );
+			this.sValue = messageBuffer.readString();
 		}
 	}
-
 }
 
 /*
 $Log: Tag.java,v $
+Revision 1.6  2003/07/05 20:04:02  lemmstercvs01
+javadoc improved
+
 Revision 1.5  2003/06/24 09:29:57  lemmstercvs01
 Enum more improved
 

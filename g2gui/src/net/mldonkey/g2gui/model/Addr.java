@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  * @author ${user}
- * @version $$Id: Addr.java,v 1.5 2003/07/04 10:26:03 lemmstercvs01 Exp $$ 
+ * @version $$Id: Addr.java,v 1.6 2003/07/05 20:04:10 lemmstercvs01 Exp $$ 
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -48,21 +48,21 @@ public class Addr implements SimpleInformation {
 	private String nameAddress;
 
 	/**
-	 * @return a boolean
+	 * @return direct or indirekt address
 	 */
 	public boolean isAddressType() {
 		return addressType;
 	}
 
 	/**
-	 * @return an int
+	 * @return The IP address
 	 */
 	public InetAddress getIpAddress() {
 		return ipAddress;
 	}
 
 	/**
-	 * @return a string
+	 * @return The address name
 	 */
 	public String getNameAddress() {
 		return nameAddress;
@@ -71,27 +71,13 @@ public class Addr implements SimpleInformation {
 	/**
 	 * @param b a boolean
 	 */
-	public void setAddressType( byte b ) {
+	private void setAddressType( byte b ) {
 		if ( b == 0 ) 
 			addressType = true;
 		if ( b == 1 )
 			addressType = false;
 	}
 
-	/**
-	 * @param i an int
-	 */
-	public void setIpAddress( InetAddress i ) {
-		ipAddress = i;
-	}
-
-	/**
-	 * @param string a string
-	 */
-	public void setNameAddress( String string ) {
-		nameAddress = string;
-	}
-	
 	/**
 	 * Reads an Addr object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
@@ -105,16 +91,19 @@ public class Addr implements SimpleInformation {
 		this.setAddressType( messageBuffer.readByte() );
 		if ( this.isAddressType() )
 			try {
-				this.setIpAddress( messageBuffer.readInetAddress() );
+				this.ipAddress = messageBuffer.readInetAddress();
 			}
 			/* do nothing, we receive always a valid address */
 			catch ( UnknownHostException e ) { }
 		else
-			this.setNameAddress( messageBuffer.readString() );
+			this.nameAddress = messageBuffer.readString();
 	}
 }
 /*
 $$Log: Addr.java,v $
+$Revision 1.6  2003/07/05 20:04:10  lemmstercvs01
+$javadoc improved
+$
 $Revision 1.5  2003/07/04 10:26:03  lemmstercvs01
 $minor: just checkstyle
 $

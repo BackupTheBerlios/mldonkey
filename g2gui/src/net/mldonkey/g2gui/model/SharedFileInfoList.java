@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfoList
  *
  * @author $user$
- * @version $Id: SharedFileInfoList.java,v 1.2 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: SharedFileInfoList.java,v 1.3 2003/07/05 20:04:02 lemmstercvs01 Exp $ 
  *
  */
 public class SharedFileInfoList extends InfoList {
@@ -39,14 +39,6 @@ public class SharedFileInfoList extends InfoList {
 	 */
 	public SharedFileInfoList( CoreCommunication communication ) {
 		super( communication );		
-	}
-
-	/**
-	 * Creates a emptry SharedFileInfoList
-	 *
-	 */
-	public SharedFileInfoList() {
-		super();
 	}
 	
 	/**
@@ -70,6 +62,9 @@ public class SharedFileInfoList extends InfoList {
 
 /*
 $Log: SharedFileInfoList.java,v $
+Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
+javadoc improved
+
 Revision 1.2  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
