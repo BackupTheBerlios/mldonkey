@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.helper.CMenuListener;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeContentProvider;
 
@@ -38,8 +39,11 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 
 
 /**
@@ -47,10 +51,10 @@ import org.eclipse.jface.viewers.ViewerFilter;
  * DownloadPaneMenuListener
  *
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.4 2003/09/23 15:24:24 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.5 2003/10/08 01:12:41 zet Exp $
  *
  */
-public class DownloadPaneMenuListener extends CMenuListener implements IMenuListener {
+public class DownloadPaneMenuListener extends CMenuListener implements IMenuListener, DisposeListener {
 	
 	private static String[] ExtensionNames = {
 		G2GuiResources.getString("TT_DOWNLOAD_FILTER_AUDIO"), 
@@ -97,6 +101,39 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         this.tableTreeViewer = tableTreeViewer;
         this.core = core;
         this.tableTreeContentProvider = (DownloadTableTreeContentProvider) tableTreeViewer.getContentProvider(  );
+    	startDefaultFilters();
+    	
+    	tableTreeViewer.getTableTree().addDisposeListener( this );
+    }
+    
+    /**
+     * Start the default filters
+     */
+    public void startDefaultFilters() {
+    	
+    	boolean requiresUpdate = false;
+    	
+    	if ( PreferenceLoader.loadBoolean( "downloadsFilterQueued" ) ) {
+			tableTreeViewer.addFilter( new FileStateFilter( EnumFileState.QUEUED ) );
+			requiresUpdate = true;
+    	}
+		if ( PreferenceLoader.loadBoolean( "downloadsFilterPaused" ) ) {
+			tableTreeViewer.addFilter( new FileStateFilter( EnumFileState.PAUSED ) );
+			requiresUpdate = true;
+		}
+		
+		if (requiresUpdate) 
+			tableTreeContentProvider.updateAllEditors(  );	
+			
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+     */
+    public void widgetDisposed(DisposeEvent e) {
+    	PreferenceStore p = PreferenceLoader.getPreferenceStore();
+    	p.setValue( "downloadsFilterPaused", isFiltered(EnumFileState.PAUSED) ? true : false );
+		p.setValue( "downloadsFilterQueued", isFiltered(EnumFileState.QUEUED) ? true : false );
     }
 
     /* (non-Javadoc)
@@ -123,13 +160,8 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
 
         filterSubMenu.add( new Separator(  ) );
 
-        FileStateFilterAction fFA = new FileStateFilterAction( "queued", EnumFileState.QUEUED );
-
-        if ( !isFiltered( EnumFileState.QUEUED ) ) {
-            fFA.setChecked( true );
-        }
-
-        filterSubMenu.add( fFA );
+		addFileStateFilter( filterSubMenu, "TT_Queued", EnumFileState.QUEUED );
+       	addFileStateFilter( filterSubMenu, "TT_Paused", EnumFileState.PAUSED );
 
         filterSubMenu.add( new Separator(  ) );
 
@@ -165,6 +197,15 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
 
         menuManager.add( filterSubMenu );
     }
+
+	private void addFileStateFilter( MenuManager menuManager, String resString, EnumFileState enumFileState ) {
+		FileStateFilterAction action = new FileStateFilterAction( G2GuiResources.getString( resString ).toLowerCase(), enumFileState );
+
+		if ( !isFiltered( enumFileState ) ) {
+			action.setChecked( true );
+		}
+		menuManager.add(action);
+	}
 
     private boolean isFiltered( NetworkInfo.Enum networkType ) {
         ViewerFilter[] viewerFilters = tableTreeViewer.getFilters(  );
@@ -533,6 +574,9 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.5  2003/10/08 01:12:41  zet
+save Paused&Queued filter
+
 Revision 1.4  2003/09/23 15:24:24  zet
 not much..
 
