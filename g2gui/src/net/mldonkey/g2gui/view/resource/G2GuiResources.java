@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.46 2003/10/31 16:35:08 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.47 2003/11/04 16:54:03 vnc Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -299,20 +299,20 @@ public class G2GuiResources {
         String[] fileNames = { "directconnect", "edonkey2000", "gnutella", "gnutella2", "kazaa", "soulseek", "opennap", "unknown" };
 
         for ( int i = 0; i < shortNames.length; i++ ) {
-            reg.put( shortNames[ i ] + "Connected", createNTrans( fileNames[ i ] + "_connected.png" ) );
-            reg.put( shortNames[ i ] + "Disconnected", createNTrans( fileNames[ i ] + "_disconnected.png" ) );
-            reg.put( shortNames[ i ] + "Disabled", createNTrans( fileNames[ i ] + "_disabled.png" ) );
-            reg.put( shortNames[ i ] + "BadConnected", createNTrans( fileNames[ i ] + "_badconnected.png" ) );
-            reg.put( shortNames[ i ] + "ConnectedWhite", createNTrans( fileNames[ i ] + "_connected.png", white ) );
+            reg.put( shortNames[ i ] + "Connected", createNTrans( fileNames[ i ] + "_connected.gif" ) );
+            reg.put( shortNames[ i ] + "Disconnected", createNTrans( fileNames[ i ] + "_disconnected.gif" ) );
+            reg.put( shortNames[ i ] + "Disabled", createNTrans( fileNames[ i ] + "_disabled.gif" ) );
+            reg.put( shortNames[ i ] + "BadConnected", createNTrans( fileNames[ i ] + "_badconnected.gif" ) );
+            reg.put( shortNames[ i ] + "ConnectedWhite", createNTrans( fileNames[ i ] + "_connected.gif", white ) );
         }
 
         /* some icons for networks without all states */
-        reg.put( "BTConnected", createNTrans( "bt_connected.png" ) );
-        reg.put( "BTConnectedWhite", createNTrans( "bt_connected.png", white ) );
-        reg.put( "BTDisabled", createNTrans( "bt_disabled.png" ) );
-        reg.put( "MULTIConnected", createNTrans( "multinet_connected.png" ) );
-        reg.put( "MULTIConnectedWhite", createNTrans( "multinet_connected.png", white ) );
-        reg.put( "MULTIDisabled", createNTrans( "multinet_disabled.png" ) );
+        reg.put( "BTConnected", createNTrans( "bt_connected.gif" ) );
+        reg.put( "BTConnectedWhite", createNTrans( "bt_connected.gif", white ) );
+        reg.put( "BTDisabled", createNTrans( "bt_disabled.gif" ) );
+        reg.put( "MULTIConnected", createNTrans( "multinet_connected.gif" ) );
+        reg.put( "MULTIConnectedWhite", createNTrans( "multinet_connected.gif", white ) );
+        reg.put( "MULTIDisabled", createNTrans( "multinet_disabled.gif" ) );
     }
 
     /**
@@ -432,6 +432,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.47  2003/11/04 16:54:03  vnc
+changed network mini-icons from png to gif
+
 Revision 1.46  2003/10/31 16:35:08  zet
 typo
 
@@ -551,7 +554,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: vnc $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
