@@ -28,6 +28,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.viewers.ViewerFilter;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -39,6 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -46,10 +48,10 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * Generic Table Viewer
  *
- * @version $Id: GTableViewer.java,v 1.4 2003/10/22 21:20:33 zet Exp $
+ * @version $Id: GTableViewer.java,v 1.5 2003/10/29 16:56:21 lemmster Exp $
  *
  */
-public class GTableViewer {
+public class GTableViewer implements GViewer {
     protected boolean manualDispose;
     protected GTableSorter tableSorter;
     protected GTableLabelProvider tableLabelProvider;
@@ -261,11 +263,63 @@ public class GTableViewer {
     public String getPreferenceString() {
         return preferenceString;
     }
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getFilters()
+	 */
+	public ViewerFilter[] getFilters() {
+		return this.tableViewer.getFilters();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#addFilter(org.eclipse.jface.viewers.ViewerFilter)
+	 */
+	public void addFilter(ViewerFilter viewerFilter) {
+		this.tableViewer.addFilter( viewerFilter );
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#removeFilter(org.eclipse.jface.viewers.ViewerFilter)
+	 */
+	public void removeFilter(ViewerFilter viewerFilter) {
+		this.tableViewer.removeFilter( viewerFilter );
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#refresh()
+	 */
+	public void refresh() {
+		this.tableViewer.refresh();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getShell()
+	 */
+	public Shell getShell() {
+		return this.tableViewer.getTable().getShell();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getViewer()
+	 */
+	public Object getViewer() {
+		return this.tableViewer;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#addDisposeListener(net.mldonkey.g2gui.view.viewers.GPaneListener)
+	 */
+	public void addDisposeListener(GPaneListener listener) {
+		this.tableViewer.getTable().addDisposeListener( listener );
+	}
 }
 
 
 /*
 $Log: GTableViewer.java,v $
+Revision 1.5  2003/10/29 16:56:21  lemmster
+added reasonable class hierarchy for panelisteners, viewers...
+
 Revision 1.4  2003/10/22 21:20:33  zet
 static validate
 

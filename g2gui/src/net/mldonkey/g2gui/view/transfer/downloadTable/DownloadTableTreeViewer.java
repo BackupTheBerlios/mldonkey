@@ -31,7 +31,9 @@ import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.GPaneListener;
 import net.mldonkey.g2gui.view.viewers.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.GViewer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -42,6 +44,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableTree;
@@ -52,6 +55,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -59,10 +63,10 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.15 2003/10/22 21:20:33 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.16 2003/10/29 16:56:21 lemmster Exp $
  *
  */
-public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListener {
+public class DownloadTableTreeViewer implements GViewer, ICellModifier, IDoubleClickListener {
     private static boolean displayChunkGraphs = false;
     public static final String ALL_COLUMNS = "ABCDEFGHIJKLMN";
     public static final String BASIC_COLUMNS = "ABCDFIK";
@@ -432,11 +436,91 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
             new ClientDetailDialog(treeClientInfo.getFileInfo(), treeClientInfo.getClientInfo(), mldonkey);
         }
     }
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getFilters()
+	 */
+	public ViewerFilter[] getFilters() {
+		return this.tableTreeViewer.getFilters();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#addFilter(org.eclipse.jface.viewers.ViewerFilter)
+	 */
+	public void addFilter(ViewerFilter viewerFilter) {
+		this.tableTreeViewer.addFilter( viewerFilter );
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#removeFilter(org.eclipse.jface.viewers.ViewerFilter)
+	 */
+	public void removeFilter(ViewerFilter viewerFilter) {
+		this.tableTreeViewer.removeFilter( viewerFilter );
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#refresh()
+	 */
+	public void refresh() {
+		this.tableTreeViewer.refresh();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getShell()
+	 */
+	public Shell getShell() {
+		return this.tableTreeViewer.getTableTree().getShell();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getViewer()
+	 */
+	public Object getViewer() {
+		return this.tableTreeViewer;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getAllColumnIDs()
+	 */
+	public String getAllColumnIDs() {
+		return ALL_COLUMNS;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getColumnLabels()
+	 */
+	public String[] getColumnLabels() {
+		return COLUMN_LABELS;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getPreferenceString()
+	 */
+	public String getPreferenceString() {
+		return "download";
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#getCore()
+	 */
+	public CoreCommunication getCore() {
+		return this.mldonkey;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GViewer#addDisposeListener(net.mldonkey.g2gui.view.viewers.GPaneListener)
+	 */
+	public void addDisposeListener(GPaneListener listener) {
+		this.tableTreeViewer.getTableTree().addDisposeListener( listener );
+	}
 }
 
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.16  2003/10/29 16:56:21  lemmster
+added reasonable class hierarchy for panelisteners, viewers...
+
 Revision 1.15  2003/10/22 21:20:33  zet
 static validate
 
@@ -519,7 +603,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/22 13:47:56  dek
 selection is removed with click on empty-row

@@ -22,13 +22,8 @@
  */
 package net.mldonkey.g2gui.view.helper;
 
-import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
-import net.mldonkey.g2gui.model.enum.Enum;
-import net.mldonkey.g2gui.model.enum.EnumNetwork;
-import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GTableMenuListener;
 import net.mldonkey.g2gui.view.viewers.GTableViewer;
@@ -61,12 +56,11 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.16 2003/10/28 12:33:31 lemmster Exp $
+ * @version $Id: TableMenuListener.java,v 1.17 2003/10/29 16:56:21 lemmster Exp $
  *
  */
 public abstract class TableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
     protected ViewerFilter incrementalViewerFilter;
-	protected Enum.MaskMatcher aMatcher;
 
     public TableMenuListener( GTableViewer gTableViewer ) {
         super(gTableViewer);
@@ -82,37 +76,6 @@ public abstract class TableMenuListener extends GTableMenuListener implements IS
 		
 		super.menuAboutToShow( menuManager );				
     }
-
-    public boolean isFiltered( NetworkInfo aNetworkInfo ) {
-        ViewerFilter[] viewerFilters = tableViewer.getFilters();
-        for ( int i = 0; i < viewerFilters.length; i++ ) {
-            if ( viewerFilters[ i ] instanceof NetworkViewerFilter ) {
-                NetworkViewerFilter filter = ( NetworkViewerFilter ) viewerFilters[ i ];
-                if ( filter.matches( aNetworkInfo ) )
-                        return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isFiltered( EnumState state ) {
-        ViewerFilter[] viewerFilters = tableViewer.getFilters();
-        for ( int i = 0; i < viewerFilters.length; i++ ) {
-            if ( viewerFilters[ i ] instanceof EnumStateViewerFilter ) {
-                EnumStateViewerFilter filter = ( EnumStateViewerFilter ) viewerFilters[ i ];
-                if ( filter.matches( state ) )
-                    return true;
-            }
-        }
-        return false;
-    }
-    
-	protected void toggleFilter( ViewerFilter viewerFilter, boolean toggle ) {
-		if ( toggle )
-			tableViewer.addFilter( viewerFilter );
-		else
-			tableViewer.removeFilter( viewerFilter );
-	}
 
 	/**
 	 * 
@@ -156,139 +119,6 @@ public abstract class TableMenuListener extends GTableMenuListener implements IS
         }
     }
 
-    /**
-     *
-     * NetworkFilter
-     *
-     */
-	public static class NetworkViewerFilter extends MyViewerFilter {
-        public boolean matches( NetworkInfo networkInfo ) {
-        	return super.matches( networkInfo.getNetworkType() );
-        }
-        
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        public boolean select( Viewer viewer, Object parentElement, Object element ) {
-            if ( element instanceof ServerInfo ) {
-                ServerInfo server = ( ServerInfo ) element;
-                if ( matches( server.getNetwork() ) )
-                   return true;
-                return false;
-            }
-            if ( element instanceof ResultInfo ) {
-                ResultInfo result = ( ResultInfo ) element;
-                if ( matches( result.getNetwork() ) )
-                    return true;
-                return false;
-            }
-            if ( element instanceof FileInfo ) {
-                FileInfo fileInfo = ( FileInfo ) element;
-                if ( matches( fileInfo.getNetwork() ) )
-                    return true;
-                return false;
-            }
-            return true;
-        }
-    }
-
-    /**
-     *
-     * EnumStateFilter
-     *
-     */
-	public static class EnumStateViewerFilter extends MyViewerFilter {
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.viewers.ViewerFilter#
-         * select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        public boolean select( Viewer viewer, Object parentElement, Object element ) {
-            if ( element instanceof ServerInfo ) {
-                ServerInfo server = ( ServerInfo ) element;
-                if ( aMatcher.matches( server.getConnectionState().getState() ) )
-                    return true;
-                return false;
-            }
-            return true;
-        }
-    }
-    
-    /**
-     * MyFilter Superclass for EnumStateFilter and NetworkFilter
-     */
-    public static abstract class MyViewerFilter extends ViewerFilter {
-		protected Enum.MaskMatcher aMatcher;
-		/**
-		 * Creates a new EnumStateFilter
-		 */
-		public MyViewerFilter() {
-			this.aMatcher = new Enum.MaskMatcher();
-		}
-
-		public void add( Enum enum ) {
-			this.aMatcher.add( enum );
-		}
-
-		public void remove( Enum state ) {
-			this.aMatcher.remove( state );
-		}
-        
-		public boolean matches( Enum enum ) {
-			return this.aMatcher.matches( enum );        	
-		}
-        
-		public int count() {
-			return this.aMatcher.count();
-		}	
-		public abstract boolean select( Viewer viewer, Object parentElement, Object element );
-    }
-
-    /**
-     *
-     * EnumStateFilterAction
-     *
-     */
-    protected class EnumStateFilterAction extends Action {
-        private EnumState state;
-
-        public EnumStateFilterAction( String name, EnumState state ) {
-            super( name, Action.AS_CHECK_BOX );
-            this.state = state;
-        }
-
-        public void run() {
-            if ( !isChecked() ) {
-                ViewerFilter[] viewerFilters = tableViewer.getFilters();
-                for ( int i = 0; i < viewerFilters.length; i++ ) {
-                    if ( viewerFilters[ i ] instanceof EnumStateViewerFilter ) {
-                        EnumStateViewerFilter filter = ( EnumStateViewerFilter ) viewerFilters[ i ];
-                        if ( filter.matches( state ) )
-                            if ( filter.count() == 1 )
-                                toggleFilter( viewerFilters[ i ], false );
-                            else {
-                                filter.remove( state );
-                                tableViewer.refresh();
-                            }
-                    }
-                }
-            }
-            else {
-                ViewerFilter[] viewerFilters = tableViewer.getFilters();
-                for ( int i = 0; i < viewerFilters.length; i++ ) {
-                    if ( viewerFilters[ i ] instanceof EnumStateViewerFilter ) {
-                        EnumStateViewerFilter filter = ( EnumStateViewerFilter ) viewerFilters[ i ];
-                        filter.add( state );
-                        tableViewer.refresh();
-                        return;
-                    }
-                }
-                EnumStateViewerFilter filter = new EnumStateViewerFilter();
-                filter.add( state );
-                toggleFilter( filter, true );
-            }
-        }
-    }
-    
     protected class RefineFilterAction extends Action {
     	public RefineFilterAction() {
     		super();
@@ -392,84 +222,13 @@ public abstract class TableMenuListener extends GTableMenuListener implements IS
 			}
 		}
     }
-
-    /**
-     *
-     * NetworkFilterAction
-     *
-     */
-    public class NetworkFilterAction extends Action {
-        private EnumNetwork networkType;
-
-		/**
-		 * Creates a new NetworkFilterAction
-		 * @param name The name we should display on the <code>MenuManager</code>
-		 * @param networkType The <code>NetworkInfo.Enum</code> we should filter
-		 */
-        public NetworkFilterAction( String name, EnumNetwork networkType ) {
-            super( name, Action.AS_CHECK_BOX );
-            this.networkType = networkType;
-        }
-
-        public void run() {
-            if ( !isChecked() ) {
-                ViewerFilter[] viewerFilters = tableViewer.getFilters();
-                for ( int i = 0; i < viewerFilters.length; i++ ) {
-                    if ( viewerFilters[ i ] instanceof NetworkViewerFilter ) {
-                        NetworkViewerFilter filter = ( NetworkViewerFilter ) viewerFilters[ i ];
-                        if ( filter.matches( networkType ) )
-                            if ( filter.count() == 1 )
-                                toggleFilter( viewerFilters[ i ], false );
-                            else {
-                                filter.remove( networkType );
-                                tableViewer.refresh();
-                            }
-                    }
-                }
-            }
-            else {
-                ViewerFilter[] viewerFilters = tableViewer.getFilters();
-                for ( int i = 0; i < viewerFilters.length; i++ ) {
-                    if ( viewerFilters[ i ] instanceof NetworkViewerFilter ) {
-                        NetworkViewerFilter filter = ( NetworkViewerFilter ) viewerFilters[ i ];
-                        filter.add( networkType );
-                        tableViewer.refresh();
-                        return;
-                    }
-                }
-                NetworkViewerFilter filter = new NetworkViewerFilter();
-                filter.add( networkType );
-                toggleFilter( filter, true );
-            }
-        }
-    }
-
-    /**
-     *
-     * AllFiltersAction
-     *
-     */
-    public class AllFiltersAction extends Action {
-        /**
-         * Creates a new AllFiltersAction
-         */
-        public AllFiltersAction() {
-            super();
-            setText( G2GuiResources.getString( "TML_NO_FILTERS" ) );
-        }
-
-        public void run() {
-            ViewerFilter[] viewerFilters = tableViewer.getFilters();
-            for ( int i = 0; i < viewerFilters.length; i++ )
-                if ( !( viewerFilters[ i ] instanceof WordFilter ) )
-                    toggleFilter( viewerFilters[ i ], false );
-        }
-    }
-
 }
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.17  2003/10/29 16:56:21  lemmster
+added reasonable class hierarchy for panelisteners, viewers...
+
 Revision 1.16  2003/10/28 12:33:31  lemmster
 moved NetworkInfo.Enum -> enum.EnumNetwork;
 added Enum.MaskMatcher

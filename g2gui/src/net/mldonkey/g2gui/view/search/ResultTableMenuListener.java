@@ -28,12 +28,10 @@ import java.util.List;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.Download;
-import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
-import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.CopyED2KLinkToClipboardAction;
 import net.mldonkey.g2gui.view.viewers.actions.WebServicesAction;
@@ -59,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.24 2003/10/28 11:24:12 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.25 2003/10/29 16:56:21 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -170,37 +168,6 @@ Yet			menuManager.add( webManager );
 		}
 		
 		super.menuAboutToShow( menuManager );
-		
-		/* filter submenu (select network to display) */			
-		MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TML_FILTER" ) );
-
-		// all filter
-		AllFiltersAction aFA = new AllFiltersAction();
-		boolean setChecked = true;
-		for ( int i = 0; i < tableViewer.getFilters().length; i++ ) {
-			if ( !( tableViewer.getFilters()[ i ] instanceof WordFilter ) ) 
-				setChecked = false;
-		}
-		aFA.setChecked( setChecked );
-		filterSubMenu.add( aFA );
-		filterSubMenu.add( new Separator() );
-			
-		// network filter
-		NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
-		for ( int i = 0; i < networks.length; i++ ) {
-			NetworkInfo network = networks[ i ];
-			if ( network.isEnabled() && network.isSearchable() ) {
-				NetworkFilterAction nFA =
-					new NetworkFilterAction( network.getNetworkName(), network.getNetworkType() );
-				if ( isFiltered( network ) )
-					nFA.setChecked( true );
-				filterSubMenu.add( nFA );
-			}
-		}
-
-		filterSubMenu.add( new Separator() );
-		
-		menuManager.add( filterSubMenu );
 
 		menuManager.add( new Separator() );
 
@@ -338,6 +305,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.25  2003/10/29 16:56:21  lemmster
+added reasonable class hierarchy for panelisteners, viewers...
+
 Revision 1.24  2003/10/28 11:24:12  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"

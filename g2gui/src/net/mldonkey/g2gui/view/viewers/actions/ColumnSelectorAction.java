@@ -24,40 +24,41 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.ColumnSelector;
-import net.mldonkey.g2gui.view.viewers.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.GViewer;
 
 import org.eclipse.jface.action.Action;
-
 
 /**
  * ColumnSelectorAction
  *
- * @version $Id: ColumnSelectorAction.java,v 1.1 2003/10/22 16:28:52 zet Exp $
+ * @version $Id: ColumnSelectorAction.java,v 1.2 2003/10/29 16:56:21 lemmster Exp $
  *
  */
 public class ColumnSelectorAction extends Action {
-    private GTableViewer gTableViewer;
+    private GViewer gViewer;
 
-    public ColumnSelectorAction(GTableViewer gTableViewer) {
-        super(G2GuiResources.getString("TT_ColumnSelector"));
-        setImageDescriptor(G2GuiResources.getImageDescriptor("table"));
-        this.gTableViewer = gTableViewer;
+    public ColumnSelectorAction( GViewer gViewer ) {
+        super( G2GuiResources.getString( "TT_ColumnSelector" ) );
+        setImageDescriptor( G2GuiResources.getImageDescriptor( "table" ) );
+        this.gViewer = gViewer;
     }
 
     public void run() {
-        ColumnSelector c = new ColumnSelector(gTableViewer.getTableViewer().getTable().getShell(), gTableViewer.getColumnLabels(),
-                gTableViewer.getAllColumnIDs(), gTableViewer.getPreferenceString());
-
-        if (c.open() == ColumnSelector.OK) {
-            c.savePrefs();
-            gTableViewer.resetColumns();
+        ColumnSelector cSelector =
+            new ColumnSelector( gViewer.getShell(), gViewer.getColumnLabels(),
+                                gViewer.getAllColumnIDs(), gViewer.getPreferenceString() );
+        if ( cSelector.open() == ColumnSelector.OK ) {
+            cSelector.savePrefs();
+            gViewer.resetColumns();
         }
     }
 }
 
-
 /*
 $Log: ColumnSelectorAction.java,v $
+Revision 1.2  2003/10/29 16:56:21  lemmster
+added reasonable class hierarchy for panelisteners, viewers...
+
 Revision 1.1  2003/10/22 16:28:52  zet
 common actions
 

@@ -23,20 +23,21 @@
 package net.mldonkey.g2gui.view.server;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.viewers.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
+import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
+import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
+import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTableViewer.java,v 1.5 2003/10/28 11:07:32 lemmster Exp $ 
+ * @version $Id: ServerTableViewer.java,v 1.6 2003/10/29 16:56:21 lemmster Exp $ 
  *
  */
 public class ServerTableViewer extends GTableViewer {
@@ -96,13 +97,6 @@ public class ServerTableViewer extends GTableViewer {
 		
 		// add a menulistener to make the first menu item bold
 	    addMenuListener();
-
-		/* set the state filter if preference says so */
-		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) ) {
-			ServerTableMenuListener.EnumStateViewerFilter filter = new ServerTableMenuListener.EnumStateViewerFilter();
-			filter.add( EnumState.CONNECTED );
-			tableViewer.addFilter( filter );
-		}
 	}
 	
 	//wtf
@@ -115,41 +109,25 @@ public class ServerTableViewer extends GTableViewer {
 	public void updateDisplay() {
 	    super.updateDisplay();
 		/* only update on pref change */
-		boolean loadServers = PreferenceLoader.loadBoolean( "displayAllServers" );
-		if ( oldValue != loadServers ) {
-			/* update the state filter */
-			if ( loadServers ) {
-				/* first remove all EnumState filters */
-				for ( int i = 0; i < getTableViewer().getFilters().length; i++ ) {
-					if ( getTableViewer().getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateViewerFilter )
-						getTableViewer().removeFilter( getTableViewer().getFilters()[ i ] );
-				}
-				/* now add the new one */
-				ServerTableMenuListener.EnumStateViewerFilter filter =
-					 new ServerTableMenuListener.EnumStateViewerFilter();
+		//TODO ist dieser ganze zusammenhang fuer den user logisch?
+		boolean displayConnServers = PreferenceLoader.loadBoolean( "displayAllServers" );
+		if ( oldValue != displayConnServers ) {
+			// update the state filter
+			if ( displayConnServers ) {
+				// first remove all EnumState filters
+				StateFilterAction.removeFilters( this );
+				// now add the new one
+				GViewerFilter filter = new StateGViewerFilter();
 				filter.add( EnumState.CONNECTED );
 				getTableViewer().addFilter( filter );
 			}
 			else {
-				ViewerFilter[] filters = getTableViewer().getFilters();
-				for ( int i = 0; i < filters.length; i++ ) {
-					if ( getTableViewer().getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateViewerFilter ) {
-						TableMenuListener.EnumStateViewerFilter filter =
-							( TableMenuListener.EnumStateViewerFilter ) filters[ i ];
-						if ( filter.matches( EnumState.CONNECTED ) ) {
-							if (  filter.count() == 1 )
-								getTableViewer().removeFilter( filter );
-							else {
-								filter.remove( EnumState.CONNECTED );
-								getTableViewer().refresh();
-							}
-						}
-					}
-				}
+				FilterAction action = new StateFilterAction( "", this, EnumState.CONNECTED );
+				action.run();
 			}
-			this.oldValue = loadServers;
+			this.oldValue = displayConnServers;
 		}
-		/* displayTableColors changed? */
+		// displayTableColors changed?
 		boolean temp2 = PreferenceLoader.loadBoolean( "displayTableColors" );
 		if ( oldValue2 != temp2 ) {
 			( ( ServerTableLabelProvider ) getTableViewer().getLabelProvider() ).setColors( temp2 );
@@ -157,27 +135,13 @@ public class ServerTableViewer extends GTableViewer {
 			this.oldValue2 = temp2;
 		}
 	}
-
-	/**
-	 * Adds a <code>ViewerFilter</code> to the <code>TableViewer</code> by
-	 * removing all present <code>TabelMenuListener.NetworkFilter</code> 
-	 * from the table.
-	 * @param enum The <code>NetworkInfo.Enum</code> we want to be filtered
-	 */
-	public void setFilter( EnumNetwork enum ) {
-		ViewerFilter[] filters = getTableViewer().getFilters();
-		for ( int i = 0; i < filters.length; i++ ) {
-			if ( filters[ i ] instanceof ServerTableMenuListener.NetworkViewerFilter )
-				getTableViewer().removeFilter( filters[ i ] );
-		}
-		ServerTableMenuListener.NetworkViewerFilter filter = new ServerTableMenuListener.NetworkViewerFilter();
-		filter.add( enum );
-		getTableViewer().addFilter( filter );
-	}
 }
 
 /*
 $Log: ServerTableViewer.java,v $
+Revision 1.6  2003/10/29 16:56:21  lemmster
+added reasonable class hierarchy for panelisteners, viewers...
+
 Revision 1.5  2003/10/28 11:07:32  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"

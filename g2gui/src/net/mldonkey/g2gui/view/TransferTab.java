@@ -32,18 +32,16 @@ import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
-import net.mldonkey.g2gui.view.helper.HeaderBarMenuListener;
 import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.DownloadPaneMenuListener;
+import net.mldonkey.g2gui.view.transfer.clientTable.ClientPaneListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
+import net.mldonkey.g2gui.view.transfer.uploadTable.UploadMenuListener;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableViewer;
-import net.mldonkey.g2gui.view.viewers.GTableViewer;
-import net.mldonkey.g2gui.view.viewers.actions.RefreshUploadsAction;
 
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -67,7 +65,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.80 2003/10/22 17:17:30 zet Exp $
+ * @version $Id: TransferTab.java,v 1.81 2003/10/29 16:56:21 lemmster Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -129,7 +127,7 @@ public class TransferTab extends GuiTab {
         downloadViewForm.setContent(downloadComposite);
         createUploads(mainSashForm);
         downloadTableTreeViewer = new DownloadTableTreeViewer(downloadComposite, clientTableViewer, mldonkey, this);
-        popupMenuDL.addMenuListener(new DownloadPaneMenuListener(downloadTableTreeViewer.getTableTreeViewer(), mldonkey, downloadTableTreeViewer));
+        popupMenuDL.addMenuListener(new DownloadPaneMenuListener(downloadTableTreeViewer, mldonkey, mainSashForm, downloadParent ) );
         mainSashForm.setWeights(new int[] { 1, 1 });
         mainSashForm.setMaximizedControl(downloadParent);
         mldonkey.getFileInfoIntMap().addObserver(this);
@@ -212,7 +210,7 @@ public class TransferTab extends GuiTab {
     public void createUploadHeader(ViewForm parentViewForm, final SashForm mainSashForm, final Control uploadParent) {
         popupMenuUL = new MenuManager("");
         popupMenuUL.setRemoveAllWhenShown(true);
-        popupMenuUL.addMenuListener(new UploadsMenuListener(mainSashForm, parentViewForm, uploadTableViewer));
+        popupMenuUL.addMenuListener(new UploadMenuListener(uploadTableViewer, mldonkey, mainSashForm, parentViewForm));
 
         CLabel uploadsCLabel = CCLabel.createCL(parentViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar");
         uploadsCLabel.addMouseListener(new MaximizeSashMouseAdapter(uploadsCLabel, popupMenuUL, mainSashForm, uploadParent));
@@ -258,7 +256,7 @@ public class TransferTab extends GuiTab {
         popupMenuCL = new MenuManager("");
 
         popupMenuCL.setRemoveAllWhenShown(true);
-        popupMenuCL.addMenuListener(new HeaderBarMenuListener(parentSash, clientViewForm, clientTableViewer));
+        popupMenuCL.addMenuListener(new ClientPaneListener(clientTableViewer, mldonkey, parentSash, clientViewForm));
         clientCLabel.addMouseListener(new MaximizeSashMouseAdapter(clientCLabel, popupMenuCL, parentSash, clientViewForm));
 
         return downloadClients;
@@ -402,25 +400,14 @@ public class TransferTab extends GuiTab {
             popupMenuCL.dispose();
         }
     }
-
-    /**
-    * UploadsMenuListener
-    */
-    public class UploadsMenuListener extends HeaderBarMenuListener {
-        public UploadsMenuListener(SashForm sashForm, Control control, GTableViewer gTableViewer) {
-            super(sashForm, control, gTableViewer);
-        }
-
-        public void menuAboutToShow(IMenuManager menuManager) {
-            menuManager.add(new RefreshUploadsAction(uploadTableViewer));
-            super.menuAboutToShow(menuManager);
-        }
-    }
 }
 
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.81  2003/10/29 16:56:21  lemmster
+added reasonable class hierarchy for panelisteners, viewers...
+
 Revision 1.80  2003/10/22 17:17:30  zet
 common actions
 
@@ -560,7 +547,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

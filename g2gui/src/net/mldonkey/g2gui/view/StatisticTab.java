@@ -26,16 +26,12 @@ import java.util.Observable;
 
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.helper.CCLabel;
-import net.mldonkey.g2gui.view.helper.HeaderBarMenuListener;
 import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.statistic.Graph;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
-import net.mldonkey.g2gui.view.statistic.GraphHistory;
+import net.mldonkey.g2gui.view.statistic.GraphPaneListener;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -50,14 +46,11 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.MessageBox;
-
 
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.35 2003/10/22 01:36:59 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.36 2003/10/29 16:56:21 lemmster Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
@@ -69,9 +62,10 @@ public class StatisticTab extends GuiTab {
      */
     public StatisticTab( MainTab gui ) {
         super( gui );
-        createButton( "StatisticsButton", G2GuiResources.getString( "TT_StatisticsButton" ), G2GuiResources.getString( "TT_StatisticsButtonToolTip" ) );
+        createButton( "StatisticsButton", G2GuiResources.getString( "TT_StatisticsButton" ),
+                      G2GuiResources.getString( "TT_StatisticsButtonToolTip" ) );
         createContents( this.subContent );
-        gui.getCore(  ).getClientStats(  ).addObserver( this );
+        gui.getCore().getClientStats().addObserver( this );
     }
 
     /**
@@ -79,20 +73,22 @@ public class StatisticTab extends GuiTab {
      */
     protected void createContents( Composite parent ) {
         SashForm mainSash = new SashForm( parent, SWT.VERTICAL );
-        mainSash.setLayout( new FillLayout(  ) );
+        mainSash.setLayout( new FillLayout() );
 
         /* Top composite for other stats */
         createStatsComposite( mainSash );
-
         /* Bottom Sash for graphs */
-        final SashForm graphSash = new SashForm( mainSash, (PreferenceLoader.loadBoolean("graphSashHorizontal") ? SWT.HORIZONTAL : SWT.VERTICAL) );
-		graphSash.addDisposeListener( new DisposeListener() { 
-			public void widgetDisposed(DisposeEvent e) {
-				PreferenceStore p = PreferenceLoader.getPreferenceStore();
-				p.setValue("graphSashHorizontal", ( graphSash.getOrientation() == SWT.HORIZONTAL ? true : false) );
-			}
-		});
-
+        final SashForm graphSash =
+            new SashForm( mainSash,
+                          ( PreferenceLoader.loadBoolean( "graphSashHorizontal" ) ? SWT.HORIZONTAL
+                                                                                  : SWT.VERTICAL ) );
+        graphSash.addDisposeListener( new DisposeListener() {
+                public void widgetDisposed( DisposeEvent e ) {
+                    PreferenceStore p = PreferenceLoader.getPreferenceStore();
+                    p.setValue( "graphSashHorizontal",
+                                ( ( graphSash.getOrientation() == SWT.HORIZONTAL ) ? true : false ) );
+                }
+            } );
         downloadsGraphControl = createGraph( graphSash, "TT_Downloads" );
         uploadsGraphControl = createGraph( graphSash, "TT_Uploads" );
 
@@ -105,22 +101,22 @@ public class StatisticTab extends GuiTab {
      * @param mainSash
      */
     private void createStatsComposite( final SashForm mainSash ) {
-        ViewForm statsViewForm = new ViewForm( mainSash, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+        ViewForm statsViewForm =
+            new ViewForm( mainSash,
+                          SWT.BORDER
+                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
         statsViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-        CLabel statsCLabel = CCLabel.createCL( statsViewForm, "TT_StatisticsButton", "StatisticsButtonSmallTitlebar" );
-
+        CLabel statsCLabel =
+            CCLabel.createCL( statsViewForm, "TT_StatisticsButton", "StatisticsButtonSmallTitlebar" );
         Composite statsComposite = new Composite( statsViewForm, SWT.NONE );
-        statsComposite.setLayout( new FillLayout(  ) );
-
+        statsComposite.setLayout( new FillLayout() );
         Button b = new Button( statsComposite, SWT.NONE );
         b.setText( "<gui protocol needs more stats>" );
-        b.addSelectionListener( new SelectionAdapter(  ) {
+        b.addSelectionListener( new SelectionAdapter() {
                 public void widgetSelected( SelectionEvent s ) {
                     mainSash.setWeights( new int[] { 0, 100 } );
                 }
             } );
-
         statsViewForm.setTopLeft( statsCLabel );
         statsViewForm.setContent( statsComposite );
     }
@@ -136,23 +132,19 @@ public class StatisticTab extends GuiTab {
     * @return GraphControl
     */
     public GraphControl createGraph( SashForm graphSash, String titleResString ) {
-        final MenuManager popupMenu = new MenuManager(  );
+        final MenuManager popupMenu = new MenuManager();
         popupMenu.setRemoveAllWhenShown( true );
-
         String graphName = G2GuiResources.getString( titleResString );
-
-        ViewForm graphViewForm = new ViewForm( graphSash, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+        ViewForm graphViewForm =
+            new ViewForm( graphSash,
+                          SWT.BORDER
+                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
         CLabel cLabel = CCLabel.createCL( graphViewForm, titleResString, "StatisticsButtonSmallTitlebar" );
-
         GraphControl graphControl = new GraphControl( graphViewForm, graphName );
-
-        popupMenu.addMenuListener( new GraphMenuListener( graphSash, graphViewForm, graphControl ) );
-
+        popupMenu.addMenuListener( new GraphPaneListener( graphSash, graphViewForm, graphControl ) );
         graphViewForm.setTopLeft( cLabel );
         graphViewForm.setContent( graphControl );
-
         cLabel.addMouseListener( new MaximizeSashMouseAdapter( cLabel, popupMenu, graphSash, graphViewForm ) );
-
         return graphControl;
     }
 
@@ -160,97 +152,37 @@ public class StatisticTab extends GuiTab {
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable arg0, Object receivedInfo ) {
-        ClientStats clientInfo = (ClientStats) receivedInfo;
-        uploadsGraphControl.addPointToGraph( clientInfo.getTcpUpRate(  ) );
-        downloadsGraphControl.addPointToGraph( clientInfo.getTcpDownRate(  ) );
-        uploadsGraphControl.redraw(  );
-        downloadsGraphControl.redraw(  );
+        ClientStats clientInfo = ( ClientStats ) receivedInfo;
+        uploadsGraphControl.addPointToGraph( clientInfo.getTcpUpRate() );
+        downloadsGraphControl.addPointToGraph( clientInfo.getTcpDownRate() );
+        uploadsGraphControl.redraw();
+        downloadsGraphControl.redraw();
     }
 
     public void setInActive( boolean removeObserver ) {
         // Do not remove Observer
-        super.setInActive(  );
+        super.setInActive();
     }
 
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.GuiTab#dispose()
      */
-    public void dispose(  ) {
-        super.dispose(  );
+    public void dispose() {
+        super.dispose();
     }
 
-	public void updateDisplay() {
-		super.updateDisplay();
-		uploadsGraphControl.updateDisplay();
-		downloadsGraphControl.updateDisplay();
-	}
-
-
-    /**
-     * GraphMenuListener
-     */
-    public class GraphMenuListener extends HeaderBarMenuListener {
-        GraphControl graphControl;
-
-        public GraphMenuListener( SashForm sashForm, Control control, GraphControl graphControl ) {
-        	super(sashForm, control, null);
-            this.graphControl = graphControl;
-        }
-
-        public void menuAboutToShow( IMenuManager menuManager ) {
-            menuManager.add( new GraphHistoryAction( graphControl.getGraph(  ) ) );
-            menuManager.add( new ClearGraphHistoryAction( graphControl.getGraph(  ) ) );
-            super.menuAboutToShow( menuManager );
-        }
-    }
-
-    /**
-    * GraphHistoryAction
-    */
-    public class GraphHistoryAction extends Action {
-        Graph graph;
-
-        public GraphHistoryAction( Graph graph ) {
-            super( "Hourly graph history" );
-			setImageDescriptor( G2GuiResources.getImageDescriptor( "graph" ) );
-            this.graph = graph;
-        }
-
-        public void run(  ) {
-            new GraphHistory( graph );
-        }
-    }
-
-    /**
-    * ClearGraphHistoryAction
-    */
-    public class ClearGraphHistoryAction extends Action {
-        Graph graph;
-
-        public ClearGraphHistoryAction( Graph graph ) {
-            super( "Clear graph history" );
-            setImageDescriptor( G2GuiResources.getImageDescriptor( "clear" ) ); 
-            this.graph = graph;
-        }
-
-        public void run(  ) {
-			MessageBox confirm =
-				new MessageBox( 
-					downloadsGraphControl.getShell(),
-					SWT.YES | SWT.NO | SWT.ICON_QUESTION );
-
-			confirm.setMessage( G2GuiResources.getString( "MISC_AYS" ) );
-
-			if ( confirm.open() == SWT.YES ) {
-				graph.clearHistory();
-			}
-        }
+    public void updateDisplay() {
+        super.updateDisplay();
+        uploadsGraphControl.updateDisplay();
+        downloadsGraphControl.updateDisplay();
     }
 }
 
-
 /*
 $Log: StatisticTab.java,v $
+Revision 1.36  2003/10/29 16:56:21  lemmster
+added reasonable class hierarchy for panelisteners, viewers...
+
 Revision 1.35  2003/10/22 01:36:59  zet
 add column selector to server/search (might not be finished yet..)
 
@@ -306,7 +238,7 @@ Revision 1.18  2003/08/23 01:12:43  zet
 remove todos
 
 Revision 1.17  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle

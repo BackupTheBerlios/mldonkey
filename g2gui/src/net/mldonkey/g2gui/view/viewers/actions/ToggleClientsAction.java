@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.GViewer;
 
 import org.eclipse.jface.action.Action;
 
@@ -31,33 +32,37 @@ import org.eclipse.jface.action.Action;
 /**
  * ToggleClientsAction
  *
- * @version $Id: ToggleClientsAction.java,v 1.1 2003/10/22 17:17:30 zet Exp $
+ * @version $Id: ToggleClientsAction.java,v 1.2 2003/10/29 16:56:21 lemmster Exp $
  *
  */
 public class ToggleClientsAction extends Action {
-    private DownloadTableTreeViewer downloadTableTreeViewer;
+    private GViewer gViewer;
 
-    public ToggleClientsAction(DownloadTableTreeViewer downloadTableTreeViewer) {
+    public ToggleClientsAction(GViewer gViewer) {
         super();
-        this.downloadTableTreeViewer = downloadTableTreeViewer;
+        this.gViewer = gViewer;
 
-        if (downloadTableTreeViewer.clientsDisplayed()) {
+        if ( ( ( DownloadTableTreeViewer ) gViewer ).clientsDisplayed()) {
             setText(G2GuiResources.getString("MISC_HIDE") + G2GuiResources.getString("TT_Clients"));
             setImageDescriptor(G2GuiResources.getImageDescriptor("minus"));
-        } else {
+        } 
+        else {
             setText(G2GuiResources.getString("MISC_SHOW") + G2GuiResources.getString("TT_Clients"));
             setImageDescriptor(G2GuiResources.getImageDescriptor("plus"));
         }
     }
 
     public void run() {
-        downloadTableTreeViewer.toggleClientsTable();
+        ( ( DownloadTableTreeViewer ) gViewer ).toggleClientsTable();
     }
 }
 
 
 /*
 $Log: ToggleClientsAction.java,v $
+Revision 1.2  2003/10/29 16:56:21  lemmster
+added reasonable class hierarchy for panelisteners, viewers...
+
 Revision 1.1  2003/10/22 17:17:30  zet
 common actions
 

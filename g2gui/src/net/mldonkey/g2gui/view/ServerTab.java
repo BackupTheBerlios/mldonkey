@@ -29,15 +29,13 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
-import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.server.ServerTableMenuListener;
+import net.mldonkey.g2gui.view.server.ServerPaneListener;
 import net.mldonkey.g2gui.view.server.ServerTableViewer;
-import net.mldonkey.g2gui.view.viewers.ColumnSelectorPaneListener;
+import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ViewForm;
@@ -50,7 +48,7 @@ import org.eclipse.swt.widgets.Composite;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.42 2003/10/28 11:07:32 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.43 2003/10/29 16:56:21 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -105,7 +103,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		
 		popupMenu = new MenuManager( "" );
 		popupMenu.setRemoveAllWhenShown( true );
-		popupMenu.addMenuListener(new ColumnSelectorPaneListener(ourTableViewer));
+		popupMenu.addMenuListener(new ServerPaneListener(ourTableViewer, core));
 		ccLabel.addMouseListener( new HeaderBarMouseAdapter( ccLabel, popupMenu ) );
 	}
 
@@ -138,19 +136,12 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		}
 		int itemCount = ourTableViewer.getTableViewer().getTable().getItemCount();	
 		this.setStatusLine();
-		
+
 		/* refresh the table if "show connected servers only" is true and the filter is activated */
 		if ( PreferenceLoader.loadBoolean( "displayAllServers" )
 		&& this.servers.getConnected() != itemCount ) {
-			ViewerFilter[] filters = ourTableViewer.getTableViewer().getFilters();
-			for ( int i = 0; i < filters.length; i++ ) {
-				if ( filters[ i ] instanceof ServerTableMenuListener.EnumStateViewerFilter ) {
-					TableMenuListener.EnumStateViewerFilter filter =
-						( TableMenuListener.EnumStateViewerFilter ) filters[ i ];
-					if ( filter.matches( EnumState.CONNECTED ) )
-						ourTableViewer.getTableViewer().refresh();
-				}
-			}	
+			if ( StateGViewerFilter.matches( ourTableViewer, EnumState.CONNECTED ) )
+				ourTableViewer.getTableViewer().refresh();
 		}
 	}
 	
@@ -218,6 +209,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.43  2003/10/29 16:56:21  lemmster
+added reasonable class hierarchy for panelisteners, viewers...
+
 Revision 1.42  2003/10/28 11:07:32  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"

@@ -24,7 +24,7 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.view.viewers.GTableViewer;
+import net.mldonkey.g2gui.view.viewers.GViewer;
 
 import org.eclipse.jface.action.Action;
 
@@ -32,26 +32,29 @@ import org.eclipse.jface.action.Action;
 /**
  * RefreshUploadsAction
  *
- * @version $Id: RefreshUploadsAction.java,v 1.1 2003/10/22 17:17:30 zet Exp $
+ * @version $Id: RefreshUploadsAction.java,v 1.2 2003/10/29 16:56:21 lemmster Exp $
  *
  */
 public class RefreshUploadsAction extends Action {
-    private GTableViewer gTableViewer;
+    private GViewer gViewer;
 
-    public RefreshUploadsAction(GTableViewer gTableViewer) {
+    public RefreshUploadsAction(GViewer gViewer) {
         super("Refresh");
-        this.gTableViewer = gTableViewer;
+        this.gViewer = gViewer;
     }
 
     public void run() {
         Message refresh = new EncodeMessage(Message.S_REFRESH_UPLOAD_STATS);
-        refresh.sendMessage(gTableViewer.getCore());
+        refresh.sendMessage(gViewer.getCore());
     }
 }
 
 
 /*
 $Log: RefreshUploadsAction.java,v $
+Revision 1.2  2003/10/29 16:56:21  lemmster
+added reasonable class hierarchy for panelisteners, viewers...
+
 Revision 1.1  2003/10/22 17:17:30  zet
 common actions
 
