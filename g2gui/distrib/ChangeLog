@@ -1,11 +1,21 @@
+2003/10/10: z
+	* Transfer: Removed rate from Downloads header 
+	* Transfer: Buffered add/remove methods so multiple calls are performed en masse
+	* Transfer: Save queued & paused filter settings
+	* Transfer: Save last sort column 
+	* Transfer: Add ColumnSelector!: add|remove|move columns 
+	* Transfer: Rewrote TableTreeEditor (chunkGraph) integration (moved into the Viewer)
+	* Transfer: Fixed TableTreeEditor.run crash on +/- selection (SWT bug)
+	* About: Add version information (+ titlebar)
+
 2003/10/07: Dek
 	* Console & Messages: Added history to input-line (UP / DOWN -Key to browse history)
 	
 2003/10/04: z
-	* Transfer: Add absolute/relative file priority settings (rt-clk menu)
+	* Transfer: Add absolute & relative file priority settings w/slider (rt-clk menu)
 
 2003/10/01: z
-	* Transfer&Statistics: Add Flip sash menuItem ( horizontal | vertical )
+	* Transfer, Statistics: Add Flip sash menuItem ( horizontal | vertical )
 
 2003/09/29: 
 	*** Release version 0.1.1 ***
