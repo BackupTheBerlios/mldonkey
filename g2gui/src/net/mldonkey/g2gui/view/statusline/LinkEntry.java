@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.16 2003/10/16 20:24:53 zet Exp $
+ * @version $Id: LinkEntry.java,v 1.17 2003/10/16 20:40:49 zet Exp $
  *
  */
 public class LinkEntry {
@@ -94,7 +94,7 @@ public class LinkEntry {
       	linkEntryText.addKeyListener( new KeyAdapter() {
 				public void keyPressed( KeyEvent e ) {
 					if ( (e.stateMask & SWT.CTRL) != 0  ) {
-						if (e.character == SWT.LF) // SWT.CR doesn't work
+						if (e.character == SWT.LF || e.character == SWT.CR) 
 							enterLinks( linkEntryText );	
 					}
 				}
@@ -198,6 +198,9 @@ public class LinkEntry {
 
 /*
 $Log: LinkEntry.java,v $
+Revision 1.17  2003/10/16 20:40:49  zet
+cr+lf
+
 Revision 1.16  2003/10/16 20:24:53  zet
 ctrl+cr
 
