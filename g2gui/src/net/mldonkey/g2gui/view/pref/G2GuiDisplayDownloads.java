@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * G2GuiDisplayDownloads
  *
- * @version $Id: G2GuiDisplayDownloads.java,v 1.1 2003/10/15 22:06:13 zet Exp $ 
+ * @version $Id: G2GuiDisplayDownloads.java,v 1.2 2003/10/16 16:10:14 zet Exp $ 
  *
  */
 public class G2GuiDisplayDownloads extends PreferencePage {
@@ -43,6 +43,13 @@ public class G2GuiDisplayDownloads extends PreferencePage {
      */
     protected void createFieldEditors() {
 		Composite composite = getFieldEditorParent();
+		
+		setupEditor( 
+			new ExtendedColorFieldEditor( 
+				"downloadsBackgroundColor",
+				G2GuiResources.getString( "PREF_DISPLAY_D_BACKGROUND" ),
+				composite ) );
+		
 		
 		setupEditor( 
 			new ExtendedColorFieldEditor( 
@@ -91,12 +98,23 @@ public class G2GuiDisplayDownloads extends PreferencePage {
 				"downloadsRateAbove0FileColor",
 				G2GuiResources.getString( "PREF_DISPLAY_D_RATE0" ),
 				composite ) );		
+				
+		setupEditor( 
+			new ExtendedFontFieldEditor2( 
+				"downloadsFontData",
+				G2GuiResources.getString( "PREF_DISPLAY_D_FONT" ),
+				G2GuiResources.getString( "PREF_DISPLAY_SAMPLE" ),
+				composite ) );			
+		
     }
 
 }
 
 /*
 $Log: G2GuiDisplayDownloads.java,v $
+Revision 1.2  2003/10/16 16:10:14  zet
+background/font
+
 Revision 1.1  2003/10/15 22:06:13  zet
 Split Console/Downloads pref pages.
 

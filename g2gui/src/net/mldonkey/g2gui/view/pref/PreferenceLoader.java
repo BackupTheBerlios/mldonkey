@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.35 2003/10/15 22:06:13 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.36 2003/10/16 16:10:14 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -94,7 +94,10 @@ public class PreferenceLoader {
                                         display.getSystemColor( SWT.COLOR_LIST_FOREGROUND ).getRGB() );
         PreferenceConverter.setDefault( preferenceStore, "consoleFontData",
                                         JFaceResources.getTextFont().getFontData() );
-                            
+                                        
+                                        
+             
+		PreferenceConverter.setDefault( preferenceStore, "downloadsBackgroundColor", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );               
         PreferenceConverter.setDefault( preferenceStore, "downloadsAvailableFileColor", display.getSystemColor( SWT.COLOR_BLACK ).getRGB() );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsUnAvailableFileColor", new RGB(128,128,128) );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsDownloadedFileColor", display.getSystemColor( SWT.COLOR_BLUE ).getRGB() );
@@ -103,6 +106,7 @@ public class PreferenceLoader {
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove20FileColor", new RGB(0,160,0) );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove10FileColor", new RGB(0,140,0) );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove0FileColor", new RGB(0,110,0) );
+        PreferenceConverter.setDefault( preferenceStore, "downloadsFontData", JFaceResources.getDefaultFont().getFontData() );     
                                         
         preferenceStore.setDefault( "hostname", "localhost" );
         preferenceStore.setDefault( "username", "admin" );
@@ -246,6 +250,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.36  2003/10/16 16:10:14  zet
+background/font
+
 Revision 1.35  2003/10/15 22:06:13  zet
 Split Console/Downloads pref pages.
 
