@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.7 2003/07/07 18:31:08 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.8 2003/07/08 15:03:01 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -79,9 +79,10 @@ public class Preferences extends PreferenceManager {
 				};
 		if ( ( mldonkey != null ) && ( mldonkey.isConnected() ) ) {
 			this.connected = true;
+			createMLDonkeyOptions(connected, mldonkey);
 		}	
 		
-		createMLDonkeyOptions(connected, mldonkey);
+		
 			
 		//myprefs.addToRoot( new PreferenceNode
 		//		( "mldonkey", new General( preferenceStore, connected, mldonkey ) ) );
@@ -187,6 +188,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.8  2003/07/08 15:03:01  dek
+*** empty log message ***
+
 Revision 1.7  2003/07/07 18:31:08  dek
 saving options now also works
 
