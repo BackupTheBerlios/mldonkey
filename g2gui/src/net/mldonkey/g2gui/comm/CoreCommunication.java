@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
  * CoreCommunication
  *
  *
- * @version $Id: CoreCommunication.java,v 1.41 2003/11/20 15:40:59 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.42 2003/11/20 17:51:53 dek Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -68,7 +68,6 @@ public interface CoreCommunication extends Runnable {
 	 * reconnects the Core if socket was lost (for example)
 	 */
 	void reconnect();
-	
 	
 	/**
 	 * Sends the password message to the core. 
@@ -169,6 +168,9 @@ public interface CoreCommunication extends Runnable {
 }
 /*
 $Log: CoreCommunication.java,v $
+Revision 1.42  2003/11/20 17:51:53  dek
+moved disconnect-listener out of core
+
 Revision 1.41  2003/11/20 15:40:59  dek
 reconnect started
 

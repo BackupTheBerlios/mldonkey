@@ -29,6 +29,7 @@ import java.net.UnknownHostException;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.DisconnectListener;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.ObjectPool;
@@ -50,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.45 2003/11/20 15:56:02 dek Exp $
+ * @version $Id: G2Gui.java,v 1.46 2003/11/20 17:51:53 dek Exp $
  *
  */
 public class G2Gui {
@@ -228,13 +229,13 @@ public class G2Gui {
             Thread mldonkey = new Thread(core);
             mldonkey.setDaemon(true);
             mldonkey.start();
-
             try {
                 waiterObject.wait();
             } catch (InterruptedException e1) {
 				Thread.currentThread().interrupt();
             }
         }
+		core.addObserver( new DisconnectListener( core,shell ) );
 
 		// handle some errors the core can cause
 		// connection denied
@@ -418,6 +419,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.46  2003/11/20 17:51:53  dek
+moved disconnect-listener out of core
+
 Revision 1.45  2003/11/20 15:56:02  dek
 missed one small thing
 

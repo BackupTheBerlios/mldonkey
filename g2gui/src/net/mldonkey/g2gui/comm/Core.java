@@ -57,7 +57,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.111 2003/11/20 15:54:50 dek Exp $ 
+ * @version $Id: Core.java,v 1.112 2003/11/20 17:51:53 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -66,6 +66,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * the core denies our connection attempt
 	 */
 	private boolean connectionDenied;
+	
 	/**
 	 * Should we use poll or push mode
 	 */
@@ -140,8 +141,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * Username and Password to work with
 	 */
-	private String username, password;
-	private DisconnectListener disconnectListener;
+	private String username, password;	
 	
 	/**
 	 * Connects the Core to mldonkey @remote
@@ -180,8 +180,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		this.waiterObj = waiterObj;
 		this.pollModeEnabled = pollModeEnabled;
 		this.advancedMode = advancedMode;
-		this.pollUpStats = PreferenceLoader.loadBoolean( "pollUpStats" );
-		this.disconnectListener = new DisconnectListener( this );
+		this.pollUpStats = PreferenceLoader.loadBoolean( "pollUpStats" );	
+			
 	}
 
 	/**
@@ -628,10 +628,15 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		return ( SharedFileInfoIntMap ) sharedFileInfoList;
 	}
 
+
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.112  2003/11/20 17:51:53  dek
+moved disconnect-listener out of core
+
 Revision 1.111  2003/11/20 15:54:50  dek
 minor checkstyle and removed unescessary type-cast
 

@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * DisconnectListener
  *
- * @version $Id: DisconnectListener.java,v 1.2 2003/11/20 15:54:50 dek Exp $ 
+ * @version $Id: DisconnectListener.java,v 1.3 2003/11/20 17:51:53 dek Exp $ 
  *
  */
 public class DisconnectListener implements Observer, Runnable {
@@ -42,12 +42,14 @@ public class DisconnectListener implements Observer, Runnable {
 	private CoreCommunication core;
 	private Object waiterObj;
 	private int result;
+	private Shell shell;
 
 	/**
 	 * @param core handles all the connections to mldonkey
 	 */
-	public DisconnectListener( CoreCommunication core ) {
+	public DisconnectListener( CoreCommunication core, Shell shell ) {
 		this.core = core;
+		this.shell = shell;
 		core.addObserver( this );		
 	}
 
@@ -68,11 +70,9 @@ public class DisconnectListener implements Observer, Runnable {
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
-	public void run() {		
-		Shell errorShell = new Shell();
-		MessageBox box = new MessageBox( errorShell , SWT.ICON_ERROR | SWT.YES | SWT.NO );
-		box.setMessage( "disconnected : reconnect ?" );
-		errorShell.dispose();	
+	public void run() {				
+		MessageBox box = new MessageBox( shell , SWT.ICON_ERROR | SWT.YES | SWT.NO );
+		box.setMessage( "disconnected : reconnect ?" );		
 		result = box.open();		
 	}
 	
@@ -82,6 +82,9 @@ public class DisconnectListener implements Observer, Runnable {
 
 /*
 $Log: DisconnectListener.java,v $
+Revision 1.3  2003/11/20 17:51:53  dek
+moved disconnect-listener out of core
+
 Revision 1.2  2003/11/20 15:54:50  dek
 minor checkstyle and removed unescessary type-cast
 
