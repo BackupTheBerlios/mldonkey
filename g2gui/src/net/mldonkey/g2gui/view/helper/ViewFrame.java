@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * ViewFrame
  *
- * @version $Id: ViewFrame.java,v 1.1 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: ViewFrame.java,v 1.2 2003/11/23 21:53:09 zet Exp $
  *
  */
 public class ViewFrame {
@@ -109,6 +109,7 @@ public class ViewFrame {
         return childComposite;
     }
 
+    // These are duplicates, but needed atm for downloadView (w/ and w/out advancedMode) 
     public SashForm getParentSashForm() {
         return parentSashForm;
     }
@@ -141,6 +142,9 @@ public class ViewFrame {
 
 /*
 $Log: ViewFrame.java,v $
+Revision 1.2  2003/11/23 21:53:09  zet
+comment
+
 Revision 1.1  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 
