@@ -29,6 +29,7 @@ import java.util.List;
 
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.enum.EnumTagType;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
@@ -45,15 +46,17 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 /**
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.35 2003/08/29 20:27:52 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.36 2003/08/30 12:09:04 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {	
+	private boolean isEmpty = false;
 	private Composite parent;
 	private List options = new ArrayList();
 	private final int inputFieldLength = 20;
@@ -166,36 +169,46 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
 	 */
 	protected Control createContents( Composite myparent ) {
-		
-		Group group = new Group( myparent, SWT.NONE );
-			GridLayout gl = new GridLayout( 1, false );
-			group.setLayout( gl );
-			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+		if ( this.isEmpty ){
+			Composite parent = ( Composite ) super.createContents( myparent );
+			System.out.println(parent.getLayout());
+			parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+			Label emptyLabel = new Label( parent,SWT.NONE );
+			emptyLabel.setText( G2GuiResources.getString( "PREF_EMPTY" ) );
+			parent.layout();
 			
-		
-		ScrolledComposite sc = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {		
-			public Point computeSize( int wHint, int hHint, boolean changed ) 
-			/* This method prevents the window from becoming huge (as in hight and width) 
-			 * when reopening "General" (or equivalents)
-			 */ 
-				{ return new Point( SWT.DEFAULT, SWT.DEFAULT ); }
-		};
-		
-		sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-			sc.setLayout( new FillLayout() );
-		
-		Composite parent = ( Composite ) super.createContents( sc );
-		parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );		
-		
-		sc.setExpandHorizontal( true );
-		sc.setExpandVertical( true );
-		sc.setContent( parent );
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;		
-		
-		sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
-		parent.layout();
-		
+			
+		}
+		else {		
+			Group group = new Group( myparent, SWT.NONE );
+				GridLayout gl = new GridLayout( 1, false );
+				group.setLayout( gl );
+				group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+				
+			
+			ScrolledComposite sc = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {		
+				public Point computeSize( int wHint, int hHint, boolean changed ) 
+				/* This method prevents the window from becoming huge (as in hight and width) 
+				 * when reopening "General" (or equivalents)
+				 */ 
+					{ return new Point( SWT.DEFAULT, SWT.DEFAULT ); }
+			};
+			
+			sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+				sc.setLayout( new FillLayout() );
+			
+			Composite parent = ( Composite ) super.createContents( sc );
+			parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );		
+			
+			sc.setExpandHorizontal( true );
+			sc.setExpandVertical( true );
+			sc.setContent( parent );
+			GridLayout layout = new GridLayout();
+			layout.numColumns = 1;		
+			
+			sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+			parent.layout();
+		}
 		return parent; 
 	}
 	/**
@@ -227,9 +240,19 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		}
 		
 	}
+	/**
+	 * @param b
+	 */
+	public void isEmpty(boolean empty) {
+		isEmpty = empty;
+		
+	}
 } 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.36  2003/08/30 12:09:04  dek
+Label added, when empty prefPage (networks with old core)
+
 Revision 1.35  2003/08/29 20:27:52  dek
 removed unused import
 

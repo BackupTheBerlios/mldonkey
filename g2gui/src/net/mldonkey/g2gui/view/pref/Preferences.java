@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.31 2003/08/29 20:24:42 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.32 2003/08/30 12:09:04 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -174,7 +174,9 @@ public class Preferences extends PreferenceManager {
 		if ( plugins.size() != 0 ) {		 
 			IPreferenceNode pluginOptions = find( "Networks" );
 			if ( pluginOptions == null ){
-				pluginOptions = new PreferenceNode( "Networks", new MLDonkeyOptions( "Networks", FieldEditorPreferencePage.GRID ) );
+				MLDonkeyOptions emptyItem = new MLDonkeyOptions( "Networks", FieldEditorPreferencePage.FLAT );
+				pluginOptions = new PreferenceNode( "Networks", emptyItem );
+				emptyItem.isEmpty( true );
 				addToRoot( pluginOptions );	
 			}
 				
@@ -229,6 +231,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.32  2003/08/30 12:09:04  dek
+Label added, when empty prefPage (networks with old core)
+
 Revision 1.31  2003/08/29 20:24:42  dek
 icon for preferences, and simple frame (group)
 
