@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.16 2003/08/03 20:00:14 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.17 2003/08/04 16:57:00 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -62,7 +62,7 @@ public class OptionsInfoMap extends InfoMap {
 			else {
 				/*get the already existing option and change the values:*/
 				OptionsInfo existingOption = ( OptionsInfo ) this.infoMap.get( optionsInfo.getKey() );
-				existingOption.value = optionsInfo.getValue();
+				existingOption.alterValue( optionsInfo.getValue() );
 			}
 		}
 		this.setChanged();
@@ -157,6 +157,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.17  2003/08/04 16:57:00  lemmstercvs01
+better way to set the value
+
 Revision 1.16  2003/08/03 20:00:14  lemmstercvs01
 bugfix
 

@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.15 2003/08/03 20:00:14 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.16 2003/08/04 16:57:00 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -59,7 +59,7 @@ public class OptionsInfo extends Parent {
 	/**
 	 * Options Value
 	 */
-	protected String value;
+	private String value;
 	/**
 	 * The option defaultValue
 	 */
@@ -94,11 +94,15 @@ public class OptionsInfo extends Parent {
 	public String getValue() {
 		return value;
 	}
+	
+	protected void alterValue( String aString ) {
+		this.value = aString;
+	}
 
 	/**
 	 * @param string the OptionValue
 	 */
-	private void setValue( String aString ) {
+	public void setValue( String aString ) {
 		Object[] obj = new Object[ 2 ];
 		obj[ 0 ] = this.key;
 		obj[ 1 ] = aString;
@@ -288,6 +292,9 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.16  2003/08/04 16:57:00  lemmstercvs01
+better way to set the value
+
 Revision 1.15  2003/08/03 20:00:14  lemmstercvs01
 bugfix
 
