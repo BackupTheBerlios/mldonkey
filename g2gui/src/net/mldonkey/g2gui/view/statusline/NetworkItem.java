@@ -26,6 +26,8 @@ import gnu.trove.TIntObjectIterator;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.ResourceBundle;
+
 import org.eclipse.swt.widgets.Composite;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.*;
@@ -35,11 +37,11 @@ import net.mldonkey.g2gui.model.*;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.2 2003/06/27 13:37:28 dek Exp $ 
+ * @version $Id: NetworkItem.java,v 1.3 2003/06/28 09:50:00 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkItem extends StatusLineItem implements Observer {
-	
+	private static ResourceBundle res = ResourceBundle.getBundle("g2gui");
 	private CoreCommunication core;
 	private StatusLine statusline;
 	private Composite parent;
@@ -50,62 +52,53 @@ public class NetworkItem extends StatusLineItem implements Observer {
 	 * @param line
 	 * @param mldonkey
 	 */
-	public NetworkItem(StatusLine statusline, CoreCommunication mldonkey) {
-	super();
-	this.parent = statusline.getStatusline();
-	content = "";
-	this.statusline = statusline;
-	mldonkey.addObserver( this );	
-	this.core = mldonkey;	
+	public NetworkItem( StatusLine statusline, CoreCommunication mldonkey ) {
+		super();
+		this.parent = statusline.getStatusline();
+		this.statusline = statusline;
+		this.core = mldonkey;	
+		content = "";
+
+		mldonkey.addObserver( this );	
 	}
 
 
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
-	public void update(Observable o, Object arg) {
-		/*
-		 * 	private long totalUp;
-			private long totalDown;
-			private long totalShared;
-			private int numOfShare;
-			private float tcpUpRate;
-			private float tcpDownRate;
-			private float udpUpRate;
-			private float udpDownRate;
-			private int numCurrDownload;
-			private int numDownloadFinished;
-			private int[] connectedNetworks;
-		 */
-		
-		if (arg instanceof ClientStats){
-			ClientStats temp = (ClientStats) arg;
+	public void update( Observable o, Object arg ) {
+		if ( arg instanceof ClientStats ) {
+			ClientStats temp = ( ClientStats ) arg;
 			final int[] networks = temp.getConnectedNetworks();
-			if (!parent.isDisposed())						
-				parent.getDisplay().syncExec( new Runnable () {
+			if ( !parent.isDisposed() )						
+				parent.getDisplay().asyncExec( new Runnable () {
 					public void run() {
-						statusline.update(position," connected to "+networks.length+" networks");
+						statusline.update( position, res.getString( "NI_ConnectedTo" ) + " "
+													 + networks.length + " "
+													 + res.getString( "NI_Networks" ) );
 						String toolTipText = "";									
-						TIntObjectIterator it = ((NetworkInfoIntMap) core.getNetworkinfoMap()).iterator();
-						while (it.hasNext()){
+						TIntObjectIterator it = ( ( NetworkInfoIntMap ) core.getNetworkinfoMap() ).iterator();
+						int collsize = core.getNetworkinfoMap().size();
+						for ( ; collsize-- > 0;) {
 							it.advance();
-							
-							if (((NetworkInfo)it.value()).isEnabled())	{	
-								if (toolTipText!="") toolTipText+="\n";					
-								toolTipText += (((NetworkInfo)it.value()).getNetworkName());							
+							if ( ( (NetworkInfo ) it.value() ).isEnabled() )	{	
+								if ( toolTipText != "" ) toolTipText += "\n";					
+								toolTipText += ( ( ( NetworkInfo ) it.value() ).getNetworkName() );							
 							}
 								
 						}
-						statusline.updateTooltip(position,toolTipText);
+						statusline.updateTooltip( position, toolTipText );
 					}
 				});
 		}
 	}
-
 }
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.3  2003/06/28 09:50:00  lemmstercvs01
+hasNext() optimized
+
 Revision 1.2  2003/06/27 13:37:28  dek
 tooltips added
 
