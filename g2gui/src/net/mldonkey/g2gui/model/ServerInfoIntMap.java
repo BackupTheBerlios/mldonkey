@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.13 2003/08/06 20:56:49 lemmstercvs01 Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.14 2003/08/07 12:35:31 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -299,6 +299,8 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 * @param port The Port of the ServerInfo
 	 */
 	public void add( NetworkInfo network, InetAddress address, short port ) {
+		if ( address == null ) return;
+		
 		Object[] obj = new Object[ 3 ];
 		obj[ 0 ] = new Integer( network.getNetwork() );
 		obj[ 1 ] = address.getAddress();
@@ -372,6 +374,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.14  2003/08/07 12:35:31  lemmstercvs01
+cleanup, more efficient
+
 Revision 1.13  2003/08/06 20:56:49  lemmstercvs01
 cleanup, more efficient
 

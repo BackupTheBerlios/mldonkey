@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * TableSorter
  *
  * @author $user$
- * @version $Id: TableSorter.java,v 1.2 2003/08/06 17:38:38 lemmstercvs01 Exp $ 
+ * @version $Id: TableSorter.java,v 1.3 2003/08/07 12:35:31 lemmstercvs01 Exp $ 
  *
  */
 public class TableSorter extends ViewerSorter {
@@ -74,7 +74,8 @@ public class TableSorter extends ViewerSorter {
 		ServerInfo server1 = ( ServerInfo ) obj1;
 		ServerInfo server2 = ( ServerInfo ) obj2;
 		
-		if ( server1 == null && server2 == null )
+		/* avoid null pointer exceptions */
+		if ( server1 == null || server2 == null )
 			return 0;
 		
 		/* network */
@@ -204,6 +205,9 @@ public class TableSorter extends ViewerSorter {
 
 /*
 $Log: TableSorter.java,v $
+Revision 1.3  2003/08/07 12:35:31  lemmstercvs01
+cleanup, more efficient
+
 Revision 1.2  2003/08/06 17:38:38  lemmstercvs01
 some actions still missing. but it should work for the moment
 

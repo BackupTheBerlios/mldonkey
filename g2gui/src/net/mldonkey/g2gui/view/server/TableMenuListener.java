@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view.server;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +41,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -47,6 +50,14 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -54,7 +65,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * TableMenuListener
  *
  * @author $user$
- * @version $Id: TableMenuListener.java,v 1.3 2003/08/06 09:42:34 lemmstercvs01 Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.4 2003/08/07 12:35:31 lemmstercvs01 Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -105,7 +116,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	public void menuAboutToShow( IMenuManager menuManager ) {
 		/* disconnect */
 		if ( selectedServer != null
-			&& selectedServer.getConnectionState().getState() == EnumState.CONNECTED )
+			&& selectedServer.isConnected() )
 			menuManager.add( new DisconnectAction() );
 
 		/* connect */
@@ -125,10 +136,15 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		removeManager.add( new RemoveServersAction() );
 		menuManager.add( removeManager );
 		
+		/* blacklist server */
 		if ( selectedServer != null )
 			menuManager.add( new BlackListAction() );
 			
 		menuManager.add( new Separator() );
+
+		/* add to favorites */
+		if ( selectedServer != null && this.core.getProtoToUse() > 16 )
+			menuManager.add( new FavoritesAction() );			
 		
 		/* columns toogle */
 		MenuManager columnsSubMenu = new MenuManager( "Columns" );
@@ -157,6 +173,23 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 				filterSubMenu.add( nFA );
 			}
 		}
+
+		filterSubMenu.add( new Separator() );
+		
+		EnumState[] states = { EnumState.BLACK_LISTED, EnumState.CONNECTED, EnumState.CONNECTED_AND_QUEUED,
+							   EnumState.CONNECTED_DOWNLOADING, EnumState.CONNECTED_INITIATING, 
+							   EnumState.CONNECTING, EnumState.NEW_HOST, EnumState.NOT_CONNECTED,
+							   EnumState.NOT_CONNECTED_WAS_QUEUED };
+							   
+		for ( int i = 0; i < states.length; i ++ ) {
+			EnumState state = states[ i ];
+			EnumStateFilterAction enFA = new EnumStateFilterAction( state.toString(), state );
+			if ( isFiltered( state ) )
+				enFA.setChecked( true );
+			filterSubMenu.add( enFA );	 	
+		}
+
+		
 		
 		menuManager.add( filterSubMenu );
 
@@ -167,15 +200,26 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	
 	public boolean isFiltered( NetworkInfo.Enum networkType ) {
 		ViewerFilter[] viewerFilters = tableViewer.getFilters();
-		for (int i = 0; i < viewerFilters.length; i++) {
+		for ( int i = 0; i < viewerFilters.length; i++ ) {
 			if ( viewerFilters [ i ] instanceof NetworkFilter )
-				if (((NetworkFilter) viewerFilters[ i ]).getNetworkType().equals(networkType))
+				if ( ( ( NetworkFilter ) viewerFilters[ i ] ).getNetworkType().equals(networkType ) )
 					return true; 
 	
 		}
 		return false;
 	}
+
+	public boolean isFiltered( EnumState state ) {
+		ViewerFilter[] viewerFilters = tableViewer.getFilters();
+		for ( int i = 0; i < viewerFilters.length; i++ ) {
+			if ( viewerFilters [ i ] instanceof EnumStateFilter )
+				if ( ( ( EnumStateFilter ) viewerFilters[ i ] ).getEnumState().equals( state ) )
+					return true; 
 	
+		}
+		return false;
+	}
+
 	public void toggleFilter( ViewerFilter viewerFilter, boolean toggle ) {
 		if ( toggle ) 
 			tableViewer.addFilter( viewerFilter );
@@ -220,11 +264,50 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	}
 	
 	private class AddServerAction extends Action {
+		private MyInputDialog dialog;
 		public AddServerAction() {
 			super();
 			setText( "Add Server" );
 		}
 		public void run() {
+			dialog = new MyInputDialog( tableViewer.getTable().getShell(),
+										"Add Server",
+										"The Server",
+										"The Network",
+										"hostname:port",
+										new MyInputValidator() );
+			dialog.open();
+			if ( dialog.getReturnCode() == IDialogConstants.OK_ID ) {
+				String text = dialog.getValue();
+				String[] strings = dialog.getValue().split( ":" );
+				InetAddress inetAddress = null;
+				try {
+					inetAddress = InetAddress.getByName( strings[0] );
+				}
+				catch ( UnknownHostException e ) {
+					MessageBox box = new MessageBox( tableViewer.getTable().getShell(),
+														 SWT.ICON_WARNING | SWT.OK );
+					box.setText( "Hostname Lookup Error" );
+					box.setMessage( "Hostname invalid" );
+					box.open();
+				}
+				core.getServerInfoIntMap().add( dialog.getCombo(), inetAddress, new Short( strings[ 1 ] ).shortValue() );							
+			}
+		}
+		
+		private class MyInputValidator implements IInputValidator {
+			/* (non-Javadoc)
+			 * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
+			 */
+			public String isValid( String newText ) {
+				Pattern pattern = Pattern.compile( "([a-z0-9-.]*):[0-9]{1,5}" );
+				Matcher m = pattern.matcher( newText );
+				if ( m.matches() )
+					return null;
+				else
+					return "Invalid Input";
+			}
+			
 		}
 	}
 	
@@ -245,18 +328,18 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			if ( result != null )
 				serverInfoMap.addServerList( result );							
 		}
-		
+
 		private class MyInputValidator implements IInputValidator {
 			/* (non-Javadoc)
 			 * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
 			 */
 			public String isValid( String newText ) {
-				Pattern pattern = Pattern.compile("[a-z/:]*[.met|.ocl]"); //TODO correct pattern
+				Pattern pattern = Pattern.compile( "(http://|https://)([a-z0-9-./?=!+]*)" );
 				Matcher m = pattern.matcher( newText );
-				if ( m.find() )
+				if ( m.matches() )
 					return null;
 				else
-					return "Invalid Input";	
+					return "Invalid Input";
 			}
 		}
 	}
@@ -326,6 +409,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			setText( "All Filters" );
 		}
 		public void run() {
+			ViewerFilter[] viewerFilters = tableViewer.getFilters();
+			for ( int i = 0; i < viewerFilters.length; i++ ) 
+				toggleFilter( viewerFilters[ i ], false );
 		}
 	}
 	
@@ -339,9 +425,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		public void run() {
 			if ( !isChecked() ) {
 				ViewerFilter[] viewerFilters = tableViewer.getFilters();
-				for (int i = 0; i < viewerFilters.length; i++) {
+				for ( int i = 0; i < viewerFilters.length; i++ ) {
 					if ( viewerFilters[i] instanceof NetworkFilter )
-						if ( ( (NetworkFilter ) viewerFilters[ i ] ).getNetworkType() == networkType ) {
+						if ( ( ( NetworkFilter ) viewerFilters[ i ] ).getNetworkType() == networkType ) {
 							toggleFilter( viewerFilters[ i ], false );
 						}
 				}
@@ -350,6 +436,56 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			}
 		}
 	}
+	
+	private class EnumStateFilterAction extends Action {
+		private EnumState state;
+		
+		public EnumStateFilterAction( String name, EnumState state ) {
+			super( name, Action.AS_CHECK_BOX );
+			this.state = state;			
+		}
+		
+		public void run() {
+			if ( !isChecked() ) {
+				ViewerFilter[] viewerFilters = tableViewer.getFilters();
+				for ( int i = 0; i < viewerFilters.length; i++ ) {
+					if ( viewerFilters[i] instanceof EnumStateFilter )
+						if ( ( ( EnumStateFilter ) viewerFilters[ i ] ).getEnumState() == state ) {
+							toggleFilter( viewerFilters[ i ], false );
+						}
+				}
+			} else {
+				toggleFilter( new EnumStateFilter( state ), true );
+			}
+		}		
+	}
+	
+	private class RefreshAction extends Action {
+		public RefreshAction() {
+			super();
+			setText( "manual refresh" );
+		}
+		public void run() {
+			tableViewer.getTable().getDisplay().asyncExec( new Runnable() {
+				public void run() {
+					tableViewer.refresh();
+				}
+			} );
+		}		
+	}
+	
+	private class FavoritesAction extends Action {
+		public FavoritesAction() {
+			super();
+			setText( "Add to Favorites" );
+		}
+		public void run() {
+			for ( int i = 0; i < selectedServers.size(); i++ ) {
+				ServerInfo server = ( ServerInfo ) selectedServers.get( i );
+				server.setFavorites();
+			}
+		}	
+	}		
 	
 	private class NetworkFilter extends ViewerFilter {
 		private NetworkInfo.Enum networkType;
@@ -377,23 +513,122 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		}
 	}
 	
-	private class RefreshAction extends Action {
-		public RefreshAction() {
-			super();
-			setText( "manual refresh" );
+	private class EnumStateFilter extends ViewerFilter {
+		private EnumState state;
+		
+		public EnumStateFilter( EnumState state ) {
+			this.state = state;
 		}
-		public void run() {
-			tableViewer.getTable().getDisplay().asyncExec( new Runnable() {
-				public void run() {
-					tableViewer.refresh();
-				}
-			} );
+		
+		public EnumState getEnumState() {
+			return this.state;
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.ViewerFilter#
+		 * select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+		 */
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if ( element instanceof ServerInfo ) {
+				ServerInfo server = ( ServerInfo ) element;
+				if ( server.getConnectionState().getState() == state )
+					return true;
+				else 
+					return false;
+			}
+			return true;
 		}		
-	}	
+	}
+	
+	private class MyInputDialog extends InputDialog {
+		private Combo combo;
+		private Composite composite;
+		private String comboMessage;
+		private NetworkInfo networkInfo;
+		/**
+		 * Creates an input dialog with OK and Cancel buttons.
+		 * Note that the dialog will have no visual representation (no widgets)
+		 * until it is told to open.
+		 * <p>
+		 * Note that the <code>open</code> method blocks for input dialogs.
+		 * </p>
+		 *
+		 * @param parentShell the parent shell
+		 * @param dialogTitle the dialog title, or <code>null</code> if none
+		 * @param dialogMessage the dialog message, or <code>null</code> if none
+		 * @param comboMessage the combo message, or <code>null</code> if none
+		 * @param initialValue the initial input value, or <code>null</code> if none
+		 *  (equivalent to the empty string)
+		 * @param validator an input validator, or <code>null</code> if none
+		 */
+		public MyInputDialog( Shell parentShell, String dialogTitle,
+							   String dialogMessage, String comboMessage, String initialValue, IInputValidator validator ) {
+			super( parentShell, dialogTitle, dialogMessage, initialValue, validator );
+			this.comboMessage = comboMessage;
+		}
+
+		protected Control createDialogArea( Composite parent ) {
+			composite = ( Composite ) super.createDialogArea( parent );
+
+			/* create the combo message */
+			if ( comboMessage != null) {
+				Label label = new Label( composite, SWT.WRAP );
+				label.setText( comboMessage );
+				GridData data = new GridData(
+					GridData.GRAB_HORIZONTAL |
+					GridData.GRAB_VERTICAL |
+					GridData.HORIZONTAL_ALIGN_FILL |
+					GridData.VERTICAL_ALIGN_CENTER );
+				data.widthHint = convertHorizontalDLUsToPixels( IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH );;
+				label.setLayoutData( data );
+				label.setFont( parent.getFont() );
+			}
+
+			/* now our combo for the networks */
+			combo = new Combo( composite, SWT.NONE );
+			combo.setLayoutData( new GridData(
+				GridData.GRAB_HORIZONTAL |
+				GridData.HORIZONTAL_ALIGN_FILL ) );
+			NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
+			for ( int i = 0; i < networks.length; i++ ) {
+				NetworkInfo network = networks[ i ];
+				if ( network.isEnabled() && network.hasServers() ) {
+					combo.add( network.getNetworkName() );
+					combo.setData( network.getNetworkName(), network );
+				}	
+			}
+			combo.select( 0 );
+
+			return composite;
+		}
+		
+		/* (non-Javadoc)
+		 * Method declared on Dialog.
+		 */
+		protected void buttonPressed( int buttonId ) {
+			if ( buttonId == IDialogConstants.OK_ID ) {
+				this.networkInfo = ( NetworkInfo ) combo.getData( combo.getItem( combo.getSelectionIndex() ) );
+			}
+			else {
+				this.networkInfo = null;
+			}
+			super.buttonPressed( buttonId );
+		}
+		
+		/**
+		 * @return The networkinfo to the selected combo item
+		 */
+		public NetworkInfo getCombo() {
+			return this.networkInfo;
+		}	
+	}		
 }
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.4  2003/08/07 12:35:31  lemmstercvs01
+cleanup, more efficient
+
 Revision 1.3  2003/08/06 09:42:34  lemmstercvs01
 manual refresh for testing
 

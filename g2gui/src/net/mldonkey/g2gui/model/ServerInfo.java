@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.15 2003/08/06 20:56:49 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.16 2003/08/07 12:35:31 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo extends Parent {
 	/**
@@ -79,6 +79,10 @@ public class ServerInfo extends Parent {
 	 * Description of Server
 	 */
 	private String descOfServer;
+	/**
+	 * Is this server a favorite
+	 */
+	private boolean favorite;
 
 	/**
 	 * @return The server connection state
@@ -90,7 +94,10 @@ public class ServerInfo extends Parent {
 	 * @return The description of this server
 	 */
 	public String getDescOfServer() {
-		return descOfServer;
+		if ( nameOfServer == null || nameOfServer.equals( "" ) ) 
+			return "<no description>";
+		else
+			return descOfServer;
 	}
 	/**
 	 * @return The name of this server
@@ -263,10 +270,27 @@ public class ServerInfo extends Parent {
 	}
 	
 	/**
+	 * convert the favorites state
+	 */
+	public void setFavorites() {
+		//TODO add favorites (need new opcode)
+	}
+	
+	/**
 	 * @return true/false if the server is in our favorites list
 	 */
 	public boolean isFavorite() {
-		return true;
+		return this.favorite;
+	}
+	
+	/**
+	 * is this server connected atm
+	 * @return
+	 */
+	public boolean isConnected() {
+		if ( this.connectionState.getState() == EnumState.CONNECTED )
+			return true;
+		return false;	
 	}
 	
 	/**
@@ -290,6 +314,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.16  2003/08/07 12:35:31  lemmstercvs01
+$cleanup, more efficient
+$
 $Revision 1.15  2003/08/06 20:56:49  lemmstercvs01
 $cleanup, more efficient
 $

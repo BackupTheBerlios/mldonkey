@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  * @author $user$
- * @version $Id: ServerTab.java,v 1.4 2003/08/06 20:56:49 lemmstercvs01 Exp $ 
+ * @version $Id: ServerTab.java,v 1.5 2003/08/07 12:35:31 lemmstercvs01 Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -76,9 +76,13 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	private ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
 
 	/* if you modify this, change the LayoutProvider and tableWidth */
-	private String[] tableColumns = { "network", "name", "desc", "address", "port", "serverScore", "users", "files", "state", "favorite" };
+	private String[] tableColumns = { "network", "name", "desc", "address",
+									   "port", "serverScore", "users", "files",
+									   "state", "favorite" };						
 	/* 0 sets the tablewidth dynamcliy */
-	private int[] tableWidth = { 45, 120, 0, 97, 50, 55, 45, 50, 80, 50 };
+	private int[] tableWidth = { 45, 120, 0, 97,
+								  50, 55, 45, 50,
+								  80, 50 };
 	
 	/**
 	 * @param gui The main gui tab
@@ -88,9 +92,17 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		/* associate this tab with the corecommunication */
 		this.core = gui.getCore();
 		/* Set our name on the coolbar */
-		createButton( "ServerButton", 
-							"Server",
-							"Server tab" );
+		createButton( "ServerButton", "Server",	"Server tab" );
+		
+		/* proto <= 16 does not support favorites */					
+		if ( this.core.getProtoToUse() <= 16 ) {
+			this.tableColumns = new String[] { "network", "name", "desc",
+											    "address", "port", "serverScore",
+											    "users", "files", "state" };						
+			this.tableWidth = new int[] { 45, 120, 0, 
+										   97, 50, 55,
+										   45, 50, 80 };
+		}
 
 		/* create the tab content */
 		this.createContents( this.content );
@@ -150,7 +162,12 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 					ascending = ascending ? false : true;
 
 					table.getSorter().sort( table, temp );
-					table.refresh();
+					try {
+						table.refresh();
+					}
+					catch ( Exception e1 ) {
+						e1.printStackTrace();
+					}
 				}	
 			} );
 		}
@@ -167,8 +184,8 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		this.table.setInput( servers );
 		servers.clearAdded();
 		
+		/* dont update the statusline, still null */
 		this.statusText = "Server: " + table.getTable().getItemCount();
-		this.setColumnWidht();
 	}
 
 	/**
@@ -226,9 +243,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 				this.servers.clearModified();
 			}	
 		}
-		this.statusText = "Server: " + itemCount;
-		this.mainWindow.statusline.update( statusText );
-		this.mainWindow.statusline.updateToolTip( "" );
+		this.setStatusLine();
 	}
 	
 	/**
@@ -246,9 +261,19 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		/* if we become active, refresh the table */
 		this.servers = this.core.getServerInfoIntMap();
 		table.getTable().getDisplay().asyncExec( this );
+		this.setStatusLine();
 		
 		this.core.getServerInfoIntMap().addObserver( this );
 		super.setActive();
+	}
+	
+	/**
+	 * Sets the statusline to the current value
+	 */
+	private void setStatusLine() {
+		this.statusText = "Server: " + table.getTable().getItemCount();
+		this.mainWindow.statusline.update( this.statusText );
+		this.mainWindow.statusline.updateToolTip( "" );
 	}
 	
 	/**
@@ -268,6 +293,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.5  2003/08/07 12:35:31  lemmstercvs01
+cleanup, more efficient
+
 Revision 1.4  2003/08/06 20:56:49  lemmstercvs01
 cleanup, more efficient
 
