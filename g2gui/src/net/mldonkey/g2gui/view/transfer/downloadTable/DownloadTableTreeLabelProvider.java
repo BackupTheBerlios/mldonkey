@@ -42,13 +42,12 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.3 2003/10/12 15:58:29 zet Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.4 2003/10/13 20:47:16 zet Exp $
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
     
-    private Color unAvailableFileColor = new Color( null, 255, 112, 0 );
-    private Color availableFileColor = new Color( null, 255, 165, 0 );
+    private Color unAvailableFileColor = new Color( null, 128, 128, 128 );
     private Color downloadedFileColor = new Color( null, 0, 0, 255 );
     private Color queuedFileColor = new Color( null, 192, 192, 192 );
     private Color pausedFileColor = new Color( null, 255, 0, 0 );
@@ -101,7 +100,7 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
             	return unAvailableFileColor;
             } 
             else {
-            	return availableFileColor;
+            	return null;
             }
         } else if ( arg0 instanceof TreeClientInfo ) {
             ClientInfo clientInfo = ( (TreeClientInfo) arg0 ).getClientInfo();
@@ -122,7 +121,6 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
      */
     public void dispose() {
         unAvailableFileColor.dispose();
-        availableFileColor.dispose();
         queuedFileColor.dispose();
         pausedFileColor.dispose();
         downloadedFileColor.dispose();
@@ -288,6 +286,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.4  2003/10/13 20:47:16  zet
+orange -> black
+
 Revision 1.3  2003/10/12 15:58:29  zet
 rewrite downloads table & more..
 
