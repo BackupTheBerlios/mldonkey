@@ -156,6 +156,10 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			prioritySubMenu.add(new PriorityLowAction());
 			menuManager.add(prioritySubMenu);
 		}
+		
+		if (selectedFile != null)
+			menuManager.add(new FileDetailAction());
+		
 
 		if (selectedFile != null) {
 			menuManager.add(new LinkToClipboardAction(false));
@@ -249,6 +253,18 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	}
 		
 	// Menu Actions	
+	
+	class FileDetailAction extends Action {
+		public FileDetailAction() {
+			super();
+			setText("File details");
+		}
+		public void run() {
+			new FileDetailDialog(selectedFile);
+		}
+		
+	}
+	
 		
 	class PauseAction extends Action {
 		public PauseAction() {
@@ -258,7 +274,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		public void run() {
 			for (int i = 0; i < selectedFiles.size(); i++)	
 				((FileInfo) selectedFiles.get(i)).setState(EnumFileState.PAUSED);
-			
 		}
 	}
 
@@ -539,6 +554,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.2  2003/08/06 17:14:50  zet
+file details
+
 Revision 1.1  2003/08/04 19:22:08  zet
 trial tabletreeviewer
 
