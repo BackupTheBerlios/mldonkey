@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.15 2003/11/24 20:33:56 dek Exp $
+ * @version $Id: MainCoolBar.java,v 1.16 2003/11/24 20:40:17 dek Exp $
  *
  */
 public class MainCoolBar {
@@ -219,7 +219,7 @@ public class MainCoolBar {
             ToolBar tempToolBar = ( ToolBar ) tempCoolItem.getControl();            
             Point pSize = tempToolBar.computeSize( SWT.DEFAULT, SWT.DEFAULT );
             pSize = tempCoolItem.computeSize( pSize.x, pSize.y );
-            //tempCoolItem.setSize( pSize );
+            tempCoolItem.setSize( pSize );
             tempCoolItem.setMinimumSize( pSize );
         }
         coolbar.setLocked( coolbarLocked );
@@ -292,7 +292,7 @@ public class MainCoolBar {
      */
     public void restoreLayout() {
     	PreferenceStore p = PreferenceLoader.getPreferenceStore();
-    	p.setDefault( "coolBarSizes", "0-0|0-0|" );
+    	p.setDefault( "coolBarSizes", "0-0|0-0|" );    	
     	p.setDefault( "coolBarOrder", "0|1|" );
     	
     	String sizesString = p.getString( "coolBarSizes" );
@@ -322,7 +322,7 @@ public class MainCoolBar {
     	
     	coolbar.setItemLayout( order, null, itemSizes );
     	
-    	layoutCoolBar();
+    	if ( p.isDefault("coolBarSizes") ) layoutCoolBar();
 
     }
     
@@ -356,6 +356,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.16  2003/11/24 20:40:17  dek
+yet another test
+
 Revision 1.15  2003/11/24 20:33:56  dek
 test for coolBar-saving on gtk
 
