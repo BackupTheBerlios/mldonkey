@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.13 2003/06/30 21:40:09 dek Exp $ 
+ * @version $Id: Gui.java,v 1.14 2003/07/01 14:06:06 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -127,6 +127,7 @@ public class Gui implements IG2gui, Listener {
 	 * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	private void createContents( Composite parent ) {
+		CoolBar coolbar = null;
 		parent.setSize(640,480);
 		GridData gridData;		
 		mainComposite = new Composite( parent, SWT.NONE );
@@ -137,10 +138,11 @@ public class Gui implements IG2gui, Listener {
 			mainLayout.marginHeight = 0;
 			mainComposite.setLayout( mainLayout );
 			
-		createCoolBar(mainComposite);				
+		coolbar = createCoolBar(mainComposite);				
 			
 		ToolItem pref = new ToolItem(miscTools,SWT.NONE);		
 			pref.setText("Preferences");
+			pref.setImage(new Image(pref.getParent().getDisplay(),"src/icons/preferences.gif"));
 			pref.addListener(SWT.Selection, new Listener(){
 				public void handleEvent(Event event) {	
 					Shell prefshell = new Shell();
@@ -158,10 +160,10 @@ public class Gui implements IG2gui, Listener {
 		addTabs();		
 		statusline = new StatusLine(mainComposite,mldonkey);
 				
-		layoutCoolBar();				
+		layoutCoolBar(coolbar);				
 
 	}
-	private void createCoolBar(Composite parent) {
+	 private CoolBar createCoolBar(Composite parent) {
 		GridData gridData;
 		
 		Composite coolBarPanel = new Composite(parent,SWT.NONE);
@@ -186,19 +188,24 @@ public class Gui implements IG2gui, Listener {
 		this.miscTools = new ToolBar(coolBar,SWT.FLAT);
 			miscCoolItem = items [1];
 			miscCoolItem.setControl (miscTools);		
+			
+		return coolBar;
 	}
 	
-	private void layoutCoolBar() {
-		int CoolBarWidth = this.mainComposite.getBounds().width;	
-		//int CoolBarWidth = 0;
+	private void layoutCoolBar(CoolBar coolBar) {
+		int CoolBarWidth = this.mainComposite.getBounds().width;
+		
 		int CoolBarHeight = 0;
-		for (int i = 0; i < mainTools.getItems().length; i++) {
-			if (mainTools.getItems()[i].getBounds().height > CoolBarHeight)
-				CoolBarHeight = mainTools.getItems()[i].getBounds().height;	
-			if (mainTools.getItems()[i].getBounds().width > CoolBarWidth)	
-				CoolBarWidth = mainTools.getItems()[i].getBounds().width;
-			}
+		for (int j = 0; j < coolBar.getItemCount(); j++) {			
+			ToolBar tempToolBar =  (ToolBar) coolBar.getItems()[j].getControl();			
 			
+			for (int i = 0; i < tempToolBar.getItems().length; i++) {
+				if (tempToolBar.getItems()[i].getBounds().height > CoolBarHeight)
+					CoolBarHeight = tempToolBar.getItems()[i].getBounds().height;	
+				if (tempToolBar.getItems()[i].getBounds().width > CoolBarWidth)	
+					CoolBarWidth = tempToolBar.getItems()[i].getBounds().width;
+				}
+		}
 		CoolBarWidth = CoolBarWidth*mainTools.getItemCount();		
 		this.mainCoolItem.setSize (mainCoolItem.computeSize (CoolBarWidth,CoolBarHeight));	
 	}
@@ -273,6 +280,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.14  2003/07/01 14:06:06  dek
+now takes all Buttons in account for calculating height for CoolBar
+
 Revision 1.13  2003/06/30 21:40:09  dek
 CoolBar created
 
