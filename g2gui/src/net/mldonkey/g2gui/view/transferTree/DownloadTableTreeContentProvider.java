@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Table;
  * DownloadTableTreeContentProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.8 2003/08/16 19:00:59 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.9 2003/08/17 16:48:08 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -74,6 +74,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	private int refreshType = 0;
 	private long lastTimeStamp = 0;
 	private boolean forceRefresh = false;
+	private DownloadTableTreeViewer downloadTableTreeViewer = null;
 
 	/*
 	 *  (non-Javadoc)
@@ -391,6 +392,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 */
 	public void treeCollapsed (TreeEvent event) 
 	{
+		downloadTableTreeViewer.setLastTreeEvent(System.currentTimeMillis());
 		TableTreeItem item = (TableTreeItem) event.item;
 		closeChildEditors(item);
 	}
@@ -401,6 +403,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 */
 	public void treeExpanded (TreeEvent event) 
 	{
+		downloadTableTreeViewer.setLastTreeEvent(System.currentTimeMillis());
 		TableTreeItem item = (TableTreeItem) event.item;
 		updateChildEditors(item);
 	}
@@ -610,10 +613,16 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	public void setForceRefresh(boolean b) {
 		forceRefresh = b;
 	}
+	public void setDownloadTableTreeViewer(DownloadTableTreeViewer v) {
+		downloadTableTreeViewer = v;
+	}
 
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.9  2003/08/17 16:48:08  zet
+prevent rapid tree expansion from triggering double click
+
 Revision 1.8  2003/08/16 19:00:59  zet
 address fast + clicking crash
 

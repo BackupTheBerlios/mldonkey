@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.7 2003/08/17 16:32:41 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.8 2003/08/17 16:48:08 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -72,6 +72,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	private static boolean displayChunkGraphs;
 	private CoreCommunication mldonkey;
 	private CellEditor[] cellEditors;
+	private long lastTreeEvent = 0;
 	
 	private final String[] COLUMN_LABELS =
 		{	"TT_Download_Id",
@@ -181,6 +182,8 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		}
 		tableTreeViewer.addDoubleClickListener(new IDoubleClickListener(){
 			public void doubleClick(DoubleClickEvent e) {
+				// hack
+				if (System.currentTimeMillis() < lastTreeEvent + 333) return; 
 				IStructuredSelection sSel = (IStructuredSelection) e.getSelection();
 				Object o = sSel.getFirstElement();
 				if (o instanceof FileInfo) {
@@ -197,6 +200,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		
 		
 		tableTreeContentProvider = new DownloadTableTreeContentProvider();
+		tableTreeContentProvider.setDownloadTableTreeViewer(this);
 		tableTreeContentProvider.setUpdateBuffer( PreferenceLoader.loadInteger("displayBuffer") );
 		tableTreeContentProvider.setForceRefresh( PreferenceLoader.loadBoolean("forceRefresh") );
 		tableTreeViewer.setContentProvider(tableTreeContentProvider);
@@ -255,6 +259,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		if (newName.length() > 0) fileInfo.setName(newName);
 			
 	}
+	public void setLastTreeEvent (long l) {
+		lastTreeEvent = l;
+	}
 	
 	public static boolean displayChunkGraphs() {
 		return displayChunkGraphs;
@@ -290,6 +297,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.8  2003/08/17 16:48:08  zet
+prevent rapid tree expansion from triggering double click
+
 Revision 1.7  2003/08/17 16:32:41  zet
 doubleclick
 
