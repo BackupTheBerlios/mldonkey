@@ -171,7 +171,10 @@ public class DownloadTab
 		if(arg0.widget instanceof MenuItem) {
 			MenuItem item = (MenuItem)arg0.widget;
 			FileInfo file = (FileInfo)popupItem.getData();
-			if(item==pauseItem) file.setState(EnumFileState.PAUSED);
+			if(item==pauseItem) {
+				file.setState(EnumFileState.PAUSED);
+				table.update(file,null);
+			} 
 			if(item==resumeItem) file.setState(EnumFileState.DOWNLOADING);
 			if(item==cancelItem) file.setState(EnumFileState.CANCELLED);
 			if(item==linkItem) {
