@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.8 2003/07/04 12:15:17 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.9 2003/07/04 12:28:46 dek Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -169,15 +169,19 @@ public class FileInfoIntMap extends InfoIntMap {
 			FileInfo aFileInfo = ( FileInfo ) itr.value();
 			/* if EnumFileState.DOWNLOADED, remove the fileinfo from this */
 			if ( aFileInfo.getState().getState() == EnumFileState.DOWNLOADED
-				|| aFileInfo.getState().getState() == EnumFileState.CANCELLED ) {
+				|| aFileInfo.getState().getState() == EnumFileState.CANCELLED )
+				{
 				this.infoIntMap.remove( itr.key() );
-			}
+				}
 		}
 	}
 }
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.9  2003/07/04 12:28:46  dek
+checkstyle
+
 Revision 1.8  2003/07/04 12:15:17  lemmstercvs01
 removeObsolete renamed/modified
 

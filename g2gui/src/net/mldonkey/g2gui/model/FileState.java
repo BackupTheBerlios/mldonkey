@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  * @author markus
- * @version $Id: FileState.java,v 1.11 2003/07/04 11:52:40 lemmstercvs01 Exp $ 
+ * @version $Id: FileState.java,v 1.12 2003/07/04 12:29:39 dek Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -111,14 +111,16 @@ public class FileState implements SimpleInformation {
 			
 		/* unpause */
 		if ( this.getState() == EnumFileState.PAUSED 
-		&& state == EnumFileState.DOWNLOADING ) {
-			content[ 1 ] = resume;
-		}
+		&& state == EnumFileState.DOWNLOADING )
+				{
+				content[ 1 ] = resume;
+				}
 		/* pause */
 		else if ( this.getState() == EnumFileState.DOWNLOADING
-			  && state == EnumFileState.PAUSED ) {
-			content[ 1 ] = pause;
-		}
+			  && state == EnumFileState.PAUSED ) 
+				{
+				content[ 1 ] = pause;
+				}
 		/* cancel */
 		else if ( state == EnumFileState.CANCELLED ) {
 			/* to cancel the dl we need a different opcode */
@@ -142,6 +144,9 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.12  2003/07/04 12:29:39  dek
+checkstyle
+
 Revision 1.11  2003/07/04 11:52:40  lemmstercvs01
 bugfix
 

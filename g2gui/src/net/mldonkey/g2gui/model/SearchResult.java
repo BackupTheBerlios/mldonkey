@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.1 2003/06/30 07:19:47 lemmstercvs01 Exp $ 
+ * @version $Id: SearchResult.java,v 1.2 2003/07/04 12:30:09 dek Exp $ 
  *
  */
 public class SearchResult implements SimpleInformation {
@@ -42,10 +42,10 @@ public class SearchResult implements SimpleInformation {
 	 */
 	private int resultID;
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see net.mldonkey.g2gui.model.Information#readStream(net.mldonkey.g2gui.helper.MessageBuffer)
 	 */
-	public void readStream(MessageBuffer messageBuffer) {
+	public void readStream( MessageBuffer messageBuffer ) {
 		/*
 		 * int32	The Search Identifier 
  		 * int32	The Result Identifier 
@@ -85,6 +85,9 @@ public class SearchResult implements SimpleInformation {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.2  2003/07/04 12:30:09  dek
+checkstyle
+
 Revision 1.1  2003/06/30 07:19:47  lemmstercvs01
 initial commit (untested)
 

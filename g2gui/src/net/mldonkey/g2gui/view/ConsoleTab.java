@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.13 2003/07/03 10:13:09 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.14 2003/07/04 12:30:53 dek Exp $ 
  *
  */
 public class ConsoleTab extends G2guiTab implements Observer, ControlListener, Runnable {	
@@ -129,14 +129,14 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 	 * as none of the present ones did what i wanted it to do	
 	 * 
 	 */
-	/* ( non-Javadoc )
+	/** ( non-Javadoc )
 	 * @see org.eclipse.swt.events.ControlListener#controlMoved( org.eclipse.swt.events.ControlEvent )
 	 */
 	public void controlMoved( ControlEvent e ) {		
 		/*do nothing*/		
 	}
 
-	/* ( non-Javadoc )
+	/** ( non-Javadoc )
 	 * @see org.eclipse.swt.events.ControlListener#controlResized( org.eclipse.swt.events.ControlEvent )
 	 */
 	public void controlResized( ControlEvent e ) {
@@ -148,7 +148,7 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 		}
 	}
 
-	/* ( non-Javadoc )
+	/** ( non-Javadoc )
 	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
 	 */
 	public void update( Observable o, Object arg ) {
@@ -159,7 +159,7 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 		/* else: we are not responsible for this Information to be displayed*/
 	}
 
-	/* ( non-Javadoc )
+	/** ( non-Javadoc )
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {				
@@ -172,6 +172,9 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.14  2003/07/04 12:30:53  dek
+checkstyle
+
 Revision 1.13  2003/07/03 10:13:09  dek
 saving font now works
 
