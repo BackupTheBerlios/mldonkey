@@ -28,94 +28,114 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+
 /**
  * AddFriend
  *
- * @version $Id: AddFriend.java,v 1.8 2003/10/19 16:40:28 zet Exp $
+ * @version $Id: AddFriend.java,v 1.9 2003/11/14 19:06:39 zet Exp $
  */
-public class AddFriend {
-    private Shell shell;
-    private Display desktop = Display.getDefault();
-    private int width = 300;
-    private int height = 200;
+public class AddFriend extends Dialog {
+    private CoreCommunication core;
+    private Text host;
+    private Text port;
 
-	/**
-	 * @param core 
-	 */
-    public AddFriend( final CoreCommunication core ) {
-        shell = new Shell( SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
-		
-		Rectangle parentBounds = desktop.getActiveShell().getBounds();
-		
-        int tlx = parentBounds.x + (parentBounds.width / 2) - ( width / 2);
-		int tly = parentBounds.y + (parentBounds.height / 2) - ( height / 2);
+    /**
+     * @param core
+     */
+    public AddFriend(Shell parentShell, CoreCommunication core) {
+        super(parentShell);
+        this.core = core;
+    }
 
-		tlx = Math.min( (desktop.getClientArea().width - width), Math.max( 0, tlx) );
-		tly = Math.min( (desktop.getClientArea().height - height), Math.max( 0, tly) );
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+     */
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setImage(G2GuiResources.getImage("ProgramIcon"));
+        newShell.setText(G2GuiResources.getString("FR_MENU_ADD_BY_IP"));
+    }
 
-		shell.setBounds( tlx, tly , width, height );
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+     */
+    protected Control createDialogArea(Composite parent) {
+        Composite composite = (Composite) super.createDialogArea(parent);
+        composite.setLayout(CGridLayout.createGL(2, 5, 5, 10, 5, false));
 
-        shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
-        shell.setText( G2GuiResources.getString( "FR_MENU_ADD_BY_IP" ) );
-        GridLayout gridLayout = CGridLayout.createGL( 2, 5, 5, 10, 5, false );
-        shell.setLayout( gridLayout );
+        Label hostLabel = new Label(composite, SWT.NONE);
+        hostLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+        hostLabel.setText(G2GuiResources.getString("FR_ADD_HOST") + ":");
 
-        Label hostLabel = new Label( shell, SWT.NONE );
-        hostLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
-        hostLabel.setText( G2GuiResources.getString( "FR_ADD_HOST" ) + ":" );
+        host = new Text(composite, SWT.BORDER);
+        host.setText("192.168.1.1");
+        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+        gridData.widthHint = 120;
+        host.setLayoutData(gridData);
 
-        final Text host = new Text( shell, SWT.BORDER );
-        host.setText( "192.168.1.1" );
-        host.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        Label portLabel = new Label(composite, SWT.NONE);
+        portLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+        portLabel.setText(G2GuiResources.getString("FR_ADD_PORT") + ":");
 
-        Label portLabel = new Label( shell, SWT.NONE );
-        portLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
-        portLabel.setText( G2GuiResources.getString( "FR_ADD_PORT" ) + ":" );
+        port = new Text(composite, SWT.BORDER);
+        port.setText("4662");
+        port.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        final Text port = new Text( shell, SWT.BORDER );
-        port.setText( "4662" );
-        port.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        return composite;
+    }
 
-        Button okButton = new Button( shell, SWT.NONE );
-        okButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        okButton.setText( G2GuiResources.getString( "BTN_OK" ) );
-        okButton.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent s ) {
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createButtonBar(org.eclipse.swt.widgets.Composite)
+     */
+    protected Control createButtonBar(Composite parent) {
+        Composite buttonComposite = new Composite(parent, SWT.NONE);
+		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		buttonComposite.setLayout(CGridLayout.createGL(2, 5, 5, 5, 0, false));
+				
+        Button okButton = new Button(buttonComposite, SWT.NONE);
+        okButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        okButton.setText(G2GuiResources.getString("BTN_OK"));
+        okButton.addSelectionListener(new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent s) {
                     String string = "afr " + host.getText() + " " + port.getText();
-                    Message consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, string );
-                    consoleMessage.sendMessage( core );
+                    Message consoleMessage = new EncodeMessage(Message.S_CONSOLEMSG, string);
+                    consoleMessage.sendMessage(core);
                     consoleMessage = null;
-                    shell.close();
+                    close();
                 }
-            } );
+            });
 
-        Button cancelButton = new Button( shell, SWT.NONE );
-        cancelButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        cancelButton.setText( G2GuiResources.getString( "BTN_CANCEL" ) );
-        cancelButton.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent s ) {
-                    shell.close();
+        Button cancelButton = new Button(buttonComposite, SWT.NONE);
+        cancelButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        cancelButton.setText(G2GuiResources.getString("BTN_CANCEL"));
+        cancelButton.addSelectionListener(new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent s) {
+                    close();
                 }
-            } );
-        shell.pack();
-        shell.open();
+            });
+
+        return buttonComposite;
     }
 }
 
+
 /*
 $Log: AddFriend.java,v $
+Revision 1.9  2003/11/14 19:06:39  zet
+use Dialog / fix #1087 (fox)
+
 Revision 1.8  2003/10/19 16:40:28  zet
 centre
 

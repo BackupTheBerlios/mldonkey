@@ -42,7 +42,7 @@ import org.eclipse.jface.viewers.TableViewer;
 /**
  * TableMenuListener
  *
- * @version $Id: FriendsTableMenuListener.java,v 1.8 2003/11/04 20:38:39 zet Exp $
+ * @version $Id: FriendsTableMenuListener.java,v 1.9 2003/11/14 19:06:39 zet Exp $
  *
  */
 public class FriendsTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -155,13 +155,17 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
         }
         
         public void run() {
-            new AddFriend( core );
+            AddFriend a = new AddFriend( tableViewer.getTable().getShell(), core );
+            a.open();
         }
     }
 }
 
 /*
 $Log: FriendsTableMenuListener.java,v $
+Revision 1.9  2003/11/14 19:06:39  zet
+use Dialog / fix #1087 (fox)
+
 Revision 1.8  2003/11/04 20:38:39  zet
 update for transparent gifs
 
