@@ -34,6 +34,7 @@ import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
+import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
@@ -55,11 +56,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -68,14 +66,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.56 2003/09/15 01:25:06 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.57 2003/09/16 02:12:17 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -146,28 +143,7 @@ public class TransferTab extends GuiTab  {
 		popupMenu.setRemoveAllWhenShown( true );
 		
 		downloadCLabel = CCLabel.createCL( parentViewForm, "TT_Downloads", "TransfersButtonSmallTitlebar" );	
-		downloadCLabel.addMouseListener(new MouseAdapter() {
-			public boolean overImage(int x) {
-				return x < downloadCLabel.getImage().getBounds().width;
-			}
-			public void showMenu(Point p) {
-				Menu menu = popupMenu.createContextMenu( downloadCLabel );
-				menu.setLocation( p );
-				menu.setVisible( true );	
-			}
-			public void mouseDown(MouseEvent e) {
-				if ( ( e.button == 1 && overImage( e.x ) )
-					|| e.button == 3 ) {
-					Point p;
-					if (e.button == 1) {
-						p = new Point( 0, downloadCLabel.getBounds().height );
-					} else {
-						p = new Point( e.x, e.y );
-					}
-					showMenu( ( ( CLabel ) e.widget ).toDisplay( p ) );
-				}
-			}
-		});
+		downloadCLabel.addMouseListener(new HeaderBarMouseAdapter(downloadCLabel, popupMenu));
 		parentViewForm.setTopLeft( downloadCLabel );
 	}
 	
@@ -376,6 +352,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.57  2003/09/16 02:12:17  zet
+headerbar menu
+
 Revision 1.56  2003/09/15 01:25:06  zet
 move menu
 
