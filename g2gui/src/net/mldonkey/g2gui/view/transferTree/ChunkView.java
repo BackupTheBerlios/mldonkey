@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkView.java,v 1.7 2003/07/15 20:13:56 dek Exp $ 
+ * @version $Id: ChunkView.java,v 1.8 2003/07/18 15:45:16 dek Exp $ 
  *
  */
 public class ChunkView extends Canvas {
@@ -313,7 +313,9 @@ public class ChunkView extends Canvas {
 			if ( avail != null  )
 				if ( !tempAvail.equals( avail ) )
 					createImage();
-				else { }
+				else {
+					this.redraw( 0, 0, 0, 0, false );
+					 }
 			else this.redraw( 0, 0, 0, 0, false );
 		}
 		
@@ -322,6 +324,9 @@ public class ChunkView extends Canvas {
 
 /*
 $Log: ChunkView.java,v $
+Revision 1.8  2003/07/18 15:45:16  dek
+still working on flicker...
+
 Revision 1.7  2003/07/15 20:13:56  dek
 sorting works now, chunk-display is kind of broken, when sorting with expanded tree-items...
 

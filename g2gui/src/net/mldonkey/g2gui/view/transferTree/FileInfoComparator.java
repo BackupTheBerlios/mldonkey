@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * DownloadItemComparator
  *
  * @author $user$
- * @version $Id: FileInfoComparator.java,v 1.7 2003/07/18 09:43:15 dek Exp $ 
+ * @version $Id: FileInfoComparator.java,v 1.8 2003/07/18 15:45:16 dek Exp $ 
  *
  */
 public class FileInfoComparator implements Comparator {
@@ -82,8 +82,9 @@ public class FileInfoComparator implements Comparator {
 				result = r13.compareTo( r23 );
 				break;
 			case 4 :
-				//Sorting by # of available chunks...
-				result = 0;
+			Float r14 = new Float( row1.getPerc() );
+			Float r24 = new Float( row2.getPerc() );
+			result = r14.compareTo( r24 );
 				break;
 			case 5 :
 				Float r15 = new Float( row1.getPerc() );
@@ -110,6 +111,9 @@ public class FileInfoComparator implements Comparator {
 
 /*
 $Log: FileInfoComparator.java,v $
+Revision 1.8  2003/07/18 15:45:16  dek
+still working on flicker...
+
 Revision 1.7  2003/07/18 09:43:15  dek
 never use * / (without space) in CVS-commit-comments......
 

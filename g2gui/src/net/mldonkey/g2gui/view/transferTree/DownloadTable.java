@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.16 2003/07/18 09:43:15 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.17 2003/07/18 15:45:16 dek Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
@@ -200,6 +200,7 @@ public class DownloadTable implements Observer, Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
+		tableTree.setRedraw( true );
 		TIntObjectIterator it = files.iterator();
 		while ( it.hasNext() ) {
 			it.advance();
@@ -212,8 +213,7 @@ public class DownloadTable implements Observer, Runnable {
 				if ( downloads.containsKey( fileInfo.getId() ) ) {
 					downloads.get( fileInfo.getId() );
 					DownloadItem existingItem =
-						( DownloadItem ) downloads.get( fileInfo.getId() );
-					//existingItem.update();
+						( DownloadItem ) downloads.get( fileInfo.getId() );					
 				} else {
 					DownloadItem newItem =
 						new DownloadItem( tableTree, SWT.NONE, fileInfo );
@@ -227,6 +227,7 @@ public class DownloadTable implements Observer, Runnable {
 				/* remove this file from the downloadList if contained*/
 				 ( ( DownloadItem ) downloads.get( fileInfo.getId() ) ).dispose();
 				downloads.remove( fileInfo.getId() );
+				tableTree.redraw();
 			} else {
 				/* we really don't care about this one...*/
 			}
@@ -249,6 +250,9 @@ public class DownloadTable implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.17  2003/07/18 15:45:16  dek
+still working on flicker...
+
 Revision 1.16  2003/07/18 09:43:15  dek
 never use * / (without space) in CVS-commit-comments......
 
