@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.43 2003/06/30 07:24:19 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.44 2003/07/01 13:13:27 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -159,7 +159,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private void  decodeMessage( short opcode, MessageBuffer messageBuffer ) throws IOException 
+	private synchronized void  decodeMessage( short opcode, MessageBuffer messageBuffer ) throws IOException 
 		{
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
@@ -333,6 +333,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.44  2003/07/01 13:13:27  dek
+decode Message is synchronized to prevent it from sending notify()s to disposed gui
+
 Revision 1.43  2003/06/30 07:24:19  lemmstercvs01
 some opcodes added
 
