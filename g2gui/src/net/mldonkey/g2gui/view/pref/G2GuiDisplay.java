@@ -24,11 +24,12 @@ package net.mldonkey.g2gui.view.pref;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.swt.widgets.Composite;
 /**
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiDisplay.java,v 1.2 2003/10/08 01:12:16 zet Exp $
+ * @version $Id: G2GuiDisplay.java,v 1.3 2003/10/12 16:27:01 lemmster Exp $
  */
 public class G2GuiDisplay extends PreferencePage {
 	/**
@@ -45,7 +46,7 @@ public class G2GuiDisplay extends PreferencePage {
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected void createFieldEditors() {
-		composite = getFieldEditorParent();
+		Composite composite = getFieldEditorParent();
 		
 		setupEditor( 
 			new ExtendedColorFieldEditor( 
@@ -100,6 +101,9 @@ public class G2GuiDisplay extends PreferencePage {
 }
 /*
 $Log: G2GuiDisplay.java,v $
+Revision 1.3  2003/10/12 16:27:01  lemmster
+minor changes
+
 Revision 1.2  2003/10/08 01:12:16  zet
 useGradient preference
 
@@ -147,7 +151,7 @@ Revision 1.17  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.16  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.15  2003/08/19 22:02:15  zet
 localise

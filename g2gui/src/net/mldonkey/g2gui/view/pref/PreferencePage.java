@@ -41,13 +41,10 @@ import org.eclipse.swt.widgets.Label;
 /**
  * GuiPreferences
  *
- * @version $Id: PreferencePage.java,v 1.1 2003/10/01 20:56:27 lemmster Exp $ 
+ * @version $Id: PreferencePage.java,v 1.2 2003/10/12 16:27:01 lemmster Exp $ 
  *
  */
 public abstract class PreferencePage extends FieldEditorPreferencePage {
-	protected Label label;
-	protected Composite composite;
-
 	/**
 	 * @param title
 	 * @param style
@@ -80,16 +77,16 @@ public abstract class PreferencePage extends FieldEditorPreferencePage {
 		scrolledComposite.setExpandHorizontal( true );
 		scrolledComposite.setExpandVertical( true );
 
-		composite = ( Composite ) super.createContents( scrolledComposite );
-		composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+		Composite aComposite = ( Composite ) super.createContents( scrolledComposite );
+		aComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-		scrolledComposite.setContent( composite );
+		scrolledComposite.setContent( aComposite );
 
-		scrolledComposite.setMinSize( composite.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+		scrolledComposite.setMinSize( aComposite.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 
-		composite.layout();
+		aComposite.layout();
 
-		return composite;
+		return aComposite;
 	}
 
 	/* ( non-Javadoc )
@@ -120,6 +117,9 @@ public abstract class PreferencePage extends FieldEditorPreferencePage {
 
 /*
 $Log: PreferencePage.java,v $
+Revision 1.2  2003/10/12 16:27:01  lemmster
+minor changes
+
 Revision 1.1  2003/10/01 20:56:27  lemmster
 add class hierarchy
 

@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.13 2003/10/01 20:56:27 lemmster Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.14 2003/10/12 16:27:01 lemmster Exp $ 
  *
  */
 public class G2GuiPref extends PreferencePage {
@@ -51,39 +51,39 @@ public class G2GuiPref extends PreferencePage {
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected void createFieldEditors() {
-		Composite parent = getFieldEditorParent();
+		Composite composite = getFieldEditorParent();
 			StringFieldEditor hostNameField =
-					new StringFieldEditor( "hostname", "Hostname", parent );
+					new StringFieldEditor( "hostname", "Hostname", composite );
 				hostNameField.setPreferenceStore( this.getPreferenceStore() );
-				hostNameField.fillIntoGrid( parent, 2 );
+				hostNameField.fillIntoGrid( composite, 2 );
 				addField( hostNameField );
 				hostNameField.load();
 			
 			StringFieldEditor portField =
-					new StringFieldEditor( "port", "Port", parent );
+					new StringFieldEditor( "port", "Port", composite );
 				portField.setPreferenceStore( this.getPreferenceStore() );
-				portField.fillIntoGrid( parent, 2 );
+				portField.fillIntoGrid( composite, 2 );
 				addField( portField );
 				portField.load();
 			
 			StringFieldEditor userNameField =
-					new StringFieldEditor( "username", "Username", parent );
+					new StringFieldEditor( "username", "Username", composite );
 				userNameField.setPreferenceStore( this.getPreferenceStore() );
-				userNameField.fillIntoGrid( parent, 2 );
+				userNameField.fillIntoGrid( composite, 2 );
 				addField( userNameField );
 				userNameField.load();
 			
 			StringFieldEditor passwordField =
-					new StringFieldEditor( "password", "Password", parent );
-				passwordField.getTextControl( parent ).setEchoChar( '*' );
-				passwordField.fillIntoGrid( parent, 2 );
+					new StringFieldEditor( "password", "Password", composite );
+				passwordField.getTextControl( composite ).setEchoChar( '*' );
+				passwordField.fillIntoGrid( composite, 2 );
 				passwordField.setPreferenceStore( this.getPreferenceStore() );
 				addField( passwordField );
 				passwordField.load();
 		
 			FileFieldEditor executableField =
 					new FileFieldEditor( "coreExecutable", 
-						G2GuiResources.getString( "PREF_CORE_EXEC" ), true, parent );
+						G2GuiResources.getString( "PREF_CORE_EXEC" ), true, composite );
 					executableField.setPreferenceStore( this.getPreferenceStore() );
 					addField( executableField );
 					executableField.load();	
@@ -93,26 +93,29 @@ public class G2GuiPref extends PreferencePage {
 		
 			FieldEditor advancedModeEditor =
 				new BooleanFieldEditor( "advancedMode",
-					"Advanced mode (*)", parent );
+					"Advanced mode (*)", composite );
 				advancedModeEditor.setPreferenceStore( this.getPreferenceStore() );
-				advancedModeEditor.fillIntoGrid( parent, 2 );
+				advancedModeEditor.fillIntoGrid( composite, 2 );
 				addField( advancedModeEditor );
 				advancedModeEditor.load();
 				
 			FieldEditor mulitpleInstancesEditor =
 				new BooleanFieldEditor( "allowMultipleInstances",
-					G2GuiResources.getString( "PREF_ALLOW_MULIPLE" ), parent );
+					G2GuiResources.getString( "PREF_ALLOW_MULIPLE" ), composite );
 				mulitpleInstancesEditor.setPreferenceStore( this.getPreferenceStore() );
-				mulitpleInstancesEditor.fillIntoGrid( parent, 2 );
+				mulitpleInstancesEditor.fillIntoGrid( composite, 2 );
 				addField( mulitpleInstancesEditor );
 				mulitpleInstancesEditor.load();
 
 				
-			( ( GridLayout )parent.getLayout() ).numColumns = 2;
+			( ( GridLayout )composite.getLayout() ).numColumns = 2;
 	}
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.14  2003/10/12 16:27:01  lemmster
+minor changes
+
 Revision 1.13  2003/10/01 20:56:27  lemmster
 add class hierarchy
 

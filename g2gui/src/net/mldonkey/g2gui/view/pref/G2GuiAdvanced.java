@@ -27,11 +27,12 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 /**
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.2 2003/10/08 01:12:16 zet Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.3 2003/10/12 16:27:01 lemmster Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -57,7 +58,7 @@ public class G2GuiAdvanced extends PreferencePage {
 	protected void createFieldEditors() {
 		boolean advanced = getPreferenceStore().getBoolean( "advancedMode" );
 
-		composite = getFieldEditorParent();
+		Composite composite = getFieldEditorParent();
 		
 		if ( SWT.getPlatform().equals("win32") ) {
 			setupEditor( 
@@ -153,6 +154,9 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.3  2003/10/12 16:27:01  lemmster
+minor changes
+
 Revision 1.2  2003/10/08 01:12:16  zet
 useGradient preference
 
