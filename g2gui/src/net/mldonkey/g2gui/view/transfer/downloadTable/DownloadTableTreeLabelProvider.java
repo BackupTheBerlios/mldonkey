@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.5 2003/10/13 21:26:39 zet Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.6 2003/10/13 21:36:33 zet Exp $
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -218,7 +218,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 				   return "" + fileInfo.getSources();
 	            
 			   case DownloadTableTreeViewer.ACTIVE_SOURCES:
-				   return "" + fileInfo.getActiveSources( );    
+			   		if (fileInfo.getActiveSources() > 0) 
+			   			return "" + fileInfo.getActiveSources();
+				   return "-";    
 	
 			   case DownloadTableTreeViewer.AVAIL:
 				   return "" + fileInfo.getRelativeAvail() + "%";
@@ -232,6 +234,8 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 				   } else if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADED ) {
 					   return G2GuiResources.getString( "TT_Downloaded" );
 				   } else {
+					 	if (fileInfo.getRate() == 0) 
+					 		return "-";	 				   	
 					   return "" + df.format( fileInfo.getRate() / 1000f );
 				   }
 	
@@ -286,6 +290,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.6  2003/10/13 21:36:33  zet
+Use "-" instead of 0's
+
 Revision 1.5  2003/10/13 21:26:39  zet
 different, darker greens
 
