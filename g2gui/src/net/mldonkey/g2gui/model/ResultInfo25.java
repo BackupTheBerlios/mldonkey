@@ -22,45 +22,31 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+
 /**
- * ModelFactory25.java
+ * ResultInfo35.java
  *
- * @version $Id: ModelFactory25.java,v 1.4 2004/03/21 21:20:26 dek Exp $ 
+ * @version $Id: ResultInfo25.java,v 1.1 2004/03/21 21:20:26 dek Exp $ 
  *
  */
-public class ModelFactory25 extends ModelFactory24 {
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.model.ModelFactory24#getFileInfo()
+public class ResultInfo25 extends ResultInfo {
+
+	/**
+	 * @param core
 	 */
-	public FileInfo getFileInfo() {		
-		return new FileInfo25(core);
+	ResultInfo25(CoreCommunication core) {
+		super(core);
+		// TODO Auto-generated constructor stub
 	}
-	
-	public SharedFileInfo getSharedFileInfo() {
-		return new SharedFileInfo25();
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.model.ModelFactory#getResultInfo()
-	 */
-	public ResultInfo getResultInfo() {		
-		return new ResultInfo25(core);
-	}
-	
 
 }
 
 
 /*
- $Log: ModelFactory25.java,v $
- Revision 1.4  2004/03/21 21:20:26  dek
+ $Log: ResultInfo25.java,v $
+ Revision 1.1  2004/03/21 21:20:26  dek
  some proto25 was still missing
-
- Revision 1.3  2004/03/21 21:08:58  dek
- removed stubs
-
- Revision 1.2  2004/03/21 21:00:50  dek
- implemented gui-Proto 21-25 !!!!!
 
 
  */

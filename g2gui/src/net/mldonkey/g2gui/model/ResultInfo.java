@@ -45,7 +45,7 @@ import org.eclipse.swt.program.Program;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.33 2003/12/17 13:06:05 lemmy Exp $
+ * @version $Id: ResultInfo.java,v 1.34 2004/03/21 21:20:26 dek Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -246,7 +246,7 @@ public class ResultInfo extends Parent {
         this.setNetworkID( messageBuffer.readInt32() );
         this.names = messageBuffer.readStringList();
         this.md4 = messageBuffer.readBinary( 16 );
-        this.size = messageBuffer.readInt32();
+        setSize(messageBuffer);        
         this.format = messageBuffer.readString();
         this.type = messageBuffer.readString();
         this.tags = messageBuffer.readTagList();
@@ -278,6 +278,14 @@ public class ResultInfo extends Parent {
     }
 
     /**
+	 * @param messageBuffer
+	 */
+	protected void setSize(MessageBuffer messageBuffer) {
+		this.size = messageBuffer.readInt32();
+		
+	}
+
+	/**
      * @param string file comment
      */
     private void setComment( String string ) {
@@ -704,6 +712,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.34  2004/03/21 21:20:26  dek
+some proto25 was still missing
+
 Revision 1.33  2003/12/17 13:06:05  lemmy
 save all panelistener states correctly to the prefstore
 
@@ -765,7 +776,7 @@ Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.13  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.12  2003/08/14 12:45:46  dek
 searching works now without errors
