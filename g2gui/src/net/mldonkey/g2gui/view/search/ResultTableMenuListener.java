@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.23 2003/10/28 00:36:06 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.24 2003/10/28 11:24:12 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -173,6 +173,8 @@ Yet			menuManager.add( webManager );
 		
 		/* filter submenu (select network to display) */			
 		MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TML_FILTER" ) );
+
+		// all filter
 		AllFiltersAction aFA = new AllFiltersAction();
 		boolean setChecked = true;
 		for ( int i = 0; i < tableViewer.getFilters().length; i++ ) {
@@ -183,14 +185,15 @@ Yet			menuManager.add( webManager );
 		filterSubMenu.add( aFA );
 		filterSubMenu.add( new Separator() );
 			
+		// network filter
 		NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
-		
 		for ( int i = 0; i < networks.length; i++ ) {
 			NetworkInfo network = networks[ i ];
 			if ( network.isEnabled() && network.isSearchable() ) {
 				NetworkFilterAction nFA =
 					new NetworkFilterAction( network.getNetworkName(), network.getNetworkType() );
-				if ( isFiltered( network.getNetworkType() ) ) nFA.setChecked( true );
+				if ( isFiltered( network ) )
+					nFA.setChecked( true );
 				filterSubMenu.add( nFA );
 			}
 		}
@@ -335,6 +338,10 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.24  2003/10/28 11:24:12  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.23  2003/10/28 00:36:06  zet
 move columnselector into the pane
 
