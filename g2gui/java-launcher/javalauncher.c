@@ -57,7 +57,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	if(ShellExecute(NULL,NULL,executable,arguments,".",SW_SHOWNORMAL)<=(HINSTANCE)32)
 	{
 		MessageBox(NULL,
-			"Could not find JRE!\n\n Download from: http://java.sun.com",
+			"Could not find JRE!\n\n Download from: http://www.java.com",
 			"G2Gui error",MB_OK | MB_ICONASTERISK);
 		return 2;
 	}
