@@ -1,4 +1,4 @@
-#                                               -*- Autoconf -*-
+#-*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
 $FULL-PACKAGE-NAME=g2gui
@@ -18,6 +18,14 @@ AC_ARG_ENABLE(batch,
 			   if test -z $ac_cv_path_WGET; then
 			   	AC_MSG_ERROR([**** Could not find wget needed for enable-batch! ****])
 			   fi
+			AC_PATH_PROG([TAR],[tar])
+			  if test -z $ac_cv_path_TAR; then
+			  	AC_MSG_ERROR([**** Could not find tar needed for enable-batch! ****])
+			  fi
+			AC_PATH_PROG([BZIP2],[bzip2])
+			  if test -z $ac_cv_path_BZIP2; then
+			  	AC_MSG_ERROR([**** Could not find bzip2 needed for enable-batch! ****])
+			  fi
 			], 
 			ac_cv_enable_batch=no)
 
@@ -45,16 +53,16 @@ fi
 
 # Checks for libraries.
 # define URLS for libs
-ac_lib_url="http://download.berlios.de/pub/mldonkey/g2gui-libs"
+ac_lib_url="http://download.berlios.de/pub/mldonkey/g2gui-libs/swt3"
+jar_dir=jar-libs
 
 #define function, that checks for jars, and downloads them if nescerssary:
 
 src_dir=src
-jar_dir=jars
 AC_SUBST(SRC_DIR,[$src_dir])
 
-define([NEEDED_JAR_PRESENT],[
-	AC_CHECK_FILE(jars/$1,,	[
+define([NEEDED_FILE_PRESENT],[
+	AC_CHECK_FILE($jar_dir/$1,,	[
 		if test $ac_cv_enable_batch = yes; then
 			echo downloading $1
 			$ac_cv_path_WGET $ac_lib_url/$1 -P$jar_dir
@@ -64,19 +72,30 @@ define([NEEDED_JAR_PRESENT],[
 	])
 ])
 
-NEEDED_JAR_PRESENT([[boot.jar]])
-NEEDED_JAR_PRESENT([[jface.jar]])
-NEEDED_JAR_PRESENT([[gnu-regexp-1.1.4.jar]])
-NEEDED_JAR_PRESENT([[rss4j.jar]])
-NEEDED_JAR_PRESENT([[runtime.jar]])
-NEEDED_JAR_PRESENT([[trove.jar]])
-NEEDED_JAR_PRESENT([[xercesImpl.jar]])
-NEEDED_JAR_PRESENT([[xmlParserAPIs.jar]])
+
+NEEDED_FILE_PRESENT([boot.JDK.jar])
+NEEDED_FILE_PRESENT([gnu-regexp-1.1.4.jar])
+NEEDED_FILE_PRESENT([jface.jar])
+NEEDED_FILE_PRESENT([Makefile.in])
+NEEDED_FILE_PRESENT([rss4j.jar])
+NEEDED_FILE_PRESENT([trove.jar])
+NEEDED_FILE_PRESENT([xercesImpl.jar])
+NEEDED_FILE_PRESENT([xmlParserAPIs.jar])
+
+
+#check for runtime-build dir
+AC_CHECK_FILE([$jar_dir/runtime/Makefile.in],, [
+	if test $ac_cv_enable_batch = yes; then
+	        echo downloading runtime
+		$ac_cv_path_WGET $ac_lib_url/runtime.tar.bz2
+		$ac_cv_path_TAR -xjf runtime.tar.bz2
+		rm runtime.tar.bz2		
+	else
+	AC_MSG_ERROR([needed files not found, use --enable-batch to auto-download])
+	fi
+])
 
 #now follow the platform-dependent stuff:
-jar_dir=$PWD/jars
-AC_SUBST(JAR_DIR,[$jar_dir])
-
 
 resources_dir=resources
 
@@ -86,13 +105,8 @@ case $host in
 	*mingw32* |*win*)
 	host=win	
 	swt_dir=swt-win
-	swt_server_dir=swt-win
-	obj_dir=$PWD/obj-win
-	AC_PATH_PROG([JAR],[jar])
-	if test -z $ac_cv_path_JAR; then
-		AC_MSG_ERROR([**** Could not find the program 'jar' needed for compilation on win32! ****])
-	fi 
-	AC_SUBST(PLATFORM_TARGET,[icon.o])
+	obj_dir=obj-win
+	platform_targets=icon.o
 	;;
 	*)
 	if !(test $widget_set); then
@@ -100,53 +114,32 @@ case $host in
 	fi
 	host=other
 	echo using widget-set : $widget_set
-	swt_server_dir=swt-$widget_set
-	swt_dir=$PWD/swt-$widget_set
-	obj_dir=$PWD/obj-$widget_set
+	swt_dir=swt-$widget_set
+	obj_dir=obj-$widget_set
 	;;
 esac
 
+AC_SUBST(PLATFORM_TARGETS,[$platform_targets])
 AC_SUBST(SWT_DIR,[$swt_dir])
 
-define([SWT_FILE_PRESENT],[
-	AC_CHECK_FILE($swt_dir/$1,, [
-		if test $ac_cv_enable_batch = yes; then
-			echo downloading $1
-				$ac_cv_path_WGET $ac_lib_url/$swt_server_dir/$1 -P$swt_dir		
-		else
-		AC_MSG_ERROR([$1 not found, use --enable-batch to auto-download])
-		fi
-	])
+AC_CHECK_FILE([$jar_dir/$swt_dir/Makefile.in],, [
+	if test $ac_cv_enable_batch = yes; then
+		echo downloading $swt_dir
+		$ac_cv_path_WGET $ac_lib_url/$swt_dir.tar.bz2
+		$ac_cv_path_TAR -xjf $swt_dir.tar.bz2
+		rm $swt_dir.tar.bz2
+	else
+	AC_MSG_ERROR([needed files not found, use --enable-batch to auto-download])
+	fi
 ])
 
-if test $host = win; then
-	SWT_FILE_PRESENT([swt.jar])
-	SWT_FILE_PRESENT([swt-win32-2135.dll])
-else 
-	if test $widget_set = gtk; then
-		SWT_FILE_PRESENT([swt.jar])
-		SWT_FILE_PRESENT([swt-pi.jar])
-		SWT_FILE_PRESENT([libswt-gnome-gtk-2135.so])
-		SWT_FILE_PRESENT([libswt-gtk-2135.so])
-		SWT_FILE_PRESENT([libswt-pi-gtk-2135.so])
-	else
-		SWT_FILE_PRESENT([libXm.so.2.1])
-		SWT_FILE_PRESENT([libswt-gnome-motif-2135.so])
-		SWT_FILE_PRESENT([libswt-kde-motif-2135.so])
-		SWT_FILE_PRESENT([libswt-motif-2135.so])
-		SWT_FILE_PRESENT([swt.jar])
-	fi
-fi
 
 # libXm.so.2.1  libswt-gnome-motif-2135.so  libswt-kde-motif-2135.so  libswt-motif-2135.so  swt.jar
 
 
 # now creating Makefile-vars
 
-AC_SUBST(CLASSPATH,[`$ac_cv_path_FIND $jar_dir $swt_dir -name "*.jar" -printf "%p:"`$src_dir:. ])
-
 #creating obj-dir
-mkdir -p $obj_dir
 AC_SUBST(OBJ_DIR,[$obj_dir])
 AC_SUBST(PACKAGE_DIR,[$PWD])
 
@@ -156,5 +149,7 @@ AC_SUBST(PACKAGE_DIR,[$PWD])
 
 # Checks for library functions.
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([jar-libs/Makefile jar-libs/runtime/Makefile jar-libs/$swt_dir/Makefile Makefile])
 AC_OUTPUT
+
+
