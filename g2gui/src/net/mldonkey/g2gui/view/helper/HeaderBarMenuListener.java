@@ -28,7 +28,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
-
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Control;
 
@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * HeaderBarMenusListener - helper for HeaderBar Menus
  *
- * @version $Id: HeaderBarMenuListener.java,v 1.1 2003/09/27 00:27:55 zet Exp $
+ * @version $Id: HeaderBarMenuListener.java,v 1.2 2003/10/01 21:16:16 zet Exp $
  *
  */
 public class HeaderBarMenuListener implements IMenuListener {
@@ -56,11 +56,17 @@ public class HeaderBarMenuListener implements IMenuListener {
         }
     }
 
+	protected void flipSash(  ) {
+		sashForm.setOrientation( sashForm.getOrientation() == SWT.HORIZONTAL ? SWT.VERTICAL : SWT.HORIZONTAL );
+	}
+
+
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
     public void menuAboutToShow( IMenuManager menuManager ) {
         menuManager.add( new Separator(  ) );
+        menuManager.add( new FlipSashAction( ) );
         menuManager.add( new MaximizeAction(  ) );
     }
 
@@ -77,16 +83,31 @@ public class HeaderBarMenuListener implements IMenuListener {
                 setText( G2GuiResources.getString( "MISC_RESTORE" ) );
             }
         }
-
         public void run(  ) {
             maximize(  );
         }
     }
+    
+	/**
+     * FlipSashAction
+     */
+    public class FlipSashAction extends Action {
+		public FlipSashAction(  ) {
+			super( G2GuiResources.getString( "MISC_FLIP_SASH" ) );
+		}
+		public void run(  ) {
+			flipSash( );
+		}
+	}
+    
 }
 
 
 /*
 $Log: HeaderBarMenuListener.java,v $
+Revision 1.2  2003/10/01 21:16:16  zet
+add flip sash menuitem
+
 Revision 1.1  2003/09/27 00:27:55  zet
 initial
 
