@@ -30,14 +30,16 @@ import org.eclipse.swt.widgets.Control;
 /**
  * VideoComplexSearch
  *
- * @version $Id: VideoComplexSearch.java,v 1.2 2003/09/04 12:17:01 lemmster Exp $ 
+ * @version $Id: VideoComplexSearch.java,v 1.3 2003/09/18 11:18:46 lemmster Exp $ 
  *
  */
 public class VideoComplexSearch extends ComplexSearch {
 
 	/**
-	 * @param core
-	 * @param tab
+	 * Creates a new VideoComplexSearch obj
+	 * 
+	 * @param core The core obj with the <code>Information</code>
+	 * @param tab The <code>GuiTab</code> we draw this obj inside
 	 */
 	public VideoComplexSearch( CoreCommunication core, SearchTab tab ) {
 		super( core, tab );
@@ -60,6 +62,9 @@ public class VideoComplexSearch extends ComplexSearch {
 
 /*
 $Log: VideoComplexSearch.java,v $
+Revision 1.3  2003/09/18 11:18:46  lemmster
+checkstyle
+
 Revision 1.2  2003/09/04 12:17:01  lemmster
 lots of changes
 
