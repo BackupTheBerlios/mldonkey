@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.73 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.74 2003/08/02 09:58:34 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -182,8 +182,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 				/* read out the message from stream, re-read if no bytes are waiting, 
 				 * untill message is completly read (thx to Jmoule for this idea ;-)
 				 */ 
-				while ( position < messageLength )
+				while ( position < messageLength ) {
 					position += i.read( content, position, ( int ) messageLength - position );
+				}
 				
 				position = 0;					
 				messageBuffer.setBuffer( content );
@@ -194,7 +195,6 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 			}			
 		} catch ( Exception e ) {
 			//TODO remove debug e.printStackTrace()
-			e.printStackTrace();
 			connected = false;
 			e.printStackTrace();
 			System.out.println( "No Connection to mldonkey" );
@@ -207,7 +207,7 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private synchronized void  decodeMessage( 
+	private void decodeMessage( 
 				short opcode, 
 				MessageBuffer 
 				messageBuffer ) throws IOException 
@@ -221,7 +221,12 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 						this.usingVersion = coreProtocol;
 					else
 						this.usingVersion = protocolVersion;
-					
+						
+/*					MessageVersion messageVersion = new MessageVersion( this );
+					messageVersion.add( Message.R_OPTIONS_INFO, 16, false );
+					messageVersion.send();
+					messageVersion = null;						
+*/					
 					/* send the password/username */
 					String[] aString = { this.password, this.username };
 					Message password = new EncodeMessage( Message.S_PASSWORD, aString );
@@ -430,6 +435,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.74  2003/08/02 09:58:34  lemmstercvs01
+synchronized on decodeMessage() removed
+
 Revision 1.73  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 
