@@ -22,24 +22,15 @@
  */
 package net.mldonkey.g2gui.model;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ConsoleMessage
  * 
  *  * @author ${user}
- * @version $$Id: ConsoleMessage.java,v 1.7 2003/06/27 10:35:53 lemmstercvs01 Exp $$ 
+ * @version $$Id: ConsoleMessage.java,v 1.8 2003/06/27 17:12:36 lemmstercvs01 Exp $$ 
  */
 public class ConsoleMessage implements SimpleInformation {
-	
-	private CoreCommunication parent;
-	/**
-	 * @param core my parent, to send messages to
-	 */
-	public ConsoleMessage( CoreCommunication core ) {		
-		this.parent = core;
-	}
 	
 	/**
 	 * String the core wants to display on the console
@@ -81,6 +72,9 @@ public class ConsoleMessage implements SimpleInformation {
 }
 /*
 $$Log: ConsoleMessage.java,v $
+$Revision 1.8  2003/06/27 17:12:36  lemmstercvs01
+$removed unneeded fields
+$
 $Revision 1.7  2003/06/27 10:35:53  lemmstercvs01
 $removed unneeded calls
 $

@@ -22,26 +22,16 @@
  */
 package net.mldonkey.g2gui.model;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ClientStats
  *
  * @author markus
- * @version $Id: ClientStats.java,v 1.9 2003/06/27 13:38:38 dek Exp $ 
+ * @version $Id: ClientStats.java,v 1.10 2003/06/27 17:12:36 lemmstercvs01 Exp $ 
  *
  */
 public class ClientStats implements SimpleInformation {
-	
-	private CoreCommunication parent;
-	/**
-	 * @param core my parent, to send messages to
-	 */
-	public ClientStats( CoreCommunication core ) {
-		
-		this.parent = core;
-	}
 
 	private long totalUp;
 	private long totalDown;
@@ -262,6 +252,9 @@ public class ClientStats implements SimpleInformation {
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.10  2003/06/27 17:12:36  lemmstercvs01
+removed unneeded fields
+
 Revision 1.9  2003/06/27 13:38:38  dek
 UL/DL rates in (float)  kb/s
 

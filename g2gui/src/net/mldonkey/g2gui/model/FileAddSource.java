@@ -22,27 +22,16 @@
  */
 package net.mldonkey.g2gui.model;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * FileAddSource
  *
  * @author markus
- * @version $Id: FileAddSource.java,v 1.6 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: FileAddSource.java,v 1.7 2003/06/27 17:12:36 lemmstercvs01 Exp $ 
  *
  */
 public class FileAddSource implements SimpleInformation {
-	
-	private CoreCommunication parent;
-	
-	/**
-	 * @param core my parent, to send messages to
-	 */
-	public FileAddSource( CoreCommunication core ) {
-		
-		this.parent = core;
-	}
 
 	/**
 	 * The File Identifier 
@@ -104,6 +93,9 @@ public class FileAddSource implements SimpleInformation {
 
 /*
 $Log: FileAddSource.java,v $
+Revision 1.7  2003/06/27 17:12:36  lemmstercvs01
+removed unneeded fields
+
 Revision 1.6  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
