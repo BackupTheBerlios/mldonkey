@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.4 2003/09/08 15:43:34 lemmster Exp $
+ * @version $Id: TableMenuListener.java,v 1.5 2003/09/08 16:10:36 lemmster Exp $
  *
  */
 public abstract class TableMenuListener {
@@ -85,7 +85,7 @@ public abstract class TableMenuListener {
     public void menuAboutToShow( IMenuManager menuManager ) {
 		menuManager.add( new Separator() );
 			
-		menuManager.add( new IncrementFilterAction() );				
+		menuManager.add( new RefineFilterAction() );				
 		
 		/* columns toogle */
 		MenuManager columnsSubMenu = new MenuManager( G2GuiResources.getString( "TML_COLUMN" ) );
@@ -148,11 +148,11 @@ public abstract class TableMenuListener {
             tableViewer.removeFilter( viewerFilter );
     }
 
-    protected class IncrementFilter extends ViewerFilter {
-        private String incrementString;
+    protected class RefineFilter extends ViewerFilter {
+        private String refineString;
         
         public void setIncrementString( String aString ) {
-        	this.incrementString = aString;
+        	this.refineString = aString;
         	tableViewer.refresh();	
         }
         
@@ -160,17 +160,17 @@ public abstract class TableMenuListener {
          * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
          */
         public boolean select( Viewer viewer, Object parentElement, Object element ) {
-            if ( this.incrementString == null ) return true;
+            if ( this.refineString == null ) return true;
             
             if ( element instanceof ServerInfo ) {
 				ServerInfo aServerInfo = ( ServerInfo ) element;
-				if ( aServerInfo.getNameOfServer().startsWith( this.incrementString ) ) {
+				if ( aServerInfo.getNameOfServer().startsWith( this.refineString ) ) {
 					return true;
 				}
             }
             else if ( element instanceof ResultInfo ) {
             	ResultInfo aResultInfo = ( ResultInfo ) element;
-				if ( aResultInfo.getNames()[ 0 ].startsWith( this.incrementString ) ) {
+				if ( aResultInfo.getNames()[ 0 ].startsWith( this.refineString ) ) {
 					return true;
 				}
             }
@@ -375,17 +375,17 @@ public abstract class TableMenuListener {
         }
     }
     
-    protected class IncrementFilterAction extends Action {
-    	public IncrementFilterAction() {
+    protected class RefineFilterAction extends Action {
+    	public RefineFilterAction() {
     		super();
-    		setText( G2GuiResources.getString( "TML_INCREMENT" ) );
+    		setText( G2GuiResources.getString( "TML_REFINE" ) );
     	}
     	public void run() {
-    		incrementalViewerFilter = new IncrementFilter();
+    		incrementalViewerFilter = new RefineFilter();
 			tableViewer.addFilter( incrementalViewerFilter );
 			Dialog myDialog = new MyDialog( ( ( TableViewer ) tableViewer ).getTable().getShell(),
-								G2GuiResources.getString( "TML_INCREMENT" ),
-								G2GuiResources.getString( "TML_INCREMENTAL" ) );
+								G2GuiResources.getString( "TML_REFINE" ),
+								G2GuiResources.getString( "TML_REFINE_LABEL" ) );
 			myDialog.open();
 			tableViewer.removeFilter( incrementalViewerFilter );
     	}
@@ -400,6 +400,13 @@ public abstract class TableMenuListener {
 				super( parent );
 				this.dialogMessage = dialogMessage;
 				this.dialogTitle = dialogTitle;
+			}
+
+			/* (non-Javadoc)
+			 * Method declared in Window.
+			 */
+			protected int getShellStyle() {
+				return SWT.TITLE;
 			}
 
 			/* (non-Javadoc)
@@ -446,8 +453,10 @@ public abstract class TableMenuListener {
 				text.setFont( parent.getFont() );
 				text.addModifyListener(	new ModifyListener() {
 						public void modifyText( ModifyEvent e ) {
-							if ( !text.getText().equals( "" ) )
-							( ( IncrementFilter ) incrementalViewerFilter).setIncrementString( text.getText() );
+							if ( text.getText().equals( "" ) )
+								( ( RefineFilter ) incrementalViewerFilter).setIncrementString( null );
+							else
+								( ( RefineFilter ) incrementalViewerFilter).setIncrementString( text.getText() );
 						}
 					}
 				);
@@ -569,6 +578,9 @@ public abstract class TableMenuListener {
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.5  2003/09/08 16:10:36  lemmster
+RefineSearch added
+
 Revision 1.4  2003/09/08 15:43:34  lemmster
 work in progress
 
