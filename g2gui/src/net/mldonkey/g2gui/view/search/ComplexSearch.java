@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.11 2003/09/10 14:47:43 zet Exp $
+ * @version $Id: ComplexSearch.java,v 1.12 2003/09/10 14:54:37 zet Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -368,10 +368,10 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable o, Object arg ) {
-    	if (maxText.isDisposed()) return;
-        maxText.getDisplay().asyncExec( new Runnable() {
+    	if (resultCombo.isDisposed()) return;
+       	resultCombo.getDisplay().asyncExec( new Runnable() {
                 public void run() {
-                	if (maxText.isDisposed()) return;
+                	if (resultCombo.isDisposed()) return;
                     /* update the other text */
                     if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
                         maxText.setEnabled( false );
@@ -408,6 +408,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.12  2003/09/10 14:54:37  zet
+still a null (with useCombo)..
+
 Revision 1.11  2003/09/10 14:47:43  zet
 nullpointer
 
