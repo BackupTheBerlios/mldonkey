@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.11 2003/07/16 18:16:53 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.12 2003/07/17 13:36:18 dek Exp $ 
  *
  */
 public class DownloadTable  implements Observer, Runnable {
@@ -120,6 +120,7 @@ public class DownloadTable  implements Observer, Runnable {
 	 * @param columnIndex
 	 */
 	protected void sort( int columnIndex ) {
+		tableTree.setRedraw( false );
 		Object[] items = downloads.getValues();
 		FileInfo[] files = new FileInfo[ items.length ];
 		int[] expanded = new int[ items.length ];
@@ -130,11 +131,10 @@ public class DownloadTable  implements Observer, Runnable {
 			expanded[ i ] = -1;
 			if ( ( ( DownloadItem ) items[ i ] ).getExpanded() )
 				expanded[ i ] = ( ( DownloadItem ) items[ i ] ).getFileInfo().getId();
-			//Now dispose the now unneeded Table-tree Entries:
-			( ( DownloadItem ) items[ i ] ).dispose();
-			downloads.remove( files[ i ].getId() );
 		}
+		tableTree.removeAll();
 		Arrays.sort( files, new FileInfoComparator( columnIndex ) );
+		tableTree.redraw();
 		
 		if ( lastSortColumn != columnIndex ) {
 			for ( int i = 0; i < files.length; i++ ) {
@@ -149,16 +149,18 @@ public class DownloadTable  implements Observer, Runnable {
 			for ( int i = files.length - 1; i >= 0 ; i-- ) {
 				DownloadItem newItem =
 					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
-				downloads.put( files[ i ].getId(), newItem );
+				downloads.put( files[ i ].getId(), newItem );				
 				lastSortColumn = -1;
 			}
 		}
+				
 		// Now expand the previous expanded items:
 		for ( int i = 0; i < expanded.length; i++ ) {
 			if ( expanded[ i ] != -1 ) {			
 				( ( DownloadItem )downloads.get( expanded[ i ] ) ).setExpanded( true );
 			}
 		}
+		tableTree.setRedraw( true );
 	}
 	/**
 	 * @return creates a menu for this download-table end returns it
@@ -217,7 +219,7 @@ public class DownloadTable  implements Observer, Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		tableTree.setRedraw( false );
+		tableTree.setRedraw( false );		
 			TIntObjectIterator it = files.iterator();
 			while ( it.hasNext() ) {
 				it.advance();
@@ -230,18 +232,17 @@ public class DownloadTable  implements Observer, Runnable {
 					if ( downloads.containsKey( fileInfo.getId() ) ) {
 						downloads.get( fileInfo.getId() );
 						DownloadItem existingItem =
-									( DownloadItem ) downloads.get( fileInfo.getId() );
-						existingItem.update();
+									( DownloadItem ) downloads.get( fileInfo.getId() );						
+						//existingItem.update();
 					}
 					else {					
 					DownloadItem newItem =
 						new DownloadItem( tableTree, SWT.NONE, fileInfo );
 					downloads.put( fileInfo.getId(), newItem );
-					TableColumn[] cols = tableTree.getTable().getColumns();
-					
+					TableColumn[] cols = tableTree.getTable().getColumns();					
 						for ( int i = 0; i < cols.length; i++ ) {
 							cols[i].pack();
-						}				
+						}								
 					}	
 				}	
 				else if ( downloads.containsKey( fileInfo.getId() ) ) {	
@@ -253,12 +254,25 @@ public class DownloadTable  implements Observer, Runnable {
 				else {
 				 /* we really don't care about this one...*/
 				}
-		}		
+		}
+		for ( int i = 0; i < files.getIds().size(); i++ ) {
+			if ( files.contains( ( ( Integer ) files.getIds().get( i ) ).intValue() ) ){			
+			DownloadItem changedItem = 
+						( DownloadItem ) downloads.get( 
+							( ( Integer ) files.getIds().get( i ) ).intValue()
+						);	
+			changedItem.update();
+			}
+		}
+		files.clearIds();	
 		tableTree.setRedraw( true );
 	}
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.12  2003/07/17 13:36:18  dek
+"flickerfilter" applyed
+
 Revision 1.11  2003/07/16 18:16:53  dek
 another flickering-test
 
