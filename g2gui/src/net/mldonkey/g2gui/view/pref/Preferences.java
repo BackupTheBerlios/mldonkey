@@ -30,6 +30,7 @@ import java.util.Map;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceNode;
@@ -43,7 +44,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.30 2003/08/26 14:12:01 zet Exp $ 
+ * @version $Id: Preferences.java,v 1.31 2003/08/29 20:24:42 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -72,12 +73,16 @@ public class Preferences extends PreferenceManager {
 	 * @param mldonkey the Core we want to configure
 	 */
 	public void open( Shell shell, CoreCommunication mldonkey ) {
+		
 		try {
 				initialize( preferenceStore );
 			} catch ( IOException e ) {
 				System.out.println( "initalizing Preferences Dialog failed due to IOException" );
 			}
 		prefdialog = new PreferenceDialog( shell, this );
+		PreferenceDialog.setDefaultImage( G2GuiResources.getImage( "ProgramIcon" ) );
+	
+		
 		
 		if ( ( mldonkey != null ) && ( mldonkey.isConnected() ) ) {
 			this.connected = true;
@@ -224,6 +229,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.31  2003/08/29 20:24:42  dek
+icon for preferences, and simple frame (group)
+
 Revision 1.30  2003/08/26 14:12:01  zet
 decrease inputfieldlength
 
@@ -251,7 +259,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name

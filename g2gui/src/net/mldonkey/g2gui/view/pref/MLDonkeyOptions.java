@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.33 2003/08/29 18:30:29 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.34 2003/08/29 20:24:42 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {	
@@ -166,19 +166,21 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
 	 */
-	protected Control createContents( Composite myparent ) {		
-		ViewForm optionViewForm = new ViewForm( myparent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
-		optionViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+	protected Control createContents( Composite myparent ) {
 		
-		ScrolledComposite sc = new ScrolledComposite( optionViewForm, SWT.H_SCROLL | SWT.V_SCROLL ) {		
+		Group group = new Group( myparent, SWT.NONE );
+			GridLayout gl = new GridLayout( 1, false );
+			group.setLayout( gl );
+			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+			
+		
+		ScrolledComposite sc = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {		
 			public Point computeSize( int wHint, int hHint, boolean changed ) 
 			/* This method prevents the window from becoming huge (as in hight and width) 
 			 * when reopening "General" (or equivalents)
 			 */ 
 				{ return new Point( SWT.DEFAULT, SWT.DEFAULT ); }
 		};
-		
-		optionViewForm.setContent(sc);
 		
 		sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 			sc.setLayout( new FillLayout() );
@@ -189,8 +191,8 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		sc.setExpandHorizontal( true );
 		sc.setExpandVertical( true );
 		sc.setContent( parent );
-		( ( GridLayout ) parent.getLayout() ).marginHeight = 5 ;
-		( ( GridLayout ) parent.getLayout() ).marginWidth = 5 ;
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;		
 		
 		sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 		parent.layout();
@@ -229,6 +231,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 } 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.34  2003/08/29 20:24:42  dek
+icon for preferences, and simple frame (group)
+
 Revision 1.33  2003/08/29 18:30:29  dek
 removed name, added shadow to mldonkey-options for previewing
 

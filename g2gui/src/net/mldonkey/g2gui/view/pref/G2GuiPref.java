@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Group;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.5 2003/08/29 18:30:29 dek Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.6 2003/08/29 20:24:42 dek Exp $ 
  *
  */
 public class G2GuiPref extends FieldEditorPreferencePage {
@@ -55,8 +55,6 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 		
 		Group group = new Group( myparent, SWT.NONE );
 			GridLayout gl = new GridLayout( 1, false );
-				gl.horizontalSpacing = 10;
-				gl.verticalSpacing = 10;
 			group.setLayout( gl );
 			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		
@@ -140,6 +138,9 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.6  2003/08/29 20:24:42  dek
+icon for preferences, and simple frame (group)
+
 Revision 1.5  2003/08/29 18:30:29  dek
 removed name, added shadow to mldonkey-options for previewing
 
