@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Label;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.34 2003/11/24 08:56:22 lemmster Exp $
+ * @version $Id: Search.java,v 1.35 2003/11/30 21:52:55 zet Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -287,6 +287,7 @@ public abstract class Search implements Observer {
         this.networkCombo.getDisplay().asyncExec( new Runnable() {
             public void run() {
                 /* update the combo */
+                if (networkCombo==null || networkCombo.isDisposed()) return;
 				networkCombo.removeAll();
                 fillNetworkCombo( networkCombo );
 				
@@ -338,6 +339,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.35  2003/11/30 21:52:55  zet
+yet another npe..
+
 Revision 1.34  2003/11/24 08:56:22  lemmster
 fix [Bug #1132] search combo retains duplicates (better solution)
 
