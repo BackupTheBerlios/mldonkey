@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.ClientStats;
  * SpeedItem
  *
  * @author $user$
- * @version $Id: SpeedItem.java,v 1.4 2003/06/27 11:34:00 lemmstercvs01 Exp $ 
+ * @version $Id: SpeedItem.java,v 1.5 2003/06/27 13:21:12 dek Exp $ 
  *
  */
 public class SpeedItem extends StatusLineItem implements Observer {	
@@ -47,9 +47,9 @@ public class SpeedItem extends StatusLineItem implements Observer {
 	 * @param i
 	 * @param mldonkey
 	 */
-	public SpeedItem(Composite parent,StatusLine statusline, CoreCommunication mldonkey) {
+	public SpeedItem(StatusLine statusline, CoreCommunication mldonkey) {
 		super();
-		this.parent = parent;
+		this.parent = statusline.getStatusline();
 		content = "";
 		this.statusline = statusline;
 		mldonkey.addObserver( this );
@@ -76,6 +76,9 @@ public class SpeedItem extends StatusLineItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.5  2003/06/27 13:21:12  dek
+added connected Networks
+
 Revision 1.4  2003/06/27 11:34:00  lemmstercvs01
 foobar
 

@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Label;
  * It has to be placed in a GridLayout, since it applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.3 2003/06/26 21:11:10 dek Exp $ 
+ * @version $Id: StatusLine.java,v 1.4 2003/06/27 13:21:12 dek Exp $ 
  *
  */
 public class StatusLine {
@@ -58,8 +58,8 @@ public class StatusLine {
 			GridData gridData = new GridData( GridData.FILL_HORIZONTAL );	
 			statusline.setLayoutData( gridData );		
 			
-	addField(new SimpleStatusLineItem(" Connection-Status",SWT.NONE));
-	addField(new SpeedItem(statusline,this,mldonkey));
+	addField(new NetworkItem(this,mldonkey));
+	addField(new SpeedItem(this,mldonkey));
 	addField(new SimpleStatusLineItem(" other Information",SWT.NONE));
 	addField(new SimpleStatusLineItem(".....",SWT.NONE));
 	
@@ -76,10 +76,8 @@ public class StatusLine {
 		item.setIndex(this.fields.size()-1);
 	}
 	
-	public void update(int index,String content){
-		for (int i = 0; i < fields.size(); i++) {
-			((Label)fields.get(index)).setText(content);			
-		}		
+	public void update(int index,String content){		
+			((Label)fields.get(index)).setText(content);					
 	}
 	
 	
@@ -87,10 +85,32 @@ public class StatusLine {
 		return (StatusLineItem[])fields.toArray();
 	}
 
+	/**
+	 * @return the Composite in which the statusline is created
+	 */
+	public Composite getStatusline() {
+		return statusline;
+	}
+
+	/**
+	 * 	Sets the tooltip of the Statusbar Item
+	 * @param index which item to update
+	 * @param tooltip The tooltip to show
+	 */
+	protected void updateTooltip(int index, String tooltip) {
+		((Label)fields.get(index)).setToolTipText(tooltip);
+		
+	}
+
+
+
 }
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.4  2003/06/27 13:21:12  dek
+added connected Networks
+
 Revision 1.3  2003/06/26 21:11:10  dek
 speed is shown
 
