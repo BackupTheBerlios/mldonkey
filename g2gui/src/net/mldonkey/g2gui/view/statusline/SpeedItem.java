@@ -27,7 +27,6 @@ import java.util.Observer;
 
 import org.eclipse.swt.widgets.Composite;
 
-import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
 
@@ -35,7 +34,7 @@ import net.mldonkey.g2gui.model.ClientStats;
  * SpeedItem
  *
  * @author $user$
- * @version $Id: SpeedItem.java,v 1.2 2003/06/27 10:36:17 lemmstercvs01 Exp $ 
+ * @version $Id: SpeedItem.java,v 1.3 2003/06/27 11:07:52 lemmstercvs01 Exp $ 
  *
  */
 public class SpeedItem extends StatusLineItem implements Observer {	
@@ -53,7 +52,7 @@ public class SpeedItem extends StatusLineItem implements Observer {
 		this.parent = parent;
 		content = "";
 		this.statusline = statusline;
-		( ( Core ) mldonkey ).addObserver( this );
+		mldonkey.addObserver( this );
 		
 	}
 
@@ -78,6 +77,9 @@ public class SpeedItem extends StatusLineItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.3  2003/06/27 11:07:52  lemmstercvs01
+CoreCommunications implements addObserver(Observer)
+
 Revision 1.2  2003/06/27 10:36:17  lemmstercvs01
 changed notify to observer/observable
 

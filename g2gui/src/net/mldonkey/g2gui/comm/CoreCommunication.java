@@ -21,13 +21,14 @@
 package net.mldonkey.g2gui.comm;
 
 import java.io.IOException;
+import java.util.Observer;
 
 import net.mldonkey.g2gui.model.ConsoleMessage;
 /**
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.10 2003/06/27 10:40:09 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.11 2003/06/27 11:07:52 lemmstercvs01 Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -48,4 +49,10 @@ public interface CoreCommunication {
 	 * @return
 	 */
 	ConsoleMessage getConsoleMessage();
+	
+	/**
+	 * Adds an Observer to this object
+	 * @param obj The Observer to add
+	 */
+	void addObserver( Observer obj );
 }

@@ -25,7 +25,6 @@ package net.mldonkey.g2gui.view;
 import java.util.Observable;
 import java.util.Observer;
 
-import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.view.download.FileInfoTableContentProvider;
 import net.mldonkey.g2gui.view.download.FileInfoTableLabelProvider;
@@ -43,7 +42,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.6 2003/06/27 10:36:17 lemmstercvs01 Exp $ 
+ * @version $Id: TransferTab.java,v 1.7 2003/06/27 11:07:52 lemmstercvs01 Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements Observer {
@@ -59,7 +58,7 @@ public class TransferTab extends G2guiTab implements Observer {
 		this.button.setText( "Transfer" );
 		createContents( this.content );
 
-		( ( Core ) gui.getCore() ).addObserver( this );
+		gui.getCore().addObserver( this );
 	}
 
 	/**
@@ -109,6 +108,9 @@ public class TransferTab extends G2guiTab implements Observer {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.7  2003/06/27 11:07:52  lemmstercvs01
+CoreCommunications implements addObserver(Observer)
+
 Revision 1.6  2003/06/27 10:36:17  lemmstercvs01
 changed notify to observer/observable
 
