@@ -24,12 +24,14 @@ ifeq ($(UNAME),Linux)
 	SYSTYPE=gtk
 	PROGRAM=g2gui-bin
 	LINK_ARGS= -s -static-libgcc -Wl,-rpath,.	
+	POST_COMPILE= cp ./build/g2gui-starter.example ./g2gui
 else
 	SYSTYPE=win
 	PROGRAM=g2gui.exe
 	LINK_ARGS=-s -mwindows \
 	-Dgnu.gcj.runtime.NameFinder.demangle=false \
-	-Dgnu.gcj.runtime.NameFinder.use_addr2line=false
+	-Dgnu.gcj.runtime.NameFinder.use_addr2line=false	
+	POST_COMPILE=
 endif
 
 JAROBJECTS = $(subst .jar,.o, $(notdir $(wildcard $(JAR_DIR)/*.jar)))
@@ -46,7 +48,7 @@ vpath % $(shell $(FIND) $(JAR_DIR) $(OBJ_DIR) -type d)
 .PHONY : swt libs mkobjdir
 
 all : mkobjdir $(PROGRAM) 
-	@cp ./build/g2gui-starter.example ./g2gui
+	@$(POST_COMPILE)
 	@echo --- DONE ---
 
 libs:
