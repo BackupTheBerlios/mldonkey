@@ -58,17 +58,17 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.8 2003/10/16 16:09:56 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.9 2003/10/16 19:58:03 zet Exp $
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListener {
     private static boolean displayChunkGraphs = false;
 	
-	public static final String ALL_COLUMNS = "ABCDEFGHIJKLMNO";
-	public static final String BASIC_COLUMNS = "ABCDFJL";
+	public static final String ALL_COLUMNS = "ABCDEFGHIJKLMN";
+	public static final String BASIC_COLUMNS = "ABCDFIK";
 	public static final String NAME_COLUMN = "C";
-	public static final String RATE_COLUMN = "J";
-	public static final String CHUNK_COLUMN = "K";
+	public static final String RATE_COLUMN = "I";
+	public static final String CHUNK_COLUMN = "J";
 	public static final String[] COLUMN_LABELS =
 			 {	 
 				"TT_Download_Id",
@@ -78,7 +78,6 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 				"TT_Download_Downloaded", 
 				"TT_Download_%",
 				"TT_Download_Sources",
-				"TT_Download_ActiveSources",
 				"TT_Download_Avail",
 				"TT_Download_Rate",
 				"TT_Download_Chunks",
@@ -90,13 +89,13 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 	private static final int[] COLUMN_DEFAULT_WIDTHS =
 			 { 
 				50, 50, 250, 75, 75, 
-				50, 50, 30, 50, 50, 
+				50, 50, 50, 50, 
 				75, 75, 50, 75, 75
 			 };
 	private static final int[] COLUMN_ALIGNMENT =
 			 {
 				SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, 
-				SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, 
+				SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, 
 				SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT
 			 };	 
 			 
@@ -107,14 +106,13 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 	public static final int DOWNLOADED = 4;
 	public static final int PERCENT = 5;
 	public static final int SOURCES = 6;
-	public static final int ACTIVE_SOURCES = 7;
-	public static final int AVAIL = 8;
-	public static final int RATE = 9;
-	public static final int CHUNKS = 10;
-	public static final int ETA = 11;
-	public static final int PRIORITY = 12;
-	public static final int LAST = 13;
-	public static final int AGE = 14;
+	public static final int AVAIL = 7;
+	public static final int RATE = 8;
+	public static final int CHUNKS = 9;
+	public static final int ETA = 10;
+	public static final int PRIORITY = 11;
+	public static final int LAST = 12;
+	public static final int AGE = 13;
 	
     private CustomTableTreeViewer tableTreeViewer;
     private TableTree tableTree;
@@ -231,7 +229,7 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 		
 		if ( advancedMode ) {
 			String prefCols = PreferenceLoader.loadString( "downloadTableColumns" );
-			columnIDs = ( ( !prefCols.equals( "" ) ) ? prefCols : ALL_COLUMNS );
+			columnIDs = ( ( !prefCols.equals( "" )  && prefCols.length() < ALL_COLUMNS.length() ) ? prefCols : ALL_COLUMNS );
 		} else {
 			columnIDs = BASIC_COLUMNS;
 		}
@@ -412,7 +410,6 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
                 tableTreeViewer.expandToLevel( fileInfo, AbstractTreeViewer.ALL_LEVELS );
             }
 
-            tableTreeViewer.nudgeColumn();
         } else if ( o instanceof TreeClientInfo ) {
             TreeClientInfo treeClientInfo = (TreeClientInfo) o;
             new ClientDetailDialog( treeClientInfo.getFileInfo(), treeClientInfo.getClientInfo(), mldonkey );
@@ -423,6 +420,9 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.9  2003/10/16 19:58:03  zet
+icons
+
 Revision 1.8  2003/10/16 16:09:56  zet
 updateDisplay
 

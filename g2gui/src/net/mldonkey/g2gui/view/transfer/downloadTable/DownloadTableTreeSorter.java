@@ -36,7 +36,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.4 2003/10/12 15:58:29 zet Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.5 2003/10/16 19:58:03 zet Exp $
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
@@ -218,9 +218,6 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 			case DownloadTableTreeViewer.PERCENT:
 				return ( property.equals( FileInfo.CHANGED_PERCENT ) ? true : false );
-
-			case DownloadTableTreeViewer.ACTIVE_SOURCES:
-				return ( property.equals( FileInfo.CHANGED_ACTIVE ) ? true : false );
 					
 			case DownloadTableTreeViewer.AVAIL:
 				return ( property.equals( FileInfo.CHANGED_AVAIL ) ? true : false );
@@ -280,9 +277,6 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 			case DownloadTableTreeViewer.SOURCES:
 				return compareIntegers( fileInfo1.getSources( ), fileInfo2.getSources() );
-
-			case DownloadTableTreeViewer.ACTIVE_SOURCES:
-				return compareIntegers( fileInfo1.getActiveSources( ), fileInfo2.getActiveSources( ) );
 
 			case DownloadTableTreeViewer.AVAIL:
 				return compareIntegers( fileInfo1.getRelativeAvail(), fileInfo2.getRelativeAvail() );
@@ -368,6 +362,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.5  2003/10/16 19:58:03  zet
+icons
+
 Revision 1.4  2003/10/12 15:58:29  zet
 rewrite downloads table & more..
 

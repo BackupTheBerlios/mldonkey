@@ -64,11 +64,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.69 2003/10/16 16:10:05 zet Exp $
+ * @version $Id: TransferTab.java,v 1.70 2003/10/16 19:58:12 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -123,6 +125,7 @@ public class TransferTab extends GuiTab {
         	downloadParent = downloadViewForm;
         }
         createDownloadHeader( downloadViewForm, mainSashForm, downloadParent );
+        createDownloadToolbar( downloadViewForm );
         downloadComposite = new Composite( downloadViewForm, SWT.NONE );
         downloadComposite.setLayout( new FillLayout() );
         downloadViewForm.setContent( downloadComposite );
@@ -148,6 +151,41 @@ public class TransferTab extends GuiTab {
         downloadCLabel.addMouseListener( new MaximizeSashMouseAdapter( downloadCLabel, popupMenuDL, mainSashForm, downloadParent  ) );
         parentViewForm.setTopLeft( downloadCLabel );
     }
+    
+    public void createDownloadToolbar ( ViewForm parentViewForm ) {
+		ToolBar downloadsToolBar = new ToolBar( parentViewForm, SWT.RIGHT | SWT.FLAT );
+		ToolItem toolItem;
+		
+		toolItem = new ToolItem( downloadsToolBar, SWT.NONE );
+		toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_COMMIT_ALL" ) );
+		toolItem.setImage( G2GuiResources.getImage( "commit" ) );
+		toolItem.addSelectionListener( new SelectionAdapter() {
+				 public void widgetSelected( SelectionEvent s ) {
+					 mldonkey.getFileInfoIntMap().commitAll();
+				 }
+			 } );	
+		
+		toolItem = new ToolItem( downloadsToolBar, SWT.NONE );
+		toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_COLLAPSE_ALL" ) );
+		toolItem.setImage( G2GuiResources.getImage( "collapseAll" ) );
+		toolItem.addSelectionListener( new SelectionAdapter() {
+				 public void widgetSelected( SelectionEvent s ) {
+					 downloadTableTreeViewer.getTableTreeViewer().collapseAll();
+				 }
+			 } );	
+			 
+		toolItem = new ToolItem( downloadsToolBar, SWT.NONE );
+		toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_EXPAND_ALL" ) );
+		toolItem.setImage( G2GuiResources.getImage( "expandAll" ) );
+		toolItem.addSelectionListener( new SelectionAdapter() {
+				 public void widgetSelected( SelectionEvent s ) {
+					 downloadTableTreeViewer.getTableTreeViewer().expandAll();
+				 }
+			 } );			 		 
+			 
+		parentViewForm.setTopRight( downloadsToolBar );	 
+    }
+    
 
     /**
      * Create the uploads window
@@ -368,6 +406,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.70  2003/10/16 19:58:12  zet
+icons
+
 Revision 1.69  2003/10/16 16:10:05  zet
 updateDisplay()
 

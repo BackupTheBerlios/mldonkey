@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * CustomTableTreeViewer
  *
  *
- * @version $Id: CustomTableTreeViewer.java,v 1.4 2003/10/14 23:27:06 zet Exp $
+ * @version $Id: CustomTableTreeViewer.java,v 1.5 2003/10/16 19:58:03 zet Exp $
  *
  */
 public class CustomTableTreeViewer extends TableTreeViewer {
@@ -140,10 +140,7 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 
     public void add( Object parentElement, Object[] childElements ) {
         super.add( parentElement, childElements );
-
-        if ( activeEditors ) {
-            nudgeColumn();
-        }
+        nudgeColumn();
     }
 
     protected void associate( Object element, Item item ) {
@@ -215,6 +212,17 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 			nudgeColumn();
 		}
 	}
+	
+	public void expandAll() {
+		super.expandAll();
+		nudgeColumn();
+	}
+	
+	public void collapseAll() {
+		super.collapseAll();
+		nudgeColumn();	
+	}
+	
     // End TTE hack	
 
 	public void setColumnIDs (String string) {
@@ -299,6 +307,9 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.5  2003/10/16 19:58:03  zet
+icons
+
 Revision 1.4  2003/10/14 23:27:06  zet
 minor
 

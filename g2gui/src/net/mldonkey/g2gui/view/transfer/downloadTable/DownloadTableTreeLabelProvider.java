@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.7 2003/10/15 22:06:32 zet Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.8 2003/10/16 19:58:03 zet Exp $
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -230,12 +230,8 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 				   return "" + dfp.format( fileInfo.getPerc() ) + "%";
 	
 			   case DownloadTableTreeViewer.SOURCES:
-				   return "" + fileInfo.getSources();
-	            
-			   case DownloadTableTreeViewer.ACTIVE_SOURCES:
-			   		if (fileInfo.getActiveSources() > 0) 
-			   			return "" + fileInfo.getActiveSources();
-				   return "-";    
+					int a =	fileInfo.getActiveSources();
+				    return "" + (a > 0 ? fileInfo.getSources() + "(" + a + ")" : "" + fileInfo.getSources() ) ;
 	
 			   case DownloadTableTreeViewer.AVAIL:
 				   return "" + fileInfo.getRelativeAvail() + "%";
@@ -305,6 +301,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.8  2003/10/16 19:58:03  zet
+icons
+
 Revision 1.7  2003/10/15 22:06:32  zet
 colours
 

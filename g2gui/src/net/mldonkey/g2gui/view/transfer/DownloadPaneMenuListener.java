@@ -51,7 +51,7 @@ import org.eclipse.swt.events.DisposeListener;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.9 2003/10/15 18:25:00 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.10 2003/10/16 19:58:03 zet Exp $
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener, DisposeListener {
@@ -296,8 +296,6 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
             } else {
                 tableTreeViewer.collapseAll();
             }
-
-            tableTreeViewer.nudgeColumn();
         }
     }
 
@@ -618,6 +616,9 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.10  2003/10/16 19:58:03  zet
+icons
+
 Revision 1.9  2003/10/15 18:25:00  zet
 icons
 
