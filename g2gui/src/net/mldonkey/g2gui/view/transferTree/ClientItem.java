@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.21 2003/07/28 21:54:47 zet Exp $ 
+ * @version $Id: ClientItem.java,v 1.22 2003/07/29 04:10:56 zet Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -100,7 +100,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		Control oldEditor = editor.getEditor();
 			if ( oldEditor != null )
 			oldEditor.dispose();
-		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, CHUNKS );
+		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NO_BACKGROUND, clientInfo, fileInfo, CHUNKS );
 		editor.setEditor ( chunks, this, CHUNKS );
 		updateCell( CLIENTNAME, clientInfo.getClientName() );
 		updateColums();	
@@ -202,6 +202,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.22  2003/07/29 04:10:56  zet
+chunks - half done - commit before I lose it again..
+
 Revision 1.21  2003/07/28 21:54:47  zet
 check isDisposed
 

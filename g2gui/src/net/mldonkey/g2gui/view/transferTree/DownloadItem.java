@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.24 2003/07/28 21:55:11 zet Exp $ 
+ * @version $Id: DownloadItem.java,v 1.25 2003/07/29 04:10:55 zet Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem implements IItemHasMenue, SelectionListener {
@@ -115,7 +115,7 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 			if ( oldEditor != null )
 				oldEditor.dispose();
 			this.chunks =
-				new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo, CHUNKS );
+				new ChunkView( this.getParent().getTable(), SWT.NO_BACKGROUND, fileInfo, CHUNKS );
 			editor.setEditor( chunks, this, CHUNKS );
 
 
@@ -406,6 +406,9 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 }
 /*
 $Log: DownloadItem.java,v $
+Revision 1.25  2003/07/29 04:10:55  zet
+chunks - half done - commit before I lose it again..
+
 Revision 1.24  2003/07/28 21:55:11  zet
 check isDisposed
 

@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.transferTree;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -47,7 +48,7 @@ import org.eclipse.swt.events.DisposeListener;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.25 2003/07/28 17:40:19 zet Exp $ 
+ * @version $Id: DownloadTable.java,v 1.26 2003/07/29 04:10:56 zet Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
@@ -132,14 +133,14 @@ public class DownloadTable implements Observer, Runnable {
 		FileInfo[] files = new FileInfo[ items.length ];
 		
 		//all DownloadItems, that are expanded are stored here with the ID
-		int[] expanded = new int[ items.length ];
+		ArrayList expanded = new ArrayList();
+		
 		for ( int i = 0; i < items.length; i++ ) {
 			files[ i ] = ( ( DownloadItem ) items[ i ] ).getFileInfo();
 			// to save the expanded-status, we save all expanded fileIds:
-			expanded[ i ] = -1;
 			DownloadItem temp = ( ( DownloadItem ) items[ i ] );
-			if ( temp.getExpanded() )
-				expanded[ i ] = temp.getFileInfo().getId();
+			if ( temp.getExpanded() ) 
+				expanded.add (new Integer (temp.getFileInfo().getId()) );
 		}
 		
 		//all selected items are stored here with their ID
@@ -162,6 +163,12 @@ public class DownloadTable implements Observer, Runnable {
 					DownloadItem newItem =
 						new DownloadItem( tableTree, SWT.NONE, files[ i ] );
 					downloads.put( files[ i ].getId(), newItem );
+					
+					if (expanded.contains(new Integer(files[ i ].getId()))) {
+						newItem.setExpanded( true );
+						newItem.sort ( columnIndex, lastSortColumn ) ;
+					}
+					
 				}
 				lastSortColumn = columnIndex;
 			} else {
@@ -171,19 +178,27 @@ public class DownloadTable implements Observer, Runnable {
 					DownloadItem newItem =
 						new DownloadItem( tableTree, SWT.NONE, files[ i ] );
 					downloads.put( files[ i ].getId(), newItem );
+					
+					if (expanded.contains(new Integer(files[ i ].getId()))) {
+							newItem.setExpanded( true );
+							newItem.sort ( columnIndex, lastSortColumn ) ;
+					}
 					lastSortColumn = -1;
 				}
 			}
 		
-		// Now expand the previous expanded items:
+		// You must expand them with the item, or the Editor will not be positioned properly
+				
+		/* Now expand the previous expanded items:
 			for ( int i = 0; i < expanded.length; i++ ) {
-				if ( expanded[ i ] != -1 ) {
-					DownloadItem temp = ( ( DownloadItem ) downloads.get( expanded[ i ] ) );
+			if ( expanded[ i ] != -1 ) {
+			DownloadItem temp = ( ( DownloadItem ) downloads.get( expanded[ i ] ) );
 					temp.setExpanded( true );
-					/*only sort the subItems if expanded, to save CPU time*/
+					 // only sort the subItems if expanded, to save CPU time
 					temp.sort( columnIndex, lastSortColumn );
 				}
 			}
+		*/
 		
 		//now select the previous selected items:
 			TableTreeItem[] selectedItems =
@@ -308,6 +323,9 @@ public class DownloadTable implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.26  2003/07/29 04:10:56  zet
+chunks - half done - commit before I lose it again..
+
 Revision 1.25  2003/07/28 17:40:19  zet
 save column widths
 

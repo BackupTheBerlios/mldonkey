@@ -22,9 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transferTree;
 
-
-
-
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 
@@ -36,6 +33,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -44,7 +42,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkView.java,v 1.10 2003/07/21 17:38:50 dek Exp $ 
+ * @version $Id: ChunkView.java,v 1.11 2003/07/29 04:10:55 zet Exp $ 
  *
  */
 public class ChunkView extends Canvas {
@@ -154,17 +152,22 @@ public class ChunkView extends Canvas {
 		
 	}
 
-	/**
-	 * 
+	/** to make transition from emule easier 
+	 * http://www.emule-project.net/faq/progress.htm
 	 */
 	private void createClientInfoImage() {
-		this.avail =  clientInfo.getFileAvailability( fileInfo );		
+		this.avail =  clientInfo.getFileAvailability( fileInfo );	
+		this.chunks = fileInfo.getChunks();	
 		int length = 0;
-		byte[] temp = {};
+		
 		Color red = getDisplay().getSystemColor( SWT.COLOR_RED );
-		Color blue = getDisplay().getSystemColor( SWT.COLOR_BLUE );
+		Color blue = new Color (null, 0, 150, 255);
 		Color black = getDisplay().getSystemColor( SWT.COLOR_BLACK );
 		Color yellow = getDisplay().getSystemColor( SWT.COLOR_YELLOW );		
+		Color silver = new Color (null, 226, 225, 221);
+		
+		Color fromColor = black;
+		Color toColor;
 		
 		if ( avail != null ) {		
 				length = avail.length();
@@ -172,28 +175,35 @@ public class ChunkView extends Canvas {
 		if ( image != null ) image.dispose();
 		
 		if ( length == 0 ) 		
-			image = new Image( getDisplay(), 1, 1 );
+			image = new Image( getDisplay(), 1, 18 );
 		else
-			image = new Image( getDisplay(), length, 1 );
+			image = new Image( getDisplay(), length, 18 );
 			
 		GC gc = new GC( image );
-		
-		gc.setBackground( getParent().getBackground( ) );		
-		gc.fillRectangle( 0, 0, image.getBounds().width, image.getBounds().height );		
+					
 		for ( int i = 0; i < length; i++ ) {
-			
-			gc.setForeground( blue );			
+			toColor = blue;
 			//this availability is so low, we can assume, it is not available:			
 			if ( avail.charAt( i ) == '0' ) {			
-				gc.setForeground( red );				
+				toColor = silver;				
 			}
 			else if ( avail.charAt( i ) == '1' ) {
-				gc.setForeground( blue );				
+				toColor = blue;				
 			}
 			else if ( avail.charAt( i ) == '2' ) {
-				gc.setForeground( black );				
-			}					
-			gc.drawLine( i, 0, i, 1  );			
+				toColor = yellow;				
+			}	
+			
+			if ( chunks.charAt( i ) == '2' ) {
+				toColor = new Color (null, 107, 81, 9);		
+			}
+			gc.setBackground (toColor);
+			gc.setForeground (fromColor);
+			gc.fillGradientRectangle(i, 0, 1, 9, true);
+			
+			gc.setForeground(toColor);
+			gc.setBackground(fromColor);
+			gc.fillGradientRectangle(i, 9, 1, 9, true);				
 		}	
 		gc.dispose();	
 	}
@@ -207,42 +217,58 @@ public class ChunkView extends Canvas {
 		int length = 0;
 		
 		Color red = getDisplay().getSystemColor( SWT.COLOR_RED );
-		Color blue = getDisplay().getSystemColor( SWT.COLOR_BLUE );
 		Color black = getDisplay().getSystemColor( SWT.COLOR_BLACK );
-		Color yellow = getDisplay().getSystemColor( SWT.COLOR_YELLOW );		
+		Color yellow = getDisplay().getSystemColor( SWT.COLOR_YELLOW );	
 		
+		Color fromColor = black;
+		Color toColor;
+			
 		if ( avail.length() != 0 ) 
 				length = avail.length();
 				
-		byte[] temp = avail.getBytes();		
-		
+		int numChunkSources;	
+		int highestNumSources = 0;
+		float factor = 1f;
+	
+		for (int i = 0; i < avail.length(); i++) 
+		{
+			numChunkSources = avail.charAt( i );
+			if (numChunkSources > highestNumSources)
+				highestNumSources = numChunkSources;
+			
+		}
+		if (highestNumSources > 0) 
+			factor = 10f / highestNumSources; 
+	
 		if ( image != null ) image.dispose();
-		image = new Image( getDisplay(), length, 12 );
+		image = new Image( getDisplay(), length, 18 );
 		GC gc = new GC( image );
-		for ( int i = 0; i < avail.length(); i++ ) {		
-			int height = temp[ i ] / 10	;			
-			if ( height < 1 ) height = 1;
-			gc.setForeground( blue );	
+		
+		for ( int i = 0; i < avail.length(); i++ ) {
+					
+			numChunkSources = avail.charAt( i ) ;
 			
-			//this availability is so low, we can assume, it is not available:			
-			if ( temp[ i ] == 0 ) {			
-				gc.setForeground( red );
-				height = 12;
-			}
+			int colorIntensity = 255 - ( int ) ((float) numChunkSources * factor) * 25;
+			toColor = new Color(null, 0, colorIntensity, 255);	
+				
+			if ( numChunkSources == 0 )		
+				toColor = red;
+				
+			if ( chunks.charAt( i ) == '2' ) 			
+				toColor = new Color (null, 107, 81, 9) ;
+			else if ( chunks.charAt( i ) == '3' ) 		
+				toColor = yellow;
+						
+			gc.setBackground (toColor);
+			gc.setForeground (fromColor);
+			gc.fillGradientRectangle(i, 0, 1, 9, true);
 			
-			if ( chunks.charAt( i ) == '2' ) {			
-				gc.setForeground( black );
-				height = 12;
-			}
-			if ( chunks.charAt( i ) == '3' ) {			
-				gc.setForeground( yellow );
-				height = 12;
-			}
-									
-			gc.drawLine( i, 12, i, 12 - height );			
+			gc.setForeground(toColor);
+			gc.setBackground(fromColor);
+			gc.fillGradientRectangle(i, 9, 1, 9, true);	
+			
 		}	
 		gc.dispose();	
-		
 	}
 
 	/**
@@ -262,32 +288,48 @@ public class ChunkView extends Canvas {
 		int srcHeight = image.getBounds().height;	
 		int destWidth = e.width;
 		int destHeight = e.height;	
-		
-		if ( destWidth < column.getWidth() ) {
-			/*we don't have to get the whole source-image, but only the displayed stuff*/
-			float showPercent = ( ( float ) destWidth ) / column.getWidth();
-			srcWidth = Math.round( srcWidth * showPercent ) ;			
-		}
 			
-		if ( destWidth >= 2 ) {
-			destWidth = e.width - 2;
-		}
-		if ( e.height >= 2 ) {
-			destHeight = e.height - 2;
-		}
 		if ( image != null ) {
-			gc.setBackground( getParent().getBackground( ) );		
-			gc.fillRectangle( 0, 0, e.width, e.height );
+			
+			ImageData imageData = image.getImageData();
+			imageData = imageData.scaledTo(getBounds().width, getBounds().height);
+			Image newImage = new Image(null, imageData);
+			
+			GC t = new GC( newImage );
+				
+			int ht = newImage.getBounds().height - 1;
+			int wt = newImage.getBounds().width-1 ;
+			// progress bar				
+			if ( type == isFileInfo ) {
+				int pix =  ( int ) ( ( fileInfo.getPerc() / 100 ) * ( double ) wt ) ;
+				t.setBackground( new Color(null, 15, 136, 0 ));
+				t.setForeground( new Color(null, 41, 187, 26));
+				t.fillGradientRectangle(0,0,pix,4,false);
+			}
+			// spacer in background colour	
+			t.setForeground(getParent().getBackground());
+			t.drawLine(0,0,newImage.getBounds().width, 0);
+			t.drawLine(0,newImage.getBounds().height-1, newImage.getBounds().width, newImage.getBounds().height-1);
+			
+			// round the corners
+			t.drawLine(0,1,0,1);
+			t.drawLine(0,ht-1,0,ht-1);
+			t.drawLine(wt,1,wt,1);
+			t.drawLine(wt,ht-1,wt,ht-1);	
+	
 			gc.drawImage(
-				image,
-				0,
-				0,
-				srcWidth,
-				srcHeight,
-				1,
-				1,
-				destWidth,
-				destHeight );
+				newImage,
+				e.x,
+				e.y,
+				e.width,
+				e.height,
+				e.x,
+				e.y,
+				e.width,
+				e.height );
+			
+			t.dispose();
+			newImage.dispose();
 		}
 		gc.dispose();
 	}
@@ -325,6 +367,9 @@ public class ChunkView extends Canvas {
 
 /*
 $Log: ChunkView.java,v $
+Revision 1.11  2003/07/29 04:10:55  zet
+chunks - half done - commit before I lose it again..
+
 Revision 1.10  2003/07/21 17:38:50  dek
 checkstyle
 
