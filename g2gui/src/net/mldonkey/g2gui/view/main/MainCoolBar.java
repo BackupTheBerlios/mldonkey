@@ -41,6 +41,8 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -60,7 +62,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.16 2003/11/24 20:40:17 dek Exp $
+ * @version $Id: MainCoolBar.java,v 1.17 2003/11/24 21:06:02 dek Exp $
  *
  */
 public class MainCoolBar {
@@ -74,7 +76,8 @@ public class MainCoolBar {
     private ToolBar mainTools;
     private List miscToolButtons;
     private List mainToolButtons;
-	protected int[] order;
+	protected int[] order = { 0, 1 };
+	protected Point[] itemsizes;
 
 	/**
 	 * @param mainTab 
@@ -107,14 +110,26 @@ public class MainCoolBar {
         coolbar.addControlListener( new ControlListener() {
 
         	public void controlMoved( ControlEvent e ) {
-        		composite.getParent().layout();
+        		composite.getParent().layout();        		
         	}
 
         	public void controlResized( ControlEvent e ) {
         		composite.getParent().layout();
-        		order=MainCoolBar.this.coolbar.getItemOrder();
         	}
         } );
+        
+        coolbar.addPaintListener(new PaintListener(){
+			public void paintControl(PaintEvent e) {
+				/*
+				 * this listener is to keep the Layoutinfos up to date,
+				 * since the paint-listener iss called everytime 
+				 * something has changed. I know, this is a hack, but gtk forces 
+				 * me to do so, since i can't call coolbar.getItemSizes() at 
+				 * dispose-time on gtk
+				 */
+				order = coolbar.getItemOrder();
+				itemsizes = coolbar.getItemSizes();
+			}});
     }
 
 	/**
@@ -322,8 +337,10 @@ public class MainCoolBar {
     	
     	coolbar.setItemLayout( order, null, itemSizes );
     	
-    	if ( p.isDefault("coolBarSizes") ) layoutCoolBar();
-
+    	if ( p.isDefault("coolBarSizes") ){
+    		System.out.println("coolbar is default");
+    		layoutCoolBar();
+    	}
     }
     
 	/**
@@ -335,7 +352,7 @@ public class MainCoolBar {
 		p.setValue( "toolbarSmallButtons", isToolbarSmallButtons() );
 		
 		StringBuffer sizesBuffer = new StringBuffer();
-		Point[] itemsizes = coolbar.getItemSizes();
+		
 		for ( int i = 0; i < itemsizes.length; i++ ) {
 			sizesBuffer.append( itemsizes[ i ].x+"-"+itemsizes[ i ].y+"|" );			
 		}				
@@ -348,14 +365,14 @@ public class MainCoolBar {
 		
 		p.setValue( "coolBarSizes", sizesBuffer.toString() );	
 		p.setValue( "coolBarOrder", orderBuffer.toString() );
-		
 	}
-
-
 }
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.17  2003/11/24 21:06:02  dek
+gtk workaround works by now?
+
 Revision 1.16  2003/11/24 20:40:17  dek
 yet another test
 
