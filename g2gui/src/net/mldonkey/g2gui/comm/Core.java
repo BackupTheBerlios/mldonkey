@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.92 2003/09/02 09:24:36 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.93 2003/09/02 10:00:33 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -541,12 +541,22 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getRoomInfoIntMap()
 	 */
 	public RoomInfoIntMap getRoomInfoIntMap() {		
-		return ( RoomInfoIntMap ) roomInfoIntMap;
+		return ( RoomInfoIntMap ) this.roomInfoIntMap;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getDefineSearch()
+	 */
+	public DefineSearchMap getDefineSearch() {
+		return ( DefineSearchMap ) this.defineSearchMap;
 	}
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.93  2003/09/02 10:00:33  lemmster
+getDefineSearch()
+
 Revision 1.92  2003/09/02 09:24:36  lemmster
 checkstyle
 

@@ -27,6 +27,7 @@ import java.util.Observer;
 import net.mldonkey.g2gui.model.ClientInfoIntMap;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.model.ConsoleMessage;
+import net.mldonkey.g2gui.model.DefineSearchMap;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.NetworkInfoIntMap;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
@@ -38,7 +39,7 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
  * CoreCommunication
  *
  *
- * @version $Id: CoreCommunication.java,v 1.36 2003/08/24 16:54:07 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.37 2003/09/02 10:00:33 lemmster Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -75,9 +76,12 @@ public interface CoreCommunication extends Runnable {
 	 */
 	ConsoleMessage getConsoleMessage();
 	/**
+	 * @return A map defining the search masks
+	 */
+	DefineSearchMap getDefineSearch();
+	/**
 	 * @return Infos about all the nice networks we know about
 	 */
-	
 	NetworkInfoIntMap getNetworkInfoMap();
 	/**
 	 * @return all mldonkey-options
@@ -143,6 +147,9 @@ public interface CoreCommunication extends Runnable {
 }
 /*
 $Log: CoreCommunication.java,v $
+Revision 1.37  2003/09/02 10:00:33  lemmster
+getDefineSearch()
+
 Revision 1.36  2003/08/24 16:54:07  dek
 RoomInfo is now read from stream to Map, ready for use to implement
 all the room-stuff
