@@ -3,22 +3,13 @@ package net.mldonkey.g2gui.view;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-
-
 import net.mldonkey.g2gui.model.ClientStats;
-import net.mldonkey.g2gui.view.statistic.GraphCanvas;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
-
-
-
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+
 
 
 // rz,
@@ -26,14 +17,7 @@ import org.eclipse.swt.widgets.Label;
 // TODO file progress field
 
 /**
- * 
- * DownloadTab
- *
- * Implements the view-layer for all download-related actions.
- * 
- * @author mitch
- * @version 0.1 
- * @todo Implement table-sorting, status-fields, progress-bars
+ * Statistic Tab
  *
  */
 
@@ -53,12 +37,12 @@ public class StatisticTab
 	public StatisticTab(Gui gui) {
 		super(gui);
 		toolItem.setText(bundle.getString("TT_StatisticButton"));
-		/*toolItem.setImage(
+		toolItem.setImage(
 			Gui.createTransparentImage(
 				new Image(
 					toolItem.getParent().getDisplay(),
-					"src/icons/"),
-				toolItem.getParent()));*/
+					"src/icons/statistics.png"),
+				toolItem.getParent()));
 		createContents(this.content);
 		
 
@@ -85,8 +69,6 @@ public class StatisticTab
 	public void update(Observable arg0, Object receivedInfo) {
 		if (receivedInfo instanceof ClientStats){
 			ClientStats clientInfo = (ClientStats) receivedInfo;
-			System.out.println(clientInfo.getTcpUpRate());
-			System.out.println(clientInfo.getTcpDownRate());
 			
 			graphControl.addPointToUploadGraph(clientInfo.getTcpUpRate());
 			graphControl.addPointToDownloadGraph(clientInfo.getTcpDownRate());
