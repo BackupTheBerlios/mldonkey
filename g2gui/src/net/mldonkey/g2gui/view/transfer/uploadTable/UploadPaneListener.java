@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadPaneListener.java,v 1.5 2003/11/14 00:46:04 zet Exp $
+ * @version $Id: UploadPaneListener.java,v 1.6 2003/11/15 21:15:29 zet Exp $
  *
  */
 public class UploadPaneListener extends SashGPaneListener {
@@ -93,13 +93,16 @@ public class UploadPaneListener extends SashGPaneListener {
         // flip sash/maximize sash
         menuManager.add(new Separator());
         menuManager.add(new FlipSashAction(this.sashForm));
-        menuManager.add(new MaximizeAction(this.sashForm, this.control));
+        menuManager.add(new MaximizeAction(this.sashForm, this.control, "TT_Downloads"));
     }
 }
 
 
 /*
 $Log: UploadPaneListener.java,v $
+Revision 1.6  2003/11/15 21:15:29  zet
+Label restore action
+
 Revision 1.5  2003/11/14 00:46:04  zet
 sort by column menu item (for macOS)
 

@@ -57,7 +57,7 @@ import java.util.Observable;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.40 2003/11/09 02:18:37 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.41 2003/11/15 21:15:29 zet Exp $
  */
 public class StatisticTab extends PaneGuiTab {
     private GraphControl uploadsGraphControl;
@@ -150,14 +150,18 @@ public class StatisticTab extends PaneGuiTab {
                 SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE));
         CLabel cLabel = CCLabel.createCL(graphViewForm, titleResString, "StatisticsButtonSmall");
 
-        if (titleResString.equals("TT_Uploads")) {
+        String showResString = "TT_Uploads";
+
+        if (titleResString.equals(showResString)) {
             uploadsHeaderCLabel = cLabel;
+            showResString = "TT_Downloads";
         } else {
             downloadsHeaderCLabel = cLabel;
         }
 
         GraphControl graphControl = new GraphControl(graphViewForm, graphName);
-        GPaneListener aListener = new GraphPaneListener(graphSash, graphViewForm, graphControl);
+        GPaneListener aListener = new GraphPaneListener(graphSash, graphViewForm, graphControl,
+                showResString);
         createPaneToolBar(graphViewForm, aListener);
 
         popupMenu.addMenuListener(aListener);
@@ -248,6 +252,9 @@ public class StatisticTab extends PaneGuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.41  2003/11/15 21:15:29  zet
+Label restore action
+
 Revision 1.40  2003/11/09 02:18:37  zet
 put some info in the headers
 
