@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.8 2003/06/26 09:10:54 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.9 2003/06/29 17:51:44 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements SimpleInformation {
@@ -389,6 +389,26 @@ public class FileInfo implements SimpleInformation {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
+		/*
+		* int32			File Identifier 
+		* int32			File Network Identifier 
+		* List of String	Possible File Names 
+		* char[16]		File Md4 (binary) 
+		* int32			File Size 
+		* int32			File Downloaded 
+		* int32			Number of Sources 
+		* int32			Number of Clients 
+		* FileState		Current State of the Download 
+		* String		Chunks (one char by chunk '0'-'3') 
+		* String		Availability (one char by chunk, 0-255 sources) 
+		* Float			Download Rate 
+		* List of Time	Chunks Ages (last time each chunk has been seen) 
+		* Time			File Age (when download started) 
+		* FileFormat	File Format 
+		* String		File Preferred Name 
+		* OffsetTime	File Last Seen 
+		* int32			File Priority 
+		*/ 
 		this.setId( messageBuffer.readInt32() );
 		this.setNetwork( messageBuffer.readInt32() );
 		this.setNames( messageBuffer.readStringList() );
@@ -459,6 +479,9 @@ public class FileInfo implements SimpleInformation {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.9  2003/06/29 17:51:44  lemmstercvs01
+added some doku
+
 Revision 1.8  2003/06/26 09:10:54  lemmstercvs01
 added field for percent, store rate rounded
 
