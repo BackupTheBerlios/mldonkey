@@ -37,11 +37,12 @@ import net.mldonkey.g2gui.model.*;
 /**
  * Core
  *
- * @author $user$
- * @version $Id: Core.java,v 1.85 2003/08/20 14:26:19 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: Core.java,v 1.86 2003/08/22 10:28:22 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
+	private boolean connectionDenied;
 	private boolean pollModeEnabled;
 	private boolean initialized;
 	private boolean advancedMode;
@@ -179,10 +180,11 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			}
 		}	
 		catch ( SocketException e ) {
-			System.out.println( e.getMessage() );
-			System.out.println( "Iterator: " + messageBuffer.getIterator() 
-								+ "Buffer: " + messageBuffer.getBuffer().length );
-			e.printStackTrace();							
+			/* expect the core denies our connection attempt */
+			this.connectionDenied = true;
+			synchronized ( waiterObj ) {
+				waiterObj.notify();
+			}
 		}
 		catch ( IOException e ) {
 			e.printStackTrace();
@@ -479,10 +481,20 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		message.sendMessage( connection );
 		message = null;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getConnectionDenied()
+	 */
+	public boolean getConnectionDenied() {
+		return this.connectionDenied;
+	}
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.86  2003/08/22 10:28:22  lemmster
+catch wrong "allowed_ips" values (connection denied)
+
 Revision 1.85  2003/08/20 14:26:19  dek
 work on build-in-link handler, now sendig out poll-mode request, 
 not only creating it...

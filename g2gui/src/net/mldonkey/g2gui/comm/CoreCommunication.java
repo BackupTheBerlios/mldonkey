@@ -36,8 +36,8 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
 /**
  * CoreCommunication
  *
- * @author $user$
- * @version $Id: CoreCommunication.java,v 1.30 2003/08/21 11:58:23 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: CoreCommunication.java,v 1.31 2003/08/22 10:28:22 lemmster Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -114,6 +114,10 @@ public interface CoreCommunication extends Runnable {
 	 */
 	boolean getBadPassword();
 	
+	/**
+	 * @return true if the connection was denied by the core
+	 */	
+	boolean getConnectionDenied();
 	/**
 	 * The protocol version we are talking with the core
 	 * @return the protocol version 

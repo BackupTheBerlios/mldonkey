@@ -53,8 +53,8 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Starts the hole thing
  *
- * @author $user$
- * @version $Id: G2Gui.java,v 1.21 2003/08/20 14:26:19 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: G2Gui.java,v 1.22 2003/08/22 10:28:22 lemmster Exp $ 
  *
  */
 public class G2Gui {
@@ -101,7 +101,7 @@ public class G2Gui {
 		} 		
 		waiterObject = new Object();
 		
-		if (notProcessingLink){	
+		if ( notProcessingLink ){	
 			myPrefs = new Preferences( preferenceStore );
 			
 			/* load the preferences */
@@ -165,39 +165,41 @@ public class G2Gui {
 			socket = ( Socket ) socketPool.checkOut();
 		}
 		catch ( UnknownHostException e ) {
-			if (notProcessingLink) {
+			if ( notProcessingLink ) {
 				splashShell.dispose();
 				box.setText( G2GuiResources.getString( "G2_INVALID_ADDRESS") );
 				box.setMessage( G2GuiResources.getString( "G2_ILLEGAL_ADDRESS" ) );
 				int rc = box.open();
-				if (rc == SWT.NO) {
+				if ( rc == SWT.NO ) {
 					shell.dispose();
 					display.dispose();
-				} else {
+				}
+				else {
 					myPrefs.open( shell, null );
-					relaunchSelf(args);
+					relaunchSelf( args );
 				}
 			}
 			else {
 				myPrefs = new Preferences( preferenceStore );
 				shell = new Shell();
 				myPrefs.open( shell, null);
-				relaunchSelf(args);
+				relaunchSelf( args );
 			}
 			return;
 		}
 		catch ( IOException e ) {
-			if (notProcessingLink) {
+			if ( notProcessingLink ) {
 				splashShell.dispose(); 
 				box.setText( G2GuiResources.getString( "G2_IOEXCEPTION") );
 				box.setMessage( G2GuiResources.getString( "G2_CORE_NOT_RUNNING" ) );
 				int rc = box.open();
-				if (rc == SWT.NO) {
+				if ( rc == SWT.NO ) {
 					shell.dispose();
 					display.dispose();
-				} else {
+				}
+				else {
 					myPrefs.open( shell, null );
-					relaunchSelf(args);
+					relaunchSelf( args );
 				}
 			}
 			else {
@@ -228,15 +230,22 @@ public class G2Gui {
 			catch ( InterruptedException e1 ) { }
 		}
 		/* did the core receive "bad password" */
-		if ( core.getBadPassword() ) {
+		if ( core.getConnectionDenied() ) {
+			if ( notProcessingLink )
+				connectDeniedHandling();
+		}
+		else if ( core.getBadPassword() ) {
 			core.disconnect();
-			if ( notProcessingLink ) badPasswordHandling(args);
-		} else {
-			if (notProcessingLink){
+			if ( notProcessingLink )
+				badPasswordHandling( args );
+		}
+		else {
+			if ( notProcessingLink ){
 				increaseBar( "Starting the view" ); 			
 				MainTab g2gui = new MainTab( core, shell );
-			} else {
-				sendDownloadLink(args);
+			}
+			else {
+				sendDownloadLink( args );
 			}
 		}
 		core.disconnect();
@@ -251,25 +260,26 @@ public class G2Gui {
 		 * this is for the handling of platform independent link-handling-hack
 		 * but this seems not to be important, as core ignores malformed links
 		 */
-		if ( args.length!= 0) return true;
-		else return false;
+		if ( args.length!= 0 )
+			return true;
+		else
+			return false;
 	}
 
 	/**
 	 * 
 	 */
-	private static void sendDownloadLink(String[] args) {
-		
+	private static void sendDownloadLink( String[] args ) {
 		//TODO creating message and send it out		
 		Object[] content = args;		
-		EncodeMessage link = new EncodeMessage(Message.S_DLLINK,content);		
-		link.sendMessage(socket);
+		EncodeMessage link = new EncodeMessage( Message.S_DLLINK, content );		
+		link.sendMessage( socket );
 	}
 
 	/**
 	 * relaunch the main method with killing the old one
 	 */
-	private static void relaunchSelf(String[] args) {
+	private static void relaunchSelf( String[] args)  {
 		shell.dispose();
 		launch( args );
 	}
@@ -278,20 +288,32 @@ public class G2Gui {
 	 * Raise an messagebox on badpassword exception
 	 * and send the password again
 	 */
-	public static void badPasswordHandling(String[] args) {
+	public static void badPasswordHandling( String[] args ) {
 		splashShell.dispose();
 		/* raise a warning msg */
 		box = new MessageBox( shell, SWT.ICON_WARNING | SWT.YES | SWT.NO );
 		box.setText( G2GuiResources.getString( "G2_LOGIN_INVALID" ) );
 		box.setMessage( G2GuiResources.getString( "G2_USER_PASS" ) );
 		int rc = box.open();
-		if (rc == SWT.NO) {
+		if ( rc == SWT.NO ) {
 			shell.dispose();
 			display.dispose();
-		} else {
-			myPrefs.open( shell, null );
-			relaunchSelf(args);
 		}
+		else {
+			myPrefs.open( shell, null );
+			relaunchSelf( args );
+		}
+	}
+	
+	public static void connectDeniedHandling() {
+		splashShell.dispose();
+		/* raise a warning msg */
+		box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
+		box.setText( G2GuiResources.getString( "G2_CONNECTION_DENIED" ) );
+		box.setMessage( G2GuiResources.getString( "G2_CONNECTION_ATTEMPT_DENIED" ) );
+		box.open();
+		shell.dispose();
+		display.dispose();
 	}
 
 	/**
@@ -323,6 +345,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.22  2003/08/22 10:28:22  lemmster
+catch wrong "allowed_ips" values (connection denied)
+
 Revision 1.21  2003/08/20 14:26:19  dek
 work on build-in-link handler, now sendig out poll-mode request, 
 not only creating it...
