@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.7 2003/07/07 15:32:43 dek Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.8 2003/07/07 17:39:18 dek Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -87,7 +87,6 @@ public class OptionsInfo extends Parent {
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.key = messageBuffer.readString();
 		this.setValue( messageBuffer.readString() );
-		System.out.println( "Option received & created\n" + this );	
 	}	
 
 	
@@ -191,6 +190,9 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.8  2003/07/07 17:39:18  dek
+removed debugging System.out.....
+
 Revision 1.7  2003/07/07 15:32:43  dek
 made Option-handling more natural
 
