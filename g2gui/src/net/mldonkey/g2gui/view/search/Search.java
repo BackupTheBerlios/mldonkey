@@ -50,7 +50,7 @@ import org.eclipse.swt.events.KeyEvent;
  * Search
  *
  * @author $user$
- * @version $Id: Search.java,v 1.6 2003/07/28 08:19:20 lemmstercvs01 Exp $ 
+ * @version $Id: Search.java,v 1.7 2003/07/30 19:32:02 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Search {
@@ -144,8 +144,8 @@ public abstract class Search {
 		for ( int i = 0; i < temp.size(); i++ ) {
 			itr.advance();
 			NetworkInfo elem = ( NetworkInfo ) itr.value();
-			/* exclude disabled and bittorrent (no search in there) */
-			if ( elem.isEnabled() && elem.getNetworkType() != NetworkInfo.Enum.BT )
+			/* exclude disabled and networks without servers */
+			if ( elem.isEnabled() && elem.hasServers() )
 				items.add( elem );
 		}
 		/* if more than 1 network is enabled, we need a "All" field */
@@ -181,6 +181,9 @@ public abstract class Search {
 
 /*
 $Log: Search.java,v $
+Revision 1.7  2003/07/30 19:32:02  lemmstercvs01
+using hasServers() instead of direct compare
+
 Revision 1.6  2003/07/28 08:19:20  lemmstercvs01
 get NetworkInfo by Enum instead of NetworkName
 
