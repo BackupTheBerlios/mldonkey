@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.4 2003/08/23 15:55:23 zet Exp $ 
+ * @version $Id: MainCoolBar.java,v 1.5 2003/08/23 16:18:44 lemmster Exp $ 
  *
  */
 public class MainCoolBar {
@@ -79,23 +79,14 @@ public class MainCoolBar {
 	 * 
 	 * @param mainTab
 	 */
-	public MainCoolBar( MainTab mainTab ) {
+	public MainCoolBar( MainTab mainTab, boolean size, boolean locked ) {
+		this.toolbarSmallButtons = size;
+		this.coolbarLocked = locked;
 		this.mainTab = mainTab;
 		this.shell = mainTab.getShell();
 		this.mainToolButtons = new ArrayList();
 		this.miscToolButtons = new ArrayList();
-		this.getInternalPrefStoreSettings();
 		this.createContent( mainTab.getMainComposite() );
-	}
-	
-	/**
-	 * 
-	 */
-	public void getInternalPrefStoreSettings() {
-		internalPrefStore.setDefault( "coolbarLocked", this.isCoolbarLocked() );
-		
-		this.setToolbarSmallButtons( internalPrefStore.getBoolean( "toolbarSmallButtons" ) );
-		this.setCoolbarLocked( internalPrefStore.getBoolean( "coolbarLocked" ) );
 	}
 	
 	/**
@@ -362,6 +353,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.5  2003/08/23 16:18:44  lemmster
+fixed locked/button size
+
 Revision 1.4  2003/08/23 15:55:23  zet
 remove unneeded import
 

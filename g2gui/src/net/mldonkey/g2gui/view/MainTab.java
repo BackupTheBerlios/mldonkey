@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.56 2003/08/23 15:49:28 lemmster Exp $ 
+ * @version $Id: MainTab.java,v 1.57 2003/08/23 16:18:44 lemmster Exp $ 
  *
  */
 public class MainTab implements Observer, ShellListener {
@@ -153,7 +153,9 @@ public class MainTab implements Observer, ShellListener {
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		horLine.setLayoutData( gridData );
 		
-		this.coolBar = new MainCoolBar( this );
+		this.coolBar = new MainCoolBar( this, 
+			internalPrefStore.getBoolean( "toolbarSmallButtons" ),
+			internalPrefStore.getBoolean( "coolbarLocked" ) );
 			
 		pageContainer = new Composite( mainComposite, SWT.NONE );			
 		pageContainer.setLayout( new StackLayout() );
@@ -413,6 +415,9 @@ public class MainTab implements Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.57  2003/08/23 16:18:44  lemmster
+fixed locked/button size
+
 Revision 1.56  2003/08/23 15:49:28  lemmster
 fix for prefs and refactoring
 
