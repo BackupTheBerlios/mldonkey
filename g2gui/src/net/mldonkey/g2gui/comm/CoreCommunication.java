@@ -20,6 +20,8 @@
  
 package net.mldonkey.g2gui.comm;
 
+import gnu.trove.TIntObjectHashMap;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Observer;
@@ -30,7 +32,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.21 2003/07/17 14:06:53 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.22 2003/07/23 17:02:18 lemmstercvs01 Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -68,6 +70,16 @@ public interface CoreCommunication {
 	 * @return all mldonkey-options
 	 */
 	OptionsInfoMap getOptionsInfoMap();
+	/**
+	 * @return all our current running downloads
+	 */
+	FileInfoIntMap getFileInfoIntMap();
+	/**
+	 * 
+	 * @return A Map with all the resultInfo obj
+	 */
+	TIntObjectHashMap getResultInfo();
+	
 	/**
 	 * Gets the socket the core is conntected through with mldonkey
 	 * @return The socket
