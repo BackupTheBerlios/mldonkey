@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.15 2003/07/06 14:13:22 dek Exp $ 
+ * @version $Id: Query.java,v 1.16 2003/07/10 10:59:21 dek Exp $ 
  *
  */
 public class Query implements SimpleInformation {
@@ -121,6 +121,27 @@ public class Query implements SimpleInformation {
 			this.defaultValue = messageBuffer.readString();
 		}
 	}
+	
+	/** (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		String result = "";
+		result += "\n\t" + node;
+			if ( node == EnumQuery.AND || node == EnumQuery.OR || node == EnumQuery.HIDDEN ) {
+				for ( int i = 0; i < queries.size(); i++ ) {	
+					result += queries.get( i ).toString();					
+					}
+				}
+			else if ( node == EnumQuery.AND_NOT  ) { result += "\nAND_NOT_QUERY"; }
+			else if ( node == EnumQuery.MODULE  ) { result += "\nMODULE_QUERY"; }
+			else {
+				result += "\n\t Comment: " + comment;
+				result += "\n\t Value: " + defaultValue;
+			}
+		return result;
+	}
+
 	
 	/**
 	 * creates an byte-stream, representing this object (in order to send it to our beloved mldonkey
@@ -362,6 +383,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.16  2003/07/10 10:59:21  dek
+toString() created (still very raw-output, but one can see, what's inside..)
+
 Revision 1.15  2003/07/06 14:13:22  dek
 "one-word-searching" now also works, only little bug
 
