@@ -39,6 +39,7 @@ import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.actions.AddClientAsFriendAction;
 import net.mldonkey.g2gui.view.viewers.actions.ClientDetailAction;
 import net.mldonkey.g2gui.view.viewers.actions.CopyED2KLinkToClipboardAction;
+import net.mldonkey.g2gui.view.viewers.actions.CopyPreviewLinkToClipboardAction;
 import net.mldonkey.g2gui.view.viewers.actions.ToggleClientsAction;
 import net.mldonkey.g2gui.view.viewers.actions.WebServicesAction;
 import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
@@ -90,7 +91,7 @@ import java.io.File;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.37 2004/03/25 18:30:37 psy Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.38 2004/03/25 19:17:18 psy Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -324,14 +325,18 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
         if (selectedFile != null) {
             String[] linkList = new String[ selectedFiles.size() ];
+            int[] fileIDList = new int[ selectedFiles.size() ];
 
-            for (int i = 0; i < selectedFiles.size(); i++)
+            for (int i = 0; i < selectedFiles.size(); i++) {
                 linkList[ i ] = new String(((FileInfo) selectedFiles.get(i)).getED2K());
-
+                fileIDList[ i ] = ((FileInfo) selectedFiles.get(i)).getId();
+            }
+                
             MenuManager clipboardMenu = new MenuManager(G2GuiResources.getString(
                         "TT_DOWNLOAD_MENU_COPYTO"));
             clipboardMenu.add(new CopyED2KLinkToClipboardAction(false, linkList));
             clipboardMenu.add(new CopyED2KLinkToClipboardAction(true, linkList));
+            clipboardMenu.add(new CopyPreviewLinkToClipboardAction(generatePreviewURL(), fileIDList));
             menuManager.add(clipboardMenu);
         }
 
@@ -369,15 +374,28 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         return false;
     }
 
-    private String generatePreviewURL(int fileID) {
+    /**
+     * This method generates the base-url which mldonkey uses for http file-preview
+     * @return a String which still needs a fileID concatenated to the end to be complete
+     */
+    private String generatePreviewURL() {
      	OptionsInfo http_port = 
      		(OptionsInfo) gView.getCore().getOptionsInfoMap().get("http_port");
     	
      	String url = "http://" + PreferenceLoader.getString("hostname") + ":" + 
-			http_port.getValue() + "/preview_download?q=" + fileID;
+			http_port.getValue() + "/preview_download?q=";
      	
-     	return url;
+     	return url; 
     }
+    
+    /**
+     * This method generates the full URL which mldonkey uses for http file-preview
+     * @return a complete preview-URL, including a fileID
+     */
+    private String generatePreviewURL(int fileID) {
+     	return generatePreviewURL() + fileID;
+    }
+    
     
     // Menu Actions
 
@@ -415,7 +433,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
     
     /**
-     * PreviewAction
+     * NetPreviewAction
      */
      private class NetPreviewAction extends Action {
          public NetPreviewAction() {
@@ -438,9 +456,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
          }
      }
     
-
-     
-    /**
+ 
+     /**
      * FileDetailAction
      */
     private class FileDetailAction extends Action {
@@ -716,6 +733,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.38  2004/03/25 19:17:18  psy
+added copy preview link to clipboard action
+
 Revision 1.37  2004/03/25 18:30:37  psy
 introduced http-preview
 
