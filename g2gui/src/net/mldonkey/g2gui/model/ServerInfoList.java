@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoList.java,v 1.6 2003/06/16 18:05:26 dek Exp $ 
+ * @version $Id: ServerInfoList.java,v 1.7 2003/06/16 20:08:38 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoList extends InfoMap {
@@ -59,13 +59,11 @@ public class ServerInfoList extends InfoMap {
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 		if ( this.infoMap.containsKey( id ) ) {
 			this.get( id ).readStream( messageBuffer );
-			System.out.println( "serverinfo object reused" );		
 		}
 		else {
 			ServerInfo serverInfo = new ServerInfo();
 			serverInfo.readStream( messageBuffer );
 			this.put( serverInfo.getServerId(), serverInfo );
-			System.out.println( "new serverinfo object created" );
 		}
 
 	}
@@ -84,7 +82,8 @@ public class ServerInfoList extends InfoMap {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void update( MessageBuffer messageBuffer ) {
-		// do nothing
+		int id = messageBuffer.readInt32();
+		this.get( id ).update( messageBuffer );
 	}
 
 	/**
@@ -101,11 +100,13 @@ public class ServerInfoList extends InfoMap {
 		}
 		this.infoMap = tempServerInfoList;		
 	}
-	
 }
 
 /*
 $Log: ServerInfoList.java,v $
+Revision 1.7  2003/06/16 20:08:38  lemmstercvs01
+opcode 13 added
+
 Revision 1.6  2003/06/16 18:05:26  dek
 refactored cleanTable
 

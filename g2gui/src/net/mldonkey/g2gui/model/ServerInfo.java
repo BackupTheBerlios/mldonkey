@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.2 2003/06/14 20:30:44 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.3 2003/06/16 20:08:38 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo implements Information {
 	/**
@@ -268,9 +268,21 @@ public class ServerInfo implements Information {
 		this.setNameOfServer( messageBuffer.readString() );
 		this.setDescOfServer( messageBuffer.readString() );
 	}
+	
+	/**
+	 * Updates the state of this object
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	public void update( MessageBuffer messageBuffer ) {
+		byte state = messageBuffer.readByte();
+		this.getConnectionState().setState( state );
+	}
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.3  2003/06/16 20:08:38  lemmstercvs01
+$opcode 13 added
+$
 $Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
 $cosmetic changes
 $$

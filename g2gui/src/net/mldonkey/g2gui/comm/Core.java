@@ -22,8 +22,6 @@
  */
 package net.mldonkey.g2gui.comm;
 
-import gnu.trove.TIntObjectHashMap;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -35,7 +33,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.18 2003/06/16 18:05:12 dek Exp $ 
+ * @version $Id: Core.java,v 1.19 2003/06/16 20:08:38 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -97,7 +95,6 @@ public class Core extends Thread implements CoreCommunication {
 	 * disConnects the Core from mldonkey @remote	 * 
 	 */
 	public void disconnect() {
-		System.out.println("core disconnected")
 		this.connected = false;
 	}
 
@@ -146,7 +143,7 @@ public class Core extends Thread implements CoreCommunication {
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private synchronized void decodeMessage( short opcode, MessageBuffer messageBuffer ) throws IOException 
+	private void decodeMessage( short opcode, MessageBuffer messageBuffer ) throws IOException 
 		{
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
@@ -165,6 +162,10 @@ public class Core extends Thread implements CoreCommunication {
 			case Message.R_FILE_ADD_SOURCE :				
 					this.fileAddSources.readStream( messageBuffer );
 					break;
+					
+			case Message.R_SERVER_STATE : 
+					this.serverInfoMap.update( messageBuffer );
+					break;		
 					
 			case Message.R_CLIENT_INFO :
 					this.clientInfoList.readStream( messageBuffer );
@@ -205,8 +206,6 @@ public class Core extends Thread implements CoreCommunication {
 
 			case Message.R_CONSOLE :				
 					this.consoleMessage.readStream( messageBuffer );
-					System.out.print( 
-						( ( ConsoleMessage ) this.consoleMessage ).getConsoleMessage() );
 					break;
 				
 			case Message.R_NETWORK_INFO :
@@ -225,8 +224,8 @@ public class Core extends Thread implements CoreCommunication {
 					 break;
 					 
 			case Message.R_CLEAN_TABLE :
-					( ( ServerInfoList )this.serverInfoMap ).clean( messageBuffer );
 					( ( ClientInfoList )this.clientInfoList ).clean( messageBuffer );
+					( ( ServerInfoList )this.serverInfoMap ).clean( messageBuffer );
 					break;
 
 			default :				
@@ -255,6 +254,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.19  2003/06/16 20:08:38  lemmstercvs01
+opcode 13 added
+
 Revision 1.18  2003/06/16 18:05:12  dek
 refactored cleanTable
 
