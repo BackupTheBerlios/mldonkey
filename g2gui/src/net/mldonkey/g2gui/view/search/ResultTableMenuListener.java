@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.model.Download;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
+import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
@@ -42,23 +43,20 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * ResultTableMenuListener
  *
  * @author $Author: lemmster $
- * @version $Id: ResultTableMenuListener.java,v 1.2 2003/08/22 19:29:16 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.3 2003/08/23 09:46:18 lemmster Exp $ 
  *
  */
-public class ResultTableMenuListener implements ISelectionChangedListener, IMenuListener {
+public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
 
 	private CTabItem cTabItem;
 
@@ -70,10 +68,6 @@ public class ResultTableMenuListener implements ISelectionChangedListener, IMenu
 
 	private ResultTableContentProvider tableContentProvider;
 
-	private CoreCommunication core;
-
-	private TableViewer tableViewer;
-	
 	private Clipboard clipboard;
 
 	/**
@@ -83,9 +77,7 @@ public class ResultTableMenuListener implements ISelectionChangedListener, IMenu
 	 * @param cTabItem The CTabItem in which the table res
 	 */
 	public ResultTableMenuListener( TableViewer tableViewer, CoreCommunication core, CTabItem cTabItem ) {
-		super();
-		this.tableViewer = tableViewer;
-		this.core = core;
+		super( tableViewer, core );
 		this.cTabItem = cTabItem;
 		this.resultInfoMap = this.core.getResultInfoIntMap();
 		this.tableContentProvider =
@@ -151,7 +143,7 @@ Yet			menuManager.add( webManager );
 		
 		/* columns toogle */
 		MenuManager columnsSubMenu = new MenuManager( G2GuiResources.getString( "TML_COLUMN" ) );
-		Table table = tableViewer.getTable();
+		Table table = ( ( TableViewer ) tableViewer ).getTable();
 		for ( int i = 0; i < table.getColumnCount(); i++ ) {
 			ToggleColumnsAction tCA = new ToggleColumnsAction( i );
 			if ( table.getColumn( i ).getResizable() ) tCA.setChecked( true );
@@ -193,27 +185,6 @@ Yet			menuManager.add( webManager );
 		}
 	}
 	
-	public boolean isFiltered( NetworkInfo.Enum networkType ) {
-		ViewerFilter[] viewerFilters = tableViewer.getFilters();
-		for ( int i = 0; i < viewerFilters.length; i++ ) {
-			if ( viewerFilters [ i ] instanceof NetworkFilter ) {
-				NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
-				for ( int j = 0; j < filter.getNetworkType().size(); j++ ) {
-					if ( filter.getNetworkType().get( j ).equals( networkType ) )
-						return true;					
-				}
-			}
-		}
-		return false;
-	}
-
-	public void toggleFilter( ViewerFilter viewerFilter, boolean toggle ) {
-		if ( toggle ) 
-			tableViewer.addFilter( viewerFilter );
-		else 
-			tableViewer.removeFilter( viewerFilter );
-	}
-
 	private class DownloadAction extends Action {
 		public DownloadAction() {
 			super();
@@ -285,6 +256,7 @@ Yet			menuManager.add( webManager );
 			setText( G2GuiResources.getString( "ST_WEBSERVICE1" ) );
 		}
 		public void run() {
+			//TODO add fake search
 		}
 	}
 	
@@ -294,7 +266,8 @@ Yet			menuManager.add( webManager );
 			setText( G2GuiResources.getString( "ST_REMOVE" ) );
 		}
 		public void run() {
-			tableViewer.getTable().remove( tableViewer.getTable().getSelectionIndices() );
+			( ( TableViewer ) tableViewer ).getTable().remove(
+				 ( ( TableViewer ) tableViewer ).getTable().getSelectionIndices() );
 		}
 	}
 
@@ -304,128 +277,17 @@ Yet			menuManager.add( webManager );
 			setText( G2GuiResources.getString( "ST_CLOSE" ) );
 		}
 		public void run() {
-			tableViewer.getTable().dispose();
+			( ( TableViewer ) tableViewer ).getTable().dispose();
 			cTabItem.dispose();
-		}
-	}
-
-	private class ToggleColumnsAction extends Action {
-		private int column;
-		private Table table = tableViewer.getTable();
-		private TableColumn tableColumn;
-			
-		public ToggleColumnsAction( int column ) {
-			super( "", Action.AS_CHECK_BOX );
-			this.column = column;
-			tableColumn = table.getColumn( column );
-			setText( tableColumn.getText() );
-		}
-			
-		public  void run () {
-			if ( !isChecked() ) {
-				tableColumn.setWidth( 0 );
-				tableColumn.setResizable( false );
-			} else {
-				tableColumn.setResizable( true );
-				tableColumn.setWidth( 100 );
-			}
-		}
-	}
-
-	private class AllFiltersAction extends Action {
-		public AllFiltersAction() {
-			super();
-			setText( G2GuiResources.getString( "TML_NO_FILTERS" ) );
-		}
-		public void run() {
-			ViewerFilter[] viewerFilters = tableViewer.getFilters();
-			for ( int i = 0; i < viewerFilters.length; i++ ) 
-				toggleFilter( viewerFilters[ i ], false );
-		}
-	}
-		
-	private class NetworkFilterAction extends Action {
-		private NetworkInfo.Enum networkType;
-	
-		public NetworkFilterAction( String name, NetworkInfo.Enum networkType ) {
-			super( name, Action.AS_CHECK_BOX );
-			this.networkType = networkType;
-		}
-		public void run() {
-			if ( !isChecked() ) {
-				ViewerFilter[] viewerFilters = tableViewer.getFilters();
-				for ( int i = 0; i < viewerFilters.length; i++ ) {
-					if ( viewerFilters[i] instanceof NetworkFilter ) {
-						NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
-						for ( int j = 0; j < filter.getNetworkType().size(); j++ ) {
-							if ( filter.getNetworkType().get( j ) == networkType )
-								if ( filter.getNetworkType().size() == 1 )
-									toggleFilter( viewerFilters[ i ], false );
-								else {
-									filter.remove( networkType );
-									tableViewer.refresh();
-								}									
-						}	
-					}
-				}
-			}
-			else {
-				ViewerFilter[] viewerFilters = tableViewer.getFilters();
-				for ( int i = 0; i < viewerFilters.length; i++ ) {
-					if ( viewerFilters[i] instanceof NetworkFilter ) {
-						NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
-						filter.add( networkType );
-						tableViewer.refresh();
-						return;
-					}
-				}
-				NetworkFilter filter = new NetworkFilter();
-				filter.add( networkType );
-				toggleFilter( filter, true );
-			}
-		}
-	}
-
-	public static class NetworkFilter extends ViewerFilter {
-		private List networkType;
-		
-		public NetworkFilter() {
-			this.networkType = new ArrayList();	
-		}	
-		
-		public List getNetworkType () {
-			return networkType;
-		}
-		
-		public boolean add( NetworkInfo.Enum enum ) {
-			return this.networkType.add( enum );
-		}
-		
-		public boolean remove( NetworkInfo.Enum enum ) {
-			return this.networkType.remove( enum );
-		}		 
-	
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.ViewerFilter#
-		 * select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-		 */
-		public boolean select( Viewer viewer, Object parentElement, Object element ) {
-			if ( element instanceof ResultInfo ) {
-				ResultInfo result = ( ResultInfo ) element;
-				for ( int i = 0; i < this.networkType.size(); i++ ) {
-					if ( result.getNetwork().getNetworkType() == networkType.get( i ) )
-						return true;
-				}	
-				return false;
-			}
-			return true;
-
 		}
 	}
 }
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.3  2003/08/23 09:46:18  lemmster
+superclass TableMenuListener added
+
 Revision 1.2  2003/08/22 19:29:16  lemmster
 additiv filters
 

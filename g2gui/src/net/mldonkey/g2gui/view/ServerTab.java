@@ -29,13 +29,13 @@ import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.server.TableContentProvider;
-import net.mldonkey.g2gui.view.server.TableLabelProvider;
-import net.mldonkey.g2gui.view.server.TableMenuListener;
-import net.mldonkey.g2gui.view.server.TableSorter;
-import net.mldonkey.g2gui.view.server.TableMenuListener.EnumStateFilter;
+import net.mldonkey.g2gui.view.server.ServerTableContentProvider;
+import net.mldonkey.g2gui.view.server.ServerTableLabelProvider;
+import net.mldonkey.g2gui.view.server.ServerTableMenuListener;
+import net.mldonkey.g2gui.view.server.ServerTableSorter;
 import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  * @author $Author: lemmster $
- * @version $Id: ServerTab.java,v 1.13 2003/08/23 08:30:07 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.14 2003/08/23 09:46:18 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -159,10 +159,10 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		table.getTable().setHeaderVisible( true );
 		table.setUseHashlookup( true );
 		
-		table.setContentProvider( new TableContentProvider() );
-		table.setLabelProvider( new TableLabelProvider() );
-		table.setSorter( new TableSorter() );
-		TableMenuListener tableMenuListener = new TableMenuListener( table, core );
+		table.setContentProvider( new ServerTableContentProvider() );
+		table.setLabelProvider( new ServerTableLabelProvider() );
+		table.setSorter( new ServerTableSorter() );
+		ServerTableMenuListener tableMenuListener = new ServerTableMenuListener( table, core );
 		table.addSelectionChangedListener( tableMenuListener );
 		MenuManager popupMenu = new MenuManager( "" );
 		popupMenu.setRemoveAllWhenShown( true );
@@ -180,9 +180,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			tableColumn.addListener( SWT.Selection, new Listener() {
 				public void handleEvent( Event e ) {
 					/* set the column to sort */
-					( ( TableSorter ) table.getSorter() ).setColumnIndex( columnIndex );
+					( ( ServerTableSorter ) table.getSorter() ).setColumnIndex( columnIndex );
 					/* set the way to sort (ascending/descending) */
-					( ( TableSorter ) table.getSorter() ).setLastSort( ascending );
+					( ( ServerTableSorter ) table.getSorter() ).setLastSort( ascending );
 
 					/* get the data for all tableitems */
 					TableItem[] items = table.getTable().getItems();
@@ -228,7 +228,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		
 		/* set the state filter if preference says so */
 		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) ) {
-			TableMenuListener.EnumStateFilter filter = new TableMenuListener.EnumStateFilter();
+			ServerTableMenuListener.EnumStateFilter filter = new ServerTableMenuListener.EnumStateFilter();
 			filter.add( EnumState.CONNECTED );
 			table.addFilter( filter );
 		}
@@ -291,8 +291,8 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) && this.servers.getConnected() != itemCount ) {
 			ViewerFilter[] filters = table.getFilters();
 			for ( int i = 0; i < filters.length; i++ )
-				if ( filters[ i ] instanceof TableMenuListener.EnumStateFilter ) {
-					TableMenuListener.EnumStateFilter filter = ( EnumStateFilter ) filters[ i ];
+				if ( filters[ i ] instanceof ServerTableMenuListener.EnumStateFilter ) {
+					TableMenuListener.EnumStateFilter filter = ( TableMenuListener.EnumStateFilter ) filters[ i ];
 					for ( int j = 0; j < filter.getEnumState().size(); j++ ) {
 						if ( filter.getEnumState().get( j ) == EnumState.CONNECTED )
 							table.refresh();
@@ -355,10 +355,10 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	public void setFilter( NetworkInfo.Enum enum ) {
 		ViewerFilter[] filters = table.getFilters();
 		for ( int i = 0; i < filters.length; i++ ) {
-			if ( filters[ i ] instanceof TableMenuListener.NetworkFilter )
+			if ( filters[ i ] instanceof ServerTableMenuListener.NetworkFilter )
 				table.removeFilter( filters[ i ] );
 		}
-		TableMenuListener.NetworkFilter filter = new TableMenuListener.NetworkFilter();
+		ServerTableMenuListener.NetworkFilter filter = new ServerTableMenuListener.NetworkFilter();
 		filter.add( enum );
 		table.addFilter( filter );
 	}
@@ -371,19 +371,19 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) ) {
 			/* first remove all EnumState filters */
 			for ( int i = 0; i < table.getFilters().length; i++ ) {
-				if ( table.getFilters()[ i ] instanceof TableMenuListener.EnumStateFilter )
+				if ( table.getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateFilter )
 					table.removeFilter( table.getFilters()[ i ] );
 			}
 			/* now add the new one */
-			TableMenuListener.EnumStateFilter filter = new TableMenuListener.EnumStateFilter();
+			ServerTableMenuListener.EnumStateFilter filter = new ServerTableMenuListener.EnumStateFilter();
 			filter.add( EnumState.CONNECTED );
 			table.addFilter( filter );
 		}
 		else {
 			ViewerFilter[] filters = table.getFilters();
 			for ( int i = 0; i < filters.length; i++ ) {
-				if ( table.getFilters()[ i ] instanceof TableMenuListener.EnumStateFilter ) {
-					TableMenuListener.EnumStateFilter filter = ( EnumStateFilter ) filters[ i ];
+				if ( table.getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateFilter ) {
+					TableMenuListener.EnumStateFilter filter = ( TableMenuListener.EnumStateFilter ) filters[ i ];
 					if ( filter.contains( EnumState.CONNECTED ) ) {
 						if (  filter.getEnumState().size() == 1 )
 							table.removeFilter( filter );
@@ -401,6 +401,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.14  2003/08/23 09:46:18  lemmster
+superclass TableMenuListener added
+
 Revision 1.13  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 

@@ -33,6 +33,7 @@ import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -54,26 +55,23 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * 
  * DownloadTableTreeMenuListener
  *
- * @author $Author: zet $
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.14 2003/08/22 23:25:15 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.15 2003/08/23 09:46:18 lemmster Exp $ 
  *
  */
-public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
+public class DownloadTableTreeMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
 
 	private FileInfo lastSelectedFile, selectedFile;
 	private TreeClientInfo selectedClient;
-	private ArrayList selectedClients = new ArrayList();
-	private ArrayList selectedFiles = new ArrayList();
-	private TableTreeViewer tableTreeViewer;
+	private List selectedClients = new ArrayList();
+	private List selectedFiles = new ArrayList();
 	private TableViewer clientTableViewer;
 	private DownloadTableTreeContentProvider tableTreeContentProvider;
-	private CoreCommunication mldonkey;
 	private boolean createClientTable = false;
 	
 	// move these external some day
@@ -114,10 +112,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	};
 		
 	public DownloadTableTreeMenuListener (TableTreeViewer tableTreeViewer, TableViewer clientTableViewer, CoreCommunication mldonkey) {
-
-		this.tableTreeViewer = tableTreeViewer;
+		super( tableTreeViewer, mldonkey );
 		this.clientTableViewer = clientTableViewer;
-		this.mldonkey = mldonkey;
 		tableTreeContentProvider = (DownloadTableTreeContentProvider) tableTreeViewer.getContentProvider();
 
 	}
@@ -231,7 +227,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		menuManager.add(new Separator());
 		MenuManager columnsSubMenu = new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_COLUMNS"));
 		
-		Table table = tableTreeViewer.getTableTree().getTable();
+		Table table = ( ( TableTreeViewer ) tableViewer ).getTableTree().getTable();
 		for (int i = 0; i < table.getColumnCount(); i++) {
 			ToggleColumnsAction tCA = new ToggleColumnsAction(i);
 			if (table.getColumn(i).getResizable()) tCA.setChecked(true);
@@ -243,7 +239,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		// filter submenu			
 		MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_FILTER"));
 		AllFiltersAction aFA = new AllFiltersAction();
-		if (tableTreeViewer.getFilters().length == 0) aFA.setChecked(true);
+		if (tableViewer.getFilters().length == 0) aFA.setChecked(true);
 		filterSubMenu.add(aFA);
 		
 		filterSubMenu.add(new Separator());
@@ -255,7 +251,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		
 		filterSubMenu.add(new Separator());
 			
-		NetworkInfo[] networks = mldonkey.getNetworkInfoMap().getNetworks();
+		NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
 		
 		for ( int i = 0; i < networks.length; i++ ) {
 			NetworkInfo network = networks[ i ];
@@ -282,23 +278,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		
 	// Helpers
 			
-	public boolean isFiltered( NetworkInfo.Enum networkType ) {
-			ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
-			for ( int i = 0; i < viewerFilters.length; i++ ) {
-				if ( viewerFilters [ i ] instanceof NetworkFilter ) {
-					NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
-					for ( int j = 0; j < filter.getNetworkType().size(); j++ ) {
-						if ( filter.getNetworkType().get( j ).equals( networkType ) )
-							return true;					
-					}
-				}
-			}
-			return false;
-	}
-	
-	
 	public boolean isFiltered(EnumFileState fileState) {
-		ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+		ViewerFilter[] viewerFilters = tableViewer.getFilters();
 		for (int i = 0; i < viewerFilters.length; i++) {
 			if (viewerFilters [ i ] instanceof FileStateFilter)
 				if (((FileStateFilter) viewerFilters[ i ]).getFileStateType().equals(fileState))
@@ -309,7 +290,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	
 	
 	public boolean isFiltered( String[] extensions ) {
-				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+				ViewerFilter[] viewerFilters = tableViewer.getFilters();
 				for ( int i = 0; i < viewerFilters.length; i++ ) {
 					if ( viewerFilters [ i ] instanceof FileExtensionsFilter ) {
 						FileExtensionsFilter filter = ( FileExtensionsFilter ) viewerFilters[ i ];
@@ -323,17 +304,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 				return false;
 		}
 			
-	public void toggleFilter(ViewerFilter viewerFilter, boolean toggle) {
-	//	tableTreeContentProvider.closeAllEditors();
-	
-		if (toggle) 
-			tableTreeViewer.addFilter(viewerFilter);
-		else 
-			tableTreeViewer.removeFilter(viewerFilter);
-			
-		tableTreeContentProvider.updateAllEditors();
-	}
-		
 	// Menu Actions
 	
 	class VerifyChunksAction extends Action {
@@ -366,7 +336,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		public void run() {
 			for (int i = 0; i < selectedClients.size(); i++) {
 				TreeClientInfo selectedClientInfo = (TreeClientInfo) selectedClients.get(i);
-					ClientInfo.addFriend(mldonkey, selectedClientInfo.getClientInfo().getClientid());
+					ClientInfo.addFriend(core, selectedClientInfo.getClientInfo().getClientid());
 			}
 		}
 	}
@@ -495,24 +465,13 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		}
 		public void run() {
 		//	tableTreeContentProvider.closeAllEditors();
-			if (expand) tableTreeViewer.expandAll();
-			else tableTreeViewer.collapseAll();
+			if (expand) ( ( TableTreeViewer ) tableViewer ).expandAll();
+			else ( ( TableTreeViewer ) tableViewer ).collapseAll();
 			tableTreeContentProvider.updateAllEditors();
 			
 		}
 	
 	}
-	
-	class AllFiltersAction extends Action {
-		public AllFiltersAction() {
-			super(G2GuiResources.getString("TT_DOWNLOAD_MENU_FILTER_ALL"), Action.AS_CHECK_BOX);
-		}
-		public void run() {
-			ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
-			for (int i = 0; i < viewerFilters.length; i++) 
-				toggleFilter(viewerFilters[ i ], false);
-		}
-	}	
 	
 	private class NetworkFilterAction extends Action {
 		private NetworkInfo.Enum networkType;
@@ -523,7 +482,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		}
 		public void run() {
 			if ( !isChecked() ) {
-				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+				ViewerFilter[] viewerFilters = tableViewer.getFilters();
 				for ( int i = 0; i < viewerFilters.length; i++ ) {
 					if ( viewerFilters[i] instanceof NetworkFilter ) {
 						NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
@@ -533,7 +492,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 									toggleFilter( viewerFilters[ i ], false );
 								else {
 									filter.remove( networkType );
-									tableTreeViewer.refresh();
+									tableViewer.refresh();
 									tableTreeContentProvider.updateAllEditors();
 								}									
 						}	
@@ -541,12 +500,12 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 				}
 			}
 			else {
-				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+				ViewerFilter[] viewerFilters = tableViewer.getFilters();
 				for ( int i = 0; i < viewerFilters.length; i++ ) {
 					if ( viewerFilters[i] instanceof NetworkFilter ) {
 						NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
 						filter.add( networkType );
-						tableTreeViewer.refresh();
+						tableViewer.refresh();
 						tableTreeContentProvider.updateAllEditors();
 						return;
 					}
@@ -569,7 +528,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		public void run() {
 		
 			if (isChecked()) {
-				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+				ViewerFilter[] viewerFilters = tableViewer.getFilters();
 				for (int i = 0; i < viewerFilters.length; i++) {
 					if (viewerFilters[i] instanceof FileStateFilter)
 						if (((FileStateFilter) viewerFilters[i]).getFileStateType() == fileState) {
@@ -591,7 +550,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		}
 		public void run() {
 			if ( !isChecked() ) {
-				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+				ViewerFilter[] viewerFilters = tableViewer.getFilters();
 				for ( int i = 0; i < viewerFilters.length; i++ ) {
 					if ( viewerFilters[i] instanceof FileExtensionsFilter ) {
 						FileExtensionsFilter filter = ( FileExtensionsFilter ) viewerFilters[ i ];
@@ -602,7 +561,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 									toggleFilter( viewerFilters[ i ], false );
 								} else {
 									filter.remove( fileExtensions );
-									tableTreeViewer.refresh();
+									tableViewer.refresh();
 									tableTreeContentProvider.updateAllEditors();
 								}									
 							}
@@ -611,12 +570,12 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 				}
 			}
 			else {
-				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+				ViewerFilter[] viewerFilters = tableViewer.getFilters();
 				for ( int i = 0; i < viewerFilters.length; i++ ) {
 					if ( viewerFilters[i] instanceof FileExtensionsFilter ) {
 						FileExtensionsFilter filter = ( FileExtensionsFilter ) viewerFilters[ i ];
 						filter.add( extensions );
-						tableTreeViewer.refresh();
+						tableViewer.refresh();
 						tableTreeContentProvider.updateAllEditors();
 						return;
 					}
@@ -665,70 +624,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		}
 	}	
 	
-	class ToggleColumnsAction extends Action {
-		
-		private int column;
-		private Table table = tableTreeViewer.getTableTree().getTable();
-		private TableColumn tableColumn;
-		public ToggleColumnsAction (int column) {
-			super("", Action.AS_CHECK_BOX);
-			this.column = column;
-			tableColumn = table.getColumn(column);
-			setText(tableColumn.getText());
-		}
-		
-		public  void run () {
-			if (!isChecked()) {
-				tableColumn.setWidth(0);
-				tableColumn.setResizable(false);
-			} else {
-				tableColumn.setResizable(true);
-				tableColumn.setWidth(100);
-			}
-		}
-	
-	}
-	
 	// Filters	
-	public static class NetworkFilter extends ViewerFilter {
-		private List networkType;
-
-		public NetworkFilter() {
-			this.networkType = new ArrayList();
-		}
-
-		public List getNetworkType() {
-			return networkType;
-		}
-
-		public boolean add(NetworkInfo.Enum enum) {
-			return this.networkType.add(enum);
-		}
-
-		public boolean remove(NetworkInfo.Enum enum) {
-			return this.networkType.remove(enum);
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-		 */
-		public boolean select(
-			Viewer viewer,
-			Object parentElement,
-			Object element) {
-			if (element instanceof FileInfo) {
-				FileInfo fileInfo = (FileInfo) element;
-				for (int i = 0; i < this.networkType.size(); i++) {
-					if (fileInfo.getNetwork().getNetworkType()
-						== networkType.get(i))
-						return true;
-				}
-				return false;
-			}
-			return true;
-		}
-	}
-	
 	public class FileStateFilter extends ViewerFilter {
 		
 		private EnumFileState fileState;
@@ -798,11 +694,14 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.15  2003/08/23 09:46:18  lemmster
+superclass TableMenuListener added
+
 Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/22 14:30:45  lemmster
 verify chunks added
