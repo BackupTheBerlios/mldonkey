@@ -26,14 +26,13 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 /**
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.6 2003/11/27 15:33:24 zet Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.7 2003/11/27 15:49:24 zet Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -135,18 +134,30 @@ public class G2GuiAdvanced extends PreferencePage {
 				composite ) ;
 		updateDelayEditor.setValidRange( 0, 600 );
 		setupEditor( updateDelayEditor );
-	
-		setupEditor( 
-		     new StringFieldEditor( 
-		        "defaultWebBrowser",
-		        G2GuiResources.getString( "PREF_DISPLAY_DEFAULT_BROWSER" ),
-		        composite ) );
 		
+		
+		GCJFileFieldEditor defaultBrowserField =
+				new GCJFileFieldEditor( "defaultWebBrowser", 
+				G2GuiResources.getString( "PREF_DISPLAY_DEFAULT_BROWSER" ), 
+		        true, 
+		        composite );
+			
+		if ((System.getProperty("os.name").length() > 7) &&
+			System.getProperty("os.name").substring(0, 7).equals("Windows")) {
+			defaultBrowserField.setFileExtensions( new String[] { "*.exe;*.bat" } );
+		} else {
+			defaultBrowserField.setFileExtensions( new String[] {"*"});
+		}
+				
+		setupEditor(defaultBrowserField);		
 	
 	}
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.7  2003/11/27 15:49:24  zet
+filebrowser
+
 Revision 1.6  2003/11/27 15:33:24  zet
 defWebBrowser
 
