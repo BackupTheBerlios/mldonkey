@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.*;
  * ExtendedFontFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedFontFieldEditor.java,v 1.3 2003/07/03 08:59:06 dek Exp $ 
+ * @version $Id: ExtendedFontFieldEditor.java,v 1.4 2003/07/03 09:42:34 dek Exp $ 
  *
  */
 public class ExtendedFontFieldEditor extends FieldEditor {
@@ -83,6 +83,14 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 	 */
 	public boolean hasChanged() {
 		return hasChanged;
+	}
+	
+	/**
+	 * Give me your font ;-)
+	 * @return current font
+	 */
+	public Font getFont() {
+		return font;
 	}
 
 	/* (non-Javadoc)
@@ -137,16 +145,24 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 	 * @return the selected font
 	 */
 	public String toString() {
-		if ( font != null && font.getFontData() != null )	{			
-			return font.toString();}
-		
-		return "";
+		String result = "";
+		if ( font != null && font.getFontData() != null )	{
+			result += font.getFontData()[0].getName();
+			result += " | ";
+			result += font.getFontData()[0].getStyle();
+			result += " | ";
+			result += font.getFontData()[0].getHeight();
+			}
+		return result;
 	}
 
 }
 
 /*
 $Log: ExtendedFontFieldEditor.java,v $
+Revision 1.4  2003/07/03 09:42:34  dek
+now saving Font as string representation
+
 Revision 1.3  2003/07/03 08:59:06  dek
 debugging deleted
 
