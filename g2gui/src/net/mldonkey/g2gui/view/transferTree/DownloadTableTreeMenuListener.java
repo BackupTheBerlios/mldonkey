@@ -59,8 +59,7 @@ import org.eclipse.swt.widgets.Table;
  * 
  * DownloadTableTreeMenuListener
  *
- *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.17 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.18 2003/08/23 20:33:01 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -171,29 +170,44 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 
 	// Build the menu
 	
+	public boolean selectedFileListContains(EnumFileState e) {
+		for (int i = 0; i < selectedFiles.size(); i++) 
+			if ( ((FileInfo)selectedFiles.get(i)).getState().getState() == e)
+				return true;
+		return false;
+	}
+	
+	public boolean selectedFileListContainsOtherThan(EnumFileState e) {
+		for (int i = 0; i < selectedFiles.size(); i++) 
+			if ( ((FileInfo)selectedFiles.get(i)).getState().getState() != e)
+				return true;
+		return false;
+	}
+	
+	
 	public void fillContextMenu(IMenuManager menuManager) {
 
 		if (selectedFile != null
-			&& selectedFile.getState().getState() == EnumFileState.DOWNLOADED)
+			&& selectedFileListContains(EnumFileState.DOWNLOADED))
 			menuManager.add(new CommitAction());
 
 		if (selectedFile != null)
 			menuManager.add(new FileDetailAction());
 
 		if (selectedFile != null
-			&& selectedFile.getState().getState() == EnumFileState.DOWNLOADING)
+			&& selectedFileListContains(EnumFileState.DOWNLOADING))
 			menuManager.add(new PauseAction());
 
 		if (selectedFile != null
-			&& selectedFile.getState().getState() == EnumFileState.PAUSED)
+			&& selectedFileListContains(EnumFileState.PAUSED))
 			menuManager.add(new ResumeAction());
 
 		if (selectedFile != null
-			&& selectedFile.getState().getState() != EnumFileState.DOWNLOADED)
+			&& selectedFileListContainsOtherThan(EnumFileState.DOWNLOADED))
 			menuManager.add(new CancelAction());
 
 		if (selectedFile != null
-			&& selectedFile.getState().getState() != EnumFileState.DOWNLOADED)
+			&& selectedFileListContainsOtherThan(EnumFileState.DOWNLOADED))
 		{
 			MenuManager prioritySubMenu =
 				new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY"));
@@ -359,8 +373,11 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 				setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_PAUSE"));
 			}
 			public void run() {
-				for (int i = 0; i < selectedFiles.size(); i++)	
-					((FileInfo) selectedFiles.get(i)).setState(EnumFileState.PAUSED);
+				for (int i = 0; i < selectedFiles.size(); i++) {	
+					FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
+					if (fileInfo.getState().getState() == EnumFileState.DOWNLOADING)
+						fileInfo.setState(EnumFileState.PAUSED);
+				}
 			}
 	}
 	
@@ -386,9 +403,11 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 			setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_RESUME"));
 		}
 		public void run() {
-			for (int i = 0; i < selectedFiles.size(); i++)	
-				((FileInfo) selectedFiles.get(i)).setState(EnumFileState.DOWNLOADING);
-			
+			for (int i = 0; i < selectedFiles.size(); i++) {	
+				FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
+				if (fileInfo.getState().getState() == EnumFileState.PAUSED)
+					fileInfo.setState(EnumFileState.DOWNLOADING);
+			}
 		}
 	}
 	
@@ -406,8 +425,11 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 			reallyCancel.setMessage( G2GuiResources.getString( "TT_REALLY_CANCEL" ) + " (" + selectedFiles.size() + ")" );
 			int answer = reallyCancel.open();
 			if ( answer == SWT.YES ) {
-				for (int i = 0; i < selectedFiles.size(); i++)	
-					((FileInfo) selectedFiles.get(i)).setState(EnumFileState.CANCELLED);
+				for (int i = 0; i < selectedFiles.size(); i++) {	
+				FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
+				if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
+					fileInfo.setState(EnumFileState.CANCELLED);
+				}
 				
 			}
 				
@@ -419,8 +441,11 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 			super(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_HIGH"), Action.AS_CHECK_BOX);
 		}
 		public void run() {
-			for (int i = 0; i < selectedFiles.size(); i++)	
-				((FileInfo) selectedFiles.get(i)).setPriority(EnumPriority.HIGH);
+			for (int i = 0; i < selectedFiles.size(); i++) {	
+				FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
+				if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
+					fileInfo.setPriority(EnumPriority.HIGH);
+			}
 		}
 		public boolean isChecked() {
 			return (selectedFile.getPriority() == EnumPriority.HIGH);
@@ -433,8 +458,11 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 			super(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_NORMAL"), Action.AS_CHECK_BOX);
 					}
 		public void run() {
-			for (int i = 0; i < selectedFiles.size(); i++)	
-				((FileInfo) selectedFiles.get(i)).setPriority(EnumPriority.NORMAL);
+			for (int i = 0; i < selectedFiles.size(); i++) {	
+				FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
+				if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
+					fileInfo.setPriority(EnumPriority.NORMAL);
+			}
 		}
 		public boolean isChecked() {
 			return (selectedFile.getPriority() == EnumPriority.NORMAL);
@@ -446,8 +474,11 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 			super(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_LOW"), Action.AS_CHECK_BOX);
 		}
 		public void run() {
-			for (int i = 0; i < selectedFiles.size(); i++)	
-					((FileInfo) selectedFiles.get(i)).setPriority(EnumPriority.LOW);
+			for (int i = 0; i < selectedFiles.size(); i++) {	
+				FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
+				if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
+					fileInfo.setPriority(EnumPriority.LOW);
+			}
 		}
 		public boolean isChecked() {
 					return (selectedFile.getPriority() == EnumPriority.LOW);
@@ -695,6 +726,9 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.18  2003/08/23 20:33:01  zet
+multi select actions
+
 Revision 1.17  2003/08/23 15:21:37  zet
 remove @author
 
