@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.51 2003/09/15 22:10:46 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.52 2003/09/16 01:26:44 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -316,6 +316,7 @@ public class FileInfo extends Parent implements Observer {
 		 * be AND'ed with 0xFFFFFFFFL so that it can be treated
 		 * as a signed long.
 		 */
+		 
 		long result = ( size & 0xFFFFFFFFL );
 		return result;
 	}
@@ -423,7 +424,7 @@ public class FileInfo extends Parent implements Observer {
 		
 		this.setPriority( messageBuffer.readSignedInt32() );
 		
-		this.stringSize = calcStringSize( this.size );
+		this.stringSize = calcStringSize( this.getSize() );
 		
 		updateETA();
 		
@@ -588,7 +589,7 @@ public class FileInfo extends Parent implements Observer {
 		this.downloaded = i;
 		
 		String oldStringDownloaded = stringDownloaded;
-		this.stringDownloaded = calcStringSize( this.downloaded );
+		this.stringDownloaded = calcStringSize( this.getDownloaded() );
 		
 		if (!oldStringDownloaded.equals(stringDownloaded)) {
 			changedProperties.add(CHANGED_DOWNLOADED);
@@ -794,6 +795,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.52  2003/09/16 01:26:44  zet
+fix #916 bigfile
+
 Revision 1.51  2003/09/15 22:10:46  zet
 add relative availability
 
