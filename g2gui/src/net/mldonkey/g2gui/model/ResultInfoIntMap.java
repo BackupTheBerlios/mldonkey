@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfoIntMap
  *
  * @author $user$
- * @version $Id: ResultInfoIntMap.java,v 1.3 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfoIntMap.java,v 1.4 2003/08/01 17:30:18 lemmstercvs01 Exp $ 
  *
  */
 public class ResultInfoIntMap extends InfoIntMap {
@@ -89,6 +89,8 @@ public class ResultInfoIntMap extends InfoIntMap {
 			aList.add( result );
 			this.infoIntMap.put( searchID, aList );
 		}
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 
 	/* (non-Javadoc)
@@ -109,6 +111,9 @@ public class ResultInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ResultInfoIntMap.java,v $
+Revision 1.4  2003/08/01 17:30:18  lemmstercvs01
+search works again
+
 Revision 1.3  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 
