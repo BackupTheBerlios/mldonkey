@@ -22,42 +22,29 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * InfoList
- *
- * @author $user$
- * @version $Id: InfoList.java,v 1.4 2003/06/15 16:18:41 lemmstercvs01 Exp $ 
- *
+ * 
+ * @author ${user}
+ * @version $$Id: InfoCollection.java,v 1.1 2003/06/15 16:18:41 lemmstercvs01 Exp $$ 
  */
-public abstract class InfoList implements InfoCollection {
-	/**
-	 * the addsomeoptionlist 
-	 */
-	List infoList;
+public interface InfoCollection {
 	
-	/**
-	 * Creates an empty AddSomeOptionList object
-	 */
-	public InfoList() {
-		this.infoList = new ArrayList();
-	}
-	
-	/**
-	 * Get an Iterator for this list
-	 * @return iterator An Iterator
-	 */
-	public Iterator iterator() {
-		return this.infoList.iterator();
-	}
+	public abstract void readStream( MessageBuffer messageBuffer );
+
+	public abstract void update( MessageBuffer messageBuffer );
 }
-
 /*
-$Log: InfoList.java,v $
-Revision 1.4  2003/06/15 16:18:41  lemmstercvs01
-new interface introduced
-
+$$Log: InfoCollection.java,v $
+$Revision 1.1  2003/06/15 16:18:41  lemmstercvs01
+$new interface introduced
+$
+$Revision 1.3  2003/06/14 23:04:08  lemmstercvs01
+$change from interface to abstract superclass
+$
+$Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
+$cosmetic changes
+$$
 */

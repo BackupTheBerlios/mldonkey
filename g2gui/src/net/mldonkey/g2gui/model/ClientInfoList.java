@@ -28,9 +28,9 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoList.java,v 1.4 2003/06/15 13:14:06 lemmstercvs01 Exp $$ 
+ * @version $$Id: ClientInfoList.java,v 1.5 2003/06/15 16:18:41 lemmstercvs01 Exp $$ 
  */
-public class ClientInfoList extends InfoList {
+public class ClientInfoList extends InfoMap {
 	/**
 	 * Creates a new ClientInfoList
 	 */
@@ -54,7 +54,16 @@ public class ClientInfoList extends InfoList {
 	 * @param value The ClientInfo object
 	 */
 	public void put( int key, ClientInfo value ) {
-		this.infoList.put( key, value );
+		this.infoMap.put( key, value );
+	}
+	
+	/**
+	 * Get a ClientInfo object from this object by there id
+	 * @param id The ClientInfo id
+	 * @return The ClientInfo object
+	 */
+	public ClientInfo get( int key ) {
+		return ( ClientInfo ) this.infoMap.get( key );
 	}
 	
 	/**
@@ -63,11 +72,14 @@ public class ClientInfoList extends InfoList {
 	 */
 	public void update( MessageBuffer messageBuffer ) {
 		int key = messageBuffer.readInt32();
-		( ( ClientInfo ) this.infoList.get( key ) ).update( messageBuffer );
+		( ( ClientInfo ) this.infoMap.get( key ) ).update( messageBuffer );
 	}
 }
 /*
 $$Log: ClientInfoList.java,v $
+$Revision 1.5  2003/06/15 16:18:41  lemmstercvs01
+$new interface introduced
+$
 $Revision 1.4  2003/06/15 13:14:06  lemmstercvs01
 $fixed a bug in put()
 $

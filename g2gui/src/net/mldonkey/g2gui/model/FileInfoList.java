@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoList.java,v 1.7 2003/06/14 23:04:08 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoList.java,v 1.8 2003/06/15 16:18:41 lemmstercvs01 Exp $ 
  *
  */
-public class FileInfoList extends InfoList {
+public class FileInfoList extends InfoMap {
 	/**
 	 * Generates a empty FileInfoList object
 	 */
@@ -45,7 +45,7 @@ public class FileInfoList extends InfoList {
 	 * @param value The FileInfo object
 	 */
 	public void put( int key, FileInfo value ) {
-		this.infoList.put( key, value );
+		this.infoMap.put( key, value );
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class FileInfoList extends InfoList {
 		short listElem = messageBuffer.readInt16();
 
 		/* clear the list */
-		this.infoList.clear();
+		this.infoMap.clear();
 
 		/* insert the new FileInfo objects */
 		for ( int i = 0; i < listElem; i++ ) {
@@ -81,12 +81,15 @@ public class FileInfoList extends InfoList {
 	 * @return The FileInfo object
 	 */
 	public FileInfo get( int id ) {
-		return ( FileInfo ) this.infoList.get( id );
+		return ( FileInfo ) this.infoMap.get( id );
 	}
 }
 
 /*
 $Log: FileInfoList.java,v $
+Revision 1.8  2003/06/15 16:18:41  lemmstercvs01
+new interface introduced
+
 Revision 1.7  2003/06/14 23:04:08  lemmstercvs01
 change from interface to abstract superclass
 

@@ -22,42 +22,41 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectIterator;
 
 /**
- * InfoList
+ * InfoMap
  *
  * @author $user$
- * @version $Id: InfoList.java,v 1.4 2003/06/15 16:18:41 lemmstercvs01 Exp $ 
+ * @version $Id: InfoMap.java,v 1.1 2003/06/15 16:18:41 lemmstercvs01 Exp $ 
  *
  */
-public abstract class InfoList implements InfoCollection {
+public abstract class InfoMap implements InfoCollection {
 	/**
-	 * the addsomeoptionlist 
+	 * 
 	 */
-	List infoList;
+	protected TIntObjectHashMap infoMap;
 	
 	/**
-	 * Creates an empty AddSomeOptionList object
+	 * Generates a empty ServerInfoList object
 	 */
-	public InfoList() {
-		this.infoList = new ArrayList();
+	public InfoMap() {
+		this.infoMap = new TIntObjectHashMap();
 	}
 	
 	/**
-	 * Get an Iterator for this list
-	 * @return iterator An Iterator
+	 * Get an Iterator
+	 * @return an Iterator
 	 */
-	public Iterator iterator() {
-		return this.infoList.iterator();
+	public TIntObjectIterator iterator() {
+		return this.infoMap.iterator();
 	}
 }
 
 /*
-$Log: InfoList.java,v $
-Revision 1.4  2003/06/15 16:18:41  lemmstercvs01
+$Log: InfoMap.java,v $
+Revision 1.1  2003/06/15 16:18:41  lemmstercvs01
 new interface introduced
 
 */

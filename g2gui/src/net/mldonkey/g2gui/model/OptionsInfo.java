@@ -23,26 +23,50 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import gnu.trove.THashMap;
 
 /**
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.1 2003/06/14 23:07:20 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.2 2003/06/15 16:18:41 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfo implements Information {
 	/**
-	 * Map containing option value pairs
+	 * Options Name
 	 */
-	private THashMap optionsInfo;
+	private String key;
+	/**
+	 * Options Value
+	 */
+	private String value;
 	
 	/**
-	 * Creates a new THashMap
-	 */	
-	public OptionsInfo() {
-		this.optionsInfo = new THashMap();
+	 * @return a string
+	 */
+	public String getKey() {
+		return key;
+	}
+
+	/**
+	 * @return a string
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * @param string a string
+	 */
+	public void setKey( String string ) {
+		key = string;
+	}
+
+	/**
+	 * @param string a string
+	 */
+	public void setValue( String string ) {
+		value = string;
 	}
 	
 	/**
@@ -50,21 +74,25 @@ public class OptionsInfo implements Information {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
-		/*
-		 * List of (String,String)	The list of options with their current value
-		 */
-		short listElem = messageBuffer.readInt16();
-		for ( int i = 0; i < ( listElem / 2 ); i++ ) {
-			String key = new String( messageBuffer.readString() );
-			String value = new String( messageBuffer.readString() );
-			this.optionsInfo.put( key, value );
-		}
+		this.setKey( messageBuffer.readString() );
+		this.setValue( messageBuffer.readString() );
+	}
+	
+	/**
+	 * return a string representation of this object
+	 * @return a string
+	 */
+	public String toString() {
+		String result = new String();
+		result += this.getKey();
+		result += ": " + this.getValue() + "\n";
+		return result;
 	}
 }
 
 /*
 $Log: OptionsInfo.java,v $
-Revision 1.1  2003/06/14 23:07:20  lemmstercvs01
-added opcode 1
+Revision 1.2  2003/06/15 16:18:41  lemmstercvs01
+new interface introduced
 
 */

@@ -22,8 +22,7 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
@@ -31,24 +30,25 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * AddSomeOptionList
  *
  * @author $user$
- * @version $Id: AddSomeOptionList.java,v 1.1 2003/06/15 09:58:04 lemmstercvs01 Exp $ 
+ * @version $Id: AddSomeOptionList.java,v 1.2 2003/06/15 16:18:41 lemmstercvs01 Exp $ 
  *
  */
 public class AddSomeOptionList extends InfoList {
-	List addSomeOptionsList;
-	
+	/**
+	 * 
+	 */
 	public AddSomeOptionList() {
-		this.addSomeOptionsList = new ArrayList();
+		super();
 	}
 	
 	/**
-	 * Does nothing!
+	 * Reads an AddSomeOptionList from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer which is untouched
 	 */
 	public void readStream(MessageBuffer messageBuffer) {
 		AddSomeOption someOption = new AddSomeOption();
 		someOption.readStream( messageBuffer );
-		this.addSomeOptionsList.add( someOption );
+		this.infoList.add( someOption );
 	}
 	
 	/**
@@ -58,10 +58,26 @@ public class AddSomeOptionList extends InfoList {
 	public void update(MessageBuffer messageBuffer) {
 		// do nothing
 	}
+	
+	/**
+	 * Returns a string representation of this object
+	 * @return String a string
+	 */
+	public String toString() {
+		String result = new String();
+		Iterator itr = this.infoList.iterator();
+		while ( itr.hasNext() ) {
+			result += ( AddSomeOption ) itr.next();
+		}
+		return result;
+	}
 }
 
 /*
 $Log: AddSomeOptionList.java,v $
+Revision 1.2  2003/06/15 16:18:41  lemmstercvs01
+new interface introduced
+
 Revision 1.1  2003/06/15 09:58:04  lemmstercvs01
 initial commit
 
