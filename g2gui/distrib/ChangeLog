@@ -6,7 +6,7 @@
 	* Preferences: Add default font preference for tables
 	
 2003/11/24: Dek   
-         * ToolBar now keeps its state over sessions [Bug #1122] 
+	* ToolBar now keeps its state over sessions [Bug #1122] 
 
 2003/11/24: lemmy
 	* Search: fixed [Bug #1132] search combo retains duplicates
