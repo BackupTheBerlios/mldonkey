@@ -37,10 +37,13 @@ import net.mldonkey.g2gui.view.statistic.GraphHistory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -55,7 +58,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.31 2003/09/27 00:48:11 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.32 2003/10/12 15:56:52 zet Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
@@ -87,7 +90,13 @@ public class StatisticTab extends GuiTab {
         createStatsComposite( mainSash );
 
         /* Bottom Sash for graphs */
-        SashForm graphSash = new SashForm( mainSash, SWT.HORIZONTAL );
+        final SashForm graphSash = new SashForm( mainSash, (PreferenceLoader.loadBoolean("graphSashHorizontal") ? SWT.HORIZONTAL : SWT.VERTICAL) );
+		graphSash.addDisposeListener( new DisposeListener() { 
+			public void widgetDisposed(DisposeEvent e) {
+				PreferenceStore p = PreferenceLoader.getPreferenceStore();
+				p.setValue("graphSashHorizontal", ( graphSash.getOrientation() == SWT.HORIZONTAL ? true : false) );
+			}
+		});
 
         downloadsGraphControl = createGraph( graphSash, "TT_Downloads", downloadsGraphColor1, downloadsGraphColor2 );
         uploadsGraphControl = createGraph( graphSash, "TT_Uploads", uploadsGraphColor1, uploadsGraphColor2 );
@@ -242,6 +251,9 @@ public class StatisticTab extends GuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.32  2003/10/12 15:56:52  zet
+save sash orientation
+
 Revision 1.31  2003/09/27 00:48:11  zet
 +word
 
