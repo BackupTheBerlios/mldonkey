@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreMessage
  *
  * @author markus
- * @version $Id: CoreMessage.java,v 1.4 2003/06/11 20:43:45 lemmstercvs01 Exp $ 
+ * @version $Id: CoreMessage.java,v 1.5 2003/06/12 07:40:22 lemmstercvs01 Exp $ 
  *
  */
 public class CoreMessage extends Message {
@@ -63,6 +63,7 @@ public class CoreMessage extends Message {
 		aDownload.setSize( readInt32( inputStream ) );
 		aDownload.setDownloaded( readInt32( inputStream ) );
 		aDownload.setSources( readInt32( inputStream ) );
+		aDownload.setClients( readInt32( inputStream ) );
 		
 		/* File State */
 		State state = new State();
@@ -163,6 +164,9 @@ public class CoreMessage extends Message {
 
 /*
 $Log: CoreMessage.java,v $
+Revision 1.5  2003/06/12 07:40:22  lemmstercvs01
+fixed bug in file info decoding
+
 Revision 1.4  2003/06/11 20:43:45  lemmstercvs01
 setMd4() fixed
 
