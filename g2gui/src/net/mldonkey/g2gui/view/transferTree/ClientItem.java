@@ -40,14 +40,12 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.8 2003/07/15 20:17:27 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.9 2003/07/15 20:42:48 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
 	
 	private Menu menu;
-
-	private Object shell;
 
 	private ChunkView chunks;
 
@@ -85,9 +83,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		setText( 2, clientInfo.getClientName() );	
 		updateColums();	
 		addDisposeListener(new DisposeListener(){
-			public void widgetDisposed(DisposeEvent e) {
+			public void widgetDisposed(DisposeEvent e) {				
+				chunks.dispose();
 				editor.dispose();
-				chunks.dispose();	
 				
 			}});
 		
@@ -153,6 +151,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.9  2003/07/15 20:42:48  dek
+*** empty log message ***
+
 Revision 1.8  2003/07/15 20:17:27  dek
 ok, sorting with opened chunkbars works also now, forgot disposeListener()
 

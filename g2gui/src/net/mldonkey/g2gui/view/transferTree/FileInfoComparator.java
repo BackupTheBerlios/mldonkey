@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * DownloadItemComparator
  *
  * @author $user$
- * @version $Id: FileInfoComparator.java,v 1.2 2003/07/15 20:19:57 dek Exp $ 
+ * @version $Id: FileInfoComparator.java,v 1.3 2003/07/15 20:42:48 dek Exp $ 
  *
  */
 public class FileInfoComparator implements Comparator {
@@ -82,13 +82,13 @@ public class FileInfoComparator implements Comparator {
 				result = r1_3.compareTo( r2_3 );
 				break;
 			case 4 :
-				Float r1_4 = new Float( row1.getRate() );
-				Float r2_4 = new Float( row2.getRate() );
-				result = r1_4.compareTo( r2_4 );
-				break;
-			case 5 :
 				//Sorting by # of available chunks...
 				result = 0;
+				break;
+			case 5 :
+				Float r1_5 = new Float( row1.getRate() );
+				Float r2_5 = new Float( row2.getRate() );
+				result = r1_5.compareTo( r2_5 );
 				break;
 			case 6 :
 				Integer r1_6 = new Integer( row1.getDownloaded() );
@@ -110,7 +110,7 @@ public class FileInfoComparator implements Comparator {
 
 /*
 $Log: FileInfoComparator.java,v $
-Revision 1.2  2003/07/15 20:19:57  dek
+Revision 1.3  2003/07/15 20:42:48  dek
 *** empty log message ***
 
 Revision 1.1  2003/07/15 20:13:56  dek
