@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  * @author $user$
- * @version $Id: ResultInfo.java,v 1.6 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfo.java,v 1.7 2003/07/23 17:01:24 lemmstercvs01 Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -202,6 +202,13 @@ public class ResultInfo extends Parent {
 	public String getType() {
 		return type;
 	}
+	
+	/**
+	 * @return
+	 */
+	public String getComment() {
+		return comment;
+	}
 
 	/**
 	 * @param b The History as a byte
@@ -222,12 +229,20 @@ public class ResultInfo extends Parent {
 		( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
 	}
 
-
+	/**
+	 * @param info
+	 */
+	public void setNetworkID(NetworkInfo info) {
+		networkID = info;
+	}
 
 }
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.7  2003/07/23 17:01:24  lemmstercvs01
+added getComment() and setNetworkID(Networkinfo info)
+
 Revision 1.6  2003/07/06 08:49:33  lemmstercvs01
 better oo added
 
