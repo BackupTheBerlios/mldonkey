@@ -55,7 +55,7 @@ import net.mldonkey.g2gui.helper.RegExp;
  * DownloadSubmit
  *
  * @author $user$
- * @version $Id: DownloadSubmit.java,v 1.4 2004/03/02 23:39:29 psy Exp $ 
+ * @version $Id: DownloadSubmit.java,v 1.5 2004/03/04 17:23:08 psy Exp $ 
  *
  */
 public class DownloadSubmit implements Runnable {
@@ -226,7 +226,9 @@ public class DownloadSubmit implements Runnable {
 							GETfile = GETfile.substring(0, GETfile.length() - ".torrent".length());
 							
 							/* locate our local file */
-							File file = new File(localfile.getParent() + hexDecode(new File(GETfile).getAbsoluteFile().toString()) );
+							String LocalPath = new File(localfile.getParent()).toString();
+							File file = new File((LocalPath != null ? LocalPath : "") + 
+									hexDecode(new File(GETfile).getAbsoluteFile().toString()));
 							if (G2Gui.debug) System.out.println("REQUEST: " + GETfile + ", we should have it at: " + file);
 							
 							if (file.exists()) {
@@ -317,6 +319,9 @@ public class DownloadSubmit implements Runnable {
 
 /*
 $Log: DownloadSubmit.java,v $
+Revision 1.5  2004/03/04 17:23:08  psy
+fix error when torrent file was in root (/, C:\) directory
+
 Revision 1.4  2004/03/02 23:39:29  psy
 replaced raw-socket link-submission
 
