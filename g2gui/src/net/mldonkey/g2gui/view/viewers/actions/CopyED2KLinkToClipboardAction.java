@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * CopyED2KLinkToClipboardAction
  *
- * @version $Id: CopyED2KLinkToClipboardAction.java,v 1.5 2004/03/15 23:28:03 psy Exp $
+ * @version $Id: CopyED2KLinkToClipboardAction.java,v 1.6 2004/03/15 23:29:31 psy Exp $
  *
  */
 public class CopyED2KLinkToClipboardAction extends Action {
@@ -67,7 +67,7 @@ public class CopyED2KLinkToClipboardAction extends Action {
                     link += links[ i ];
                 }
 
-                if (links.length - 1 > i && links[ i + 1 ] != "")
+                if (links.length - 1 > i)
                 	link += (SWT.getPlatform().equals("win32") ? "\r\n" : "\n");
             }
         }
@@ -80,6 +80,9 @@ public class CopyED2KLinkToClipboardAction extends Action {
 
 /*
 $Log: CopyED2KLinkToClipboardAction.java,v $
+Revision 1.6  2004/03/15 23:29:31  psy
+*** empty log message ***
+
 Revision 1.5  2004/03/15 23:28:03  psy
 *** empty log message ***
 
