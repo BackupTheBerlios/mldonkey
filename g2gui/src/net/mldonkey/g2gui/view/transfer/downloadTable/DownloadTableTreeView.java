@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeView.java,v 1.2 2003/11/07 03:51:22 zet Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.3 2003/11/08 18:47:20 zet Exp $
  *
  */
 public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
@@ -112,7 +112,6 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
         advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
-        // createTableTreeViewer(parent, core);
         createContents(parent);
     }
 
@@ -130,7 +129,6 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
         tableTreeViewer.addDoubleClickListener(this);
         tableTreeViewer.addSelectionChangedListener((DownloadTableTreeMenuListener) tableTreeMenuListener);
         tableTreeViewer.setInput(core.getFileInfoIntMap());
-        core.getFileInfoIntMap().addObserver((DownloadTableTreeContentProvider) tableTreeContentProvider);
     }
 
     /* (non-Javadoc)
@@ -313,6 +311,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
 /*
 $Log: DownloadTableTreeView.java,v $
+Revision 1.3  2003/11/08 18:47:20  zet
+minor
+
 Revision 1.2  2003/11/07 03:51:22  zet
 super.updateDisplay()
 

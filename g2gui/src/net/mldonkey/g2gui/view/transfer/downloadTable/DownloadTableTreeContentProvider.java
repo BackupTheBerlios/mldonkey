@@ -22,12 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
-import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.model.FileInfoIntMap;
-import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
-import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeContentProvider;
-
 import gnu.trove.TIntObjectIterator;
 
 import java.util.ArrayList;
@@ -36,11 +30,19 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
+import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.model.FileInfoIntMap;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
+import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeContentProvider;
+
+import org.eclipse.jface.viewers.Viewer;
+
 
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.8 2003/10/31 22:41:59 zet Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.9 2003/11/08 18:47:20 zet Exp $
  *
  */
 public class DownloadTableTreeContentProvider extends GTableTreeContentProvider implements Observer {
@@ -132,6 +134,19 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
         }
 
         return EMPTY_ARRAY;
+    }
+
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        super.inputChanged(viewer, oldInput, newInput);
+        
+        if (oldInput != null) {
+            ((Observable) oldInput).deleteObserver(this);
+        }
+        
+        if (newInput != null) {
+			((Observable) newInput).addObserver(this);
+        }
+        
     }
 
     /*
@@ -307,6 +322,9 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.9  2003/11/08 18:47:20  zet
+minor
+
 Revision 1.8  2003/10/31 22:41:59  zet
 rename to View
 
