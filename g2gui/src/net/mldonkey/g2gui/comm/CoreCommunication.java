@@ -21,12 +21,17 @@
 package net.mldonkey.g2gui.comm;
 
 import java.io.IOException;
+import java.net.Socket;
+
+import net.mldonkey.g2gui.view.widgets.InterFaceUI;
+
+
 
 /**
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.3 2003/06/18 13:31:30 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.4 2003/06/18 19:46:34 dek Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -34,7 +39,7 @@ public interface CoreCommunication {
 	 * connect()
 	 *
 	 * @author $user$
-	 * @version $Id: CoreCommunication.java,v 1.3 2003/06/18 13:31:30 dek Exp $ 
+	 * @version $Id: CoreCommunication.java,v 1.4 2003/06/18 19:46:34 dek Exp $ 
 	 * Connects this object to given mldonkey-core @remote 
 	 *
 	 */	
@@ -43,13 +48,14 @@ public interface CoreCommunication {
 	 * run()
 	 *
 	 * @author $user$
-	 * @version $Id: CoreCommunication.java,v 1.3 2003/06/18 13:31:30 dek Exp $ 
+	 * @version $Id: CoreCommunication.java,v 1.4 2003/06/18 19:46:34 dek Exp $ 
 	 * starts the Core-Thread and begins to receive messages 
 	 *
 	 */	
 	void run() throws IOException;
 	
-	boolean registerListener( net.mldonkey.snippets.InterFaceUI anInterFaceUI );
+	void registerListener( InterFaceUI anInterFaceUI );
+	Socket getConnection();
 	
 	
 	
