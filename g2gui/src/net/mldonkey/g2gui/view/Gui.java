@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.IOException;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -44,7 +45,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.21 2003/07/02 19:25:41 dek Exp $ 
+ * @version $Id: Gui.java,v 1.22 2003/07/03 01:56:45 zet Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -63,6 +64,8 @@ public class Gui implements IG2gui, Listener {
 	private G2guiTab activeTab;
 	private Menu mainMenuBar;
 	private Shell mainShell;
+	private PreferenceStore internalPrefStore = new PreferenceStore("g2gui-internal.pref");
+	
 	
 		/**
 		 * Layout for the page container.
@@ -109,14 +112,18 @@ public class Gui implements IG2gui, Listener {
 	public Gui( CoreCommunication core, Shell shell ) {
 		mainShell = shell;	
 		Display display = shell.getDisplay();	
-		
+				
 		this.mldonkey = core;
 		shell.setLayout( new FillLayout() );
+		createInternalPrefStore();
 		createContents( shell );
+		setSizeLocation( shell );
 		shell.pack ();
 		shell.open ();
 		shell.addDisposeListener( new DisposeListener() {
 			public synchronized void widgetDisposed( DisposeEvent e ) {
+				saveSizeLocation( mainShell );
+				saveInternalPrefStore();
 				( ( Core )mldonkey ).disconnect();				
 			} } );
 		while ( !shell.isDisposed () ) {
@@ -135,7 +142,6 @@ public class Gui implements IG2gui, Listener {
 		createMenuBar();
 		CoolBar coolbar = null;
 				
-		parent.setSize( 640, 480 );
 		GridData gridData;		
 		mainComposite = new Composite( parent, SWT.NONE );
 		
@@ -395,11 +401,64 @@ public class Gui implements IG2gui, Listener {
 	public void setTitleBar( String title ) {
 		mainShell.setText( title );
 	} 
+	public void setSizeLocation (Shell shell) {
+			
+		int windowW = internalPrefStore.getInt( "windowWidth" );
+		int windowH = internalPrefStore.getInt( "windowHeight" );
+		int windowPX = internalPrefStore.getInt ( "windowX" );
+		int windowPY = internalPrefStore.getInt ( "windowY" );
+		boolean windowMaximized = internalPrefStore.getBoolean ("windowMaximized");
+		
+		if (internalPrefStore.contains("windowX")) {
+			if (windowMaximized) {
+				shell.setMaximized(true);
+			} else {
+				shell.setBounds ( windowPX, windowPY, windowW, windowH );	
+			}
+		}
+	}		
+
+	public void saveSizeLocation (Shell shell) {
+				
+		Rectangle shellBounds = shell.getBounds();
+							
+		if (shell.getMaximized()) {
+			internalPrefStore.setValue( "windowMaximized", shell.getMaximized());	
+		} else {
+			internalPrefStore.setValue( "windowWidth", shellBounds.width );
+			internalPrefStore.setValue( "windowHeight", shellBounds.height );
+			internalPrefStore.setValue( "windowX", shellBounds.x );
+			internalPrefStore.setValue( "windowY", shellBounds.y);
+			internalPrefStore.setValue( "windowMaximized", shell.getMaximized());
+		}
+	}
+
+	public void createInternalPrefStore() {
+		try {			
+			internalPrefStore.load();
+		} catch ( IOException e ) {
+		}
+	}
+
+	public void saveInternalPrefStore() {
+		try {
+			internalPrefStore.save();
+		} catch ( IOException e ) {
+			System.out.println( "Saving g2gui-internal preferences failed" );
+		}	
+	}
+
+	public PreferenceStore getStore() {
+		return internalPrefStore;
+	}
 
 } 
 
 /*
 $Log: Gui.java,v $
+Revision 1.22  2003/07/03 01:56:45  zet
+attempt(?) to save window size/pos & table column widths between sessions
+
 Revision 1.21  2003/07/02 19:25:41  dek
 transferTab is now default ;-)
 

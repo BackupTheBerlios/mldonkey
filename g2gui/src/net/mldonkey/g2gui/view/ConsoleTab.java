@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.11 2003/07/02 19:26:55 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.12 2003/07/03 01:56:45 zet Exp $ 
  *
  */
 public class ConsoleTab extends G2guiTab implements Observer, ControlListener, Runnable {	
@@ -54,7 +54,7 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 	/**
 	 * @param gui
 	 */
-	public ConsoleTab( IG2gui gui ) {
+	public ConsoleTab( Gui gui ) {
 		super( gui );
 		this.core = gui.getCore();		
 		this.toolItem.setText( "Console" );		
@@ -146,6 +146,9 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.12  2003/07/03 01:56:45  zet
+attempt(?) to save window size/pos & table column widths between sessions
+
 Revision 1.11  2003/07/02 19:26:55  dek
 fixed:< no i don't ever want to become active> bug
 

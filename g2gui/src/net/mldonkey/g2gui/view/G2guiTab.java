@@ -33,12 +33,12 @@ import org.eclipse.swt.widgets.ToolItem;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: G2guiTab.java,v 1.7 2003/07/02 19:14:10 dek Exp $ 
+ * @version $Id: G2guiTab.java,v 1.8 2003/07/03 01:56:45 zet Exp $ 
  *
  */
 public abstract class G2guiTab implements Listener {	
 	protected Composite content;
-	protected IG2gui mainWindow;
+	protected Gui mainWindow;
 	protected ToolItem toolItem;
 	
 	
@@ -46,7 +46,7 @@ public abstract class G2guiTab implements Listener {
 	/**
 	 * @param gui
 	 */
-	public G2guiTab( IG2gui gui ) {
+	public G2guiTab( Gui gui ) {
 		this.mainWindow = gui;		
 		this.content = new Composite( gui.getPageContainer(), SWT.NONE );
 		this.content.setLayout( new FillLayout() );
@@ -70,9 +70,13 @@ public abstract class G2guiTab implements Listener {
 	public void handleEvent( Event event ) {
 		mainWindow.setActive( this );
 	}
+		
 }
 /*
 $Log: G2guiTab.java,v $
+Revision 1.8  2003/07/03 01:56:45  zet
+attempt(?) to save window size/pos & table column widths between sessions
+
 Revision 1.7  2003/07/02 19:14:10  dek
 default-window is now transfer-Tab
 

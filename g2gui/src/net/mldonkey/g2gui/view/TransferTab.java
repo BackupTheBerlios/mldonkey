@@ -51,13 +51,14 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.events.*;
 
 
 /**
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.13 2003/07/02 11:21:59 dek Exp $ 
+ * @version $Id: TransferTab.java,v 1.14 2003/07/03 01:56:45 zet Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements Observer {
@@ -69,7 +70,7 @@ public class TransferTab extends G2guiTab implements Observer {
 	/**
 	 * @param gui gui the parent Gui
 	 */
-	public TransferTab( IG2gui gui ) {
+	public TransferTab( Gui gui ) {
 		super( gui );
 		toolItem.setText( res.getString( "TT_Button" ) );
 		toolItem.setImage(Gui.createTransparentImage( 
@@ -113,8 +114,21 @@ public class TransferTab extends G2guiTab implements Observer {
 		for ( int i = 0; i < aString.length; i++ ) {
 			column = new TableColumn( table.getTable(), SWT.LEFT );
 			column.setText( aString[ i ] );
-			column.setWidth( anInt[ i ] );
 			
+			if (mainWindow.getStore().contains( "TransferTab_DL_" + column.getText() )) {
+				column.setWidth( mainWindow.getStore().getInt("TransferTab_DL_" + column.getText()));
+			} else {
+				column.setWidth( anInt[ i ] );
+			}
+			
+			// Save column widths between sessions
+			column.addDisposeListener( new DisposeListener() {
+					public synchronized void widgetDisposed( DisposeEvent e ) {
+						mainWindow.getStore().setValue(
+							"TransferTab_DL_" + ((TableColumn) e.getSource()).getText(),
+							((TableColumn) e.getSource()).getWidth());			
+					} } );
+					
 			/* listen for table sorting */
 			final int columnIndex = i;
 			column.addSelectionListener( new SelectionAdapter() {
@@ -271,6 +285,9 @@ public class TransferTab extends G2guiTab implements Observer {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.14  2003/07/03 01:56:45  zet
+attempt(?) to save window size/pos & table column widths between sessions
+
 Revision 1.13  2003/07/02 11:21:59  dek
 transfer Icon
 
