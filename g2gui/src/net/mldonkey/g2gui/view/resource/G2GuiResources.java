@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.44 2003/10/28 11:07:32 lemmster Exp $
+ * @version $Id: G2GuiResources.java,v 1.45 2003/10/31 13:17:10 lemmster Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -286,8 +286,7 @@ public class G2GuiResources {
         reg.put( "copy", createRawMImage( "copy.gif" ) );
         reg.put( "clear", createRawMImage( "clear.gif" ) );
         reg.put( "graph", createRawMImage( "graph.gif" ) );
-        
-        
+        reg.put( "dropdown", createRawImage( "dropdown.gif" ) );
     }
 
     /**
@@ -433,6 +432,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.45  2003/10/31 13:17:10  lemmster
+dropdown.gif added
+
 Revision 1.44  2003/10/28 11:07:32  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
