@@ -37,6 +37,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.view.*;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
@@ -53,13 +54,13 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.13 2003/07/17 13:44:30 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.14 2003/07/17 14:59:23 lemmstercvs01 Exp $ 
  *
  */
 public class DownloadTable  implements Observer, Runnable {
 	private int lastSortColumn = -1;
 	protected IItemHasMenue selectedItem;
-	private TransferMain page;
+	private TransferTab page;
 	private FileInfoIntMap files;
 	private TableTree tableTree;
 	private TIntObjectHashMap downloads;
@@ -82,7 +83,7 @@ public class DownloadTable  implements Observer, Runnable {
 	 * @param mldonkey this object's master, from which this object gets the data
 	 * @param page the TransferPage, where this table is located
 	 */
-	public DownloadTable( Composite parent, CoreCommunication mldonkey, TransferMain page ) {
+	public DownloadTable( Composite parent, CoreCommunication mldonkey, TransferTab page ) {
 		this.page = page;	
 		downloads = new TIntObjectHashMap();	
 		 tableTree = new TableTree( parent, SWT.FULL_SELECTION );
@@ -274,6 +275,9 @@ public class DownloadTable  implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.14  2003/07/17 14:59:23  lemmstercvs01
+foobar
+
 Revision 1.13  2003/07/17 13:44:30  dek
 *** empty log message ***
 
