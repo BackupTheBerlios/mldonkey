@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.36 2003/09/28 18:04:46 zet Exp $
+ * @version $Id: G2Gui.java,v 1.37 2003/09/28 21:38:23 dek Exp $
  *
  */
 public class G2Gui {
@@ -210,7 +210,7 @@ public class G2Gui {
             
             // Needed on GTK to dispatch paintEvent.
             // SWT is idiotic.
-            while ( display.readAndDispatch() );
+            while ( display.readAndDispatch() ) { }
             
             spawnCore();
             increaseBar( "Starting the model" );
@@ -452,6 +452,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.37  2003/09/28 21:38:23  dek
+removed red cross for empty expression by replacing ";" with "{ }"
+
 Revision 1.36  2003/09/28 18:04:46  zet
 try while loop
 
