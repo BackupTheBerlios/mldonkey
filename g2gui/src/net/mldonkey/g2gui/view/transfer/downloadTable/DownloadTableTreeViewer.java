@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.viewers.GTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -41,7 +42,6 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableTree;
@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.14 2003/10/22 16:50:21 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.15 2003/10/22 21:20:33 zet Exp $
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListener {
@@ -211,7 +211,7 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
         if (advancedMode) {
             String prefCols = PreferenceLoader.loadString("downloadTableColumns");
 
-            if (validColumnIDs(prefCols)) {
+            if (GTableViewer.validColumnIDs(prefCols, ALL_COLUMNS)) {
                 columnIDs = prefCols;
             } else {
                 columnIDs = ALL_COLUMNS;
@@ -271,24 +271,6 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
                     }
                 });
         }
-    }
-
-    /**
-            * @param string
-            * @return true if String contains valid columnIDs, else false
-            */
-    public boolean validColumnIDs(String string) {
-        if (string.equals("") || (string.length() > ALL_COLUMNS.length())) {
-            return false;
-        }
-
-        for (int i = 0; i < string.length(); i++) {
-            if (ALL_COLUMNS.indexOf(string.charAt(i)) == -1) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -455,6 +437,9 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.15  2003/10/22 21:20:33  zet
+static validate
+
 Revision 1.14  2003/10/22 16:50:21  zet
 validate ids
 
