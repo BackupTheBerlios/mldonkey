@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -37,28 +39,35 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.79 2003/10/13 18:36:07 zet Exp $
+ * @version $Id: MainTab.java,v 1.80 2003/10/27 00:19:14 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -131,10 +140,22 @@ public class MainTab implements ShellListener {
                     PreferenceLoader.cleanUp();
                 }
             } );
-        while ( !shell.isDisposed() ) {
-            if ( !display.readAndDispatch() )
-                display.sleep();
+        
+        try {
+        
+	        while ( !shell.isDisposed() ) {
+	            if ( !display.readAndDispatch() )
+	                display.sleep();
+	        }
+        
+        } catch (Exception e) {
+            // getCause() seems always to be null unfortunately
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw, true));
+		    ErrorDialog errorDialog = new ErrorDialog( new Shell(display), sw.toString() );
+		    errorDialog.open();
         }
+        
         display.dispose();
     }
 
@@ -146,7 +167,8 @@ public class MainTab implements ShellListener {
         mainComposite = new Composite( parent, SWT.NONE );
         parent.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
         new MainMenuBar( this );
-        GridLayout gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 1, false );
+        // try a margin of 1 ?
+        GridLayout gridLayout = CGridLayout.createGL( 1, 1, 1, 0, 1, false );
         mainComposite.setLayout( gridLayout );
         Label horLine = new Label( mainComposite, SWT.HORIZONTAL | SWT.SEPARATOR );
         gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -358,10 +380,74 @@ public class MainTab implements ShellListener {
     public void shellIconified( ShellEvent e ) {
         minimizer.minimize( );
     }
+    
+    
+	/**
+	 * ErrorDialog
+	 */
+	private class ErrorDialog extends Dialog {
+
+		String string;
+		Shell shell;
+
+		public ErrorDialog( Shell shell, String string) {
+		   super(shell);
+		   this.string = string;
+		}
+
+		protected void configureShell(Shell newShell) {
+		    super.configureShell( newShell );
+		    shell = newShell;
+		    newShell.setText("Boog Ditekted!");
+		}
+		
+		protected Control createDialogArea(Composite parent) {
+			Composite composite = (Composite)super.createDialogArea(parent);
+			Text textInfo = new Text(composite, SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+			textInfo.setText("Please help us to improve this product!\n" 
+			        + "Please submit a bug report detailing exactly what you were doing when this happened!\n"
+			        + "http://developer.berlios.de/bugs/?group_id=610\n\n"
+			        + "StackTrace:\n\n"
+			        + string);
+			return composite;
+		}
+
+		protected Control createButtonBar(Composite parent) {
+			Composite composite = new Composite(parent, SWT.NONE);
+			composite.setLayout(CGridLayout.createGL(2,5,5,5,5,false));
+			composite.setLayoutData( new GridData(GridData.FILL_HORIZONTAL));
+			
+			Button launch = new Button(composite, SWT.NONE);
+			launch.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			launch.setText("Report this bug!");
+			launch.addSelectionListener( new SelectionAdapter() {
+					  public void widgetSelected( SelectionEvent s ) {
+						  Program.launch("http://developer.berlios.de/bugs/?group_id=610");
+					  }
+				  } );
+			
+			Button close = new Button(composite, SWT.NONE);
+			close.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+			close.setText(G2GuiResources.getString( "BTN_CLOSE" ));
+			close.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent s ) {
+			    shell.close();
+					}
+				} );
+	    
+			return composite;
+		}
+		
+	}
+    
 }
 
 /*
 $Log: MainTab.java,v $
+Revision 1.80  2003/10/27 00:19:14  zet
+simple attempt to catch exceptions & inform the user instead of silently crashing
++ try a marginwidth of 1 (as per feedback)
+
 Revision 1.79  2003/10/13 18:36:07  zet
 fix file->exit (w/tray) bug
 
