@@ -143,6 +143,13 @@ public class GraphPainter {
 			//	drawBoardBuffer.drawText("  " + value,0,height-8-(int)zoom*value*10, true);
 			// }
 			
+//			just for temporary fun .. this will overflow pretty quickly
+			 drawBoardBuffer.setForeground(graphColor);
+			 drawBoardBuffer.drawText(graphs[which].getName() + 
+				 " avg: " + ((double)graphs[which].getAvg()/100) + " kb/s," +
+				 " max: " + ((double)graphs[which].getMax()/100) + " kb/s",
+				 20, (int)height+2,true);
+			
 			double vv = (double)graphs[which].getLast().getValue()/100;
 			int textPosition = (int) (height - (float) (graphs[which].getLast().getValue()/10) * zoom);
 			
@@ -154,12 +161,7 @@ public class GraphPainter {
 			drawBoardBuffer.setForeground(new Color(null, 255,255,0));
 			drawBoardBuffer.drawLine(startx+10,textPosition,startx,textPosition);
 			
-			// just for temporary fun .. this will overflow pretty quickly
-			drawBoardBuffer.setForeground(graphColor);
-			drawBoardBuffer.drawText(graphs[which].getName() + 
-				" avg: " + ((double)graphs[which].getAvg()/100) + " kb/s," +
-				" max: " + ((double)graphs[which].getMax()/100) + " kb/s",
-				20, (int)height+2,true);
+			
 			
 			which++;
 		}
