@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  * @author $Author: lemmster $
- * @version $Id: ServerTab.java,v 1.16 2003/08/23 14:58:38 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.17 2003/08/23 15:01:32 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -370,43 +370,46 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	public void updateDisplay() {
 		/* only update on pref change */
 		boolean temp = PreferenceLoader.loadBoolean( "displayAllServers" );
-		if ( oldValue == temp ) return;
-		
-		/* update the state filter */
-		if ( temp ) {
-			/* first remove all EnumState filters */
-			for ( int i = 0; i < table.getFilters().length; i++ ) {
-				if ( table.getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateFilter )
-					table.removeFilter( table.getFilters()[ i ] );
+		if ( oldValue != temp ) {
+			/* update the state filter */
+			if ( temp ) {
+				/* first remove all EnumState filters */
+				for ( int i = 0; i < table.getFilters().length; i++ ) {
+					if ( table.getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateFilter )
+						table.removeFilter( table.getFilters()[ i ] );
+				}
+				/* now add the new one */
+				ServerTableMenuListener.EnumStateFilter filter = new ServerTableMenuListener.EnumStateFilter();
+				filter.add( EnumState.CONNECTED );
+				table.addFilter( filter );
 			}
-			/* now add the new one */
-			ServerTableMenuListener.EnumStateFilter filter = new ServerTableMenuListener.EnumStateFilter();
-			filter.add( EnumState.CONNECTED );
-			table.addFilter( filter );
-		}
-		else {
-			ViewerFilter[] filters = table.getFilters();
-			for ( int i = 0; i < filters.length; i++ ) {
-				if ( table.getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateFilter ) {
-					TableMenuListener.EnumStateFilter filter = ( TableMenuListener.EnumStateFilter ) filters[ i ];
-					if ( filter.contains( EnumState.CONNECTED ) ) {
-						if (  filter.getEnumState().size() == 1 )
-							table.removeFilter( filter );
-						else {
-							filter.remove( EnumState.CONNECTED );
-							table.refresh();
+			else {
+				ViewerFilter[] filters = table.getFilters();
+				for ( int i = 0; i < filters.length; i++ ) {
+					if ( table.getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateFilter ) {
+						TableMenuListener.EnumStateFilter filter = ( TableMenuListener.EnumStateFilter ) filters[ i ];
+						if ( filter.contains( EnumState.CONNECTED ) ) {
+							if (  filter.getEnumState().size() == 1 )
+								table.removeFilter( filter );
+							else {
+								filter.remove( EnumState.CONNECTED );
+								table.refresh();
+							}
 						}
 					}
 				}
 			}
+			this.oldValue = temp;
 		}
-		this.oldValue = temp;
 		super.updateDisplay();
 	}
 }
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.17  2003/08/23 15:01:32  lemmster
+update the header
+
 Revision 1.16  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
