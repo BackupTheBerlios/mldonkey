@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.10 2003/08/16 20:05:19 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.11 2003/08/17 19:16:36 vnc Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -118,7 +118,7 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 			case 4: // downloaded
 				return ""+fileInfo.getStringDownloaded();
 			case 5: // percent
-				return ""+dfp.format(fileInfo.getPerc());
+				return ""+dfp.format(fileInfo.getPerc()) + "%";
 			case 6: // # sources  fileInfo.getSources() is always 0 
 				return ""+fileInfo.getClientInfos().size();		
 			case 7: // rate
@@ -226,6 +226,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.11  2003/08/17 19:16:36  vnc
+cosmetics: added "%" sign
+
 Revision 1.10  2003/08/16 20:05:19  zet
 *** empty log message ***
 
