@@ -51,8 +51,8 @@ import org.eclipse.swt.widgets.Text;
  * 
  * FileDetailDialog
  *
- * @author $Author: vaste $
- * @version $Id: FileDetailDialog.java,v 1.11 2003/08/22 22:49:22 vaste Exp $ 
+ * @author $Author: zet $
+ * @version $Id: FileDetailDialog.java,v 1.12 2003/08/23 01:00:02 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -157,7 +157,7 @@ public class FileDetailDialog implements Observer {
 		// Rename
 		Group renameGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
 		renameGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_ALTERNATE_FILENAMES"));
-		// TODO (by vaste) change alternate to alternative
+		
 		
 		GridLayout renameGridLayout = new GridLayout();
 		renameGridLayout.numColumns = 1;
@@ -202,7 +202,7 @@ public class FileDetailDialog implements Observer {
 		
 		Button renameButton = new Button(rename, SWT.NONE);
 		renameButton.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_RENAME_BUTTON"));
-		// TODO: (by vaste) add close button.  (to the right of rename?)
+		
 		
 		renameText.addKeyListener( new KeyAdapter() {
 			public void keyPressed( KeyEvent e ) {
@@ -319,11 +319,17 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.12  2003/08/23 01:00:02  zet
+*** empty log message ***
+
 Revision 1.11  2003/08/22 22:49:22  vaste
 new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
+fix Revision 1.12  2003/08/23 01:00:02  zet
+fix *** empty log message ***
+fix
 fix Revision 1.11  2003/08/22 22:49:22  vaste
 fix new todos (name + close button)
 fix
