@@ -41,6 +41,7 @@ import net.mldonkey.g2gui.view.transfer.DownloadPaneMenuListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeContentProvider;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
+import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
@@ -61,7 +62,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.60 2003/09/20 14:39:48 zet Exp $
+ * @version $Id: TransferTab.java,v 1.61 2003/09/26 15:45:59 dek Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -139,13 +140,7 @@ public class TransferTab extends GuiTab {
             CCLabel.createCL( uploadsViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar" );
         Composite uploadersComposite = new Composite( uploadsViewForm, SWT.NONE );
         uploadersComposite.setLayout( new FillLayout() );
-        Button b = new Button( uploadersComposite, SWT.NONE );
-        b.setText( "Try \"uploaders\" or \"upstats\" command in "        		   + "console until gui protocol sends upload information." );
-        b.addSelectionListener( new SelectionAdapter() {
-                public void widgetSelected( SelectionEvent s ) {
-                    mainSashForm.setWeights( new int[] { 100, 0 } );
-                }
-            } );
+        UploadTableViewer upload = new UploadTableViewer(uploadersComposite,mldonkey,this);
         uploadsViewForm.setTopLeft( uploadsCLabel );
         uploadsViewForm.setContent( uploadersComposite );
     }
@@ -287,6 +282,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.61  2003/09/26 15:45:59  dek
+we now have upload-stats (well, kind of...)
+
 Revision 1.60  2003/09/20 14:39:48  zet
 move transfer package
 
@@ -372,7 +370,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

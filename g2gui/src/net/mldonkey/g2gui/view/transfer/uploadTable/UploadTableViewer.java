@@ -49,14 +49,14 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.5 2003/09/26 12:25:52 dek Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.6 2003/09/26 15:45:59 dek Exp $ 
  *
  */
 public class UploadTableViewer {
 	/**
 	 * MyTableSorter
 	 *
-	 * @version $Id: UploadTableViewer.java,v 1.5 2003/09/26 12:25:52 dek Exp $ 
+	 * @version $Id: UploadTableViewer.java,v 1.6 2003/09/26 15:45:59 dek Exp $ 
 	 *
 	 */
 	
@@ -64,7 +64,9 @@ public class UploadTableViewer {
 	private CoreCommunication mldonkey;
 	private Table table;
 	private final String[] COLUMN_LABELS =
-		{ "TT_Download_Network", "TT_Download_Name", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES", };
+		{ "TT_Download_Network", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES","TT_Download_Name" };
+	private final int[] COLUMN_ALIGNEMENT =
+		{ SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT };
 	private TableViewer tableviewer;
 	private boolean ascending = false;
 	private SharedFileInfoIntMap sharedFileInfoIntMap;
@@ -90,7 +92,7 @@ public class UploadTableViewer {
 		table.setHeaderVisible( true );
 		table.setLinesVisible( true );
 		for ( int i = 0; i < COLUMN_LABELS.length; i++ ) {
-			TableColumn tableColumn = new TableColumn( table, SWT.NONE );
+			TableColumn tableColumn = new TableColumn( table, COLUMN_ALIGNEMENT[ i ] );
 			tableColumn.setText( G2GuiResources.getString( COLUMN_LABELS[ i ] ) );			
 			tableColumn.setWidth( 80 );
 			
@@ -210,14 +212,17 @@ public class UploadTableViewer {
 		public String getColumnText( Object element, int columnIndex ) {
 			SharedFileInfo info = ( SharedFileInfo ) element;
 			String result = "";
+			/*
+			 * { "TT_Download_Network", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES","TT_Download_Name" };
+			 */
 			switch ( columnIndex ) {
-				case 1 :
+				case 3 :
 					result = info.getName();
 					break;
-				case 2 :
+				case 1 :
 					result = info.getUploadedString();
 					break;
-				case 3 :
+				case 2 :
 					result = String.valueOf( info.getNumOfQueriesForFile() );
 					break;
 				case 0 :
@@ -275,7 +280,7 @@ public class UploadTableViewer {
 					else
 						result = aString2.compareToIgnoreCase( aString1 );			
 					break;				
-				case 1 : /*filename*/	
+				case 3 : /*filename*/	
 					aString1 = sharedFile1.getNetwork().getNetworkName();
 					aString2 = sharedFile2.getNetwork().getNetworkName();
 					if ( lastSort )
@@ -283,7 +288,7 @@ public class UploadTableViewer {
 					else
 						result = aString2.compareToIgnoreCase( aString1 );					
 					break;				
-				case 2 :/*upload*/
+				case 1 :/*upload*/
 					aLong1 = new Long( sharedFile1.getNumOfBytesUploaded() );
 					aLong2 = new Long( sharedFile2.getNumOfBytesUploaded() );
 					if ( lastSort )
@@ -291,7 +296,7 @@ public class UploadTableViewer {
 					else 
 						result = aLong2.compareTo( aLong1 );								
 					break;				
-				case 3 :/*queries*/	
+				case 2 :/*queries*/	
 					aLong1 = new Long( sharedFile1.getNumOfQueriesForFile() );
 					aLong2 = new Long( sharedFile2.getNumOfQueriesForFile() );
 					if ( lastSort )
@@ -324,6 +329,9 @@ public class UploadTableViewer {
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.6  2003/09/26 15:45:59  dek
+we now have upload-stats (well, kind of...)
+
 Revision 1.5  2003/09/26 12:25:52  dek
 changed refresh() -> update() to avoid flickering table
 
