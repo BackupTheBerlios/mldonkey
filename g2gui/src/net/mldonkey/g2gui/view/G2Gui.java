@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.helper.ObjectPool;
 import net.mldonkey.g2gui.helper.SocketPool;
 import net.mldonkey.g2gui.view.pref.Preferences;
@@ -50,10 +51,11 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.8 2003/08/07 13:25:37 lemmstercvs01 Exp $ 
+ * @version $Id: G2Gui.java,v 1.9 2003/08/15 22:39:53 dek Exp $ 
  *
  */
 public class G2Gui {
+	private static boolean notProcessingLink = true;
 	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
 	private static Process p;
 	private static Thread mldonkey;
@@ -79,39 +81,45 @@ public class G2Gui {
 	 * Starts a new Core and launch the Gui
 	 * @param args Nothing to put inside
 	 */
-	public static void main( String[] args ) {
-		/* initializing */
+	public static void main( String[] args ) {		
+		if ( containsLink(args) ) notProcessingLink = false;
+		
+		/* initializing */		
 		display = new Display();
 		shell = new Shell( display );
-		splashShell = new Shell( display, SWT.ON_TOP );
 		preferenceStore = new PreferenceStore( "g2gui.pref" );
 		myPrefs = new Preferences( preferenceStore );
-		waiterObject = new Object();
+		splashShell = new Shell( display, SWT.ON_TOP );	
 		box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
-		progressBar = new ProgressBar( splashShell, SWT.NONE );
-		count = new int[] { 3 };
-
-		/* build the splash */
-		progressBar.setMaximum( count[0] );
-		image = new Image( display, "icons/splash.png" );
-		label = new Label( splashShell, SWT.NONE );
-		label.setImage( image );
-		FormLayout layout = new FormLayout();
-		splashShell.setLayout( layout );
-		formData = new FormData();
-		formData.left = new FormAttachment( 0, 5 );
-		formData.right = new FormAttachment( 100, -5 );
-		formData.bottom = new FormAttachment( 100, -5 );
-		progressBar.setLayoutData( formData );
-		splashShell.pack();
-		shellRect = splashShell.getBounds();
-		displayRect = display.getBounds();
-		int x = ( displayRect.width - shellRect.width ) / 2;
-		int y = ( displayRect.height - shellRect.height ) / 2;
-		splashShell.setLocation( x, y );
-		splashShell.open(); //TODO disabled for developing
-
-		increaseBar( "Starting the model" );
+		waiterObject = new Object();
+		
+		if (notProcessingLink){		
+					
+			progressBar = new ProgressBar( splashShell, SWT.NONE );
+			count = new int[] { 3 };
+				
+			/* build the splash */
+			progressBar.setMaximum( count[0] );
+			image = new Image( display, "icons/splash.png" );
+			label = new Label( splashShell, SWT.NONE );
+			label.setImage( image );
+			FormLayout layout = new FormLayout();
+			splashShell.setLayout( layout );
+			formData = new FormData();
+			formData.left = new FormAttachment( 0, 5 );
+			formData.right = new FormAttachment( 100, -5 );
+			formData.bottom = new FormAttachment( 100, -5 );
+			progressBar.setLayoutData( formData );
+			splashShell.pack();
+			shellRect = splashShell.getBounds();
+			displayRect = display.getBounds();
+			int x = ( displayRect.width - shellRect.width ) / 2;
+			int y = ( displayRect.height - shellRect.height ) / 2;
+			splashShell.setLocation( x, y );
+			splashShell.open(); //TODO disabled for developing
+			
+			increaseBar( "Starting the model" );
+		}
 
 		/* load the preferences */
 		try {
@@ -144,7 +152,7 @@ public class G2Gui {
 			box.setMessage( res.getString( "G2_ILLEGAL_ADDRESS" ) );
 			box.open();
 			myPrefs.open( shell, null );
-			relaunchSelf();
+			relaunchSelf(args);
 		}
 		catch ( IOException e ) {
 			splashShell.dispose();
@@ -153,11 +161,12 @@ public class G2Gui {
 			box.setMessage( res.getString( "G2_CORE_NOT_RUNNING" ) );
 			box.open();
 			myPrefs.open( shell, null );
-			relaunchSelf();
+			relaunchSelf(args);
 		}
 		
 		/* launch the model */
-		core = new Core( socket, username, password, waiterObject );
+		boolean pushmode = ! notProcessingLink;
+		core = new Core( socket, username, password, waiterObject, pushmode );
 		core.connect();
 		mldonkey = new Thread( core );
 		mldonkey.setDaemon( true );
@@ -173,27 +182,51 @@ public class G2Gui {
 			}
 			/* did the core receive "bad password" */
 			if ( core.getBadPassword() ) {
-				badPasswordHandling();
+				badPasswordHandling(args);
 			}
 			/* user/pass was valid, leave the loop */
 			else
 				break;
 		}
-		
-		increaseBar( "Starting the view" ); 
-		
-		/* launch the view */	
-		MainTab g2gui = new MainTab( core, shell );
+		if (notProcessingLink){
+			increaseBar( "Starting the view" ); 			
+			/* launch the view */	
+			MainTab g2gui = new MainTab( core, shell );
+		}
+		else {
+			sendEd2kLink();
+		}
 		core.disconnect();
 	}
 	
 	/**
-	 * relaunch the main method with killing the old one
+	 * @param args
+	 * @return
 	 */
-	private static void relaunchSelf() {
+	private static boolean containsLink(String[] args) {
+		/*TODO: regex-check wether the args[] contains an ed2k-link
+		 * this is for the handling of platform independent link-handling-hack
+		 */
+		return false;
+	}
+
+	/**
+	 * 
+	 */
+	private static void sendEd2kLink() {
+		//TODO creating message and send it out
 		shell.dispose();
 		display.dispose();
-		G2Gui.main( null );
+		
+	}
+
+	/**
+	 * relaunch the main method with killing the old one
+	 */
+	private static void relaunchSelf(String[] args) {
+		shell.dispose();
+		display.dispose();
+		G2Gui.main( args );
 	}
 	
 	
@@ -201,7 +234,7 @@ public class G2Gui {
 	 * Raise an messagebox on badpassword exception
 	 * and send the password again
 	 */
-	public static void badPasswordHandling() {
+	public static void badPasswordHandling(String[] args) {
 		splashShell.dispose();
 		image.dispose();
 		/* raise a warning msg */
@@ -212,7 +245,7 @@ public class G2Gui {
 		/* dont launch the gui but launch the password box */
 		myPrefs.open( shell, null );
 		/* send the password again */
-		relaunchSelf();
+		relaunchSelf(args);
 	}
 
 	/**
@@ -250,6 +283,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.9  2003/08/15 22:39:53  dek
+ed2k-link handling-hack started
+
 Revision 1.8  2003/08/07 13:25:37  lemmstercvs01
 ResourceBundle added
 

@@ -37,10 +37,11 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.80 2003/08/12 04:10:29 zet Exp $ 
+ * @version $Id: Core.java,v 1.81 2003/08/15 22:39:44 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
+	private boolean pushmodeEnabled;
 	private boolean initialized;
 	private boolean badPassword = true;
 	/**
@@ -128,11 +129,12 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param password
 	 * @param waiterObj
 	 */
-	public Core( Socket socket, String username, String password, Object waiterObj ) {
+	public Core( Socket socket, String username, String password, Object waiterObj, boolean pushmodeEnabled ) {
 		this.connection = socket;
 		this.username = username;
 		this.password = password;
 		this.waiterObj = waiterObj;
+		this.pushmodeEnabled = pushmodeEnabled;
 	}
 
 	/**
@@ -170,7 +172,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 				opCode = messageBuffer.readInt16();		
 				
 				/* decode the message content */			
-				this.decodeMessage( opCode, messageLength, messageBuffer );
+				this.decodeMessage( opCode, messageLength, messageBuffer, pushmodeEnabled );
 			}
 		}	
 		catch ( SocketException e ) {
@@ -190,7 +192,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private synchronized void decodeMessage( short opcode, int messageLength, MessageBuffer messageBuffer ) {
+	private synchronized void decodeMessage( short opcode, int messageLength, MessageBuffer messageBuffer, boolean pushmodeEnabled ) {
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
 					coreProtocol = messageBuffer.readInt32();
@@ -202,7 +204,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 						this.usingVersion = protocolVersion;
 					
 					this.sendPassword( this.username, this.password );	
-					
+					this.sendPushmode(pushmodeEnabled);
 					break;
 					
 			case Message.R_DEFINE_SEARCH :
@@ -344,6 +346,16 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	}
 	
 	/**
+	 * @param pushmodeEnabled
+	 */
+	private void sendPushmode( boolean pushmodeEnabled ) {
+		if ( pushmodeEnabled ){	
+			//TODO creating message and send it out			
+		}
+		
+	}
+
+	/**
 	 * Sends our protocol version to the core
 	 */	
 	private void sendProtocolVersion() {
@@ -453,6 +465,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.81  2003/08/15 22:39:44  dek
+ed2k-link handling-hack started
+
 Revision 1.80  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 
