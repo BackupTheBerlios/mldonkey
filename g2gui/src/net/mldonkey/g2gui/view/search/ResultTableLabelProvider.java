@@ -28,20 +28,22 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GTableLabelProvider;
 
 import org.eclipse.jface.viewers.IColorProvider;
-
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 
 /**
  * ResultTableLabelProvider
  *
  *
- * @version $Id: ResultTableLabelProvider.java,v 1.20 2003/10/22 14:38:32 dek Exp $
+ * @version $Id: ResultTableLabelProvider.java,v 1.21 2003/10/22 23:43:36 zet Exp $
  *
  */
 public class ResultTableLabelProvider extends GTableLabelProvider implements IColorProvider {
     private Color alreadyDownloadedColor = new Color(null, 41, 174, 57);
+    private Color containsFakeColor = Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED);
 
     public ResultTableLabelProvider(ResultTableViewer rTableViewer) {
         super(rTableViewer);
@@ -64,7 +66,7 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
             }
 
         case ResultTableViewer.AVAILABILITY:
-            return G2GuiResources.getRatingImage(resultInfo.getAvail());
+            return G2GuiResources.getRatingImage(resultInfo.containsFake() ? -1 : resultInfo.getAvail());
 
         default:
             return null;
@@ -122,12 +124,12 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
     public Color getForeground(Object element) {
         if (element instanceof ResultInfo) {
             ResultInfo resultInfo = (ResultInfo) element;
-
             if (!resultInfo.getHistory()) {
                 return alreadyDownloadedColor;
+            } else if ( resultInfo.containsFake() ) {
+                return containsFakeColor;
             }
         }
-
         return null;
     }
 }
@@ -135,6 +137,9 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.21  2003/10/22 23:43:36  zet
+flag results that contain "fake" string
+
 Revision 1.20  2003/10/22 14:38:32  dek
 removed malformed UTF-8 char gcj complains about (was only in comment)
 
@@ -154,7 +159,7 @@ Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.14  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer
