@@ -36,19 +36,18 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Text;
+
 /**
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.25 2003/08/25 13:21:35 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.26 2003/08/26 08:55:52 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -99,31 +98,8 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 					String optionHelp = temp.getOptionHelp();					
 						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
 							
-					/*create a IntegerFieldEditor and add to page
-					 * 
-					 * this is kind of hacky, but i don't see another way to get the stuff
-					 * with the different-sized inputs done...
-					 */
-					
-					IntegerFieldEditor integer = new IntegerFieldEditor( temp.getKey(), description, parent ) {
-							/* (non-Javadoc)
-							 * @see org.eclipse.jface.preference.StringFieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite, int)
-							 */
-							protected void doFillIntoGrid( Composite parent, int numColumns ) {
-								getLabelControl( parent );
-								Text textField = getTextControl( parent );
-								GridData gd = new GridData();
-								gd.horizontalSpan = numColumns - 1;							
-								GC gc = new GC( textField );
-									try {
-										Point extent = gc.textExtent( "X" );
-										gd.widthHint = inputFieldLength * extent.x;
-									} finally {
-										gc.dispose();
-									}						
-								textField.setLayoutData( gd );
-							}
-						};					
+					/*create a IntegerFieldEditor and add to page*/					
+					IntegerFieldEditor integer = new IntegerFieldEditor( temp.getKey(), description, parent );					
 						integer.getLabelControl( parent ).setToolTipText( optionHelp );
 						integer.setPreferenceStore( this.getPreferenceStore() );					
 						integer.fillIntoGrid( parent, 2 );
@@ -134,9 +110,10 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 					String description = temp.getDescription();
 						if ( description.equals( "" ) ) description = temp.getKey();
 					String optionHelp = temp.getOptionHelp();					
-						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
-					// with a very long string, the pref pages looks bad. limit to inputFieldLength?
-					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, inputFieldLength, parent ); 
+						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();	
+						
+					/*create a StringFieldEditor and add to page*/					
+					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, parent ); 
 						string.getLabelControl( parent ).setToolTipText( optionHelp );					
 						string.setPreferenceStore( this.getPreferenceStore() );
 						string.fillIntoGrid( parent, 2 );
@@ -164,7 +141,19 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		
 		computeSize();
 		
-		sc = new ScrolledComposite( myparent, SWT.H_SCROLL | SWT.V_SCROLL );
+		sc = new ScrolledComposite( myparent, SWT.H_SCROLL | SWT.V_SCROLL ) {
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.custom.ScrolledComposite#computeSize(int, int, boolean)
+			 */
+			public Point computeSize( int wHint, int hHint, boolean changed ) 
+			/* This method is the Holy Grail:
+			 *  1. It gets rid of the ugly horizontal scollbars, without the need to restrict
+			 *     the input-Fields
+			 *  2. It prevents the window from becoming huge (as in hight and width) when
+			 *     reopening "General" (or equivalents)
+			 */ 
+				{ return new Point( SWT.DEFAULT, SWT.DEFAULT ); }
+			};
 		
 		sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 			sc.setLayout( new FillLayout() );
@@ -209,6 +198,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 } 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.26  2003/08/26 08:55:52  dek
+i found the holy grail (see comment)
+
 Revision 1.25  2003/08/25 13:21:35  dek
 checkstyle
 
