@@ -1,3 +1,6 @@
+2004/04/06: vnc
+	* reduced CPU-usage a lot when in tray/minimized
+
 2004/04/04: Dek
 	* removed external Tray-support, now we need swt 3044 from eclipse's 3.0M8
 		just for saving one dll and the ugly workarounds for win32-only Trays
