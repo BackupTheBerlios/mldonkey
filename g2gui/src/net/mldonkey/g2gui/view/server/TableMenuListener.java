@@ -22,6 +22,9 @@
  */
 package net.mldonkey.g2gui.view.server;
 
+import gnu.regexp.RE;
+import gnu.regexp.REException;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -66,7 +69,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * TableMenuListener
  *
  * @author $user$
- * @version $Id: TableMenuListener.java,v 1.5 2003/08/07 13:25:37 lemmstercvs01 Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.6 2003/08/09 13:51:02 dek Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -302,9 +305,15 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			 * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
 			 */
 			public String isValid( String newText ) {
-				Pattern pattern = Pattern.compile( "([a-z0-9-.]*):[0-9]{1,5}" );
-				Matcher m = pattern.matcher( newText );
-				if ( m.matches() )
+				
+				RE regex = null;				
+				try {
+					 regex = new RE( "([a-z0-9-.]*):[0-9]{1,5}" );
+				} catch ( REException e ) {			
+					e.printStackTrace();
+				}
+				
+				if ( regex.isMatch( newText ) )				
 					return null;
 				else
 					return res.getString( "TML_INVALID_INPUT" );
@@ -581,7 +590,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 					GridData.GRAB_VERTICAL |
 					GridData.HORIZONTAL_ALIGN_FILL |
 					GridData.VERTICAL_ALIGN_CENTER );
-				data.widthHint = convertHorizontalDLUsToPixels( IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH );;
+				data.widthHint = convertHorizontalDLUsToPixels( IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH );
 				label.setLayoutData( data );
 				label.setFont( parent.getFont() );
 			}
@@ -628,6 +637,12 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.6  2003/08/09 13:51:02  dek
+added gnu.regexp for compiling with gcj
+you can get it at:
+
+ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz
+
 Revision 1.5  2003/08/07 13:25:37  lemmstercvs01
 ResourceBundle added
 
