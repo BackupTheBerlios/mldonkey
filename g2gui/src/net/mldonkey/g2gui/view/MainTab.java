@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.24 2003/07/29 10:10:14 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.25 2003/07/31 17:11:07 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer {
@@ -70,7 +70,7 @@ public class MainTab implements Listener, Observer {
 	private static PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
 	private static ImageRegistry imageRegistry = new ImageRegistry();
 	private ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
-	private Shell thisShell = null;
+	private static Shell thisShell = null;
 	private final String titleBarText = "g2gui alpha";
 	/**
 	 * @param core the most important thing of the gui: were do i get my data from
@@ -596,10 +596,16 @@ public class MainTab implements Listener, Observer {
 	public static Image getImageFromRegistry (String key) {
 		return imageRegistry.get(key);
 	}
+	public static Shell getShell() {
+		return thisShell;
+	}
 } 
 
 /*
 $Log: MainTab.java,v $
+Revision 1.25  2003/07/31 17:11:07  zet
+getShell
+
 Revision 1.24  2003/07/29 10:10:14  lemmstercvs01
 moved icon folder out of src/
 
