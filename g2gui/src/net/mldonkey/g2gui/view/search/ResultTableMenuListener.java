@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.10 2003/09/08 15:43:34 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.11 2003/09/15 15:32:09 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -221,13 +221,13 @@ Yet			menuManager.add( webManager );
 				if ( rc == SWT.YES ) {
 					download.setForce( true );
 					download.send();
-					result.setDownloading();
+					result.setDownloading( true );
 					counter++;
 				}
 			}
 			else {
 				download.send();
-				result.setDownloading();
+				result.setDownloading( true );
 				counter++;
 			}
 		}
@@ -333,6 +333,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.11  2003/09/15 15:32:09  lemmster
+reset state of canceled downloads from search [bug #908]
+
 Revision 1.10  2003/09/08 15:43:34  lemmster
 work in progress
 

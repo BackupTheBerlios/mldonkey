@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.20 2003/09/08 12:38:00 lemmster Exp $ 
+ * @version $Id: ResultInfo.java,v 1.21 2003/09/15 15:32:09 lemmster Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -412,13 +412,36 @@ public class ResultInfo extends Parent {
 	/**
 	 * set this download to downloaded
 	 */
-	public void setDownloading() {
-		downloading = true;
+	public void setDownloading( boolean bool ) {
+		downloading = bool;
+	}
+	
+    /**
+     * Compares this resultInfo to the specified object.
+     * The result is <code>true</code> if and only if the argument is not
+     * <code>null</code> and is a <code>FileInfo</code> object that represents
+     * the same sequence of md4 characters/size as this object.
+     *
+	 * @param aFileInfo the object to compare this <code>ResultInfo</code> against
+	 * @return <code>true</code> if the objs are equal;
+     *          <code>false</code> otherwise.
+	 */
+	public boolean equals( FileInfo aFileInfo ) {
+		/* does the size match */
+		if ( !( this.getSize() == aFileInfo.getSize() ) )
+			return false;
+		if ( !this.getNames()[ 0 ].equals( aFileInfo.getNames()[ 0 ] ) )
+			return false;		
+		return true;
+		//TODO use just the md4 to compare (when the core sends a correct one)
 	}
 }
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.21  2003/09/15 15:32:09  lemmster
+reset state of canceled downloads from search [bug #908]
+
 Revision 1.20  2003/09/08 12:38:00  lemmster
 show bitrate/length for audio files in tooltip
 

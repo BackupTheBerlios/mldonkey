@@ -78,7 +78,7 @@ import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.40 2003/09/08 12:38:00 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.41 2003/09/15 15:32:09 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -155,6 +155,15 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         /* if the tab is already disposed, dont update */
         if ( cTabItem.isDisposed() || this.stopped )
             return;
+            
+        if ( arg instanceof ResultInfo ) {
+        	cTabFolder.getDisplay().asyncExec( new Runnable() {
+				public void run() {
+					table.update( arg, null );
+				}
+        	} );
+        	return;
+        }    
 
         /* are we responsible for this update */
         if ( ( ( ResultInfoIntMap ) arg ).containsKey( searchId ) )
@@ -583,6 +592,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.41  2003/09/15 15:32:09  lemmster
+reset state of canceled downloads from search [bug #908]
+
 Revision 1.40  2003/09/08 12:38:00  lemmster
 show bitrate/length for audio files in tooltip
 

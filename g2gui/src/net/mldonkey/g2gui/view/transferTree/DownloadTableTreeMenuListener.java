@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.TableItem;
  * 
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.28 2003/09/14 03:37:43 zet Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.29 2003/09/15 15:32:09 lemmster Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -326,6 +326,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	 			FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
 	 			if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
 		  			fileInfo.setState(EnumFileState.CANCELLED);
+		  			mldonkey.getResultInfoIntMap().setDownloading( fileInfo, false );
 	 			}
 			}
 		}
@@ -395,6 +396,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.29  2003/09/15 15:32:09  lemmster
+reset state of canceled downloads from search [bug #908]
+
 Revision 1.28  2003/09/14 03:37:43  zet
 changedProperties
 
@@ -441,7 +445,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/22 14:30:45  lemmster
 verify chunks added
