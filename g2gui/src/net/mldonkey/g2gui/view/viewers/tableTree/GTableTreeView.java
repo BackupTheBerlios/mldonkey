@@ -41,14 +41,14 @@ import org.eclipse.swt.widgets.Table;
 /**
  * GTableTreeViewer
  *
- * @version $Id: GTableTreeView.java,v 1.1 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: GTableTreeView.java,v 1.2 2003/10/31 16:26:32 zet Exp $
  *
  */
 public class GTableTreeView extends GView {
     protected GTableLabelProvider tableLabelProvider;
     protected GTableTreeContentProvider tableTreeContentProvider;
     protected GTableMenuListener tableTreeMenuListener;
-    private StructuredViewer sViewer;
+    protected StructuredViewer sViewer;
 
     public GTableTreeView(Composite parent, CoreCommunication core) {
         this.core = core;
@@ -144,6 +144,9 @@ public class GTableTreeView extends GView {
 
 /*
 $Log: GTableTreeView.java,v $
+Revision 1.2  2003/10/31 16:26:32  zet
+private->protected
+
 Revision 1.1  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
