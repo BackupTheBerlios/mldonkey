@@ -45,8 +45,8 @@ import org.eclipse.swt.widgets.Text;
 /**
  * Search
  *
- * @author $Author: lemmster $
- * @version $Id: Search.java,v 1.11 2003/08/20 10:04:41 lemmster Exp $ 
+ * @author $Author: vaste $
+ * @version $Id: Search.java,v 1.12 2003/08/22 14:33:06 vaste Exp $ 
  *
  */
 public abstract class Search implements Observer {
@@ -105,6 +105,13 @@ public abstract class Search implements Observer {
 		gridData.horizontalSpan = 2;
 		text = new Text( group, SWT.SINGLE | SWT.BORDER );
 		text.setLayoutData( gridData );
+		// TODO Change all input to a monospaced font
+		// See http://www.nongnu.org/freefont/ and
+		// http://savannah.nongnu.org/download/freefont/freefont-ttf.zip
+		// for a possible candidate if we need to include them ourselves
+		//
+		// temporarily changed font as an example:
+		text.setFont(new org.eclipse.swt.graphics.Font(null, "Courier New", 10, SWT.NORMAL));
 		text.addKeyListener( new KeyAdapter() {
 			public void keyPressed( KeyEvent e ) {
 				if ( e.character == SWT.CR ) {
@@ -191,6 +198,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.12  2003/08/22 14:33:06  vaste
+temporarily changed font to monospaced as an example (ugly hack)
+
 Revision 1.11  2003/08/20 10:04:41  lemmster
 inputbox disabled when zero searchable networks are enabled
 
