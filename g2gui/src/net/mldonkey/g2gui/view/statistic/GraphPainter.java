@@ -101,7 +101,7 @@ public class GraphPainter {
 				
 				} 
 				fac = height/maximum; 
-				System.out.println("valueY" + valueY + " - Maximum:"+ maximum);
+				//System.out.println("valueY" + valueY + " - Maximum:"+ maximum);
 				valueY = height - valueY*fac;
 				
 				drawBoard.drawLine(k,height,k,valueY);
@@ -111,7 +111,7 @@ public class GraphPainter {
 			double vv = (double)graphs[which].getLast().getValue()/100;
 			
 			
-			System.out.println("wert:" + (height-(int)vv));
+			//System.out.println("wert:" + (height-(int)vv));
 			int textPosition = height - graphs[which].getLast().getValue()/10*fac;
 			Color aimColor = new Color(null,0,0,0);
 			drawBoard.setForeground(aimColor);
