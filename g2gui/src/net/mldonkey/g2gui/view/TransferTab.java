@@ -70,7 +70,7 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.78 2003/10/22 01:36:26 zet Exp $
+ * @version $Id: TransferTab.java,v 1.79 2003/10/22 01:58:32 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -349,26 +349,26 @@ public class TransferTab extends GuiTab {
             }
         }
 
-        String newText = "" + totalFiles;
+        String newText = "";
 
         if (totalActive > 0) {
-            newText += (" | " + G2GuiResources.getString("TT_Active").toLowerCase() + "(" + totalActive + "): " +
-            FileInfo.calcStringSize(activeDownloaded) + "/" + FileInfo.calcStringSize(activeTotal));
+			newText += totalActive + " / " + totalFiles + " " + G2GuiResources.getString( "TT_Active" ).toLowerCase() 
+			+ " (" + FileInfo.calcStringSize( activeDownloaded ) + " / " + FileInfo.calcStringSize( activeTotal ) + ")";
         }
 
         if (totalPaused > 0) {
-            newText += (" | " + G2GuiResources.getString("TT_Status0").toLowerCase() + "(" + totalPaused + "): " +
-            FileInfo.calcStringSize(pausedDownloaded) + "/" + FileInfo.calcStringSize(pausedTotal));
+			newText += ", " + G2GuiResources.getString( "TT_Status0" ) + ": " + totalPaused 
+			+ " (" + FileInfo.calcStringSize( pausedDownloaded ) + " / " + FileInfo.calcStringSize( pausedTotal ) + ")";
         }
 
         if (totalQueued > 0) {
-            newText += (" | " + G2GuiResources.getString("TT_Queued").toLowerCase() + "(" + totalQueued + "): " +
-            FileInfo.calcStringSize(queuedDownloaded) + "/" + FileInfo.calcStringSize(queuedTotal));
+			newText += ", " + G2GuiResources.getString( "TT_Queued" ) + ": " + totalQueued 
+			+ " (" + FileInfo.calcStringSize( queuedDownloaded ) + " / " + FileInfo.calcStringSize( queuedTotal ) + ")";
         }
 
         if (totalDownloaded > 0) {
-            newText += (" | " + G2GuiResources.getString("TT_Downloaded").toLowerCase() + "(" + totalDownloaded + "): " +
-            FileInfo.calcStringSize(downloadedTotal) + "");
+			newText += ", " + G2GuiResources.getString( "TT_Downloaded" ) + ": " + totalDownloaded 
+			+  " (" + FileInfo.calcStringSize( downloadedTotal ) + ")";
         }
 
         if (!oldDLabelText.equals(newText)) {
@@ -438,6 +438,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.79  2003/10/22 01:58:32  zet
+comma delimited
+
 Revision 1.78  2003/10/22 01:36:26  zet
 add column selector to server/search (might not be finished yet..)
 
