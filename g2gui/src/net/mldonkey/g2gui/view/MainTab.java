@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.6 2003/07/22 16:22:56 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.7 2003/07/22 16:41:38 zet Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -314,6 +314,7 @@ public class MainTab implements Listener {
 	private void addTabs() {
 		new TransferTab( this );
 		new ConsoleTab( this );
+		new StatisticTab( this );
 		/*setting TransferTab active if registered*/
 		Iterator tabIterator = registeredTabs.iterator();
 		while ( tabIterator.hasNext() ) {
@@ -452,6 +453,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.7  2003/07/22 16:41:38  zet
+register statistics tab
+
 Revision 1.6  2003/07/22 16:22:56  zet
 setSizeLocation after pack
 
