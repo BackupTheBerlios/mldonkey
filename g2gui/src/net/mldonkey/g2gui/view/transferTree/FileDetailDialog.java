@@ -82,7 +82,7 @@ public class FileDetailDialog implements Observer {
 								  (desktop.getBounds().height - height) / 2,
 								  width, height);
 								  
-		shell.setImage(MainTab.getImageFromRegistry("TransfersButton"));
+		shell.setImage(MainTab.getImageFromRegistry("ProgramIcon"));
 		shell.setText( "File " + fileInfo.getId() + " details");						  
 								  
 		GridLayout gridLayout = new GridLayout();
