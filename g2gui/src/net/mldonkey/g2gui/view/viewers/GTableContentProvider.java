@@ -30,11 +30,11 @@ import org.eclipse.jface.viewers.Viewer;
  *
  * GenericContentProvider
  *
- * @version $Id: GTableContentProvider.java,v 1.1 2003/10/22 01:36:59 zet Exp $
+ * @version $Id: GTableContentProvider.java,v 1.2 2003/10/22 21:23:19 zet Exp $
  *
  */
 public class GTableContentProvider implements IStructuredContentProvider {
-    private final static Object[] EMPTY_ARRAY = new Object[ 0 ];
+    protected final static Object[] EMPTY_ARRAY = new Object[ 0 ];
     protected CustomTableViewer tableViewer;
     protected GTableViewer gTableViewer;
 
@@ -73,6 +73,9 @@ public class GTableContentProvider implements IStructuredContentProvider {
 
 /*
 $Log: GTableContentProvider.java,v $
+Revision 1.2  2003/10/22 21:23:19  zet
+private -> protected
+
 Revision 1.1  2003/10/22 01:36:59  zet
 add column selector to server/search (might not be finished yet..)
 
