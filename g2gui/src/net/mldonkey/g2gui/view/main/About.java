@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.27 2003/12/04 08:47:31 lemmy Exp $ 
+ * @version $Id: About.java,v 1.28 2004/01/13 18:53:00 psy Exp $ 
  *
  */
 public class About extends Dialog {
@@ -128,10 +128,10 @@ public class About extends Dialog {
 		G2GuiResources.getString( "ABOUT_DEVEL" );
 		
 		String develHeader = G2GuiResources.getString( "ABOUT_DEVEL" ) + "\n";
-		String devels = "Dek, lemmy, vnc and z\n\n";
+		String devels = "Dek, lemmy, vnc\n\n";
 
 		String contributorHeader = G2GuiResources.getString( "ABOUT_CONTRIB" ) + "\n";
-		String contributors = "housetier, mitch and vaste\n\n";
+		String contributors = "housetier, mitch, vaste, z\n\n";
 		
 		
 		String thankHeader = G2GuiResources.getString( "ABOUT_THANK" ) + "\n";
@@ -186,7 +186,7 @@ public class About extends Dialog {
 			gd.verticalAlignment = GridData.CENTER;
 			gd.horizontalAlignment = GridData.CENTER;
 		info.setLayoutData( gd );		
-		info.setText(  "G2gui " + VersionInfo.getVersion() + " is (c) 2003 by the G2gui team, \n" 
+		info.setText(  "G2gui is (c) 2003,2004 by the G2gui team, \n" 
 					 + "all of our own java code is released under \n" 
 					 + "the  " );	
 					 	
@@ -199,7 +199,7 @@ public class About extends Dialog {
 				gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				gd.horizontalSpan = 2;
 				swt.setLayoutData( gd );
-				swt.setText( "swt-" + SWT.getPlatform() + "-" + SWT.getVersion() );
+				swt.setText( "g2gui " + VersionInfo.getVersion() + "\n" + "swt-" + SWT.getPlatform() + "-" + SWT.getVersion() );
 		
 		info.addMouseMoveListener( new MouseMoveListener() {
 			public void mouseMove( MouseEvent e ) {
@@ -254,7 +254,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.27 2003/12/04 08:47:31 lemmy Exp $ 
+	 * @version $Id: About.java,v 1.28 2004/01/13 18:53:00 psy Exp $ 
 	 *
 	 */
 	public class Link {
@@ -303,6 +303,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.28  2004/01/13 18:53:00  psy
+credits update
+
 Revision 1.27  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
