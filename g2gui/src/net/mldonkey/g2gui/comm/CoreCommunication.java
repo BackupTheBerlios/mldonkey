@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.14 2003/06/27 16:23:01 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.15 2003/06/28 20:08:45 dek Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -74,4 +74,11 @@ public interface CoreCommunication {
 	 * 
 	 */
 	 OptionsInfoMap getOptions();
+	 
+	 /**
+	  * Sets the option <b> name</b> to the <b>value</b>
+	  * @param name name of the option
+	  * @param value the value
+	  */
+	public void setOption( String name, String value );
 }
