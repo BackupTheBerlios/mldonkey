@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.transferTree;
 
@@ -55,390 +55,404 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
- * 
+ *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.31 2003/09/18 12:43:29 lemmster Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.32 2003/09/18 13:04:36 lemmster Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
+    private FileInfo lastSelectedFile;
+    private FileInfo selectedFile;
+    private TreeClientInfo selectedClient;
+    private ArrayList selectedClients = new ArrayList();
+    private ArrayList selectedFiles = new ArrayList();
+    private TableTreeViewer tableTreeViewer;
+    private TableViewer clientTableViewer;
+    private DownloadTableTreeContentProvider tableTreeContentProvider;
+    private CoreCommunication mldonkey;
+    private boolean createClientTable = false;
 
-	private FileInfo lastSelectedFile, selectedFile;
-	private TreeClientInfo selectedClient;
-	private ArrayList selectedClients = new ArrayList();
-	private ArrayList selectedFiles = new ArrayList();
-	private TableTreeViewer tableTreeViewer;
-	private TableViewer clientTableViewer;
-	private DownloadTableTreeContentProvider tableTreeContentProvider;
-	private CoreCommunication mldonkey;
-	private boolean createClientTable = false;
+    /**
+     * DOCUMENT ME!
+     *
+     * @param tableTreeViewer DOCUMENT ME!
+     * @param clientTableViewer DOCUMENT ME!
+     * @param mldonkey DOCUMENT ME!
+     */
+    public DownloadTableTreeMenuListener( TableTreeViewer tableTreeViewer, TableViewer clientTableViewer,
+                                          CoreCommunication mldonkey ) {
+        this.tableTreeViewer = tableTreeViewer;
+        this.clientTableViewer = clientTableViewer;
+        this.mldonkey = mldonkey;
+        tableTreeContentProvider =
+            ( DownloadTableTreeContentProvider ) tableTreeViewer.getContentProvider();
 
-	/**
-	 * DOCUMENT ME! 
-	 * 
-	 * @param tableTreeViewer DOCUMENT ME!
-	 * @param clientTableViewer DOCUMENT ME!
-	 * @param mldonkey DOCUMENT ME!
-	 */
-	public DownloadTableTreeMenuListener( TableTreeViewer tableTreeViewer, TableViewer clientTableViewer, CoreCommunication mldonkey ) {
-		this.tableTreeViewer = tableTreeViewer;
-		this.clientTableViewer = clientTableViewer;
-		this.mldonkey = mldonkey;
-		tableTreeContentProvider = ( DownloadTableTreeContentProvider ) tableTreeViewer.getContentProvider();
-	
-		/*this is to delete the selection, if one clicks in an empty row of the table*/
-		tableTreeViewer.getTableTree().getTable().addMouseListener(  new MouseListener() {
-			public void mouseDoubleClick(  MouseEvent e  ) { }
-	
-			public void mouseDown(  MouseEvent e  ) {
-				Table table = (  Table  ) e.widget;
-				TableItem item = table.getItem(  new Point(  e.x, e.y  )  );	
-				if (  item == null  ) {
-					table.setSelection(  new int[ 0 ]  );		
-					selectedFiles.clear();
-					selectedClients.clear();
-					selectedClient = null;
-					selectedFile = null;
-				}
-			}
-			public void mouseUp(  MouseEvent e  ) { }
-		}  );
-	
-	}
-	
-	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param e DOCUMENT ME!
-	 */
-	public void selectionChanged( SelectionChangedEvent e ) {
-		IStructuredSelection sSel = ( IStructuredSelection ) e.getSelection();
-		Object o = sSel.getFirstElement();
+        /*this is to delete the selection, if one clicks in an empty row of the table*/
+        tableTreeViewer.getTableTree().getTable().addMouseListener( new MouseListener() {
+                public void mouseDoubleClick( MouseEvent e ) {
+                }
 
-		if ( o instanceof FileInfo ) {
-			FileInfo fileInfo = ( FileInfo ) o;
-			selectedFile = fileInfo;
-			if ( createClientTable
-			&& ( lastSelectedFile == null || lastSelectedFile != selectedFile ) ) {
-				clientTableViewer.setInput( fileInfo );
-			}
-			lastSelectedFile = selectedFile;
-			
-		} else
-			selectedFile = null;
-			
-		if ( o instanceof TreeClientInfo ) {
-			selectedClient = ( TreeClientInfo ) o;
-		} else
-			selectedClient = null;
-		
-		selectedClients.clear();
-		selectedFiles.clear();	
-		for ( Iterator it = sSel.iterator(); it.hasNext();) {
-			o = it.next();
-			if ( o instanceof FileInfo ) 
-				selectedFiles.add( ( FileInfo ) o );
-			else if ( o instanceof TreeClientInfo )
-				selectedClients.add( ( TreeClientInfo ) o );	
-		}
-	}
-	
-	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param b DOCUMENT ME!
-	 */
-	public void updateClientsTable( boolean b ) {
-		if ( b ) {
-			if ( createClientTable != b )
-				clientTableViewer.setInput( lastSelectedFile );				
-		}
-		else {
-			clientTableViewer.setInput( null );
-		}
-		createClientTable = b;
-	}
-	
-	
-	/* ( non-Javadoc )
-	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow( org.eclipse.jface.action.IMenuManager )
-	 */
-	public void menuAboutToShow( IMenuManager menuManager ) {
-		if ( selectedFile != null
-		 	&& selectedFileListContains( EnumFileState.DOWNLOADED ) )
-			 menuManager.add( new CommitAction() );
+                public void mouseDown( MouseEvent e ) {
+                    Table table = ( Table ) e.widget;
+                    TableItem item = table.getItem( new Point( e.x, e.y ) );
+                    if ( item == null ) {
+                        table.setSelection( new int[ 0 ] );
+                        selectedFiles.clear();
+                        selectedClients.clear();
+                        selectedClient = null;
+                        selectedFile = null;
+                    }
+                }
 
-		if ( selectedFile != null
-			&& selectedFile.getState().getState() == EnumFileState.DOWNLOADED ) 
-			{
-				MenuManager commitAsSubMenu = 
-					new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_AS" ) );
-			 	
-			 	commitAsSubMenu.add( new CommitAction( true ) );
-			 	
-			 	for ( int i = 0; i < selectedFile.getNames().length; i++ ) {
-					commitAsSubMenu.add( new CommitAction( selectedFile.getNames()[i] ) );
-			 	}
-				menuManager.add( commitAsSubMenu );
-		}
+                public void mouseUp( MouseEvent e ) {
+                }
+            } );
+    }
 
-		if ( selectedFile != null )
-			 menuManager.add( new FileDetailAction() );
-	
-		if ( selectedFile != null
-			 && selectedFileListContains( EnumFileState.DOWNLOADING ) )
-			 menuManager.add( new PauseAction() );
-	
-		if ( selectedFile != null
-			 && selectedFileListContains( EnumFileState.PAUSED ) )
-			 menuManager.add( new ResumeAction() );
-	
-		if ( selectedFile != null
-			 && selectedFileListContainsOtherThan( EnumFileState.DOWNLOADED ) )
-			 menuManager.add( new CancelAction() );
-	
-		if ( selectedFile != null
-			 && selectedFileListContainsOtherThan( EnumFileState.DOWNLOADED ) )
-		{
-			 MenuManager prioritySubMenu =
-				  new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY" ) );
-			 prioritySubMenu.add( new PriorityAction( EnumPriority.HIGH ) );
-			 prioritySubMenu.add( new PriorityAction( EnumPriority.NORMAL ) );
-			 prioritySubMenu.add( new PriorityAction( EnumPriority.LOW ) );
-			 menuManager.add( prioritySubMenu );
-		}
-		if (  selectedFile != null && PreferenceLoader.loadBoolean(  "advancedMode" )  )
-			menuManager.add(  new VerifyChunksAction()  );
-		
-		if ( selectedClient != null && PreferenceLoader.loadBoolean(  "advancedMode"  ) )
-			menuManager.add( new AddFriendAction() );
-		
-		if ( selectedClient != null )
-			menuManager.add( new ClientDetailAction() );
+    /**
+     * DOCUMENT ME!
+     *
+     * @param e DOCUMENT ME!
+     */
+    public void selectionChanged( SelectionChangedEvent e ) {
+        IStructuredSelection sSel = ( IStructuredSelection ) e.getSelection();
+        Object o = sSel.getFirstElement();
+        if ( o instanceof FileInfo ) {
+            FileInfo fileInfo = ( FileInfo ) o;
+            selectedFile = fileInfo;
+            if ( createClientTable
+                     && ( ( lastSelectedFile == null ) || ( lastSelectedFile != selectedFile ) ) )
+                clientTableViewer.setInput( fileInfo );
+            lastSelectedFile = selectedFile;
+        }
+        else
+            selectedFile = null;
+        if ( o instanceof TreeClientInfo )
+            selectedClient = ( TreeClientInfo ) o;
+        else
+            selectedClient = null;
+        selectedClients.clear();
+        selectedFiles.clear();
+        for ( Iterator it = sSel.iterator(); it.hasNext();) {
+            o = it.next();
+            if ( o instanceof FileInfo )
+                selectedFiles.add( ( FileInfo ) o );
+            else if ( o instanceof TreeClientInfo )
+                selectedClients.add( ( TreeClientInfo ) o );
+        }
+    }
 
-		if ( selectedFile != null ) {
-			menuManager.add( new LinkToClipboardAction( false ) );
-			menuManager.add( new LinkToClipboardAction( true ) );
-		}	
-	}
-		
-	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param e DOCUMENT ME!
-	 * @return DOCUMENT ME!
-	 */
-	public boolean selectedFileListContains( EnumFileState e ) {
-		 for ( int i = 0; i < selectedFiles.size(); i++ )
-			  if (  ( ( FileInfo )selectedFiles.get( i ) ).getState().getState() == e )
-				   return true;
-		 return false;
-	}
-	
-	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param e DOCUMENT ME!
-	 * @return DOCUMENT ME!
-	 */
-	public boolean selectedFileListContainsOtherThan( EnumFileState e ) {
-		 for ( int i = 0; i < selectedFiles.size(); i++ )
-			  if (  ( ( FileInfo )selectedFiles.get( i ) ).getState().getState() != e )
-				   return true;
-		 return false;
-	}
-		
-	/**
-	 * VerifyChunksAction
-	 */
-	private class VerifyChunksAction extends Action {
-		public VerifyChunksAction() {
-			super();
-			setText(  G2GuiResources.getString(  "TT_DOWNLOAD_MENU_VERIFY_CHUNKS"  )  );	
-		}
-		public void run() {
-			for ( int i = 0; i < selectedFiles.size(); i++ )	
-				(  (  FileInfo  ) selectedFiles.get(  i  )  ).verifyChunks();
-		}
-	}
-	
-	private class FileDetailAction extends Action {
-		public FileDetailAction() {
-			super();
-			setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILE_DETAILS" ) );
-		}
-		public void run() {
-			new FileDetailDialog( selectedFile );
-		}
-		
-	}
-	
-	private class AddFriendAction extends Action {
-		public AddFriendAction() {
-			super();
-			setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
-		}
-		public void run() {
-			for ( int i = 0; i < selectedClients.size(); i++ ) {
-				TreeClientInfo selectedClientInfo = ( TreeClientInfo ) selectedClients.get( i );
-					ClientInfo.addFriend( mldonkey, selectedClientInfo.getClientInfo().getClientid() );
-			}
-		}
-	}
-	
-	
-	private class ClientDetailAction extends Action {
-		public ClientDetailAction() {
-			super();
-			setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CLIENT_DETAILS" ) );
-		}
-		public void run() {
-			new ClientDetailDialog( selectedClient.getFileInfo(), selectedClient.getClientInfo(), mldonkey );
-		}
-		
-	}	
-	private class PauseAction extends Action {
-		public PauseAction() {
-			super();
-			setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ) );
-		}
-		public void run() {
-			 for ( int i = 0; i < selectedFiles.size(); i++ ) {
-				  FileInfo fileInfo = ( FileInfo ) selectedFiles.get( i );
-				  if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING )
-					   fileInfo.setState( EnumFileState.PAUSED );
-			 }
-		}
-	}
-		
-	private class CommitAction extends Action {
-		private String commitAs;
-		private boolean manualInput = false;
-		
-		public CommitAction() {
-			super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_SELECTED" ) );
-		}
-		public CommitAction(  String commitAs  ) {
-			super(  commitAs  );
-			this.commitAs = commitAs;
-		}
-		public CommitAction(  boolean b  ) {
-			super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_INPUT" ) );
-			manualInput = b;
-		}
-		
-		public void run() {
-			
-			if ( commitAs == null && !manualInput ) {
-				
-				for ( int i = 0; i < selectedFiles.size(); i++ ) {
-					FileInfo selectedFileInfo = ( FileInfo ) selectedFiles.get( i );
-					if ( selectedFileInfo.getState().getState() == EnumFileState.DOWNLOADED )
-					selectedFileInfo.saveFileAs(  selectedFileInfo.getName()  );
-				}
-				
-			} 
-			else {
-				if ( manualInput ) {
-					
-					InputDialog inputDialog = new InputDialog(  tableTreeViewer.getTableTree().getShell(),
-									G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_AS" ),
-									G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_AS" ),
-									selectedFile.getName(),
-									null );
-									
-					if ( inputDialog.open() == InputDialog.OK ) {
-						String newFileName = inputDialog.getValue();
-						if ( !newFileName.equals( "" ) ) {
-							selectedFile.saveFileAs( newFileName );
-						}
-					}
-				}
-				else {
-					selectedFile.saveFileAs(  commitAs  );	
-				}
-			}
-		}
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param b DOCUMENT ME!
+     */
+    public void updateClientsTable( boolean b ) {
+        if ( b ) {
+            if ( createClientTable != b )
+                clientTableViewer.setInput( lastSelectedFile );
+        }
+        else
+            clientTableViewer.setInput( null );
+        createClientTable = b;
+    }
 
-	private class ResumeAction extends Action {
-		public ResumeAction() {
-			super();
-			setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ) );
-		}
-		public void run() {
-			 for ( int i = 0; i < selectedFiles.size(); i++ ) {
-				FileInfo fileInfo = ( FileInfo ) selectedFiles.get( i );
-				if ( fileInfo.getState().getState() == EnumFileState.PAUSED )
-					fileInfo.setState( EnumFileState.DOWNLOADING );
-			 }
-		}
-	}
-	
-	private class CancelAction extends Action {
-		public CancelAction() {
-			super();
-			setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CANCEL" ) );
-		}
-		public void run() {
-			MessageBox reallyCancel =
-					new MessageBox(  
-						tableTreeViewer.getTableTree().getShell(),
-						SWT.YES | SWT.NO | SWT.ICON_QUESTION  );
-						
-			reallyCancel.setMessage( 
-					G2GuiResources.getString( "TT_REALLY_CANCEL" ) + " (" + selectedFiles.size() + ")" );
-			int answer = reallyCancel.open();
-			if (  answer == SWT.YES  ) {
-				for ( int i = 0; i < selectedFiles.size(); i++ ) {
-	 			FileInfo fileInfo = ( FileInfo ) selectedFiles.get( i );
-	 			if ( fileInfo.getState().getState() != EnumFileState.DOWNLOADED )
-		  			fileInfo.setState( EnumFileState.CANCELLED );
-		  			mldonkey.getResultInfoIntMap().setDownloading(  fileInfo, false  );
-	 			}
-			}
-		}
-	}
-	
-	private class PriorityAction extends Action {
-		private EnumPriority enumPriority;
+    /* ( non-Javadoc )
+     * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow( org.eclipse.jface.action.IMenuManager )
+     */
+    public void menuAboutToShow( IMenuManager menuManager ) {
+        if ( ( selectedFile != null ) && selectedFileListContains( EnumFileState.DOWNLOADED ) )
+            menuManager.add( new CommitAction() );
+        if ( ( selectedFile != null )
+                 && ( selectedFile.getState().getState() == EnumFileState.DOWNLOADED ) ) {
+            MenuManager commitAsSubMenu =
+                new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_AS" ) );
+            commitAsSubMenu.add( new CommitAction( true ) );
+            for ( int i = 0; i < selectedFile.getNames().length; i++ )
+                commitAsSubMenu.add( new CommitAction( selectedFile.getNames()[ i ] ) );
+            menuManager.add( commitAsSubMenu );
+        }
+        if ( selectedFile != null )
+            menuManager.add( new FileDetailAction() );
+        if ( ( selectedFile != null ) && selectedFileListContains( EnumFileState.DOWNLOADING ) )
+            menuManager.add( new PauseAction() );
+        if ( ( selectedFile != null ) && selectedFileListContains( EnumFileState.PAUSED ) )
+            menuManager.add( new ResumeAction() );
+        if ( ( selectedFile != null ) && selectedFileListContainsOtherThan( EnumFileState.DOWNLOADED ) )
+            menuManager.add( new CancelAction() );
+        if ( ( selectedFile != null ) && selectedFileListContainsOtherThan( EnumFileState.DOWNLOADED ) ) {
+            MenuManager prioritySubMenu =
+                new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY" ) );
+            prioritySubMenu.add( new PriorityAction( EnumPriority.HIGH ) );
+            prioritySubMenu.add( new PriorityAction( EnumPriority.NORMAL ) );
+            prioritySubMenu.add( new PriorityAction( EnumPriority.LOW ) );
+            menuManager.add( prioritySubMenu );
+        }
+        if ( ( selectedFile != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) )
+            menuManager.add( new VerifyChunksAction() );
+        if ( ( selectedClient != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) )
+            menuManager.add( new AddFriendAction() );
+        if ( selectedClient != null )
+            menuManager.add( new ClientDetailAction() );
+        if ( selectedFile != null ) {
+            menuManager.add( new LinkToClipboardAction( false ) );
+            menuManager.add( new LinkToClipboardAction( true ) );
+        }
+    }
 
-		public PriorityAction( EnumPriority e ) {
-			super( "", Action.AS_CHECK_BOX );
-			enumPriority = e;
-			if ( e == EnumPriority.HIGH )
-				setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_HIGH" ) );
-			else if ( e == EnumPriority.NORMAL )
-				setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_NORMAL" ) );
-			else if ( e == EnumPriority.LOW )
-				setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_LOW" ) );
-		 }
-		 public void run() {
-			  for ( int i = 0; i < selectedFiles.size(); i++ ) {
-				   FileInfo fileInfo = ( FileInfo ) selectedFiles.get( i );
-				   if ( fileInfo.getState().getState() != EnumFileState.DOWNLOADED )
-						fileInfo.setPriority( enumPriority );
-			  }
-		 }
-		 public boolean isChecked() {
-			  return ( selectedFile.getPriority() == enumPriority );
-		 }
-	}
-	
-	private class LinkToClipboardAction extends Action {
-		private boolean useHTML = false;
-		
-		public LinkToClipboardAction( boolean useHTML ) {
-			super();
-			this.useHTML = useHTML;
-			setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_LINKTO" )
-				+ ( useHTML ? " ( html )" : "" ) );
-		}
-		public void run() {
-			Clipboard clipBoard = new Clipboard(  tableTreeViewer.getTableTree().getDisplay()  );
-			String link = "";
-			for ( int i = 0; i < selectedFiles.size(); i++ ) {
-				FileInfo aFileInfo = ( FileInfo ) selectedFiles.get( i );
+    /**
+     * DOCUMENT ME!
+     *
+     * @param e DOCUMENT ME!
+     * @return DOCUMENT ME!
+     */
+    public boolean selectedFileListContains( EnumFileState e ) {
+        for ( int i = 0; i < selectedFiles.size(); i++ )
+            if ( ( ( FileInfo ) selectedFiles.get( i ) ).getState().getState() == e )
+                return true;
+        return false;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param e DOCUMENT ME!
+     * @return DOCUMENT ME!
+     */
+    public boolean selectedFileListContainsOtherThan( EnumFileState e ) {
+        for ( int i = 0; i < selectedFiles.size(); i++ )
+            if ( ( ( FileInfo ) selectedFiles.get( i ) ).getState().getState() != e )
+                return true;
+        return false;
+    }
+
+    /**
+     * VerifyChunksAction
+     */
+    private class VerifyChunksAction extends Action {
+        public VerifyChunksAction() {
+            super();
+            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_VERIFY_CHUNKS" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            for ( int i = 0; i < selectedFiles.size(); i++ )
+                ( ( FileInfo ) selectedFiles.get( i ) ).verifyChunks();
+        }
+    }
+
+    private class FileDetailAction extends Action {
+        public FileDetailAction() {
+            super();
+            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILE_DETAILS" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            new FileDetailDialog( selectedFile );
+        }
+    }
+
+    private class AddFriendAction extends Action {
+        public AddFriendAction() {
+            super();
+            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            for ( int i = 0; i < selectedClients.size(); i++ ) {
+                TreeClientInfo selectedClientInfo = ( TreeClientInfo ) selectedClients.get( i );
+                ClientInfo.addFriend( mldonkey, selectedClientInfo.getClientInfo().getClientid() );
+            }
+        }
+    }
+
+    private class ClientDetailAction extends Action {
+        public ClientDetailAction() {
+            super();
+            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CLIENT_DETAILS" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            new ClientDetailDialog( selectedClient.getFileInfo(), selectedClient.getClientInfo(), mldonkey );
+        }
+    }
+
+    private class PauseAction extends Action {
+        public PauseAction() {
+            super();
+            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            for ( int i = 0; i < selectedFiles.size(); i++ ) {
+                FileInfo fileInfo = ( FileInfo ) selectedFiles.get( i );
+                if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING )
+                    fileInfo.setState( EnumFileState.PAUSED );
+            }
+        }
+    }
+
+    private class CommitAction extends Action {
+        private String commitAs;
+        private boolean manualInput = false;
+
+        public CommitAction() {
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_SELECTED" ) );
+        }
+
+        public CommitAction( String commitAs ) {
+            super( commitAs );
+            this.commitAs = commitAs;
+        }
+
+        public CommitAction( boolean b ) {
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_INPUT" ) );
+            manualInput = b;
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            if ( ( commitAs == null ) && !manualInput ) {
+                for ( int i = 0; i < selectedFiles.size(); i++ ) {
+                    FileInfo selectedFileInfo = ( FileInfo ) selectedFiles.get( i );
+                    if ( selectedFileInfo.getState().getState() == EnumFileState.DOWNLOADED )
+                        selectedFileInfo.saveFileAs( selectedFileInfo.getName() );
+                }
+            }
+            else {
+                if ( manualInput ) {
+                    InputDialog inputDialog =
+                        new InputDialog( tableTreeViewer.getTableTree().getShell(),
+                                         G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_AS" ),
+                                         G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_AS" ),
+                                         selectedFile.getName(), null );
+                    if ( inputDialog.open() == InputDialog.OK ) {
+                        String newFileName = inputDialog.getValue();
+                        if ( !newFileName.equals( "" ) )
+                            selectedFile.saveFileAs( newFileName );
+                    }
+                }
+                else
+                    selectedFile.saveFileAs( commitAs );
+            }
+        }
+    }
+
+    private class ResumeAction extends Action {
+        public ResumeAction() {
+            super();
+            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            for ( int i = 0; i < selectedFiles.size(); i++ ) {
+                FileInfo fileInfo = ( FileInfo ) selectedFiles.get( i );
+                if ( fileInfo.getState().getState() == EnumFileState.PAUSED )
+                    fileInfo.setState( EnumFileState.DOWNLOADING );
+            }
+        }
+    }
+
+    private class CancelAction extends Action {
+        public CancelAction() {
+            super();
+            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CANCEL" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            MessageBox reallyCancel =
+                new MessageBox( tableTreeViewer.getTableTree().getShell(),
+                                SWT.YES | SWT.NO | SWT.ICON_QUESTION );
+            reallyCancel.setMessage( G2GuiResources.getString( "TT_REALLY_CANCEL" ) + " ("
+                                     + selectedFiles.size() + ")" );
+            int answer = reallyCancel.open();
+            if ( answer == SWT.YES ) {
+                for ( int i = 0; i < selectedFiles.size(); i++ ) {
+                    FileInfo fileInfo = ( FileInfo ) selectedFiles.get( i );
+                    if ( fileInfo.getState().getState() != EnumFileState.DOWNLOADED )
+                        fileInfo.setState( EnumFileState.CANCELLED );
+                    mldonkey.getResultInfoIntMap().setDownloading( fileInfo, false );
+                }
+            }
+        }
+    }
+
+    private class PriorityAction extends Action {
+        private EnumPriority enumPriority;
+
+        public PriorityAction( EnumPriority e ) {
+            super( "", Action.AS_CHECK_BOX );
+            enumPriority = e;
+            if ( e == EnumPriority.HIGH )
+                setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_HIGH" ) );
+            else if ( e == EnumPriority.NORMAL )
+                setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_NORMAL" ) );
+            else if ( e == EnumPriority.LOW )
+                setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_LOW" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            for ( int i = 0; i < selectedFiles.size(); i++ ) {
+                FileInfo fileInfo = ( FileInfo ) selectedFiles.get( i );
+                if ( fileInfo.getState().getState() != EnumFileState.DOWNLOADED )
+                    fileInfo.setPriority( enumPriority );
+            }
+        }
+
+        /**
+         * DOCUMENT ME!
+         *
+         * @return DOCUMENT ME!
+         */
+        public boolean isChecked() {
+            return ( selectedFile.getPriority() == enumPriority );
+        }
+    }
+
+    private class LinkToClipboardAction extends Action {
+        private boolean useHTML = false;
+
+        public LinkToClipboardAction( boolean useHTML ) {
+            super();
+            this.useHTML = useHTML;
+            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_LINKTO" ) + ( useHTML ? " ( html )" : "" ) );
+        }
+
+        /**
+         * DOCUMENT ME!
+         */
+        public void run() {
+            Clipboard clipBoard = new Clipboard( tableTreeViewer.getTableTree().getDisplay() );
+            String link = "";
+            for ( int i = 0; i < selectedFiles.size(); i++ ) {
+                FileInfo aFileInfo = ( FileInfo ) selectedFiles.get( i );
 				if ( link.length() > 0 ) 
 					link += ( SWT.getPlatform().equals( "win32" ) ? "\r\n" : "\n" );
 			 	
@@ -451,19 +465,18 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 					+ aFileInfo.getMd4()
 					+ "|/" 
 					+ ( useHTML ? "\">" + aFileInfo.getName() + "</a>" : "" );
-									
-			}		
-			clipBoard.setContents(  
-				new Object[] { link },
-				new Transfer[] { TextTransfer.getInstance() }  );
-			clipBoard.dispose();
-		}
-	}	
+            }
+            clipBoard.setContents( new Object[] { link }, new Transfer[] { TextTransfer.getInstance() } );
+            clipBoard.dispose();
+        }
+    }
 }
-
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.32  2003/09/18 13:04:36  lemmster
+checkstyle
+
 Revision 1.31  2003/09/18 12:43:29  lemmster
 checkstyle
 

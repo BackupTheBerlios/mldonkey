@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -10,7 +10,7 @@
  * the Free Software Foundation; either version 2 of the License, or
  * ( at your option ) any later version.
  *
- * G2GUI is distributed in the hope that it will be useful, 
+ * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,14 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view;
-
 
 import gnu.trove.TIntObjectIterator;
 
 import java.text.DecimalFormat;
+
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -72,286 +72,272 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.57 2003/09/16 02:12:17 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.58 2003/09/18 13:01:23 lemmster Exp $
  *
  */
-public class TransferTab extends GuiTab  {
-	
-	private static DecimalFormat decimalFormat = new DecimalFormat( "0.0" );
-	
-	private CLabel downloadCLabel;
-	private CoreCommunication mldonkey;
-	private DownloadTableTreeViewer downloadTableTreeViewer = null;
-	private CustomTableViewer clientTableViewer = null;	
-	private Composite downloadComposite;
-	private MenuManager popupMenu;
-		
-	/**
-	 * @param gui where this tab belongs to
-	 */
-	public TransferTab( MainTab gui ) {
-		super( gui );
-		this.mldonkey = gui.getCore();		
-		
-		createButton( "TransfersButton", 
-						G2GuiResources.getString( "TT_TransfersButton" ), 
-						G2GuiResources.getString( "TT_TransfersButtonToolTip" ) );
-		createContents( this.subContent );
-	}
-	
-	/* ( non-Javadoc )
-	 * @see net.mldonkey.g2gui.view.G2guiTab#createContents( org.eclipse.swt.widgets.Composite )
-	 */	 
-	protected void createContents( Composite parent ) {
-		SashForm mainSashForm = new SashForm( parent, SWT.VERTICAL );
-		SashForm downloadParent = mainSashForm;
-		
-		if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-			downloadParent = new SashForm( mainSashForm, SWT.HORIZONTAL );
+public class TransferTab extends GuiTab {
+    private static DecimalFormat decimalFormat = new DecimalFormat( "0.0" );
+    private CLabel downloadCLabel;
+    private CoreCommunication mldonkey;
+    private DownloadTableTreeViewer downloadTableTreeViewer = null;
+    private CustomTableViewer clientTableViewer = null;
+    private Composite downloadComposite;
+    private MenuManager popupMenu;
+
+    /**
+     * DOCUMENT ME! 
+     * 
+     * @param gui where this tab belongs to
+     */
+    public TransferTab( MainTab gui ) {
+        super( gui );
+        this.mldonkey = gui.getCore();
+        createButton( "TransfersButton", G2GuiResources.getString( "TT_TransfersButton" ),
+                      G2GuiResources.getString( "TT_TransfersButtonToolTip" ) );
+        createContents( this.subContent );
+    }
+
+    /* ( non-Javadoc )
+     * @see net.mldonkey.g2gui.view.G2guiTab#createContents( org.eclipse.swt.widgets.Composite )
+     */
+    protected void createContents( Composite parent ) {
+        SashForm mainSashForm = new SashForm( parent, SWT.VERTICAL );
+        SashForm downloadParent = mainSashForm;
+        if ( PreferenceLoader.loadBoolean( "advancedMode" ) )
+            downloadParent = new SashForm( mainSashForm, SWT.HORIZONTAL );
+        ViewForm downloadViewForm =
+            new ViewForm( downloadParent,
+                          SWT.BORDER
+                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+        if ( PreferenceLoader.loadBoolean( "advancedMode" ) )
+            createClientViewForm( downloadParent );
+        createDownloadHeader( downloadViewForm );
+        downloadComposite = new Composite( downloadViewForm, SWT.NONE );
+        downloadComposite.setLayout( new FillLayout() );
+        downloadViewForm.setContent( downloadComposite );
+        createUploads( mainSashForm );
+        downloadTableTreeViewer =
+            new DownloadTableTreeViewer( downloadComposite, clientTableViewer, mldonkey, this );
+        popupMenu.addMenuListener( new DownloadPaneMenuListener( downloadTableTreeViewer.getTableTreeViewer(),
+                                                                 mldonkey ) );
+        mainSashForm.setWeights( new int[] { 10, 0 } );
+        mldonkey.getFileInfoIntMap().addObserver( this );
+    }
+
+    /**
+     * Create the download pane header with popup menu
+     * 
+     * @param parentViewForm DOCUMENT ME!
+     */
+    public void createDownloadHeader( ViewForm parentViewForm ) {
+        popupMenu = new MenuManager( "" );
+        popupMenu.setRemoveAllWhenShown( true );
+        downloadCLabel = CCLabel.createCL( parentViewForm, "TT_Downloads", "TransfersButtonSmallTitlebar" );
+        downloadCLabel.addMouseListener( new HeaderBarMouseAdapter( downloadCLabel, popupMenu ) );
+        parentViewForm.setTopLeft( downloadCLabel );
+    }
+
+    /**
+     * Create the uploads window
+     *
+     * @param mainSashForm DOCUMENT ME!
+     */
+    public void createUploads( final SashForm mainSashForm ) {
+        ViewForm uploadsViewForm =
+            new ViewForm( mainSashForm,
+                          SWT.BORDER
+                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+        uploadsViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        CLabel uploadsCLabel =
+            CCLabel.createCL( uploadsViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar" );
+        Composite uploadersComposite = new Composite( uploadsViewForm, SWT.NONE );
+        uploadersComposite.setLayout( new FillLayout() );
+        Button b = new Button( uploadersComposite, SWT.NONE );
+        b.setText( "Try \"uploaders\" or \"upstats\" command in "        		   + "console until gui protocol sends upload information." );
+        b.addSelectionListener( new SelectionAdapter() {
+                public void widgetSelected( SelectionEvent s ) {
+                    mainSashForm.setWeights( new int[] { 100, 0 } );
+                }
+            } );
+        uploadsViewForm.setTopLeft( uploadsCLabel );
+        uploadsViewForm.setContent( uploadersComposite );
+    }
+
+    /**
+     * Create the hidden client view form
+     *
+     * @param parentSash DOCUMENT ME!
+     */
+    public void createClientViewForm( SashForm parentSash ) {
+        ViewForm clientViewForm =
+            new ViewForm( parentSash,
+                          SWT.BORDER
+                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+        CLabel clientCLabel =
+            CCLabel.createCL( clientViewForm, "TT_Clients", "TransfersButtonSmallTitlebar" );
+        Composite downloadClients = new Composite( clientViewForm, SWT.NONE );
+        downloadClients.setLayout( CGridLayout.createGL( 1, 0, 0, 0, 0, false ) );
+        clientViewForm.setContent( downloadClients );
+        clientViewForm.setTopLeft( clientCLabel );
+        downloadClients.addControlListener( new ControlAdapter() {
+                public void controlResized( ControlEvent e ) {
+                    Composite c = ( Composite ) e.widget;
+                    int width = c.getBounds().width;
+                    if ( ( width > 0 ) && ( downloadTableTreeViewer != null ) )
+                        downloadTableTreeViewer.updateClientsTable( true );
+                }
+            } );
+        createClientTableViewer( downloadClients, parentSash );
+        parentSash.setWeights( new int[] { 100, 0 } );
+    }
+
+    /**
+     * Create the hidden client table viewer
+     *
+     * @param parent DOCUMENT ME!
+     * @param parentSash DOCUMENT ME!
+     */
+    public void createClientTableViewer( Composite parent, final SashForm parentSash ) {
+        final String[] COLUMN_LABELS = { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
+        final int[] COLUMN_ALIGNMENT = { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
+        final int[] COLUMN_DEFAULT_WIDTHS = { 200, 100, 75, 75 };
+        clientTableViewer = new CustomTableViewer( parent, SWT.FULL_SELECTION | SWT.MULTI );
+        Table table = clientTableViewer.getTable();
+        table.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
+        clientTableViewer.getTable().setHeaderVisible( true );
+        for ( int i = 0; i < COLUMN_LABELS.length; i++ ) {
+            PreferenceStore p = PreferenceLoader.getPreferenceStore();
+            p.setDefault( COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ] );
+            TableColumn tableColumn = new TableColumn( table, COLUMN_ALIGNMENT[ i ] );
+            tableColumn.setText( G2GuiResources.getString( COLUMN_LABELS[ i ] ) );
+            tableColumn.setWidth( p.getInt( COLUMN_LABELS[ i ] ) );
+            final int columnIndex = i;
+            tableColumn.addDisposeListener( new DisposeListener() {
+                    public synchronized void widgetDisposed( DisposeEvent e ) {
+                        PreferenceStore p = PreferenceLoader.getPreferenceStore();
+                        TableColumn thisColumn = ( TableColumn ) e.widget;
+                        p.setValue( COLUMN_LABELS[ columnIndex ], thisColumn.getWidth() );
+                    }
+                } );
+            tableColumn.addListener( SWT.Selection,
+                                     new Listener() {
+                    public void handleEvent( Event e ) {
+                        ( ( TableSorter ) clientTableViewer.getSorter() ).setColumnIndex( columnIndex );
+                        clientTableViewer.refresh();
+                    }
+                } );
+        }
+        clientTableViewer.setContentProvider( new TableContentProvider() );
+        clientTableViewer.setLabelProvider( new TableLabelProvider() );
+        TableMenuListener tableMenuListener = new TableMenuListener( clientTableViewer, mldonkey );
+        clientTableViewer.addSelectionChangedListener( tableMenuListener );
+        MenuManager popupMenu = new MenuManager( "" );
+        popupMenu.setRemoveAllWhenShown( true );
+        popupMenu.addMenuListener( tableMenuListener );
+        clientTableViewer.getTable().setMenu( popupMenu.createContextMenu( clientTableViewer.getTable() ) );
+        clientTableViewer.setSorter( new TableSorter() );
+        Composite bottomBar = new Composite( parent, SWT.NONE );
+        GridLayout gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 0, false );
+        bottomBar.setLayout( gridLayout );
+        bottomBar.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        Label separator1 = new Label( bottomBar, SWT.SEPARATOR | SWT.HORIZONTAL );
+        separator1.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        Button hideButton = new Button( bottomBar, SWT.NONE );
+        hideButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        hideButton.setText( ">>>" );
+        hideButton.addSelectionListener( new SelectionAdapter() {
+                public void widgetSelected( SelectionEvent s ) {
+                    parentSash.setWeights( new int[] { 10, 0 } );
+                    if ( downloadTableTreeViewer != null )
+                        downloadTableTreeViewer.updateClientsTable( false );
+                }
+            } );
+    }
+
+    /**
+     * Update the label, in the gui thread
+     * 
+     * @param text DOCUMENT ME!
+     */
+    public void runLabelUpdate( final String text ) {
+        if ( !downloadCLabel.isDisposed() )
+            downloadCLabel.getDisplay().asyncExec( new Runnable() {
+                    public void run() {
+                        if ( !downloadCLabel.isDisposed() )
+                            downloadCLabel.setText(
+                            	G2GuiResources.getString( "TT_Downloads" ) + ": " + text );
+                    }
+                } );
+
+    }
+
+    /* ( non-Javadoc )
+     * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
+     */
+    public void update( Observable o, Object arg ) {
+        float totalRate = 0;
+        int totalFiles = 0;
+        int totalQueued = 0;
+        int totalDownloaded = 0;
+        if ( o instanceof FileInfoIntMap ) {
+            synchronized ( o ) {
+                FileInfoIntMap files = ( FileInfoIntMap ) o;
+                TIntObjectIterator it = files.iterator();
+                while ( it.hasNext() ) {
+                    it.advance();
+                    FileInfo fileInfo = ( FileInfo ) it.value();
+                    totalRate += fileInfo.getRate();
+                    if ( DownloadTableTreeContentProvider.isInteresting( fileInfo ) )
+                        totalFiles++;
+                    if ( fileInfo.getState().getState() == EnumFileState.QUEUED )
+                        totalQueued++;
+                    else if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADED )
+                        totalDownloaded++;
+                }
+            }
+        }
+        String extra = "";
+		if ( totalQueued > 0 || totalDownloaded > 0 ) {
+			extra = " (";
+			if ( totalQueued > 0 )
+				extra += G2GuiResources.getString( "TT_Queued" ).toLowerCase() + ": " + totalQueued;
+			if ( totalQueued > 0 && totalDownloaded > 0 )
+				extra += ", ";
+			if ( totalDownloaded > 0 )
+				extra += G2GuiResources.getString( "TT_Downloaded" ).toLowerCase() + ": " + totalDownloaded;
+			extra += ")";
 		}
+		runLabelUpdate( totalFiles + " " + G2GuiResources.getString( "TT_Files_At" )
+						+ " " + decimalFormat.format( totalRate / 1000f ) + " KB/s" + extra );
 
-		ViewForm downloadViewForm = new ViewForm( downloadParent, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-		
-		if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-			createClientViewForm(downloadParent);
-		}
-	
-		createDownloadHeader( downloadViewForm );
-		
-		downloadComposite = new Composite( downloadViewForm, SWT.NONE );
-		downloadComposite.setLayout( new FillLayout() );
-		downloadViewForm.setContent( downloadComposite );
-		
-		createUploads( mainSashForm );
-		
-		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, clientTableViewer, mldonkey, this );		
-		popupMenu.addMenuListener( new DownloadPaneMenuListener( downloadTableTreeViewer.getTableTreeViewer(), mldonkey ) );
-		
-		mainSashForm.setWeights( new int[] {10, 0} );
-		mldonkey.getFileInfoIntMap().addObserver( this );
-		
-	}
-	
-	/**
-	 * @param parentViewForm
-	 * 
-	 * Create the download pane header with popup menu
-	 */
-	public void createDownloadHeader( ViewForm parentViewForm ) {
-		
-		popupMenu = new MenuManager( "" );
-		popupMenu.setRemoveAllWhenShown( true );
-		
-		downloadCLabel = CCLabel.createCL( parentViewForm, "TT_Downloads", "TransfersButtonSmallTitlebar" );	
-		downloadCLabel.addMouseListener(new HeaderBarMouseAdapter(downloadCLabel, popupMenu));
-		parentViewForm.setTopLeft( downloadCLabel );
-	}
-	
-	/**
-	 * @param mainSashForm
-	 * 
-	 * Create the uploads window 
-	 * 
-	 */
-	public void createUploads( final SashForm mainSashForm ) {
-		
-		ViewForm uploadsViewForm = new ViewForm( mainSashForm, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-		uploadsViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );	
-	
-		CLabel uploadsCLabel = CCLabel.createCL( uploadsViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar" );
+    }
 
-		Composite uploadersComposite = new Composite( uploadsViewForm, SWT.NONE );
-		uploadersComposite.setLayout( new FillLayout() );
-		Button b = new Button( uploadersComposite, SWT.NONE );
-		b.setText( "Try \"uploaders\" or \"upstats\" command in console until gui protocol sends upload information." );
-		b.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected ( SelectionEvent s ) {
-				mainSashForm.setWeights( new int[] {100, 0} );
-			}
-		} );
+    /* ( non-Javadoc )
+     * @see net.mldonkey.g2gui.view.GuiTab#updateDisplay()
+     */
+    public void updateDisplay() {
+        downloadTableTreeViewer.updateDisplay();
+        if ( clientTableViewer != null )
+            clientTableViewer.getTable().setLinesVisible(
+            	PreferenceLoader.loadBoolean( "displayGridLines" ) );
+        super.updateDisplay();
+    }
 
-		uploadsViewForm.setTopLeft( uploadsCLabel );
-		uploadsViewForm.setContent( uploadersComposite );
-	}
-	
-	/**
-	 * @param downloadViewForm
-	 * @return
-	 * 
-	 * Create the hidden client view form
-	 */
-	public void createClientViewForm( SashForm parentSash ) {
-			
-		ViewForm clientViewForm = new ViewForm( parentSash, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-		CLabel clientCLabel = CCLabel.createCL( clientViewForm, "TT_Clients", "TransfersButtonSmallTitlebar" );	
-		
-		Composite downloadClients = new Composite( clientViewForm, SWT.NONE );
-		downloadClients.setLayout( CGridLayout.createGL( 1, 0, 0, 0, 0, false ) );
-		clientViewForm.setContent( downloadClients );
-		clientViewForm.setTopLeft( clientCLabel );
-	
-		downloadClients.addControlListener( new ControlAdapter() {
-			public void controlResized( ControlEvent e ) {
-				Composite c = ( Composite ) e.widget;
-				int width = c.getBounds().width;
-				if ( width > 0 && downloadTableTreeViewer != null ) 
-					downloadTableTreeViewer.updateClientsTable( true );
-			}
-		} );
-
-		createClientTableViewer( downloadClients, parentSash );
-		parentSash.setWeights( new int[] {100, 0} );
-		
-	}
-	
-	/**
-	 * @param parent
-	 * @param parentSash
-	 * 
-	 * Create the hidden client table viewer
-	 */
-	public void createClientTableViewer( Composite parent, final SashForm parentSash ) {
-
-		final String[] COLUMN_LABELS = { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
-		final int[] COLUMN_ALIGNMENT = { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
-		final int[] COLUMN_DEFAULT_WIDTHS = { 200, 100, 75, 75 };
-		clientTableViewer = new CustomTableViewer( parent, SWT.FULL_SELECTION | SWT.MULTI );
-		Table table = clientTableViewer.getTable();
-		table.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-		clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
-		clientTableViewer.getTable().setHeaderVisible( true );
-		
-		for ( int i = 0; i < COLUMN_LABELS.length; i++ ) {
-			PreferenceStore p = PreferenceLoader.getPreferenceStore();
-			
-			p.setDefault( COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ] );
-			TableColumn tableColumn = new TableColumn( table, COLUMN_ALIGNMENT[ i ] );
-			tableColumn.setText ( G2GuiResources.getString( COLUMN_LABELS[ i ] ) );
-			tableColumn.setWidth( p.getInt( COLUMN_LABELS[ i ] ) );
-			final int columnIndex = i;
-			tableColumn.addDisposeListener( new DisposeListener() {
-				public synchronized void widgetDisposed( DisposeEvent e ) {
-					PreferenceStore p = PreferenceLoader.getPreferenceStore();
-					TableColumn thisColumn = ( TableColumn ) e.widget;
-					p.setValue( COLUMN_LABELS [ columnIndex ] , thisColumn.getWidth() );
-				}
-			} );
-			tableColumn.addListener( SWT.Selection, new Listener() {
-				public void handleEvent( Event e ) {
-					( ( TableSorter ) clientTableViewer.getSorter() ).setColumnIndex( columnIndex );
-					clientTableViewer.refresh();
-				}	
-			} ); 
-		}
-			
-		clientTableViewer.setContentProvider( new TableContentProvider() );
-		clientTableViewer.setLabelProvider( new TableLabelProvider() );
-		
-		TableMenuListener tableMenuListener = new TableMenuListener( clientTableViewer, mldonkey );
-		clientTableViewer.addSelectionChangedListener( tableMenuListener );
-		
-		MenuManager popupMenu = new MenuManager( "" );
-		popupMenu.setRemoveAllWhenShown( true );
-		popupMenu.addMenuListener( tableMenuListener );			
-		
-		clientTableViewer.getTable().setMenu( popupMenu.createContextMenu( clientTableViewer.getTable() ) );
-		clientTableViewer.setSorter( new TableSorter() );
-		
-		Composite bottomBar = new Composite( parent, SWT.NONE );
-		GridLayout gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 0, false );
-		bottomBar.setLayout( gridLayout );
-		bottomBar.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-		
-		Label separator1 = new Label( bottomBar, SWT.SEPARATOR|SWT.HORIZONTAL );
-		separator1.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-		
-		Button hideButton = new Button( bottomBar, SWT.NONE );
-		hideButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-		hideButton.setText( ">>>" );
-		hideButton.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected ( SelectionEvent s ) {
-				parentSash.setWeights( new int[]{10, 0} );
-				if ( downloadTableTreeViewer != null ) 
-					downloadTableTreeViewer.updateClientsTable( false );
-			}
-		} );
-		
-	}
-
-	/** ( non-Javadoc )
-	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
-	 */
-	public void update( Observable o, Object arg ) {
-		
-		float totalRate = 0;
-		int totalFiles = 0, totalQueued = 0, totalDownloaded = 0;
-
-		if ( o instanceof FileInfoIntMap ) {
-			synchronized ( o ) {
-				FileInfoIntMap files = ( FileInfoIntMap )o;
-				TIntObjectIterator it = files.iterator();
-				while ( it.hasNext() ) {
-					it.advance();
-					FileInfo fileInfo = ( FileInfo ) it.value();
-					totalRate += fileInfo.getRate();
-					if ( DownloadTableTreeContentProvider.isInteresting( fileInfo ) ) 
-						totalFiles++;
-					if ( fileInfo.getState().getState() == EnumFileState.QUEUED ) 
-						totalQueued++;
-					else if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADED ) 
-						totalDownloaded++;	
-				}
-			} 
-			String extra = "";
-			
-			if ( totalQueued > 0 || totalDownloaded > 0 ) {
-				extra = " ( ";
-				if ( totalQueued > 0 ) extra += G2GuiResources.getString( "TT_Queued" ).toLowerCase() + ": " + totalQueued;
-				if ( totalQueued > 0 && totalDownloaded > 0 ) extra += ", ";
-				if ( totalDownloaded > 0 ) extra += G2GuiResources.getString( "TT_Downloaded" ).toLowerCase() + ": " + totalDownloaded;
-				extra += " )";
-			}
-			runLabelUpdate( totalFiles + " " + G2GuiResources.getString( "TT_Files_At" ) + " " + decimalFormat.format( totalRate / 1000f ) + " KB/s" + extra );
-		}
-	}
-	
-	/**
-	 * @param text
-	 * 
-	 * Update the label, in the gui thread
-	 */
-	public void runLabelUpdate( final String text ) {
-		if ( !downloadCLabel.isDisposed() ) {
-			downloadCLabel.getDisplay().asyncExec( new Runnable() {
-				public void run() {
-					if ( !downloadCLabel.isDisposed() )
-						downloadCLabel.setText( G2GuiResources.getString( "TT_Downloads" ) + ": " + text );
-				}
-			} );
-		}
-	}	
-	
-	/* ( non-Javadoc )
-	 * @see net.mldonkey.g2gui.view.GuiTab#updateDisplay()
-	 */
-	public void updateDisplay() {
-		downloadTableTreeViewer.updateDisplay();
-		if ( clientTableViewer != null )
-			clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
-		super.updateDisplay();
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.GuiTab#dispose()
-	 */
-	public void dispose() {
-		super.dispose();
-		popupMenu.dispose();
-	}
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.GuiTab#dispose()
+     */
+    public void dispose() {
+        super.dispose();
+        popupMenu.dispose();
+    }
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.58  2003/09/18 13:01:23  lemmster
+checkstyle
+
 Revision 1.57  2003/09/16 02:12:17  zet
 headerbar menu
 
@@ -428,7 +414,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression
