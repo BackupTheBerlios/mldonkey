@@ -42,14 +42,14 @@ Copyright (C) 2002 Tomas Styblo <tripie@cpan.org>
   <groupbox id="prefG2guiLinuxExample">
       <caption label="Linux Example"/>
       <description><html:img src="fileicon.png" align="left" hspace="10" ></html:img>
-        /home/user/g2gui/g2gui %r
+        /home/user/g2gui/g2gui -l %r
 	  </description>
   </groupbox>
 
   <groupbox id="prefG2guiWindowsExample">
       <caption label="Windows Example"/>
       <description><html:img src="fileicon.png" align="left" hspace="10" ></html:img>
-        c:\progr~1\g2gui\g2gui.exe %r -c c:\progr~1\g2gui\g2gui.pref
+        c:\progr~1\g2gui\g2gui.exe -l %r -c c:\progr~1\g2gui\g2gui.pref
 	  </description>
   </groupbox>
 
