@@ -78,7 +78,7 @@ import org.eclipse.swt.custom.CLabel;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.14 2003/08/10 19:31:15 lemmstercvs01 Exp $ 
+ * @version $Id: SearchResult.java,v 1.15 2003/08/11 11:27:11 lemmstercvs01 Exp $ 
  *
  */
 //TODO add image handle, fake search, real links depending on network								   
@@ -448,7 +448,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 */
 	public void widgetDisposed( DisposeEvent e ) {
 		/* dispose the table */
-		table.getTable().dispose();
+		if ( table != null )
+			table.getTable().dispose();
 		
 		/* tell the core to forget the search */
 		Object[] temp = { new Integer( searchId ), new Byte( ( byte ) 1 ) };
@@ -638,6 +639,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.15  2003/08/11 11:27:11  lemmstercvs01
+bugfix for closing searchresults
+
 Revision 1.14  2003/08/10 19:31:15  lemmstercvs01
 try to fix the root handle bug
 
