@@ -58,8 +58,8 @@ ifeq ($(SYSTYPE),gtk)
 	$(GCJ) $(SWT_ARGS) $(GCJ_ARGS) -o $(OBJ_DIR)/$@ $<
 else
 	$(build_swt_win)
-	cp $(SWT_DIR)/SWTMessages.o $(OBJ_DIR)/SWTMessages.o
 	build-stuff/build-win-swt $(SWT_DIR) $(JAR) $(FIND) $(GCJ)
+	cp $(SWT_DIR)/SWTMessages.o $(OBJ_DIR)/SWTMessages.o
 endif
 
 icon.o : % : build-stuff/g2gui.rc

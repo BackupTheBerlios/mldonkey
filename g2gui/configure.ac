@@ -50,8 +50,7 @@ ac_lib_url="http://download.berlios.de/pub/mldonkey/g2gui-libs"
 #define function, that checks for jars, and downloads them if nescerssary:
 
 src_dir=src
-jar_dir=$PWD/jars
-AC_SUBST(JAR_DIR,[$jar_dir])
+jar_dir=jars
 AC_SUBST(SRC_DIR,[$src_dir])
 
 define([NEEDED_JAR_PRESENT],[
@@ -75,7 +74,8 @@ NEEDED_JAR_PRESENT([[xercesImpl.jar]])
 NEEDED_JAR_PRESENT([[xmlParserAPIs.jar]])
 
 #now follow the platform-dependent stuff:
-
+jar_dir=$PWD/jars
+AC_SUBST(JAR_DIR,[$jar_dir])
 
 
 resources_dir=resources
@@ -85,7 +85,7 @@ AC_SUBST(RES_DIR,[$resources_dir])
 case $host in
 	*mingw32* |*win*)
 	host=win	
-	swt_dir=$PWD/swt-win
+	swt_dir=swt-win
 	swt_server_dir=swt-win
 	obj_dir=$PWD/obj-win
 	AC_PATH_PROG([JAR],[jar])
