@@ -53,10 +53,11 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.17 2003/08/19 12:14:16 lemmster Exp $ 
+ * @version $Id: G2Gui.java,v 1.18 2003/08/19 15:39:40 dek Exp $ 
  *
  */
 public class G2Gui {
+	private static boolean processingLink;
 	private static Socket socket;
 	private static boolean notProcessingLink = true;
 	private static boolean advancedMode;
@@ -91,7 +92,11 @@ public class G2Gui {
 	}
 	
 	public static void launch( String[] args ) {
-		if ( containsLink(args) ) notProcessingLink = false;
+		if ( containsLink(args) ) {
+			/*these two fields are only for easier if ( boolean )*/
+			notProcessingLink = false;
+			processingLink = true;
+		} 
 		
 		shell = new Shell( display );
 				
@@ -136,15 +141,16 @@ public class G2Gui {
 	
 		/* if the gui isnt set up yet launch the preference window */
 		if ( !( preferenceStore.getBoolean( "initialized" ) ) ) {					
-			splashShell.setVisible( false );
+			if (notProcessingLink) splashShell.setVisible( false );
 			myPrefs.open( shell, null );
-			splashShell.setVisible( true );
+			if (notProcessingLink) splashShell.setVisible( true );
 		}
 		port = preferenceStore.getInt( "port" );		
 		hostname = preferenceStore.getString( "hostname" );			
 		username = preferenceStore.getString( "username" );			
 		password = preferenceStore.getString( "password" );	
-		advancedMode = preferenceStore.getBoolean( "advancedMode" );	
+		advancedMode = preferenceStore.getBoolean( "advancedMode" );
+		if ( processingLink ) advancedMode = false;
 		
 		/* create the socket connection to the core */
 		socket = null;
@@ -153,7 +159,7 @@ public class G2Gui {
 			socket = ( Socket ) socketPool.checkOut();
 		}
 		catch ( UnknownHostException e ) {
-			splashShell.dispose();
+			if (notProcessingLink) splashShell.dispose();
 			box.setText( G2GuiResources.getString( "G2_INVALID_ADDRESS") );
 			box.setMessage( G2GuiResources.getString( "G2_ILLEGAL_ADDRESS" ) );
 			int rc = box.open();
@@ -167,7 +173,7 @@ public class G2Gui {
 			return;
 		}
 		catch ( IOException e ) {
-			splashShell.dispose();
+			if (notProcessingLink) splashShell.dispose();
 			box.setText( G2GuiResources.getString( "G2_IOEXCEPTION") );
 			box.setMessage( G2GuiResources.getString( "G2_CORE_NOT_RUNNING" ) );
 			int rc = box.open();
@@ -305,6 +311,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.18  2003/08/19 15:39:40  dek
+changed some statements for build-in link-handling
+
 Revision 1.17  2003/08/19 12:14:16  lemmster
 first try of simple/advanced mode
 
