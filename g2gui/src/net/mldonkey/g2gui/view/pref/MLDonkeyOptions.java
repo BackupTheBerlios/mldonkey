@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Control;
  * MLDonkeyOptions
  *
  * @author  $Author: zet $ 
- * @version $Id: MLDonkeyOptions.java,v 1.16 2003/08/19 16:33:37 zet Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.17 2003/08/19 16:39:50 zet Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -102,8 +102,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 					string.getTextControl( parent ).setSize( 50, inputSize.y );
 				}
 			}
-			
-		( ( GridLayout )parent.getLayout() ).numColumns = 2;
+	
+	// nullpointer -- why is this here? 		
+	//	( ( GridLayout )parent.getLayout() ).numColumns = 2;
 	}
 	/**
 	 * @param string
@@ -164,6 +165,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.17  2003/08/19 16:39:50  zet
+fix null pointer
+
 Revision 1.16  2003/08/19 16:33:37  zet
 sort the options...
 
