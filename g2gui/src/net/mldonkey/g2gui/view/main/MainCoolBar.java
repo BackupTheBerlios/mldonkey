@@ -8,9 +8,9 @@
  * G2Gui is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
- * G2Gui is distributed in the hope that it will be useful,
+ * G2Gui is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.13 2003/11/24 19:01:00 dek Exp $
+ * @version $Id: MainCoolBar.java,v 1.14 2003/11/24 20:25:26 dek Exp $
  *
  */
 public class MainCoolBar {
@@ -102,7 +102,19 @@ public class MainCoolBar {
         createCoolBar();
         createToolBars();
         createCoolItems();
-        createMiscTools();       
+        createMiscTools(); 
+        
+        coolbar.addControlListener( new ControlListener() {
+
+        	public void controlMoved( ControlEvent e ) {
+        		composite.getParent().layout();
+        	}
+
+        	public void controlResized( ControlEvent e ) {
+        		composite.getParent().layout();
+        		order=MainCoolBar.this.coolbar.getItemOrder();
+        	}
+        } );
     }
 
 	/**
@@ -112,24 +124,15 @@ public class MainCoolBar {
      */
     private void createCoolBar() {
         coolbar = new CoolBar( this.composite, SWT.FLAT );
-        coolbar.addControlListener( new ControlListener() {
 
-				public void controlMoved( ControlEvent e ) {
-                    composite.getParent().layout();
-                }
-
-                public void controlResized( ControlEvent e ) {
-                    composite.getParent().layout();
-                }
-            } );
 
         GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
         coolbar.setLayoutData( gridData );
         
-        coolbar.addDisposeListener(new DisposeListener(){
-			public void widgetDisposed(DisposeEvent e) {
+        coolbar.addDisposeListener( new DisposeListener(){
+			public void widgetDisposed( DisposeEvent e ) {
 				saveLayout();				
-			}});
+			}} );
     }
 
 	/**
@@ -170,7 +173,7 @@ public class MainCoolBar {
         prefButton.setActive( false );
         prefButton.resetImage();
         this.miscToolButtons.add( prefButton );
-        prefButton.addListener( SWT.Selection,
+        prefButton.addListener( SWT.Selection, 
                                 new Listener() {
                 public void handleEvent( Event event ) {
                     prefButton.setActive( true );
@@ -289,31 +292,37 @@ public class MainCoolBar {
      */
     public void restoreLayout() {
     	PreferenceStore p = PreferenceLoader.getPreferenceStore();
-    	p.setDefault("coolBarSizes","0-0|0-0|");
-    	String sizesString = p.getString("coolBarSizes");
+    	p.setDefault( "coolBarSizes", "0-0|0-0|" );
+    	p.setDefault( "coolBarOrder", "0|1|" );
     	
-    	String[] sizes = RegExp.split(sizesString,'|');
+    	String sizesString = p.getString( "coolBarSizes" );
+    	String orderString = p.getString( "coolBarOrder" );
+    	
+    	String[] sizes = RegExp.split( sizesString, '|' );
     	Point[] itemSizes = new Point[ sizes.length ];
 
-    	int[] order = new int[sizes.length];
+    	int[] order = new int[ sizes.length ];
     	
     	/*
     	 * we have sizes.length coolBarItems, and sizes are stored in Points
     	 * recreating Point[] from String[]:
     	 */
     	
-    	for (int i = 0; i < sizes.length; i++) {
-    		String[] coordinates = RegExp.split(sizes[ i ],'-');
-    		int x = Integer.parseInt(coordinates[ 0 ]);
-    		int y = Integer.parseInt(coordinates[ 1 ]);
+    	for ( int i = 0; i < sizes.length; i++ ) {
+    		String[] coordinates = RegExp.split( sizes[ i ], '-' );
+    		int x = Integer.parseInt( coordinates[ 0 ] );
+    		int y = Integer.parseInt( coordinates[ 1 ] );
     		itemSizes[ i ] = new Point( x, y );     		
-		}
-    	//we don't store the order yet
-    	for (int i = 0; i < sizes.length; i++) {
-    		order[ i ] = i;			
+		}    	
+    	
+    	String[] orders = RegExp.split( orderString, '|' );
+    	for ( int i = 0; i < orders.length; i++ ) {
+    		order[ i ] = Integer.parseInt( orders[ i ] );
 		}    
     	
-    	coolbar.setItemLayout(order,null,itemSizes);
+    	coolbar.setItemLayout( order, null, itemSizes );
+    	
+    	layoutCoolBar();
 
     }
     
@@ -322,16 +331,23 @@ public class MainCoolBar {
 	 */
 	public void saveLayout() {
 		PreferenceStore p = PreferenceLoader.getPreferenceStore();
-		p.setValue("coolbarLocked", isCoolbarLocked());
-		p.setValue("toolbarSmallButtons", isToolbarSmallButtons());
+		p.setValue( "coolbarLocked", isCoolbarLocked() );
+		p.setValue( "toolbarSmallButtons", isToolbarSmallButtons() );
 		
 		StringBuffer sizesBuffer = new StringBuffer();
 		Point[] itemsizes = coolbar.getItemSizes();
-		for (int i = 0; i < itemsizes.length; i++) {
-			sizesBuffer.append( itemsizes[ i ].x+"-"+itemsizes[ i ].y+"|");			
+		for ( int i = 0; i < itemsizes.length; i++ ) {
+			sizesBuffer.append( itemsizes[ i ].x+"-"+itemsizes[ i ].y+"|" );			
 		}				
 		
-		p.setValue("coolBarSizes",sizesBuffer.toString());	
+		StringBuffer orderBuffer = new StringBuffer();
+		for ( int i = 0; i < order.length; i++ ) {
+			orderBuffer.append( order[ i ]+"|" );
+			
+		}
+		
+		p.setValue( "coolBarSizes", sizesBuffer.toString() );	
+		p.setValue( "coolBarOrder", orderBuffer.toString() );
 		
 	}
 
@@ -340,6 +356,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.14  2003/11/24 20:25:26  dek
+now item-order is also saved
+
 Revision 1.13  2003/11/24 19:01:00  dek
 coolBar-Layout is now saved and restored
 
@@ -350,7 +369,7 @@ Revision 1.11  2003/11/22 02:24:30  zet
 widgetfactory & save sash postions/states between sessions
 
 Revision 1.10  2003/10/11 21:32:32  zet
-remove hand cursor (looks weird on gtk)
+remove hand cursor ( looks weird on gtk )
 
 Revision 1.9  2003/09/18 10:12:53  lemmster
 checkstyle
