@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Composite;
  * GraphCanvas
  *
  *
- * @version $Id: GraphCanvas.java,v 1.11 2003/09/20 22:08:41 zet Exp $
+ * @version $Id: GraphCanvas.java,v 1.12 2003/10/17 15:36:01 zet Exp $
  */
 public class GraphCanvas extends Canvas {
     private Composite parent;
@@ -101,11 +101,19 @@ public class GraphCanvas extends Canvas {
                 }
             } );
     }
+    
+    public void updateDisplay() {
+    	graphPainter.updateDisplay();	
+    }
+    
 }
 
 
 /*
 $Log: GraphCanvas.java,v $
+Revision 1.12  2003/10/17 15:36:01  zet
+graph colour prefs
+
 Revision 1.11  2003/09/20 22:08:41  zet
 basic graph hourly history
 

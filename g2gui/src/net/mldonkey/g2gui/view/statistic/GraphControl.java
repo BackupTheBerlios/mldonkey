@@ -22,8 +22,7 @@
  */
 package net.mldonkey.g2gui.view.statistic;
 
-import org.eclipse.swt.*;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
@@ -33,22 +32,21 @@ import org.eclipse.swt.widgets.Composite;
  * GraphControl
  *
  *
- * @version $Id: GraphControl.java,v 1.16 2003/09/20 22:08:41 zet Exp $
+ * @version $Id: GraphControl.java,v 1.17 2003/10/17 15:36:01 zet Exp $
  *
  */
 public class GraphControl extends Composite {
     private GraphCanvas graphCanvas;
     private Composite parent;
-    private GraphPainter graphPainter;
     private Graph graph;
 
-    public GraphControl( Composite parent, String name, Color color1, Color color2 ) {
+    public GraphControl( Composite parent, String name ) {
         super( parent, SWT.NONE );
         this.parent = parent;
         graphCanvas = new GraphCanvas( this );
         setLayout( new FillLayout(  ) );
 
-        graph = new Graph( name, color1, color2 );
+        graph = new Graph( name );
         graphCanvas.setGraph( graph );
     }
 
@@ -72,11 +70,20 @@ public class GraphControl extends Composite {
     public Graph getGraph(  ) {
         return graph;
     }
+    
+    public void updateDisplay() {
+    	graph.updateDisplay();	
+		graphCanvas.updateDisplay();
+    }
+    
 }
 
 
 /*
 $Log: GraphControl.java,v $
+Revision 1.17  2003/10/17 15:36:01  zet
+graph colour prefs
+
 Revision 1.16  2003/09/20 22:08:41  zet
 basic graph hourly history
 

@@ -46,7 +46,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -58,15 +57,11 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.33 2003/10/15 19:44:24 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.34 2003/10/17 15:36:08 zet Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
-    private Color uploadsGraphColor1 = new Color( null, 255, 0, 0 );
-    private Color uploadsGraphColor2 = new Color( null, 125, 0, 0 );
     private GraphControl downloadsGraphControl;
-    private Color downloadsGraphColor1 = new Color( null, 0, 0, 255 );
-    private Color downloadsGraphColor2 = new Color( null, 0, 0, 125 );
 
     /**
      * default constructor
@@ -98,8 +93,8 @@ public class StatisticTab extends GuiTab {
 			}
 		});
 
-        downloadsGraphControl = createGraph( graphSash, "TT_Downloads", downloadsGraphColor1, downloadsGraphColor2 );
-        uploadsGraphControl = createGraph( graphSash, "TT_Uploads", uploadsGraphColor1, uploadsGraphColor2 );
+        downloadsGraphControl = createGraph( graphSash, "TT_Downloads" );
+        uploadsGraphControl = createGraph( graphSash, "TT_Uploads" );
 
         /* Until top composite has stats */
         mainSash.setWeights( new int[] { 0, 10 } );
@@ -140,7 +135,7 @@ public class StatisticTab extends GuiTab {
     * @param color2
     * @return GraphControl
     */
-    public GraphControl createGraph( SashForm graphSash, String titleResString, Color color1, Color color2 ) {
+    public GraphControl createGraph( SashForm graphSash, String titleResString ) {
         final MenuManager popupMenu = new MenuManager(  );
         popupMenu.setRemoveAllWhenShown( true );
 
@@ -149,7 +144,7 @@ public class StatisticTab extends GuiTab {
         ViewForm graphViewForm = new ViewForm( graphSash, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
         CLabel cLabel = CCLabel.createCL( graphViewForm, titleResString, "StatisticsButtonSmallTitlebar" );
 
-        GraphControl graphControl = new GraphControl( graphViewForm, graphName, color1, color2 );
+        GraphControl graphControl = new GraphControl( graphViewForm, graphName );
 
         popupMenu.addMenuListener( new GraphMenuListener( graphSash, graphViewForm, graphControl ) );
 
@@ -182,11 +177,14 @@ public class StatisticTab extends GuiTab {
      */
     public void dispose(  ) {
         super.dispose(  );
-        uploadsGraphColor1.dispose(  );
-        uploadsGraphColor2.dispose(  );
-        downloadsGraphColor1.dispose(  );
-        downloadsGraphColor2.dispose(  );
     }
+
+	public void updateDisplay() {
+		super.updateDisplay();
+		uploadsGraphControl.updateDisplay();
+		downloadsGraphControl.updateDisplay();
+	}
+
 
     /**
      * GraphMenuListener
@@ -253,6 +251,9 @@ public class StatisticTab extends GuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.34  2003/10/17 15:36:08  zet
+graph colour prefs
+
 Revision 1.33  2003/10/15 19:44:24  zet
 icons
 

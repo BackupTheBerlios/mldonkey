@@ -22,16 +22,17 @@
  */
 package net.mldonkey.g2gui.view.statistic;
 
+import gnu.trove.TIntArrayList;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
-
-import gnu.trove.TIntArrayList;
 
 
 /**
  * Graph
  *
- * @version $Id: Graph.java,v 1.17 2003/09/25 16:32:47 zet Exp $
+ * @version $Id: Graph.java,v 1.18 2003/10/17 15:36:02 zet Exp $
  */
 public class Graph implements Runnable {
     public static final short MAX_POINTS = 1600;
@@ -56,10 +57,9 @@ public class Graph implements Runnable {
     private int hourlyMaxValue;
     private int hourlyAvgValue;
 
-    public Graph( String name, Color color1, Color color2 ) {
+    public Graph( String name ) {
         this.graphName = name;
-        this.graphColor1 = color1;
-        this.graphColor2 = color2;
+        updateDisplay();
 
         this.maxList = new TIntArrayList( 0 );
         this.avgList = new TIntArrayList( 0 );
@@ -206,11 +206,20 @@ public class Graph implements Runnable {
         maxList.clear(  );
         avgList.clear(  );
     }
+    
+    public void updateDisplay() {
+		graphColor1 = PreferenceLoader.loadColour( "graph" + graphName + "Color1" );
+		graphColor2 = PreferenceLoader.loadColour( "graph" + graphName + "Color2" );
+    }
+    
 }
 
 
 /*
 $Log: Graph.java,v $
+Revision 1.18  2003/10/17 15:36:02  zet
+graph colour prefs
+
 Revision 1.17  2003/09/25 16:32:47  zet
 clear both graphs (history & current)
 

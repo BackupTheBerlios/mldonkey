@@ -22,12 +22,12 @@
  */
 package net.mldonkey.g2gui.view.statistic;
 
-import org.eclipse.swt.SWT;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Display;
  * GraphPainter
  *
  *
- * @version $Id: GraphPainter.java,v 1.33 2003/09/20 22:08:41 zet Exp $
+ * @version $Id: GraphPainter.java,v 1.34 2003/10/17 15:36:02 zet Exp $
  *
  */
 public class GraphPainter {
@@ -46,9 +46,17 @@ public class GraphPainter {
     private Graph graph;
     private GC drawBoard;
     final private Composite parent;
+    private Color backgroundColor;
+    private Color gridColor;
+    private Color textColor;
+    
+    private Color labelTextColor;
+    private Color labelLineColor;
+    private Color labelBackgroundColor;
 
     public GraphPainter( Composite parent ) {
         this.parent = parent;
+        updateDisplay();
     }
 
     public void setGraphicControl( GC gc ) {
@@ -65,20 +73,13 @@ public class GraphPainter {
             return;
         }
 
-        Display display = parent.getDisplay(  );
-
-        Color black = display.getSystemColor( SWT.COLOR_BLACK );
-        Color white = display.getSystemColor( SWT.COLOR_WHITE );
-        Color yellow = display.getSystemColor( SWT.COLOR_YELLOW );
-
         // create a buffer
         GC drawBoardBuffer = new GC( imageBuffer );
 
         // set canvas background color
-        Color canvasBackgroundColor = new Color( null, 50, 50, 50 );
-        drawBoardBuffer.setBackground( canvasBackgroundColor );
-        drawBoardBuffer.setForeground( black );
-        drawBoardBuffer.fillGradientRectangle( 0, 0, parent.getClientArea(  ).width, parent.getClientArea(  ).height, true );
+      	drawBoardBuffer.setBackground( backgroundColor );
+		drawBoardBuffer.setForeground( backgroundColor );
+		drawBoardBuffer.fillRectangle( 0, 0, parent.getClientArea(  ).width, parent.getClientArea(  ).height );
 
         int startx = 1;
         int k = startx;
@@ -109,8 +110,8 @@ public class GraphPainter {
             break;
         }
 
+
         // draw grid
-        Color gridColor = new Color( null, 0, 128, 64 );
         drawBoardBuffer.setForeground( gridColor );
 
         // vertical lines
@@ -122,7 +123,6 @@ public class GraphPainter {
             drawBoardBuffer.drawLine( startx, i, startx + graphWidth, i );
 
         // just for temporary fun; this might overflow pretty quickly
-        Color textColor = new Color( null, 250, 250, 250 );
         drawBoardBuffer.setForeground( textColor );
         drawBoardBuffer.drawText( graph.getName(  ) + " avg: " + ( (double) graph.getAvg(  ) / 100 ) + " kb/s," + " max: " +
             ( (double) graph.getMax(  ) / 100 ) + " kb/s", startx,
@@ -144,20 +144,17 @@ public class GraphPainter {
         int boxWidth = drawBoardBuffer.textExtent( boxString ).x + 20;
         int boxHeight = drawBoardBuffer.textExtent( boxString ).y + 5;
 
-        drawBoardBuffer.setForeground( black );
-        drawBoardBuffer.setBackground( white );
+        drawBoardBuffer.setForeground( labelTextColor );
+        drawBoardBuffer.setBackground( labelBackgroundColor );
         drawBoardBuffer.fillRoundRectangle( startx + 10, textPosition, boxWidth, boxHeight, 18, 18 );
         drawBoardBuffer.drawRoundRectangle( startx + 10, textPosition, boxWidth, boxHeight, 18, 18 );
         drawBoardBuffer.drawText( boxString, startx + 20, textPosition + 2 );
-        drawBoardBuffer.setForeground( yellow );
+        drawBoardBuffer.setForeground( labelLineColor );
         drawBoardBuffer.drawLine( startx + 10, linePositionEnd, startx, linePosition );
 
         // output buffer to the display
         drawBoard.drawImage( imageBuffer, 0, 0 );
         drawBoardBuffer.dispose(  );
-        canvasBackgroundColor.dispose(  );
-        gridColor.dispose(  );
-        textColor.dispose(  );
     }
 
     private void drawGradiantGraph( int startx, int width, float height, float zoom, GC drawBoardBuffer ) {
@@ -227,11 +224,24 @@ public class GraphPainter {
 
         drawBoardBuffer.setLineWidth( 1 );
     }
+    
+    public void updateDisplay() {
+    	backgroundColor = PreferenceLoader.loadColour( "graphBackgroundColor" );
+    	gridColor = PreferenceLoader.loadColour( "graphGridColor" );
+    	textColor = PreferenceLoader.loadColour( "graphTextColor" );
+    	
+		labelBackgroundColor = PreferenceLoader.loadColour( "graphLabelBackgroundColor" );
+		labelTextColor = PreferenceLoader.loadColour( "graphLabelTextColor" );
+		labelLineColor = PreferenceLoader.loadColour( "graphLabelLineColor" ) ;
+    }
 }
 
 
 /*
 $Log: GraphPainter.java,v $
+Revision 1.34  2003/10/17 15:36:02  zet
+graph colour prefs
+
 Revision 1.33  2003/09/20 22:08:41  zet
 basic graph hourly history
 
