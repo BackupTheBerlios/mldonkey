@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.28 2003/08/26 14:12:01 zet Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.29 2003/08/26 14:55:12 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -78,7 +78,7 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 			while ( it.hasNext() ) {
 				parent = getFieldEditorParent();
 				OptionsInfo temp = ( OptionsInfo ) it.next();
-				if ( temp.getOptionType() == EnumTagType.BOOL || isboolean( temp.getValue() ) ) {
+				if ( temp.getOptionType() == EnumTagType.BOOL || isBoolean( temp.getValue() ) ) {
 					String description = temp.getDescription();
 						if ( description.equals( "" ) )	description = temp.getKey();
 					String optionHelp = temp.getOptionHelp();					
@@ -93,7 +93,7 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 					addField( bool );
 					
 				} 
-				else if ( temp.getOptionType() == EnumTagType.INT ) {
+				else if ( temp.getOptionType() == EnumTagType.INT || isInteger( temp.getValue() ) ) {
 					String description = temp.getDescription();
 						if ( description.equals( "" ) )	description = temp.getKey();
 					String optionHelp = temp.getOptionHelp();					
@@ -152,10 +152,23 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	 * @param string
 	 * @return
 	 */
-	private boolean isboolean( String string ) {
+	private boolean isBoolean( String string ) {
 		if ( string.equalsIgnoreCase( "true" ) || string.equalsIgnoreCase( "false" ) )
 			return true;
 		else return false;
+	}
+	
+	private boolean isInteger( String string ) {
+		try {
+			int value = Integer.valueOf( string ).intValue();
+			if ( value >= 0 && value <= Integer.MAX_VALUE ) {				
+				return true;
+			} else {				
+				return false;
+			}
+		} catch ( NumberFormatException e ) {
+				return false;
+		}	
 	}
 	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
@@ -215,6 +228,10 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 } 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.29  2003/08/26 14:55:12  dek
+added check for Integer-Valued Options, just because there are already
+IntFieldEditors...
+
 Revision 1.28  2003/08/26 14:12:01  zet
 decrease inputfieldlength
 
