@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.48 2003/07/02 16:18:15 dek Exp $ 
+ * @version $Id: Core.java,v 1.49 2003/07/02 16:22:41 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -159,7 +159,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private synchronized void  decodeMessage( short opcode, MessageBuffer messageBuffer ) throws IOException 
+	private synchronized void  decodeMessage( 
+				short opcode, 
+				MessageBuffer 
+				messageBuffer ) throws IOException 
 		{
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
@@ -340,6 +343,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.49  2003/07/02 16:22:41  dek
+extensive Checkstyle applying
+
 Revision 1.48  2003/07/02 16:18:15  dek
 Checkstyle
 

@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.17 2003/07/02 16:22:05 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.18 2003/07/02 16:22:41 dek Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -54,7 +54,7 @@ public interface CoreCommunication {
 	/**
 	 * @return Infos about all the nice networks we know about
 	 */
-	public NetworkInfoIntMap getNetworkinfoMap();
+	NetworkInfoIntMap getNetworkinfoMap();
 	
 	/**
 	 * Adds an Observer to this object
