@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * OtherComplexSearch
  *
- * @version $Id: OtherComplexSearch.java,v 1.2 2003/09/08 10:25:26 lemmster Exp $ 
+ * @version $Id: OtherComplexSearch.java,v 1.3 2003/09/08 11:54:22 lemmster Exp $ 
  *
  */
 public class OtherComplexSearch extends ComplexSearch {
@@ -132,12 +132,16 @@ public class OtherComplexSearch extends ComplexSearch {
 
 		/* draw the empty search result */
 		String aString = inputText.getText();
-		new SearchResult( aText, tab.getCTabFolder(), core, query.getSearchIdentifier() );
+		new SearchResult( aText, tab.getCTabFolder(),
+			 core, query.getSearchIdentifier(), this );
 	}
 }
 
 /*
 $Log: OtherComplexSearch.java,v $
+Revision 1.3  2003/09/08 11:54:22  lemmster
+added download button
+
 Revision 1.2  2003/09/08 10:25:26  lemmster
 OtherComplexSearch added, rest improved
 

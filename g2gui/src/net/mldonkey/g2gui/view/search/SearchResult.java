@@ -78,11 +78,13 @@ import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.38 2003/09/01 11:18:51 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.39 2003/09/08 11:54:23 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
-    private MainTab mainTab;
+    private ResultTableMenuListener tableMenuListener;
+	private Search search;
+	private MainTab mainTab;
     private CTabFolder cTabFolder;
     private String searchString;
     private CoreCommunication core;
@@ -117,11 +119,12 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      * @param core The core to communicate with
      * @param searchId The identifier to this search
      */
-    protected SearchResult( String aString, CTabFolder parent, CoreCommunication theCore, int searchId ) {
+    protected SearchResult( String aString, CTabFolder parent, CoreCommunication aCore, int searchId, Search aSearch ) {
         this.searchString = aString;
         this.cTabFolder = parent;
         this.searchId = searchId;
-        core = theCore;
+        this.core = aCore;
+        this.search = aSearch;
 
         /* draw the display */
         this.createContent();
@@ -268,7 +271,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         table.setContentProvider( new ResultTableContentProvider() );
         table.setLabelProvider( new ResultTableLabelProvider() );
         table.setSorter( resultTableSorter );
-        ResultTableMenuListener tableMenuListener = new ResultTableMenuListener( table, core, cTabItem );
+        tableMenuListener = 
+        	new ResultTableMenuListener( table, core, cTabItem, this.search );
         table.addSelectionChangedListener( tableMenuListener );
         MenuManager popupMenu = new MenuManager( "" );
         popupMenu.setRemoveAllWhenShown( true );
@@ -289,9 +293,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
             /* adds a sort listener */
             final int columnIndex = i;
-            tableColumn.addListener( 
-                                     SWT.Selection,
-                                     new Listener() {
+            tableColumn.addListener( SWT.Selection, new Listener() {
                     public void handleEvent( Event e ) {
                         resultTableSorter.setColumnIndex( columnIndex );
                         table.refresh();
@@ -389,6 +391,10 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
         /* no longer receive results for this search */
         this.unregister();
+    }
+    
+    public ResultTableMenuListener getMenuListener() {
+		return this.tableMenuListener;
     }
 
     /**
@@ -567,6 +573,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.39  2003/09/08 11:54:23  lemmster
+added download button
+
 Revision 1.38  2003/09/01 11:18:51  lemmster
 show downloading files
 

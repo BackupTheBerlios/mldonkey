@@ -60,22 +60,17 @@ import org.eclipse.swt.widgets.Table;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.8 2003/08/31 12:32:04 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.9 2003/09/08 11:54:23 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
-
 	private CTabItem cTabItem;
-
 	private ResultInfo selectedResult;
-
 	private ResultInfoIntMap resultInfoMap;
-
 	private List selectedResults;
-
 	private ResultTableContentProvider tableContentProvider;
-
 	private Clipboard clipboard;
+	private Search search;
 
 	/**
 	 * Creates a new TableMenuListener
@@ -83,9 +78,10 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	 * @param core The CoreCommunication supporting this with data
 	 * @param cTabItem The CTabItem in which the table res
 	 */
-	public ResultTableMenuListener( TableViewer tableViewer, CoreCommunication core, CTabItem cTabItem ) {
+	public ResultTableMenuListener( TableViewer tableViewer, CoreCommunication core, CTabItem cTabItem, Search aSearch ) {
 		super( tableViewer, core );
 		this.cTabItem = cTabItem;
+		this.search = aSearch;
 		this.resultInfoMap = this.core.getResultInfoIntMap();
 		this.tableContentProvider =
 				( ResultTableContentProvider ) this.tableViewer.getContentProvider();
@@ -97,7 +93,9 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 			public void mouseDoubleClick( MouseEvent e ) {
 				downloadSelected();
 			}
-			public void mouseDown( MouseEvent e ) { }
+			public void mouseDown( MouseEvent e ) { 
+				search.setDownloadButton();
+			}
 			public void mouseUp( MouseEvent e ) { }
 		} );
 		
@@ -207,7 +205,7 @@ Yet			menuManager.add( webManager );
 		}
 	}
 	
-	private void downloadSelected() {				
+	public void downloadSelected() {				
 		Download download = new Download( core );
 		int counter = 0;
 		for ( int i = 0; i < selectedResults.size(); i++ ) {
@@ -344,6 +342,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.9  2003/09/08 11:54:23  lemmster
+added download button
+
 Revision 1.8  2003/08/31 12:32:04  lemmster
 major changes to search
 

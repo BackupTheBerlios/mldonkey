@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.25 2003/09/08 10:25:26 lemmster Exp $
+ * @version $Id: Search.java,v 1.26 2003/09/08 11:54:22 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -67,9 +67,6 @@ public abstract class Search implements Observer {
 	protected Composite composite;
 	protected Button[] buttons;
 	protected String selectedMedia;
-    private Button okButton;
-    private Button stopButton;
-    private Button continueButton;
 
     /**
      *
@@ -123,6 +120,14 @@ public abstract class Search implements Observer {
         this.composite.layout();
     }
 
+	/**
+	 * DOCUMENT ME!
+	 */
+	public void setDownloadButton() {
+		this.stackLayout.topControl = this.buttons[ 3 ];
+		this.composite.layout();
+	}
+
     /**
      * DOCUMENT ME!
      *
@@ -135,8 +140,8 @@ public abstract class Search implements Observer {
 		gridData.horizontalSpan = 2;
         composite.setLayoutData(gridData);
 		this.composite.setLayout( this.stackLayout );
-        this.buttons = new Button[ 3 ];
-        stopButton = new Button( this.composite, SWT.PUSH );
+        this.buttons = new Button[ 4 ];
+        Button stopButton = new Button( this.composite, SWT.PUSH );
         stopButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         stopButton.setText( G2GuiResources.getString( "SS_STOP" ) );
         stopButton.addSelectionListener( new SelectionAdapter() {
@@ -146,7 +151,7 @@ public abstract class Search implements Observer {
                 }
             } );
         buttons[ 0 ] = stopButton;
-        continueButton = new Button( this.composite, SWT.PUSH );
+		Button continueButton = new Button( this.composite, SWT.PUSH );
         continueButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         continueButton.setText( G2GuiResources.getString( "SS_CONTINUE" ) );
         continueButton.addSelectionListener( new SelectionAdapter() {
@@ -156,7 +161,7 @@ public abstract class Search implements Observer {
                 }
             } );
         buttons[ 1 ] = continueButton;
-        okButton = new Button( this.composite, SWT.PUSH );
+		Button okButton = new Button( this.composite, SWT.PUSH );
 		okButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         okButton.setText( G2GuiResources.getString( "SS_SEARCH" ) );
         okButton.addSelectionListener( new SelectionAdapter() {
@@ -165,6 +170,17 @@ public abstract class Search implements Observer {
                 }
             } );
         buttons[ 2 ] = okButton;
+		Button downloadButton = new Button( this.composite, SWT.PUSH );
+		downloadButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		downloadButton.setText( "Download" );
+		downloadButton.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent event ) {
+					tab.getSearchResult().getMenuListener().downloadSelected();
+				}
+			} );
+		buttons[ 3 ] = downloadButton;
+        
+        
 		this.stackLayout.topControl = buttons[ 2 ];
 	}
 
@@ -377,6 +393,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.26  2003/09/08 11:54:22  lemmster
+added download button
+
 Revision 1.25  2003/09/08 10:25:26  lemmster
 OtherComplexSearch added, rest improved
 

@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.19 2003/09/08 10:25:26 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.20 2003/09/08 11:54:23 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -115,7 +115,7 @@ public class SimpleSearch extends Search {
 						
 			/* draw the empty search result */
 			new SearchResult( inputText.getText(), tab.getCTabFolder(),
-							  core, query.getSearchIdentifier() );	
+							  core, query.getSearchIdentifier(), this );	
 
 			inputText.setText( "" );
 			
@@ -126,6 +126,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.20  2003/09/08 11:54:23  lemmster
+added download button
+
 Revision 1.19  2003/09/08 10:25:26  lemmster
 OtherComplexSearch added, rest improved
 

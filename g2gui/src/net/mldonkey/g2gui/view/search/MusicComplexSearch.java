@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.11 2003/09/08 10:25:26 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.12 2003/09/08 11:54:23 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -197,12 +197,16 @@ public class MusicComplexSearch extends ComplexSearch {
 
         /* draw the empty search result */
         String aString = inputText.getText() + " " + artistText.getText() + " " + albumText.getText();
-        new SearchResult( aString, tab.getCTabFolder(), core, query.getSearchIdentifier() );
+        new SearchResult( aString, tab.getCTabFolder(),
+        	 core, query.getSearchIdentifier(), this );
     }
 }
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.12  2003/09/08 11:54:23  lemmster
+added download button
+
 Revision 1.11  2003/09/08 10:25:26  lemmster
 OtherComplexSearch added, rest improved
 
