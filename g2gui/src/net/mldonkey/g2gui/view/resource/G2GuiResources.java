@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.11 2003/08/29 17:33:20 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.12 2003/08/29 23:34:14 zet Exp $
  */
 public class G2GuiResources {
 	
@@ -186,7 +186,7 @@ public class G2GuiResources {
 		
 		imageRegistry.put( "SearchSmall", createTrans( "search_small.png" )) ;
 		imageRegistry.put( "SearchComplete", createTrans( "search_complete.png" )) ;
-		
+		imageRegistry.put( "X", ImageDescriptor.createFromFile(MainTab.class, "images/x.gif") );
 		imageRegistry.put( "epUnknown", createImageDescriptor("ep_unknown.gif") );
 		imageRegistry.put( "epTransferring", createImageDescriptor("ep_transferring.gif") );
 		imageRegistry.put( "epNoNeeded", createImageDescriptor("ep_noneeded.gif") );
@@ -246,6 +246,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.12  2003/08/29 23:34:14  zet
+close all tabs
+
 Revision 1.11  2003/08/29 17:33:20  zet
 remove headerbar
 

@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -54,6 +55,7 @@ import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -65,10 +67,12 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.22 2003/08/29 22:11:47 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.23 2003/08/29 23:34:14 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
 
@@ -185,10 +189,22 @@ public class MessagesTab extends GuiTab implements Runnable {
 		ViewForm messagesViewForm = new ViewForm( main, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 				
 		messagesCLabel = CCLabel.createCL(messagesViewForm, "FR_TABS", "MessagesButtonSmallTrans");
+		
+		ToolBar messagesToolBar = new ToolBar(messagesViewForm, SWT.RIGHT | SWT.FLAT );
+		ToolItem sendItem = new ToolItem(messagesToolBar, SWT.NONE);
+		sendItem.setToolTipText(G2GuiResources.getString("FR_TABS_CLOSE_TOOLTIP"));
+		sendItem.setImage(G2GuiResources.getImage("X"));
+		sendItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected (SelectionEvent s) {
+				closeAllTabs();
+			}	
+		});
+		
 			
 		cTabFolder = new CTabFolder( messagesViewForm , SWT.NONE );
 		
 		messagesViewForm.setTopLeft(messagesCLabel);
+		messagesViewForm.setTopRight(messagesToolBar);
 		messagesViewForm.setContent(cTabFolder);
 		
 		cTabFolder.setBorderVisible(false);
@@ -225,6 +241,21 @@ public class MessagesTab extends GuiTab implements Runnable {
 			}
 		});
 	}
+	
+	public void closeAllTabs() {
+		
+		Iterator iterator = openTabs.keySet().iterator();
+		while (iterator.hasNext()) {
+			Integer id = (Integer) iterator.next();
+			CTabItem cTabItem = (CTabItem) openTabs.get(id);
+			Composite consoleComposite = (Composite) cTabItem.getData("composite");
+			consoleComposite.dispose();
+			cTabItem.dispose();
+		}
+		openTabs.clear();
+		setTabsLabel();
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
@@ -427,6 +458,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.23  2003/08/29 23:34:14  zet
+close all tabs
+
 Revision 1.22  2003/08/29 22:11:47  zet
 add CCLabel helper class
 
