@@ -22,7 +22,10 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.trove.TIntObjectIterator;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -32,7 +35,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfoIntMap
  *
  * @author $user$
- * @version $Id: ResultInfoIntMap.java,v 1.1 2003/07/23 16:56:28 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfoIntMap.java,v 1.2 2003/07/23 23:08:56 lemmstercvs01 Exp $ 
  *
  */
 public class ResultInfoIntMap extends InfoIntMap {
@@ -52,8 +55,30 @@ public class ResultInfoIntMap extends InfoIntMap {
 		
 		/* get the result from the core resultinfo map */
 		ResultInfo result = ( ResultInfo ) parent.getResultInfo().get( resultID );
-		/* remove the resultinfo from core resultinfo map */
-		parent.getResultInfo().remove( resultID );
+		
+		/* if we didnt get a result, we done this search already and must look in this map instead */
+		if ( result == null ) {
+			/* firts iterate over all map entries */
+			TIntObjectIterator itr = this.infoIntMap.iterator();
+			int size = this.infoIntMap.size();
+			for ( int i = 0; i < size; i++ ) {
+				itr.advance();
+				/* the values of this map are Lists */
+				List temp = ( List ) itr.value();
+				/* Iterate over the List */
+				Iterator itr2 = temp.iterator();
+				while ( itr2.hasNext() ) {
+					ResultInfo temp2 = ( ResultInfo ) itr2.next();
+					/* search for the resultID */
+					if ( temp2.getResultID() == resultID )
+						result = temp2;
+				}
+			}
+		}
+		else {
+			/* remove the resultinfo from core resultinfo map */
+			parent.getResultInfo().remove( resultID );
+		}
 		
 		if ( this.infoIntMap.containsKey( searchID ) ) {
 			( ( List ) this.infoIntMap.get( searchID ) ).add( result );
@@ -83,6 +108,9 @@ public class ResultInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ResultInfoIntMap.java,v $
+Revision 1.2  2003/07/23 23:08:56  lemmstercvs01
+searching for the same string twice added
+
 Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
 initial commit
 
