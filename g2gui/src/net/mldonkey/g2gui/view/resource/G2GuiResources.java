@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.8 2003/08/25 12:24:09 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.9 2003/08/25 21:18:43 zet Exp $
  */
 public class G2GuiResources {
 	
@@ -175,8 +175,8 @@ public class G2GuiResources {
 		imageRegistry.put( "MULTIConnected", createTrans( "multinet_connected.png" ) );
 		imageRegistry.put( "MULTIConnectedWhite", createTrans( "multinet_connected.png", white ) );
 		imageRegistry.put( "MULTIDisabled", createTrans( "multinet_disabled.png" ) );
-			
-		imageRegistry.put( "MessagesButtonSmallWhite", createTrans( "messages-16.png", white ) );
+		
+		imageRegistry.put("MessagesButtonSmallTrans",ImageDescriptor.createFromFile(MainTab.class, "images/messages-16.gif"));	
 		
 		imageRegistry.put( "DownArrow", createTrans( "down.png" ) );
 		imageRegistry.put( "UpArrow", createTrans( "up.png" ) );
@@ -244,6 +244,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.9  2003/08/25 21:18:43  zet
+localise/update friendstab
+
 Revision 1.8  2003/08/25 12:24:09  zet
 Toggleable link entry.  It should parse links from pasted HTML as well.
 

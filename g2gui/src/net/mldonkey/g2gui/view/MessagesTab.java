@@ -44,6 +44,7 @@ import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
@@ -58,6 +59,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -67,13 +69,14 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.11 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.12 2003/08/25 21:18:43 zet Exp $
  */
 public class MessagesTab extends GuiTab {
 
 	private CoreCommunication core;
 	
 	private CTabFolder cTabFolder;
+	private CTabFolder friendsCTabFolder;
 	private Hashtable openTabs = new Hashtable();
 	private Composite friendsComposite;
 	private CustomTableViewer tableViewer;
@@ -115,9 +118,33 @@ public class MessagesTab extends GuiTab {
 	// obviously we want to list their files, and what else?
 	// simple and for messaging only atm 
 	private void createLeftSash( Composite main ) {
-		friendsComposite = new Composite( main, SWT.BORDER );
-		friendsComposite.setLayout( new FillLayout() );
+		friendsCTabFolder = new CTabFolder( main,  SWT.BOTTOM );
+		friendsCTabFolder.setBorderVisible( true );
+		friendsCTabFolder.setTabHeight(0);
+			
+		CTabItem friendsTabItem = new CTabItem(friendsCTabFolder, SWT.NONE);
+		friendsCTabFolder.setSelection(friendsTabItem);
+		
+		friendsComposite = new Composite( friendsCTabFolder, SWT.NONE  );
+		GridLayout g = new GridLayout();
+		g.marginHeight = 0;
+		g.marginWidth = 0;
+		g.verticalSpacing = 0;
+		g.horizontalSpacing = 0;
+		g.numColumns = 1;
+		friendsComposite.setLayout( g );
+		
+		Display display = Display.getCurrent();
+		CLabel friendsHeaderLabel = new CLabel(friendsComposite, SWT.LEFT | SWT.SHADOW_OUT);
+		friendsHeaderLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		friendsHeaderLabel.setBackground(new Color[]{display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+												friendsCTabFolder.getBackground()},
+												new int[] {100});
+										
+		friendsHeaderLabel.setText(G2GuiResources.getString("FR_FRIENDS"));
+		friendsHeaderLabel.setImage(G2GuiResources.getImage("MessagesButtonSmallTrans"));
 		createFriendsTable();
+		friendsTabItem.setControl(friendsComposite);
 	}
 
 	/**
@@ -125,7 +152,8 @@ public class MessagesTab extends GuiTab {
 	 */
 	public void createFriendsTable() {
 		tableViewer = new CustomTableViewer(friendsComposite, SWT.NONE);
-
+		tableViewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
+		tableViewer.getTable().setHeaderVisible( false );
 		tableViewer.setContentProvider(new FriendsTableContentProvider());
 		tableViewer.setLabelProvider(new FriendsTableLabelProvider());
 		
@@ -168,9 +196,6 @@ public class MessagesTab extends GuiTab {
 			public void mouseDown(MouseEvent e) {}
 			public void mouseUp(MouseEvent e) {}
 			});
-		
-		
-		
 	}
 
 	/**
@@ -284,7 +309,8 @@ public class MessagesTab extends GuiTab {
 	 * 
 	 */
 	public void setRightLabel() {
-		setRightLabel("Friends: " + tableViewer.getTable().getItemCount() + ", Tabs: " + openTabs.size());
+		setRightLabel(G2GuiResources.getString("FR_FRIENDS") + ": " + tableViewer.getTable().getItemCount() 
+				+ ", " + G2GuiResources.getString("FR_TABS") + ": " + openTabs.size());
 	}
 	
 	/**
@@ -428,6 +454,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.12  2003/08/25 21:18:43  zet
+localise/update friendstab
+
 Revision 1.11  2003/08/23 15:21:37  zet
 remove @author
 

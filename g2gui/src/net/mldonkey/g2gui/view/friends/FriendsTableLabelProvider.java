@@ -35,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: FriendsTableLabelProvider.java,v 1.2 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: FriendsTableLabelProvider.java,v 1.3 2003/08/25 21:18:43 zet Exp $
  */
 public class FriendsTableLabelProvider implements ITableLabelProvider, IColorProvider {
 
@@ -45,7 +45,7 @@ public class FriendsTableLabelProvider implements ITableLabelProvider, IColorPro
 	 
 	 // Will transparent .pngs ever work?
 	public Image getColumnImage( Object element, int columnIndex ) {
-		return G2GuiResources.getImage("MessagesButtonSmallWhite");
+		return G2GuiResources.getImage("MessagesButtonSmallTrans");
 	}
 
 	/* (non-Javadoc)
@@ -110,6 +110,9 @@ public class FriendsTableLabelProvider implements ITableLabelProvider, IColorPro
 
 /*
 $Log: FriendsTableLabelProvider.java,v $
+Revision 1.3  2003/08/25 21:18:43  zet
+localise/update friendstab
+
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
