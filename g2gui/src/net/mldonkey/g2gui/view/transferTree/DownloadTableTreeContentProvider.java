@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Table;
  * DownloadTableTreeContentProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.7 2003/08/14 12:57:03 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.8 2003/08/16 19:00:59 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -442,7 +442,8 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 										
 			TableTreeEditor tableTreeEditor = (TableTreeEditor) tableTreeItem.getData("tableTreeEditor");	
 			tableTreeEditor.getEditor().dispose();
-			tableTreeEditor.dispose(); 
+			tableTreeEditor.setEditor(null);
+		//	tableTreeEditor.dispose();  // this crashes
 							
 			ChunkCanvas chunkCanvas = (ChunkCanvas) tableTreeItem.getData("thisChunkCanvas");
 			if (tableTreeItem.getData() instanceof FileInfo)
@@ -613,6 +614,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.8  2003/08/16 19:00:59  zet
+address fast + clicking crash
+
 Revision 1.7  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 
