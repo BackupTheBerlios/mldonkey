@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * TableMenuListener
  *
  * @author $user$
- * @version $Id: TableMenuListener.java,v 1.1 2003/08/05 13:50:10 lemmstercvs01 Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.2 2003/08/05 15:34:51 lemmstercvs01 Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -170,6 +170,13 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	
 		}
 		return false;
+	}
+	
+	public void toggleFilter( ViewerFilter viewerFilter, boolean toggle ) {
+		if ( toggle ) 
+			tableViewer.addFilter( viewerFilter );
+		else 
+			tableViewer.removeFilter( viewerFilter );
 	}
 	
 	private class DisconnectAction extends Action {
@@ -326,6 +333,17 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			this.networkType = networkType;
 		}
 		public void run() {
+			if ( !isChecked() ) {
+				ViewerFilter[] viewerFilters = tableViewer.getFilters();
+				for (int i = 0; i < viewerFilters.length; i++) {
+					if ( viewerFilters[i] instanceof NetworkFilter )
+						if ( ( (NetworkFilter ) viewerFilters[ i ] ).getNetworkType() == networkType ) {
+							toggleFilter( viewerFilters[ i ], false );
+						}
+				}
+			} else {
+				toggleFilter( new NetworkFilter( networkType ), true );
+			}
 		}
 	}
 	
@@ -343,7 +361,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
-		public boolean select(Viewer viewer, Object parentElement, Object element) {
+		public boolean select( Viewer viewer, Object parentElement, Object element ) {
 			if ( element instanceof ServerInfo ) {
 				ServerInfo server = ( ServerInfo ) element;
 				if ( server.getNetwork().getNetworkType() == networkType )
@@ -358,6 +376,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.2  2003/08/05 15:34:51  lemmstercvs01
+network filter added
+
 Revision 1.1  2003/08/05 13:50:10  lemmstercvs01
 initial commit
 
