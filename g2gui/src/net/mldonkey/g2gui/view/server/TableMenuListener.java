@@ -32,8 +32,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
@@ -70,7 +69,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * TableMenuListener
  *
  * @author $user$
- * @version $Id: TableMenuListener.java,v 1.7 2003/08/09 15:35:04 dek Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.8 2003/08/09 16:03:45 dek Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -370,9 +369,13 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			 * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
 			 */
 			public String isValid( String newText ) {
-				Pattern pattern = Pattern.compile( "(http://|https://)([a-z0-9-./?=!+]*)" );
-				Matcher m = pattern.matcher( newText );
-				if ( m.matches() )
+				RE regex = null;
+				try {
+					regex = new RE( "(http://|https://)([a-z0-9-./?=!+]*)" );
+				} catch (REException e) {					
+					e.printStackTrace();
+				}				
+				if ( regex.isMatch( newText ) )
 					return null;
 				else
 					return res.getString( "TML_INVALID_INPUT" );
@@ -662,6 +665,12 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.8  2003/08/09 16:03:45  dek
+added gnu.regexp for compiling with gcj
+you can get it at:
+
+ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz
+
 Revision 1.7  2003/08/09 15:35:04  dek
 added gnu.regexp for compiling with gcj
 you can get it at:

@@ -22,10 +22,11 @@
  */
 package net.mldonkey.g2gui.view;
 
+import gnu.regexp.RE;
+import gnu.regexp.REException;
+
 import java.util.Observable;
 import java.util.Observer;
-import java.util.regex.Pattern;
-// change to gnu.regex for win compile?
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -42,7 +43,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.30 2003/08/08 20:16:13 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.31 2003/08/09 16:04:46 dek Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -99,15 +100,27 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 	 * what to do, if this tab becomes active
 	 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
 	 */
-	public void handleEvent( Event event ) {
-		super.handleEvent( event );	
-		if ( core.isConnected() ) {
-			console.append( 
-				Pattern.compile( "\n" ).matcher( core.getConsoleMessage().getConsoleMessage() ).
-				replaceAll( console.getLineDelimiter() ) 
-			);
+	public void handleEvent(Event event) {
+		super.handleEvent(event);
+		if (core.isConnected()) {
+			console.append(
+				replaceAll(	core.getConsoleMessage().getConsoleMessage(),
+							"\n",
+							console.getLineDelimiter() ) 
+						   );
 			core.getConsoleMessage().reset();
 		}
+	}
+	
+	private String replaceAll( String input, String toBeReplaced, String replaceWith ) {		
+		RE regex = null;			
+		try {
+			 regex = new RE( toBeReplaced );
+		} catch ( REException e ) {			
+			e.printStackTrace();
+		}		
+		String result = regex.substituteAll( input, replaceWith );	
+		return result;
 	}
 	
 	public void updateDisplay() {
@@ -144,6 +157,12 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.31  2003/08/09 16:04:46  dek
+added gnu.regexp for compiling with gcj
+you can get it at:
+
+ftp://ftp.tralfamadore.com/pub/java/gnu.regexp-1.1.4.tar.gz
+
 Revision 1.30  2003/08/08 20:16:13  zet
 central PreferenceLoader, abstract Console
 
