@@ -22,7 +22,8 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.io.IOException;
+// import java.io.IOException;
+import java.util.regex.Pattern;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -41,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.21 2003/07/25 02:41:22 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.22 2003/07/25 14:48:28 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -83,7 +84,7 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 		parent.addControlListener( this );		
 		/* Adding the Console-Display Text-field, and creating the saved font */
 		infoDisplay = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
-		infoDisplay.setFont( loadFont() );
+		infoDisplay.setFont( loadFont2("consoleFontData") );
 				
 		input = new Text( parent, SWT.SINGLE | SWT.BORDER );					
 		//Send command to core
@@ -106,7 +107,7 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 	 * 
 	 * @return
 	 */
-	private Font loadFont() {
+	/*private Font loadFont() {
 		this.preferenceStore = new PreferenceStore( "g2gui.pref" );
 			try { preferenceStore.load(); } catch ( IOException e ) { }		
 		this.consoleFont = preferenceStore.getString( "consoleFont" ).split( ":" );			
@@ -120,7 +121,7 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 		}
 		else font = infoDisplay.getFont();
 		return font;
-	}
+	} */
 	
 	/**
 	 * what to do, if this tab becomes active
@@ -129,7 +130,8 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 	public void handleEvent( Event event ) {
 		super.handleEvent( event );	
 		if (core.isConnected()) {
-			infoDisplay.append( core.getConsoleMessage().getConsoleMessage().replaceAll("\n", infoDisplay.getLineDelimiter()) );
+			
+			infoDisplay.append( Pattern.compile("\n").matcher(core.getConsoleMessage().getConsoleMessage()).replaceAll(infoDisplay.getLineDelimiter()) );
 			core.getConsoleMessage().reset();
 		}
 	}
@@ -183,6 +185,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.22  2003/07/25 14:48:28  zet
+replace string.split/replaceAll
+
 Revision 1.21  2003/07/25 02:41:22  zet
 console window colour config in prefs / try different fontfieldeditor / pref page  (any worse?)
 
