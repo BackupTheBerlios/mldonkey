@@ -1,4 +1,4 @@
-G2gui's TODO-list (last update: 23.02.04)
+G2gui's TODO-list (last update: 29.02.04)
 =================
 Things with "!" will be implemented/fixed next
 
@@ -6,12 +6,8 @@ Things with "!" will be implemented/fixed next
 | Important things |
  ------------------
 
-! Make local core-controller relaunch-compatible, without killing the running core.
-  Alternatively kill the core and restart it?
-  * PreferenceLoader.*Relaunching() is a bit sub-optimal
-  
-* Fix memleak when relaunching g2gui after a pref-change. MainWindow does not seem to 
-  be disposed properly
+* Fix memleak when relaunching g2gui after a pref-change. MainWindow or the core
+  does not seem to be disposed properly
 
 * Get the subsearch right
 
@@ -25,8 +21,6 @@ Things with "!" will be implemented/fixed next
 
 * stop downloads from search results in case you accicently started it from there
   - use more colors: blue for already downloaded, green for being downloaded
-
-* Implement a global hotkey/command for column-packing
 
 * Introduce the mighty link-extractor
   - Gets a tab of its own

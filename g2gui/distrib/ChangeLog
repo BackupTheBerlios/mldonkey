@@ -1,6 +1,6 @@
 2004/02/29: vnc
 	* Improved the local core-handler:
-		G2gui is now correctly starts, stops and connects
+		G2gui now correctly starts, stops and connects
 		a local mlnet binary. Even in the event of a G2gui-crash
 		the core will survive and G2gui automatically connects upon
 		(re)start.
