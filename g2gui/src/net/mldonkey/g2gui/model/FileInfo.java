@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.5 2003/06/14 17:41:03 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.6 2003/06/18 13:30:56 dek Exp $ 
  *
  */
-public class FileInfo implements Information {
+public class FileInfo implements SimpleInformation {
 	/**
 	 * File identifier
 	 */
@@ -410,6 +410,9 @@ public class FileInfo implements Information {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.6  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
 Revision 1.5  2003/06/14 17:41:03  lemmstercvs01
 foobar
 

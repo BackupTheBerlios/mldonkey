@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Tag
  *
  * @author markus
- * @version $Id: Tag.java,v 1.2 2003/06/16 15:33:03 lemmstercvs01 Exp $ 
+ * @version $Id: Tag.java,v 1.3 2003/06/18 13:30:56 dek Exp $ 
  *
  */
-public class Tag implements Information {
+public class Tag implements SimpleInformation {
 	
 	public static final short UNSIGNED_INT = 0;
 	public static final short SIGNED_INT = 1;
@@ -137,6 +137,9 @@ public class Tag implements Information {
 
 /*
 $Log: Tag.java,v $
+Revision 1.3  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
 Revision 1.2  2003/06/16 15:33:03  lemmstercvs01
 some kind of enum added
 

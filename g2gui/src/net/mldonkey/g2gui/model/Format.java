@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Format
  *
  * @author markus
- * @version $Id: Format.java,v 1.5 2003/06/16 15:33:03 lemmstercvs01 Exp $ 
+ * @version $Id: Format.java,v 1.6 2003/06/18 13:30:56 dek Exp $ 
  *
  */
-public class Format implements Information {
+public class Format implements SimpleInformation {
 	
 	public static final byte UNKNOWN_FORMAT = 0;
 	public static final byte GENERIC_FORMAT = 1;
@@ -316,6 +316,9 @@ public class Format implements Information {
 
 /*
 $Log: Format.java,v $
+Revision 1.6  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
 Revision 1.5  2003/06/16 15:33:03  lemmstercvs01
 some kind of enum added
 

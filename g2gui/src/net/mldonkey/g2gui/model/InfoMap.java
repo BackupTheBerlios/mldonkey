@@ -31,7 +31,7 @@ import gnu.trove.THashMap;
  * InfoMap
  *
  * @author $user$
- * @version $Id: InfoMap.java,v 1.3 2003/06/17 12:10:17 lemmstercvs01 Exp $ 
+ * @version $Id: InfoMap.java,v 1.4 2003/06/18 13:30:56 dek Exp $ 
  *
  */
 public abstract class InfoMap implements InfoCollection {
@@ -76,8 +76,8 @@ public abstract class InfoMap implements InfoCollection {
 	 * @param key An object key
 	 * @return An Information object
 	 */
-	public Information get( Object key ) {
-		return ( Information ) this.infoMap.get( key );
+	public SimpleInformation get( Object key ) {
+		return ( SimpleInformation ) this.infoMap.get( key );
 	}
 	
 	/**
@@ -92,6 +92,9 @@ public abstract class InfoMap implements InfoCollection {
 
 /*
 $Log: InfoMap.java,v $
+Revision 1.4  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
 Revision 1.3  2003/06/17 12:10:17  lemmstercvs01
 some methods added
 

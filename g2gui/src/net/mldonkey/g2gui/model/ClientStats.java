@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientStats
  *
  * @author markus
- * @version $Id: ClientStats.java,v 1.4 2003/06/14 12:47:27 lemmstercvs01 Exp $ 
+ * @version $Id: ClientStats.java,v 1.5 2003/06/18 13:30:56 dek Exp $ 
  *
  */
-public class ClientStats implements Information {
+public class ClientStats implements SimpleInformation {
 	
 	private long totalUp;
 	private long totalDown;
@@ -243,6 +243,9 @@ public class ClientStats implements Information {
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.5  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
 Revision 1.4  2003/06/14 12:47:27  lemmstercvs01
 checkstyle applied
 

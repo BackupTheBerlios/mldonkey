@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * AddSectionOption
  *
  * @author $user$
- * @version $Id: AddSomeOption.java,v 1.3 2003/06/16 13:18:59 lemmstercvs01 Exp $ 
+ * @version $Id: AddSomeOption.java,v 1.4 2003/06/18 13:30:56 dek Exp $ 
  *
  */
-public class AddSomeOption implements Information {
+public class AddSomeOption implements SimpleInformation {
 	/**
 	 * Section where Option should appear
 	 */
@@ -139,6 +139,9 @@ public class AddSomeOption implements Information {
 
 /*
 $Log: AddSomeOption.java,v $
+Revision 1.4  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
 Revision 1.3  2003/06/16 13:18:59  lemmstercvs01
 checkstyle applied
 

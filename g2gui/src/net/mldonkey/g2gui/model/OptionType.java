@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionType
  *
  * @author $user$
- * @version $Id: OptionType.java,v 1.4 2003/06/16 15:33:03 lemmstercvs01 Exp $ 
+ * @version $Id: OptionType.java,v 1.5 2003/06/18 13:30:56 dek Exp $ 
  *
  */
-public class OptionType implements Information {
+public class OptionType implements SimpleInformation {
 	
 	public static final byte	STRING = 0;
 	public static final byte BOOL = 1;
@@ -80,6 +80,9 @@ public class OptionType implements Information {
 
 /*
 $Log: OptionType.java,v $
+Revision 1.5  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
 Revision 1.4  2003/06/16 15:33:03  lemmstercvs01
 some kind of enum added
 

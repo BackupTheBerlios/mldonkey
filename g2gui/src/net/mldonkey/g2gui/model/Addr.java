@@ -28,9 +28,9 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  * @author ${user}
- * @version $$Id: Addr.java,v 1.2 2003/06/14 20:30:44 lemmstercvs01 Exp $$ 
+ * @version $$Id: Addr.java,v 1.3 2003/06/18 13:30:56 dek Exp $$ 
  */
-public class Addr implements Information {
+public class Addr implements SimpleInformation {
 	/**
 	 * Address Type
 	 */
@@ -109,6 +109,9 @@ public class Addr implements Information {
 }
 /*
 $$Log: Addr.java,v $
+$Revision 1.3  2003/06/18 13:30:56  dek
+$Improved Communication Layer view <--> model by introducing a super-interface
+$
 $Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
 $cosmetic changes
 $$

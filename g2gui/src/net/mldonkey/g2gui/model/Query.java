@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.2 2003/06/17 12:07:37 lemmstercvs01 Exp $ 
+ * @version $Id: Query.java,v 1.3 2003/06/18 13:30:56 dek Exp $ 
  *
  */
-public class Query implements Information {
+public class Query implements SimpleInformation {
 	public static final byte AND = 0;
 	public static final byte OR = 1; 
 	public static final byte ANDNOT = 2;
@@ -244,6 +244,9 @@ public class Query implements Information {
 
 /*
 $Log: Query.java,v $
+Revision 1.3  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
 Revision 1.2  2003/06/17 12:07:37  lemmstercvs01
 checkstyle applied
 

@@ -28,9 +28,9 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * InfoList
  * 
  * @author ${user}
- * @version $$Id: InfoCollection.java,v 1.3 2003/06/17 12:10:17 lemmstercvs01 Exp $$ 
+ * @version $$Id: InfoCollection.java,v 1.4 2003/06/18 13:30:56 dek Exp $$ 
  */
-public interface InfoCollection {
+public interface InfoCollection extends Information {
 	
 	/**
 	 * Reads a InfoCollection from a MessageBuffer
@@ -52,6 +52,9 @@ public interface InfoCollection {
 }
 /*
 $$Log: InfoCollection.java,v $
+$Revision 1.4  2003/06/18 13:30:56  dek
+$Improved Communication Layer view <--> model by introducing a super-interface
+$
 $Revision 1.3  2003/06/17 12:10:17  lemmstercvs01
 $some methods added
 $

@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * State
  *
  * @author markus
- * @version $Id: State.java,v 1.6 2003/06/16 15:33:03 lemmstercvs01 Exp $ 
+ * @version $Id: State.java,v 1.7 2003/06/18 13:30:56 dek Exp $ 
  *
  */
-public class State implements Information {
+public class State implements SimpleInformation {
 	
 	public static final byte NOT_CONNECTED = 0;
 	public static final byte CONNECTING = 1;
@@ -122,6 +122,9 @@ public class State implements Information {
 
 /*
 $Log: State.java,v $
+Revision 1.7  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
 Revision 1.6  2003/06/16 15:33:03  lemmstercvs01
 some kind of enum added
 

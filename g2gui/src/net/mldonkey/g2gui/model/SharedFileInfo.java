@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  * @author $user$
- * @version $Id: SharedFileInfo.java,v 1.1 2003/06/15 16:17:26 lemmstercvs01 Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.2 2003/06/18 13:30:56 dek Exp $ 
  *
  */
-public class SharedFileInfo implements Information {
+public class SharedFileInfo implements SimpleInformation {
 	/**
 	 * Shared File Identifier
 	 */
@@ -185,6 +185,9 @@ public class SharedFileInfo implements Information {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.2  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
 Revision 1.1  2003/06/15 16:17:26  lemmstercvs01
 opcode 48 added
 

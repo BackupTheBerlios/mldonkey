@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * FileAddSource
  *
  * @author markus
- * @version $Id: FileAddSource.java,v 1.4 2003/06/14 12:47:27 lemmstercvs01 Exp $ 
+ * @version $Id: FileAddSource.java,v 1.5 2003/06/18 13:30:56 dek Exp $ 
  *
  */
-public class FileAddSource implements Information {
+public class FileAddSource implements SimpleInformation {
 	
 	/**
 	 * The File Identifier 
@@ -93,6 +93,9 @@ public class FileAddSource implements Information {
 
 /*
 $Log: FileAddSource.java,v $
+Revision 1.5  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
 Revision 1.4  2003/06/14 12:47:27  lemmstercvs01
 checkstyle applied
 

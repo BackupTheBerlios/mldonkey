@@ -28,9 +28,9 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.3 2003/06/16 20:08:38 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.4 2003/06/18 13:30:56 dek Exp $$ 
  */
-public class ServerInfo implements Information {
+public class ServerInfo implements SimpleInformation {
 	/**
 	 * Server Identifier
 	 */
@@ -280,6 +280,9 @@ public class ServerInfo implements Information {
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.4  2003/06/18 13:30:56  dek
+$Improved Communication Layer view <--> model by introducing a super-interface
+$
 $Revision 1.3  2003/06/16 20:08:38  lemmstercvs01
 $opcode 13 added
 $
