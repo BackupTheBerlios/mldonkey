@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.15 2003/09/19 15:19:14 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.16 2003/09/23 19:57:03 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -66,7 +66,6 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	private ResultInfoIntMap resultInfoMap;
 	private List selectedResults;
 	private ResultTableContentProvider tableContentProvider;
-	private Clipboard clipboard;
 
 	/**
 	 * Creates a new TableMenuListener
@@ -81,7 +80,6 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 		this.tableContentProvider =
 				( ResultTableContentProvider ) this.tableViewer.getContentProvider();
 		this.selectedResults = new ArrayList();
-		this.clipboard = new Clipboard( tableViewer.getTable().getDisplay() );
 	}
 
 	/* (non-Javadoc)
@@ -255,12 +253,18 @@ Yet			menuManager.add( webManager );
 			setText( G2GuiResources.getString( "ST_COPYNAME" ) );
 		}
 		public void run() {
+			Clipboard clipboard =
+				new Clipboard( ( ( TableViewer ) tableViewer ).getTable().getDisplay() );
+			String aString = "";
 			for ( int i = 0; i < selectedResults.size(); i++ ) {
 				ResultInfo result = ( ResultInfo ) selectedResults.get( i );
-				TextTransfer textTransfer = TextTransfer.getInstance();
-				clipboard.setContents( new Object[] { result.getName() },
-								new Transfer[] { textTransfer } );
+				if ( aString.length() > 0 )
+					aString += ( SWT.getPlatform().equals( "win32" ) ? "\r\n" : "\n" );
+				aString += result.getName();
 			}
+			clipboard.setContents( new Object[] { aString },
+								new Transfer[] { TextTransfer.getInstance() } );
+			clipboard.dispose();						
 		}
 	}
 
@@ -270,12 +274,18 @@ Yet			menuManager.add( webManager );
 			setText( G2GuiResources.getString( "ST_ASPLAIN" ) );
 		}
 		public void run() {
+			Clipboard clipboard =
+				new Clipboard( ( ( TableViewer ) tableViewer ).getTable().getDisplay() );
+			String aString = "";
 			for ( int i = 0; i < selectedResults.size(); i++ ) {
 				ResultInfo result = ( ResultInfo ) selectedResults.get( i );
-				TextTransfer textTransfer = TextTransfer.getInstance();
-				clipboard.setContents( new Object[] { result.getLink() }, 
-								new Transfer[] { textTransfer } );
+				if ( aString.length() > 0 )
+					aString += ( SWT.getPlatform().equals( "win32" ) ? "\r\n" : "\n" );
+				aString += result.getLink();
 			}
+			clipboard.setContents( new Object[] { aString },
+								new Transfer[] { TextTransfer.getInstance() } );
+			clipboard.dispose();						
 		}
 	}
 
@@ -285,14 +295,19 @@ Yet			menuManager.add( webManager );
 			setText( G2GuiResources.getString( "ST_ASHTML" ) );
 		}
 		public void run() {
+			Clipboard clipboard =
+				new Clipboard( ( ( TableViewer ) tableViewer ).getTable().getDisplay() );
+			String aString = "";
 			for ( int i = 0; i < selectedResults.size(); i++ ) {
 				ResultInfo result = ( ResultInfo ) selectedResults.get( i );
-				String aString = "<a href=\"" + result.getLink() + "\">"
+				if ( aString.length() > 0 )
+					aString += ( SWT.getPlatform().equals( "win32" ) ? "\r\n" : "\n" );
+				aString += "<a href=\"" + result.getLink() + "\">"
 								 + result.getName() + "</a>";
-				TextTransfer textTransfer = TextTransfer.getInstance();
-				clipboard.setContents( new Object[] { aString }, 
-								new Transfer[] { textTransfer } );
 			}
+			clipboard.setContents( new Object[] { aString }, 
+							new Transfer[] { TextTransfer.getInstance() } );
+			clipboard.dispose();						
 		}
 	}
 	
@@ -331,6 +346,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.16  2003/09/23 19:57:03  lemmster
+copy to... works with multiple files now
+
 Revision 1.15  2003/09/19 15:19:14  lemmster
 reworked
 

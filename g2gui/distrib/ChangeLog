@@ -1,6 +1,7 @@
 2003/09/23: lemmy
 	* Statusline: Display manage nodes for FT/Gnut/Gnut2
 	* Server: Tables colors switchable
+	* Search: Copy to... works with multiple files
 2003/09/22: lemmy
 	* Server: Integer columns right- instead of left-aligned [bug #934]
 	* Search: Show number of sources in avail column
@@ -11,6 +12,7 @@
     * Preferences: renamed "General" / "Other" to "Advanced" 
       and put it on the end of the list (only visible in advanced-mode)
 2003/09/15: lemmy
+	* Server: "Connect More" in right click menu in the servertab [forum request]
 	* Server: Save column width [bug #864]
 	* Server: Show ips in correct order [bug #883]
 	* Server: Show all connected servers (FT/Gnut/Gnut2) [bug #904]
