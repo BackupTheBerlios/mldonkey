@@ -32,13 +32,13 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.8 2003/07/07 17:39:18 dek Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.9 2003/07/07 18:30:29 dek Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
 	
 	private EnumTagType optionType;
-	private String description;
+	private String description = "";
 	private String sectionToAppear;
 	private String pluginToAppear;
 
@@ -190,6 +190,9 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.9  2003/07/07 18:30:29  dek
+saving options now also works
+
 Revision 1.8  2003/07/07 17:39:18  dek
 removed debugging System.out.....
 

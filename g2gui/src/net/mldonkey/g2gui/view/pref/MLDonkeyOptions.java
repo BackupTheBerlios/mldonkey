@@ -30,6 +30,7 @@ import java.util.Map;
 
 import net.mldonkey.g2gui.model.OptionsInfo;
 
+import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
@@ -39,12 +40,15 @@ import org.eclipse.swt.widgets.Control;
  * MLDonkeyOptions
  *
  * @author $user$
- * @version $Id: MLDonkeyOptions.java,v 1.1 2003/07/07 17:38:14 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.2 2003/07/07 18:31:08 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends PreferencePage {
+	/*have this page's contents been created? important for saving, as this might cause an NPE*/
+	private boolean initialized = false;
+	
 	private Map options = new HashMap();
-	private List fields = new ArrayList();
+	private Map fields = new HashMap();
 	/**
 	 * 
 	 * @param title the Title of this preferencePage, is displayed in the tree on the left side
@@ -67,16 +71,10 @@ public class MLDonkeyOptions extends PreferencePage {
 			temp.setStringValue( option.getValue() );
 			temp.getTextControl( parent ).setToolTipText( option.getKey() );
 			temp.getLabelControl( parent ).setToolTipText( option.getKey() );
-			fields.add( temp );
+			fields.put( option.getKey(), temp );
 		}
 		
-		/*
-		 * this.clientNameField = new StringFieldEditor( "client_name", "Client Name", shell );
-			clientNameField.setEnabled( connected, shell );
-			clientNameField.setStringValue( clientName );			
-			clientNameField.getTextControl( shell ).setToolTipText( "Small name of client" );
-			clientNameField.getLabelControl( shell ).setToolTipText( "Small name of client" );			
-		 */
+		this.initialized = true;
 		return null;
 	}
 	/**
@@ -84,12 +82,44 @@ public class MLDonkeyOptions extends PreferencePage {
 	 */
 	public void addOption( OptionsInfo option ) {
 		this.options.put( option.getKey(), option );
-		
+		/*if this option has no description, we set its name as description*/
+		if ( option.getDescription().equals( "" ) )
+			option.setDescription( option.getKey() );
+	}
+	
+	/**
+	 * Is called, when the OKbutton of the Tab is pressed
+	 *  (non-Javadoc)
+	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
+	 */
+	public boolean performOk() {	
+		/* only perform, if this tab has been initialized */
+		if ( initialized ) {
+			Iterator it = fields.keySet().iterator();
+			while ( it.hasNext() ) {
+				String optionName = ( String ) it.next();
+				OptionsInfo option = ( OptionsInfo ) options.get( optionName );
+				StringFieldEditor field = ( StringFieldEditor ) fields.get( optionName );
+				/*has the value changed??*/
+				if ( !field.getStringValue().equals( option.getValue() ) ) {
+					/*Ok, option has changed, take it and send it to the mldonkey*/
+					option.setValue( field.getStringValue() );
+					option.send();
+				}
+								
+			}			
+				
+		}
+		 
+		return super.performOk();		
 	}
 }
 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.2  2003/07/07 18:31:08  dek
+saving options now also works
+
 Revision 1.1  2003/07/07 17:38:14  dek
 now, one can take a look at all Core-options, not saving yet, but is in work
 

@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.11 2003/07/07 15:32:43 dek Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.12 2003/07/07 18:30:29 dek Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -52,10 +52,20 @@ public class OptionsInfoMap extends InfoMap {
 		 * 
 		 */
 		short listElem = messageBuffer.readInt16();		
-		for ( int i = 0; i < ( listElem ); i++ ) {
+		for ( int i = 0; i < ( listElem ); i++ ) {			
 			OptionsInfo optionsInfo = new OptionsInfo( this.parent );
 			optionsInfo.readStream( messageBuffer );
-			this.infoMap.put( optionsInfo.getKey(), optionsInfo );			
+			/*now we must take care, wether the option already exists, so that we don't
+			 * overwrite this option*/
+			if ( !this.infoMap.contains( optionsInfo.getKey() ) )
+				this.infoMap.put( optionsInfo.getKey(), optionsInfo );
+			else {
+				/*get the already existing option and change the values:*/
+				OptionsInfo existingOption = ( OptionsInfo ) this.infoMap.get( optionsInfo.getKey() );
+				existingOption.setValue( optionsInfo.getValue() );
+			}
+			
+				
 		}
 	}
 	
@@ -141,6 +151,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.12  2003/07/07 18:30:29  dek
+saving options now also works
+
 Revision 1.11  2003/07/07 15:32:43  dek
 made Option-handling more natural
 

@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.6 2003/07/07 17:38:14 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.7 2003/07/07 18:31:08 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -83,11 +83,11 @@ public class Preferences extends PreferenceManager {
 		
 		createMLDonkeyOptions(connected, mldonkey);
 			
-		myprefs.addToRoot( new PreferenceNode
-				( "mldonkey", new General( preferenceStore, connected, mldonkey ) ) );
-				
-		myprefs.addToRoot( new PreferenceNode
-				( "eDonkey", new Edonkey( preferenceStore, connected ) ) );	
+		//myprefs.addToRoot( new PreferenceNode
+		//		( "mldonkey", new General( preferenceStore, connected, mldonkey ) ) );
+		//		
+		//myprefs.addToRoot( new PreferenceNode
+		//		( "eDonkey", new Edonkey( preferenceStore, connected ) ) );	
 					
 		prefdialog.open();
 	}
@@ -111,8 +111,22 @@ public class Preferences extends PreferenceManager {
 			String section = option.getSectionToAppear();
 			String plugin = option.getPluginToAppear();
 			
-			if ( section != null ) {				
-				//create the section, or if already done, only add the option
+			if ( ( section == null ) && ( plugin == null ) ) {				
+				/* create the General-section, or if already done, only add the option */
+				if ( !sections.containsKey( "aaaGeneral" ) ) {
+					MLDonkeyOptions temp = new MLDonkeyOptions( "aaaGeneral" );
+					myprefs.addToRoot( new PreferenceNode ( "aaaGeneral", temp ) );
+					sections.put( "aaaGeneral", temp );
+					}
+			
+			/*commented out the following, as it produces ton's of options in this tab
+			 * which made it unreadable	
+			 */
+			//	( ( MLDonkeyOptions  )sections.get( "aaaGeneral" ) ).addOption( option );
+				
+			}
+			else if ( section != null ) {				
+			/* create the section, or if already done, only add the option */
 				if ( !sections.containsKey( section ) ) {
 					MLDonkeyOptions temp = new MLDonkeyOptions( section );
 					myprefs.addToRoot( new PreferenceNode ( section, temp ) );
@@ -120,7 +134,8 @@ public class Preferences extends PreferenceManager {
 					}
 				( ( MLDonkeyOptions  )sections.get( section ) ).addOption( option );
 			}
-			if ( plugin != null ) {
+			else if ( plugin != null ) {
+			/* create the pluginSection, or if already done, only add the option */
 				if ( !plugins.containsKey( plugin ) ) {
 					MLDonkeyOptions temp = new MLDonkeyOptions( plugin );
 					//myprefs.addToRoot( new PreferenceNode ( plugin, temp ) );
@@ -130,6 +145,7 @@ public class Preferences extends PreferenceManager {
 				( ( MLDonkeyOptions  )plugins.get( plugin ) ).addOption( option );			
 				//create the plugin, or if already done, only add the option
 				}
+			
 			
 		}
 	}
@@ -171,6 +187,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.7  2003/07/07 18:31:08  dek
+saving options now also works
+
 Revision 1.6  2003/07/07 17:38:14  dek
 now, one can take a look at all Core-options, not saving yet, but is in work
 
