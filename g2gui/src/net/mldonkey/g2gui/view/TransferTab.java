@@ -65,7 +65,7 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.91 2003/11/09 02:18:37 zet Exp $
+ * @version $Id: TransferTab.java,v 1.92 2003/11/09 21:49:26 zet Exp $
  *
  */
 public class TransferTab extends TableGuiTab {
@@ -243,7 +243,7 @@ public class TransferTab extends TableGuiTab {
         popupMenuUL.setRemoveAllWhenShown(true);
         popupMenuUL.addMenuListener(new UploadPaneListener(this, core, mainSashForm, parentViewForm));
 
-        CLabel uploadsCLabel = CCLabel.createCL(parentViewForm, "TT_Uploads", "TransfersButtonSmall");
+        CLabel uploadsCLabel = CCLabel.createCL(parentViewForm, "TT_Uploads", "UpArrowBlue");
         uploadsCLabel.addMouseListener(new MaximizeSashMouseAdapter(uploadsCLabel, popupMenuUL,
                 mainSashForm, uploadParent));
         parentViewForm.setTopLeft(uploadsCLabel);
@@ -360,6 +360,9 @@ public class TransferTab extends TableGuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.92  2003/11/09 21:49:26  zet
+uploads arrow
+
 Revision 1.91  2003/11/09 02:18:37  zet
 put some info in the headers
 

@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.RGB;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.57 2003/11/07 17:47:46 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.58 2003/11/09 21:49:26 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -254,6 +254,7 @@ public class G2GuiResources {
         reg.put("SearchSmall", createRawMImage("search_small.gif"));
         reg.put("SearchComplete", createRawMImage("search_complete.gif"));
 
+        reg.put("UpArrowBlue", createRawMImage("up_arrow_blue.gif"));
         reg.put("UpArrowGreen", createRawMImage("up_arrow_green.gif"));
         reg.put("DownArrowGreen", createRawMImage("down_arrow_green.gif"));
         reg.put("X", createRawMImage("x.gif"));
@@ -376,6 +377,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.58  2003/11/09 21:49:26  zet
+uploads arrow
+
 Revision 1.57  2003/11/07 17:47:46  zet
 remove duplicate pref images
 
