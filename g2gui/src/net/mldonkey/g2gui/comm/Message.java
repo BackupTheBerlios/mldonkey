@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.2 2003/06/11 15:32:33 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.3 2003/06/11 16:41:19 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -153,20 +153,6 @@ public abstract class Message {
 		else
 			return ( "" );
 	}
-
-	/**
-	 * Reads a char array from an InputStream
-	 * @param inputStream Stream to read from
-	 * @param length length to read from the stream
-	 * @return String
-	 * @throws IOException Error if read on InputStream failed
-	 */
-	public static char readChar( InputStream inputStream ) throws IOException {
-		char result = ( char ) inputStream.read();
-		return result;
-	}
-
-
 	
 	/**
 	 * Reads a String[] from an InputStream
@@ -189,12 +175,15 @@ public abstract class Message {
 	 * @return a String
 	 * @throws IOException Error if read from Stream failed
 	 */
-	public static String readCharList( InputStream inputStream, int length ) throws IOException {
-		StringBuffer result = new StringBuffer( length );
-		for ( int i = 0; i < length; i++ ){
-			result.append( readChar( inputStream ) );
-		}
-		return result.toString();
+	public static String readChar( InputStream inputStream, int length ) throws IOException {
+		if ( length > 0 ) {
+			byte[] content = new byte[ length ];
+			inputStream.read( content, 0, length );
+			String result = new String( content, 0, length );
+			return ( result );
+		} 
+		else
+			return ( "" );
 	}
 	
 	/**
@@ -326,6 +315,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.3  2003/06/11 16:41:19  lemmstercvs01
+still a problem in setMd4()
+
 Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
 still in progress
 
