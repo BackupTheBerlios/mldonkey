@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.model;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.text.DecimalFormat;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -38,7 +39,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.26 2003/07/21 17:32:21 dek Exp $ 
+ * @version $Id: FileInfo.java,v 1.27 2003/07/31 17:10:14 zet Exp $ 
  *
  */
 public class FileInfo extends Parent {
@@ -122,6 +123,9 @@ public class FileInfo extends Parent {
 	 * Which clients this file have
 	 */
 	private Set clientInfos = Collections.synchronizedSet( new HashSet() );
+
+	private String stringSize;
+	private String stringDownloaded;
 
 	/**
 	 * @return time when download started
@@ -318,6 +322,9 @@ public class FileInfo extends Parent {
 		this.setPriority( messageBuffer.readInt32() );
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
+	
+		this.stringSize = calcStringSize( this.size );
+		this.stringDownloaded = calcStringSize( this.downloaded );
 	}
 	
 	/**
@@ -442,10 +449,47 @@ public class FileInfo extends Parent {
 			new EncodeMessage( Message.S_VERIFY_ALL_CHUNKS, new Integer( this.getId() ) );
 		chunks.sendMessage( this.parent.getConnection() );
 	}
+	
+	/**
+	 * creates a String from the size
+	 * @param size The size
+	 * @return a string represantation of this size
+	 */	
+	private String calcStringSize( long size ) {
+			float k = 1024f;
+			float m = k * k;
+			float g = m * k;
+			float t = g * k;
+		
+			float fsize = (float) size;
+		
+			DecimalFormat df = new DecimalFormat( "0.#" );
+			
+			if ( fsize > t ) 
+				return new String ( df.format(fsize / t) + " TB" );
+			else if ( fsize > g ) 
+				return new String ( df.format(fsize / g) + " GB" );	
+			else if ( fsize > m ) 
+				return new String ( df.format(fsize / m) + " MB" );
+			else if ( fsize > k ) 
+				return new String ( df.format(fsize / k) + " KB" );
+			else
+				return new String ( size + "" );	
+	}
+	public String getStringSize () {
+		return stringSize;
+	}
+	public String getStringDownloaded () {
+		return stringDownloaded;
+	}
+	
 }	
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.27  2003/07/31 17:10:14  zet
+stringsize
+
 Revision 1.26  2003/07/21 17:32:21  dek
 added comment for calculating the signed long out of the unsigned int
 
