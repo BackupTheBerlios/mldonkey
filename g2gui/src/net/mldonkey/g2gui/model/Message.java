@@ -31,7 +31,7 @@ import java.net.Socket;
  * Message
  *
  * @author ${user}
- * @version $Id: Message.java,v 1.1 2003/06/09 21:15:10 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.2 2003/06/09 23:02:49 lemmstercvs01 Exp $ 
  *
  */
 public class Message {
@@ -300,7 +300,7 @@ public class Message {
 			result[ i ] = src[ i ];
 		}
 		for ( int i = 0; i < dest.length; i++ ) {
-			result[ i ] = dest[ i ];
+			result[ i + src.length ] = dest[ i ];
 		}
 		return result;
 	}
@@ -331,18 +331,18 @@ public class Message {
 				listcount++;
 				Object[] received;
 				//getting the length of listentrys				
-				if ( content[i] instanceof Object[] ) {
-					received = (Object[]) content[i];
-					for (int j = 0; j < received.length; j++) {
-						if (received[j] instanceof Byte)
+				if ( content[ i ] instanceof Object[] ) {
+					received = ( Object[] ) content[ i ];
+					for ( int j = 0; j < received.length; j++ ) {
+						if ( received[ j ] instanceof Byte )
 							msglength++;
-						else if (received[j] instanceof Short)
+						else if ( received[ j ] instanceof Short )
 							msglength += 2;
-						else if (received[j] instanceof Integer)
+						else if ( received[ j ] instanceof Integer )
 							msglength += 4;
-						else if (received[j] instanceof Long)
+						else if ( received[ j ] instanceof Long )
 							msglength += 8;
-						else if (received[j] instanceof String)
+						else if ( received[ j ] instanceof String )
 							msglength =
 								msglength + content[ i ].toString().length() + 2;
 					} //end for loop
@@ -475,6 +475,9 @@ public class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.2  2003/06/09 23:02:49  lemmstercvs01
+fixed a bug in merge() - counter position modified
+
 Revision 1.1  2003/06/09 21:15:10  lemmstercvs01
 initial release
 
