@@ -21,10 +21,11 @@
  */
 package net.mldonkey.g2gui.view.systray;
 
-import java.text.DecimalFormat;
+
 import java.util.Observable;
 import java.util.Observer;
 
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.helper.VersionInfo;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.MainWindow;
@@ -34,49 +35,68 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
-import org.eclipse.swt.graphics.Image;
+
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TrayItem;
 
-import com.gc.systray.SystemTrayIconListener;
-import com.gc.systray.SystemTrayIconManager;
 
 /**
- * @version $Id: SystemTray.java,v 1.20 2004/03/19 16:53:26 dek Exp $
+ * @version $Id: SystemTray.java,v 1.21 2004/04/02 17:25:46 dek Exp $
  *  
  */
-public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
+public class SystemTray implements Listener, Observer, Runnable {
+
 
 	private Menu menu;
-	private MenuManager popupMenu;
 	private MainWindow parent;
-	private SystemTrayIconManager systemTrayManager;
-	private static final DecimalFormat decimalFormat = new DecimalFormat("0.#");
+	private MenuManager popupMenu;
 	private String titleBarText;
-	private int icon;
-	private Image iconImage;
 
-	/*
-	 * the following attributes are a hack to "smoothen Tooltip-updates in
-	 * tray# because tooltip is not updated but killed and redrawn if text
-	 * changes maye a native-code hacker can change this ;-)
+	private TrayItem systray;
+
+	/**
+	 * @param window
 	 */
-	private float[] uploadrate = new float[5];
-	private float[] downloadrate = new float[5];
-	private int counter = 0;
+	public SystemTray(MainWindow window) {
+		this.titleBarText = "g2gui v " + VersionInfo.getVersion();
+		parent = window;
+		run();
+	}
+	/**
+	 * @return Returns the parent.
+	 */
+	MainWindow getParent() {
+		return parent;
+	}
+	
+	public void handleEvent(Event event) {
+		Point cursorLocation = Display.getCurrent().getCursorLocation();
+		
+		switch (event.type) {
+			case SWT.Selection :
+				mouseClickedLeftButton(cursorLocation.x,cursorLocation.y);
+				
+				break;
+			case SWT.MenuDetect:
+				mouseClickedRightButton(cursorLocation.x,cursorLocation.y);
+				break;
 
-	/* holds the status if the native library is loaded */
-	private boolean libLoaded = false;		
+			default :
+				break;
+		}
+	}
 
-	/* SystemTrayIconListener implementation */
-	public void mouseClickedLeftButton(
-		final int x,
-		final int y,
-		SystemTrayIconManager source) {
+	public void mouseClickedLeftButton(final int x, final int y) {
 		parent.getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = parent.getShell();
@@ -91,10 +111,7 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 		});
 
 	}
-	public void mouseClickedRightButton(
-		final int x,
-		final int y,
-		final SystemTrayIconManager source) {
+	public void mouseClickedRightButton( final int x, final int y) {
 
 		parent.getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -112,8 +129,8 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 				menu.addMenuListener(new MenuAdapter() {
 					public void menuShown(MenuEvent e) {
 						/*
-						 * set the default menue entry, this makes problems
-						 * with motif if nothing in the table has been selected
+						 * set the default menue entry, this makes problems with motif if nothing
+						 * in the table has been selected
 						 */
 						if (menu.getItem(0) != null)
 							menu.setDefaultItem(menu.getItem(0));
@@ -124,29 +141,7 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 		});
 
 	}
-	public void mouseLeftDoubleClicked(
-		final int x,
-		final int y,
-		SystemTrayIconManager source) {
-
-	}
-	public void mouseRightDoubleClicked(
-		final int x,
-		final int y,
-		SystemTrayIconManager source) {
-
-	}
-
-	/**
-	 * @param window
-	 */
-	public SystemTray(MainWindow window) {
-		this.titleBarText = "g2gui v " + VersionInfo.getVersion();
-		parent = window;
-		Thread tray = new Thread(this);		
-		tray.start();
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -154,28 +149,34 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 	 */
 	public void run() {
 		
-		libLoaded = SystemTrayIconManager.libLoaded;
-		if (!libLoaded) return;
-
+		/* 
+		 * for this implemetation, one needs SWT from 3.0M8
+		 * i.e. swt version 3044
+		 */
+		systray = new TrayItem(parent.getShell().getDisplay().getSystemTray(),SWT.NONE);		
+		
 		parent.getCore().getClientStats().addObserver(this);
 		
-		iconImage = G2GuiResources.getImageDescriptor("TrayIcon").createImage();
+		systray.setText("Text");
+		systray.setToolTipText("Tooltip");
 		
 		/*
-		 * following line has to be commented out for gcj-compilation on linux
-		 * my guess is, this needs some makefile magic
-		 */		
-		/***************/
-		// NO_LINUX_START
-		icon = iconImage.handle;
-		// NO_LINUX_END
-		/****************/
-
+		 * this adds a Listener for right Mouse-clicks,
+		 * I discovered this while browsing SWT-sources, this is not
+		 * mentioned in the API, or did i just miss it?
+		 * the second line is standard-left-click-listener
+		 */
+		systray.addListener(SWT.MenuDetect,this);
+		systray.addListener(SWT.Selection,this);	
+		
+		systray.setImage( G2GuiResources.getImageDescriptor("TrayIcon").createImage());
+		parent.getShell().addDisposeListener(new DisposeListener(){
+			public void widgetDisposed(DisposeEvent e) {
+				systray.dispose();
+			}});
+		
+		
 				
-		systemTrayManager = new SystemTrayIconManager(icon, titleBarText);
-		systemTrayManager.addSystemTrayIconListener(this);
-		systemTrayManager.setVisible(true);
-
 		IMenuListener manager = new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
 				String toggle = "";
@@ -211,51 +212,17 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 		popupMenu = new MenuManager("");
 		popupMenu.setRemoveAllWhenShown(true);
 		popupMenu.addMenuListener(manager);
-		
-		
-		parent.getShell().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				Shell shell = parent.getShell();
-				
-				/* check for widget disposed */
-				if (shell.isDisposed()) {
-					/*if we are already disposed, kill tray*/					
-					systemTrayManager.finalize();
-					return;
-				}
-				/* add dispose-listener to Tray*/
-				shell.addDisposeListener(new DisposeListener() {
-					public void widgetDisposed(DisposeEvent e) {
-						systemTrayManager.finalize();
-					}
-				});
-			}
-		});
-
-
-
-	}
-	/**
-	 * @return Returns the parent.
-	 */
-	MainWindow getParent() {
-		return parent;
 	}
 
-	public void update(Observable arg0, Object receivedInfo) {
-		// check if the library was loaded
-		if (!libLoaded) {
-			// no, so there is nothing what we can update
-			return;
-		}
+	public void update(Observable arg0, Object receivedInfo) {		
 
-		ClientStats clientInfo = (ClientStats) receivedInfo;
+		ClientStats clientStats = (ClientStats) receivedInfo;
 		Shell shell = parent.getShell();
 		final String transferRates =
 			"\nDL:"
-				+ decimalFormat.format(clientInfo.getTcpDownRate())
+				+ RegExp.getDecimalFormat(clientStats.getTcpDownRate())
 				+ " / UL:"
-				+ decimalFormat.format(clientInfo.getTcpUpRate());
+				+ RegExp.getDecimalFormat(clientStats.getTcpUpRate());
 
 		if (parent.getShell().isDisposed())
 			return;
@@ -266,17 +233,21 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 				/* check for widget disposed */
 				if (parent.getShell().isDisposed())
 					return;
-				systemTrayManager.update(icon, titleBarText + transferRates);
-
+				systray.setToolTipText(titleBarText + transferRates);
 			}
 		});
 
 	}
 
+	
+
 
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.21  2004/04/02 17:25:46  dek
+ introduced SWTs Tray-support, now we need swt from M08, i.e. version 3044
+
  Revision 1.20  2004/03/19 16:53:26  dek
  Makefile magic for win-only feature
 

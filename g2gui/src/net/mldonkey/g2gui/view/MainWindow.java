@@ -72,7 +72,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.17 2004/03/26 01:15:03 psy Exp $
+ * @version $Id: MainWindow.java,v 1.18 2004/04/02 17:25:45 dek Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText;
@@ -157,7 +157,7 @@ public class MainWindow implements ShellListener {
                  }
             });
  
-        if ( SWT.getPlatform().equals("win32") )
+       /*since we now use SWTs tray, we don't need platform-distinguishing here anymore*/
         	trayMenu = new SystemTray(this);
 
 
@@ -510,6 +510,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.18  2004/04/02 17:25:45  dek
+introduced SWTs Tray-support, now we need swt from M08, i.e. version 3044
+
 Revision 1.17  2004/03/26 01:15:03  psy
 more intelligent way to handle relaunches and quittings
 
