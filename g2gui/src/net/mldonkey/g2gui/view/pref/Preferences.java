@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.48 2004/01/02 21:22:00 psy Exp $
+ * @version $Id: Preferences.java,v 1.49 2004/01/08 21:58:48 psy Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -97,10 +97,7 @@ public class Preferences extends PreferenceManager {
         String g2guiexe = System.getProperty("user.dir") + System.getProperty("file.separator") +
             "g2gui.exe";
 
-        String platform = VersionCheck.getSWTPlatform();
-
-        if (("win32".equals(platform) || "win32-fox".equals(platform)) &&
-                new File(g2guiexe).exists()) {
+        if ( VersionCheck.isWin32() && new File(g2guiexe).exists() ) {
             preferencePage = new G2GuiWinReg("Windows Registry", FieldEditorPreferencePage.NONE);
             preferencePage.setPreferenceStore(preferenceStore);
             g2GuiRootNode.add(new PreferenceNode("Windows Registry", preferencePage));
@@ -260,6 +257,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.49  2004/01/08 21:58:48  psy
+usage of isWin32()
+
 Revision 1.48  2004/01/02 21:22:00  psy
 javadoc
 
