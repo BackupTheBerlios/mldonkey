@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.25 2003/07/05 14:04:50 dek Exp $ 
+ * @version $Id: Gui.java,v 1.26 2003/07/06 18:57:21 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -140,8 +140,7 @@ public class Gui implements IG2gui, Listener {
 	private void createContents( Composite parent ) {
 		setTitleBar( "g2gui alpha" );
 		createMenuBar();
-		CoolBar coolbar = null;
-				
+		CoolBar coolbar = null;				
 		GridData gridData;		
 		mainComposite = new Composite( parent, SWT.NONE );
 		
@@ -149,8 +148,13 @@ public class Gui implements IG2gui, Listener {
 			mainLayout.numColumns = 1;
 			mainLayout.marginWidth = 0;
 			mainLayout.marginHeight = 0;
+			mainLayout.verticalSpacing = 1;
 			mainComposite.setLayout( mainLayout ); 
 			
+		Label horLine = new Label( mainComposite, SWT.HORIZONTAL | SWT.SEPARATOR );
+			gridData = new GridData( GridData.FILL_HORIZONTAL );
+			horLine.setLayoutData( gridData );
+		
 		coolbar = createCoolBar( mainComposite );				
 			
 		ToolItem pref = new ToolItem( miscTools, SWT.NONE );				
@@ -252,6 +256,7 @@ public class Gui implements IG2gui, Listener {
 		/*now follows the creation of the CoolBar*/		
 		final CoolBar coolBar = new CoolBar ( parent, SWT.FLAT );
 			gridData = new GridData( GridData.FILL_HORIZONTAL );
+			
 			coolBar.setLayoutData( gridData );
 		Menu toolmenu = createToolBarRMMenu( coolBar );
 				for ( int i = 0; i < 2; i++ ) { 			
@@ -459,6 +464,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.26  2003/07/06 18:57:21  dek
+*** empty log message ***
+
 Revision 1.25  2003/07/05 14:04:50  dek
 ups, now it works again
 
