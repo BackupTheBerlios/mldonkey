@@ -33,7 +33,7 @@ import java.net.UnknownHostException;
  * Addr
  *
  *
- * @version $Id: Addr.java,v 1.24 2004/03/25 18:07:24 dek Exp $
+ * @version $Id: Addr.java,v 1.25 2004/03/26 18:11:03 dek Exp $
  */
 public class Addr {
 	/**
@@ -174,7 +174,7 @@ public class Addr {
 		Addr anAddr = new Addr();
 		anAddr.addressType = false;
 		
-		if (aString.equals("")) 
+		if (aString.equals(G2Gui.emptyString)) 
 		    aString = "0.0.0.0";
 		
 		try {
@@ -196,6 +196,9 @@ public class Addr {
 
 /*
 $Log: Addr.java,v $
+Revision 1.25  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.24  2004/03/25 18:07:24  dek
 profiling
 

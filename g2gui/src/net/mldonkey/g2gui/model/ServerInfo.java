@@ -35,7 +35,7 @@ import net.mldonkey.g2gui.view.G2Gui;
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.30 2004/03/25 19:25:23 dek Exp $
+ * @version $Id: ServerInfo.java,v 1.31 2004/03/26 18:11:03 dek Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -106,8 +106,8 @@ public class ServerInfo extends Parent {
 	 * @return The description of this server
 	 */
 	public String getDescOfServer() {
-		if ( nameOfServer == null || nameOfServer.equals( "" ) ) 
-			return "<no description>";
+		if ( descOfServer == null || descOfServer == G2Gui.emptyString ) 
+			return G2Gui.noDescription;
 		else
 			return descOfServer;
 	}
@@ -116,9 +116,9 @@ public class ServerInfo extends Parent {
 	 */
 	public String getNameOfServer() {
 		if ( nameOfServer == null ) 
-			return "<unknown>";
-		else if ( nameOfServer.equals( "" ) )
-			return "<unknown>";
+			return G2Gui.unkown;
+		else if ( nameOfServer == G2Gui.emptyString )
+			return G2Gui.unkown;
 		else
 			return nameOfServer;	
 	}
@@ -341,6 +341,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.31  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.30  2004/03/25 19:25:23  dek
 yet more profiling
 

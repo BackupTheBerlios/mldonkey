@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view.transfer.uploadTable;
 import net.mldonkey.g2gui.helper.ObjectWeakMap;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GSorter;
@@ -57,7 +58,7 @@ import java.util.Observer;
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.13 2004/03/25 19:25:23 dek Exp $
+ * @version $Id: UploadTableView.java,v 1.14 2004/03/26 18:11:03 dek Exp $
  *
  */
 public class UploadTableView extends GTableView {
@@ -242,16 +243,16 @@ public class UploadTableView extends GTableView {
 
             switch (cViewer.getColumnIDs()[ columnIndex ]) {
             case UploadTableView.STATE:
-                return "" + clientInfo.getDetailedClientActivity();
+                return G2Gui.emptyString + clientInfo.getDetailedClientActivity();
 
             case UploadTableView.NAME:
-                return "" + clientInfo.getClientName();
+                return G2Gui.emptyString + clientInfo.getClientName();
 
             case UploadTableView.NETWORK:
-                return "" + clientInfo.getClientnetworkid().getNetworkName();
+                return G2Gui.emptyString + clientInfo.getClientnetworkid().getNetworkName();
 
             case UploadTableView.KIND:
-                return "" + clientInfo.getClientConnection();
+                return G2Gui.emptyString + clientInfo.getClientConnection();
 
             case UploadTableView.SOFTWARE:
                 return clientInfo.getClientSoftware();
@@ -269,13 +270,13 @@ public class UploadTableView extends GTableView {
                 return clientInfo.getClientKind().getAddr().toString();
 
             case UploadTableView.PORT:
-                return "" + clientInfo.getClientKind().getPort();
+                return G2Gui.emptyString + clientInfo.getClientKind().getPort();
 
             case UploadTableView.FILENAME:
                 return clientInfo.getUploadFilename();
 
             default:
-                return "";
+                return G2Gui.emptyString;
             }
         }
     }
@@ -414,6 +415,9 @@ public class UploadTableView extends GTableView {
 
 /*
 $Log: UploadTableView.java,v $
+Revision 1.14  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.13  2004/03/25 19:25:23  dek
 yet more profiling
 

@@ -56,13 +56,18 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.76 2004/03/26 01:15:03 psy Exp $
+ * @version $Id: G2Gui.java,v 1.77 2004/03/26 18:11:03 dek Exp $
  *
  */
 public class G2Gui {
 	//TODO externalize strigns
-
+	/**
+	 * An emtpy String, that is useded everytime once would write "" to
+	 * prevent instantiation of many ""-Objects (be nice to gc)
+	 */
 	public static final String emptyString = "";
+	public static final String noDescription = "<no description>";
+	public static final String unkown = "<unknown>";
 
 	// this flag switches debugging output on/off
     public static boolean debug = false;
@@ -653,6 +658,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.77  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.76  2004/03/26 01:15:03  psy
 more intelligent way to handle relaunches and quittings
 

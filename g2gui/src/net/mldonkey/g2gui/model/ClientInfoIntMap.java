@@ -22,26 +22,28 @@
  */
 package net.mldonkey.g2gui.model;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.comm.EncodeMessage;
-import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.helper.MessageBuffer;
-import net.mldonkey.g2gui.helper.ObjectWeakMap;
-import net.mldonkey.g2gui.model.enum.EnumClientType;
-import net.mldonkey.g2gui.view.G2Gui;
-
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
 import gnu.trove.TObjectProcedure;
 
 import java.util.Iterator;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.helper.ObjectWeakMap;
+import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumClientType;
+import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.G2Gui;
+
 
 /**
  * ClientInfoList
  *
  *
- * @version $Id: ClientInfoIntMap.java,v 1.17 2003/12/15 19:57:24 dek Exp $
+ * @version $Id: ClientInfoIntMap.java,v 1.18 2004/03/26 18:11:03 dek Exp $
  */
 public class ClientInfoIntMap extends InfoIntMap {
     /**
@@ -54,6 +56,9 @@ public class ClientInfoIntMap extends InfoIntMap {
      */
     private ObjectWeakMap uploadersWeakMap = new ObjectWeakMap();
 
+	private int ignored;
+
+	
     /**
      * @param communication my parent
      */
@@ -62,24 +67,61 @@ public class ClientInfoIntMap extends InfoIntMap {
     }
 
     /**
-     * Reads a clientInfo object from the stream
-     * If the clientID exists, use the existing clientInfo object or we get dups
-     * @param messageBuffer The MessageBuffer to read from
-     */
-    public void readStream(MessageBuffer messageBuffer) {
-        int clientID = messageBuffer.readInt32();
-        ClientInfo clientInfo;
+	 * Reads a clientInfo object from the stream If the clientID exists, use the existing
+	 * clientInfo object or we get dups
+	 * 
+	 * @param messageBuffer
+	 *            The MessageBuffer to read from
+	 */
+	public void readStream(MessageBuffer messageBuffer) {
+		//check if is Interesting, if not, discard to save memory;
+		if (isInterstingClient(messageBuffer)) {
+			int clientID = messageBuffer.readInt32();
+			ClientInfo clientInfo;
 
-        if (this.containsKey(clientID))
-            clientInfo = this.get(clientID);
-        else
-            clientInfo = parent.getModelFactory().getClientInfo();
+			if (this.containsKey(clientID))
+				clientInfo = this.get(clientID);
+			else
+				clientInfo = parent.getModelFactory().getClientInfo();
 
-        clientInfo.readStream(clientID, messageBuffer);
-        this.put(clientInfo.getClientid(), clientInfo);
-    }
+			clientInfo.readStream(clientID, messageBuffer);
+			this.put(clientInfo.getClientid(), clientInfo);
+
+		}
+	}
 
     /**
+	 * @param messageBuffer
+	 * @return
+	 */
+	private boolean isInterstingClient(MessageBuffer messageBuffer) {
+		//save message-buffer Iterator:
+		int oldIt = messageBuffer.getIterator();
+		boolean result = true;
+		//clientId
+		messageBuffer.readInt32();
+		//networkID
+		messageBuffer.readInt32();
+		//ClientKind
+		ClientKind.getSingleton().readStream(messageBuffer);
+		Enum state = StateHandler.getStatefromByte(messageBuffer.readByte());
+		if (state == EnumState.NEW_HOST
+				|| state == EnumState.BLACK_LISTED
+				|| state == EnumState.REMOVE_HOST){			
+			result = false;
+			messageBuffer.setIterator(messageBuffer.getBuffer().length);
+		}
+		else{
+			//restore Iterator
+			messageBuffer.setIterator(oldIt);			
+		}
+		
+					
+		
+		return result;
+	}
+
+	/**
      * Store a key/value pair in this object
      * @param key The Key
      * @param value The ClientInfo object
@@ -116,6 +158,10 @@ public class ClientInfoIntMap extends InfoIntMap {
 
         if (this.infoIntMap.contains(key))
             ((ClientInfo) this.infoIntMap.get(key)).update(messageBuffer);
+        else{
+        	//we don't care about this Info, we discard the rest:
+        	 messageBuffer.readByte();
+        }
     }
 
     /**
@@ -234,6 +280,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ClientInfoIntMap.java,v $
+Revision 1.18  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.17  2003/12/15 19:57:24  dek
 'Sources-Leak' reduced
 

@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.viewers;
 
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.helper.VersionCheck;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -53,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.11 2004/02/05 20:44:43 psy Exp $
+ * @version $Id: ColumnSelector.java,v 1.12 2004/03/26 18:11:03 dek Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -109,8 +110,8 @@ public class ColumnSelector extends Dialog {
          */ 
         String aString = PreferenceLoader.loadString(this.prefOption);
         
-        leftColumnIDs = "";
-        rightColumnIDs = ((!aString.equals("")) ? aString : allColumnIDs);
+        leftColumnIDs = G2Gui.emptyString;
+        rightColumnIDs = ((!aString.equals(G2Gui.emptyString)) ? aString : allColumnIDs);
         
         /* check for a gtk bogus column and remove it,
          *  we do not want to have it in our list */
@@ -211,7 +212,7 @@ public class ColumnSelector extends Dialog {
         restore.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent s) {
                     rightColumnIDs = allColumnIDs;
-                    leftColumnIDs = "";
+                    leftColumnIDs = G2Gui.emptyString;
                     refreshLists();
                 }
             });
@@ -273,7 +274,7 @@ public class ColumnSelector extends Dialog {
         if (list.getSelectionCount() > 0) {
             int[] ind = list.getSelectionIndices();
 
-            String newString = "";
+            String newString = G2Gui.emptyString;
             boolean found;
 
             for (int i = 0; i < myString.length(); i++) {
@@ -358,6 +359,9 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.12  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.11  2004/02/05 20:44:43  psy
 hopefully fixed dynamic column behaviour under gtk by introducing a
 bogus column.

@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 
@@ -35,7 +36,7 @@ import org.eclipse.swt.graphics.Image;
  *
  * ClientTableLabelProvider
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.18 2004/03/25 19:25:23 dek Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.19 2004/03/26 18:11:03 dek Exp $
  *
  */
 public class ClientTableLabelProvider extends GTableLabelProvider implements ITableLabelProvider {
@@ -69,16 +70,16 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ClientTableView.STATE:
-            return "" + clientInfo.getDetailedClientActivity();
+            return G2Gui.emptyString + clientInfo.getDetailedClientActivity();
 
         case ClientTableView.NAME:
-            return "" + clientInfo.getClientName();
+            return G2Gui.emptyString + clientInfo.getClientName();
 
         case ClientTableView.NETWORK:
-            return "" + clientInfo.getClientnetworkid().getNetworkName();
+            return G2Gui.emptyString + clientInfo.getClientnetworkid().getNetworkName();
 
         case ClientTableView.KIND:
-            return "" + clientInfo.getClientConnection();
+            return G2Gui.emptyString + clientInfo.getClientConnection();
 
         case ClientTableView.SOFTWARE:
             return clientInfo.getClientSoftware();
@@ -107,6 +108,9 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.19  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.18  2004/03/25 19:25:23  dek
 yet more profiling
 

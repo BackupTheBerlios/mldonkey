@@ -24,12 +24,13 @@ package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.view.G2Gui;
 
 /**
  * ClientStats
  *
  *
- * @version $Id: ClientStats.java,v 1.19 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: ClientStats.java,v 1.20 2004/03/26 18:11:03 dek Exp $ 
  *
  */
 public class ClientStats extends Parent {
@@ -59,7 +60,7 @@ public class ClientStats extends Parent {
 	 *  @return a String
 	 */
 	public String toString() {
-		String result = "";
+		String result = G2Gui.emptyString;
 		
 		result += this.getClass();
 		result += "\n Total Up: " + this.getTotalUp();
@@ -201,6 +202,9 @@ public class ClientStats extends Parent {
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.20  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.19  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -214,7 +218,7 @@ Revision 1.16  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.15  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.14  2003/08/02 09:55:16  lemmy
 observers changed

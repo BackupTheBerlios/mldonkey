@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.66 2004/03/26 01:13:51 psy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.67 2004/03/26 18:11:04 dek Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -68,7 +68,7 @@ public class PreferenceLoader {
     // critical preferences which need a restart after change
     private static final String critPrefsList[] = {"hostname", "username", "password", "port", 
     		"advancedMode", "flatInterface", "useGraident", "pollUpStats", "displayNodes", 
-			"dragAndDrop", "coreExecutable"};
+			"dragAndDrop", "coreExecutable","allClients"};
     
     // our current state, are we in the progress of relaunching or quitting?
     private static boolean relaunching = false;
@@ -469,6 +469,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.67  2004/03/26 18:11:04  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.66  2004/03/26 01:13:51  psy
 added quitting-status methods
 
@@ -643,7 +646,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: psy $
+replace $user$ with $Author: dek $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates

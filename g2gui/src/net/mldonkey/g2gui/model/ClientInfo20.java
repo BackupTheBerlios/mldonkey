@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.view.G2Gui;
 /**
  * ClientInfo20
  *
- * @version $Id: ClientInfo20.java,v 1.8 2004/03/25 19:25:23 dek Exp $ 
+ * @version $Id: ClientInfo20.java,v 1.9 2004/03/26 18:11:03 dek Exp $ 
  *
  */
 public class ClientInfo20 extends ClientInfo19 {
@@ -74,7 +74,7 @@ public class ClientInfo20 extends ClientInfo19 {
 		// I've sent mail... 
 		this.clientConnectTime = messageBuffer.readInt32();		
 		
-		this.clientConnectTimeString = "" +
+		this.clientConnectTimeString = G2Gui.emptyString +
 		new Date(((long) clientConnectTime + 1000000000L) * 1000L);
 
 		// human-readable time-passed-since string
@@ -83,7 +83,7 @@ public class ClientInfo20 extends ClientInfo19 {
 		int hours = (int) connectseconds / 3600;
 		int minutes = (int) (connectseconds - (3600*hours)) / 60;
 		int seconds = (int) (connectseconds - (3600*hours) - (minutes*60));
-		this.clientConnectTimePassedString = "";
+		this.clientConnectTimePassedString = G2Gui.emptyString;
 
 		if (hours > 0) { 
 			this.clientConnectTimePassedString += hours + "h "; 
@@ -102,7 +102,7 @@ public class ClientInfo20 extends ClientInfo19 {
 		this.clientDownloadedString = RegExp.calcStringSize(clientDownloaded);
 
 		// Occasionally it seems the filename isn't reset to null when not uploading anymore
-		this.isUploader = !clientUploadFilename.equals("");
+		this.isUploader = (clientUploadFilename != G2Gui.emptyString);
 		onChangedState(oldState);
 	}
 
@@ -135,6 +135,9 @@ public class ClientInfo20 extends ClientInfo19 {
 
 /*
 $Log: ClientInfo20.java,v $
+Revision 1.9  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.8  2004/03/25 19:25:23  dek
 yet more profiling
 

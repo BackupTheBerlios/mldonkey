@@ -25,11 +25,12 @@ package net.mldonkey.g2gui.model;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.G2Gui;
 
 /**
  * ClientInfo21.java
  *
- * @version $Id: ClientInfo21.java,v 1.3 2004/03/25 19:25:23 dek Exp $ 
+ * @version $Id: ClientInfo21.java,v 1.4 2004/03/26 18:11:03 dek Exp $ 
  *
  */
 public class ClientInfo21 extends ClientInfo20 {
@@ -56,7 +57,7 @@ public class ClientInfo21 extends ClientInfo20 {
 	 */
 	public String getClientName() {
 		String result = super.getClientName();
-		if (!eMulemod.equals(""))
+		if (!(eMulemod == G2Gui.emptyString) )
 			result = result+" ("+eMulemod+")";		
 		return result;
 	}
@@ -90,6 +91,9 @@ public class ClientInfo21 extends ClientInfo20 {
 
 /*
  $Log: ClientInfo21.java,v $
+ Revision 1.4  2004/03/26 18:11:03  dek
+ some more profiling and mem-saving option (hopefully)  introduced
+
  Revision 1.3  2004/03/25 19:25:23  dek
  yet more profiling
 

@@ -27,6 +27,7 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -46,7 +47,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.18 2004/03/25 19:25:23 dek Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.19 2004/03/26 18:11:03 dek Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
@@ -198,12 +199,12 @@ public class ClientDetailDialog extends DetailDialog {
      */
     public void updateLabels() {
         updateLabel(clName, clientInfo.getClientName());
-        updateLabel(clRating, "" + clientInfo.getClientRating());
+        updateLabel(clRating, G2Gui.emptyString + clientInfo.getClientRating());
         updateLabel(clActivity, clientInfo.getClientActivity());
         updateLabel(clKind, clientInfo.getClientConnection());
         updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
         updateLabel(clSockAddr, clientInfo.getClientKind().getAddr().toString());
-        updateLabel(clPort, "" + clientInfo.getClientKind().getPort());
+        updateLabel(clPort, G2Gui.emptyString + clientInfo.getClientKind().getPort());
         updateLabel(clHash,
             ((clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED)
             ? clientInfo.getClientKind().getClientHash() : "n/a"));
@@ -233,6 +234,9 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.19  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.18  2004/03/25 19:25:23  dek
 yet more profiling
 

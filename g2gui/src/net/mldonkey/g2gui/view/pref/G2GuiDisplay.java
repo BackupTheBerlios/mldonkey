@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiDisplay.java,v 1.11 2004/01/08 21:48:33 psy Exp $
+ * @version $Id: G2GuiDisplay.java,v 1.12 2004/03/26 18:11:04 dek Exp $
  */
 public class G2GuiDisplay extends PreferencePage {
 	/**
@@ -84,20 +84,33 @@ public class G2GuiDisplay extends PreferencePage {
 			new BooleanFieldEditor( 
 				"displayGridLines",
 				G2GuiResources.getString( "PREF_DISPLAY_GRID" ),
-				composite ) );		
+				composite ) );
+		
+		if (advancedMode()) {
+			setupEditor(
+				new BooleanFieldEditor(
+					"allClients",
+					G2GuiResources.getString("PREF_DISPLAY_ALLCLIENTS"),
+					composite));
+		}
 				
 		setupEditor( 
 			new ExtendedFontFieldEditor2( 
 				"viewerFontData",
 				G2GuiResources.getString( "PREF_DISPLAY_V_FONT" ),
 				G2GuiResources.getString( "PREF_DISPLAY_SAMPLE" ),
-				composite ) );			
+				composite ) );	
+		
+	
 		
 				
 	}
 }
 /*
 $Log: G2GuiDisplay.java,v $
+Revision 1.12  2004/03/26 18:11:04  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.11  2004/01/08 21:48:33  psy
 minor
 
@@ -172,7 +185,7 @@ Revision 1.17  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.16  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: psy $
+replace $user$ with $Author: dek $
 
 Revision 1.15  2003/08/19 22:02:15  zet
 localise

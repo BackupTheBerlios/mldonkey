@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.45 2004/03/25 19:25:23 dek Exp $
+ * @version $Id: ClientInfo.java,v 1.46 2004/03/26 18:11:03 dek Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -278,10 +278,10 @@ public class ClientInfo extends Parent {
     public String getDetailedClientActivity() {
         if ((this.getState() == EnumState.CONNECTED_DOWNLOADING) ||
                 (this.rank == 0))
-            return "" + this.getState().toString();
+            return G2Gui.emptyString + this.getState().toString();
         else
 
-            return "" + this.getState().toString() + " (Q: " +
+            return G2Gui.emptyString + this.getState().toString() + " (Q: " +
             this.rank + ")";
     }
 
@@ -300,7 +300,7 @@ public class ClientInfo extends Parent {
      * @return clientSoftware
      */
     public String getClientSoftware() {
-    	return "";
+    	return G2Gui.emptyString;
     }
 
     /**
@@ -321,21 +321,21 @@ public class ClientInfo extends Parent {
      * @return clientUploaded String
      */
     public String getUploadedString() {
-    	return "";
+    	return G2Gui.emptyString;
     }
 
     /**
      * @return clientDownloaded String
      */
     public String getDownloadedString() {
-    	return "";
+    	return G2Gui.emptyString;
     }
     
     /**
      * @return clientUploadFilename (Filename currently being uploaded to client)
      */
     public String getUploadFilename() {
-    	return "";
+    	return G2Gui.emptyString;
     }
 
     public int getClientConnectTime() {
@@ -343,11 +343,11 @@ public class ClientInfo extends Parent {
     }
 
     public String getClientConnectTimeString() {
-        return "";
+        return G2Gui.emptyString;
     }
 
     public String getClientConnectTimePassedString() {
-    	return "";
+    	return G2Gui.emptyString;
     }
     
     
@@ -496,6 +496,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.46  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.45  2004/03/25 19:25:23  dek
 yet more profiling
 

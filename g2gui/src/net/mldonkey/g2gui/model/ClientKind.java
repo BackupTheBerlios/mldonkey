@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.enum.EnumClientMode;
  * ClientKind
  *
  *
- * @version $Id: ClientKind.java,v 1.13 2004/03/25 18:07:24 dek Exp $ 
+ * @version $Id: ClientKind.java,v 1.14 2004/03/26 18:11:03 dek Exp $ 
  *
  */
 public class ClientKind {
@@ -54,6 +54,7 @@ public class ClientKind {
 	 * IpAddr (present only if client type = 0)
 	 */
 	private Addr addr = new Addr();
+	private static ClientKind singleton;
 
 	ClientKind() {
 		//prevent outer package instanciation
@@ -128,10 +129,21 @@ public class ClientKind {
 			this.addr = Addr.getAddr("0.0.0.0");
 		}
 	}
+	
+	public static ClientKind getSingleton(){
+		if (singleton == null){
+			singleton = new ClientKind();			
+		}
+			return singleton;
+		
+	}
 }
 
 /*
 $Log: ClientKind.java,v $
+Revision 1.14  2004/03/26 18:11:03  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.13  2004/03/25 18:07:24  dek
 profiling
 

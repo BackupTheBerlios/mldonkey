@@ -27,6 +27,7 @@ import java.util.StringTokenizer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -50,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.21 2003/12/04 08:47:29 lemmy Exp $
+ * @version $Id: ComplexSearch.java,v 1.22 2004/03/26 18:11:04 dek Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -108,7 +109,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      * @param combo DOCUMENT ME!
      */
     public void addQueryMinMax( Combo combo ) {
-        String tokenOne = "";
+        String tokenOne = G2Gui.emptyString;
         String tokenTwo = "MB";
         StringTokenizer st = new StringTokenizer( combo.getText() );
         tokenOne = st.nextToken();
@@ -125,24 +126,24 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      */
     public void performSearch() {
         if ( PreferenceLoader.loadBoolean( "useCombo" ) ) {
-            if ( !minCombo.getText().equals( "" ) )
+            if ( !minCombo.getText().equals( G2Gui.emptyString ) )
                 addQueryMinMax( minCombo );
-            if ( !maxCombo.getText().equals( "" ) )
+            if ( !maxCombo.getText().equals( G2Gui.emptyString ) )
                 addQueryMinMax( maxCombo );
         }
         else {
-            if ( !maxText.getText().equals( "" ) )
+            if ( !maxText.getText().equals( G2Gui.emptyString ) )
                 query.setMaxSize( maxText.getText(), maxCombo.getText() );
-            if ( !minText.getText().equals( "" ) )
+            if ( !minText.getText().equals( G2Gui.emptyString ) )
                 query.setMinSize( minText.getText(), minCombo.getText() );
         }
 
         /* the max results */
-        if ( !resultCombo.getText().equals( "" ) )
+        if ( !resultCombo.getText().equals( G2Gui.emptyString ) )
             query.setMaxSearchResults( new Integer( resultCombo.getText() ).intValue() );
 		
 		/* the extension combo */
-        if ( !extensionCombo.getText().equals( "" ) )
+        if ( !extensionCombo.getText().equals( G2Gui.emptyString ) )
             query.setFormat( extensionCombo.getText() );
 
         /* get the network id for this query */
@@ -199,7 +200,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 
         /* the max result box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        String[] resultItems = { "", "50", "100", "200", "400" };
+        String[] resultItems = { G2Gui.emptyString, "50", "100", "200", "400" };
         this.resultCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
         this.resultCombo.setLayoutData( gridData );
         this.resultCombo.setItems( resultItems );
@@ -222,7 +223,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
                         if ( aString.length() > 1 )
                             aCombo.setText( aString.substring( 0, aString.length() - 1 ) );
                         else
-                            aCombo.setText( "" );
+                            aCombo.setText( G2Gui.emptyString );
                     }
                 }
             } );
@@ -259,7 +260,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
         aComposite.setLayout( gridLayout );
         aComposite.setLayoutData( gridData );
         /* the items for the combos */
-        String[] items = { "", "KB", "MB", "GB" };
+        String[] items = { G2Gui.emptyString, "KB", "MB", "GB" };
 
         /* the max size text */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -321,7 +322,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
         label.setText( labelText );
         label.setToolTipText( G2GuiResources.getString( "CS_TOOLHELP" ) );
         /* the items for the combos */
-        String[] items = { "", "100 KB", "200 KB", "500 KB", "1 MB",
+        String[] items = { G2Gui.emptyString, "100 KB", "200 KB", "500 KB", "1 MB",
         				   "5 MB", "10 MB", "50 MB", "100 MB", "500 MB",
         				   "1 GB", "2 GB"
         };
@@ -350,7 +351,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      */
     public void handleEvent( Event e ) {
         Text aText = ( Text ) e.widget;
-        String aString = "";
+        String aString = G2Gui.emptyString;
         try {
             if ( aText.getText() != null )
                 aString = aText.getText();
@@ -405,6 +406,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.22  2004/03/26 18:11:04  dek
+some more profiling and mem-saving option (hopefully)  introduced
+
 Revision 1.21  2003/12/04 08:47:29  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
