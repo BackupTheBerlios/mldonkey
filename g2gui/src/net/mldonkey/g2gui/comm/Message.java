@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.25 2003/08/01 13:46:24 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.26 2003/08/02 09:32:07 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -102,7 +102,7 @@ public abstract class Message {
 	 */
 	public static final short S_OLD_CLOSE_SEARCH = 27;
 	/**
-	 * Send SetOption (value is 29)
+	 * Send SetOption (value is 28)
 	 */
 	public static final short S_SET_OPTION = 28;	
 	/**
@@ -405,6 +405,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.26  2003/08/02 09:32:07  lemmstercvs01
+javadoc fixed
+
 Revision 1.25  2003/08/01 13:46:24  lemmstercvs01
 opcodes added
 
