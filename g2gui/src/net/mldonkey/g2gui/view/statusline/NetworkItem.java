@@ -56,10 +56,11 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.17 2003/08/19 12:14:16 lemmster Exp $ 
+ * @version $Id: NetworkItem.java,v 1.18 2003/08/19 14:34:36 lemmster Exp $ 
  *
  */
 public class NetworkItem implements Observer {
+	private boolean advancedMode = PreferenceLoader.loadBoolean( "advancedMode" );
 	private boolean connected;
 	private CoreCommunication core;
 	private StatusLine statusline;
@@ -171,7 +172,6 @@ public class NetworkItem implements Observer {
 
 				/* find the corresponding label */	
 				cLabel = getLabelByNetwork( controls, network );
-				cLabel.getImage().dispose(); // dispose the old image // nullpointer on this
 				cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
 
 				if ( core.getProtoToUse() >= 18 ) {
@@ -216,28 +216,29 @@ public class NetworkItem implements Observer {
 			|| networkInfo.getNetworkType() == NetworkInfo.Enum.SOULSEEK 
 			|| networkInfo.getNetworkType() == NetworkInfo.Enum.DC ) {
 	
-			if (enabled){	
+			if ( enabled ) {	
 			
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED" ) ).booleanValue();
 				if ( connected || core.getProtoToUse() < 18 ) // connected to servers
-					return G2GuiResources.getImage(networkInfo.getNetworkShortName() + "Connected");
+					return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Connected" );
 				else // not connected to servers 
-					return G2GuiResources.getImage(networkInfo.getNetworkShortName() + "Disconnected"); 
-			} else 	
-				return G2GuiResources.getImage(networkInfo.getNetworkShortName() + "Disabled");					
-	
+					return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Disconnected" ); 
+			}
+			else 	
+				return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Disabled" );					
+			}
 		// but not for these:
-		} else {
+		else {
 		
 			if ( enabled ) { 
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED" ) ).booleanValue();
 				if ( connected || core.getProtoToUse() < 18 ) 
-					return G2GuiResources.getImage("UnknownConnected");
+					return G2GuiResources.getImage( "UnknownConnected" );
 				else 
-					return G2GuiResources.getImage("UnknownDisconnected");
+					return G2GuiResources.getImage( "UnknownDisconnected" );
 			}
 			else 
-				return G2GuiResources.getImage("UnknownDisabled");
+				return G2GuiResources.getImage( "UnknownDisabled" );
 	
 		}		
 	}
@@ -251,8 +252,7 @@ public class NetworkItem implements Observer {
 		Menu menu = new Menu( shell , SWT.POP_UP );
 	
 		/* change the menu for bittorrent (doesnt have servers) */
-		if ( ( ( NetworkInfo ) cLabel.getData() ).hasServers() 
-		&& PreferenceLoader.loadBoolean( "advancedMode") ) {
+		if ( ( ( NetworkInfo ) cLabel.getData() ).hasServers() && advancedMode ) {
 		
 			/* manage Server */
 			item = new MenuItem( menu, SWT.PUSH );
@@ -279,29 +279,31 @@ public class NetworkItem implements Observer {
 		} );
 			
 		/* disable or enable? */
-		if ( PreferenceLoader.loadBoolean( "advancedMode")
-		&& ( ( NetworkInfo ) cLabel.getData() ).hasServers() ) {
-			menu.addListener( SWT.Show, new Listener () {
-				private MenuItem item = NetworkItem.this.item;
-				public void handleEvent( Event event ) {
-					NetworkInfo networkInfo = ( NetworkInfo ) anotherCLabel.getData();
-					if ( networkInfo.isEnabled() ) {
-						stateItem.setText( "Disable" );
+		menu.addListener( SWT.Show, new Listener () {
+			private MenuItem item = NetworkItem.this.item;
+			public void handleEvent( Event event ) {
+				NetworkInfo networkInfo = ( NetworkInfo ) anotherCLabel.getData();
+				if ( networkInfo.isEnabled() ) {
+					stateItem.setText( "Disable" );
+					if ( advancedMode )
 						item.setEnabled( true );
-					}
-					else {
-						stateItem.setText( "Enable" );						
-						item.setEnabled( false );
-					}
 				}
-			} );
-		}
+				else {
+					stateItem.setText( "Enable" );						
+					if ( advancedMode )
+						item.setEnabled( false );
+				}
+			}
+		} );
 		return menu;
 	}
 }
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.18  2003/08/19 14:34:36  lemmster
+dont dispose() the image if its from the imageregistry
+
 Revision 1.17  2003/08/19 12:14:16  lemmster
 first try of simple/advanced mode
 
