@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.16 2003/07/26 23:10:14 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.17 2003/07/27 00:12:29 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer {
@@ -409,7 +409,7 @@ public class MainTab implements Listener, Observer {
 					final ClientStats clientInfo = (ClientStats) receivedInfo;
 					thisShell.getDisplay().asyncExec(new Runnable() {
 						   public void run() {
-								thisShell.setText(
+								if (!thisShell.isDisposed()) thisShell.setText(
 									"(D:" + String.valueOf(clientInfo.getTcpDownRate()) + ")" +
 									"(U:" + String.valueOf(clientInfo.getTcpUpRate()) + ")" +
 									": " + titleBarText
@@ -486,6 +486,9 @@ public class MainTab implements Listener, Observer {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.17  2003/07/27 00:12:29  zet
+check isDisposed
+
 Revision 1.16  2003/07/26 23:10:14  zet
 update titlebar with rates
 
