@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.84 2003/11/05 01:54:13 zet Exp $
+ * @version $Id: MainTab.java,v 1.85 2003/11/05 04:52:25 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -155,8 +155,8 @@ public class MainTab implements ShellListener {
 		    ErrorDialog errorDialog = new ErrorDialog( new Shell(display), sw.toString() );
 		    errorDialog.open();
         }
-        // win32-fox 1.1.41 problem ?
-        if (!SWT.getPlatform().equals("fox"))
+        // win32-fox 1.1.41 problem ? comment out on linux-fox (they both return "fox")
+        // if (!SWT.getPlatform().equals("fox"))
             display.dispose();
     }
 
@@ -448,6 +448,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.85  2003/11/05 04:52:25  zet
+fox junk
+
 Revision 1.84  2003/11/05 01:54:13  zet
 minor
 
