@@ -28,10 +28,10 @@ import net.mldonkey.g2gui.view.viewers.GPage;
 /**
  * TableGuiTab
  *
- * @version $Id: TableGuiTab.java,v 1.1 2003/10/31 10:42:47 lemmster Exp $ 
+ * @version $Id: TableGuiTab.java,v 1.2 2003/10/31 13:20:31 lemmster Exp $ 
  *
  */
-public abstract class TableGuiTab extends GuiTab {
+public abstract class TableGuiTab extends PaneGuiTab {
 	protected CoreCommunication core;
 	protected GPage gPage;
 
@@ -48,10 +48,18 @@ public abstract class TableGuiTab extends GuiTab {
 	public GPage getPage() {
 		return gPage;
 	}
+	
+	public GPage getGPage() {
+		return gPage;
+	}
 }
 
 /*
 $Log: TableGuiTab.java,v $
+Revision 1.2  2003/10/31 13:20:31  lemmster
+added PaneGuiTab and TableGuiTab
+added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
+
 Revision 1.1  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

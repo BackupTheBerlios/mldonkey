@@ -31,9 +31,11 @@ import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.server.ServerPaneListener;
-import net.mldonkey.g2gui.view.server.ServerTableViewer;
+import net.mldonkey.g2gui.view.server.ServerTablePage;
+import net.mldonkey.g2gui.view.viewers.GPaneListener;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -43,12 +45,13 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.44 2003/10/31 10:42:47 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.45 2003/10/31 13:20:31 lemmster Exp $ 
  *
  */
 public class ServerTab extends TableGuiTab implements Runnable, DisposeListener {
@@ -88,8 +91,11 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 	
 		viewForm.setContent( composite );
 		viewForm.setTopLeft( ccLabel );
+		
+		GPaneListener aListener = new ServerPaneListener(this, core);
+		createPaneToolBar( viewForm, aListener);
 
-		gPage = new ServerTableViewer( composite, core );
+		gPage = new ServerTablePage( composite, core );
 
 		/* fill the table with content */
 		servers = core.getServerInfoIntMap();
@@ -101,8 +107,17 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 		
 		popupMenu = new MenuManager( "" );
 		popupMenu.setRemoveAllWhenShown( true );
-		popupMenu.addMenuListener(new ServerPaneListener(gPage, core));
+		popupMenu.addMenuListener( aListener );
+		( (ServerPaneListener) aListener ).initialize();
 		ccLabel.addMouseListener( new HeaderBarMouseAdapter( ccLabel, popupMenu ) );
+	}
+
+	private void createPaneToolBar( ViewForm aViewForm, IMenuListener menuListener ) {
+		ToolBar toolBar = new ToolBar(aViewForm, SWT.RIGHT | SWT.FLAT);
+
+		super.createPaneToolBar( toolBar, menuListener );   
+
+		aViewForm.setTopRight( toolBar );
 	}
 
 	/* (non-Javadoc)
@@ -193,13 +208,17 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 	 * Updates this tab on preference close
 	 */
 	public void updateDisplay() {
-		( ( ServerTableViewer ) gPage ).updateDisplay();
+		( ( ServerTablePage ) gPage ).updateDisplay();
 		super.updateDisplay();
 	}
 }
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.45  2003/10/31 13:20:31  lemmster
+added PaneGuiTab and TableGuiTab
+added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
+
 Revision 1.44  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

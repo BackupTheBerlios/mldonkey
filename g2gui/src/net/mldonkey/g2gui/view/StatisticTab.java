@@ -31,7 +31,10 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
 import net.mldonkey.g2gui.view.statistic.GraphPaneListener;
+import net.mldonkey.g2gui.view.viewers.GPage;
+import net.mldonkey.g2gui.view.viewers.GPaneListener;
 
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -46,13 +49,14 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.36 2003/10/29 16:56:21 lemmster Exp $
+ * @version $Id: StatisticTab.java,v 1.37 2003/10/31 13:20:31 lemmster Exp $
  */
-public class StatisticTab extends GuiTab {
+public class StatisticTab extends PaneGuiTab {
     private GraphControl uploadsGraphControl;
     private GraphControl downloadsGraphControl;
 
@@ -82,7 +86,8 @@ public class StatisticTab extends GuiTab {
             new SashForm( mainSash,
                           ( PreferenceLoader.loadBoolean( "graphSashHorizontal" ) ? SWT.HORIZONTAL
                                                                                   : SWT.VERTICAL ) );
-        graphSash.addDisposeListener( new DisposeListener() {
+
+       graphSash.addDisposeListener( new DisposeListener() {
                 public void widgetDisposed( DisposeEvent e ) {
                     PreferenceStore p = PreferenceLoader.getPreferenceStore();
                     p.setValue( "graphSashHorizontal",
@@ -140,13 +145,25 @@ public class StatisticTab extends GuiTab {
                           SWT.BORDER
                           | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
         CLabel cLabel = CCLabel.createCL( graphViewForm, titleResString, "StatisticsButtonSmallTitlebar" );
-        GraphControl graphControl = new GraphControl( graphViewForm, graphName );
-        popupMenu.addMenuListener( new GraphPaneListener( graphSash, graphViewForm, graphControl ) );
+
+		GraphControl graphControl = new GraphControl( graphViewForm, graphName );
+   		GPaneListener aListener = new GraphPaneListener( graphSash, graphViewForm, graphControl );
+		createPaneToolBar( graphViewForm, aListener );
+                
+        popupMenu.addMenuListener( aListener );
         graphViewForm.setTopLeft( cLabel );
         graphViewForm.setContent( graphControl );
         cLabel.addMouseListener( new MaximizeSashMouseAdapter( cLabel, popupMenu, graphSash, graphViewForm ) );
         return graphControl;
     }
+    
+    	private void createPaneToolBar( ViewForm aViewForm, IMenuListener menuListener ) {
+		ToolBar toolBar = new ToolBar(aViewForm, SWT.RIGHT | SWT.FLAT);
+
+		super.createPaneToolBar( toolBar, menuListener );   
+
+		aViewForm.setTopRight( toolBar );
+	}
 
     /* (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
@@ -176,10 +193,22 @@ public class StatisticTab extends GuiTab {
         uploadsGraphControl.updateDisplay();
         downloadsGraphControl.updateDisplay();
     }
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.PaneGuiTab#getGPage()
+	 */
+	public GPage getGPage() {
+		// we dont have a GPage so we return null. its checked in GPage
+		return null;
+	}
 }
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.37  2003/10/31 13:20:31  lemmster
+added PaneGuiTab and TableGuiTab
+added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
+
 Revision 1.36  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 

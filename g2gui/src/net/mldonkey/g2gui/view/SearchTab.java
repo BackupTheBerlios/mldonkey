@@ -34,11 +34,13 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.search.CompositeSearch;
 import net.mldonkey.g2gui.view.search.MusicComplexSearch;
 import net.mldonkey.g2gui.view.search.OtherComplexSearch;
-import net.mldonkey.g2gui.view.search.Search;
 import net.mldonkey.g2gui.view.search.ResultPaneListener;
+import net.mldonkey.g2gui.view.search.Search;
 import net.mldonkey.g2gui.view.search.SearchResult;
 import net.mldonkey.g2gui.view.search.SimpleSearch;
+import net.mldonkey.g2gui.view.viewers.GPage;
 
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -63,15 +65,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.37 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.38 2003/10/31 13:20:31 lemmster Exp $ 
  *
  */
-public class SearchTab extends GuiTab {
+public class SearchTab extends PaneGuiTab {
 	private SashForm mainSash;
 	private GridLayout gridLayout;
 	private Group group;
@@ -136,20 +139,19 @@ public class SearchTab extends GuiTab {
 	 * The search mask
 	 */
 	private void createLeftGroup() {
-		
-		ViewForm searchViewForm = 
+		ViewForm viewForm = 
 				new ViewForm( mainSash , SWT.BORDER
 				| ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
 		GridData gd = new GridData( GridData.FILL_VERTICAL );
 		gd.widthHint = 150;
-		searchViewForm.setLayoutData( gd );
+		viewForm.setLayoutData( gd );
 		CLabel searchCLabel = 
-			CCLabel.createCL( searchViewForm, "TT_SearchButton", "SearchButtonSmallTitlebar" );
+			CCLabel.createCL( viewForm, "TT_SearchButton", "SearchButtonSmallTitlebar" );
 
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
-		Composite aComposite = new Composite( searchViewForm, SWT.NONE );
+		Composite aComposite = new Composite( viewForm, SWT.NONE );
 		aComposite.setLayout( gridLayout );
 
 		tabFolder = new CTabFolder( aComposite, SWT.NONE );
@@ -197,8 +199,8 @@ public class SearchTab extends GuiTab {
 		anotherComposite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 		createSearchButton( anotherComposite );
 		
-		searchViewForm.setContent( aComposite );
-		searchViewForm.setTopLeft( searchCLabel );
+		viewForm.setContent( aComposite );
+		viewForm.setTopLeft( searchCLabel );
 	}
 	
 
@@ -287,6 +289,14 @@ public class SearchTab extends GuiTab {
 			}
 			public void mouseUp( MouseEvent e ) { }
 		} );
+	}
+
+	private void createPaneToolBar( ViewForm aViewForm, IMenuListener menuListener ) {
+		ToolBar toolBar = new ToolBar(aViewForm, SWT.RIGHT | SWT.FLAT);
+
+		super.createPaneToolBar( toolBar, menuListener );   
+
+		aViewForm.setTopRight( toolBar );
 	}
 
 	/* (non-Javadoc)
@@ -432,10 +442,23 @@ public class SearchTab extends GuiTab {
 			}			
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.PaneGuiTab#getGPage()
+	 */
+	public GPage getGPage() {
+		CTabItem item = this.getCTabFolder().getSelection();
+		SearchResult searchResult = (SearchResult) item.getData();
+		return searchResult.getGPage();
+	}
 }
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.38  2003/10/31 13:20:31  lemmster
+added PaneGuiTab and TableGuiTab
+added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
+
 Revision 1.37  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 
