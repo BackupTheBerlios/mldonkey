@@ -50,6 +50,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -79,7 +80,7 @@ import org.eclipse.swt.custom.CLabel;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.17 2003/08/14 12:44:45 dek Exp $ 
+ * @version $Id: SearchResult.java,v 1.18 2003/08/17 09:34:35 dek Exp $ 
  *
  */
 //TODO add image handle, fake search, real links depending on network								   
@@ -275,12 +276,34 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			}
 		} );
 		
+		/*add a mouse-listener to catch double-clicks */
+		table.getTable().addMouseListener(new MouseListener(){
+			public void mouseDoubleClick(MouseEvent e) {
+				downloadSelected();
+			}
+			public void mouseDown(MouseEvent e) {}
+			public void mouseUp(MouseEvent e) {}}
+			);
+		
 		final ToolTipHandler tooltip = new ToolTipHandler( table.getTable().getShell() );
 		tooltip.activateHoverHelp( table.getTable() );
 		
 		/* set the this table as the new CTabItem Control */
 		cTabItem.setControl( table.getTable() );
 		
+	}
+	
+	private void downloadSelected() {				
+		TableItem[] currentItems = table.getTable().getSelection();
+		for ( int i = 0; i < currentItems.length;	 i ++ ) {
+			ResultInfo result = ( ResultInfo ) currentItems[ i ].getData();
+			Download download = new Download( core );
+			download.setPossibleNames( result.getNames() );	
+			download.setResultID( result.getResultID() );
+			download.setForce( false );
+			download.send();
+			download = null;
+		}
 	}
 	
 	/**
@@ -298,18 +321,12 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		/* Download */
 		dlItem = new MenuItem( menu, SWT.PUSH );
 		dlItem.setText( bundle.getString( "ST_DOWNLOAD" ) );
+		//make it the default-item (bold):
+		menu.setDefaultItem( dlItem );
+		
 		dlItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
-				TableItem[] currentItems = table.getTable().getSelection();
-				for ( int i = 0; i < currentItems.length;	 i ++ ) {
-					ResultInfo result = ( ResultInfo ) currentItems[ i ].getData();
-					Download download = new Download( core );
-					download.setPossibleNames( result.getNames() );	
-					download.setResultID( result.getResultID() );
-					download.setForce( false );
-					download.send();
-					download = null;
-				}
+				downloadSelected();
 			}
 		} );
 		
@@ -650,6 +667,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.18  2003/08/17 09:34:35  dek
+double-click starts download of selected items
+
 Revision 1.17  2003/08/14 12:44:45  dek
 searching works now without errors
 
