@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.4 2003/07/18 04:34:22 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.5 2003/07/18 09:44:35 dek Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -321,7 +321,7 @@ public class MainTab implements Listener {
 			GuiTab tempTab = ( GuiTab )  tabIterator.next();
 			/* set the default tab to active */
 			if ( tempTab instanceof TransferTab )									
-				 this.setActive( tempTab );					 
+				tempTab.setActive();					 
 		}		
 	} 
 
@@ -454,6 +454,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.5  2003/07/18 09:44:35  dek
+using the right setActive, when choosing default-tab
+
 Revision 1.4  2003/07/18 04:34:22  lemmstercvs01
 checkstyle applied
 
