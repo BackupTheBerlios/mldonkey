@@ -29,10 +29,12 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.2 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.3 2003/06/27 17:15:16 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
+	private int id;
+	
 	/**
 	 * @param communication my parent
 	 */
@@ -54,6 +56,15 @@ public class FileInfoIntMap extends InfoIntMap {
 	 */
 	public void put( int key, FileInfo value ) {
 		this.infoIntMap.put( key, value );
+	}
+	
+	/**
+	 * true/false if this contains the object
+	 * @param key The key to the object
+	 * @return boolean
+	 */
+	public boolean contains( int key ) {
+		return this.infoIntMap.contains( key );
 	}
 
 	/**
@@ -90,7 +101,7 @@ public class FileInfoIntMap extends InfoIntMap {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void add( MessageBuffer messageBuffer ) {
-		int id = messageBuffer.readInt32();
+		id = messageBuffer.readInt32();
 		/* go 4bytes back in the MessageBuffer */
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 		if ( this.infoIntMap.containsKey( id ) )
@@ -110,10 +121,21 @@ public class FileInfoIntMap extends InfoIntMap {
 	public FileInfo get( int id ) {
 		return ( FileInfo ) this.infoIntMap.get( id );
 	}
+	
+	/**
+	 * @return
+	 */
+	public int getId() {
+		return id;
+	}
+
 }
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.3  2003/06/27 17:15:16  lemmstercvs01
+added private int id for easier table update
+
 Revision 1.2  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
