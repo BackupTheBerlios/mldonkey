@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.main.MainCoolBar;
 import net.mldonkey.g2gui.view.main.MainMenuBar;
-import net.mldonkey.g2gui.view.main.Minimizer;
+import net.mldonkey.g2gui.view.main.Minimizer_win32;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.69 2003/09/08 18:27:42 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.68 2003/09/08 18:25:37 zet Exp $ 
  *
  */
 public class MainTab implements ShellListener {
@@ -74,7 +74,7 @@ public class MainTab implements ShellListener {
 	private GuiTab activeTab;
 	private GuiTab[] tabs;
 	private MainCoolBar coolBar;
-	private Minimizer minimizer;
+	private Minimizer_win32 minimizer;
 	
 	/**
 	 * @param core the most important thing of the gui: were do i get my data from
@@ -87,7 +87,7 @@ public class MainTab implements ShellListener {
 		final Shell mainShell = shell;	
 		Display display = shell.getDisplay();
 		shell.addShellListener( this );
-		minimizer = new Minimizer(shell, core, titleBarText);
+		minimizer = new Minimizer_win32(shell, core, titleBarText);
 		minimizer.setTitleBarText(); 
 		shell.setLayout( new FillLayout() );
 		createContents( shell );
@@ -373,9 +373,6 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
-Revision 1.69  2003/09/08 18:27:42  zet
-*** empty log message ***
-
 Revision 1.68  2003/09/08 18:25:37  zet
 init resources in g2gui
 

@@ -39,8 +39,6 @@ import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
@@ -56,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.27 2003/09/03 15:50:39 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.28 2003/09/08 18:25:45 zet Exp $ 
  *
  */
 public class G2Gui {
@@ -90,8 +88,7 @@ public class G2Gui {
 	 */
 	public static void main( String[] args ) {		
 		display = new Display();
-		ImageRegistry reg = G2GuiResources.getImageRegistry();
-		reg.put("splashScreen", ImageDescriptor.createFromFile(G2Gui.class, "images/splash.png") );	
+		G2GuiResources.initialize();
 		PreferenceLoader.initialize();
 		preferenceStore = PreferenceLoader.getPreferenceStore();
 		launch( args );
@@ -377,6 +374,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.28  2003/09/08 18:25:45  zet
+init resources in g2gui
+
 Revision 1.27  2003/09/03 15:50:39  zet
 workaround for garbage windows gcc: java.io.IOException: GetFullPathName failed
 
