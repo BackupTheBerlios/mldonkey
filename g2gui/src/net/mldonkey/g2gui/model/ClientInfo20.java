@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.Enum;
 /**
  * ClientInfo20
  *
- * @version $Id: ClientInfo20.java,v 1.5 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: ClientInfo20.java,v 1.6 2004/03/22 18:47:39 dek Exp $ 
  *
  */
 public class ClientInfo20 extends ClientInfo19 {
@@ -71,8 +71,7 @@ public class ClientInfo20 extends ClientInfo19 {
 
 		// this needs to be fixed in the core soon since core/gui clocks can be out of sync rendering this useless
 		// I've sent mail... 
-		this.clientConnectTime = messageBuffer.readInt32();
-		readEmuleMod(messageBuffer);
+		this.clientConnectTime = messageBuffer.readInt32();		
 		
 		this.clientConnectTimeString = "" +
 		new Date(((long) clientConnectTime + 1000000000L) * 1000L);
@@ -113,12 +112,6 @@ public class ClientInfo20 extends ClientInfo19 {
 		this.getState().readStream(messageBuffer);	
 	}
 
-	/**
-	 * @param messageBuffer
-	 */
-	protected void readEmuleMod(MessageBuffer messageBuffer) {		
-		//valid for gui Proto >=21
-	}
 	
 	public int getClientConnectTime() {
 		return clientConnectTime;
@@ -147,6 +140,9 @@ public class ClientInfo20 extends ClientInfo19 {
 
 /*
 $Log: ClientInfo20.java,v $
+Revision 1.6  2004/03/22 18:47:39  dek
+Still some Gui-Protocoll enhancements
+
 Revision 1.5  2004/03/21 21:00:50  dek
 implemented gui-Proto 21-25 !!!!!
 

@@ -48,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.88 2004/03/21 21:11:08 dek Exp $
+ * @version $Id: FileInfo.java,v 1.89 2004/03/22 18:47:39 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -724,9 +724,9 @@ public class FileInfo extends Parent implements Observer {
         this.clientInfoWeakMap.remove(clientInfo);
         clientInfo.deleteObserver(this);
         removeTreeClientInfo(clientInfo);
-        setActiveSources(0);
-        this.setChanged();
-        this.notifyObservers(clientInfo);
+        setActiveSources(0);       
+        // this.setChanged();
+        //this.notifyObservers(clientInfo);
     }
 
     /**
@@ -1126,6 +1126,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.89  2004/03/22 18:47:39  dek
+Still some Gui-Protocoll enhancements
+
 Revision 1.88  2004/03/21 21:11:08  dek
 fixed buggy thing
 

@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * ClientInfo21.java
  *
- * @version $Id: ClientInfo21.java,v 1.1 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: ClientInfo21.java,v 1.2 2004/03/22 18:47:39 dek Exp $ 
  *
  */
 public class ClientInfo21 extends ClientInfo20 {
@@ -41,11 +41,6 @@ public class ClientInfo21 extends ClientInfo20 {
 	}
 	
 	private String eMulemod;
-
-	
-	protected void readEmuleMod(MessageBuffer messageBuffer) {
-		eMulemod = messageBuffer.readString();		
-	}
 
 
 	/*
@@ -60,20 +55,15 @@ public class ClientInfo21 extends ClientInfo20 {
 		return result;
 	}
 	
-	/**
-	 * Updates the state of this object
-	 * @param messageBuffer The MessageBuffer to read from
+	
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.model.ClientInfo20#readStream(int, net.mldonkey.g2gui.helper.MessageBuffer)
 	 */
-	public void update(MessageBuffer messageBuffer) {
-		super.update(messageBuffer);
+	public void readStream(int clientID, MessageBuffer messageBuffer) {		
+		super.readStream(clientID, messageBuffer);
+		eMulemod = messageBuffer.readString();			
 	}
 	
-	/**
-	 * @param messageBuffer
-	 */
-	protected void readState(MessageBuffer messageBuffer) {
-		this.getState().readStream(messageBuffer);	
-	}
 
 	
 }
@@ -81,6 +71,9 @@ public class ClientInfo21 extends ClientInfo20 {
 
 /*
  $Log: ClientInfo21.java,v $
+ Revision 1.2  2004/03/22 18:47:39  dek
+ Still some Gui-Protocoll enhancements
+
  Revision 1.1  2004/03/21 21:00:50  dek
  implemented gui-Proto 21-25 !!!!!
 
