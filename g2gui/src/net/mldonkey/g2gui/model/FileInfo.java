@@ -44,7 +44,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.43 2003/08/24 14:27:36 lemmster Exp $ 
+ * @version $Id: FileInfo.java,v 1.44 2003/08/24 20:37:51 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -662,7 +662,7 @@ public class FileInfo extends Parent implements Observer {
 		long minutes = rest / 60;
 		long seconds = rest - minutes * 60;
 		
-		if (days > 100) return "";
+		if (days > 99) return "";
 		if (days > 0) return "" + days + "d";
 		if (hours > 0) return "" + hours + "h" + (minutes > 0 ? " " + minutes + "m" : "");
 		return "" + minutes + "m";
@@ -700,6 +700,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.44  2003/08/24 20:37:51  zet
+minor
+
 Revision 1.43  2003/08/24 14:27:36  lemmster
 mutlinet avail is overall avail
 
@@ -713,7 +716,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)
