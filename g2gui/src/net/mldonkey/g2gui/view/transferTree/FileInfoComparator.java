@@ -30,16 +30,16 @@ import net.mldonkey.g2gui.model.FileInfo;
  * DownloadItemComparator
  *
  * @author $user$
- * @version $Id: FileInfoComparator.java,v 1.8 2003/07/18 15:45:16 dek Exp $ 
+ * @version $Id: FileInfoComparator.java,v 1.9 2003/07/20 10:31:21 dek Exp $ 
  *
  */
-public class FileInfoComparator implements Comparator {
+class FileInfoComparator implements Comparator {
 	private int column;
 
 	/**
 	 * @param columnIndex the column, which is responsible for the search order
 	 */
-	public FileInfoComparator( int columnIndex ) {
+	FileInfoComparator( int columnIndex ) {
 		super();
 		this.column = columnIndex ;
 	}
@@ -111,6 +111,9 @@ public class FileInfoComparator implements Comparator {
 
 /*
 $Log: FileInfoComparator.java,v $
+Revision 1.9  2003/07/20 10:31:21  dek
+done some work on flickering & sorting
+
 Revision 1.8  2003/07/18 15:45:16  dek
 still working on flicker...
 

@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.17 2003/07/18 15:45:16 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.18 2003/07/20 10:31:21 dek Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
@@ -122,13 +122,14 @@ public class DownloadTable implements Observer, Runnable {
 				expanded[ i ] = ( ( DownloadItem ) items[ i ] ).getFileInfo().getId();
 		}
 		tableTree.removeAll();
-		Arrays.sort( files, new FileInfoComparator( columnIndex ) );
-		tableTree.redraw();
+		Arrays.sort( files, new FileInfoComparator( columnIndex ) );	
 		if ( lastSortColumn != columnIndex ) {
 			for ( int i = 0; i < files.length; i++ ) {
 				DownloadItem newItem =
 					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
 				downloads.put( files[ i ].getId(), newItem );
+				/*sorting the children(ClientItems) of this object*/
+				newItem.sort( columnIndex, 1 );
 			}
 			lastSortColumn = columnIndex;
 		} else {
@@ -138,6 +139,8 @@ public class DownloadTable implements Observer, Runnable {
 				DownloadItem newItem =
 					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
 				downloads.put( files[ i ].getId(), newItem );
+				/*sorting the children(ClientItems) of this object*/
+				newItem.sort( columnIndex, -1 );
 				lastSortColumn = -1;
 			}
 		}
@@ -199,8 +202,7 @@ public class DownloadTable implements Observer, Runnable {
 	/** (  non-Javadoc  )u
 	 * @see java.lang.Runnable#run()
 	 */
-	public void run() {
-		tableTree.setRedraw( true );
+	public void run() {		
 		TIntObjectIterator it = files.iterator();
 		while ( it.hasNext() ) {
 			it.advance();
@@ -227,7 +229,7 @@ public class DownloadTable implements Observer, Runnable {
 				/* remove this file from the downloadList if contained*/
 				 ( ( DownloadItem ) downloads.get( fileInfo.getId() ) ).dispose();
 				downloads.remove( fileInfo.getId() );
-				tableTree.redraw();
+				//tableTree.redraw();
 			} else {
 				/* we really don't care about this one...*/
 			}
@@ -250,6 +252,9 @@ public class DownloadTable implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.18  2003/07/20 10:31:21  dek
+done some work on flickering & sorting
+
 Revision 1.17  2003/07/18 15:45:16  dek
 still working on flicker...
 

@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.14 2003/07/18 09:43:15 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.15 2003/07/20 10:31:21 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -83,6 +83,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, 6 );
 		editor.setEditor ( chunks, this, 4 );			
 		updateCell( 2, clientInfo.getClientName() );	
+		updateCell( 6, "rank: unknown" );		
 		updateColums();	
 		addDisposeListener( new DisposeListener() {
 			public void widgetDisposed( DisposeEvent e ) {				
@@ -105,7 +106,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		int y = getBounds( column ).y;
 		int width = getBounds( column ).width;
 		int height = getBounds( column ).height;		
-		getParent().redraw( x, y, width, height, true );	
+		//getParent().redraw( x, y, width, height, true );	
 	}
 	
 	/**
@@ -113,6 +114,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 	 */
 	private void updateColums() {
 		//"ID"|"Network"|"Filename"|"Rate"|"Chunks"|"%"|"Downloaded"|"Size"
+		//  0      1         2         3       4     5       6          7
 		String connection = "";
 		if ( clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) {
 			connection = "firewalled";
@@ -122,13 +124,18 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		}
 		updateCell( 3, connection );
 		
+		if ( !getText( 6 ).equals( "rank: " + clientInfo.getState().getRank() ) ) {
+			updateCell( 6, "rank: " + clientInfo.getState().getRank() );			
+		}
 		String state = "";
 		if ( clientInfo.getState().getState() == EnumState.CONNECTED )		
 			state = "connected";
 		if ( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED )
 			state = "Queued";
-		if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
+		if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING ) {
+			updateCell( 6, "transfering" );
 			state = "transfering";
+			}			
 		if ( clientInfo.getState().getState() == EnumState.CONNECTED_INITIATING )
 			state = "initiating";
 		if ( clientInfo.getState().getState() == EnumState.CONNECTING )
@@ -162,10 +169,20 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		menuItem.setText( "Nothing to do here..." );		
 		menuItem.setEnabled( false );
 	}
+	/**
+	 * @return the clientInfo behind this Item
+	 */
+	public ClientInfo getClientInfo() {
+		return clientInfo;
+	}
+
 }
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.15  2003/07/20 10:31:21  dek
+done some work on flickering & sorting
+
 Revision 1.14  2003/07/18 09:43:15  dek
 never use * / (without space) in CVS-commit-comments......
 
