@@ -31,9 +31,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Observable;
 
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.helper.ObjectPool;
 import net.mldonkey.g2gui.helper.SocketPool;
@@ -43,10 +40,10 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.76 2003/08/03 19:09:39 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.77 2003/08/03 19:12:47 lemmstercvs01 Exp $ 
  *
  */
-public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
+public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * The protocol version we maximal speak
 	 */
@@ -378,13 +375,6 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 		return ( OptionsInfoMap ) optionsInfoMap;
 	}
 
-	/** stops reading messages if the Gui is disposed
-	 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
-	 */
-	public void widgetDisposed( DisposeEvent e ) {
-		disconnect();
-		
-	}
 	/**
 	 * @return A Map with all the resultInfos
 	 */
@@ -431,6 +421,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.77  2003/08/03 19:12:47  lemmstercvs01
+DisposeListener and DisposeEvent removed (needed somewhere?)
+
 Revision 1.76  2003/08/03 19:09:39  lemmstercvs01
 better error handling
 
