@@ -8,9 +8,9 @@
  * G2GUI is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
- * G2GUI is distributed in the hope that it will be useful,
+ * G2GUI is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: G2guiTab.java,v 1.4 2003/07/01 21:21:27 dek Exp $ 
+ * @version $Id: G2guiTab.java,v 1.5 2003/07/02 16:37:12 dek Exp $ 
  *
  */
 public abstract class G2guiTab implements Listener{	
@@ -46,18 +46,18 @@ public abstract class G2guiTab implements Listener{
 	/**
 	 * @param gui
 	 */
-	public G2guiTab(IG2gui gui) {
+	public G2guiTab( IG2gui gui ) {
 		this.mainWindow = gui;		
-		this.content = new Composite(gui.getPageContainer(),SWT.NONE);
-		this.content.setLayout(new FillLayout());
-		this.content.setVisible(false);
-		toolItem = new ToolItem(((Gui)gui).getMainTools(),SWT.PUSH);		
-		this.toolItem.addListener(SWT.Selection,this);
-		gui.registerTab(this);		
-		mainWindow.setActive(this);
+		this.content = new Composite( gui.getPageContainer(), SWT.NONE );
+		this.content.setLayout( new FillLayout() );
+		this.content.setVisible( false );
+		toolItem = new ToolItem( ( ( Gui )gui ).getMainTools(), SWT.PUSH );		
+		this.toolItem.addListener( SWT.Selection, this );
+		gui.registerTab( this );		
+		mainWindow.setActive( this );
 	}
 		
-	protected abstract void createContents(Composite parent);
+	protected abstract void createContents( Composite parent );
 		
 
 	/**
@@ -67,12 +67,15 @@ public abstract class G2guiTab implements Listener{
 		return content;
 	}
 
-	public void handleEvent(Event event) {
-		mainWindow.setActive(this);
+	public void handleEvent( Event event ) {
+		mainWindow.setActive( this );
 	}
 }
 /*
 $Log: G2guiTab.java,v $
+Revision 1.5  2003/07/02 16:37:12  dek
+Checkstyle, JavaDocs still have to be added
+
 Revision 1.4  2003/07/01 21:21:27  dek
 *** empty log message ***
 
@@ -92,8 +95,8 @@ Revision 1.1  2003/06/24 18:25:43  dek
 working on main gui, without any connection to mldonkey atm, but the princip works
 test with:
 public class guitest{
-	public static void main(String[] args) {
-	Gui g2gui = new Gui(null);
+	public static void main( String[] args ) {
+	Gui g2gui = new Gui( null );
 }
 
 */

@@ -8,9 +8,9 @@
  * G2GUI is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
- * G2GUI is distributed in the hope that it will be useful,
+ * G2GUI is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.7 2003/06/30 21:40:09 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.8 2003/07/02 16:34:19 dek Exp $ 
  *
  */
 public class ConsoleTab extends G2guiTab implements Observer, ControlListener, Runnable {	
@@ -54,100 +54,101 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 	/**
 	 * @param gui
 	 */
-	public ConsoleTab(IG2gui gui) {
-		super(gui);
+	public ConsoleTab( IG2gui gui ) {
+		super( gui );
 		this.core = gui.getCore();		
-		this.toolItem.setText("Console");		
+		this.toolItem.setText( "Console" );		
 		createContents( this.content );
 		( ( Core ) core ).addObserver( this );
-		this.preferenceStore = new PreferenceStore("g2gui.pref");
-		this.consoleFont = preferenceStore.getString("ConsoleFont");		
+		this.preferenceStore = new PreferenceStore( "g2gui.pref" );
+		this.consoleFont = preferenceStore.getString( "ConsoleFont" );		
 	} 
 	
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.widgets.Gui.G2guiTab#createContents(org.eclipse.swt.widgets.Composite)
+	/* ( non-Javadoc )
+	 * @see net.mldonkey.g2gui.view.widgets.Gui.G2guiTab#createContents( org.eclipse.swt.widgets.Composite )
 	 */
-	protected void createContents(Composite parent) {		
+	protected void createContents( Composite parent ) {		
 		this.parent = parent;
-		parent.setLayout(null);
-		parent.addControlListener(this);		
+		parent.setLayout( null );
+		parent.addControlListener( this );		
 			/*
 			 * Adding the Console-Display Text-field
 			 */			
-			infoDisplay = new Text(parent,SWT.BORDER|SWT.MULTI|SWT.H_SCROLL|SWT.V_SCROLL |SWT.READ_ONLY);
-		//infoDisplay.setFont(new Font(null,consoleFont,0,0));
-			input = new Text(parent, SWT.SINGLE | SWT.BORDER);					
+			infoDisplay = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
+		//infoDisplay.setFont( new Font( null, consoleFont, 0, 0 ) );
+			input = new Text( parent, SWT.SINGLE | SWT.BORDER );					
 			//Send command to core
-			input.addKeyListener(new KeyAdapter() {
-				public void keyPressed(KeyEvent e) {
+			input.addKeyListener( new KeyAdapter() {
+				public void keyPressed( KeyEvent e ) {
 					if ( e.character == SWT.CR ) {
-						infoDisplay.setText(infoDisplay.getText()+input.getText()+"\n");
-						String[] command = new String[1];
-						command[0]=input.getText();
-						( new EncodeMessage( Message.S_CONSOLEMSG,command ) ).sendMessage( ( ( Core ) core ).getConnection() );
-						input.setText("");
+						infoDisplay.setText( infoDisplay.getText() + input.getText() + "\n" );
+						String[] command = new String[ 1 ] ;
+						command[ 0 ] = input.getText();
+						( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage( ( ( Core ) core ).getConnection() );
+						input.setText( "" );
 					}
 		  		}		
-			});	
+			} );	
 	}
 	
-	public void handleEvent(Event event) {
-		mainWindow.setActive(this);
+	public void handleEvent( Event event ) {
+		mainWindow.setActive( this );
 		
-		infoDisplay.append(core.getConsoleMessage().getConsoleMessage());
+		infoDisplay.append( core.getConsoleMessage().getConsoleMessage() );
 		core.getConsoleMessage().reset();
 	}
 	
 	/*
-	 * Everything below here is a private kind of LayoutManager, only for this tab,
+	 * Everything below here is a private kind of LayoutManager, only for this tab, 
 	 * as none of the present ones did what i wanted it to do	
 	 * 
 	 */
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.ControlListener#controlMoved(org.eclipse.swt.events.ControlEvent)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.swt.events.ControlListener#controlMoved( org.eclipse.swt.events.ControlEvent )
 	 */
-	public void controlMoved(ControlEvent e) {		
+	public void controlMoved( ControlEvent e ) {		
 		/*do nothing*/		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.ControlListener#controlResized(org.eclipse.swt.events.ControlEvent)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.swt.events.ControlListener#controlResized( org.eclipse.swt.events.ControlEvent )
 	 */
-	public void controlResized(ControlEvent e) {
-		if ((this.infoDisplay!=null) && (this.input!=null)){
+	public void controlResized( ControlEvent e ) {
+		if ( ( this.infoDisplay != null ) && ( this.input!=null ) ){
 			Rectangle rect = this.parent.getClientArea ();	
-			int inputheight =this.input.computeSize( SWT.DEFAULT, SWT.DEFAULT, true ).y;		
-			this.infoDisplay.setBounds(0,0,rect.width,(rect.height-inputheight));
-			this.input.setBounds(0,(rect.height-inputheight),rect.width,inputheight);			
+			int inputheight = this.input.computeSize( SWT.DEFAULT, SWT.DEFAULT, true ).y;		
+			this.infoDisplay.setBounds( 0, 0, rect.width, ( rect.height - inputheight ) );
+			this.input.setBounds( 0, ( rect.height - inputheight ), rect.width, inputheight );			
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	/* ( non-Javadoc )
+	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
 	 */
-	public void update(Observable o, Object arg) {
-		if (arg instanceof ConsoleMessage )
-		{	
-			this.consoleMessage = (ConsoleMessage)arg;
-			content.getDisplay().syncExec(this);
+	public void update( Observable o, Object arg ) {
+		if ( arg instanceof ConsoleMessage ) {	
+			this.consoleMessage = ( ConsoleMessage )arg;
+			content.getDisplay().syncExec( this );
 		}
 		/* else: we are not responsible for this Information to be displayed*/
 	}
 
-	/* (non-Javadoc)
+	/* ( non-Javadoc )
 	 * @see java.lang.Runnable#run()
 	 */
-	public void run() {
-				
+	public void run() {				
 				String message = consoleMessage.getConsoleMessage();	
 				consoleMessage.reset();	
-					infoDisplay.append(message);
+					infoDisplay.append( message );
 					infoDisplay.update();			
 				}
 }
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.8  2003/07/02 16:34:19  dek
+Checkstyle, JavaDocs still have to be added
+
 Revision 1.7  2003/06/30 21:40:09  dek
 CoolBar created
 
