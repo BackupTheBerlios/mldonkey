@@ -15,21 +15,9 @@ than 3.2 is strictly required. If compilation fails, using natively
 precompiled binaries is recommended. In case they also refuse to run, 
 stick to the java bytecode packages.
 
-Under linux you can choose between gtk2 and motif builds. While gtk2 is prettier,
-some people prefer motif over gtk2 due to its slightly higher responsiveness.
-You don't have any special choice under windows and MacOS.
-
-
-
-Compiling from Sources
-----------------------
-Unpack the sourcecode ball and do the following:
-$ ./configure --enable-batch
-$ make 
-
-G2gui requires some external libraries which will be automatically downloaded from
-our ftp server if you specify "--enable-batch". The casual user won't have them by
-default and configure will tell you to enable this switch to get them.
+Under linux you can choose between gtk2, fox and motif builds. While gtk2 is prettier,
+some people prefer fox (and motif to a lesser extent) over gtk2 due to its 
+higher responsiveness. You don't have any special choice under windows and MacOS.
 
 
 
@@ -52,8 +40,23 @@ with any Sun j2re version 1.4x and higher. We've also reports of people
 successfully using the "Blackdown" kit with G2gui. "Kaffee" seems to 
 produce some memory related problems, but we've not verified this yet.
 
-* Under linux, simply run g2gui.sh
+* Under linux, simply run ./g2gui
 * If you are under windows, run g2gui.bat
+
+
+
+Compiling from Sources
+----------------------
+Unpack the sourcecode ball and do the following:
+$ ./configure --enable-batch
+$ make 
+
+G2gui requires some external libraries which will be automatically downloaded from
+our ftp server if you specify "--enable-batch". The casual user won't have them by
+default and configure will tell you to enable this switch to get them.
+
+This part of the project is subject to heavy changes at the moment,
+things might break or not work. Always check the CVS for updates.
 
 
 
