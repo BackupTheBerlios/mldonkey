@@ -43,11 +43,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.4 2003/08/28 17:07:03 zet Exp $ 
+ * @version $Id: LinkEntry.java,v 1.5 2003/08/28 18:01:46 zet Exp $ 
  *
  */
 public class LinkEntry {
@@ -70,7 +72,7 @@ public class LinkEntry {
 		ViewForm linkEntryViewForm = new ViewForm( parent, SWT.BORDER );
 		linkEntryViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));	
 			
-		CLabel linkEntryCLabel = new CLabel(linkEntryViewForm, SWT.LEFT | SWT.SHADOW_OUT );	
+		CLabel linkEntryCLabel = new CLabel(linkEntryViewForm, SWT.LEFT );	
 		linkEntryCLabel.setText(G2GuiResources.getString("LE_HEADER"));
 		linkEntryCLabel.setImage(G2GuiResources.getImage("UpArrowBlue"));
 		linkEntryCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -84,19 +86,19 @@ public class LinkEntry {
 		linkEntryText.setFont(JFaceResources.getTextFont());
 
 		
-
-		linkEntryButton = new Button(linkEntryViewForm, SWT.FLAT);
-		linkEntryButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.FILL_VERTICAL));
-		linkEntryButton.setText(G2GuiResources.getString("LE_BUTTON"));
-		linkEntryButton.addSelectionListener( new SelectionAdapter() {
+		ToolBar linkEntryToolBar = new ToolBar(linkEntryViewForm, SWT.RIGHT | SWT.FLAT );
+		ToolItem sendItem = new ToolItem(linkEntryToolBar, SWT.NONE);
+		sendItem.setText(G2GuiResources.getString("LE_BUTTON"));
+		sendItem.setImage(G2GuiResources.getImage("UpArrowBlue"));
+		sendItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 				enterLinks(linkEntryText.getText());
-			}
+			}	
 		});
 		
 		linkEntryViewForm.setTopLeft(linkEntryCLabel);
 		linkEntryViewForm.setContent(linkEntryText);
-		linkEntryViewForm.setTopRight(linkEntryButton);
+		linkEntryViewForm.setTopRight(linkEntryToolBar);
 		
 	}
 
@@ -144,6 +146,9 @@ public class LinkEntry {
 }
 /*
 $Log: LinkEntry.java,v $
+Revision 1.5  2003/08/28 18:01:46  zet
+remove button
+
 Revision 1.4  2003/08/28 17:07:03  zet
 gif not png
 
