@@ -22,24 +22,25 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
  * SharedFileInfoList
  *
  *
- * @version $Id: SharedFileInfoIntMap.java,v 1.7 2003/11/03 03:08:07 zet Exp $
+ * @version $Id: SharedFileInfoIntMap.java,v 1.8 2003/11/28 14:36:54 zet Exp $
  *
  */
 public class SharedFileInfoIntMap extends InfoIntMap {
-    private List unsharedFiles = new ArrayList();
-    private List newSharedFiles = new ArrayList();
-    private List updatedFiles = new ArrayList();
+    private List unsharedFiles = Collections.synchronizedList(new ArrayList());
+    private List newSharedFiles = Collections.synchronizedList(new ArrayList());
+    private List updatedFiles = Collections.synchronizedList(new ArrayList());
 
     /**
      * @param communication my parent
@@ -182,6 +183,9 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: SharedFileInfoIntMap.java,v $
+Revision 1.8  2003/11/28 14:36:54  zet
+sync
+
 Revision 1.7  2003/11/03 03:08:07  zet
 synchronized
 
