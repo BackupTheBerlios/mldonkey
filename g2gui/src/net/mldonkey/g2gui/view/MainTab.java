@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.93 2003/11/24 08:29:11 lemmster Exp $
+ * @version $Id: MainTab.java,v 1.94 2003/11/24 15:24:30 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -141,8 +141,8 @@ public class MainTab implements ShellListener {
                     }
 
                     // disconnect from core
-                    ((CoreCommunication) mldonkey).disconnect();
-
+                    mldonkey.disconnect();
+                    
                     // save preferences
                     PreferenceLoader.saveStore();
                     PreferenceLoader.cleanUp();
@@ -466,6 +466,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.94  2003/11/24 15:24:30  zet
+remove unneeded typecast
+
 Revision 1.93  2003/11/24 08:29:11  lemmster
 ErrorDialog shows up only when started without "-d"
 
