@@ -22,10 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -50,6 +46,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
@@ -68,12 +65,16 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 
 /**
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.7 2003/09/26 04:19:35 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.8 2003/09/28 17:47:45 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -87,6 +88,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     private DownloadTableTreeContentProvider tableTreeContentProvider;
     private CoreCommunication core;
     private boolean createClientTable = false;
+    private boolean myDrag = false;
 
     public DownloadTableTreeMenuListener( final CustomTableTreeViewer tableTreeViewer, TableViewer clientTableViewer, CoreCommunication mldonkey ) {
         this.tableTreeViewer = tableTreeViewer;
@@ -99,8 +101,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
                 public void mouseDown( MouseEvent e ) {
                     Table table = (Table) e.widget;
                     TableItem item = table.getItem( new Point( e.x, e.y ) );
+
                     if ( item == null ) {
-                    	tableTreeViewer.setSelectionToWidget(null, false);
+                        tableTreeViewer.setSelectionToWidget( null, false );
                         selectedFiles.clear(  );
                         selectedClients.clear(  );
                         selectedClient = null;
@@ -109,59 +112,63 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
                 }
             } );
 
-		if (SWT.getPlatform().equals("win32") 
-			&& PreferenceLoader.loadBoolean("dragAndDrop") ) {
-			activateDragAndDrop();
-		}
-            
+        if ( SWT.getPlatform(  ).equals( "win32" ) && PreferenceLoader.loadBoolean( "dragAndDrop" ) ) {
+            activateDragAndDrop(  );
+        }
     }
-    
-    
+
     /**
      * Activate drag and drop
      */
-    public void activateDragAndDrop() {
+    public void activateDragAndDrop(  ) {
+        DragSource dragSource = new DragSource( tableTreeViewer.getTableTree(  ).getTable(  ), DND.DROP_COPY | DND.DROP_LINK );
+        dragSource.setTransfer( new Transfer[] { TextTransfer.getInstance(  ) } );
 
-        DragSource dragSource = new DragSource(tableTreeViewer.getTableTree().getTable(), DND.DROP_COPY | DND.DROP_LINK);
-        dragSource.setTransfer(new Transfer[] { TextTransfer.getInstance()});
-
-        dragSource.addDragListener(new DragSourceAdapter() {
-            public void dragStart(DragSourceEvent event) {
-                if (selectedFile == null) {
-                    event.doit = false;
-                }
-                else {
-                    event.doit = true;
-                }
-            }
-            public void dragSetData(DragSourceEvent event) {
-                event.data = selectedFile.getED2K();
-            }
-        });
-
-        DropTarget dropTarget = new DropTarget(tableTreeViewer.getTableTree().getTable(), DND.DROP_COPY | DND.DROP_DEFAULT | DND.DROP_LINK);
-        final UniformResourceLocator uRL = UniformResourceLocator.getInstance();
-        final TextTransfer textTransfer = TextTransfer.getInstance();
-        dropTarget.setTransfer(new Transfer[] { uRL, textTransfer });
-        dropTarget.addDropListener(new DropTargetAdapter() {
-            
-            public void dragEnter(DropTargetEvent event) {
-                event.detail = DND.DROP_COPY;
-                for (int i = 0; i < event.dataTypes.length; i++) {
-                    if (uRL.isSupportedType(event.dataTypes[i])) {
-                        event.detail = DND.DROP_LINK;
-                        break;
+        dragSource.addDragListener( new DragSourceAdapter(  ) {
+                public void dragStart( DragSourceEvent event ) {
+                    if ( selectedFile == null ) {
+                        event.doit = false;
+                    } else {
+                        event.doit = true;
+                        myDrag = true;
                     }
                 }
-            }
-            public void drop(DropTargetEvent event) {
-                if (event.data == null) return;
-				Message dllLink = new EncodeMessage( Message.S_DLLINK, event.data );
-				dllLink.sendMessage( core );
-            }
-        
-        });
 
+                public void dragSetData( DragSourceEvent event ) {
+                    event.data = selectedFile.getED2K(  );
+                }
+
+                public void dragFinished( DragSourceEvent event ) {
+                    myDrag = false;
+                }
+            } );
+
+        DropTarget dropTarget = new DropTarget( tableTreeViewer.getTableTree(  ).getTable(  ), DND.DROP_COPY | DND.DROP_DEFAULT | DND.DROP_LINK );
+        final UniformResourceLocator uRL = UniformResourceLocator.getInstance(  );
+        final TextTransfer textTransfer = TextTransfer.getInstance(  );
+        dropTarget.setTransfer( new Transfer[] { uRL, textTransfer } );
+        dropTarget.addDropListener( new DropTargetAdapter(  ) {
+                public void dragEnter( DropTargetEvent event ) {
+                    event.detail = DND.DROP_COPY;
+
+                    for ( int i = 0; i < event.dataTypes.length; i++ ) {
+                        if ( uRL.isSupportedType( event.dataTypes[ i ] ) ) {
+                            event.detail = DND.DROP_LINK;
+
+                            break;
+                        }
+                    }
+                }
+
+                public void drop( DropTargetEvent event ) {
+                    if ( ( event.data == null ) || myDrag ) {
+                        return;
+                    }
+
+                    Message dllLink = new EncodeMessage( Message.S_DLLINK, event.data );
+                    dllLink.sendMessage( core );
+                }
+            } );
     }
 
     /* (non-Javadoc)
@@ -260,8 +267,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
             menuManager.add( prioritySubMenu );
         }
 
-		if ( ( selectedFile != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-			menuManager.add( new PreviewAction(  ) );
+        if ( ( selectedFile != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+            menuManager.add( new PreviewAction(  ) );
             menuManager.add( new VerifyChunksAction(  ) );
         }
 
@@ -279,8 +286,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
     }
 
-// Helpers
-
+    // Helpers
     private boolean selectedFileListContains( EnumFileState e ) {
         for ( int i = 0; i < selectedFiles.size(  ); i++ )
             if ( ( (FileInfo) selectedFiles.get( i ) ).getState(  ).getState(  ) == e ) {
@@ -299,8 +305,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         return false;
     }
 
-// Menu Actions
-	
+    // Menu Actions
+
     /**
      * VerifyChunksAction
      */
@@ -315,20 +321,21 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
                 ( (FileInfo) selectedFiles.get( i ) ).verifyChunks(  );
         }
     }
-	
-	/**
-     * PreviewAction
-     */
+
+    /**
+    * PreviewAction
+    */
     private class PreviewAction extends Action {
-	   public PreviewAction(  ) {
-		   super(  );
-		   setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PREVIEW" ) );
-	   }
-	   public void run(  ) {
-		   for ( int i = 0; i < selectedFiles.size(  ); i++ )
-			   ( (FileInfo) selectedFiles.get( i ) ).preview(  );
-	   }
-	}
+        public PreviewAction(  ) {
+            super(  );
+            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PREVIEW" ) );
+        }
+
+        public void run(  ) {
+            for ( int i = 0; i < selectedFiles.size(  ); i++ )
+                ( (FileInfo) selectedFiles.get( i ) ).preview(  );
+        }
+    }
 
     /**
      * FileDetailAction
@@ -553,7 +560,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
                     link += ( SWT.getPlatform(  ).equals( "win32" ) ? "\r\n" : "\n" );
                 }
 
-                link += ( ( useHTML ? "<a href=\"" : "" ) + aFileInfo.getED2K() + ( useHTML ? ( "\">" + aFileInfo.getName() + "</a>" ) : "" ) );
+                link += ( ( useHTML ? "<a href=\"" : "" ) + aFileInfo.getED2K(  ) + ( useHTML ? ( "\">" + aFileInfo.getName(  ) + "</a>" ) : "" ) );
             }
 
             clipBoard.setContents( new Object[] { link }, new Transfer[] { TextTransfer.getInstance(  ) } );
@@ -565,6 +572,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.8  2003/09/28 17:47:45  zet
+prevent local drags (since all hashes are 0 atm)
+
 Revision 1.7  2003/09/26 04:19:35  zet
 add drag&drop support
 
