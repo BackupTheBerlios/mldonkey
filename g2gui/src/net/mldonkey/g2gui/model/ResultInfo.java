@@ -28,10 +28,11 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  * @author $user$
- * @version $Id: ResultInfo.java,v 1.2 2003/07/05 12:52:19 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfo.java,v 1.3 2003/07/05 13:14:50 dek Exp $ 
  *
  */
 public class ResultInfo implements SimpleInformation {
+	private String comment;
 	/**
 	 * Result ID
 	 */
@@ -69,6 +70,31 @@ public class ResultInfo implements SimpleInformation {
 	 */
 	private boolean history;
 	
+	/** (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		String result = new String();
+		result+= "ID: "+resultID;
+		result+= "\n Network: "+ networkID;		
+		result+= "\n filenames: ";
+			for (int i = 0; i < names.length; i++) {
+				result += names[ i ] + " ";
+			}
+		result+= "\n Md4: "+ md4;
+		result+= "\n FileSize: "+ size;
+		result+= "\n File-Format: "+ format;
+		result+= "\n File-Typ: "+ type;		
+		result+= "\n MetaData: ";
+		for (int i = 0; i < tags.length; i++) {
+			result+= tags[i].getName()+" - "+ tags[i].getValue();
+					}
+		result+= "\n comment: "+ comment;
+		result+= "\n status: "+ history;		
+		return result;
+	}
+
+	
 	/**
 	 * Reads a ResulfInfo from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
@@ -86,6 +112,7 @@ public class ResultInfo implements SimpleInformation {
 		 * String		Comment 
 		 * int8			0 = Normal, 1 = Already Downloaded
 		 */
+		 
 		this.setResultID( messageBuffer.readInt32() );
 		this.setNetworkID( messageBuffer.readInt32() );
 		this.setNames( messageBuffer.readStringList() );
@@ -93,9 +120,20 @@ public class ResultInfo implements SimpleInformation {
 		this.setSize( messageBuffer.readInt32() );
 		this.setFormat( messageBuffer.readString() );
 		this.setType( messageBuffer.readString() );
-		this.setTags( messageBuffer.readTagList() );		
+		this.setTags( messageBuffer.readTagList() );
+		this.setComment( messageBuffer.readString() );		
 		this.setHistory( messageBuffer.readByte() ); 
+		//System.out.println("received resultInfo"+this);
 	}
+	/**
+	 * @param string file comment
+	 */
+	private void setComment( String string ) {
+		this.comment = string;
+		
+	}
+
+
 	/**
 	 * @return The format
 	 */
@@ -228,6 +266,9 @@ public class ResultInfo implements SimpleInformation {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.3  2003/07/05 13:14:50  dek
+*** empty log message ***
+
 Revision 1.2  2003/07/05 12:52:19  lemmstercvs01
 bugfix in readStream()
 
