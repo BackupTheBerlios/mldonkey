@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Label;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.57 2003/10/22 14:38:32 dek Exp $
+ * @version $Id: SearchResult.java,v 1.58 2003/10/22 21:12:49 zet Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -148,7 +148,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
              * only refresh the changed items,
              * look at API for refresh(false)
              */
-            if ( list.size() != ourTableViewer.getTableViewer().getTable().getItemCount() ) {
+            if ( list != null && list.size() != ourTableViewer.getTableViewer().getTable().getItemCount() ) {
                 mustRefresh = true;
                 delayedRefresh();
             }
@@ -302,6 +302,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 }
 /*
 $Log: SearchResult.java,v $
+Revision 1.58  2003/10/22 21:12:49  zet
+fix null - perhaps fixes 1022
+
 Revision 1.57  2003/10/22 14:38:32  dek
 removed malformed UTF-8 char gcj complains about (was only in comment)
 
@@ -406,7 +409,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates
