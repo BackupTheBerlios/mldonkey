@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.48 2003/11/24 21:13:39 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.49 2003/11/26 07:42:37 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -163,6 +163,9 @@ public class PreferenceLoader {
 		
 		preferenceStore.setDefault( "transferSashOrientation", SWT.VERTICAL );
 		preferenceStore.setDefault( "transferSashMaximized", -1 );
+		
+		preferenceStore.setDefault( "uploadsSashOrientation", SWT.HORIZONTAL );
+		preferenceStore.setDefault( "uploadsSashMaximized", -1 );
 		
 		PreferenceConverter.setDefault( preferenceStore, "viewerFontData", JFaceResources.getDefaultFont().getFontData() );     
 		
@@ -285,6 +288,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.49  2003/11/26 07:42:37  zet
+uploadsSash
+
 Revision 1.48  2003/11/24 21:13:39  zet
 default viewer font
 
