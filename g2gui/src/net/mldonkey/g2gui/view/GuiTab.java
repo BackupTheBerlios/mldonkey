@@ -40,13 +40,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
 /**
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.14 2003/08/08 02:46:31 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.15 2003/08/08 08:26:37 dek Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -251,9 +252,16 @@ public abstract class GuiTab implements Listener, Observer {
 	
 		Color backgroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
 		Color foregroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_WHITE);
-	
-		pageHeader = new Composite(thisContent, SWT.BORDER);
+		
+		Label row1 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
+			row1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		pageHeader = new Composite(thisContent, SWT.NONE);
 		pageHeader.setBackground(backgroundColor);
+		
+		Label row2 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
+			row2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
 
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
@@ -321,6 +329,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.15  2003/08/08 08:26:37  dek
+i think, the Tab-Caption looks better this way, don't you?
+
 Revision 1.14  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 
