@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
  * CoreCommunication
  *
  *
- * @version $Id: CoreCommunication.java,v 1.43 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.44 2003/11/29 20:16:30 zet Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -158,6 +158,14 @@ public interface CoreCommunication extends Runnable {
 	void deleteObserver( Observer obj );
 	
 	/**
+	 * start the timer
+	 */
+	void startTimer();
+	/**
+	 * stop the timer
+	 */
+	void stopTimer();
+	/**
 	 * Send a message
 	 * @param messageHeader
 	 * @param messageContent
@@ -168,6 +176,9 @@ public interface CoreCommunication extends Runnable {
 }
 /*
 $Log: CoreCommunication.java,v $
+Revision 1.44  2003/11/29 20:16:30  zet
+stop/start timer on tab (de)activation
+
 Revision 1.43  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

@@ -41,7 +41,7 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.101 2003/11/29 19:28:38 zet Exp $
+ * @version $Id: TransferTab.java,v 1.102 2003/11/29 20:16:30 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -103,11 +103,25 @@ public class TransferTab extends GuiTab {
      */
     public void update(Observable o, Object obj) {
     }
+    
+    public void setActive() {
+        super.setActive();
+        getCore().startTimer();
+    }
+    
+    public void setInActive() {
+        super.setInActive();
+        getCore().stopTimer();
+    }
+    
 }
 
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.102  2003/11/29 20:16:30  zet
+stop/start timer on tab (de)activation
+
 Revision 1.101  2003/11/29 19:28:38  zet
 minor string move
 

@@ -58,7 +58,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.116 2003/11/28 13:11:10 zet Exp $ 
+ * @version $Id: Core.java,v 1.117 2003/11/29 20:16:30 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -184,7 +184,6 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		this.pollModeEnabled = pollModeEnabled;
 		this.advancedMode = advancedMode;
 		this.pollUpStats = PreferenceLoader.loadBoolean( "pollUpStats" );	
-		startTimer();
 	}
 
 	/**
@@ -206,8 +205,13 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 				} else 
 				requestUpstats();
 			}
-		}, 5000L, 5000L);
+		}, 0L, 5000L);
 	    
+	}
+	
+	public void stopTimer() {
+	    if (timer != null)
+	        timer.cancel();
 	}
 	
 	
@@ -243,7 +247,6 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			}
 		}	
 		catch ( SocketException e ) {
-		    timer.cancel();
 			if ( !initialized ) {
 				/* expect the core denies our connection attempt */
 				connected = false;
@@ -257,12 +260,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 				e.printStackTrace();
 		}
 		catch ( IOException e ) {
-		    timer.cancel();
 			onIOException( e );
 		}	
-		
-		if (timer != null) 
-		    timer.cancel();
+		stopTimer();
 	}
 	
 	/**
@@ -295,7 +295,6 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		this.connected = true;
 		Thread restarted = new Thread( this );
 		restarted.start();
-		startTimer();
 	}
 
 	/**
@@ -666,6 +665,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.117  2003/11/29 20:16:30  zet
+stop/start timer on tab (de)activation
+
 Revision 1.116  2003/11/28 13:11:10  zet
 support patch 2372
 
