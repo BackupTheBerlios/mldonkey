@@ -34,7 +34,7 @@ import org.eclipse.swt.layout.GridData;
 /**
  * CClabel - static class to return new CLabels
  *
- * @version $Id: CCLabel.java,v 1.5 2003/10/16 22:02:33 zet Exp $
+ * @version $Id: CCLabel.java,v 1.6 2003/10/22 01:37:10 zet Exp $
  *
  */
 public class CCLabel {
@@ -47,9 +47,10 @@ public class CCLabel {
      * @param text 
      * @param image 
      *
-     * @return 
+     * @return CLabel
      */
     public static CLabel createCL( ViewForm parent, String text, String image ) {
+        // GTK/SWT3-M4: (<unknown>:5346): GLib-GObject-CRITICAL **: file gtype.c: line 1942 (g_type_add_interface_static): assertion `g_type_parent (interface_type) == G_TYPE_INTERFACE' failed
         CLabel cLabel = new CLabel( parent, SWT.LEFT );
         cLabel.setText( G2GuiResources.getString( text ) );
         
@@ -75,6 +76,9 @@ public class CCLabel {
 
 /*
 $Log: CCLabel.java,v $
+Revision 1.6  2003/10/22 01:37:10  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.5  2003/10/16 22:02:33  zet
 *** empty log message ***
 

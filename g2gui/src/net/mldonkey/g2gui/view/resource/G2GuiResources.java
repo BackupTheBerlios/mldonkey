@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.41 2003/10/19 03:56:04 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.42 2003/10/22 01:37:35 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -228,8 +228,7 @@ public class G2GuiResources {
 
         reg.put( "DownArrow", createTrans( "down.png" ) );
         reg.put( "UpArrow", createTrans( "up.png" ) );
-        reg.put( "SearchSmall", createTrans( "search_small.png" ) );
-        reg.put( "SearchComplete", createTrans( "search_complete.png" ) );
+       
         reg.put( "RedCrossSmall", createTrans( "red_cross-12.png" ) );
         reg.put( "downloaded", createTrans( "downloaded_arrow.png" ) );
 
@@ -251,12 +250,16 @@ public class G2GuiResources {
         reg.put( "epRatingGood", createRawMImage( "ep_rating_good.gif" ) );
         reg.put( "epRatingExcellent", createRawMImage( "ep_rating_excellent.gif" ) );
 
+		reg.put( "SearchSmall", createRawMImage( "search_small.gif" ) );
+		reg.put( "SearchComplete", createRawMImage( "search_complete.gif" ) );
+        
         reg.put( "UpArrowGreen", createRawMImage( "up_arrow_green.gif" ) );
         reg.put( "DownArrowGreen", createRawMImage( "down_arrow_green.gif") );
         reg.put( "X", createRawMImage( "x.gif" ) );
 
         reg.put( "Jigle", createRawMImage( "jigle.gif" ) );
         reg.put( "Bitzi", createRawMImage( "bitzi.gif" ) );
+        reg.put( "ShareReactor", createRawMImage( "sharereactor.gif" ) );
         reg.put( "info", createRawMImage( "info.gif" ) );
         reg.put( "cancel", createRawMImage( "cancel.gif" ) );
         reg.put( "resume", createRawMImage( "resume.gif" ) );
@@ -427,6 +430,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.42  2003/10/22 01:37:35  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.41  2003/10/19 03:56:04  zet
 rename tray icon
 

@@ -25,9 +25,9 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
+import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
+import net.mldonkey.g2gui.view.viewers.GTableContentProvider;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 import org.eclipse.swt.widgets.Display;
@@ -38,76 +38,74 @@ import java.util.Observer;
 
 /**
  *
- * TableContentProvider
+ * ClientTableContentProvider
  *
- *
- * @version $Id: ClientTableContentProvider.java,v 1.3 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: ClientTableContentProvider.java,v 1.4 2003/10/22 01:38:19 zet Exp $
  *
  */
-public class ClientTableContentProvider implements IStructuredContentProvider, Observer {
+public class ClientTableContentProvider extends GTableContentProvider implements Observer {
+    private long lastUpdateTime;
+
+    public ClientTableContentProvider(ClientTableViewer cTableViewer) {
+        super(cTableViewer);
+    }
+
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    private TableViewer clientTableViewer;
-    private long lastUpdateTime;
-
-    public Object[] getElements( Object inputElement ) {
+    public Object[] getElements(Object inputElement) {
         FileInfo fileInfo = (FileInfo) inputElement;
 
         return fileInfo.getClientInfos().keySet().toArray();
     }
 
     /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-     */
-    public void dispose() {
-    }
-
-    /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#
      * inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
-    public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) {
-        clientTableViewer = (TableViewer) viewer;
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        tableViewer = (CustomTableViewer) viewer;
 
-        if ( oldInput != null ) {
+        if (oldInput != null) {
             FileInfo oldFileInfo = (FileInfo) oldInput;
-            oldFileInfo.deleteObserver( this );
+            oldFileInfo.deleteObserver(this);
         }
 
-        if ( newInput != null ) {
+        if (newInput != null) {
             FileInfo newFileInfo = (FileInfo) newInput;
-            newFileInfo.addObserver( this );
+            newFileInfo.addObserver(this);
         }
     }
 
-    public void update( Observable o, final Object obj ) {
-        if ( obj instanceof ClientInfo || obj instanceof TreeClientInfo ) {
-            Display.getDefault().asyncExec( new Runnable() {
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update(Observable o, final Object obj) {
+        if (obj instanceof ClientInfo || obj instanceof TreeClientInfo) {
+            Display.getDefault().asyncExec(new Runnable() {
                     public void run() {
-                        refreshTable( obj );
+                        refreshTable(obj);
                     }
-                } );
+                });
         }
     }
 
     // delay for 5 seconds to prevent too much flicker
-    // it seems like you must do a full refresh() to maintain sort order
-    public void refreshTable( Object obj ) {
+    public void refreshTable(Object obj) {
         ClientInfo clientInfo = null;
 
-        if ( obj instanceof ClientInfo ) {
+        if (obj instanceof ClientInfo) {
             clientInfo = (ClientInfo) obj;
-        } else if ( obj instanceof TreeClientInfo ) {
-            clientInfo = ( (TreeClientInfo) obj ).getClientInfo();
+        } else if (obj instanceof TreeClientInfo) {
+            clientInfo = ((TreeClientInfo) obj).getClientInfo();
         }
 
-        if ( ( clientTableViewer != null ) && !clientTableViewer.getTable().isDisposed() ) {
-            if ( System.currentTimeMillis() > ( lastUpdateTime + 5000 ) ) {
-                clientTableViewer.refresh();
+        if ((tableViewer != null) && !tableViewer.getTable().isDisposed()) {
+            if (System.currentTimeMillis() > (lastUpdateTime + 5000)) {
+                tableViewer.refresh();
                 lastUpdateTime = System.currentTimeMillis();
             } else {
-                clientTableViewer.update( clientInfo, null ); // widget disposed
+                tableViewer.update(clientInfo, null); // widget disposed
             }
         }
     }
@@ -116,6 +114,9 @@ public class ClientTableContentProvider implements IStructuredContentProvider, O
 
 /*
 $Log: ClientTableContentProvider.java,v $
+Revision 1.4  2003/10/22 01:38:19  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.3  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 

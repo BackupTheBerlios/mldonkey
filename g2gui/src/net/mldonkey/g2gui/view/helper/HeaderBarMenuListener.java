@@ -23,9 +23,10 @@
 package net.mldonkey.g2gui.view.helper;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.ColumnSelectorPaneListener;
+import net.mldonkey.g2gui.view.viewers.GTableViewer;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.SWT;
@@ -36,14 +37,15 @@ import org.eclipse.swt.widgets.Control;
 /**
  * HeaderBarMenusListener - helper for HeaderBar Menus
  *
- * @version $Id: HeaderBarMenuListener.java,v 1.3 2003/10/15 18:24:20 zet Exp $
+ * @version $Id: HeaderBarMenuListener.java,v 1.4 2003/10/22 01:37:10 zet Exp $
  *
  */
-public class HeaderBarMenuListener implements IMenuListener {
+public class HeaderBarMenuListener extends ColumnSelectorPaneListener  {
     private SashForm sashForm;
     private Control control;
 
-    public HeaderBarMenuListener( SashForm sashForm, Control control ) {
+    public HeaderBarMenuListener( SashForm sashForm, Control control, GTableViewer gTableViewer ) {
+        super(gTableViewer);
         this.sashForm = sashForm;
         this.control = control;
     }
@@ -60,11 +62,11 @@ public class HeaderBarMenuListener implements IMenuListener {
 		sashForm.setOrientation( sashForm.getOrientation() == SWT.HORIZONTAL ? SWT.VERTICAL : SWT.HORIZONTAL );
 	}
 
-
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
     public void menuAboutToShow( IMenuManager menuManager ) {
+        super.menuAboutToShow(menuManager);
         menuManager.add( new Separator(  ) );
         menuManager.add( new FlipSashAction( ) );
         menuManager.add( new MaximizeAction(  ) );
@@ -108,6 +110,9 @@ public class HeaderBarMenuListener implements IMenuListener {
 
 /*
 $Log: HeaderBarMenuListener.java,v $
+Revision 1.4  2003/10/22 01:37:10  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.3  2003/10/15 18:24:20  zet
 icons
 

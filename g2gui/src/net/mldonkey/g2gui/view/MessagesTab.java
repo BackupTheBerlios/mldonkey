@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.view.friends.FriendsTableSorter;
 import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
+import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.30 2003/09/20 14:39:48 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.31 2003/10/22 01:36:59 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
     private CoreCommunication core;
@@ -443,6 +443,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.31  2003/10/22 01:36:59  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.30  2003/09/20 14:39:48  zet
 move transfer package
 

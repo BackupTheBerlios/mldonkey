@@ -25,140 +25,120 @@ package net.mldonkey.g2gui.view.server;
 import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.helper.OurTableSorter;
+import net.mldonkey.g2gui.view.viewers.GTableSorter;
 
 import org.eclipse.jface.viewers.Viewer;
 
+
 /**
- * TableSorter
+ * ServerTableSorter
  *
  *
- * @version $Id: ServerTableSorter.java,v 1.4 2003/10/21 17:00:45 lemmster Exp $
+ * @version $Id: ServerTableSorter.java,v 1.5 2003/10/22 01:37:55 zet Exp $
  *
  */
-public class ServerTableSorter extends OurTableSorter {
+public class ServerTableSorter extends GTableSorter {
+    public ServerTableSorter(ServerTableViewer sTableViewer) {
+        super(sTableViewer);
+    }
 
-	public ServerTableSorter() {
-		super( "ServerSorter", 9 );
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
+    public int compare(Viewer viewer, Object obj1, Object obj2) {
+        ServerInfo server1 = (ServerInfo) obj1;
+        ServerInfo server2 = (ServerInfo) obj2;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-	 */
-    public int compare( Viewer viewer, Object obj1, Object obj2 ) {
-        ServerInfo server1 = ( ServerInfo ) obj1;
-        ServerInfo server2 = ( ServerInfo ) obj2;
-        /* network */
-        if ( columnIndex == 0 ) {
-            String aString1 = server1.getNetwork().getNetworkName();
-            String aString2 = server2.getNetwork().getNetworkName();
-			return compareStrings( aString1, aString2 );
-        }
+        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        case ServerTableViewer.NETWORK:
+            return compareStrings(server1.getNetwork().getNetworkName(), server2.getNetwork().getNetworkName());
 
-        /* name */
-        if ( columnIndex == 1 ) {
-            String aString1 = server1.getNameOfServer();
-            String aString2 = server2.getNameOfServer();
-			return compareStrings( aString1, aString2 );
-        }
+        case ServerTableViewer.NAME:
+            return compareStrings(server1.getNameOfServer(), server2.getNameOfServer());
 
-        /* desc */
-        if ( columnIndex == 2 ) {
-            String aString1 = server1.getDescOfServer();
-            String aString2 = server2.getDescOfServer();
-			return compareStrings( aString1, aString2 );
-        }
+        case ServerTableViewer.DESCRIPTION:
+            return compareStrings(server1.getDescOfServer(), server2.getDescOfServer());
 
-        /* address */
-        if ( columnIndex == 3 ) {
+        case ServerTableViewer.ADDRESS:
+
             try {
                 Addr addr1 = server1.getServerAddress();
                 Addr addr2 = server2.getServerAddress();
-                if ( lastSort )
-                    return addr1.compareTo( addr2 );
-                else
-                    return addr2.compareTo( addr1 );
-            }
-            catch ( NullPointerException e ) {
+
+                if (lastSort) {
+                    return addr1.compareTo(addr2);
+                } else {
+                    return addr2.compareTo(addr1);
+                }
+            } catch (NullPointerException e) {
                 return 0;
             }
-        }
 
-        /* port */
-        if ( columnIndex == 4 ) {
-            Integer int1 = new Integer( server1.getServerPort() );
-            Integer int2 = new Integer( server2.getServerPort() );
-            if ( lastSort )
-                return int1.compareTo( int2 );
-            else
-                return int2.compareTo( int1 );
-        }
+        case ServerTableViewer.PORT:
+            return compareIntegers(server1.getServerPort(), server2.getServerPort());
 
-        /* serverScore */
-        if ( columnIndex == 5 ) {
-            Integer int1 = new Integer( server1.getServerScore() );
-            Integer int2 = new Integer( server2.getServerScore() );
-            if ( lastSort )
-                return int1.compareTo( int2 );
-            else
-                return int2.compareTo( int1 );
-        }
+        case ServerTableViewer.SCORE:
+            return compareIntegers(server1.getServerScore(), server2.getServerScore());
 
-        /* server users */
-        if ( columnIndex == 6 ) {
-            Integer int1 = new Integer( server1.getNumOfUsers() );
-            Integer int2 = new Integer( server2.getNumOfUsers() );
-            if ( lastSort )
-                return int1.compareTo( int2 );
-            else
-                return int2.compareTo( int1 );
-        }
+        case ServerTableViewer.USERS:
+            return compareIntegers(server1.getNumOfUsers(), server2.getNumOfUsers());
 
-        /* server files */
-        if ( columnIndex == 7 ) {
-            Integer int1 = new Integer( server1.getNumOfFilesShared() );
-            Integer int2 = new Integer( server2.getNumOfFilesShared() );
-            if ( lastSort )
-                return int1.compareTo( int2 );
-            else
-                return int2.compareTo( int1 );
-        }
+        case ServerTableViewer.FILES:
+            return compareIntegers(server1.getNumOfFilesShared(), server2.getNumOfFilesShared());
 
-        /* server state */
-        if ( columnIndex == 8 ) {
-            EnumState state1 = ( EnumState ) server1.getConnectionState().getState();
-            EnumState state2 = ( EnumState ) server2.getConnectionState().getState();
-            if ( lastSort )
-                return state1.compareTo( state2 );
-            else
-                return state2.compareTo( state1 );
-        }
+        case ServerTableViewer.STATE:
 
-        /* favorites */
-        if ( columnIndex == 9 ) {
+            EnumState state1 = (EnumState) server1.getConnectionState().getState();
+            EnumState state2 = (EnumState) server2.getConnectionState().getState();
+
+            if (lastSort) {
+                return state1.compareTo(state2);
+            } else {
+                return state2.compareTo(state1);
+            }
+
+        case ServerTableViewer.FAVORITE:
+
             boolean bool1 = server1.isFavorite();
             boolean bool2 = server2.isFavorite();
-            if ( lastSort )
-                if ( ( bool1 && bool2 ) || ( ( bool1 == false ) && ( bool2 == false ) ) )
+
+            if (lastSort) {
+                if ((bool1 && bool2) || ((bool1 == false) && (bool2 == false))) {
                     return 0;
-            if ( bool1 && ( bool2 == false ) )
+                }
+            }
+
+            if (bool1 && (bool2 == false)) {
                 return 1;
-            if ( ( bool1 == false ) && bool2 )
+            }
+
+            if ((bool1 == false) && bool2) {
                 return -1;
-            else if ( ( bool2 && bool1 ) || ( ( bool2 == false ) && ( bool1 == false ) ) )
+            } else if ((bool2 && bool1) || ((bool2 == false) && (bool1 == false))) {
                 return 0;
-            if ( bool2 && ( bool1 == false ) )
+            }
+
+            if (bool2 && (bool1 == false)) {
                 return 1;
-            if ( ( bool2 == false ) && bool1 )
+            }
+
+            if ((bool2 == false) && bool1) {
                 return -1;
+            }
+
+        default:
+            return 0;
         }
-        return 0;
     }
 }
 
+
 /*
 $Log: ServerTableSorter.java,v $
+Revision 1.5  2003/10/22 01:37:55  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.4  2003/10/21 17:00:45  lemmster
 class hierarchy for tableviewer
 

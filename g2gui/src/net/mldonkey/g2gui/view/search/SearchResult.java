@@ -34,7 +34,6 @@ import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.SearchTab;
-import net.mldonkey.g2gui.view.helper.OurTableViewer;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -51,7 +50,7 @@ import org.eclipse.swt.widgets.Label;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.55 2003/10/21 17:00:45 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.56 2003/10/22 01:37:45 zet Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -68,7 +67,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
     private String statusline;
 	private boolean mustRefresh = false;
     private long lastRefreshTime = 0;
-    private OurTableViewer ourTableViewer;
+    private ResultTableViewer ourTableViewer;
 
     /**
      * Creates a new SearchResult to display all the results supplied by mldonkey
@@ -281,6 +280,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		 * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
 		 */
 		public void mouseDoubleClick( MouseEvent e ) {
+		    System.out.println(ourTableViewer);
+		    System.out.println(ourTableViewer.getMenuListener());
+		    
 			( ( ResultTableViewer ) ourTableViewer ).getMenuListener().downloadSelected();
 		}
 		/* (non-Javadoc)
@@ -300,6 +302,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 }
 /*
 $Log: SearchResult.java,v $
+Revision 1.56  2003/10/22 01:37:45  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.55  2003/10/21 17:00:45  lemmster
 class hierarchy for tableviewer
 
@@ -398,7 +403,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

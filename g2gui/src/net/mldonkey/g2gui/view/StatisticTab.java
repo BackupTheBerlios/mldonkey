@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.34 2003/10/17 15:36:08 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.35 2003/10/22 01:36:59 zet Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
@@ -193,7 +193,7 @@ public class StatisticTab extends GuiTab {
         GraphControl graphControl;
 
         public GraphMenuListener( SashForm sashForm, Control control, GraphControl graphControl ) {
-        	super(sashForm, control);
+        	super(sashForm, control, null);
             this.graphControl = graphControl;
         }
 
@@ -251,6 +251,9 @@ public class StatisticTab extends GuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.35  2003/10/22 01:36:59  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.34  2003/10/17 15:36:08  zet
 graph colour prefs
 

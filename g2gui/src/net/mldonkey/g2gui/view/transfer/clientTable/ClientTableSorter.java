@@ -24,135 +24,70 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
+import net.mldonkey.g2gui.view.viewers.GTableSorter;
 
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 
 
 /**
- * TableSorter
+ * ClientTableSorter
  *
- *
- * @version $Id: ClientTableSorter.java,v 1.4 2003/10/19 21:38:54 zet Exp $
+ * @version $Id: ClientTableSorter.java,v 1.5 2003/10/22 01:38:19 zet Exp $
  *
  */
-public class ClientTableSorter extends ViewerSorter {
-    private boolean lastSort = true;
-    private int lastColumnIndex = 0;
-    private int columnIndex = 0;
-    private CustomTableViewer tableViewer;
-
-    /**
-     * Creates a new viewer sorter
-     */
-    public ClientTableSorter(CustomTableViewer tableViewer) {
-		this.tableViewer = tableViewer;
+public class ClientTableSorter extends GTableSorter {
+    public ClientTableSorter(ClientTableViewer cTableViewer) {
+        super(cTableViewer);
     }
 
-    public int compare( Viewer viewer, Object obj1, Object obj2 ) {
-        
-		switch ( tableViewer.getColumnIDs()[ columnIndex ] ) {
-        
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
+    public int compare(Viewer viewer, Object obj1, Object obj2) {
+        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
         case ClientTableViewer.STATE:
 
             ClientInfo clientInfo1 = (ClientInfo) obj1;
             ClientInfo clientInfo2 = (ClientInfo) obj2;
 
-            if ( clientInfo1.getState().getState() == EnumState.CONNECTED_DOWNLOADING ) {
+            if (clientInfo1.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
                 return -1;
-            }
-
-            if ( clientInfo2.getState().getState() == EnumState.CONNECTED_DOWNLOADING ) {
+            } else if (clientInfo2.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
+                return 1;
+            } else if ((clientInfo1.getState().getRank() != 0) && (clientInfo2.getState().getRank() != 0)) {
+                return compareIntegers(clientInfo1.getState().getRank(), clientInfo2.getState().getRank());
+            } else if (clientInfo1.getState().getRank() != 0) {
+                return -1;
+            } else if (clientInfo2.getState().getRank() != 0) {
                 return 1;
             }
 
-            if ( ( clientInfo1.getState().getRank() != 0 ) && ( clientInfo2.getState().getRank() != 0 ) ) {
-                return compareIntegers( clientInfo1.getState().getRank(), clientInfo2.getState().getRank() );
-            }
-
-            if ( clientInfo1.getState().getRank() != 0 ) {
-                return -1;
-            }
-
-            if ( clientInfo2.getState().getRank() != 0 ) {
-                return 1;
-            }
-
+        // else fall through
         default:
 
             String s1;
             String s2;
 
-            IBaseLabelProvider prov = ( (ContentViewer) viewer ).getLabelProvider();
-            ClientTableLabelProvider lprov = (ClientTableLabelProvider) ( (TableViewer) viewer ).getLabelProvider();
+            IBaseLabelProvider prov = ((ContentViewer) viewer).getLabelProvider();
+            ClientTableLabelProvider lprov = (ClientTableLabelProvider) ((TableViewer) viewer).getLabelProvider();
 
-            s1 = lprov.getColumnText( obj1, columnIndex );
-            s2 = lprov.getColumnText( obj2, columnIndex );
+            s1 = lprov.getColumnText(obj1, columnIndex);
+            s2 = lprov.getColumnText(obj2, columnIndex);
 
-            return compareStrings( s1, s2 );
+            return compareStrings(s1, s2);
         }
-    }
-
-    public int compareStrings( String aString1, String aString2 ) {
-        if ( aString1.equals( "" ) ) {
-            return 1;
-        }
-
-        if ( aString2.equals( "" ) ) {
-            return -1;
-        }
-
-        return ( lastSort ? aString1.compareToIgnoreCase( aString2 ) : aString2.compareToIgnoreCase( aString1 ) );
-    }
-
-    public int compareIntegers( int anInt1, int anInt2 ) {
-        if ( anInt1 == 0 ) {
-            return 1;
-        }
-
-        if ( anInt2 == 0 ) {
-            return -1;
-        }
-
-        return ( lastSort ? ( anInt1 - anInt2 ) : ( anInt2 - anInt1 ) );
-    }
-
-    public void setColumnIndex( int i ) {
-        columnIndex = i;
-
-        if ( columnIndex == lastColumnIndex ) {
-            lastSort = !lastSort;
-        } else {
-            lastSort = true;
-        }
-
-        lastColumnIndex = columnIndex;
-    }
-
-    public int getLastColumnIndex() {
-        return lastColumnIndex;
-    }
-
-    public void setLastColumnIndex( int i ) {
-        lastColumnIndex = i;
-    }
-
-    public boolean getLastSort() {
-        return lastSort;
-    }
-
-    public void setLastSort( boolean b ) {
-        lastSort = b;
     }
 }
 
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.5  2003/10/22 01:38:19  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.4  2003/10/19 21:38:54  zet
 columnselector support
 

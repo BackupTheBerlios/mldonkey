@@ -25,86 +25,81 @@ package net.mldonkey.g2gui.view.search;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.GTableLabelProvider;
 
 import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ITableLabelProvider;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+
 
 /**
  * ResultTableLabelProvider
  *
  *
- * @version $Id: ResultTableLabelProvider.java,v 1.18 2003/09/17 20:07:44 lemmster Exp $
+ * @version $Id: ResultTableLabelProvider.java,v 1.19 2003/10/22 01:37:45 zet Exp $
  *
  */
-public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
-    private Color alreadyDownloadedColor = new Color( null, 41, 174, 57 );
+public class ResultTableLabelProvider extends GTableLabelProvider implements IColorProvider {
+    private Color alreadyDownloadedColor = new Color(null, 41, 174, 57);
+
+    public ResultTableLabelProvider(ResultTableViewer rTableViewer) {
+        super(rTableViewer);
+    }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITableLabelProvider#
      * getColumnImage(java.lang.Object, int)
      */
-    public Image getColumnImage( Object arg0, int arg1 ) {
-        if ( arg0 instanceof ResultInfo ) {
-            ResultInfo resultInfo = ( ResultInfo ) arg0;
-            if ( arg1 == 0 ) {
-                if ( !resultInfo.isDownloading() )
-                    return G2GuiResources.getNetworkImage( resultInfo.getNetwork().getNetworkType() );
-                else
-                    return G2GuiResources.getImage( "downloaded" );
+    public Image getColumnImage(Object arg0, int columnIndex) {
+        ResultInfo resultInfo = (ResultInfo) arg0;
+
+        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        case ResultTableViewer.NETWORK:
+
+            if (!resultInfo.isDownloading()) {
+                return G2GuiResources.getNetworkImage(resultInfo.getNetwork().getNetworkType());
+            } else {
+                return G2GuiResources.getImage("downloaded");
             }
-            else if ( arg1 == 5 ) {
-                 return G2GuiResources.getRatingImage( resultInfo.getAvail() );
-            }
+
+        case ResultTableViewer.AVAILABILITY:
+            return G2GuiResources.getRatingImage(resultInfo.getAvail());
+
+        default:
+            return null;
         }
-        return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITableLabelProvider#
      * getColumnText(java.lang.Object, int)
      */
-    public String getColumnText( Object arg0, int arg1 ) {
-        /*
-         * Network id
-         * Name
-         * MD4
-         * Size
-         * Format
-         * Type
-         * Metadata
-         * Comment
-         * downloaded
-         */
-        if ( arg0 instanceof ResultInfo ) {
-            ResultInfo resultInfo = ( ResultInfo ) arg0;
-            switch ( arg1 ) {
-            case 0: // network id
-                return "" + ( ( NetworkInfo ) resultInfo.getNetwork() ).getNetworkName();
-            case 1: // name
-                return "" + resultInfo.getName();
-            case 2: // size
-                return "" + resultInfo.getStringSize();
-            case 3: // format
-                return "" + resultInfo.getFormat();
-            case 4: // type
-                return "" + resultInfo.getType();
-            case 5: // metadata
-                return G2GuiResources.getRatingString( resultInfo.getAvail() );
-            default:
-                return "";
-            }
-        }
-        return "";
-    }
+    public String getColumnText(Object arg0, int columnIndex) {
+        ResultInfo resultInfo = (ResultInfo) arg0;
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#
-     * addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     */
-    public void addListener( ILabelProviderListener arg0 ) {
+        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        case ResultTableViewer.NETWORK:
+            return ((NetworkInfo) resultInfo.getNetwork()).getNetworkName();
+
+        case ResultTableViewer.NAME:
+            return resultInfo.getName();
+
+        case ResultTableViewer.SIZE:
+            return resultInfo.getStringSize();
+
+        case ResultTableViewer.FORMAT:
+            return resultInfo.getFormat();
+
+        case ResultTableViewer.MEDIA:
+            return resultInfo.getType();
+
+        case ResultTableViewer.AVAILABILITY:
+            return G2GuiResources.getRatingString(resultInfo.getAvail());
+
+        default:
+            return "";
+        }
     }
 
     /* (non-Javadoc)
@@ -115,42 +110,34 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
     }
 
     /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#
-     * isLabelProperty(java.lang.Object, java.lang.String)
-     */
-    public boolean isLabelProperty( Object arg0, String arg1 ) {
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#
-     * removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     */
-    public void removeListener( ILabelProviderListener arg0 ) {
-    }
-
-    /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
      */
-    public Color getBackground( Object element ) {
+    public Color getBackground(Object element) {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
      */
-    public Color getForeground( Object element ) {
-        if ( element instanceof ResultInfo ) {
-            ResultInfo resultInfo = ( ResultInfo ) element;
-            if ( !resultInfo.getHistory() )
+    public Color getForeground(Object element) {
+        if (element instanceof ResultInfo) {
+            ResultInfo resultInfo = (ResultInfo) element;
+
+            if (!resultInfo.getHistory()) {
                 return alreadyDownloadedColor;
+            }
         }
+
         return null;
     }
 }
 
+
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.19  2003/10/22 01:37:45  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.18  2003/09/17 20:07:44  lemmster
 avoid NPE´s in search
 
@@ -164,7 +151,7 @@ Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.14  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer

@@ -25,13 +25,14 @@ package net.mldonkey.g2gui.view.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.GTableMenuListener;
+import net.mldonkey.g2gui.view.viewers.GTableViewer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -61,10 +62,10 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.13 2003/10/21 17:00:45 lemmster Exp $
+ * @version $Id: TableMenuListener.java,v 1.14 2003/10/22 01:37:10 zet Exp $
  *
  */
-public abstract class TableMenuListener extends CMenuListener implements ISelectionChangedListener,
+public abstract class TableMenuListener extends GTableMenuListener implements ISelectionChangedListener,
 	IMenuListener {
     protected ViewerFilter incrementalViewerFilter;
 
@@ -74,9 +75,15 @@ public abstract class TableMenuListener extends CMenuListener implements ISelect
      * @param tableViewer DOCUMENT ME!
      * @param core DOCUMENT ME!
      */
-    public TableMenuListener( CoreCommunication core ) {
-        super( core );
+    
+    public TableMenuListener( GTableViewer gTableViewer ) {
+        super(gTableViewer);
     }
+        
+    
+   // public TableMenuListener( CoreCommunication core ) {
+        //super( core );
+   // }
     
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
@@ -127,7 +134,16 @@ public abstract class TableMenuListener extends CMenuListener implements ISelect
         }
         return false;
     }
+	protected void toggleFilter( ViewerFilter viewerFilter, boolean toggle ) {
+			if ( toggle )
+				tableViewer.addFilter( viewerFilter );
+			else
+				tableViewer.removeFilter( viewerFilter );
+		}
 
+		/**
+		 * @param tableViewer
+		 */
 
     protected class RefineFilter extends ViewerFilter {
         private String refineString;
@@ -558,6 +574,9 @@ public abstract class TableMenuListener extends CMenuListener implements ISelect
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.14  2003/10/22 01:37:10  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.13  2003/10/21 17:00:45  lemmster
 class hierarchy for tableviewer
 

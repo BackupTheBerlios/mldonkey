@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,47 +18,44 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.search;
 
 import java.util.List;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
+import net.mldonkey.g2gui.view.viewers.GTableContentProvider;
+
 
 /**
  * ResultTableContentProvider
  *
  *
- * @version $Id: ResultTableContentProvider.java,v 1.4 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ResultTableContentProvider.java,v 1.5 2003/10/22 01:37:45 zet Exp $
  *
  */
-public class ResultTableContentProvider implements IStructuredContentProvider {
+public class ResultTableContentProvider extends GTableContentProvider {
+    public ResultTableContentProvider(ResultTableViewer rTableViewer) {
+        super(rTableViewer);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#
-	 * getElements(java.lang.Object)
-	 */
-	public Object[] getElements( Object arg0 ) {
-		List aList = ( List ) arg0;
-		return aList.toArray();
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IStructuredContentProvider#
+     * getElements(java.lang.Object)
+     */
+    public Object[] getElements(Object arg0) {
+        List aList = (List) arg0;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-	 */
-	public void dispose() { }
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IContentProvider#
-	 * inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-	 */
-	public void inputChanged( Viewer arg0, Object arg1, Object arg2 ) { }
+        return aList.toArray();
+    }
 }
+
 
 /*
 $Log: ResultTableContentProvider.java,v $
+Revision 1.5  2003/10/22 01:37:45  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 

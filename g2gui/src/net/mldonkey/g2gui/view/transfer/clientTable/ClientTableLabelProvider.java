@@ -25,44 +25,37 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
+import net.mldonkey.g2gui.view.viewers.GTableLabelProvider;
 
-import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.swt.graphics.Color;
+
 import org.eclipse.swt.graphics.Image;
 
 
 /**
  *
- * TableLabelProvider
+ * ClientTableLabelProvider
  *
- *
- * @version $Id: ClientTableLabelProvider.java,v 1.6 2003/10/19 21:38:54 zet Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.7 2003/10/22 01:38:19 zet Exp $
  *
  */
-public class ClientTableLabelProvider implements ITableLabelProvider, IColorProvider {
-
-    private CustomTableViewer tableViewer;
-    
-    public ClientTableLabelProvider( CustomTableViewer tableViewer ) {
-        this.tableViewer = tableViewer;
+public class ClientTableLabelProvider extends GTableLabelProvider implements ITableLabelProvider {
+    public ClientTableLabelProvider(ClientTableViewer cTableViewer) {
+        super(cTableViewer);
     }
-    
+
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      */
-    public Image getColumnImage( Object element, int columnIndex ) {
+    public Image getColumnImage(Object element, int columnIndex) {
         ClientInfo clientInfo = (ClientInfo) element;
 
-		switch ( tableViewer.getColumnIDs()[ columnIndex ] ) {
-		
-		case ClientTableViewer.STATE:
-            return G2GuiResources.getClientImage( (EnumState) clientInfo.getState().getState() );
+        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        case ClientTableViewer.STATE:
+            return G2GuiResources.getClientImage((EnumState) clientInfo.getState().getState());
 
-		case ClientTableViewer.NETWORK:
-            return G2GuiResources.getNetworkImage( clientInfo.getClientnetworkid().getNetworkType() );
+        case ClientTableViewer.NETWORK:
+            return G2GuiResources.getNetworkImage(clientInfo.getClientnetworkid().getNetworkType());
 
         default:
             return null;
@@ -71,16 +64,13 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
-     *
-     * "network", "name", "desc", "address", "serverScore", "users", "files", "state", "favorite"
      */
-    public String getColumnText( Object element, int columnIndex ) {
+    public String getColumnText(Object element, int columnIndex) {
         ClientInfo clientInfo = (ClientInfo) element;
 
-		switch ( tableViewer.getColumnIDs()[ columnIndex ] ) {
-		    
+        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
         case ClientTableViewer.STATE:
-            return "" + clientInfo.getDetailedClientActivity( );
+            return "" + clientInfo.getDetailedClientActivity();
 
         case ClientTableViewer.NAME:
             return "" + clientInfo.getClientName();
@@ -89,58 +79,20 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
             return "" + clientInfo.getClientnetworkid().getNetworkName();
 
         case ClientTableViewer.KIND:
-            return "" + clientInfo.getClientConnection( );
+            return "" + clientInfo.getClientConnection();
 
         default:
             return "";
         }
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     */
-    public void addListener( ILabelProviderListener listener ) {
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-     */
-    public void dispose() {
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#
-     * isLabelProperty(java.lang.Object, java.lang.String)
-     */
-    public boolean isLabelProperty( Object element, String property ) {
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#
-     * removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     */
-    public void removeListener( ILabelProviderListener listener ) {
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
-     */
-    public Color getForeground( Object arg0 ) {
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
-     */
-    public Color getBackground( Object element ) {
-        return null;
     }
 }
 
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.7  2003/10/22 01:38:19  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.6  2003/10/19 21:38:54  zet
 columnselector support
 

@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.view.helper;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
+import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * OurTableViewer
  *
- * @version $Id: OurTableViewer.java,v 1.1 2003/10/21 17:00:45 lemmster Exp $ 
+ * @version $Id: OurTableViewer.java,v 1.2 2003/10/22 01:37:10 zet Exp $ 
  *
  */
 public abstract class OurTableViewer {
@@ -106,8 +106,10 @@ public abstract class OurTableViewer {
 		tableViewer.setLabelProvider( labelProvider );
 		// TableSorter
 		tableViewer.setSorter( tableSorter );
+		
 		// MenuListener
-		menuListener.setTableViewer( tableViewer );		
+		// menuListener.setTableViewer( tableViewer );		
+		
 		tableViewer.addSelectionChangedListener( menuListener );
 		MenuManager popupMenu = new MenuManager( "" );
 		popupMenu.setRemoveAllWhenShown( true );
@@ -196,6 +198,9 @@ public abstract class OurTableViewer {
 
 /*
 $Log: OurTableViewer.java,v $
+Revision 1.2  2003/10/22 01:37:10  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.1  2003/10/21 17:00:45  lemmster
 class hierarchy for tableviewer
 

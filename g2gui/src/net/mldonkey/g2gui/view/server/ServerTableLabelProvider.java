@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.server;
 
@@ -28,152 +28,153 @@ import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.GTableLabelProvider;
 
 import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ITableLabelProvider;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
+
 /**
- * TableLabelProvider
+ * ServerTableLabelProvider
  *
  *
- * @version $Id: ServerTableLabelProvider.java,v 1.6 2003/10/12 00:21:34 zet Exp $ 
+ * @version $Id: ServerTableLabelProvider.java,v 1.7 2003/10/22 01:37:55 zet Exp $
  *
  */
-public class ServerTableLabelProvider implements ITableLabelProvider, IColorProvider {
-	private boolean colors = PreferenceLoader.loadBoolean( "displayTableColors" );
-	private Color connectColor = new Color( null, 41, 174, 57 );
-	private Color connectingColor = new Color( null, 255, 165, 0 );
-	private Color disconnectColor = new Color( null, 192, 192, 192 );
+public class ServerTableLabelProvider extends GTableLabelProvider implements IColorProvider {
+    private boolean colors = PreferenceLoader.loadBoolean("displayTableColors");
+    private Color connectColor = new Color(null, 41, 174, 57);
+    private Color connectingColor = new Color(null, 255, 165, 0);
+    private Color disconnectColor = new Color(null, 192, 192, 192);
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
-	 */
-	public Image getColumnImage( Object element, int columnIndex ) {
-		if ( element instanceof ServerInfo && columnIndex == 0 ) {
-			ServerInfo server = ( ServerInfo ) element;
-			return G2GuiResources.getNetworkImage( server.getNetwork().getNetworkType() );
-		}
-		return null;
-	}
+    public ServerTableLabelProvider(ServerTableViewer sTableViewer) {
+        super(sTableViewer);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
-	 *
-	 * "network", "name", "desc", "address", "serverScore", "users", "files", "state", "favorite"
-	 */
-	public String getColumnText( Object element, int columnIndex ) {
-		ServerInfo server = ( ServerInfo ) element;
-		
-		if ( columnIndex == 0 ) // network id
-			return " " + ( ( NetworkInfo ) server.getNetwork() ).getNetworkName();
-		else if ( columnIndex == 1 ) // name
-			return server.getNameOfServer();
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+     */
+    public Image getColumnImage(Object element, int columnIndex) {
+        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        case ServerTableViewer.NETWORK:
 
-		else if ( columnIndex == 2 ) // desc
-			return server.getDescOfServer();
+            ServerInfo server = (ServerInfo) element;
 
-		else if ( columnIndex == 3 )  { // address
-			try {
-				Addr addr = server.getServerAddress();
-				if ( addr.hasHostName() )
-					return addr.getHostName();
-				else
-					return addr.getAddress().getHostAddress();
-			}
-			catch ( NullPointerException e ) {
-				return "0.0.0.0";
-			}
-		}
+            return G2GuiResources.getNetworkImage(server.getNetwork().getNetworkType());
 
-		else if ( columnIndex == 4 ) // port
-			return new Integer( server.getServerPort() ).toString();
-		else if ( columnIndex == 5 ) // score
-			return new Integer( server.getServerScore() ).toString();
+        default:
+            return null;
+        }
+    }
 
-		else if ( columnIndex == 6 ) // users
-			return new Integer( server.getNumOfUsers() ).toString();
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+     *
+     * "network", "name", "desc", "address", "serverScore", "users", "files", "state", "favorite"
+     */
+    public String getColumnText(Object element, int columnIndex) {
+        ServerInfo server = (ServerInfo) element;
 
-		else if ( columnIndex == 7 ) // files
-			return new Integer( server.getNumOfFilesShared() ).toString();
+        switch (tableViewer.getColumnIDs()[ columnIndex ]) {
+        case ServerTableViewer.NETWORK:
+            return " " + ((NetworkInfo) server.getNetwork()).getNetworkName();
 
-		else if ( columnIndex == 8 ) //state
-			return server.getConnectionState().getState().toString();
+        case ServerTableViewer.NAME:
+            return server.getNameOfServer();
 
-		else if ( columnIndex == 9 ) {
-			if ( server.isFavorite() ) 
-				return G2GuiResources.getString( "TLP_TRUE" );
-			else 
-				return G2GuiResources.getString( "TLP_FALSE" );		
-		}
-		return "";
-	}
+        case ServerTableViewer.DESCRIPTION:
+            return server.getDescOfServer();
 
+        case ServerTableViewer.ADDRESS:
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-	 */
-	public void addListener( ILabelProviderListener listener ) { }
+            try {
+                Addr addr = server.getServerAddress();
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-	 */
-	public void dispose() {
-		connectColor.dispose();
-		connectingColor.dispose();
-		disconnectColor.dispose();
-	}
+                if (addr.hasHostName()) {
+                    return addr.getHostName();
+                } else {
+                    return addr.getAddress().getHostAddress();
+                }
+            } catch (NullPointerException e) {
+                return "0.0.0.0";
+            }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#
-	 * isLabelProperty(java.lang.Object, java.lang.String)
-	 */
-	public boolean isLabelProperty( Object element, String property ) {
-		return false;
-	}
+        case ServerTableViewer.PORT:
+            return "" + server.getServerPort();
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#
-	 * removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-	 */
-	public void removeListener( ILabelProviderListener listener ) { }
+        case ServerTableViewer.SCORE:
+            return "" + server.getServerScore();
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
-	 */
-	public Color getForeground( Object arg0 ) {
-		if ( !colors ) return null;
+        case ServerTableViewer.USERS:
+            return "" + server.getNumOfUsers();
 
-		ServerInfo server = ( ServerInfo ) arg0;
-		if ( server.isConnected() ) 
-			return connectColor;
-		if ( server.getConnectionState().getState() == EnumState.CONNECTING )
-			return connectingColor;
-		if ( server.getConnectionState().getState() == EnumState.NOT_CONNECTED )
-			return disconnectColor;		
+        case ServerTableViewer.FILES:
+            return "" + server.getNumOfFilesShared();
 
-		return null;
-	}
+        case ServerTableViewer.STATE:
+            return server.getConnectionState().getState().toString();
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
-	 */
-	public Color getBackground( Object element ) {
-		return null;
-	}
+        case ServerTableViewer.FAVORITE:
+            return G2GuiResources.getString(server.isFavorite() ? "TLP_TRUE" : "TLP_FALSE");
 
-	/**
-	 * @param colors Should a color for each tableitem be used
-	 */
-	public void setColors( boolean colors ) {
-		this.colors = colors;
-	}
+        default:
+            return "";
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
+     */
+    public void dispose() {
+        connectColor.dispose();
+        connectingColor.dispose();
+        disconnectColor.dispose();
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+     */
+    public Color getForeground(Object arg0) {
+        if (!colors) {
+            return null;
+        }
+
+        ServerInfo server = (ServerInfo) arg0;
+
+        if (server.isConnected()) {
+            return connectColor;
+        } else if (server.getConnectionState().getState() == EnumState.CONNECTING) {
+            return connectingColor;
+        } else if (server.getConnectionState().getState() == EnumState.NOT_CONNECTED) {
+            return disconnectColor;
+        }
+
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
+     */
+    public Color getBackground(Object element) {
+        return null;
+    }
+
+    /**
+     * @param colors Should a color for each tableitem be used
+     */
+    public void setColors(boolean colors) {
+        this.colors = colors;
+    }
 }
+
 
 /*
 $Log: ServerTableLabelProvider.java,v $
+Revision 1.7  2003/10/22 01:37:55  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.6  2003/10/12 00:21:34  zet
 dispose colors
 

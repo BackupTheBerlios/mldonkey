@@ -28,15 +28,13 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.helper.CCLabel;
-import net.mldonkey.g2gui.view.helper.CMenuListener;
 import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
-import net.mldonkey.g2gui.view.helper.OurTableViewer;
-import net.mldonkey.g2gui.view.helper.PaneMenuListener;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.server.ServerTableMenuListener;
 import net.mldonkey.g2gui.view.server.ServerTableViewer;
+import net.mldonkey.g2gui.view.viewers.ColumnSelectorPaneListener;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -52,7 +50,7 @@ import org.eclipse.swt.widgets.Composite;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.40 2003/10/21 17:06:27 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.41 2003/10/22 01:36:59 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -60,7 +58,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	private MenuManager popupMenu;
 	private String statusText = "";
 	private ServerInfoIntMap servers;
-	private OurTableViewer ourTableViewer;
+	private ServerTableViewer ourTableViewer;
 
 	/**
 	 * @param gui The main gui tab
@@ -107,10 +105,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		
 		popupMenu = new MenuManager( "" );
 		popupMenu.setRemoveAllWhenShown( true );
-		CMenuListener cMenuListener = new PaneMenuListener( core );
-		cMenuListener.setTableViewer( ourTableViewer.getTableViewer() );
-		popupMenu.addMenuListener( cMenuListener );
-		
+		popupMenu.addMenuListener(new ColumnSelectorPaneListener(ourTableViewer));
 		ccLabel.addMouseListener( new HeaderBarMouseAdapter( ccLabel, popupMenu ) );
 	}
 
@@ -217,13 +212,16 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	/**
 	 * @return
 	 */
-	public OurTableViewer getOurTableViewer() {
+	public ServerTableViewer getOurTableViewer() {
 		return ourTableViewer;
 	}
 }
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.41  2003/10/22 01:36:59  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.40  2003/10/21 17:06:27  lemmster
 fix manage servers from statusline
 

@@ -63,24 +63,32 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * TableMenuListener
+ * ServerTableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.10 2003/10/21 17:00:45 lemmster Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.11 2003/10/22 01:37:55 zet Exp $
  *
  */
-public class ServerTableMenuListener extends TableMenuListener {
+public class ServerTableMenuListener extends TableMenuListener { 
+    //TableMenuListener {
     private ServerInfo selectedServer;
     private List selectedServers;
     private ServerInfoIntMap serverInfoMap;
+    private CoreCommunication core;
 
     /**
      * Creates a new TableMenuListener
      * @param tableViewer The TableViewer
      * @param core The CoreCommunication supporting this with data
      */
-    public ServerTableMenuListener( CoreCommunication core ) {
-        super( core );
+    public ServerTableMenuListener( ServerTableViewer sTableViewer) {
+        super( sTableViewer);
+        
+    }    
+    
+    public void initialize() {
+        super.initialize();
+        this.core = gTableViewer.getCore();
         this.serverInfoMap = this.core.getServerInfoIntMap();
         this.selectedServers = new ArrayList();
     }
@@ -178,8 +186,8 @@ public class ServerTableMenuListener extends TableMenuListener {
 
     private class DisconnectAction extends Action {
         public DisconnectAction() {
-            super();
-            setText( G2GuiResources.getString( "TML_DISCONNECT" ) );
+            super( G2GuiResources.getString( "TML_DISCONNECT" ) );
+            setImageDescriptor( G2GuiResources.getImageDescriptor( "cancel" ));
         }
 
 		/*
@@ -196,8 +204,8 @@ public class ServerTableMenuListener extends TableMenuListener {
     
     private class CopyServerLink extends Action {
     	public CopyServerLink() {
-    		super();
-    		setText( G2GuiResources.getString( "TML_COPYTO" ) );
+    		super( G2GuiResources.getString( "TML_COPYTO" ) );
+    		setImageDescriptor( G2GuiResources.getImageDescriptor( "copy" ));
     	}
     	
     	/*
@@ -214,6 +222,7 @@ public class ServerTableMenuListener extends TableMenuListener {
 					aString += ( SWT.getPlatform().equals( "win32" ) ? "\r\n" : "\n" );
 				aString += server.getLink();
 			}
+			System.out.println("str" + aString);
 			clipboard.setContents( new Object[] { aString },
 								new Transfer[] { TextTransfer.getInstance() } );
 			clipboard.dispose();						
@@ -222,8 +231,7 @@ public class ServerTableMenuListener extends TableMenuListener {
 
     private class ConnectAction extends Action {
         public ConnectAction() {
-            super();
-            setText( G2GuiResources.getString( "TML_CONNECT" ) );
+            super( G2GuiResources.getString( "TML_CONNECT" ) );
         }
 
 		/*
@@ -240,8 +248,8 @@ public class ServerTableMenuListener extends TableMenuListener {
 
     private class ConnectMoreAction extends Action {
         public ConnectMoreAction() {
-            super();
-            setText( G2GuiResources.getString( "TML_CONNECT_MORE" ) );
+            super( G2GuiResources.getString( "TML_CONNECT_MORE" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "plus" ));
         }
 
 		/*
@@ -260,8 +268,8 @@ public class ServerTableMenuListener extends TableMenuListener {
         private MyInputDialog dialog;
 
         public AddServerAction() {
-            super();
-            setText( G2GuiResources.getString( "TML_ADD_SERVER" ) );
+            super( G2GuiResources.getString( "TML_ADD_SERVER" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "plus" ));
         }
 
 		/*
@@ -351,8 +359,8 @@ public class ServerTableMenuListener extends TableMenuListener {
         private InputDialog dialog;
 
         public AddServersAction() {
-            super();
-            setText( G2GuiResources.getString( "TML_ADD_SERVERS" ) );
+            super( G2GuiResources.getString( "TML_ADD_SERVERS" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "plus" ));
         }
 
 		/*
@@ -393,8 +401,8 @@ public class ServerTableMenuListener extends TableMenuListener {
 
     private class RemoveServerAction extends Action {
         public RemoveServerAction() {
-            super();
-            setText( G2GuiResources.getString( "TML_REMOVE_SERVER" ) );
+            super( G2GuiResources.getString( "TML_REMOVE_SERVER" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "minus" ));
         }
 
 		/*
@@ -411,8 +419,8 @@ public class ServerTableMenuListener extends TableMenuListener {
 
     private class RemoveServersAction extends Action {
         public RemoveServersAction() {
-            super();
-            setText( G2GuiResources.getString( "TML_REMOVE_SERVERS" ) );
+            super( G2GuiResources.getString( "TML_REMOVE_SERVERS" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "minus" ));
         }
 
 		/*
@@ -566,6 +574,9 @@ public class ServerTableMenuListener extends TableMenuListener {
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.11  2003/10/22 01:37:55  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.10  2003/10/21 17:00:45  lemmster
 class hierarchy for tableviewer
 

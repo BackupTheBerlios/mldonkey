@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.34 2003/09/27 13:30:22 dek Exp $ 
+ * @version $Id: SearchTab.java,v 1.35 2003/10/22 01:36:59 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -225,7 +225,6 @@ public class SearchTab extends GuiTab {
 				cTabFolder.getBackground() }, new int[] { 75 } );
 		cTabFolder.setSelectionForeground(
 			cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
-
 		
 		/* add a "X" and listen for close event */
 		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
@@ -428,6 +427,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.35  2003/10/22 01:36:59  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.34  2003/09/27 13:30:22  dek
 all tables have now show-Gridlines-behaviour as descibed in  preferences
 
@@ -492,7 +494,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

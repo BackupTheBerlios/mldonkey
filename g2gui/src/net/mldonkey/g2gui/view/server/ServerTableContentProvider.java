@@ -23,40 +23,35 @@
 package net.mldonkey.g2gui.view.server;
 
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
-
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
+import net.mldonkey.g2gui.view.viewers.GTableContentProvider;
 
 /**
- * TableContentProvider
+ * ServerTableContentProvider
  *
  *
- * @version $Id: ServerTableContentProvider.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ServerTableContentProvider.java,v 1.3 2003/10/22 01:37:55 zet Exp $ 
  *
  */
-public class ServerTableContentProvider implements IStructuredContentProvider {
-	/* (non-Javadoc)
+public class ServerTableContentProvider extends GTableContentProvider {
+
+    public ServerTableContentProvider( ServerTableViewer sTableViewer) {
+        super(sTableViewer);
+    }
+    
+    /* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
 	public Object[] getElements( Object inputElement ) {
 		ServerInfoIntMap servers = ( ServerInfoIntMap ) inputElement;
 		return servers.getServers();
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-	 */
-	public void dispose() { }
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IContentProvider#
-	 * inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-	 */
-	public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) { }
 }
 
 /*
 $Log: ServerTableContentProvider.java,v $
+Revision 1.3  2003/10/22 01:37:55  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 

@@ -25,9 +25,9 @@ package net.mldonkey.g2gui.view.server;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.helper.OurTableViewer;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.viewers.GTableViewer;
 
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -36,60 +36,65 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTableViewer.java,v 1.1 2003/10/21 17:00:45 lemmster Exp $ 
+ * @version $Id: ServerTableViewer.java,v 1.2 2003/10/22 01:37:55 zet Exp $ 
  *
  */
-public class ServerTableViewer extends OurTableViewer {
+public class ServerTableViewer extends GTableViewer {
 	private boolean oldValue = PreferenceLoader.loadBoolean( "displayAllServers" );
 	private boolean oldValue2 = PreferenceLoader.loadBoolean( "displayTableColors" );
+	
+	public static final int NETWORK = 0;
+	public static final int NAME = 1;
+	public static final int DESCRIPTION = 2;
+	public static final int ADDRESS = 3;
+	public static final int PORT = 4;
+	public static final int SCORE = 5;
+	public static final int USERS = 6;
+	public static final int FILES = 7;
+	public static final int STATE = 8;
+	public static final int FAVORITE = 9;
+	
 
 	/**
-	 * 
 	 * @param composite
 	 * @param core
 	 */
-	public ServerTableViewer( Composite aComposite, CoreCommunication aCore ) {
-		super( aComposite, aCore );
+	public ServerTableViewer( Composite parent, CoreCommunication aCore ) {
+		super( parent, aCore );
 		
 		/* proto <= 16 does not support favorites */					
 		if ( core.getProtoToUse() <= 16 ) {
-			this.tableColumns = new String[] { "SVT_NETWORK", "SVT_NAME", "SVT_DESC", "SVT_ADDRESS",
+			columnLabels = new String[] { "SVT_NETWORK", "SVT_NAME", "SVT_DESC", "SVT_ADDRESS",
 												"SVT_PORT", "SVT_SERVERSCORE", "SVT_USERS",	"SVT_FILES",
 												"SVT_STATE" };	
-			this.tableWidth = new int[] { 70, 160, 0, 120, 50, 55, 55, 60, 80 };
-			
-			this.tableAlign = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT,
+			columnDefaultWidths = new int[] { 70, 160, 0, 120, 50, 55, 55, 60, 80 };
+			columnAlignment = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT,
 											SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT };
 		}
 		else {
-			this.tableColumns = new String[] {	"SVT_NETWORK", "SVT_NAME", "SVT_DESC",
+			columnLabels = new String[] {	"SVT_NETWORK", "SVT_NAME", "SVT_DESC",
 												"SVT_ADDRESS", "SVT_PORT", "SVT_SERVERSCORE",
 												"SVT_USERS", "SVT_FILES", "SVT_STATE", "SVT_FAVORITES" };	
-
-			this.tableWidth = new int[] { 70, 160, 160, 120, 50, 55, 55, 60, 80, 50 };
-			
-			this.tableAlign = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT,
+			columnDefaultWidths = new int[] { 70, 160, 160, 120, 50, 55, 55, 60, 80, 50 };
+			columnAlignment = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT,
 											SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.LEFT };
 		}
 		
-		this.swtLayout = SWT.FULL_SELECTION | SWT.MULTI;
-		this.contentProvider = new ServerTableContentProvider();
-		this.labelProvider = new ServerTableLabelProvider();
-		this.tableSorter = new ServerTableSorter();
-		this.menuListener = new ServerTableMenuListener( core );
+		tableContentProvider = new ServerTableContentProvider( this );
+		tableLabelProvider = new ServerTableLabelProvider( this );
+		tableSorter = new ServerTableSorter( this );
+		tableMenuListener = new ServerTableMenuListener( this );
 		
 
-		this.create();
+		this.createContents( parent );
 	}
 
-	protected void create() {
-		super.create();
+	protected void createContents( Composite parent ) {
+		super.createContents( parent );
+		tableViewer.addSelectionChangedListener((ServerTableMenuListener) tableMenuListener);
 		
-		// create the tablecolumns
-		createTableColumns();
-
 		// add a menulistener to make the first menu item bold
-		addMenuListener();
+	    addMenuListener();
 
 		/* set the state filter if preference says so */
 		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) ) {
@@ -99,10 +104,15 @@ public class ServerTableViewer extends OurTableViewer {
 		}
 	}
 	
+	//wtf
+	public void setInput( Object object ) {
+	    tableViewer.setInput( object );
+	}
 	/**
 	 * Updates this table on preference close
 	 */
 	public void updateDisplay() {
+	    super.updateDisplay();
 		/* only update on pref change */
 		boolean temp = PreferenceLoader.loadBoolean( "displayAllServers" );
 		if ( oldValue != temp ) {
@@ -145,10 +155,7 @@ public class ServerTableViewer extends OurTableViewer {
 			getTableViewer().refresh();
 			this.oldValue2 = temp2;
 		}
-		getTableViewer().getTable().setLinesVisible(
-				PreferenceLoader.loadBoolean( "displayGridLines" ) );
 	}
-
 
 	/**
 	 * Adds a <code>ViewerFilter</code> to the <code>TableViewer</code> by
@@ -170,6 +177,9 @@ public class ServerTableViewer extends OurTableViewer {
 
 /*
 $Log: ServerTableViewer.java,v $
+Revision 1.2  2003/10/22 01:37:55  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.1  2003/10/21 17:00:45  lemmster
 class hierarchy for tableviewer
 

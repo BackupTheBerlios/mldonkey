@@ -35,6 +35,7 @@ import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.ColumnSelectorAction;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -50,6 +51,7 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -57,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.17 2003/10/21 17:00:45 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.18 2003/10/22 01:37:45 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -65,6 +67,12 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	private ResultInfo selectedResult;
 	private ResultInfoIntMap resultInfoMap;
 	private List selectedResults;
+	private CoreCommunication core;
+	
+	private static final int WS_JIGLE = 1;
+	private static final int WS_BITZI = 2;
+	private static final int WS_FILEDONKEY = 3;
+	private static final int WS_SHAREREACTOR = 4;
 
 	/**
 	 * Creates a new TableMenuListener
@@ -72,12 +80,18 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	 * @param core The CoreCommunication supporting this with data
 	 * @param cTabItem The CTabItem in which the table res
 	 */
-	public ResultTableMenuListener( CoreCommunication core, CTabItem cTabItem ) {
-		super( core );
-		this.cTabItem = cTabItem;
-		this.resultInfoMap = this.core.getResultInfoIntMap();
+	public ResultTableMenuListener( ResultTableViewer rTableViewer ) {
+		super( rTableViewer );
 		this.selectedResults = new ArrayList();
 	}
+	
+	public void initialize() {
+	    super.initialize();
+	    this.cTabItem = ((ResultTableViewer) gTableViewer).getCTabItem();
+	    this.core = gTableViewer.getCore();
+		this.resultInfoMap = this.core.getResultInfoIntMap();
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#
@@ -117,8 +131,8 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 			/* copy filename as plain/html */
 			MenuManager copyManager =
 					new MenuManager( G2GuiResources.getString( "ST_COPYLINK" ) );
-			copyManager.add( new CopyNameAsPlainAction() );
-			copyManager.add( new CopyNameAsHtmlAction() );
+			copyManager.add( new CopyED2KAction( false ) );
+			copyManager.add( new CopyED2KAction( true ) );
 			menuManager.add( copyManager );
 	
 //			menuManager.add( new Separator() );
@@ -132,6 +146,14 @@ Yet			menuManager.add( webManager );
 	
 			menuManager.add( new Separator() );
 */
+			menuManager.add(new Separator() );
+			MenuManager wsManager = new MenuManager( G2GuiResources.getString( "ST_WEBSERVICES" ) );
+				wsManager.add( new WebServiceAction( WS_BITZI ) );
+				wsManager.add( new WebServiceAction( WS_FILEDONKEY ) );
+				wsManager.add( new WebServiceAction( WS_JIGLE ) );
+				wsManager.add( new WebServiceAction( WS_SHAREREACTOR ) );
+			menuManager.add( wsManager );
+			
 		}
 		
 		super.menuAboutToShow( menuManager );
@@ -173,6 +195,9 @@ Yet			menuManager.add( webManager );
 			/* close search */
 			menuManager.add( new CloseAction() );
 		}
+		
+		menuManager.add( new ColumnSelectorAction( gTableViewer ) );
+		
 	}
 	
 	/**
@@ -236,8 +261,8 @@ Yet			menuManager.add( webManager );
 		
 	private class DownloadAction extends Action {
 		public DownloadAction() {
-			super();
-			setText( G2GuiResources.getString( "ST_DOWNLOAD" ) );
+			super( G2GuiResources.getString( "ST_DOWNLOAD" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "DownArrowGreen" ));
 		}
 		public void run() {
 			downloadSelected();
@@ -246,8 +271,8 @@ Yet			menuManager.add( webManager );
 	
 	private class CopyNameAction extends Action {
 		public CopyNameAction() {
-			super();
-			setText( G2GuiResources.getString( "ST_COPYNAME" ) );
+			super( G2GuiResources.getString( "ST_COPYNAME" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "copy" ));
 		}
 		public void run() {
 			Clipboard clipboard =
@@ -265,31 +290,18 @@ Yet			menuManager.add( webManager );
 		}
 	}
 
-	private class CopyNameAsPlainAction extends Action {
-		public CopyNameAsPlainAction() {
-			super();
-			setText( G2GuiResources.getString( "ST_ASPLAIN" ) );
-		}
-		public void run() {
-			Clipboard clipboard =
-				new Clipboard( ( ( TableViewer ) tableViewer ).getTable().getDisplay() );
-			String aString = "";
-			for ( int i = 0; i < selectedResults.size(); i++ ) {
-				ResultInfo result = ( ResultInfo ) selectedResults.get( i );
-				if ( aString.length() > 0 )
-					aString += ( SWT.getPlatform().equals( "win32" ) ? "\r\n" : "\n" );
-				aString += result.getLink();
-			}
-			clipboard.setContents( new Object[] { aString },
-								new Transfer[] { TextTransfer.getInstance() } );
-			clipboard.dispose();						
-		}
-	}
 
-	private class CopyNameAsHtmlAction extends Action {
-		public CopyNameAsHtmlAction() {
+	private class CopyED2KAction extends Action {
+	    boolean useHTML;
+		public CopyED2KAction(boolean useHTML) {
 			super();
-			setText( G2GuiResources.getString( "ST_ASHTML" ) );
+			if (useHTML) 
+			    setText( G2GuiResources.getString( "ST_ASHTML" ) );
+			else
+			    setText( G2GuiResources.getString( "ST_ASPLAIN" ) );
+			
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "edonkey" ));
+			this.useHTML = useHTML;
 		}
 		public void run() {
 			Clipboard clipboard =
@@ -299,8 +311,13 @@ Yet			menuManager.add( webManager );
 				ResultInfo result = ( ResultInfo ) selectedResults.get( i );
 				if ( aString.length() > 0 )
 					aString += ( SWT.getPlatform().equals( "win32" ) ? "\r\n" : "\n" );
-				aString += "<a href=\"" + result.getLink() + "\">"
+				
+				if (useHTML)
+				    aString += "<a href=\"" + result.getLink() + "\">"
 								 + result.getName() + "</a>";
+				else 
+				    aString += result.getLink();
+				
 			}
 			clipboard.setContents( new Object[] { aString }, 
 							new Transfer[] { TextTransfer.getInstance() } );
@@ -320,8 +337,8 @@ Yet			menuManager.add( webManager );
 	
 	private class RemoveAction extends Action {
 		public RemoveAction() {
-			super();
-			setText( G2GuiResources.getString( "ST_REMOVE" ) );
+			super( G2GuiResources.getString( "ST_REMOVE" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "minus" ));
 		}
 		public void run() {
 			( ( TableViewer ) tableViewer ).getTable().remove(
@@ -331,18 +348,69 @@ Yet			menuManager.add( webManager );
 
 	private class CloseAction extends Action {
 		public CloseAction() {
-			super();
-			setText( G2GuiResources.getString( "ST_CLOSE" ) );
+			super( G2GuiResources.getString( "ST_CLOSE" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "cancel" ));
 		}
 		public void run() {
 			( ( TableViewer ) tableViewer ).getTable().dispose();
 			cTabItem.dispose();
 		}
 	}
+	
+	
+	private class WebServiceAction extends Action {
+    
+		private int type;
+    
+		public WebServiceAction( int type ) {
+			super();
+			this.type = type;
+			switch (type) {
+				case WS_JIGLE:
+					setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_JIGLE_LOOKUP" ) );
+					setImageDescriptor( G2GuiResources.getImageDescriptor( "Jigle" ) );
+					break;
+				case WS_BITZI: 
+					setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_BITZI_LOOKUP" ) );
+					setImageDescriptor( G2GuiResources.getImageDescriptor( "Bitzi" ) );
+					break;
+				case WS_FILEDONKEY:
+					setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_FILEDONKEY_LOOKUP" ) );
+					setImageDescriptor( G2GuiResources.getImageDescriptor( "edonkey" ) );
+					break;
+				case WS_SHAREREACTOR:
+				    setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_SR_FAKECHECK" ) );
+				    setImageDescriptor( G2GuiResources.getImageDescriptor( "ShareReactor" ) );
+				    break;
+    				
+			}
+		}
+    	
+		public void run() {
+			switch (type) {
+				case WS_JIGLE:
+					Program.launch("http://www.jigle.com/search?p=ed2k:" + selectedResult.getMd4());
+					break;
+				case WS_BITZI: 
+					Program.launch("http://bitzi.com/lookup/" + selectedResult.getMd4());
+					break;	
+				case WS_FILEDONKEY:
+					Program.launch("http://www.filedonkey.com/file.html?md4=" + selectedResult.getMd4());	
+				    break;
+				case WS_SHAREREACTOR:
+					Program.launch("http://http://www.sharereactor.com/fakesearch.php?search=" + selectedResult.getLink());	
+					break;  
+			}	
+		}
+	}
+	
 }
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.18  2003/10/22 01:37:45  zet
+add column selector to server/search (might not be finished yet..)
+
 Revision 1.17  2003/10/21 17:00:45  lemmster
 class hierarchy for tableviewer
 

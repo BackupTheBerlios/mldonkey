@@ -22,10 +22,6 @@
  */
 package net.mldonkey.g2gui.view;
 
-import gnu.trove.TIntObjectIterator;
-
-import java.util.Observable;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -38,16 +34,17 @@ import net.mldonkey.g2gui.view.helper.HeaderBarMenuListener;
 import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.ColumnSelector;
 import net.mldonkey.g2gui.view.transfer.DownloadPaneMenuListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableViewer;
+import net.mldonkey.g2gui.view.viewers.GTableViewer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
@@ -60,17 +57,20 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+
+import gnu.trove.TIntObjectIterator;
+
+import java.util.Observable;
+
 
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.77 2003/10/21 21:10:23 vnc Exp $
+ * @version $Id: TransferTab.java,v 1.78 2003/10/22 01:36:26 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -79,311 +79,304 @@ public class TransferTab extends GuiTab {
     private DownloadTableTreeViewer downloadTableTreeViewer = null;
     private ClientTableViewer clientTableViewer = null;
     private Composite downloadComposite;
-    private MenuManager popupMenuDL, popupMenuUL, popupMenuCL = null;
-	private UploadTableViewer uploadTableViewer;
-	private String oldDLabelText = "";
-	private long lastLabelUpdate = 0;
-	boolean advancedMode = PreferenceLoader.loadBoolean( "advancedMode" );
-	
+    private MenuManager popupMenuDL;
+    private MenuManager popupMenuUL;
+    private MenuManager popupMenuCL = null;
+    private UploadTableViewer uploadTableViewer = null;
+    private String oldDLabelText = "";
+    private long lastLabelUpdate = 0;
+    boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
+
     /**
      * @param gui where this tab belongs to
      */
-    public TransferTab( MainTab gui ) {
-        super( gui );
+    public TransferTab(MainTab gui) {
+        super(gui);
         this.mldonkey = gui.getCore();
-        createButton( "TransfersButton", G2GuiResources.getString( "TT_TransfersButton" ),
-                      G2GuiResources.getString( "TT_TransfersButtonToolTip" ) );
-        createContents( this.subContent );
+        createButton("TransfersButton", G2GuiResources.getString("TT_TransfersButton"), G2GuiResources.getString("TT_TransfersButtonToolTip"));
+        createContents(this.subContent);
     }
 
     /* ( non-Javadoc )
      * @see net.mldonkey.g2gui.view.G2guiTab#createContents( org.eclipse.swt.widgets.Composite )
      */
-    protected void createContents( Composite parent ) {
-        final SashForm mainSashForm = new SashForm( parent, (PreferenceLoader.loadBoolean("transferSashVertical") ? SWT.VERTICAL : SWT.HORIZONTAL) );
-		
-		mainSashForm.addDisposeListener( new DisposeListener() { 
-			public void widgetDisposed(DisposeEvent e) {
-				PreferenceStore p = PreferenceLoader.getPreferenceStore();
-				p.setValue("transferSashVertical", ( mainSashForm.getOrientation() == SWT.VERTICAL ? true : false) );
-			}
-		});
-        
-        
+    protected void createContents(Composite parent) {
+        final SashForm mainSashForm = new SashForm(parent, (PreferenceLoader.loadBoolean("transferSashVertical") ? SWT.VERTICAL : SWT.HORIZONTAL));
+
+        mainSashForm.addDisposeListener(new DisposeListener() {
+                public void widgetDisposed(DisposeEvent e) {
+                    PreferenceStore p = PreferenceLoader.getPreferenceStore();
+                    p.setValue("transferSashVertical", ((mainSashForm.getOrientation() == SWT.VERTICAL) ? true : false));
+                }
+            });
+
         Control downloadParent = mainSashForm;
-        if ( advancedMode ) {
-            downloadParent = new SashForm( mainSashForm, (PreferenceLoader.loadBoolean("clientSashHorizontal") ? SWT.HORIZONTAL : SWT.VERTICAL ) );
+
+        if (advancedMode) {
+            downloadParent = new SashForm(mainSashForm, (PreferenceLoader.loadBoolean("clientSashHorizontal") ? SWT.HORIZONTAL : SWT.VERTICAL));
         }
-        ViewForm downloadViewForm =
-            new ViewForm( (SashForm) downloadParent,
-                          SWT.BORDER
-                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-                          
-        if ( advancedMode ) {
-            createClientViewForm( (SashForm) downloadParent );
+
+        ViewForm downloadViewForm = new ViewForm((SashForm) downloadParent,
+                SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE));
+
+        if (advancedMode) {
+            createClientViewForm((SashForm) downloadParent);
         } else {
-        	downloadParent = downloadViewForm;
+            downloadParent = downloadViewForm;
         }
-        createDownloadHeader( downloadViewForm, mainSashForm, downloadParent );
-        createDownloadToolbar( downloadViewForm, downloadParent );
-        downloadComposite = new Composite( downloadViewForm, SWT.NONE );
-        downloadComposite.setLayout( new FillLayout() );
-        downloadViewForm.setContent( downloadComposite );
-        createUploads( mainSashForm );
-        downloadTableTreeViewer =
-            new DownloadTableTreeViewer( downloadComposite,  clientTableViewer, mldonkey, this );
-        popupMenuDL.addMenuListener( new DownloadPaneMenuListener( downloadTableTreeViewer.getTableTreeViewer(),
-                                                                 mldonkey, downloadTableTreeViewer ) );
-        mainSashForm.setWeights( new int[] { 1, 1 } );
-        mainSashForm.setMaximizedControl( downloadParent );
-        mldonkey.getFileInfoIntMap().addObserver( this );
+
+        createDownloadHeader(downloadViewForm, mainSashForm, downloadParent);
+        createDownloadToolbar(downloadViewForm, downloadParent);
+        downloadComposite = new Composite(downloadViewForm, SWT.NONE);
+        downloadComposite.setLayout(new FillLayout());
+        downloadViewForm.setContent(downloadComposite);
+        createUploads(mainSashForm);
+        downloadTableTreeViewer = new DownloadTableTreeViewer(downloadComposite, clientTableViewer, mldonkey, this);
+        popupMenuDL.addMenuListener(new DownloadPaneMenuListener(downloadTableTreeViewer.getTableTreeViewer(), mldonkey, downloadTableTreeViewer));
+        mainSashForm.setWeights(new int[] { 1, 1 });
+        mainSashForm.setMaximizedControl(downloadParent);
+        mldonkey.getFileInfoIntMap().addObserver(this);
     }
 
     /**
      * Create the download pane header with popup menu
-     * 
-     * @param parentViewForm 
+     *
+     * @param parentViewForm
      */
-    public void createDownloadHeader( ViewForm parentViewForm, final SashForm mainSashForm, final Control downloadParent ) {
-        popupMenuDL = new MenuManager( "" );
-        popupMenuDL.setRemoveAllWhenShown( true );
-        downloadCLabel = CCLabel.createCL( parentViewForm, "TT_Downloads", "TransfersButtonSmallTitlebar" );
-        downloadCLabel.addMouseListener( new MaximizeSashMouseAdapter( downloadCLabel, popupMenuDL, mainSashForm, downloadParent  ) );
-        parentViewForm.setTopLeft( downloadCLabel );
+    public void createDownloadHeader(ViewForm parentViewForm, final SashForm mainSashForm, final Control downloadParent) {
+        popupMenuDL = new MenuManager("");
+        popupMenuDL.setRemoveAllWhenShown(true);
+        downloadCLabel = CCLabel.createCL(parentViewForm, "TT_Downloads", "TransfersButtonSmallTitlebar");
+        downloadCLabel.addMouseListener(new MaximizeSashMouseAdapter(downloadCLabel, popupMenuDL, mainSashForm, downloadParent));
+        parentViewForm.setTopLeft(downloadCLabel);
     }
-    
-    public void createDownloadToolbar ( ViewForm parentViewForm, final Control downloadParent ) {
-		ToolBar downloadsToolBar = new ToolBar( parentViewForm, SWT.RIGHT | SWT.FLAT );
-		ToolItem toolItem;
-		
-		toolItem = new ToolItem( downloadsToolBar, SWT.NONE );
-		toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_COMMIT_ALL" ) );
-		toolItem.setImage( G2GuiResources.getImage( "commit" ) );
-		toolItem.addSelectionListener( new SelectionAdapter() {
-				 public void widgetSelected( SelectionEvent s ) {
-					 mldonkey.getFileInfoIntMap().commitAll();
-				 }
-			 } );	
-			 
-		if ( advancedMode ) {
-	
-			toolItem = new ToolItem( downloadsToolBar, SWT.NONE );
-			toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_SHOW_CLIENTS" ) );
-			toolItem.setImage( G2GuiResources.getImage( "split-table" ) );
-			toolItem.addSelectionListener( new SelectionAdapter() {
-					 public void widgetSelected( SelectionEvent s ) {
-					 		downloadTableTreeViewer.toggleClientsTable();
-					 }
-				 } );	
-		}	 
-		
-		toolItem = new ToolItem( downloadsToolBar, SWT.NONE );
-		toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_COLLAPSE_ALL" ) );
-		toolItem.setImage( G2GuiResources.getImage( "collapseAll" ) );
-		toolItem.addSelectionListener( new SelectionAdapter() {
-				 public void widgetSelected( SelectionEvent s ) {
-					 downloadTableTreeViewer.getTableTreeViewer().collapseAll();
-				 }
-			 } );	
-			 
-		toolItem = new ToolItem( downloadsToolBar, SWT.NONE );
-		toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_EXPAND_ALL" ) );
-		toolItem.setImage( G2GuiResources.getImage( "expandAll" ) );
-		toolItem.addSelectionListener( new SelectionAdapter() {
-				 public void widgetSelected( SelectionEvent s ) {
-					 downloadTableTreeViewer.getTableTreeViewer().expandAll();
-				 }
-			 } );			 		 
-			 
-		parentViewForm.setTopRight( downloadsToolBar );	 
+
+    public void createDownloadToolbar(ViewForm parentViewForm, final Control downloadParent) {
+        ToolBar downloadsToolBar = new ToolBar(parentViewForm, SWT.RIGHT | SWT.FLAT);
+        ToolItem toolItem;
+
+        toolItem = new ToolItem(downloadsToolBar, SWT.NONE);
+        toolItem.setToolTipText(G2GuiResources.getString("TT_D_TT_COMMIT_ALL"));
+        toolItem.setImage(G2GuiResources.getImage("commit"));
+        toolItem.addSelectionListener(new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent s) {
+                    mldonkey.getFileInfoIntMap().commitAll();
+                }
+            });
+
+        if (advancedMode) {
+            toolItem = new ToolItem(downloadsToolBar, SWT.NONE);
+            toolItem.setToolTipText(G2GuiResources.getString("TT_D_TT_SHOW_CLIENTS"));
+            toolItem.setImage(G2GuiResources.getImage("split-table"));
+            toolItem.addSelectionListener(new SelectionAdapter() {
+                    public void widgetSelected(SelectionEvent s) {
+                        downloadTableTreeViewer.toggleClientsTable();
+                    }
+                });
+        }
+
+        toolItem = new ToolItem(downloadsToolBar, SWT.NONE);
+        toolItem.setToolTipText(G2GuiResources.getString("TT_D_TT_COLLAPSE_ALL"));
+        toolItem.setImage(G2GuiResources.getImage("collapseAll"));
+        toolItem.addSelectionListener(new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent s) {
+                    downloadTableTreeViewer.getTableTreeViewer().collapseAll();
+                }
+            });
+
+        toolItem = new ToolItem(downloadsToolBar, SWT.NONE);
+        toolItem.setToolTipText(G2GuiResources.getString("TT_D_TT_EXPAND_ALL"));
+        toolItem.setImage(G2GuiResources.getImage("expandAll"));
+        toolItem.addSelectionListener(new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent s) {
+                    downloadTableTreeViewer.getTableTreeViewer().expandAll();
+                }
+            });
+
+        parentViewForm.setTopRight(downloadsToolBar);
     }
-    
 
     /**
      * Create the uploads window
      *
-     * @param mainSashForm 
+     * @param mainSashForm
      */
-    public void createUploads( final SashForm mainSashForm ) {
-        ViewForm uploadsViewForm =
-            new ViewForm( mainSashForm,
-                          SWT.BORDER
-                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-        uploadsViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-       
-       	createUploadHeader( uploadsViewForm, mainSashForm, uploadsViewForm);
-        Composite uploadersComposite = new Composite( uploadsViewForm, SWT.NONE );
-        uploadersComposite.setLayout( new FillLayout() );
-        uploadTableViewer = new UploadTableViewer(uploadersComposite,mldonkey,this);
-        uploadsViewForm.setContent( uploadersComposite );
+    public void createUploads(final SashForm mainSashForm) {
+        ViewForm uploadsViewForm = new ViewForm(mainSashForm, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE));
+        uploadsViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        Composite uploadersComposite = new Composite(uploadsViewForm, SWT.NONE);
+        uploadersComposite.setLayout(new FillLayout());
+        uploadTableViewer = new UploadTableViewer(uploadersComposite, mldonkey, this);
+        createUploadHeader(uploadsViewForm, mainSashForm, uploadsViewForm);
+        uploadsViewForm.setContent(uploadersComposite);
     }
-    
-	public void createUploadHeader( ViewForm parentViewForm, final SashForm mainSashForm, final Control uploadParent ) {
-		popupMenuUL = new MenuManager( "" );
-		popupMenuUL.setRemoveAllWhenShown( true );
-		popupMenuUL.addMenuListener( new UploadsMenuListener(mainSashForm, parentViewForm) );
-		CLabel uploadsCLabel = CCLabel.createCL( parentViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar" );
-		uploadsCLabel.addMouseListener( new MaximizeSashMouseAdapter( uploadsCLabel, popupMenuUL, mainSashForm, uploadParent  ) );
-		parentViewForm.setTopLeft( uploadsCLabel );
-	}
+
+    public void createUploadHeader(ViewForm parentViewForm, final SashForm mainSashForm, final Control uploadParent) {
+        popupMenuUL = new MenuManager("");
+        popupMenuUL.setRemoveAllWhenShown(true);
+        popupMenuUL.addMenuListener(new UploadsMenuListener(mainSashForm, parentViewForm, uploadTableViewer));
+
+        CLabel uploadsCLabel = CCLabel.createCL(parentViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar");
+        uploadsCLabel.addMouseListener(new MaximizeSashMouseAdapter(uploadsCLabel, popupMenuUL, mainSashForm, uploadParent));
+        parentViewForm.setTopLeft(uploadsCLabel);
+    }
 
     /**
      * Create the hidden client view form
      *
-     * @param parentSash 
+     * @param parentSash
      */
-    public Composite createClientViewForm( final SashForm parentSash ) {
-		parentSash.addDisposeListener( new DisposeListener() { 
-			public void widgetDisposed(DisposeEvent e) {
-				PreferenceStore p = PreferenceLoader.getPreferenceStore();
-				p.setValue("clientSashHorizontal", ( parentSash.getOrientation() == SWT.HORIZONTAL ? true : false) );
-			}
-		});
-    	
-        ViewForm clientViewForm =
-            new ViewForm( parentSash,
-                          SWT.BORDER
-                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-        CLabel clientCLabel = 
-            CCLabel.createCL( clientViewForm, "TT_Clients", "TransfersButtonSmallTitlebar" );
-		
-		popupMenuCL = new MenuManager( "" );
-		popupMenuCL.setRemoveAllWhenShown( true );
-		popupMenuCL.addMenuListener( new ClientsMenuListener( parentSash, clientViewForm ) );
-		clientCLabel.addMouseListener( new MaximizeSashMouseAdapter( clientCLabel, popupMenuCL, parentSash, clientViewForm  ) );
-        Composite downloadClients = new Composite( clientViewForm, SWT.NONE );
-        downloadClients.setLayout( CGridLayout.createGL( 1, 0, 0, 0, 0, false ) );
-        clientViewForm.setContent( downloadClients );
-        clientViewForm.setTopLeft( clientCLabel );
-        downloadClients.addControlListener( new ControlAdapter() {
-                public void controlResized( ControlEvent e ) {
-                    Composite c = ( Composite ) e.widget;
+    public Composite createClientViewForm(final SashForm parentSash) {
+        parentSash.addDisposeListener(new DisposeListener() {
+                public void widgetDisposed(DisposeEvent e) {
+                    PreferenceStore p = PreferenceLoader.getPreferenceStore();
+                    p.setValue("clientSashHorizontal", ((parentSash.getOrientation() == SWT.HORIZONTAL) ? true : false));
+                }
+            });
+
+        ViewForm clientViewForm = new ViewForm(parentSash, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE));
+
+        CLabel clientCLabel = CCLabel.createCL(clientViewForm, "TT_Clients", "TransfersButtonSmallTitlebar");
+
+        Composite downloadClients = new Composite(clientViewForm, SWT.NONE);
+        downloadClients.setLayout(CGridLayout.createGL(1, 0, 0, 0, 0, false));
+        clientViewForm.setContent(downloadClients);
+        clientViewForm.setTopLeft(clientCLabel);
+        downloadClients.addControlListener(new ControlAdapter() {
+                public void controlResized(ControlEvent e) {
+                    Composite c = (Composite) e.widget;
                     int width = c.getBounds().width;
                     int height = c.getBounds().height;
-                    if ( ( width > 0 ) &&  (height > 0 ) && ( downloadTableTreeViewer != null ) ) {
-                        downloadTableTreeViewer.updateClientsTable( true );
+
+                    if ((width > 0) && (height > 0) && (downloadTableTreeViewer != null)) {
+                        downloadTableTreeViewer.updateClientsTable(true);
                     } else {
-                        downloadTableTreeViewer.updateClientsTable( false );
+                        downloadTableTreeViewer.updateClientsTable(false);
                     }
                 }
-            } );
-        createClientTableViewer( downloadClients, parentSash );
-        parentSash.setWeights( new int[] { 100, 0 } );
+            });
+        createClientTableViewer(downloadClients, parentSash);
+        parentSash.setWeights(new int[] { 100, 0 });
+        popupMenuCL = new MenuManager("");
+
+        popupMenuCL.setRemoveAllWhenShown(true);
+        popupMenuCL.addMenuListener(new HeaderBarMenuListener(parentSash, clientViewForm, clientTableViewer));
+        clientCLabel.addMouseListener(new MaximizeSashMouseAdapter(clientCLabel, popupMenuCL, parentSash, clientViewForm));
+
         return downloadClients;
     }
 
     /**
      * Create the hidden client table viewer
      *
-     * @param parent 
-     * @param parentSash 
+     * @param parent
+     * @param parentSash
      */
-    public void createClientTableViewer( Composite parent, final SashForm parentSash ) {
-     
-     	clientTableViewer = new ClientTableViewer( parent, mldonkey );
-        
-        Composite bottomBar = new Composite( parent, SWT.NONE );
-        GridLayout gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 0, false );
-        bottomBar.setLayout( gridLayout );
-        bottomBar.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        Label separator1 = new Label( bottomBar, SWT.SEPARATOR | SWT.HORIZONTAL );
-        separator1.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        
+    public void createClientTableViewer(Composite parent, final SashForm parentSash) {
+        clientTableViewer = new ClientTableViewer(parent, mldonkey);
     }
 
     /**
      * Update the label, in the gui thread
-     * 
-     * @param text 
+     *
+     * @param text
      */
-    public void runLabelUpdate( final String text ) {
-        if ( !downloadCLabel.isDisposed() )
-            downloadCLabel.getDisplay().asyncExec( new Runnable() {
+    public void runLabelUpdate(final String text) {
+        if (!downloadCLabel.isDisposed()) {
+            downloadCLabel.getDisplay().asyncExec(new Runnable() {
                     public void run() {
-                        if ( !downloadCLabel.isDisposed() )
-                            downloadCLabel.setText(
-                            	G2GuiResources.getString( "TT_Downloads" ) + ": " + text );
+                        if (!downloadCLabel.isDisposed()) {
+                            downloadCLabel.setText(G2GuiResources.getString("TT_Downloads") + ": " + text);
+                        }
                     }
-                } );
-
+                });
+        }
     }
 
     /* ( non-Javadoc )
      * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
      */
-    public void update( Observable o, Object arg ) {
-    	
-    	if (System.currentTimeMillis() < lastLabelUpdate + 1111) return;
-    	
+    public void update(Observable o, Object arg) {
+        if (System.currentTimeMillis() < (lastLabelUpdate + 1111)) {
+            return;
+        }
+
         int totalFiles = 0;
         int totalQueued = 0;
         int totalDownloaded = 0;
-		int totalActive = 0;
-		int totalPaused = 0;
+        int totalActive = 0;
+        int totalPaused = 0;
         long activeTotal = 0;
         long activeDownloaded = 0;
         long queuedTotal = 0;
         long queuedDownloaded = 0;
-		long downloadedTotal = 0;
-		long pausedTotal = 0;
-		long pausedDownloaded = 0;
-        if ( o instanceof FileInfoIntMap ) {
-            synchronized ( o ) {
-                FileInfoIntMap files = ( FileInfoIntMap ) o;
+        long downloadedTotal = 0;
+        long pausedTotal = 0;
+        long pausedDownloaded = 0;
+
+        if (o instanceof FileInfoIntMap) {
+            synchronized (o) {
+                FileInfoIntMap files = (FileInfoIntMap) o;
                 TIntObjectIterator it = files.iterator();
-                while ( it.hasNext() ) {
+
+                while (it.hasNext()) {
                     it.advance();
-                    FileInfo fileInfo = ( FileInfo ) it.value();
-                    
-                    if ( fileInfo.isInteresting() ) {
+
+                    FileInfo fileInfo = (FileInfo) it.value();
+
+                    if (fileInfo.isInteresting()) {
                         totalFiles++;
-                    
-                        if ( fileInfo.getState().getState() == EnumFileState.QUEUED ) {
-							queuedTotal += fileInfo.getSize();
-							queuedDownloaded += fileInfo.getDownloaded();
+
+                        if (fileInfo.getState().getState() == EnumFileState.QUEUED) {
+                            queuedTotal += fileInfo.getSize();
+                            queuedDownloaded += fileInfo.getDownloaded();
                             totalQueued++;
-                        }    
-                        else if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADED ) {
+                        } else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED) {
                             totalDownloaded++;
-							downloadedTotal += fileInfo.getSize();						
-						}	
-						else if ( fileInfo.getState().getState() == EnumFileState.PAUSED ) {
-							totalPaused++;
-							pausedTotal += fileInfo.getSize();
-							pausedDownloaded += fileInfo.getDownloaded();
-						}	
-                        else {
-							totalActive++;
+                            downloadedTotal += fileInfo.getSize();
+                        } else if (fileInfo.getState().getState() == EnumFileState.PAUSED) {
+                            totalPaused++;
+                            pausedTotal += fileInfo.getSize();
+                            pausedDownloaded += fileInfo.getDownloaded();
+                        } else {
+                            totalActive++;
                             activeTotal += fileInfo.getSize();
-							activeDownloaded += fileInfo.getDownloaded();
-						}
+                            activeDownloaded += fileInfo.getDownloaded();
+                        }
                     }
                 }
             }
         }
-        
-        String newText = "";
-		
-        if (totalActive > 0) 
 
-            newText += totalActive + " / " + totalFiles + " " + G2GuiResources.getString( "TT_Active" ).toLowerCase() + " (" + FileInfo.calcStringSize( activeDownloaded ) + " / " + FileInfo.calcStringSize( activeTotal ) + ")";
-		
-		if ( totalPaused > 0 ) 
-			newText += ", " + G2GuiResources.getString( "TT_Status0" ) + ": " + totalPaused + " (" + FileInfo.calcStringSize( pausedDownloaded ) + " / " + FileInfo.calcStringSize( pausedTotal ) + ")";
-        
-        if ( totalQueued > 0 ) 
-			newText += ", " + G2GuiResources.getString( "TT_Queued" ) + ": " + totalQueued + " (" + FileInfo.calcStringSize( queuedDownloaded ) + " / " + FileInfo.calcStringSize( queuedTotal ) + ")";
-		
-		if ( totalDownloaded > 0 )
-			newText += ", " + G2GuiResources.getString( "TT_Downloaded" ) + ": " + totalDownloaded +  " (" + FileInfo.calcStringSize( downloadedTotal ) + ")";
-		
-		if ( !oldDLabelText.equals( newText ) ) {
-			runLabelUpdate( newText );
-			oldDLabelText = newText;
-		}
+        String newText = "" + totalFiles;
 
-		lastLabelUpdate = System.currentTimeMillis();
-	
+        if (totalActive > 0) {
+            newText += (" | " + G2GuiResources.getString("TT_Active").toLowerCase() + "(" + totalActive + "): " +
+            FileInfo.calcStringSize(activeDownloaded) + "/" + FileInfo.calcStringSize(activeTotal));
+        }
+
+        if (totalPaused > 0) {
+            newText += (" | " + G2GuiResources.getString("TT_Status0").toLowerCase() + "(" + totalPaused + "): " +
+            FileInfo.calcStringSize(pausedDownloaded) + "/" + FileInfo.calcStringSize(pausedTotal));
+        }
+
+        if (totalQueued > 0) {
+            newText += (" | " + G2GuiResources.getString("TT_Queued").toLowerCase() + "(" + totalQueued + "): " +
+            FileInfo.calcStringSize(queuedDownloaded) + "/" + FileInfo.calcStringSize(queuedTotal));
+        }
+
+        if (totalDownloaded > 0) {
+            newText += (" | " + G2GuiResources.getString("TT_Downloaded").toLowerCase() + "(" + totalDownloaded + "): " +
+            FileInfo.calcStringSize(downloadedTotal) + "");
+        }
+
+        if (!oldDLabelText.equals(newText)) {
+            runLabelUpdate(newText);
+            oldDLabelText = newText;
+        }
+
+        lastLabelUpdate = System.currentTimeMillis();
     }
 
     /* ( non-Javadoc )
@@ -392,10 +385,11 @@ public class TransferTab extends GuiTab {
     public void updateDisplay() {
         downloadTableTreeViewer.updateDisplay();
         uploadTableViewer.updateDisplay();
-        if ( clientTableViewer != null ) {
-        	clientTableViewer.updateDisplay();	
+
+        if (clientTableViewer != null) {
+            clientTableViewer.updateDisplay();
         }
-          
+
         super.updateDisplay();
     }
 
@@ -406,77 +400,46 @@ public class TransferTab extends GuiTab {
         super.dispose();
         popupMenuDL.dispose();
         popupMenuUL.dispose();
-        if (popupMenuCL != null) popupMenuCL.dispose();
-    }
-    
-    /**
-     * ClientsMenuListener
-     */
-    public class ClientsMenuListener extends HeaderBarMenuListener {
-    
-        public ClientsMenuListener(SashForm sashForm, Control control) {
-			super(sashForm, control);
-		}
 
-		public void menuAboutToShow( IMenuManager menuManager ) {
-			menuManager.add( new ColumnSelectorAction( ) );
-			super.menuAboutToShow(menuManager);
-		}
-	}
-    
-	/**
-     * UploadsMenuListener
-     */
+        if (popupMenuCL != null) {
+            popupMenuCL.dispose();
+        }
+    }
+
+    /**
+    * UploadsMenuListener
+    */
     public class UploadsMenuListener extends HeaderBarMenuListener {
-    	
-    	public UploadsMenuListener(SashForm sashForm, Control control) {
-    		super(sashForm, control);
-    	}
+        public UploadsMenuListener(SashForm sashForm, Control control, GTableViewer gTableViewer) {
+            super(sashForm, control, gTableViewer);
+        }
 
-		public void menuAboutToShow( IMenuManager menuManager ) {
-			menuManager.add( new RefreshUploadsAction( ) );
-			super.menuAboutToShow(menuManager);
-		}
-	}
-	/**
-     * RefreshUploadsAction
-     */
-    public class RefreshUploadsAction extends Action {
-	   public RefreshUploadsAction( ) {
-		   super( "Refresh" );
-	   }
-
-	   public void run(  ) {
-			Message refresh = new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
-			refresh.sendMessage( mldonkey );
-	   }
+        public void menuAboutToShow(IMenuManager menuManager) {
+            menuManager.add(new RefreshUploadsAction());
+            super.menuAboutToShow(menuManager);
+        }
     }
 
     /**
-     * ColumnSelectorAction
-     */
-    private class ColumnSelectorAction extends Action {
-        public ColumnSelectorAction() {
-            super( G2GuiResources.getString("TT_ColumnSelector") );
-            setImageDescriptor( G2GuiResources.getImageDescriptor("table") );
+    * RefreshUploadsAction
+    */
+    public class RefreshUploadsAction extends Action {
+        public RefreshUploadsAction() {
+            super("Refresh");
         }
 
         public void run() {
-            ColumnSelector c = new ColumnSelector(clientTableViewer.getTableViewer().getTable().getShell(), ClientTableViewer.COLUMN_LABELS,
-                    ClientTableViewer.ALL_COLUMNS, "clientTableColumns");
-            if (c.open() == ColumnSelector.OK) {
-                c.savePrefs();
-                clientTableViewer.resetColumns();
-            }
+            Message refresh = new EncodeMessage(Message.S_REFRESH_UPLOAD_STATS);
+            refresh.sendMessage(mldonkey);
         }
-    } 
-    
+    }
 }
+
 
 /*
 $Log: TransferTab.java,v $
-Revision 1.77  2003/10/21 21:10:23  vnc
-improved transfertab headerbar info-layout
+Revision 1.78  2003/10/22 01:36:26  zet
+add column selector to server/search (might not be finished yet..)
 
 Revision 1.76  2003/10/20 00:13:03  zet
 update header bar
@@ -608,7 +571,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: vnc $
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression
