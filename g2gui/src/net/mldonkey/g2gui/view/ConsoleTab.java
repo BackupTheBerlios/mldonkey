@@ -37,6 +37,8 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
@@ -44,7 +46,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.40 2003/08/25 22:11:53 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.41 2003/08/29 15:59:16 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -72,11 +74,20 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 	protected void createContents( Composite parent ) {	
 		this.parent = parent;		
 		
-		console = new Console ( parent, SWT.BORDER );
-		console.addObserver( this );
+		ViewForm consoleViewForm = new ViewForm( parent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		consoleViewForm.setLayout(new FillLayout());
 		
-		parent.setLayout( null );
+		Composite consoleComposite = new Composite(consoleViewForm, SWT.NONE);
+		consoleComposite.setLayout( new FillLayout() );
+		
+		console = new Console ( consoleComposite, SWT.NONE );
+		console.addObserver( this );
+
+//		parent.setLayout( null );
 		loadPreferences();
+	
+		consoleViewForm.setContent(consoleComposite);
+
 	}
 	
 	/* (non-Javadoc)
@@ -170,6 +181,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.41  2003/08/29 15:59:16  zet
+optional shadow
+
 Revision 1.40  2003/08/25 22:11:53  zet
 update style bits
 
