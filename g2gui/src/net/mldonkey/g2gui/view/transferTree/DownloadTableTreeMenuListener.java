@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Table;
  * 
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.18 2003/08/23 20:33:01 zet Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.19 2003/08/23 22:35:55 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -73,7 +73,7 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 	private TableTreeViewer tableTreeViewer;
 	private boolean createClientTable = false;
 	
-	// move these external some day
+	
 	private static String[] ExtensionNames = {
 		G2GuiResources.getString("TT_DOWNLOAD_FILTER_AUDIO"), 
 		G2GuiResources.getString("TT_DOWNLOAD_FILTER_VIDEO"), 
@@ -81,7 +81,7 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 		G2GuiResources.getString("TT_DOWNLOAD_FILTER_CDIMAGE"), 
 		G2GuiResources.getString("TT_DOWNLOAD_FILTER_PICTURE")
 	};
-	
+//	move these external some day
 	private static String[] AudioExtensions = {
 		"aac", "ape", "au", "flac", "mpc", "mp2", "mp3", "mp4", 
 		"wav", "ogg", "wma"	
@@ -159,31 +159,14 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 		} else {
 			clientTableViewer.setInput(null);
 		}
-		
 		createClientTable = b;
 	}
-	
 	
 	public void menuAboutToShow(IMenuManager menuManager) {
 		fillContextMenu(menuManager);
 	}
 
 	// Build the menu
-	
-	public boolean selectedFileListContains(EnumFileState e) {
-		for (int i = 0; i < selectedFiles.size(); i++) 
-			if ( ((FileInfo)selectedFiles.get(i)).getState().getState() == e)
-				return true;
-		return false;
-	}
-	
-	public boolean selectedFileListContainsOtherThan(EnumFileState e) {
-		for (int i = 0; i < selectedFiles.size(); i++) 
-			if ( ((FileInfo)selectedFiles.get(i)).getState().getState() != e)
-				return true;
-		return false;
-	}
-	
 	
 	public void fillContextMenu(IMenuManager menuManager) {
 
@@ -211,9 +194,9 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 		{
 			MenuManager prioritySubMenu =
 				new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY"));
-			prioritySubMenu.add(new PriorityHighAction());
-			prioritySubMenu.add(new PriorityNormalAction());
-			prioritySubMenu.add(new PriorityLowAction());
+			prioritySubMenu.add(new PriorityAction(EnumPriority.HIGH));
+			prioritySubMenu.add(new PriorityAction(EnumPriority.NORMAL));
+			prioritySubMenu.add(new PriorityAction(EnumPriority.LOW));
 			menuManager.add(prioritySubMenu);
 		}
 		
@@ -236,7 +219,6 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 		menuManager.add(new ExpandCollapseAction(true));
 		menuManager.add(new ExpandCollapseAction(false));
 		
-		
 		// columns submenu
 		
 		menuManager.add(new Separator());
@@ -249,7 +231,6 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 			columnsSubMenu.add(tCA);
 		}
 		menuManager.add(columnsSubMenu);
-		
 			
 		// filter submenu			
 		MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString("TT_DOWNLOAD_MENU_FILTER"));
@@ -292,6 +273,20 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 	}
 		
 	// Helpers
+	
+	public boolean selectedFileListContains(EnumFileState e) {
+		for (int i = 0; i < selectedFiles.size(); i++) 
+			if ( ((FileInfo)selectedFiles.get(i)).getState().getState() == e)
+				return true;
+		return false;
+	}
+
+	public boolean selectedFileListContainsOtherThan(EnumFileState e) {
+		for (int i = 0; i < selectedFiles.size(); i++) 
+			if ( ((FileInfo)selectedFiles.get(i)).getState().getState() != e)
+				return true;
+		return false;
+	}
 			
 	public boolean isFiltered(EnumFileState fileState) {
 		ViewerFilter[] viewerFilters = tableViewer.getFilters();
@@ -302,7 +297,6 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 		}
 		return false;
 	}
-	
 	
 	public boolean isFiltered( String[] extensions ) {
 				ViewerFilter[] viewerFilters = tableViewer.getFilters();
@@ -356,7 +350,6 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 		}
 	}
 	
-	
 	class ClientDetailAction extends Action {
 		public ClientDetailAction() {
 			super();
@@ -380,7 +373,6 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 				}
 			}
 	}
-	
 		
 	class CommitAction extends Action {
 		public CommitAction() {
@@ -436,52 +428,26 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 		}
 	}
 	
-	class PriorityHighAction extends Action {
-		public PriorityHighAction() {
-			super(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_HIGH"), Action.AS_CHECK_BOX);
+	class PriorityAction extends Action {
+		
+		private EnumPriority enumPriority;
+		
+		public PriorityAction(EnumPriority e) {
+			super("", Action.AS_CHECK_BOX);
+			enumPriority = e;
+			if (e == EnumPriority.HIGH) setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_HIGH"));
+			else if (e == EnumPriority.NORMAL) setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_NORMAL"));
+			else if (e == EnumPriority.LOW) setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_LOW"));
 		}
 		public void run() {
 			for (int i = 0; i < selectedFiles.size(); i++) {	
 				FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
 				if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
-					fileInfo.setPriority(EnumPriority.HIGH);
+					fileInfo.setPriority(enumPriority);
 			}
 		}
 		public boolean isChecked() {
-			return (selectedFile.getPriority() == EnumPriority.HIGH);
-		}
-	}
-
-	class PriorityNormalAction extends Action {
-
-		public PriorityNormalAction() {
-			super(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_NORMAL"), Action.AS_CHECK_BOX);
-					}
-		public void run() {
-			for (int i = 0; i < selectedFiles.size(); i++) {	
-				FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
-				if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
-					fileInfo.setPriority(EnumPriority.NORMAL);
-			}
-		}
-		public boolean isChecked() {
-			return (selectedFile.getPriority() == EnumPriority.NORMAL);
-		}
-	}
-
-	class PriorityLowAction extends Action {
-		public PriorityLowAction() {
-			super(G2GuiResources.getString("TT_DOWNLOAD_MENU_PRIORITY_LOW"), Action.AS_CHECK_BOX);
-		}
-		public void run() {
-			for (int i = 0; i < selectedFiles.size(); i++) {	
-				FileInfo fileInfo = (FileInfo) selectedFiles.get(i);
-				if (fileInfo.getState().getState() != EnumFileState.DOWNLOADED)
-					fileInfo.setPriority(EnumPriority.LOW);
-			}
-		}
-		public boolean isChecked() {
-					return (selectedFile.getPriority() == EnumPriority.LOW);
+			return (selectedFile.getPriority() == enumPriority);
 		}
 	}
 	
@@ -496,7 +462,6 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 			this.expand = expand;
 		}
 		public void run() {
-		//	tableTreeContentProvider.closeAllEditors();
 			if (expand) ( ( TableTreeViewer ) tableViewer ).expandAll();
 			else ( ( TableTreeViewer ) tableViewer ).collapseAll();
 			tableTreeContentProvider.updateAllEditors();
@@ -726,6 +691,9 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.19  2003/08/23 22:35:55  zet
+combine priority actions
+
 Revision 1.18  2003/08/23 20:33:01  zet
 multi select actions
 
