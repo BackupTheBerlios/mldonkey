@@ -23,8 +23,12 @@
 package net.mldonkey.g2gui.view;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
+
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.view.pref.Preferences;
@@ -33,34 +37,53 @@ import net.mldonkey.g2gui.view.pref.Preferences;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.4 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: G2Gui.java,v 1.5 2003/08/03 19:09:51 lemmstercvs01 Exp $ 
  *
  */
 public class G2Gui {
-	
 	private static Core mldonkey;
+	private static MessageBox box;
+	private static Shell shell;
+	private static PreferenceStore preferenceStore;
+	private static Preferences myPrefs;
+	private static String hostname, username, password;
+	private static int port;
 	
 	/**
 	 * Starts a new Core and launch the Gui
 	 * @param args Nothing to put inside
 	 */
 	public static void main( String[] args ) {
-		Shell shell = new Shell( new Display() );
-		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
-		Preferences myprefs = new Preferences( preferenceStore );
+		shell = new Shell( new Display() );
+		preferenceStore = new PreferenceStore( "g2gui.pref" );
+		myPrefs = new Preferences( preferenceStore );
 		try {
-			myprefs.initialize( preferenceStore );
+			myPrefs.initialize( preferenceStore );
 		}
 		catch ( IOException e ) { }		
 		if ( !( preferenceStore.getBoolean( "initialized" ) ) ) {					
-			myprefs.open( shell, null );
+			myPrefs.open( shell, null );
 		}
-		int port = preferenceStore.getInt( "port" );
-		String hostname = preferenceStore.getString( "hostname" );
-		String username = preferenceStore.getString( "username" );
-		String password = preferenceStore.getString( "password" );
+		port = preferenceStore.getInt( "port" );
+		hostname = preferenceStore.getString( "hostname" );
+		username = preferenceStore.getString( "username" );
+		password = preferenceStore.getString( "password" );
 
-		mldonkey  = new Core( hostname, port, username, password );
+		try {
+			mldonkey  = new Core( hostname, port, username, password );
+		}
+		catch ( UnknownHostException e1 ) {
+			box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
+			box.setText( "Invalid Host Address" );
+			box.setMessage( "Illegal Host Address" );
+			box.open();
+		}
+		catch ( IOException e1 ) {
+			box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
+			box.setText( "IOException" );
+			box.setMessage( "Core is not running on this Host/Port" );
+			box.open();
+		}
 			
 		MainTab g2gui = new MainTab( mldonkey, shell );
 		mldonkey.disconnect();
@@ -76,6 +99,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.5  2003/08/03 19:09:51  lemmstercvs01
+better error handling
+
 Revision 1.4  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

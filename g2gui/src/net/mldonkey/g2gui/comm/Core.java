@@ -27,6 +27,8 @@ import gnu.trove.TIntObjectHashMap;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Observable;
 
 import org.eclipse.swt.events.DisposeEvent;
@@ -41,7 +43,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.75 2003/08/02 10:07:57 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.76 2003/08/03 19:09:39 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -97,8 +99,8 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 	/**
 	 * 
 	 */
-	private boolean badPassword = false;
-	
+	private boolean badPassword;
+
 	/**
 	 * 
 	 */
@@ -112,7 +114,7 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 	 * 
 	 * @param connection the socket, where the whole thing takes place
 	 */
-	public Core( String hostname, int port, String username, String password ) {
+	public Core( String hostname, int port, String username, String password ) throws UnknownHostException, IOException {
 		this.hostname = hostname;
 		this.port = port;
 		this.username = username;
@@ -171,34 +173,37 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 		InputStream i;
 		try {
 			i = connection.getInputStream();
-			
+		
 			byte[] content;
-		 		
+			
 			while ( connected ) {	
 				/* getting length of message */
-				messageLength = Message.readInt32( i );							
+				messageLength = Message.readInt32( i );
 				content = new byte[messageLength];
 				position = 0;
 				/* read out the message from stream, re-read if no bytes are waiting, 
 				 * untill message is completly read (thx to Jmoule for this idea ;-)
 				 */ 
-				while ( position < messageLength ) {
+				while ( position < messageLength )
 					position += i.read( content, position, ( int ) messageLength - position );
-				}
-				
+			
 				position = 0;					
 				messageBuffer.setBuffer( content );
 				opCode = messageBuffer.readInt16();		
 				
 				/* decode the message content */			
 				this.decodeMessage( opCode, messageBuffer );
-			}			
-		} catch ( Exception e ) {
-			//TODO remove debug e.printStackTrace()
-			connected = false;
+			}
+		}	
+		catch ( SocketException e ) {
+			System.out.println( e.getMessage() );
+			System.out.println( "Iterator: " + messageBuffer.getIterator() 
+								+ "Buffer: " + messageBuffer.getBuffer().length );
+			e.printStackTrace();							
+		}
+		catch ( IOException e ) {
 			e.printStackTrace();
-			System.out.println( "No Connection to mldonkey" );
-		}			
+		}
 	}
 					
 	/**
@@ -207,11 +212,7 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private synchronized void decodeMessage( 
-				short opcode, 
-				MessageBuffer 
-				messageBuffer ) throws IOException 
-		{
+	private synchronized void decodeMessage( short opcode, MessageBuffer messageBuffer ) {
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
 					coreProtocol = messageBuffer.readInt32();
@@ -222,11 +223,6 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 					else
 						this.usingVersion = protocolVersion;
 						
-/*					MessageVersion messageVersion = new MessageVersion( this );
-					messageVersion.add( Message.R_OPTIONS_INFO, 16, false );
-					messageVersion.send();
-					messageVersion = null;						
-*/					
 					/* send the password/username */
 					String[] aString = { this.password, this.username };
 					Message password = new EncodeMessage( Message.S_PASSWORD, aString );
@@ -297,7 +293,7 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 					break;		
 					
 			case Message.R_BAD_PASSWORD :
-					this.badPassword = true;						
+					this.badPassword = true;
 					this.disconnect();
 					break;
 					
@@ -435,6 +431,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.76  2003/08/03 19:09:39  lemmstercvs01
+better error handling
+
 Revision 1.75  2003/08/02 10:07:57  lemmstercvs01
 synchronized readded
 
