@@ -36,23 +36,22 @@ import org.eclipse.swt.widgets.*;
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.3 2003/06/27 18:05:46 dek Exp $ 
+ * @version $Id: General.java,v 1.4 2003/06/29 18:25:03 dek Exp $ 
  *
  */
 public class General extends PreferencePage {
-	private OptionsInfoMap options;
-	private CoreCommunication mldonkey;
-	private boolean connected;
-	private PreferenceStore preferenceStore;
-	private StringFieldEditor username;
+	OptionsInfoMap options;
+	String clientName;
+	CoreCommunication mldonkey;
+	boolean connected;	
+	public StringFieldEditor clientNameField;
 
 	/**
 	 * @param preferenceStore
 	 */
 	public General( PreferenceStore preferenceStore_, boolean connected, CoreCommunication mldonkey ) {
 		super( "General Settings" );
-		this.connected = connected;
-		this.preferenceStore = preferenceStore_;
+		this.connected = connected;		
 		this.mldonkey = mldonkey;
 		if (connected){
 			this.options = mldonkey.getOptions();		
@@ -61,31 +60,50 @@ public class General extends PreferencePage {
 				while (!(options.keySet().contains("client_name"))){					
 					}				
 				}});
-			preferenceStore.setDefault("client_name",
-				( ( OptionsInfo ) options.get( "client_name" ) ).getValue());			
+			clientName = 
+				( ( OptionsInfo ) options.get( "client_name" ) ).getValue();			
 		}
-		else preferenceStore.setDefault("client_name","<no Connection to mldonkey>");
+		else clientName = "<no Connection to mldonkey>";
 		
-
 	}
 
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createContents( Composite shell ) {
-		
-		username = new StringFieldEditor("client_name", "Client Name",shell);
-			username.setEnabled(connected,shell);
-			username.setStringValue(preferenceStore.getDefaultString("client_name"));
-			username.setStringValue(preferenceStore.getString("client_name"));	
+	protected Control createContents( Composite shell ) {	
+					
+		this.clientNameField = new StringFieldEditor("client_name", "Client Name",shell);
+			clientNameField.setEnabled(connected,shell);
+			clientNameField.setStringValue(clientName);				
 		return null;
 	}
-
+	
+	/* take care, that this tab has been initalized and then update mldonkey only with the
+	 * options that have changed
+	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
+	 */
+	public boolean performOk(){			
+		 if (clientNameField!= null){		 
+			if (!clientName.equals(clientNameField.getStringValue()))
+		 		{mldonkey.setOption("client_name",clientNameField.getStringValue());
+		 		}
+		 }
+		 //Dek - ([emule.de] AND [emule] suck)
+		return super.performOk();		
+	}
+	
+	protected void performApply() {		
+		super.performApply();
+		
+	}
 }
 
 /*
 $Log: General.java,v $
+Revision 1.4  2003/06/29 18:25:03  dek
+setting clientname now works
+
 Revision 1.3  2003/06/27 18:05:46  dek
 Client name is now an option, not saveable yet, but it's displayed ;-)
 
