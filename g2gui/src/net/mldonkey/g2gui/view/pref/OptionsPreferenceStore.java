@@ -8,9 +8,9 @@
  * G2GUI is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
- * G2GUI is distributed in the hope that it will be useful,
+ * G2GUI is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -36,41 +36,43 @@ import org.eclipse.jface.util.IPropertyChangeListener;
  * as mldonkey itself cares for wrong values... 
  *
  *
- * @version $Id: OptionsPreferenceStore.java,v 1.10 2003/08/24 14:05:11 dek Exp $ 
+ * @version $Id: OptionsPreferenceStore.java,v 1.11 2003/08/26 08:41:17 dek Exp $ 
  *
  */
 public class OptionsPreferenceStore implements IPreferenceStore {
 	
 
+	private boolean debug = false;
+
 	private OptionsInfoMap input;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#addPropertyChangeListener(org.eclipse.jface.util.IPropertyChangeListener)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#addPropertyChangeListener( org.eclipse.jface.util.IPropertyChangeListener )
 	 */
-	public void addPropertyChangeListener(IPropertyChangeListener listener) {
+	public void addPropertyChangeListener( IPropertyChangeListener listener ) {
 		//  Auto-generated method stub
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#contains(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#contains( java.lang.String )
 	 */
-	public boolean contains(String name) {		
+	public boolean contains( String name ) {		
 		return input.keySet().contains( name );
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#firePropertyChangeEvent(java.lang.String, java.lang.Object, java.lang.Object)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#firePropertyChangeEvent( java.lang.String, java.lang.Object, java.lang.Object )
 	 */
-	public void firePropertyChangeEvent(String name, Object oldValue, Object newValue) {
-		System.out.println("firePropertyChangeEvent");
+	public void firePropertyChangeEvent( String name, Object oldValue, Object newValue ) {
+		if ( debug )  System.out.println( "firePropertyChangeEvent" );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getBoolean(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getBoolean( java.lang.String )
 	 */
-	public boolean getBoolean(String name) {
+	public boolean getBoolean( String name ) {
 		if ( contains( name ) )		
 			return new Boolean ( ( ( OptionsInfo )input
 									.get( name ) )
@@ -78,249 +80,242 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 		else return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultBoolean(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultBoolean( java.lang.String )
 	 */
-	public boolean getDefaultBoolean(String name) {
+	public boolean getDefaultBoolean( String name ) {
+		if ( debug )  System.out.println( "getDefaultBoolean: " + name );
 		return new Boolean ( ( ( OptionsInfo )input
 							.get( name ) )
 							.getDefaultValue() ).booleanValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultDouble(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultDouble( java.lang.String )
 	 */
-	public double getDefaultDouble(String name) {
-		System.out.println("getDefaultDouble");
+	public double getDefaultDouble( String name ) {
+		if ( debug )  System.out.println( "getDefaultDouble" );
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultFloat(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultFloat( java.lang.String )
 	 */
-	public float getDefaultFloat(String name) {
-		System.out.println("getDefaultFloat");
+	public float getDefaultFloat( String name ) {
+		if ( debug )  System.out.println( "getDefaultFloat" );
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultInt(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultInt( java.lang.String )
 	 */
-	public int getDefaultInt(String name) {
+	public int getDefaultInt( String name ) {
+		if ( debug )  System.out.println( "getDefaultInt: " + name );
 		String stringValue = ( ( OptionsInfo )input.get( name ) ) .getDefaultValue();
 		return new Integer( stringValue ).intValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultLong(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultLong( java.lang.String )
 	 */
-	public long getDefaultLong(String name) {
-		System.out.println("getDefaultLong");
+	public long getDefaultLong( String name ) {
+		if ( debug )  System.out.println( "getDefaultLong: " + name );
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultString(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getDefaultString( java.lang.String )
 	 */
-	public String getDefaultString(String name) {
+	public String getDefaultString( String name ) {
+		if ( debug )  System.out.println( "getDefaultString: " + name );
 		return  ( ( OptionsInfo )input
 					.get( name ) )
 					.getDefaultValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getDouble(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getDouble( java.lang.String )
 	 */
-	public double getDouble(String name) {
-		System.out.println("getDouble");
+	public double getDouble( String name ) {		
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getFloat(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getFloat( java.lang.String )
 	 */
-	public float getFloat(String name) {
-		System.out.println("getFloat");
+	public float getFloat( String name ) {		
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getInt(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getInt( java.lang.String )
 	 */
-	public int getInt(String name) {
+	public int getInt( String name ) {		
 		String stringValue = ( ( OptionsInfo )input.get( name ) ) .getValue();
 		return new Integer( stringValue ).intValue();		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getLong(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getLong( java.lang.String )
 	 */
-	public long getLong(String name) {
-		System.out.println("getLong");
+	public long getLong( String name ) {		
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#getString(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#getString( java.lang.String )
 	 */
-	public String getString(String name) {
+	public String getString( String name ) {
 		return  ( ( OptionsInfo )input
 							.get( name ) )
 							.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#isDefault(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#isDefault( java.lang.String )
 	 */
-	public boolean isDefault(String name) {
-		System.out.println("isDefault");
+	public boolean isDefault( String name ) {
+		if ( debug )  System.out.println( "isDefault ??" );
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.IPreferenceStore#needsSaving()
 	 */
 	public boolean needsSaving() {		
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#putValue(java.lang.String, java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#putValue( java.lang.String, java.lang.String )
 	 */
-	public void putValue(String name, String value) {
-		System.out.println("putValue");
+	public void putValue( String name, String value ) {
+		if ( debug )  System.out.println( "putStringValue" );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#removePropertyChangeListener(org.eclipse.jface.util.IPropertyChangeListener)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#removePropertyChangeListener( org.eclipse.jface.util.IPropertyChangeListener )
 	 */
-	public void removePropertyChangeListener(IPropertyChangeListener listener) {
-		System.out.println("removePropertyChangeListener");
+	public void removePropertyChangeListener( IPropertyChangeListener listener ) {
+		if ( debug )  System.out.println( "removePropertyChangeListener" );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, double)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, double )
 	 */
-	public void setDefault(String name, double value) {
-		System.out.println("setDefault");
+	public void setDefault( String name, double value ) {
+		if ( debug )  System.out.println( "setDoubleDefault" );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, float)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, float )
 	 */
-	public void setDefault(String name, float value) {
-		System.out.println("setDefault");
+	public void setDefault( String name, float value ) {
+		if ( debug )  System.out.println( "setFloatDefault" );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, int)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, int )
 	 */
-	public void setDefault(String name, int value) {
-		System.out.println("setDefault");
+	public void setDefault( String name, int value ) {
+		if ( debug )  System.out.println( "setIntDefault" );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, long)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, long )
 	 */
-	public void setDefault(String name, long value) {
-		System.out.println("setDefault");
+	public void setDefault( String name, long value ) {
+		if ( debug )  System.out.println( "setLongDefault" );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, java.lang.String )
 	 */
-	public void setDefault(String name, String defaultObject) {
-		System.out.println("setDefault");
+	public void setDefault( String name, String defaultObject ) {
+		if ( debug )  System.out.println( "setDefault: defaultObject:" + defaultObject );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault(java.lang.String, boolean)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setDefault( java.lang.String, boolean )
 	 */
-	public void setDefault(String name, boolean value) {
-		System.out.println("setDefault");
+	public void setDefault( String name, boolean value ) {
+		if ( debug )  System.out.println( "setDefault" );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setToDefault(java.lang.String)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setToDefault( java.lang.String )
 	 */
-	public void setToDefault(String name) {
-		System.out.println("setDefault");
+	public void setToDefault( String name ) {
+		if ( debug )  System.out.println( "setToDefault:" + name );
+		setValue( name, getDefaultString( name ) );
+	}
+
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue( java.lang.String, double )
+	 */
+	public void setValue( String name, double value ) {
+		if ( debug )  System.out.println( "setDoubleValue" );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue(java.lang.String, double)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue( java.lang.String, float )
 	 */
-	public void setValue(String name, double value) {
-		System.out.println("setValue");
+	public void setValue( String name, float value ) {
+		if ( debug )  System.out.println( "setFloatValue" );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue(java.lang.String, float)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue( java.lang.String, int )
 	 */
-	public void setValue(String name, float value) {
-		System.out.println("setValue");
+	public void setValue( String name, int value ) {
+		setValue( name, Integer.toString( value ) );
+	}
+
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue( java.lang.String, long )
+	 */
+	public void setValue( String name, long value ) {
+		if ( debug )  System.out.println( "setValue" );
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue(java.lang.String, int)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue( java.lang.String, java.lang.String )
 	 */
-	public void setValue(String name, int value) {		
-		int oldValue = getInt(name);
-		if (oldValue != ( value ) ) {
-			( ( OptionsInfo )input.get( name ) ).setValue( Integer.toString( value ) );			
-		}
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue(java.lang.String, long)
-	 */
-	public void setValue(String name, long value) {
-		System.out.println("setValue");
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue(java.lang.String, java.lang.String)
-	 */
-	public void setValue(String name, String value) {
-		String oldValue = getString(name);
-		if (oldValue == null || !oldValue.equals(value)) {
+	public void setValue( String name, String value ) {
+		String oldValue = getString( name );
+		if ( oldValue == null || !oldValue.equals( value ) ) {
 			( ( OptionsInfo )input.get( name ) ).setValue( value );
-			System.out.println("setting string-value");
+			if ( debug )  System.out.println( "setting value: "+name+" : "+value );
 		}
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue(java.lang.String, boolean)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.IPreferenceStore#setValue( java.lang.String, boolean )
 	 */
-	public void setValue(String name, boolean value) {
-		String temp;
-		boolean oldValue = getBoolean( name );
-		if ( oldValue != value ) {
-			if ( value ) temp = "true";
-			else temp = "false";
-			( ( OptionsInfo )input.get( name ) ).setValue( temp );
-		}
-		
+	public void setValue( String name, boolean value ) {
+		String temp;	
+		boolean oldValue = getBoolean( name );		
+		if ( value ) temp = "true";
+		else temp = "false";
+		setValue( name, temp );		
 	}
 
 	/**
 	 * @param options
 	 */
-	public void setInput(OptionsInfoMap options) {
+	public void setInput( OptionsInfoMap options ) {
 		this.input = options;
 		
 	}
@@ -328,6 +323,9 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 
 /*
 $Log: OptionsPreferenceStore.java,v $
+Revision 1.11  2003/08/26 08:41:17  dek
+some cleaning up
+
 Revision 1.10  2003/08/24 14:05:11  dek
 getInt() returns now value instead of "0"
 
@@ -350,12 +348,12 @@ Revision 1.4  2003/08/18 12:43:07  dek
 removed extendendFontFieldEditor
 
 Revision 1.3  2003/08/18 12:22:28  dek
-g2gui-pref-page is now fully JFace-approved ;-)
+g2gui-pref-page is now fully JFace-approved ;- )
 
 Revision 1.2  2003/08/17 21:29:51  dek
 removed TO-DO's, as we don't really have to do them, look at top javadoc-comment
 
 Revision 1.1  2003/08/17 21:22:21  dek
-reworked options, finally, it makes full use of the jFace framework ;-)
+reworked options, finally, it makes full use of the jFace framework ;- )
 
 */
