@@ -2,7 +2,7 @@
 	* Core-Communication: Implemented GUI-Protocol Version 21...25
 
 2004/03/16: Dek
-	*FileDetail Dialog: Infos (e.g. hash, filename) are now 
+	* FileDetail Dialog: Infos (e.g. hash, filename) are now 
 	copy-and-paste enabled[TM]
 	
 2004/03/10: Dek
