@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * ToolButton A simple helper class made so that the coolbar can be redrawn
  *
  *
- * @version $Id: ToolButton.java,v 1.10 2003/09/18 14:14:29 zet Exp $
+ * @version $Id: ToolButton.java,v 1.11 2003/10/31 23:29:52 zet Exp $
  *
  */
 public class ToolButton {
@@ -66,11 +66,13 @@ public class ToolButton {
  
     public void setText( String text ) {
         this.text = text;
+		if (!SWT.getPlatform().equals("fox")) // TODO: remove when FOX is fixed
         toolItem.setText( text );
     }
   
     public void setToolTipText( String text ) {
         this.toolTipText = text;
+       
         toolItem.setToolTipText( text );
     }
 
@@ -141,6 +143,9 @@ public class ToolButton {
 
 /*
 $Log: ToolButton.java,v $
+Revision 1.11  2003/10/31 23:29:52  zet
+no text on fox
+
 Revision 1.10  2003/09/18 14:14:29  zet
 revert
 
