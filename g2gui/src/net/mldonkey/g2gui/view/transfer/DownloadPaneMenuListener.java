@@ -42,6 +42,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
@@ -50,7 +51,7 @@ import org.eclipse.swt.events.DisposeListener;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.6 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.7 2003/10/12 23:14:08 zet Exp $
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener, DisposeListener {
@@ -135,8 +136,9 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
         menuManager.add( new ExpandCollapseAction( false ) );
         menuManager.add( new Separator() );
 
+		boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
         // columnSelector
-        if (PreferenceLoader.loadBoolean("advancedMode")) {
+        if ( advancedMode ) {
         	menuManager.add( new ColumnSelectorAction() );
         }
         // filter submenu			
@@ -187,6 +189,15 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
         }
 
         menuManager.add( filterSubMenu );
+        
+        
+        if ( advancedMode ) {
+        	menuManager.add( new Separator() );
+        	menuManager.add( new ToggleClientsAction() );
+        }
+        
+        
+        
     }
 
     private void addFileStateFilter( MenuManager menuManager, String resString, EnumFileState enumFileState ) {
@@ -364,7 +375,33 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
             new ColumnSelector( DownloadTableTreeViewer.COLUMN_LABELS, DownloadTableTreeViewer.ALL_COLUMNS, "downloadTableColumns", downloadTableTreeViewer );
         }
     }
+    
+    /**
+     * ToggleClientsAction - nice and ugly
+     */
+	private class ToggleClientsAction extends Action {
 
+	   private SashForm sashForm;
+	   private boolean show;
+		
+	   public ToggleClientsAction( ) {
+	   		super();
+	   		sashForm = (SashForm) tableTreeViewer.getTableTree().getTable().getParent().getParent().getParent().getParent();
+			show = (sashForm.getWeights()[1] == 0);
+		    setText( (show ? G2GuiResources.getString( "MISC_SHOW" ) : G2GuiResources.getString( "MISC_HIDE") ) + " " + G2GuiResources.getString( "TT_Clients") );
+	   }
+
+	   public void run() {
+	   	
+	   		SashForm sashForm = (SashForm) tableTreeViewer.getTableTree().getTable().getParent().getParent().getParent().getParent();
+	   		if ( show ) {
+		   		sashForm.setWeights(new int[] { 2, 1 } );
+	   		} else {
+				sashForm.setWeights(new int[] { 1, 0 } );
+				downloadTableTreeViewer.updateClientsTable( false );
+	   		}
+	   }
+   }
     /**
      * FileStateFilterAction
      */
@@ -569,6 +606,9 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.7  2003/10/12 23:14:08  zet
+show clients menuitem
+
 Revision 1.6  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 
