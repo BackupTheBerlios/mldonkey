@@ -1,6 +1,5 @@
 package com.gc.systray;
 
-import java.util.Date;
 import java.util.LinkedList;
 
 
