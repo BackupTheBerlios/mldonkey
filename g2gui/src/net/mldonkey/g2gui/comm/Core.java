@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.54 2003/07/06 08:50:12 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.55 2003/07/06 10:04:39 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -61,7 +61,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 */
 	
 	private SimpleInformation fileAddSources = new FileAddSource(),
-						clientStats          = new ClientStats(),
+						clientStats          = new ClientStats( this ),
 						consoleMessage       = new ConsoleMessage(),
 						searchResult		 = new SearchResult();
 	/**
@@ -202,10 +202,12 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					this.notifyObservers( optionsInfoMap );
 					break;
 				
-			case Message.R_FILE_UPDATE_AVAILABILITY :				
+			case Message.R_FILE_UPDATE_AVAILABILITY :
+			//TODO file availability updaten.				
 					break;
 
-			case Message.R_FILE_ADD_SOURCE :				
+			case Message.R_FILE_ADD_SOURCE :
+			//TODO file updaten und nicht nen neues objekt anlegen. wo ist bei file allerdings die source list?				
 					this.fileAddSources.readStream( messageBuffer );
 					break;
 					
@@ -324,6 +326,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.55  2003/07/06 10:04:39  lemmstercvs01
+clientstats() -> clienstats( this )
+
 Revision 1.54  2003/07/06 08:50:12  lemmstercvs01
 ResultInfo() -> ResultInfo( this )
 
