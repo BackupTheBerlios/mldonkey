@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  *
- * @version $Id: FileInfoIntMap.java,v 1.29 2003/10/12 15:55:28 zet Exp $
+ * @version $Id: FileInfoIntMap.java,v 1.30 2003/10/16 19:57:43 zet Exp $
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -153,6 +153,21 @@ public class FileInfoIntMap extends InfoIntMap {
         this.setChanged();
         this.notifyObservers( this );
     }
+    
+    /**
+     * Commit all
+     */
+    public void commitAll() {
+		TIntObjectIterator itr = this.iterator();
+		   int collsize = this.size();
+		   for ( ; collsize-- > 0;) {
+			   itr.advance();
+			   FileInfo aFileInfo = ( FileInfo ) itr.value();
+				if (aFileInfo.getState().getState() == EnumFileState.DOWNLOADED) {
+					aFileInfo.saveFileAs( aFileInfo.getName() );
+				}
+		   }
+    }
 
     /**
      * Removes all compelte and canceled downloads from this map
@@ -185,6 +200,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.30  2003/10/16 19:57:43  zet
+commitAll
+
 Revision 1.29  2003/10/12 15:55:28  zet
 remove clean
 
