@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.80 2003/10/27 00:19:14 zet Exp $
+ * @version $Id: MainTab.java,v 1.81 2003/11/01 18:45:26 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -398,12 +398,15 @@ public class MainTab implements ShellListener {
 		protected void configureShell(Shell newShell) {
 		    super.configureShell( newShell );
 		    shell = newShell;
+		    shell.setSize(400,300);
 		    newShell.setText("Boog Ditekted!");
 		}
 		
 		protected Control createDialogArea(Composite parent) {
 			Composite composite = (Composite)super.createDialogArea(parent);
+			
 			Text textInfo = new Text(composite, SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+			textInfo.setLayoutData(new GridData(GridData.FILL_BOTH));
 			textInfo.setText("Please help us to improve this product!\n" 
 			        + "Please submit a bug report detailing exactly what you were doing when this happened!\n"
 			        + "http://developer.berlios.de/bugs/?group_id=610\n\n"
@@ -444,6 +447,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.81  2003/11/01 18:45:26  zet
+shell.setSize
+
 Revision 1.80  2003/10/27 00:19:14  zet
 simple attempt to catch exceptions & inform the user instead of silently crashing
 + try a marginwidth of 1 (as per feedback)
