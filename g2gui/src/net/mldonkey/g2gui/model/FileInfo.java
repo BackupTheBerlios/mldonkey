@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.14 2003/07/04 18:35:02 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.15 2003/07/05 11:33:08 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements SimpleInformation {
@@ -42,6 +42,10 @@ public class FileInfo implements SimpleInformation {
 	 * The CoreCommunication
 	 */
 	private CoreCommunication parent;
+	/**
+	 * Does this object change?
+	 */
+	private boolean changed = false;
 	/**
 	 * File identifier
 	 */
@@ -301,6 +305,7 @@ public class FileInfo implements SimpleInformation {
 		this.setPriority( messageBuffer.readInt32() );
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
+		this.setChanged();
 	}
 	
 	/**
@@ -315,6 +320,7 @@ public class FileInfo implements SimpleInformation {
 		this.offset = messageBuffer.readInt32();
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
+		this.setChanged();
 	}
 	
 	/**
@@ -330,13 +336,35 @@ public class FileInfo implements SimpleInformation {
 	/**
 	 * Compares two FileInfo objects by their md4
 	 * @param fileInfo the fileinfo to compare with
-	 * @return if they are identical
+	 * @return true if they are identical, otherwise false
 	 */
 	public boolean equals( FileInfo fileInfo ) {
 		if ( this.getMd4() == fileInfo.getMd4() )
 			return true;
 		else
 			return false;
+	}
+	
+	/**
+	 * Changed status of this object
+	 * @return true if changed, otherwise false
+	 */
+	public boolean isChanged() {
+		return changed;
+	}
+	
+	/**
+	 * set the change status
+	 */
+	private void setChanged() {
+		this.changed = true;	
+	}
+	
+	/**
+	 * clear the change status
+	 */
+	public void clearChanged() {
+		this.changed = false;
 	}
 	
 	/**
@@ -411,6 +439,9 @@ public class FileInfo implements SimpleInformation {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.15  2003/07/05 11:33:08  lemmstercvs01
+id -> List ids
+
 Revision 1.14  2003/07/04 18:35:02  lemmstercvs01
 foobar
 

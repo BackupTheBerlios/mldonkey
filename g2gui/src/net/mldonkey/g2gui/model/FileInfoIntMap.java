@@ -38,14 +38,14 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.11 2003/07/05 08:58:49 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.12 2003/07/05 11:33:08 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
 	/**
 	 * id of last file changed in the map
 	 */
-	private int id;
+	private List ids = new ArrayList();
 	
 	/**
 	 * @param communication my parent
@@ -114,7 +114,10 @@ public class FileInfoIntMap extends InfoIntMap {
 	 */
 	public void add( MessageBuffer messageBuffer ) {
 		synchronized( this ) {
-			id = messageBuffer.readInt32();
+			int id = messageBuffer.readInt32();
+			synchronized ( this.ids ) {
+				this.ids.add( new Integer( id ) );
+			}
 			/* go 4bytes back in the MessageBuffer */
 			messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 			if ( this.infoIntMap.containsKey( id ) )
@@ -124,6 +127,7 @@ public class FileInfoIntMap extends InfoIntMap {
 				fileInfo.readStream( messageBuffer );
 				this.put( fileInfo.getId(), fileInfo );
 			}
+			System.out.println( "changed: " + id );
 		}
 	}
 	
@@ -139,8 +143,14 @@ public class FileInfoIntMap extends InfoIntMap {
 	/**
 	 * @return The fileinfo id which changed last
 	 */
-	public int getId() {
-		return id;
+	public List getIds() {
+		return ids;
+	}
+	
+	public void clearIds() {
+		synchronized ( this.ids ) {
+			this.ids.removeAll( ids );
+		}
 	}
 	
 	/**
@@ -191,8 +201,8 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
-Revision 1.11  2003/07/05 08:58:49  lemmstercvs01
-removeObsolete() fixed
+Revision 1.12  2003/07/05 11:33:08  lemmstercvs01
+id -> List ids
 
 Revision 1.10  2003/07/04 13:29:15  lemmstercvs01
 removeObsolete() fixed
