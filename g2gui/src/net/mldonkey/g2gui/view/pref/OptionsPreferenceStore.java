@@ -36,7 +36,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
  * as mldonkey itself cares for wrong values... 
  *
  * @author $user$
- * @version $Id: OptionsPreferenceStore.java,v 1.3 2003/08/18 12:22:28 dek Exp $ 
+ * @version $Id: OptionsPreferenceStore.java,v 1.4 2003/08/18 12:43:07 dek Exp $ 
  *
  */
 public class OptionsPreferenceStore implements IPreferenceStore {
@@ -326,11 +326,14 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 
 /*
 $Log: OptionsPreferenceStore.java,v $
+Revision 1.4  2003/08/18 12:43:07  dek
+removed extendendFontFieldEditor
+
 Revision 1.3  2003/08/18 12:22:28  dek
 g2gui-pref-page is now fully JFace-approved ;-)
 
 Revision 1.2  2003/08/17 21:29:51  dek
-removed TODO's, as we don't really have to do them, look at top javadoc-comment
+removed TO-DO's, as we don't really have to do them, look at top javadoc-comment
 
 Revision 1.1  2003/08/17 21:22:21  dek
 reworked options, finally, it makes full use of the jFace framework ;-)
