@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.2 2003/07/18 04:34:22 lemmstercvs01 Exp $ 
+ * @version $Id: StatusLine.java,v 1.3 2003/07/29 09:41:56 lemmstercvs01 Exp $ 
  *
  */
 public class StatusLine {
@@ -69,18 +69,16 @@ public class StatusLine {
 		this.statusline.setLayout( new FillLayout() );
 		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );	
 		statusline.setLayoutData( gridData );		
-			
-		addField( new NetworkItem( this, mldonkey ) );
+
 		addField( new SpeedItem( this, mldonkey ) );
 		addField( new SimpleStatusLineItem( res.getString( "SL_other" ), SWT.NONE ) );
-		addField( new SimpleStatusLineItem( res.getString( "SL_other2" ), SWT.NONE ) );
 	}
 
 	/**
 	 * @param item the StatusBarItem which should be added to our nice little statusbar
 	 */
 	public void addField( StatusLineItem item ) {
-		Label newField = new Label( statusline, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER );	
+		Label newField = new Label( statusline, SWT.BORDER );	
 		newField.setText( item.getContent() );
 		newField.setAlignment( item.getAlignment() );
 		this.fields.add( newField );
@@ -124,6 +122,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.3  2003/07/29 09:41:56  lemmstercvs01
+still in progress, removed networkitem for compatibility
+
 Revision 1.2  2003/07/18 04:34:22  lemmstercvs01
 checkstyle applied
 
