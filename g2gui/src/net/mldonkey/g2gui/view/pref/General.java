@@ -36,12 +36,18 @@ import org.eclipse.swt.widgets.*;
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.5 2003/06/29 18:58:57 dek Exp $ 
+ * @version $Id: General.java,v 1.6 2003/06/29 20:23:41 dek Exp $ 
  *
  */
 public class General extends PreferencePage {
+	private BooleanFieldEditor autoCommitField;
+	private IntegerFieldEditor maxHardDownloadRateField;
+	private StringFieldEditor maxHardUploadRateField;
 	OptionsInfoMap options;
-	String clientName;
+	String 	clientName,
+			maxHardUploadRate,
+			maxHardDownloadRate;
+			
 	CoreCommunication mldonkey;
 	boolean connected;	
 	public StringFieldEditor clientNameField;
@@ -50,9 +56,10 @@ public class General extends PreferencePage {
 	 * @param preferenceStore
 	 */
 	public General( PreferenceStore preferenceStore_, boolean connected, CoreCommunication mldonkey ) {
-		super( "General Settings" );
+		super( "General Settings" );		
 		this.connected = connected;		
 		this.mldonkey = mldonkey;
+		
 		if (connected){
 			this.options = mldonkey.getOptions();		
 			BusyIndicator.showWhile(null,new Runnable(){			
@@ -61,22 +68,66 @@ public class General extends PreferencePage {
 					}				
 				}});
 			clientName = 
-				( ( OptionsInfo ) options.get( "client_name" ) ).getValue();			
+				( ( OptionsInfo ) options.get( "client_name" ) ).getValue();
+			
+			maxHardUploadRate = 	
+				( ( OptionsInfo ) options.get( "max_hard_upload_rate" ) ).getValue();
+			
+			maxHardDownloadRate = 	
+				( ( OptionsInfo ) options.get( "max_hard_download_rate" ) ).getValue();	
 		}
-		else clientName = "<no Connection to mldonkey>";
+		else {
+			clientName = "<no Connection to mldonkey>";
+			maxHardUploadRate = "<no Connection to mldonkey>";
+			maxHardDownloadRate = "<no Connection to mldonkey>";
+		}
 		
-	}
-
+		
+	}		
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createContents( Composite shell ) {	
-					
+	protected Control createContents( Composite shell ) {					
+		createClientNameField(shell);
+		createDownloadRateField(shell);
+		createUploadRateField(shell);
+		this.autoCommitField = new BooleanFieldEditor("auto_commit","Auto Commit",1, shell);
+		
+		return null;
+	}
+	
+	
+	private void createUploadRateField(Composite shell) {
+		this.maxHardUploadRateField = new IntegerFieldEditor("max_hard_upload_rate", "Max. Upload (in kb/s, 0 is unlimited)",shell);
+			maxHardUploadRateField.setEnabled(connected,shell);
+			maxHardUploadRateField.setStringValue(maxHardUploadRate);
+			maxHardUploadRateField.getTextControl(shell).setToolTipText("The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n" +
+				"The limit will apply on all your connections (clients and servers) and both\n" +
+				" control and data messages.");
+			maxHardUploadRateField.getLabelControl(shell).setToolTipText("The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n" +
+				"The limit will apply on all your connections (clients and servers) and both\n" +
+				" control and data messages.");
+	}
+	
+	private void createDownloadRateField(Composite shell) {
+		this.maxHardDownloadRateField = new IntegerFieldEditor("max_hard_download_rate", "Max. Download (in kb/s, 0 is unlimited)",shell);
+			maxHardDownloadRateField.setEnabled(connected,shell);
+			maxHardDownloadRateField.setStringValue(maxHardDownloadRate);
+			maxHardDownloadRateField.getTextControl(shell).setToolTipText("The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n" +
+				"The limit will apply on all your connections (clients and servers) and both\n" +
+				" control and data messages.");
+			maxHardDownloadRateField.getLabelControl(shell).setToolTipText("The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n" +
+				"The limit will apply on all your connections (clients and servers) and both\n" +
+				" control and data messages.");
+	}
+	
+	private void createClientNameField(Composite shell) {
 		this.clientNameField = new StringFieldEditor("client_name", "Client Name",shell);
 			clientNameField.setEnabled(connected,shell);
-			clientNameField.setStringValue(clientName);				
-		return null;
+			clientNameField.setStringValue(clientName);
+			clientNameField.getTextControl(shell).setToolTipText("Small name of client");
+			clientNameField.getLabelControl(shell).setToolTipText("Small name of client");			
 	}
 	
 	/* take care, that this tab has been initalized and then update mldonkey only with the
@@ -109,6 +160,9 @@ public class General extends PreferencePage {
 
 /*
 $Log: General.java,v $
+Revision 1.6  2003/06/29 20:23:41  dek
+how the hell do i get the value out of a booleanFieldeditor???
+
 Revision 1.5  2003/06/29 18:58:57  dek
 saving values to disk/mldonkey starts working
 
