@@ -44,7 +44,11 @@ AC_ARG_WITH(motif,
 # Checks for programs.
 
 #take gcj from commandline ./configure (...) gcj=/path/to/gcj (...)
+
+
+if test ! -z $gcj; then
 ac_cv_path_GCJ=$gcj
+fi
 
 AC_PATH_PROG([GCJ],[gcj])
 if test -z $ac_cv_path_GCJ; then
@@ -80,6 +84,12 @@ AC_PATH_PROG([LD],[ld])
 if test -z $ac_cv_path_LD; then
    AC_MSG_ERROR([**** Could not find the program 'ld' needed to compile this software! ****])
 fi
+
+AC_PATH_PROG([SED],[sed])
+if test -z $ac_cv_path_SED; then
+   AC_MSG_ERROR([**** Could not find the program 'sed' needed to compile this software! ****])
+fi
+   
 
 
 # Checks for libraries.
@@ -140,6 +150,7 @@ case $host in
 	swt_dir=swt-win32
 	obj_dir=obj-$host
 	platform_targets=icon.o
+	AC_SUBST(MAGIC,["#no magic"])
 	;;
 
 	*)
@@ -150,6 +161,7 @@ case $host in
     host=$(echo $(uname) | tr A-Z a-z)
 	swt_dir=swt-$host-$widget_set
 	obj_dir=obj-$widget_set
+	AC_SUBST(MAGIC,[$(magic)])
 	echo "SWT widget-set : $widget_set"
 	echo "SWT dir prefix : $swt_dir"
 	;;
