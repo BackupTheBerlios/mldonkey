@@ -50,7 +50,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.74 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: FileInfo.java,v 1.75 2003/11/23 20:21:05 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -703,11 +703,16 @@ public class FileInfo extends Parent implements Observer {
                 NetworkInfo aNetwork = parent.getNetworkInfoMap().get(networkID);
 
                 /* multinet avail is the overall avail */
-                if (aNetwork.getNetworkType() != EnumNetwork.MULTINET) {					
-					this.avail = messageBuffer.readString();
-                    this.avails.put(aNetwork, avail);
+                if (aNetwork.getNetworkType() == EnumNetwork.MULTINET) {
+                	this.avail = messageBuffer.readString();                
                 } else {
-                    this.avail = messageBuffer.readString();
+                	/* 
+                	 * avail is only set if it is null
+                	 * so that a following MULTINET can overwrite this value 
+                	 * and is not re-overwritten at this place
+                	 */
+                	if ( this.avail == null ) this.avail = messageBuffer.readString();
+                	this.avails.put(aNetwork, avail);                	                
                 }
             }
         } else {
@@ -1104,6 +1109,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.75  2003/11/23 20:21:05  dek
+MULTINET can overwirte avail
+
 Revision 1.74  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
@@ -1212,7 +1220,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: dek $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)
