@@ -31,7 +31,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
-import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
@@ -47,7 +46,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.16 2004/04/05 22:41:22 psy Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.17 2004/04/14 09:49:57 dek Exp $
  *
  */
 public class DownloadTableTreeContentProvider extends GTableTreeContentProvider implements Observer {
@@ -375,6 +374,11 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.17  2004/04/14 09:49:57  dek
+best fit was _not_ stored , when unselected (no best sort anymore...) which is done now
+
+removed some deprecated imports as well, some minor stuff
+
 Revision 1.16  2004/04/05 22:41:22  psy
 only update if we are actually visible
 
@@ -471,7 +475,7 @@ Revision 1.13  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.12  2003/08/22 21:16:36  lemmy
-replace $user$ with $Author: psy $
+replace $user$ with $Author: dek $
 
 Revision 1.11  2003/08/21 00:59:57  zet
 doubleclick expand

@@ -21,19 +21,18 @@
  * 
  */
 package net.mldonkey.g2gui.view.pref;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.helper.VersionCheck;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 /**
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.16 2004/04/04 15:21:59 psy Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.17 2004/04/14 09:49:57 dek Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -149,6 +148,11 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.17  2004/04/14 09:49:57  dek
+best fit was _not_ stored , when unselected (no best sort anymore...) which is done now
+
+removed some deprecated imports as well, some minor stuff
+
 Revision 1.16  2004/04/04 15:21:59  psy
 make systray-options available under linux
 

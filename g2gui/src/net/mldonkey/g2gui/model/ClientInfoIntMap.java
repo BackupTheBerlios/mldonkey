@@ -44,7 +44,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * ClientInfoList
  *
  *
- * @version $Id: ClientInfoIntMap.java,v 1.19 2004/03/26 18:38:37 dek Exp $
+ * @version $Id: ClientInfoIntMap.java,v 1.20 2004/04/14 09:49:57 dek Exp $
  */
 public class ClientInfoIntMap extends InfoIntMap {
     /**
@@ -268,7 +268,7 @@ public class ClientInfoIntMap extends InfoIntMap {
             Iterator i = uploadersWeakMap.getKeySet().iterator();
             
 
-            while (i.hasNext()) {
+            while (i.hasNext()) {            	
                 ClientInfo clientInfo = (ClientInfo) i.next();
                 Object[] num = new Object[ 1 ];
                 num[ 0 ] = new Integer(clientInfo.getClientid());
@@ -284,6 +284,11 @@ public class ClientInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ClientInfoIntMap.java,v $
+Revision 1.20  2004/04/14 09:49:57  dek
+best fit was _not_ stored , when unselected (no best sort anymore...) which is done now
+
+removed some deprecated imports as well, some minor stuff
+
 Revision 1.19  2004/03/26 18:38:37  dek
 now the "surpress-received-clients" option is working
 

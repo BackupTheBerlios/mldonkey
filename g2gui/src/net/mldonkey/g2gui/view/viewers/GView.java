@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.25 2004/03/31 20:28:58 psy Exp $
+ * @version $Id: GView.java,v 1.26 2004/04/14 09:49:58 dek Exp $
  *
  */
 public abstract class GView {
@@ -150,7 +150,7 @@ public abstract class GView {
     		this.getTable().getHorizontalBar().setVisible(false);
     		this.getTable().getVerticalBar().setVisible(true);
     	} else {
-    		this.getTable().getHorizontalBar().setVisible(true);
+    		this.getTable().getHorizontalBar().setVisible(true);    		
     	}
     }
     
@@ -561,6 +561,11 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.26  2004/04/14 09:49:58  dek
+best fit was _not_ stored , when unselected (no best sort anymore...) which is done now
+
+removed some deprecated imports as well, some minor stuff
+
 Revision 1.25  2004/03/31 20:28:58  psy
 added ESC for deselection
 

@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ViewFrameListener
  *
- * @version $Id: ViewFrameListener.java,v 1.12 2004/03/31 19:13:55 psy Exp $
+ * @version $Id: ViewFrameListener.java,v 1.13 2004/04/14 09:49:57 dek Exp $
  *
  */
 public abstract class ViewFrameListener implements IMenuListener, DisposeListener {
@@ -134,10 +134,16 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
      * Saves the bestfit column to the pref file
      */
     protected void saveBestFit() {
-    	if ( gView != null && gView.getDynColListenerIsOn() != -1 )
+    	if ( (gView != null) && (gView.getDynColListenerIsOn() != -1) ){
     		/* save with an offset because if no value is set, 0 is returned */
     		PreferenceLoader.setValue( this.getClass().getName() + "BestFit", 
     				gView.getDynColListenerIsOn() + 10);
+    	}
+    	else if (gView.getDynColListenerIsOn() == -1) {
+    		/* no dyn-listener is set, so restore default-value: -1
+    		  don't have to take care about offset here since -1 is default for no-column */
+    		PreferenceLoader.setValue( this.getClass().getName() + "BestFit",  -1);
+		}
     }
 
     /**
@@ -184,6 +190,11 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
 
 /*
 $Log: ViewFrameListener.java,v $
+Revision 1.13  2004/04/14 09:49:57  dek
+best fit was _not_ stored , when unselected (no best sort anymore...) which is done now
+
+removed some deprecated imports as well, some minor stuff
+
 Revision 1.12  2004/03/31 19:13:55  psy
 improved dynamic column handling
 

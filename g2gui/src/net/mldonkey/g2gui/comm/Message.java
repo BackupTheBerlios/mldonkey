@@ -30,7 +30,7 @@ import java.net.Socket;
 /**
  * Message
  *
- * @version $Id: Message.java,v 1.42 2003/12/04 08:47:31 lemmy Exp $
+ * @version $Id: Message.java,v 1.43 2004/04/14 09:49:57 dek Exp $
  *
  */
 public abstract class Message {
@@ -155,6 +155,11 @@ public abstract class Message {
      * Connect Friend (value is 31)
      */
     public static final short S_CONNECT_FRIEND = 31;
+    
+    /**
+     * Get Client Info (value is 34)
+     */
+    public static final short S_GET_FILE_LOCATIONS = 34;
 
     /**
      * Get Client Info (value is 36)
@@ -447,6 +452,11 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.43  2004/04/14 09:49:57  dek
+best fit was _not_ stored , when unselected (no best sort anymore...) which is done now
+
+removed some deprecated imports as well, some minor stuff
+
 Revision 1.42  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -491,7 +501,7 @@ Revision 1.30  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.29  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.28  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging

@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.view.G2Gui;
 /**
  * ClientInfo21.java
  *
- * @version $Id: ClientInfo21.java,v 1.5 2004/03/27 15:31:53 dek Exp $ 
+ * @version $Id: ClientInfo21.java,v 1.6 2004/04/14 09:49:57 dek Exp $ 
  *
  */
 public class ClientInfo21 extends ClientInfo20 {
@@ -82,7 +82,9 @@ public class ClientInfo21 extends ClientInfo20 {
 			 * so we put ourselves in the list*/
 			if (parent.getFileInfoIntMap().contains(fileNumber))
 				parent.getFileInfoIntMap().get(fileNumber).addClientInfo(this);
-		}		
+
+		}
+		else fileNumber = -2;
 		
 	}
 	
@@ -95,6 +97,11 @@ public class ClientInfo21 extends ClientInfo20 {
 
 /*
  $Log: ClientInfo21.java,v $
+ Revision 1.6  2004/04/14 09:49:57  dek
+ best fit was _not_ stored , when unselected (no best sort anymore...) which is done now
+ 
+ removed some deprecated imports as well, some minor stuff
+
  Revision 1.5  2004/03/27 15:31:53  dek
  put client info in file-list if know to be uploading
 
