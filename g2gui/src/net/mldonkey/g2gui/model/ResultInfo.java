@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.17 2003/08/28 11:54:41 lemmster Exp $ 
+ * @version $Id: ResultInfo.java,v 1.18 2003/08/28 12:41:04 lemmster Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -85,11 +85,11 @@ public class ResultInfo extends Parent {
 	/**
 	 * true if this obj contains profanity
 	 */
-	private boolean containsProfanity;
+	private boolean containsProfanity = false;
 	/**
 	 * true if this obj contains pronography
 	 */
-	private boolean containsPornography;
+	private boolean containsPornography = false;
 	/**
 	 * The Profanity Filter
 	 */
@@ -371,6 +371,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.18  2003/08/28 12:41:04  lemmster
+initialize with false
+
 Revision 1.17  2003/08/28 11:54:41  lemmster
 use getter methode for profanity/pornogaphic
 
