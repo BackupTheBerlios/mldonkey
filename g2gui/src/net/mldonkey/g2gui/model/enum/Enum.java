@@ -22,14 +22,12 @@
  */
 package net.mldonkey.g2gui.model.enum;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Enum
  *
  *
- * @version $Id: Enum.java,v 1.4 2003/10/28 11:07:32 lemmster Exp $ 
+ * @version $Id: Enum.java,v 1.5 2003/10/29 16:54:42 lemmster Exp $ 
  *
  */
 public abstract class Enum {
@@ -49,48 +47,34 @@ public abstract class Enum {
 	 */
 	public static class MaskMatcher {
 		/**
-		 * Containing the Enums. 
+		 * Counting the number of enums
 		 */
-		private List enumList;
+		private int enumCounter = 0;
 		/**
 		 * Representing the mask of the Enum. (2^x for each Enum)
 		 */
 		private int enumMask;
 		/**
-		 * Creates a new MaskMatcher obj
-		 */		
-		public MaskMatcher() {
-			this.enumList = new ArrayList();
-		}
-		/**
 		 * Adds an new <code>Enum</code> to the EnumMask
   		 * @param enum
 		 */
-		public boolean add( Enum enum ) {
-			if ( !this.enumList.contains( enum ) ) {
-				this.enumList.add( enum );
-				this.enumMask += enum.field;
-				return true;				
-			}
-			return false;
+		public void add( Enum enum ) {
+			this.enumMask += enum.field;
+			this.enumCounter++;
 		}
 		/**
 		 * Removes an <code>Enum</code> from the EnumMask
  		 * @param enum
 		 */
-		public boolean remove( Enum enum ) {
-			if ( this.enumList.contains( enum ) ) {
-				this.enumList.remove( enum );
-				this.enumMask -= enum.field;
-				return true;				
-			}
-			return false;
+		public void remove( Enum enum ) {
+			this.enumMask -= enum.field;
+			this.enumCounter--;
 		}
 		/**
 		 * @return The number of Enums in this obj
 		 */
 		public int count() {
-			return this.enumList.size();
+			return this.enumCounter;
 		}
 		/**
 		 * Does the supported <code>Enum<code> belongs to our Enum collection
@@ -108,6 +92,9 @@ public abstract class Enum {
 
 /*
 $Log: Enum.java,v $
+Revision 1.5  2003/10/29 16:54:42  lemmster
+use int instead of List for internal counter
+
 Revision 1.4  2003/10/28 11:07:32  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"
