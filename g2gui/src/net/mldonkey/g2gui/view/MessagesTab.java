@@ -72,7 +72,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.24 2003/08/30 14:25:57 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.25 2003/08/30 23:38:14 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
 
@@ -174,7 +174,6 @@ public class MessagesTab extends GuiTab implements Runnable {
 				for ( int i = 0; i < currentItems.length;	 i ++ ) {					
 					ClientInfo selectedClientInfo = ( ClientInfo ) currentItems[ i ].getData();
 					openTab(selectedClientInfo);
-					
 				}
 			}
 			public void mouseDown(MouseEvent e) {}
@@ -237,6 +236,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 			public void widgetSelected(SelectionEvent e) {
 				CTabItem cTabItem = (CTabItem) e.item;
 				Console console = (Console) cTabItem.getData("console");
+				setTabsLabel();
 				console.setFocus();
 			}
 		});
@@ -300,7 +300,6 @@ public class MessagesTab extends GuiTab implements Runnable {
 		if (!cTabFolder.isDisposed()) {
 			lastTime = System.currentTimeMillis();
 			tableViewer.refresh();
-			setTabsLabel();
 			setFriendsLabel();
 			mustRefresh=0;
 		}
@@ -313,7 +312,12 @@ public class MessagesTab extends GuiTab implements Runnable {
 		friendsCLabel.setText(G2GuiResources.getString("FR_FRIENDS") + ": " + tableViewer.getTable().getItemCount()); 
 	} 
 	public void setTabsLabel() {
-		messagesCLabel.setText(G2GuiResources.getString("FR_TABS") + ": " +  openTabs.size());
+		
+		String extra = "";
+		if (cTabFolder.getSelection() != null)
+			extra = " -> " + cTabFolder.getSelection().getText();
+		
+		messagesCLabel.setText(G2GuiResources.getString("FR_TABS") + ": " +  openTabs.size() + extra);
 	}
 	
 	/**
@@ -378,6 +382,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 			}
 
 			sendTabMessage(message.getId(), textMessage);
+			setTabsLabel();
 		}
 	}
 	
@@ -401,7 +406,6 @@ public class MessagesTab extends GuiTab implements Runnable {
 		tabItem.setData("composite", consoleComposite);
 		tabItem.setData("console", console);
 		openTabs.put(new Integer(id), tabItem);
-		setTabsLabel();
 		return tabItem;
 	}
 	
@@ -415,6 +419,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 		} else {
 			cTabFolder.setSelection((CTabItem) openTabs.get(new Integer(clientInfo.getClientid())));
 		}
+		setTabsLabel();
 	}
 
 	/**
@@ -458,6 +463,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.25  2003/08/30 23:38:14  zet
+show selected tabtext in tab header
+
 Revision 1.24  2003/08/30 14:25:57  zet
 multi select
 
