@@ -30,7 +30,6 @@ import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.statusline.*;
 
 import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.jface.window.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
@@ -41,7 +40,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.8 2003/06/27 11:23:48 dek Exp $ 
+ * @version $Id: Gui.java,v 1.9 2003/06/27 11:34:56 lemmstercvs01 Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {
@@ -240,6 +239,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.9  2003/06/27 11:34:56  lemmstercvs01
+unnecessary importer removed
+
 Revision 1.8  2003/06/27 11:23:48  dek
 gui is no more children of applicationwindow
 
