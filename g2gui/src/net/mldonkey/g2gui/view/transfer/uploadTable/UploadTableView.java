@@ -22,14 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 
-import gnu.trove.TIntObjectIterator;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.model.SharedFileInfo;
@@ -51,16 +43,24 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+
+import gnu.trove.TIntObjectIterator;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.8 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: UploadTableView.java,v 1.9 2003/11/27 21:42:33 zet Exp $
  *
  */
 public class UploadTableView extends GTableView implements Observer {
@@ -69,7 +69,6 @@ public class UploadTableView extends GTableView implements Observer {
     private static final int REQUESTS = 2;
     private static final int NAME = 3;
     private SharedFileInfoIntMap sharedFileInfoIntMap;
-    private CLabel headerCLabel;
     private long lastTimeStamp;
 
     /**
@@ -78,8 +77,7 @@ public class UploadTableView extends GTableView implements Observer {
      * @param tab We live on this tab
      */
     public UploadTableView(ViewFrame viewFrame) {
-        super(viewFrame.getChildComposite(), viewFrame.getCore());
-        this.headerCLabel = viewFrame.getCLabel();
+        super(viewFrame);
 
         preferenceString = "upload";
         columnLabels = new String[] {
@@ -116,21 +114,9 @@ public class UploadTableView extends GTableView implements Observer {
         if (System.currentTimeMillis() > (lastTimeStamp + 5000)) {
             lastTimeStamp = System.currentTimeMillis();
 
-            if ((headerCLabel == null) || headerCLabel.isDisposed()) {
-                return;
-            }
-
-            headerCLabel.getDisplay().asyncExec(new Runnable() {
-                    public void run() {
-                        if ((headerCLabel == null) || headerCLabel.isDisposed()) {
-                            return;
-                        }
-
-                        headerCLabel.setText(G2GuiResources.getString("TT_Uploads") + ": " +
-                            clientStats.getNumOfShare() + " (" +
-						RegExp.calcStringSize(clientStats.getTotalUp()) + ")");
-                    }
-                });
+            viewFrame.updateCLabelTextInGuiThread(G2GuiResources.getString("TT_Uploads") + ": " +
+                clientStats.getNumOfShare() + " (" +
+                RegExp.calcStringSize(clientStats.getTotalUp()) + ")");
         }
     }
 
@@ -174,28 +160,24 @@ public class UploadTableView extends GTableView implements Observer {
             SharedFileInfoIntMap oldI = (SharedFileInfoIntMap) oldInput;
             SharedFileInfoIntMap newI = (SharedFileInfoIntMap) newInput;
 
-            if (oldI != null) {
+            if (oldI != null)
                 oldI.deleteObserver(this);
-            }
 
-            if (newI != null) {
+            if (newI != null)
                 newI.addObserver(this);
-            }
         }
 
         /* (non-Javadoc)
          * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
          */
         public void update(Observable arg0, final Object arg1) {
-            if (getTableViewer().getTable().isDisposed()) {
+            if (getTableViewer().getTable().isDisposed())
                 return;
-            }
 
             getTableViewer().getTable().getDisplay().asyncExec(new Runnable() {
                     public void run() {
-                        if (getTableViewer().getTable().isDisposed()) {
+                        if (getTableViewer().getTable().isDisposed())
                             return;
-                        }
 
                         synchronized (sharedFileInfoIntMap.getRemoved()) {
                             if (sharedFileInfoIntMap.getRemoved().size() > 0) {
@@ -337,9 +319,8 @@ public class UploadTableView extends GTableView implements Observer {
             for (Iterator it = sSel.iterator(); it.hasNext();) {
                 o = it.next();
 
-                if (o instanceof SharedFileInfo) {
+                if (o instanceof SharedFileInfo)
                     selectedFiles.add(o);
-                }
             }
         }
 
@@ -351,9 +332,8 @@ public class UploadTableView extends GTableView implements Observer {
             if (selectedFile != null) {
                 String[] linkList = new String[ selectedFiles.size() ];
 
-                for (int i = 0; i < selectedFiles.size(); i++) {
+                for (int i = 0; i < selectedFiles.size(); i++)
                     linkList[ i ] = new String(((SharedFileInfo) selectedFiles.get(i)).getED2K());
-                }
 
                 MenuManager clipboardMenu = new MenuManager(G2GuiResources.getString(
                             "TT_DOWNLOAD_MENU_COPYTO"));
@@ -370,6 +350,9 @@ public class UploadTableView extends GTableView implements Observer {
 
 /*
 $Log: UploadTableView.java,v $
+Revision 1.9  2003/11/27 21:42:33  zet
+integrate ViewFrame a little more.. more to come.
+
 Revision 1.8  2003/11/24 01:33:27  zet
 move some classes
 

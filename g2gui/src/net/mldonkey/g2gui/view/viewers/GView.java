@@ -22,7 +22,11 @@
  */
 package net.mldonkey.g2gui.view.viewers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.filters.AlwaysFalseGViewerFilter;
@@ -35,7 +39,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -49,14 +52,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-import java.util.HashMap;
-import java.util.Map;
-
 
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.10 2003/11/27 16:30:38 zet Exp $
+ * @version $Id: GView.java,v 1.11 2003/11/27 21:42:33 zet Exp $
  *
  */
 public abstract class GView {
@@ -71,6 +71,7 @@ public abstract class GView {
     protected GSorter gSorter;
     protected GTableLabelProvider tableLabelProvider;
     protected StructuredViewer sViewer;
+    protected ViewFrame viewFrame;
 
     public abstract GTableContentProvider getTableContentProvider();
 
@@ -376,6 +377,13 @@ public abstract class GView {
     }
 
     /**
+     * @return ViewFrame
+     */
+    public ViewFrame getViewFrame() {
+        return viewFrame;
+    }
+    
+    /**
      * StructuredViewer#refresh
      */
     public void refresh() {
@@ -386,6 +394,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.11  2003/11/27 21:42:33  zet
+integrate ViewFrame a little more.. more to come.
+
 Revision 1.10  2003/11/27 16:30:38  zet
 prevent column widths of 0
 

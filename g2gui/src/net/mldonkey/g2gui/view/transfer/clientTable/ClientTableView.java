@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableView.java,v 1.5 2003/11/26 07:43:15 zet Exp $
+ * @version $Id: ClientTableView.java,v 1.6 2003/11/27 21:42:33 zet Exp $
  *
  */
 public class ClientTableView extends GTableView {
@@ -48,7 +48,7 @@ public class ClientTableView extends GTableView {
     public static final int STATE = 7;
 
     public ClientTableView(ViewFrame viewFrame) {
-        super(viewFrame.getChildComposite(), viewFrame.getCore());
+        super(viewFrame);
 
         preferenceString = "client";
         columnLabels = new String[] {
@@ -92,6 +92,9 @@ public class ClientTableView extends GTableView {
 
 /*
 $Log: ClientTableView.java,v $
+Revision 1.6  2003/11/27 21:42:33  zet
+integrate ViewFrame a little more.. more to come.
+
 Revision 1.5  2003/11/26 07:43:15  zet
 quick attempt at an uploaders table w/proto 19 - still in progress...
 

@@ -22,7 +22,10 @@
  */
 package net.mldonkey.g2gui.view.transfer.clientTable;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.viewers.actions.AddClientAsFriendAction;
@@ -35,21 +38,16 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 
 /**
  * ClientTableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.14 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.15 2003/11/27 21:42:33 zet Exp $
  *
  */
 public class ClientTableMenuListener extends GTableMenuListener implements ISelectionChangedListener,
     IMenuListener {
-    private CoreCommunication core;
     private List selectedClients = new ArrayList();
 
     /**
@@ -57,15 +55,6 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
      */
     public ClientTableMenuListener(ClientTableView cTableViewer) {
         super(cTableViewer);
-    }
-
-    /* (non-Javadoc)
-     * requires tableContentProvider to have been created
-     * @see net.mldonkey.g2gui.view.viewers.GTableMenuListener#initialize()
-     */
-    public void initialize() {
-        super.initialize();
-        this.core = gView.getCore();
     }
 
     /* (non-Javadoc)
@@ -97,9 +86,9 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
                 clientInfoArray[ i ] = (ClientInfo) selectedClients.get(i);
             }
 
-            menuManager.add(new AddClientAsFriendAction(core, clientInfoArray));
+            menuManager.add(new AddClientAsFriendAction(gView.getCore(), clientInfoArray));
             menuManager.add(new ClientDetailAction(gView.getShell(),
-                    (FileInfo) tableViewer.getInput(), (ClientInfo) selectedClients.get(0), core));
+                    (FileInfo) tableViewer.getInput(), (ClientInfo) selectedClients.get(0), gView.getCore()));
         }
     }
 }
@@ -107,6 +96,9 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.15  2003/11/27 21:42:33  zet
+integrate ViewFrame a little more.. more to come.
+
 Revision 1.14  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

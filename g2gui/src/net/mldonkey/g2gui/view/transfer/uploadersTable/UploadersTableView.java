@@ -50,7 +50,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
@@ -58,7 +57,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadersTableView.java,v 1.2 2003/11/26 16:05:37 zet Exp $
+ * @version $Id: UploadersTableView.java,v 1.3 2003/11/27 21:42:33 zet Exp $
  *
  */
 public class UploadersTableView extends GTableView {
@@ -72,7 +71,6 @@ public class UploadersTableView extends GTableView {
     private static final int STATE = 7;
     private static final int FILENAME = 8;
     private ObjectWeakMap objectWeakMap;
-    private CLabel headerCLabel;
     private long lastTimeStamp;
 
     /**
@@ -81,8 +79,7 @@ public class UploadersTableView extends GTableView {
      * @param tab We live on this tab
      */
     public UploadersTableView(ViewFrame viewFrame) {
-        super(viewFrame.getChildComposite(), viewFrame.getCore());
-        this.headerCLabel = viewFrame.getCLabel();
+        super(viewFrame);
 
         preferenceString = "uploaders";
         columnLabels = new String[] {
@@ -116,7 +113,7 @@ public class UploadersTableView extends GTableView {
     }
 
     private void updateHeaderLabel() {
-        headerCLabel.setText(G2GuiResources.getString("TT_Uploaders") + ": " +
+        viewFrame.updateCLabelText(G2GuiResources.getString("TT_Uploaders") + ": " +
             objectWeakMap.getWeakMap().size());
     }
 
@@ -369,9 +366,8 @@ public class UploadersTableView extends GTableView {
                     clientInfoArray[ i ] = (ClientInfo) selectedClientInfos.get(i);
 
                 menuManager.add(new AddClientAsFriendAction(core, clientInfoArray));
-                menuManager.add(new ClientDetailAction(gView.getShell(),
-                        null, (ClientInfo) selectedClientInfos.get(0),
-                        core));
+                menuManager.add(new ClientDetailAction(gView.getShell(), null,
+                        (ClientInfo) selectedClientInfos.get(0), core));
             }
         }
     }
@@ -380,6 +376,9 @@ public class UploadersTableView extends GTableView {
 
 /*
 $Log: UploadersTableView.java,v $
+Revision 1.3  2003/11/27 21:42:33  zet
+integrate ViewFrame a little more.. more to come.
+
 Revision 1.2  2003/11/26 16:05:37  zet
 minor
 

@@ -40,6 +40,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.widgets.Composite;
@@ -49,7 +50,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeView.java,v 1.8 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.9 2003/11/27 21:42:33 zet Exp $
  *
  */
 public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
@@ -76,7 +77,6 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
     private CellEditor[] cellEditors = null;
     private CustomTableTreeViewer tableTreeViewer;
     private GView clientView;
-    private DownloadViewFrame viewFrame;
 
     /**
      * Creates a new Viewer inside the composite parent
@@ -85,8 +85,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      * @param page
      */
     public DownloadTableTreeView(ViewFrame viewFrame) {
-        super(viewFrame.getChildComposite(), viewFrame.getCore());
-        this.viewFrame = (DownloadViewFrame) viewFrame;
+        super(viewFrame);
 
         preferenceString = "download";
         columnLabels = new String[] {
@@ -104,7 +103,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
         columnDefaultWidths = new int[] { 50, 50, 250, 75, 75, 50, 50, 50, 50, 75, 75, 50, 75, 75 };
 
         gSorter = new DownloadTableTreeSorter(this);
-        tableTreeContentProvider = new DownloadTableTreeContentProvider(this, viewFrame.getCLabel());
+        tableTreeContentProvider = new DownloadTableTreeContentProvider(this);
         tableLabelProvider = new DownloadTableTreeLabelProvider(this);
         tableTreeMenuListener = new DownloadTableTreeMenuListener(this);
 
@@ -141,11 +140,10 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      * @see net.mldonkey.g2gui.view.viewers.GView#loadColumnIDs()
      */
     public void loadColumnIDs() {
-        if (advancedMode) {
+        if (advancedMode)
             super.loadColumnIDs();
-        } else {
+        else
             columnIDs = BASIC_COLUMNS;
-        }
     }
 
     /* (non-Javadoc)
@@ -158,9 +156,8 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
         if (cellEditors != null) {
             for (int i = 0; i < cellEditors.length; i++) {
-                if (cellEditors[ i ] != null) {
+                if (cellEditors[ i ] != null)
                     cellEditors[ i ].dispose();
-                }
             }
 
             cellEditors = null;
@@ -176,9 +173,8 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
      */
     public boolean canModify(Object element, String property) {
-        if (element instanceof FileInfo) {
+        if (element instanceof FileInfo)
             return true;
-        }
 
         return false;
     }
@@ -200,9 +196,8 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
         FileInfo fileInfo = (FileInfo) item.getData();
         String newName = ((String) value).trim();
 
-        if (newName.length() > 0) {
+        if (newName.length() > 0)
             fileInfo.setName(newName);
-        }
     }
 
     /**
@@ -236,16 +231,14 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
         if (advancedMode) {
             boolean b = PreferenceLoader.loadBoolean("displayChunkGraphs");
 
-            if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
+            if (columnIDs.indexOf(CHUNK_COLUMN) > 0)
                 tableTreeViewer.setChunksColumn(columnIDs.indexOf(CHUNK_COLUMN));
-            }
 
             if ((b == false) && tableTreeViewer.getEditors()) {
                 tableTreeViewer.closeAllTTE();
 
-                if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
+                if (columnIDs.indexOf(CHUNK_COLUMN) > 0)
                     tableTreeViewer.setEditors(b);
-                }
             } else if ((b == true) && !tableTreeViewer.getEditors()) {
                 if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
                     tableTreeViewer.setEditors(true);
@@ -266,22 +259,22 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      * @return boolean
      */
     public boolean clientsDisplayed() {
-        if (clientView != null) {
-            return viewFrame.getParentSashForm(false).getMaximizedControl() == null;
-        } else {
+        if (clientView != null)
+            return ((DownloadViewFrame) viewFrame).getParentSashForm(false).getMaximizedControl() == null;
+        else
             return false;
-        }
     }
 
     /**
      * toggle Clients table
      */
     public void toggleClientsTable() {
-        if (clientView == null) {
+        if (clientView == null)
             return;
-        }
 
-        WidgetFactory.setMaximizedSashFormControl(viewFrame.getParentSashForm(false), viewFrame.getViewForm());
+        DownloadViewFrame downloadViewFrame = (DownloadViewFrame) viewFrame;
+        WidgetFactory.setMaximizedSashFormControl(downloadViewFrame.getParentSashForm(false),
+            downloadViewFrame.getViewForm());
     }
 
     /* (non-Javadoc)
@@ -294,11 +287,10 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
         if (o instanceof FileInfo) {
             FileInfo fileInfo = (FileInfo) o;
 
-            if (tableTreeViewer.getExpandedState(fileInfo)) {
+            if (tableTreeViewer.getExpandedState(fileInfo))
                 tableTreeViewer.collapseToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
-            } else {
+            else
                 tableTreeViewer.expandToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
-            }
         } else if (o instanceof TreeClientInfo) {
             TreeClientInfo treeClientInfo = (TreeClientInfo) o;
             ClientDetailDialog c = new ClientDetailDialog(tableTreeViewer.getTableTree().getShell(),
@@ -306,11 +298,18 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
             c.open();
         }
     }
+
+    public ViewFrame getViewFrame() {
+        return viewFrame;
+    }
 }
 
 
 /*
 $Log: DownloadTableTreeView.java,v $
+Revision 1.9  2003/11/27 21:42:33  zet
+integrate ViewFrame a little more.. more to come.
+
 Revision 1.8  2003/11/24 01:33:27  zet
 move some classes
 

@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * ViewFrame
  *
- * @version $Id: ViewFrame.java,v 1.3 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: ViewFrame.java,v 1.4 2003/11/27 21:42:33 zet Exp $
  *
  */
 public class ViewFrame {
@@ -141,11 +141,30 @@ public class ViewFrame {
     public Control getControl() {
         return getViewForm();
     }
+
+    public void updateCLabelText(String string) {
+        if ((cLabel != null) && !cLabel.isDisposed())
+            if (!cLabel.getText().equals(string))
+                cLabel.setText(string);
+    }
+
+    public void updateCLabelTextInGuiThread(final String string) {
+        if ((cLabel != null) && !cLabel.isDisposed())
+            cLabel.getDisplay().asyncExec(new Runnable() {
+                    public void run() {
+                        updateCLabelText(string);
+                    }
+                });
+
+    }
 }
 
 
 /*
 $Log: ViewFrame.java,v $
+Revision 1.4  2003/11/27 21:42:33  zet
+integrate ViewFrame a little more.. more to come.
+
 Revision 1.3  2003/11/24 01:33:27  zet
 move some classes
 

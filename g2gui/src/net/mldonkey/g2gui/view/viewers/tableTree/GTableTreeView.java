@@ -23,13 +23,13 @@
 package net.mldonkey.g2gui.view.viewers.tableTree;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
 
 import org.eclipse.jface.viewers.TableTreeViewer;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * GTableTreeViewer
  *
- * @version $Id: GTableTreeView.java,v 1.5 2003/11/07 02:24:03 zet Exp $
+ * @version $Id: GTableTreeView.java,v 1.6 2003/11/27 21:42:33 zet Exp $
  *
  */
 public class GTableTreeView extends GView {
@@ -47,6 +47,11 @@ public class GTableTreeView extends GView {
 
     public GTableTreeView(Composite parent, CoreCommunication core) {
         this.core = core;
+    }
+
+    public GTableTreeView(ViewFrame viewFrame) {
+        this(viewFrame.getChildComposite(), viewFrame.getCore());
+        this.viewFrame = viewFrame;
     }
 
     /**
@@ -90,6 +95,9 @@ public class GTableTreeView extends GView {
 
 /*
 $Log: GTableTreeView.java,v $
+Revision 1.6  2003/11/27 21:42:33  zet
+integrate ViewFrame a little more.. more to come.
+
 Revision 1.5  2003/11/07 02:24:03  zet
 push sViewer into GView
 

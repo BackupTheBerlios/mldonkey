@@ -23,11 +23,11 @@
 package net.mldonkey.g2gui.view.viewers.table;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
 import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.viewers.TableViewer;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * Generic Table Viewer
  *
- * @version $Id: GTableView.java,v 1.4 2003/11/07 02:24:03 zet Exp $
+ * @version $Id: GTableView.java,v 1.5 2003/11/27 21:42:33 zet Exp $
  *
  */
 public class GTableView extends GView {
@@ -45,6 +45,11 @@ public class GTableView extends GView {
 
     public GTableView(Composite parent, CoreCommunication core) {
         this.core = core;
+    }
+    
+    public GTableView(ViewFrame viewFrame) {
+        this(viewFrame.getChildComposite(), viewFrame.getCore());
+        this.viewFrame = viewFrame;
     }
 
     /**
@@ -87,6 +92,9 @@ public class GTableView extends GView {
 
 /*
 $Log: GTableView.java,v $
+Revision 1.5  2003/11/27 21:42:33  zet
+integrate ViewFrame a little more.. more to come.
+
 Revision 1.4  2003/11/07 02:24:03  zet
 push sViewer into GView
 

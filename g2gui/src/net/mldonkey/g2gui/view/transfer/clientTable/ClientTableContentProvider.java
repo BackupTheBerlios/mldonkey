@@ -22,6 +22,10 @@
  */
 package net.mldonkey.g2gui.view.transfer.clientTable;
 
+import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
+
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -30,29 +34,22 @@ import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
 import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 
 import org.eclipse.jface.viewers.Viewer;
-
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Display;
-
-import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
 
 
 /**
  *
  * ClientTableContentProvider
  *
- * @version $Id: ClientTableContentProvider.java,v 1.10 2003/11/26 23:32:35 zet Exp $
+ * @version $Id: ClientTableContentProvider.java,v 1.11 2003/11/27 21:42:33 zet Exp $
  *
  */
 public class ClientTableContentProvider extends GTableContentProvider implements Observer {
     private long lastUpdateTime;
-    private CLabel headerCLabel;
-
+    
     public ClientTableContentProvider(ClientTableView cTableViewer, CLabel headerCLabel) {
         super(cTableViewer);
-        this.headerCLabel = headerCLabel;
     }
 
     /* (non-Javadoc)
@@ -133,7 +130,7 @@ public class ClientTableContentProvider extends GTableContentProvider implements
             }
         }
 
-        headerCLabel.setText(G2GuiResources.getString("TT_Clients") + ": " + totalConnected +
+        gView.getViewFrame().updateCLabelText(G2GuiResources.getString("TT_Clients") + ": " + totalConnected +
             " / " + totalClients + " " + G2GuiResources.getString("ENS_CONNECTED").toLowerCase());
     }
 }
@@ -141,6 +138,9 @@ public class ClientTableContentProvider extends GTableContentProvider implements
 
 /*
 $Log: ClientTableContentProvider.java,v $
+Revision 1.11  2003/11/27 21:42:33  zet
+integrate ViewFrame a little more.. more to come.
+
 Revision 1.10  2003/11/26 23:32:35  zet
 sync
 
