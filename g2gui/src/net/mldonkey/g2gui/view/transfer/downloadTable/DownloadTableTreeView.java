@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeView.java,v 1.10 2003/11/28 20:52:36 zet Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.11 2004/02/05 20:44:43 psy Exp $
  *
  */
 public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
@@ -102,13 +102,14 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
         columnDefaultWidths = new int[] { 50, 50, 250, 75, 75, 50, 50, 50, 50, 75, 75, 50, 75, 75 };
 
+        
         gSorter = new DownloadTableTreeSorter(this);
         tableTreeContentProvider = new DownloadTableTreeContentProvider(this);
         tableLabelProvider = new DownloadTableTreeLabelProvider(this);
         tableTreeMenuListener = new DownloadTableTreeMenuListener(this);
 
         advancedMode = PreferenceLoader.loadBoolean("advancedMode");
-
+        
         createContents(viewFrame.getChildComposite());
     }
 
@@ -116,8 +117,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      * @see net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeView#createContents(org.eclipse.swt.widgets.Composite)
      */
     public void createContents(Composite parent) {
-        super.createContents(parent);
-
+    	
+    	super.createContents(parent);
+    	
         // Does this pack() hurt or help?  
         // Header label text will disappear (SWT Bug)
         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=26632
@@ -300,6 +302,10 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
 /*
 $Log: DownloadTableTreeView.java,v $
+Revision 1.11  2004/02/05 20:44:43  psy
+hopefully fixed dynamic column behaviour under gtk by introducing a
+bogus column.
+
 Revision 1.10  2003/11/28 20:52:36  zet
 close/reopen tte on set pref
 

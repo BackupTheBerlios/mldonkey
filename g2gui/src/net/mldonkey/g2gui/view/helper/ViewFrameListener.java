@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ViewFrameListener
  *
- * @version $Id: ViewFrameListener.java,v 1.8 2003/12/17 13:17:37 lemmy Exp $
+ * @version $Id: ViewFrameListener.java,v 1.9 2004/02/05 20:44:43 psy Exp $
  *
  */
 public abstract class ViewFrameListener implements IMenuListener, DisposeListener {
@@ -82,7 +82,7 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
         
         MenuManager sortSubMenu = new MenuManager(G2GuiResources.getString("MISC_SORT"));
 
-        for (int i = 0; i < viewFrame.getGView().getTable().getColumnCount(); i++)
+        for (int i = 0; i < viewFrame.getGView().getRealColumnCount(); i++)
             sortSubMenu.add(new SortByColumnAction(viewFrame.getGView(), i));
 
         menuManager.add(sortSubMenu);
@@ -93,7 +93,7 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
     	
     	MenuManager favoriteSubMenu = new MenuManager(G2GuiResources.getString("MISC_BESTFIT"));
 
-    	for (int i = 0; i < viewFrame.getGView().getTable().getColumnCount(); i++)
+    	for (int i = 0; i < viewFrame.getGView().getRealColumnCount(); i++)
     		favoriteSubMenu.add(new BestFitColumnAction(viewFrame.getGView(), i));
 
     	menuManager.add(favoriteSubMenu);
@@ -178,6 +178,10 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
 
 /*
 $Log: ViewFrameListener.java,v $
+Revision 1.9  2004/02/05 20:44:43  psy
+hopefully fixed dynamic column behaviour under gtk by introducing a
+bogus column.
+
 Revision 1.8  2003/12/17 13:17:37  lemmy
 show all enabled and !virtual networks in the panelistener network filter
 

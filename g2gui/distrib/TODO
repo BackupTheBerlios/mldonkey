@@ -4,14 +4,13 @@ G2gui's TODO-list (last update: 30.01.04)
  ------------------
 | Important things |
  ------------------
+
 * Make local core-controller relaunch-compatible, without killing the running core.
   Alternatively kill the core and restart it?
   * PreferenceLoader.*Relaunching() is a bit sub-optimal
   
 * Fix big memleak when relaunching g2gui after a pref-change. MainWindow does not seem to 
   be disposed properly (important!)
-
-* Fix damaged dynamic-column behaviour under linux (important!)
 
 * Disable "boog ditekted" when using native version
   Maybe do a relaunch() (also after displaying the stracktrace) if the user wishes to do so?
@@ -21,6 +20,10 @@ G2gui's TODO-list (last update: 30.01.04)
 * Servercount in networkItem tooltip is wrong,
   connecting servers currently are counted as connected ones
 
+* The mousewheel does not scroll in motif but produces clicks/doubleclicks!
+  Very irritating and you accidently download stuff from the results-list etc.
+
+* Implement a global hotkey/command for column-packing
 
  ----------------------
 | Feature Enhancements |

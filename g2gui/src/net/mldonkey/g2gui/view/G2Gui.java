@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.64 2004/01/29 08:25:04 lemmy Exp $
+ * @version $Id: G2Gui.java,v 1.65 2004/02/05 20:44:44 psy Exp $
  *
  */
 public class G2Gui {
@@ -227,10 +227,10 @@ public class G2Gui {
         // should the core be spawned by the gui?
         // if yes, set hostname to localhost
 		boolean runCore = false;
-		if (!PreferenceLoader.loadString("coreExecutable").equals("") && !PreferenceLoader.isRelaunching()) {
-			if (debug) System.out.println("Setting hostname=localhost");
+		if (!PreferenceLoader.loadString("coreExecutable").equals("")) {
+			if (debug) System.out.println("A coreExecutable has been given");
 			runCore = true;
-			PreferenceLoader.setValue("hostname", "localhost");
+			//PreferenceLoader.setValue("hostname", "localhost");
 		}
 			
 		// create the splash
@@ -267,9 +267,6 @@ public class G2Gui {
 			display.update();
         }
         
-        // we're almost done with restarting, so set it to false
-        PreferenceLoader.setRelaunching(false);
-        
         // read parameters from our preferencestore
         readParams();
         if (debug) System.out.println("Host: " + hostname + ":" + port + " User: " + username);
@@ -277,9 +274,11 @@ public class G2Gui {
         Socket socket = initializeSocket( false );
 		if (socket == null ) return;
 
+		// we're almost done with restarting, so set it to false
+		PreferenceLoader.setRelaunching(false);
+		
         PreferenceLoader.saveStore();
 
-        
         core = startCore( waiterObject, socket, false );
         
 		// handle some errors the core can cause
@@ -612,6 +611,10 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.65  2004/02/05 20:44:44  psy
+hopefully fixed dynamic column behaviour under gtk by introducing a
+bogus column.
+
 Revision 1.64  2004/01/29 08:25:04  lemmy
 removed duplicated code
 

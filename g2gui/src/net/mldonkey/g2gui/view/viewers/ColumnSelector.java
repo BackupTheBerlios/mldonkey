@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view.viewers;
 
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
+import net.mldonkey.g2gui.view.helper.VersionCheck;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -52,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.10 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: ColumnSelector.java,v 1.11 2004/02/05 20:44:43 psy Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -64,6 +65,7 @@ public class ColumnSelector extends Dialog {
     private List leftList;
     private List rightList;
     private String prefOption;
+    private char bogusColumn;
 
     /**
      * @param parentShell
@@ -74,16 +76,54 @@ public class ColumnSelector extends Dialog {
     public ColumnSelector(Shell parentShell, String[] columnLegend, String allColumnIDs,
         String prefOption) {
         super(parentShell);
-        this.columnLegend = columnLegend;
+        
+        /* how many columns in total do we have? */
+        int totalColumns = allColumnIDs.length();
+        System.out.println("All columns: " + totalColumns);
+        
+        /* remember the gtk bogus column if we use gtk */
+        if (VersionCheck.isGtk()) {
+	        bogusColumn = allColumnIDs.charAt( allColumnIDs.length() - 1);
+	        
+	        /* cut the bogus column from the string */
+	        allColumnIDs = allColumnIDs.substring(0, allColumnIDs.length() - 1);
+	        
+	        /* reduce the amount of columns by one */
+	        totalColumns -= 1;
+        }
+        
+        System.out.println("allColumnIDs: " + allColumnIDs + ", bogus cut: " + bogusColumn);
+        
+        /* copy over the ColumnLegends into our array */
+        this.columnLegend = new String[totalColumns];
+        for (int i = 0; i < totalColumns; i++) {
+        	System.out.println("Copying: " + columnLegend[i]);
+        	this.columnLegend[i] = columnLegend[i];
+        }
+        
         this.allColumnIDs = allColumnIDs;
         this.prefOption = prefOption + "TableColumns";
-
+        
+        /* check if we have a previously saved column-setup,
+         * use all available columns if nothing was saved 
+         */ 
         String aString = PreferenceLoader.loadString(this.prefOption);
-        rightColumnIDs = ((!aString.equals("")) ? aString : allColumnIDs);
+        
         leftColumnIDs = "";
-
-        for (int i = 0; i < allColumnIDs.length(); i++) {
-            if (rightColumnIDs.indexOf(allColumnIDs.charAt(i)) == -1) {
+        rightColumnIDs = ((!aString.equals("")) ? aString : allColumnIDs);
+        
+        /* check for a gtk bogus column and remove it,
+         *  we do not want to have it in our list */
+        if ( rightColumnIDs.charAt(rightColumnIDs.length()-1) == 
+        	(char) (ColumnSelector.MAGIC_NUMBER + totalColumns) )
+        	rightColumnIDs = rightColumnIDs.substring(0, rightColumnIDs.length() - 1); 
+        
+        //System.out.println("Right: " + rightColumnIDs);
+		
+        /* check which columns are unused and put them into the left list */
+        for (int i = 0; i < totalColumns; i++) {
+        	System.out.println("checking: " + allColumnIDs.charAt(i));
+        	if (rightColumnIDs.indexOf(allColumnIDs.charAt(i)) == -1) {
                 leftColumnIDs += allColumnIDs.charAt(i);
             }
         }
@@ -192,7 +232,10 @@ public class ColumnSelector extends Dialog {
      */
     public void savePrefs() {
         if (rightColumnIDs.length() > 1) {
-            PreferenceLoader.setValue(prefOption, rightColumnIDs);
+            /* add our gtk bogus column before saving */
+        	if (VersionCheck.isGtk()) rightColumnIDs += bogusColumn;
+        	
+        	PreferenceLoader.setValue(prefOption, rightColumnIDs);
             PreferenceLoader.saveStore();
         }
     }
@@ -209,11 +252,12 @@ public class ColumnSelector extends Dialog {
      * @param string
      * @param list
      */
-    public void refreshList(String string, List list) {
+    public void refreshList(String columnIDs, List list) {
         list.removeAll();
-
-        for (int i = 0; i < string.length(); i++) {
-            int n = string.charAt(i) - MAGIC_NUMBER;
+        //System.out.println("Refresh: columnIDs (" + columnIDs.length() + ")");
+        //System.out.println("Refresh: columnLegend " + columnLegend.length);
+        for (int i = 0; i < columnIDs.length(); i++) {
+            int n = columnIDs.charAt(i) - MAGIC_NUMBER;
             list.add(G2GuiResources.getString(columnLegend[ n ]));
         }
     }
@@ -314,6 +358,10 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.11  2004/02/05 20:44:43  psy
+hopefully fixed dynamic column behaviour under gtk by introducing a
+bogus column.
+
 Revision 1.10  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

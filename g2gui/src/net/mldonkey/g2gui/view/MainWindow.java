@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.8 2004/01/28 22:15:34 psy Exp $
+ * @version $Id: MainWindow.java,v 1.9 2004/02/05 20:44:44 psy Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText;
@@ -134,7 +134,7 @@ public class MainWindow implements ShellListener {
                         aTab.dispose();
                     }
 
-                    /* If we have created the core, kill it */
+                    /* If we have created the core, kill it only if we _really_ shutdown */
                     if (G2Gui.getCoreConsole() != null && !PreferenceLoader.isRelaunching()) {
                         Message killCore = new EncodeMessage(Message.S_KILL_CORE);
                         killCore.sendMessage(mldonkey);
@@ -489,6 +489,10 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.9  2004/02/05 20:44:44  psy
+hopefully fixed dynamic column behaviour under gtk by introducing a
+bogus column.
+
 Revision 1.8  2004/01/28 22:15:34  psy
 * Properly handle disconnections from the core
 * Fast inline-reconnect

@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.view.viewers.GView;
 /**
  * FavoriteColumnAction
  *
- * @version $Id: BestFitColumnAction.java,v 1.1 2003/12/07 19:40:19 lemmy Exp $ 
+ * @version $Id: BestFitColumnAction.java,v 1.2 2004/02/05 20:44:43 psy Exp $ 
  *
  */
 public class BestFitColumnAction extends ColumnAction implements ControlListener {
@@ -52,7 +52,8 @@ public class BestFitColumnAction extends ColumnAction implements ControlListener
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.ControlListener#controlMoved(org.eclipse.swt.events.ControlEvent)
 	 */
-	public void controlMoved(ControlEvent e) { }
+	public void controlMoved(ControlEvent e) { 
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.ControlListener#controlResized(org.eclipse.swt.events.ControlEvent)
@@ -67,6 +68,10 @@ public class BestFitColumnAction extends ColumnAction implements ControlListener
 }
 /*
 $Log: BestFitColumnAction.java,v $
+Revision 1.2  2004/02/05 20:44:43  psy
+hopefully fixed dynamic column behaviour under gtk by introducing a
+bogus column.
+
 Revision 1.1  2003/12/07 19:40:19  lemmy
 [Bug #1156] Allow a certain column to be 100% by pref
 

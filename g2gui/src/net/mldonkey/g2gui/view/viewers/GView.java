@@ -28,6 +28,7 @@ import java.util.Map;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.helper.ViewFrameListener;
+import net.mldonkey.g2gui.view.helper.VersionCheck;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
@@ -57,12 +58,13 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.17 2003/12/17 13:06:04 lemmy Exp $
+ * @version $Id: GView.java,v 1.18 2004/02/05 20:44:43 psy Exp $
  *
  */
 public abstract class GView {
     private BestFitColumnAction myCListener;
-	
+	private int[] columnWidths;
+    
 	protected boolean manualDispose;
     protected CoreCommunication core;
     protected String[] columnLabels;
@@ -234,33 +236,90 @@ public abstract class GView {
         return true;
     }
 
+    
+    /**
+     * This method strips a gtk bogus column from the string if it exists. 
+     * @param prefCols a columnID-String
+     * @return a columnID-String without the bogus column in it
+     */
+    public String stripBogusColumn(String prefCols) {
+    	if (prefCols.length() > 0 && 
+    		(prefCols.charAt(prefCols.length()-1) == 
+    		(char) (ColumnSelector.MAGIC_NUMBER + columnLabels.length))) {
+    		System.out.println("NON-GTK: Killing bogos column: " + (char) (ColumnSelector.MAGIC_NUMBER + columnLabels.length));
+    		return prefCols.substring(0, prefCols.length() - 1);
+    	} else
+    		return prefCols;
+    }
+    
     /**
      * loadColumnIDs
      */
     protected void loadColumnIDs() {
-        String prefCols = PreferenceLoader.loadString(preferenceString + "TableColumns");
-
-        if (validColumnIDs(prefCols, allColumns))
+    	/* read out column-config from the prefs */
+    	String prefCols = PreferenceLoader.loadString(preferenceString + "TableColumns");
+    	
+    	/* check if the last column is the gtk bogus column */
+    	if (VersionCheck.isGtk()) {
+    		char bogusColumn = (char) (ColumnSelector.MAGIC_NUMBER + columnLabels.length-1);
+    		/* add the gtk bogus column if it is not present */
+    		if ( prefCols.length() > 0 && bogusColumn != prefCols.charAt(prefCols.length()-1)) {
+    			prefCols += bogusColumn;
+    		}
+		/* check for a gtk bogus column and remove it */
+    	} else prefCols = stripBogusColumn(prefCols);
+    	
+    	/* check if all our previously saved columns are within our valid column-range */
+    	if (validColumnIDs(prefCols, allColumns)) {
+        	/* they are all valid and exist, use them */
             columnIDs = prefCols;
-        else {
-            columnIDs = allColumns;
-
+        } else {
+        	/* reset: use all columns which are available */
+        	columnIDs = allColumns;
             PreferenceLoader.setValue(preferenceString + "TableColumns", columnIDs);
         }
+   
     }
 
+    /**
+     * This method is used to add an extra-column for GTK to improve the
+     * table-behaviour consistency for the user. 
+     * Blame GTK for sucking that bad ;).
+     * 
+     * We're simply adding a new column to the column-arrays.
+     */
+    protected void addBogusColumn() {
+    	/* TODO: improve the way for adding the bogus GTK-column
+    	 * This is really really ugly.
+    	 */ 
+    	String[] labelTemp = new String[columnLabels.length + 1];
+    	for (int i = 0; i < columnLabels.length; i++) labelTemp[i] = columnLabels[i];
+    	labelTemp[labelTemp.length - 1] = "";
+    	columnLabels = (String[]) labelTemp.clone();
+
+    	int[] alignTemp = new int[columnAlignment.length + 1];
+    	for (int i = 0; i < columnAlignment.length; i++) alignTemp[i] = columnAlignment[i];
+    	alignTemp[alignTemp.length - 1] = SWT.RIGHT;
+    	columnAlignment = (int[]) alignTemp.clone();
+    	
+    	int[] widthsTemp = new int[columnDefaultWidths.length + 1];
+    	for (int i = 0; i < columnDefaultWidths.length; i++) widthsTemp[i] = columnDefaultWidths[i];
+    	widthsTemp[widthsTemp.length - 1] = 0;
+    	columnDefaultWidths = (int[]) widthsTemp.clone();
+    }
+    
     /**
      * createColumns
      */
     protected void createColumns() {
-        loadColumnIDs();
+    	loadColumnIDs();
         ((ICustomViewer) getViewer()).setColumnIDs(columnIDs);
 
         Table table = getTable();
         table.setHeaderVisible(true);
 
         TableColumn[] tableColumns = table.getColumns();
-
+        
         // The SWT TableColumn DisposeEvent.widget returns a width of 0 when manually disposing
         manualDispose = true;
 
@@ -271,15 +330,16 @@ public abstract class GView {
 
         for (int i = 0; i < columnIDs.length(); i++) {
             final int columnIndex = i;
-            final int arrayItem = columnIDs.charAt(i) - 65;
-
+            final int arrayItem;
+            arrayItem = columnIDs.charAt(i) - 65;
+   
             TableColumn tableColumn = new TableColumn(table, columnAlignment[ arrayItem ]);
             PreferenceLoader.setDefault(columnLabels[ arrayItem ], columnDefaultWidths[ arrayItem ]);
             tableColumn.setText(G2GuiResources.getString(columnLabels[ arrayItem ]));
 
             int oldWidth = PreferenceLoader.getInt(columnLabels[ arrayItem ]);
             tableColumn.setWidth((oldWidth > 0) ? oldWidth : columnDefaultWidths[ arrayItem ]);
-
+   
             tableColumn.addDisposeListener(new DisposeListener() {
                     public synchronized void widgetDisposed(DisposeEvent e) {
                         TableColumn thisColumn = (TableColumn) e.widget;
@@ -289,13 +349,35 @@ public abstract class GView {
                     }
                 });
 
+            /* add our sorter */
             tableColumn.addListener(SWT.Selection,
                 new Listener() {
                     public void handleEvent(Event e) {
-                        sortByColumn(columnIndex);
+                    	sortByColumn(columnIndex);
                     }
                 });
+
+            /* event which is triggered on a column-resize,
+             * be careful: while g2gui is starting up, its triggered very often
+             */
+            tableColumn.addListener(SWT.Resize,
+            	new Listener() {
+            	public void handleEvent(Event e) {
+            		/* something */
+            	}
+            }); 
         }
+        
+    }
+
+    /**
+     * Determine the number of "real" columns, which is
+     * the number of all columns minus a possibly existent gtk bogus column
+     * @return the number of real columns
+     */
+    public int getRealColumnCount() {
+    	return VersionCheck.isGtk() ? 
+			getTable().getColumns().length - 1 : getTable().getColumns().length; 
     }
 
     /**
@@ -306,17 +388,36 @@ public abstract class GView {
         refresh();
     }
     
-    public void setColumnWidth( int columnId ) {
+    public void setColumnWidth( int dynColumnId ) {
     	Table table = getTable();
     	if ( !table.isDisposed() ) {
-    		int totalWidth = table.getSize().x - 25; //why is this needed?
+    		/* adjust the right offset to prevent the horizontal scrollbar
+    		 * from appearing
+    		 */
+    		int rightOffset = table.getVerticalBar().isVisible() ? 25 : 10;
+    		int totalWidth = table.getSize().x - rightOffset;
+    		
     		TableColumn[] columns = table.getColumns();
-    		for ( int i = 0; i < columns.length; i++ ) {
-   				if ( i != columnId )
-   					totalWidth -= columns[ i ].getWidth();
+    		
+    		/* only cycle through "real" columns and not our gtk bogus column */
+    		int realColumns = getRealColumnCount();
+    		for ( int i = 0; i < realColumns; i++ ) {
+    			/* make sure to not substract the dynamic column from totalWidth */ 
+    			if ( i != dynColumnId )
+    				totalWidth -= columns[ i ].getWidth();
     		}
+
     		//TODO find reason for IllegalArgumentException
-    		table.getColumn( columnId ).setWidth( totalWidth );
+    		/* make sure that columns cannot vanish */
+    		if (totalWidth < 10) totalWidth = 10;
+    		table.getColumn( dynColumnId ).setWidth( totalWidth );
+   		
+    		/* when using GTK, we have our additional right column
+    		 * which will automatically expand to fit (standard GTK behaviour),
+    		 * even if we assign it a size of 1.
+    		 */ 
+    		if (VersionCheck.isGtk())
+    			table.getColumn(columns.length-1).setWidth(1);
     	}
     }
 
@@ -326,9 +427,14 @@ public abstract class GView {
     protected void createContents() {
         sViewer.setData(GViewerFilter.class.getName(), new HashMap());
 
+        /* add a bogus column for GTK to allow homogenous table-handling */
+        if (VersionCheck.isGtk()) 
+        	addBogusColumn();
+        
         for (int i = 0; i < columnLabels.length; i++)
             allColumns += String.valueOf((char) (ColumnSelector.MAGIC_NUMBER + i));
-
+        
+        
         Table table = getTable();
         table.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -349,6 +455,7 @@ public abstract class GView {
         table.setMenu(popupMenu.createContextMenu(getTable()));
 
         sViewer.setSorter(gSorter);
+        //setColumnWidth(getTable().);
     }
 
     /* (non-Javadoc)
@@ -425,6 +532,10 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.18  2004/02/05 20:44:43  psy
+hopefully fixed dynamic column behaviour under gtk by introducing a
+bogus column.
+
 Revision 1.17  2003/12/17 13:06:04  lemmy
 save all panelistener states correctly to the prefstore
 

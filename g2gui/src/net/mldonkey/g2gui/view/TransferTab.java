@@ -40,7 +40,7 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.105 2004/01/28 22:15:34 psy Exp $
+ * @version $Id: TransferTab.java,v 1.106 2004/02/05 20:44:43 psy Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -92,7 +92,6 @@ public class TransferTab extends GuiTab {
     private void createUploadsView(SashForm sashForm) {
         String sashPrefString = "uploadsSash";
         SashForm sashForm2 = WidgetFactory.createSashForm(sashForm, sashPrefString);
-        //addViewFrame(new SharesViewFrame(sashForm2, "TT_Uploads", "UpArrowBlue", this));
         addViewFrame(new UploadViewFrame(sashForm2, "TT_Uploads", "UpArrowBlue", this));
         WidgetFactory.loadSashForm(sashForm2, sashPrefString);
     }
@@ -118,6 +117,10 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.106  2004/02/05 20:44:43  psy
+hopefully fixed dynamic column behaviour under gtk by introducing a
+bogus column.
+
 Revision 1.105  2004/01/28 22:15:34  psy
 * Properly handle disconnections from the core
 * Fast inline-reconnect
