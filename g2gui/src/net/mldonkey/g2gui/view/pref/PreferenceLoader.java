@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.62 2004/03/23 20:21:37 psy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.63 2004/03/23 20:27:31 psy Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -95,8 +95,10 @@ public class PreferenceLoader {
     		preferenceStore.load();
     	}
     	catch ( IOException e ) {
-    		// no pref file is created -> lets create one (including all needed directories)
-    		new File( new File( file ).getParent() ).mkdirs();
+    		// no pref file is created -> lets create one 
+    		// (including all needed directories when under linux)
+    		if (!VersionCheck.isWin32()) 
+    			new File( new File( file ).getParent() ).mkdirs();
     		preferenceStore.save();
     		System.out.println("Created new configfile.");
     	}
@@ -440,6 +442,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.63  2004/03/23 20:27:31  psy
+only create dirs for g2gui.pref if not under win32
+
 Revision 1.62  2004/03/23 20:21:37  psy
 fixed little mistake
 
