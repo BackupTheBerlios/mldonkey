@@ -23,13 +23,12 @@
 package net.mldonkey.g2gui.view.main;
 
 import java.text.DecimalFormat;
-
 import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.helper.VersionInfo;
 import net.mldonkey.g2gui.model.ClientStats;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.widgets.Shell;
 
@@ -37,7 +36,7 @@ import org.eclipse.swt.widgets.Shell;
  * A temp class to help use swt TrayIcon on win32 only
  * https://bugs.eclipse.org/bugs/show_bug.cgi?id=30834
  *
- * @version $Id: Minimizer.java,v 1.4 2003/09/25 00:51:23 zet Exp $
+ * @version $Id: Minimizer.java,v 1.5 2003/10/11 22:53:56 zet Exp $
  */
 public class Minimizer implements Observer {
 	private static final DecimalFormat decimalFormat = new DecimalFormat( "0.#" );
@@ -57,7 +56,7 @@ public class Minimizer implements Observer {
     }
 
     public void setTitleBarText() {
-        shell.setText( titleBarText + " " + G2GuiResources.getString( "BUILD_INFORMATION" ) );
+        shell.setText( titleBarText + " v" + VersionInfo.getVersion() );
     }
 
     public boolean close() {
@@ -96,6 +95,9 @@ public class Minimizer implements Observer {
 
 /*
 $Log: Minimizer.java,v $
+Revision 1.5  2003/10/11 22:53:56  zet
+version info
+
 Revision 1.4  2003/09/25 00:51:23  zet
 not much
 
