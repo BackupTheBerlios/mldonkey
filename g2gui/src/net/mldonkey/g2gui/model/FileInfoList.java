@@ -31,10 +31,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoList.java,v 1.5 2003/06/14 17:41:03 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoList.java,v 1.6 2003/06/14 19:30:41 lemmstercvs01 Exp $ 
  *
  */
-public class FileInfoList implements Information {
+public class FileInfoList implements Information, InfoList {
 	/**
 	 * 
 	 */
@@ -45,6 +45,15 @@ public class FileInfoList implements Information {
 	 */
 	public FileInfoList() {
 		this.fileInfoList = new TIntObjectHashMap();
+	}
+	
+	/**
+	 * Store a key/value pair in this object
+	 * @param key The Key
+	 * @param value The FileInfo object
+	 */
+	public void put( int key, FileInfo value ) {
+		this.fileInfoList.put( key, value );
 	}
 
 	/**
@@ -62,7 +71,7 @@ public class FileInfoList implements Information {
 		for ( int i = 0; i < listElem; i++ ) {
 			FileInfo fileInfo = new FileInfo();
 			fileInfo.readStream( messageBuffer );
-			this.fileInfoList.put( fileInfo.getId(), fileInfo );
+			this.put( fileInfo.getId(), fileInfo );
 		}
 	}
 	
@@ -94,6 +103,9 @@ public class FileInfoList implements Information {
 
 /*
 $Log: FileInfoList.java,v $
+Revision 1.6  2003/06/14 19:30:41  lemmstercvs01
+interface added
+
 Revision 1.5  2003/06/14 17:41:03  lemmstercvs01
 foobar
 
