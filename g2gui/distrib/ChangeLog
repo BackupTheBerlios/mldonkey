@@ -1,3 +1,6 @@
+2004/02/23: vnc
+	* (Almost all) dynamic columns are saved properly now
+
 2004/02/17: vnc
 	* Fixed G2gui problem with 2.5.7 and newer Cores which resulted
 		in a nullpointer / segfault problem

@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ViewFrameListener
  *
- * @version $Id: ViewFrameListener.java,v 1.9 2004/02/05 20:44:43 psy Exp $
+ * @version $Id: ViewFrameListener.java,v 1.10 2004/02/23 15:28:08 psy Exp $
  *
  */
 public abstract class ViewFrameListener implements IMenuListener, DisposeListener {
@@ -134,15 +134,17 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
      */
     protected void saveBestFit() {
     	if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
-    		PreferenceLoader.setValue( this.getClass().getName() + "BestFit", gView.getColumnControlListenerIsOn() );
+    		/* save with an offset because if no value is set, 0 is returned */
+    		PreferenceLoader.setValue( this.getClass().getName() + "BestFit", gView.getColumnControlListenerIsOn() + 10);
     }
 
     /**
      * reads the bestfit column from the pref file and sets them on the table
      */
     protected void setBestFit() {
-    	int i = PreferenceLoader.getInt( this.getClass().getName() + "BestFit" );
-    	if ( i != -1 )
+    	/* do not forget to substract the offset */
+    	int i = PreferenceLoader.getInt( this.getClass().getName() + "BestFit" ) - 10;
+    	if ( i > -1 )
     		new BestFitColumnAction( gView, i ).run();
     }
 
@@ -178,6 +180,9 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
 
 /*
 $Log: ViewFrameListener.java,v $
+Revision 1.10  2004/02/23 15:28:08  psy
+dynamic columns are saved properly now, only the searchtab needs some more fixing
+
 Revision 1.9  2004/02/05 20:44:43  psy
 hopefully fixed dynamic column behaviour under gtk by introducing a
 bogus column.
