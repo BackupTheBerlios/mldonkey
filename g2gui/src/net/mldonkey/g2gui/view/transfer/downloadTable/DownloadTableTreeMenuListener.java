@@ -22,6 +22,10 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -48,7 +52,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
@@ -66,6 +69,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.MessageBox;
@@ -75,16 +79,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 
 /**
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.13 2003/10/13 21:27:00 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.14 2003/10/15 00:49:56 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -99,6 +99,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     private CoreCommunication core;
     private boolean createClientTable = false;
     private boolean myDrag = false;
+    private final int WS_JIGLE = 1;
+    private final int WS_BITZI = 2;
 
     public DownloadTableTreeMenuListener( final CustomTableTreeViewer tableTreeViewer, TableViewer clientTableViewer, CoreCommunication mldonkey ) {
         this.tableTreeViewer = tableTreeViewer;
@@ -305,6 +307,14 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
             menuManager.add( new LinkToClipboardAction( false ) );
             menuManager.add( new LinkToClipboardAction( true ) );
         }
+        
+        if ( selectedFile != null && advancedMode ) {
+        	MenuManager webServicesMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_SERVICES" ) );
+        	webServicesMenu.add( new WebServiceAction( WS_JIGLE ) ) ;
+        	webServicesMenu.add( new WebServiceAction( WS_BITZI ) ) ;
+        	menuManager.add( webServicesMenu );
+        }
+        
     }
 
     // Helpers
@@ -643,6 +653,40 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
             clipBoard.dispose();
         }
     }
+   
+    
+    /**
+     * WebServiceAction
+     */
+    private class WebServiceAction extends Action {
+    
+    	private int type;
+    
+    	public WebServiceAction( int type ) {
+    		super();
+    		this.type = type;
+    		switch (type) {
+    			case WS_JIGLE:
+    				setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_JIGLE_LOOKUP" ) );
+    				break;
+    			case WS_BITZI: 
+    				setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_WEB_BITZI_LOOKUP" ) );
+    				break;
+    		}
+    	}
+    	
+		public void run() {
+			switch (type) {
+				case WS_JIGLE:
+					Program.launch("http://www.jigle.com/search?p=ed2k:" + selectedFile.getMd4());
+					break;
+				case WS_BITZI: 
+					Program.launch("http://bitzi.com/lookup/" + selectedFile.getMd4());
+					break;		
+			}	
+		}
+    }
+    
 
     /**
      * PriorityInputDialog
@@ -693,6 +737,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.14  2003/10/15 00:49:56  zet
+add web services hash lookup
+
 Revision 1.13  2003/10/13 21:27:00  zet
 nil
 
