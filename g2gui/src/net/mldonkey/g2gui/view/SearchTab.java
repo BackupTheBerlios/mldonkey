@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.TabItem;
  * SearchTab
  *
  * @author $user$
- * @version $Id: SearchTab.java,v 1.11 2003/08/18 01:42:24 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.12 2003/08/18 05:22:27 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -134,9 +134,6 @@ public class SearchTab extends GuiTab {
 				CTabItem item = ( CTabItem ) event.item;
 				( ( SearchResult ) item.getData() ).widgetDisposed( null );
 	
-				/* dispose the tabitem image */
-				item.getImage().dispose();
-	
 				/* close the tab item */
 				item.dispose();
 	
@@ -208,6 +205,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.12  2003/08/18 05:22:27  zet
+remove image.dispose
+
 Revision 1.11  2003/08/18 01:42:24  zet
 centralize resource bundle
 
