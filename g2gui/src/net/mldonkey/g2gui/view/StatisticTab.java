@@ -35,6 +35,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -42,11 +44,12 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.24 2003/09/13 22:24:42 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.25 2003/09/16 01:58:25 zet Exp $
  */
 
 public class StatisticTab extends GuiTab {
@@ -102,7 +105,6 @@ public class StatisticTab extends GuiTab {
 		
 		// Bottom graph for Sash				
 		SashForm graphSash = new SashForm ( mainSash, SWT.HORIZONTAL );
-		
 		ViewForm downloadsGraphViewForm = new ViewForm( graphSash, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		ViewForm uploadsGraphViewForm = new ViewForm( graphSash, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		
@@ -120,6 +122,8 @@ public class StatisticTab extends GuiTab {
 		uploadsGraphViewForm.setTopLeft(uploadsCLabel);
 		uploadsGraphViewForm.setContent(uploadsGraphControl);
 		
+		uploadsCLabel.addMouseListener( new MaximizeSashMouseAdapter( graphSash, uploadsGraphViewForm ) );
+		downloadsCLabel.addMouseListener( new MaximizeSashMouseAdapter( graphSash, downloadsGraphViewForm ) );
 		
 		// Until top composite has stats	 		
 		mainSash.setWeights( new int[] { 0, 10 } );	 		
@@ -144,10 +148,32 @@ public class StatisticTab extends GuiTab {
 		downloadsGraphColor1.dispose();
 		downloadsGraphColor2.dispose();
 	}
+	
+	public class MaximizeSashMouseAdapter extends MouseAdapter {
+		private SashForm sashForm;
+		private Control control;
+		
+		public MaximizeSashMouseAdapter(SashForm sashForm, Control control) {
+			this.sashForm = sashForm;
+			this.control = control;
+		}
+		public void mouseDoubleClick(MouseEvent e) {
+			if (sashForm.getMaximizedControl() == null) {
+				sashForm.setMaximizedControl(control);
+			} else {
+				sashForm.setMaximizedControl(null);
+			}
+		}
+	}
+	
+	
 
 }
 /*
 $Log: StatisticTab.java,v $
+Revision 1.25  2003/09/16 01:58:25  zet
+maximize on dblclick
+
 Revision 1.24  2003/09/13 22:24:42  zet
 int[] array
 
