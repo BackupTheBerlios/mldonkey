@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.*;
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.9 2003/07/02 15:57:23 dek Exp $ 
+ * @version $Id: General.java,v 1.10 2003/07/02 16:16:47 dek Exp $ 
  *
  */
 public class General extends PreferencePage {	
@@ -53,10 +53,13 @@ public class General extends PreferencePage {
 	private boolean autoCommit;
 	private CoreCommunication mldonkey;
 	private boolean connected;	
-	public StringFieldEditor clientNameField;
+	private StringFieldEditor clientNameField;
+
 
 	/**
-	 * @param preferenceStore
+	 * @param preferenceStore_ where to store the Data
+	 * @param connected are we connected to mldonkey-core
+	 * @param mldonkey the core
 	 */
 	public General( PreferenceStore preferenceStore_, boolean connected, CoreCommunication mldonkey ) {
 		super( "General Settings" );	
@@ -69,14 +72,14 @@ public class General extends PreferencePage {
 	}
 	private void getOptionsFromCore(
 		boolean connected,
-		CoreCommunication mldonkey) {
-		if (connected){
+		CoreCommunication mldonkey ) {
+		if ( connected ) {
 			this.options = mldonkey.getOptions();		
-			BusyIndicator.showWhile(null,new Runnable(){			
+			BusyIndicator.showWhile( null, new Runnable() {			
 			public void run() {
-				while (!(options.keySet().contains("client_name"))){					
+				while ( !( options.keySet().contains( "client_name" ) ) ) {					
 					}				
-				}});
+				} } );
 			clientName = 
 				( ( OptionsInfo ) options.get( "client_name" ) ).getValue();
 			
@@ -86,16 +89,16 @@ public class General extends PreferencePage {
 			maxHardDownloadRate = 	
 				( ( OptionsInfo ) options.get( "max_hard_download_rate" ) ).getValue();
 			
-			Boolean hell = new Boolean("false");
+			Boolean hell = new Boolean( "false" );
 			
 			autoCommit = ( new Boolean (
 				( ( OptionsInfo ) options.get( "auto_commit" ) ).getValue() ) 
 										).booleanValue();			
 		}
 		else {
-			clientName = res.getString("OPTIONS_NOT_CONNECTED");
-			maxHardUploadRate = res.getString("OPTIONS_NOT_CONNECTED");
-			maxHardDownloadRate = res.getString("OPTIONS_NOT_CONNECTED");
+			clientName = res.getString( "OPTIONS_NOT_CONNECTED" );
+			maxHardUploadRate = res.getString( "OPTIONS_NOT_CONNECTED" );
+			maxHardDownloadRate = res.getString( "OPTIONS_NOT_CONNECTED" );
 		}
 	}		
 
@@ -104,76 +107,77 @@ public class General extends PreferencePage {
 	 */
 	protected Control createContents( Composite shell ) {
 		
-			getOptionsFromCore(connected, mldonkey);
-		 	createClientNameField(shell);
-			createDownloadRateField(shell);
-			createUploadRateField(shell);
-			createAutoCommitField(shell);	
+			getOptionsFromCore( connected, mldonkey );
+		 	createClientNameField( shell );
+			createDownloadRateField( shell );
+			createUploadRateField( shell );
+			createAutoCommitField( shell );	
 					
 		return null;
 	}
 	
-	private void createAutoCommitField(Composite shell) {
-		this.autoCommitField = new ExtendedBooleanFieldEditor("auto_commit","Auto Commit", shell);
-			autoCommitField.setEnabled(connected,shell);
-			autoCommitField.setSelection(autoCommit);
-			autoCommitField.setToolTipText("Uncheck if you don't want mldonkey to automatically put completed files in incoming directory");
+	private void createAutoCommitField( Composite shell ) {
+		this.autoCommitField = new ExtendedBooleanFieldEditor( "auto_commit", "Auto Commit", shell );
+			autoCommitField.setEnabled( connected, shell );
+			autoCommitField.setSelection( autoCommit );
+			autoCommitField.setToolTipText( "Uncheck if you don't want mldonkey to automatically put completed files in incoming directory" );
 	}
 	
 	
-	private void createUploadRateField(Composite shell) {
-		this.maxHardUploadRateField = new IntegerFieldEditor("max_hard_upload_rate", "Max. Upload (in kb/s, 0 is unlimited)",shell);
-			maxHardUploadRateField.setEnabled(connected,shell);
-			maxHardUploadRateField.setStringValue(maxHardUploadRate);		 	
-			maxHardUploadRateField.getTextControl(shell).setToolTipText("The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n" +
-				"The limit will apply on all your connections (clients and servers) and both\n" +
-				" control and data messages.");
-			maxHardUploadRateField.getLabelControl(shell).setToolTipText("The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n" +
-				"The limit will apply on all your connections (clients and servers) and both\n" +
-				" control and data messages.");
+	private void createUploadRateField( Composite shell ) {
+		this.maxHardUploadRateField = new IntegerFieldEditor( "max_hard_upload_rate", "Max. Upload (in kb/s, 0 is unlimited)", shell );
+			maxHardUploadRateField.setEnabled( connected, shell );
+			maxHardUploadRateField.setStringValue( maxHardUploadRate );		 	
+			maxHardUploadRateField.getTextControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n"
+				+ "The limit will apply on all your connections (clients and servers) and both\n"
+				+ " control and data messages." );
+			maxHardUploadRateField.getLabelControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n" 
+				+ "The limit will apply on all your connections (clients and servers) and both\n" 
+				+ " control and data messages." );
 	}
 	
-	private void createDownloadRateField(Composite shell) {
-		this.maxHardDownloadRateField = new IntegerFieldEditor("max_hard_download_rate", "Max. Download (in kb/s, 0 is unlimited)",shell);
-			maxHardDownloadRateField.setEnabled(connected,shell);
-			maxHardDownloadRateField.setStringValue(maxHardDownloadRate);
-			maxHardDownloadRateField.getTextControl(shell).setToolTipText("The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n" +
-				"The limit will apply on all your connections (clients and servers) and both\n" +
-				" control and data messages.");
-			maxHardDownloadRateField.getLabelControl(shell).setToolTipText("The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n" +
-				"The limit will apply on all your connections (clients and servers) and both\n" +
-				" control and data messages.");
+	private void createDownloadRateField( Composite shell ) {
+		this.maxHardDownloadRateField = new IntegerFieldEditor( "max_hard_download_rate", "Max. Download (in kb/s, 0 is unlimited)", shell );
+			maxHardDownloadRateField.setEnabled( connected, shell );
+			maxHardDownloadRateField.setStringValue( maxHardDownloadRate );
+			maxHardDownloadRateField.getTextControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n"
+				+ "The limit will apply on all your connections (clients and servers) and both\n"
+				+ " control and data messages." );
+			maxHardDownloadRateField.getLabelControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n"
+				+ "The limit will apply on all your connections (clients and servers) and both\n"
+				+ " control and data messages." );
 	}
 	
-	private void createClientNameField(Composite shell) {
-		this.clientNameField = new StringFieldEditor("client_name", "Client Name",shell);
-			clientNameField.setEnabled(connected,shell);
-			clientNameField.setStringValue(clientName);			
-			clientNameField.getTextControl(shell).setToolTipText("Small name of client");
-			clientNameField.getLabelControl(shell).setToolTipText("Small name of client");			
+	private void createClientNameField( Composite shell ) {
+		this.clientNameField = new StringFieldEditor( "client_name", "Client Name", shell );
+			clientNameField.setEnabled( connected, shell );
+			clientNameField.setStringValue( clientName );			
+			clientNameField.getTextControl( shell ).setToolTipText( "Small name of client" );
+			clientNameField.getLabelControl( shell ).setToolTipText( "Small name of client" );			
 	}
 	
 
-	public boolean performOk(){	
+
+	public boolean performOk() {	
 		/* only perform, if this tab has been 
 		 * initialized (checked by the existance of the clientNameField)
 		 */		
-		 if (clientNameField!= null){		
+		 if ( clientNameField != null ) {		
 		 	
 		 	/* This is the structure all Options have to ve handled to avoid senseless traffic
 		 	 * for setting options, that have not changed.
 		 	 */		 	 
-			if (!clientName.equals(clientNameField.getStringValue()))
-		 		mldonkey.setOption("client_name",clientNameField.getStringValue());
+			if ( !clientName.equals( clientNameField.getStringValue() ) )
+		 		mldonkey.setOption( "client_name", clientNameField.getStringValue() );
 		 		
-			if (!maxHardUploadRate.equals(maxHardUploadRateField.getStringValue()))
-				mldonkey.setOption("max_hard_upload_rate",maxHardUploadRateField.getStringValue());
+			if ( !maxHardUploadRate.equals( maxHardUploadRateField.getStringValue() ) )
+				mldonkey.setOption( "max_hard_upload_rate", maxHardUploadRateField.getStringValue() );
 							
-			if (!maxHardDownloadRate.equals(maxHardDownloadRateField.getStringValue()))
-				mldonkey.setOption("max_hard_download_rate",maxHardDownloadRateField.getStringValue());
+			if ( !maxHardDownloadRate.equals( maxHardDownloadRateField.getStringValue() ) )
+				mldonkey.setOption( "max_hard_download_rate", maxHardDownloadRateField.getStringValue() );
 				
-			if (autoCommitField.HasChanged())
-				mldonkey.setOption("auto_commit",autoCommitField.getValue());
+			if ( autoCommitField.hasChanged() )
+				mldonkey.setOption( "auto_commit", autoCommitField.getValue() );
 				
 		 	/*any more settings in here, got the syntax?*/	
 			
@@ -196,6 +200,9 @@ public class General extends PreferencePage {
 
 /*
 $Log: General.java,v $
+Revision 1.10  2003/07/02 16:16:47  dek
+extensive Checkstyle applying
+
 Revision 1.9  2003/07/02 15:57:23  dek
 Checkstyle
 

@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.10 2003/07/02 15:56:37 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.11 2003/07/02 16:16:47 dek Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {	
@@ -47,48 +47,50 @@ public class G2Gui extends PreferencePage  {
 					 	passwordField,
 					 	portField;
 					 	
-	PreferenceStore preferenceStore;
+	private PreferenceStore preferenceStore;
+
 	/**
-	 * @param preferenceStore
+	 * @param preferenceStore_ where to store the values at...
+	 * @param connected are we connected to remote-mldonkey?
 	 */
-	public G2Gui(PreferenceStore preferenceStore_, boolean connected) {
-		super("G2gui");
+	public G2Gui( PreferenceStore preferenceStore_, boolean connected ) {
+		super( "G2gui" );
 		this.connected = connected;		
 		this.preferenceStore = preferenceStore_;
-		preferenceStore.setDefault("hostname","localhost");
-		preferenceStore.setDefault("username","admin");
-		preferenceStore.setDefault("password","");
-		preferenceStore.setDefault("port","4001");
+		preferenceStore.setDefault( "hostname", "localhost" );
+		preferenceStore.setDefault( "username", "admin" );
+		preferenceStore.setDefault( "password", "" );
+		preferenceStore.setDefault( "port", "4001" );
 
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createContents(Composite shell) {	
+	protected Control createContents( Composite shell ) {	
 		this.controlshell = shell;
-		hostNameField = new StringFieldEditor("hostname", "Hostname",shell);	
-			hostNameField.setStringValue(preferenceStore.getDefaultString("hostname"));
-			hostNameField.setStringValue(preferenceStore.getString("hostname"));
-			computeColumn(hostNameField.getNumberOfControls());					
+		hostNameField = new StringFieldEditor( "hostname", "Hostname", shell );	
+			hostNameField.setStringValue( preferenceStore.getDefaultString( "hostname" ) );
+			hostNameField.setStringValue( preferenceStore.getString( "hostname" ) );
+			computeColumn( hostNameField.getNumberOfControls() );					
 			
-		portField = new StringFieldEditor("port","Port",shell);
-			portField.setStringValue(preferenceStore.getDefaultString("port"));
-			portField.setStringValue(preferenceStore.getString("port"));			
-			computeColumn(portField.getNumberOfControls());
+		portField = new StringFieldEditor( "port", "Port", shell );
+			portField.setStringValue( preferenceStore.getDefaultString( "port" ) );
+			portField.setStringValue( preferenceStore.getString( "port" ) );			
+			computeColumn( portField.getNumberOfControls() );
 
-		userNameField = new StringFieldEditor("username", "Username",shell);
-			userNameField.setStringValue(preferenceStore.getDefaultString("username"));
-			userNameField.setStringValue(preferenceStore.getString("username"));			
-			computeColumn(userNameField.getNumberOfControls());
+		userNameField = new StringFieldEditor( "username", "Username", shell );
+			userNameField.setStringValue( preferenceStore.getDefaultString( "username" ) );
+			userNameField.setStringValue( preferenceStore.getString( "username" ) );			
+			computeColumn( userNameField.getNumberOfControls() );
 
-		passwordField = new StringFieldEditor("password", "Password",shell);
-			passwordField.getTextControl(shell).setEchoChar ('*');			
-			passwordField.setStringValue(preferenceStore.getString("password"));
-			computeColumn(passwordField.getNumberOfControls());
+		passwordField = new StringFieldEditor( "password", "Password", shell );
+			passwordField.getTextControl( shell ).setEchoChar ( '*' );			
+			passwordField.setStringValue( preferenceStore.getString( "password" ) );
+			computeColumn( passwordField.getNumberOfControls() );
 
-			consoleTabFontField = new FontFieldEditor("consoleFont", "Font for Console Window","MLdonkey",shell);
-			computeColumn(consoleTabFontField.getNumberOfControls());
+			consoleTabFontField = new FontFieldEditor( "consoleFont", "Font for Console Window", "MLdonkey", shell );
+			computeColumn( consoleTabFontField.getNumberOfControls() );
 		
 			
 		arrangeFields();
@@ -99,55 +101,55 @@ public class G2Gui extends PreferencePage  {
 	 * 
 	 */
 	private void arrangeFields() {
-		setHorizontalSpan(hostNameField);
-		setHorizontalSpan(portField);
-		setHorizontalSpan(userNameField);
-		setHorizontalSpan(passwordField);
+		setHorizontalSpan( hostNameField );
+		setHorizontalSpan( portField );
+		setHorizontalSpan( userNameField );
+		setHorizontalSpan( passwordField );
 	}
 
 	/**
 	 * @param i
 	 */
-	private void computeColumn(int i) {
-		if (columns<i) columns = i;		
+	private void computeColumn( int i ) {
+		if ( columns < i ) columns = i;		
 	}
 
 	/**
 	 * @param hostNameField
 	 */
-	private void setHorizontalSpan(StringFieldEditor editor) {
-		((org.eclipse.swt.layout.GridData)
-			editor.getTextControl(controlshell).getLayoutData()
-			      ).horizontalSpan = columns-1;
-		((org.eclipse.swt.layout.GridLayout)controlshell.getLayout()).numColumns = columns;
+	private void setHorizontalSpan( StringFieldEditor editor ) {
+		( ( org.eclipse.swt.layout.GridData )
+			editor.getTextControl( controlshell ).getLayoutData()
+			      ).horizontalSpan = columns - 1;
+		( ( org.eclipse.swt.layout.GridLayout )controlshell.getLayout() ).numColumns = columns;
 		
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
+	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
-	public boolean performOk(){	
+	public boolean performOk() {	
 		/* only perform, if this tab has been 
 		 * initialized (checked by the existance of the hostnamefield)
 		 */ 	
-		if (hostNameField!= null){	
-		preferenceStore.setValue("initialized",true);
-		preferenceStore.setValue("hostname",hostNameField.getStringValue());
-		preferenceStore.setValue("username",userNameField.getStringValue());
-		preferenceStore.setValue("port",portField.getStringValue());
-		preferenceStore.setValue("password",passwordField.getStringValue());
+		if ( hostNameField != null ) {	
+		preferenceStore.setValue( "initialized", true );
+		preferenceStore.setValue( "hostname", hostNameField.getStringValue() );
+		preferenceStore.setValue( "username", userNameField.getStringValue() );
+		preferenceStore.setValue( "port", portField.getStringValue() );
+		preferenceStore.setValue( "password", passwordField.getStringValue() );
 		
 		/*the next one gets the wrong thing, have to find out, how to obtain the selected
 		 * font out of the fontDialog, maybe subclassing the thing??
 		 */
 		
-		preferenceStore.setValue("ConsoleFont",consoleTabFontField.getFieldEditorFontName());
+		preferenceStore.setValue( "ConsoleFont", consoleTabFontField.getFieldEditorFontName() );
 		/* any more options go in here, you got the syntax??*/
 		
 			try {
 				preferenceStore.save();
-			} catch (IOException e) {
-				System.out.println("Saving Preferences failed");
+			} catch ( IOException e ) {
+				System.out.println( "Saving Preferences failed" );
 			}	
 		}		
 		return super.performOk();		
@@ -166,9 +168,9 @@ public class G2Gui extends PreferencePage  {
 	 */
 	protected void performDefaults() {	
 		
-		hostNameField.setStringValue(preferenceStore.getDefaultString("hostname"));
-		portField.setStringValue(preferenceStore.getDefaultString("port"));
-		userNameField.setStringValue(preferenceStore.getDefaultString("username"));
+		hostNameField.setStringValue( preferenceStore.getDefaultString( "hostname" ) );
+		portField.setStringValue( preferenceStore.getDefaultString( "port" ) );
+		userNameField.setStringValue( preferenceStore.getDefaultString( "username" ) );
 						
 		super.performDefaults();
 	}
@@ -178,6 +180,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.11  2003/07/02 16:16:47  dek
+extensive Checkstyle applying
+
 Revision 1.10  2003/07/02 15:56:37  dek
 Checkstyle
 

@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  * ExtendedBooleanFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedBooleanFieldEditor.java,v 1.3 2003/07/02 15:55:50 dek Exp $ 
+ * @version $Id: ExtendedBooleanFieldEditor.java,v 1.4 2003/07/02 16:16:47 dek Exp $ 
  *
  */
 public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
@@ -52,7 +52,7 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 			
 			gridData.horizontalAlignment = GridData.BEGINNING;
 		temp.setLayoutData( gridData );
-		temp.setLayout(new GridLayout() );
+		temp.setLayout( new GridLayout() );
 		
 		//Now we tell our parent, that we like to have it the 2 column-way
 			( ( GridLayout ) shell.getLayout() ).numColumns = 2;	
@@ -80,15 +80,15 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.BooleanFieldEditor#setEnabled(boolean, org.eclipse.swt.widgets.Composite)
 	 */
-	public void setEnabled(boolean arg0, Composite arg1) {		
-		super.setEnabled(arg0, temp);
+	public void setEnabled( boolean arg0, Composite arg1 ) {		
+		super.setEnabled( arg0, temp );
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.BooleanFieldEditor#valueChanged(boolean, boolean)
 	 */
-	protected void valueChanged(boolean arg0, boolean arg1) {
-		super.valueChanged(arg0, arg1);
+	protected void valueChanged( boolean arg0, boolean arg1 ) {
+		super.valueChanged( arg0, arg1 );
 		this.hasChanged = true;
 		
 	}
@@ -98,9 +98,9 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 	
 
 	/**
-	 * @return
+	 * @return returns wether this control has been changed
 	 */
-	public boolean HasChanged() {
+	public boolean hasChanged() {
 		return hasChanged;
 	}
 
@@ -108,13 +108,16 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 	 * @return the state of this field as String "true" or "false"
 	 */
 	public String getValue() {
-		return Boolean.toString(this.getBooleanValue());		
+		return Boolean.toString( this.getBooleanValue() );		
 	}
 
 }
 
 /*
 $Log: ExtendedBooleanFieldEditor.java,v $
+Revision 1.4  2003/07/02 16:16:47  dek
+extensive Checkstyle applying
+
 Revision 1.3  2003/07/02 15:55:50  dek
 checkstyle
 

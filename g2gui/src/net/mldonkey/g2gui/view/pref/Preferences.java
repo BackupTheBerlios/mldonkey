@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.4 2003/06/27 18:05:46 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.5 2003/07/02 16:16:47 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -41,24 +41,27 @@ public class Preferences extends PreferenceManager {
 	private PreferenceManager myprefs;
 	private PreferenceDialog prefdialog;
 	private PreferenceStore preferenceStore;
+
 	/**
-	 * @param shell
-	 * @param mldonkey
-	 * @param display
+	 * @param preferenceStore where to store the values at
 	 */
-	public Preferences(PreferenceStore preferenceStore) {	
+	public Preferences( PreferenceStore preferenceStore ) {	
 		this.preferenceStore = 	preferenceStore;
 		myprefs = new PreferenceManager();
-		myprefs.addToRoot(new PreferenceNode("G2gui", new G2Gui(preferenceStore,connected)));		
+		myprefs.addToRoot( new PreferenceNode( "G2gui", new G2Gui( preferenceStore, connected ) ) );		
 	}
 	
-	public void open(Shell shell, CoreCommunication mldonkey) {
+	/**
+	 * @param shell the parent shell, where this pref-window has to be opened
+	 * @param mldonkey the Core we want to configure
+	 */
+	public void open( Shell shell, CoreCommunication mldonkey ) {
 		try {
-				initialize(preferenceStore);
-			} catch (IOException e) {
-				System.out.println("initalizing Preferences Dialog failed due to IOException");
+				initialize( preferenceStore );
+			} catch ( IOException e ) {
+				System.out.println( "initalizing Preferences Dialog failed due to IOException" );
 			}
-		prefdialog = new PreferenceDialog(shell, myprefs){
+		prefdialog = new PreferenceDialog( shell, myprefs ) {
 				/* (non-Javadoc)
 				 * @see org.eclipse.jface.preference.PreferenceDialog#cancelPressed()
 				 */
@@ -66,18 +69,28 @@ public class Preferences extends PreferenceManager {
 					prefdialog.close();
 				}
 				};
-		if ( ( mldonkey != null ) && (mldonkey.isConnected() ) ) {
+		if ( ( mldonkey != null ) && ( mldonkey.isConnected() ) ) {
 			this.connected = true;
 		}		
-		myprefs.addToRoot(new PreferenceNode("mldonkey", new General(preferenceStore,connected, mldonkey)));
-		myprefs.addToRoot(new PreferenceNode("eDonkey", new Edonkey(preferenceStore,connected)));		
+		myprefs.addToRoot( new PreferenceNode
+				( "mldonkey", new General( preferenceStore, connected, mldonkey ) ) );
+				
+		myprefs.addToRoot( new PreferenceNode
+				( "eDonkey", new Edonkey( preferenceStore, connected ) ) );	
+					
 		prefdialog.open();
 	}
 
-	public void initialize(PreferenceStore preferenceStore) throws IOException {
+	/**
+	 * Initializes a preference Store. It creates the corresponding file , so that we can write and
+	 * read from it without throwing wild exceptions around.
+	 * @param preferenceStore the preferneceStore we want to initialize
+	 * @throws IOException some nice IO-Exception if the initialization failed
+	 */
+	public void initialize( PreferenceStore preferenceStore ) throws IOException {
 		try {			
 			preferenceStore.load();
-		} catch (IOException e) {
+		} catch ( IOException e ) {
 			preferenceStore.save();
 			preferenceStore.load();
 		}
@@ -85,7 +98,7 @@ public class Preferences extends PreferenceManager {
 
 
 	/**
-	 * @return
+	 * @return this classes preferenceManager
 	 */
 	public PreferenceManager getMyprefs() {
 		return myprefs;
@@ -102,6 +115,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.5  2003/07/02 16:16:47  dek
+extensive Checkstyle applying
+
 Revision 1.4  2003/06/27 18:05:46  dek
 Client name is now an option, not saveable yet, but it's displayed ;-)
 
