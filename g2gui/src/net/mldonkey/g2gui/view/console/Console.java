@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  * @author 
- * @version $Id: Console.java,v 1.5 2003/08/16 05:08:21 zet Exp $ 
+ * @version $Id: Console.java,v 1.6 2003/08/18 06:00:01 zet Exp $ 
  *
  */
 public class Console extends Observable implements ControlListener  {	
@@ -162,21 +162,15 @@ public class Console extends Observable implements ControlListener  {
 		Date oToday = new Date();
 		return sdFormatter.format(oToday);
 	}
-	public void dispose() {
-		// If these were loaded from the PreferenceLoader, is this necessary? 
-		
-		infoDisplay.getBackground().dispose();
-		infoDisplay.getForeground().dispose();
-		input.getBackground().dispose();
-		input.getForeground().dispose();
-		highlightColor.dispose();
-	}
 	
 }
 
 
 /*
 $Log: Console.java,v $
+Revision 1.6  2003/08/18 06:00:01  zet
+fix null pointer (I'm not even sure it is real..)
+
 Revision 1.5  2003/08/16 05:08:21  zet
 fix gtk crash when closing a message tab
 

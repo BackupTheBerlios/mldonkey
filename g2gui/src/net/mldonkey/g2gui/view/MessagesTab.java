@@ -187,14 +187,13 @@ public class MessagesTab extends GuiTab {
 							 			 	new int[] {75});
 		
 		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
-			public void itemClosed( CTabFolderEvent event ) {
+		public void itemClosed( CTabFolderEvent event ) {
 				CTabItem item = ( CTabItem ) event.item;
-				Console console = (Console) item.getData("console");
-				Composite consoleComposite = (Composite) item.getData("composite");
+				//Console console = (Console) item.getData("console");
+				//Composite consoleComposite = (Composite) item.getData("composite");
 				Integer id = (Integer) item.getData("id");
 				openTabs.remove(id);
-				console.dispose();
-				consoleComposite.dispose();
+				//consoleComposite.dispose();
 				item.dispose();
 				setRightLabel();
 			}
@@ -395,6 +394,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.5  2003/08/18 06:00:01  zet
+fix null pointer (I'm not even sure it is real..)
+
 Revision 1.4  2003/08/18 01:42:24  zet
 centralize resource bundle
 
