@@ -24,11 +24,9 @@ package net.mldonkey.g2gui.view;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.net.InetAddress;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +34,11 @@ import net.mldonkey.g2gui.model.ModelFactory;
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.DisconnectListener;
-import net.mldonkey.g2gui.comm.EncodeMessage;
-import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.ObjectPool;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.helper.SocketPool;
 import net.mldonkey.g2gui.helper.VersionInfo;
+import net.mldonkey.g2gui.helper.DownloadSubmit;
 import net.mldonkey.g2gui.view.console.ExecConsole;
 import net.mldonkey.g2gui.view.helper.Splash;
 import net.mldonkey.g2gui.view.helper.VersionCheck;
@@ -59,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.68 2004/02/29 20:35:03 psy Exp $
+ * @version $Id: G2Gui.java,v 1.69 2004/03/01 21:00:31 psy Exp $
  *
  */
 public class G2Gui {
@@ -79,6 +76,9 @@ public class G2Gui {
     private static String username;
     private static String password;
     private static int port;
+    // IP and port for serving a .torrent
+    private static String submitHost;
+    private static int submitPort;
 
     // list of links for submission
     private static List links;
@@ -114,6 +114,10 @@ public class G2Gui {
 			} else if (argv[optind].toLowerCase().startsWith("ed2k://") | 
 					argv[optind].toLowerCase().startsWith("http://")) {
 				links.add( argv[optind] );
+			// local (torrent) files
+			} else if (new File(argv[optind]).exists()) {
+				System.out.println("Adding a torrent to list");
+				links.add( argv[optind] );
 			// parameter with a value
 			} else if ( argv.length > optind + 1 )	{
 				// configfile-parameter
@@ -134,10 +138,20 @@ public class G2Gui {
 					String[] strings = RegExp.split(argv[++optind], ':');
 					if ( strings.length == 2 ) {
 						hostname = strings[0];
-						port = port = new Integer( strings[1] ).intValue();
+						port = new Integer( strings[1] ).intValue();
 					} else if (strings.length == 1) {
 						hostname = strings[0];
 						port = 4001;
+					}
+				// torrentServer IP and optionally port
+				} else if (argv[optind].equals("-s")) {
+					System.out.println("We got a -s parameter!");
+					String[] strings = RegExp.split(argv[++optind], ':');
+					if ( strings.length == 2 ) {
+						submitHost = strings[0];
+						submitPort = new Integer( strings[1] ).intValue();
+					} else if (strings.length == 1) {
+						submitHost = strings[0];
 					}
 				// username
 				} else if (argv[optind].equals("-u")) {
@@ -170,7 +184,7 @@ public class G2Gui {
 		}
 	
 		// we received links? -> send them
-		if ( links.size() > 0 ) {
+		if ( links.size() > 0) {
 			launch( links );
 			return;
 		}	
@@ -198,8 +212,8 @@ public class G2Gui {
     private static void printCommandlineHelp() {
     	if (debug) System.out.println( VersionCheck.getInfoString() );
     	System.out.println(
-    		"G2gui " + VersionInfo.getVersion() + " (" + VersionCheck.getSWTPlatform() + ")\n" +
-			"Usage: g2gui [params] [links]\n" +
+    		"G2gui " + VersionInfo.getVersion() + "\n" +
+			"Usage: g2gui [params] [links] [.torrent-files]\n" +
     		"\n" + 
     		"   --help	this help\n" +
 			"   -v		increase verbosiveness / debug output\n" +
@@ -207,13 +221,16 @@ public class G2Gui {
 			"   -h		host[:port]\n" +
 			"   -u		username\n" +
 			"   -p		password\n" +
+			"   -s		host[:port]  (.torrent-submit host override)\n" +
 			"\n" +
 			"Examples:\n" +
     		"g2gui ed2k://...\n" +
-    		"g2gui -c /home/user/g2gui/g2gui.pref ed2k://...\n" + 
-    		"g2gui -h server:4001 -u user -p password http://link/to/file.torrent\n\n" + 
-    		"Config-file values are overridden by -h, -u and -p.\n" + 
-			"Multiple links are possible.");
+    		"g2gui /tmp/file.torrent\n" +
+			"g2gui -c /home/user/g2gui/g2gui.pref ed2k://...\n" + 
+    		"g2gui -h server:4001 -u user -p password http://link/to/file.torrent\n" + 
+			"g2gui -s 192.168.0.1:8000 /tmp/file.torrent\n\n" +
+			"Config-file values and defaults are overridden by -h, -u, -p and -s\n" + 
+			"Multiple links and torrent-files are possible.");
     }
     
     
@@ -321,7 +338,7 @@ public class G2Gui {
     	// connection denied
     	if ( connectCore(true) ) {
     		System.out.println("Connection fine, sending links!");
-    		sendDownloadLink( aLink, core.getConnection() );
+    		new DownloadSubmit( aLink, core.getConnection(), submitHost, submitPort );
     	}
     }
 
@@ -437,29 +454,7 @@ public class G2Gui {
     	return aCore;
     }
     
-	/**
-     * Send a link - raw socket without a core
-     */
-    private static void sendDownloadLink( List aLink, Socket aSocket ) {
-        String decoded;
-    	for ( int i = 0; i < aLink.size(); i++ ) {
-			/* do some simple hex-decoding */
-    		try {
-				decoded = URLDecoder.decode( (String) aLink.get(i), "UTF-8" );
-			} catch (UnsupportedEncodingException e) {
-				decoded = (String) aLink.get(i);
-			}
-        	
-			EncodeMessage linkMessage = new EncodeMessage(Message.S_DLLINK, decoded );
-		    try {
-		        Message.writeStream(aSocket, linkMessage.getHeader(), linkMessage.getContent());
-		    } 
-		    catch (IOException e) {
-		        e.printStackTrace();
-		    }
-		    linkMessage = null;
-        }
-    }
+
 
     /**
      * relaunch the launch method with killing the old one
@@ -584,7 +579,7 @@ public class G2Gui {
 			}
 			if (debug) {
 				if (connected) System.out.println("Local core successfully started.");
-				else System.out.println("Local core failed to start!");
+			else System.out.println("Local core failed to start!");
 			}
 		}
 	}
@@ -650,6 +645,10 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.69  2004/03/01 21:00:31  psy
+* Moved linksubmitter from G2gui.java to DownloadSubmit.java
+* added .torrent http-server
+
 Revision 1.68  2004/02/29 20:35:03  psy
 simple link hex-decoding
 
