@@ -36,7 +36,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * TableSorter
  *
  *
- * @version $Id: ClientTableSorter.java,v 1.2 2003/09/21 23:39:31 zet Exp $
+ * @version $Id: ClientTableSorter.java,v 1.3 2003/10/12 15:58:30 zet Exp $
  *
  */
 public class ClientTableSorter extends ViewerSorter {
@@ -47,8 +47,8 @@ public class ClientTableSorter extends ViewerSorter {
     /**
      * Creates a new viewer sorter
      */
-    public ClientTableSorter(  ) {
-        super(  );
+    public ClientTableSorter() {
+        super();
     }
 
     public int compare( Viewer viewer, Object obj1, Object obj2 ) {
@@ -58,23 +58,23 @@ public class ClientTableSorter extends ViewerSorter {
             ClientInfo clientInfo1 = (ClientInfo) obj1;
             ClientInfo clientInfo2 = (ClientInfo) obj2;
 
-            if ( clientInfo1.getState(  ).getState(  ) == EnumState.CONNECTED_DOWNLOADING ) {
+            if ( clientInfo1.getState().getState() == EnumState.CONNECTED_DOWNLOADING ) {
                 return -1;
             }
 
-            if ( clientInfo2.getState(  ).getState(  ) == EnumState.CONNECTED_DOWNLOADING ) {
+            if ( clientInfo2.getState().getState() == EnumState.CONNECTED_DOWNLOADING ) {
                 return 1;
             }
 
-            if ( ( clientInfo1.getState(  ).getRank(  ) != 0 ) && ( clientInfo2.getState(  ).getRank(  ) != 0 ) ) {
-                return compareIntegers( clientInfo1.getState(  ).getRank(  ), clientInfo2.getState(  ).getRank(  ) );
+            if ( ( clientInfo1.getState().getRank() != 0 ) && ( clientInfo2.getState().getRank() != 0 ) ) {
+                return compareIntegers( clientInfo1.getState().getRank(), clientInfo2.getState().getRank() );
             }
 
-            if ( clientInfo1.getState(  ).getRank(  ) != 0 ) {
+            if ( clientInfo1.getState().getRank() != 0 ) {
                 return -1;
             }
 
-            if ( clientInfo2.getState(  ).getRank(  ) != 0 ) {
+            if ( clientInfo2.getState().getRank() != 0 ) {
                 return 1;
             }
 
@@ -83,8 +83,8 @@ public class ClientTableSorter extends ViewerSorter {
             String s1;
             String s2;
 
-            IBaseLabelProvider prov = ( (ContentViewer) viewer ).getLabelProvider(  );
-            ClientTableLabelProvider lprov = (ClientTableLabelProvider) ( (TableViewer) viewer ).getLabelProvider(  );
+            IBaseLabelProvider prov = ( (ContentViewer) viewer ).getLabelProvider();
+            ClientTableLabelProvider lprov = (ClientTableLabelProvider) ( (TableViewer) viewer ).getLabelProvider();
 
             s1 = lprov.getColumnText( obj1, columnIndex );
             s2 = lprov.getColumnText( obj2, columnIndex );
@@ -129,7 +129,7 @@ public class ClientTableSorter extends ViewerSorter {
         lastColumnIndex = columnIndex;
     }
 
-    public int getLastColumnIndex(  ) {
+    public int getLastColumnIndex() {
         return lastColumnIndex;
     }
 
@@ -137,7 +137,7 @@ public class ClientTableSorter extends ViewerSorter {
         lastColumnIndex = i;
     }
 
-    public boolean getLastSort(  ) {
+    public boolean getLastSort() {
         return lastSort;
     }
 
@@ -149,6 +149,9 @@ public class ClientTableSorter extends ViewerSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.3  2003/10/12 15:58:30  zet
+rewrite downloads table & more..
+
 Revision 1.2  2003/09/21 23:39:31  zet
 displayTableColors preference
 

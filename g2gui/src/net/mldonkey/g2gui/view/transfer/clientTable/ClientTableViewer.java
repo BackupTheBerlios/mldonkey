@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableViewer.java,v 1.2 2003/09/21 23:39:31 zet Exp $
+ * @version $Id: ClientTableViewer.java,v 1.3 2003/10/12 15:58:30 zet Exp $
  *
  */
 public class ClientTableViewer {
@@ -62,13 +62,13 @@ public class ClientTableViewer {
     public void createContents( Composite parent ) {
         clientTableViewer = new CustomTableViewer( parent, SWT.FULL_SELECTION | SWT.MULTI );
 
-        Table table = clientTableViewer.getTable(  );
+        Table table = clientTableViewer.getTable();
         table.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        clientTableViewer.getTable(  ).setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
-        clientTableViewer.getTable(  ).setHeaderVisible( true );
+        clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
+        clientTableViewer.getTable().setHeaderVisible( true );
 
         for ( int i = 0; i < COLUMN_LABELS.length; i++ ) {
-            PreferenceStore p = PreferenceLoader.getPreferenceStore(  );
+            PreferenceStore p = PreferenceLoader.getPreferenceStore();
             p.setDefault( COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ] );
 
             TableColumn tableColumn = new TableColumn( table, COLUMN_ALIGNMENT[ i ] );
@@ -76,24 +76,24 @@ public class ClientTableViewer {
             tableColumn.setWidth( p.getInt( COLUMN_LABELS[ i ] ) );
 
             final int columnIndex = i;
-            tableColumn.addDisposeListener( new DisposeListener(  ) {
+            tableColumn.addDisposeListener( new DisposeListener() {
                     public synchronized void widgetDisposed( DisposeEvent e ) {
-                        PreferenceStore p = PreferenceLoader.getPreferenceStore(  );
+                        PreferenceStore p = PreferenceLoader.getPreferenceStore();
                         TableColumn thisColumn = (TableColumn) e.widget;
-                        p.setValue( COLUMN_LABELS[ columnIndex ], thisColumn.getWidth(  ) );
+                        p.setValue( COLUMN_LABELS[ columnIndex ], thisColumn.getWidth() );
                     }
                 } );
             tableColumn.addListener( SWT.Selection,
-                new Listener(  ) {
+                new Listener() {
                     public void handleEvent( Event e ) {
-                        ( (ClientTableSorter) clientTableViewer.getSorter(  ) ).setColumnIndex( columnIndex );
-                        clientTableViewer.refresh(  );
+                        ( (ClientTableSorter) clientTableViewer.getSorter() ).setColumnIndex( columnIndex );
+                        clientTableViewer.refresh();
                     }
                 } );
         }
 
-        clientTableViewer.setContentProvider( new ClientTableContentProvider(  ) );
-        clientTableViewer.setLabelProvider( new ClientTableLabelProvider(  ) );
+        clientTableViewer.setContentProvider( new ClientTableContentProvider() );
+        clientTableViewer.setLabelProvider( new ClientTableLabelProvider() );
 
         ClientTableMenuListener tableMenuListener = new ClientTableMenuListener( clientTableViewer, core );
         clientTableViewer.addSelectionChangedListener( tableMenuListener );
@@ -101,11 +101,11 @@ public class ClientTableViewer {
         MenuManager popupMenu = new MenuManager( "" );
         popupMenu.setRemoveAllWhenShown( true );
         popupMenu.addMenuListener( tableMenuListener );
-        clientTableViewer.getTable(  ).setMenu( popupMenu.createContextMenu( clientTableViewer.getTable(  ) ) );
-        clientTableViewer.setSorter( new ClientTableSorter(  ) );
+        clientTableViewer.getTable().setMenu( popupMenu.createContextMenu( clientTableViewer.getTable() ) );
+        clientTableViewer.setSorter( new ClientTableSorter() );
     }
 
-    public CustomTableViewer getTableViewer(  ) {
+    public CustomTableViewer getTableViewer() {
         return clientTableViewer;
     }
 }
@@ -113,6 +113,9 @@ public class ClientTableViewer {
 
 /*
 $Log: ClientTableViewer.java,v $
+Revision 1.3  2003/10/12 15:58:30  zet
+rewrite downloads table & more..
+
 Revision 1.2  2003/09/21 23:39:31  zet
 displayTableColors preference
 

@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.TableViewer;
  * TableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.3 2003/09/23 15:24:24 zet Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.4 2003/10/12 15:58:30 zet Exp $
  *
  */
 public class ClientTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -53,7 +53,7 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
     private TableViewer tableViewer;
     private CoreCommunication core;
     private ClientInfo selectedClientInfo;
-    private List selectedClients = new ArrayList(  );
+    private List selectedClients = new ArrayList();
 
     /**
      * Creates a new TableMenuListener
@@ -61,18 +61,18 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
      * @param The CoreCommunication supporting this with data
      */
     public ClientTableMenuListener( TableViewer tableViewer, CoreCommunication core ) {
-        super(  );
+        super();
         this.tableViewer = tableViewer;
         this.core = core;
-        this.tableContentProvider = (ClientTableContentProvider) this.tableViewer.getContentProvider(  );
+        this.tableContentProvider = (ClientTableContentProvider) this.tableViewer.getContentProvider();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
     public void selectionChanged( SelectionChangedEvent event ) {
-        IStructuredSelection sSel = (IStructuredSelection) event.getSelection(  );
-        Object o = sSel.getFirstElement(  );
+        IStructuredSelection sSel = (IStructuredSelection) event.getSelection();
+        Object o = sSel.getFirstElement();
 
         if ( o instanceof ClientInfo ) {
             selectedClientInfo = (ClientInfo) o;
@@ -80,10 +80,10 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
             selectedClientInfo = null;
         }
 
-        selectedClients.clear(  );
+        selectedClients.clear();
 
-        for ( Iterator it = sSel.iterator(  ); it.hasNext(  ); ) {
-            o = it.next(  );
+        for ( Iterator it = sSel.iterator(); it.hasNext(); ) {
+            o = it.next();
 
             if ( o instanceof ClientInfo ) {
                 selectedClients.add( (ClientInfo) o );
@@ -97,8 +97,8 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
     public void menuAboutToShow( IMenuManager menuManager ) {
         /* disconnect */
         if ( selectedClientInfo != null ) {
-            menuManager.add( new AddFriendAction(  ) );
-            menuManager.add( new ClientDetailAction(  ) );
+            menuManager.add( new AddFriendAction() );
+            menuManager.add( new ClientDetailAction() );
         }
     }
 
@@ -106,15 +106,15 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
      * AddFriendAction
      */
     private class AddFriendAction extends Action {
-        public AddFriendAction(  ) {
-            super(  );
+        public AddFriendAction() {
+            super();
             setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
         }
 
-        public void run(  ) {
-            for ( int i = 0; i < selectedClients.size(  ); i++ ) {
+        public void run() {
+            for ( int i = 0; i < selectedClients.size(); i++ ) {
                 ClientInfo selectedClientInfo = (ClientInfo) selectedClients.get( i );
-                ClientInfo.addFriend( core, selectedClientInfo.getClientid(  ) );
+                ClientInfo.addFriend( core, selectedClientInfo.getClientid() );
             }
         }
     }
@@ -123,13 +123,13 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
      * ClientDetailAction
      */
     class ClientDetailAction extends Action {
-        public ClientDetailAction(  ) {
-            super(  );
+        public ClientDetailAction() {
+            super();
             setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CLIENT_DETAILS" ) );
         }
 
-        public void run(  ) {
-            new ClientDetailDialog( (FileInfo) tableViewer.getInput(  ), selectedClientInfo, core );
+        public void run() {
+            new ClientDetailDialog( (FileInfo) tableViewer.getInput(), selectedClientInfo, core );
         }
     }
 }
@@ -137,6 +137,9 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.4  2003/10/12 15:58:30  zet
+rewrite downloads table & more..
+
 Revision 1.3  2003/09/23 15:24:24  zet
 not much..
 

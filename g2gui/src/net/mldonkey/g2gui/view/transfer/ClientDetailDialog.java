@@ -54,13 +54,13 @@ import java.util.Observer;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.2 2003/09/21 23:39:31 zet Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.3 2003/10/12 15:58:30 zet Exp $
  *
  */
 public class ClientDetailDialog implements Observer, DisposeListener {
     private Shell shell;
     private CoreCommunication core;
-    private Display desktop = Display.getDefault(  );
+    private Display desktop = Display.getDefault();
     private FileInfo fileInfo;
     private ClientInfo clientInfo;
     private CLabel clName;
@@ -68,7 +68,7 @@ public class ClientDetailDialog implements Observer, DisposeListener {
     private CLabel clActivity;
     private CLabel clKind;
     private CLabel clNetwork;
-    private ArrayList chunkCanvases = new ArrayList(  );
+    private ArrayList chunkCanvases = new ArrayList();
     int leftColumn = 100;
     int rightColumn = leftColumn * 3;
     int width = leftColumn + rightColumn + 30;
@@ -78,21 +78,21 @@ public class ClientDetailDialog implements Observer, DisposeListener {
         this.fileInfo = fileInfo;
         this.clientInfo = clientInfo;
         this.core = core;
-        createContents(  );
+        createContents();
     }
 
     /**
      * Create dialog contents
      */
-    public void createContents(  ) {
+    public void createContents() {
         shell = new Shell( SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
         shell.addDisposeListener( this );
-        shell.setBounds( ( desktop.getBounds(  ).width - width ) / 2, ( desktop.getBounds(  ).height - height ) / 2, width, height );
+        shell.setBounds( ( desktop.getBounds().width - width ) / 2, ( desktop.getBounds().height - height ) / 2, width, height );
 
         shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
 
-        shell.setText( G2GuiResources.getString( "TT_Client" ) + " " + clientInfo.getClientid(  ) + " " +
-            G2GuiResources.getString( "TT_Details" ).toLowerCase(  ) );
+        shell.setText( G2GuiResources.getString( "TT_Client" ) + " " + clientInfo.getClientid() + " " +
+            G2GuiResources.getString( "TT_Details" ).toLowerCase() );
 
         GridLayout gridLayout = CGridLayout.createGL( 1, 5, 5, 0, 5, false );
 
@@ -106,11 +106,11 @@ public class ClientDetailDialog implements Observer, DisposeListener {
 
         createButtons( shell );
 
-        updateLabels(  );
+        updateLabels();
         fileInfo.addObserver( this );
         clientInfo.addObserver( this );
-        shell.pack(  );
-        shell.open(  );
+        shell.pack();
+        shell.open();
     }
 
     /**
@@ -147,7 +147,7 @@ public class ClientDetailDialog implements Observer, DisposeListener {
 
         // clientInfo.getFileAvail is not synched. TIntObjHash.. 
         if ( clientInfo == null ) {
-            totalChunks = " (" + fileInfo.getAvail(  ).length(  ) + ")";
+            totalChunks = " (" + fileInfo.getAvail().length() + ")";
         }
 
         chunkGroup.setText( text + totalChunks );
@@ -184,25 +184,25 @@ public class ClientDetailDialog implements Observer, DisposeListener {
         addFriendButton.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END ) );
         addFriendButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
 
-        if ( clientInfo.getClientType(  ) == EnumClientType.FRIEND ) {
+        if ( clientInfo.getClientType() == EnumClientType.FRIEND ) {
             addFriendButton.setEnabled( false );
         }
 
-        addFriendButton.addSelectionListener( new SelectionAdapter(  ) {
+        addFriendButton.addSelectionListener( new SelectionAdapter() {
                 public void widgetSelected( SelectionEvent s ) {
-                    ClientInfo.addFriend( core, clientInfo.getClientid(  ) );
+                    ClientInfo.addFriend( core, clientInfo.getClientid() );
                     addFriendButton.setText( G2GuiResources.getString( "BTN_OK" ) );
                     addFriendButton.setEnabled( false );
                 }
             } );
 
         Button closeButton = new Button( buttonComposite, SWT.NONE );
-        closeButton.setFocus(  );
+        closeButton.setFocus();
         closeButton.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_END ) );
         closeButton.setText( G2GuiResources.getString( "BTN_CLOSE" ) );
-        closeButton.addSelectionListener( new SelectionAdapter(  ) {
+        closeButton.addSelectionListener( new SelectionAdapter() {
                 public void widgetSelected( SelectionEvent s ) {
-                    shell.close(  );
+                    shell.close();
                 }
             } );
     }
@@ -220,12 +220,12 @@ public class ClientDetailDialog implements Observer, DisposeListener {
         Label aLabel = new Label( composite, SWT.NONE );
         aLabel.setText( label );
 
-        GridData lGD = new GridData(  );
+        GridData lGD = new GridData();
         lGD.widthHint = leftColumn;
         aLabel.setLayoutData( lGD );
 
         CLabel aCLabel = new CLabel( composite, SWT.NONE );
-        GridData clGD = new GridData(  );
+        GridData clGD = new GridData();
 
         if ( longlabel ) {
             clGD.widthHint = rightColumn;
@@ -242,12 +242,12 @@ public class ClientDetailDialog implements Observer, DisposeListener {
     /**
      * Update labels
      */
-    public void updateLabels(  ) {
-        updateLabel( clName, clientInfo.getClientName(  ) );
-        updateLabel( clRating, "" + clientInfo.getClientRating(  ) );
-        updateLabel( clActivity, clientInfo.getClientActivity(  ) );
-        updateLabel( clKind, clientInfo.getClientConnection(  ) );
-        updateLabel( clNetwork, clientInfo.getClientnetworkid(  ).getNetworkName(  ) );
+    public void updateLabels() {
+        updateLabel( clName, clientInfo.getClientName() );
+        updateLabel( clRating, "" + clientInfo.getClientRating() );
+        updateLabel( clActivity, clientInfo.getClientActivity() );
+        updateLabel( clKind, clientInfo.getClientConnection() );
+        updateLabel( clNetwork, clientInfo.getClientnetworkid().getNetworkName() );
     }
 
     /**
@@ -258,10 +258,10 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      *
      */
     public void updateLabel( CLabel cLabel, String string ) {
-        if ( !cLabel.isDisposed(  ) ) {
+        if ( !cLabel.isDisposed() ) {
             cLabel.setText( string );
 
-            if ( string.length(  ) > 10 ) {
+            if ( string.length() > 10 ) {
                 cLabel.setToolTipText( string );
             } else {
                 cLabel.setToolTipText( "" );
@@ -273,10 +273,10 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable o, Object arg ) {
-        if ( o instanceof FileInfo && !shell.isDisposed(  ) ) {
-            shell.getDisplay(  ).asyncExec( new Runnable(  ) {
-                    public void run(  ) {
-                        updateLabels(  );
+        if ( o instanceof FileInfo && !shell.isDisposed() ) {
+            shell.getDisplay().asyncExec( new Runnable() {
+                    public void run() {
+                        updateLabels();
                     }
                 } );
         }
@@ -286,10 +286,10 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
     public synchronized void widgetDisposed( DisposeEvent e ) {
-        Iterator i = chunkCanvases.iterator(  );
+        Iterator i = chunkCanvases.iterator();
 
-        while ( i.hasNext(  ) )
-            ( (ChunkCanvas) i.next(  ) ).dispose(  );
+        while ( i.hasNext() )
+            ( (ChunkCanvas) i.next() ).dispose();
 
         clientInfo.deleteObserver( this );
         fileInfo.deleteObserver( this );
@@ -299,6 +299,9 @@ public class ClientDetailDialog implements Observer, DisposeListener {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.3  2003/10/12 15:58:30  zet
+rewrite downloads table & more..
+
 Revision 1.2  2003/09/21 23:39:31  zet
 displayTableColors preference
 

@@ -24,7 +24,6 @@ package net.mldonkey.g2gui.view;
 
 import gnu.trove.TIntObjectIterator;
 
-import java.text.DecimalFormat;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -42,19 +41,21 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
 import net.mldonkey.g2gui.view.transfer.DownloadPaneMenuListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
-import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeContentProvider;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableViewer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -68,18 +69,19 @@ import org.eclipse.swt.widgets.Label;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.66 2003/09/27 12:30:40 dek Exp $
+ * @version $Id: TransferTab.java,v 1.67 2003/10/12 15:58:03 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
-    private static DecimalFormat decimalFormat = new DecimalFormat( "0.0" );
     private CLabel downloadCLabel;
     private CoreCommunication mldonkey;
     private DownloadTableTreeViewer downloadTableTreeViewer = null;
     private CustomTableViewer clientTableViewer = null;
     private Composite downloadComposite;
-    private MenuManager popupMenuDL, popupMenuUL;
+    private MenuManager popupMenuDL, popupMenuUL, popupMenuCL = null;
 	private UploadTableViewer uploadTableViewer;
+	private String oldDLabelText = "";
+	private long lastLabelUpdate = 0;
 
     /**
      * @param gui where this tab belongs to
@@ -96,10 +98,18 @@ public class TransferTab extends GuiTab {
      * @see net.mldonkey.g2gui.view.G2guiTab#createContents( org.eclipse.swt.widgets.Composite )
      */
     protected void createContents( Composite parent ) {
-        SashForm mainSashForm = new SashForm( parent, SWT.VERTICAL );
+        final SashForm mainSashForm = new SashForm( parent, (PreferenceLoader.loadBoolean("transferSashVertical") ? SWT.VERTICAL : SWT.HORIZONTAL) );
+		mainSashForm.addDisposeListener( new DisposeListener() { 
+			public void widgetDisposed(DisposeEvent e) {
+				PreferenceStore p = PreferenceLoader.getPreferenceStore();
+				p.setValue("transferSashVertical", ( mainSashForm.getOrientation() == SWT.VERTICAL ? true : false) );
+			}
+		});
+        
+        
         Control downloadParent = mainSashForm;
         if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-            downloadParent = new SashForm( mainSashForm, SWT.HORIZONTAL );
+            downloadParent = new SashForm( mainSashForm, (PreferenceLoader.loadBoolean("clientSashHorizontal") ? SWT.HORIZONTAL : SWT.VERTICAL ) );
         }
         ViewForm downloadViewForm =
             new ViewForm( (SashForm) downloadParent,
@@ -119,7 +129,7 @@ public class TransferTab extends GuiTab {
         downloadTableTreeViewer =
             new DownloadTableTreeViewer( downloadComposite, clientTableViewer, mldonkey, this );
         popupMenuDL.addMenuListener( new DownloadPaneMenuListener( downloadTableTreeViewer.getTableTreeViewer(),
-                                                                 mldonkey ) );
+                                                                 mldonkey, downloadTableTreeViewer ) );
         mainSashForm.setWeights( new int[] { 1, 1 } );
         mainSashForm.setMaximizedControl( downloadParent );
         mldonkey.getFileInfoIntMap().addObserver( this );
@@ -156,6 +166,7 @@ public class TransferTab extends GuiTab {
         uploadTableViewer = new UploadTableViewer(uploadersComposite,mldonkey,this);
         uploadsViewForm.setContent( uploadersComposite );
     }
+    
 	public void createUploadHeader( ViewForm parentViewForm, final SashForm mainSashForm, final Control uploadParent ) {
 		popupMenuUL = new MenuManager( "" );
 		popupMenuUL.setRemoveAllWhenShown( true );
@@ -164,22 +175,31 @@ public class TransferTab extends GuiTab {
 		uploadsCLabel.addMouseListener( new MaximizeSashMouseAdapter( uploadsCLabel, popupMenuUL, mainSashForm, uploadParent  ) );
 		parentViewForm.setTopLeft( uploadsCLabel );
 	}
-    
-    
-    
 
     /**
      * Create the hidden client view form
      *
      * @param parentSash 
      */
-    public void createClientViewForm( SashForm parentSash ) {
+    public void createClientViewForm( final SashForm parentSash ) {
+		parentSash.addDisposeListener( new DisposeListener() { 
+			public void widgetDisposed(DisposeEvent e) {
+				PreferenceStore p = PreferenceLoader.getPreferenceStore();
+				p.setValue("clientSashHorizontal", ( parentSash.getOrientation() == SWT.HORIZONTAL ? true : false) );
+			}
+		});
+    	
         ViewForm clientViewForm =
             new ViewForm( parentSash,
                           SWT.BORDER
                           | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
         CLabel clientCLabel =
             CCLabel.createCL( clientViewForm, "TT_Clients", "TransfersButtonSmallTitlebar" );
+		
+		popupMenuCL = new MenuManager( "" );
+		popupMenuCL.setRemoveAllWhenShown( true );
+		popupMenuCL.addMenuListener( new HeaderBarMenuListener( parentSash, clientViewForm ) );
+		clientCLabel.addMouseListener( new MaximizeSashMouseAdapter( clientCLabel, popupMenuCL, parentSash, clientViewForm  ) );
         Composite downloadClients = new Composite( clientViewForm, SWT.NONE );
         downloadClients.setLayout( CGridLayout.createGL( 1, 0, 0, 0, 0, false ) );
         clientViewForm.setContent( downloadClients );
@@ -215,7 +235,7 @@ public class TransferTab extends GuiTab {
         separator1.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         Button hideButton = new Button( bottomBar, SWT.NONE );
         hideButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        hideButton.setText( ">>>" );
+        hideButton.setText( "-" );
         hideButton.addSelectionListener( new SelectionAdapter() {
                 public void widgetSelected( SelectionEvent s ) {
                     parentSash.setWeights( new int[] { 10, 0 } );
@@ -246,7 +266,9 @@ public class TransferTab extends GuiTab {
      * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
      */
     public void update( Observable o, Object arg ) {
-        float totalRate = 0;
+    	
+    	if (System.currentTimeMillis() < lastLabelUpdate + 1000) return;
+    	
         int totalFiles = 0;
         int totalQueued = 0;
         int totalDownloaded = 0;
@@ -257,8 +279,7 @@ public class TransferTab extends GuiTab {
                 while ( it.hasNext() ) {
                     it.advance();
                     FileInfo fileInfo = ( FileInfo ) it.value();
-                    totalRate += fileInfo.getRate();
-                    if ( DownloadTableTreeContentProvider.isInteresting( fileInfo ) )
+                    if ( fileInfo.isInteresting() )
                         totalFiles++;
                     if ( fileInfo.getState().getState() == EnumFileState.QUEUED )
                         totalQueued++;
@@ -267,20 +288,28 @@ public class TransferTab extends GuiTab {
                 }
             }
         }
-        String extra = "";
+        
+        String newText = "" + totalFiles;
 		if ( totalQueued > 0 || totalDownloaded > 0 ) {
-			extra = " (";
-			if ( totalQueued > 0 )
-				extra += G2GuiResources.getString( "TT_Queued" ).toLowerCase() + ": " + totalQueued;
-			if ( totalQueued > 0 && totalDownloaded > 0 )
-				extra += ", ";
+			newText += " (";
+			if ( totalQueued > 0 ) {
+				newText += G2GuiResources.getString( "TT_Queued" ).toLowerCase() + ": " + totalQueued;
+				if ( totalDownloaded > 0 ) {
+					newText += ", ";
+				}
+			}
 			if ( totalDownloaded > 0 )
-				extra += G2GuiResources.getString( "TT_Downloaded" ).toLowerCase() + ": " + totalDownloaded;
-			extra += ")";
+				newText += G2GuiResources.getString( "TT_Downloaded" ).toLowerCase() + ": " + totalDownloaded;
+			newText += ")";
 		}
-		runLabelUpdate( totalFiles + " " + G2GuiResources.getString( "TT_Files_At" )
-						+ " " + decimalFormat.format( totalRate / 1000f ) + " KB/s" + extra );
+		
+		if ( !oldDLabelText.equals( newText ) ) {
+			runLabelUpdate( newText );
+			oldDLabelText = newText;
+		}
 
+		lastLabelUpdate = System.currentTimeMillis();
+	
     }
 
     /* ( non-Javadoc )
@@ -302,6 +331,7 @@ public class TransferTab extends GuiTab {
         super.dispose();
         popupMenuDL.dispose();
         popupMenuUL.dispose();
+        if (popupMenuCL != null) popupMenuCL.dispose();
     }
     
 	/**
@@ -336,6 +366,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.67  2003/10/12 15:58:03  zet
+rewrite downloads table & more..
+
 Revision 1.66  2003/09/27 12:30:40  dek
 upload-Table has now same show-Gridlines-behaviour as download-Table
 
@@ -436,7 +469,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

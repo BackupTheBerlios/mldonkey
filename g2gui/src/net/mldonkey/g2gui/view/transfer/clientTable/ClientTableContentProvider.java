@@ -41,7 +41,7 @@ import java.util.Observer;
  * TableContentProvider
  *
  *
- * @version $Id: ClientTableContentProvider.java,v 1.2 2003/09/21 23:39:31 zet Exp $
+ * @version $Id: ClientTableContentProvider.java,v 1.3 2003/10/12 15:58:30 zet Exp $
  *
  */
 public class ClientTableContentProvider implements IStructuredContentProvider, Observer {
@@ -54,13 +54,13 @@ public class ClientTableContentProvider implements IStructuredContentProvider, O
     public Object[] getElements( Object inputElement ) {
         FileInfo fileInfo = (FileInfo) inputElement;
 
-        return fileInfo.getClientInfos(  ).keySet(  ).toArray(  );
+        return fileInfo.getClientInfos().keySet().toArray();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
-    public void dispose(  ) {
+    public void dispose() {
     }
 
     /* (non-Javadoc)
@@ -83,8 +83,8 @@ public class ClientTableContentProvider implements IStructuredContentProvider, O
 
     public void update( Observable o, final Object obj ) {
         if ( obj instanceof ClientInfo || obj instanceof TreeClientInfo ) {
-            Display.getDefault(  ).asyncExec( new Runnable(  ) {
-                    public void run(  ) {
+            Display.getDefault().asyncExec( new Runnable() {
+                    public void run() {
                         refreshTable( obj );
                     }
                 } );
@@ -99,13 +99,13 @@ public class ClientTableContentProvider implements IStructuredContentProvider, O
         if ( obj instanceof ClientInfo ) {
             clientInfo = (ClientInfo) obj;
         } else if ( obj instanceof TreeClientInfo ) {
-            clientInfo = ( (TreeClientInfo) obj ).getClientInfo(  );
+            clientInfo = ( (TreeClientInfo) obj ).getClientInfo();
         }
 
-        if ( ( clientTableViewer != null ) && !clientTableViewer.getTable(  ).isDisposed(  ) ) {
-            if ( System.currentTimeMillis(  ) > ( lastUpdateTime + 5000 ) ) {
-                clientTableViewer.refresh(  );
-                lastUpdateTime = System.currentTimeMillis(  );
+        if ( ( clientTableViewer != null ) && !clientTableViewer.getTable().isDisposed() ) {
+            if ( System.currentTimeMillis() > ( lastUpdateTime + 5000 ) ) {
+                clientTableViewer.refresh();
+                lastUpdateTime = System.currentTimeMillis();
             } else {
                 clientTableViewer.update( clientInfo, null ); // widget disposed
             }
@@ -116,6 +116,9 @@ public class ClientTableContentProvider implements IStructuredContentProvider, O
 
 /*
 $Log: ClientTableContentProvider.java,v $
+Revision 1.3  2003/10/12 15:58:30  zet
+rewrite downloads table & more..
+
 Revision 1.2  2003/09/21 23:39:31  zet
 displayTableColors preference
 

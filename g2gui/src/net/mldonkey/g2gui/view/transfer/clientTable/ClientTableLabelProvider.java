@@ -38,7 +38,7 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.4 2003/09/24 03:07:43 zet Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.5 2003/10/12 15:58:30 zet Exp $
  *
  */
 public class ClientTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -52,10 +52,10 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
 
         switch ( columnIndex ) {
         case 0:
-            return G2GuiResources.getClientImage( (EnumState) clientInfo.getState(  ).getState(  ) );
+            return G2GuiResources.getClientImage( (EnumState) clientInfo.getState().getState() );
 
         case 2:
-            return G2GuiResources.getNetworkImage( clientInfo.getClientnetworkid(  ).getNetworkType(  ) );
+            return G2GuiResources.getNetworkImage( clientInfo.getClientnetworkid().getNetworkType() );
 
         default:
             return null;
@@ -75,10 +75,10 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
             return "" + clientInfo.getDetailedClientActivity( );
 
         case 1:
-            return "" + clientInfo.getClientName(  );
+            return "" + clientInfo.getClientName();
 
         case 2:
-            return "" + clientInfo.getClientnetworkid(  ).getNetworkName(  );
+            return "" + clientInfo.getClientnetworkid().getNetworkName();
 
         case 3:
             return "" + clientInfo.getClientConnection( );
@@ -97,7 +97,7 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
-    public void dispose(  ) {
+    public void dispose() {
     }
 
     /* (non-Javadoc)
@@ -133,6 +133,9 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.5  2003/10/12 15:58:30  zet
+rewrite downloads table & more..
+
 Revision 1.4  2003/09/24 03:07:43  zet
 add # of active sources column
 

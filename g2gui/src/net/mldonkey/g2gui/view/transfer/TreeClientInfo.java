@@ -31,26 +31,24 @@ import net.mldonkey.g2gui.model.FileInfo;
  * TreeClientInfo
  *
  *
- * @version $Id: TreeClientInfo.java,v 1.2 2003/09/21 23:39:31 zet Exp $
+ * @version $Id: TreeClientInfo.java,v 1.3 2003/10/12 15:58:30 zet Exp $
  *
  */
 public class TreeClientInfo {
     private FileInfo fileInfo;
     private ClientInfo clientInfo;
+    private boolean deleteFlag = false;
 
     public TreeClientInfo( FileInfo fileInfo, ClientInfo clientInfo ) {
         this.fileInfo = fileInfo;
         this.clientInfo = clientInfo;
     }
-
     public FileInfo getFileInfo(  ) {
         return fileInfo;
     }
-
     public ClientInfo getClientInfo(  ) {
         return clientInfo;
     }
-
     public boolean equals( Object o ) {
         if ( o instanceof TreeClientInfo ) {
             ClientInfo c = (ClientInfo) ( (TreeClientInfo) o ).getClientInfo(  );
@@ -65,11 +63,21 @@ public class TreeClientInfo {
             return false;
         }
     }
+    public void setDelete() {
+    	deleteFlag = true;
+    }
+    public boolean getDelete() {
+    	return deleteFlag;
+    }
+    
 }
 
 
 /*
 $Log: TreeClientInfo.java,v $
+Revision 1.3  2003/10/12 15:58:30  zet
+rewrite downloads table & more..
+
 Revision 1.2  2003/09/21 23:39:31  zet
 displayTableColors preference
 
