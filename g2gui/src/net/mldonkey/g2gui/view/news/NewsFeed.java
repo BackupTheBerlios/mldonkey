@@ -39,7 +39,7 @@ import churchillobjects.rss4j.RssDocument;
 /**
  * NewsFeed
  *
- * @version $Id: NewsFeed.java,v 1.1 2003/09/27 12:09:32 lemmster Exp $
+ * @version $Id: NewsFeed.java,v 1.2 2003/09/29 14:05:45 lemmster Exp $
  *
  */
 public class NewsFeed extends News {
@@ -59,8 +59,8 @@ public class NewsFeed extends News {
      */
     private void create() {
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
+//		gridLayout.numColumns = 3;
+//		gridLayout.makeColumnsEqualWidth = true;
 		
 		Composite composite = new Composite( ( Composite ) control, SWT.NONE );
 		composite.setLayout( gridLayout );
@@ -87,6 +87,9 @@ public class NewsFeed extends News {
 
 /*
 $Log: NewsFeed.java,v $
+Revision 1.2  2003/09/29 14:05:45  lemmster
+update & add still not working
+
 Revision 1.1  2003/09/27 12:09:32  lemmster
 initial commit
 

@@ -37,7 +37,7 @@ import churchillobjects.rss4j.RssChannelItem;
 /**
  * NewsItem
  *
- * @version $Id: NewsItem.java,v 1.1 2003/09/27 12:09:32 lemmster Exp $
+ * @version $Id: NewsItem.java,v 1.2 2003/09/29 14:05:45 lemmster Exp $
  *
  */
 public class NewsItem extends News {
@@ -56,7 +56,7 @@ public class NewsItem extends News {
      * DOCUMENT ME!
      */
     public void create() {
-    	if ( this.myComposite != null ) this.dispose();
+    	this.dispose();
  
 		boldFont = new Font( control.getDisplay(), new FontData( "Arial", 10, SWT.BOLD ) );
 		italicFont = new Font( control.getDisplay(), new FontData( "Arial", 10, SWT.ITALIC ) );
@@ -103,6 +103,9 @@ public class NewsItem extends News {
 
 /*
 $Log: NewsItem.java,v $
+Revision 1.2  2003/09/29 14:05:45  lemmster
+update & add still not working
+
 Revision 1.1  2003/09/27 12:09:32  lemmster
 initial commit
 

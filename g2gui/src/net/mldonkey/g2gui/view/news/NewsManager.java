@@ -50,7 +50,7 @@ import churchillobjects.rss4j.RssDocument;
 /**
  * NewsManager
  *
- * @version $Id: NewsManager.java,v 1.1 2003/09/27 12:09:32 lemmster Exp $
+ * @version $Id: NewsManager.java,v 1.2 2003/09/29 14:05:45 lemmster Exp $
  *
  */
 public class NewsManager extends News implements Observer {
@@ -82,8 +82,8 @@ public class NewsManager extends News implements Observer {
 	        aThread = new Thread( aRSSFetcher );
 	        aThread.start();
 		}
-		catch ( MalformedURLException e ) {
-			e.printStackTrace();
+		catch ( MalformedURLException e ) { 
+			/* we expect to receive always valid urls */
 		}
 
 		/* register on the newsgenerator */
@@ -96,7 +96,7 @@ public class NewsManager extends News implements Observer {
 		( ( Composite ) control ).setLayout( gridLayout );
 
         /* a temp stubs obj to show something in the meantime */ 
-        stubs = new Text( ( Composite ) control, SWT.NONE );
+        stubs = new Text( ( Composite ) control, SWT.NONE | SWT.READ_ONLY );
         stubs.setText( "fetching and parsing newsfeeds..." );
     }
 
@@ -127,6 +127,25 @@ public class NewsManager extends News implements Observer {
 		
 		( ( Composite ) control ).layout();
     }
+    
+    /**
+     * 
+     * @param title A title for this newsfeed. if <code>null</code> the hostname is used
+     * @param anUrl The <code>URL</code> of this newsfeed file
+     */
+    public void add( String title, URL anUrl ) {
+    	this.aRSSFetcher.add( anUrl );
+    	aThread.interrupt();
+    }
+    
+    /**
+     * 
+     * @param anUrl
+     */
+    public void remove( URL anUrl ) {
+    	this.aRSSFetcher.remove( anUrl );
+    	aThread.interrupt();
+    }
 
     /**
      * @return
@@ -153,6 +172,7 @@ public class NewsManager extends News implements Observer {
 			control.getDisplay().asyncExec( new Runnable() {
 				public void run() {
 					create();
+					return;
 				}
 			} );
 		}		
@@ -161,6 +181,9 @@ public class NewsManager extends News implements Observer {
 
 /*
 $Log: NewsManager.java,v $
+Revision 1.2  2003/09/29 14:05:45  lemmster
+update & add still not working
+
 Revision 1.1  2003/09/27 12:09:32  lemmster
 initial commit
 

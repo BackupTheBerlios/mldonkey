@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.helper;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,7 +39,7 @@ import churchillobjects.rss4j.parser.RssParser;
 /**
  * NewsCreator
  *
- * @version $Id: RSSFetcher.java,v 1.1 2003/09/27 12:09:32 lemmster Exp $
+ * @version $Id: RSSFetcher.java,v 1.2 2003/09/29 14:05:45 lemmster Exp $
  *
  */
 public class RSSFetcher extends Observable implements Runnable {
@@ -46,6 +47,10 @@ public class RSSFetcher extends Observable implements Runnable {
     private boolean connected;
     private Map newsSource;
 
+	/**
+	 * 
+	 * @throws MalformedURLException
+	 */
     public RSSFetcher()
         throws MalformedURLException {
         this.connected = true;
@@ -100,10 +105,14 @@ public class RSSFetcher extends Observable implements Runnable {
      *
      * @throws MalformedURLException DOCUMENT ME!
      */
-    private Map createURLMap()
-        throws MalformedURLException {
+    private Map createURLMap() throws MalformedURLException {
+		/* read the urls from the preferenceLoader */
         String[] aString = OurTools.split( PreferenceLoader.loadString( "newsSource" ), ';' );
-        Map aMap = new HashMap();
+
+		/* create a synchronized map so we dont need to mess with sync around */
+        Map aMap = Collections.synchronizedMap( new HashMap() );
+
+		/* put the url/null entry in the map (null is replaced by a RssDocument in run()) */
         for ( int i = 0; i < aString.length; i++ ) {
             URL anUrl = new URL( aString[ i ] );
             aMap.put( anUrl, null );
@@ -122,6 +131,22 @@ public class RSSFetcher extends Observable implements Runnable {
         this.notifyObservers( e );
     }
 
+	/**
+	 * 
+	 * @param anUrl
+	 */
+	public void add( URL anUrl ) {
+		this.newsSource.put( anUrl, null );
+	}
+	
+	/**
+	 * 
+	 * @param anUrl
+	 */
+	public void remove( URL anUrl ) {
+		this.newsSource.remove( anUrl );
+	}
+
     /**
      * @param connected
      */
@@ -139,6 +164,9 @@ public class RSSFetcher extends Observable implements Runnable {
 
 /*
 $Log: RSSFetcher.java,v $
+Revision 1.2  2003/09/29 14:05:45  lemmster
+update & add still not working
+
 Revision 1.1  2003/09/27 12:09:32  lemmster
 initial commit
 

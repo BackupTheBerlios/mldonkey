@@ -28,7 +28,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -40,13 +39,13 @@ import churchillobjects.rss4j.RssChannelItem;
 /**
  * NewsFeed
  *
- * @version $Id: NewsChan.java,v 1.1 2003/09/27 12:09:32 lemmster Exp $
+ * @version $Id: NewsChan.java,v 1.2 2003/09/29 14:05:45 lemmster Exp $
  *
  */
 public class NewsChan extends News {
     private RssChannel channel;
     private List aList;
-    private Composite composite;
+    private Group group;
 
     public NewsChan( Control aControl, RssChannel channel ) {
 		super( aControl );
@@ -57,19 +56,14 @@ public class NewsChan extends News {
      * DOCUMENT ME!
      */
     private void create() {
-        composite = new Composite( ( Composite ) control, SWT.NONE );
-        composite.setLayout( new GridLayout() );
-        composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-		Group aGroup = new Group( composite, SWT.NONE );
-		aGroup.setLayout( new GridLayout() );
-		aGroup.setText( channel.getChannelTitle() );
+    	System.out.println( channel.getChannelTitle() );
+		group = new Group( ( Composite ) control, SWT.NONE );
+		group.setLayout( new GridLayout() );
+		group.setText( channel.getChannelTitle() );
 
         Enumeration items = channel.items();
         while ( items.hasMoreElements() )
-            aList.add( new NewsItem( aGroup, ( RssChannelItem ) items.nextElement() ) );
-
-        composite.layout();
+            aList.add( new NewsItem( group, ( RssChannelItem ) items.nextElement() ) );
     }
 
     /**
@@ -89,12 +83,15 @@ public class NewsChan extends News {
     public void dispose() {
         for ( int i = 0; i < aList.size(); i++ )
             ( ( NewsItem ) aList.get( i ) ).dispose();
-        this.composite.dispose();
+        this.group.dispose();
     }
 }
 
 /*
 $Log: NewsChan.java,v $
+Revision 1.2  2003/09/29 14:05:45  lemmster
+update & add still not working
+
 Revision 1.1  2003/09/27 12:09:32  lemmster
 initial commit
 
