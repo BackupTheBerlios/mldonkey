@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.26 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.27 2003/08/24 18:28:24 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -255,6 +255,9 @@ public abstract class GuiTab implements Listener, Observer {
 			GridLayout layout = new GridLayout();
 			layout.numColumns = 2;
 			layout.marginWidth = 10;
+			layout.marginHeight = 0;
+			layout.horizontalSpacing = 0;
+			layout.verticalSpacing = 0;
 			pageHeader.setLayout(layout);
 			pageHeader.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			
@@ -296,6 +299,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.27  2003/08/24 18:28:24  zet
+thinner header bar
+
 Revision 1.26  2003/08/23 15:21:37  zet
 remove @author
 
