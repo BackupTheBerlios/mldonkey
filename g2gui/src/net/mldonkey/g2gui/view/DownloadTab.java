@@ -120,7 +120,7 @@ public class DownloadTab
 
 	public void run() {
 		if(table.getInput()==null) table.setInput(fileInfoMap);
-		if(fileInfoMap.getId()!=0 && fileInfoMap.contains(fileInfoMap.getId())) table.update(fileInfoMap.get(fileInfoMap.getId()),null);
+		if(fileInfoMap.size()==table.getTable().getItemCount() && fileInfoMap.getId()!=0 && fileInfoMap.contains(fileInfoMap.getId())) table.update(fileInfoMap.get(fileInfoMap.getId()),null);
 		else table.refresh();
 	}
 
