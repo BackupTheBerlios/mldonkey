@@ -43,7 +43,7 @@ import java.util.Observer;
  *
  * ClientTableContentProvider
  *
- * @version $Id: ClientTableContentProvider.java,v 1.13 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: ClientTableContentProvider.java,v 1.14 2004/03/27 22:04:27 psy Exp $
  *
  */
 public class ClientTableContentProvider extends GTableContentProvider implements Observer {
@@ -135,13 +135,17 @@ public class ClientTableContentProvider extends GTableContentProvider implements
 
         gView.getViewFrame().updateCLabelText(G2GuiResources.getString("TT_Clients") + ": " +
             totalConnected + " / " + totalClients + " " +
-            G2GuiResources.getString("ENS_CONNECTED").toLowerCase());
+            G2GuiResources.getString("ENS_CONNECTED").toLowerCase() + 
+			" [" + fileInfo.getName() + "]"	);
     }
 }
 
 
 /*
 $Log: ClientTableContentProvider.java,v $
+Revision 1.14  2004/03/27 22:04:27  psy
+show filename in clients sash header
+
 Revision 1.13  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -203,7 +207,7 @@ Revision 1.3  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.2  2003/08/22 21:17:25  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.1  2003/08/20 14:58:43  zet
 sources clientinfo viewer
