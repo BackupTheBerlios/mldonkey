@@ -33,13 +33,14 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * MenuListener
  *
- * @version $Id: CMenuListener.java,v 1.1 2003/09/23 14:47:53 zet Exp $
+ * @version $Id: CMenuListener.java,v 1.2 2003/09/23 14:59:50 zet Exp $
  *
  */
 public abstract class CMenuListener implements IMenuListener {
@@ -62,7 +63,13 @@ public abstract class CMenuListener implements IMenuListener {
     public void menuAboutToShow( IMenuManager menuManager ) {
         /* columns toogle */
         MenuManager columnsSubMenu = new MenuManager( G2GuiResources.getString( "TML_COLUMN" ) );
-        Table table = ( ( TableViewer ) tableViewer ).getTable(  );
+        Table table;
+		
+		if ( tableViewer instanceof TableTreeViewer )
+			table = ( ( TableTreeViewer ) tableViewer ).getTableTree(  ).getTable(  );
+		else
+            table = ( ( TableViewer ) tableViewer ).getTable(  );
+            
         for ( int i = 0; i < table.getColumnCount(  ); i++ ) {
             ToggleColumnsAction tCA = new ToggleColumnsAction( i );
             if ( table.getColumn( i ).getResizable(  ) )
@@ -73,9 +80,7 @@ public abstract class CMenuListener implements IMenuListener {
     }
 
     /**
-     *
      * ToggleColumnsAction
-     *
      */
     public class ToggleColumnsAction extends Action {
         private int column;
@@ -95,13 +100,11 @@ public abstract class CMenuListener implements IMenuListener {
             tableColumn = table.getColumn( column );
             setText( tableColumn.getText(  ) );
         }
-
-        /**
-         * DOCUMENT ME!
-         */
+    
         public void run(  ) {
             if ( !isChecked(  ) ) {
-                tableColumn.setWidth( 0 );
+//				gtk doesn't support column width 0
+				tableColumn.setWidth( SWT.getPlatform(  ).equals( "gtk" ) ? 1 : 0 );
                 tableColumn.setResizable( false );
             }
             else {
@@ -112,10 +115,8 @@ public abstract class CMenuListener implements IMenuListener {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param viewerFilter DOCUMENT ME!
-     * @param toggle DOCUMENT ME!
+     * @param viewerFilter 
+     * @param toggle 
      */
     protected void toggleFilter( ViewerFilter viewerFilter, boolean toggle ) {
         if ( toggle )
@@ -127,6 +128,9 @@ public abstract class CMenuListener implements IMenuListener {
 
 /*
 $Log: CMenuListener.java,v $
+Revision 1.2  2003/09/23 14:59:50  zet
+update for tabletreeviewer support
+
 Revision 1.1  2003/09/23 14:47:53  zet
 rename MenuListener to avoid conflict with swt MenuListener
 
