@@ -35,7 +35,7 @@ import net.mldonkey.g2gui.view.G2Gui;
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.31 2004/03/26 18:11:03 dek Exp $
+ * @version $Id: ServerInfo.java,v 1.32 2004/09/10 18:09:17 lemmy Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -243,7 +243,7 @@ public class ServerInfo extends Parent {
 	 */
 	private void setNetwork( int i ) {
 		this.network =
-		( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
+		( NetworkInfo ) this.parent.getNetworkInfoMap().get( i );
 	}
 	
 	/**
@@ -341,6 +341,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.32  2004/09/10 18:09:17  lemmy
+use the get(int i) method of networkinfointmap instead of working on the TIntObjectMap directly
+
 Revision 1.31  2004/03/26 18:11:03  dek
 some more profiling and mem-saving option (hopefully)  introduced
 
@@ -383,7 +386,7 @@ Revision 1.19  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
 Revision 1.18  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmy $
 
 Revision 1.17  2003/08/11 11:22:53  lemmy
 avoid npes

@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.view.G2Gui;
 /**
  * ClientInfo20
  *
- * @version $Id: ClientInfo20.java,v 1.12 2004/09/10 17:59:09 dek Exp $ 
+ * @version $Id: ClientInfo20.java,v 1.13 2004/09/10 18:08:46 lemmy Exp $ 
  *
  */
 public class ClientInfo20 extends ClientInfo19 {
@@ -58,7 +58,7 @@ public class ClientInfo20 extends ClientInfo19 {
 	 */
 	public void readStream(int clientID, MessageBuffer messageBuffer) {
 		this.clientid = clientID;		
-		this.clientNetwork = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(messageBuffer.readInt32());
+		this.clientNetwork = (NetworkInfo) this.parent.getNetworkInfoMap().get(messageBuffer.readInt32());
 		this.getClientKind().readStream(messageBuffer);
 
 		Enum oldState = this.getState();
@@ -79,7 +79,7 @@ public class ClientInfo20 extends ClientInfo19 {
 		this.clientDownloadedString = RegExp.calcStringSize(clientDownloaded);
 
 		// Occasionally it seems the filename isn't reset to null when not uploading anymore
-		this.isUploader = (clientUploadFilename != G2Gui.emptyString);		
+		this.isUploader = (clientUploadFilename != G2Gui.emptyString);
 		onChangedState(oldState);
 	}
 
@@ -142,8 +142,8 @@ public class ClientInfo20 extends ClientInfo19 {
 
 /*
 $Log: ClientInfo20.java,v $
-Revision 1.12  2004/09/10 17:59:09  dek
-Work-around for core-bug
+Revision 1.13  2004/09/10 18:08:46  lemmy
+use the get(int i) method of networkinfointmap instead of working on the TIntObjectMap directly
 
 Revision 1.11  2004/03/27 17:04:17  dek
 replaced string by stringbuffer for building-string ,you know Strings are special-objects in java ;-)

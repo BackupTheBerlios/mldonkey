@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.view.G2Gui;
 /**
  * ClientInfo19
  *
- * @version $Id: ClientInfo19.java,v 1.6 2004/03/29 14:51:44 dek Exp $ 
+ * @version $Id: ClientInfo19.java,v 1.7 2004/09/10 18:09:17 lemmy Exp $ 
  *
  */
 public class ClientInfo19 extends ClientInfo {
@@ -74,7 +74,7 @@ public class ClientInfo19 extends ClientInfo {
 	public void readStream(int clientID, MessageBuffer messageBuffer) {
 		this.clientid = clientID;
 
-		this.clientNetwork = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(messageBuffer.readInt32());
+		this.clientNetwork = (NetworkInfo) this.parent.getNetworkInfoMap().get(messageBuffer.readInt32());
 
 		this.getClientKind().readStream(messageBuffer);
 
@@ -143,6 +143,9 @@ public class ClientInfo19 extends ClientInfo {
 
 /*
 $Log: ClientInfo19.java,v $
+Revision 1.7  2004/09/10 18:09:17  lemmy
+use the get(int i) method of networkinfointmap instead of working on the TIntObjectMap directly
+
 Revision 1.6  2004/03/29 14:51:44  dek
 some mem-improvements
 

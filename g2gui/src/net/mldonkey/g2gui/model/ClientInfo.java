@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.46 2004/03/26 18:11:03 dek Exp $
+ * @version $Id: ClientInfo.java,v 1.47 2004/09/10 18:09:17 lemmy Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -368,7 +368,7 @@ public class ClientInfo extends Parent {
     public void readStream(int clientID, MessageBuffer messageBuffer) {
         this.clientid = clientID;
 
-        this.clientNetwork = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(messageBuffer.readInt32());
+        this.clientNetwork = (NetworkInfo) this.parent.getNetworkInfoMap().get(messageBuffer.readInt32());
 
         this.getClientKind().readStream(messageBuffer);
 
@@ -496,6 +496,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.47  2004/09/10 18:09:17  lemmy
+use the get(int i) method of networkinfointmap instead of working on the TIntObjectMap directly
+
 Revision 1.46  2004/03/26 18:11:03  dek
 some more profiling and mem-saving option (hopefully)  introduced
 
@@ -582,7 +585,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmy $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

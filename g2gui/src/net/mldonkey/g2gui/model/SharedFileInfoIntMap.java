@@ -36,7 +36,7 @@ import java.util.List;
  * SharedFileInfoList
  *
  *
- * @version $Id: SharedFileInfoIntMap.java,v 1.12 2004/03/20 01:34:02 dek Exp $
+ * @version $Id: SharedFileInfoIntMap.java,v 1.13 2004/09/10 18:09:17 lemmy Exp $
  *
  */
 public class SharedFileInfoIntMap extends InfoIntMap {
@@ -79,7 +79,7 @@ public class SharedFileInfoIntMap extends InfoIntMap {
                 this.infoIntMap.put(fileID, sharedFileInfo);
 
                 /*get the networkItem and assign it to this sharedInfo*/
-                NetworkInfo temp = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(sharedFileInfo.getNetworkId());
+                NetworkInfo temp = (NetworkInfo) this.parent.getNetworkInfoMap().get(sharedFileInfo.getNetworkId());
                 sharedFileInfo.setNetwork(temp);
                 newSharedFiles.add(sharedFileInfo);
             }
@@ -195,6 +195,9 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: SharedFileInfoIntMap.java,v $
+Revision 1.13  2004/09/10 18:09:17  lemmy
+use the get(int i) method of networkinfointmap instead of working on the TIntObjectMap directly
+
 Revision 1.12  2004/03/20 01:34:02  dek
 implemented gui-Proto 25 !!!!!
 
@@ -234,7 +237,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmy $
 
 Revision 1.3  2003/07/05 20:04:02  lemmy
 javadoc improved

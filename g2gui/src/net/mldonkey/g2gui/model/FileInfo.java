@@ -49,7 +49,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.94 2004/03/29 14:51:44 dek Exp $
+ * @version $Id: FileInfo.java,v 1.95 2004/09/10 18:09:16 lemmy Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -772,7 +772,7 @@ public class FileInfo extends Parent implements Observer {
      * @param i the int
      */
     private void setNetwork(int i) {
-        this.network = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(i);
+        this.network = (NetworkInfo) this.parent.getNetworkInfoMap().get(i);
     }
 
     /**
@@ -1132,6 +1132,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.95  2004/09/10 18:09:16  lemmy
+use the get(int i) method of networkinfointmap instead of working on the TIntObjectMap directly
+
 Revision 1.94  2004/03/29 14:51:44  dek
 some mem-improvements
 
@@ -1297,7 +1300,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmy $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)

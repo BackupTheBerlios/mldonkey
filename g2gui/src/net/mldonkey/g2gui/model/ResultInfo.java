@@ -46,14 +46,14 @@ import org.eclipse.swt.program.Program;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.37 2004/09/10 17:59:09 dek Exp $
+ * @version $Id: ResultInfo.java,v 1.38 2004/09/10 18:10:34 lemmy Exp $
  *
  */
 public class ResultInfo extends Parent {
     /**
      * The Result Comment
      */
-    private String comment;
+    private String comment = "";
 
     /**
      * Result ID
@@ -73,7 +73,7 @@ public class ResultInfo extends Parent {
     /**
      * MD4
      */
-    private String md4;
+    private String md4 = "";
 
     /**
      * Size
@@ -83,17 +83,17 @@ public class ResultInfo extends Parent {
     /**
      * The size rounded with metric unit
      */
-    private String stringSize;
+    private String stringSize = "";
 
     /**
      * Format
      */
-    private String format;
+    private String format = "";
 
     /**
      * Type
      */
-    private String type;
+    private String type = "";
 
     /**
      * Metatags
@@ -514,7 +514,7 @@ public class ResultInfo extends Parent {
      * @param i the int
      */
     private void setNetworkID( int i ) {
-    	        this.network = ( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
+        this.network = ( NetworkInfo ) this.parent.getNetworkInfoMap().get( i );
     }
 
     /**
@@ -713,6 +713,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.38  2004/09/10 18:10:34  lemmy
+use the get(int i) method of networkinfointmap instead of working on the TIntObjectMap directly
+
 Revision 1.37  2004/09/10 17:59:09  dek
 Work-around for core-bug
 
@@ -786,7 +789,7 @@ Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.13  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmy $
 
 Revision 1.12  2003/08/14 12:45:46  dek
 searching works now without errors
