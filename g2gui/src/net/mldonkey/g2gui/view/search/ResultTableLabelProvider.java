@@ -38,7 +38,7 @@ import org.eclipse.swt.graphics.Color;
  * ResultTableLabelProvider
  *
  * @author $user$
- * @version $Id: ResultTableLabelProvider.java,v 1.5 2003/08/08 23:33:49 zet Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.6 2003/08/12 07:26:03 lemmstercvs01 Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -130,22 +130,31 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 	 */
 	public void removeListener( ILabelProviderListener arg0 ) { }
 	
-	public Color getBackground (Object arg0) {
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
+	 */
+	public Color getBackground( Object element ) {
 		return null;
 	}
-	public Color getForeground (Object arg0) {
-		if (arg0 instanceof ResultInfo) {
-			ResultInfo resultInfo = (ResultInfo) arg0;
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+	 */
+	public Color getForeground( Object element ) {
+		if ( element instanceof ResultInfo ) {
+			ResultInfo resultInfo = ( ResultInfo ) element;
 			if ( !resultInfo.getHistory() )
 				return alreadyDownloadedColor;
 		}
 		return null;
 	}
-		
 }
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.6  2003/08/12 07:26:03  lemmstercvs01
+checkstyle applied
+
 Revision 1.5  2003/08/08 23:33:49  zet
 dispose color
 
