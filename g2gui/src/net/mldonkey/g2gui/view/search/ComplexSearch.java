@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.10 2003/09/08 10:25:26 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.11 2003/09/10 14:47:43 zet Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -368,8 +368,10 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable o, Object arg ) {
+    	if (maxText.isDisposed()) return;
         maxText.getDisplay().asyncExec( new Runnable() {
                 public void run() {
+                	if (maxText.isDisposed()) return;
                     /* update the other text */
                     if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
                         maxText.setEnabled( false );
@@ -406,6 +408,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.11  2003/09/10 14:47:43  zet
+nullpointer
+
 Revision 1.10  2003/09/08 10:25:26  lemmster
 OtherComplexSearch added, rest improved
 
