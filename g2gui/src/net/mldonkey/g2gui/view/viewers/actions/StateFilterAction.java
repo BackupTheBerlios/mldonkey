@@ -24,16 +24,16 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.view.viewers.GView;
+import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.ViewerFilter;
 
 
 /**
  * StateFilterAction
  *
- * @version $Id: StateFilterAction.java,v 1.4 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: StateFilterAction.java,v 1.5 2003/11/04 21:06:35 lemmster Exp $
  *
  */
 public class StateFilterAction extends FilterAction {
@@ -63,55 +63,40 @@ public class StateFilterAction extends FilterAction {
     }
 
     public void run() {
-        if (!isChecked() != exclusion) {
-            ViewerFilter[] viewerFilters = gViewer.getFilters();
-
-            for (int i = 0; i < viewerFilters.length; i++) {
-                if (viewerFilters[ i ] instanceof StateGViewerFilter) {
-                    StateGViewerFilter filter = (StateGViewerFilter) viewerFilters[ i ];
-
-                    if (filter.matches(state)) {
-                        if (filter.count() == 1) {
-                            toggleFilter(viewerFilters[ i ], false);
-                        } else {
-                            filter.remove(state);
-                            gViewer.refresh();
-                        }
-                    }
-                }
-            }
-        } else {
-            ViewerFilter[] viewerFilters = gViewer.getFilters();
-
-            for (int i = 0; i < viewerFilters.length; i++) {
-                if (viewerFilters[ i ] instanceof StateGViewerFilter) {
-                    StateGViewerFilter filter = (StateGViewerFilter) viewerFilters[ i ];
-                    filter.add(state);
+		GViewerFilter filter = gViewer.getFilter( StateGViewerFilter.class );
+        if (isChecked() == exclusion)
+            if (filter.matches(state))
+	            if (filter.count() == 1)
+    	            toggleFilter(filter, false);
+                else {
+                    filter.remove(state);
                     gViewer.refresh();
-
-                    return;
                 }
+        else
+	        if (filter.isReal()) {
+	            filter.add(state);
+                gViewer.refresh();
             }
-
-            StateGViewerFilter filter = new StateGViewerFilter(exclusion);
-            filter.add(state);
-            toggleFilter(filter, true);
-        }
+            else {
+				GViewerFilter nFilter = new StateGViewerFilter(exclusion);
+				nFilter.add(state);
+				toggleFilter(nFilter, true);
+            }
     }
 
     public static void removeFilters(GView gViewer) {
-        ViewerFilter[] filters = gViewer.getFilters();
-
-        for (int i = 0; i < filters.length; i++)
-            if (filters[ i ] instanceof StateGViewerFilter) {
-                gViewer.removeFilter(filters[ i ]);
-            }
+        GViewerFilter filter = gViewer.getFilter( StateGViewerFilter.class );
+        if (filter.isReal())
+        	gViewer.removeFilter(filter);
     }
 }
 
 
 /*
 $Log: StateFilterAction.java,v $
+Revision 1.5  2003/11/04 21:06:35  lemmster
+enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
+
 Revision 1.4  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

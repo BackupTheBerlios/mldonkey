@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * GTableTreeViewer
  *
- * @version $Id: GTableTreeView.java,v 1.2 2003/10/31 16:26:32 zet Exp $
+ * @version $Id: GTableTreeView.java,v 1.3 2003/11/04 21:06:35 lemmster Exp $
  *
  */
 public class GTableTreeView extends GView {
@@ -52,13 +52,6 @@ public class GTableTreeView extends GView {
 
     public GTableTreeView(Composite parent, CoreCommunication core) {
         this.core = core;
-    }
-
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.IGViewer#getFilters()
-     */
-    public ViewerFilter[] getFilters() {
-        return sViewer.getFilters();
     }
 
     /* (non-Javadoc)
@@ -139,11 +132,22 @@ public class GTableTreeView extends GView {
         sViewer = new CustomTableTreeViewer(parent, SWT.FULL_SELECTION | SWT.MULTI);
         super.createContents();
     }
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GView#getFilters()
+	 */
+	public ViewerFilter[] getFilters() {
+		return sViewer.getFilters();
+	}
 }
 
 
 /*
 $Log: GTableTreeView.java,v $
+Revision 1.3  2003/11/04 21:06:35  lemmster
+enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
+
 Revision 1.2  2003/10/31 16:26:32  zet
 private->protected
 

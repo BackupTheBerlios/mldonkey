@@ -25,6 +25,8 @@ package net.mldonkey.g2gui.view.viewers;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.filters.AlwaysFalseGViewerFilter;
+import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
 import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableLabelProvider;
 import net.mldonkey.g2gui.view.viewers.table.GTableMenuListener;
@@ -50,7 +52,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.1 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: GView.java,v 1.2 2003/11/04 21:06:35 lemmster Exp $
  *
  */
 public abstract class GView {
@@ -107,8 +109,6 @@ public abstract class GView {
     
 	public abstract StructuredViewer getViewer();
 	
-	public abstract ViewerFilter[] getFilters();
-	
 	public abstract Table getTable();
 	
 	public abstract void refresh();
@@ -119,11 +119,27 @@ public abstract class GView {
 	
 	public abstract Shell getShell();
 	
+	public abstract ViewerFilter[] getFilters();
+	
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.viewers.IGViewer#addDisposeListener(net.mldonkey.g2gui.view.viewers.GPaneListener)
      */
     public void addDisposeListener(GPaneListener listener) {
         getTable().addDisposeListener(listener);
+    }
+    
+    /**
+     * @param aClassName
+     * @return The GViewerFilter to this ClassName or FalseGViewerFilter on null
+     */
+    public GViewerFilter getFilter( Class aClassName ) {
+		ViewerFilter[] filters = this.getFilters();
+		for ( int i = 0; i < filters.length; i++ ) {
+			if ( aClassName.isInstance( filters[ i ] ) )
+				return (GViewerFilter) filters[ i ];
+		}
+		// we return a filter which retuns false for all methods. avoid null pointer checks
+		return new AlwaysFalseGViewerFilter();
     }
 
     /**
@@ -289,6 +305,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.2  2003/11/04 21:06:35  lemmster
+enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
+
 Revision 1.1  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -26,6 +26,7 @@ import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.filters.FileExtensionFilter;
+import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.NetworkGViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
@@ -35,7 +36,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * GAction
  *
- * @version $Id: FilterAction.java,v 1.4 2003/10/31 16:02:57 zet Exp $ 
+ * @version $Id: FilterAction.java,v 1.5 2003/11/04 21:06:35 lemmster Exp $ 
  *
  */
 public abstract class FilterAction extends Action {
@@ -53,50 +54,30 @@ public abstract class FilterAction extends Action {
 	}
 	
 	public static boolean isFiltered( GView aGViewer, NetworkInfo aNetworkInfo ) {
-		ViewerFilter[] viewerFilters = aGViewer.getFilters();
-		for ( int i = 0; i < viewerFilters.length; i++ ) {
-			if ( viewerFilters[ i ] instanceof NetworkGViewerFilter ) {
-				NetworkGViewerFilter filter = ( NetworkGViewerFilter ) viewerFilters[ i ];
-				if ( filter.matches( aNetworkInfo ) )
-						return true;
-			}
-		}
+		NetworkGViewerFilter filter = (NetworkGViewerFilter) aGViewer.getFilter( NetworkGViewerFilter.class );
+		if ( filter.matches( aNetworkInfo ) )
+			return true;
 		return false;
 	}
 
 	protected boolean isFiltered( NetworkInfo aNetworkInfo ) {
-		ViewerFilter[] viewerFilters = gViewer.getFilters();
-		for ( int i = 0; i < viewerFilters.length; i++ ) {
-			if ( viewerFilters[ i ] instanceof NetworkGViewerFilter ) {
-				NetworkGViewerFilter filter = ( NetworkGViewerFilter ) viewerFilters[ i ];
-				if ( filter.matches( aNetworkInfo ) )
-						return true;
-			}
-		}
+		GViewerFilter filter = (GViewerFilter) gViewer.getFilter( NetworkGViewerFilter.class );
+		if ( filter.matches( aNetworkInfo ) )
+			return true;
 		return false;
 	}
 
 	public static boolean isFiltered( GView aGViewer, Enum state ) {
-		ViewerFilter[] viewerFilters = aGViewer.getFilters();
-		for ( int i = 0; i < viewerFilters.length; i++ ) {
-			if ( viewerFilters[ i ] instanceof StateGViewerFilter ) {
-				StateGViewerFilter filter = ( StateGViewerFilter ) viewerFilters[ i ];
-				if ( filter.matches( state ) )
-					return true;
-			}
-		}
+		GViewerFilter filter = ( GViewerFilter ) aGViewer.getFilter( StateGViewerFilter.class );
+		if ( filter.matches( state ) )
+			return true;
 		return false;
 	}
 
 	protected boolean isFiltered( Enum state ) {
-		ViewerFilter[] viewerFilters = gViewer.getFilters();
-		for ( int i = 0; i < viewerFilters.length; i++ ) {
-			if ( viewerFilters[ i ] instanceof StateGViewerFilter ) {
-				StateGViewerFilter filter = ( StateGViewerFilter ) viewerFilters[ i ];
-				if ( filter.matches( state ) )
-					return true;
-			}
-		}
+		GViewerFilter filter = ( GViewerFilter ) gViewer.getFilter( StateGViewerFilter.class );
+		if ( filter.matches( state ) )
+			return true;
 		return false;
 	}
 	
@@ -135,6 +116,9 @@ public abstract class FilterAction extends Action {
 
 /*
 $Log: FilterAction.java,v $
+Revision 1.5  2003/11/04 21:06:35  lemmster
+enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
+
 Revision 1.4  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

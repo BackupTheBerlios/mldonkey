@@ -22,59 +22,45 @@
  */
 package net.mldonkey.g2gui.view.viewers.filters;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
-
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.Enum;
 
+import org.eclipse.jface.viewers.Viewer;
+
 /**
- * GViewerFilter
+ * FalseGViewerFilter this filter returns always null for all methods
  *
- * @version $Id: GViewerFilter.java,v 1.2 2003/11/04 21:06:35 lemmster Exp $ 
+ * @version $Id: AlwaysFalseGViewerFilter.java,v 1.1 2003/11/04 21:06:35 lemmster Exp $ 
  *
  */
-public abstract class GViewerFilter extends ViewerFilter {
-	protected Enum.MaskMatcher aMatcher;
-	/**
-	 * Creates a new EnumStateFilter
+public class AlwaysFalseGViewerFilter extends GViewerFilter {
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.filters.GViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
-	public GViewerFilter() {
-		this.aMatcher = new Enum.MaskMatcher();
-	}
-
-	public void add( Enum enum ) {
-		this.aMatcher.add( enum );
-	}
-
-	public void remove( Enum state ) {
-		this.aMatcher.remove( state );
-	}
-        
-	public boolean matches( Enum enum ) {
-		return this.aMatcher.matches( enum );        	
-	}
-	
-	public boolean matches( NetworkInfo network ) {
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		return false;
 	}
-        
-	public int count() {
-		return this.aMatcher.count();
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.filters.GViewerFilter#matches(net.mldonkey.g2gui.model.enum.Enum)
+	 */
+	public boolean matches( Enum enum ) {
+		return false;        	
 	}
+	
+	public boolean matches( NetworkInfo aNetworkInfo ) {
+		return false;
+	}
+	
 	public boolean isReal() {
-		return true;
+		return false;
 	}
-		
-	public abstract boolean select( Viewer viewer, Object parentElement, Object element );
 }
 
 /*
-$Log: GViewerFilter.java,v $
-Revision 1.2  2003/11/04 21:06:35  lemmster
+$Log: AlwaysFalseGViewerFilter.java,v $
+Revision 1.1  2003/11/04 21:06:35  lemmster
 enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
-
-Revision 1.1  2003/10/29 16:56:21  lemmster
-added reasonable class hierarchy for panelisteners, viewers...
 
 */

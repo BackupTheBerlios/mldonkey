@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * Generic Table Viewer
  *
- * @version $Id: GTableView.java,v 1.1 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: GTableView.java,v 1.2 2003/11/04 21:06:35 lemmster Exp $
  *
  */
 public class GTableView extends GView {
@@ -96,13 +96,6 @@ public class GTableView extends GView {
     }
 
     /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.GViewer#getFilters()
-     */
-    public ViewerFilter[] getFilters() {
-        return this.sViewer.getFilters();
-    }
-
-    /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.viewers.GViewer#addFilter(org.eclipse.jface.viewers.ViewerFilter)
      */
     public void addFilter(ViewerFilter viewerFilter) {
@@ -136,11 +129,22 @@ public class GTableView extends GView {
     public StructuredViewer getViewer() {
         return this.sViewer;
     }
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.viewers.GView#getFilters()
+	 */
+    public ViewerFilter[] getFilters() {
+        return this.sViewer.getFilters();
+    }
 }
 
 
 /*
 $Log: GTableView.java,v $
+Revision 1.2  2003/11/04 21:06:35  lemmster
+enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
+
 Revision 1.1  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -25,13 +25,10 @@ package net.mldonkey.g2gui.view.viewers.actions;
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GView;
-
-import org.eclipse.jface.viewers.ViewerFilter;
-
 /**
  * AllFilterAction
  *
- * @version $Id: AllFilterAction.java,v 1.4 2003/10/31 16:02:57 zet Exp $ 
+ * @version $Id: AllFilterAction.java,v 1.5 2003/11/04 21:06:35 lemmster Exp $ 
  *
  */
 public class AllFilterAction extends FilterAction {
@@ -45,16 +42,16 @@ public class AllFilterAction extends FilterAction {
 	}
 
 	public void run() {
-		ViewerFilter[] viewerFilters = gViewer.getFilters();
-		for ( int i = 0; i < viewerFilters.length; i++ )
-			if ( !( viewerFilters[ i ] instanceof WordFilter ) )
-				toggleFilter( viewerFilters[ i ], false );
+		toggleFilter( gViewer.getFilter( WordFilter.class ), false );
 	}
 
 }
 
 /*
 $Log: AllFilterAction.java,v $
+Revision 1.5  2003/11/04 21:06:35  lemmster
+enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
+
 Revision 1.4  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

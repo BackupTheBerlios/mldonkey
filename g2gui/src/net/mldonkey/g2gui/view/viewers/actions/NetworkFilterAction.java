@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view.viewers.actions;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.view.viewers.GView;
+import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.NetworkGViewerFilter;
 
 import org.eclipse.jface.action.Action;
@@ -33,7 +34,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * NetworkFilterAction
  *
- * @version $Id: NetworkFilterAction.java,v 1.4 2003/10/31 16:02:57 zet Exp $ 
+ * @version $Id: NetworkFilterAction.java,v 1.5 2003/11/04 21:06:35 lemmster Exp $ 
  *
  */
 public class NetworkFilterAction extends FilterAction {
@@ -52,35 +53,27 @@ public class NetworkFilterAction extends FilterAction {
 	}
 
 	public void run() {
+		GViewerFilter filter = gViewer.getFilter( NetworkGViewerFilter.class );
 		if ( !isChecked() ) {
-			ViewerFilter[] viewerFilters = gViewer.getFilters();
-			for ( int i = 0; i < viewerFilters.length; i++ ) {
-				if ( viewerFilters[ i ] instanceof NetworkGViewerFilter ) {
-					NetworkGViewerFilter filter = ( NetworkGViewerFilter ) viewerFilters[ i ];
-					if ( filter.matches( networkType ) )
-						if ( filter.count() == 1 )
-							toggleFilter( viewerFilters[ i ], false );
-						else {
-							filter.remove( networkType );
-							gViewer.refresh();
-						}
+			if ( filter.matches( networkType ) )
+				if ( filter.count() == 1 )
+					toggleFilter( filter, false );
+				else {
+					filter.remove( networkType );
+					gViewer.refresh();
 				}
-			}
 		}
 		else {
-			ViewerFilter[] viewerFilters = gViewer.getFilters();
-			for ( int i = 0; i < viewerFilters.length; i++ ) {
-				if ( viewerFilters[ i ] instanceof NetworkGViewerFilter ) {
-					NetworkGViewerFilter filter = ( NetworkGViewerFilter ) viewerFilters[ i ];
-					filter.add( networkType );
-					gViewer.refresh();
-					return;
-				}
+			if (filter.isReal()) {
+				filter.add(networkType);
+				gViewer.refresh();
 			}
-			NetworkGViewerFilter filter = new NetworkGViewerFilter();
-			filter.add( networkType );
-			toggleFilter( filter, true );
-		}
+			else {
+				NetworkGViewerFilter nFilter = new NetworkGViewerFilter();
+				nFilter.add(networkType);
+				toggleFilter(nFilter, true);
+			}
+		}	
 	}
 	
 	public void removeAllNetworkFilter() {
@@ -93,6 +86,9 @@ public class NetworkFilterAction extends FilterAction {
 
 /*
 $Log: NetworkFilterAction.java,v $
+Revision 1.5  2003/11/04 21:06:35  lemmster
+enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
+
 Revision 1.4  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -29,13 +29,12 @@ import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 
 
 /**
  * StateGViewerFilter
  *
- * @version $Id: StateGViewerFilter.java,v 1.5 2003/10/31 16:48:51 zet Exp $
+ * @version $Id: StateGViewerFilter.java,v 1.6 2003/11/04 21:06:35 lemmster Exp $
  *
  */
 public class StateGViewerFilter extends GViewerFilter {
@@ -107,18 +106,9 @@ public class StateGViewerFilter extends GViewerFilter {
      * @return boolean
      */
     public static boolean matches(GView gViewer, Enum enum) {
-        ViewerFilter[] filters = gViewer.getFilters();
-
-        for (int i = 0; i < filters.length; i++) {
-            if (filters[ i ] instanceof StateGViewerFilter) {
-                StateGViewerFilter filter = (StateGViewerFilter) filters[ i ];
-
-                if (filter.matches(enum)) {
-                    return true;
-                }
-            }
-        }
-
+	    GViewerFilter filter = (GViewerFilter) gViewer.getFilter( StateGViewerFilter.class );
+	    if (filter.matches(enum))
+     	   return true;
         return false;
     }
 }
@@ -126,6 +116,9 @@ public class StateGViewerFilter extends GViewerFilter {
 
 /*
 $Log: StateGViewerFilter.java,v $
+Revision 1.6  2003/11/04 21:06:35  lemmster
+enclouse iteration of getFilters() to getFilter(someClass) into GView. Next step is optimisation of getFilter(someClass) in GView
+
 Revision 1.5  2003/10/31 16:48:51  zet
 minor
 
