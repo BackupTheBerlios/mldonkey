@@ -22,9 +22,6 @@
  */
 package net.mldonkey.g2gui.comm;
 
-
-import gnu.trove.TIntObjectHashMap;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -36,7 +33,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.11 2003/06/14 17:41:33 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.12 2003/06/14 19:31:02 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread {
@@ -55,25 +52,22 @@ public class Core extends Thread {
 	/**
 	 * 
 	 */
-	private FileInfoList fileInfoList = new FileInfoList();
-	/**
-	 * 
-	 */
-	private ClientStats clientStats = new ClientStats();
-	/**
-	 * 
-	 */
-	private FileAddSource fileAddSources = new FileAddSource();
+	private Information networkinfo = new NetworkInfo(),
+						fileAddSources = new FileAddSource(),
+						clientStats = new ClientStats(),
+						consoleMessage = new ConsoleMessage();
 	
 	/**
 	 * 
 	 */
-	private NetworkInfo networkinfo = new NetworkInfo();
+	private InfoList clientInfoList = new ClientInfoList(),
+					 fileInfoList = new FileInfoList(),
+					 serverInfoList = new ServerInfoList();
 	
 	/**
 	 * 
 	 */
-	private TIntObjectHashMap clientInfoMap = new TIntObjectHashMap();
+	private boolean badPassword = false;
 	
 	
 	/**
@@ -155,9 +149,6 @@ public class Core extends Thread {
 					this.requestFileInfoList();
 					break;
 
-			case Message.R_NETWORK_INFO :
-					break;
-					
 			case Message.R_OPTIONS_INFO :				
 					break;
 				
@@ -169,18 +160,15 @@ public class Core extends Thread {
 					break;
 					
 			case Message.R_CLIENT_INFO :
-					ClientInfo clientInfo =  new ClientInfo();
-					clientInfo.readStream( messageBuffer );
-					this.clientInfoMap.put( clientInfo.getClientid(), clientInfo );
+					this.clientInfoList.readStream( messageBuffer );
 					break;
 					
 			case Message.R_CLIENT_STATE :
-					int i = messageBuffer.readInt32();
-					( ( ClientInfo ) this.clientInfoMap.get( i ) ).update( messageBuffer );
+					this.clientInfoList.update( messageBuffer );
 					break;		
 					
 			case Message.R_BAD_PASSWORD :
-					System.out.println( "Bad Password" );						
+					this.badPassword = true;						
 					this.disconnect();
 					break;
 
@@ -193,10 +181,16 @@ public class Core extends Thread {
 					break;				
 
 			case Message.R_CONSOLE :				
-					String payloadText = messageBuffer.readString();
-					System.out.println( payloadText );
+					this.consoleMessage.readStream( messageBuffer );
 					break;
 				
+			case Message.R_NETWORK_INFO :
+					break;
+					
+			case Message.R_SERVER_INFO :
+					this.serverInfoList.readStream( messageBuffer );
+					break;
+							
 			case Message.R_DOWNLOADING_LIST :
 					this.fileInfoList.readStream( messageBuffer );
 					break;
@@ -228,6 +222,9 @@ public class Core extends Thread {
 
 /*
 $Log: Core.java,v $
+Revision 1.12  2003/06/14 19:31:02  lemmstercvs01
+some opcodes added
+
 Revision 1.11  2003/06/14 17:41:33  lemmstercvs01
 added some opcodes
 

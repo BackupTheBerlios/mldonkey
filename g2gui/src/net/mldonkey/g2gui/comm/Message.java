@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.12 2003/06/14 17:41:19 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.13 2003/06/14 19:30:50 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -40,7 +40,7 @@ public abstract class Message {
 	 */
 	public static final short S_COREPROTOCOL = 0;
 	/**
-	 * Send ConsoleMessage (value is 29)
+	 * Send Console Message (value is 29)
 	 */
 	public static final short S_CONSOLEMSG = 29;
 	/**
@@ -56,27 +56,27 @@ public abstract class Message {
 	 */
 	public static final short S_PASSWORD = 52;
 	/**
-	 * Receive CoreProtocol (value is 0)
+	 * Receive Core Protocol (value is 0)
 	 */
 	public static final short R_COREPROTOCOL = 0;
 	/**
-	 * Receive OptionsInfo (value is 1)
+	 * Receive Options Info (value is 1)
 	 */
 	public static final short R_OPTIONS_INFO = 1;
 	/**
-	 * Receive FileUpdateAvailability (value is 9)
+	 * Receive File Update Availability (value is 9)
 	 */
 	public static final short R_FILE_UPDATE_AVAILABILITY = 9;
 	/**
-	 * Receive FileAddSource (value is 10)
+	 * Receive File Add Source (value is 10)
 	 */
 	public static final short R_FILE_ADD_SOURCE = 10;
 	/**
-	 * Receive ClientInfo (value is 15)
+	 * Receive Client Info (value is 15)
 	 */
 	public static final short R_CLIENT_INFO = 15; 
 	/**
-	 * Receive ClientState (value is 16)
+	 * Receive Client State (value is 16)
 	 */
 	public static final short R_CLIENT_STATE = 16;
 	/**
@@ -84,19 +84,23 @@ public abstract class Message {
 	 */
 	public static final short R_CONSOLE = 19;
 	/**
-	 * Receive NetworkInfo (value is 20)
+	 * Receive Network Info (value is 20)
 	 */	
 	public static final short R_NETWORK_INFO = 20;
+	/**
+	 * Receive Server Info (value is 26)
+	 */
+	public static final short R_SERVER_INFO = 26;
 	/**
 	 * Receive Bad Password (value is 45)
 	 */
 	public static final short R_BAD_PASSWORD = 45;
 	/**
-	 * Receive FileDownloadUpdate (value is 46)
+	 * Receive File Download Update (value is 46)
 	 */
 	public static final short R_FILE_DOWNLOAD_UPDATE = 46;
 	/**
-	 * Receive ClientStats (value is 49)
+	 * Receive Client Stats (value is 49)
 	 */
 	public static final short R_CLIENT_STATS = 49;
 	/**
@@ -242,6 +246,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.13  2003/06/14 19:30:50  lemmstercvs01
+some opcodes added
+
 Revision 1.12  2003/06/14 17:41:19  lemmstercvs01
 added some opcodes
 
