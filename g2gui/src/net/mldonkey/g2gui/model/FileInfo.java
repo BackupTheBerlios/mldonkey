@@ -50,7 +50,7 @@ import java.util.Set;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.79 2003/11/28 13:11:10 zet Exp $
+ * @version $Id: FileInfo.java,v 1.80 2003/11/29 12:49:22 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -435,6 +435,7 @@ public class FileInfo extends Parent implements Observer {
         else if (priority == 0)
             return G2GuiResources.getString("TT_PRIO_Normal");
         else
+
             return "?" + priority;
     }
 
@@ -518,6 +519,7 @@ public class FileInfo extends Parent implements Observer {
         if (aEnum != null)
             return aEnum;
         else
+
             return EnumExtension.UNKNOWN;
     }
 
@@ -649,6 +651,7 @@ public class FileInfo extends Parent implements Observer {
         if (this.getMd4().equalsIgnoreCase(fileInfo.getMd4()))
             return true;
         else
+
             return false;
     }
 
@@ -689,22 +692,25 @@ public class FileInfo extends Parent implements Observer {
             int listElem = messageBuffer.readInt16();
             this.avails = new HashMap(listElem);
 
+            boolean foundMultiNet = false;
+
             for (int i = 0; i < listElem; i++) {
                 int networkID = messageBuffer.readInt32();
                 NetworkInfo aNetwork = parent.getNetworkInfoMap().get(networkID);
 
                 /* multinet avail is the overall avail */
-                if (aNetwork.getNetworkType() == EnumNetwork.MULTINET)
+                if (aNetwork.getNetworkType() == EnumNetwork.MULTINET) {
                     this.avail = messageBuffer.readString();
-                else {
+                    foundMultiNet = true;
+                } else {
                     /*
-                     * avail is only set if it is null
-                     * so that a following MULTINET can overwrite this value
-                     * and is not re-overwritten at this place
+                     * Set this.avail until multiNet is found.
+                     * if you only check for null, it will not be updated
+                     * by subsequent updates.
                      */
                     String tempAvail = messageBuffer.readString();
 
-                    if (this.avail == null)
+                    if (!foundMultiNet)
                         this.avail = tempAvail;
 
                     this.avails.put(aNetwork, tempAvail);
@@ -833,12 +839,12 @@ public class FileInfo extends Parent implements Observer {
      */
     public void setName(String string) {
         if (parent.getProtoToUse() > 19) {
-			Object[] obj = new Object[ 2 ];
-			obj[ 0 ] = new Integer(this.getId());
-			obj[ 1 ] = string;		
-			Message renameMessage = new EncodeMessage(Message.S_RENAME_FILE, obj);
-			renameMessage.sendMessage(this.parent);
-            
+            Object[] obj = new Object[ 2 ];
+            obj[ 0 ] = new Integer(this.getId());
+            obj[ 1 ] = string;
+
+            Message renameMessage = new EncodeMessage(Message.S_RENAME_FILE, obj);
+            renameMessage.sendMessage(this.parent);
         } else {
             string = "rename " + this.getId() + " \"" + string + "\"";
 
@@ -1054,6 +1060,7 @@ public class FileInfo extends Parent implements Observer {
                 (getState().getState() == EnumFileState.QUEUED))
             return true;
         else
+
             return false;
     }
 
@@ -1091,6 +1098,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.80  2003/11/29 12:49:22  zet
+update this.avail properly
+
 Revision 1.79  2003/11/28 13:11:10  zet
 support patch 2372
 
