@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Label;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.58 2003/10/22 21:12:49 zet Exp $
+ * @version $Id: SearchResult.java,v 1.59 2003/10/23 01:14:10 zet Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -280,8 +280,6 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		 * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
 		 */
 		public void mouseDoubleClick( MouseEvent e ) {
-		    System.out.println(ourTableViewer);
-		    System.out.println(ourTableViewer.getMenuListener());
 		    
 			( ( ResultTableViewer ) ourTableViewer ).getMenuListener().downloadSelected();
 		}
@@ -302,6 +300,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 }
 /*
 $Log: SearchResult.java,v $
+Revision 1.59  2003/10/23 01:14:10  zet
+remove debug println
+
 Revision 1.58  2003/10/22 21:12:49  zet
 fix null - perhaps fixes 1022
 
