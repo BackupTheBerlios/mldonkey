@@ -19,6 +19,7 @@
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ *
  */
 package net.mldonkey.g2gui.view;
 
@@ -40,7 +41,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.50 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: StatisticTab.java,v 1.51 2004/03/09 11:17:11 dek Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
@@ -159,6 +160,9 @@ public class StatisticTab extends GuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.51  2004/03/09 11:17:11  dek
+*** empty log message ***
+
 Revision 1.50  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -261,7 +265,7 @@ Revision 1.18  2003/08/23 01:12:43  zet
 remove todos
 
 Revision 1.17  2003/08/22 21:06:48  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle
