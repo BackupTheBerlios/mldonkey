@@ -28,11 +28,12 @@ import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
-import net.mldonkey.g2gui.model.NetworkInfoIntMap;
 import net.mldonkey.g2gui.view.StatusLine;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -54,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.8 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkItem.java,v 1.9 2003/08/02 09:55:16 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -81,7 +82,7 @@ public class NetworkItem implements Observer {
 		
 		this.createContent();
 
-		mldonkey.getNetworkInfoMap().addObserver( this );	
+		this.core.getNetworkInfoMap().addObserver( this );	
 	}
 
 	/**
@@ -117,6 +118,13 @@ public class NetworkItem implements Observer {
 				}
 				public void mouseDoubleClick( MouseEvent e ) { }
 				public void mouseUp( MouseEvent e ) { }
+			} );
+
+			/* on dispose() deregister on the model */			
+			cLabel.addDisposeListener( new DisposeListener () {
+				public void widgetDisposed(DisposeEvent e) {
+					core.getNetworkInfoMap().deleteObserver( NetworkItem.this );
+				}
 			} );
 
 			if ( core.getProtoToUse() >= 18 ) {
@@ -187,7 +195,7 @@ public class NetworkItem implements Observer {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, Object arg ) {
-		final NetworkInfoIntMap networks = ( NetworkInfoIntMap ) arg;
+		final NetworkInfo network = ( NetworkInfo ) arg;
 		composite.getDisplay().asyncExec( new Runnable () {
 			public void run() {
 				/* check for widget disposed */
@@ -196,25 +204,28 @@ public class NetworkItem implements Observer {
 				/* get all labels */
 				Control[] controls = composite.getChildren();
 
-				/* check all controls (label) */	
+				/* find the corresponding label */	
 				for ( int i = 0; i < controls.length; i++ ) {
 					cLabel = ( CLabel ) controls[ i ];
 					/* get the data from the network */
-					NetworkInfo network = ( NetworkInfo ) cLabel.getData();
-					cLabel.getImage().dispose(); // dispose the old image
-					cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
+					NetworkInfo cNetwork = ( NetworkInfo ) cLabel.getData();
+					if ( network == cNetwork ) {
+						cLabel.getImage().dispose(); // dispose the old image
+						cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
 
-					if ( core.getProtoToUse() >= 18 ) {
-						/* get the servers the network is connected to */
-						int numConnected = network.getConnectedServers();
-						if ( numConnected > 0 ) { //TODO get min # of servers
-							/* we are connected, the "CONNECTED" to true */
-							cLabel.setData( "CONNECTED", new Boolean( true ) );
-							/* alter the tooltip text, to reflect that we are connected */
-							cLabel.setToolTipText( network.getNetworkName() + ": connected to " + numConnected + " servers" );
+						if ( core.getProtoToUse() >= 18 ) {
+							/* get the servers the network is connected to */
+							int numConnected = network.getConnectedServers();
+							if ( numConnected > 0 ) { //TODO get min # of servers
+								/* we are connected, the "CONNECTED" to true */
+								cLabel.setData( "CONNECTED", new Boolean( true ) );
+								/* alter the tooltip text, to reflect that we are connected */
+								cLabel.setToolTipText( network.getNetworkName() + ": connected to " + numConnected + " servers" );
+							}
 						}
+						cLabel.setImage( createNetworkImage( network ) );
+						break;
 					}
-					cLabel.setImage( createNetworkImage( network ) );
 				}						
 			}
 		} );	
@@ -481,6 +492,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.9  2003/08/02 09:55:16  lemmstercvs01
+observers changed
+
 Revision 1.8  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

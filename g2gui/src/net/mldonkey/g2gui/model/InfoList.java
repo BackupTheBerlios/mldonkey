@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 
@@ -32,10 +33,10 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
  * InfoList
  *
  * @author $user$
- * @version $Id: InfoList.java,v 1.8 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: InfoList.java,v 1.9 2003/08/02 09:55:55 lemmstercvs01 Exp $ 
  *
  */
-public abstract class InfoList implements InfoCollection {
+public abstract class InfoList extends Observable implements InfoCollection {
 	
 	protected CoreCommunication parent;
 
@@ -79,6 +80,9 @@ public abstract class InfoList implements InfoCollection {
 
 /*
 $Log: InfoList.java,v $
+Revision 1.9  2003/08/02 09:55:55  lemmstercvs01
+observers changed
+
 Revision 1.8  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 

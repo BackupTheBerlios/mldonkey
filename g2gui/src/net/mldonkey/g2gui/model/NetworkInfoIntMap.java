@@ -30,10 +30,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: NetworkInfoIntMap.java,v 1.9 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.10 2003/08/02 09:55:16 lemmstercvs01 Exp $ 
  *
  */
-public class NetworkInfoIntMap extends InfoIntMap {
+public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 	
 	/**
 	 * @param communication my parent
@@ -52,21 +52,22 @@ public class NetworkInfoIntMap extends InfoIntMap {
 		/* go 4bytes back in the MessageBuffer */
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 
+		NetworkInfo networkInfo;
 		if ( this.infoIntMap.containsKey( id ) ) {
 			//update existing NetworkInfo-Object
-			NetworkInfo networkInfo = ( NetworkInfo ) this.infoIntMap.get( id );
+			networkInfo = ( NetworkInfo ) this.infoIntMap.get( id );
 			networkInfo.readStream( messageBuffer );
 		}
 		else {
 			//add a new NetworkInfo-Object to the Map
-			NetworkInfo networkInfo = new NetworkInfo( this.parent );
+			networkInfo = new NetworkInfo( this.parent );
 			networkInfo.readStream( messageBuffer );
 			synchronized ( this ) {
 				this.infoIntMap.put( id, networkInfo );
 			}
 		}
 		this.setChanged();
-		this.notifyObservers( this );
+		this.notifyObservers( networkInfo );
 	}
 	
 	/**
@@ -119,10 +120,25 @@ public class NetworkInfoIntMap extends InfoIntMap {
 		}
 		return null;
 	}
+	
+	/**
+	 * sets the connected servers of a networkinfo
+	 * @param i The new number of connected Servers
+	 * @param network The network
+	 */
+	protected void setConnectedServers( int i, NetworkInfo aNetwork ) {
+		NetworkInfo network = ( NetworkInfo ) this.get( aNetwork.getNetwork() );
+		network.setConnectedServers( i );
+		this.setChanged();
+		this.notifyObservers( network );
+	}
 }
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.10  2003/08/02 09:55:16  lemmstercvs01
+observers changed
+
 Revision 1.9  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

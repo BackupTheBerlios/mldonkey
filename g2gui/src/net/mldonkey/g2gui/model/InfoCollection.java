@@ -22,13 +22,15 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.Observer;
+
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * InfoList
  * 
  * @author ${user}
- * @version $$Id: InfoCollection.java,v 1.4 2003/06/18 13:30:56 dek Exp $$ 
+ * @version $$Id: InfoCollection.java,v 1.5 2003/08/02 09:55:55 lemmstercvs01 Exp $$ 
  */
 public interface InfoCollection extends Information {
 	
@@ -49,9 +51,23 @@ public interface InfoCollection extends Information {
 	 * @return int a size
 	 */
 	int size();
+	
+	/**
+	 * Adds an Observer to this object
+	 * @param obj The Observer to add
+	 */
+	void addObserver( Observer obj );
+	/**
+	 * Removes an Observer from this object
+	 * @param obj The Observer to remove
+	 */
+	void deleteObserver( Observer obj );
 }
 /*
 $$Log: InfoCollection.java,v $
+$Revision 1.5  2003/08/02 09:55:55  lemmstercvs01
+$observers changed
+$
 $Revision 1.4  2003/06/18 13:30:56  dek
 $Improved Communication Layer view <--> model by introducing a super-interface
 $

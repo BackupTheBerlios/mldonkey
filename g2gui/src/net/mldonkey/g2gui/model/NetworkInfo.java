@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.14 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.15 2003/08/02 09:55:16 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -108,7 +108,7 @@ public class NetworkInfo extends Parent {
 		this.downloaded = messageBuffer.readInt64();
 		
 		if ( parent.getProtoToUse() >= 18 )
-			this.connectedServers = messageBuffer.readInt32();
+			//this.connectedServers = messageBuffer.readInt32();
 		
 		/* set the networktype by networkname */
 		this.setNetworkType( this.networkName );
@@ -262,8 +262,6 @@ public class NetworkInfo extends Parent {
 	 */
 	protected void setConnectedServers( int i ) {
 		this.connectedServers = i;
-		this.setChanged();
-		this.notifyObservers( this );
 	}
 	
 	/**
@@ -318,6 +316,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.15  2003/08/02 09:55:16  lemmstercvs01
+observers changed
+
 Revision 1.14  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

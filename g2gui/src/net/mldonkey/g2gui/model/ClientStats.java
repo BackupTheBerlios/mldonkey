@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientStats
  *
  * @author markus
- * @version $Id: ClientStats.java,v 1.13 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: ClientStats.java,v 1.14 2003/08/02 09:55:16 lemmstercvs01 Exp $ 
  *
  */
 public class ClientStats extends Parent {
@@ -185,7 +185,8 @@ public class ClientStats extends Parent {
 			if ( parent.getProtoToUse() >= 18 ) {
 				NetworkInfo network = ( NetworkInfo ) this.parent.getNetworkInfoMap()
 										.get( key );
-				network.setConnectedServers( messageBuffer.readInt32() );
+				this.parent.getNetworkInfoMap().setConnectedServers( 
+										messageBuffer.readInt32(), network );
 				temp[ i ] = network;
 			}
 			else {
@@ -210,6 +211,9 @@ public class ClientStats extends Parent {
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.14  2003/08/02 09:55:16  lemmstercvs01
+observers changed
+
 Revision 1.13  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 
