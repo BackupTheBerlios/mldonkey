@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.3 2003/06/13 11:03:41 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.4 2003/06/14 12:47:40 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements Information {
@@ -361,15 +361,13 @@ public class FileInfo implements Information {
 	 * @return A string representation of this object
 	 */
 	public String toString() {
-		String result =  new String(this.getName());
+		String result =  new String( this.getName() );
 		return result;
 	}
 
 	/**
-	 * Reads a Download from an InputStream
-	 * @param inputStream Stream to read from
-	 * @return Download
-	 * @throws IOException Error if read on stream failed
+	 * Reads a FileInfo object from a MessageBuffer
+	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setId( messageBuffer.readInt32() );
@@ -397,11 +395,24 @@ public class FileInfo implements Information {
 		this.setOffset( messageBuffer.readInt32() );
 		this.setPriority( messageBuffer.readInt32() );
 	}
+	
+	/**
+	 * Update a FileInfo object
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	public void update( MessageBuffer messageBuffer ) {
+		this.setDownloaded( messageBuffer.readInt32() );
+		this.setRate( new Float( messageBuffer.readString() ).floatValue() );
+		this.setOffset( messageBuffer.readInt32() );
+	}
 
 }
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.4  2003/06/14 12:47:40  lemmstercvs01
+update() added
+
 Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
 changed InputStream to MessageBuffer
 

@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
@@ -31,21 +32,25 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoList.java,v 1.3 2003/06/13 11:03:41 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoList.java,v 1.4 2003/06/14 12:47:40 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoList implements Information {
-	public List fileInfoList;
+	/**
+	 * 
+	 */
+	private List fileInfoList;
 	
+	/**
+	 * Generates a empty FileInfoList object
+	 */
 	public FileInfoList() {
 		this.fileInfoList = new ArrayList();
 	}
 
 	/**
-	 * Reads a List of running Downloads
-	 * @param inputStream Stream to read from
-	 * @return a List filled with complete Downloads
-	 * @throws IOException Error if read from stream failed
+	 * Reads a List of FileInfo objects from a MessageBuffer
+	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		short listElem = messageBuffer.readInt16();
@@ -65,10 +70,46 @@ public class FileInfoList implements Information {
 			( ( FileInfo ) this.fileInfoList.get( i ) ).readStream( messageBuffer );
 		}
 	}
+	
+	/**
+	 * Update a specific element in the List
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	public void update( MessageBuffer messageBuffer ) {
+		this.get( messageBuffer.readInt32() ).update( messageBuffer );
+	}
+	
+	/**
+	 * Get a FileInfo object from this object by there id
+	 * @param id The FileInfo id
+	 * @return The FileInfo object, or null if not available
+	 */
+	public FileInfo get( int id ) {
+		Iterator itr = this.fileInfoList.iterator();
+		while ( itr.hasNext() ) {
+			FileInfo elem = ( FileInfo ) itr.next();
+			if ( elem.getId() == id )
+				return elem;
+		}
+		return null;
+	}
+	
+	/**
+	 * Creates a new iterator for the FileInfoList
+	 * @return an Iterator
+	 */
+	public Iterator iterator() {
+		Iterator itr = this.fileInfoList.iterator();
+		return itr;
+	}
+
 }
 
 /*
 $Log: FileInfoList.java,v $
+Revision 1.4  2003/06/14 12:47:40  lemmstercvs01
+update() added
+
 Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
 changed InputStream to MessageBuffer
 
