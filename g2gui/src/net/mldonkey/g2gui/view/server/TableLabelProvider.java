@@ -35,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  * @author $user$
- * @version $Id: TableLabelProvider.java,v 1.2 2003/08/06 17:38:38 lemmstercvs01 Exp $ 
+ * @version $Id: TableLabelProvider.java,v 1.3 2003/08/06 18:53:45 lemmstercvs01 Exp $ 
  *
  */
 public class TableLabelProvider implements ITableLabelProvider {
@@ -92,6 +92,8 @@ public class TableLabelProvider implements ITableLabelProvider {
 				return "Connected";
 			else if ( enum == EnumState.CONNECTED_AND_QUEUED )
 				return "Connected and queued";
+			else if ( enum == EnumState.CONNECTING )
+				return "Connecting";	
 			else if ( enum == EnumState.CONNECTED_DOWNLOADING )
 				return "Connected and downloading";
 			else if ( enum == EnumState.CONNECTED_INITIATING )
@@ -144,6 +146,9 @@ public class TableLabelProvider implements ITableLabelProvider {
 
 /*
 $Log: TableLabelProvider.java,v $
+Revision 1.3  2003/08/06 18:53:45  lemmstercvs01
+missed enum added
+
 Revision 1.2  2003/08/06 17:38:38  lemmstercvs01
 some actions still missing. but it should work for the moment
 
