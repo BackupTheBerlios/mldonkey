@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
  * with setter(). When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.4 2003/07/05 09:52:49 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.5 2003/07/05 13:25:43 dek Exp $ 
  *
  */
 public class SearchQuery {
@@ -151,7 +151,7 @@ public class SearchQuery {
 		String[] patterns = searchString.split( " " );
 		/* now we have to generate a query-Object for each search pattern */
 		Query newQuery;
-		for ( int i = 0; i < patterns.length; i++ ) {
+		for ( int i = 0; i < patterns.length; i++ ) {			
 			newQuery = new Query();
 			String pattern = patterns[i];
 			newQuery = new Query();
@@ -243,19 +243,6 @@ public class SearchQuery {
 			for ( int i = 0; i < tempArray.length; i++ ) {
 				content.add( tempArray [ i ] );
 			}
-
-		/* did we succeed, don't know yet, must doing some testing,
-		 * something must be wrong, as mldonkey says: 
-		 * 		decoding gui proto[16]: exception Invalid_argument("out-of-bound array or string access"), opcode 42
-		 *		ascii: [ *(0)(1)(0)(0)(0)(0)(1)(0)(0)(0)(0)(0)(1)(0)(0)(0)(0)]
-		 *		dec: [(42)(0)(1)(0)(0)(0)(0)(1)(0)(0)(0)(0)(0)(1)(0)(0)(0)(0)]
-		 *
-		 *So i do it the most simple way, which works indeed ;-)
-		*/
-		//content.add( new Byte( ( byte )4 ) );
-		//content.add( "Comment" );
-		//content.add( this.searchString );
-		
 		
 		content.add( new Integer( maxSearchResults ) );
 		content.add( new Byte( searchType ) );
@@ -282,6 +269,9 @@ public class SearchQuery {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.5  2003/07/05 13:25:43  dek
+removed old comments
+
 Revision 1.4  2003/07/05 09:52:49  dek
 searching rocks ;-)
 
