@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.57 2004/01/28 22:15:34 psy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.58 2004/01/29 15:06:36 lemmy Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -62,7 +62,7 @@ public class PreferenceLoader {
     private static List fontArray = new ArrayList();
     private static List colorArray = new ArrayList();
 
-    private static HashMap critPrefsMap = new HashMap();
+    private static Map critPrefsMap = new HashMap();
     // critical preferences which need a restart after change
     private static final String critPrefsList[] = {"hostname", "username", "password", "port", 
     		"advancedMode", "flatInterface", "useGraident", "pollUpStats", "displayNodes", 
@@ -436,6 +436,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.58  2004/01/29 15:06:36  lemmy
+use supertype (programm against the interface, not the concrete class)
+
 Revision 1.57  2004/01/28 22:15:34  psy
 * Properly handle disconnections from the core
 * Fast inline-reconnect
@@ -582,7 +585,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: psy $
+replace $user$ with $Author: lemmy $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates
