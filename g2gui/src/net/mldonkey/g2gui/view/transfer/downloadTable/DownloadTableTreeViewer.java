@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.10 2003/10/16 23:56:44 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.11 2003/10/19 21:39:32 zet Exp $
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListener {
@@ -229,7 +229,7 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 		
 		if ( advancedMode ) {
 			String prefCols = PreferenceLoader.loadString( "downloadTableColumns" );
-			columnIDs = ( ( !prefCols.equals( "" )  && prefCols.length() < ALL_COLUMNS.length() ) ? prefCols : ALL_COLUMNS );
+			columnIDs = ( ( !prefCols.equals( "" )  && prefCols.length() <= ALL_COLUMNS.length() ) ? prefCols : ALL_COLUMNS );
 		} else {
 			columnIDs = BASIC_COLUMNS;
 		}
@@ -256,7 +256,7 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 		for ( int i = 0; i < columnIDs.length(); i++ ) {
 			final int columnIndex = i;
 			final int arrayItem = columnIDs.charAt( i ) - 65;
-
+			
 			TableColumn tableColumn = new TableColumn( table, COLUMN_ALIGNMENT[ arrayItem ] );
 			p.setDefault( COLUMN_LABELS[ arrayItem ], COLUMN_DEFAULT_WIDTHS[ arrayItem ] );
 			tableColumn.setText( G2GuiResources.getString( COLUMN_LABELS[ arrayItem ] ) );
@@ -444,6 +444,9 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.11  2003/10/19 21:39:32  zet
+nil
+
 Revision 1.10  2003/10/16 23:56:44  zet
 not much
 
