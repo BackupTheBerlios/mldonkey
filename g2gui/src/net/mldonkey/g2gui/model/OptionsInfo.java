@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.9 2003/07/07 18:30:29 dek Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.10 2003/07/09 08:48:58 dek Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -121,7 +121,7 @@ public class OptionsInfo extends Parent {
 	/**
 	 * @param description Some more detailed Information about this option
 	 */
-	public void setDescription( String description ) {
+	void setDescription( String description ) {
 		this.description = description;
 		
 	}
@@ -129,7 +129,7 @@ public class OptionsInfo extends Parent {
 	/**
 	 * @param sectionToAppear in which general Section this Option fits best
 	 */
-	public void setSectionToAppear( String sectionToAppear ) {
+	void setSectionToAppear( String sectionToAppear ) {
 		this.sectionToAppear = sectionToAppear;
 		
 	}
@@ -137,7 +137,7 @@ public class OptionsInfo extends Parent {
 	/**
 	 * @param optionType what kind of option do we have: String, Int od Boolean
 	 */
-	public void setOptionType( byte optionType ) {		
+	void setOptionType( byte optionType ) {		
 			if ( optionType == 0 )
 				this.optionType = EnumTagType.STRING;
 			else if ( optionType == 1 )
@@ -182,7 +182,7 @@ public class OptionsInfo extends Parent {
 	/**
 	 * @param string this is an option for which plugin?
 	 */
-	public void setPluginToAppear( String string ) {
+	 void setPluginToAppear( String string ) {
 		pluginToAppear = string;
 	}
 
@@ -190,6 +190,9 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.10  2003/07/09 08:48:58  dek
+*** empty log message ***
+
 Revision 1.9  2003/07/07 18:30:29  dek
 saving options now also works
 
