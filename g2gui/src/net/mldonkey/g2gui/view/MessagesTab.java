@@ -69,16 +69,13 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.16 2003/08/28 18:27:32 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.17 2003/08/28 23:00:07 zet Exp $
  */
 public class MessagesTab extends GuiTab {
 
 	private CoreCommunication core;
-	
 	private CTabFolder cTabFolder;
-	private ViewForm friendsViewForm;
 	private Hashtable openTabs = new Hashtable();
-	private Composite friendsComposite;
 	private CustomTableViewer tableViewer;
 	private long lastTime = 0;
 	private boolean mustRefresh;
@@ -119,9 +116,9 @@ public class MessagesTab extends GuiTab {
 	// simple and for messaging only atm 
 	private void createLeftSash( Composite main ) {
 		
-		friendsViewForm = new ViewForm( main, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		ViewForm friendsViewForm = new ViewForm( main, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		
-		friendsComposite = new Composite( friendsViewForm, SWT.NONE );
+		Composite friendsComposite = new Composite( friendsViewForm, SWT.NONE );
 		friendsComposite.setLayout( new FillLayout() );
 		
 		CLabel friendsHeaderLabel = new CLabel(friendsViewForm, SWT.LEFT );
@@ -132,7 +129,7 @@ public class MessagesTab extends GuiTab {
 										
 		friendsHeaderLabel.setText(G2GuiResources.getString("FR_FRIENDS"));
 		friendsHeaderLabel.setImage(G2GuiResources.getImage("MessagesButtonSmallTrans"));
-		createFriendsTable();
+		createFriendsTable(friendsComposite);
 		
 		friendsViewForm.setTopLeft(friendsHeaderLabel);
 		friendsViewForm.setContent(friendsComposite);
@@ -141,8 +138,8 @@ public class MessagesTab extends GuiTab {
 	/**
 	 * 
 	 */
-	public void createFriendsTable() {
-		tableViewer = new CustomTableViewer(friendsComposite, SWT.NONE);
+	public void createFriendsTable( Composite parent ) {
+		tableViewer = new CustomTableViewer( parent , SWT.NONE);
 		tableViewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
 		tableViewer.getTable().setHeaderVisible( false );
 		tableViewer.setContentProvider(new FriendsTableContentProvider());
@@ -446,6 +443,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.17  2003/08/28 23:00:07  zet
+remove unused
+
 Revision 1.16  2003/08/28 18:27:32  zet
 configurable flat interface
 
