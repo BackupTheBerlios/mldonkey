@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.18 2003/08/20 22:20:08 lemmster Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.19 2003/08/20 22:41:08 lemmster Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -161,6 +161,8 @@ public class OptionsInfoMap extends InfoMap {
 	 * @return max_connected_servers/ultrapeers
 	 */
 	public int getMaxConnectedServers( NetworkInfo network ) {
+		if ( parent.getProtoToUse() < 18 ) return 0;
+	
 		/* does this networkinfo has servers/supernodes */
 		if ( network.hasServers() || network.hasSupernodes() ) {
 			OptionsInfo option = null;
@@ -217,6 +219,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.19  2003/08/20 22:41:08  lemmster
+bugfix for getMaxConnectedServers()
+
 Revision 1.18  2003/08/20 22:20:08  lemmster
 badconnect is display too. added some icons
 
