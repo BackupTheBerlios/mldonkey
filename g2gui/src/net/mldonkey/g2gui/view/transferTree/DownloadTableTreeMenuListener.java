@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.TableItem;
  * 
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.27 2003/08/31 00:08:59 zet Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.28 2003/09/14 03:37:43 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -146,6 +146,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
+	 */
 	public void menuAboutToShow(IMenuManager menuManager) {
 		fillContextMenu(menuManager);
 	}
@@ -200,7 +203,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		
 	// Helpers
 
-
 	public boolean selectedFileListContains(EnumFileState e) {
 		 for (int i = 0; i < selectedFiles.size(); i++)
 			  if ( ((FileInfo)selectedFiles.get(i)).getState().getState() == e)
@@ -214,9 +216,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 				   return true;
 		 return false;
 	}
-
-			
-
 		
 	// Menu Actions
 	
@@ -396,6 +395,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.28  2003/09/14 03:37:43  zet
+changedProperties
+
 Revision 1.27  2003/08/31 00:08:59  zet
 add buttons
 

@@ -30,7 +30,6 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
-import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -53,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.22 2003/09/13 22:26:44 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.23 2003/09/14 03:37:43 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -218,7 +217,7 @@ public class ClientDetailDialog implements Observer {
 		
 		updateLabel(clName, clientInfo.getClientName());
 		updateLabel(clRating, "" + clientInfo.getClientRating());
-		updateLabel(clActivity, getClientActivity(clientInfo));
+		updateLabel(clActivity, clientInfo.getClientActivity());
 		updateLabel(clKind, getClientConnection(clientInfo));
 		updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
 		
@@ -257,17 +256,13 @@ public class ClientDetailDialog implements Observer {
 			return G2GuiResources.getString( "TT_Direct" ).toLowerCase();	
 	}
 	
-	public String getClientActivity( ClientInfo clientInfo) {
-		if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
-			return G2GuiResources.getString( "TT_Transferring" ).toLowerCase();
-		else 
-			return G2GuiResources.getString( "TT_Rank" ).toLowerCase() + ": " + clientInfo.getState().getRank() ;
-	}	
-
 
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.23  2003/09/14 03:37:43  zet
+changedProperties
+
 Revision 1.22  2003/09/13 22:26:44  zet
 weak sets & !rawrate
 

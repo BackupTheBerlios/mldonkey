@@ -32,7 +32,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * DownloadTableTreeSorterBasic
  *
- * @version $Id: DownloadTableTreeSorterBasic.java,v 1.2 2003/08/23 19:48:58 zet Exp $ 
+ * @version $Id: DownloadTableTreeSorterBasic.java,v 1.3 2003/09/14 03:37:43 zet Exp $ 
  *
  */
 public class DownloadTableTreeSorterBasic extends DownloadTableTreeSorter {
@@ -45,31 +45,35 @@ public class DownloadTableTreeSorterBasic extends DownloadTableTreeSorter {
 		lastColumnIndex = 5;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ViewerSorter#isSorterProperty(java.lang.Object, java.lang.String)
+	 */
 	public boolean isSorterProperty(Object element, String property) {
 	
 		// if you return true, the table will refresh() and flicker more often
 		// but the table maintains sort order, so try to be precise with updates.
-		if ((columnIndex == 4 
-			|| columnIndex == 5
-			|| columnIndex == 6) 
-			&& (element instanceof FileInfo)
-			&& maintainSortOrder) {		
+		if (element instanceof FileInfo
+			&& maintainSortOrder) {
+				switch (columnIndex) {	
+					case 4: 
+						return (property.equals(FileInfo.CHANGED_PERCENT) ? true : false);	
 
-			FileInfo fileInfo = (FileInfo) element;
-			switch (columnIndex) {
-				case 4:	
-					return (fileInfo.changedPercent ? true : false);
-				case 5:
-					return (fileInfo.changedRate ? true : false); 
-				case 6:
-					return (fileInfo.changedETA ? true : false);
-				default: 
-					return false;
-			}
+					case 5: 
+						return (property.equals(FileInfo.CHANGED_RATE) ? true : false);
+
+					case 6: 
+						return (property.equals(FileInfo.CHANGED_ETA) ? true : false);
+
+					default: 
+						return false;
+				}
 		}
 		return false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+	 */
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		int cat1 = category(e1);
 		int cat2 = category(e2);
@@ -180,6 +184,9 @@ public class DownloadTableTreeSorterBasic extends DownloadTableTreeSorter {
 
 /*
 $Log: DownloadTableTreeSorterBasic.java,v $
+Revision 1.3  2003/09/14 03:37:43  zet
+changedProperties
+
 Revision 1.2  2003/08/23 19:48:58  zet
 *** empty log message ***
 

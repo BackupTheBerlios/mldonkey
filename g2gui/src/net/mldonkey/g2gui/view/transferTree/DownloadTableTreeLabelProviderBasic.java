@@ -33,12 +33,15 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProviderBasic
  *
- * @version $Id: DownloadTableTreeLabelProviderBasic.java,v 1.3 2003/09/13 22:26:44 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProviderBasic.java,v 1.4 2003/09/14 03:37:43 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProviderBasic
 	extends DownloadTableTreeLabelProvider {
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+	 */
 	public Image getColumnImage(Object arg0, int arg1) {
 		if (arg0 instanceof FileInfo && arg1 == 1) {
 			FileInfo fileInfo = (FileInfo) arg0;
@@ -55,6 +58,9 @@ public class DownloadTableTreeLabelProviderBasic
 
 		return null;
 	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+	 */
 	public String getColumnText(Object arg0, int arg1) {
 		
 		if (arg0 instanceof FileInfo) {
@@ -95,9 +101,9 @@ public class DownloadTableTreeLabelProviderBasic
 				case 2: // client name
 					return ""+treeClientInfo.getClientInfo().getClientName();
 				case 3: // client connection
-					return ""+getClientConnection(treeClientInfo.getClientInfo());
+					return ""+treeClientInfo.getClientInfo().getClientConnection();
 				case 4: // client activity
-					return ""+getClientActivity(treeClientInfo.getClientInfo());
+					return ""+treeClientInfo.getClientInfo().getClientActivity();
 				default: 
 					return "";
 			}
@@ -111,6 +117,9 @@ public class DownloadTableTreeLabelProviderBasic
 
 /*
 $Log: DownloadTableTreeLabelProviderBasic.java,v $
+Revision 1.4  2003/09/14 03:37:43  zet
+changedProperties
+
 Revision 1.3  2003/09/13 22:26:44  zet
 weak sets & !rawrate
 

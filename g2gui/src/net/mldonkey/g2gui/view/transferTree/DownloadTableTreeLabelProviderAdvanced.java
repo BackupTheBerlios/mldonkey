@@ -33,11 +33,14 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadtableTreeLabelProviderAdvanced
  *
- * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.4 2003/09/13 22:26:44 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.5 2003/09/14 03:37:43 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLabelProvider {
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+	 */
 	public Image getColumnImage(Object arg0, int arg1) {
 		if (arg0 instanceof FileInfo && arg1 == 1) {
 			FileInfo fileInfo = (FileInfo) arg0;
@@ -54,6 +57,9 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 	
 		return null;
 	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+	 */
 	public String getColumnText(Object arg0, int arg1) {
 			
 		if (arg0 instanceof FileInfo) {
@@ -106,9 +112,9 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 				case 2: // client name
 					return ""+treeClientInfo.getClientInfo().getClientName();
 				case 3: // client connection
-					return ""+getClientConnection(treeClientInfo.getClientInfo());
+					return ""+treeClientInfo.getClientInfo().getClientConnection();
 				case 4: // client activity
-					return ""+getClientActivity(treeClientInfo.getClientInfo());
+					return ""+treeClientInfo.getClientInfo().getClientActivity();
 				case 8: // num chunks
 					return ""+treeClientInfo.getClientInfo().getNumChunks( treeClientInfo.getFileInfo() );
 					
@@ -120,10 +126,13 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 			return "";
 		
 	}
-
+	
 }
 /*
 $Log: DownloadTableTreeLabelProviderAdvanced.java,v $
+Revision 1.5  2003/09/14 03:37:43  zet
+changedProperties
+
 Revision 1.4  2003/09/13 22:26:44  zet
 weak sets & !rawrate
 

@@ -46,14 +46,13 @@ import org.eclipse.swt.custom.TableTreeEditor;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.events.TreeListener;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.19 2003/09/13 22:26:44 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.20 2003/09/14 03:37:43 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, TreeListener {
@@ -225,11 +224,12 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 */
 	public void update(final Observable o, final Object object) {
 		if (tableTreeViewer == null || tableTreeViewer.getTableTree().isDisposed()) return;
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					sendUpdate(o, object);
-				}
-			});
+	
+		tableTreeViewer.getTableTree().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				sendUpdate(o, object);
+			}
+		});
 	}
 	
 	public void sendUpdate(Observable o, Object arg) {
@@ -252,11 +252,10 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 			}
 		} else if (o instanceof FileInfo) {
 			// updated fileInfo
-			if (arg instanceof FileInfo) {
-				FileInfo fileInfo = (FileInfo) arg;
+			if (arg instanceof String[]) {
+				FileInfo fileInfo = (FileInfo) o;
 				if (isInteresting(fileInfo)) {	
-					String[] z = { "z" }; // require !null for isSorterProperty() 
-					tableTreeViewer.update(fileInfo,z);
+					tableTreeViewer.update(fileInfo, (String[]) arg);
 					updateAllEditors();
 				} else {
 					tableTreeViewer.remove(fileInfo);
@@ -524,6 +523,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.20  2003/09/14 03:37:43  zet
+changedProperties
+
 Revision 1.19  2003/09/13 22:26:44  zet
 weak sets & !rawrate
 

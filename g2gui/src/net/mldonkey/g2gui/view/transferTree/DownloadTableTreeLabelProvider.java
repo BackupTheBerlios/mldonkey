@@ -27,10 +27,8 @@ import java.text.DecimalFormat;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -41,7 +39,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.19 2003/08/31 01:46:33 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.20 2003/09/14 03:37:43 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -59,18 +57,30 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	
 	protected CustomTableTreeViewer tableTreeViewer;
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
+	 */
 	public Color getBackground (Object arg0) {
 			return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+	 */
 	public Image getColumnImage(Object object, int column) {
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+	 */
 	public String getColumnText(Object object, int column) {
 		return "";
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+	 */
 	public Color getForeground(Object arg0) {
 		if (arg0 instanceof FileInfo) {
 			FileInfo fileInfo = (FileInfo) arg0;
@@ -105,24 +115,16 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 			return "";
 		return fileInfo.getStringETA();
 	}
-
-	public String getClientConnection(ClientInfo clientInfo) {
-		if ( clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) 
-			return G2GuiResources.getString( "TT_Firewalled" ).toLowerCase();			
-		else
-			return G2GuiResources.getString( "TT_Direct" ).toLowerCase();	
-	}
 	
-	public String getClientActivity( ClientInfo clientInfo) {
-		if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
-			return G2GuiResources.getString( "TT_Transferring" ).toLowerCase();
-		else 
-			return G2GuiResources.getString( "TT_Rank" ).toLowerCase() + ": " + clientInfo.getState().getRank() ;
-	}	
-
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
+	 */
 	public void addListener(ILabelProviderListener arg0) {
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
+	 */
 	public void dispose() {
 		unAvailableFileColor.dispose();
 		availableFileColor.dispose();
@@ -132,24 +134,33 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 		rateAbove20Color.dispose();
 		rateAbove10Color.dispose();
 		rateAbove0Color.dispose();
-
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
+	 */
 	public boolean isLabelProperty(Object arg0, String arg1) {
 		return true;
 	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+	 */
 	public void removeListener(ILabelProviderListener arg0) {
 	}
+	/**
+	 * @param v
+	 */
 	public void setTableTreeViewer(CustomTableTreeViewer v) {
 		tableTreeViewer = v;
 	}
-	
-	
 
 }
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.20  2003/09/14 03:37:43  zet
+changedProperties
+
 Revision 1.19  2003/08/31 01:46:33  zet
 localise
 
