@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.14 2003/11/24 20:25:26 dek Exp $
+ * @version $Id: MainCoolBar.java,v 1.15 2003/11/24 20:33:56 dek Exp $
  *
  */
 public class MainCoolBar {
@@ -216,10 +216,10 @@ public class MainCoolBar {
         // This seems to work in xp/gtk - z			
         for ( int j = 0; j < coolbar.getItemCount(); j++ ) {
             CoolItem tempCoolItem = coolbar.getItem( j );
-            ToolBar tempToolBar = ( ToolBar ) tempCoolItem.getControl();
+            ToolBar tempToolBar = ( ToolBar ) tempCoolItem.getControl();            
             Point pSize = tempToolBar.computeSize( SWT.DEFAULT, SWT.DEFAULT );
             pSize = tempCoolItem.computeSize( pSize.x, pSize.y );
-            tempCoolItem.setSize( pSize );
+            //tempCoolItem.setSize( pSize );
             tempCoolItem.setMinimumSize( pSize );
         }
         coolbar.setLocked( coolbarLocked );
@@ -356,6 +356,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.15  2003/11/24 20:33:56  dek
+test for coolBar-saving on gtk
+
 Revision 1.14  2003/11/24 20:25:26  dek
 now item-order is also saved
 
