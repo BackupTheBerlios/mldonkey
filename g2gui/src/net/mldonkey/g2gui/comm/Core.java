@@ -38,11 +38,11 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.84 2003/08/19 12:14:16 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.85 2003/08/20 14:26:19 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
-	private boolean pushmodeEnabled;
+	private boolean pollModeEnabled;
 	private boolean initialized;
 	private boolean advancedMode;
 	private boolean badPassword = true;
@@ -131,12 +131,12 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param password
 	 * @param waiterObj
 	 */
-	public Core( Socket socket, String username, String password, Object waiterObj, boolean pushmodeEnabled, boolean advancedMode ) {
+	public Core( Socket socket, String username, String password, Object waiterObj, boolean pollModeEnabled, boolean advancedMode ) {
 		this.connection = socket;
 		this.username = username;
 		this.password = password;
 		this.waiterObj = waiterObj;
-		this.pushmodeEnabled = pushmodeEnabled;
+		this.pollModeEnabled = pollModeEnabled;
 		this.advancedMode = advancedMode;
 	}
 
@@ -175,7 +175,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 				opCode = messageBuffer.readInt16();		
 				
 				/* decode the message content */			
-				this.decodeMessage( opCode, messageLength, messageBuffer, pushmodeEnabled );
+				this.decodeMessage( opCode, messageLength, messageBuffer, pollModeEnabled );
 			}
 		}	
 		catch ( SocketException e ) {
@@ -186,7 +186,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		}
 		catch ( IOException e ) {
 			e.printStackTrace();
-		}
+		}		
 	}
 					
 	/**
@@ -195,7 +195,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private synchronized void decodeMessage( short opcode, int messageLength, MessageBuffer messageBuffer, boolean pushmodeEnabled ) {
+	private synchronized void decodeMessage( short opcode, int messageLength, MessageBuffer messageBuffer, boolean pollModeEnabled ) {
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
 					coreProtocol = messageBuffer.readInt32();
@@ -205,9 +205,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 						this.usingVersion = coreProtocol;
 					else
 						this.usingVersion = protocolVersion;
-					this.sendPushmode(pushmodeEnabled);
+					this.sendPullmode(pollModeEnabled);
 					this.sendPassword( this.username, this.password );	
-					
 					break;
 					
 			case Message.R_DEFINE_SEARCH :
@@ -224,19 +223,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					this.resultInfoMap.readStream( messageBuffer );		
 					break;
 					
-			case Message.R_OPTIONS_INFO :
-					this.optionsInfoMap.readStream( messageBuffer );
-					/*
-					 * when we first receive this msg,we passed the badPassword msg
-					 * so release the waiterobj that the G2Gui.main() can continue
-					 */
-					if ( !initialized ) {
-						badPassword = false;
-						synchronized ( waiterObj ) {
-							waiterObj.notify();
-						}
-						initialized = true;
-					}
+			case Message.R_OPTIONS_INFO :		
+					this.optionsInfoMap.readStream( messageBuffer );			
 					break;
 				
 			case Message.R_FILE_UPDATE_AVAILABILITY :
@@ -298,7 +286,18 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					this.fileInfoMap.update( messageBuffer );
 					break;	
 					
-			case Message.R_CLIENT_STATS :				
+			case Message.R_CLIENT_STATS :
+					/*
+					 * when we first receive this msg,we passed the badPassword msg
+					 * so release the waiterobj that the G2Gui.main() can continue
+					 */
+					if ( !initialized ) {
+						badPassword = false;
+						synchronized ( waiterObj ) {
+							waiterObj.notify();
+						}
+						initialized = true;
+					}
 					clientStats.readStream( messageBuffer );
 					break;	
 					
@@ -356,9 +355,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * @param pushmodeEnabled
 	 */
-	private void sendPushmode( boolean pushmodeEnabled ) {
-		if ( pushmodeEnabled ){	
-			
+	private void sendPullmode( boolean pollmodeEnabled ) {
+		if ( pollmodeEnabled ){	
+		System.out.println("enabling poll-mode");
 		ArrayList output = new ArrayList();
 		/*Header: We have only one entry*/
 		output.add( new Short( ( short )1 ) );
@@ -368,7 +367,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		output.add( new Byte( ( byte )1 ) ); 
 		
 		EncodeMessage pushmode = new EncodeMessage(Message.S_GUIEXTENSION,output.toArray());
-					
+		pushmode.sendMessage(getConnection());			
 		}
 		
 	}
@@ -384,6 +383,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					new EncodeMessage( Message.S_COREPROTOCOL, temp );
 		coreProtocol.sendMessage( connection );
 		coreProtocol = null;
+		
 	}
 	
 	/**
@@ -483,6 +483,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.85  2003/08/20 14:26:19  dek
+work on build-in-link handler, now sendig out poll-mode request, 
+not only creating it...
+
 Revision 1.84  2003/08/19 12:14:16  lemmster
 first try of simple/advanced mode
 

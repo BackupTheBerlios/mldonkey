@@ -54,11 +54,11 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.20 2003/08/20 11:51:52 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.21 2003/08/20 14:26:19 dek Exp $ 
  *
  */
 public class G2Gui {
-	private static boolean processingLink;
+	private static boolean processingLink = false;
 	private static Socket socket;
 	private static boolean notProcessingLink = true;
 	private static boolean advancedMode;
@@ -98,16 +98,21 @@ public class G2Gui {
 			/*these two fields are only for easier if ( boolean )*/
 			notProcessingLink = false;
 			processingLink = true;
-		} 
-		shell = new Shell( display );
-				
-		myPrefs = new Preferences( preferenceStore );
-		splashShell = new Shell( shell, SWT.ON_TOP );	
-		box = new MessageBox( shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
+		} 		
 		waiterObject = new Object();
 		
-		if (notProcessingLink){		
-					
+		if (notProcessingLink){	
+			myPrefs = new Preferences( preferenceStore );
+			
+			/* load the preferences */
+			try {
+				myPrefs.initialize( preferenceStore );
+			}
+			catch ( IOException e ) { System.out.println( "failed" ); }	
+			
+			shell = new Shell( display );
+			splashShell = new Shell( shell, SWT.ON_TOP );	
+			box = new MessageBox( shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);					
 			progressBar = new ProgressBar( splashShell, SWT.NONE );
 			count = new int[] { 3 };
 				
@@ -132,24 +137,18 @@ public class G2Gui {
 			
 			increaseBar( "Starting the model" );
 		}
-
-		/* load the preferences */
-		try {
-			myPrefs.initialize( preferenceStore );
-		}
-		catch ( IOException e ) {System.out.println("failed"); }		
 	
 		/* if the gui isnt set up yet launch the preference window */
-		if ( !( preferenceStore.getBoolean( "initialized" ) ) ) {
-			preferenceStore.setValue("initialized", true);	
-			if (notProcessingLink) splashShell.setVisible( false );
+		if ( !( preferenceStore.getBoolean( "initialized" ) ) && notProcessingLink ) {
+			preferenceStore.setValue( "initialized", true );	
+			splashShell.setVisible( false );
 			myPrefs.open( shell, null );
 			// crashes if you call myPrefs.open again 
 			// if you don't create a new Preferenes() - Why?
 			// a jface.Wizard would be better
 			// temporary hack
 			myPrefs = new Preferences( preferenceStore );
-			if (notProcessingLink) splashShell.setVisible( true );
+			splashShell.setVisible( true );
 		}
 		
 		port = preferenceStore.getInt( "port" );		
@@ -166,29 +165,45 @@ public class G2Gui {
 			socket = ( Socket ) socketPool.checkOut();
 		}
 		catch ( UnknownHostException e ) {
-			if (notProcessingLink) splashShell.dispose();
-			box.setText( G2GuiResources.getString( "G2_INVALID_ADDRESS") );
-			box.setMessage( G2GuiResources.getString( "G2_ILLEGAL_ADDRESS" ) );
-			int rc = box.open();
-			if (rc == SWT.NO) {
-				shell.dispose();
-				display.dispose();
-			} else {
-				myPrefs.open( shell, null );
+			if (notProcessingLink) {
+				splashShell.dispose();
+				box.setText( G2GuiResources.getString( "G2_INVALID_ADDRESS") );
+				box.setMessage( G2GuiResources.getString( "G2_ILLEGAL_ADDRESS" ) );
+				int rc = box.open();
+				if (rc == SWT.NO) {
+					shell.dispose();
+					display.dispose();
+				} else {
+					myPrefs.open( shell, null );
+					relaunchSelf(args);
+				}
+			}
+			else {
+				myPrefs = new Preferences( preferenceStore );
+				shell = new Shell();
+				myPrefs.open( shell, null);
 				relaunchSelf(args);
 			}
 			return;
 		}
 		catch ( IOException e ) {
-			if (notProcessingLink) splashShell.dispose();
-			box.setText( G2GuiResources.getString( "G2_IOEXCEPTION") );
-			box.setMessage( G2GuiResources.getString( "G2_CORE_NOT_RUNNING" ) );
-			int rc = box.open();
-			if (rc == SWT.NO) {
-				shell.dispose();
-				display.dispose();
-			} else {
-				myPrefs.open( shell, null );
+			if (notProcessingLink) {
+				splashShell.dispose(); 
+				box.setText( G2GuiResources.getString( "G2_IOEXCEPTION") );
+				box.setMessage( G2GuiResources.getString( "G2_CORE_NOT_RUNNING" ) );
+				int rc = box.open();
+				if (rc == SWT.NO) {
+					shell.dispose();
+					display.dispose();
+				} else {
+					myPrefs.open( shell, null );
+					relaunchSelf(args);
+				}
+			}
+			else {
+				myPrefs = new Preferences( preferenceStore );
+				shell = new Shell();
+				myPrefs.open( shell, null);
 				relaunchSelf(args);
 			}
 			return;
@@ -197,11 +212,11 @@ public class G2Gui {
 		/* launch the model */
 		PreferenceLoader.saveStore();
 		
-		boolean pushmode = ! notProcessingLink;
+		boolean pollMode = processingLink;
 		/* wait as long as the core tells us to continue */
 		synchronized ( waiterObject ) {
 		
-			core = new Core( socket, username, password, waiterObject, pushmode, advancedMode );
+			core = new Core( socket, username, password, waiterObject, pollMode, advancedMode );
 			core.connect();
 			mldonkey = new Thread( core );
 			mldonkey.setDaemon( true );
@@ -215,15 +230,12 @@ public class G2Gui {
 		/* did the core receive "bad password" */
 		if ( core.getBadPassword() ) {
 			core.disconnect();
-			badPasswordHandling(args);
+			if ( notProcessingLink ) badPasswordHandling(args);
 		} else {
-
 			if (notProcessingLink){
 				increaseBar( "Starting the view" ); 			
 				MainTab g2gui = new MainTab( core, shell );
 			} else {
-				shell.dispose();
-				display.dispose();			
 				sendDownloadLink(args);
 			}
 		}
@@ -252,9 +264,6 @@ public class G2Gui {
 		Object[] content = args;		
 		EncodeMessage link = new EncodeMessage(Message.S_DLLINK,content);		
 		link.sendMessage(socket);
-		shell.dispose();
-		display.dispose();
-		
 	}
 
 	/**
@@ -314,6 +323,10 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.21  2003/08/20 14:26:19  dek
+work on build-in-link handler, now sendig out poll-mode request, 
+not only creating it...
+
 Revision 1.20  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
 
