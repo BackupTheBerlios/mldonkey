@@ -6,23 +6,26 @@ G2gui's TODO-list (last update: 30.01.04)
  ------------------
 * Make local core-controller relaunch-compatible, without killing the running core.
   Alternatively kill the core and restart it?
-
+  * PreferenceLoader.*Relaunching() is a bit sub-optimal
+  
 * Fix big memleak when relaunching g2gui after a pref-change. MainWindow does not seem to 
   be disposed properly (important!)
 
 * Fix damaged dynamic-column behaviour under linux (important!)
 
-* PreferenceLoader.*Relaunching() is a bit sub-optimal
+* Disable "boog ditekted" when using native version
+  Maybe do a relaunch() (also after displaying the stracktrace) if the user wishes to do so?
+
+* Get the subsearch right
 
 * Servercount in networkItem tooltip is wrong,
   connecting servers currently are counted as connected ones
 
 
-
-
  ----------------------
 | Feature Enhancements |
  ----------------------
+
 * Introduce the mighty link-extractor
   - Gets a tab of its own
   - Rips websites
