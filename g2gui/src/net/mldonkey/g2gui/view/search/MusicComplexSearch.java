@@ -27,6 +27,7 @@ import java.util.Observable;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -41,7 +42,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.7 2003/09/05 16:50:19 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.8 2003/09/05 23:49:07 zet Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -76,39 +77,66 @@ public class MusicComplexSearch extends ComplexSearch {
 		aComposite.setLayout( gridLayout );
  		
  		/* the input boxes */
-        this.inputText = this.createInputBox( aComposite, "Title" );
-        this.artistText = this.createInputBox( aComposite, "Artist" );
-        this.albumText = this.createInputBox( aComposite, "Album" );
+ 		
+ 		Composite aSubComposite = new Composite( aComposite, SWT.NONE );
+ 		aSubComposite.setLayout(CGridLayout.createGL(2,0,0,2,2,false));
+		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
+		gridData.horizontalSpan = 2;
+ 		aSubComposite.setLayoutData(gridData);
+ 		
+        this.inputText = this.createInputBox( aSubComposite, "Title:" );
+        this.artistText = this.createInputBox( aSubComposite, "Artist:"  );
+        this.albumText = this.createInputBox( aSubComposite, "Album:"  );
  
+ 		Label s = new Label(aComposite, SWT.SEPARATOR|SWT.HORIZONTAL);
+		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		gridData.horizontalSpan = 2;
+		s.setLayoutData(gridData);
+ 
+		Composite aSubComposite2 = new Composite( aComposite, SWT.NONE );
+		aSubComposite2.setLayout(CGridLayout.createGL(2,0,0,2,2,false));
+		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		gridData.horizontalSpan = 2;
+		aSubComposite2.setLayoutData(gridData);
         /* the bitrate label */
-        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
-        gridData.horizontalSpan = 2;
-        Label label = new Label( aComposite, SWT.NONE );
+        gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
+        Label label = new Label( aSubComposite2, SWT.NONE );
         label.setLayoutData( gridData );
-        label.setText( "Bitrate" );
+        label.setText( "Bitrate:" );
 
         /* the bitrate combo */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        gridData.horizontalSpan = 2;
         String[] bitrateItems = { "", "96kb", "128kb", "196kb" };
-        this.bitrateCombo = new Combo( aComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+        this.bitrateCombo = new Combo( aSubComposite2, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
 		this.bitrateCombo.setLayoutData( gridData );
 		this.bitrateCombo.setItems( bitrateItems );
 		this.bitrateCombo.select( 0 );
 		this.bitrateCombo.addMouseListener( this );
 
         /* the network combo */
-        this.createNetworkCombo( aComposite, G2GuiResources.getString( "SS_NETWORK" ) );
+        this.createNetworkCombo( aSubComposite2, G2GuiResources.getString( "SS_NETWORK" ) );
  
         /* the result and size controls */
         String[] items = { "", "mp3", "ogg", "wav", "midi" };
-        this.createExtensionAndResultCombo( aComposite, items );
- 
+        this.createExtensionCombo( aSubComposite2, items );
+        
+		s = new Label(aComposite, SWT.SEPARATOR|SWT.HORIZONTAL);
+		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		gridData.horizontalSpan = 2;
+		s.setLayoutData(gridData);
+		
+		Composite aSubComposite3 = new Composite( aComposite, SWT.NONE );
+		aSubComposite3.setLayout(CGridLayout.createGL(2,0,0,2,2,false));
+		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		gridData.horizontalSpan = 2;
+		aSubComposite3.setLayoutData(gridData);
+		
         /* the min and max size text fields */
-        this.createMaxMinSizeText( aComposite );
-	
+        this.createMinMaxSizeText( aSubComposite3 );
+      //  this.createMaxMinSizeText( aComposite );
+		
+		this.createResultCombo( aSubComposite3 );
 		this.createSearchButton( aComposite );
-
         return aComposite;
     }
 
@@ -164,6 +192,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.8  2003/09/05 23:49:07  zet
+1 line per search option
+
 Revision 1.7  2003/09/05 16:50:19  lemmster
 set search button correctly, verify input for result count
 

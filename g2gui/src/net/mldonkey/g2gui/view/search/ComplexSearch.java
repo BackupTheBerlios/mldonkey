@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.6 2003/09/05 16:50:19 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.7 2003/09/05 23:49:07 zet Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -131,26 +131,29 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      * @param group DOCUMENT ME!
      * @param items DOCUMENT ME!
      */
-    protected void createExtensionAndResultCombo( Composite group, String[] items ) {
+    protected void createExtensionCombo( Composite group, String[] items ) {
         /* the max result label */
-        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
+        GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
         Label label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
-        label.setText( "File Extension" );
+        label.setText( "File .ext:" );
+        
+		/* the extension box */
+	  gridData = new GridData( GridData.FILL_HORIZONTAL );
+	  this.extensionCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
+	  this.extensionCombo.setLayoutData( gridData );
+	  this.extensionCombo.setItems( items );
+	  this.extensionCombo.select( 0 );
+	  this.extensionCombo.addMouseListener( this );
+    }
+      
+	protected void createResultCombo( Composite group ) {
 
-        /* the extension label */
-        gridData = new GridData( GridData.FILL_HORIZONTAL );
-        label = new Label( group, SWT.NONE );
-        label.setLayoutData( gridData );
-        label.setText( "Max Results" );
-
-        /* the extension box */
-        gridData = new GridData( GridData.FILL_HORIZONTAL );
-		this.extensionCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
-		this.extensionCombo.setLayoutData( gridData );
-		this.extensionCombo.setItems( items );
-		this.extensionCombo.select( 0 );
-		this.extensionCombo.addMouseListener( this );
+		/* the extension label */
+	  GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
+	  Label label = new Label( group, SWT.NONE );
+	  label.setLayoutData( gridData );
+	  label.setText( "Max Results:" );
 
         /* the max result box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -244,6 +247,35 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 		this.minCombo.select( 0 );
 		this.minCombo.addMouseListener( this );
     }
+    
+    protected void createMinMaxSizeText( Composite group ) {
+			createSizeText( group, "Min Size:", this.minCombo );
+			createSizeText( group, "Max Size:", this.maxCombo );
+    }
+    
+    protected void createSizeText ( Composite group, String labelText, Combo aCombo ) {
+
+		/* the max size label */
+				
+		GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
+		Label label = new Label( group, SWT.NONE );
+		label.setLayoutData( gridData );
+		label.setText( labelText );
+		
+		/* the items for the combos */
+		String[] items = { "", "100 KB", "200 KB", "500 KB", "1 MB",
+							"5 MB", "10 MB", "50 MB", "100 MB", 
+							"500 MB", "1 GB", "2 GB"  };
+	
+		/* the max size combo */
+		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		aCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+		aCombo.setLayoutData( gridData );
+		aCombo.setItems( items );
+		aCombo.select( 0 );
+		aCombo.addMouseListener( this );
+	
+	}	
 
 	/**
 	 * DOCUMENT ME!
@@ -305,6 +337,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 }
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.7  2003/09/05 23:49:07  zet
+1 line per search option
+
 Revision 1.6  2003/09/05 16:50:19  lemmster
 set search button correctly, verify input for result count
 

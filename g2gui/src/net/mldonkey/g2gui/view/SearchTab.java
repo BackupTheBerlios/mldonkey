@@ -32,11 +32,9 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.search.CompositeSearch;
 import net.mldonkey.g2gui.view.search.MusicComplexSearch;
-import net.mldonkey.g2gui.view.search.OtherComplexSearch;
 import net.mldonkey.g2gui.view.search.Search;
 import net.mldonkey.g2gui.view.search.SearchResult;
 import net.mldonkey.g2gui.view.search.SimpleSearch;
-import net.mldonkey.g2gui.view.search.VideoComplexSearch;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -60,7 +58,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.24 2003/09/04 16:06:45 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.25 2003/09/05 23:49:07 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -286,6 +284,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.25  2003/09/05 23:49:07  zet
+1 line per search option
+
 Revision 1.24  2003/09/04 16:06:45  lemmster
 working in progress
 
@@ -320,7 +321,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.22 2003/09/05 14:22:10 lemmster Exp $
+ * @version $Id: Search.java,v 1.23 2003/09/05 23:49:07 zet Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -129,6 +129,9 @@ public abstract class Search implements Observer {
     protected void createSearchButton( Composite group ) {
         this.stackLayout = new StackLayout();
         this.composite = new Composite( group, SWT.NONE );
+		GridData gridData = new GridData( GridData.FILL_HORIZONTAL ) ;
+		gridData.horizontalSpan = 2;
+        composite.setLayoutData(gridData);
 		this.composite.setLayout( this.stackLayout );
         this.buttons = new Button[ 3 ];
         stopButton = new Button( this.composite, SWT.PUSH );
@@ -152,7 +155,7 @@ public abstract class Search implements Observer {
             } );
         buttons[ 1 ] = continueButton;
         okButton = new Button( this.composite, SWT.PUSH );
-        okButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		okButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         okButton.setText( G2GuiResources.getString( "SS_SEARCH" ) );
         okButton.addSelectionListener( new SelectionAdapter() {
                 public void widgetSelected( SelectionEvent event ) {
@@ -161,7 +164,8 @@ public abstract class Search implements Observer {
             } );
         buttons[ 2 ] = okButton;
 		this.stackLayout.topControl = buttons[ 2 ];
-    }
+			
+		}
 
     /**
      * Creates a blank input field for search strings
@@ -170,15 +174,13 @@ public abstract class Search implements Observer {
      */
     protected Text createInputBox( Composite group, String aString ) {
         /* the box label */
-        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
-        gridData.horizontalSpan = 2;
+        GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
         Label label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
         label.setText( aString );
 
         /* the box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        gridData.horizontalSpan = 2;
         Text aText = new Text( group, SWT.SINGLE | SWT.BORDER );
         aText.setLayoutData( gridData );
         aText.setFont( JFaceResources.getTextFont() );
@@ -210,15 +212,13 @@ public abstract class Search implements Observer {
      */
     protected void createNetworkCombo( Composite group, String aString ) {
 		/* the combo label */
-        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
-        gridData.horizontalSpan = 2;
+        GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
         Label label = new Label( group, SWT.NONE );
         label.setLayoutData( gridData );
-        label.setText( aString );
+        label.setText( aString + ":" );
         
         /* the combo itself */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        gridData.horizontalSpan = 2;
         this.networkCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
 		this.networkCombo.setLayoutData( gridData );
         
@@ -279,6 +279,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.23  2003/09/05 23:49:07  zet
+1 line per search option
+
 Revision 1.22  2003/09/05 14:22:10  lemmster
 working version
 

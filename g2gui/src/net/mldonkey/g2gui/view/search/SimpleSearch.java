@@ -26,23 +26,25 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.15 2003/09/05 14:22:10 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.16 2003/09/05 23:49:07 zet Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -72,77 +74,116 @@ public class SimpleSearch extends Search {
 		/* set the minimum width so, that the whole title is visible */
 		tabFolder.MIN_TAB_WIDTH = tabFolder.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
 		/* the input field */
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
 		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
-		gridData.horizontalIndent = 12;
-		gridData.widthHint=500;
+	//	gridData.horizontalIndent = 12;
+	//	gridData.widthHint=500;
 		Composite group = new Composite( tabFolder, SWT.NONE );
-		group.setLayout( gridLayout );
+		group.setLayout( CGridLayout.createGL(2,4,4,2,2,false) );
 		group.setLayoutData( gridData );
 			
 			this.inputText = 
 				this.createInputBox( group, G2GuiResources.getString( "SS_STRING" ) );
-			this.createNetworkCombo( group, G2GuiResources.getString( "SS_NETWORK" ) );
+			this.createNetworkCombo( group, G2GuiResources.getString( "SS_NETWORK" )  );
+		
+		String[] items = { 
+			G2GuiResources.getString( "SS_ALL" ), 
+			G2GuiResources.getString( "SS_AUDIO" ),
+			G2GuiResources.getString( "SS_VIDEO" ),
+			G2GuiResources.getString( "SS_IMAGE" ),
+			G2GuiResources.getString( "SS_Software" ) 
+		};
 			
-			/* media select */
-			gridData = new GridData();
-			gridData.horizontalSpan = 2;
-			all = new Button( group, SWT.RADIO );
-			all.setLayoutData( gridData );
-			all.setText( G2GuiResources.getString( "SS_ALL" ) );
-			/* we want a default selection */
-			all.setSelection( true );
-			all.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					selectedMedia = null;
-				}	
-			} );
-
-			gridData = new GridData();
-			gridData.horizontalSpan = 2;
-			audio = new Button( group, SWT.RADIO );
-			audio.setLayoutData( gridData );
-			audio.setText( G2GuiResources.getString( "SS_AUDIO" ) );
-			audio.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					selectedMedia = "Audio";
-				}	
-			} );
+		Label fileTypeLabel = new Label( group, SWT.NONE );
+		fileTypeLabel.setText("File type:");
+		fileTypeLabel.setLayoutData( new GridData(GridData.HORIZONTAL_ALIGN_FILL ));
+		
+		final Combo fileTypeCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+		fileTypeCombo.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
+		fileTypeCombo.setItems( items );
+		fileTypeCombo.select( 0 );
+		fileTypeCombo.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {}
+			public void widgetSelected(SelectionEvent e) {
+				switch (fileTypeCombo.getSelectionIndex()) {
+					case 1: selectedMedia = "Audio"; 
+							break;
+					case 2: selectedMedia = "Video";
+							break;
+					case 3: selectedMedia = "Image";
+							break;
+					case 4: selectedMedia = "Software";
+							break;
+					default: selectedMedia = null;
+							break;
+				}
+			}
 			
-			gridData = new GridData();
-			gridData.horizontalSpan = 2;
-			video = new Button( group, SWT.RADIO );
-			video.setLayoutData( gridData );
-			video.setText( G2GuiResources.getString( "SS_VIDEO" ) );
-			video.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					selectedMedia = "Video";
-				}	
-			} );
+		});
 			
-			gridData = new GridData();
-			gridData.horizontalSpan = 2;
-			image = new Button( group, SWT.RADIO );
-			image.setLayoutData( gridData );
-			image.setText( G2GuiResources.getString( "SS_IMAGE" ) );
-			image.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					selectedMedia = "Image";
-				}	
-			} );
-			
-			gridData = new GridData();
-			gridData.horizontalSpan = 2;
-			software = new Button( group, SWT.RADIO );
-			software.setLayoutData( gridData );
-			software.setText( G2GuiResources.getString( "SS_Software" ) );
-			software.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent event ) {
-					selectedMedia = "Software";
-				}	
-			} );
+//		Group mediaGroup = new Group( group, SWT.SHADOW_OUT );	
+//		gridData = new GridData(GridData.FILL_HORIZONTAL);
+//		gridData.horizontalSpan = 2;
+//		mediaGroup.setLayoutData(gridData);
+//		mediaGroup.setLayout(CGridLayout.createGL(2,2,2,0,0,false));		
+//			
+//			/* media select */
+//			gridData = new GridData();
+//			gridData.horizontalSpan = 2;
+//			all = new Button( mediaGroup, SWT.RADIO );
+//			all.setLayoutData( gridData );
+//			all.setText( G2GuiResources.getString( "SS_ALL" ) );
+//			/* we want a default selection */
+//			all.setSelection( true );
+//			all.addSelectionListener( new SelectionAdapter() {
+//				public void widgetSelected( SelectionEvent event ) {
+//					selectedMedia = null;
+//				}	
+//			} );
+//
+//			gridData = new GridData();
+//			gridData.horizontalSpan = 2;
+//			audio = new Button( mediaGroup, SWT.RADIO );
+//			audio.setLayoutData( gridData );
+//			audio.setText( G2GuiResources.getString( "SS_AUDIO" ) );
+//			audio.addSelectionListener( new SelectionAdapter() {
+//				public void widgetSelected( SelectionEvent event ) {
+//					selectedMedia = "Audio";
+//				}	
+//			} );
+//			
+//			gridData = new GridData();
+//			gridData.horizontalSpan = 2;
+//			video = new Button( mediaGroup, SWT.RADIO );
+//			video.setLayoutData( gridData );
+//			video.setText( G2GuiResources.getString( "SS_VIDEO" ) );
+//			video.addSelectionListener( new SelectionAdapter() {
+//				public void widgetSelected( SelectionEvent event ) {
+//					selectedMedia = "Video";
+//				}	
+//			} );
+//			
+//			gridData = new GridData();
+//			gridData.horizontalSpan = 2;
+//			image = new Button( mediaGroup, SWT.RADIO );
+//			image.setLayoutData( gridData );
+//			image.setText( G2GuiResources.getString( "SS_IMAGE" ) );
+//			image.addSelectionListener( new SelectionAdapter() {
+//				public void widgetSelected( SelectionEvent event ) {
+//					selectedMedia = "Image";
+//				}	
+//			} );
+//			
+//			gridData = new GridData();
+//			gridData.horizontalSpan = 2;
+//			software = new Button( mediaGroup, SWT.RADIO );
+//			software.setLayoutData( gridData );
+//			software.setText( G2GuiResources.getString( "SS_Software" ) );
+//			software.addSelectionListener( new SelectionAdapter() {
+//				public void widgetSelected( SelectionEvent event ) {
+//					selectedMedia = "Software";
+//				}	
+//			} );
 
 			this.createSearchButton( group );
 
@@ -184,6 +225,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.16  2003/09/05 23:49:07  zet
+1 line per search option
+
 Revision 1.15  2003/09/05 14:22:10  lemmster
 working version
 
@@ -206,7 +250,7 @@ Revision 1.9  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.8  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.7  2003/08/18 01:42:24  zet
 centralize resource bundle
