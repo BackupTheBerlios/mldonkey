@@ -27,6 +27,7 @@ import gnu.regexp.REException;
 import gnu.regexp.REMatch;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -40,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.22 2003/09/04 21:45:32 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.23 2003/09/06 11:46:57 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -49,10 +50,19 @@ public class SearchQuery implements Sendable {
 	 */
 	private Query searchOptions;
 	
+	private final short OR = 1;
+	private final short AND = 2;
+	private final short ANDNOT = 3;
+	
 	/**
 	 * This is the wrapper for options & search-query
 	 */
 	private Query mainQuery;
+	
+	private List andNotQuerys = new ArrayList();
+	private List andQuerys = new ArrayList();
+	private List orQuerys = new ArrayList();
+	
 	
 	/**
 	 * The String we want to search
@@ -106,13 +116,6 @@ public class SearchQuery implements Sendable {
 		searchIdentifier = counter + 1;
 		counter++;
 		
-		/* this is, what we need to fill with values
-		 * 
-		 * The normal search-type should be AND (= type 0)
-		 * could be changed by setter-method
-		 */
-		searchQuery = new Query();
-		searchQuery.setNode( EnumQuery.AND );
 		
 		/*and this are the options for our search:*/
 		searchOptions = new Query();
@@ -147,13 +150,41 @@ public class SearchQuery implements Sendable {
 		
 	 	for ( int i = 0; i < patterns.length; i++ ) {				
 				newQuery = new Query();
-				String pattern = patterns[i];			
-				newQuery.setNode( EnumQuery.KEYWORDS );
-				newQuery.setComment( "Search-pattern:" );
-				newQuery.setDefaultValue( pattern );
-				searchQuery.addQuery( newQuery );
+				String pattern = patterns[i];
+				
+				switch ( determineSearchType( pattern ) )	 {
+					case AND :					
+						newQuery.setNode( EnumQuery.KEYWORDS );
+						newQuery.setComment( "Search-pattern:" );
+						pattern = pattern.substring( 1 );
+						newQuery.setDefaultValue( pattern );
+						andQuerys.add( newQuery );						
+						break;
+					case ANDNOT :					
+						newQuery.setNode( EnumQuery.KEYWORDS );
+						newQuery.setComment( "Search-pattern:" );
+						pattern = pattern.substring( 1 );
+						newQuery.setDefaultValue( pattern );
+						andNotQuerys.add( newQuery );						
+						break;						
+					default :					
+					newQuery.setNode( EnumQuery.KEYWORDS );
+					newQuery.setComment( "Search-pattern:" );
+					newQuery.setDefaultValue( pattern );					
+					orQuerys.add( newQuery );
+						break;
+				} 
 			}
 	}
+	
+	private short determineSearchType( String pattern ) {
+		if ( pattern.charAt( 0 ) == '+' )
+			return AND;
+		else if ( pattern.charAt( 0 ) == '-' )
+			return ANDNOT;
+		else return OR;
+	}
+
 	
 	/**
 	 * Setting the maximum-size of search-results
@@ -327,28 +358,90 @@ public class SearchQuery implements Sendable {
 		searchOptions.addQuery( format );
 	}
 	
-	/**
-	 * Sets the type of this search-query (AND / OR)
-	 * @param enum The Type of this search
-	 */
-	public void setSearchType( EnumQuery enum ) {
-		if ( ( enum == EnumQuery.AND ) || ( enum == EnumQuery.OR )  ) {		
-				searchQuery.setNode( enum );				
-		}
-	}
 	
 	/**
 	 * sends out the search-query and hopefully get any results....
 	 * 
 	 */
 	public void send() {
+		
 		/* if we have only one SearchQuery or SearchOptions,
 		 * we don't need to build the whole tree-structure
 		 * and we can directly set the searchQuery /searchOptions
-		 */ 
-		if ( searchQuery.getQueries().length == 1 )
-			searchQuery = searchQuery.getQueries()[ 0 ];
-					
+		 */
+		 Query baseQuery = new Query();
+		 baseQuery.setNode( EnumQuery.AND );
+		 
+		 /*process OR-Entrys*/
+		 if ( orQuerys.size() > 0 ) {
+		 	// if only one or-Query: add this directly to the basequery
+		 	if ( orQuerys.size() == 1 ) {
+		 		baseQuery.addQuery( ( Query ) orQuerys.get( 0 ) );
+		 	}
+		 	else {
+		 		//create OR-Query, put all those stuff in, and add to baseQuery
+		 		Query orQuery = new Query();
+		 		orQuery.setNode( EnumQuery.OR );
+				Iterator it = orQuerys.iterator();
+				while ( it.hasNext() ) {
+					Query temp = ( Query ) it.next();
+					orQuery.addQuery( temp );
+				}
+				baseQuery.addQuery( orQuery );
+		 		
+		 	}
+		 }
+		 
+		/*process AND-Entrys*/
+		if ( andQuerys.size() > 0 ) {
+		   // if only one AND-Query: add this directly to the basequery
+		   if ( andQuerys.size() == 1 ) {
+			   baseQuery.addQuery( ( Query ) andQuerys.get( 0 ) );
+		   }
+		   else {
+			   //create AND-Query, put all those stuff in, and add to baseQuery
+			   Query andQuery = new Query();
+			   andQuery.setNode( EnumQuery.AND );
+			   Iterator it = andQuerys.iterator();
+			   while ( it.hasNext() ) {
+				   Query temp = ( Query ) it.next();
+				   andQuery.addQuery( temp );
+			   }
+			   baseQuery.addQuery( andQuery );
+		 		
+		   }
+		}
+		
+		/*if basequery as only one entry, than this entry is basequery.*/
+		if ( baseQuery.getQueries().length == 1 )
+			baseQuery = baseQuery.getQueries()[ 0 ];		 
+		 
+		 if ( andNotQuerys.size() > 0 ){
+		 	/*we hav at least one AND_NOT entry, so we have to create
+		 	 * a and_not-node and fill it
+		 	 */		 		 
+		 	searchQuery.setNode(EnumQuery.AND_NOT);
+		 	if ( andNotQuerys.size() == 1) {
+		 		/*only one entry, no need for tree*/
+		 		searchQuery.setSAndNot( ( Query ) andNotQuerys.get( 0 ) );
+		 	}
+		 	else {
+		 		/*multiple entrys, we need a tree*/
+		 		Query andNotQuery = new Query();
+		 		andNotQuery.setNode( EnumQuery.AND );
+		 		Iterator it = andNotQuerys.iterator();
+		 		while ( it.hasNext() ) {
+		 			 Query temp = ( Query ) it.next();
+		 			 andNotQuery.addQuery( temp );
+		 		}
+		 		searchQuery.setSAndNot( andNotQuery ); 		
+		 	}
+		 	searchQuery.setFAndNot( baseQuery );
+		 }
+		 /*No AND_NOT search, so we only search baseQuery*/
+		 else searchQuery = baseQuery;		 
+		 
+		
 		if ( searchOptions.getQueries().length == 1 )
 			searchOptions = searchOptions.getQueries()[ 0 ];
 		
@@ -422,6 +515,14 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.23  2003/09/06 11:46:57  dek
+now we have google-style searching:
++PATTERN (= AND)
+-PATTERN (=AND_NOT)
+PATTERN (OR)
+
+note the prefix +|-|  "", which are respnsible for this
+
 Revision 1.22  2003/09/04 21:45:32  dek
 added line for no unit ;-)
 
