@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.27 2003/08/10 23:20:41 zet Exp $ 
+ * @version $Id: Message.java,v 1.28 2003/08/12 04:10:29 zet Exp $ 
  *
  */
 public abstract class Message {
@@ -80,6 +80,22 @@ public abstract class Message {
 	 */
 	public static final short S_SAVE_FILE_AS = 13;
 	/**
+	 * Send Add Client Friend (value is 14)
+	 */
+	public static final short S_ADD_CLIENT_FRIEND = 14;
+	/**
+	 * Send Add User Friend (value is 15)
+	 */
+	public static final short S_ADD_USER_FRIEND = 15;
+	/**
+	 * Send Remove Friend (value is 16)
+	 */
+	public static final short S_REMOVE_FRIEND = 16;
+	/**
+	 * Send Remove All Friends (value is 17)
+	 */
+	public static final short S_REMOVE_ALL_FRIENDS = 17;
+	/**
 	 * Send Connect Server (value is 21)
 	 */
 	public static final short S_CONNECT_SERVER = 21;
@@ -125,6 +141,10 @@ public abstract class Message {
 	 * Send Search Query (value is 42)
 	 */
 	public static final short S_SEARCH_QUERY = 42;
+	/**
+	 * Send Message To Client (value is 43)
+	 */
+	public static final short S_MESSAGE_TO_CLIENT = 43;
 	/**
 	 * Get Connected Servers (value is 44)
 	 */
@@ -225,6 +245,10 @@ public abstract class Message {
 	 * Receive Server Info (value is 26)
 	 */
 	public static final short R_SERVER_INFO = 26;
+	/**
+	 * Receive Message From Client (value is 27)
+	 */
+	public static final short R_MESSAGE_FROM_CLIENT = 27;
 	/**
 	 * Receive Add Section Option (value is 36)
 	 */
@@ -415,6 +439,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.28  2003/08/12 04:10:29  zet
+try to remove dup clientInfos, add friends/basic messaging
+
 Revision 1.27  2003/08/10 23:20:41  zet
 signed ints
 

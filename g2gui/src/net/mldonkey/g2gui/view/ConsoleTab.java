@@ -36,6 +36,7 @@ import net.mldonkey.g2gui.model.ConsoleMessage;
 import net.mldonkey.g2gui.view.console.Console;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
@@ -43,7 +44,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.33 2003/08/10 23:24:20 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.34 2003/08/12 04:10:29 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -71,7 +72,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 	protected void createContents( Composite parent ) {	
 		this.parent = parent;		
 		
-		console = new Console ( parent );
+		console = new Console ( parent, SWT.NONE );
 		console.addObserver( this );
 		
 		parent.setLayout( null );
@@ -164,6 +165,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.34  2003/08/12 04:10:29  zet
+try to remove dup clientInfos, add friends/basic messaging
+
 Revision 1.33  2003/08/10 23:24:20  zet
 move updatedisplay
 

@@ -75,7 +75,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.33 2003/08/10 19:31:15 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.34 2003/08/12 04:10:29 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -460,12 +460,13 @@ public class MainTab implements Listener, Observer, ShellListener {
 	 * for the content and their button.
 	 */
 	private void addTabs() {
-		this.tabs = new GuiTab[ 5 ];
+		this.tabs = new GuiTab[ 6 ];
 		tabs[ 0 ] =	new TransferTab( this );
 		tabs[ 1 ] =	new SearchTab( this );
 		tabs[ 2 ] =	new ServerTab( this );
 		tabs[ 3 ] =	new ConsoleTab( this );
 		tabs[ 4 ] =	new StatisticTab( this );
+		tabs[ 5 ] = new MessagesTab( this );
 
 		/*setting TransferTab active if registered*/
 		Iterator tabIterator = registeredTabs.iterator();
@@ -636,14 +637,17 @@ public class MainTab implements Listener, Observer, ShellListener {
 		imageRegistry.put("ConsoleButton", createTrans("console.png"));
 		imageRegistry.put("ConsoleButtonSmall", createTrans("console-16.png"));
 	
-		imageRegistry.put("TransfersButton", createTrans("transfer2.png"));
-		imageRegistry.put("TransfersButtonSmall", createTrans("transfer2-16.png"));
+		imageRegistry.put("TransfersButton", createTrans("transfer3a.png"));
+		imageRegistry.put("TransfersButtonSmall", createTrans("transfer3a-16.png"));
 		
 		imageRegistry.put("SearchButton", createTrans("search.png"));
 		imageRegistry.put("SearchButtonSmall", createTrans("search-16.png"));
 		
 		imageRegistry.put( "ServerButton", createTrans( "server.png" ) );
 		imageRegistry.put( "ServerButtonSmall", createTrans( "server-16.png" ) ); 
+		
+		imageRegistry.put( "MessagesButton", createTrans( "messages.png" ) );
+		imageRegistry.put( "MessagesButtonSmall", createTrans( "messages-16.png" ) );
 			
 	}
 	// transparent pngs on gtk still require this, but it is noticable on win :(
@@ -691,6 +695,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.34  2003/08/12 04:10:29  zet
+try to remove dup clientInfos, add friends/basic messaging
+
 Revision 1.33  2003/08/10 19:31:15  lemmstercvs01
 try to fix the root handle bug
 

@@ -25,14 +25,17 @@ package net.mldonkey.g2gui.model;
 import gnu.trove.THash;
 import gnu.trove.TIntObjectHashMap;
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import net.mldonkey.g2gui.model.enum.*;
+import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumClientType;
 
 /**
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.15 2003/08/08 02:46:31 zet Exp $ 
+ * @version $Id: ClientInfo.java,v 1.16 2003/08/12 04:10:29 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -186,8 +189,13 @@ public class ClientInfo extends Parent {
 	 * Reads a ClientInfo object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	public void readStream( MessageBuffer messageBuffer ) {
-		this.clientid = messageBuffer.readInt32();
+	public void readStream (MessageBuffer messageBuffer) {
+		int clientID = messageBuffer.readInt32();
+		readStream ( clientID, messageBuffer );
+	}
+	
+	public void readStream( int clientID, MessageBuffer messageBuffer ) {
+		this.clientid = clientID;
 		
 		this.clientnetworkid =
 			( NetworkInfo ) this.parent.getNetworkInfoMap()
@@ -200,6 +208,9 @@ public class ClientInfo extends Parent {
 		this.clientName = messageBuffer.readString();
 		this.clientRating = messageBuffer.readInt32();
 		this.clientChatPort = messageBuffer.readInt32();
+		
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -222,10 +233,36 @@ public class ClientInfo extends Parent {
 		this.setChanged();
 		this.notifyObservers( this );
 	}
+
+	// static to save mem
+	public static void addFriend(CoreCommunication core, int id) {
+		EncodeMessage addFriend =
+			new EncodeMessage( Message.S_ADD_CLIENT_FRIEND, new Integer(id) );
+		addFriend.sendMessage( core.getConnection() );
+		addFriend = null;
+	}
+
+	public static void removeFriend(CoreCommunication core, int id) {
+		EncodeMessage removeFriend =
+			new EncodeMessage( Message.S_REMOVE_FRIEND, new Integer(id) );
+		removeFriend.sendMessage( core.getConnection() );
+		removeFriend = null;
+	}
+
+	public static void removeAllFriends(CoreCommunication core) {
+		EncodeMessage removeAllFriends =
+			new EncodeMessage( Message.S_REMOVE_ALL_FRIENDS );
+		removeAllFriends.sendMessage( core.getConnection() );
+		removeAllFriends = null;
+	}
+	
 }
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.16  2003/08/12 04:10:29  zet
+try to remove dup clientInfos, add friends/basic messaging
+
 Revision 1.15  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 

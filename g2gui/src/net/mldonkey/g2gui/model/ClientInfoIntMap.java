@@ -23,16 +23,30 @@
 package net.mldonkey.g2gui.model;
 
 import gnu.trove.TIntObjectHashMap;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumClientType;
+
 
 /**
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoIntMap.java,v 1.5 2003/08/01 13:48:04 lemmstercvs01 Exp $$ 
+ * @version $$Id: ClientInfoIntMap.java,v 1.6 2003/08/12 04:10:29 zet Exp $$ 
  */
 public class ClientInfoIntMap extends InfoIntMap {
+	
+	/**
+	 * A subset of ClientInfo's that are friends
+	 */
+	List friendsList = Collections.synchronizedList(new ArrayList());
+
+	
 	/**
 	 * @param communication my parent
 	 */
@@ -48,13 +62,32 @@ public class ClientInfoIntMap extends InfoIntMap {
 	}
 	
 	/**
-	 * Reads a networkInfo object from the stream
+	 * Reads a clientInfo object from the stream
+	 * If the clientID exists, use the existing clientInfo object or we get dups
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
-		ClientInfo clientInfo = new ClientInfo( this.parent );
-		clientInfo.readStream( messageBuffer );
+		
+		int clientID = messageBuffer.readInt32();
+		ClientInfo clientInfo;
+		
+		if (this.containsKey(clientID)) 
+			clientInfo = this.get(clientID);
+		else
+			clientInfo = new ClientInfo( this.parent );
+		
+		try {
+		
+		clientInfo.readStream( clientID, messageBuffer );  	// nullPointer here.. but why? -z
+															// i've only seen it once.. someone else?
+															// from_gui: exception Not_found for message AddClientFriend
 		this.put( clientInfo.getClientid(), clientInfo );
+		
+		} catch (Exception e) {
+				e.printStackTrace();
+		}
+		
+		
 	}
 	
 	/**
@@ -64,6 +97,19 @@ public class ClientInfoIntMap extends InfoIntMap {
 	 */
 	public void put( int key, ClientInfo value ) {
 		this.infoIntMap.put( key, value );
+		if (value.getClientType() == EnumClientType.FRIEND) {
+			if (!friendsList.contains(value)) {
+				friendsList.add( value );
+				setChanged();
+				notifyObservers( value );
+			}
+		} else { 
+			if (friendsList.contains(value)) {
+				friendsList.remove(value);
+				setChanged();
+				notifyObservers( value );
+			}
+		}
 	}
 	
 	/**
@@ -82,7 +128,7 @@ public class ClientInfoIntMap extends InfoIntMap {
 	public void update( MessageBuffer messageBuffer ) {		
 		int key = messageBuffer.readInt32();
 		if ( this.infoIntMap.contains( key ) )
-			( ( ClientInfo ) this.infoIntMap.get( key ) ).update( messageBuffer );
+			( ( ClientInfo ) this.infoIntMap.get( key ) ).update( messageBuffer ); // nullPointer here
 	}
 	
 	/**
@@ -99,10 +145,19 @@ public class ClientInfoIntMap extends InfoIntMap {
 		this.infoIntMap = tempClientInfoList;		
 	}
 	
+	/**
+	 * @return friendsList ArrayList
+	 */
+	public List getFriendsList() {
+		return friendsList;
+	}
 	
 }
 /*
 $$Log: ClientInfoIntMap.java,v $
+$Revision 1.6  2003/08/12 04:10:29  zet
+$try to remove dup clientInfos, add friends/basic messaging
+$
 $Revision 1.5  2003/08/01 13:48:04  lemmstercvs01
 $removed debug
 $

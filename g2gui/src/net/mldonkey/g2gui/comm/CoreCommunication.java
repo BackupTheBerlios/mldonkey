@@ -23,6 +23,7 @@ package net.mldonkey.g2gui.comm;
 import java.net.Socket;
 import java.util.Observer;
 
+import net.mldonkey.g2gui.model.ClientInfoIntMap;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.model.ConsoleMessage;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
@@ -35,7 +36,7 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.27 2003/08/04 14:38:13 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.28 2003/08/12 04:10:29 zet Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -92,6 +93,8 @@ public interface CoreCommunication extends Runnable {
 	 * @return A Map with all the resultInfo obj
 	 */
 	ResultInfoIntMap getResultInfoIntMap();
+	
+	ClientInfoIntMap getClientInfoIntMap();
 	
 	/**
 	 * @return The clientstats of the core

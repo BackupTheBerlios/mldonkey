@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.79 2003/08/08 13:09:34 zet Exp $ 
+ * @version $Id: Core.java,v 1.80 2003/08/12 04:10:29 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -329,6 +329,13 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					( ( ClientInfoIntMap )this.clientInfoList ).clean( messageBuffer );
 					( ( ServerInfoIntMap )this.serverInfoMap ).clean( messageBuffer );
 					break;
+					
+			case Message.R_MESSAGE_FROM_CLIENT :
+					ClientMessage clientMessage = new ClientMessage(this);
+					clientMessage.readStream( messageBuffer );
+					this.setChanged();
+					this.notifyObservers( clientMessage );
+					break;
 
 			default :				
 					System.out.println( "unknown opcode: " + opcode + " length: " + messageLength);
@@ -407,6 +414,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		return ( ServerInfoIntMap ) this.serverInfoMap;
 	}
 
+	public ClientInfoIntMap getClientInfoIntMap() {
+		return (ClientInfoIntMap) this.clientInfoList;
+	}
+
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getUsingVersion()
 	 */
@@ -442,6 +453,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.80  2003/08/12 04:10:29  zet
+try to remove dup clientInfos, add friends/basic messaging
+
 Revision 1.79  2003/08/08 13:09:34  zet
 cosmetic
 

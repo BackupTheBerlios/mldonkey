@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view.console;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Observable;
 
 import org.eclipse.swt.SWT;
@@ -35,38 +37,39 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-
 /**
  * ConsoleTab
  *
- * @author $user$
- * @version $Id: Console.java,v 1.2 2003/08/10 00:38:17 zet Exp $ 
+ * @author 
+ * @version $Id: Console.java,v 1.3 2003/08/12 04:10:29 zet Exp $ 
  *
  */
 public class Console extends Observable implements ControlListener  {	
 	private Composite parent;
 	private Text infoDisplay;	
 	private Text input;
+	private int clientId = 0;
 
 	/**
 	 * @param gui the main gui, which takes care of all our tabs
 	 */
-	public Console ( Composite parent ) {
-		createContents( parent );
+	public Console ( Composite parent, int style ) {
+		createContents( parent, style );
 	} 
 	
 	/* ( non-Javadoc )
 	 * @see net.mldonkey.g2gui.view.widgets.Gui.G2guiTab#createContents( org.eclipse.swt.widgets.Composite )
 	 */
-	protected void createContents( Composite parent ) {	
+	protected void createContents( Composite parent, int style ) {	
 		this.parent = parent;		
 		parent.setLayout( null );
 		parent.addControlListener( this );		
 		/* Adding the Console-Display Text-field */
-		infoDisplay = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
-				
+		// change to styledtext sometime in the future to differentiate incoming/outgoing text in color
+		infoDisplay = new Text( parent, style | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
 		input = new Text( parent, SWT.SINGLE | SWT.BORDER );					
-		//Send command to core
+		
+		//Send command 
 		input.addKeyListener( new KeyAdapter() {
 			public void keyPressed( KeyEvent e ) {
 				int numLinesDisplayed = infoDisplay.getClientArea().height / infoDisplay.getLineHeight();
@@ -80,7 +83,7 @@ public class Console extends Observable implements ControlListener  {
 					infoDisplay.setTopIndex( infoDisplay.getTopIndex() + ( numLinesDisplayed ) );
 				}
 				else if ( e.character == SWT.CR ) {
-					infoDisplay.append( input.getText() );
+					infoDisplay.append( (clientId > 0 ? getTimeStamp() + "> " : "") + input.getText() + getLineDelimiter() );
 					setChanged();
 					notifyObservers( input.getText() );
 					input.setText( "" );
@@ -136,13 +139,26 @@ public class Console extends Observable implements ControlListener  {
 	public void setFocus() {
 		input.setFocus();
 	}
-	
+	public void setClientId(int i) {
+		clientId = i;
+	}
+	public int getClientId() {
+		return clientId;
+	}
+	public String getTimeStamp() {
+		SimpleDateFormat sdFormatter = new SimpleDateFormat("[HH:mm:ss] ");
+		Date oToday = new Date();
+		return sdFormatter.format(oToday);
+	}
 	
 }
 
 
 /*
 $Log: Console.java,v $
+Revision 1.3  2003/08/12 04:10:29  zet
+try to remove dup clientInfos, add friends/basic messaging
+
 Revision 1.2  2003/08/10 00:38:17  zet
 setFocus on activation
 

@@ -70,6 +70,7 @@ public class ClientDetailDialog implements Observer {
 	
 	public ClientDetailDialog (FileInfo fileInfo, ClientInfo clientInfo ) 
 	{
+	
 		this.fileInfo = fileInfo;
 		this.clientInfo = clientInfo;
 		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );

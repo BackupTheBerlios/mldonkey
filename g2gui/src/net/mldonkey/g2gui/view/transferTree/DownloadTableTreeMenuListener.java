@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.NetworkInfo.Enum;
@@ -63,6 +64,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 	FileInfo selectedFile;
 	TreeClientInfo selectedClient;
+	ArrayList selectedClients = new ArrayList();
 	ArrayList selectedFiles = new ArrayList();
 	public static ResourceBundle res = ResourceBundle.getBundle("g2gui");
 	private TableTreeViewer tableTreeViewer;
@@ -129,12 +131,15 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			selectedClient = (TreeClientInfo) o;
 		else
 			selectedClient = null;
-			
+		
+		selectedClients.clear();
 		selectedFiles.clear();	
 		for (Iterator it = sSel.iterator(); it.hasNext(); ) {
 			o = it.next();
 			if (o instanceof FileInfo) 
 				selectedFiles.add((FileInfo) o);
+			else if (o instanceof TreeClientInfo)
+				selectedClients.add((TreeClientInfo) o);	
 		}
 	}
 	
@@ -172,6 +177,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			prioritySubMenu.add(new PriorityLowAction());
 			menuManager.add(prioritySubMenu);
 		}
+		
+		if (selectedClient != null)
+			menuManager.add(new AddFriendAction());
 		
 		if (selectedClient != null)
 			menuManager.add(new ClientDetailAction());
@@ -300,6 +308,20 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		}
 		
 	}
+	
+	class AddFriendAction extends Action {
+		public AddFriendAction() {
+			super();
+			setText(res.getString("TT_DOWNLOAD_MENU_ADD_FRIEND"));
+		}
+		public void run() {
+			for (int i = 0; i < selectedClients.size(); i++) {
+				TreeClientInfo selectedClientInfo = (TreeClientInfo) selectedClients.get(i);
+					ClientInfo.addFriend(mldonkey, selectedClientInfo.getClientInfo().getClientid());
+			}
+		}
+	}
+	
 	
 	class ClientDetailAction extends Action {
 		public ClientDetailAction() {
@@ -663,6 +685,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.6  2003/08/12 04:10:29  zet
+try to remove dup clientInfos, add friends/basic messaging
+
 Revision 1.5  2003/08/11 00:30:10  zet
 show queued files
 
