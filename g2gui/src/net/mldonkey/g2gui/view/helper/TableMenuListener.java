@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.6 2003/09/08 16:37:52 lemmster Exp $
+ * @version $Id: TableMenuListener.java,v 1.7 2003/09/08 17:09:38 dek Exp $
  *
  */
 public abstract class TableMenuListener {
@@ -450,7 +450,7 @@ public abstract class TableMenuListener {
 						GridData.GRAB_VERTICAL |
 						GridData.HORIZONTAL_ALIGN_FILL |
 						GridData.VERTICAL_ALIGN_CENTER );
-					data.widthHint = convertHorizontalDLUsToPixels( IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH );;
+					data.widthHint = convertHorizontalDLUsToPixels( IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH );
 					label.setLayoutData(data);
 					label.setFont( parent.getFont() );
 				}
@@ -604,6 +604,9 @@ public abstract class TableMenuListener {
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.7  2003/09/08 17:09:38  dek
+;; --> ;
+
 Revision 1.6  2003/09/08 16:37:52  lemmster
 refine search toggleable for case sensitive
 
