@@ -1,4 +1,6 @@
 2003/09/22: lemmy
+	* Statusline: Display manage nodes for FT/Gnut/Gnut2
+2003/09/22: lemmy
 	* Server: Integer columns right- instead of left-aligned [bug #934]
 	* Search: Show number of sources in avail column
 	* Search: Integer columns right- instead of left-aligned [bug #934]

@@ -38,12 +38,12 @@ import org.eclipse.jface.action.Separator;
  * NetworkItemMenuListener
  *
  *
- * @version $Id: NetworkItemMenuListener.java,v 1.6 2003/09/18 11:37:24 lemmster Exp $
+ * @version $Id: NetworkItemMenuListener.java,v 1.7 2003/09/23 05:24:04 lemmster Exp $
  *
  */
 public class NetworkItemMenuListener implements IMenuListener {
     private static final boolean advanced = PreferenceLoader.loadBoolean( "advancedMode" );
-
+	private static final boolean nodes = PreferenceLoader.loadBoolean( "displayNodes" );
     /**
      * The <code>StatusLine</code>
      */
@@ -78,7 +78,8 @@ public class NetworkItemMenuListener implements IMenuListener {
      */
     public void menuAboutToShow( IMenuManager manager ) {
         if ( network.isEnabled() ) {
-            if ( network.hasServers() && advanced )
+            if ( ( network.hasServers() && advanced )
+            || network.hasSupernodes() && advanced && nodes )
                 manager.add( new ManageAction() );
             if ( network.hasServers() || network.hasSupernodes() )
                 manager.add( new ConnectMoreAction() );
@@ -123,7 +124,10 @@ public class NetworkItemMenuListener implements IMenuListener {
     private class ManageAction extends Action {
         public ManageAction() {
             super();
-            setText( G2GuiResources.getString( "NIML_MANAGE" ) );
+            if ( network.hasServers() )
+	            setText( G2GuiResources.getString( "NIML_MANAGE" ) );
+	        else
+	        	setText( G2GuiResources.getString( "NIML_NMANAGE" ) );    
         }
 
         /**
@@ -152,6 +156,9 @@ public class NetworkItemMenuListener implements IMenuListener {
 
 /*
 $Log: NetworkItemMenuListener.java,v $
+Revision 1.7  2003/09/23 05:24:04  lemmster
+display "manage nodes" for FT/Gnut/Gnut2
+
 Revision 1.6  2003/09/18 11:37:24  lemmster
 checkstyle
 
