@@ -2,7 +2,7 @@ MLdonkey G2gui
 --------------
 MLdonkey G2gui is a graphical frontend to the MLdonkey Core[1].
 It is written in java, makes use of SWT and other modern efficient libs
-and is fully gcj[2] compliant. It aims to replace the old "mlgui" in the future.
+and is fully gcj[2] compliant.
 MLdonkey is a multi-network P2P client application.
 
 G2gui comes in several flavours: Additionally to the source for compiling 
@@ -26,22 +26,23 @@ Binary Packages
 Win32 packages are statically compiled and should run out of the box on any
 decent windows system. Simply unzip the archive and start g2gui.exe.
 
-Linux packages cannot be statically compiled at the moment, so we recommend to
-check the shared ones. We try to make G2gui available for many distributions.
+Linux packages cannot be statically compiled at the moment due to some of gcj's
+design limitations, so we recommend to check the shared ones. 
+We try to make G2gui available for many distributions.
 To run it, simply untar the archive and type ./g2gui.
 
 
 
 Java Packages
 -------------
-g2gui-jar packages contain all and everything, except for a java VM, 
+G2gui-jar packages contain all and everything, except for a java VM, 
 to run MLdonkey G2gui in its byteform. They should run without problems
 with any Sun j2re version 1.4x and higher. We've also reports of people
 successfully using the "Blackdown" kit with G2gui. "Kaffee" seems to 
 produce some memory related problems, but we've not verified this yet.
 
 * Under linux, simply run ./g2gui
-* If you are under windows, run g2gui.bat
+* If you are under windows, run g2gui.bat or g2gui.exe if available
 
 
 
@@ -55,14 +56,35 @@ G2gui requires some external libraries which will be automatically downloaded fr
 our ftp server if you specify "--enable-batch". The casual user won't have them by
 default and configure will tell you to enable this switch to get them.
 
-This part of the project is subject to heavy changes at the moment,
-things might break or not work. Always check the CVS for updates.
+
+
+Usage Tips
+----------
+G2gui features a few interesting commandline-options, please try:
+$ ./g2gui --help
+to get a list.
+
+The intersting feature is the link-submission tool. Simply give G2gui
+an ed2k:// or .torrent link and it will submit it to the core.
+
+
+
+Link Submission
+---------------
+
+For Mozilla and Firebird/Firefox users mainly under linux there exists a XPI plugin
+called "G2submit", which makes link-submits from the browser easy. It works best
+for ed2k://-links. Under windows, simply go to the "Registry"-Tab in the preferences.
+
+When you click a .torrent file in your browser, you can simply choose to "Open with..."
+G2gui.exe. G2gui takes the file without further configuration.
 
 
 
 Bug Reports
 -----------
 In case you found a bug, please visit our Bug Report System[4]. Thank you!
+
 
 
 Links and Homepages
