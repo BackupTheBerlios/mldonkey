@@ -23,17 +23,20 @@
 package net.mldonkey.g2gui.comm;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
- * Message
+ * EncodeMessage
  *
- *
- * @version $Id: EncodeMessage.java,v 1.7 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: EncodeMessage.java,v 1.8 2003/09/18 03:59:37 zet Exp $ 
  *
  */
 public class EncodeMessage extends Message {
+	
 	/**
 	 * The message opcode
 	 */
@@ -45,16 +48,10 @@ public class EncodeMessage extends Message {
 	private int length;
 	
 	/**
-	 * The message content
+	 * The message content 
 	 */
-	private byte[] content;
+	private ByteArrayOutputStream content;
 	
-	/**
-	 * Generates a new and empty message opject
-	 */
-	public EncodeMessage() {
-	}
-
 	/**
 	 * Generates a new message object
 	 * @param opCode the opcode for the message
@@ -62,9 +59,13 @@ public class EncodeMessage extends Message {
 	 */
 	public EncodeMessage( short opCode, Object[] content ) {
 		this.opCode = opCode;
-		this.content = createContent( content );
-		/* message length = content length + opcode length */
-		this.length = this.content.length + 2;
+		this.length = 2;
+		this.content = new ByteArrayOutputStream();
+	
+		if ( content != null ) {
+		   createContent( content );
+		   this.length += this.content.size();
+		}
 	}
 	
 	/**
@@ -72,12 +73,8 @@ public class EncodeMessage extends Message {
 	 * @param opcode the opcode for the message
 	 * @param content an object as message content
 	 */
-	public EncodeMessage( short opcode, Object content ) {
-		this.opCode = opcode;
-		Object[] temp = { content };	
-		this.content = createContent( temp );
-		/* message length = content length + opcode length */
-		this.length = this.content.length + 2;
+	public EncodeMessage( short opCode, Object content ) {
+		this( opCode, new Object[]{ content } );
 	}
 	
 	/**
@@ -85,9 +82,7 @@ public class EncodeMessage extends Message {
 	 * @param opCode the opcode for the message
 	 */
 	public EncodeMessage( short opCode ) {
-		this.opCode = opCode;
-		this.content = null;
-		this.length = 2;
+		this( opCode, null );
 	}
 	
 	/**
@@ -97,21 +92,20 @@ public class EncodeMessage extends Message {
 	 */
 	public boolean sendMessage( Socket connection ) {
 		try {
-			// null pointer on this when no core running
-			BufferedOutputStream bOut = new BufferedOutputStream( connection.getOutputStream() );
+			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream( connection.getOutputStream() );
 			
-			byte[] temp = Message.merge( Message.toBytes( this.length ), 
-										  Message.toBytes( this.opCode ) );
-			byte[] temp2;
-			if ( this.content != null )
-				temp2 = Message.merge( temp, this.content );
-			else
-				temp2 = temp;
+			// messageHeader: (int) messageLength (short) opCode 
+			ByteBuffer messageHeader = ByteBuffer.allocate( 6 );
+			messageHeader.order( ByteOrder.LITTLE_ENDIAN ); 
+			messageHeader.putInt( this.length  ).putShort( this.opCode );
 			
-			temp = null;
-			bOut.write( temp2 );
-			temp2 = null;
-			bOut.flush();
+			// write the message to the stream
+			bufferedOutputStream.write( messageHeader.array() );
+			if ( this.content.size() > 0) {
+				bufferedOutputStream.write( this.content.toByteArray() );
+				this.content.reset();
+			}
+			bufferedOutputStream.flush();
 			return true;
 		}
 		catch ( IOException e ) {
@@ -124,144 +118,80 @@ public class EncodeMessage extends Message {
 	 * @param content object array which represense the payload
 	 * @return a byte array 
 	 */
-	private static byte[] createContent( Object[] content ) {
-		int msglength = 0;
-		short listcount = 0;
-		//First of All, we calculate the length (msglength) of the PayLoad: 
+	private void createContent( Object[] content ) {
+		
+		// Cycle through content array
 		for ( int i = 0; i < content.length; i++ ) {
-			if ( content[ i ] instanceof Byte )
-				msglength++;
-			else if ( content[ i ] instanceof Short )
-				msglength += 2;
-			else if ( content[ i ] instanceof Integer )
-				msglength += 4;
-			else if ( content[ i ] instanceof Long )
-				msglength += 8;
-			else if ( content[ i ] instanceof String )
-				msglength = msglength + content[ i ].toString().length() + 2;
-			else if ( content[ i ].getClass().isArray() ) {
-				if ( listcount == 0 )	msglength += 2;
-				//On first array-entry add 2 bytes for List-header
-				listcount++;
-				Object[] received;
-				//getting the length of listentrys				
-				if ( content[ i ] instanceof Object[] ) {
-					received = ( Object[] ) content[ i ];
-					for ( int j = 0; j < received.length; j++ ) {
-						if ( received[ j ] instanceof Byte )
-							msglength++;
-						else if ( received[ j ] instanceof Short )
-							msglength += 2;
-						else if ( received[ j ] instanceof Integer )
-							msglength += 4;
-						else if ( received[ j ] instanceof Long )
-							msglength += 8;
-						else if ( received[ j ] instanceof String ) 
-							msglength = msglength + received[ j ].toString().length() + 2;
-					} //end for loop
-				} // end if
-			} // end last else if 
-		} // end for loop
-		//Then we re-run the whole Thing again, creating the result:
-		byte[] buffer;
-		buffer = new byte[ msglength ];
-		int buffer_walker = 0;
-		boolean list_head_written = false;
-
-		for ( int i = 0; i < content.length; i++ ) {
-			if ( content[ i ] instanceof Byte ) {
-				byte temp = ( ( Byte ) content[ i ] ).byteValue();
-				buffer[ buffer_walker++ ] = temp;
-			}
-			if ( content[ i ] instanceof Short ) {
-				//converting Object to short (is there some nicer way?)				
-				byte[] helper = Message.toBytes( ( ( Short ) content[ i ] ).shortValue() );
-				System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
-				buffer_walker += helper.length;
-			} 
-			else if ( content[ i ] instanceof Integer ) {
-				//converting Object to Int (is there some nicer way?)				
-				byte[] helper = Message.toBytes( ( ( Integer ) content[ i ] ).intValue() );
-				System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
-				buffer_walker += helper.length;
-			}
-			else if ( content[ i ] instanceof Long ) {
-				//converting Object to Int (is there some nicer way?)				
-				byte[] helper = Message.toBytes( ( ( Long ) content[ i ] ).longValue() );
-				System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
-				buffer_walker += helper.length;
-			}
-			else if ( content[ i ] instanceof String ) {
-				String temp = content[ i ].toString();
-
-				byte[] prefix = Message.toBytes( ( short ) temp.length() );
-				buffer[ buffer_walker++ ] = prefix[ 0 ];
-				buffer[ buffer_walker++ ] = prefix[ 1 ];
-
-				byte[] helper = temp.getBytes();
-				System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
-				buffer_walker += helper.length;
-			}
-			else if ( content[ i ].getClass().isArray() ) {
-				Object[] received;
-				/*
-				 * Hey, we've got a list, let's get to work
-				 * First of all, we type in List-header (number of _ROWS_ in the List)
-				 */
-				if ( !list_head_written ) {
-					byte[] temp = Message.toBytes( listcount );
-					System.arraycopy( temp, 0, buffer, buffer_walker, temp.length );
-					buffer_walker += temp.length;
-					list_head_written = true;
-				}
-				/*
-				 * Now we add the current _ROW_ to the Buffer
-				 */
-				if ( content[i] instanceof Object[] ) {
-					received = ( Object[] ) content[ i ];
-					for ( int j = 0; j < received.length; j++ ) {
-						if ( received[ j ] instanceof Byte ) {
-							buffer[ buffer_walker++ ] = ( ( Byte ) received[ j ] ).byteValue();
-						}
-						else if ( received[ j ] instanceof Short ) {
-							byte[] helper = Message.toBytes( ((Short)received[j]).shortValue() );
-							System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
-							buffer_walker += helper.length;
-						}
-						else if ( received[ j ] instanceof Integer ) {
-							byte[] helper = Message.toBytes( ((Integer)received[j]).intValue() );
-							System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
-							buffer_walker += helper.length;
-						}
-						else if ( received[ j ] instanceof Long ) {
-							byte[] helper = Message.toBytes( ((Long)received[j]).longValue() );
-							System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
-							buffer_walker += helper.length;
-						}
-						else if ( received[ j ] instanceof String ) {
-							String temp = received[ j ].toString();
-
-							byte[] prefix = Message.toBytes( ( short ) temp.length() );
-							buffer[ buffer_walker++ ] = prefix[ 0 ];
-							buffer[ buffer_walker++ ] = prefix[ 1 ];
-
-							byte[] helper = temp.getBytes();
-							System.arraycopy( helper, 0, buffer, buffer_walker, helper.length );
-							buffer_walker += helper.length;
-						}
-					}//End of processing Single List-Entry 
-				}//End of processing Array_ROW_
-			} //End of processing array
-		} //End of creating the result
-		return buffer;
+			// If content object is an array, cycle through it
+			if ( content[ i ].getClass().isArray() ) {
+				Object[] objectArray = (Object[]) content[ i ];
+				
+				// Append the (short) array length to the message
+				appendNumber( new Short( ( short ) objectArray.length ) );
+			
+				// Append the array contents to the message
+				for ( int j = 0; j < objectArray.length; j++ ) {
+					appendObject( objectArray[ j ] );	
+				}	
+			// Append the content to the message
+			} else {	
+				appendObject( content[ i ] );	
+			}		
+		}	
+	}
+	
+	/**
+	 * @param object
+	 * 
+	 * Append an object to the content
+	 */
+	public void appendObject( Object object ) {
+	
+		if ( object instanceof Byte ) {
+			this.content.write( ( ( Byte ) object ).byteValue() );
+		}
+		else if ( object instanceof Short 
+				|| object instanceof Integer
+				|| object instanceof Long ) {
+		
+			appendNumber( object );
+		
+		}
+		else if ( object instanceof String ) {
+			String string = (String) object;
+			
+			// Append the (short) length of the string, and then the string
+			appendNumber( new Short( (short) string.length() ) );
+			this.content.write( string.getBytes(), 0, string.length() );
+		}
 	}
 
 	/**
-	 * @return
+	 * @param object
+	 * 
+	 * Append a number to the content in LITTLE_ENDIAN 
+	 * must be one of: Short, Integer, or Long
 	 */
-	private byte[] getContent() {
-		return content;
-	}
+	public void appendNumber( Object object ) { 
+		
+		ByteBuffer byteBuffer;
+		
+		if ( object instanceof Short ) {
+				byteBuffer = ByteBuffer.allocate( 2 );
+				byteBuffer.order( ByteOrder.LITTLE_ENDIAN ); 
+			 	byteBuffer.putShort( (( Short ) object).shortValue() );
+		} else if ( object instanceof Integer ) {
+				byteBuffer = ByteBuffer.allocate( 4 );
+				byteBuffer.order( ByteOrder.LITTLE_ENDIAN ); 
+				byteBuffer.putInt( (( Integer ) object).intValue() );
+		} else {
+				byteBuffer = ByteBuffer.allocate( 8 );
+				byteBuffer.order( ByteOrder.LITTLE_ENDIAN ); 
+				byteBuffer.putLong( (( Long ) object).longValue() );
+		}
+		
+		this.content.write( byteBuffer.array(), 0, byteBuffer.capacity() );
+	}	
 
 	/**
 	 * @return
@@ -280,6 +210,9 @@ public class EncodeMessage extends Message {
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.8  2003/09/18 03:59:37  zet
+rewrite to use ByteBuffer -- easier to read, and fixes sending of StringLists
+
 Revision 1.7  2003/08/23 15:21:37  zet
 remove @author
 

@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  *
- * @version $Id: Message.java,v 1.34 2003/09/17 13:49:09 dek Exp $ 
+ * @version $Id: Message.java,v 1.35 2003/09/18 03:59:37 zet Exp $ 
  *
  */
 public abstract class Message {
@@ -330,7 +330,6 @@ public abstract class Message {
 	 * @param inputStream
 	 * @return
 	 * @throws IOException
-	 * @throws SocketException
 	 * Read an in32 from InputStream
 	 */
 	public static int readInt32( InputStream inputStream ) throws IOException {
@@ -340,110 +339,6 @@ public abstract class Message {
 			+  ( ( ( ( int ) b[ 1 ] ) & 0xFF ) << 8 )
 			+  ( ( ( ( int ) b[ 2 ] ) & 0xFF ) << 16 )
 			+  ( ( ( ( int ) b[ 3 ] ) & 0xFF ) << 24 );
-	}
-	/**
-	 * Creates a 2 byte array of int16 from a short
-	 * @param aShort short object to create a byte array with
-	 * @return a byte array of int16
-	 */
-	public static byte[] toBytes( Short aShort ) {
-		short value = aShort.shortValue();
-		byte[] result = new byte[ 2 ];
-		for ( int j = 0; j < 2; j++ ) {
-			result[ j ] = ( byte ) ( value % 256 );
-			value = ( short ) ( value / 256 );
-		}
-		return result;
-	}
-
-	/**
-	 * Creates a 2 byte array of int16 from a short object
-	 * @param aShort short to create a byte array with
-	 * @return a byte array of int16
-	 */
-	public static byte[] toBytes ( short aShort ) {		
-		byte[] result = new byte[ 2 ];
-		for ( int j = 0; j < 2; j++ ) {
-			result[ j ] = ( byte ) ( aShort % 256 );
-			aShort = ( short ) ( aShort / 256 );
-		}
-		return result;
-	}
-
-	/**
-	 * Creates a 4 byte array of int32 from an int object
-	 * @param anInt int object to create a byte array with
-	 * @return a byte array of int32
-	 */
-	public static byte[] toBytes( Integer anInt ) {
-		int temp = anInt.intValue();
-		byte[] result = new byte[ 4 ];
-		for ( int j = 0; j < 4; j++ ) {
-			result[ j ] = ( byte ) ( temp % 256 );
-			temp = temp / 256;
-		}
-		return result;
-	}
-
-	/**
-	 * Creates a 4 byte array of int32 from an int
-	 * @param anInt int to create a byte array with
-	 * @return a byte array of int32
-	 */
-	public static byte[] toBytes( int anInt ) {
-		byte[] result = new byte [ 4 ];
-		result[0] = ( byte ) ( anInt & 0xFF );
-		result[1] = ( byte ) ( ( anInt & 0xFFFF ) >> 8 );
-		result[2] = ( byte ) ( ( anInt & 0xFFFFFF ) >> 16 );
-		result[3] = ( byte ) ( ( anInt & 0x7FFFFFFF ) >> 24 );
-		
-		return result;
-	}
-
-	/**
-	 * Creates a 8 byte array of int64 from a long object
-	 * @param aLong long object to create a byte array with
-	 * @return a byte array of int64
-	 */
-	public static byte[] toBytes( Long aLong ) {
-		long temp = aLong.longValue();
-		byte[] result = new byte[ 8 ];
-		for ( int j = 0; j < 8; j++ ) {
-			result[ j ] = ( byte ) ( temp % 256 );
-			temp = temp / 256;
-		}
-		return result;
-	}
-
-	/**
-	 * Creates a 8 byte array of int64 from a long
-	 * @param aLong long to create a byte array with
-	 * @return a byte array of int64
-	 */
-	public static byte[] toBytes( long aLong ) {			
-		byte[] result = new byte[ 8 ];
-		for ( int j = 0; j < 8; j++ ) {
-			result[ j ] = ( byte ) ( aLong % 256 );
-			aLong = aLong / 256;
-		}
-		return result;
-	}
-
-	/**
-	 * Merge two byte arrays together
-	 * @param src The first byte array
-	 * @param dest The second byte array
-	 * @return A byte array with src on first and dest on second
-	 */
-	public static byte[] merge( byte[] src, byte[] dest ) {
-		byte [] result =  new byte[ src.length + dest.length ];
-		for ( int i = 0; i < src.length; i++ ) {
-			result[ i ] = src[ i ];
-		}
-		for ( int i = 0; i < dest.length; i++ ) {
-			result[ i + src.length ] = dest[ i ];
-		}
-		return result;
 	}
 	
 	/**
@@ -457,6 +352,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.35  2003/09/18 03:59:37  zet
+rewrite to use ByteBuffer -- easier to read, and fixes sending of StringLists
+
 Revision 1.34  2003/09/17 13:49:09  dek
 now the gui refreshes the upload-stats, add and observer to SharedFileInfoIntMap
 to get notice of changes in # of requests and # of uploaded bytes
@@ -475,7 +373,7 @@ Revision 1.30  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.29  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.28  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
