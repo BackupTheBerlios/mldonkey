@@ -25,14 +25,10 @@ package net.mldonkey.g2gui.view.friends;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.model.ClientInfo;
-import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transferTree.ChunkCanvas;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -40,29 +36,21 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
  * AddFriend
  *
- * @version $Id: AddFriend.java,v 1.1 2003/08/29 21:02:45 zet Exp $
+ * @version $Id: AddFriend.java,v 1.2 2003/08/29 21:05:09 zet Exp $
  */
 public class AddFriend {
 
 	private Shell shell;
 	private Display desktop = Display.getDefault();
-	private FileInfo fileInfo;
-	private ClientInfo clientInfo;
-	private ChunkCanvas chunkCanvas, chunkCanvas2;
-	private CLabel clName, clRating, clActivity, clKind, clNetwork;
 	
 	int width = 300;
 	int height = 200;
-	
-	private List renameList;
-	private Text renameText;
 	
 	public AddFriend (final CoreCommunication core) 
 	{
@@ -126,6 +114,9 @@ public class AddFriend {
 }
 /*
 $Log: AddFriend.java,v $
+Revision 1.2  2003/08/29 21:05:09  zet
+remove imports
+
 Revision 1.1  2003/08/29 21:02:45  zet
 Add friend by ip
 
