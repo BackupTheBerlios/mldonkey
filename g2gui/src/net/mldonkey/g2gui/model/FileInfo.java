@@ -47,7 +47,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.67 2003/10/12 21:17:38 zet Exp $
+ * @version $Id: FileInfo.java,v 1.68 2003/10/13 21:36:04 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -710,6 +710,7 @@ public class FileInfo extends Parent implements Observer {
             this.etaSeconds = ( long ) ( ( getSize() - getDownloaded() ) / ( this.rate + 1 ) );
         String oldStringETA = stringETA;
         this.stringETA = calcStringOfSeconds( this.etaSeconds );
+        if (stringETA.equals("")) stringETA = "-";
         if ( !oldStringETA.equals( stringETA ) )
             changedProperties.add( CHANGED_ETA );
     }
@@ -861,8 +862,9 @@ public class FileInfo extends Parent implements Observer {
  	 */
     public String getStringETA() {
 		if (getState().getState() == EnumFileState.QUEUED 
+			|| getState().getState() == EnumFileState.DOWNLOADED
 			|| getState().getState() == EnumFileState.PAUSED)
-			return "";
+			return "-";
 		
         return stringETA;
     }
@@ -964,6 +966,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.68  2003/10/13 21:36:04  zet
+Use "-" for blank ETAs
+
 Revision 1.67  2003/10/12 21:17:38  zet
 compat priority w/2.5.4
 
