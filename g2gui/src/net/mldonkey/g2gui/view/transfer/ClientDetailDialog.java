@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view.transfer;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -45,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.12 2003/11/29 13:01:11 lemmster Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.13 2003/12/01 13:28:16 zet Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
@@ -61,6 +62,8 @@ public class ClientDetailDialog extends DetailDialog {
     private CLabel clUploaded;
     private CLabel clDownloaded;
     private CLabel clSoftware;
+    private CLabel clHash;
+    private CLabel clPort;
 
     public ClientDetailDialog(Shell parentShell, FileInfo fileInfo, ClientInfo clientInfo,
         CoreCommunication core) {
@@ -120,7 +123,9 @@ public class ClientDetailDialog extends DetailDialog {
         clActivity = createLine(clientGeneral, "TT_DOWNLOAD_CD_ACTIVITY", false);
         clKind = createLine(clientGeneral, "TT_DOWNLOAD_CD_KIND", false);
         clSoftware = createLine(clientGeneral, "TT_DOWNLOAD_CD_SOFTWARE", false);
+        clHash = createLine(clientGeneral, "TT_DOWNLOAD_CD_HASH", false);
         clSockAddr = createLine(clientGeneral, "TT_DOWNLOAD_CD_ADDRESS", false);
+        clPort = createLine(clientGeneral, "TT_DOWNLOAD_CD_PORT", false);
         clUploaded = createLine(clientGeneral, "TT_DOWNLOAD_CD_UPLOADED", false);
         clDownloaded = createLine(clientGeneral, "TT_DOWNLOAD_CD_DOWNLOADED", false);
     }
@@ -186,7 +191,11 @@ public class ClientDetailDialog extends DetailDialog {
         updateLabel(clActivity, clientInfo.getClientActivity());
         updateLabel(clKind, clientInfo.getClientConnection());
         updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
-        updateLabel(clSockAddr, clientInfo.getClientSockAddr().toString());
+        updateLabel(clSockAddr, clientInfo.getClientKind().getAddr().toString());
+        updateLabel(clPort, "" + clientInfo.getClientKind().getPort());
+        updateLabel(clHash,
+            ((clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED)
+            ? clientInfo.getClientKind().getClientHash() : "n/a"));
         updateLabel(clSoftware, clientInfo.getClientSoftware());
         updateLabel(clUploaded, clientInfo.getUploadedString());
         updateLabel(clDownloaded, clientInfo.getDownloadedString());
@@ -208,6 +217,9 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.13  2003/12/01 13:28:16  zet
+add port info
+
 Revision 1.12  2003/11/29 13:01:11  lemmster
 Addr.getString() renamed to the more natural word name Addr.toString()
 

@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ClientTableSorter
  *
- * @version $Id: ClientTableSorter.java,v 1.12 2003/11/30 23:42:56 zet Exp $
+ * @version $Id: ClientTableSorter.java,v 1.13 2003/12/01 13:28:16 zet Exp $
  *
  */
 public class ClientTableSorter extends GSorter {
@@ -56,7 +56,12 @@ public class ClientTableSorter extends GSorter {
             return compareLongs(clientInfo1.getDownloaded(), clientInfo2.getDownloaded());
 
         case ClientTableView.SOCK_ADDR:
-            return compareAddrs(clientInfo1.getClientSockAddr(), clientInfo2.getClientSockAddr());
+            return compareAddrs(clientInfo1.getClientKind().getAddr(),
+                clientInfo2.getClientKind().getAddr());
+
+        case ClientTableView.PORT:
+            return compareIntegers(clientInfo1.getClientKind().getPort(),
+                clientInfo2.getClientKind().getPort());
 
         case ClientTableView.CONNECT_TIME:
             return compareIntegers(clientInfo1.getClientConnectTime(),
@@ -96,6 +101,9 @@ public class ClientTableSorter extends GSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.13  2003/12/01 13:28:16  zet
+add port info
+
 Revision 1.12  2003/11/30 23:42:56  zet
 updates for latest mldonkey cvs
 

@@ -26,6 +26,7 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -85,7 +86,7 @@ import java.util.List;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.33 2003/11/25 01:13:13 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.34 2003/12/01 13:28:16 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -279,8 +280,16 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             menuManager.add(prioritySubMenu);
         }
 
-        if (selectedFile != null)
-            menuManager.add(new PreviewAction());
+        if ((selectedFile != null) && (selectedFile.getDownloaded() > 0)) {
+            OptionsInfo option = (OptionsInfo) gView.getCore().getOptionsInfoMap().get("previewer");
+
+            if (option != null) {
+                String previewer = (String) option.getValue();
+
+                if (!previewer.equals(""))
+                    menuManager.add(new PreviewAction());
+            }
+        }
 
         if ((selectedFile != null) && advancedMode) {
             menuManager.add(new VerifyChunksAction());
@@ -651,6 +660,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.34  2003/12/01 13:28:16  zet
+add port info
+
 Revision 1.33  2003/11/25 01:13:13  zet
 include filesize for webservice>jigle lookup
 

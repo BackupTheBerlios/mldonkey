@@ -57,7 +57,7 @@ import java.util.Observer;
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadersTableView.java,v 1.7 2003/11/30 23:42:56 zet Exp $
+ * @version $Id: UploadersTableView.java,v 1.8 2003/12/01 13:28:16 zet Exp $
  *
  */
 public class UploadersTableView extends GTableView {
@@ -68,9 +68,10 @@ public class UploadersTableView extends GTableView {
     private static final int DOWNLOADED = 4;
     private static final int CONNECT_TIME = 5;
     private static final int SOCK_ADDR = 6;
-    private static final int KIND = 7;
-    private static final int STATE = 8;
-    private static final int FILENAME = 9;
+    private static final int PORT = 7;
+    private static final int KIND = 8;
+    private static final int STATE = 9;
+    private static final int FILENAME = 10;
     private ObjectWeakMap objectWeakMap;
     private long lastTimeStamp;
 
@@ -85,14 +86,14 @@ public class UploadersTableView extends GTableView {
         preferenceString = "uploaders";
         columnLabels = new String[] {
                 "TT_UT_NETWORK", "TT_UT_NAME", "TT_UT_SOFTWARE", "TT_UT_UPLOADED",
-                "TT_UT_DOWNLOADED", "TT_UT_CONNECT_TIME", "TT_UT_SOCK_ADDR", "TT_UT_KIND",
-                "TT_UT_STATE", "TT_UT_FILENAME"
+                "TT_UT_DOWNLOADED", "TT_UT_CONNECT_TIME", "TT_UT_SOCK_ADDR", "TT_UT_PORT",
+                "TT_UT_KIND", "TT_UT_STATE", "TT_UT_FILENAME"
             };
 
-        columnDefaultWidths = new int[] { 100, 100, 100, 100, 100, 100, 100, 100, 150, 200 };
+        columnDefaultWidths = new int[] { 100, 100, 100, 100, 100, 100, 100, 100, 100, 150, 200 };
         columnAlignment = new int[] {
-                SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT,
-                SWT.LEFT, SWT.LEFT
+                SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT,
+                SWT.LEFT, SWT.LEFT, SWT.LEFT
             };
 
         gSorter = new UploadersTableSorter(this);
@@ -265,7 +266,10 @@ public class UploadersTableView extends GTableView {
                 return clientInfo.getDownloadedString();
 
             case UploadersTableView.SOCK_ADDR:
-                return clientInfo.getClientSockAddr().toString();
+                return clientInfo.getClientKind().getAddr().toString();
+
+            case UploadersTableView.PORT:
+                return "" + clientInfo.getClientKind().getPort();
 
             case UploadersTableView.FILENAME:
                 return clientInfo.getUploadFilename();
@@ -315,7 +319,12 @@ public class UploadersTableView extends GTableView {
                     return 1;
 
             case UploadersTableView.SOCK_ADDR:
-                return compareAddrs(clientInfo1.getClientSockAddr(), clientInfo2.getClientSockAddr());
+                return compareAddrs(clientInfo1.getClientKind().getAddr(),
+                    clientInfo2.getClientKind().getAddr());
+
+            case UploadersTableView.PORT:
+                return compareIntegers(clientInfo1.getClientKind().getPort(),
+                    clientInfo2.getClientKind().getPort());
 
             case UploadersTableView.CONNECT_TIME:
                 return compareIntegers(clientInfo1.getClientConnectTime(),
@@ -388,6 +397,9 @@ public class UploadersTableView extends GTableView {
 
 /*
 $Log: UploadersTableView.java,v $
+Revision 1.8  2003/12/01 13:28:16  zet
+add port info
+
 Revision 1.7  2003/11/30 23:42:56  zet
 updates for latest mldonkey cvs
 

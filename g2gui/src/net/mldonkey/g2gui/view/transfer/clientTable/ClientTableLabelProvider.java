@@ -35,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
  *
  * ClientTableLabelProvider
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.15 2003/11/30 23:42:56 zet Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.16 2003/12/01 13:28:16 zet Exp $
  *
  */
 public class ClientTableLabelProvider extends GTableLabelProvider implements ITableLabelProvider {
@@ -90,7 +90,10 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
             return clientInfo.getDownloadedString();
 
         case ClientTableView.SOCK_ADDR:
-            return clientInfo.getClientSockAddr().toString();
+            return clientInfo.getClientKind().getAddr().toString();
+            
+        case ClientTableView.PORT:
+            return "" + clientInfo.getClientKind().getPort();
             
         case ClientTableView.CONNECT_TIME:
             return clientInfo.getClientConnectTimeString();
@@ -104,6 +107,9 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.16  2003/12/01 13:28:16  zet
+add port info
+
 Revision 1.15  2003/11/30 23:42:56  zet
 updates for latest mldonkey cvs
 
