@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.10 2003/07/15 20:52:05 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.11 2003/07/16 18:16:53 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -82,10 +82,10 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		editor.setEditor ( chunks, this, 4 );			
 		setText( 2, clientInfo.getClientName() );	
 		updateColums();	
-		addDisposeListener(new DisposeListener(){
-			public void widgetDisposed(DisposeEvent e) {				
+		addDisposeListener( new DisposeListener() {
+			public void widgetDisposed( DisposeEvent e ) {				
 				chunks.dispose();
-			}});
+			} } );
 		
 		
 	}
@@ -149,6 +149,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.11  2003/07/16 18:16:53  dek
+another flickering-test
+
 Revision 1.10  2003/07/15 20:52:05  dek
 exit-exceptions are gone...
 

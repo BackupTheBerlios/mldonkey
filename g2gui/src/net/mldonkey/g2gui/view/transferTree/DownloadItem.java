@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectIterator;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
@@ -58,7 +59,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.12 2003/07/15 20:52:05 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.13 2003/07/16 18:16:53 dek Exp $ 
  *
  */
 public class DownloadItem 
@@ -98,14 +99,15 @@ public class DownloadItem
 		 * Now fill the columns with initial values, that never change...
 		 */
 		setText( 0, String.valueOf( fileInfo.getId() ) );
-		setText( 1, fileInfo.getNetwork().getNetworkName() );		
+		setText( 1, fileInfo.getNetwork().getNetworkName() );	
+			
 		Control oldEditor = editor.getEditor();
 				if ( oldEditor != null )
 					oldEditor.dispose();
 				this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo, 4 );
 		editor.setEditor ( chunks, this, 4 );					
 		setText( 7, String.valueOf( fileInfo.getSize() ) );
-
+		
 		updateColumns();
 
 		Iterator it =  fileInfo.getClientInfos().iterator();		
@@ -135,11 +137,19 @@ public class DownloadItem
 					}		
 			}
 
-		addDisposeListener(new DisposeListener(){
-			public void widgetDisposed(DisposeEvent e) {				
-				chunks.dispose();	
-				
-			}});
+		addDisposeListener( new DisposeListener() {
+			public void widgetDisposed( DisposeEvent e ) {
+				chunks.dispose();
+				TIntObjectIterator it = namedclients.iterator();
+				while ( it.hasNext() ) {
+					while ( it.hasNext() ) {
+						it.advance();
+						ClientItem clientItem = ( ClientItem ) it.value();
+						clientItem.dispose();
+					}
+				}				
+			}
+		} );
 	}
 	
 	void update() {
@@ -356,6 +366,9 @@ public class DownloadItem
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.13  2003/07/16 18:16:53  dek
+another flickering-test
+
 Revision 1.12  2003/07/15 20:52:05  dek
 exit-exceptions are gone...
 

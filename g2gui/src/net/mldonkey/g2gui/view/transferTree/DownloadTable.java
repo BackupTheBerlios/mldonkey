@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.10 2003/07/16 18:11:07 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.11 2003/07/16 18:16:53 dek Exp $ 
  *
  */
 public class DownloadTable  implements Observer, Runnable {
@@ -99,7 +99,7 @@ public class DownloadTable  implements Observer, Runnable {
 					public void widgetSelected( SelectionEvent e ) {
 						sort( columnIndex );
 					}
-				});
+				} );
 			}
 			
 			table.addMouseListener( new MouseListener () {
@@ -146,7 +146,7 @@ public class DownloadTable  implements Observer, Runnable {
 		} else {
 			// reverse order if the current column is selected again
 			int j = files.length - 1;
-			for ( int i = files.length-1; i >=0 ; i-- ) {
+			for ( int i = files.length - 1; i >= 0 ; i-- ) {
 				DownloadItem newItem =
 					new DownloadItem( tableTree, SWT.NONE, files[ i ] );
 				downloads.put( files[ i ].getId(), newItem );
@@ -154,8 +154,8 @@ public class DownloadTable  implements Observer, Runnable {
 			}
 		}
 		// Now expand the previous expanded items:
-		for (int i = 0; i < expanded.length; i++) {
-			if ( expanded[ i ] != -1 ){			
+		for ( int i = 0; i < expanded.length; i++ ) {
+			if ( expanded[ i ] != -1 ) {			
 				( ( DownloadItem )downloads.get( expanded[ i ] ) ).setExpanded( true );
 			}
 		}
@@ -217,6 +217,7 @@ public class DownloadTable  implements Observer, Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
+		tableTree.setRedraw( false );
 			TIntObjectIterator it = files.iterator();
 			while ( it.hasNext() ) {
 				it.advance();
@@ -253,10 +254,14 @@ public class DownloadTable  implements Observer, Runnable {
 				 /* we really don't care about this one...*/
 				}
 		}		
+		tableTree.setRedraw( true );
 	}
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.11  2003/07/16 18:16:53  dek
+another flickering-test
+
 Revision 1.10  2003/07/16 18:11:07  dek
 returned to prev. version
 

@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * DownloadItemComparator
  *
  * @author $user$
- * @version $Id: FileInfoComparator.java,v 1.4 2003/07/15 20:48:09 dek Exp $ 
+ * @version $Id: FileInfoComparator.java,v 1.5 2003/07/16 18:16:53 dek Exp $ 
  *
  */
 public class FileInfoComparator implements Comparator {
@@ -60,7 +60,7 @@ public class FileInfoComparator implements Comparator {
 		FileInfo row2 =  ( FileInfo ) obj2;
 		
 		int result = 0;
-		switch (column) {
+		switch ( column ) {
 			case 0 :
 				Integer r1_0 = new Integer( row1.getId() );
 				Integer r2_0 = new Integer( row2.getId() );
@@ -110,6 +110,9 @@ public class FileInfoComparator implements Comparator {
 
 /*
 $Log: FileInfoComparator.java,v $
+Revision 1.5  2003/07/16 18:16:53  dek
+another flickering-test
+
 Revision 1.4  2003/07/15 20:48:09  dek
 now even the %-values are sorted right...
 
