@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.25 2003/08/19 12:14:15 lemmster Exp $ 
+ * @version $Id: G2Gui.java,v 1.26 2003/08/19 17:12:56 zet Exp $ 
  *
  */
 public class G2Gui extends FieldEditorPreferencePage {
@@ -57,11 +57,7 @@ public class G2Gui extends FieldEditorPreferencePage {
 	 */
 	public void setPreferenceStore( IPreferenceStore store ) {
 		super.setPreferenceStore( store );
-		store.setDefault( "hostname", "localhost" );
-		store.setDefault( "username", "admin" );
-		store.setDefault( "password", "" );
-		store.setDefault( "port", "4001" );
-		store.setDefault( "advancedMode", false );
+		store = PreferenceLoader.setDefaults(store);
 	}
 	
 	/* ( non-Javadoc )
@@ -110,6 +106,9 @@ public class G2Gui extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui.java,v $
+Revision 1.26  2003/08/19 17:12:56  zet
+set defaults
+
 Revision 1.25  2003/08/19 12:14:15  lemmster
 first try of simple/advanced mode
 

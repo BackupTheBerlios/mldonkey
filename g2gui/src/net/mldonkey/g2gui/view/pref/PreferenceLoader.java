@@ -64,7 +64,12 @@ public class PreferenceLoader {
 		PreferenceConverter.setDefault(preferenceStore, "consoleInputBackground", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );
 		PreferenceConverter.setDefault(preferenceStore, "consoleInputForeground", display.getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB() );
 		
+		preferenceStore.setDefault( "hostname", "localhost" );
+		preferenceStore.setDefault( "username", "admin" );
+		preferenceStore.setDefault( "password", "" );
+		preferenceStore.setDefault( "port", "4001" );
 		preferenceStore.setDefault( "advancedMode", false);
+
 		preferenceStore.setDefault( "displayAllServers", true );
 		preferenceStore.setDefault( "displayChunkGraphs", false );
 		preferenceStore.setDefault( "displayGridLines", true );
@@ -123,6 +128,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.8  2003/08/19 17:12:56  zet
+set defaults
+
 Revision 1.7  2003/08/19 15:41:09  zet
 fix crash when no advancedMode is set. (set a default)
 
