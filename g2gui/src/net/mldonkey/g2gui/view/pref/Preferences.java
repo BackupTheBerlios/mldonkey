@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.35 2003/09/18 10:23:48 lemmster Exp $
+ * @version $Id: Preferences.java,v 1.36 2003/10/01 20:56:27 lemmster Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -58,17 +58,30 @@ public class Preferences extends PreferenceManager {
      */
     public Preferences( PreferenceStore preferenceStore ) {
         this.preferenceStore = preferenceStore;
-        G2GuiPref g2gui = new G2GuiPref( "G2Gui", FieldEditorPreferencePage.GRID );
+
+		/* main page */
+		PreferencePage g2gui = new G2GuiPref( "G2Gui", FieldEditorPreferencePage.GRID );
         g2gui.setPreferenceStore( preferenceStore );
         PreferenceNode g2GuiRootNode = new PreferenceNode( "G2gui", g2gui );
+
+		/* display page */
         if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-            G2Gui_Display g2gui_display = new G2Gui_Display( "Display", FieldEditorPreferencePage.GRID );
-            g2gui_display.setPreferenceStore( preferenceStore );
-            g2GuiRootNode.add( new PreferenceNode( "Display", g2gui_display ) );
+            PreferencePage g2guiDisplay = new G2GuiDisplay( "Display", FieldEditorPreferencePage.GRID );
+            g2guiDisplay.setPreferenceStore( preferenceStore );
+            g2GuiRootNode.add( new PreferenceNode( "Display", g2guiDisplay ) );
         }
-        G2Gui_Advanced g2gui_advanced = new G2Gui_Advanced( "Advanced", FieldEditorPreferencePage.GRID );
-        g2gui_advanced.setPreferenceStore( preferenceStore );
-        g2GuiRootNode.add( new PreferenceNode( "Advanced", g2gui_advanced ) );
+        
+        /* news page */
+        PreferencePage g2guiNews = new G2GuiNews( "News", FieldEditorPreferencePage.GRID );
+		g2guiNews.setPreferenceStore( preferenceStore );
+		g2GuiRootNode.add( new PreferenceNode( "News", g2guiNews ) );
+
+		/* advanced page */
+		PreferencePage g2guiAdvanced = new G2GuiAdvanced( "Advanced", FieldEditorPreferencePage.GRID );
+        g2guiAdvanced.setPreferenceStore( preferenceStore );
+        g2GuiRootNode.add( new PreferenceNode( "Advanced", g2guiAdvanced ) );
+
+		/* add all of this to the root node */
         addToRoot( g2GuiRootNode );
     }
 
@@ -233,6 +246,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.36  2003/10/01 20:56:27  lemmster
+add class hierarchy
+
 Revision 1.35  2003/09/18 10:23:48  lemmster
 checkstyle
 

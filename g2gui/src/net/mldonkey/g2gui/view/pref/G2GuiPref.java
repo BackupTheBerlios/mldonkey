@@ -25,27 +25,19 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 /**
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.12 2003/09/28 13:10:31 dek Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.13 2003/10/01 20:56:27 lemmster Exp $ 
  *
  */
-public class G2GuiPref extends FieldEditorPreferencePage {
+public class G2GuiPref extends PreferencePage {
 	
 	/**
 	 * @param string name
@@ -55,52 +47,6 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 		super( string, i );
 	}
 
-	/* ( non-Javadoc )
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#
-	 * createContents( org.eclipse.swt.widgets.Composite )
-	 */
-	protected Control createContents( Composite myparent ) {
-		
-		Group group = new Group( myparent, SWT.NONE );
-			GridLayout gl = new GridLayout( 1, false );
-			group.setLayout( gl );
-			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-		
-		Label l = new Label(myparent, SWT.NONE );
-		l.setText(G2GuiResources.getString("PREF_RESTART"));
-		
-		
-		Composite sub = new Composite( group, SWT.NONE ) {		
-			public Point computeSize( int wHint, int hHint, boolean changed ) 
-			/* This method prevents the window from becoming huge (as in hight and width) 
-			 * when reopening "General" (or equivalents)
-			 */ 
-				{ return new Point( SWT.DEFAULT, SWT.DEFAULT ); }
-		};
-		
-		sub.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-		sub.setLayout( new FillLayout() );
-		
-		Composite parent = ( Composite ) super.createContents( sub );
-		parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );		
-		
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		
-		parent.layout();
-		
-		return parent; 
-	}
-	
-	/* ( non-Javadoc )
-	 * @see org.eclipse.jface.preference.PreferencePage#
-	 * setPreferenceStore( org.eclipse.jface.preference.IPreferenceStore )
-	 */
-	public void setPreferenceStore( IPreferenceStore store ) {
-		super.setPreferenceStore( store );
-		store = PreferenceLoader.setDefaults( store );
-	}
-	
 	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
@@ -167,6 +113,9 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.13  2003/10/01 20:56:27  lemmster
+add class hierarchy
+
 Revision 1.12  2003/09/28 13:10:31  dek
 Added Option, wether multiple Instances of G2Gui are allowed or not[bug #867]
 
@@ -198,7 +147,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
