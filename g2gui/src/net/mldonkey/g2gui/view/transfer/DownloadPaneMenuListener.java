@@ -22,10 +22,14 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.view.helper.CMenuListener;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeContentProvider;
 
@@ -37,23 +41,16 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  *
  * DownloadPaneMenuListener
  *
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.2 2003/09/21 23:39:31 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.3 2003/09/23 15:00:02 zet Exp $
  *
  */
-public class DownloadPaneMenuListener implements IMenuListener {
+public class DownloadPaneMenuListener extends CMenuListener implements IMenuListener {
 	
 	private static String[] ExtensionNames = {
 		G2GuiResources.getString("TT_DOWNLOAD_FILTER_AUDIO"), 
@@ -96,38 +93,20 @@ public class DownloadPaneMenuListener implements IMenuListener {
 	private CoreCommunication core;
 
     public DownloadPaneMenuListener( CustomTableTreeViewer tableTreeViewer, CoreCommunication core ) {
+        super(tableTreeViewer, core);
         this.tableTreeViewer = tableTreeViewer;
         this.core = core;
         this.tableTreeContentProvider = (DownloadTableTreeContentProvider) tableTreeViewer.getContentProvider(  );
     }
 
     public void menuAboutToShow( IMenuManager menuManager ) {
-        fillContextMenu( menuManager );
-    }
-
-    // Build the menu
-    public void fillContextMenu( IMenuManager menuManager ) {
+    
         menuManager.add( new ExpandCollapseAction( true ) );
         menuManager.add( new ExpandCollapseAction( false ) );
-
-        // columns submenu
         menuManager.add( new Separator(  ) );
-
-        MenuManager columnsSubMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COLUMNS" ) );
-
-        Table table = tableTreeViewer.getTableTree(  ).getTable(  );
-
-        for ( int i = 0; i < table.getColumnCount(  ); i++ ) {
-            ToggleColumnsAction tCA = new ToggleColumnsAction( i );
-
-            if ( table.getColumn( i ).getResizable(  ) ) {
-                tCA.setChecked( true );
-            }
-
-            columnsSubMenu.add( tCA );
-        }
-
-        menuManager.add( columnsSubMenu );
+		
+		// columns submenu
+		super.menuAboutToShow( menuManager );
 
         // filter submenu			
         MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILTER" ) );
@@ -412,30 +391,6 @@ public class DownloadPaneMenuListener implements IMenuListener {
         }
     }
 
-    class ToggleColumnsAction extends Action {
-        private int column;
-        private Table table = tableTreeViewer.getTableTree(  ).getTable(  );
-        private TableColumn tableColumn;
-
-        public ToggleColumnsAction( int column ) {
-            super( "", Action.AS_CHECK_BOX );
-            this.column = column;
-            tableColumn = table.getColumn( column );
-            setText( tableColumn.getText(  ) );
-        }
-
-        public void run(  ) {
-            if ( !isChecked(  ) ) {
-                // gtk doesn't support column width 0
-                tableColumn.setWidth( SWT.getPlatform(  ).equals( "gtk" ) ? 1 : 0 );
-                tableColumn.setResizable( false );
-            } else {
-                tableColumn.setResizable( true );
-                tableColumn.setWidth( 100 );
-            }
-        }
-    }
-
     // Filters	
     public static class NetworkFilter extends ViewerFilter {
         private List networkType;
@@ -549,6 +504,9 @@ public class DownloadPaneMenuListener implements IMenuListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.3  2003/09/23 15:00:02  zet
+extend CMenuListener
+
 Revision 1.2  2003/09/21 23:39:31  zet
 displayTableColors preference
 
