@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.*;
  * ExtendedFontFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedFontFieldEditor.java,v 1.7 2003/07/03 22:56:43 mitch Exp $ 
+ * @version $Id: ExtendedFontFieldEditor.java,v 1.8 2003/07/04 12:06:38 dek Exp $ 
  *
  */
 public class ExtendedFontFieldEditor extends FieldEditor {
@@ -62,7 +62,7 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 					new SelectionListener() {
 						public void widgetSelected( SelectionEvent e ) {
 							fontDialog.open();
-							font = new Font( null, fontDialog.getFontList()[0] );							
+							font = new Font( null, fontDialog.getFontData() );							
 							fontSample.setFont( font );
 							fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 							hasChanged = true;
@@ -169,6 +169,9 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 
 /*
 $Log: ExtendedFontFieldEditor.java,v $
+Revision 1.8  2003/07/04 12:06:38  dek
+*** empty log message ***
+
 Revision 1.7  2003/07/03 22:56:43  mitch
 fixed getFontData() (replaced by getFontList()[0] because of deprecation)
 
