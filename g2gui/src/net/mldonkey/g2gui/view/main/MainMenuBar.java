@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.20 2003/12/04 08:47:31 lemmy Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.21 2004/04/05 00:07:35 psy Exp $ 
  *
  */
 public class MainMenuBar {
@@ -94,11 +94,30 @@ public class MainMenuBar {
 									shell,
 									SWT.YES | SWT.NO | SWT.ICON_QUESTION );
 		
-							confirm.setMessage( G2GuiResources.getString( "MISC_AYS" ) );
+							confirm.setMessage( G2GuiResources.getString( "MENUE_KILLCORE" ) );
 				
 							if ( confirm.open() == SWT.YES ) {
 								Message killCore = new EncodeMessage( Message.S_KILL_CORE );
 								killCore.sendMessage( mainTab.getCore() );
+							}
+						} 
+					} );
+					
+					menuItem = new MenuItem ( fileMenu, SWT.PUSH );
+					menuItem.setText ( "&Reconnect" );
+					menuItem.setImage( G2GuiResources.getImage( "rotate" ) );
+					menuItem.addListener ( SWT.Selection, new Listener () {
+						public void handleEvent ( Event e ) {
+							
+							MessageBox confirm =
+								new MessageBox( 
+									shell,
+									SWT.YES | SWT.NO | SWT.ICON_QUESTION );
+		
+							confirm.setMessage( G2GuiResources.getString( "MENUE_RECONNECT" ) );
+				
+							if ( confirm.open() == SWT.YES ) {
+								G2Gui.relaunchSelf();
 							}
 						} 
 					} );
@@ -217,6 +236,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.21  2004/04/05 00:07:35  psy
+added "reconnect core" menu entry
+
 Revision 1.20  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

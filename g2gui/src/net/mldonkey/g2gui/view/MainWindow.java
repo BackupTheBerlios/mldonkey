@@ -72,7 +72,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.18 2004/04/02 17:25:45 dek Exp $
+ * @version $Id: MainWindow.java,v 1.19 2004/04/05 00:07:36 psy Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText;
@@ -117,13 +117,13 @@ public class MainWindow implements ShellListener {
         /* set the old size of this window - must be after pack() */
         setSizeLocation(shell);
 
-        System.out.println("Mainwindow opened shell");
+        if (G2Gui.debug) System.out.println("MainWindow opened shell");
         shell.open();
 
         /* things we should do if we dispose */
         shell.addDisposeListener(new DisposeListener() {
                 public synchronized void widgetDisposed(DisposeEvent e) {
-                    if (G2Gui.debug) System.out.println("Disposing MainWindow");
+                	if (G2Gui.debug) System.out.println("Disposing MainWindow");
                     /* save the size of this window */
                     saveSizeLocation(shell);
 
@@ -510,6 +510,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.19  2004/04/05 00:07:36  psy
+added "reconnect core" menu entry
+
 Revision 1.18  2004/04/02 17:25:45  dek
 introduced SWTs Tray-support, now we need swt from M08, i.e. version 3044
 
