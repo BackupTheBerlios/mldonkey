@@ -26,7 +26,7 @@ import java.util.Observable;
 
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.helper.CCLabel;
-import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
+import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.statistic.Graph;
@@ -41,7 +41,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -49,14 +48,13 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.MessageBox;
 
 
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.28 2003/09/20 22:08:50 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.29 2003/09/26 16:08:02 zet Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
@@ -148,7 +146,7 @@ public class StatisticTab extends GuiTab {
         graphViewForm.setTopLeft( cLabel );
         graphViewForm.setContent( graphControl );
 
-        cLabel.addMouseListener( new MaximizeSashMouseAdapter( cLabel, popupMenu, graphSash, graphViewForm, graphControl ) );
+        cLabel.addMouseListener( new MaximizeSashMouseAdapter( cLabel, popupMenu, graphSash, graphViewForm ) );
 
         return graphControl;
     }
@@ -178,31 +176,6 @@ public class StatisticTab extends GuiTab {
         uploadsGraphColor2.dispose(  );
         downloadsGraphColor1.dispose(  );
         downloadsGraphColor2.dispose(  );
-    }
-
-    /**
-     * MaximizeSashMouseAdapter
-     */
-    public class MaximizeSashMouseAdapter extends HeaderBarMouseAdapter {
-        private SashForm sashForm;
-        private Control control;
-        private GraphControl graphControl;
-
-        public MaximizeSashMouseAdapter( CLabel cLabel, MenuManager menuManager, 
-        			SashForm sashForm, Control control, GraphControl graphControl ) {
-            super( cLabel, menuManager );
-            this.sashForm = sashForm;
-            this.control = control;
-            this.graphControl = graphControl;
-        }
-
-        public void mouseDoubleClick( MouseEvent e ) {
-            if ( sashForm.getMaximizedControl(  ) == null ) {
-                sashForm.setMaximizedControl( control );
-            } else {
-                sashForm.setMaximizedControl( null );
-            }
-        }
     }
 
     /**
@@ -266,6 +239,9 @@ public class StatisticTab extends GuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.29  2003/09/26 16:08:02  zet
+dblclick header to maximize/restore
+
 Revision 1.28  2003/09/20 22:08:50  zet
 basic graph hourly history
 

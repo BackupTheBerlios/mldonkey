@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
-import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
+import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
@@ -57,12 +57,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.61 2003/09/26 15:45:59 dek Exp $
+ * @version $Id: TransferTab.java,v 1.62 2003/09/26 16:08:02 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -90,16 +91,21 @@ public class TransferTab extends GuiTab {
      */
     protected void createContents( Composite parent ) {
         SashForm mainSashForm = new SashForm( parent, SWT.VERTICAL );
-        SashForm downloadParent = mainSashForm;
-        if ( PreferenceLoader.loadBoolean( "advancedMode" ) )
+        Control downloadParent = mainSashForm;
+        if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
             downloadParent = new SashForm( mainSashForm, SWT.HORIZONTAL );
+        }
         ViewForm downloadViewForm =
-            new ViewForm( downloadParent,
+            new ViewForm( (SashForm) downloadParent,
                           SWT.BORDER
                           | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-        if ( PreferenceLoader.loadBoolean( "advancedMode" ) )
-            createClientViewForm( downloadParent );
-        createDownloadHeader( downloadViewForm );
+                          
+        if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+            createClientViewForm( (SashForm) downloadParent );
+        } else {
+        	downloadParent = downloadViewForm;
+        }
+        createDownloadHeader( downloadViewForm, mainSashForm, downloadParent );
         downloadComposite = new Composite( downloadViewForm, SWT.NONE );
         downloadComposite.setLayout( new FillLayout() );
         downloadViewForm.setContent( downloadComposite );
@@ -108,7 +114,8 @@ public class TransferTab extends GuiTab {
             new DownloadTableTreeViewer( downloadComposite, clientTableViewer, mldonkey, this );
         popupMenu.addMenuListener( new DownloadPaneMenuListener( downloadTableTreeViewer.getTableTreeViewer(),
                                                                  mldonkey ) );
-        mainSashForm.setWeights( new int[] { 10, 0 } );
+        mainSashForm.setWeights( new int[] { 1, 1 } );
+        mainSashForm.setMaximizedControl( downloadParent );
         mldonkey.getFileInfoIntMap().addObserver( this );
     }
 
@@ -117,11 +124,11 @@ public class TransferTab extends GuiTab {
      * 
      * @param parentViewForm 
      */
-    public void createDownloadHeader( ViewForm parentViewForm ) {
+    public void createDownloadHeader( ViewForm parentViewForm, final SashForm mainSashForm, final Control downloadParent ) {
         popupMenu = new MenuManager( "" );
         popupMenu.setRemoveAllWhenShown( true );
         downloadCLabel = CCLabel.createCL( parentViewForm, "TT_Downloads", "TransfersButtonSmallTitlebar" );
-        downloadCLabel.addMouseListener( new HeaderBarMouseAdapter( downloadCLabel, popupMenu ) );
+        downloadCLabel.addMouseListener( new MaximizeSashMouseAdapter( downloadCLabel, popupMenu, mainSashForm, downloadParent  ) );
         parentViewForm.setTopLeft( downloadCLabel );
     }
 
@@ -282,6 +289,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.62  2003/09/26 16:08:02  zet
+dblclick header to maximize/restore
+
 Revision 1.61  2003/09/26 15:45:59  dek
 we now have upload-stats (well, kind of...)
 
@@ -370,7 +380,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression
