@@ -29,6 +29,7 @@
 	* Transfer: Fix FileDetail buttons [#897], move header menu
 	* Transfer: Fix display of files >2gb [#916] [#918]
 	* Transfer: Add rightClick menuItem: Commit as (filename selection)
+	* Transfer: Add rightClick menuItem: Preview
 	* Transfer: Add preference option to disable colors in table 
 	* Transfer: Change filesources to weakly reference # clients [#865]
 	* Statistics: Add header doubleClick to maximize a graph [#916]
