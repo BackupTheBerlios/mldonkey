@@ -9,6 +9,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -65,6 +66,8 @@ public class StatisticTab
 		Composite top = new Composite( mainSash, SWT.BORDER );
 		top.setLayout( new FillLayout() );
 				
+		Label tmp = new Label(top, SWT.CENTER);
+		tmp.setText("<gui protocol needs more stats>");
 		
 		// Bottom graph for Sash				
 		SashForm graphSash = new SashForm (mainSash, SWT.HORIZONTAL );
