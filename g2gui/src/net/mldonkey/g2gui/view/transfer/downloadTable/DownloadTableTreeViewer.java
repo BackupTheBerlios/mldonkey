@@ -28,6 +28,7 @@ import net.mldonkey.g2gui.view.TransferTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
+import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.viewers.GPage;
 import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreePage;
 
@@ -48,7 +49,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.18 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.19 2003/10/31 15:16:38 zet Exp $
  *
  */
 public class DownloadTableTreeViewer extends GTableTreePage implements ICellModifier,
@@ -74,6 +75,7 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
     public static final int AGE = 13;
     private boolean advancedMode = false;
     private CellEditor[] cellEditors = null;
+    private CustomTableTreeViewer tableTreeViewer;
     private GPage gPage;
     private Composite parent;
 
@@ -118,14 +120,16 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
     public void createContents(Composite parent) {
         super.createContents(parent);
 
+        
+        
         if (SWT.getPlatform().equals("gtk")) {
             getTable().getColumns()[ 0 ].pack();
         }
 
         addMenuListener();
-		getTableTreeViewer().addDoubleClickListener(this);
-		getTableTreeViewer().addSelectionChangedListener((DownloadTableTreeMenuListener) tableTreeMenuListener);
-		getTableTreeViewer().setInput(core.getFileInfoIntMap());
+		tableTreeViewer.addDoubleClickListener(this);
+		tableTreeViewer.addSelectionChangedListener((DownloadTableTreeMenuListener) tableTreeMenuListener);
+		tableTreeViewer.setInput(core.getFileInfoIntMap());
         core.getFileInfoIntMap().addObserver((DownloadTableTreeContentProvider) tableTreeContentProvider);
     }
 
@@ -141,13 +145,15 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
      * Create columns
      */
     public void createColumns() {
+		tableTreeViewer = getTableTreeViewer();
+        
         if (advancedMode) {
             loadColumnIDs();
         } else {
             columnIDs = BASIC_COLUMNS;
         }
         
-        getTableTreeViewer().setColumnProperties(columnLabels);
+        tableTreeViewer.setColumnProperties(columnLabels);
 
         if (cellEditors != null) {
             for (int i = 0; i < cellEditors.length; i++) {
@@ -208,7 +214,7 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
         tableLabelProvider.updateDisplay();
         tableTreeContentProvider.updateDisplay();
         gSorter.updateDisplay();
-        getTableTreeViewer().refresh();
+        tableTreeViewer.refresh();
     }
 
     /**
@@ -221,30 +227,30 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
         table.setLinesVisible(PreferenceLoader.loadBoolean("displayGridLines"));
 
         if (PreferenceLoader.loadBoolean("tableCellEditors")) {
-			getTableTreeViewer().setCellEditors(cellEditors);
-			getTableTreeViewer().setCellModifier(this);
+			tableTreeViewer.setCellEditors(cellEditors);
+			tableTreeViewer.setCellModifier(this);
         } else {
-			getTableTreeViewer().setCellEditors(null);
-			getTableTreeViewer().setCellModifier(null);
+			tableTreeViewer.setCellEditors(null);
+			tableTreeViewer.setCellModifier(null);
         }
 
         if (advancedMode) {
             boolean b = PreferenceLoader.loadBoolean("displayChunkGraphs");
 
             if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
-				getTableTreeViewer().setChunksColumn(columnIDs.indexOf(CHUNK_COLUMN));
+				tableTreeViewer.setChunksColumn(columnIDs.indexOf(CHUNK_COLUMN));
             }
 
-            if ((b == false) && getTableTreeViewer().getEditors()) {
-				getTableTreeViewer().closeAllTTE();
+            if ((b == false) && tableTreeViewer.getEditors()) {
+				tableTreeViewer.closeAllTTE();
 
                 if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
-					getTableTreeViewer().setEditors(b);
+					tableTreeViewer.setEditors(b);
                 }
-            } else if ((b == true) && !getTableTreeViewer().getEditors()) {
+            } else if ((b == true) && !tableTreeViewer.getEditors()) {
                 if (columnIDs.indexOf(CHUNK_COLUMN) > 0) {
-					getTableTreeViewer().setEditors(true);
-					getTableTreeViewer().openAllTTE();
+					tableTreeViewer.setEditors(true);
+					tableTreeViewer.openAllTTE();
                 }
             }
         }
@@ -293,10 +299,10 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
         if (o instanceof FileInfo) {
             FileInfo fileInfo = (FileInfo) o;
 
-            if (getTableTreeViewer().getExpandedState(fileInfo)) {
-				getTableTreeViewer().collapseToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
+            if (tableTreeViewer.getExpandedState(fileInfo)) {
+				tableTreeViewer.collapseToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
             } else {
-				getTableTreeViewer().expandToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
+				tableTreeViewer.expandToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
             }
         } else if (o instanceof TreeClientInfo) {
             TreeClientInfo treeClientInfo = (TreeClientInfo) o;
@@ -309,6 +315,9 @@ public class DownloadTableTreeViewer extends GTableTreePage implements ICellModi
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.19  2003/10/31 15:16:38  zet
+use a local
+
 Revision 1.18  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job
@@ -410,7 +419,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/22 13:47:56  dek
 selection is removed with click on empty-row
