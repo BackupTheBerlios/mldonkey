@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.11 2003/06/27 17:14:32 lemmstercvs01 Exp $ 
+ * @version $Id: Gui.java,v 1.12 2003/06/27 18:20:44 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {
@@ -169,7 +169,7 @@ public class Gui implements IG2gui, Listener {
 				public void handleEvent(Event event) {	
 					Shell prefshell = new Shell();
 					Preferences myprefs = new Preferences(new PreferenceStore("g2gui.pref"));					
-					myprefs.open(prefshell,null);
+					myprefs.open(prefshell,mldonkey);
 			}});
 		
 		pageContainer = new Composite( mainComposite, SWT.NONE);
@@ -243,6 +243,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.12  2003/06/27 18:20:44  dek
+für preferences
+
 Revision 1.11  2003/06/27 17:14:32  lemmstercvs01
 removed unneeded importer
 
