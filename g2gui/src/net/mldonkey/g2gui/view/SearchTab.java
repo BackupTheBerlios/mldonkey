@@ -31,8 +31,6 @@ import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -40,7 +38,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Widget;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.search.*;
@@ -49,7 +46,7 @@ import net.mldonkey.g2gui.view.search.*;
  * SearchTab
  *
  * @author $user$
- * @version $Id: SearchTab.java,v 1.5 2003/07/29 09:42:46 lemmstercvs01 Exp $ 
+ * @version $Id: SearchTab.java,v 1.6 2003/07/29 09:56:52 lemmstercvs01 Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -217,6 +214,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.6  2003/07/29 09:56:52  lemmstercvs01
+some importers removed
+
 Revision 1.5  2003/07/29 09:42:46  lemmstercvs01
 added support for the statusline
 
