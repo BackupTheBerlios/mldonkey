@@ -49,14 +49,14 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.4 2003/09/26 11:55:48 dek Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.5 2003/09/26 12:25:52 dek Exp $ 
  *
  */
 public class UploadTableViewer {
 	/**
 	 * MyTableSorter
 	 *
-	 * @version $Id: UploadTableViewer.java,v 1.4 2003/09/26 11:55:48 dek Exp $ 
+	 * @version $Id: UploadTableViewer.java,v 1.5 2003/09/26 12:25:52 dek Exp $ 
 	 *
 	 */
 	
@@ -67,6 +67,7 @@ public class UploadTableViewer {
 		{ "TT_Download_Network", "TT_Download_Name", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES", };
 	private TableViewer tableviewer;
 	private boolean ascending = false;
+	private SharedFileInfoIntMap sharedFileInfoIntMap;
 	
 	/**
 	 * @param parent the place where this table lives
@@ -76,8 +77,10 @@ public class UploadTableViewer {
 	public UploadTableViewer( Composite parent, CoreCommunication mldonkey, TransferTab tab ) {
 		this.shell = parent.getShell();
 		this.mldonkey = mldonkey;
-		createContent( parent );
+		this.sharedFileInfoIntMap = mldonkey.getSharedFileInfoIntMap();
+		createContent( parent );		
 	}
+	
 	/**
 	 * @param parent
 	 */
@@ -114,9 +117,10 @@ public class UploadTableViewer {
 			} );
 			
 		}
+		
 		tableviewer.setContentProvider( new MyContentProvider() );
 		tableviewer.setLabelProvider( new MyLabelProvider() );
-		tableviewer.setInput( mldonkey.getSharedFileInfoIntMap() );
+		tableviewer.setInput( this.sharedFileInfoIntMap );
 		tableviewer.setSorter( new MyTableSorter() );
 		
 		UploadTableMenuListener tableMenuListener = 
@@ -158,16 +162,26 @@ public class UploadTableViewer {
 				newI.addObserver( this );
 			}
 		}
-		/* ( non-Javadoc )
-		 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
-		 */
+		
 		public void update( Observable arg0, final Object arg1 ) {
 			if ( tableviewer.getTable().isDisposed() )
 				return;
 			tableviewer.getTable().getDisplay().asyncExec( new Runnable() {
 				public void run() {
-					if ( !tableviewer.getTable().isDisposed() ) tableviewer.refresh(); 				
-				
+					if ( tableviewer.getTable().isDisposed() ) return;
+		
+					synchronized ( sharedFileInfoIntMap.getRemoved() ) {
+						tableviewer.remove( sharedFileInfoIntMap.getRemoved().toArray() );
+						sharedFileInfoIntMap.clearRemoved();
+					}
+					synchronized ( sharedFileInfoIntMap.getAdded() ) {
+						tableviewer.add( sharedFileInfoIntMap.getAdded().toArray() );
+						sharedFileInfoIntMap.clearAdded();
+					}
+					synchronized ( sharedFileInfoIntMap.getUpdated() ) {
+						tableviewer.update( sharedFileInfoIntMap.getUpdated().toArray(), null );
+						sharedFileInfoIntMap.clearUpdated();
+					}				
 				}
 			} );
 		}
@@ -310,6 +324,9 @@ public class UploadTableViewer {
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.5  2003/09/26 12:25:52  dek
+changed refresh() -> update() to avoid flickering table
+
 Revision 1.4  2003/09/26 11:55:48  dek
 right-mouse menue for upload-Table
 

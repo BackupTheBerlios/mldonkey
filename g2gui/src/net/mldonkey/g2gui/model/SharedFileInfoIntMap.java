@@ -22,6 +22,9 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
@@ -30,11 +33,15 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfoList
  *
  *
- * @version $Id: SharedFileInfoIntMap.java,v 1.4 2003/09/25 14:24:11 dek Exp $ 
+ * @version $Id: SharedFileInfoIntMap.java,v 1.5 2003/09/26 12:25:52 dek Exp $ 
  *
  */
 public class SharedFileInfoIntMap extends InfoIntMap {
 	
+	private List unsharedFiles = new ArrayList(),
+				 newSharedFiles = new ArrayList(),
+				 updatedFiles = new ArrayList();
+
 	/**
 	 * @param communication my parent
 	 */
@@ -72,8 +79,8 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 							getNetworkInfoMap().infoIntMap.
 							get( sharedFileInfo.getNetworkId() );
 			sharedFileInfo.setNetwork( temp );
-		}
-		
+			newSharedFiles.add( sharedFileInfo );
+		}		
 	}
 
 	/**
@@ -90,6 +97,7 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 		if ( sharedFileInfo != null ) {
 			if ( sharedFileInfo.update( messageBuffer ) ) { /*returns true, if Info has changed*/
 					this.setChanged();
+					updatedFiles.add( sharedFileInfo );
 				}
 		}
 		else {
@@ -97,10 +105,48 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 		}											
 		this.notifyObservers( sharedFileInfo );		
 	}
+
+	/**
+	 * @return a List of files, that have been unshared
+	 */
+	public List getRemoved() {		
+		return unsharedFiles;
+	}
+	/**
+	 * @return a List of files, that have been added to the shared Files
+	 */
+	public List getAdded() {		
+		return newSharedFiles;
+	}
+	/**
+	 * @return a List of files, that have been updated since last visit
+	 */
+	public List getUpdated() {		
+		return updatedFiles;
+	}
+
+	/**
+	 * resets the list of unshared files
+	 */
+	public void clearRemoved() { unsharedFiles.clear(); }
+
+	/**
+	 * resets the list of new shared files
+	 */
+	public void clearAdded() { newSharedFiles.clear(); }
+
+	/**
+	 * resets the list of updated files
+	 */
+	public void clearUpdated() { updatedFiles.clear(); }
+
 }
 
 /*
 $Log: SharedFileInfoIntMap.java,v $
+Revision 1.5  2003/09/26 12:25:52  dek
+changed refresh() -> update() to avoid flickering table
+
 Revision 1.4  2003/09/25 14:24:11  dek
 sharedFile no has Network (not only networkID)
 
