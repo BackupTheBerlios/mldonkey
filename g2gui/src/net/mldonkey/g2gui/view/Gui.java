@@ -41,10 +41,10 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.7 2003/06/26 21:31:29 lemmstercvs01 Exp $ 
+ * @version $Id: Gui.java,v 1.8 2003/06/27 11:23:48 dek Exp $ 
  *
  */
-public class Gui extends ApplicationWindow implements IG2gui, Listener {
+public class Gui implements IG2gui, Listener {
 	private StatusLine statusline;
 	private Composite miscButtonRow;
 	private Composite buttonRow;
@@ -99,18 +99,25 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 	/**
 	 * @param arg0 You know, what a shell is, right?
 	 */
-	public Gui(CoreCommunication core) {
-		super( null );	
+	public Gui(CoreCommunication core,Shell shell) {	
+		Display display = shell.getDisplay();	
 		this.mldonkey = core;
-		this.setBlockOnOpen( true );
-		this.open();		
-		//Display.getCurrent().dispose();
+		shell.setLayout(new FillLayout());
+		createContents(shell);
+		shell.pack ();
+		shell.open ();
+		while (!shell.isDisposed ()) {
+			if (!display.readAndDispatch ()) display.sleep ();
+		}
+		display.dispose();
+	
+		
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createContents( Composite parent ) {
+	private void createContents( Composite parent ) {
 		parent.setSize(640,480);
 		GridData gridData;		
 		mainComposite = new Composite( parent, SWT.NONE );
@@ -169,8 +176,7 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 						
 		addTabs();		
 		statusline = new StatusLine(mainComposite,mldonkey);					
-		
-		return super.createContents( parent );
+
 	}
 
 	/**
@@ -234,6 +240,9 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.8  2003/06/27 11:23:48  dek
+gui is no more children of applicationwindow
+
 Revision 1.7  2003/06/26 21:31:29  lemmstercvs01
 unnecessary importer removed
 

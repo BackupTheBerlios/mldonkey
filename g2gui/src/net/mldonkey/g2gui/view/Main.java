@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.view.pref.Preferences;
  * G2GuiTest
  *
  * @author $user$
- * @version $Id: Main.java,v 1.6 2003/06/27 10:39:37 lemmstercvs01 Exp $ 
+ * @version $Id: Main.java,v 1.7 2003/06/27 11:23:48 dek Exp $ 
  *
  */
 public class Main {
@@ -48,6 +48,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Shell shell = new Shell(new Display());
 		PreferenceStore preferenceStore = new PreferenceStore("g2gui.pref");
 		Preferences myprefs = new Preferences(preferenceStore);
 		try {
@@ -56,7 +57,7 @@ public class Main {
 			
 		}		
 		if (!(preferenceStore.getBoolean("initialized"))){					
-			myprefs.open(new Shell(new Display()),null);
+			myprefs.open(shell,null);
 			}
 		int port = preferenceStore.getInt("port");
 		String hostname = preferenceStore.getString("hostname");
@@ -66,7 +67,7 @@ public class Main {
 		SocketPool socketPool = new SocketPool( hostname, port, username, password );
 		mldonkey = mldonkey  = new Core( ( Socket ) socketPool.checkOut() );
 			
-		Gui g2gui = new Gui(mldonkey);
+		Gui g2gui = new Gui(mldonkey,shell);
 		mldonkey.disconnect();
 	}
 
@@ -80,6 +81,9 @@ public class Main {
 
 /*
 $Log: Main.java,v $
+Revision 1.7  2003/06/27 11:23:48  dek
+gui is no more children of applicationwindow
+
 Revision 1.6  2003/06/27 10:39:37  lemmstercvs01
 core is now Runnable
 
