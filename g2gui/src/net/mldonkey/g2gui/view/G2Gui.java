@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.49 2003/11/29 17:01:00 zet Exp $
+ * @version $Id: G2Gui.java,v 1.50 2003/11/30 18:14:55 dek Exp $
  *
  */
 public class G2Gui {
@@ -128,7 +128,8 @@ public class G2Gui {
         /*determine wether a new instance of G2gui is allowed: */
         if (processingLink 
           || PreferenceLoader.loadBoolean("allowMultipleInstances")
-	      || !PreferenceLoader.loadBoolean("running")) {
+	      || !PreferenceLoader.loadBoolean("running")
+          || debug ) {
             launch();
         } else {
             MessageBox alreadyRunning = new MessageBox(new Shell(display),
@@ -423,6 +424,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.50  2003/11/30 18:14:55  dek
+multiple instances are allowed if in debug-mode
+
 Revision 1.49  2003/11/29 17:01:00  zet
 update for mainWindow
 
