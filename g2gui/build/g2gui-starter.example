@@ -19,13 +19,13 @@ fi
 if [ -d $LIBDIR ]; then
 	for LIB in $(ls $LIBDIR); do
 		if [ $(echo $LIB|grep 'swt-fox') ]; then
-			echo "fox-lib detected $LIBDIR/$LIB"
+			echo "lib detected: $LIBDIR/$LIB"
 			SWT=fox
 		elif [ $(echo $LIB|grep 'swt-motif') ]; then
-			echo "motif-lib detected $LIBDIR/$LIB"
+			echo "lib detected: $LIBDIR/$LIB"
 			SWT=motif
 		elif [ $(echo $LIB|grep 'swt-gtk') ]; then
-			echo "gtk-lib detected $LIBDIR/$LIB"
+			echo "lib detected: $LIBDIR/$LIB"
 			SWT=gtk
         ## is not likely to happen, but anyway...
 		elif [ $(echo $LIB|grep 'swt-win') ]; then
@@ -58,12 +58,12 @@ if [ -e g2gui.jar ]; then
 		    fi
 	    done
     fi
-	echo "Starting MLdonkey G2gui (java $SWT)..."
+	echo "Starting MLdonkey G2gui (java)..."
 	java -Djava.library.path=lib -jar g2gui.jar $1 $2 $3 $4 $5 $6 $7 $8 $9
 
 #### Binary package
 elif [ -e g2gui-bin ]; then
-	echo "Starting MLdonkey G2gui (native $SWT)..."
+	echo "Starting MLdonkey G2gui (native)..."
 	./g2gui-bin $1 $2 $3 $4 $5 $6 $7 $8 $9
 fi
 
