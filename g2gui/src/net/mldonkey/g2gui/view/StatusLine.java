@@ -22,15 +22,11 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.statusline.NetworkItem;
-import net.mldonkey.g2gui.view.statusline.SimpleStatusLineItem;
 import net.mldonkey.g2gui.view.statusline.SpeedItem;
-import net.mldonkey.g2gui.view.statusline.StatusLineItem;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -45,83 +41,68 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.3 2003/07/29 09:41:56 lemmstercvs01 Exp $ 
+ * @version $Id: StatusLine.java,v 1.4 2003/07/31 14:10:58 lemmstercvs01 Exp $ 
  *
  */
 public class StatusLine {
 	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
-	private CoreCommunication mldonkey;
-	private Composite statusline;
-	private List fields;
-	private int counter = 0;
+	private CoreCommunication core;
+	private Composite composite;
+	private Label label;
 
 	/**
 	 * Creates a new StatusLine obj
 	 * @param parent The parent obj Composite to display in
 	 * @param mldonkey The CoreCommunication to connect with
 	 */
-	public StatusLine( Composite parent, CoreCommunication mldonkey ) {
+	public StatusLine( Composite parent, CoreCommunication core ) {
+		this.core = core;
 		
-		this.fields = new ArrayList();	
-		this.mldonkey = mldonkey;
+		this.composite = new Composite( parent, SWT.NONE );			
+		this.composite.setLayout( new FillLayout() );
+		composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );		
 		
-		this.statusline = new Composite( parent, SWT.NONE );			
-		this.statusline.setLayout( new FillLayout() );
-		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );	
-		statusline.setLayoutData( gridData );		
+		/* the left field */
+		new NetworkItem( this, this.core );
 
-		addField( new SpeedItem( this, mldonkey ) );
-		addField( new SimpleStatusLineItem( res.getString( "SL_other" ), SWT.NONE ) );
+		/* the middle field */
+		label = new Label( composite, SWT.BORDER );	
+		label.setText( "" );
+		
+		/* the right field */
+		new SpeedItem( this, this.core );
 	}
 
-	/**
-	 * @param item the StatusBarItem which should be added to our nice little statusbar
-	 */
-	public void addField( StatusLineItem item ) {
-		Label newField = new Label( statusline, SWT.BORDER );	
-		newField.setText( item.getContent() );
-		newField.setAlignment( item.getAlignment() );
-		this.fields.add( newField );
-		item.setIndex( this.fields.size() - 1 );
-	}
-	
 	/**
 	 * Updates a String at a specific position
-	 * @param index Index where to update
-	 * @param content The new String to display
+	 * @param aString The new String to display
 	 */
-	public void update( int index, String content ) {		
-		if ( !statusline.isDisposed() )
-			( ( Label ) fields.get( index ) ).setText( content );					
-	}
-	
-	/**
-	 * @return All our StatusLineItems as an Array
-	 */
-	public StatusLineItem[] getItems() {		
-		return ( StatusLineItem[] ) fields.toArray();
-	}
-
-	/**
-	 * @return the Composite in which the statusline is created
-	 */
-	public Composite getStatusline() {
-		return statusline;
+	public void update( String aString ) {		
+		if ( !composite.isDisposed() )
+			label.setText( aString );					
 	}
 
 	/**
 	 * 	Sets the tooltip of the Statusbar Item
-	 * @param index which item to update
-	 * @param tooltip The tooltip to show
+	 * @param aString The tooltip to show
 	 */
-	public void updateTooltip( int index, String tooltip ) {
-		if ( !statusline.isDisposed() )
-			( ( Label ) fields.get( index ) ).setToolTipText( tooltip );
+	public void updateToolTip( String aString ) {
+		if ( !composite.isDisposed() )
+			label.setToolTipText( aString );					
+	}
+	/**
+	 * @return the Composite in which the statusline is created
+	 */
+	public Composite getStatusline() {
+		return composite;
 	}
 }
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.4  2003/07/31 14:10:58  lemmstercvs01
+reworked
+
 Revision 1.3  2003/07/29 09:41:56  lemmstercvs01
 still in progress, removed networkitem for compatibility
 

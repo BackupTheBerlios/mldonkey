@@ -25,6 +25,11 @@ package net.mldonkey.g2gui.view.statusline;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -35,13 +40,15 @@ import net.mldonkey.g2gui.view.*;
  * SpeedItem
  *
  * @author $user$
- * @version $Id: SpeedItem.java,v 1.8 2003/07/17 14:58:56 lemmstercvs01 Exp $ 
+ * @version $Id: SpeedItem.java,v 1.9 2003/07/31 14:11:06 lemmstercvs01 Exp $ 
  *
  */
-public class SpeedItem extends StatusLineItem implements Observer {	
+public class SpeedItem implements Observer {	
 
+	private CoreCommunication core;
+	private Composite composite;
 	private StatusLine statusline;
-	private Composite parent;
+	private CLabel cLabelDown, cLabelUp;
 
 	/**
 	 * @param string
@@ -49,38 +56,65 @@ public class SpeedItem extends StatusLineItem implements Observer {
 	 * @param mldonkey
 	 */
 	public SpeedItem( StatusLine statusline, CoreCommunication mldonkey ) {
-		super();
-		this.parent = statusline.getStatusline();
-		content = "";
+		this.composite = statusline.getStatusline();
 		this.statusline = statusline;
-		mldonkey.addObserver( this );
+		this.core = mldonkey;
 		
+		this.createContent();
+
+		mldonkey.addObserver( this );	
+	}
+
+	/**
+	 * 
+	 */
+	private void createContent() {
+		composite = new Composite( composite, SWT.BORDER );
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		gridLayout.makeColumnsEqualWidth = true;
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
+		composite.setLayout( gridLayout );
+	
+		/* down rate */	
+		cLabelDown = new CLabel( composite, SWT.RIGHT );
+		cLabelDown.setImage( new Image( composite.getDisplay(), "icons/down.png" ) );
+		cLabelDown.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+
+		
+		/* up rate */
+		cLabelUp = new CLabel( composite, SWT.NONE );
+		cLabelUp.setImage( new Image( composite.getDisplay(), "icons/up.png" ) );
+		cLabelUp.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 	}
 
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, Object arg ) {
-		if ( arg instanceof ClientStats ){
-			final ClientStats temp = ( ClientStats ) arg;
-			final float down = temp.getTcpDownRate();
-			final float up   = temp.getTcpUpRate();
-			if ( !parent.isDisposed() )				
-			parent.getDisplay().asyncExec( new Runnable () {
+		if ( arg instanceof ClientStats ) {
+			final ClientStats stats = ( ClientStats ) arg;
+			if ( !composite.isDisposed() )				
+			composite.getDisplay().asyncExec( new Runnable () {
 				public void run() {
-					statusline.update( position, " DL: " + down
-										+ "kb/s - UL: " + up + "kb/s" );
-					String toolTipText = "UDP-DL: " + temp.getUdpDownRate()
-									   + "\nUDP-UL: " + temp.getUdpUpRate();						
-					statusline.updateTooltip( position,toolTipText );
+					/* first the text */
+					cLabelDown.setText( "DL: " + stats.getTcpDownRate() + " kb/s");
+					cLabelUp.setText( "UL: " + stats.getTcpUpRate() + "kb/s" );
+					/* not the tooltip */
+					cLabelDown.setToolTipText( "UDP-DL: " + stats.getUdpDownRate() );
+					cLabelUp.setToolTipText( "UDP-UL: " + stats.getUdpUpRate() );
 				}
 			});
-		}
+		} 
 	}
 }
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.9  2003/07/31 14:11:06  lemmstercvs01
+reworked
+
 Revision 1.8  2003/07/17 14:58:56  lemmstercvs01
 refactored
 
