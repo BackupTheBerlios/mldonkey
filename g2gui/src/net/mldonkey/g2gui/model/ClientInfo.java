@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.37 2003/12/01 14:43:45 lemmster Exp $
+ * @version $Id: ClientInfo.java,v 1.38 2003/12/01 16:04:52 lemmster Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -124,7 +124,6 @@ public class ClientInfo extends Parent {
     private boolean isUploader = false;
 
     /**
->>>>>>> 1.36
      * Availability of a file (int fileId, String availability)
      * small initial capacity
      */
@@ -445,6 +444,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.38  2003/12/01 16:04:52  lemmster
+removed broken cvs tag
+
 Revision 1.37  2003/12/01 14:43:45  lemmster
 ProtocolVersion handling completely rewritten
 
