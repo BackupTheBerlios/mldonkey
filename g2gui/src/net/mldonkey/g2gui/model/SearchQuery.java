@@ -32,16 +32,29 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
  * with setter(). When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.3 2003/07/04 22:59:15 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.4 2003/07/05 09:52:49 dek Exp $ 
  *
  */
 public class SearchQuery {
-	private byte search;
-	private String searchString;
+
 	private final byte AND = 0;
 	private final byte OR = 1;
 	private final byte ANDNOT = 2;
 	
+	/**
+	 * some options for the search : minFileSize, maxFileSize, etc...
+	 */
+	private Query searchOptions;
+	
+	/**
+	 * This is the wrapper for options & search-query
+	 */
+	private Query mainQuery;
+	
+	/**
+	 * The String we want to search
+	 */
+	private String searchString;	
 	 
 	/**
 	 * The CoreCommunication
@@ -94,6 +107,17 @@ public class SearchQuery {
 		/*this is, what we need to fill with values*/
 		searchQuery = new Query();
 		
+		/*and this are the options for our search:*/
+		searchOptions = new Query();
+		searchOptions.setNode( AND );
+		
+				
+		/*This is the wrapper for options & search-query*/
+		mainQuery = new Query();
+			mainQuery.addQuery( searchOptions );			
+			mainQuery.addQuery( searchQuery );			
+			
+		
 		/*we want to search remotely, so we can set this field here*/
 		searchType = 1;
 		
@@ -101,12 +125,12 @@ public class SearchQuery {
 		 * could be changed by setter-method
 		 */
 		searchQuery.setNode( AND );
-		search = AND;
+
 		
 		/*
 		 * default is searching in all networks:
 		 */
-		 network = 0;
+		network = 0;
 		 
 		 
 		
@@ -126,15 +150,17 @@ public class SearchQuery {
 		this.searchString = searchString;
 		String[] patterns = searchString.split( " " );
 		/* now we have to generate a query-Object for each search pattern */
-		Query[] queries = new Query[patterns.length];
+		Query newQuery;
 		for ( int i = 0; i < patterns.length; i++ ) {
+			newQuery = new Query();
 			String pattern = patterns[i];
-			queries[i] = new Query();
-			queries[i].setNode( ( byte )4 );
-			queries[i].setComment( "Search-pattern:" );
-			queries[i].setDefaultValue( pattern );
+			newQuery = new Query();
+			newQuery.setNode( ( byte )4 );
+			newQuery.setComment( "Search-pattern:" );
+			newQuery.setDefaultValue( pattern );
+			searchQuery.addQuery( newQuery );
 		}
-		searchQuery.setQueries( queries );
+		
 	}
 	
 	/**
@@ -146,9 +172,11 @@ public class SearchQuery {
 		maxSize.setNode( ( byte ) 6 );
 		maxSize.setComment( "Maximum size" );
 		maxSize.setDefaultValue( String.valueOf( size ) );
-		/* I do not know yet, what to do with this query, 
-		 * so we give it back to the gc ;-
+		/*
+		 * add this query to the list in searchOptions
 		 */
+		searchOptions.addQuery( maxSize );
+		
 	}
 
 	/**
@@ -157,12 +185,13 @@ public class SearchQuery {
 	 */
 	public void setMinSize( long size ) {
 		Query minSize = new Query();
-		minSize.setNode( ( byte ) 6 );
+		minSize.setNode( ( byte ) 5 );
 		minSize.setComment( "Minimum size" );
-		minSize.setDefaultValue( String.valueOf( size ) );
-		/* I do not know yet, what to do with this query, 
-		 * so we give it back to the gc ;-
+		minSize.setDefaultValue( String.valueOf( size ) );		
+		/*
+		 * add this query to the list in searchOptions
 		 */
+		searchOptions.addQuery( minSize );
 	}
 	/**
 	 * Setting the file-format of search-results
@@ -173,9 +202,10 @@ public class SearchQuery {
 		format.setNode( ( byte ) 6 );
 		format.setComment( "Format: " );
 		format.setDefaultValue( format_ );
-		/* I do not know yet, what to do with this query, 
-		 * so we give it back to the gc ;-
+		/*
+		 * add this query to the list in searchOptions
 		 */
+		searchOptions.addQuery( format );
 	}
 
 	/**
@@ -195,8 +225,7 @@ public class SearchQuery {
 	 */
 	public void setSearchType( byte type ) {
 		if ( ( type == AND ) || ( type == OR )  ) {		
-				searchQuery.setNode( type );
-				this.search = type;
+				searchQuery.setNode( type );				
 		}
 				
 	}
@@ -210,7 +239,7 @@ public class SearchQuery {
 		content.add( new Integer( searchIdentifier ) );
 		
 		/* now we need to get the Query sorted out in kind of Objects[] */
-			Object[] tempArray = this.searchQuery.toObjectArray();
+			Object[] tempArray = this.mainQuery.toObjectArray();
 			for ( int i = 0; i < tempArray.length; i++ ) {
 				content.add( tempArray [ i ] );
 			}
@@ -253,6 +282,9 @@ public class SearchQuery {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.4  2003/07/05 09:52:49  dek
+searching rocks ;-)
+
 Revision 1.3  2003/07/04 22:59:15  dek
 now works without work-around
 

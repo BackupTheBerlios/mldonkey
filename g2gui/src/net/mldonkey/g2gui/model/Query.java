@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.model;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
@@ -31,7 +32,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.10 2003/07/04 22:59:15 dek Exp $ 
+ * @version $Id: Query.java,v 1.11 2003/07/05 09:52:49 dek Exp $ 
  *
  */
 public class Query implements SimpleInformation {
@@ -44,7 +45,7 @@ public class Query implements SimpleInformation {
 	/**
 	 * Queries for AND or OR or Hidden
 	 */
-	private Query[] queries;
+	private List queries;
 	/**
 	 * First Argument of Andnot
 	 */
@@ -70,6 +71,13 @@ public class Query implements SimpleInformation {
 	 */
 	private String defaultValue;
 
+
+	/**
+	 * creates an empty Query-Object
+	 */
+	public Query() {
+		this.queries = new ArrayList();
+	}
 	/**
 	 * Reads a Query object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
@@ -89,11 +97,10 @@ public class Query implements SimpleInformation {
 
 		if ( node == 0 || node == 1 || node == 13 ) {
 			short listElem = messageBuffer.readInt16();
-			for ( int i = 0; i < listElem; i++ ) {
-				this.queries = new Query[ listElem ];
+			for ( int i = 0; i < listElem; i++ ) {				
 				Query aQuery = new Query();
 				aQuery.readStream( messageBuffer );
-				queries[ i ] = aQuery;
+				queries.add( aQuery ) ;
 			}
 		}
 		else if ( node == 2 ) {
@@ -125,18 +132,17 @@ public class Query implements SimpleInformation {
 		ArrayList output = new ArrayList();
 		output.add( new Byte( node ) );
 		
-			 if ( node == 0 || node == 1 || node == 13 ) {
-			 	
+			 if ( node == 0 || node == 1 || node == 13 ) {			 	
 			 	/*
 			 	 * List of Queries for AND or OR or Hidden.
 			 	 */	
 			 	 
 			 	/* setting List header */
-				output.add( new Short( ( short )queries.length ) );	 
+				output.add( new Short( ( short )queries.size() ) );	 
 					
 				/*now setting an entry for each Query in queries[]*/			 	
-				 	for ( int i = 0; i < queries.length; i++ ) {	
-						Object[] querieArray = queries[ i ].toObjectArray();
+				 	for ( int i = 0; i < queries.size(); i++ ) {	
+						Object[] querieArray = ( ( Query )queries.get( i ) ).toObjectArray();
 							for ( int j = 0; j < querieArray.length; j++ ) {
 								output.add( querieArray [ j ] );
 							}
@@ -198,7 +204,7 @@ public class Query implements SimpleInformation {
 	 * @return a Query[]
 	 */
 	public Query[] getQueries() {
-		return queries;
+		return ( Query[] )queries.toArray();
 	}
 
 	/**
@@ -216,10 +222,10 @@ public class Query implements SimpleInformation {
 	}
 
 	/**
-	 * @param queries a Query[]
+	 * @param query a Query to be added to our query-list
 	 */
-	public void setQueries( Query[] queries ) {
-		this.queries = queries;
+	public void addQuery( Query query ) {
+		this.queries.add ( query );
 	}
 
 	/**
@@ -332,6 +338,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.11  2003/07/05 09:52:49  dek
+searching rocks ;-)
+
 Revision 1.10  2003/07/04 22:59:15  dek
 now works without work-around
 
