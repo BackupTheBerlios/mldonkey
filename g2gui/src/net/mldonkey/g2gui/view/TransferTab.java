@@ -28,6 +28,8 @@ import java.text.DecimalFormat;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
@@ -43,6 +45,9 @@ import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeContentPr
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableViewer;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -63,7 +68,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.62 2003/09/26 16:08:02 zet Exp $
+ * @version $Id: TransferTab.java,v 1.63 2003/09/26 17:19:55 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -73,7 +78,7 @@ public class TransferTab extends GuiTab {
     private DownloadTableTreeViewer downloadTableTreeViewer = null;
     private CustomTableViewer clientTableViewer = null;
     private Composite downloadComposite;
-    private MenuManager popupMenu;
+    private MenuManager popupMenuDL, popupMenuUL;
 
     /**
      * @param gui where this tab belongs to
@@ -112,7 +117,7 @@ public class TransferTab extends GuiTab {
         createUploads( mainSashForm );
         downloadTableTreeViewer =
             new DownloadTableTreeViewer( downloadComposite, clientTableViewer, mldonkey, this );
-        popupMenu.addMenuListener( new DownloadPaneMenuListener( downloadTableTreeViewer.getTableTreeViewer(),
+        popupMenuDL.addMenuListener( new DownloadPaneMenuListener( downloadTableTreeViewer.getTableTreeViewer(),
                                                                  mldonkey ) );
         mainSashForm.setWeights( new int[] { 1, 1 } );
         mainSashForm.setMaximizedControl( downloadParent );
@@ -125,10 +130,10 @@ public class TransferTab extends GuiTab {
      * @param parentViewForm 
      */
     public void createDownloadHeader( ViewForm parentViewForm, final SashForm mainSashForm, final Control downloadParent ) {
-        popupMenu = new MenuManager( "" );
-        popupMenu.setRemoveAllWhenShown( true );
+        popupMenuDL = new MenuManager( "" );
+        popupMenuDL.setRemoveAllWhenShown( true );
         downloadCLabel = CCLabel.createCL( parentViewForm, "TT_Downloads", "TransfersButtonSmallTitlebar" );
-        downloadCLabel.addMouseListener( new MaximizeSashMouseAdapter( downloadCLabel, popupMenu, mainSashForm, downloadParent  ) );
+        downloadCLabel.addMouseListener( new MaximizeSashMouseAdapter( downloadCLabel, popupMenuDL, mainSashForm, downloadParent  ) );
         parentViewForm.setTopLeft( downloadCLabel );
     }
 
@@ -143,14 +148,24 @@ public class TransferTab extends GuiTab {
                           SWT.BORDER
                           | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
         uploadsViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        CLabel uploadsCLabel =
-            CCLabel.createCL( uploadsViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar" );
+       
+       	createUploadHeader( uploadsViewForm, mainSashForm, uploadsViewForm);
         Composite uploadersComposite = new Composite( uploadsViewForm, SWT.NONE );
         uploadersComposite.setLayout( new FillLayout() );
         UploadTableViewer upload = new UploadTableViewer(uploadersComposite,mldonkey,this);
-        uploadsViewForm.setTopLeft( uploadsCLabel );
         uploadsViewForm.setContent( uploadersComposite );
     }
+	public void createUploadHeader( ViewForm parentViewForm, final SashForm mainSashForm, final Control uploadParent ) {
+		popupMenuUL = new MenuManager( "" );
+		popupMenuUL.setRemoveAllWhenShown( true );
+		popupMenuUL.addMenuListener( new UploadsMenuListener() );
+		CLabel uploadsCLabel = CCLabel.createCL( parentViewForm, "TT_Uploads", "TransfersButtonSmallTitlebar" );
+		uploadsCLabel.addMouseListener( new MaximizeSashMouseAdapter( uploadsCLabel, popupMenuUL, mainSashForm, uploadParent  ) );
+		parentViewForm.setTopLeft( uploadsCLabel );
+	}
+    
+    
+    
 
     /**
      * Create the hidden client view form
@@ -283,12 +298,40 @@ public class TransferTab extends GuiTab {
      */
     public void dispose() {
         super.dispose();
-        popupMenu.dispose();
+        popupMenuDL.dispose();
+        popupMenuUL.dispose();
     }
+    
+	/**
+     * UploadsMenuListener
+     */
+    public class UploadsMenuListener implements IMenuListener {
+
+		public void menuAboutToShow( IMenuManager menuManager ) {
+			menuManager.add( new RefreshUploadsAction( ) );
+		}
+	}
+	/**
+     * RefreshUploadsAction
+     */
+    public class RefreshUploadsAction extends Action {
+	   public RefreshUploadsAction( ) {
+		   super( "Refresh" );
+	   }
+
+	   public void run(  ) {
+			Message refresh = new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
+			refresh.sendMessage( mldonkey );
+	   }
+   }
+    
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.63  2003/09/26 17:19:55  zet
+add refresh menuitem
+
 Revision 1.62  2003/09/26 16:08:02  zet
 dblclick header to maximize/restore
 
