@@ -1,10 +1,28 @@
 /*
- * Created on Jul 24, 2003
+ * Copyright 2003
+ * G2GUI Team
+ * 
+ * 
+ * This file is part of G2GUI.
  *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * G2GUI is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * G2GUI is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with G2GUI; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
  */
 package net.mldonkey.g2gui.view.pref;
+
+import java.util.ArrayList;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
@@ -18,26 +36,21 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * @author  
+ * @author z
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class G2Gui_Display extends PreferencePage  {
 	private Composite controlshell;
-	private ExtendedColorFieldEditor consoleBackground, consoleForeground,
-				consoleInputBackground, consoleInputForeground, consoleHighlight;
-	private ExtendedFontFieldEditor2 consoleFontData;
-	private BooleanFieldEditor displayChunkGraphs, displayGridLines, forceRefresh,
-							tableCellEditors, displayHeaderBar, displayAllServers;
-	private IntegerFieldEditor displayBuffer;
+
+	private ArrayList fieldEditorArray = new ArrayList();
 	private int columns = 0;
 	
 	public G2Gui_Display(PreferenceStore preferenceStore, boolean connected) {
 		super( "Display" );
 		setPreferenceStore(preferenceStore);
 		preferenceStore = PreferenceLoader.setDefaults(preferenceStore);
-				
 	}
 	
 	protected void setupEditor(FieldEditor e) {
@@ -45,49 +58,38 @@ public class G2Gui_Display extends PreferencePage  {
 		e.setPreferenceStore( getPreferenceStore() );
 		e.load();
 		computeColumn( e.getNumberOfControls() );
+		fieldEditorArray.add(e);
 	}
 	
 	protected Control createContents( Composite shell ) {	
 
 		this.controlshell = shell;			
 						
-		consoleBackground = new ExtendedColorFieldEditor("consoleBackground", "Console window background colour", shell);
-		setupEditor(consoleBackground);
+		setupEditor(new ExtendedColorFieldEditor("consoleBackground", "Console window background colour", shell));
 			
-		consoleForeground = new ExtendedColorFieldEditor("consoleForeground", "Console window foreground colour", shell);
-		setupEditor(consoleForeground);
+		setupEditor(new ExtendedColorFieldEditor("consoleForeground", "Console window foreground colour", shell));
 	
-		consoleHighlight = new ExtendedColorFieldEditor("consoleHighlight", "Console window highlight colour", shell);
-		setupEditor(consoleHighlight);
+		setupEditor(new ExtendedColorFieldEditor("consoleHighlight", "Console window highlight colour", shell));
 	
-		consoleInputBackground = new ExtendedColorFieldEditor("consoleInputBackground", "Console input background colour", shell);
-		setupEditor(consoleInputBackground);
+		setupEditor(new ExtendedColorFieldEditor("consoleInputBackground", "Console input background colour", shell));
 			
-		consoleInputForeground = new ExtendedColorFieldEditor("consoleInputForeground", "Console input foreground colour", shell);
-		setupEditor(consoleInputForeground);
+		setupEditor(new ExtendedColorFieldEditor("consoleInputForeground", "Console input foreground colour", shell));
 	
-		consoleFontData = new ExtendedFontFieldEditor2("consoleFontData", "Console window font", "Sample",  shell);
-		setupEditor(consoleFontData);
+		setupEditor(new ExtendedFontFieldEditor2("consoleFontData", "Console window font", "Sample",  shell));
 
-		displayAllServers = new BooleanFieldEditor( "displayAllServers", "Show only connected servers", shell );
-		setupEditor( displayAllServers );		
+		setupEditor(new BooleanFieldEditor( "displayAllServers", "Show only connected servers", shell ));
 		
-		displayHeaderBar = new BooleanFieldEditor("displayHeaderBar", "Display header bar", shell);
-		setupEditor(displayHeaderBar);
+		setupEditor(new BooleanFieldEditor("displayHeaderBar", "Display header bar", shell));
 		
-		displayChunkGraphs = new BooleanFieldEditor("displayChunkGraphs", "Display chunk graphs", shell);
-		setupEditor(displayChunkGraphs);
+		setupEditor(new BooleanFieldEditor("displayChunkGraphs", "Display chunk graphs", shell));
 		
-		displayGridLines = new BooleanFieldEditor("displayGridLines", "Display grid lines", shell);
-		setupEditor(displayGridLines);
+		setupEditor(new BooleanFieldEditor("displayGridLines", "Display grid lines", shell));
 		
-		tableCellEditors = new BooleanFieldEditor("tableCellEditors", "Activate table cell editors", shell);
-		setupEditor(tableCellEditors);
+		setupEditor(new BooleanFieldEditor("tableCellEditors", "Activate table cell editors", shell));
 		
-		forceRefresh = new BooleanFieldEditor("forceRefresh", "Force full table refresh at each update (maintains sort order, might flicker)", shell);
-		setupEditor(forceRefresh);
+		setupEditor(new BooleanFieldEditor("forceRefresh", "Force full table refresh at each update (maintains sort order, might flicker)", shell));
 				
-		displayBuffer = new IntegerFieldEditor("displayBuffer", "GUI update buffer (0-60 seconds)", shell);
+		IntegerFieldEditor displayBuffer = new IntegerFieldEditor("displayBuffer", "GUI update buffer (0-60 seconds)", shell);
 		displayBuffer.setValidRange(0,60);
 		setupEditor(displayBuffer);
 		
@@ -114,18 +116,18 @@ public class G2Gui_Display extends PreferencePage  {
 	} 
 	
 	private void arrangeFields() {
-		setHorizontalSpan(consoleForeground);
-		setHorizontalSpan(consoleBackground);
-		setHorizontalSpan(consoleHighlight);
-		setHorizontalSpan(consoleInputForeground);
-		setHorizontalSpan(consoleInputBackground);
-		displayHeaderBar.fillIntoGrid(controlshell, columns);
-		displayChunkGraphs.fillIntoGrid(controlshell, columns);
-		displayGridLines.fillIntoGrid(controlshell, columns);
-		tableCellEditors.fillIntoGrid(controlshell, columns);
-		displayBuffer.fillIntoGrid(controlshell, columns);
-		forceRefresh.fillIntoGrid(controlshell, columns);
-		consoleFontData.adjustForNumColumns( columns );
+		
+		for (int i = 0; i < fieldEditorArray.size(); i++) {
+			FieldEditor fieldEditor = (FieldEditor) fieldEditorArray.get(i);
+					
+			if (fieldEditor instanceof ExtendedColorFieldEditor)
+				setHorizontalSpan( (ExtendedColorFieldEditor) fieldEditor );
+			else if (fieldEditor instanceof BooleanFieldEditor
+					|| fieldEditor instanceof IntegerFieldEditor)
+				fieldEditor.fillIntoGrid(controlshell, columns);
+			else if (fieldEditor instanceof ExtendedFontFieldEditor2)
+				((ExtendedFontFieldEditor2) fieldEditor).adjustForNumColumns( columns );
+		}
 	}
 
 	/**
@@ -138,7 +140,6 @@ public class G2Gui_Display extends PreferencePage  {
 		super.performApply();
 		
 	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
 	 */
@@ -146,29 +147,17 @@ public class G2Gui_Display extends PreferencePage  {
 		super.performDefaults();
 	}
 	public boolean performOk() {
-	 	if (consoleBackground != null) { 
-	 		consoleBackground.store();
-			consoleForeground.store();
-			consoleHighlight.store();
-			consoleInputBackground.store();
-			consoleInputForeground.store();
-			consoleFontData.store();
-			displayAllServers.store();
-			displayHeaderBar.store();
-			displayChunkGraphs.store();
-			displayGridLines.store();
-			tableCellEditors.store();
-			forceRefresh.store();
-			displayBuffer.store();
-		}	
+ 		for (int i = 0; i < fieldEditorArray.size(); i++)
+	 		((FieldEditor) fieldEditorArray.get(i) ).store();
 	 	return super.performOk();
-	 	 	
 	}
-
 }
 
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.12  2003/08/18 00:24:44  zet
+cleanup
+
 Revision 1.11  2003/08/17 23:13:42  zet
 centralize resources, move images
 
