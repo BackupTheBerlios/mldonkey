@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.10 2003/07/24 02:22:46 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.11 2003/07/24 02:35:04 zet Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -112,6 +112,13 @@ public class MainTab implements Listener {
 		Composite mainComposite = new Composite( parent, SWT.NONE );
 		
 		setTitleBar( parent, "g2gui alpha" );
+		
+		parent.setImage (createTransparentImage ( 
+								new Image(parent.getDisplay(), 
+								"src/icons/mld_logo_48x48.png"),
+							parent));
+		
+		
 		createMenuBar( parent );					
 				
 		GridLayout mainLayout = new GridLayout();
@@ -458,6 +465,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.11  2003/07/24 02:35:04  zet
+program icon
+
 Revision 1.10  2003/07/24 02:22:46  zet
 doesn't crash if no core is running
 
