@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.41 2003/11/09 23:09:57 lemmster Exp $
+ * @version $Id: PreferenceLoader.java,v 1.42 2003/11/10 09:58:38 lemmster Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -218,7 +218,8 @@ public class PreferenceLoader {
 	public static boolean loadBoolean( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) )
             return preferenceStore.getBoolean( preferenceString );
-        return true;
+        // TODO return false instead of true by default does hurt somebody/somewhere?
+        return false;
     }
    
 	public static int loadInteger( String preferenceString ) {
@@ -271,6 +272,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.42  2003/11/10 09:58:38  lemmster
+return false by default instead of true in loadBoolean(someString)
+
 Revision 1.41  2003/11/09 23:09:57  lemmster
 remove "Show connected Servers only"
 added filter saving in searchtab
