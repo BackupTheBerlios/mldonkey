@@ -28,7 +28,6 @@ import gnu.regexp.REMatch;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,14 +41,12 @@ import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
@@ -69,25 +66,22 @@ import org.eclipse.swt.widgets.Shell;
  * TableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.9 2003/09/24 09:35:57 lemmster Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.10 2003/10/21 17:00:45 lemmster Exp $
  *
  */
-public class ServerTableMenuListener extends TableMenuListener implements ISelectionChangedListener,
-                                                                          IMenuListener {
+public class ServerTableMenuListener extends TableMenuListener {
     private ServerInfo selectedServer;
     private List selectedServers;
     private ServerInfoIntMap serverInfoMap;
-    private ServerTableContentProvider tableContentProvider;
 
     /**
      * Creates a new TableMenuListener
      * @param tableViewer The TableViewer
      * @param core The CoreCommunication supporting this with data
      */
-    public ServerTableMenuListener( TableViewer tableViewer, CoreCommunication core ) {
-        super( tableViewer, core );
+    public ServerTableMenuListener( CoreCommunication core ) {
+        super( core );
         this.serverInfoMap = this.core.getServerInfoIntMap();
-        this.tableContentProvider = ( ServerTableContentProvider ) this.tableViewer.getContentProvider();
         this.selectedServers = new ArrayList();
     }
 
@@ -572,6 +566,9 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.10  2003/10/21 17:00:45  lemmster
+class hierarchy for tableviewer
+
 Revision 1.9  2003/09/24 09:35:57  lemmster
 serverlink in menulistener
 

@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.16 2003/09/23 19:57:03 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.17 2003/10/21 17:00:45 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -65,7 +65,6 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	private ResultInfo selectedResult;
 	private ResultInfoIntMap resultInfoMap;
 	private List selectedResults;
-	private ResultTableContentProvider tableContentProvider;
 
 	/**
 	 * Creates a new TableMenuListener
@@ -73,12 +72,10 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	 * @param core The CoreCommunication supporting this with data
 	 * @param cTabItem The CTabItem in which the table res
 	 */
-	public ResultTableMenuListener( TableViewer tableViewer, CoreCommunication core, CTabItem cTabItem ) {
-		super( tableViewer, core );
+	public ResultTableMenuListener( CoreCommunication core, CTabItem cTabItem ) {
+		super( core );
 		this.cTabItem = cTabItem;
 		this.resultInfoMap = this.core.getResultInfoIntMap();
-		this.tableContentProvider =
-				( ResultTableContentProvider ) this.tableViewer.getContentProvider();
 		this.selectedResults = new ArrayList();
 	}
 
@@ -346,6 +343,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.17  2003/10/21 17:00:45  lemmster
+class hierarchy for tableviewer
+
 Revision 1.16  2003/09/23 19:57:03  lemmster
 copy to... works with multiple files now
 

@@ -28,14 +28,13 @@ import net.mldonkey.g2gui.model.SharedFileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableViewer.MyContentProvider;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -43,31 +42,22 @@ import org.eclipse.swt.dnd.Transfer;
 /**
  * UploadTableMenuListener
  *
- * @version $Id: UploadTableMenuListener.java,v 1.3 2003/10/19 22:31:53 zet Exp $ 
+ * @version $Id: UploadTableMenuListener.java,v 1.4 2003/10/21 17:00:45 lemmster Exp $ 
  *
  */
-class UploadTableMenuListener
-	extends TableMenuListener
-	implements ISelectionChangedListener, IMenuListener {
-	/**
-	 * CopyEd2kLinkAction
-	 *
-	 * @version $Id: UploadTableMenuListener.java,v 1.3 2003/10/19 22:31:53 zet Exp $ 
-	 *
-	 */
+class UploadTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
 	private SharedFileInfoIntMap sharedFileInfoMap;
-	private MyContentProvider tableContentProvider;
 	private SharedFileInfo selectedFile;
+
 	/**
 	 * Creates a new TableMenuListener
 	 * @param tableViewer The TableViewer
 	 * @param core The CoreCommunication supporting this with data
 	 */
-	public UploadTableMenuListener( StructuredViewer tableViewer, CoreCommunication core ) {
-		super( tableViewer, core );
+	public UploadTableMenuListener( CoreCommunication core ) {
+		super( core );
+		setTableViewer( tableViewer );
 		this.sharedFileInfoMap = this.core.getSharedFileInfoIntMap();
-		this.tableContentProvider =
-			( UploadTableViewer.MyContentProvider ) this.tableViewer.getContentProvider();
 	}
 	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged( org.eclipse.jface.viewers.SelectionChangedEvent )
@@ -105,6 +95,7 @@ class UploadTableMenuListener
 			clipboard.dispose();
 		}
 	}
+
 	/**
 	 * RefreshUploadsAction
 	 */
@@ -121,6 +112,9 @@ class UploadTableMenuListener
 }
 /*
 $Log: UploadTableMenuListener.java,v $
+Revision 1.4  2003/10/21 17:00:45  lemmster
+class hierarchy for tableviewer
+
 Revision 1.3  2003/10/19 22:31:53  zet
 nil
 

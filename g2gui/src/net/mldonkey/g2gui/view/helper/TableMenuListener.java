@@ -34,11 +34,12 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -60,10 +61,11 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.12 2003/10/13 19:55:22 zet Exp $
+ * @version $Id: TableMenuListener.java,v 1.13 2003/10/21 17:00:45 lemmster Exp $
  *
  */
-public abstract class TableMenuListener extends CMenuListener {
+public abstract class TableMenuListener extends CMenuListener implements ISelectionChangedListener,
+	IMenuListener {
     protected ViewerFilter incrementalViewerFilter;
 
     /**
@@ -72,8 +74,8 @@ public abstract class TableMenuListener extends CMenuListener {
      * @param tableViewer DOCUMENT ME!
      * @param core DOCUMENT ME!
      */
-    public TableMenuListener( StructuredViewer tableViewer, CoreCommunication core ) {
-        super( tableViewer, core );
+    public TableMenuListener( CoreCommunication core ) {
+        super( core );
     }
     
 	/* (non-Javadoc)
@@ -556,6 +558,9 @@ public abstract class TableMenuListener extends CMenuListener {
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.13  2003/10/21 17:00:45  lemmster
+class hierarchy for tableviewer
+
 Revision 1.12  2003/10/13 19:55:22  zet
 remove high ascii
 

@@ -25,52 +25,27 @@ package net.mldonkey.g2gui.view.server;
 import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.helper.OurTableSorter;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 
 /**
  * TableSorter
  *
  *
- * @version $Id: ServerTableSorter.java,v 1.3 2003/09/18 11:26:07 lemmster Exp $
+ * @version $Id: ServerTableSorter.java,v 1.4 2003/10/21 17:00:45 lemmster Exp $
  *
  */
-public class ServerTableSorter extends ViewerSorter {
-    /* set the default sort column to state */
-    private int columnIndex = 8;
+public class ServerTableSorter extends OurTableSorter {
 
-    /* set the default way to descending */
-    private boolean lastSort = true;
+	public ServerTableSorter() {
+		super( "ServerSorter", 9 );
+	}
 
-    /**
-     * Creates a new viewer sorter
-     */
-    public ServerTableSorter() {
-        super();
-    }
-
-    /**
-     * Returns a negative, zero, or positive number depending on whether
-     * the first element is less than, equal to, or greater than
-     * the second element.
-     * <p>
-     * The default implementation of this method is based on
-     * comparing the elements' categories as computed by the <code>category</code>
-     * framework method. Elements within the same category are further
-     * subjected to a case insensitive compare of their label strings, either
-     * as computed by the content viewer's label provider, or their
-     * <code>toString</code> values in other cases. Subclasses may override.
-     * </p>
-     *
-     * @param viewer the viewer
-     * @param obj1 the first element
-     * @param obj2 the second element
-     * @return a negative number if the first element is less  than the
-     *  second element; the value <code>0</code> if the first element is
-     *  equal to the second element; and a positive number if the first
-     *  element is greater than the second element
-     */
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+	 */
     public int compare( Viewer viewer, Object obj1, Object obj2 ) {
         ServerInfo server1 = ( ServerInfo ) obj1;
         ServerInfo server2 = ( ServerInfo ) obj2;
@@ -78,30 +53,21 @@ public class ServerTableSorter extends ViewerSorter {
         if ( columnIndex == 0 ) {
             String aString1 = server1.getNetwork().getNetworkName();
             String aString2 = server2.getNetwork().getNetworkName();
-            if ( lastSort )
-                return aString1.compareToIgnoreCase( aString2 );
-            else
-                return aString2.compareToIgnoreCase( aString1 );
+			return compareStrings( aString1, aString2 );
         }
 
         /* name */
         if ( columnIndex == 1 ) {
             String aString1 = server1.getNameOfServer();
             String aString2 = server2.getNameOfServer();
-            if ( lastSort )
-                return aString1.compareToIgnoreCase( aString2 );
-            else
-                return aString2.compareToIgnoreCase( aString1 );
+			return compareStrings( aString1, aString2 );
         }
 
         /* desc */
         if ( columnIndex == 2 ) {
             String aString1 = server1.getDescOfServer();
             String aString2 = server2.getDescOfServer();
-            if ( lastSort )
-                return aString1.compareToIgnoreCase( aString2 );
-            else
-                return aString2.compareToIgnoreCase( aString1 );
+			return compareStrings( aString1, aString2 );
         }
 
         /* address */
@@ -189,25 +155,13 @@ public class ServerTableSorter extends ViewerSorter {
         }
         return 0;
     }
-
-    /**
-     * Sets the column index
-     * @param i The column index to sort
-     */
-    public void setColumnIndex( int i ) {
-        columnIndex = i;
-    }
-
-    /**
-     * @param i The ascending or descending
-     */
-    public void setLastSort( boolean i ) {
-        lastSort = i;
-    }
 }
 
 /*
 $Log: ServerTableSorter.java,v $
+Revision 1.4  2003/10/21 17:00:45  lemmster
+class hierarchy for tableviewer
+
 Revision 1.3  2003/09/18 11:26:07  lemmster
 checkstyle
 

@@ -25,94 +25,43 @@ package net.mldonkey.g2gui.view;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.model.NetworkInfo;
-import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.helper.CCLabel;
+import net.mldonkey.g2gui.view.helper.CMenuListener;
 import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
+import net.mldonkey.g2gui.view.helper.OurTableViewer;
 import net.mldonkey.g2gui.view.helper.PaneMenuListener;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.server.ServerTableContentProvider;
-import net.mldonkey.g2gui.view.server.ServerTableLabelProvider;
 import net.mldonkey.g2gui.view.server.ServerTableMenuListener;
-import net.mldonkey.g2gui.view.server.ServerTableSorter;
-import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
+import net.mldonkey.g2gui.view.server.ServerTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MenuEvent;
-import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 
 /**
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.38 2003/10/12 14:56:19 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.39 2003/10/21 17:00:45 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
-	private boolean oldValue = PreferenceLoader.loadBoolean( "displayAllServers" );
-	private boolean oldValue2 = PreferenceLoader.loadBoolean( "displayTableColors" );
-	private boolean ascending = false;;
-	private TableColumn tableColumn;
-	private Combo combo;
-	private GridData gridData;
-	private Label label;
 	private CoreCommunication core;
-	private ServerInfoIntMap servers;
-	private CustomTableViewer table;
-	private Composite composite;
-	private Group group;
 	private MenuManager popupMenu;
 	private String statusText = "";
+	private ServerInfoIntMap servers;
+	private OurTableViewer ourTableViewer;
 
-	/* if you modify this, change the LayoutProvider and tableWidth */
-	private String[] tableColumns =
-	{ 
-		"SVT_NETWORK",
-		"SVT_NAME",
-		"SVT_DESC",
-		"SVT_ADDRESS",
-		"SVT_PORT",
-		"SVT_SERVERSCORE",
-		"SVT_USERS",
-		"SVT_FILES",
-		"SVT_STATE",
-		"SVT_FAVORITES"
-	};
-	/* 0 sets the tablewidth dynamcliy */
-	private int[] tableWidth =
-	{
-		70, 160, 0, 120, 50,
-		55, 55, 60, 80, 50
-	};
-	
-	private int[] tableAlign =
-	{
-		SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT,
-		SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.LEFT
-	};
-	
 	/**
 	 * @param gui The main gui tab
 	 */
@@ -124,34 +73,6 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		createButton( "ServersButton", 
 						G2GuiResources.getString( "TT_ServersButton" ),
 						G2GuiResources.getString( "TT_ServersButtonToolTip" ) );
-		/* proto <= 16 does not support favorites */					
-		if ( this.core.getProtoToUse() <= 16 ) {
-			this.tableColumns = new String[]
-			{
-				"SVT_NETWORK",
-				"SVT_NAME",
-				"SVT_DESC",
-				"SVT_ADDRESS",
-				"SVT_PORT",
-				"SVT_SERVERSCORE",
-				"SVT_USERS",
-				"SVT_FILES",
-				"SVT_STATE"
-			};	
-			this.tableWidth = new int[]
-			{
-				70, 160, 0, 120,
-				50, 55, 55, 60,
-				80
-			};
-			
-			this.tableAlign = new int[]
-			{
-				SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT,
-				SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT
-			};
-
-		}
 
 		/* create the tab content */
 		this.createContents( this.subContent );
@@ -162,132 +83,42 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * @see net.mldonkey.g2gui.view.GuiTab#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected void createContents( Composite parent ) {
-		
 		ViewForm viewForm = 
 			new ViewForm( parent, SWT.BORDER
 				| ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
 		
 		CLabel ccLabel = CCLabel.createCL( viewForm, "TT_ServersButton", "ServersButtonSmallTitlebar" );
 			
-		this.composite = new Composite( viewForm, SWT.NONE );
+		Composite composite = new Composite( viewForm, SWT.NONE );
 		composite.setLayout( new FillLayout() );
 	
-		viewForm.setContent( this.composite );
+		viewForm.setContent( composite );
 		viewForm.setTopLeft( ccLabel );
 
-		this.createTable();
+		ourTableViewer = new ServerTableViewer( composite, core );
+
+		/* fill the table with content */
+		servers = core.getServerInfoIntMap();
+		ourTableViewer.setInput( servers );
+		servers.clearAdded();
+
+		int itemCount = ourTableViewer.getTableViewer().getTable().getItemCount();
+		this.statusText = G2GuiResources.getString( "SVT_SERVERS" ) + itemCount;
 		
 		popupMenu = new MenuManager( "" );
 		popupMenu.setRemoveAllWhenShown( true );
-		popupMenu.addMenuListener( new PaneMenuListener( table, core ) );
+		CMenuListener cMenuListener = new PaneMenuListener( core );
+		cMenuListener.setTableViewer( ourTableViewer.getTableViewer() );
+		popupMenu.addMenuListener( cMenuListener );
 		
 		ccLabel.addMouseListener( new HeaderBarMouseAdapter( ccLabel, popupMenu ) );
-	}
-
-	/**
-	 * Creates the table
-	 */
-	private void createTable() {
-		table = new CustomTableViewer( composite, SWT.FULL_SELECTION | SWT.MULTI );
-		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
-		table.getTable().setLinesVisible( true );
-		table.getTable().setHeaderVisible( true );
-		table.setUseHashlookup( true );
-		
-		table.setContentProvider( new ServerTableContentProvider() );
-		table.setLabelProvider( new ServerTableLabelProvider() );
-		table.setSorter( new ServerTableSorter() );
-		ServerTableMenuListener tableMenuListener = new ServerTableMenuListener( table, core );
-		table.addSelectionChangedListener( tableMenuListener );
-		MenuManager popupMenu = new MenuManager( "" );
-		popupMenu.setRemoveAllWhenShown( true );
-		popupMenu.addMenuListener( tableMenuListener );
-		table.getTable().setMenu( popupMenu.createContextMenu( table.getTable() ) );
-		
-		/* create the columns */
-		int w;
-		boolean isGTK = SWT.getPlatform().equals("gtk");
-		for ( int i = 0; i < tableColumns.length; i++ ) {
-			final PreferenceStore prefStore = PreferenceLoader.getPreferenceStore();
-			prefStore.setDefault( tableColumns[ i ], tableWidth[ i ] );
-			tableColumn = new TableColumn( table.getTable(), tableAlign[ i ] );
-			tableColumn.setText( G2GuiResources.getString( tableColumns[ i ] ) );
-			
-			// gtk renders an error when setWidth == 0
-			w = prefStore.getInt( tableColumns[ i ] );
-			tableColumn.setWidth( ( ( w == 0 && isGTK ) ? ( tableWidth[ i ] == 0 ? 50 : tableWidth [ i ] ) : w ) );
-			
-			/* read the new tablewidth to the prefstore */
-			final int j = i;
-			tableColumn.addDisposeListener( new DisposeListener() {
-				public synchronized void widgetDisposed( DisposeEvent e ) {
-					TableColumn aColumn = ( TableColumn ) e.widget;
-					prefStore.setValue( tableColumns[ j ] , aColumn.getWidth() );
-				}
-			} );
-			
-			/* adds a sort listener */
-			final int columnIndex = i;
-			tableColumn.addListener( SWT.Selection, new Listener() {
-				public void handleEvent( Event e ) {
-					/* set the column to sort */
-					( ( ServerTableSorter ) table.getSorter() ).setColumnIndex( columnIndex );
-					/* set the way to sort (ascending/descending) */
-					( ( ServerTableSorter ) table.getSorter() ).setLastSort( ascending );
-
-					/* get the data for all tableitems */
-					TableItem[] items = table.getTable().getItems();
-					ServerInfo[] temp = new ServerInfo[ items.length ];
-					for ( int i = 0; i < items.length; i++ )
-							temp[ i ] = ( ServerInfo ) items[ i ].getData();
-
-					/* reverse sorting way */
-					ascending = ascending ? false : true;
-
-					table.getSorter().sort( table, temp );
-					table.refresh();
-				}	
-			} );
-		}
-
-		/*
-		 * add a menulistener to set the first item to default
-		 * sadly not possible with the MenuManager Class
-		 * (Feature Request on eclipse?)
-		 */
-		Menu menu = table.getTable().getMenu();
-		menu.addMenuListener( new MenuListener() {
-			public void menuShown( MenuEvent e ) {
-				Menu menu = table.getTable().getMenu();
-				if ( !table.getSelection().isEmpty() )
-					menu.setDefaultItem( menu.getItem( 0 ) );
-			}
-			public void menuHidden( MenuEvent e ) { }
-		} );
-
-		/* fill the table with content */
-		servers = this.core.getServerInfoIntMap();
-		this.table.setInput( servers );
-		servers.clearAdded();
-		
-		/* set the state filter if preference says so */
-		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) ) {
-			ServerTableMenuListener.EnumStateFilter filter = new ServerTableMenuListener.EnumStateFilter();
-			filter.add( EnumState.CONNECTED );
-			table.addFilter( filter );
-		}
-		
-		int itemCount = table.getTable().getItemCount();
-		//setRightLabel("Total: " + itemCount);
-		/* dont update the statusline, still null */
-		this.statusText = G2GuiResources.getString( "SVT_SERVERS" ) + itemCount;
 	}
 
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, Object arg ) {
-		if ( table.getTable().isDisposed() ) return;
+		if ( ourTableViewer.getTableViewer().getTable().isDisposed() ) return;
 		this.content.getDisplay().asyncExec( this );
 	}		
 
@@ -296,34 +127,34 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 */
 	public void run() {
 		/* still running? */
-		if ( table.getTable().isDisposed() ) return;
+		if ( ourTableViewer.getTableViewer().getTable().isDisposed() ) return;
 		
 		synchronized ( this.servers.getRemoved() ) {
-			table.remove( this.servers.getRemoved().toArray() );
+			ourTableViewer.getTableViewer().remove( this.servers.getRemoved().toArray() );
 			this.servers.clearRemoved();
 		}
 		synchronized ( this.servers.getAdded() ) {
-			table.add( this.servers.getAdded().toArray() );
+			ourTableViewer.getTableViewer().add( this.servers.getAdded().toArray() );
 			this.servers.clearAdded();
 		}
 		synchronized ( this.servers.getModified() ) {
-			table.update( this.servers.getModified().toArray(), null );
+			ourTableViewer.getTableViewer().update( this.servers.getModified().toArray(), null );
 			this.servers.clearModified();
 		}
-		int itemCount = table.getTable().getItemCount();	
+		int itemCount = ourTableViewer.getTableViewer().getTable().getItemCount();	
 		this.setStatusLine();
 		
 		/* refresh the table if "show connected servers only" is true and the filter is activated */
 		if ( PreferenceLoader.loadBoolean( "displayAllServers" )
 		&& this.servers.getConnected() != itemCount ) {
-			ViewerFilter[] filters = table.getFilters();
+			ViewerFilter[] filters = ourTableViewer.getTableViewer().getFilters();
 			for ( int i = 0; i < filters.length; i++ )
 				if ( filters[ i ] instanceof ServerTableMenuListener.EnumStateFilter ) {
 					TableMenuListener.EnumStateFilter filter =
 						( TableMenuListener.EnumStateFilter ) filters[ i ];
 					for ( int j = 0; j < filter.getEnumState().size(); j++ ) {
 						if ( filter.getEnumState().get( j ) == EnumState.CONNECTED )
-							table.refresh();
+							ourTableViewer.getTableViewer().refresh();
 					}
 				}
 		}
@@ -343,7 +174,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	public void setActive() {
 		/* if we become active, refresh the table */
 		this.servers = this.core.getServerInfoIntMap();
-		table.getTable().getDisplay().asyncExec( this );
+		ourTableViewer.getTableViewer().getTable().getDisplay().asyncExec( this );
 		this.setStatusLine();
 		
 		this.core.getServerInfoIntMap().addObserver( this );
@@ -376,76 +207,19 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	}
 	
 	/**
-	 * Adds a <code>ViewerFilter</code> to the <code>TableViewer</code> by
-	 * removing all present <code>TabelMenuListener.NetworkFilter</code> 
-	 * from the table.
-	 * @param enum The <code>NetworkInfo.Enum</code> we want to be filtered
-	 */
-	public void setFilter( NetworkInfo.Enum enum ) {
-		ViewerFilter[] filters = table.getFilters();
-		for ( int i = 0; i < filters.length; i++ ) {
-			if ( filters[ i ] instanceof ServerTableMenuListener.NetworkFilter )
-				table.removeFilter( filters[ i ] );
-		}
-		ServerTableMenuListener.NetworkFilter filter = new ServerTableMenuListener.NetworkFilter();
-		filter.add( enum );
-		table.addFilter( filter );
-	}
-	
-	/**
 	 * Updates this tab on preference close
 	 */
 	public void updateDisplay() {
-		/* only update on pref change */
-		boolean temp = PreferenceLoader.loadBoolean( "displayAllServers" );
-		if ( oldValue != temp ) {
-			/* update the state filter */
-			if ( temp ) {
-				/* first remove all EnumState filters */
-				for ( int i = 0; i < table.getFilters().length; i++ ) {
-					if ( table.getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateFilter )
-						table.removeFilter( table.getFilters()[ i ] );
-				}
-				/* now add the new one */
-				ServerTableMenuListener.EnumStateFilter filter =
-					 new ServerTableMenuListener.EnumStateFilter();
-				filter.add( EnumState.CONNECTED );
-				table.addFilter( filter );
-			}
-			else {
-				ViewerFilter[] filters = table.getFilters();
-				for ( int i = 0; i < filters.length; i++ ) {
-					if ( table.getFilters()[ i ] instanceof ServerTableMenuListener.EnumStateFilter ) {
-						TableMenuListener.EnumStateFilter filter =
-							( TableMenuListener.EnumStateFilter ) filters[ i ];
-						if ( filter.contains( EnumState.CONNECTED ) ) {
-							if (  filter.getEnumState().size() == 1 )
-								table.removeFilter( filter );
-							else {
-								filter.remove( EnumState.CONNECTED );
-								table.refresh();
-							}
-						}
-					}
-				}
-			}
-			this.oldValue = temp;
-		}
-		/* displayTableColors changed? */
-		boolean temp2 = PreferenceLoader.loadBoolean( "displayTableColors" );
-		if ( oldValue2 != temp2 ) {
-			( ( ServerTableLabelProvider ) table.getLabelProvider() ).setColors( temp2 );
-			table.refresh();
-			this.oldValue2 = temp2;
-		}
-		table.getTable().setLinesVisible(
-				PreferenceLoader.loadBoolean( "displayGridLines" ) );
+		( ( ServerTableViewer ) ourTableViewer ).updateDisplay();
 		super.updateDisplay();
 	}
 }
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.39  2003/10/21 17:00:45  lemmster
+class hierarchy for tableviewer
+
 Revision 1.38  2003/10/12 14:56:19  zet
 *** empty log message ***
 

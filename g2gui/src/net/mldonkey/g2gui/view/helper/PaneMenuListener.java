@@ -26,12 +26,11 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.viewers.StructuredViewer;
 
 /**
  * PaneMenuListener
  *
- * @version $Id: PaneMenuListener.java,v 1.3 2003/09/23 14:47:53 zet Exp $ 
+ * @version $Id: PaneMenuListener.java,v 1.4 2003/10/21 17:00:45 lemmster Exp $ 
  *
  */
 public class PaneMenuListener extends CMenuListener implements IMenuListener {
@@ -41,14 +40,14 @@ public class PaneMenuListener extends CMenuListener implements IMenuListener {
 	 * @param viewer The Viewer which is the parent of this objs
 	 * @param core The parent core
 	 */
-	public PaneMenuListener( StructuredViewer viewer, CoreCommunication core ) {
-		super( viewer, core );
+	public PaneMenuListener( CoreCommunication core ) {
+		super( core );
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
 	 */
-	public void menuAboutToShow(IMenuManager manager) {
+	public void menuAboutToShow( IMenuManager manager ) {
 		super.menuAboutToShow( manager );
 	}
 
@@ -56,6 +55,9 @@ public class PaneMenuListener extends CMenuListener implements IMenuListener {
 
 /*
 $Log: PaneMenuListener.java,v $
+Revision 1.4  2003/10/21 17:00:45  lemmster
+class hierarchy for tableviewer
+
 Revision 1.3  2003/09/23 14:47:53  zet
 rename MenuListener to avoid conflict with swt MenuListener
 

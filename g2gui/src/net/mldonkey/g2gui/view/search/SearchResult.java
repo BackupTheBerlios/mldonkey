@@ -34,57 +34,27 @@ import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.SearchTab;
-import net.mldonkey.g2gui.view.helper.CGridLayout;
-import net.mldonkey.g2gui.view.helper.WordFilter;
+import net.mldonkey.g2gui.view.helper.OurTableViewer;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
 
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MenuEvent;
-import org.eclipse.swt.events.MenuListener;
-import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.program.Program;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Widget;
 
 /**
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.54 2003/09/29 17:44:40 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.55 2003/10/21 17:00:45 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
-    private ResultTableMenuListener resultTableMenuListener;
 	private GuiTab search;
 	private MainTab mainTab;
     private CTabFolder cTabFolder;
@@ -93,32 +63,12 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
     private int searchId;
     private boolean stopped = false;
     private ResultInfoIntMap results;
-    private TableViewer table;
     private Label label;
     private CTabItem cTabItem;
-    private TableColumn tableColumn;
     private String statusline;
-    private ResultTableSorter resultTableSorter = new ResultTableSorter();
 	private boolean mustRefresh = false;
     private long lastRefreshTime = 0;
-    private int count = 0;
-
-    /* if you modify this, change the LayoutProvider and tableWidth */
-    private String[] tableColumns = { G2GuiResources.getString( "SR_NETWORK" ),
-								    	G2GuiResources.getString( "SR_NAME" ),
-								    	G2GuiResources.getString( "SR_SIZE" ),
-								    	G2GuiResources.getString( "SR_FORMAT" ),
-								    	G2GuiResources.getString( "SR_MEDIA" ),
-								    	G2GuiResources.getString( "SR_AVAIL" ), };
-
-    /* 0 sets the tablewidth dynamcliy */
-    private int[] tableWidth = { 58, 0, 65, 45, 50, 70 };
-    
-    private int[] tableAlign =
-    {
-    	SWT.LEFT, SWT.LEFT, SWT.RIGHT, 
-		SWT.LEFT, SWT.LEFT, SWT.LEFT 
-    };
+    private OurTableViewer ourTableViewer;
 
     /**
      * Creates a new SearchResult to display all the results supplied by mldonkey
@@ -127,12 +77,12 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
      * @param core The core to communicate with
      * @param searchId The identifier to this search
      */
-    protected SearchResult( String aString, CTabFolder parent, CoreCommunication aCore, int searchId, GuiTab aTab ) {
+    protected SearchResult( String aString, CTabFolder parent, CoreCommunication aCore, int searchId, GuiTab aSearch ) {
         this.searchString = aString;
         this.cTabFolder = parent;
         this.searchId = searchId;
         this.core = aCore;
-        this.search = aTab;
+        this.search = aSearch;
 
         /* draw the display */
         this.createContent();
@@ -167,7 +117,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         if ( arg instanceof ResultInfo ) {
         	cTabFolder.getDisplay().asyncExec( new Runnable() {
 				public void run() {
-					table.update( arg, null );
+					ourTableViewer.getTableViewer().update( arg, null );
 				}
         	} );
         	return;
@@ -187,12 +137,11 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
             return;
         this.results = this.core.getResultInfoIntMap();
         List list = ( List ) results.get( searchId );
-        if ( table == null ) {
+        if ( ourTableViewer == null ) {
             /* remove the old label "searching..." */
             label.dispose();
             this.createTable();
-            table.setInput( list );
-            this.setColumnWidth();
+            ourTableViewer.setInput( list );
         }
         else {
             /*
@@ -200,7 +149,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
              * only refresh the changed items,
              * look at API for refresh(false)
              */
-            if ( list.size() != table.getTable().getItemCount() ) {
+            if ( list.size() != ourTableViewer.getTableViewer().getTable().getItemCount() ) {
                 mustRefresh = true;
                 delayedRefresh();
             }
@@ -209,7 +158,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         /* are we active? set the statusline text */
         if ( cTabFolder.getSelection() == cTabItem ) {
             SearchTab parent = ( SearchTab ) cTabFolder.getData();
-            int itemCount = table.getTable().getItemCount();
+            int itemCount = ourTableViewer.getTableViewer().getTable().getItemCount();
             this.statusline = "Results: " + itemCount;
             parent.getMainTab().getStatusline().update( this.statusline );
         }
@@ -221,7 +170,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
     private void delayedRefresh() {
         if ( System.currentTimeMillis() > ( lastRefreshTime + 2000 ) ) {
             lastRefreshTime = System.currentTimeMillis();
-            table.refresh( true );
+			ourTableViewer.getTableViewer().refresh( true );
             mustRefresh = false;
         }
         else { // schedule an update so we don't miss one
@@ -273,90 +222,10 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         cTabItem.setImage( G2GuiResources.getImage( "SearchComplete" ) );
 
         /* create the result table */
-        table = new CustomTableViewer( cTabFolder, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
-        table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        table.getTable().setLinesVisible( true );
-        table.getTable().setHeaderVisible( true );
-        table.setUseHashlookup( true ); // more mem, but faster
-        table.setContentProvider( new ResultTableContentProvider() );
-        table.setLabelProvider( new ResultTableLabelProvider() );
-        table.setSorter( resultTableSorter );
-        resultTableMenuListener = 
-        	new ResultTableMenuListener( table, core, cTabItem );
-        table.addSelectionChangedListener( resultTableMenuListener );
-        MenuManager popupMenu = new MenuManager( "" );
-        popupMenu.setRemoveAllWhenShown( true );
-        popupMenu.addMenuListener( resultTableMenuListener );
-        table.getTable().setMenu( popupMenu.createContextMenu( table.getTable() ) );
-		
-        // add optional filters
-        if ( PreferenceLoader.loadBoolean( "searchFilterPornography" ) )
-            table.addFilter( new WordFilter( WordFilter.PORNOGRAPHY_FILTER_TYPE ) );
-        else if ( PreferenceLoader.loadBoolean( "searchFilterProfanity" ) )
-            table.addFilter( new WordFilter( WordFilter.PROFANITY_FILTER_TYPE ) );
-
-        /* create the columns */
-        for ( int i = 0; i < tableColumns.length; i++ ) {
-            tableColumn = new TableColumn( table.getTable(), tableAlign[ i ] );
-            tableColumn.setText( tableColumns[ i ] );
-            tableColumn.pack();
-
-            /* adds a sort listener */
-            final int columnIndex = i;
-            tableColumn.addListener( SWT.Selection, new Listener() {
-                    public void handleEvent( Event e ) {
-                        resultTableSorter.setColumnIndex( columnIndex );
-                        table.refresh();
-                    }
-                } );
-        }
-
-        /* add a resize listener */
-        cTabFolder.addControlListener( new ControlAdapter() {
-                public void controlResized( ControlEvent e ) {
-                    SearchResult.this.setColumnWidth();
-                }
-            } );
-
-        /*
-         * add a menulistener to set the first item to default
-         * sadly not possible with the MenuManager Class
-         * (Feature Request on eclipse?)
-         */
-        Menu menu = table.getTable().getMenu();
-        menu.addMenuListener( new MenuListener() {
-                public void menuShown( MenuEvent e ) {
-                    Menu menu = table.getTable().getMenu();
-                    if ( !table.getSelection().isEmpty() )
-                        menu.setDefaultItem( menu.getItem( 0 ) );
-                }
-
-                public void menuHidden( MenuEvent e ) {
-                }
-            } );
-           
-		/* add a mouse-listener to catch double-clicks */
-		table.getTable().addMouseListener( new MouseListener() {
-			public void mouseDoubleClick( MouseEvent e ) {
-				resultTableMenuListener.downloadSelected();
-			}
-			public void mouseDown( MouseEvent e ) { 
-				if ( stopped )
-					( ( SearchTab ) search ).setContinueButton();
-				else
-					( ( SearchTab ) search ).setStopButton();
-			}
-			public void mouseUp( MouseEvent e ) { }
-		} );
-
-		/* just show tooltip on user request */    
-		if ( PreferenceLoader.loadBoolean( "showSearchTooltip" ) ) {
-	        final ToolTipHandler tooltip = new ToolTipHandler( table.getTable().getShell() );
-	        tooltip.activateHoverHelp( table.getTable() );
-		}
+		this.ourTableViewer = new ResultTableViewer( cTabFolder, core, cTabItem, new MyMouseListener() );
 		
         /* set the this table as the new CTabItem Control */
-        cTabItem.setControl( table.getTable() );
+        cTabItem.setControl( ourTableViewer.getTableViewer().getTable() );
         
         /*load behaviour from preference-Store*/
 		updateDisplay();
@@ -368,38 +237,10 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 * might have benn changed.
 	 */
 	public void updateDisplay() {
-		table.getTable().setLinesVisible(
+		ourTableViewer.getTableViewer().getTable().setLinesVisible(
 						PreferenceLoader.loadBoolean( "displayGridLines" ) );
 		
 	}
-
-    /**
-     * Sets the size for the columns
-     */
-    private void setColumnWidth() {
-        /* only do this, if this table has not been disposed, because strangely
-         * this is also called if this searchresult has been disposed further
-         * investigation needed??
-         */
-        if ( !table.getTable().isDisposed() ) {
-            /* the total width of the table */
-            int totalWidth = table.getTable().getSize().x - 25; //why is it 25 to width?			
-
-            /* our tablecolumns */
-            TableColumn[] columns = table.getTable().getColumns();
-            for ( int i = 0; i < tableWidth.length; i++ ) {
-                TableColumn column = columns[ i ];
-                int width = tableWidth[ i ];
-                if ( width != 0 ) {
-                    column.setWidth( tableWidth[ i ] );
-                    totalWidth -= tableWidth[ i ];
-                }
-            }
-
-            /* sets the size of the name (add each column you want to set dynamicly) */
-            columns[ 1 ].setWidth( totalWidth );
-        }
-    }
 
     /**
      * @return The string to display in the statusline
@@ -431,193 +272,37 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
     }
     
     /**
-     * Emulated tooltip handler
-     * Notice that we could display anything in a tooltip besides text and images.
-     * For instance, it might make sense to embed large tables of data or buttons linking
-     * data under inspection to material elsewhere, or perform dynamic lookup for creating
-     * tooltip text on the fly.
+     * 
+     * MyMouseListener
+     *
      */
-    private static class ToolTipHandler {
-        private Shell tipShell;
-        private CLabel tipLabelImage;
-        private Label tipLabelText;
-        private Widget tipWidget; // widget this tooltip is hovering over
-        private Point tipPosition; // the position being hovered over
-
-        /**
-         * Creates a new tooltip handler
-         *
-         * @param parent the parent Shell
-         */
-        public ToolTipHandler( Composite parent ) {
-            final Display display = parent.getDisplay();
-            tipShell = new Shell( parent.getShell(), SWT.ON_TOP );
-            GridLayout gridLayout = CGridLayout.createGL( 1, 2, 2, 0, 0, false );
-            tipShell.setLayout( gridLayout );
-            tipShell.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
-            tipLabelImage = new CLabel( tipShell, SWT.NONE );
-            tipLabelImage.setAlignment( SWT.LEFT );
-            tipLabelImage.setForeground( display.getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
-            tipLabelImage.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
-            tipLabelImage.setLayoutData( new GridData( GridData.FILL_HORIZONTAL
-                                                       | GridData.HORIZONTAL_ALIGN_BEGINNING ) );
-            tipLabelText = new Label( tipShell, SWT.NONE );
-            tipLabelText.setForeground( display.getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
-            tipLabelText.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
-            tipLabelText.setLayoutData( new GridData( GridData.FILL_HORIZONTAL
-                                                      | GridData.VERTICAL_ALIGN_CENTER ) );
-        }
-
-        /**
-         * Enables customized hover help for a specified control
-         *
-         * @control the control on which to enable hoverhelp
-         */
-        public void activateHoverHelp( final Control control ) {
-            /*
-             * Get out of the way if we attempt to activate the control underneath the tooltip
-             */
-            control.addMouseListener( new MouseAdapter() {
-                    public void mouseDown( MouseEvent e ) {
-                        if ( tipShell.isVisible() )
-                            tipShell.setVisible( false );
-                    }
-                } );
-
-            /*
-             * Trap hover events to pop-up tooltip
-             */
-            control.addMouseTrackListener( new MouseTrackAdapter() {
-                    public void mouseExit( MouseEvent e ) {
-                        if ( tipShell.isVisible() )
-                            tipShell.setVisible( false );
-                        tipWidget = null;
-                    }
-
-                    public void mouseHover( MouseEvent event ) {
-                        if ( event.widget == null )
-                            return;
-                        Point pt = new Point( event.x, event.y );
-                        Widget widget = event.widget;
-
-                        /* get the selected item from the table */
-                        Table w = ( Table ) widget;
-                        widget = w.getItem( pt );
-                        if ( widget == null ) {
-                            tipShell.setVisible( false );
-                            tipWidget = null;
-                        }
-                        if ( widget == tipWidget )
-                            return;
-                        tipWidget = widget;
-
-                        // Create the tooltip on demand
-                        if ( widget instanceof TableItem ) {
-                            TableItem tableItem = ( TableItem ) widget;
-                            ResultInfo aResult = ( ResultInfo ) tableItem.getData();
-                            Image image = null;
-                            Program p;
-                            if ( !aResult.getFormat().equals( "" ) )
-                                p = Program.findProgram( aResult.getFormat() );
-                            else {
-                                String temp = aResult.getName();
-                                int index = temp.lastIndexOf( "." );
-                                try {
-                                    temp = temp.substring( index );
-                                }
-                                catch ( Exception e ) {
-                                    p = null;
-                                }
-                                p = Program.findProgram( temp );
-                            }
-                            if ( p != null ) {
-                                ImageData data = p.getImageData();
-                                if ( data != null )
-                                    if ( G2GuiResources.getImage( p.getName() ) == null )
-                                        G2GuiResources.getImageRegistry().put( 
-                                                                                 p.getName(),
-                                                                                 new Image( null, data ) );
-                            }
-                            String imageText = aResult.getName();
-                            String aString = "";
-                            if ( !aResult.getFormat().equals( "" ) )
-                                aString += ( 
-                                               G2GuiResources.getString( "ST_TT_FORMAT" )
-                                               + aResult.getFormat() + "\n"
-                                            );
-                            aString += ( 
-                                               G2GuiResources.getString( "ST_TT_LINK" ) + aResult.getLink()
-                                               + "\n"
-                                            );
-                            aString += ( 
-                                               G2GuiResources.getString( "ST_TT_NETWORK" )
-                                               + aResult.getNetwork().getNetworkName() + "\n"
-                                            );
-                            aString += ( 
-                                               G2GuiResources.getString( "ST_TT_SIZE" )
-                                               + aResult.getStringSize() + "\n"
-                                            );
-                            aString += ( 
-                                               G2GuiResources.getString( "ST_TT_AVAIL" )
-                                               + aResult.getAvail() + " "
-											   + G2GuiResources.getString( "ST_TT_SOURCES" ) + "\n"
-                                            );
-                            if ( aResult.getType().equals( "Audio" ) ) {
-                            	if ( !aResult.getBitrate().equals( "" ) )
-	                            	aString += ( 
-	                            				G2GuiResources.getString( "ST_TT_BITRATE" )
-	                            				+ aResult.getBitrate() + "\n"
-	                            				 );
-								if ( !aResult.getLength().equals( "" ) )
-	                            	aString += ( 
-	                            				G2GuiResources.getString( "ST_TT_LENGTH" )
-	                            				+ aResult.getLength() 
-	                            				 );
-                            }
-                            if ( !aResult.getHistory() )
-                                aString = aString + "\n" + G2GuiResources.getString( "ST_TT_DOWNLOADED" );
-
-                            // set the text/image for the tooltip 
-                            if ( aString != null )
-                                tipLabelText.setText( aString );
-                            else
-                                tipLabelText.setText( "" );
-
-                            /* load the image only if we have a associated programm */
-                            if ( p != null )
-                                tipLabelImage.setImage( G2GuiResources.getImage( p.getName() ) );
-                            else
-                                tipLabelImage.setImage( null );
-                            tipLabelImage.setText( imageText );
-
-                            /* pack/layout the tooltip */
-                            tipShell.pack();
-                            tipPosition = control.toDisplay( pt );
-                            setHoverLocation( tipShell, tipPosition );
-                            tipShell.setVisible( true );
-                        }
-                    }
-                } );
-        }
-
-        /**
-         * Sets the location for a hovering shell
-         * @param shell the object that is to hover
-         * @param position the position of a widget to hover over
-         * @return the top-left location for a hovering box
-         */
-        private void setHoverLocation( Shell shell, Point position ) {
-            Rectangle displayBounds = shell.getDisplay().getBounds();
-            Rectangle shellBounds = shell.getBounds();
-            shellBounds.x = Math.max( Math.min( position.x, displayBounds.width - shellBounds.width ), 0 );
-            shellBounds.y =
-                Math.max( Math.min( position.y + 16, displayBounds.height - shellBounds.height ), 0 );
-            shell.setBounds( shellBounds );
-        }
+    public class MyMouseListener implements MouseListener {
+		/* (non-Javadoc)
+		 * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
+		 */
+		public void mouseDoubleClick( MouseEvent e ) {
+			( ( ResultTableViewer ) ourTableViewer ).getMenuListener().downloadSelected();
+		}
+		/* (non-Javadoc)
+		 * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
+		 */
+		public void mouseDown( MouseEvent e ) {
+			if ( stopped )
+				( ( SearchTab ) search ).setContinueButton();
+			else
+				( ( SearchTab ) search ).setStopButton();
+		}
+		/* (non-Javadoc)
+		 * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
+		 */
+		public void mouseUp( MouseEvent e ) { }
     }
 }
 /*
 $Log: SearchResult.java,v $
+Revision 1.55  2003/10/21 17:00:45  lemmster
+class hierarchy for tableviewer
+
 Revision 1.54  2003/09/29 17:44:40  lemmster
 switch for search tooltips
 

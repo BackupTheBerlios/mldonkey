@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * MenuListener
  *
- * @version $Id: CMenuListener.java,v 1.2 2003/09/23 14:59:50 zet Exp $
+ * @version $Id: CMenuListener.java,v 1.3 2003/10/21 17:00:45 lemmster Exp $
  *
  */
 public abstract class CMenuListener implements IMenuListener {
@@ -52,8 +52,7 @@ public abstract class CMenuListener implements IMenuListener {
 	 * @param viewer The Viewer which is the parent of this objs
 	 * @param core The parent core3
 	 */
-    public CMenuListener( StructuredViewer viewer, CoreCommunication core ) {
-        this.tableViewer = viewer;
+    public CMenuListener( CoreCommunication core ) {
         this.core = core;
     }
 
@@ -66,13 +65,13 @@ public abstract class CMenuListener implements IMenuListener {
         Table table;
 		
 		if ( tableViewer instanceof TableTreeViewer )
-			table = ( ( TableTreeViewer ) tableViewer ).getTableTree(  ).getTable(  );
+			table = ( ( TableTreeViewer ) tableViewer ).getTableTree().getTable();
 		else
             table = ( ( TableViewer ) tableViewer ).getTable(  );
             
-        for ( int i = 0; i < table.getColumnCount(  ); i++ ) {
+        for ( int i = 0; i < table.getColumnCount(); i++ ) {
             ToggleColumnsAction tCA = new ToggleColumnsAction( i );
-            if ( table.getColumn( i ).getResizable(  ) )
+            if ( table.getColumn( i ).getResizable() )
                 tCA.setChecked( true );
             columnsSubMenu.add( tCA );
         }
@@ -94,17 +93,17 @@ public abstract class CMenuListener implements IMenuListener {
             super( "", Action.AS_CHECK_BOX );
             this.column = column;
             if ( tableViewer instanceof TableTreeViewer )
-                table = ( ( TableTreeViewer ) tableViewer ).getTableTree(  ).getTable(  );
+                table = ( ( TableTreeViewer ) tableViewer ).getTableTree().getTable();
             else
-                table = ( ( TableViewer ) tableViewer ).getTable(  );
+                table = ( ( TableViewer ) tableViewer ).getTable();
             tableColumn = table.getColumn( column );
-            setText( tableColumn.getText(  ) );
+            setText( tableColumn.getText() );
         }
     
-        public void run(  ) {
-            if ( !isChecked(  ) ) {
+        public void run() {
+            if ( !isChecked() ) {
 //				gtk doesn't support column width 0
-				tableColumn.setWidth( SWT.getPlatform(  ).equals( "gtk" ) ? 1 : 0 );
+				tableColumn.setWidth( SWT.getPlatform().equals( "gtk" ) ? 1 : 0 );
                 tableColumn.setResizable( false );
             }
             else {
@@ -124,10 +123,20 @@ public abstract class CMenuListener implements IMenuListener {
         else
             tableViewer.removeFilter( viewerFilter );
     }
+
+	/**
+	 * @param tableViewer
+	 */
+	public void setTableViewer( StructuredViewer tableViewer ) {
+		this.tableViewer = tableViewer;
+	}
 }
 
 /*
 $Log: CMenuListener.java,v $
+Revision 1.3  2003/10/21 17:00:45  lemmster
+class hierarchy for tableviewer
+
 Revision 1.2  2003/09/23 14:59:50  zet
 update for tabletreeviewer support
 
