@@ -36,7 +36,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
  * as mldonkey itself cares for wrong values... 
  *
  *
- * @version $Id: OptionsPreferenceStore.java,v 1.9 2003/08/24 11:30:57 dek Exp $ 
+ * @version $Id: OptionsPreferenceStore.java,v 1.10 2003/08/24 14:05:11 dek Exp $ 
  *
  */
 public class OptionsPreferenceStore implements IPreferenceStore {
@@ -148,8 +148,8 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 	 * @see org.eclipse.jface.preference.IPreferenceStore#getInt(java.lang.String)
 	 */
 	public int getInt(String name) {
-		//  Auto-generated method stub
-		return 0;
+		String stringValue = ( ( OptionsInfo )input.get( name ) ) .getValue();
+		return new Integer( stringValue ).intValue();		
 	}
 
 	/* (non-Javadoc)
@@ -328,6 +328,9 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 
 /*
 $Log: OptionsPreferenceStore.java,v $
+Revision 1.10  2003/08/24 14:05:11  dek
+getInt() returns now value instead of "0"
+
 Revision 1.9  2003/08/24 11:30:57  dek
 prefDialog is not resizable any more, and we have IntEditors for int-values
 
