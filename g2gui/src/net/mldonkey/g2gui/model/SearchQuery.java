@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.9 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
+ * @version $Id: SearchQuery.java,v 1.10 2003/07/06 14:13:22 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -102,26 +102,22 @@ public class SearchQuery implements Sendable {
 		searchIdentifier = counter + 1;
 		counter++;
 		
-		/*this is, what we need to fill with values*/
+		/* this is, what we need to fill with values
+		 * 
+		 * The normal search-type should be AND (= type 0)
+		 * could be changed by setter-method
+		 */
 		searchQuery = new Query();
+		searchQuery.setNode( EnumQuery.AND );
 		
 		/*and this are the options for our search:*/
 		searchOptions = new Query();
 		searchOptions.setNode( EnumQuery.AND );
 				
-		/*This is the wrapper for options & search-query*/
-		mainQuery = new Query();
-		mainQuery.setNode( EnumQuery.AND );
-		mainQuery.addQuery( searchOptions );			
-		mainQuery.addQuery( searchQuery );			
 		
 		/*we want to search remotely, so we can set this field here*/
 		searchType = 1;
 		
-		/*The normal search-type should be AND (= type 0)
-		 * could be changed by setter-method
-		 */
-		searchQuery.setNode( EnumQuery.AND );
 
 		/*
 		 * default is searching in all networks:
@@ -144,14 +140,15 @@ public class SearchQuery implements Sendable {
 		String[] patterns = searchString.split( " " );
 		/* now we have to generate a query-Object for each search pattern */
 		Query newQuery;
-		for ( int i = 0; i < patterns.length; i++ ) {				
-			newQuery = new Query();
-			String pattern = patterns[i];			
-			newQuery.setNode( EnumQuery.KEYWORDS );
-			newQuery.setComment( "Search-pattern:" );
-			newQuery.setDefaultValue( pattern );
-			searchQuery.addQuery( newQuery );
-		}
+		
+	 	for ( int i = 0; i < patterns.length; i++ ) {				
+				newQuery = new Query();
+				String pattern = patterns[i];			
+				newQuery.setNode( EnumQuery.KEYWORDS );
+				newQuery.setComment( "Search-pattern:" );
+				newQuery.setDefaultValue( pattern );
+				searchQuery.addQuery( newQuery );
+			}
 	}
 	
 	/**
@@ -221,6 +218,25 @@ public class SearchQuery implements Sendable {
 	 * 
 	 */
 	public void send() {
+		/* if we have only one SearchQuery or SearchOptions,
+		 * we don't need to build the whole tree-structure
+		 * and we can directly set the searchQuery /searchOptions
+		 */ 
+		if ( searchQuery.getQueries().length == 1 )
+			searchQuery = searchQuery.getQueries()[ 0 ];
+					
+		if ( searchOptions.getQueries().length == 1 )
+			searchOptions = searchOptions.getQueries()[ 0 ];
+		
+		/* now we do know, what our search exactly looks like, 
+		 * we can build the whole thing correct
+		 */
+		/*This is the wrapper for options & search-query*/
+		mainQuery = new Query();
+		mainQuery.setNode( EnumQuery.AND );	
+		mainQuery.addQuery( searchOptions );			
+		mainQuery.addQuery( searchQuery );
+			
 		List content = new ArrayList();
 		content.add( new Integer( searchIdentifier ) );
 		
@@ -250,6 +266,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.10  2003/07/06 14:13:22  dek
+"one-word-searching" now also works, only little bug
+
 Revision 1.9  2003/07/06 08:49:33  lemmstercvs01
 better oo added
 

@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.14 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
+ * @version $Id: Query.java,v 1.15 2003/07/06 14:13:22 dek Exp $ 
  *
  */
 public class Query implements SimpleInformation {
@@ -203,8 +203,14 @@ public class Query implements SimpleInformation {
 	/**
 	 * @return a Query[]
 	 */
-	public Query[] getQueries() {
-		return ( Query[] ) queries.toArray();
+	public Query[] getQueries() {	
+		/*creating the Query[], as a direct ClassCast to Query[] doesn't work..:-(*/
+		Object[] temp = queries.toArray();
+		Query[] result = new Query[temp.length];
+		for ( int i = 0; i < result.length; i++ ) {
+				result[ i ] = ( Query ) temp[ i ];
+			}
+		return result;		
 	}
 
 	/**
@@ -356,6 +362,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.15  2003/07/06 14:13:22  dek
+"one-word-searching" now also works, only little bug
+
 Revision 1.14  2003/07/06 07:45:26  lemmstercvs01
 checkstyle applied
 
