@@ -26,10 +26,10 @@ package net.mldonkey.g2gui.model;
  * Download
  *
  * @author markus
- * @version $Id: Download.java,v 1.4 2003/06/12 10:36:04 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.1 2003/06/12 18:14:04 lemmstercvs01 Exp $ 
  *
  */
-public class Download {
+public class FileInfo {
 	/**
 	 * File identifier
 	 */
@@ -366,7 +366,10 @@ public class Download {
 }
 
 /*
-$Log: Download.java,v $
+$Log: FileInfo.java,v $
+Revision 1.1  2003/06/12 18:14:04  lemmstercvs01
+initial commit
+
 Revision 1.4  2003/06/12 10:36:04  lemmstercvs01
 toString() added
 
