@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.14 2003/08/18 12:22:53 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.15 2003/08/18 12:34:44 dek Exp $ 
  *
  */
 public class G2Gui {
@@ -129,7 +129,7 @@ public class G2Gui {
 		try {
 			myPrefs.initialize( preferenceStore );
 		}
-		catch ( IOException e ) { }		
+		catch ( IOException e ) {System.out.println("failed"); }		
 	
 		/* if the gui isnt set up yet launch the preference window */
 		if ( !( preferenceStore.getBoolean( "initialized" ) ) ) {					
@@ -137,9 +137,8 @@ public class G2Gui {
 			myPrefs.open( shell, null );
 			splashShell.setVisible( true );
 		}
-		
 		port = preferenceStore.getInt( "port" );		
-		hostname = preferenceStore.getString( "hostname" );		
+		hostname = preferenceStore.getString( "hostname" );			
 		username = preferenceStore.getString( "username" );			
 		password = preferenceStore.getString( "password" );		
 		
@@ -173,6 +172,12 @@ public class G2Gui {
 		mldonkey = new Thread( core );
 		mldonkey.setDaemon( true );
 		mldonkey.start();
+		preferenceStore.setValue("initialized", true);
+		try {
+			preferenceStore.save();
+		} catch (IOException e2) {
+			
+		}
 		
 		while ( true ) {
 			/* wait as long as the core tells us to continue */
@@ -286,6 +291,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.15  2003/08/18 12:34:44  dek
+now the initialized-stuff works again
+
 Revision 1.14  2003/08/18 12:22:53  dek
 g2gui-pref-page is now fully JFace-approved ;-)
 
