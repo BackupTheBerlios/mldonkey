@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.4 2003/06/16 15:21:01 dek Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.5 2003/06/16 15:33:45 dek Exp $ 
  *
  */
 public class NetworkInfo implements Information {
@@ -84,7 +84,8 @@ public class NetworkInfo implements Information {
 		 * @param messageBuffer The buffer to read from
 		 * @param network_id The ID of the given network ;-)
 		 * 
-		 * If invoked from NetworkInfoMap, this is nescessary, since the network.identifier is already read
+		 * If invoked from NetworkInfoMap, this is nescessary,
+		 * since the network.identifier is already read
 		 */
 		public void readStream( MessageBuffer messageBuffer, int network_id ) {
 			this.setNetwork( network_id );
@@ -189,6 +190,9 @@ public class NetworkInfo implements Information {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.5  2003/06/16 15:33:45  dek
+checkstyle applied
+
 Revision 1.4  2003/06/16 15:21:01  dek
 *** empty log message ***
 
