@@ -8,7 +8,7 @@
  * G2GUI is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * ( at your option ) any later version.
+ * (  at your option  ) any later version.
  *
  * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,29 +22,28 @@
  */
 package net.mldonkey.g2gui.view.pref;
 import java.util.ArrayList;
-
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.IntegerFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 /**
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Display.java,v 1.20 2003/08/28 18:27:32 zet Exp $
+ * @version $Id: G2Gui_Display.java,v 1.21 2003/08/29 14:59:34 dek Exp $
  */
 public class G2Gui_Display extends FieldEditorPreferencePage {
 	private Composite parent;
 	private ArrayList fieldEditorArray = new ArrayList();
 	private int columns = 0;
+	/**
+	 * 
+	 * @param string The name of the OptionsPage
+	 * @param i Style: SWT.XXXX
+	 */
 	public G2Gui_Display( String string, int i ) {
 		super( string, i );
 	}
@@ -52,102 +51,136 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 		e.setPreferencePage( this );
 		e.setPreferenceStore( getPreferenceStore() );
 		e.load();
-		computeColumn( e.getNumberOfControls() );
 		addField( e );
-		fieldEditorArray.add( e );
 	}
-	/* ( non-Javadoc )
-	 * @see org.eclipse.jface.preference.PreferencePage#setPreferenceStore( org.eclipse.jface.preference.IPreferenceStore )
+	/* (  non-Javadoc  )
+	 * @see org.eclipse.jface.preference.PreferencePage#setPreferenceStore(  org.eclipse.jface.preference.IPreferenceStore  )
 	 */
 	public void setPreferenceStore( IPreferenceStore store ) {
 		super.setPreferenceStore( PreferenceLoader.setDefaults( store ) );
 	}
+	
 	protected Control createContents( Composite myparent ) {
 		this.parent = ( Composite ) super.createContents( myparent );
 		return parent;
 	}
-	/* ( non-Javadoc )
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
-	 */
-	private void setHorizontalSpan( FieldEditor editor ) {
-		if ( editor instanceof ExtendedColorFieldEditor ) {
-			(( GridData )
-				( ( ExtendedColorFieldEditor ) editor ).getChangeControl( parent ).getLayoutData() 
-						).horizontalSpan = columns - 1;
-			( ( GridData )
-				( ( ExtendedColorFieldEditor ) editor ).getChangeControl( parent ).getLayoutData()
-						).horizontalAlignment = GridData.FILL;
-		} else {
-			( ( GridData ) 
-				( ( StringFieldEditor ) editor ).getTextControl( parent ).getLayoutData() 
-						 ).horizontalSpan = columns - 1;
-		}
-		( ( GridLayout ) parent.getLayout() ).numColumns = columns;
-	}
-	
-	private void arrangeFields() {
-		for ( int i = 0; i < fieldEditorArray.size(); i++ ) {
-			FieldEditor fieldEditor = ( FieldEditor ) fieldEditorArray.get( i );
-			if ( fieldEditor instanceof ExtendedColorFieldEditor )
-				setHorizontalSpan( ( ExtendedColorFieldEditor ) fieldEditor );
-			else if ( 
-				fieldEditor instanceof BooleanFieldEditor
-					|| fieldEditor instanceof IntegerFieldEditor )
-				fieldEditor.fillIntoGrid( parent, columns );
-			else if ( fieldEditor instanceof ExtendedFontFieldEditor2 )
-				( ( ExtendedFontFieldEditor2 ) fieldEditor ).adjustForNumColumns( 
-					columns );
-		}
-	}
-	/**
-	 * @param i
-	 */
-	private void computeColumn( int i ) {
-		if ( columns < i )
-			columns = i;
-	}
-	/* ( non-Javadoc )
+	/* (   non-Javadoc   )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected void createFieldEditors() {
 		boolean advanced = getPreferenceStore().getBoolean( "advancedMode" );
+
 		parent = getFieldEditorParent();
-		if ( advanced ){		
-			setupEditor( new ExtendedColorFieldEditor( "consoleBackground", G2GuiResources.getString("PREF_DISPLAY_CONSOLE_OBK"), parent ) );
-			setupEditor( new ExtendedColorFieldEditor( "consoleForeground", G2GuiResources.getString("PREF_DISPLAY_CONSOLE_OFG"),parent ) );
-			setupEditor( new ExtendedColorFieldEditor( "consoleHighlight",  G2GuiResources.getString("PREF_DISPLAY_CONSOLE_HL"), parent ) );
-			setupEditor( new ExtendedColorFieldEditor( "consoleInputBackground", G2GuiResources.getString("PREF_DISPLAY_CONSOLE_IBK"), parent ) );
-			setupEditor( new ExtendedColorFieldEditor( "consoleInputForeground", G2GuiResources.getString("PREF_DISPLAY_CONSOLE_IFG"), parent ) );
-			setupEditor( new ExtendedFontFieldEditor2( "consoleFontData", G2GuiResources.getString("PREF_DISPLAY_CONSOLE_FONT"), "Sample", parent ) );
-			setupEditor( new BooleanFieldEditor( "displayAllServers", G2GuiResources.getString("PREF_DISPLAY_CONN_SERV"), parent ) );
-		}			
-			
-		setupEditor( new BooleanFieldEditor( "searchFilterPornography", G2GuiResources.getString("PREF_SEARCH_FILTER_PORNOGRAPHY"), parent ) );
-		
-		setupEditor( new BooleanFieldEditor( "searchFilterProfanity", G2GuiResources.getString("PREF_SEARCH_FILTER_PROFANITY"), parent ) );	
-				
-		setupEditor( new BooleanFieldEditor( "flatInterface", G2GuiResources.getString("PREF_DISPLAY_FLAT_INTERFACE"), parent ) );		
-																								
-		setupEditor( new BooleanFieldEditor( "displayHeaderBar", G2GuiResources.getString("PREF_DISPLAY_HEADER"), parent ) );
-				
-		setupEditor( new BooleanFieldEditor(  "displayChunkGraphs", G2GuiResources.getString("PREF_DISPLAY_CHUNK"), parent ) );
-				
-		setupEditor( new BooleanFieldEditor( "displayGridLines", G2GuiResources.getString("PREF_DISPLAY_GRID"), parent ) );
-				
-		setupEditor( new BooleanFieldEditor( "tableCellEditors", G2GuiResources.getString("PREF_DISPLAY_CELLEDITORS"), parent ) );
-				
-		// setupEditor( new BooleanFieldEditor( "forceRefresh", G2GuiResources.getString("PREF_DISPLAY_FULL_REFRESH"),parent ) );
-			
-		setupEditor( new BooleanFieldEditor( "maintainSortOrder", G2GuiResources.getString("PREF_DISPLAY_SORT_ORDER"),parent ) );	
-				
-	//	IntegerFieldEditor displayBuffer = new IntegerFieldEditor( "displayBuffer", G2GuiResources.getString("PREF_DISPLAY_UPDATE_BUFFER"),parent );
-	//	displayBuffer.setValidRange( 0, 60 );
-	//	setupEditor( displayBuffer );
-		arrangeFields();
+
+		if ( advanced ) {
+			setupEditor( 
+				new ExtendedColorFieldEditor( 
+					"consoleBackground",
+					G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_OBK" ),
+					parent ) );
+
+			setupEditor( 
+				new ExtendedColorFieldEditor( 
+					"consoleForeground",
+					G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_OFG" ),
+					parent ) );
+
+			setupEditor( 
+				new ExtendedColorFieldEditor( 
+					"consoleHighlight",
+					G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_HL" ),
+					parent ) );
+
+			setupEditor( 
+				new ExtendedColorFieldEditor( 
+					"consoleInputBackground",
+					G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_IBK" ),
+					parent ) );
+
+			setupEditor( 
+				new ExtendedColorFieldEditor( 
+					"consoleInputForeground",
+					G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_IFG" ),
+					parent ) );
+
+			setupEditor( 
+				new ExtendedFontFieldEditor2( 
+					"consoleFontData",
+					G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_FONT" ),
+					"Sample",
+					parent ) );
+
+			setupEditor( 
+				new BooleanFieldEditor( 
+					"displayAllServers",
+					G2GuiResources.getString( "PREF_DISPLAY_CONN_SERV" ),
+					parent ) );
+
+		}
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"searchFilterPornography",
+				G2GuiResources.getString( "PREF_SEARCH_FILTER_PORNOGRAPHY" ),
+				parent ) );
+
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"searchFilterProfanity",
+				G2GuiResources.getString( "PREF_SEARCH_FILTER_PROFANITY" ),
+				parent ) );
+
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"flatInterface",
+				G2GuiResources.getString( "PREF_DISPLAY_FLAT_INTERFACE" ),
+				parent ) );
+
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"displayHeaderBar",
+				G2GuiResources.getString( "PREF_DISPLAY_HEADER" ),
+				parent ) );
+
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"displayChunkGraphs",
+				G2GuiResources.getString( "PREF_DISPLAY_CHUNK" ),
+				parent ) );
+
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"displayGridLines",
+				G2GuiResources.getString( "PREF_DISPLAY_GRID" ),
+				parent ) );
+
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"tableCellEditors",
+				G2GuiResources.getString( "PREF_DISPLAY_CELLEDITORS" ),
+				parent ) );
+
+		// setupEditor(  new BooleanFieldEditor(   "forceRefresh", G2GuiResources.getString(  "PREF_DISPLAY_FULL_REFRESH"  ),parent   )   );
+
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"maintainSortOrder",
+				G2GuiResources.getString( "PREF_DISPLAY_SORT_ORDER" ),
+				parent ) );
+
+		//	IntegerFieldEditor displayBuffer = new IntegerFieldEditor(   "displayBuffer", G2GuiResources.getString(  "PREF_DISPLAY_UPDATE_BUFFER"  ),parent   );
+
+		//	displayBuffer.setValidRange(   0, 60   );
+
+		//	setupEditor(   displayBuffer   );
+
 	}
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.21  2003/08/29 14:59:34  dek
+cleaning up, jFaced the whole thing even more, removed not needed methods & calls..
+now the whole thing is kind of small ;-)
+
 Revision 1.20  2003/08/28 18:27:32  zet
 configurable flat interface
 
@@ -161,7 +194,7 @@ Revision 1.17  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.16  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.15  2003/08/19 22:02:15  zet
 localise
