@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.49 2003/11/26 07:42:37 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.50 2003/11/27 15:33:24 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -129,6 +129,8 @@ public class PreferenceLoader {
 		PreferenceConverter.setDefault( preferenceStore, "graphLabelLineColor", display.getSystemColor( SWT.COLOR_YELLOW ).getRGB() );
 		PreferenceConverter.setDefault( preferenceStore, "graphLabelTextColor", display.getSystemColor( SWT.COLOR_BLACK ).getRGB() );
 				
+		
+		preferenceStore.setDefault( "defaultWebBrowser", "");
         preferenceStore.setDefault( "hostname", "localhost" );
         preferenceStore.setDefault( "username", "admin" );
         preferenceStore.setDefault( "password", "" );
@@ -288,6 +290,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.50  2003/11/27 15:33:24  zet
+defWebBrowser
+
 Revision 1.49  2003/11/26 07:42:37  zet
 uploadsSash
 

@@ -26,13 +26,14 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 /**
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.5 2003/11/09 23:09:57 lemmster Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.6 2003/11/27 15:33:24 zet Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -134,10 +135,21 @@ public class G2GuiAdvanced extends PreferencePage {
 				composite ) ;
 		updateDelayEditor.setValidRange( 0, 600 );
 		setupEditor( updateDelayEditor );
+	
+		setupEditor( 
+		     new StringFieldEditor( 
+		        "defaultWebBrowser",
+		        G2GuiResources.getString( "PREF_DISPLAY_DEFAULT_BROWSER" ),
+		        composite ) );
+		
+	
 	}
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.6  2003/11/27 15:33:24  zet
+defWebBrowser
+
 Revision 1.5  2003/11/09 23:09:57  lemmster
 remove "Show connected Servers only"
 added filter saving in searchtab
