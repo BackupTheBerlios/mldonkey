@@ -25,27 +25,25 @@ package net.mldonkey.g2gui.helper;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import churchillobjects.rss4j.RssDocument;
 import churchillobjects.rss4j.parser.RssParseException;
 import churchillobjects.rss4j.parser.RssParser;
 
 /**
  * NewsCreator
  *
- * @version $Id: RSSFetcher.java,v 1.3 2003/10/04 08:49:25 lemmster Exp $
+ * @version $Id: RSSFetcher.java,v 1.4 2003/10/13 08:18:17 lemmster Exp $
  *
  */
 public class RSSFetcher extends Observable implements Runnable {
     private long refreshTime;
     private boolean connected;
-    private Map newsSource;
+    private List newsSource;
 
 	/**
 	 * 
@@ -54,8 +52,11 @@ public class RSSFetcher extends Observable implements Runnable {
     public RSSFetcher()
         throws MalformedURLException {
         this.connected = true;
-        this.newsSource = createURLMap();
-        this.refreshTime = PreferenceLoader.loadInteger( "newsRefreshTime" );
+        this.newsSource = createNewsFeedURLList();
+        this.refreshTime = PreferenceLoader.loadInteger( "newsFeedRefreshTime" );
+        
+		this.setProxy( PreferenceLoader.loadString( "proxyHost"), 
+					   new Integer( PreferenceLoader.loadInteger( "proxyPort" ) ).toString() );
     }
 
     /* (non-Javadoc)
@@ -63,23 +64,23 @@ public class RSSFetcher extends Observable implements Runnable {
      */
     public void run() {
         while ( connected ) {
-            Iterator itr = newsSource.keySet().iterator();
+            Iterator itr = newsSource.iterator();
             while ( itr.hasNext() ) {
-                URL anUrl = ( URL ) itr.next();
+                NewsFeedURL aNewsFeedURL = ( NewsFeedURL ) itr.next();
                 try {
-                    RssDocument doc = RssParser.parseRss( anUrl.openStream() );
-                    newsSource.put( anUrl, doc );
+                    aNewsFeedURL.setRssDocument( 
+                    	RssParser.parseRss( aNewsFeedURL.getUrl().openStream() ) );
                 }
                 catch ( RssParseException e ) {
                     /* remove the incorrect url from the map */
-                    newsSource.remove( anUrl );
+                    newsSource.remove( aNewsFeedURL );
 
                     /* notify the observer */
                     handleException( e );
                 }
                 catch ( IOException e ) {
                     /* remove the incorrect url from the map */
-                    newsSource.remove( anUrl );
+                    newsSource.remove( aNewsFeedURL );
 
                     /* notify the observer */
                     handleException( e );
@@ -105,19 +106,24 @@ public class RSSFetcher extends Observable implements Runnable {
      *
      * @throws MalformedURLException DOCUMENT ME!
      */
-    private Map createURLMap() throws MalformedURLException {
+    public static List createNewsFeedURLList() throws MalformedURLException {
+		List result = new ArrayList();
+
 		/* read the urls from the preferenceLoader */
-        String[] aString = OurTools.split( PreferenceLoader.loadString( "newsUrl" ), ';' );
+		int i = 1;
+		while ( true ) {
+			/* read the hostname (break if preferences returns null */
+			String aHostname = PreferenceLoader.loadString( "newsFeedURL" + i );
+			if ( aHostname.equals( "" ) ) break;
+			URL anUrl = new URL( aHostname );
 
-		/* create a synchronized map so we dont need to mess with sync around */
-        Map aMap = Collections.synchronizedMap( new HashMap() );
+			/* read the title (if preferences return null use hostname */
+			String aTitle = PreferenceLoader.loadString( "newsFeedTitle" + i++ );
+			if ( aTitle.equals( "" ) ) aTitle = anUrl.getHost();
 
-		/* put the url/null entry in the map (null is replaced by a RssDocument in run()) */
-        for ( int i = 0; i < aString.length; i++ ) {
-            URL anUrl = new URL( aString[ i ] );
-            aMap.put( anUrl, null );
-        }
-        return aMap;
+			result.add( new NewsFeedURL( anUrl, aTitle ) );	
+		}
+        return result;
     }
 
     /**
@@ -135,8 +141,8 @@ public class RSSFetcher extends Observable implements Runnable {
 	 * 
 	 * @param anUrl
 	 */
-	public void add( URL anUrl ) {
-		this.newsSource.put( anUrl, null );
+	public void add( NewsFeedURL aNewsFeedURL ) {
+		this.newsSource.add( aNewsFeedURL );
 	}
 	
 	/**
@@ -150,17 +156,31 @@ public class RSSFetcher extends Observable implements Runnable {
     public void stop() {
         this.connected = false;
     }
+    
+    public void setProxy( String hostname, String port ) {
+		if (  hostname == null || hostname.equals( "" ) ) {
+			System.getProperties().put( "proxySet", "false" );
+			return;
+		}
+				
+		System.getProperties().put( "proxySet", "true" );
+		System.getProperties().put( "proxyHost", hostname );
+		System.getProperties().put( "proxyPort", port );
+    }
 
 	/**
 	 * @return
 	 */
-	public Map getNewsSource() {
+	public List getNewsSource() {
 		return newsSource;
 	}
 }
 
 /*
 $Log: RSSFetcher.java,v $
+Revision 1.4  2003/10/13 08:18:17  lemmster
+foobar
+
 Revision 1.3  2003/10/04 08:49:25  lemmster
 foobar
 

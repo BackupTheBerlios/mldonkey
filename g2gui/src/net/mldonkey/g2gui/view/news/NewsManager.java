@@ -22,21 +22,16 @@
  */
 package net.mldonkey.g2gui.view.news;
 
-import churchillobjects.rss4j.RssDocument;
-
-import churchillobjects.rss4j.parser.RssParseException;
-
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import net.mldonkey.g2gui.helper.NewsFeedURL;
 import net.mldonkey.g2gui.helper.RSSFetcher;
 
 import org.eclipse.swt.SWT;
@@ -51,10 +46,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
+import churchillobjects.rss4j.parser.RssParseException;
+
 /**
  * NewsManager
  *
- * @version $Id: NewsManager.java,v 1.3 2003/10/04 08:49:25 lemmster Exp $
+ * @version $Id: NewsManager.java,v 1.4 2003/10/13 08:18:17 lemmster Exp $
  *
  */
 public class NewsManager extends News implements Observer {
@@ -129,19 +126,25 @@ public class NewsManager extends News implements Observer {
      * DOCUMENT ME!
      */
     private void fill() {
-        Iterator itr = aRSSFetcher.getNewsSource().entrySet().iterator();
+        Iterator itr = aRSSFetcher.getNewsSource().iterator();
         while ( itr.hasNext() ) {
-            Map.Entry anEntry = ( Map.Entry ) itr.next();
-            URL anUrl = ( URL ) anEntry.getKey();
-            RssDocument aDoc = ( RssDocument ) anEntry.getValue();
-            if ( aMap.containsKey( anUrl ) ) {
-                NewsFeed aNewsFeed = ( NewsFeed ) aMap.get( anUrl );
+            NewsFeedURL aNewsFeedURL = ( NewsFeedURL ) itr.next();
+            if ( aMap.containsKey( aNewsFeedURL ) ) {
+                NewsFeed aNewsFeed = ( NewsFeed ) aMap.get( aNewsFeedURL );
                 /* only update the newsfeed if the hash of the rssdoc has changed */
-                if ( aNewsFeed.getARssDocument().hashCode() != aDoc.hashCode() )
-                    aNewsFeed.update( aDoc );
+                if ( aNewsFeed.getARssDocument().hashCode() != aNewsFeedURL.getRssDocument().hashCode() ) {
+					aNewsFeed.update( aNewsFeedURL.getRssDocument() );
+					MessageBox box = new MessageBox( control.getShell(), SWT.ICON_INFORMATION );
+					box.setText( "Update" );
+					box.setMessage( "Running an update for: " +  aNewsFeedURL.getTitle() );
+					box.open();
+                }
             }
-            else
-                aMap.put( anUrl, new NewsFeed( cTabFolder, aDoc, anUrl.getHost() ) );
+            else {
+            	NewsFeed aNewsFeed = 
+            		new NewsFeed( cTabFolder, aNewsFeedURL.getRssDocument(), aNewsFeedURL.getTitle() );
+				aMap.put( aNewsFeedURL, aNewsFeed );
+            }
         }
     }
 
@@ -180,8 +183,8 @@ public class NewsManager extends News implements Observer {
      * @param title A title for this newsfeed. if <code>null</code> the hostname is used
      * @param anUrl The <code>URL</code> of this newsfeed file
      */
-    public void add( String title, URL anUrl ) {
-        this.aRSSFetcher.add( anUrl );
+    public void add( NewsFeedURL aNewsFeedURL ) {
+        this.aRSSFetcher.add( aNewsFeedURL );
         aThread.interrupt();
     }
 
@@ -229,6 +232,9 @@ public class NewsManager extends News implements Observer {
 
 /*
 $Log: NewsManager.java,v $
+Revision 1.4  2003/10/13 08:18:17  lemmster
+foobar
+
 Revision 1.3  2003/10/04 08:49:25  lemmster
 foobar
 
