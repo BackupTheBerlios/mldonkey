@@ -1,0 +1,49 @@
+G2gui's TODO-list (last update: 22.01.04)
+=================
+
+----------------
+| Major things |
+----------------
+
+* Fix damaged dynamic-column behaviour under linux (important!)
+
+* Move "Uploads"-sash to a tab of its own called "Shared Files"
+
+* Fix core-connection-loss crash
+  - The (to be extended/fixed) relaunch() method should be called
+    when the core goes down. A small countdown-window counts down
+    from 10 to 0 and tries to connect again (like implemented in teamspeak).
+    Label: "x seconds until reconnection attempt...\n Reconnect now?"
+    Buttons: <OK> (reconnects immediately) <CANCEL> (goes back to pref-window)
+
+* G2gui relaunch() after some preferences-changes ("*needs restart" candidates)
+  - Neededs an extended cleanup-part to make it work
+
+
+------------------------
+| Feature Enhancements |
+------------------------
+* Introduce the mighty link-extractor
+  - Gets a tab of its own
+  - Rips websites
+  - Includes a big (2/3 of tab?) "smart-board" as link-entry window
+    * when stuff is being put into it, automatically extract the
+      links and delete the text inbetween
+    * ripped links from websites are also put into it
+    * its nicely sorted and has checkboxes to select the links for submission
+    * a big submit- and clear-button
+
+
+-------------
+| Cosmetics |
+-------------
+* Increase space between text in table (devein)
+
+* Expanded Transfers should make more of a "block" appearance
+  - Transfertable-clients in italics?
+  - Same background for clients-rows under gtk?
+  - Insert a blank line above and below each block?
+
+* Do something against gtk's contrast-loss when selecting a table-entry
+  (example: dark blue selection-bar over dark green text == hardly readable)
+  - Make text white or something...
