@@ -63,8 +63,8 @@ $(OTHER_RESOBJECTS) :%.o : $(subst .,/,$<)
 $(PROGRAM): libs $(G2GUI_RES_OBJECTS) $(G2GUI_JAVA_OBJECTS) $(OTHER_RESOBJECTS) @PLATFORM_TARGETS@
 	$(GCJ) --main=$(MAINCLASS) $(LINK_ARGS) -o $(PROGRAM) $(JAR_DIR)/$(OBJ_DIR)/*.o $(OBJ_DIR)/*.o
 
-icon.o : % : build-stuff/g2gui.rc
-	windres -o $(OBJ_DIR)/$@ build-stuff/g2gui.rc
+icon.o : % : build/g2gui.rc
+	windres -o $(OBJ_DIR)/$@ build/g2gui.rc
 
 mkobjdir :
 	@if [ ! -d $(OBJ_DIR) ]; then  \
