@@ -45,7 +45,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.8 2003/11/10 08:11:47 lemmster Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.9 2003/11/10 09:58:50 lemmster Exp $ 
  *
  */
 public class ServerPaneListener extends GPaneListener {
@@ -68,7 +68,7 @@ public class ServerPaneListener extends GPaneListener {
 		boolean temp = false;
 		GViewerFilter aFilter = new StateGViewerFilter(gView);
 		for ( int i = 0; i < this.states.length; i++ ) {
-			if ( PreferenceLoader.loadBoolean( states[ i ].toString() ) ) {
+			if ( PreferenceLoader.loadBoolean( states[ i ].getPrefName(this) ) ) {
 				aFilter.add( states[ i ] );
 				temp = true;
 			}
@@ -112,12 +112,15 @@ public class ServerPaneListener extends GPaneListener {
 	public void widgetDisposed(DisposeEvent arg0) {
 		PreferenceStore p = PreferenceLoader.getPreferenceStore();
 		for ( int i = 0; i < this.states.length; i++ )
-			p.setValue( states[ i ].toString(), FilterAction.isFiltered( gView, states[ i ] ) ); 
+			p.setValue( states[ i ].getPrefName(this), FilterAction.isFiltered( gView, states[ i ] ) ); 
 	}
 }
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.9  2003/11/10 09:58:50  lemmster
+save filter state
+
 Revision 1.8  2003/11/10 08:11:47  lemmster
 removed debug
 

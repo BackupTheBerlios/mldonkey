@@ -27,7 +27,7 @@ package net.mldonkey.g2gui.model.enum;
  * Enum
  *
  *
- * @version $Id: Enum.java,v 1.7 2003/10/31 11:01:16 lemmster Exp $
+ * @version $Id: Enum.java,v 1.8 2003/11/10 09:56:51 lemmster Exp $
  *
  */
 public abstract class Enum {
@@ -39,6 +39,18 @@ public abstract class Enum {
     // no instanciation
     protected Enum(int i) {
         field = i;
+    }
+    
+    /**
+     * Creates the preference string
+     * @param obj
+     * @return a String
+     */
+    public String getPrefName( Object obj ) {
+    	String objString = obj.getClass().getName();
+		objString = objString.substring(objString.lastIndexOf( "." ) + 1, objString.length());
+		
+    	return objString + "_" + this.toString();
     }
 
     /**
@@ -105,6 +117,9 @@ public abstract class Enum {
 
 /*
 $Log: Enum.java,v $
+Revision 1.8  2003/11/10 09:56:51  lemmster
+save filter state
+
 Revision 1.7  2003/10/31 11:01:16  lemmster
 TestCase for EnumMaskMatcher
 
