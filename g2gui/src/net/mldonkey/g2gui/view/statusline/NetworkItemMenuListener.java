@@ -38,10 +38,11 @@ import org.eclipse.jface.action.Separator;
  * NetworkItemMenuListener
  *
  *
- * @version $Id: NetworkItemMenuListener.java,v 1.4 2003/09/12 16:28:21 lemmster Exp $ 
+ * @version $Id: NetworkItemMenuListener.java,v 1.5 2003/09/15 22:53:35 lemmster Exp $ 
  *
  */
 public class NetworkItemMenuListener implements IMenuListener {
+	private static final boolean advanced = PreferenceLoader.loadBoolean( "advancedMode" );
 	/**
 	 * The <code>StatusLine</code>
 	 */
@@ -71,9 +72,8 @@ public class NetworkItemMenuListener implements IMenuListener {
 	 * menuAboutToShow(org.eclipse.jface.action.IMenuManager)
 	 */
 	public void menuAboutToShow( IMenuManager manager ) {
-		boolean advancedMode = PreferenceLoader.loadBoolean( "advancedMode" );
 		if ( network.isEnabled() ) {
-			if ( network.hasServers() && advancedMode )
+			if ( network.hasServers() && advanced )
 					manager.add( new ManageAction() );
 
 			if ( network.hasServers() || network.hasSupernodes() )
@@ -134,6 +134,9 @@ public class NetworkItemMenuListener implements IMenuListener {
 
 /*
 $Log: NetworkItemMenuListener.java,v $
+Revision 1.5  2003/09/15 22:53:35  lemmster
+bugfix [bug #912]
+
 Revision 1.4  2003/09/12 16:28:21  lemmster
 ResourceBundle added
 
