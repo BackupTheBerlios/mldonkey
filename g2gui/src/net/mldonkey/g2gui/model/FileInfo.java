@@ -22,17 +22,6 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.text.DecimalFormat;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
-import java.util.WeakHashMap;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -44,17 +33,31 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
+import java.text.DecimalFormat;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Set;
+import java.util.WeakHashMap;
+
+
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.68 2003/10/13 21:36:04 zet Exp $
+ * @version $Id: FileInfo.java,v 1.69 2003/10/23 05:11:56 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
-	/**
-	 * Decimal format for calcStringSize
-	 */
-	private static final DecimalFormat df = new DecimalFormat( "0.#" );
+    /**
+     * Decimal format for calcStringSize
+     */
+    private static final DecimalFormat df = new DecimalFormat("0.#");
+
     /**
      * Static strings used internally for tableviewer updates
      */
@@ -65,44 +68,45 @@ public class FileInfo extends Parent implements Observer {
     public static final String CHANGED_LAST = "last";
     public static final String CHANGED_AVAIL = "avail";
     public static final String CHANGED_ACTIVE = "active";
-	public static final String[] ALL_PROPERTIES = {
-			CHANGED_RATE, 
-			CHANGED_DOWNLOADED, 
-			CHANGED_PERCENT, 
-			CHANGED_AVAIL, 
-			CHANGED_ETA,
-			CHANGED_LAST, 
-			CHANGED_ACTIVE
-		};
+    public static final String[] ALL_PROPERTIES = {
+        CHANGED_RATE, CHANGED_DOWNLOADED, CHANGED_PERCENT, CHANGED_AVAIL, CHANGED_ETA, CHANGED_LAST, CHANGED_ACTIVE
+    };
 
     /**
      * A set (no duplicates) of changed properties
      */
-    private Set changedProperties = Collections.synchronizedSet( new HashSet() );
+    private Set changedProperties = Collections.synchronizedSet(new HashSet());
+
     /**
      * File identifier
      */
     private int id;
+
     /**
      * File network identifier
      */
     private NetworkInfo network;
+
     /**
      * Possible file names
      */
     private String[] names;
+
     /**
      * File md4
      */
     private String md4;
+
     /**
      * File size
      */
     private int size;
+
     /**
      * Size already downloaded
      */
     private int downloaded;
+
     /**
      * Number of sources
      */
@@ -112,89 +116,116 @@ public class FileInfo extends Parent implements Observer {
      * Number of active sources
      */
     private int activeSources;
-    
+
     /**
      * Number of clients
      */
     private int clients;
+
     /**
      * Chunks
      */
     private String chunks;
     private int numChunks;
+
     /**
      * Availibility
      */
     private String avail;
     private int relativeAvail = 0;
+
     /**
      * Availibility for each network
      * only in protocol > 17
      */
     private Map avails;
+
     /**
      * Download rate
      */
     private float rate;
+
     /**
      * File name
      */
     private String name;
+
     /**
      * File priority inside mldonkey
      */
     private Enum priorityEnum;
     private int priority;
+
     /**
      * File last seen
      */
     private int offset;
     private String stringOffset = "";
+
     /**
      * last time each chunk has been seen
      */
     private String[] chunkAges;
+
     /**
      * when download started
      */
     private String age;
     private String stringAge;
+
     /**
      * File Format object
      */
     private Format format = new Format();
+
     /**
      * File State object
      */
     private FileState state = new FileState();
+
     /**
      * Percent (Downloaded/Size)*100
      */
     private int perc;
+
     /**
      * A set of active clients associated with this file
-     */	
-    private Set treeClientInfoSet = Collections.synchronizedSet( new HashSet() );
+     */
+    private Set treeClientInfoSet = Collections.synchronizedSet(new HashSet());
+
     /**
      * A weak keyset of clients associated with this file
      */
-    private Map clientInfos = Collections.synchronizedMap( new WeakHashMap( 4 ) );
+    private Map clientInfos = Collections.synchronizedMap(new WeakHashMap(4));
+
     /**
      * String size
      */
     private String stringSize = "";
+
     /**
      * String downloaded
      */
     private String stringDownloaded = "";
-	/**
-	 * String ETA
-	 */
+
+    /**
+     * String ETA
+     */
     private String stringETA = "";
+
     /**
      * ETA seconds
      */
     private long etaSeconds;
+
+    /**
+     * Creates a new fileinfo object
+     * @param core The CoreCommunication parent
+     */
+    public FileInfo(CoreCommunication core) {
+        super(core);
+    }
+
     /**
      * @return String time when download started
      */
@@ -222,21 +253,29 @@ public class FileInfo extends Parent implements Observer {
     public void setRelativeAvail() {
         int oldRelativeAvail = relativeAvail;
         relativeAvail = 0;
+
         int neededChunks = 0;
         int availChunks = 0;
-        if ( ( avail.length() > 0 ) && ( avail.length() == chunks.length() ) ) {
-            for ( int i = 0; i < avail.length(); i++ ) {
-                if ( ( chunks.charAt( i ) == '0' ) || ( chunks.charAt( i ) == '1' ) ) {
+
+        if ((avail.length() > 0) && (avail.length() == chunks.length())) {
+            for (int i = 0; i < avail.length(); i++) {
+                if ((chunks.charAt(i) == '0') || (chunks.charAt(i) == '1')) {
                     neededChunks++;
-                    if ( ( int ) avail.charAt( i ) > 0 )
+
+                    if ((int) avail.charAt(i) > 0) {
                         availChunks++;
+                    }
                 }
             }
-            if ( neededChunks > 0 )
-                relativeAvail = ( int ) ( ( ( float ) availChunks / ( float ) neededChunks ) * 100f );
+
+            if (neededChunks > 0) {
+                relativeAvail = (int) (((float) availChunks / (float) neededChunks) * 100f);
+            }
         }
-        if ( oldRelativeAvail != relativeAvail )
-            changedProperties.add( CHANGED_AVAIL );
+
+        if (oldRelativeAvail != relativeAvail) {
+            changedProperties.add(CHANGED_AVAIL);
+        }
     }
 
     /**
@@ -259,10 +298,10 @@ public class FileInfo extends Parent implements Observer {
     public String getChunks() {
         return chunks;
     }
-   
-   	/**
-   	 * @return numChunks
-   	 */
+
+    /**
+        * @return numChunks
+        */
     public int getNumChunks() {
         return numChunks;
     }
@@ -276,7 +315,8 @@ public class FileInfo extends Parent implements Observer {
          * be AND'ed with 0xFFFFFFFFL so that it can be treated
          * as a signed long.
          */
-        long result = ( downloaded & 0xFFFFFFFFL );
+        long result = (downloaded & 0xFFFFFFFFL);
+
         return result;
     }
 
@@ -336,29 +376,30 @@ public class FileInfo extends Parent implements Observer {
         return priorityEnum;
     }
 
-	/**
-     * @return File Priority
-     */
+    /**
+    * @return File Priority
+    */
     public int getPriority() {
-		return priority;
-	}
+        return priority;
+    }
 
     /**
      * @return Priority as a string
      */
     public String getStringPriority() {
-    	if ( priority > 19 ) 
-			return G2GuiResources.getString( "TT_PRIO_Very_High" ) + "(" + priority + ")" ;
-        else if ( priority > 0 )
-            return G2GuiResources.getString( "TT_PRIO_High" ) + "(" + priority + ")" ;
-        else if ( priority < -19 )
-        	return G2GuiResources.getString( "TT_PRIO_Very_Low" ) + "(" + priority + ")";    
-        else if ( priority < 0 )
-            return G2GuiResources.getString( "TT_PRIO_Low" ) + "(" + priority + ")" ;
-        else if ( priority == 0 )
-            return G2GuiResources.getString( "TT_PRIO_Normal" );
-        else
+        if (priority > 19) {
+            return G2GuiResources.getString("TT_PRIO_Very_High") + "(" + priority + ")";
+        } else if (priority > 0) {
+            return G2GuiResources.getString("TT_PRIO_High") + "(" + priority + ")";
+        } else if (priority < -19) {
+            return G2GuiResources.getString("TT_PRIO_Very_Low") + "(" + priority + ")";
+        } else if (priority < 0) {
+            return G2GuiResources.getString("TT_PRIO_Low") + "(" + priority + ")";
+        } else if (priority == 0) {
+            return G2GuiResources.getString("TT_PRIO_Normal");
+        } else {
             return "?" + priority;
+        }
     }
 
     /**
@@ -377,7 +418,8 @@ public class FileInfo extends Parent implements Observer {
          * be AND'ed with 0xFFFFFFFFL so that it can be treated
          * as a signed long.
          */
-        long result = ( size & 0xFFFFFFFFL );
+        long result = (size & 0xFFFFFFFFL);
+
         return result;
     }
 
@@ -389,11 +431,12 @@ public class FileInfo extends Parent implements Observer {
         // TODO: use "sources" when core sends it
         return clientInfos.size();
     }
+
     /**
      * @return number of actively transferring sources
      */
     public int getActiveSources() {
-    	return activeSources;
+        return activeSources;
     }
 
     /**
@@ -423,27 +466,19 @@ public class FileInfo extends Parent implements Observer {
     public Map getClientInfos() {
         return clientInfos;
     }
-    
+
     /**
      * @return treeClientInfoSet
      */
     public Set getTreeClientInfoSet() {
-    	return treeClientInfoSet;
-    }
-
-    /**
-     * Creates a new fileinfo object
-     * @param core The CoreCommunication parent
-     */
-    public FileInfo( CoreCommunication core ) {
-        super( core );
+        return treeClientInfoSet;
     }
 
     /**
      * Reads a FileInfo object from a MessageBuffer
      * @param messageBuffer The MessageBuffer to read from
      */
-    public void readStream( MessageBuffer messageBuffer ) {
+    public void readStream(MessageBuffer messageBuffer) {
         /*
         * int32                        File Identifier
         * int32                        File Network Identifier
@@ -465,34 +500,36 @@ public class FileInfo extends Parent implements Observer {
         * int32                        File Priority
         */
         this.id = messageBuffer.readInt32();
-        this.setNetwork( messageBuffer.readInt32() );
+        this.setNetwork(messageBuffer.readInt32());
         this.names = messageBuffer.readStringList();
-        this.md4 = messageBuffer.readBinary( 16 );
+        this.md4 = messageBuffer.readBinary(16);
         this.size = messageBuffer.readInt32();
-        setDownloaded( messageBuffer.readInt32() );
+        setDownloaded(messageBuffer.readInt32());
         this.sources = messageBuffer.readInt32();
         this.clients = messageBuffer.readInt32();
 
         /* File State */
         Enum oldState = this.state.getState();
-        this.getState().readStream( messageBuffer );
-        if ( oldState != this.state.getState() )
-            changedProperties.add( CHANGED_RATE );
-        setChunks( messageBuffer.readString() );
-        setAvailability( messageBuffer );
-        setRate( new Double( messageBuffer.readString() ).doubleValue() ); // use float?
+        this.getState().readStream(messageBuffer);
+
+        if (oldState != this.state.getState()) {
+            changedProperties.add(CHANGED_RATE);
+        }
+
+        setChunks(messageBuffer.readString());
+        setAvailability(messageBuffer);
+        setRate(new Double(messageBuffer.readString()).doubleValue()); // use float?
         this.chunkAges = messageBuffer.readStringList();
         this.age = messageBuffer.readString();
 
         /* File Format */
-        this.getFormat().readStream( messageBuffer );
+        this.getFormat().readStream(messageBuffer);
         this.name = messageBuffer.readString();
-        setOffset( messageBuffer.readInt32() );
-        this.setPriority( messageBuffer.readSignedInt32() );
-        this.stringSize = calcStringSize( this.getSize() );
+        setOffset(messageBuffer.readInt32());
+        this.setPriority(messageBuffer.readSignedInt32());
+        this.stringSize = calcStringSize(this.getSize());
         updateETA();
-        this.stringAge =
-            calcStringOfSeconds( ( System.currentTimeMillis() / 1000 ) - Long.parseLong( this.age ) );
+        this.stringAge = calcStringOfSeconds((System.currentTimeMillis() / 1000) - Long.parseLong(this.age));
         notifyChangedProperties();
     }
 
@@ -505,10 +542,10 @@ public class FileInfo extends Parent implements Observer {
      *
      * @param messageBuffer The MessageBuffer to read from
      */
-    public void update( MessageBuffer messageBuffer ) {
-        setDownloaded( messageBuffer.readInt32() );
-        setRate( new Double( messageBuffer.readString() ).doubleValue() );
-        setOffset( messageBuffer.readInt32() );
+    public void update(MessageBuffer messageBuffer) {
+        setDownloaded(messageBuffer.readInt32());
+        setRate(new Double(messageBuffer.readString()).doubleValue());
+        setOffset(messageBuffer.readInt32());
         updateETA();
         notifyChangedProperties();
     }
@@ -518,38 +555,43 @@ public class FileInfo extends Parent implements Observer {
      */
     public void notifyChangedProperties() {
         String[] changed = new String[ changedProperties.size() ];
-        changedProperties.toArray( changed );
+        changedProperties.toArray(changed);
         changedProperties.clear();
         this.setChanged();
-        this.notifyObservers( changed );
+        this.notifyObservers(changed);
     }
 
     /**
      * Put the client into this list of clientinfos
      * @param clientInfo The clientInfo to put into this map
      */
-    public void addClientInfo( ClientInfo clientInfo ) {
-        this.clientInfos.put( clientInfo, null );
-        clientInfo.addObserver( this );
-		if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
-			setActiveSources( +1 );
-			treeClientInfoSet.add(new TreeClientInfo(this, clientInfo));
-		}
+    public void addClientInfo(ClientInfo clientInfo) {
+        this.clientInfos.put(clientInfo, null);
+        clientInfo.addObserver(this);
+
+        if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
+            setActiveSources(+1);
+
+            if (findTreeClientInfo(clientInfo) == null) {
+                treeClientInfoSet.add(new TreeClientInfo(this, clientInfo));
+            }
+        }
+
         this.setChanged();
-        this.notifyObservers( clientInfo );
+        this.notifyObservers(clientInfo);
     }
 
     /**
      * Removes a clientinfo from this list of clientinfos
      * @param clientInfo The clientinfo obj to remove
-	 */
-    public void removeClientInfo( ClientInfo clientInfo ) {
-        this.clientInfos.remove( clientInfo );
-        clientInfo.deleteObserver( this );
-        removeTreeClientInfo( clientInfo );
-        setActiveSources( 0 );
+         */
+    public void removeClientInfo(ClientInfo clientInfo) {
+        this.clientInfos.remove(clientInfo);
+        clientInfo.deleteObserver(this);
+        removeTreeClientInfo(clientInfo);
+        setActiveSources(0);
         this.setChanged();
-        this.notifyObservers( clientInfo );
+        this.notifyObservers(clientInfo);
     }
 
     /**
@@ -557,37 +599,40 @@ public class FileInfo extends Parent implements Observer {
      * @param fileInfo the fileinfo to compare with
      * @return true if they are identical, otherwise false
      */
-    public boolean equals( FileInfo fileInfo ) {
-        if ( this.getMd4().equalsIgnoreCase( fileInfo.getMd4() ) )
+    public boolean equals(FileInfo fileInfo) {
+        if (this.getMd4().equalsIgnoreCase(fileInfo.getMd4())) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /**
      * translate the int to EnumPriority
      * @param i the int
      */
-    private void setPriority( int i ) {
-    	priority = i;
-		if ( i < -19 )
-			priorityEnum = EnumPriority.VERY_LOW;
-        else if ( i < 0 )
+    private void setPriority(int i) {
+        priority = i;
+
+        if (i < -19) {
+            priorityEnum = EnumPriority.VERY_LOW;
+        } else if (i < 0) {
             priorityEnum = EnumPriority.LOW;
-        else if ( i > 19 )
+        } else if (i > 19) {
             priorityEnum = EnumPriority.VERY_HIGH;
-        else if ( i > 0 )
-			priorityEnum = EnumPriority.HIGH;
-        else
+        } else if (i > 0) {
+            priorityEnum = EnumPriority.HIGH;
+        } else {
             priorityEnum = EnumPriority.NORMAL;
+        }
     }
 
     /**
      * translate the int to EnumNetwork
      * @param i the int
      */
-    private void setNetwork( int i ) {
-        this.network = ( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
+    private void setNetwork(int i) {
+        this.network = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(i);
     }
 
     /**
@@ -595,24 +640,27 @@ public class FileInfo extends Parent implements Observer {
      *
      * read a list of int32(networkid) and string(avail)
      */
-    private void setAvailability( MessageBuffer messageBuffer ) {
-        if ( parent.getProtoToUse() > 17 ) {
+    private void setAvailability(MessageBuffer messageBuffer) {
+        if (parent.getProtoToUse() > 17) {
             int listElem = messageBuffer.readInt16();
-            this.avails = new HashMap( listElem );
-            for ( int i = 0; i < listElem; i++ ) {
+            this.avails = new HashMap(listElem);
+
+            for (int i = 0; i < listElem; i++) {
                 int networkID = messageBuffer.readInt32();
-                NetworkInfo network = parent.getNetworkInfoMap().get( networkID );
+                NetworkInfo network = parent.getNetworkInfoMap().get(networkID);
+
                 /* multinet avail is the overall avail */
-                if ( network.getNetworkType() != NetworkInfo.Enum.MULTINET ) {
+                if (network.getNetworkType() != NetworkInfo.Enum.MULTINET) {
                     String aString = messageBuffer.readString();
-                    this.avails.put( network, aString );
-                }
-                else
+                    this.avails.put(network, aString);
+                } else {
                     this.avail = messageBuffer.readString();
+                }
             }
-        }
-        else
+        } else {
             this.avail = messageBuffer.readString();
+        }
+
         setRelativeAvail();
     }
 
@@ -621,12 +669,14 @@ public class FileInfo extends Parent implements Observer {
      *
      * @param string
      */
-    private void setChunks( String s ) {
+    private void setChunks(String s) {
         this.chunks = s;
         numChunks = 0;
-        for ( int i = 0; i < chunks.length(); i++ ) {
-            if ( ( chunks.charAt( i ) == '2' ) || ( chunks.charAt( i ) == '3' ) )
+
+        for (int i = 0; i < chunks.length(); i++) {
+            if ((chunks.charAt(i) == '2') || (chunks.charAt(i) == '3')) {
                 numChunks++;
+            }
         }
     }
 
@@ -635,19 +685,27 @@ public class FileInfo extends Parent implements Observer {
      *
      * @param int
      */
-    private void setDownloaded( int i ) {
+    private void setDownloaded(int i) {
         this.downloaded = i;
+
         String oldStringDownloaded = stringDownloaded;
-        this.stringDownloaded = calcStringSize( this.getDownloaded() );
-        if ( !oldStringDownloaded.equals( stringDownloaded ) )
-            changedProperties.add( CHANGED_DOWNLOADED );
+        this.stringDownloaded = calcStringSize(this.getDownloaded());
+
+        if (!oldStringDownloaded.equals(stringDownloaded)) {
+            changedProperties.add(CHANGED_DOWNLOADED);
+        }
+
         int oldPercent = this.perc;
-        if ( this.getSize() > 0 )
-            this.perc = ( int ) ( ( float ) this.getDownloaded() / ( float ) this.getSize() * 100f );
-        else
+
+        if (this.getSize() > 0) {
+            this.perc = (int) ((float) this.getDownloaded() / (float) this.getSize() * 100f);
+        } else {
             this.perc = 0;
-        if ( oldPercent != this.perc )
-            changedProperties.add( CHANGED_PERCENT );
+        }
+
+        if (oldPercent != this.perc) {
+            changedProperties.add(CHANGED_PERCENT);
+        }
     }
 
     /**
@@ -655,10 +713,12 @@ public class FileInfo extends Parent implements Observer {
      *
      * @param double
      */
-    private void setRate( double d ) {
-        if ( this.rate != ( float ) d )
-            changedProperties.add( CHANGED_RATE );
-        this.rate = ( float ) d;
+    private void setRate(double d) {
+        if (this.rate != (float) d) {
+            changedProperties.add(CHANGED_RATE);
+        }
+
+        this.rate = (float) d;
     }
 
     /**
@@ -666,135 +726,152 @@ public class FileInfo extends Parent implements Observer {
      *
      * @param int
      */
-    private void setOffset( int i ) {
+    private void setOffset(int i) {
         this.offset = i;
+
         String oldStringOffset = stringOffset;
-        this.stringOffset = calcStringOfSeconds( this.offset );
-        if ( !oldStringOffset.equals( stringOffset ) )
-            changedProperties.add( CHANGED_LAST );
+        this.stringOffset = calcStringOfSeconds(this.offset);
+
+        if (!oldStringOffset.equals(stringOffset)) {
+            changedProperties.add(CHANGED_LAST);
+        }
     }
-    
+
     /**
      * Calculate # of active sources
      */
-    public void setActiveSources( int i ) {
-		
-		int oldActiveSources = activeSources;
-		
-		if ( i == 0 ) {
-	    	activeSources = 0;
-	    	Iterator it = clientInfos.keySet().iterator();
-	    	while (it.hasNext()) {
-	    		ClientInfo clientInfo = (ClientInfo) it.next();
-	    		if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
-	    			activeSources++;
-	    	}
-	
-		} else {
-			activeSources += i;
-		}
+    public void setActiveSources(int i) {
+        int oldActiveSources = activeSources;
 
-    	if (oldActiveSources != activeSources) {
-    		changedProperties.add( CHANGED_ACTIVE );
-			notifyChangedProperties();
-    	}
+        if (i == 0) {
+            activeSources = 0;
+
+            Iterator it = clientInfos.keySet().iterator();
+
+            while (it.hasNext()) {
+                ClientInfo clientInfo = (ClientInfo) it.next();
+
+                if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
+                    activeSources++;
+                }
+            }
+        } else {
+            activeSources += i;
+        }
+
+        if (oldActiveSources != activeSources) {
+            changedProperties.add(CHANGED_ACTIVE);
+            notifyChangedProperties();
+        }
     }
 
     /**
      * update ETA
      */
     private void updateETA() {
-        if ( this.rate == 0 )
+        if (this.rate == 0) {
             this.etaSeconds = Long.MAX_VALUE;
-        else
-            this.etaSeconds = ( long ) ( ( getSize() - getDownloaded() ) / ( this.rate + 1 ) );
+        } else {
+            this.etaSeconds = (long) ((getSize() - getDownloaded()) / (this.rate + 1));
+        }
+
         String oldStringETA = stringETA;
-        this.stringETA = calcStringOfSeconds( this.etaSeconds );
-        if (stringETA.equals("")) stringETA = "-";
-        if ( !oldStringETA.equals( stringETA ) )
-            changedProperties.add( CHANGED_ETA );
+        this.stringETA = calcStringOfSeconds(this.etaSeconds);
+
+        if (stringETA.equals("")) {
+            stringETA = "-";
+        }
+
+        if (!oldStringETA.equals(stringETA)) {
+            changedProperties.add(CHANGED_ETA);
+        }
     }
 
     /**
      * @param string The new name for this file
      */
-    public void setName( String string ) {
+    public void setName(String string) {
         string = "rename " + this.getId() + " \"" + string + "\"";
+
         /* create the message content */
-        Message consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, string );
-        consoleMessage.sendMessage( this.parent );
+        Message consoleMessage = new EncodeMessage(Message.S_CONSOLEMSG, string);
+        consoleMessage.sendMessage(this.parent);
         consoleMessage = null;
     }
 
     /**
      * @param enum The new priority for this file (LOW/NORMAL/HIGH)
      */
-    public void sendPriority( EnumPriority enum ) {
-       
+    public void sendPriority(EnumPriority enum) {
         int newPriority;
-        
-        if ( enum == EnumPriority.LOW )
-            newPriority = -10;
-        else if ( enum == EnumPriority.HIGH )
-            newPriority = 10;
-        else if ( enum == EnumPriority.VERY_HIGH )
-        	newPriority = 20;
-        else if ( enum == EnumPriority.VERY_LOW )
-        	newPriority = -20;
-        else
-            newPriority = 0;
-            
-        sendPriority( false, newPriority );    
 
+        if (enum == EnumPriority.LOW) {
+            newPriority = -10;
+        } else if (enum == EnumPriority.HIGH) {
+            newPriority = 10;
+        } else if (enum == EnumPriority.VERY_HIGH) {
+            newPriority = 20;
+        } else if (enum == EnumPriority.VERY_LOW) {
+            newPriority = -20;
+        } else {
+            newPriority = 0;
+        }
+
+        sendPriority(false, newPriority);
     }
-    
+
     /**
      * Send new priority
      * @param relative
      * @param i
      */
-    public void sendPriority( boolean relative, int i ) {
-		Object[] obj = new Object[ 2 ];
-		obj[ 0 ] = new Integer( this.getId() );
-		if (relative) i+= priority;
-    	obj[ 1 ] = new Integer( i );
-		
-		Message priorityMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, obj );
-		priorityMessage.sendMessage( this.parent );
-    }	
+    public void sendPriority(boolean relative, int i) {
+        Object[] obj = new Object[ 2 ];
+        obj[ 0 ] = new Integer(this.getId());
+
+        if (relative) {
+            i += priority;
+        }
+
+        obj[ 1 ] = new Integer(i);
+
+        Message priorityMessage = new EncodeMessage(Message.S_SET_FILE_PRIO, obj);
+        priorityMessage.sendMessage(this.parent);
+    }
 
     /**
      * @param enum The new state of this file
      */
-    public void setState( EnumFileState enum ) {
-        this.getState().setState( enum, this.getId(), this.parent );
+    public void setState(EnumFileState enum) {
+        this.getState().setState(enum, this.getId(), this.parent);
     }
 
     /**
      * Verify all chunks of this fileinfo
      */
     public void verifyChunks() {
-        Message chunks = new EncodeMessage( Message.S_VERIFY_ALL_CHUNKS, new Integer( this.getId() ) );
-        chunks.sendMessage( this.parent );
+        Message chunks = new EncodeMessage(Message.S_VERIFY_ALL_CHUNKS, new Integer(this.getId()));
+        chunks.sendMessage(this.parent);
     }
-    
+
     /**
      * Preview the file
      */
     public void preview() {
-    	Message preview = new EncodeMessage( Message.S_PREVIEW, new Integer( this.getId() ) );
-    	preview.sendMessage( this.parent );
+        Message preview = new EncodeMessage(Message.S_PREVIEW, new Integer(this.getId()));
+        preview.sendMessage(this.parent);
     }
 
     /**
      * @param name Save file as (name)
      */
-    public void saveFileAs( String name ) {
+    public void saveFileAs(String name) {
         Object[] obj = new Object[ 2 ];
-        obj[ 0 ] = new Integer( this.getId() );
+        obj[ 0 ] = new Integer(this.getId());
         obj[ 1 ] = name;
-        Message saveAs = new EncodeMessage( Message.S_SAVE_FILE_AS, obj );
-        saveAs.sendMessage( this.parent );
+
+        Message saveAs = new EncodeMessage(Message.S_SAVE_FILE_AS, obj);
+        saveAs.sendMessage(this.parent);
         obj = null;
         saveAs = null;
     }
@@ -804,168 +881,197 @@ public class FileInfo extends Parent implements Observer {
      * @param size The size
      * @return a string represantation of this size
      */
-    public static String calcStringSize( long size ) {
+    public static String calcStringSize(long size) {
         float k = 1024f;
         float m = k * k;
         float g = m * k;
         float t = g * k;
-        float fsize = ( float ) size;
-        if ( fsize >= t )
-            return new String( df.format( fsize / t ) + " TB" );
-        else if ( fsize >= g )
-            return new String( df.format( fsize / g ) + " GB" );
-        else if ( fsize >= m )
-            return new String( df.format( fsize / m ) + " MB" );
-        else if ( fsize >= k )
-            return new String( df.format( fsize / k ) + " KB" );
-        else
-            return new String( size + "" );
+        float fsize = (float) size;
+
+        if (fsize >= t) {
+            return new String(df.format(fsize / t) + " TB");
+        } else if (fsize >= g) {
+            return new String(df.format(fsize / g) + " GB");
+        } else if (fsize >= m) {
+            return new String(df.format(fsize / m) + " MB");
+        } else if (fsize >= k) {
+            return new String(df.format(fsize / k) + " KB");
+        } else {
+            return new String(size + "");
+        }
     }
-	/**
-	 * @return stringSize
-	 */
+
+    /**
+     * @return stringSize
+     */
     public String getStringSize() {
         return stringSize;
     }
 
-	/**
-	 * @return stringDownloaded
-	 */
+    /**
+     * @return stringDownloaded
+     */
     public String getStringDownloaded() {
         return stringDownloaded;
     }
 
-	/**
-	 * @param inSeconds
-	 * @return stringOfSeconds
-	 */
-    private static String calcStringOfSeconds( long inSeconds ) {
-        if ( inSeconds < 1 )
+    /**
+     * @param inSeconds
+     * @return stringOfSeconds
+     */
+    private static String calcStringOfSeconds(long inSeconds) {
+        if (inSeconds < 1) {
             return "0m";
+        }
+
         long days = inSeconds / 60 / 60 / 24;
-        long rest = inSeconds - ( days * 60 * 60 * 24 );
+        long rest = inSeconds - (days * 60 * 60 * 24);
         long hours = rest / 60 / 60;
-        rest = rest - ( hours * 60 * 60 );
+        rest = rest - (hours * 60 * 60);
+
         long minutes = rest / 60;
-        long seconds = rest - ( minutes * 60 );
-        if ( days > 99 )
+        long seconds = rest - (minutes * 60);
+
+        if (days > 99) {
             return "";
-        if ( days > 0 )
+        }
+
+        if (days > 0) {
             return "" + days + "d";
-        if ( hours > 0 )
-            return "" + hours + "h" + ( ( minutes > 0 ) ? ( " " + minutes + "m" ) : "" );
+        }
+
+        if (hours > 0) {
+            return "" + hours + "h" + ((minutes > 0) ? (" " + minutes + "m") : "");
+        }
+
         return "" + minutes + "m";
     }
- 
- 	/**
- 	 * @return stringETA
- 	 */
+
+    /**
+      * @return stringETA
+      */
     public String getStringETA() {
-		if (getState().getState() == EnumFileState.QUEUED 
-			|| getState().getState() == EnumFileState.DOWNLOADED
-			|| getState().getState() == EnumFileState.PAUSED)
-			return "-";
-		
+        if ((getState().getState() == EnumFileState.QUEUED) || (getState().getState() == EnumFileState.DOWNLOADED) ||
+                (getState().getState() == EnumFileState.PAUSED)) {
+            return "-";
+        }
+
         return stringETA;
     }
 
-	/**
-	 * @return stringOffset (Last seen complete)
-	 */
+    /**
+     * @return stringOffset (Last seen complete)
+     */
     public String getStringOffset() {
         return stringOffset;
     }
 
-	/**
-	 * @return stringAge (Age of download)
-	 */
+    /**
+     * @return stringAge (Age of download)
+     */
     public String getStringAge() {
         return stringAge;
     }
- 
- 	/**
- 	 * @return eta
- 	 */
+
+    /**
+      * @return eta
+      */
     public long getETA() {
         return etaSeconds;
     }
 
-	/**
-	 * @return ed2kLink
-	 */
-	public String getED2K() {
-		return "ed2k://|file|" + this.getName() 
-				+ "|" + this.getSize() 
-				+ "|" + this.getMd4() 
-				+ "|/";
-	}
-	
+    /**
+     * @return ed2kLink
+     */
+    public String getED2K() {
+        return "ed2k://|file|" + this.getName() + "|" + this.getSize() + "|" + this.getMd4() + "|/";
+    }
+
     /* (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
-    public void update( Observable o, Object obj ) {
-        if ( o instanceof ClientInfo && obj instanceof Boolean ) {
-            ClientInfo clientInfo = ( ClientInfo ) o;
+    public void update(Observable o, Object obj) {
+        if (o instanceof ClientInfo && obj instanceof Boolean) {
+            ClientInfo clientInfo = (ClientInfo) o;
+
             // this client is now interesting.. notify the viewer
-            if ( ((Boolean) obj).equals(Boolean.TRUE) ) {
-                setActiveSources( +1 );
-                TreeClientInfo treeClientInfo = new TreeClientInfo( this, clientInfo );
-                treeClientInfoSet.add( treeClientInfo );
-				this.setChanged();
-                this.notifyObservers( treeClientInfo );
+            if (((Boolean) obj).equals(Boolean.TRUE)) {
+                setActiveSources(+1);
+
+                TreeClientInfo treeClientInfo = findTreeClientInfo(clientInfo);
+
+                if (treeClientInfo == null) {
+                    treeClientInfo = new TreeClientInfo(this, clientInfo);
+                    treeClientInfoSet.add(treeClientInfo);
+                }
+
+                this.setChanged();
+                this.notifyObservers(treeClientInfo);
             } else {
-            	TreeClientInfo foundTreeClientInfo;
-            	if ( (foundTreeClientInfo = removeTreeClientInfo(clientInfo)) != null) {
-            		foundTreeClientInfo.setDelete();	
-            		setActiveSources( -1 );
-                	this.setChanged();
-                	this.notifyObservers( foundTreeClientInfo );
-            	}
+                TreeClientInfo foundTreeClientInfo;
+
+                if ((foundTreeClientInfo = removeTreeClientInfo(clientInfo)) != null) {
+                    foundTreeClientInfo.setDelete();
+                    setActiveSources(-1);
+                    this.setChanged();
+                    this.notifyObservers(foundTreeClientInfo);
+                }
             }
         }
     }
-   
-   	/**
-   	 * @return boolean if this FileInfo is interesting to display in downloadsTable
-   	 */
-	public boolean isInteresting() {
-		if ( getState().getState() == EnumFileState.DOWNLOADING  
-			|| getState().getState() == EnumFileState.PAUSED  
-			|| getState().getState() == EnumFileState.DOWNLOADED  
-			|| getState().getState() == EnumFileState.QUEUED ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
-	/**
-	 * @param clientInfo
-	 * @return treeClientInfo 
-	 */	
-	public TreeClientInfo removeTreeClientInfo( ClientInfo clientInfo ) {
-		Iterator i = treeClientInfoSet.iterator();
-		TreeClientInfo foundTreeClientInfo = null;
-		
-		while( i.hasNext() ) {
-			TreeClientInfo treeClientInfo = (TreeClientInfo) i.next();
-			if ( clientInfo == treeClientInfo.getClientInfo() ) {
-				foundTreeClientInfo = treeClientInfo;
-				break;
-			}
-		}
+    /**
+        * @return boolean if this FileInfo is interesting to display in downloadsTable
+        */
+    public boolean isInteresting() {
+        if ((getState().getState() == EnumFileState.DOWNLOADING) || (getState().getState() == EnumFileState.PAUSED) ||
+                (getState().getState() == EnumFileState.DOWNLOADED) || (getState().getState() == EnumFileState.QUEUED)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-		if ( foundTreeClientInfo != null )
-			treeClientInfoSet.remove(foundTreeClientInfo);
-		
-		return foundTreeClientInfo;
-		
-	}
-    
+    /**
+     * @param clientInfo
+     * @return treeClientInfo
+     */
+    public TreeClientInfo removeTreeClientInfo(ClientInfo clientInfo) {
+        TreeClientInfo foundTreeClientInfo = findTreeClientInfo(clientInfo);
+
+        if (foundTreeClientInfo != null) {
+            treeClientInfoSet.remove(foundTreeClientInfo);
+        }
+
+        return foundTreeClientInfo;
+    }
+
+    /**
+     * @param clientInfo
+     * @return treeClientInfo
+     */
+    public TreeClientInfo findTreeClientInfo(ClientInfo clientInfo) {
+        Iterator i = treeClientInfoSet.iterator();
+        TreeClientInfo foundTreeClientInfo = null;
+
+        while (i.hasNext()) {
+            TreeClientInfo treeClientInfo = (TreeClientInfo) i.next();
+
+            if (clientInfo == treeClientInfo.getClientInfo()) {
+                return treeClientInfo;
+            }
+        }
+
+        return null;
+    }
 }
+
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.69  2003/10/23 05:11:56  zet
+try to fix rare duplicate treeclientinfos
+
 Revision 1.68  2003/10/13 21:36:04  zet
 Use "-" for blank ETAs
 

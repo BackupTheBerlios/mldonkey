@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,12 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.model;
 
-import gnu.trove.THash;
-import gnu.trove.TIntObjectHashMap;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -34,310 +32,327 @@ import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import gnu.trove.THash;
+import gnu.trove.TIntObjectHashMap;
+
+
 /**
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.29 2003/09/24 03:09:57 zet Exp $ 
+ * @version $Id: ClientInfo.java,v 1.30 2003/10/23 05:11:56 zet Exp $
  *
  */
 public class ClientInfo extends Parent {
-	/**
-	 * Client Id
-	 */
-	private int clientid;
-	/**
-	 * Client Network Id
-	 */
-	private NetworkInfo clientnetworkid;
-	/**
-	 * Client Kind
-	 */
-	private ClientKind clientKind = new ClientKind();
-	/**
-	 * Client State
-	 */
-	private State state = new State();
-	/**
-	 * Client Type
-	 */
-	private Enum clientType;
-	/**
-	 * List of Tags
-	 */
-	private Tag[] tag;
-	/**
-	 * Client Name
-	 */
-	private String clientName;
-	/**
-	 * Client Rate
-	 */
-	private int clientRating;
-	/**
-	 * Client Chat Port (mlchat)
-	 */
-	private int clientChatPort;
-	/**
-	 * Availability of a file (int fileId, String availability)
-	 * small initial capacity
-	 */
-	private THash avail = new TIntObjectHashMap( 1 );
-
-	/**
-	 * @return The client chat port
-	 */
-	public int getClientChatPort() {
-		return clientChatPort;
-	}
-
-	/**
-	 * @return The client identifier
-	 */
-	public int getClientid() {
-		return clientid;
-	}
-
-	/**
-	 * @return The client kind
-	 */
-	public ClientKind getClientKind() {
-		return clientKind;
-	}
-
-	/**
-	 * @return The client name
-	 */
-	public String getClientName() {
-		return clientName;
-	}
-
-	/**
-	 * @return The client network identifier
-	 */
-	public NetworkInfo getClientnetworkid() {
-		return clientnetworkid;
-	}
-
-	/**
-	 * @return This clients Rating (not used yet)
-	 */
-	public int getClientRating() {		
-		return clientRating;
-	}
-	
-	/**
-	 *returns a string with file-availability-Information
-	 * @param fileInfo which file do you wnat the availability for?
-	 * @return String representation of the avail.
-	 */
-	public String getFileAvailability( FileInfo fileInfo ) {
-		return ( String ) ( ( TIntObjectHashMap ) this.avail ).get( fileInfo.getId() );
-	}
-	
-	/**
-	 * @param fileInfo The <code>FileInfo</code> obj
-	 * @return int numberOfFullChunks
-	 */
-	public int getNumChunks( FileInfo fileInfo ) {
-		int numChunks = 0;
-		String availability = getFileAvailability ( fileInfo );
-		if ( availability != null ) {
-			for ( int i = 0; i < availability.length() ; i++ ) 
-				if ( availability.charAt( i ) == '1' ) numChunks++;
-		}
-		return numChunks;
-	}
-
-	/**
-	 * @return The client type
-	 */
-	public Enum getClientType() {
-		return clientType;
-	}
-
-	/**
-	 * @return The client state
-	 */
-	public State getState() {
-		return state;
-	}
-
-	/**
-	 * @return The client tags
-	 */
-	public Tag[] getTag() {
-		return tag;
-	}
-
-	/**
-	 * @param b a byte
-	 */
-	private void setClientType( byte b ) {
-		if ( b == 0 )
-			clientType = EnumClientType.SOURCE;
-		else if ( b == 1 )
-			clientType = EnumClientType.FRIEND;
-		else if ( b == 2 )
-			clientType = EnumClientType.BROWSED;		
-	}
-	
-	/**
-	 * @return String clientActivity
-	 */
-	public String getClientActivity() {
-		if ( this.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
-			return G2GuiResources.getString( "TT_Transferring" ).toLowerCase();
-		else 
-			return G2GuiResources.getString( "TT_Rank" ).toLowerCase() + ": " + this.getState().getRank() ;
-	}	
-	
-	/**
-     * @param clientInfo
-     * @return String clientDetailedActivity
+    /**
+     * Client Id
      */
-    public String getDetailedClientActivity() {   
-		 if ( ( this.getState(  ).getState(  ) == EnumState.CONNECTED_DOWNLOADING ) || ( this.getState(  ).getRank(  ) == 0 ) ) {   
-			 return "" + this.getState(  ).getState(  ).toString(  );   
-		 } else {   
-			 return "" + this.getState(  ).getState(  ).toString(  ) + " (Q: " + this.getState(  ).getRank(  ) + ")";   
-		 }   
-	 } 
-	
-	/**
-	 * @return String clientConnection
-	 */
-	public String getClientConnection() {
-		if ( this.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) 
-			return G2GuiResources.getString( "TT_Firewalled" ).toLowerCase();			
-		else
-			return G2GuiResources.getString( "TT_Direct" ).toLowerCase();	
-	}
-	
-	/**
-	 * @param core with this object, we make our main cimmunication (the main-Layer)
-	 */
-	public ClientInfo( CoreCommunication core ) {
-		super( core );
-	}
+    private int clientid;
 
-	/**
-	 * Reads a ClientInfo object from a MessageBuffer
-	 * @param messageBuffer The MessageBuffer to read from
-	 */
-	public void readStream( MessageBuffer messageBuffer ) {
-		int clientID = messageBuffer.readInt32();
-		readStream ( clientID, messageBuffer );
-	}
-	
-	/**
-	 * 
-	 * @param clientID
-	 * @param messageBuffer
-	 */
-	public void readStream( int clientID, MessageBuffer messageBuffer ) {
-		this.clientid = clientID;
-		
-		this.clientnetworkid =
-			( NetworkInfo ) this.parent.getNetworkInfoMap()
-					.infoIntMap.get( messageBuffer.readInt32() );
-		
-		this.getClientKind().readStream( messageBuffer );
-		Enum oldState = this.getState().getState();
-		this.getState().readStream( messageBuffer );
-		this.setClientType( messageBuffer.readByte() );
-		this.tag = messageBuffer.readTagList();
-		this.clientName = messageBuffer.readString();
-		this.clientRating = messageBuffer.readInt32();
-		this.clientChatPort = messageBuffer.readInt32();
-		
-		onChangedState( oldState );
-	}
-	
-	/**
-	 * Updates the state of this object
-	 * @param messageBuffer The MessageBuffer to read from
-	 */
-	public void update( MessageBuffer messageBuffer ) {
-		
-		Enum oldState = getState().getState();
-		this.getState().update( messageBuffer );
-		
-		onChangedState(oldState);
-		
-	}
-	
-	/**
-     * @param oldState
+    /**
+     * Client Network Id
      */
-    public void onChangedState (Enum oldState) {
-		Enum newState = getState().getState();
-		
-		this.setChanged();
-		
-		if ( oldState != newState ) {
-			if (newState == EnumState.CONNECTED_DOWNLOADING) {
-				this.notifyObservers( new Boolean(true) );	
-			} else if (oldState == EnumState.CONNECTED_DOWNLOADING) {
-				this.notifyObservers( new Boolean(false) );
-			} else {
-				this.notifyObservers( this );
-			}
-		}
-		else {
-			this.notifyObservers( this );
-		}
-	}
-	
-	/**
-	 * Adds the availability of a file into this list of availability
-	 * @param fileId The fileId
-	 * @param avail The availability of this file
-	 */
-	public void putAvail( int fileId, String avail ) {
-		( ( TIntObjectHashMap ) this.avail ).put( fileId, avail );
-		this.setChanged();
-		this.notifyObservers( this );
-	}
+    private NetworkInfo clientnetworkid;
 
-	/**
-	 * Adds a friend to the list of friends
-	 * @param core The core the list is stored at
-	 * @param id The friend id
-	 */
-	public static void addFriend( CoreCommunication core, int id ) {
-		Message addFriend =
-			new EncodeMessage( Message.S_ADD_CLIENT_FRIEND, new Integer( id ) );
-		addFriend.sendMessage( core );
-		addFriend = null;
-	}
+    /**
+     * Client Kind
+     */
+    private ClientKind clientKind = new ClientKind();
 
-	/**
-	 * Removes a friend from the list of friends
-	 * @param core The core the list is stored at
-	 * @param id The friend id
-	 */
-	public static void removeFriend( CoreCommunication core, int id ) {
-		Message removeFriend =
-			new EncodeMessage( Message.S_REMOVE_FRIEND, new Integer( id ) );
-		removeFriend.sendMessage( core );
-		removeFriend = null;
-	}
+    /**
+     * Client State
+     */
+    private State state = new State();
 
-	/**
-	 * Removes all friends from the list of friends
-	 * @param core The core the list is stored at
-	 */
-	public static void removeAllFriends( CoreCommunication core ) {
-		Message removeAllFriends =
-			new EncodeMessage( Message.S_REMOVE_ALL_FRIENDS );
-		removeAllFriends.sendMessage( core );
-		removeAllFriends = null;
-	}
+    /**
+     * Client Type
+     */
+    private Enum clientType;
+
+    /**
+     * List of Tags
+     */
+    private Tag[] tag;
+
+    /**
+     * Client Name
+     */
+    private String clientName;
+
+    /**
+     * Client Rate
+     */
+    private int clientRating;
+
+    /**
+     * Client Chat Port (mlchat)
+     */
+    private int clientChatPort;
+
+    /**
+     * Availability of a file (int fileId, String availability)
+     * small initial capacity
+     */
+    private THash avail = new TIntObjectHashMap(1);
+
+    /**
+     * @param core with this object, we make our main cimmunication (the main-Layer)
+     */
+    public ClientInfo(CoreCommunication core) {
+        super(core);
+    }
+
+    /**
+     * @return The client chat port
+     */
+    public int getClientChatPort() {
+        return clientChatPort;
+    }
+
+    /**
+     * @return The client identifier
+     */
+    public int getClientid() {
+        return clientid;
+    }
+
+    /**
+     * @return The client kind
+     */
+    public ClientKind getClientKind() {
+        return clientKind;
+    }
+
+    /**
+     * @return The client name
+     */
+    public String getClientName() {
+        return clientName;
+    }
+
+    /**
+     * @return The client network identifier
+     */
+    public NetworkInfo getClientnetworkid() {
+        return clientnetworkid;
+    }
+
+    /**
+     * @return This clients Rating (not used yet)
+     */
+    public int getClientRating() {
+        return clientRating;
+    }
+
+    /**
+     *returns a string with file-availability-Information
+     * @param fileInfo which file do you wnat the availability for?
+     * @return String representation of the avail.
+     */
+    public String getFileAvailability(FileInfo fileInfo) {
+        return (String) ((TIntObjectHashMap) this.avail).get(fileInfo.getId());
+    }
+
+    /**
+     * @param fileInfo The <code>FileInfo</code> obj
+     * @return int numberOfFullChunks
+     */
+    public int getNumChunks(FileInfo fileInfo) {
+        int numChunks = 0;
+        String availability = getFileAvailability(fileInfo);
+
+        if (availability != null) {
+            for (int i = 0; i < availability.length(); i++)
+                if (availability.charAt(i) == '1') {
+                    numChunks++;
+                }
+        }
+
+        return numChunks;
+    }
+
+    /**
+     * @return The client type
+     */
+    public Enum getClientType() {
+        return clientType;
+    }
+
+    /**
+     * @return The client state
+     */
+    public State getState() {
+        return state;
+    }
+
+    /**
+     * @return The client tags
+     */
+    public Tag[] getTag() {
+        return tag;
+    }
+
+    /**
+     * @param b a byte
+     */
+    private void setClientType(byte b) {
+        if (b == 0) {
+            clientType = EnumClientType.SOURCE;
+        } else if (b == 1) {
+            clientType = EnumClientType.FRIEND;
+        } else if (b == 2) {
+            clientType = EnumClientType.BROWSED;
+        }
+    }
+
+    /**
+     * @return String clientActivity
+     */
+    public String getClientActivity() {
+        if (this.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
+            return G2GuiResources.getString("TT_Transferring").toLowerCase();
+        } else {
+            return G2GuiResources.getString("TT_Rank").toLowerCase() + ": " + this.getState().getRank();
+        }
+    }
+
+    /**
+    * @param clientInfo
+    * @return String clientDetailedActivity
+    */
+    public String getDetailedClientActivity() {
+        if ((this.getState().getState() == EnumState.CONNECTED_DOWNLOADING) || (this.getState().getRank() == 0)) {
+            return "" + this.getState().getState().toString();
+        } else {
+            return "" + this.getState().getState().toString() + " (Q: " + this.getState().getRank() + ")";
+        }
+    }
+
+    /**
+     * @return String clientConnection
+     */
+    public String getClientConnection() {
+        if (this.getClientKind().getClientMode() == EnumClientMode.FIREWALLED) {
+            return G2GuiResources.getString("TT_Firewalled").toLowerCase();
+        } else {
+            return G2GuiResources.getString("TT_Direct").toLowerCase();
+        }
+    }
+
+    /**
+     * Reads a ClientInfo object from a MessageBuffer
+     * @param messageBuffer The MessageBuffer to read from
+     */
+    public void readStream(MessageBuffer messageBuffer) {
+        int clientID = messageBuffer.readInt32();
+        readStream(clientID, messageBuffer);
+    }
+
+    /**
+     *
+     * @param clientID
+     * @param messageBuffer
+     */
+    public void readStream(int clientID, MessageBuffer messageBuffer) {
+        this.clientid = clientID;
+
+        this.clientnetworkid = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(messageBuffer.readInt32());
+
+        this.getClientKind().readStream(messageBuffer);
+
+        Enum oldState = this.getState().getState();
+        this.getState().readStream(messageBuffer);
+        this.setClientType(messageBuffer.readByte());
+        this.tag = messageBuffer.readTagList();
+        this.clientName = messageBuffer.readString();
+        this.clientRating = messageBuffer.readInt32();
+        this.clientChatPort = messageBuffer.readInt32();
+
+        onChangedState(oldState);
+    }
+
+    /**
+     * Updates the state of this object
+     * @param messageBuffer The MessageBuffer to read from
+     */
+    public void update(MessageBuffer messageBuffer) {
+        Enum oldState = getState().getState();
+        this.getState().update(messageBuffer);
+
+        onChangedState(oldState);
+    }
+
+    /**
+    * @param oldState
+    */
+    public void onChangedState(Enum oldState) {
+        Enum newState = getState().getState();
+
+        this.setChanged();
+
+        if (oldState != newState) {
+            if (newState == EnumState.CONNECTED_DOWNLOADING) {
+                this.notifyObservers(new Boolean(true));
+            } else if (oldState == EnumState.CONNECTED_DOWNLOADING) {
+                this.notifyObservers(new Boolean(false));
+            } else {
+                this.notifyObservers(this);
+            }
+        } else {
+            this.notifyObservers(this);
+        }
+    }
+
+    /**
+     * Adds the availability of a file into this list of availability
+     * @param fileId The fileId
+     * @param avail The availability of this file
+     */
+    public void putAvail(int fileId, String avail) {
+        ((TIntObjectHashMap) this.avail).put(fileId, avail);
+        this.setChanged();
+        this.notifyObservers(this);
+    }
+
+    /**
+     * Adds a friend to the list of friends
+     * @param core The core the list is stored at
+     * @param id The friend id
+     */
+    public static void addFriend(CoreCommunication core, int id) {
+        Message addFriend = new EncodeMessage(Message.S_ADD_CLIENT_FRIEND, new Integer(id));
+        addFriend.sendMessage(core);
+        addFriend = null;
+    }
+
+    /**
+     * Removes a friend from the list of friends
+     * @param core The core the list is stored at
+     * @param id The friend id
+     */
+    public static void removeFriend(CoreCommunication core, int id) {
+        Message removeFriend = new EncodeMessage(Message.S_REMOVE_FRIEND, new Integer(id));
+        removeFriend.sendMessage(core);
+        removeFriend = null;
+    }
+
+    /**
+     * Removes all friends from the list of friends
+     * @param core The core the list is stored at
+     */
+    public static void removeAllFriends(CoreCommunication core) {
+        Message removeAllFriends = new EncodeMessage(Message.S_REMOVE_ALL_FRIENDS);
+        removeAllFriends.sendMessage(core);
+        removeAllFriends = null;
+    }
 }
+
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.30  2003/10/23 05:11:56  zet
+try to fix rare duplicate treeclientinfos
+
 Revision 1.29  2003/09/24 03:09:57  zet
 add # of active sources column
 
