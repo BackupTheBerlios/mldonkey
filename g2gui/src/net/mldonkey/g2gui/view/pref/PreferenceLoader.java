@@ -36,6 +36,7 @@ import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.server.ServerPaneListener;
+import net.mldonkey.g2gui.view.helper.VersionCheck;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -52,7 +53,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.60 2004/03/01 21:12:21 psy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.61 2004/03/23 19:58:41 psy Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -81,7 +82,7 @@ public class PreferenceLoader {
     	String userhome = System.getProperty("user.home");
     	String fileSep = System.getProperty("file.separator");
     	String pathToConf = userhome + fileSep + ".g2gui" + fileSep;
-    	initialize( pathToConf + "g2gui.pref" );
+    	initialize( VersionCheck.isWin32() ? "" : pathToConf + "g2gui.pref" );
     }
 
     public static void initialize( String file ) throws IOException {
@@ -439,6 +440,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.61  2004/03/23 19:58:41  psy
+under windows, use cwd for g2gui.pref storage
+
 Revision 1.60  2004/03/01 21:12:21  psy
 removed download-table font config (use global one instead)
 started re-arranging the preferences (to be continued...)
