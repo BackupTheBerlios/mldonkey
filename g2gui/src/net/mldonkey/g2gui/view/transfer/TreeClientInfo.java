@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * TreeClientInfo
  *
  *
- * @version $Id: TreeClientInfo.java,v 1.3 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: TreeClientInfo.java,v 1.4 2003/11/11 02:31:42 zet Exp $
  *
  */
 public class TreeClientInfo {
@@ -39,22 +39,25 @@ public class TreeClientInfo {
     private ClientInfo clientInfo;
     private boolean deleteFlag = false;
 
-    public TreeClientInfo( FileInfo fileInfo, ClientInfo clientInfo ) {
+    public TreeClientInfo(FileInfo fileInfo, ClientInfo clientInfo) {
         this.fileInfo = fileInfo;
         this.clientInfo = clientInfo;
     }
-    public FileInfo getFileInfo(  ) {
+
+    public FileInfo getFileInfo() {
         return fileInfo;
     }
-    public ClientInfo getClientInfo(  ) {
+
+    public ClientInfo getClientInfo() {
         return clientInfo;
     }
-    public boolean equals( Object o ) {
-        if ( o instanceof TreeClientInfo ) {
-            ClientInfo c = (ClientInfo) ( (TreeClientInfo) o ).getClientInfo(  );
-            FileInfo f = (FileInfo) ( (TreeClientInfo) o ).getFileInfo(  );
 
-            if ( c.equals( this.getClientInfo(  ) ) && f.equals( this.getFileInfo(  ) ) ) {
+    public boolean equals(Object o) {
+        if (o instanceof TreeClientInfo) {
+            ClientInfo c = (ClientInfo) ((TreeClientInfo) o).getClientInfo();
+            FileInfo f = (FileInfo) ((TreeClientInfo) o).getFileInfo();
+
+            if (c.equals(this.getClientInfo()) && f.equals(this.getFileInfo())) {
                 return true;
             } else {
                 return false;
@@ -63,18 +66,22 @@ public class TreeClientInfo {
             return false;
         }
     }
+
     public void setDelete() {
-    	deleteFlag = true;
+        deleteFlag = true;
     }
+
     public boolean getDelete() {
-    	return deleteFlag;
+        return deleteFlag;
     }
-    
 }
 
 
 /*
 $Log: TreeClientInfo.java,v $
+Revision 1.4  2003/11/11 02:31:42  zet
+cleanup
+
 Revision 1.3  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 

@@ -22,11 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
@@ -34,7 +29,6 @@ import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -44,7 +38,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 
@@ -52,10 +45,10 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.6 2003/11/10 18:57:33 zet Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.7 2003/11/11 02:31:42 zet Exp $
  *
  */
-public class ClientDetailDialog extends Dialog implements Observer {
+public class ClientDetailDialog extends DetailDialog {
     private CoreCommunication core;
     private FileInfo fileInfo;
     private ClientInfo clientInfo;
@@ -64,15 +57,10 @@ public class ClientDetailDialog extends Dialog implements Observer {
     private CLabel clActivity;
     private CLabel clKind;
     private CLabel clNetwork;
-    private ArrayList chunkCanvases = new ArrayList();
-    private int leftColumn = 100;
-    private int rightColumn = leftColumn * 3;
-   
 
-    public ClientDetailDialog(Shell parentShell, FileInfo fileInfo, final ClientInfo clientInfo,
-        final CoreCommunication core) {
+    public ClientDetailDialog(Shell parentShell, FileInfo fileInfo, ClientInfo clientInfo,
+        CoreCommunication core) {
         super(parentShell);
-
         this.fileInfo = fileInfo;
         this.clientInfo = clientInfo;
         this.core = core;
@@ -85,9 +73,7 @@ public class ClientDetailDialog extends Dialog implements Observer {
         super.configureShell(newShell);
         newShell.setText(G2GuiResources.getString("TT_Client") + " " + clientInfo.getClientid() +
             " " + G2GuiResources.getString("TT_Details").toLowerCase());
-        newShell.setImage(G2GuiResources.getImage("ProgramIcon"));
     }
-
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
@@ -97,12 +83,11 @@ public class ClientDetailDialog extends Dialog implements Observer {
         composite.setLayout(CGridLayout.createGL(1, 5, 5, 0, 5, false));
 
         createGeneralGroup(composite);
-
-        createChunkGroup(composite, G2GuiResources.getString("TT_DOWNLOAD_CD_LOCAL_CHUNKS"), null);
-        createChunkGroup(composite, G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_CHUNKS"),
-            clientInfo);
+        createChunkGroup(composite, "TT_DOWNLOAD_CD_LOCAL_CHUNKS", null);
+        createChunkGroup(composite, "TT_DOWNLOAD_CD_CLIENT_CHUNKS", clientInfo);
 
         updateLabels();
+
         fileInfo.addObserver(this);
         clientInfo.addObserver(this);
 
@@ -117,56 +102,30 @@ public class ClientDetailDialog extends Dialog implements Observer {
     public void createGeneralGroup(Composite parent) {
         Group clientGeneral = new Group(parent, SWT.SHADOW_ETCHED_OUT);
         clientGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_INFO"));
-
         clientGeneral.setLayout(CGridLayout.createGL(4, 5, 2, 0, 0, false));
-
-        clName = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NAME"), true);
-        clNetwork = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NETWORK"),
-                false);
-        clRating = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_RATING"),
-                false);
-        clActivity = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_ACTIVITY"),
-                false);
-        clKind = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_KIND"), false);
-
         clientGeneral.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        clName = createLine(clientGeneral, "TT_DOWNLOAD_CD_NAME", true);
+        clNetwork = createLine(clientGeneral, "TT_DOWNLOAD_CD_NETWORK", false);
+        clRating = createLine(clientGeneral, "TT_DOWNLOAD_CD_RATING", false);
+        clActivity = createLine(clientGeneral, "TT_DOWNLOAD_CD_ACTIVITY", false);
+        clKind = createLine(clientGeneral, "TT_DOWNLOAD_CD_KIND", false);
     }
 
     /**
-     * @param shell
-     * @param text
+     * @param parent
+     * @param resString
      * @param clientInfo
-     *
-     * Create chunk group (clientInfo=null to display fileInfo chunks)
      */
-    public void createChunkGroup(Composite parent, String text, ClientInfo clientInfo) {
-        Group chunkGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT);
-
-        String totalChunks = "";
-
-        // clientInfo.getFileAvail is not synched. TIntObjHash.. 
-        if (clientInfo == null) {
-            totalChunks = " (" + fileInfo.getAvail().length() + ")";
-        }
-
-        chunkGroup.setText(text + totalChunks);
-        chunkGroup.setLayout(CGridLayout.createGL(1, 5, 5, 0, 0, false));
-        chunkGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-        ChunkCanvas chunkCanvas = new ChunkCanvas(chunkGroup, SWT.NO_BACKGROUND, clientInfo,
-                fileInfo, null);
+    protected void createChunkGroup(Composite parent, String resString, ClientInfo clientInfo) {
+        ChunkCanvas chunkCanvas = super.createChunkGroup(parent,
+                G2GuiResources.getString(resString), clientInfo, fileInfo, null);
 
         if (clientInfo == null) {
             fileInfo.addObserver(chunkCanvas);
         } else {
             clientInfo.addObserver(chunkCanvas);
         }
-
-        chunkCanvases.add(chunkCanvas);
-
-        GridData canvasGD = new GridData(GridData.FILL_HORIZONTAL);
-        canvasGD.heightHint = 28;
-        chunkCanvas.setLayoutData(canvasGD);
     }
 
     /* (non-Javadoc)
@@ -175,7 +134,7 @@ public class ClientDetailDialog extends Dialog implements Observer {
     protected Control createButtonBar(Composite parent) {
         Composite buttonComposite = new Composite(parent, SWT.NONE);
         buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        buttonComposite.setLayout(CGridLayout.createGL(2, 0, 0, 5, 0, false));
+        buttonComposite.setLayout(CGridLayout.createGL(2, 5, 5, 5, 0, false));
 
         final Button addFriendButton = new Button(buttonComposite, SWT.NONE);
         addFriendButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL |
@@ -208,38 +167,6 @@ public class ClientDetailDialog extends Dialog implements Observer {
     }
 
     /**
-     * @param composite
-     * @param label
-     * @param longlabel
-     * @return CLabel
-     *
-     * Create a Label/CLabel combination for information display
-     *
-     */
-    private CLabel createLine(Composite composite, String label, boolean longlabel) {
-        Label aLabel = new Label(composite, SWT.NONE);
-        aLabel.setText(label);
-
-        GridData lGD = new GridData();
-        lGD.widthHint = leftColumn;
-        aLabel.setLayoutData(lGD);
-
-        CLabel aCLabel = new CLabel(composite, SWT.NONE);
-        GridData clGD = new GridData();
-
-        if (longlabel) {
-            clGD.widthHint = rightColumn;
-            clGD.horizontalSpan = 3;
-        } else {
-            clGD.widthHint = leftColumn;
-        }
-
-        aCLabel.setLayoutData(clGD);
-
-        return aCLabel;
-    }
-
-    /**
      * Update labels
      */
     public void updateLabels() {
@@ -250,47 +177,10 @@ public class ClientDetailDialog extends Dialog implements Observer {
         updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
     }
 
-    /**
-     * @param cLabel
-     * @param string
-     *
-     * Update a label
-     *
-     */
-    public void updateLabel(CLabel cLabel, String string) {
-        if (!cLabel.isDisposed()) {
-            cLabel.setText(string);
-
-            if (string.length() > 10) {
-                cLabel.setToolTipText(string);
-            } else {
-                cLabel.setToolTipText("");
-            }
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-     */
-    public void update(Observable o, Object arg) {
-        if (o instanceof FileInfo && !getShell().isDisposed()) {
-            getShell().getDisplay().asyncExec(new Runnable() {
-                    public void run() {
-                        updateLabels();
-                    }
-                });
-        }
-    }
-
     /* (non-Javadoc)
      * @see org.eclipse.jface.window.Window#close()
      */
     public boolean close() {
-        Iterator i = chunkCanvases.iterator();
-
-        while (i.hasNext())
-            ((ChunkCanvas) i.next()).dispose();
-
         clientInfo.deleteObserver(this);
         fileInfo.deleteObserver(this);
 
@@ -301,6 +191,9 @@ public class ClientDetailDialog extends Dialog implements Observer {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.7  2003/11/11 02:31:42  zet
+cleanup
+
 Revision 1.6  2003/11/10 18:57:33  zet
 use jface dialogs
 

@@ -29,8 +29,6 @@ import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
-import org.eclipse.jface.dialogs.Dialog;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.KeyAdapter;
@@ -38,7 +36,6 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -51,11 +48,8 @@ import org.eclipse.swt.widgets.Text;
 
 import java.text.DecimalFormat;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
 
 
 /**
@@ -63,15 +57,14 @@ import java.util.Observer;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.7 2003/11/10 18:57:33 zet Exp $
+ * @version $Id: FileDetailDialog.java,v 1.8 2003/11/11 02:31:42 zet Exp $
  *
  */
-public class FileDetailDialog extends Dialog implements Observer {
+public class FileDetailDialog extends DetailDialog {
+    private DecimalFormat df = new DecimalFormat("0.0");
     private FileInfo fileInfo;
-    private ArrayList chunkCanvases = new ArrayList();
     private Button fileActionButton;
     private Button fileCancelButton;
-    private DecimalFormat df = new DecimalFormat("0.0");
     private CLabel clFileName;
     private CLabel clHash;
     private CLabel clSize;
@@ -86,8 +79,6 @@ public class FileDetailDialog extends Dialog implements Observer {
     private CLabel clETA;
     private List renameList;
     private Text renameText;
-    private int leftColumn = 100;
-    private int rightColumn = leftColumn * 3;
 
     public FileDetailDialog(Shell parentShell, FileInfo fileInfo) {
         super(parentShell);
@@ -101,7 +92,6 @@ public class FileDetailDialog extends Dialog implements Observer {
         super.configureShell(newShell);
         newShell.setText(G2GuiResources.getString("TT_File") + " " + fileInfo.getId() + " " +
             G2GuiResources.getString("TT_Details").toLowerCase());
-        newShell.setImage(G2GuiResources.getImage("ProgramIcon"));
     }
 
     /* (non-Javadoc)
@@ -163,7 +153,6 @@ public class FileDetailDialog extends Dialog implements Observer {
 
     /**
      * @param parent
-     *
      * Create group relating to general file information
      */
     private void createFileGeneralGroup(Composite parent) {
@@ -173,16 +162,14 @@ public class FileDetailDialog extends Dialog implements Observer {
         fileGeneral.setLayout(CGridLayout.createGL(4, 5, 0, 0, 0, false));
         fileGeneral.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        clFileName = createLine(fileGeneral, G2GuiResources.getString("TT_DOWNLOAD_FD_FILENAME"),
-                true);
-        clHash = createLine(fileGeneral, G2GuiResources.getString("TT_DOWNLOAD_FD_HASH"), true);
-        clSize = createLine(fileGeneral, G2GuiResources.getString("TT_DOWNLOAD_FD_SIZE"), false);
-        clAge = createLine(fileGeneral, G2GuiResources.getString("TT_DOWNLOAD_FD_AGE"), false);
+        clFileName = createLine(fileGeneral, "TT_DOWNLOAD_FD_FILENAME", true);
+        clHash = createLine(fileGeneral, "TT_DOWNLOAD_FD_HASH", true);
+        clSize = createLine(fileGeneral, "TT_DOWNLOAD_FD_SIZE", false);
+        clAge = createLine(fileGeneral, "TT_DOWNLOAD_FD_AGE", false);
     }
 
     /**
      * @param parent
-     *
      * Create group relating to the file transfer
      */
     private void createFileTransferGroup(Composite parent) {
@@ -192,64 +179,29 @@ public class FileDetailDialog extends Dialog implements Observer {
         fileTransfer.setLayout(CGridLayout.createGL(4, 5, 0, 0, 0, false));
         fileTransfer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        clSources = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_SOURCES"),
-                false);
-        clChunks = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS"), false);
-        clTransferred = createLine(fileTransfer,
-                G2GuiResources.getString("TT_DOWNLOAD_FD_TRANSFERRED"), false);
-        clRelativeAvail = createLine(fileTransfer,
-                G2GuiResources.getString("TT_DOWNLOAD_FD_REL_AVAIL"), false);
-        clLast = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_LAST"), false);
-        clPriority = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_PRIORITY"),
-                false);
-        clRate = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_RATE"), false);
-        clETA = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_ETA"), false);
+        clSources = createLine(fileTransfer, "TT_DOWNLOAD_FD_SOURCES", false);
+        clChunks = createLine(fileTransfer, "TT_DOWNLOAD_FD_CHUNKS", false);
+        clTransferred = createLine(fileTransfer, "TT_DOWNLOAD_FD_TRANSFERRED", false);
+        clRelativeAvail = createLine(fileTransfer, "TT_DOWNLOAD_FD_REL_AVAIL", false);
+        clLast = createLine(fileTransfer, "TT_DOWNLOAD_FD_LAST", false);
+        clPriority = createLine(fileTransfer, "TT_DOWNLOAD_FD_PRIORITY", false);
+        clRate = createLine(fileTransfer, "TT_DOWNLOAD_FD_RATE", false);
+        clETA = createLine(fileTransfer, "TT_DOWNLOAD_FD_ETA", false);
     }
 
     /**
      * @param parent
-     * @param text
+     * @param resString
      * @param networkInfo
-     *
-     * Create chunk group (null networkInfo=MultiNet)
-     *
      */
-    private void createChunkGroup(Composite parent, String text, NetworkInfo networkInfo) {
-        Group chunkGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT);
-
-        int totalChunks = 0;
-
-        if (networkInfo == null) {
-            totalChunks = fileInfo.getAvail().length();
-        } else {
-            if (fileInfo.getAvails().get(networkInfo) instanceof String) {
-                totalChunks = ((String) fileInfo.getAvails().get(networkInfo)).length();
-            }
-        }
-
-        chunkGroup.setText(text + " (" + totalChunks + ")");
-
-        GridLayout gridLayout = CGridLayout.createGL(1, 5, 2, 0, 0, false);
-        chunkGroup.setLayout(gridLayout);
-
-        chunkGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-        ChunkCanvas chunkCanvas = new ChunkCanvas(chunkGroup, SWT.NO_BACKGROUND, null, fileInfo,
-                networkInfo);
+    private void createChunkGroup(Composite parent, String string, NetworkInfo networkInfo) {
+        ChunkCanvas chunkCanvas = super.createChunkGroup(parent, string, null, fileInfo, networkInfo);
         fileInfo.addObserver(chunkCanvas);
-
-        GridData canvasGD = new GridData(GridData.FILL_HORIZONTAL);
-        canvasGD.heightHint = 18;
-        chunkCanvas.setLayoutData(canvasGD);
-
-        chunkCanvases.add(chunkCanvas);
     }
 
     /**
      * @param parent
-     *
      * Create the rename group
-     *
      */
     private void createRenameGroup(Composite parent) {
         Group renameGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT);
@@ -313,7 +265,7 @@ public class FileDetailDialog extends Dialog implements Observer {
     protected Control createButtonBar(Composite parent) {
         Composite buttonComposite = new Composite(parent, SWT.NONE);
         buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        buttonComposite.setLayout(CGridLayout.createGL(3, 0, 0, 5, 0, false));
+        buttonComposite.setLayout(CGridLayout.createGL(3, 5, 5, 5, 0, false));
 
         if ((fileInfo.getState().getState() == EnumFileState.PAUSED) ||
                 (fileInfo.getState().getState() == EnumFileState.DOWNLOADING) ||
@@ -400,38 +352,7 @@ public class FileDetailDialog extends Dialog implements Observer {
                 }
             });
 
-        return parent;
-    }
-
-    /**
-     * @param composite
-     * @param label
-     * @param longlabel
-     * @return CLabel
-     *
-     *        Create a Label/CLabel for information display
-     */
-    private CLabel createLine(Composite composite, String label, boolean longlabel) {
-        Label aLabel = new Label(composite, SWT.NONE);
-        aLabel.setText(label);
-
-        GridData lGD = new GridData();
-        lGD.widthHint = leftColumn;
-        aLabel.setLayoutData(lGD);
-
-        CLabel aCLabel = new CLabel(composite, SWT.NONE);
-        GridData clGD = new GridData();
-
-        if (longlabel) {
-            clGD.widthHint = rightColumn;
-            clGD.horizontalSpan = 3;
-        } else {
-            clGD.widthHint = leftColumn;
-        }
-
-        aCLabel.setLayoutData(clGD);
-
-        return aCLabel;
+        return buttonComposite;
     }
 
     /**
@@ -462,46 +383,10 @@ public class FileDetailDialog extends Dialog implements Observer {
         updateLabel(clETA, fileInfo.getStringETA());
     }
 
-    /**
-     * @param cLabel
-     * @param string
-     *
-     * Update a label
-     */
-    public void updateLabel(CLabel cLabel, String string) {
-        if (!cLabel.isDisposed()) {
-            cLabel.setText(string);
-
-            if (string.length() > 10) {
-                cLabel.setToolTipText(string);
-            } else {
-                cLabel.setToolTipText("");
-            }
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-     */
-    public void update(Observable o, Object arg) {
-        if (o instanceof FileInfo && !getShell().isDisposed()) {
-            getShell().getDisplay().asyncExec(new Runnable() {
-                    public void run() {
-                        updateLabels();
-                    }
-                });
-        }
-    }
-
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
     public boolean close() {
-        Iterator i = chunkCanvases.iterator();
-
-        while (i.hasNext())
-            ((ChunkCanvas) i.next()).dispose();
-
         fileInfo.deleteObserver(this);
 
         return super.close();
@@ -511,6 +396,9 @@ public class FileDetailDialog extends Dialog implements Observer {
 
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.8  2003/11/11 02:31:42  zet
+cleanup
+
 Revision 1.7  2003/11/10 18:57:33  zet
 use jface dialogs
 
