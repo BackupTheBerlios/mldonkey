@@ -44,7 +44,7 @@ import com.sun.rsasign.g;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.17 2003/07/02 11:21:59 dek Exp $ 
+ * @version $Id: Gui.java,v 1.18 2003/07/02 14:55:00 zet Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -61,6 +61,8 @@ public class Gui implements IG2gui, Listener {
 					pageContainer;
 	private List registeredTabs = new ArrayList();
 	private G2guiTab activeTab;
+	private Menu mainMenuBar;
+	private Shell mainShell;
 	
 		/**
 		 * Layout for the page container.
@@ -106,8 +108,10 @@ public class Gui implements IG2gui, Listener {
 	/**
 	 * @param arg0 You know, what a shell is, right?
 	 */
-	public Gui(CoreCommunication core,Shell shell) {	
+	public Gui(CoreCommunication core,Shell shell) {
+		mainShell = shell;	
 		Display display = shell.getDisplay();	
+		
 		this.mldonkey = core;
 		shell.setLayout(new FillLayout());
 		createContents(shell);
@@ -129,7 +133,10 @@ public class Gui implements IG2gui, Listener {
 	 * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	private void createContents( Composite parent ) {
+		setTitleBar("g2gui alpha");
+		createMenuBar();
 		CoolBar coolbar = null;
+				
 		parent.setSize(640,480);
 		GridData gridData;		
 		mainComposite = new Composite( parent, SWT.NONE );
@@ -168,6 +175,46 @@ public class Gui implements IG2gui, Listener {
 		layoutCoolBar(coolbar);				
 
 	}
+	
+	private void createMenuBar () {
+		mainMenuBar = new Menu(mainShell, SWT.BAR);
+		mainShell.setMenuBar(mainMenuBar);
+		
+		MenuItem mItem = new MenuItem (mainMenuBar, SWT.CASCADE);
+		mItem.setText ("File");
+			Menu submenu = new Menu (mainShell, SWT.DROP_DOWN);
+			mItem.setMenu (submenu);
+			MenuItem item = new MenuItem (submenu, 0);
+			item.addListener (SWT.Selection, new Listener () {
+					public void handleEvent (Event e) {
+						mainShell.close();
+					}
+			});
+			item.setText ("E&xit\tCtrl+W");
+			item.setAccelerator (SWT.CTRL + 'W');
+			
+		mItem = new MenuItem (mainMenuBar, SWT.CASCADE);
+		mItem.setText ("View");
+		
+		mItem = new MenuItem (mainMenuBar, SWT.CASCADE);
+		mItem.setText ("Tools");
+		
+			submenu = new Menu (mainShell, SWT.DROP_DOWN);
+			mItem.setMenu (submenu);
+			item = new MenuItem(submenu, 0);
+			item.addListener(SWT.Selection, new Listener(){
+			public void handleEvent( Event event ) {	
+				Shell prefshell = new Shell();
+				Preferences myprefs = new Preferences( new PreferenceStore("g2gui.pref" ));					
+				myprefs.open( prefshell,mldonkey );
+			}});
+			item.setText ("Preferences");
+							
+		mItem = new MenuItem (mainMenuBar, SWT.CASCADE);
+		mItem.setText ("Help");
+				
+	}
+	
 	
 	/**
 	 * Creates a Transparent imageobject with a given .png|.gif Image-Object
@@ -276,7 +323,6 @@ public class Gui implements IG2gui, Listener {
 		System.out.println( event.widget.toString() );
 		
 	}
-
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.widgets.Gui.IG2gui#getButtonRow()
 	 */
@@ -315,10 +361,17 @@ public class Gui implements IG2gui, Listener {
 		return mainTools;
 	}
 
+	public void setTitleBar(String title) {
+		mainShell.setText(title);
+	}
+
 }
 
 /*
 $Log: Gui.java,v $
+Revision 1.18  2003/07/02 14:55:00  zet
+quick & dirty menu bar
+
 Revision 1.17  2003/07/02 11:21:59  dek
 transfer Icon
 
