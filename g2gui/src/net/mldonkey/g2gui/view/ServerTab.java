@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  * @author $user$
- * @version $Id: ServerTab.java,v 1.1 2003/08/05 13:50:10 lemmstercvs01 Exp $ 
+ * @version $Id: ServerTab.java,v 1.2 2003/08/05 15:35:24 lemmstercvs01 Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable {
@@ -78,7 +78,7 @@ public class ServerTab extends GuiTab implements Runnable {
 	/* if you modify this, change the LayoutProvider and tableWidth */
 	private String[] tableColumns = { "network", "name", "desc", "address", "port", "serverScore", "users", "files", "state", "favorite" };
 	/* 0 sets the tablewidth dynamcliy */
-	private int[] tableWidth = { 45, 120, 0, 95, 55, 55, 45, 50, 80, 50 };
+	private int[] tableWidth = { 45, 120, 0, 97, 50, 55, 45, 50, 80, 50 };
 	
 	/**
 	 * @param gui The main gui tab
@@ -235,6 +235,9 @@ public class ServerTab extends GuiTab implements Runnable {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.2  2003/08/05 15:35:24  lemmstercvs01
+minor: column width changed
+
 Revision 1.1  2003/08/05 13:50:10  lemmstercvs01
 initial commit
 
