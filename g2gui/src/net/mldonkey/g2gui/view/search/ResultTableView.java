@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Composite;
 
@@ -38,7 +39,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableView.java,v 1.10 2003/12/04 08:47:29 lemmy Exp $
+ * @version $Id: ResultTableView.java,v 1.11 2004/04/14 11:29:05 dek Exp $
  *
  */
 public class ResultTableView extends GTableView {
@@ -110,6 +111,11 @@ public class ResultTableView extends GTableView {
 
         /* add a mouse-listener to catch double-clicks */
         getTableViewer().getTable().addMouseListener(aMouseListener);
+        
+        /* add a Key-listener to catch [ENTER]-presses to download*/
+        
+        getTableViewer().getTable().addKeyListener((KeyListener) tableMenuListener);
+        
 
         // multiline tooltip
         ToolTipHandler tooltip = new ToolTipHandler(getTableViewer().getTable());
@@ -119,6 +125,9 @@ public class ResultTableView extends GTableView {
 
 /*
 $Log: ResultTableView.java,v $
+Revision 1.11  2004/04/14 11:29:05  dek
+now one can start a download from searchresult by hitting [ENTER]
+
 Revision 1.10  2003/12/04 08:47:29  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

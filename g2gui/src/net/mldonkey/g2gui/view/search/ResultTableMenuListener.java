@@ -49,6 +49,8 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -56,10 +58,10 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.35 2003/12/04 08:47:29 lemmy Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.36 2004/04/14 11:29:05 dek Exp $ 
  *
  */
-public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
+public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener,KeyListener {
 	private CTabItem cTabItem;
 	private ResultInfo selectedResult;
 	private List selectedResults;
@@ -294,10 +296,27 @@ Yet			menuManager.add( webManager );
 			( (SearchTab) searchTab ).setSearchButton();
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
+	 */
+	public void keyPressed(KeyEvent arg0) {
+		/*
+		 * now one can start a download from searchresult by pressing [ENTER]-Key
+		 */
+		if( arg0.keyCode == SWT.Selection ){
+			downloadSelected();
+		}
+	}
+
+	public void keyReleased(KeyEvent arg0){}
 }
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.36  2004/04/14 11:29:05  dek
+now one can start a download from searchresult by hitting [ENTER]
+
 Revision 1.35  2003/12/04 08:47:29  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
