@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.10 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.11 2003/07/28 08:18:17 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -59,6 +59,10 @@ public class NetworkInfo extends Parent {
 	 * Number of bytes downloaded on network
 	 */
 	private long downloaded;
+	/**
+	 * Represents the network type
+	 */
+	private Enum networkType;
 	/**
 	 * disable
 	 */
@@ -97,6 +101,8 @@ public class NetworkInfo extends Parent {
 		this.configFile = messageBuffer.readString();
 		this.uploaded = messageBuffer.readInt64();
 		this.downloaded = messageBuffer.readInt64();
+		
+		this.setNetworkType( this.networkName );
 	}
 	
 	/**
@@ -166,12 +172,87 @@ public class NetworkInfo extends Parent {
 		netinfo = null;
 		temp = null;			
 	}
+	
+	/**
+	 * @return The type of this network
+	 */
+	public Enum getNetworkType() {
+		return networkType;
+	}
+
+	/**
+	 * @param string the network name, to deceide which network
+	 */
+	private void setNetworkType( String string ) {
+		if ( string.equals( "Donkey" ) )
+			networkType = Enum.DONKEY;
+		else if ( string.equals( "Fasttrack" ) )
+			networkType = Enum.FT;
+		else if ( string.equals( "Soulseek" ) )
+			networkType = Enum.SOULSEEK;
+		else if ( string.equals( "BitTorrent" ) )
+			networkType = Enum.BT;
+		else if ( string.equals( "Overnet" ) )
+			networkType = Enum.OV;
+		else if ( string.equals( "Gnutella" ) )
+			networkType = Enum.GNUT;
+		else if ( string.equals( "Direct Connect" ) )
+			networkType = Enum.DC;
+		else if ( string.equals( "Open Napster" ) )
+			networkType = Enum.OPENNP;
+	}
+	
+	/**
+	 * Creates a new EnumNetwork obj to differ each network
+	 */
+	public static class Enum {
+		/**
+		 * eDonkey2000
+		 */
+		public static Enum DONKEY = new Enum();
+		/**
+		 * SoulSeek
+		 */
+		public static Enum SOULSEEK = new Enum();
+		/**
+		 * Gnutella 1/2
+		 */
+		public static Enum GNUT = new Enum();
+		/**
+		 * Overnet
+		 */
+		public static Enum OV = new Enum();
+		/**
+		 * Bittorrent
+		 */
+		public static Enum BT = new Enum();
+		/**
+		 * Fasttrack
+		 */
+		public static Enum FT = new Enum();
+		/**
+		 * OpenNapster
+		 */
+		public static Enum OPENNP = new Enum();
+		/**
+		 * DirectConnect
+		 */
+		public static Enum DC  = new Enum();
+		
+		/**
+		 * Creates a new EnumNetwork
+		 */
+		private Enum() { }
+	}
 }
 
 
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.11  2003/07/28 08:18:17  lemmstercvs01
+added NetworkInfo.Enum to differ the networks
+
 Revision 1.10  2003/07/06 08:49:33  lemmstercvs01
 better oo added
 
