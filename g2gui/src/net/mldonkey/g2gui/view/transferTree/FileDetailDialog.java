@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.22 2003/08/31 02:16:50 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.23 2003/08/31 02:21:33 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -250,7 +250,11 @@ public class FileDetailDialog implements Observer {
 					fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ));
 				}
 				else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED) {
-					fileInfo.saveFileAs( fileInfo.getName() );
+					if (renameText.getText().equals(""))
+						fileInfo.saveFileAs( fileInfo.getName() );
+					else
+						fileInfo.saveFileAs( renameText.getText() );
+						
 					fileActionButton.setText(G2GuiResources.getString( "BTN_OK" ));
 					fileActionButton.setEnabled(false);
 				}
@@ -364,6 +368,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.23  2003/08/31 02:21:33  zet
+commit
+
 Revision 1.22  2003/08/31 02:16:50  zet
 cancel button
 
@@ -399,6 +406,9 @@ new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
+fix Revision 1.23  2003/08/31 02:21:33  zet
+fix commit
+fix
 fix Revision 1.22  2003/08/31 02:16:50  zet
 fix cancel button
 fix
