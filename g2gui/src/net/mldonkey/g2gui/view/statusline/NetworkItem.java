@@ -38,13 +38,13 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.28 2003/10/22 15:46:06 dek Exp $ 
+ * @version $Id: NetworkItem.java,v 1.29 2003/10/31 10:44:41 lemmster Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -111,17 +111,17 @@ public class NetworkItem implements Observer {
 			popupMenu.setRemoveAllWhenShown( true );
 			popupMenu.addMenuListener( manager );
 			
-			toolItem.addListener (SWT.Selection, new Listener () {
-				public void handleEvent (Event event) {
-						Rectangle rect = ((ToolItem) event.widget).getBounds ();
-						Menu menu = popupMenu.createContextMenu( toolBar );
-						Point pt = new Point (rect.x, rect.y + rect.height);
-						pt = toolBar.toDisplay (pt);
-						menu.setLocation (pt.x, pt.y);
-						menu.setVisible (true);
+			toolItem.addSelectionListener( new SelectionListener() {
+				public void widgetSelected(SelectionEvent arg0) {
+					Rectangle rect = ((ToolItem) arg0.widget).getBounds ();
+					Menu menu = popupMenu.createContextMenu( toolBar );
+					Point pt = new Point (rect.x, rect.y + rect.height);
+					pt = toolBar.toDisplay (pt);
+					menu.setLocation (pt.x, pt.y);
+					menu.setVisible (true);
 				}
-			});
-
+				public void widgetDefaultSelected(SelectionEvent arg0) { }
+			} );
 			createTooltip( toolItem, network );
 	
 			/* on dispose() deregister on the model */			
@@ -202,6 +202,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.29  2003/10/31 10:44:41  lemmster
+use addSelectionListener(...) instead of addListener(SWT.Selection...)
+
 Revision 1.28  2003/10/22 15:46:06  dek
 flattened status bar
 
