@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: G2guiTab.java,v 1.1 2003/06/24 20:44:54 lemmstercvs01 Exp $ 
+ * @version $Id: G2guiTab.java,v 1.2 2003/06/26 14:08:03 dek Exp $ 
  *
  */
 public abstract class G2guiTab implements Listener{
@@ -53,8 +53,8 @@ public abstract class G2guiTab implements Listener{
 		this.content = new Composite(gui.getPageContainer(),SWT.NONE);
 		this.content.setLayout(new FillLayout());
 		this.content.setVisible(false);
-		gui.registerTab(this);	}
-
+		gui.registerTab(this);		
+	}
 		
 	protected abstract void createContents(Composite parent);
 	
@@ -78,6 +78,9 @@ public abstract class G2guiTab implements Listener{
 }
 /*
 $Log: G2guiTab.java,v $
+Revision 1.2  2003/06/26 14:08:03  dek
+statusline created
+
 Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
 refactored
 

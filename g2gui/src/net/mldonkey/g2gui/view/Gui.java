@@ -27,8 +27,9 @@ import java.util.ArrayList;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.Preferences;
+import net.mldonkey.g2gui.view.statusline.*;
 
-import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.*;
 import org.eclipse.swt.SWT;
@@ -41,10 +42,11 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.4 2003/06/26 12:04:59 dek Exp $ 
+ * @version $Id: Gui.java,v 1.5 2003/06/26 14:08:03 dek Exp $ 
  *
  */
 public class Gui extends ApplicationWindow implements IG2gui, Listener {
+	private StatusLine statusline;
 	private Composite miscButtonRow;
 	private Composite buttonRow;
 	private CoreCommunication mldonkey;
@@ -102,7 +104,6 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 		super( null );	
 		this.mldonkey = core;
 		this.setBlockOnOpen( true );
-		this.addStatusLine();		
 		this.open();		
 		//Display.getCurrent().dispose();
 	}
@@ -117,6 +118,8 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 		
 		GridLayout mainLayout = new GridLayout();
 			mainLayout.numColumns = 1;
+			mainLayout.marginWidth = 0;
+			mainLayout.marginHeight = 0;
 			mainComposite.setLayout( mainLayout );
 			
 		this.buttonRow = new Composite( mainComposite, SWT.NONE );
@@ -160,22 +163,13 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 					myprefs.open(prefshell,null);
 			}});
 		
-		
-
-		
-			
-			
-
-		
 		pageContainer = new Composite( mainComposite, SWT.NONE);
 		pageContainer.setLayout( new PageLayout() );						
 		gridData = new GridData( GridData.FILL_BOTH );			
 			pageContainer.setLayoutData( gridData );
-		
-
-			
-		addTabs();
 						
+		addTabs();
+		statusline = new StatusLine(mainComposite);					
 		
 		return super.createContents( parent );
 	}
@@ -186,8 +180,9 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 	 */
 	private void addTabs() {
 		new TransferTab(this );
-		new ConsoleTab( this );
+		new ConsoleTab( this );		
 	}
+	
 	
 
 	/* (non-Javadoc)
@@ -240,6 +235,9 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.5  2003/06/26 14:08:03  dek
+statusline created
+
 Revision 1.4  2003/06/26 12:04:59  dek
 pref-dialog accessible in main-window
 
