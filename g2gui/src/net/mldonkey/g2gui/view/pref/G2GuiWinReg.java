@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.view.pref;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
@@ -42,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.1 2003/11/06 03:27:29 zet Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.2 2003/11/06 15:26:25 zet Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -103,14 +102,8 @@ public class G2GuiWinReg extends PreferencePage {
         String currentDir;
         FileOutputStream out;
         PrintStream p;
-        File thisDir = new File(".");
-
-        try {
-            currentDir = thisDir.getCanonicalPath() + System.getProperty("file.separator");
-        } catch (Exception e) {
-            System.err.println("getCanonicalPath: " + e);
-            return;
-        }
+        
+        currentDir = System.getProperty("user.dir") + System.getProperty("file.separator");
 
         try {
             String regFile = currentDir + appName + ".reg";
@@ -263,6 +256,9 @@ public class G2GuiWinReg extends PreferencePage {
 
 /*
 $Log: G2GuiWinReg.java,v $
+Revision 1.2  2003/11/06 15:26:25  zet
+use System instead of io.File
+
 Revision 1.1  2003/11/06 03:27:29  zet
 initial
 
