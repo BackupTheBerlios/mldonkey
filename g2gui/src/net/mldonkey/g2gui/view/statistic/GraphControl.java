@@ -31,8 +31,8 @@ public class GraphControl extends Composite{
 		layout(true);
 			
 	//	System.out.println("parent widget" + parent.getBounds());
-		uploadGraph = new Graph( new Color(null,244,0,0) );
-		downloadGraph = new Graph(new Color(null,0,0,244) );
+		uploadGraph = new Graph( new Color(null,244,0,0), "Uploads" );
+		downloadGraph = new Graph(new Color(null,0,0,244), "Downloads" );
 		
 		// this.setSize(400,200);
 		//graphCanvas1.redraw();

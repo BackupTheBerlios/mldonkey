@@ -20,12 +20,20 @@ public class Graph {
 	StatisticPoint firstPoint;
 	StatisticPoint lastPoint;
 	int amount;
+	int maxValue;
+	int avgValue;
+	long sumValue;
+	long totalPoints;
 	long createTime;
+	String name;
 	
 	Color graphColor;
 	
-	public Graph(Color color)
+	public Graph(Color color, String name)
 	{
+		this.name=name;
+		sumValue=totalPoints=avgValue=maxValue=0;
+		
 		graphColor = color;
 		// System.out.println("Graph created");
 		createTime = System.currentTimeMillis();
@@ -47,7 +55,10 @@ public class Graph {
 			lastPoint = nextPoint;
 			
 		}
+		if (value > maxValue) maxValue = value;
+		sumValue += value;
 		amount++;
+		avgValue = (int) (sumValue/(long)amount);
 		//System.out.println(lastPoint.getTime());		
 	}
 	
@@ -62,6 +73,15 @@ public class Graph {
 	public Color getGraphColor()
 	{
 		return graphColor;
+	}
+	public int getMax() {
+		return maxValue;
+	}
+	public String getName() {
+		return name;
+	}
+	public int getAvg() {
+		return avgValue;
 	}
 
 }

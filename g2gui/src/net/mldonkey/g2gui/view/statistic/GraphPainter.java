@@ -129,7 +129,7 @@ public class GraphPainter {
 			}
 			drawBoardBuffer.setForeground(new Color(null,0,128,64));
 			drawBoardBuffer.drawLine(startx,(int)(height+1f),width-40,(int)(height+1));
-			
+						
 			for (int i = 0; i < 10; i++) 
 				drawBoardBuffer.drawLine(startx+i*(width/20),0,startx+i*(width/20),(int)height);
 					
@@ -150,9 +150,16 @@ public class GraphPainter {
 			drawBoardBuffer.setBackground(new Color(null,255,255,255));
 			drawBoardBuffer.fillRoundRectangle(startx+10,textPosition-3,80,20,7,7);
 			drawBoardBuffer.drawRoundRectangle(startx+10,textPosition-3,80,20,7,7);
-			drawBoardBuffer.drawText(vv + " KB/s",startx+20,textPosition);
+			drawBoardBuffer.drawText(vv + " kb/s",startx+20,textPosition);
 			drawBoardBuffer.setForeground(new Color(null, 255,255,0));
 			drawBoardBuffer.drawLine(startx+10,textPosition,startx,textPosition);
+			
+			// just for temporary fun .. this will overflow pretty quickly
+			drawBoardBuffer.setForeground(graphColor);
+			drawBoardBuffer.drawText(graphs[which].getName() + 
+				" avg: " + ((double)graphs[which].getAvg()/100) + " kb/s," +
+				" max: " + ((double)graphs[which].getMax()/100) + " kb/s",
+				20, (int)height+2,true);
 			
 			which++;
 		}
