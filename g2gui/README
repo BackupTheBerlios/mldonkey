@@ -69,7 +69,7 @@ $ ./g2gui --help
 to get a list.
 
 The intersting feature is the link-submission tool. Simply give G2gui
-an ed2k:// or .torrent link and it will submit it to the core.
+an ed2k:// or .torrent link or file(!) and it will submit it to the core.
 
 
 
