@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.12 2003/07/07 18:30:29 dek Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.13 2003/07/09 08:55:19 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -64,8 +64,6 @@ public class OptionsInfoMap extends InfoMap {
 				OptionsInfo existingOption = ( OptionsInfo ) this.infoMap.get( optionsInfo.getKey() );
 				existingOption.setValue( optionsInfo.getValue() );
 			}
-			
-				
 		}
 	}
 	
@@ -82,18 +80,18 @@ public class OptionsInfoMap extends InfoMap {
 		 * String  	 Name of Option 
 		 * OptionType  	 The Type of the Option (to select which widget to use)
 		 */
-		 String sectionToAppear = messageBuffer.readString();
-		 String description = messageBuffer.readString();
-		 String nameOfOption = messageBuffer.readString();
-		 byte optionType = messageBuffer.readByte();
+		String sectionToAppear = messageBuffer.readString();
+		String description = messageBuffer.readString();
+		String nameOfOption = messageBuffer.readString();
+		byte optionType = messageBuffer.readByte();
 		 
 		 /*
 		  * now get the specific Option and set the values:
 		  */
-		( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setDescription( description );
-		( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setSectionToAppear( sectionToAppear );
-		( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setOptionType( optionType );
-		 
+		OptionsInfo optionInfo = ( ( OptionsInfo ) infoMap.get( nameOfOption ) );
+		optionInfo.setDescription( description );
+		optionInfo.setSectionToAppear( sectionToAppear );
+		optionInfo.setOptionType( optionType );
 	}
 	
 	/**
@@ -116,12 +114,22 @@ public class OptionsInfoMap extends InfoMap {
 		/*
 		 * now get the specific Option and set the values:
 		 */
-	   ( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setDescription( description );
-	   ( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setPluginToAppear( pluginToAppear );
-	   ( ( OptionsInfo ) infoMap.get( nameOfOption ) ).setOptionType( optionType );	   
-		
+		/* Bugfix for missing options */
+		if ( this.infoMap.contains( nameOfOption ) ) { 
+			OptionsInfo optionInfo = ( ( OptionsInfo ) infoMap.get( nameOfOption ) );
+			optionInfo.setDescription( description );
+			optionInfo.setPluginToAppear( pluginToAppear );
+			optionInfo.setOptionType( optionType );	   
+		}
+		else {
+			OptionsInfo optionInfo = new OptionsInfo( this.parent );
+			optionInfo.setDescription( description );
+			optionInfo.setPluginToAppear( pluginToAppear );
+			optionInfo.setOptionType( optionType );
+			optionInfo.setKey( nameOfOption );
+			this.infoMap.put( nameOfOption, optionInfo );
+		}
 	}
-	
 
 	/**
 	 * String representation of this object
@@ -143,14 +151,14 @@ public class OptionsInfoMap extends InfoMap {
 		/*
 		 * does nothing
 		 */
-		
 	}
-
-
 }
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.13  2003/07/09 08:55:19  lemmstercvs01
+bugfix for missing optionInfos
+
 Revision 1.12  2003/07/07 18:30:29  dek
 saving options now also works
 
