@@ -80,7 +80,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.49 2003/09/20 14:38:51 zet Exp $
+ * @version $Id: SearchResult.java,v 1.50 2003/09/22 20:07:22 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -112,7 +112,13 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 								    	G2GuiResources.getString( "SR_AVAIL" ), };
 
     /* 0 sets the tablewidth dynamcliy */
-    private int[] tableWidth = { 45, 0, 65, 45, 50, 45 };
+    private int[] tableWidth = { 58, 0, 65, 45, 50, 55 };
+    
+    private int[] tableAlign =
+    {
+    	SWT.LEFT, SWT.LEFT, SWT.RIGHT, 
+		SWT.LEFT, SWT.LEFT, SWT.LEFT 
+    };
 
     /**
      * Creates a new SearchResult to display all the results supplied by mldonkey
@@ -291,7 +297,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
         /* create the columns */
         for ( int i = 0; i < tableColumns.length; i++ ) {
-            tableColumn = new TableColumn( table.getTable(), SWT.LEFT );
+            tableColumn = new TableColumn( table.getTable(), tableAlign[ i ] );
             tableColumn.setText( tableColumns[ i ] );
             tableColumn.pack();
 
@@ -600,6 +606,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 }
 /*
 $Log: SearchResult.java,v $
+Revision 1.50  2003/09/22 20:07:22  lemmster
+right column align for integers [bug #934]
+
 Revision 1.49  2003/09/20 14:38:51  zet
 move transfer package
 
@@ -680,7 +689,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

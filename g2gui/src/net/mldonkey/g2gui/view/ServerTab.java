@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.33 2003/09/20 14:39:48 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.34 2003/09/22 20:02:34 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -106,6 +106,12 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		55, 55, 60, 80, 50
 	};
 	
+	private int[] tableAlign =
+	{
+		SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT,
+		SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.LEFT
+	};
+	
 	/**
 	 * @param gui The main gui tab
 	 */
@@ -137,6 +143,13 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 				50, 55, 55, 60,
 				80
 			};
+			
+			this.tableAlign = new int[]
+			{
+				SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT,
+				SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT
+			};
+
 		}
 
 		/* create the tab content */
@@ -194,7 +207,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		for ( int i = 0; i < tableColumns.length; i++ ) {
 			final PreferenceStore prefStore = PreferenceLoader.getPreferenceStore();
 			prefStore.setDefault( tableColumns[ i ], tableWidth[ i ] );
-			tableColumn = new TableColumn( table.getTable(), SWT.LEFT );
+			tableColumn = new TableColumn( table.getTable(), tableAlign[ i ] );
 			tableColumn.setText( G2GuiResources.getString( tableColumns[ i ] ) );
 			tableColumn.setWidth( prefStore.getInt( tableColumns[ i ] ) );
 			
@@ -418,6 +431,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.34  2003/09/22 20:02:34  lemmster
+right column align for integers [bug #934]
+
 Revision 1.33  2003/09/20 14:39:48  zet
 move transfer package
 
