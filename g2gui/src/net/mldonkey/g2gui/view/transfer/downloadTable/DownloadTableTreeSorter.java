@@ -37,7 +37,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.11 2003/12/01 16:39:25 zet Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.12 2003/12/01 17:02:05 zet Exp $
  *
  */
 public class DownloadTableTreeSorter extends GSorter {
@@ -63,7 +63,6 @@ public class DownloadTableTreeSorter extends GSorter {
         return 3;
     }
 
-
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.viewers.GSorter#sortOrder(int)
      */
@@ -88,22 +87,22 @@ public class DownloadTableTreeSorter extends GSorter {
         if (element instanceof FileInfo && maintainSortOrder) {
             switch (cViewer.getColumnIDs()[ columnIndex ]) {
             case DownloadTableTreeView.DOWNLOADED:
-                return (property.equals(FileInfo.CHANGED_DOWNLOADED) ? true : false);
+                return property.equals(FileInfo.CHANGED_DOWNLOADED);
 
             case DownloadTableTreeView.PERCENT:
-                return (property.equals(FileInfo.CHANGED_PERCENT) ? true : false);
+                return property.equals(FileInfo.CHANGED_PERCENT);
 
             case DownloadTableTreeView.AVAIL:
-                return (property.equals(FileInfo.CHANGED_AVAIL) ? true : false);
+                return property.equals(FileInfo.CHANGED_AVAIL);
 
             case DownloadTableTreeView.RATE:
-                return (property.equals(FileInfo.CHANGED_RATE) ? true : false);
+                return property.equals(FileInfo.CHANGED_RATE);
 
             case DownloadTableTreeView.ETA:
-                return (property.equals(FileInfo.CHANGED_ETA) ? true : false);
+                return property.equals(FileInfo.CHANGED_ETA);
 
             case DownloadTableTreeView.LAST:
-                return (property.equals(FileInfo.CHANGED_LAST) ? true : false);
+                return property.equals(FileInfo.CHANGED_LAST);
 
             default:
                 return false;
@@ -243,6 +242,9 @@ public class DownloadTableTreeSorter extends GSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.12  2003/12/01 17:02:05  zet
+*** empty log message ***
+
 Revision 1.11  2003/12/01 16:39:25  zet
 set default sort order for specific columns
 
