@@ -1,6 +1,6 @@
 2003/09/22: lemmy
-	* Server: Integer columns right- instaed of left-aligned [bug #934]
-	* Search: Integer columns right- instaed of left-aligned [bug #934]
+	* Server: Integer columns right- instead of left-aligned [bug #934]
+	* Search: Integer columns right- instead of left-aligned [bug #934]
 2003/09/16: lemmy
 	* Statusline: Dont change the rightclick menu when switching between modes [bug #912]
 2003/09/15: Dek
