@@ -32,10 +32,10 @@ import org.eclipse.swt.widgets.Composite;
  * ExtendedBooleanFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedBooleanFieldEditor.java,v 1.4 2003/07/02 16:16:47 dek Exp $ 
+ * @version $Id: ExtendedBooleanFieldEditor.java,v 1.5 2003/07/08 16:59:23 dek Exp $ 
  *
  */
-public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
+public class ExtendedBooleanFieldEditor extends BooleanFieldEditor implements IValueEditor {
 	private boolean hasChanged;
 	private Composite temp;
 
@@ -77,7 +77,7 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 		
 	}
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.jface.preference.BooleanFieldEditor#setEnabled(boolean, org.eclipse.swt.widgets.Composite)
 	 */
 	public void setEnabled( boolean arg0, Composite arg1 ) {		
@@ -92,10 +92,16 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 		this.hasChanged = true;
 		
 	}
+	
+	/** (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.pref.IValueEditor#resetChangedStatus()
+	 */
+	public void resetChangedStatus() {
+		hasChanged = false;
+		
+	}
 
 
-	
-	
 
 	/**
 	 * @return returns wether this control has been changed
@@ -115,6 +121,9 @@ public class ExtendedBooleanFieldEditor extends BooleanFieldEditor {
 
 /*
 $Log: ExtendedBooleanFieldEditor.java,v $
+Revision 1.5  2003/07/08 16:59:23  dek
+now the booleanValues are checkBoxes
+
 Revision 1.4  2003/07/02 16:16:47  dek
 extensive Checkstyle applying
 

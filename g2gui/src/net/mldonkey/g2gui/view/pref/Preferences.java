@@ -23,10 +23,8 @@
 package net.mldonkey.g2gui.view.pref;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -40,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.8 2003/07/08 15:03:01 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.9 2003/07/08 16:59:23 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -79,7 +77,7 @@ public class Preferences extends PreferenceManager {
 				};
 		if ( ( mldonkey != null ) && ( mldonkey.isConnected() ) ) {
 			this.connected = true;
-			createMLDonkeyOptions(connected, mldonkey);
+			createMLDonkeyOptions( connected, mldonkey );
 		}	
 		
 		
@@ -99,8 +97,6 @@ public class Preferences extends PreferenceManager {
 	 */
 	private void createMLDonkeyOptions( boolean connected, CoreCommunication mldonkey ) {
 		OptionsInfoMap options = mldonkey.getOptionsInfoMap();
-		PreferenceNode pluginOptions = new PreferenceNode( "plugins",new MLDonkeyOptions("Plugins") );
-			myprefs.addToRoot( pluginOptions );
 		
 		Map sections = new HashMap();
 		Map plugins = new HashMap();
@@ -114,10 +110,10 @@ public class Preferences extends PreferenceManager {
 			
 			if ( ( section == null ) && ( plugin == null ) ) {				
 				/* create the General-section, or if already done, only add the option */
-				if ( !sections.containsKey( "aaaGeneral" ) ) {
-					MLDonkeyOptions temp = new MLDonkeyOptions( "aaaGeneral" );
-					myprefs.addToRoot( new PreferenceNode ( "aaaGeneral", temp ) );
-					sections.put( "aaaGeneral", temp );
+				if ( !sections.containsKey( "General" ) ) {
+					MLDonkeyOptions temp = new MLDonkeyOptions( "General" );
+					myprefs.addToRoot( new PreferenceNode ( "General", temp ) );
+					sections.put( "General", temp );
 					}
 			
 			/*commented out the following, as it produces ton's of options in this tab
@@ -130,7 +126,7 @@ public class Preferences extends PreferenceManager {
 			/* create the section, or if already done, only add the option */
 				if ( !sections.containsKey( section ) ) {
 					MLDonkeyOptions temp = new MLDonkeyOptions( section );
-					myprefs.addToRoot( new PreferenceNode ( section, temp ) );
+					//myprefs.addToRoot( new PreferenceNode ( section, temp ) );
 					sections.put( section, temp );
 					}
 				( ( MLDonkeyOptions  )sections.get( section ) ).addOption( option );
@@ -139,15 +135,37 @@ public class Preferences extends PreferenceManager {
 			/* create the pluginSection, or if already done, only add the option */
 				if ( !plugins.containsKey( plugin ) ) {
 					MLDonkeyOptions temp = new MLDonkeyOptions( plugin );
-					//myprefs.addToRoot( new PreferenceNode ( plugin, temp ) );
-					pluginOptions.add( new PreferenceNode ( plugin, temp ) );
+					
+					//pluginOptions.add( new PreferenceNode ( plugin, temp ) );
 					plugins.put( plugin, temp );
 					}
 				( ( MLDonkeyOptions  )plugins.get( plugin ) ).addOption( option );			
 				//create the plugin, or if already done, only add the option
 				}
-			
-			
+		}
+		/*Now we create the tree-structure, since we received all options*/
+		
+		 /*
+		  * first the sections:
+		  */
+		 sections.remove( "General" ); //remove the General-page, as it is already created
+		 it = sections.keySet().iterator();
+		 while ( it.hasNext() ) {
+		 	String sectionName = ( String ) it.next();
+		 	 MLDonkeyOptions optionspage = ( MLDonkeyOptions ) sections.get( sectionName );
+				myprefs.addToRoot( new PreferenceNode ( sectionName, optionspage ) );
+		 }
+		 
+		 /*
+		  * and now the Plugins:
+		  */
+		PreferenceNode pluginOptions = new PreferenceNode( "plugins", new MLDonkeyOptions( "Plugins" ) );
+			myprefs.addToRoot( pluginOptions );
+		it = plugins.keySet().iterator();
+		while ( it.hasNext() ) {
+		   String sectionName = ( String ) it.next();
+			MLDonkeyOptions optionspage = ( MLDonkeyOptions ) plugins.get( sectionName );
+				pluginOptions.add( new PreferenceNode ( sectionName, optionspage ) );
 		}
 	}
 		
@@ -188,6 +206,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.9  2003/07/08 16:59:23  dek
+now the booleanValues are checkBoxes
+
 Revision 1.8  2003/07/08 15:03:01  dek
 *** empty log message ***
 

@@ -22,17 +22,13 @@
  */
 package net.mldonkey.g2gui.view.pref;
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-
 import net.mldonkey.g2gui.model.OptionsInfo;
-
-import org.eclipse.jface.preference.FieldEditor;
+import net.mldonkey.g2gui.model.enum.EnumTagType;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -40,7 +36,7 @@ import org.eclipse.swt.widgets.Control;
  * MLDonkeyOptions
  *
  * @author $user$
- * @version $Id: MLDonkeyOptions.java,v 1.2 2003/07/07 18:31:08 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.3 2003/07/08 16:59:23 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends PreferencePage {
@@ -62,16 +58,32 @@ public class MLDonkeyOptions extends PreferencePage {
 	 */
 	protected Control createContents( Composite parent ) {
 		Iterator it = options.keySet().iterator();
-		while ( it.hasNext() ) {			
+		while ( it.hasNext() ) {
+			
+		
 			OptionsInfo option = ( OptionsInfo ) options.get( it.next() );
-			StringFieldEditor temp = new StringFieldEditor(
-										 option.getKey(), 
-										 option.getDescription(), 
-										 parent );
-			temp.setStringValue( option.getValue() );
-			temp.getTextControl( parent ).setToolTipText( option.getKey() );
-			temp.getLabelControl( parent ).setToolTipText( option.getKey() );
-			fields.put( option.getKey(), temp );
+			/*First check the Option, what kind of option it is: string or boolean
+			 * to known, which widget to use*/	
+			 if ( option.getOptionType().equals( EnumTagType.STRING ) ) {			
+				ExtendedStringFieldEditor temp = new ExtendedStringFieldEditor(
+											 option.getKey(), 
+											 option.getDescription(), 
+											 parent );
+				temp.setStringValue( option.getValue() );
+				temp.setToolTipText( option.getKey() );				
+				fields.put( option.getKey(), temp );
+			 }
+			else if ( option.getOptionType().equals( EnumTagType.BOOL ) ) {			
+				ExtendedBooleanFieldEditor temp = new ExtendedBooleanFieldEditor(
+											 option.getKey(), 
+											 option.getDescription(), 
+											 parent );
+				temp.setSelection( new Boolean( option.getValue() ).booleanValue() );
+				temp.setToolTipText( option.getKey() );				
+				fields.put( option.getKey(), temp );
+			}
+			 
+			 
 		}
 		
 		this.initialized = true;
@@ -99,12 +111,13 @@ public class MLDonkeyOptions extends PreferencePage {
 			while ( it.hasNext() ) {
 				String optionName = ( String ) it.next();
 				OptionsInfo option = ( OptionsInfo ) options.get( optionName );
-				StringFieldEditor field = ( StringFieldEditor ) fields.get( optionName );
+				IValueEditor field = ( IValueEditor ) fields.get( optionName );
 				/*has the value changed??*/
-				if ( !field.getStringValue().equals( option.getValue() ) ) {
-					/*Ok, option has changed, take it and send it to the mldonkey*/
-					option.setValue( field.getStringValue() );
+				if ( field.hasChanged() ) {
+					/*Ok, option has changed, take it and send it to the mldonkey*/					
+					option.setValue( field.getValue() );
 					option.send();
+					field.resetChangedStatus();
 				}
 								
 			}			
@@ -117,6 +130,9 @@ public class MLDonkeyOptions extends PreferencePage {
 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.3  2003/07/08 16:59:23  dek
+now the booleanValues are checkBoxes
+
 Revision 1.2  2003/07/07 18:31:08  dek
 saving options now also works
 
