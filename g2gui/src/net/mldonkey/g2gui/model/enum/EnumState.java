@@ -26,11 +26,11 @@ package net.mldonkey.g2gui.model.enum;
  * EnumState
  *
  * @author markus
- * @version $Id: EnumState.java,v 1.1 2003/06/24 09:29:33 lemmstercvs01 Exp $ 
+ * @version $Id: EnumState.java,v 1.2 2003/07/30 19:30:21 lemmstercvs01 Exp $ 
  *
  */
 public class EnumState implements Enum {
-
+	private String state;
 	/**
 	 * not connected
 	 */
@@ -77,11 +77,22 @@ public class EnumState implements Enum {
 	 * @param aString The value
 	 */
 	private EnumState( String aString ) {
+		state = aString;
+	}
+	/**
+	 * @param state2
+	 * @return
+	 */
+	public int compareTo( EnumState state2 ) {
+		return this.state.compareTo( state2.state );
 	}
 }
 
 /*
 $Log: EnumState.java,v $
+Revision 1.2  2003/07/30 19:30:21  lemmstercvs01
+compareTo(EnumState enum) added
+
 Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
 Enum more improved
 
