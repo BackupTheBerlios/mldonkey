@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.widgets.InterFaceUI;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.25 2003/06/18 14:14:17 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.26 2003/06/18 19:45:55 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -253,13 +253,10 @@ public class Core extends Thread implements CoreCommunication {
 	
 	/**
 	 * 
-	 * @param anInterfaceUi
-	 * @return
+	 * @param anInterFaceUI hf
+	 * 
 	 */
-	public synchronized void registerListener( InterFaceUI anInterFaceUI ) {
-		if ( ! ( this.registeredListeners.contains( anInterFaceUI ) ) ) 
-			this.registeredListeners.add( anInterFaceUI );
-	}
+
 
 	/**
 	 * 
@@ -272,10 +269,25 @@ public class Core extends Thread implements CoreCommunication {
 			anInterFaceUI.notify( anInformation );
 		}
 	}
+	/**
+	 * @return
+	 */
+	public Socket getConnection() {
+		return connection;
+	}
+
+public void registerListener( InterFaceUI anInterFaceUI ) {
+		if ( ! ( this.registeredListeners.contains( anInterFaceUI ) ) ) 
+			this.registeredListeners.add( anInterFaceUI );
+	}
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.26  2003/06/18 19:45:55  dek
+added getConnection
+
 Revision 1.25  2003/06/18 14:14:17  lemmstercvs01
 running :)
 
