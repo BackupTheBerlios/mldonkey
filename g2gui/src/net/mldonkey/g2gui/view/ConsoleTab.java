@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.25 2003/07/26 20:21:48 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.26 2003/07/27 01:01:51 vnc Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -90,11 +90,13 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 		//Send command to core
 		input.addKeyListener( new KeyAdapter() {
 			public void keyPressed( KeyEvent e ) {
-				if (e.keyCode == SWT.PAGE_DOWN || e.keyCode == SWT.PAGE_UP) {
-					// awkward?
-					int approxNumLinesDisplayed = infoDisplay.getClientArea().height / (infoDisplay.getFont().getFontData()[0].getHeight() + 4);
-					if (e.keyCode == SWT.PAGE_UP) approxNumLinesDisplayed = -approxNumLinesDisplayed;
-					infoDisplay.setTopIndex(infoDisplay.getTopIndex() + approxNumLinesDisplayed);
+				int numLinesDisplayed = infoDisplay.getClientArea().height / infoDisplay.getLineHeight();
+				if (e.keyCode == SWT.PAGE_UP) {
+					if ( infoDisplay.getTopIndex() > numLinesDisplayed )  
+						infoDisplay.setTopIndex( infoDisplay.getTopIndex() - ( numLinesDisplayed ) );
+					else infoDisplay.setTopIndex(0);
+				} else if (e.keyCode == SWT.PAGE_DOWN) {
+					infoDisplay.setTopIndex( infoDisplay.getTopIndex() + ( numLinesDisplayed ) );
 				} else if ( e.character == SWT.CR ) {
 					infoDisplay.append( input.getText() );
 					String[] command = new String[ 1 ] ;
@@ -199,6 +201,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.26  2003/07/27 01:01:51  vnc
+added better scrolling features
+
 Revision 1.25  2003/07/26 20:21:48  zet
 pgup/pgdn from input
 
