@@ -22,13 +22,15 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 
 /**
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.1 2003/06/09 21:14:52 dek Exp $ 
+ * @version $Id: Core.java,v 1.2 2003/06/09 22:08:23 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -39,6 +41,7 @@ public class Core extends Thread implements CoreCommunication {
 	private String password;
 	private String host;
 	private int port;
+	private int coreProtocol = 0;
 
 	/**
 	 * Core()
@@ -79,75 +82,83 @@ public class Core extends Thread implements CoreCommunication {
 	 */
 	public void run() {
 		connect();
-		Message receivedMessage = new Message( connection );
-		while ( connected ) {
-			int opcode = receivedMessage.getOpCode();			
-			receivedMessage.getContent();
-			decodeMessage(opcode,connection);			
+		InputStream i;
+		try {
+			i = connection.getInputStream();
+			//getting length of message (No use for this so far??):	
+			Message.readInt32(i);
+			while (connected) {
+				short opCode = Message.readInt16(i);
+				decodeMessage(opCode, connection);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+
 	}
 
 	/**
 	 * @param opcode
 	 * @param connection
+	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private void decodeMessage( int opcode, Socket connection ) {
+	private void decodeMessage(int opcode, Socket connection ) throws IOException {
+				InputStream inputStream = connection.getInputStream();
 				switch (opcode) {
-					case MSG.R_COREPROTOCOL :
-						{
+					case Message.R_COREPROTOCOL :{
 							/*
 							 *	PayLoad:
 							 *	int32	The maximal protocol version accepted by the core 
-							 */											
+							 */	
+							coreProtocol = Message.readInt32(inputStream);
+							Object[] temp = new Object[1];
+							temp[0] = new Integer(16);
+							Message coreProtocolReply = new Message(Message.S_COREPROTOCOL,temp);
+							coreProtocolReply.sendMessage(connection);							
+																	
+							Object[] extension = { new Integer(1), new Byte((byte) 1)};
+							Object[][] a = { extension };
+							Message guiExtension = new Message(Message.S_GUIEXTENSION,a);
+							guiExtension.sendMessage(connection);							
 							
-							coreprotocoll = MSG.readInt32(receivedMessage.getStream());
-							MSG.sendMessage(MSG.S_COREPROTOCOL,	MSG.createInt32(16), connection);						
-							Object[] row1 = { new Integer(1), new Byte((byte) 1)};
-							Object[][] a = { row1 };
-							//MSG.sendMessage(MSG.S_GUIEXTENSION,MSG.createMessage(a),connection);
 							String[] aString = { this.password, this.username };
-							MSG.sendMessage(
-								MSG.S_PASSWORD,
-								MSG.createMessage(aString),
-								connection);
-
+							Message password = new Message(Message.S_PASSWORD,aString);
+							password.sendMessage(connection);
 							break;
-						}
-					case MSG.R_OPTIONS_INFO :{
+					}
+						
+					case Message.R_OPTIONS_INFO :{
 						/*
 						 *	PayLoad:
-						 *	List of (St
-						 *ring,String)	The list of options with their current value 
-						 */
-						Main.debug(5,"R_OPTIONS_INFO received");
+						 *	List of (String,String)	The list of options with their current value 
+						 */						
 						 break;
-					}
-				
-					case MSG.R_FILE_UPDATE_AVAILABILITY : {
+					}				
+					case Message.R_FILE_UPDATE_AVAILABILITY : {
 						/*
 						 *	PayLoad:
 						 *	int32	File Number
 						 *	int32	client_num
 						 *	String	Availability				
-						 */
-						Main.debug(5,"R_FILE_UPDATE_AVAILABILITY received");
+						 */						
 						break;									
 					}
 
 
-					case MSG.R_FILE_ADD_SOURCE :
+					case Message.R_FILE_ADD_SOURCE :
 						{
 							/*
 							 *	PayLoad:
 							 *	int32	The File Identifier 
 							 *	int32	The Source/Client Identifier 
-							 */
-							Main.debug(5,"R_FILE_ADD_SOURCE received");
+							 */							
 							break;
 						}
 				
-					case MSG.R_CLIENT_STATS :
+					case Message.R_CLIENT_STATS :
 						{
 							/*
 							 *	PayLoad:
@@ -162,26 +173,25 @@ public class Core extends Thread implements CoreCommunication {
 							 *	int32	Number of current downloads 
 							 *	int32	Number of downloads finished 
 							 *	List of int32  	 Connected Networks 
-							 */
-							Main.debug(5,"R_CLIENT_STATS received");
+							 */							
 							break;
 						}
 
 
-					case MSG.R_CONSOLE :
+					case Message.R_CONSOLE :
 						{
 							/*
 							 *	PayLoad:
 							 *	String	Data, the core wants to be displayed on the console 
 							 */
 							String payload_text =
-								MSG.readString(receivedMessage.getStream());
-							Main.debug(10, payload_text);
+							Message.readString(inputStream);
+							System.out.println(payload_text);
 							//receiving = false;
 							break;
 						}
 
-					case MSG.R_NETWORK_INFO :								
+					case Message.R_NETWORK_INFO :								
 						{
 							/*
 							 *	PayLoad:
@@ -204,71 +214,39 @@ public class Core extends Thread implements CoreCommunication {
 							 * (not yet implemented)
 							 */
 							//get network_indetifier from payload:
-							identifier = (int) MSG.readInt32(receivedMessage.getStream());
+							identifier = (int) Message.readInt32(inputStream);
 							//get network_name from payload:
-							network_name = MSG.readString(receivedMessage.getStream());
+							network_name = Message.readString(inputStream);
 							//get enabled|disabled from payload:							
-							if (MSG.readByte(receivedMessage.getStream()) == 1) {
+							if (Message.readByte(inputStream) == 1) {
 								status = true;
 							} else {
 								status = false;
 							}
 							//Now follows the decoding of network_config							
-							network_config = MSG.readString(receivedMessage.getStream());
+							network_config = Message.readString(inputStream);
 							//Some up / download-stats:
-							upload = MSG.readInt64(receivedMessage.getStream());
-							download = MSG.readInt64(receivedMessage.getStream());
-							// Now we are through the message and can show it the world:
-							// And put it all on STDOUT	
-							Main.debug(
-								9,
-								"Network-Identifier: "
-									+ network_name
-									+ "("
-									+ String.valueOf(identifier)
-									+ ")"
-									+ Boolean.toString(status)
-									+ "["
-									+ network_config
-									+ "]"
-									+ "(UP: "
-									+ String.valueOf(upload)
-									+ "DOWN: "
-									+ String.valueOf(download)
-									+ ")");
+							upload = Message.readInt64(inputStream);
+							download = Message.readInt64(inputStream);			
 							break;
 						}
 
 					default :
 						{
-							Main.debug(6, "unknown OP-Code : " + opcode + "!!!");
+							System.out.println("unknown OP-Code : " + opcode + "!!!");
 							//receivedMessage.getStream().read(new byte[receivedMessage.getLength()], 0, receivedMessage.getLength());
 							//String payload_ascii = new String(content, 0, receivedMessage.getLength());
-							byte[] content = new byte[receivedMessage.getLength()-2];
-							receivedMessage.getStream().read(content, 0, receivedMessage.getLength()-2);
-							String payload_ascii = new String(content, 0, receivedMessage.getLength()-2);
-						
-							Main.debug("ASCII: "+ payload_ascii );
-							Main.debug("dec.: ");
+							//byte[] content = new byte[receivedMessage.getLength()-2];
+							//inputStream.read(content, 0, receivedMessage.getLength()-2);
+							//String payload_ascii = new String(content, 0, receivedMessage.getLength()-2);
+													//System.out.println("ASCII: "+ payload_ascii );							
 							//for (int i = 0; i < receivedMessage.getContent().length-2; i++) {
 							//	System.out.print(receivedMessage.getContent()[i]+",");							
 							//}
 							System.out.print("\n");
-							try {
-								sleep(1000);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
 							break;
 						}
-				}
-			}
-			socketpool.returnSocket(connection);
-			connection = null;
-		}
-		
+		}				
 	}
 
 	/**
@@ -311,6 +289,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.2  2003/06/09 22:08:23  dek
+No time for checkstyle yet. Next step: trying to get the whole thing running...
+
 Revision 1.1  2003/06/09 21:14:52  dek
 broken atm, work in progress...
 
