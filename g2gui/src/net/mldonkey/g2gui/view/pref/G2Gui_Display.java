@@ -23,7 +23,7 @@ public class G2Gui_Display extends PreferencePage  {
 				consoleInputBackground, consoleInputForeground;
 	private ExtendedFontFieldEditor2 consoleFontData;
 	private BooleanFieldEditor displayChunkGraphs, displayGridLines,
-							tableCellEditors, displayHeaderBar;
+							tableCellEditors, displayHeaderBar, displayAllServers;
 	private IntegerFieldEditor displayBuffer;
 	private int columns = 0;
 	
@@ -60,6 +60,9 @@ public class G2Gui_Display extends PreferencePage  {
 	
 		consoleFontData = new ExtendedFontFieldEditor2("consoleFontData", "Console window font", "Sample",  shell);
 		setupEditor(consoleFontData);
+
+		displayAllServers = new BooleanFieldEditor( "displayAllServers", "Show only connected Servers", shell );
+		setupEditor( displayAllServers );		
 		
 		displayHeaderBar = new BooleanFieldEditor("displayHeaderBar", "Display header bar", shell);
 		setupEditor(displayHeaderBar);
@@ -136,6 +139,7 @@ public class G2Gui_Display extends PreferencePage  {
 			consoleInputBackground.store();
 			consoleInputForeground.store();
 			consoleFontData.store();
+			displayAllServers.store();
 			displayHeaderBar.store();
 			displayChunkGraphs.store();
 			displayGridLines.store();
@@ -150,6 +154,9 @@ public class G2Gui_Display extends PreferencePage  {
 
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.7  2003/08/11 11:27:46  lemmstercvs01
+display only connected servers added
+
 Revision 1.6  2003/08/08 21:11:15  zet
 set defaults in central location
 

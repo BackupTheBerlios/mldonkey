@@ -37,10 +37,6 @@ import org.eclipse.swt.graphics.Font;
  */
 public class PreferenceLoader {
 
-	public PreferenceLoader () {
-		
-	}
-	
 	/**
 	 * @return
 	 */
@@ -57,6 +53,7 @@ public class PreferenceLoader {
 	 * @return
 	 */
 	static PreferenceStore setDefaults(PreferenceStore preferenceStore) {
+		preferenceStore.setDefault( "displayAllServers", true );
 		preferenceStore.setDefault("displayChunkGraphs", true);
 		preferenceStore.setDefault("displayGridLines", true);
 		preferenceStore.setDefault("tableCellEditors", false);
@@ -110,11 +107,12 @@ public class PreferenceLoader {
 			return preferenceStore.getInt( preferenceString );
 		return 0;
 	}
-	
-
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.3  2003/08/11 11:27:46  lemmstercvs01
+display only connected servers added
+
 Revision 1.2  2003/08/08 21:11:15  zet
 set defaults in central location
 
