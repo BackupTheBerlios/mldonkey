@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.33 2003/09/27 10:24:54 lemmster Exp $
+ * @version $Id: G2GuiResources.java,v 1.34 2003/10/15 04:16:37 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -66,6 +66,15 @@ public class G2GuiResources {
      */
     public static Image getImage( String key ) {
         return getImageRegistry().get( key );
+    }
+    
+    /**
+     * Get resource imageDescriptor
+     * @param key
+     * @return
+     */
+    public static ImageDescriptor getImageDescriptor( String key ) {
+    	return getImageRegistry().getDescriptor( key );
     }
 
     /**
@@ -246,6 +255,17 @@ public class G2GuiResources {
         reg.put( "epRatingGood", createImageDescriptor( "ep_rating_good.gif" ) );
         reg.put( "epRatingExcellent", createImageDescriptor( "ep_rating_excellent.gif" ) );
         reg.put( "downloaded", createTrans( "downloaded_arrow.png" ) );
+        reg.put( "Jigle", createRawImage( "jigle.gif" ) );
+        reg.put( "Bitzi", createRawImage( "bitzi.gif" ) );
+        reg.put( "info", createRawImage( "info.gif") );
+        reg.put( "cancel", createRawImage( "cancel.gif") );
+        reg.put( "resume", createRawImage( "resume.gif") );
+        reg.put( "pause", createRawImage( "pause.gif" ) );
+        reg.put( "preview", createRawImage( "preview.gif") );
+        reg.put( "verify", createRawImage( "verify.gif") );
+        reg.put( "commit", createRawImage( "commit.gif" ) );
+        reg.put( "commit_question", createRawImage( "commit_question.gif" ) );
+        reg.put( "edonkey", createRawImage( "edonkey.gif" ) );
     }
 
     /**
@@ -318,6 +338,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.34  2003/10/15 04:16:37  zet
+add images
+
 Revision 1.33  2003/09/27 10:24:54  lemmster
 news items added
 
@@ -397,7 +420,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
