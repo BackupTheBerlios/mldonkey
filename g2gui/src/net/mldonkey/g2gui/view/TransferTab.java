@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Composite;
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.17 2003/07/17 14:58:37 lemmstercvs01 Exp $ 
+ * @version $Id: TransferTab.java,v 1.18 2003/07/18 09:58:00 dek Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -65,16 +65,19 @@ public class TransferTab extends GuiTab  {
 		new DownloadTable( download, mldonkey, this );
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
-	public void update(Observable o, Object arg) {
+	public void update( Observable o, Object arg ) {
 		// TODO Auto-generated method stub
 	}
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.18  2003/07/18 09:58:00  dek
+checkstyle
+
 Revision 1.17  2003/07/17 14:58:37  lemmstercvs01
 refactored
 
