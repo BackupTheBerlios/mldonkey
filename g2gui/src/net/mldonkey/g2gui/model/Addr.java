@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  * @author ${user}
- * @version $$Id: Addr.java,v 1.7 2003/07/30 19:27:49 lemmstercvs01 Exp $$ 
+ * @version $$Id: Addr.java,v 1.8 2003/08/06 17:36:06 lemmstercvs01 Exp $$ 
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -42,6 +42,10 @@ public class Addr implements SimpleInformation {
 	 * IP Address
 	 */
 	private InetAddress address;
+	/**
+	 * Host Name
+	 */
+	private String hostName;
 
 	/**
 	 * @return direct/true or indirekt/false address
@@ -54,7 +58,13 @@ public class Addr implements SimpleInformation {
 	 * @return The address
 	 */
 	public InetAddress getAddress() {
-		return address;
+		return this.address;
+	}
+	/**
+	 * @return The HostName
+	 */
+	public String getHostName() {
+		return this.hostName;
 	}
 
 	/**
@@ -78,14 +88,13 @@ public class Addr implements SimpleInformation {
  		 * String  	 Name address (present only if Address Type = 1) 
 		 */
 		this.setAddressType( messageBuffer.readByte() );
-		try {
-			if ( this.hasHostName() )
-				this.address =  InetAddress.getAllByName( messageBuffer.readString() )[ 0 ];
-			else
+		if ( this.hasHostName() )
+			this.hostName = messageBuffer.readString();	
+		else
+			try {
 				this.address = messageBuffer.readInetAddress();
-		}
-		/* do nothing, we receive always a valid address */
-		catch ( UnknownHostException e ) { }
+			}
+			catch (UnknownHostException e) { }
 	}
 
 	/**
@@ -109,6 +118,9 @@ public class Addr implements SimpleInformation {
 }
 /*
 $$Log: Addr.java,v $
+$Revision 1.8  2003/08/06 17:36:06  lemmstercvs01
+$save a string address as string and not as InetAddress anymore (speed!!)
+$
 $Revision 1.7  2003/07/30 19:27:49  lemmstercvs01
 $address is always an InetAddress instead of just a String
 $
