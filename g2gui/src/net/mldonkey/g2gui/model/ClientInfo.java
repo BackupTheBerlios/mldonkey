@@ -23,7 +23,6 @@
 package net.mldonkey.g2gui.model;
 
 import gnu.trove.THash;
-import gnu.trove.THashMap;
 import gnu.trove.TIntObjectHashMap;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
@@ -33,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.11 2003/07/12 14:11:51 dek Exp $ 
+ * @version $Id: ClientInfo.java,v 1.12 2003/07/15 18:17:27 dek Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -166,6 +165,9 @@ public class ClientInfo extends Parent {
 			clientType = EnumClientType.BROWSED;		
 	}
 	
+	/**
+	 * @param core with this object, we make our main cimmunication (the main-Layer)
+	 */
 	public ClientInfo( CoreCommunication core ) {
 		super( core );
 	}
@@ -210,6 +212,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.12  2003/07/15 18:17:27  dek
+checkstyle & javadoc
+
 Revision 1.11  2003/07/12 14:11:51  dek
 made the ClientInfo-availability easier
 
