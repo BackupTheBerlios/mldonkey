@@ -36,8 +36,8 @@ import net.mldonkey.g2gui.model.enum.EnumClientType;
 /**
  * ClientInfoList
  * 
- * @author ${user}
- * @version $$Id: ClientInfoIntMap.java,v 1.7 2003/08/14 12:57:03 zet Exp $$ 
+ * @author $Author: lemmster $
+ * @version $Id: ClientInfoIntMap.java,v 1.8 2003/08/22 21:03:15 lemmster Exp $ 
  */
 public class ClientInfoIntMap extends InfoIntMap {
 	
@@ -146,6 +146,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 }
 /*
 $$Log: ClientInfoIntMap.java,v $
+$Revision 1.8  2003/08/22 21:03:15  lemmster
+$replace $user$ with $Author$
+$
 $Revision 1.7  2003/08/14 12:57:03  zet
 $fix nullpointer in clientInfo, add icons to tables
 $

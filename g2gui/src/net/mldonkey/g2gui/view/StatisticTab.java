@@ -44,7 +44,8 @@ import org.eclipse.swt.widgets.Label;
 
 /**
  * Statistic Tab
- *
+ * @author $Author: lemmster $
+ * @version $Id: StatisticTab.java,v 1.17 2003/08/22 21:06:48 lemmster Exp $
  */
 
 public class StatisticTab extends GuiTab {
@@ -130,6 +131,9 @@ public class StatisticTab extends GuiTab {
 }
 /*
 $Log: StatisticTab.java,v $
+Revision 1.17  2003/08/22 21:06:48  lemmster
+replace $user$ with $Author$
+
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle
 

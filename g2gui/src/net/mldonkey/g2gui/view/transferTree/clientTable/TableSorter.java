@@ -34,8 +34,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * TableSorter
  *
- * @author $Author: zet $
- * @version $Id: TableSorter.java,v 1.1 2003/08/20 14:58:43 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: TableSorter.java,v 1.2 2003/08/22 21:17:25 lemmster Exp $ 
  *
  */
 public class TableSorter extends ViewerSorter {
@@ -129,7 +129,5 @@ public class TableSorter extends ViewerSorter {
 }
 
 /*
-
-
-
+$Log
 */

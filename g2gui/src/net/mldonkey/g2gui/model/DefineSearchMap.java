@@ -28,8 +28,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * DefineSearchMap
  *
- * @author $user$
- * @version $Id: DefineSearchMap.java,v 1.4 2003/07/06 09:38:10 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: DefineSearchMap.java,v 1.5 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class DefineSearchMap extends InfoMap {
@@ -66,6 +66,9 @@ public class DefineSearchMap extends InfoMap {
 
 /*
 $Log: DefineSearchMap.java,v $
+Revision 1.5  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.4  2003/07/06 09:38:10  lemmstercvs01
 useless constructor removed
 

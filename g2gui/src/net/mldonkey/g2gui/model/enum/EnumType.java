@@ -25,8 +25,8 @@ package net.mldonkey.g2gui.model.enum;
 /**
  * EnumType
  *
- * @author markus
- * @version $Id: EnumType.java,v 1.1 2003/06/24 09:29:33 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: EnumType.java,v 1.2 2003/08/22 21:04:27 lemmster Exp $ 
  *
  */
 public class EnumType implements Enum {
@@ -58,6 +58,9 @@ public class EnumType implements Enum {
 
 /*
 $Log: EnumType.java,v $
+Revision 1.2  2003/08/22 21:04:27  lemmster
+replace $user$ with $Author$
+
 Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
 Enum more improved
 

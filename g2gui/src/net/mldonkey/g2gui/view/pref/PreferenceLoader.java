@@ -33,10 +33,10 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * @author  
+ * PreferenceLoader
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author $Author: lemmster $
+ * @version $Id: PreferenceLoader.java,v 1.10 2003/08/22 21:10:57 lemmster Exp $
  */
 public class PreferenceLoader {
 
@@ -137,6 +137,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.10  2003/08/22 21:10:57  lemmster
+replace $user$ with $Author$
+
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates
 

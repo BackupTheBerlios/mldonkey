@@ -40,8 +40,8 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * SpeedItem
  *
- * @author $user$
- * @version $Id: SpeedItem.java,v 1.14 2003/08/17 23:13:42 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: SpeedItem.java,v 1.15 2003/08/22 21:13:11 lemmster Exp $ 
  *
  */
 public class SpeedItem implements Observer {	
@@ -113,6 +113,9 @@ public class SpeedItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.15  2003/08/22 21:13:11  lemmster
+replace $user$ with $Author$
+
 Revision 1.14  2003/08/17 23:13:42  zet
 centralize resources, move images
 

@@ -27,8 +27,8 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 /**
  * EnumState
  *
- * @author markus
- * @version $Id: EnumState.java,v 1.5 2003/08/18 01:42:24 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: EnumState.java,v 1.6 2003/08/22 21:04:27 lemmster Exp $ 
  *
  */
 public class EnumState implements Enum {
@@ -100,6 +100,9 @@ public class EnumState implements Enum {
 
 /*
 $Log: EnumState.java,v $
+Revision 1.6  2003/08/22 21:04:27  lemmster
+replace $user$ with $Author$
+
 Revision 1.5  2003/08/18 01:42:24  zet
 centralize resource bundle
 

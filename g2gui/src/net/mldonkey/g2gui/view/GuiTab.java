@@ -44,8 +44,8 @@ import org.eclipse.swt.widgets.Listener;
 /**
  * G2guiTab
  *
- * @author $user$
- * @version $Id: GuiTab.java,v 1.22 2003/08/18 01:42:24 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: GuiTab.java,v 1.23 2003/08/22 21:06:48 lemmster Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -301,6 +301,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.23  2003/08/22 21:06:48  lemmster
+replace $user$ with $Author$
+
 Revision 1.22  2003/08/18 01:42:24  zet
 centralize resource bundle
 

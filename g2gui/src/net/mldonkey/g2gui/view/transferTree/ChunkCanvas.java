@@ -48,8 +48,8 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ChunkView
  *
- * @author $user$
- * @version $Id: ChunkCanvas.java,v 1.11 2003/08/14 12:57:03 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ChunkCanvas.java,v 1.12 2003/08/22 21:16:36 lemmster Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -469,6 +469,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.12  2003/08/22 21:16:36  lemmster
+replace $user$ with $Author$
+
 Revision 1.11  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 

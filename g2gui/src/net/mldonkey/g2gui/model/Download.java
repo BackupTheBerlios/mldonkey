@@ -29,8 +29,8 @@ import net.mldonkey.g2gui.comm.Message;
 /**
  * Download
  *
- * @author $user$
- * @version $Id: Download.java,v 1.6 2003/07/23 16:56:28 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: Download.java,v 1.7 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class Download implements Sendable {
@@ -93,6 +93,9 @@ public class Download implements Sendable {
 
 /*
 $Log: Download.java,v $
+Revision 1.7  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.6  2003/07/23 16:56:28  lemmstercvs01
 initial commit
 

@@ -39,8 +39,8 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * It needs to be created, and then filled with setter().
  * When complete, it can be sent with this.send().
  *
- * @author $user$
- * @version $Id: SearchQuery.java,v 1.15 2003/08/09 15:32:45 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: SearchQuery.java,v 1.16 2003/08/22 21:03:14 lemmster Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -320,6 +320,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.16  2003/08/22 21:03:14  lemmster
+replace $user$ with $Author$
+
 Revision 1.15  2003/08/09 15:32:45  dek
 removed unused import
 

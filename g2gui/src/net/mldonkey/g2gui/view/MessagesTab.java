@@ -66,10 +66,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
- * @author
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author $Author: lemmster $
+ * @version $Id: MessagesTab.java,v 1.8 2003/08/22 21:06:48 lemmster Exp $
  */
 public class MessagesTab extends GuiTab {
 
@@ -430,6 +428,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.8  2003/08/22 21:06:48  lemmster
+replace $user$ with $Author$
+
 Revision 1.7  2003/08/20 22:18:56  zet
 Viewer updates
 

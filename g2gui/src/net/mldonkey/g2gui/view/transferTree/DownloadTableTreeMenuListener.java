@@ -57,10 +57,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
- * @author zet
+ * 
+ * DownloadTableTreeMenuListener
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author $Author: lemmster $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.13 2003/08/22 21:16:36 lemmster Exp $ 
+ *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
 
@@ -722,6 +724,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.13  2003/08/22 21:16:36  lemmster
+replace $user$ with $Author$
+
 Revision 1.12  2003/08/22 14:30:45  lemmster
 verify chunks added
 

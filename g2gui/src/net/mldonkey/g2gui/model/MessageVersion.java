@@ -32,8 +32,8 @@ import net.mldonkey.g2gui.comm.Message;
 /**
  * MessageVersion
  *
- * @author $user$
- * @version $Id: MessageVersion.java,v 1.2 2003/08/02 09:54:17 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: MessageVersion.java,v 1.3 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class MessageVersion implements Sendable {
@@ -79,6 +79,9 @@ public class MessageVersion implements Sendable {
 
 /*
 $Log: MessageVersion.java,v $
+Revision 1.3  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.2  2003/08/02 09:54:17  lemmstercvs01
 replaced socket with corecommunication
 

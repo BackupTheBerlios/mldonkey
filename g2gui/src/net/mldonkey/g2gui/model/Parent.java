@@ -30,8 +30,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * Parent
  *
- * @author $user$
- * @version $Id: Parent.java,v 1.3 2003/08/21 13:13:10 lemmster Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: Parent.java,v 1.4 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public abstract class Parent extends Observable implements SimpleInformation {
@@ -62,6 +62,9 @@ public abstract class Parent extends Observable implements SimpleInformation {
 
 /*
 $Log: Parent.java,v $
+Revision 1.4  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.3  2003/08/21 13:13:10  lemmster
 cleanup in networkitem
 

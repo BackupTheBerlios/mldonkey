@@ -30,12 +30,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
-
 /**
- * @author achim
+ * 
+ * GraphPainter
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author $Author: lemmster $
+ * @version $Id: GraphPainter.java,v 1.25 2003/08/22 21:13:11 lemmster Exp $ 
+ *
  */
 public class GraphPainter {
 
@@ -197,6 +198,9 @@ public class GraphPainter {
 }
 /*
 $Log: GraphPainter.java,v $
+Revision 1.25  2003/08/22 21:13:11  lemmster
+replace $user$ with $Author$
+
 Revision 1.24  2003/08/18 13:42:43  zet
 *** empty log message ***
 

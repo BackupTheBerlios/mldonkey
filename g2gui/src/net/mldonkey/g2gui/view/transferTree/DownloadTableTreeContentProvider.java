@@ -54,8 +54,8 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeContentProvider
  *
- * @author $user$
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.11 2003/08/21 00:59:57 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.12 2003/08/22 21:16:36 lemmster Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -618,6 +618,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.12  2003/08/22 21:16:36  lemmster
+replace $user$ with $Author$
+
 Revision 1.11  2003/08/21 00:59:57  zet
 doubleclick expand
 

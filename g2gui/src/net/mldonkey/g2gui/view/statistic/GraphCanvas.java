@@ -28,10 +28,10 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.events.*;
 
 /**
- * @author achim
+ * GraphCanvas
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author $Author: lemmster $
+ * @version $Id: GraphCanvas.java,v 1.7 2003/08/22 21:13:11 lemmster Exp $
  */
 public class GraphCanvas extends Canvas {
 
@@ -66,6 +66,9 @@ public class GraphCanvas extends Canvas {
 }
 /*
 $Log: GraphCanvas.java,v $
+Revision 1.7  2003/08/22 21:13:11  lemmster
+replace $user$ with $Author$
+
 Revision 1.6  2003/07/26 05:42:39  zet
 cleanup
 

@@ -35,8 +35,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * ResultInfoIntMap
  *
- * @author $user$
- * @version $Id: ResultInfoIntMap.java,v 1.4 2003/08/01 17:30:18 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ResultInfoIntMap.java,v 1.5 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class ResultInfoIntMap extends InfoIntMap {
@@ -111,6 +111,9 @@ public class ResultInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ResultInfoIntMap.java,v $
+Revision 1.5  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.4  2003/08/01 17:30:18  lemmstercvs01
 search works again
 

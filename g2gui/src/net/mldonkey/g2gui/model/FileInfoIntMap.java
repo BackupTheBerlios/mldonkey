@@ -37,8 +37,8 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
 /**
  * FileInfoList
  *
- * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.21 2003/08/15 22:05:58 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: FileInfoIntMap.java,v 1.22 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -231,6 +231,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.22  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.21  2003/08/15 22:05:58  zet
 *** empty log message ***
 

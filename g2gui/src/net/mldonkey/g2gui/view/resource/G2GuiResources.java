@@ -32,10 +32,10 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * @author zet
+ * G2GuiResources
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author $Author: lemmster $
+ * @version $Id: G2GuiResources.java,v 1.5 2003/08/22 21:10:57 lemmster Exp $
  */
 public class G2GuiResources {
 	
@@ -126,6 +126,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.5  2003/08/22 21:10:57  lemmster
+replace $user$ with $Author$
+
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
 

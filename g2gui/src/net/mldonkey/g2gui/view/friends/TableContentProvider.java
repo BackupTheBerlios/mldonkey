@@ -30,6 +30,8 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * TableContentProvider
  *
+ * @author $Author: lemmster $
+ * @version $Id: TableContentProvider.java,v 1.2 2003/08/22 21:10:57 lemmster Exp $
  */
 public class TableContentProvider implements IStructuredContentProvider {
 	/* (non-Javadoc)
@@ -53,6 +55,9 @@ public class TableContentProvider implements IStructuredContentProvider {
 
 /*
 $Log: TableContentProvider.java,v $
+Revision 1.2  2003/08/22 21:10:57  lemmster
+replace $user$ with $Author$
+
 Revision 1.1  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 

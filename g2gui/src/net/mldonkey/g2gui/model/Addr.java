@@ -33,8 +33,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * Addr
  * 
- * @author ${user}
- * @version $$Id: Addr.java,v 1.10 2003/08/11 11:23:06 lemmstercvs01 Exp $$ 
+ * @author $Author: lemmster $
+ * @version $Id: Addr.java,v 1.11 2003/08/22 21:03:15 lemmster Exp $
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -129,6 +129,9 @@ public class Addr implements SimpleInformation {
 }
 /*
 $$Log: Addr.java,v $
+$Revision 1.11  2003/08/22 21:03:15  lemmster
+$replace $user$ with $Author$
+$
 $Revision 1.10  2003/08/11 11:23:06  lemmstercvs01
 $fix sort by string
 $

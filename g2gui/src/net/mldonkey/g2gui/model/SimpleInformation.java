@@ -27,8 +27,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * Information
  *
- * @author markus
- * @version $Id: SimpleInformation.java,v 1.2 2003/07/06 08:49:03 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: SimpleInformation.java,v 1.3 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public interface SimpleInformation extends Information {
@@ -41,6 +41,9 @@ public interface SimpleInformation extends Information {
 
 /*
 $Log: SimpleInformation.java,v $
+Revision 1.3  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.2  2003/07/06 08:49:03  lemmstercvs01
 refactored
 

@@ -10,10 +10,10 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.jface.preference.ColorFieldEditor;
 
 /**
- * @author
+ * ExtendedColorFieldEditor
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author $Author: lemmster $
+ * @version $Id: ExtendedColorFieldEditor.java,v 1.2 2003/08/22 21:10:57 lemmster Exp $
  */
 public class ExtendedColorFieldEditor extends ColorFieldEditor {
 	

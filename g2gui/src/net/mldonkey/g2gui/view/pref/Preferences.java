@@ -37,8 +37,8 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * OptionTree2
  *
- * @author $user$
- * @version $Id: Preferences.java,v 1.21 2003/08/20 11:51:52 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: Preferences.java,v 1.22 2003/08/22 21:10:57 lemmster Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -218,6 +218,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.22  2003/08/22 21:10:57  lemmster
+replace $user$ with $Author$
+
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
 

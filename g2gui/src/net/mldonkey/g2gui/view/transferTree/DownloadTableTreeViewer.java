@@ -35,9 +35,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -60,8 +58,8 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * DownloadTable
  *
- * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.12 2003/08/22 13:47:56 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.13 2003/08/22 21:16:36 lemmster Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -320,6 +318,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.13  2003/08/22 21:16:36  lemmster
+replace $user$ with $Author$
+
 Revision 1.12  2003/08/22 13:47:56  dek
 selection is removed with click on empty-row
 

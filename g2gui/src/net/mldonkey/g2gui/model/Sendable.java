@@ -25,8 +25,8 @@ package net.mldonkey.g2gui.model;
 /**
  * Sendable
  *
- * @author $user$
- * @version $Id: Sendable.java,v 1.1 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: Sendable.java,v 1.2 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public interface Sendable extends Information {
@@ -38,6 +38,9 @@ public interface Sendable extends Information {
 
 /*
 $Log: Sendable.java,v $
+Revision 1.2  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.1  2003/07/06 08:49:33  lemmstercvs01
 better oo added
 

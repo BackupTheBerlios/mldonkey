@@ -43,13 +43,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-  
+
 /**
- * @author z
+ * 
+ * ClientDetailDialog
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
+ * @author $Author: lemmster $
+ * @version $Id: ClientDetailDialog.java,v 1.7 2003/08/22 21:16:36 lemmster Exp $ 
+ *
+ */  
 public class ClientDetailDialog implements Observer {
 
 	private Shell shell;
@@ -248,3 +250,6 @@ public class ClientDetailDialog implements Observer {
 
 
 }
+/*
+$Log
+*/

@@ -30,8 +30,8 @@ import net.mldonkey.g2gui.model.Tag;
 /**
  * MessageBuffer
  *
- * @author $user$
- * @version $Id: MessageBuffer.java,v 1.17 2003/08/10 23:20:26 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: MessageBuffer.java,v 1.18 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class MessageBuffer {
@@ -250,6 +250,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.18  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.17  2003/08/10 23:20:26  zet
 signed ints
 

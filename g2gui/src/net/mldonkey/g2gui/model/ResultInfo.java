@@ -30,8 +30,8 @@ import java.text.DecimalFormat;
 /**
  * ResultInfo
  *
- * @author $user$
- * @version $Id: ResultInfo.java,v 1.12 2003/08/14 12:45:46 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ResultInfo.java,v 1.13 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -298,6 +298,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.13  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.12  2003/08/14 12:45:46  dek
 searching works now without errors
 

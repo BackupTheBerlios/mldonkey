@@ -33,8 +33,8 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
 /**
  * Query
  *
- * @author $user$
- * @version $Id: Query.java,v 1.16 2003/07/10 10:59:21 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: Query.java,v 1.17 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class Query implements SimpleInformation {
@@ -383,6 +383,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.17  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.16  2003/07/10 10:59:21  dek
 toString() created (still very raw-output, but one can see, what's inside..)
 

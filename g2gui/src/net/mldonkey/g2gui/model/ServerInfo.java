@@ -31,8 +31,8 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 /**
  * ServerInfo
  * 
- * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.17 2003/08/11 11:22:53 lemmstercvs01 Exp $$ 
+ * @author $Author: lemmster $
+ * @version $Id: ServerInfo.java,v 1.18 2003/08/22 21:03:15 lemmster Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -313,53 +313,55 @@ public class ServerInfo extends Parent {
 	}
 }
 /*
-$$Log: ServerInfo.java,v $
-$Revision 1.17  2003/08/11 11:22:53  lemmstercvs01
-$avoid npes
-$
-$Revision 1.16  2003/08/07 12:35:31  lemmstercvs01
-$cleanup, more efficient
-$
-$Revision 1.15  2003/08/06 20:56:49  lemmstercvs01
-$cleanup, more efficient
-$
-$Revision 1.14  2003/08/06 17:38:38  lemmstercvs01
-$some actions still missing. but it should work for the moment
-$
-$Revision 1.13  2003/08/06 09:46:42  lemmstercvs01
-$toString() added, some bugfixes
-$
-$Revision 1.12  2003/08/01 17:21:19  lemmstercvs01
-$reworked observer/observable design, added multiversion support
-$
-$Revision 1.11  2003/07/30 19:29:36  lemmstercvs01
-$public short getServerPort() -> public int getServerPort() to fix negativ ports
-$
-$Revision 1.10  2003/07/29 09:47:13  lemmstercvs01
-$networkid -> networkInfo, no servename -> "<unknown>"
-$
-$Revision 1.9  2003/07/06 08:57:09  lemmstercvs01
-$getParent() removed
-$
-$Revision 1.8  2003/07/06 08:49:33  lemmstercvs01
-$better oo added
-$
-$Revision 1.7  2003/07/06 07:45:26  lemmstercvs01
-$checkstyle applied
-$
-$Revision 1.6  2003/07/04 18:35:02  lemmstercvs01
-$foobar
-$
-$Revision 1.5  2003/06/30 07:20:09  lemmstercvs01
-$changed to readTagList()
-$
-$Revision 1.4  2003/06/18 13:30:56  dek
-$Improved Communication Layer view <--> model by introducing a super-interface
-$
-$Revision 1.3  2003/06/16 20:08:38  lemmstercvs01
-$opcode 13 added
-$
-$Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
-$cosmetic changes
-$$
+$Log: ServerInfo.java,v $
+Revision 1.18  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
+Revision 1.17  2003/08/11 11:22:53  lemmstercvs01
+avoid npes
+
+Revision 1.16  2003/08/07 12:35:31  lemmstercvs01
+cleanup, more efficient
+
+Revision 1.15  2003/08/06 20:56:49  lemmstercvs01
+cleanup, more efficient
+
+Revision 1.14  2003/08/06 17:38:38  lemmstercvs01
+some actions still missing. but it should work for the moment
+
+Revision 1.13  2003/08/06 09:46:42  lemmstercvs01
+toString() added, some bugfixes
+
+Revision 1.12  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
+Revision 1.11  2003/07/30 19:29:36  lemmstercvs01
+public short getServerPort() -> public int getServerPort() to fix negativ ports
+
+Revision 1.10  2003/07/29 09:47:13  lemmstercvs01
+networkid -> networkInfo, no servename -> "<unknown>"
+
+Revision 1.9  2003/07/06 08:57:09  lemmstercvs01
+getParent() removed
+
+Revision 1.8  2003/07/06 08:49:33  lemmstercvs01
+better oo added
+
+Revision 1.7  2003/07/06 07:45:26  lemmstercvs01
+checkstyle applied
+
+Revision 1.6  2003/07/04 18:35:02  lemmstercvs01
+foobar
+
+Revision 1.5  2003/06/30 07:20:09  lemmstercvs01
+changed to readTagList()
+
+Revision 1.4  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
+Revision 1.3  2003/06/16 20:08:38  lemmstercvs01
+opcode 13 added
+
+Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
+cosmetic changes
 */

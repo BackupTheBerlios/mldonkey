@@ -48,8 +48,8 @@ import org.eclipse.swt.widgets.TabItem;
 /**
  * SearchTab
  *
- * @author $user$
- * @version $Id: SearchTab.java,v 1.12 2003/08/18 05:22:27 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: SearchTab.java,v 1.13 2003/08/22 21:06:48 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -205,6 +205,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.13  2003/08/22 21:06:48  lemmster
+replace $user$ with $Author$
+
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose
 

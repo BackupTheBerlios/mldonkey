@@ -73,8 +73,8 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * SearchResult
  *
- * @author $Author: zet $
- * @version $Id: SearchResult.java,v 1.22 2003/08/20 22:18:56 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: SearchResult.java,v 1.23 2003/08/22 21:10:57 lemmster Exp $ 
  *
  */
 //TODO fake search, real links depending on network								   
@@ -426,6 +426,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 					tipWidget = null;
 				}
 				public void mouseHover( MouseEvent event ) {
+					if ( event.widget == null ) return;
 					Point pt = new Point( event.x, event.y );
 					Widget widget = event.widget;
 
@@ -535,6 +536,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.23  2003/08/22 21:10:57  lemmster
+replace $user$ with $Author$
+
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates
 

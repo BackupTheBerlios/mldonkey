@@ -32,8 +32,8 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 /**
  * InfoList
  *
- * @author $user$
- * @version $Id: InfoList.java,v 1.9 2003/08/02 09:55:55 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: InfoList.java,v 1.10 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public abstract class InfoList extends Observable implements InfoCollection {
@@ -80,6 +80,9 @@ public abstract class InfoList extends Observable implements InfoCollection {
 
 /*
 $Log: InfoList.java,v $
+Revision 1.10  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.9  2003/08/02 09:55:55  lemmstercvs01
 observers changed
 

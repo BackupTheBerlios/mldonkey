@@ -28,8 +28,8 @@ import net.mldonkey.g2gui.model.enum.*;
 /**
  * State
  *
- * @author markus
- * @version $Id: State.java,v 1.10 2003/07/05 16:04:34 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: State.java,v 1.11 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class State implements SimpleInformation {
@@ -105,6 +105,9 @@ public class State implements SimpleInformation {
 
 /*
 $Log: State.java,v $
+Revision 1.11  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.10  2003/07/05 16:04:34  lemmstercvs01
 javadoc improved
 

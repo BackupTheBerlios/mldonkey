@@ -44,8 +44,8 @@ import org.eclipse.swt.widgets.Event;
 /**
  * ConsoleTab
  *
- * @author $user$
- * @version $Id: ConsoleTab.java,v 1.36 2003/08/18 01:42:24 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ConsoleTab.java,v 1.37 2003/08/22 21:06:48 lemmster Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -168,6 +168,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.37  2003/08/22 21:06:48  lemmster
+replace $user$ with $Author$
+
 Revision 1.36  2003/08/18 01:42:24  zet
 centralize resource bundle
 

@@ -33,8 +33,8 @@ import gnu.trove.THashMap;
 /**
  * InfoMap
  *
- * @author $user$
- * @version $Id: InfoMap.java,v 1.6 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: InfoMap.java,v 1.7 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public abstract class InfoMap extends Observable implements InfoCollection {
@@ -106,6 +106,9 @@ public abstract class InfoMap extends Observable implements InfoCollection {
 
 /*
 $Log: InfoMap.java,v $
+Revision 1.7  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.6  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

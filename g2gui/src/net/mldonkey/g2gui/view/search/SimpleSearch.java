@@ -41,8 +41,8 @@ import org.eclipse.swt.widgets.TabFolder;
 /**
  * SimpleSearch
  *
- * @author $user$
- * @version $Id: SimpleSearch.java,v 1.7 2003/08/18 01:42:24 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: SimpleSearch.java,v 1.8 2003/08/22 21:10:57 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -192,6 +192,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.8  2003/08/22 21:10:57  lemmster
+replace $user$ with $Author$
+
 Revision 1.7  2003/08/18 01:42:24  zet
 centralize resource bundle
 

@@ -25,11 +25,11 @@ package net.mldonkey.g2gui.view.statistic;
 import org.eclipse.swt.graphics.Color;
 
 /**
- * @author achim
- *
  * Graph is a List of StatisticPoints only knowing the first and the last Point, a Graph also has got a Color. And 
  * knows when it was started
  * 
+ * @author $Author: lemmster $
+ * @version $Id: Graph.java,v 1.9 2003/08/22 21:13:11 lemmster Exp $
  */
 public class Graph {
 	
@@ -125,6 +125,9 @@ public class Graph {
 }
 /*
 $Log: Graph.java,v $
+Revision 1.9  2003/08/22 21:13:11  lemmster
+replace $user$ with $Author$
+
 Revision 1.8  2003/08/09 00:42:18  zet
 dispose colors
 

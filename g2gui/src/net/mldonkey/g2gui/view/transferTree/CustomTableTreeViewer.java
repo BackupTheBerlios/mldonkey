@@ -34,10 +34,12 @@ import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * @author z
+ * 
+ * CustomTableTreeViewer
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author $Author: lemmster $
+ * @version $Id: CustomTableTreeViewer.java,v 1.4 2003/08/22 21:16:36 lemmster Exp $ 
+ *
  */
 public class CustomTableTreeViewer extends TableTreeViewer {
 
@@ -108,6 +110,9 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 }
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.4  2003/08/22 21:16:36  lemmster
+replace $user$ with $Author$
+
 Revision 1.3  2003/08/20 22:18:56  zet
 Viewer updates
 

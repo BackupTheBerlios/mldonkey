@@ -28,8 +28,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * ClientStats
  *
- * @author markus
- * @version $Id: ClientStats.java,v 1.14 2003/08/02 09:55:16 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ClientStats.java,v 1.15 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class ClientStats extends Parent {
@@ -211,6 +211,9 @@ public class ClientStats extends Parent {
 
 /*
 $Log: ClientStats.java,v $
+Revision 1.15  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.14  2003/08/02 09:55:16  lemmstercvs01
 observers changed
 

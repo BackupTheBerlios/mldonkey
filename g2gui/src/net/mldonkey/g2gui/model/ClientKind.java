@@ -28,8 +28,8 @@ import net.mldonkey.g2gui.model.enum.*;
 /**
  * ClientKind
  *
- * @author markus
- * @version $Id: ClientKind.java,v 1.6 2003/07/06 09:37:41 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ClientKind.java,v 1.7 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class ClientKind implements SimpleInformation {
@@ -120,6 +120,9 @@ public class ClientKind implements SimpleInformation {
 
 /*
 $Log: ClientKind.java,v $
+Revision 1.7  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.6  2003/07/06 09:37:41  lemmstercvs01
 javadoc improved
 

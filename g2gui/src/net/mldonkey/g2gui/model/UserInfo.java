@@ -30,8 +30,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * UserInfo
  *
- * @author $user$
- * @version $Id: UserInfo.java,v 1.2 2003/07/04 10:26:03 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: UserInfo.java,v 1.3 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class UserInfo implements SimpleInformation {
@@ -195,6 +195,9 @@ public class UserInfo implements SimpleInformation {
 
 /*
 $Log: UserInfo.java,v $
+Revision 1.3  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.2  2003/07/04 10:26:03  lemmstercvs01
 minor: just checkstyle
 

@@ -42,8 +42,8 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
 /**
  * Download
  *
- * @author markus
- * @version $Id: FileInfo.java,v 1.38 2003/08/22 14:28:56 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: FileInfo.java,v 1.39 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -636,6 +636,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.39  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)
 

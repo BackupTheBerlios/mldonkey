@@ -28,12 +28,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 /**
- * @author z
+ * ToolButton A simple helper class made so that the coolbar can be redrawn
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- * 
- * A simple helper class made so that the coolbar can be redrawn
+ * @author $Author: lemmster $
+ * @version $Id: ToolButton.java,v 1.4 2003/08/22 21:16:36 lemmster Exp $
  * 
  */
 public class ToolButton {
@@ -119,6 +117,9 @@ public class ToolButton {
 
 /*
 $Log: ToolButton.java,v $
+Revision 1.4  2003/08/22 21:16:36  lemmster
+replace $user$ with $Author$
+
 Revision 1.3  2003/08/21 16:04:24  zet
 try setSelection..
 

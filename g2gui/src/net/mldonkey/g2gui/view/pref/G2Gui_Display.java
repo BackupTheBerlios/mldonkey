@@ -36,10 +36,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 /**
- * @author z
+ * G2Gui_Display
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author $Author: lemmster $
+ * @version $Id: G2Gui_Display.java,v 1.16 2003/08/22 21:10:57 lemmster Exp $
  */
 public class G2Gui_Display extends FieldEditorPreferencePage {
 	private Composite parent;
@@ -140,6 +140,9 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.16  2003/08/22 21:10:57  lemmster
+replace $user$ with $Author$
+
 Revision 1.15  2003/08/19 22:02:15  zet
 localise
 

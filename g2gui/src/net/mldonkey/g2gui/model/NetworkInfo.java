@@ -33,8 +33,8 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 /**
  * NetworkInfo
  *
- * @author $user$
- * @version $Id: NetworkInfo.java,v 1.22 2003/08/21 13:13:10 lemmster Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: NetworkInfo.java,v 1.23 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -557,6 +557,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.23  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.22  2003/08/21 13:13:10  lemmster
 cleanup in networkitem
 

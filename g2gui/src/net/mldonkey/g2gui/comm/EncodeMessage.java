@@ -29,8 +29,8 @@ import java.net.Socket;
 /**
  * Message
  *
- * @author ${user}
- * @version $Id: EncodeMessage.java,v 1.5 2003/08/04 19:22:21 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: EncodeMessage.java,v 1.6 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class EncodeMessage extends Message {
@@ -280,6 +280,9 @@ public class EncodeMessage extends Message {
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.6  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.5  2003/08/04 19:22:21  zet
 trial tabletreeviewer
 

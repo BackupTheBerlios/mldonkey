@@ -31,8 +31,8 @@ import net.mldonkey.g2gui.model.enum.*;
 /**
  * State
  *
- * @author markus
- * @version $Id: FileState.java,v 1.12 2003/07/04 12:29:39 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: FileState.java,v 1.13 2003/08/22 21:03:14 lemmster Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -144,6 +144,9 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.13  2003/08/22 21:03:14  lemmster
+replace $user$ with $Author$
+
 Revision 1.12  2003/07/04 12:29:39  dek
 checkstyle
 

@@ -35,7 +35,11 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 
 /**
+ * 
  * TableContentProvider
+ *
+ * @author $Author: lemmster $
+ * @version $Id: TableContentProvider.java,v 1.2 2003/08/22 21:17:25 lemmster Exp $ 
  *
  */
 public class TableContentProvider implements IStructuredContentProvider, Observer {
@@ -98,6 +102,9 @@ public class TableContentProvider implements IStructuredContentProvider, Observe
 
 /*
 $Log: TableContentProvider.java,v $
+Revision 1.2  2003/08/22 21:17:25  lemmster
+replace $user$ with $Author$
+
 Revision 1.1  2003/08/20 14:58:43  zet
 sources clientinfo viewer
 

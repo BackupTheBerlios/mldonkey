@@ -34,8 +34,8 @@ import net.mldonkey.g2gui.model.enum.EnumClientType;
 /**
  * ClientInfo
  *
- * @author markus
- * @version $Id: ClientInfo.java,v 1.17 2003/08/14 12:57:03 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ClientInfo.java,v 1.18 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -263,6 +263,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.18  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 

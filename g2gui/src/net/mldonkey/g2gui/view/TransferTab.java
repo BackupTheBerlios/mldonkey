@@ -67,8 +67,8 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * Main
  *
- * @author $user$
- * @version $Id: TransferTab.java,v 1.31 2003/08/21 10:12:10 dek Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: TransferTab.java,v 1.32 2003/08/22 21:06:48 lemmster Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -288,6 +288,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.32  2003/08/22 21:06:48  lemmster
+replace $user$ with $Author$
+
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression
 

@@ -24,10 +24,12 @@ package net.mldonkey.g2gui.view.statistic;
 
 
 /**
- * @author achim
+ * StatisticPoint belongs to a Graph its unimportant to which Every Point knows its following point,
+ * and the time it was created.
  *
- *A Statistic Point belongs to a Graph its unimportant to which Every Point knows its following point,
- *and the time it was created.
+ * @author $Author: lemmster $
+ * @version $Id: StatisticPoint.java,v 1.6 2003/08/22 21:13:11 lemmster Exp $
+ * 
  */
 public class StatisticPoint  {
 	
@@ -74,6 +76,9 @@ public class StatisticPoint  {
 }
 /*
 $Log: StatisticPoint.java,v $
+Revision 1.6  2003/08/22 21:13:11  lemmster
+replace $user$ with $Author$
+
 Revision 1.5  2003/07/26 05:42:39  zet
 cleanup
 

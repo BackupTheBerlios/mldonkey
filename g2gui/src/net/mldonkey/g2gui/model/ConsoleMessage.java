@@ -29,8 +29,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * ConsoleMessage
  * 
- *  * @author ${user}
- * @version $$Id: ConsoleMessage.java,v 1.10 2003/08/01 17:21:19 lemmstercvs01 Exp $$ 
+ *  * @author $Author: lemmster $
+ * @version $Id: ConsoleMessage.java,v 1.11 2003/08/22 21:03:15 lemmster Exp $
  */
 public class ConsoleMessage extends Observable implements SimpleInformation {
 	
@@ -76,32 +76,34 @@ public class ConsoleMessage extends Observable implements SimpleInformation {
 	}
 }
 /*
-$$Log: ConsoleMessage.java,v $
-$Revision 1.10  2003/08/01 17:21:19  lemmstercvs01
-$reworked observer/observable design, added multiversion support
-$
-$Revision 1.9  2003/07/04 10:26:03  lemmstercvs01
-$minor: just checkstyle
-$
-$Revision 1.8  2003/06/27 17:12:36  lemmstercvs01
-$removed unneeded fields
-$
-$Revision 1.7  2003/06/27 10:35:53  lemmstercvs01
-$removed unneeded calls
-$
-$Revision 1.6  2003/06/25 18:04:53  dek
-$Console-Tab reworked
-$
-$Revision 1.5  2003/06/20 15:15:22  dek
-$humm, some interface-changes, hope, it didn't break anything ;-)
-$
-$Revision 1.4  2003/06/19 08:40:20  lemmstercvs01
-$checkstyle applied
-$
-$Revision 1.3  2003/06/18 13:30:56  dek
-$Improved Communication Layer view <--> model by introducing a super-interface
-$
-$Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
-$cosmetic changes
-$$
+$Log: ConsoleMessage.java,v $
+Revision 1.11  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
+Revision 1.10  2003/08/01 17:21:19  lemmstercvs01
+reworked observer/observable design, added multiversion support
+
+Revision 1.9  2003/07/04 10:26:03  lemmstercvs01
+minor: just checkstyle
+
+Revision 1.8  2003/06/27 17:12:36  lemmstercvs01
+removed unneeded fields
+
+Revision 1.7  2003/06/27 10:35:53  lemmstercvs01
+removed unneeded calls
+
+Revision 1.6  2003/06/25 18:04:53  dek
+Console-Tab reworked
+
+Revision 1.5  2003/06/20 15:15:22  dek
+humm, some interface-changes, hope, it didn't break anything ;-)
+
+Revision 1.4  2003/06/19 08:40:20  lemmstercvs01
+checkstyle applied
+
+Revision 1.3  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
+Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
+cosmetic changes
 */

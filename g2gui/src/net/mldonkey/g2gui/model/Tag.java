@@ -28,8 +28,8 @@ import net.mldonkey.g2gui.model.enum.*;
 /**
  * Tag
  *
- * @author markus
- * @version $Id: Tag.java,v 1.6 2003/07/05 20:04:02 lemmstercvs01 Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: Tag.java,v 1.7 2003/08/22 21:03:15 lemmster Exp $ 
  *
  */
 public class Tag implements SimpleInformation {
@@ -111,6 +111,9 @@ public class Tag implements SimpleInformation {
 
 /*
 $Log: Tag.java,v $
+Revision 1.7  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
 Revision 1.6  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved
 

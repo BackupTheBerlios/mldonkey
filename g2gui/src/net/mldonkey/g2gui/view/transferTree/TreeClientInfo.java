@@ -26,10 +26,12 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 
 /**
- * @author z
+ * 
+ * TreeClientInfo
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author $Author: lemmster $
+ * @version $Id: TreeClientInfo.java,v 1.2 2003/08/22 21:16:36 lemmster Exp $ 
+ *
  */
 public class TreeClientInfo {
 
@@ -48,3 +50,6 @@ public class TreeClientInfo {
 	}
 
 }
+/*
+$Log
+*/

@@ -29,8 +29,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * InfoList
  * 
- * @author ${user}
- * @version $$Id: InfoCollection.java,v 1.5 2003/08/02 09:55:55 lemmstercvs01 Exp $$ 
+ * @author $Author: lemmster $
+ * @version $Id: InfoCollection.java,v 1.6 2003/08/22 21:03:15 lemmster Exp $
  */
 public interface InfoCollection extends Information {
 	
@@ -64,26 +64,28 @@ public interface InfoCollection extends Information {
 	void deleteObserver( Observer obj );
 }
 /*
-$$Log: InfoCollection.java,v $
-$Revision 1.5  2003/08/02 09:55:55  lemmstercvs01
-$observers changed
-$
-$Revision 1.4  2003/06/18 13:30:56  dek
-$Improved Communication Layer view <--> model by introducing a super-interface
-$
-$Revision 1.3  2003/06/17 12:10:17  lemmstercvs01
-$some methods added
-$
-$Revision 1.2  2003/06/16 15:32:43  lemmstercvs01
-$changed some modifiers
-$
-$Revision 1.1  2003/06/15 16:18:41  lemmstercvs01
-$new interface introduced
-$
-$Revision 1.3  2003/06/14 23:04:08  lemmstercvs01
-$change from interface to abstract superclass
-$
-$Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
-$cosmetic changes
-$$
+$Log: InfoCollection.java,v $
+Revision 1.6  2003/08/22 21:03:15  lemmster
+replace $user$ with $Author$
+
+Revision 1.5  2003/08/02 09:55:55  lemmstercvs01
+observers changed
+
+Revision 1.4  2003/06/18 13:30:56  dek
+Improved Communication Layer view <--> model by introducing a super-interface
+
+Revision 1.3  2003/06/17 12:10:17  lemmstercvs01
+some methods added
+
+Revision 1.2  2003/06/16 15:32:43  lemmstercvs01
+changed some modifiers
+
+Revision 1.1  2003/06/15 16:18:41  lemmstercvs01
+new interface introduced
+
+Revision 1.3  2003/06/14 23:04:08  lemmstercvs01
+change from interface to abstract superclass
+
+Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
+cosmetic changes
 */
