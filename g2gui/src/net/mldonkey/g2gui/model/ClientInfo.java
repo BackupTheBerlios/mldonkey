@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.model;
 
 import gnu.trove.THash;
 import gnu.trove.THashMap;
+import gnu.trove.TIntObjectHashMap;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.*;
@@ -32,7 +33,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.9 2003/07/12 13:53:21 dek Exp $ 
+ * @version $Id: ClientInfo.java,v 1.10 2003/07/12 13:59:39 dek Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -75,7 +76,7 @@ public class ClientInfo extends Parent {
 	/**
 	 * Availability of a file
 	 */
-	private THash avail = new THashMap();
+	private THash avail = new TIntObjectHashMap();
 
 	/**
 	 * @return The client chat port
@@ -127,7 +128,7 @@ public class ClientInfo extends Parent {
 	 */
 	public String getFileAvailability( FileInfo fileInfo ) {
 		String availability =
-		  ( String ) ( ( THashMap ) this.avail ).get( fileInfo );
+		  ( String ) ( ( TIntObjectHashMap ) this.avail ).get( fileInfo.getId() );
 		return availability;
 	}
 
@@ -202,12 +203,15 @@ public class ClientInfo extends Parent {
 	 * @param avail The availability of this file
 	 */
 	public void putAvail( FileInfo fileInfo, String avail ) {
-		( ( THashMap ) this.avail ).put( fileInfo, avail );
+		( ( TIntObjectHashMap ) this.avail ).put( fileInfo.getId(), avail );
 	}
 }
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.10  2003/07/12 13:59:39  dek
+availability is strange: it doesn't seem to make it's way to clients...
+
 Revision 1.9  2003/07/12 13:53:21  dek
 some new methods, to be able to show the information
 
