@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -36,7 +37,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.12 2003/07/23 17:01:40 lemmstercvs01 Exp $ 
+ * @version $Id: SearchQuery.java,v 1.13 2003/07/25 14:46:50 zet Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -137,7 +138,7 @@ public class SearchQuery implements Sendable {
 	 */
 	public void setSearchString( String searchString ) {
 		this.searchString = searchString;
-		String[] patterns = searchString.split( " " );
+		String[] patterns = Pattern.compile(" ").split(searchString,0);
 		/* now we have to generate a query-Object for each search pattern */
 		Query newQuery;
 		
@@ -292,6 +293,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.13  2003/07/25 14:46:50  zet
+replace string.split
+
 Revision 1.12  2003/07/23 17:01:40  lemmstercvs01
 modified setMedia()
 

@@ -23,8 +23,8 @@
 package net.mldonkey.g2gui.view.pref;
 import java.io.IOException;
 import org.eclipse.jface.preference.*;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
+//import org.eclipse.swt.graphics.Font;
+//import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.17 2003/07/25 02:56:52 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.18 2003/07/25 14:47:28 zet Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {	
@@ -129,7 +129,7 @@ public class G2Gui extends PreferencePage  {
 		( ( org.eclipse.swt.layout.GridLayout )controlshell.getLayout() ).numColumns = columns;
 		
 	}
-
+/*
 	private Font loadFont() {
 		Font font;
 		this.preferenceStore = new PreferenceStore( "g2gui.pref" );
@@ -145,7 +145,7 @@ public class G2Gui extends PreferencePage  {
 		}
 		else  font = null;
 		return font;
-	}
+	} */
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
@@ -201,6 +201,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.18  2003/07/25 14:47:28  zet
+replace string.split
+
 Revision 1.17  2003/07/25 02:56:52  zet
 *** empty log message ***
 
