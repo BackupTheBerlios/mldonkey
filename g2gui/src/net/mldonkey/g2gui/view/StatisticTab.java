@@ -26,24 +26,28 @@ package net.mldonkey.g2gui.view;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.20 2003/08/25 22:20:25 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.21 2003/08/29 21:42:11 zet Exp $
  */
 
 public class StatisticTab extends GuiTab {
@@ -79,33 +83,70 @@ public class StatisticTab extends GuiTab {
 		mainSash.setLayout (new FillLayout());
 		
 		// Top composite for other stats	
-		Composite top = new Composite( mainSash, SWT.BORDER );
-		top.setLayout( new FillLayout() );
-		Button b = new Button(top, SWT.NONE);
+		ViewForm statsViewForm = new ViewForm( mainSash, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		statsViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));	
+
+		CLabel statsCLabel = new CLabel(statsViewForm, SWT.LEFT );	
+		statsCLabel.setText(G2GuiResources.getString("TT_StatisticsButton"));
+		statsCLabel.setImage(G2GuiResources.getImage("StatisticsButtonSmallTitlebar"));
+		statsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		statsCLabel.setForeground(statsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
+		statsCLabel.setBackground(new Color[]{statsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+										statsViewForm.getBackground()},
+										new int[] {100});	
+
+		Composite statsComposite = new Composite( statsViewForm, SWT.NONE );
+		statsComposite.setLayout(new FillLayout());
+		
+		Button b = new Button(statsComposite, SWT.NONE);
 		b.setText("<gui protocol needs more stats>");
 		b.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 				mainSash.setWeights( new int[] {0,100});
 			}
-		});		
+		});
+		statsViewForm.setTopLeft(statsCLabel);
+		statsViewForm.setContent(statsComposite);	
 		
 		// Bottom graph for Sash				
 		SashForm graphSash = new SashForm ( mainSash, SWT.HORIZONTAL );
-		graphSash.setLayout( new FillLayout() );
+//	graphSash.setLayout( new FillLayout() );
 		
-		Composite left = new Composite( graphSash, SWT.NONE );
-		left.setLayout( new FillLayout() );
-		Composite right = new Composite( graphSash, SWT.NONE );
-		right.setLayout( new FillLayout() );
-					
-		downloadsGraphControl = new GraphControl( left, downloadsGraphName, 
+		ViewForm downloadsGraphViewForm = new ViewForm( graphSash, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		ViewForm uploadsGraphViewForm = new ViewForm( graphSash, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		
+		CLabel downloadsCLabel = new CLabel(downloadsGraphViewForm, SWT.LEFT );	
+		downloadsCLabel.setText(G2GuiResources.getString("TT_Downloads"));
+		downloadsCLabel.setImage(G2GuiResources.getImage("StatisticsButtonSmallTitlebar"));
+		downloadsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		downloadsCLabel.setForeground(downloadsGraphViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
+		downloadsCLabel.setBackground(new Color[]{downloadsGraphViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+												downloadsGraphViewForm.getBackground()},
+												new int[] {100});	
+		
+		CLabel uploadsCLabel = new CLabel(uploadsGraphViewForm, SWT.LEFT );	
+		uploadsCLabel.setText(G2GuiResources.getString("TT_Uploads"));
+		uploadsCLabel.setImage(G2GuiResources.getImage("StatisticsButtonSmallTitlebar"));
+		uploadsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		uploadsCLabel.setForeground(uploadsGraphViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
+		uploadsCLabel.setBackground(new Color[]{uploadsGraphViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+												uploadsGraphViewForm.getBackground()},
+												new int[] {100});	
+						
+		downloadsGraphControl = new GraphControl( downloadsGraphViewForm, downloadsGraphName, 
 									downloadsGraphColor1, downloadsGraphColor2 );
 									
-		uploadsGraphControl = new GraphControl( right, uploadsGraphName, 
+		uploadsGraphControl = new GraphControl( uploadsGraphViewForm, uploadsGraphName, 
 						uploadsGraphColor1, uploadsGraphColor2 );
-			 				
+		
+		downloadsGraphViewForm.setTopLeft(downloadsCLabel);
+		downloadsGraphViewForm.setContent(downloadsGraphControl);
+		uploadsGraphViewForm.setTopLeft(uploadsCLabel);
+		uploadsGraphViewForm.setContent(uploadsGraphControl);
+		
+		
 		// Until top composite has stats	 		
-		mainSash.setWeights( new int[] { 0, 1111 } );	 		
+		mainSash.setWeights( new int[] { 0, 10 } );	 		
 	}
 
 	public void mouseUp( MouseEvent arg0 ) {}
@@ -133,6 +174,9 @@ public class StatisticTab extends GuiTab {
 }
 /*
 $Log: StatisticTab.java,v $
+Revision 1.21  2003/08/29 21:42:11  zet
+add shadow
+
 Revision 1.20  2003/08/25 22:20:25  zet
 *** empty log message ***
 

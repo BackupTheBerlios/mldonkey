@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Display;
  * GraphPainter
  *
  *
- * @version $Id: GraphPainter.java,v 1.26 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: GraphPainter.java,v 1.27 2003/08/29 21:42:11 zet Exp $ 
  *
  */
 public class GraphPainter {
@@ -83,7 +83,7 @@ public class GraphPainter {
 		
 		//g2d.setColor(green);
 		
-		int startx = 20;
+		int startx = 1;
 		int k = startx;
 		
 		int bottomSpace = drawBoardBuffer.getFontMetrics().getHeight() + 2;
@@ -110,8 +110,6 @@ public class GraphPainter {
 			
 		// calculate zoom
 	
-		// this will still jump around when going from high rates to low ones & back
-		// find a better solution...	
 		zoom = (height-10f) / maximum ;  
 		actualPoint = lastPoint;	
 
@@ -152,7 +150,7 @@ public class GraphPainter {
 		drawBoardBuffer.drawText(graph.getName() + 
 		 " avg: " + ((double)graph.getAvg()/100) + " kb/s," +
 		 " max: " + ((double)graph.getMax()/100) + " kb/s",
-		 20, parent.getClientArea().height-drawBoardBuffer.getFontMetrics().getHeight() ,true);
+		 startx, parent.getClientArea().height-drawBoardBuffer.getFontMetrics().getHeight() ,true);
 				
 		// draw floating box
 		double value = (double)graph.getLast().getValue()/100;
@@ -198,6 +196,9 @@ public class GraphPainter {
 }
 /*
 $Log: GraphPainter.java,v $
+Revision 1.27  2003/08/29 21:42:11  zet
+add shadow
+
 Revision 1.26  2003/08/23 15:21:37  zet
 remove @author
 

@@ -33,7 +33,7 @@ import org.eclipse.swt.*;
  * GraphControl
  *
  *
- * @version $Id: GraphControl.java,v 1.11 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: GraphControl.java,v 1.12 2003/08/29 21:42:11 zet Exp $ 
  *
  */
 public class GraphControl extends Composite{
@@ -45,7 +45,7 @@ public class GraphControl extends Composite{
 	private Graph graph;
 		
 	public GraphControl(Composite parent, String name, Color color1, Color color2) {
-		super(parent,SWT.BORDER);
+		super(parent,SWT.NONE);
 		this.parent = parent;
 		graphCanvas = new GraphCanvas(this);
 		setLayout(new FillLayout());
@@ -99,6 +99,9 @@ public class GraphControl extends Composite{
 
 /*
 $Log: GraphControl.java,v $
+Revision 1.12  2003/08/29 21:42:11  zet
+add shadow
+
 Revision 1.11  2003/08/23 15:21:37  zet
 remove @author
 
