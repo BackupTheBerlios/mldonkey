@@ -29,8 +29,8 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * CoreConsoleItem
  *
- * @version $Id: CoreConsoleItem.java,v 1.3 2003/09/20 01:36:19 zet Exp $
+ * @version $Id: CoreConsoleItem.java,v 1.4 2003/09/23 21:58:14 zet Exp $
  *
  */
 public class CoreConsoleItem {
@@ -63,22 +63,19 @@ public class CoreConsoleItem {
         CLabel link = new CLabel( linkComposite, SWT.BORDER );
         link.setImage( G2GuiResources.getImage( "G2GuiLogoSmall" ) );
         link.setToolTipText( G2GuiResources.getString( "CORE_CONSOLE_TOOLTIP" ) );
-        link.addMouseListener( new MouseListener() {
-                public void mouseDown( MouseEvent e ) {
-                    G2Gui.getCoreConsole().getShell().open();
-                }
-
-                public void mouseUp( MouseEvent e ) {
-                }
-
-                public void mouseDoubleClick( MouseEvent e ) {
-                }
-            } );
+        link.addMouseListener( new MouseAdapter() {
+            public void mouseDown( MouseEvent e ) {
+                G2Gui.getCoreConsole().getShell().open();
+            }
+        } );
     }
 }
 
 /*
 $Log: CoreConsoleItem.java,v $
+Revision 1.4  2003/09/23 21:58:14  zet
+not much..
+
 Revision 1.3  2003/09/20 01:36:19  zet
 *** empty log message ***
 

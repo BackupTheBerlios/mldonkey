@@ -28,8 +28,8 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * LinkEntryItem
  *
- * @version $Id: LinkEntryItem.java,v 1.4 2003/09/20 01:36:19 zet Exp $
+ * @version $Id: LinkEntryItem.java,v 1.5 2003/09/23 21:58:14 zet Exp $
  *
  */
 public class LinkEntryItem {
@@ -66,30 +66,27 @@ public class LinkEntryItem {
         CLabel link = new CLabel( linkComposite, SWT.BORDER );
         link.setImage( G2GuiResources.getImage( "UpArrowBlue" ) );
         link.setToolTipText( G2GuiResources.getString( "LE_TOGGLE" ) );
-        link.addMouseListener( new MouseListener() {
-                // hide/show the linkEntry
-                public void mouseDown( MouseEvent e ) {
-                    GridData g = new GridData( GridData.FILL_HORIZONTAL );
-                    if ( linkEntryToggle )
-                        g.heightHint = 0;
-                    else
-                        g.heightHint = 75;
-                    linkEntryToggle = !linkEntryToggle;
-                    linkEntryComposite.setLayoutData( g );
-                    statusLine.getMainTab().getMainComposite().layout();
-                }
-
-                public void mouseUp( MouseEvent e ) {
-                }
-
-                public void mouseDoubleClick( MouseEvent e ) {
-                }
+        link.addMouseListener( new MouseAdapter() {
+            // hide/show the linkEntry
+            public void mouseDown( MouseEvent e ) {
+                GridData g = new GridData( GridData.FILL_HORIZONTAL );
+                if ( linkEntryToggle )
+                    g.heightHint = 0;
+                else
+                    g.heightHint = 75;
+                linkEntryToggle = !linkEntryToggle;
+                linkEntryComposite.setLayoutData( g );
+                statusLine.getMainTab().getMainComposite().layout();
+            }
        	});
     }
 }
 
 /*
 $Log: LinkEntryItem.java,v $
+Revision 1.5  2003/09/23 21:58:14  zet
+not much..
+
 Revision 1.4  2003/09/20 01:36:19  zet
 *** empty log message ***
 
