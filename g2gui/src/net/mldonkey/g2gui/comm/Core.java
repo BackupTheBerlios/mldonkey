@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.20 2003/06/16 21:47:41 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.21 2003/06/17 12:11:02 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -81,7 +81,6 @@ public class Core extends Thread implements CoreCommunication {
 	 */
 	public Core( Socket connection ) {
 		this.connection = connection;
-		this.run();
 	}
 
 	/**
@@ -255,10 +254,20 @@ public class Core extends Thread implements CoreCommunication {
 		downloadUpdate.sendMessage( connection );
 		downloadUpdate = null;
 	}*/
+	/**
+	 * @return
+	 */
+	public InfoCollection getFileInfoMap() {
+		return fileInfoMap;
+	}
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.21  2003/06/17 12:11:02  lemmstercvs01
+this.run() in constructor removed, getter method for fileInfoList added
+
 Revision 1.20  2003/06/16 21:47:41  lemmstercvs01
 opcode 3 added
 
