@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.15 2003/10/31 22:41:59 zet Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.16 2003/11/13 00:45:28 zet Exp $
  *
  */
 public class DownloadTableTreeLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -91,13 +91,13 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
             else if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADED ) {
                 return downloadedFileColor;
             }
-            else if ( fileInfo.getRate() > 20f ) {
+            else if ( fileInfo.getRate() / 1000f > 20f ) {
                 return rateAbove20Color;
             }
-            else if ( fileInfo.getRate() > 10f ) {
+            else if ( fileInfo.getRate() / 1000f > 10f ) {
                 return rateAbove10Color;
             }
-            else if ( fileInfo.getRate() > 0f ) {
+            else if ( fileInfo.getRate() / 1000f > 0f ) {
                 return rateAbove0Color;
             } 
             else if ( fileInfo.getRelativeAvail() == 0 ) {
@@ -271,6 +271,9 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.16  2003/11/13 00:45:28  zet
+fix #1081
+
 Revision 1.15  2003/10/31 22:41:59  zet
 rename to View
 
