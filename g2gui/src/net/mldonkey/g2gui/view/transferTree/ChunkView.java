@@ -44,11 +44,15 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkView.java,v 1.4 2003/07/14 19:26:40 dek Exp $ 
+ * @version $Id: ChunkView.java,v 1.5 2003/07/15 13:25:41 dek Exp $ 
  *
  */
 public class ChunkView extends Canvas {
 
+
+	private String avail;
+
+	private String chunks;
 
 	private ClientInfo clientInfo;
 
@@ -104,7 +108,7 @@ public class ChunkView extends Canvas {
 	}
 	
 	/**
-	 * creates a chunkview-Object for the given FileInfo
+	 * creates a chunkview-Object for the given clientInfo
 	 * @param parent here does the object live
 	 * @param style this style do we prefer (not used atm)
 	 * @param clientInfo the source of this chunkviews information
@@ -154,8 +158,7 @@ public class ChunkView extends Canvas {
 	 * 
 	 */
 	private void createClientInfoImage() {
-		
-		String avail = clientInfo.getFileAvailability( fileInfo );
+		this.avail =  clientInfo.getFileAvailability( fileInfo );		
 		int length = 0;
 		byte[] temp = {};
 		Color red = getDisplay().getSystemColor( SWT.COLOR_RED );
@@ -198,8 +201,8 @@ public class ChunkView extends Canvas {
 	 * @param chunks
 	 */
 	private void createFileInfoImage() {
-		String chunks = fileInfo.getChunks();
-		String avail = fileInfo.getAvail();
+		this.chunks = fileInfo.getChunks();
+		this.avail = fileInfo.getAvail();
 		int length = 0;
 		
 		Color red = getDisplay().getSystemColor( SWT.COLOR_RED );
@@ -287,14 +290,32 @@ public class ChunkView extends Canvas {
 	 * redraws this widget, with refreshed Information from FileInfo (if changed)
 	 */
 	public void refresh() {		
-		createFileInfoImage();
-		
+		if ( type == isFileInfo ) {
+			
+			/*only redraw image if one of the chunks or avail-strings have changed */
+			if ( !( chunks.equals( fileInfo.getChunks() ) )
+			  || !( avail.equals(  fileInfo.getAvail()  ) ) ) 
+					createImage();
+			else this.redraw(0,0,0,0,false);
+		}
+		else if ( type == isClientInfo ) {		
+			/*redraw if avail is not null, and has changed...*/
+			String tempAvail = clientInfo.getFileAvailability( fileInfo );
+			if ( avail != null  )
+				if ( !tempAvail.equals( avail ) )
+					createImage();
+				else {}
+			else this.redraw(0,0,0,0,false);
+		}
 		
 	}
 }
 
 /*
 $Log: ChunkView.java,v $
+Revision 1.5  2003/07/15 13:25:41  dek
+right-mouse menu and some action to hopefully avoid flickering table
+
 Revision 1.4  2003/07/14 19:26:40  dek
 done some clean.up work, since it seems,as if this view becomes reality..
 

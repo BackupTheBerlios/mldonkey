@@ -30,16 +30,22 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTreeEditor;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 /**
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.4 2003/07/14 19:26:40 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.5 2003/07/15 13:25:41 dek Exp $ 
  *
  */
-public class ClientItem extends TableTreeItem {
+public class ClientItem extends TableTreeItem implements IItemHasMenue {
 	
+	private Menu menu;
+
+	private Object shell;
+
 	private ChunkView chunks;
 
 	private DownloadItem downloadItem;
@@ -67,8 +73,7 @@ public class ClientItem extends TableTreeItem {
 			if ( oldEditor != null )
 			oldEditor.dispose();
 		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, 6 );
-		editor.setEditor ( chunks, this, 6 );
-		
+		editor.setEditor ( chunks, this, 6 );		
 		updateColums();	
 		
 		
@@ -114,10 +119,21 @@ public class ClientItem extends TableTreeItem {
 	void update() {
 		updateColums();
 	}
+
+
+	public void createMenu(Menu menu) {
+		MenuItem menuItem;
+		menuItem = new MenuItem( menu, SWT.PUSH );
+		menuItem.setText( "dummy Item"+clientInfo.getClientName() );
+		MenuItem[] result = { menuItem };		
+	}
 }
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.5  2003/07/15 13:25:41  dek
+right-mouse menu and some action to hopefully avoid flickering table
+
 Revision 1.4  2003/07/14 19:26:40  dek
 done some clean.up work, since it seems,as if this view becomes reality..
 

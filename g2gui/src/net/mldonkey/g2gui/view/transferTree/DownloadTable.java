@@ -37,23 +37,22 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
-import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.*;
+
 
 
 /**
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.5 2003/07/14 20:13:39 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.6 2003/07/15 13:25:41 dek Exp $ 
  *
  */
 public class DownloadTable  implements Observer, Runnable {
+	protected IItemHasMenue selectedItem;
 	private TransferMain page;
 	private FileInfoIntMap files;
 	private TableTree tableTree;
@@ -74,11 +73,12 @@ public class DownloadTable  implements Observer, Runnable {
 	 * mldonkey
 	 * @param parent here, this object will be placed
 	 * @param mldonkey this object's master, from which this object gets the data
+	 * @param page the TransferPage, where this table is located
 	 */
-	public DownloadTable( Composite parent, CoreCommunication mldonkey,TransferMain page ) {
+	public DownloadTable( Composite parent, CoreCommunication mldonkey, TransferMain page ) {
 		this.page = page;	
 		downloads = new TIntObjectHashMap();	
-		 tableTree = new TableTree( parent, SWT.FULL_SELECTION | SWT.MULTI );
+		 tableTree = new TableTree( parent, SWT.FULL_SELECTION );
 			Table table = tableTree.getTable();
 			table.setLinesVisible( false );
 			table.setHeaderVisible( true );	
@@ -89,18 +89,55 @@ public class DownloadTable  implements Observer, Runnable {
 			}
 			
 			table.addMouseListener( new MouseListener () {
-			public void mouseDown( MouseEvent e ) {
-				if ( e.button == 3 ) {
-					Point pt = new Point( e.x, e.y );
-					TableTreeItem item = tableTree.getItem( pt );
-					System.out.println(item);
+				public void mouseDown( MouseEvent e ) {
+						Point pt = new Point( e.x, e.y );
+						DownloadTable.this.selectedItem = ( IItemHasMenue ) tableTree.getItem( pt );				    	
 				}
-			}
-			public void mouseDoubleClick(MouseEvent e) {}
-			public void mouseUp(MouseEvent e) {}
-		});
+				public void mouseDoubleClick( MouseEvent e ) { }
+				public void mouseUp( MouseEvent e ) { }
+			} );
+			table.setMenu( createRightMouse() );
 			mldonkey.addObserver( this );
 			
+	}
+
+
+
+	/**
+	 * @return creates a menu for this download-table end returns it
+	 */
+	private Menu createRightMouse() {
+		/*
+		 * If a menu is opened, all items are disposed, and the selected TabletreeItem
+		 * is called to create a menu, suitable for his needs.
+		 * If no item has been selected, a failsafe Menue is shown, saying, that
+		 * no item has been selected 
+		 */
+		Shell shell = tableTree.getShell();
+		final Menu menu = new Menu( shell, SWT.POP_UP );		
+		menu.addListener( SWT.Show, new Listener() {
+			public void handleEvent( Event event ) {
+				if ( DownloadTable.this.selectedItem != null ) {
+					MenuItem[] menuItems = menu.getItems();
+					menu.setDefaultItem( null );
+					for ( int i = 0; i < menuItems.length; i++ ) {
+						menuItems[i].dispose();
+					}
+					DownloadTable.this.selectedItem.createMenu( menu );
+				}
+				else {
+					MenuItem[] menuItems = menu.getItems();
+					menu.setDefaultItem( null );
+					for ( int i = 0; i < menuItems.length; i++ ) {
+						menuItems[i].dispose();
+					}
+					MenuItem menuItem = new MenuItem( menu, SWT.PUSH );
+					menuItem.setText( " No entry selected " );
+					menuItem.setEnabled( false );					
+				}
+			}
+		} );
+		return menu;
 	}
 
 
@@ -148,6 +185,9 @@ public class DownloadTable  implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.6  2003/07/15 13:25:41  dek
+right-mouse menu and some action to hopefully avoid flickering table
+
 Revision 1.5  2003/07/14 20:13:39  dek
 now full-row selection, with System.out.println'ing item, on which right-mous-button was clicked
 
