@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.*;
 
@@ -29,11 +30,10 @@ import net.mldonkey.g2gui.model.enum.*;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.6 2003/06/30 07:20:09 lemmstercvs01 Exp $ 
+ * @version $Id: ClientInfo.java,v 1.7 2003/07/06 09:33:50 lemmstercvs01 Exp $ 
  *
  */
-public class ClientInfo implements SimpleInformation {
-	
+public class ClientInfo extends Parent {
 	/**
 	 * Client Id
 	 */
@@ -41,7 +41,7 @@ public class ClientInfo implements SimpleInformation {
 	/**
 	 * Client Network Id
 	 */
-	private int clientnetworkid;
+	private NetworkInfo clientnetworkid;
 	/**
 	 * Client Kind
 	 */
@@ -72,114 +72,72 @@ public class ClientInfo implements SimpleInformation {
 	private int clientChatPort;
 
 	/**
-	 * @return an int
+	 * @return The client chat port
 	 */
 	public int getClientChatPort() {
 		return clientChatPort;
 	}
 
 	/**
-	 * @return an int
+	 * @return The client identifier
 	 */
 	public int getClientid() {
 		return clientid;
 	}
 
 	/**
-	 * @return a ClientKind object
+	 * @return The client kind
 	 */
 	public ClientKind getClientKind() {
 		return clientKind;
 	}
 
 	/**
-	 * @return a string
+	 * @return The client name
 	 */
 	public String getClientName() {
 		return clientName;
 	}
 
 	/**
-	 * @return an int
+	 * @return The client network identifier
 	 */
-	public int getClientnetworkid() {
+	public NetworkInfo getClientnetworkid() {
 		return clientnetworkid;
 	}
 
 	/**
-	 * @return an int
+	 * @return The client rate
 	 */
 	public int getClientRate() {
 		return clientRate;
 	}
 
 	/**
-	 * @return a byte
+	 * @return The client type
 	 */
 	public Enum getClientType() {
 		return clientType;
 	}
 
 	/**
-	 * @return a state object
+	 * @return The client state
 	 */
 	public State getState() {
 		return state;
 	}
 
 	/**
-	 * @return an array of tags
+	 * @return The client tags
 	 */
 	public Tag[] getTag() {
 		return tag;
 	}
 
 	/**
-	 * @param i an int
-	 */
-	public void setClientChatPort( int i ) {
-		clientChatPort = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setClientid( int i ) {
-		clientid = i;
-	}
-
-	/**
-	 * @param kind a ClientKind object
-	 */
-	public void setClientKind( ClientKind kind ) {
-		clientKind = kind;
-	}
-
-	/**
-	 * @param string a string
-	 */
-	public void setClientName( String string ) {
-		clientName = string;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setClientnetworkid( int i ) {
-		clientnetworkid = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setClientRate( int i ) {
-		clientRate = i;
-	}
-
-	/**
 	 * @param b a byte
 	 */
-	public void setClientType( byte b ) {
+	private void setClientType( byte b ) {
 		if ( b == 0 )
 			clientType = EnumClientType.SOURCE;
 		else if ( b == 1 )
@@ -187,35 +145,29 @@ public class ClientInfo implements SimpleInformation {
 		else if ( b == 2 )
 			clientType = EnumClientType.BROWSED;		
 	}
-
-	/**
-	 * @param state a state object
-	 */
-	public void setState( State state ) {
-		this.state = state;
-	}
-
-	/**
-	 * @param tags an array of tags
-	 */
-	public void setTag( Tag[] tags ) {
-		tag = tags;
-	}
 	
+	public ClientInfo( CoreCommunication core ) {
+		super( core );
+	}
+
 	/**
 	 * Reads a ClientInfo object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
-		this.setClientid( messageBuffer.readInt32() );
-		this.setClientnetworkid( messageBuffer.readInt32() );
+		this.clientid = messageBuffer.readInt32();
+		
+		this.clientnetworkid =
+			( NetworkInfo ) this.parent.getNetworkInfoMap()
+					.infoIntMap.get( messageBuffer.readInt32() );
+		
 		this.getClientKind().readStream( messageBuffer );
 		this.getState().readStream( messageBuffer );
 		this.setClientType( messageBuffer.readByte() );
-		this.setTag( messageBuffer.readTagList() );
-		this.setClientName( messageBuffer.readString() );
-		this.setClientRate( messageBuffer.readInt32() );
-		this.setClientChatPort( messageBuffer.readInt32() );
+		this.tag = messageBuffer.readTagList();
+		this.clientName = messageBuffer.readString();
+		this.clientRate = messageBuffer.readInt32();
+		this.clientChatPort = messageBuffer.readInt32();
 	}
 	
 	/**
@@ -225,11 +177,13 @@ public class ClientInfo implements SimpleInformation {
 	public void update( MessageBuffer messageBuffer ) {
 		this.getState().update( messageBuffer );
 	}
-
 }
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.7  2003/07/06 09:33:50  lemmstercvs01
+int networkid -> networkinfo networkid
+
 Revision 1.6  2003/06/30 07:20:09  lemmstercvs01
 changed to readTagList()
 

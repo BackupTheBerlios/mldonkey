@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoIntMap.java,v 1.3 2003/06/20 15:15:22 dek Exp $$ 
+ * @version $$Id: ClientInfoIntMap.java,v 1.4 2003/07/06 09:33:50 lemmstercvs01 Exp $$ 
  */
 public class ClientInfoIntMap extends InfoIntMap {
 	/**
@@ -52,7 +52,7 @@ public class ClientInfoIntMap extends InfoIntMap {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
-		ClientInfo clientInfo = new ClientInfo();
+		ClientInfo clientInfo = new ClientInfo( this.parent );
 		clientInfo.readStream( messageBuffer );
 		this.put( clientInfo.getClientid(), clientInfo );
 	}
@@ -107,6 +107,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 }
 /*
 $$Log: ClientInfoIntMap.java,v $
+$Revision 1.4  2003/07/06 09:33:50  lemmstercvs01
+$int networkid -> networkinfo networkid
+$
 $Revision 1.3  2003/06/20 15:15:22  dek
 $humm, some interface-changes, hope, it didn't break anything ;-)
 $
