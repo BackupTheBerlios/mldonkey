@@ -34,10 +34,13 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.16 2003/08/28 00:12:10 zet Exp $ 
+ * @version $Id: ResultInfo.java,v 1.17 2003/08/28 11:54:41 lemmster Exp $ 
  *
  */
 public class ResultInfo extends Parent {
+	/**
+	 * The Result Comment
+	 */
 	private String comment;
 	/**
 	 * Result ID
@@ -79,22 +82,34 @@ public class ResultInfo extends Parent {
 	 * true = Normal, false = Already Downloaded 
 	 */
 	private boolean history;
-
-
-	// basic filtering
-	public boolean containsProfanity = false;
-	public boolean containsPornography = false;
-
+	/**
+	 * true if this obj contains profanity
+	 */
+	private boolean containsProfanity;
+	/**
+	 * true if this obj contains pronography
+	 */
+	private boolean containsPornography;
+	/**
+	 * The Profanity Filter
+	 */
 	private static RE profanityFilterRE;
+	/**
+	 * The Pornography Filter
+	 */
 	private static RE pornographyFilterRE;
 	
+	/**
+	 * Create ones this Filters
+	 */
 	static {
 		// who knows how to filter this garbage properly...
 		try {
 			profanityFilterRE = new RE( 
 				"fuck|shit" 
 				, RE.REG_ICASE );
-		}  catch ( REException e ) {
+		}
+		catch ( REException e ) {
 			profanityFilterRE = null;
 		}
 		try {
@@ -102,13 +117,26 @@ public class ResultInfo extends Parent {
 				"fuck|shit|porn|pr0n|pussy|xxx|sex|erotic|anal|lolita|sluts|fetish"
 				+ "|naked|incest|bondage|masturbat|blow.*job|barely.*legal" 
 				, RE.REG_ICASE );
-		} catch ( REException e ) {
+		}
+		catch ( REException e ) {
 			pornographyFilterRE = null;		
 		}
-		
 	}
 	
-	
+	/**
+	 * @return does this obj contains pornography
+	 */
+	public boolean containsPornography() {
+		return containsPornography;
+	}
+
+	/**
+	 * @return does this obj contains profanity
+	 */
+	public boolean containsProfanity() {
+		return containsProfanity;
+	}
+
 	/**
 	 * Creates a new ResultInfo
 	 * @param core The parent
@@ -343,6 +371,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.17  2003/08/28 11:54:41  lemmster
+use getter methode for profanity/pornogaphic
+
 Revision 1.16  2003/08/28 00:12:10  zet
 chk for null
 
@@ -353,7 +384,7 @@ Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.13  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/14 12:45:46  dek
 searching works now without errors

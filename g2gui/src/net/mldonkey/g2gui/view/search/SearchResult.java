@@ -78,7 +78,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.30 2003/08/26 22:44:03 zet Exp $ 
+ * @version $Id: SearchResult.java,v 1.31 2003/08/28 11:54:41 lemmster Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -362,19 +362,25 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		this.unregister();		
 	}
 	
-	public class WordFilter extends ViewerFilter {
-		
+	/**
+	 * A wordfilter for the resultinfo to filter pornographic and profanity
+	 */
+	private class WordFilter extends ViewerFilter {
 		private int wordFilterType = 0;
 		
-		public WordFilter(int type) {
+		public WordFilter( int type ) {
 			wordFilterType = type;
 		}
-		
-		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			if (element instanceof ResultInfo) {
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.ViewerFilter#
+		 * select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+		 */
+		public boolean select( Viewer viewer, Object parentElement, Object element ) {
+			if ( element instanceof ResultInfo ) {
 				ResultInfo resultInfo = ( ResultInfo ) element;
-				if ( (wordFilterType == PROFANITY_FILTER_TYPE && resultInfo.containsProfanity)
-					|| (wordFilterType == PORNOGRAPHY_FILTER_TYPE && resultInfo.containsPornography) )
+				if ( ( wordFilterType == PROFANITY_FILTER_TYPE && resultInfo.containsProfanity() )
+				|| ( wordFilterType == PORNOGRAPHY_FILTER_TYPE && resultInfo.containsPornography() ) )
 						return false;
 				return true;
 			}
@@ -389,7 +395,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 * data under inspection to material elsewhere, or perform dynamic lookup for creating
 	 * tooltip text on the fly.
 	 */
-	protected static class ToolTipHandler {
+	private static class ToolTipHandler {
 		private Shell  tipShell;
 		private CLabel  tipLabelImage;
 		private Label tipLabelText;
@@ -561,6 +567,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.31  2003/08/28 11:54:41  lemmster
+use getter methode for profanity/pornogaphic
+
 Revision 1.30  2003/08/26 22:44:03  zet
 basic filtering
 
@@ -583,7 +592,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates
