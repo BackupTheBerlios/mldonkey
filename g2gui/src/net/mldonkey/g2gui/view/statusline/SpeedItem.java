@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.ClientStats;
  * SpeedItem
  *
  * @author $user$
- * @version $Id: SpeedItem.java,v 1.5 2003/06/27 13:21:12 dek Exp $ 
+ * @version $Id: SpeedItem.java,v 1.6 2003/06/27 13:37:28 dek Exp $ 
  *
  */
 public class SpeedItem extends StatusLineItem implements Observer {	
@@ -60,14 +60,29 @@ public class SpeedItem extends StatusLineItem implements Observer {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable o, Object arg) {
+		/*
+		 * 	private long totalUp;
+			private long totalDown;
+			private long totalShared;
+			private int numOfShare;
+			private float tcpUpRate;
+			private float tcpDownRate;
+			private float udpUpRate;
+			private float udpDownRate;
+			private int numCurrDownload;
+			private int numDownloadFinished;
+			private int[] connectedNetworks;
+		 */
 		if (arg instanceof ClientStats){
-			ClientStats temp = (ClientStats) arg;
+			final ClientStats temp = (ClientStats) arg;
 			final float down = temp.getTcpDownRate();
-			final float up = 	temp.getTcpUpRate();
-						
+			final float up   = temp.getTcpUpRate();
+			if (!parent.isDisposed())				
 			parent.getDisplay().syncExec( new Runnable () {
 				public void run() {
-					statusline.update(position," UL: "+up+" DL: "+down);
+					statusline.update(position," DL: "+down+"kb/s - UL: "+up+"kb/s");
+					String toolTipText ="UDP-DL: " + temp.getUdpDownRate()+						"\nUDP-UL: " + temp.getUdpUpRate();						
+					statusline.updateTooltip(position,toolTipText);
 				}
 			});
 		}
@@ -76,6 +91,9 @@ public class SpeedItem extends StatusLineItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.6  2003/06/27 13:37:28  dek
+tooltips added
+
 Revision 1.5  2003/06/27 13:21:12  dek
 added connected Networks
 

@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Label;
  * It has to be placed in a GridLayout, since it applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.4 2003/06/27 13:21:12 dek Exp $ 
+ * @version $Id: StatusLine.java,v 1.5 2003/06/27 13:37:28 dek Exp $ 
  *
  */
 public class StatusLine {
@@ -77,6 +77,7 @@ public class StatusLine {
 	}
 	
 	public void update(int index,String content){		
+		if (!statusline.isDisposed())
 			((Label)fields.get(index)).setText(content);					
 	}
 	
@@ -108,6 +109,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.5  2003/06/27 13:37:28  dek
+tooltips added
+
 Revision 1.4  2003/06/27 13:21:12  dek
 added connected Networks
 

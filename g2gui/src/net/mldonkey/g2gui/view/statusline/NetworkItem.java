@@ -35,7 +35,7 @@ import net.mldonkey.g2gui.model.*;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.1 2003/06/27 13:21:12 dek Exp $ 
+ * @version $Id: NetworkItem.java,v 1.2 2003/06/27 13:37:28 dek Exp $ 
  *
  */
 public class NetworkItem extends StatusLineItem implements Observer {
@@ -80,24 +80,25 @@ public class NetworkItem extends StatusLineItem implements Observer {
 		
 		if (arg instanceof ClientStats){
 			ClientStats temp = (ClientStats) arg;
-			final int[] networks = temp.getConnectedNetworks();						
-			parent.getDisplay().syncExec( new Runnable () {
-				public void run() {
-					statusline.update(position," connected to "+networks.length+" networks");
-					String toolTipText = "";									
-					TIntObjectIterator it = ((NetworkInfoIntMap) core.getNetworkinfoMap()).iterator();
-					while (it.hasNext()){
-						it.advance();
-						
-						if (((NetworkInfo)it.value()).isEnabled())	{	
-							if (toolTipText!="") toolTipText+="\n";					
-							toolTipText += (((NetworkInfo)it.value()).getNetworkName());							
-						}
+			final int[] networks = temp.getConnectedNetworks();
+			if (!parent.isDisposed())						
+				parent.getDisplay().syncExec( new Runnable () {
+					public void run() {
+						statusline.update(position," connected to "+networks.length+" networks");
+						String toolTipText = "";									
+						TIntObjectIterator it = ((NetworkInfoIntMap) core.getNetworkinfoMap()).iterator();
+						while (it.hasNext()){
+							it.advance();
 							
+							if (((NetworkInfo)it.value()).isEnabled())	{	
+								if (toolTipText!="") toolTipText+="\n";					
+								toolTipText += (((NetworkInfo)it.value()).getNetworkName());							
+							}
+								
+						}
+						statusline.updateTooltip(position,toolTipText);
 					}
-					statusline.updateTooltip(position,toolTipText);
-				}
-			});
+				});
 		}
 	}
 
@@ -105,6 +106,9 @@ public class NetworkItem extends StatusLineItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.2  2003/06/27 13:37:28  dek
+tooltips added
+
 Revision 1.1  2003/06/27 13:21:12  dek
 added connected Networks
 
