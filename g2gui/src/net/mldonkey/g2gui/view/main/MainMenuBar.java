@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.15 2003/09/26 14:17:00 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.16 2003/10/13 18:36:17 zet Exp $ 
  *
  */
 public class MainMenuBar {
@@ -107,6 +107,7 @@ public class MainMenuBar {
 				menuItem = new MenuItem ( fileMenu, SWT.PUSH );
 				menuItem.addListener ( SWT.Selection, new Listener () {
 					public void handleEvent ( Event e ) {
+						mainTab.getMinimizer().forceClose();
 						shell.close();
 					} 
 				} );
@@ -196,6 +197,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.16  2003/10/13 18:36:17  zet
+fix file->exit (w/tray) bug
+
 Revision 1.15  2003/09/26 14:17:00  zet
 update faq url
 

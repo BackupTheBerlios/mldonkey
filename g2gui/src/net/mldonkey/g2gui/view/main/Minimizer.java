@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Shell;
  * A temp class to help use swt TrayIcon on win32 only
  * https://bugs.eclipse.org/bugs/show_bug.cgi?id=30834
  *
- * @version $Id: Minimizer.java,v 1.5 2003/10/11 22:53:56 zet Exp $
+ * @version $Id: Minimizer.java,v 1.6 2003/10/13 18:36:17 zet Exp $
  */
 public class Minimizer implements Observer {
 	private static final DecimalFormat decimalFormat = new DecimalFormat( "0.#" );
@@ -63,10 +63,12 @@ public class Minimizer implements Observer {
         return true;
     }
 
-    public void minimize( ) {
+    public void minimize() {
         core.getClientStats().addObserver( this );
     }
 
+	public void forceClose() {
+	}
     public void restore() {
         core.getClientStats().deleteObserver( this );
         setTitleBarText();
@@ -95,6 +97,9 @@ public class Minimizer implements Observer {
 
 /*
 $Log: Minimizer.java,v $
+Revision 1.6  2003/10/13 18:36:17  zet
+fix file->exit (w/tray) bug
+
 Revision 1.5  2003/10/11 22:53:56  zet
 version info
 

@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.78 2003/10/12 20:39:26 zet Exp $
+ * @version $Id: MainTab.java,v 1.79 2003/10/13 18:36:07 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -98,8 +98,7 @@ public class MainTab implements ShellListener {
         setSizeLocation( shell );
 
         // what do we do when the close button is selected
-        shell.addListener( SWT.Close,
-                           new Listener() {
+        shell.addListener( SWT.Close, new Listener() {
                 public void handleEvent( Event event ) {
                     event.doit = minimizer.close();
                 }
@@ -315,6 +314,13 @@ public class MainTab implements ShellListener {
     public MainCoolBar getCoolBar() {
         return coolBar;
     }
+    
+    /**
+     * @return minimizer
+     */
+    public Minimizer getMinimizer() {
+    	return minimizer;
+    }
 
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.ShellListener#
@@ -356,6 +362,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.79  2003/10/13 18:36:07  zet
+fix file->exit (w/tray) bug
+
 Revision 1.78  2003/10/12 20:39:26  zet
 remove high ascii
 
