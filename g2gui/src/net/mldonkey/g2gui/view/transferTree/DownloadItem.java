@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Control;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.5 2003/07/13 12:48:28 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.6 2003/07/13 17:13:08 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem {
@@ -58,8 +58,7 @@ public class DownloadItem extends TableTreeItem {
 	public DownloadItem(TableTree parent, int style, FileInfo fileInfo) {
 		super(parent, style);
 		this.tableTree = parent;
-		this.fileInfo = fileInfo;		
-		updateColumns();
+		this.fileInfo = fileInfo;
 		
 		TableTreeEditor editor = new TableTreeEditor(this.getParent());		
 		editor.horizontalAlignment = SWT.LEFT;
@@ -69,6 +68,8 @@ public class DownloadItem extends TableTreeItem {
 			oldEditor.dispose();
 		this.chunks = new ChunkView(this.getParent().getTable(),SWT.NONE,fileInfo);
 		editor.setEditor (chunks, this, 6);
+		
+		updateColumns();
 
 		Object[] temp = fileInfo.getClientInfos().toArray();
 		for (int i = 0; i < temp.length; i++) {	
@@ -103,8 +104,7 @@ public class DownloadItem extends TableTreeItem {
 	}
 	
 	void update() {
-		updateColumns();
-			
+		updateColumns();		
 		Object[] temp =  fileInfo.getClientInfos().toArray();
 		for (int i = 0; i < temp.length; i++) {	
 		ClientInfo clientInfo =  (ClientInfo) temp[ i ];
@@ -144,8 +144,6 @@ public class DownloadItem extends TableTreeItem {
 		setText( 4, String.valueOf( fileInfo.getSize() ) );
 		setText( 5, String.valueOf( fileInfo.getPerc() ) );
 		chunks.refresh();
-		
-
 	}
 	
 
@@ -200,6 +198,9 @@ public class DownloadItem extends TableTreeItem {
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.6  2003/07/13 17:13:08  dek
+NPE fixed
+
 Revision 1.5  2003/07/13 12:48:28  dek
 chunk-bar begins to work
 
