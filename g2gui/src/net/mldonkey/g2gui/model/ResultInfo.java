@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.24 2003/10/13 19:54:32 zet Exp $
+ * @version $Id: ResultInfo.java,v 1.25 2003/10/22 23:42:57 zet Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -110,6 +110,11 @@ public class ResultInfo extends Parent {
     private boolean containsPornography = false;
 
     /**
+     * true if this obj contains "fake" string
+     */
+    private boolean containsFake = false;
+    
+    /**
      * The Profanity Filter
      */
     private static RE profanityFilterRE;
@@ -118,6 +123,11 @@ public class ResultInfo extends Parent {
      * The Pornography Filter
      */
     private static RE pornographyFilterRE;
+    
+    /**
+     * The fake RE
+     */
+    private static RE fakeRE;
 
     /**
      * Create ones this Filters
@@ -138,6 +148,21 @@ public class ResultInfo extends Parent {
         catch ( REException e ) {
             pornographyFilterRE = null;
         }
+        
+        try {
+            fakeRE = new RE( "fake", RE.REG_ICASE );
+    	}  
+		catch ( REException e ) {
+		    fakeRE = null;
+		 }
+        
+    }
+    
+    /**
+     * @return true if this obj contains the string "fake"
+     */
+    public boolean containsFake() {
+        return containsFake;
     }
 
     /**
@@ -223,7 +248,16 @@ public class ResultInfo extends Parent {
                 if ( containsProfanity )
                     break;
             }
+            if ( (fakeRE != null ) && ( fakeRE.getMatch ( names[ i ] ) != null ) ) {
+                containsFake = true;
+            }
         }
+        
+        if ( !containsFake && fakeRE != null ) {
+            if ( fakeRE.getMatch( this.comment ) != null ) 
+                containsFake = true;
+        }
+        
     }
 
     /**
@@ -467,6 +501,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.25  2003/10/22 23:42:57  zet
+fake regexp
+
 Revision 1.24  2003/10/13 19:54:32  zet
 remove high ascii
 
