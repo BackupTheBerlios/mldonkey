@@ -29,14 +29,16 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 /**
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.24 2003/09/13 22:22:59 zet Exp $ 
+ * @version $Id: ClientInfo.java,v 1.25 2003/09/14 03:37:24 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -180,6 +182,26 @@ public class ClientInfo extends Parent {
 	}
 	
 	/**
+	 * @return String clientActivity
+	 */
+	public String getClientActivity() {
+		if ( this.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
+			return G2GuiResources.getString( "TT_Transferring" ).toLowerCase();
+		else 
+			return G2GuiResources.getString( "TT_Rank" ).toLowerCase() + ": " + this.getState().getRank() ;
+	}	
+	
+	/**
+	 * @return String clientConnection
+	 */
+	public String getClientConnection() {
+		if ( this.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) 
+			return G2GuiResources.getString( "TT_Firewalled" ).toLowerCase();			
+		else
+			return G2GuiResources.getString( "TT_Direct" ).toLowerCase();	
+	}
+	
+	/**
 	 * @param core with this object, we make our main cimmunication (the main-Layer)
 	 */
 	public ClientInfo( CoreCommunication core ) {
@@ -281,11 +303,13 @@ public class ClientInfo extends Parent {
 		removeAllFriends.sendMessage( core.getConnection() );
 		removeAllFriends = null;
 	}
-	
 }
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.25  2003/09/14 03:37:24  zet
+changedProperties in model
+
 Revision 1.24  2003/09/13 22:22:59  zet
 weak sets
 

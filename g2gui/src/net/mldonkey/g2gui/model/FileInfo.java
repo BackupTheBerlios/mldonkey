@@ -23,8 +23,10 @@
 package net.mldonkey.g2gui.model;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -44,11 +46,20 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.48 2003/09/13 22:22:59 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.49 2003/09/14 03:37:24 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
 	
+	/**
+	 * Static strings used internally for tableviewer updates
+	 */
+	public static final String CHANGED_RATE = "rate";
+	public static final String CHANGED_DOWNLOADED = "downloaded";
+	public static final String CHANGED_PERCENT = "percent";
+	public static final String CHANGED_ETA = "eta";
+	public static final String CHANGED_LAST = "last";
+	private List changedProperties = Collections.synchronizedList(new ArrayList());
 	/**
 	 * Decimal format for calcStringSize
 	 */
@@ -147,13 +158,7 @@ public class FileInfo extends Parent implements Observer {
 	private String stringDownloaded="";
 	private String stringETA = "";
 	private long etaSeconds;
-
-	public boolean changedRate;
-	public boolean changedDownloaded;
-	public boolean changedLast;
-	public boolean changedPercent;
-	public boolean changedETA;
-		
+			
 	/**
 	 * @return time when download started
 	 */
@@ -339,6 +344,7 @@ public class FileInfo extends Parent implements Observer {
 		* OffsetTime	File Last Seen 
 		* int32			File Priority 
 		*/ 
+		
 		this.id = messageBuffer.readInt32();
 		this.setNetwork( messageBuffer.readInt32() );
 		this.names = messageBuffer.readStringList();
@@ -356,7 +362,9 @@ public class FileInfo extends Parent implements Observer {
 		
 		this.getState().readStream( messageBuffer );
 		
-		changedRate = (oldState != this.state.getState() ? true : false); 
+		if (oldState != this.state.getState()) {
+			changedProperties.add(CHANGED_RATE);
+		}
 		
 		setChunks( messageBuffer.readString() );
 		
@@ -381,8 +389,7 @@ public class FileInfo extends Parent implements Observer {
 		
 		this.stringAge = calcStringOfSeconds ( System.currentTimeMillis() / 1000 - Long.parseLong(this.age)  );
 
-		this.setChanged();
-		this.notifyObservers( this );
+		notifyChangedProperties();
 	}
 	
 	/**
@@ -395,7 +402,7 @@ public class FileInfo extends Parent implements Observer {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void update( MessageBuffer messageBuffer ) {
-
+			
 		setDownloaded( messageBuffer.readInt32() );
 
 		setRate( new Double( messageBuffer.readString() ).doubleValue() );
@@ -404,8 +411,22 @@ public class FileInfo extends Parent implements Observer {
 
 		updateETA();
 		
+		notifyChangedProperties();
+		
+	}
+	
+	/**
+	 *	notify tableviewer of the changed properties 
+	 */
+	public void notifyChangedProperties() {
+		
+		String[] changed = new String[ changedProperties.size() ];
+		changedProperties.toArray( changed );
+		changedProperties.clear();
+
 		this.setChanged();
-		this.notifyObservers( this );
+		this.notifyObservers( changed );
+		
 	}
 
 	/**
@@ -526,13 +547,18 @@ public class FileInfo extends Parent implements Observer {
 		
 		String oldStringDownloaded = stringDownloaded;
 		this.stringDownloaded = calcStringSize( this.downloaded );
-		changedDownloaded = (!oldStringDownloaded.equals(stringDownloaded) ? true : false);
+		
+		if (!oldStringDownloaded.equals(stringDownloaded)) {
+			changedProperties.add(CHANGED_DOWNLOADED);
+		}
 		
 		int oldPercent = (int) this.perc;
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
 
-		changedPercent = (oldPercent != (int) this.perc ? true : false);
+		if (oldPercent != (int) this.perc) {
+			changedProperties.add(CHANGED_PERCENT);
+		}
 	}
 	
 	/**
@@ -541,7 +567,9 @@ public class FileInfo extends Parent implements Observer {
 	 * @param double
 	 */
 	private void setRate( double d ) {
-		changedRate = ( this.rate != ( float ) d ? true : false );
+		if (this.rate != ( float ) d ) {
+			changedProperties.add(CHANGED_RATE);
+		}
 		this.rate = ( float ) d;
 	}
 	
@@ -555,7 +583,9 @@ public class FileInfo extends Parent implements Observer {
 
 		String oldStringOffset = stringOffset;
 		this.stringOffset = calcStringOfSeconds( this.offset );	
-		changedLast = (!oldStringOffset.equals(stringOffset) ? true : false);
+		if (!oldStringOffset.equals(stringOffset)) {
+			changedProperties.add(CHANGED_LAST);
+		}
 	}
 	
 	/**
@@ -567,7 +597,10 @@ public class FileInfo extends Parent implements Observer {
 		
 		String oldStringETA = stringETA;
 		this.stringETA = calcStringOfSeconds ( this.etaSeconds );
-		changedETA = (!oldStringETA.equals(stringETA) ? true : false);
+		
+		if (!oldStringETA.equals(stringETA)) {
+			changedProperties.add(CHANGED_ETA);
+		}
 	}
 
 
@@ -719,6 +752,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.49  2003/09/14 03:37:24  zet
+changedProperties in model
+
 Revision 1.48  2003/09/13 22:22:59  zet
 weak sets
 
