@@ -14,9 +14,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 
-
-
-
 /**
  * @author achim
  *
@@ -30,38 +27,29 @@ public class GraphCanvas extends Canvas {
 	Image canvas;
 	final private GraphPainter gp;
 	
-	public GraphCanvas(Composite parent_)
-	 {
-	super(parent_,SWT.NO_BACKGROUND);
-		parent = parent_;
+	public GraphCanvas(Composite parent) 
+	{
+		super(parent,SWT.NO_BACKGROUND);
+		this.parent = parent;
 		gp = new GraphPainter(parent);
 
-	
-	addPaintListener(new PaintListener() {
+		addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
 			   GraphCanvas.this.paintControl(e);
-
 			}
-
 		});
 	 }
 		
-		private void paintControl(PaintEvent e)
-		{
-			GC gc = e.gc;
-			gp.setGraphicControl(gc);
-			gp.paint();		
-		}
+	private void paintControl(PaintEvent e)
+	{
+		GC gc = e.gc;
+		gp.setGraphicControl(gc);
+		gp.paint();		
+	}
 		
 	public void setGraph(Graph graph)
 	{
 		gp.setGraph(graph);
 	}
-
-			
-		
-
-
-
 
 }

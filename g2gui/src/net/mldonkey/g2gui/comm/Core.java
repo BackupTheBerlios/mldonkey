@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.68 2003/07/23 17:39:59 vnc Exp $ 
+ * @version $Id: Core.java,v 1.69 2003/07/24 02:22:46 zet Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -160,6 +160,7 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 				this.decodeMessage( opCode, messageBuffer );
 			}			
 		} catch ( Exception e ) {
+			connected = false;
 			System.out.println( "No Connection to mldonkey" );
 		}			
 	}
@@ -365,6 +366,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.69  2003/07/24 02:22:46  zet
+doesn't crash if no core is running
+
 Revision 1.68  2003/07/23 17:39:59  vnc
 made core instance connect properly under linux
 

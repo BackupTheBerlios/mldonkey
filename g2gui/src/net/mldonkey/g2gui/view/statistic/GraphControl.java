@@ -39,8 +39,6 @@ public class GraphControl extends Composite{
 		//graphCanvas2.redraw();
 		graphCanvas1.setGraph(downloadGraph);
 		graphCanvas2.setGraph(uploadGraph);
-
-		
 		
 	/*	addControlListener(new ControlAdapter() {
 				 public void controlResized(ControlEvent e) {
@@ -75,21 +73,15 @@ public class GraphControl extends Composite{
 					});
 	}
 	
-
-	
-
-	
 	public void addPointToUploadGraph(float value)
 	{
 		uploadGraph.addPoint((int)(value*100));
 
 	}
 
-	
 	public void addPointToDownloadGraph(float value) {
 		downloadGraph.addPoint((int)(value*100));		
 		
 	}
-	
 	
 }

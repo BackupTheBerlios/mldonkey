@@ -19,13 +19,12 @@ public class StatisticPoint {
 	long createTime;
 	int value;
 	
-	public StatisticPoint(int value_) {
-		
-			value = value_;
-			createTime = System.currentTimeMillis();
+	public StatisticPoint(int value) 
+	{
+		this.value = value;
+		createTime = System.currentTimeMillis();
 			
-		}	
-
+	}	
 	
 	public long getTime()
 	{
@@ -35,19 +34,18 @@ public class StatisticPoint {
 	public void setNext(StatisticPoint nextP)
 	{
 		nextPoint = nextP;
-		
 	}
 	
 	public StatisticPoint getNext()
-		{
+	{
 			return nextPoint;
-		
-		}
+	}
+
 	public int getValue()
 	{
 		return value;
-		
 	}
+
 	public void setPrev(StatisticPoint prevP)
 	{
 		prevPoint = prevP;
@@ -57,6 +55,4 @@ public class StatisticPoint {
 	{
 			return prevPoint;
 	}
-	
-
 }

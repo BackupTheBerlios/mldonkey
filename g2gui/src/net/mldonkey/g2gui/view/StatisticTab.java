@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+
 // rz,
 // TODO status-field
 // TODO file progress field
@@ -44,13 +45,9 @@ public class StatisticTab
 		toolItem.setToolTipText(bundle.getString("TT_StatisticsButtonToolTip"));
 		toolItem.setImage(inActiveIm); 
 		createContents(this.content);
-		
-
 		gui.getCore().addObserver(this);
 	}
-	
 
-	
 	protected void createContents(Composite parent) {
 		// System.out.println(parent.getBounds());
 		
@@ -59,17 +56,14 @@ public class StatisticTab
 		top.setLayout( new FillLayout() );
 		Composite bottom = new Composite( main, SWT.BORDER );
 		bottom.setLayout( new FillLayout() );
-		
+		main.setWeights( new int[] {1,11});
 		graphControl = new GraphControl(bottom);
 		 		
 	}
 
-	
-
 	public void mouseUp(MouseEvent arg0) {}
 
 	public void run() {
-		
 	}
 
 	public void update(Observable arg0, Object receivedInfo) {
@@ -79,25 +73,14 @@ public class StatisticTab
 			graphControl.addPointToUploadGraph(clientInfo.getTcpUpRate());
 			graphControl.addPointToDownloadGraph(clientInfo.getTcpDownRate());
 			graphControl.redraw();
-			
-			
+						
 			//graphControl.setGraph((int)(clientInfo.getTcpUpRate()*10));
-			
-		
-		
+				
 		}
-	
-	
-	
 	}
-
 
 	public void widgetDisposed(DisposeEvent arg0) {
 		// TODO store Column position
 	}
-
-
-
-
 
 }

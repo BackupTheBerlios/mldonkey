@@ -53,21 +53,15 @@ public class Graph {
 	
 	public int getAmount()
 	{
-
 		return amount;
-		
 	}
 	public StatisticPoint getLast()
 	{
 		return lastPoint;
 	}
-	
 	public Color getGraphColor()
 	{
 		return graphColor;
 	}
-	
-	
-	
 
 }

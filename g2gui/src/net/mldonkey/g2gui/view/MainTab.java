@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.9 2003/07/23 17:06:45 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.10 2003/07/24 02:22:46 zet Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -353,7 +353,10 @@ public class MainTab implements Listener {
 	 * Sets the given tab to the current active page
 	 * @param activatedTab The tab to set active
 	 */
-	public void setActive( GuiTab activatedTab ) {		
+	public void setActive( GuiTab activatedTab ) {	
+		
+		if (!getCore().isConnected()) return;	
+		
 		if ( activeTab != null ) {
 			activeTab.getContent().setVisible( false );
 			activeTab.setInActive();
@@ -455,6 +458,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.10  2003/07/24 02:22:46  zet
+doesn't crash if no core is running
+
 Revision 1.9  2003/07/23 17:06:45  lemmstercvs01
 add new SearchTab(this)
 

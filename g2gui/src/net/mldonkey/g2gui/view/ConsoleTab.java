@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.19 2003/07/23 04:08:07 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.20 2003/07/24 02:22:46 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -126,9 +126,11 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 	 */
 	public void handleEvent( Event event ) {
 		super.handleEvent( event );	
-		infoDisplay.append( core.getConsoleMessage().getConsoleMessage().replaceAll("\n", infoDisplay.getLineDelimiter()) );
-		core.getConsoleMessage().reset();
-		infoDisplay.setFont( loadFont() );
+		if (core.isConnected()) {
+			infoDisplay.append( core.getConsoleMessage().getConsoleMessage().replaceAll("\n", infoDisplay.getLineDelimiter()) );
+			core.getConsoleMessage().reset();
+			infoDisplay.setFont( loadFont() );
+		}
 	}
 
 	/* (non-Javadoc)
@@ -172,6 +174,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.20  2003/07/24 02:22:46  zet
+doesn't crash if no core is running
+
 Revision 1.19  2003/07/23 04:08:07  zet
 looks better with icons
 

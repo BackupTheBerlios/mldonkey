@@ -39,7 +39,7 @@ import org.eclipse.swt.graphics.Image;
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.19 2003/07/23 04:08:07 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.20 2003/07/24 02:22:46 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -74,6 +74,7 @@ public class TransferTab extends GuiTab  {
 		Composite download = new Composite( main, SWT.BORDER );
 			download.setLayout( new FillLayout() );
 		Composite upload = new Composite( main, SWT.BORDER );
+		main.setWeights( new int[] {11,1});
 		new DownloadTable( download, mldonkey, this );
 	}
 
@@ -87,6 +88,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.20  2003/07/24 02:22:46  zet
+doesn't crash if no core is running
+
 Revision 1.19  2003/07/23 04:08:07  zet
 looks better with icons
 

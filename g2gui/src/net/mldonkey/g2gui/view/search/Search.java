@@ -48,7 +48,7 @@ import org.eclipse.swt.events.KeyEvent;
  * Search
  *
  * @author $user$
- * @version $Id: Search.java,v 1.2 2003/07/23 19:49:17 zet Exp $ 
+ * @version $Id: Search.java,v 1.3 2003/07/24 02:22:46 zet Exp $ 
  *
  */
 public abstract class Search {
@@ -137,12 +137,16 @@ public abstract class Search {
 			strings[ i ] = (String) itemsArray[ i ];
 		}
 		combo.setItems( strings );
-		combo.setText( strings[ 0 ] );
+		if (strings.length > 0) combo.setText( strings[ 0 ] );
+				
 	}
 }
 
 /*
 $Log: Search.java,v $
+Revision 1.3  2003/07/24 02:22:46  zet
+doesn't crash if no core is running
+
 Revision 1.2  2003/07/23 19:49:17  zet
 press enter
 

@@ -6,7 +6,6 @@
  */
 package net.mldonkey.g2gui.view.statistic;
 
-
 import org.eclipse.swt.graphics.*;
 
 import org.eclipse.swt.graphics.GC;
@@ -30,14 +29,13 @@ public class GraphPainter {
 	 
 	private int graph;
 	private Graph graphs[] = new Graph[10];
-	 private GC drawBoard;
+	private GC drawBoard;
 	final private Composite parent;
 	
-	public GraphPainter(Composite parent_)
+	public GraphPainter(Composite parent)
 	{
 		//System.out.println("GraphPainter added");
-		
-		parent = parent_;
+		this.parent = parent;
 	}
 	
 	public void setGraphicControl(GC gc)
@@ -56,17 +54,14 @@ public class GraphPainter {
 	{
 		int i = 0;
 		while (graphs[i]!=null)
-		{
 			i++;
-		}
 		return i;
 		
 	}
 	
 	public void paint() {
 		//setting the Canvas Background to the parents Background
-		
-	
+			
 		if (parent.getClientArea().height < 25) return;
 		
 		Image imageBuffer = new Image(null, parent.getBounds());
@@ -84,8 +79,7 @@ public class GraphPainter {
 		float height = (float) parent.getBounds().height - 20f;
 		int width = parent.getBounds().width;
 		float zoom, valueY;
-		
-		
+				
 		while (graphs[which]!=null)
 		{	
 			StatisticPoint lastPoint = graphs[which].getLast();
@@ -102,7 +96,8 @@ public class GraphPainter {
 														  blue > 100 ? blue - 100 : blue));
 			zoom = 0;
 			valueY = 0;
-			
+		
+			// find highest	
 			while ( (k<=width/2) && (actualPoint.getPrev()!=null))
 			{
 				
@@ -114,8 +109,11 @@ public class GraphPainter {
 			
 			zoom = height / maximum ;
 			actualPoint = lastPoint;	
-			if ( ((float) (actualPoint.getValue()/10) * zoom)  >  ((height / 5f)*4f)) zoom = (zoom / 5f)*4f;
+			if ( ((float) (actualPoint.getValue()/10) * zoom)  >  ((height / 5f)*4f)) 
+				zoom = (zoom / 5f)*4f;
 			k=startx;
+			
+			// draw
 			while ( (k<=width/2) && (actualPoint.getPrev()!=null))	{
 			
 				
@@ -140,37 +138,28 @@ public class GraphPainter {
 			
 			
 			// TODO: fix this
-			for (int dummy=0; dummy<1; dummy++) {
-			int value=dummy*2;
-		//	drawBoardBuffer.drawText("  " + value,0,height-8-(int)zoom*value*10, true);
-			}
+			// for (int dummy=0; dummy<1; dummy++) {
+			//	int value=dummy*2;
+			//	drawBoardBuffer.drawText("  " + value,0,height-8-(int)zoom*value*10, true);
+			// }
 			
 			double vv = (double)graphs[which].getLast().getValue()/100;
-			
-			
-			//System.out.println("wert:" + (height-(int)vv));
 			int textPosition = (int) (height - (float) (graphs[which].getLast().getValue()/10) * zoom);
-			Color aimColor = new Color(null,0,0,0);
-			drawBoardBuffer.setForeground(aimColor);
+			
+			drawBoardBuffer.setForeground(new Color(null,0,0,0));
 			drawBoardBuffer.setBackground(new Color(null,255,255,255));
 			drawBoardBuffer.fillRoundRectangle(startx+10,textPosition-3,80,20,7,7);
 			drawBoardBuffer.drawRoundRectangle(startx+10,textPosition-3,80,20,7,7);
 			drawBoardBuffer.drawText(vv + " KB/s",startx+20,textPosition);
 			drawBoardBuffer.setForeground(new Color(null, 255,255,0));
 			drawBoardBuffer.drawLine(startx+10,textPosition,startx,textPosition);
-	
-		
+			
 			which++;
-			
-			
 		}
-		
-		
+			
 		drawBoard.drawImage(imageBuffer, 0,0);
 		imageBuffer.dispose();
 		drawBoardBuffer.dispose();
-			
-		
 	}
 
 	/* (non-Javadoc)
@@ -178,7 +167,6 @@ public class GraphPainter {
 	 */
 	public void redraw(Control arg0, GC arg1) {
 		// TODO Auto-generated method stub
-		
 	}
 
 }
