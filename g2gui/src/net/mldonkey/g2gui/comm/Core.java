@@ -28,14 +28,14 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.Observable;
 
-import net.mldonkey.g2gui.helper.*;
+import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.*;
 
 /**
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.6 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.7 2003/06/13 12:03:33 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable {
@@ -54,18 +54,6 @@ public class Core extends Observable {
 	/**
 	 * 
 	 */
-	private ObjectPool messagePool;
-	/**
-	 * 
-	 */
-	private String username;
-	/**
-	 * 
-	 */
-	private String password;
-	/**
-	 * 
-	 */
 	private FileInfoList fileInfoList = new FileInfoList();
 	/**
 	 * 
@@ -81,12 +69,9 @@ public class Core extends Observable {
 	 * 
 	 * @param connection_ the socket, where the whole thing takes place
 	 */
-	public Core( Socket connection, String username, String password ) throws IOException {
+	public Core( Socket connection ) throws IOException {
 		this.connection = connection;
-		this.username = username;
-		this.password = password;
-		this.messagePool =  new MessagePool();
-		this.initialize();
+		this.run();
 	}
 
 	/**
@@ -108,24 +93,26 @@ public class Core extends Observable {
 	 * run()
 	 * starts the Core and begin receiving messages	 * 
 	 */
-	public void initialize() throws IOException {
+	public void run() throws IOException {
 		this.connect();
+		
+		MessageBuffer messageBuffer = new MessageBuffer();
 		
 		int messageLength;
 		short opCode;
-
-		InputStream i;
-		BufferedInputStream bufferStream;
 		
-		i = connection.getInputStream();
-		/* getting length of message */				
+		InputStream i = connection.getInputStream();
+		BufferedInputStream bufferStream;
+		 		
 		while ( connected ) {
 			/* getting length of message */
 			messageLength = Message.readInt32( i );
-			bufferStream = new BufferedInputStream( i, messageLength );
-			opCode = Message.readInt16( bufferStream );
+			byte[] content = new byte[messageLength];
+			i.read(content);
+			messageBuffer.setBuffer(content);
+			opCode = messageBuffer.readInt16();
 			/* decode the message content */
-			this.decodeMessage( opCode, messageLength, bufferStream );
+			this.decodeMessage( opCode, messageBuffer);
 		}
 	}
 
@@ -135,7 +122,7 @@ public class Core extends Observable {
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private void decodeMessage( int opcode, int length,	BufferedInputStream inputStream ) throws IOException 
+	private void decodeMessage( short opcode, MessageBuffer messageBuffer ) throws IOException 
 		{
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
@@ -143,29 +130,13 @@ public class Core extends Observable {
 					 *	PayLoad:
 					 *	int32	The maximal protocol version accepted by the core 
 					 */
-					coreProtocol = Message.readInt32( inputStream );					
-					
-					Object[] temp = new Object[ 1 ];
-					temp[ 0 ] = new Integer( 16 );		
-					Message coreProtocolMessage =
-						new EncodeMessage( Message.S_COREPROTOCOL, temp );			
-					coreProtocolMessage.sendMessage( connection );
-			
-					Object[] extension = { new Integer( 1 ), new Byte( ( byte ) 1 )};
-					Object[][] a = { extension };
-					Message guiExtension = new EncodeMessage( Message.S_GUIEXTENSION, a );
-					guiExtension.sendMessage( connection );
+					coreProtocol = messageBuffer.readInt32();
 
-					String[] aString = { this.password, this.username };
-					Message password = new EncodeMessage( Message.S_PASSWORD, aString );
-					password.sendMessage( connection );
-					
-					Message downloadingFiles = ( EncodeMessage ) messagePool.checkOut();
-					downloadingFiles.setMessage( Message.S_GETDOWNLOADING_FILES );
-					downloadingFiles.sendMessage( connection );
-					messagePool.checkIn( downloadingFiles );
-					
+					/* send a request for FileInfoList */					
+					this.requestFileInfoList();
+										
 					break;
+
 			case Message.R_OPTIONS_INFO :				
 					/*
 					 *	PayLoad:
@@ -189,7 +160,7 @@ public class Core extends Observable {
 					 *	int32	The File Identifier 
 					 *	int32	The Source/Client Identifier 
 					 */
-					this.fileAddSources.readStream( inputStream );
+					this.fileAddSources.readStream( messageBuffer );
 					break;
 			
 			case Message.R_BAD_PASSWORD :
@@ -216,7 +187,7 @@ public class Core extends Observable {
 					 *	int32	Number of downloads finished 
 					 *	List of int32  	 Connected Networks 
 					 */
-					clientStats.readStream( inputStream );
+					clientStats.readStream( messageBuffer );
 					System.out.println(clientStats.toString() );
 					break;				
 
@@ -225,7 +196,7 @@ public class Core extends Observable {
 					 *	PayLoad:
 					 *	String	Data, the core wants to be displayed on the console 
 					 */
-					String payloadText = Message.readString( inputStream );
+					String payloadText = messageBuffer.readString();
 					System.out.println( payloadText );
 					break;
 				
@@ -252,20 +223,20 @@ public class Core extends Observable {
 					 * (not yet implemented)
 					 */
 					//get network_indetifier from payload:
-					identifier = ( int ) Message.readInt32( inputStream );
+					identifier = ( int ) messageBuffer.readInt32();
 					//get network_name from payload:
-					networkName = Message.readString( inputStream );
+					networkName = messageBuffer.readString();
 					//get enabled|disabled from payload:							
-					if ( Message.readByte( inputStream ) == 1 ) {
+					if ( messageBuffer.readByte() == 1 ) {
 						status = true;
 					} else {
 						status = false;
 					}
 					//Now follows the decoding of network_config							
-					networkConfig = Message.readString( inputStream );
+					networkConfig = messageBuffer.readString();
 					//Some up / download-stats:
-					upload = Message.readInt64( inputStream );
-					download = Message.readInt64( inputStream );
+					upload = messageBuffer.readInt64();
+					download = messageBuffer.readInt64();
 					break;
 					
 			case Message.R_DOWNLOADING_LIST :
@@ -273,7 +244,7 @@ public class Core extends Observable {
 					 * Payload:
 					 * a List of running Downloads (FileInfo)
 					 */
-					 this.fileInfoList.readStream( inputStream );
+					 this.fileInfoList.readStream( messageBuffer );
 					 this.requestFileInfoList();
 					 break;
 					 
@@ -292,15 +263,17 @@ public class Core extends Observable {
 	}
 	
 	public void requestFileInfoList() {
-		Message downloadingFiles = ( EncodeMessage ) messagePool.checkOut();
-		downloadingFiles.setMessage( Message.S_GETDOWNLOADING_FILES );
+		Message downloadingFiles = new EncodeMessage( Message.S_GETDOWNLOADING_FILES );
 		downloadingFiles.sendMessage( connection );
-		messagePool.checkIn( downloadingFiles );
+		downloadingFiles = null;
 	}
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.7  2003/06/13 12:03:33  lemmstercvs01
+changed to use MessageBuffer
+
 Revision 1.6  2003/06/12 22:23:06  lemmstercvs01
 lots of changes
 
