@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.33 2003/09/26 07:13:41 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.34 2003/09/27 13:30:22 dek Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -406,10 +406,31 @@ public class SearchTab extends GuiTab {
         
 		this.stackLayout.topControl = buttons[ 2 ];
 	}
+	
+	/**
+	 * refreshes the Display with values from preference-Store.
+	 * This method is called, when preference-Sotre is closed, that means, something
+	 * might have benn changed.
+	 */
+	public void updateDisplay() {		
+		super.updateDisplay();
+		
+		/* update all search-results with changed preferences */		
+		CTabItem[] items = cTabFolder.getItems();
+		for ( int i = 0; i < items.length; i++ ) {
+			if ( items[ i ].getData() instanceof SearchResult ) {
+				SearchResult temp = ( SearchResult ) items[ i ].getData();
+				temp.updateDisplay();				
+			}			
+		}
+	}
 }
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.34  2003/09/27 13:30:22  dek
+all tables have now show-Gridlines-behaviour as descibed in  preferences
+
 Revision 1.33  2003/09/26 07:13:41  lemmster
 checkstyle!
 
@@ -471,7 +492,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: dek $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

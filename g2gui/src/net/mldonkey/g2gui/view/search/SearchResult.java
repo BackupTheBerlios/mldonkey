@@ -80,7 +80,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.52 2003/09/25 17:58:41 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.53 2003/09/27 13:30:22 dek Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -248,8 +248,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         cTabItem.setText( searchString );
         cTabItem.setToolTipText( G2GuiResources.getString( "SR_SEARCHINGFOR" ) + searchString );
         cTabItem.setImage( G2GuiResources.getImage( "SearchSmall" ) );
-        cTabItem.setData( this );
-
+        cTabItem.setData( this );        
+        
         /* for the search delay, just draw a label */
         label = new Label( cTabFolder, SWT.NONE );
         label.setText( G2GuiResources.getString( "SR_SEARCHING" ) );
@@ -355,7 +355,21 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
         /* set the this table as the new CTabItem Control */
         cTabItem.setControl( table.getTable() );
+        
+        /*load behaviour from preference-Store*/
+		updateDisplay();
     }
+    
+	/**
+	 * refreshes the Display with values from preference-Store.
+	 * This method is called, when preference-Sotre is closed, that means, something
+	 * might have benn changed.
+	 */
+	public void updateDisplay() {
+		table.getTable().setLinesVisible(
+						PreferenceLoader.loadBoolean( "displayGridLines" ) );
+		
+	}
 
     /**
      * Sets the size for the columns
@@ -602,6 +616,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 }
 /*
 $Log: SearchResult.java,v $
+Revision 1.53  2003/09/27 13:30:22  dek
+all tables have now show-Gridlines-behaviour as descibed in  preferences
+
 Revision 1.52  2003/09/25 17:58:41  lemmster
 fixed crash bug
 
@@ -691,7 +708,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: dek $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

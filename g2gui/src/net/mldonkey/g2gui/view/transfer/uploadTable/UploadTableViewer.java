@@ -50,14 +50,14 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.10 2003/09/27 12:30:40 dek Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.11 2003/09/27 13:30:22 dek Exp $ 
  *
  */
 public class UploadTableViewer {
 	/**
 	 * MyTableSorter
 	 *
-	 * @version $Id: UploadTableViewer.java,v 1.10 2003/09/27 12:30:40 dek Exp $ 
+	 * @version $Id: UploadTableViewer.java,v 1.11 2003/09/27 13:30:22 dek Exp $ 
 	 *
 	 */
 	
@@ -137,7 +137,9 @@ public class UploadTableViewer {
 		updateDisplay();
 	}
 	/**
-	 * 
+	 * refreshes the Display with values from preference-Store.
+	 * This method is called, when preference-Sotre is closed, that means, something
+	 * might have benn changed.
 	 */
 	public void updateDisplay() {
 		tableviewer.getTable().setLinesVisible(
@@ -332,6 +334,9 @@ public class UploadTableViewer {
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.11  2003/09/27 13:30:22  dek
+all tables have now show-Gridlines-behaviour as descibed in  preferences
+
 Revision 1.10  2003/09/27 12:30:40  dek
 upload-Table has now same show-Gridlines-behaviour as download-Table
 
