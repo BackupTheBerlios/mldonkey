@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.32 2003/09/28 13:10:31 dek Exp $
+ * @version $Id: G2Gui.java,v 1.33 2003/09/28 15:24:18 zet Exp $
  *
  */
 public class G2Gui {
@@ -102,7 +102,6 @@ public class G2Gui {
         	String[] newArgs = new String[ args.length - 2 ];
         	for ( int i = 2; i < args.length; i++ ) {
         		newArgs[ i - 2 ] = args[ i ];
-        		System.out.println( newArgs[ i - 2 ] );
         	}
         	args = newArgs;
         	
@@ -435,6 +434,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.33  2003/09/28 15:24:18  zet
+remove println
+
 Revision 1.32  2003/09/28 13:10:31  dek
 Added Option, wether multiple Instances of G2Gui are allowed or not[bug #867]
 
