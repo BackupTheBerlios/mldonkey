@@ -22,6 +22,11 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
@@ -29,39 +34,29 @@ import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
 
 
 /**
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.5 2003/11/01 18:46:02 zet Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.6 2003/11/10 18:57:33 zet Exp $
  *
  */
-public class ClientDetailDialog implements Observer, DisposeListener {
-    private Shell shell;
+public class ClientDetailDialog extends Dialog implements Observer {
     private CoreCommunication core;
-    private Display desktop = Display.getDefault();
     private FileInfo fileInfo;
     private ClientInfo clientInfo;
     private CLabel clName;
@@ -70,65 +65,48 @@ public class ClientDetailDialog implements Observer, DisposeListener {
     private CLabel clKind;
     private CLabel clNetwork;
     private ArrayList chunkCanvases = new ArrayList();
-    int leftColumn = 100;
-    int rightColumn = leftColumn * 3;
-    int width = leftColumn + rightColumn + 30;
-    int height = 420;
+    private int leftColumn = 100;
+    private int rightColumn = leftColumn * 3;
+   
 
-    public ClientDetailDialog(FileInfo fileInfo, final ClientInfo clientInfo,
+    public ClientDetailDialog(Shell parentShell, FileInfo fileInfo, final ClientInfo clientInfo,
         final CoreCommunication core) {
+        super(parentShell);
+
         this.fileInfo = fileInfo;
         this.clientInfo = clientInfo;
         this.core = core;
-        createContents();
     }
 
-    /**
-     * Create dialog contents
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
-    public void createContents() {
-        shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
-        shell.addDisposeListener(this);
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText(G2GuiResources.getString("TT_Client") + " " + clientInfo.getClientid() +
+            " " + G2GuiResources.getString("TT_Details").toLowerCase());
+        newShell.setImage(G2GuiResources.getImage("ProgramIcon"));
+    }
 
-        Rectangle parentBounds;
 
-        // for win32-fox
-        if (SWT.getPlatform().equals("fox")) {
-            parentBounds = shell.getDisplay().getBounds();
-        } else {
-            parentBounds = desktop.getActiveShell().getBounds();
-        }
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+     */
+    protected Control createDialogArea(Composite parent) {
+        Composite composite = (Composite) super.createDialogArea(parent);
+        composite.setLayout(CGridLayout.createGL(1, 5, 5, 0, 5, false));
 
-        int tlx = (parentBounds.x + (parentBounds.width / 2)) - (width / 2);
-        int tly = (parentBounds.y + (parentBounds.height / 2)) - (height / 2);
+        createGeneralGroup(composite);
 
-        tlx = Math.min((desktop.getClientArea().width - width), Math.max(0, tlx));
-        tly = Math.min((desktop.getClientArea().height - height), Math.max(0, tly));
-
-        shell.setBounds(tlx, tly, width, height);
-
-        shell.setImage(G2GuiResources.getImage("ProgramIcon"));
-
-        shell.setText(G2GuiResources.getString("TT_Client") + " " + clientInfo.getClientid() + " " +
-            G2GuiResources.getString("TT_Details").toLowerCase());
-
-        GridLayout gridLayout = CGridLayout.createGL(1, 5, 5, 0, 5, false);
-
-        shell.setLayout(gridLayout);
-        shell.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        createGeneralGroup(shell);
-
-        createChunkGroup(shell, G2GuiResources.getString("TT_DOWNLOAD_CD_LOCAL_CHUNKS"), null);
-        createChunkGroup(shell, G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_CHUNKS"), clientInfo);
-
-        createButtons(shell);
+        createChunkGroup(composite, G2GuiResources.getString("TT_DOWNLOAD_CD_LOCAL_CHUNKS"), null);
+        createChunkGroup(composite, G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_CHUNKS"),
+            clientInfo);
 
         updateLabels();
         fileInfo.addObserver(this);
         clientInfo.addObserver(this);
-        shell.pack();
-        shell.open();
+
+        return composite;
     }
 
     /**
@@ -136,7 +114,7 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      *
      * Create general client information
      */
-    public void createGeneralGroup(Shell parent) {
+    public void createGeneralGroup(Composite parent) {
         Group clientGeneral = new Group(parent, SWT.SHADOW_ETCHED_OUT);
         clientGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_INFO"));
 
@@ -161,8 +139,8 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      *
      * Create chunk group (clientInfo=null to display fileInfo chunks)
      */
-    public void createChunkGroup(Shell shell, String text, ClientInfo clientInfo) {
-        Group chunkGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT);
+    public void createChunkGroup(Composite parent, String text, ClientInfo clientInfo) {
+        Group chunkGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT);
 
         String totalChunks = "";
 
@@ -191,13 +169,10 @@ public class ClientDetailDialog implements Observer, DisposeListener {
         chunkCanvas.setLayoutData(canvasGD);
     }
 
-    /**
-     * @param parent
-     *
-     * Create dialog buttons
-     *
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createButtonBar(org.eclipse.swt.widgets.Composite)
      */
-    private void createButtons(Shell parent) {
+    protected Control createButtonBar(Composite parent) {
         Composite buttonComposite = new Composite(parent, SWT.NONE);
         buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         buttonComposite.setLayout(CGridLayout.createGL(2, 0, 0, 5, 0, false));
@@ -225,9 +200,11 @@ public class ClientDetailDialog implements Observer, DisposeListener {
         closeButton.setText(G2GuiResources.getString("BTN_CLOSE"));
         closeButton.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent s) {
-                    shell.close();
+                    close();
                 }
             });
+
+        return parent;
     }
 
     /**
@@ -296,8 +273,8 @@ public class ClientDetailDialog implements Observer, DisposeListener {
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update(Observable o, Object arg) {
-        if (o instanceof FileInfo && !shell.isDisposed()) {
-            shell.getDisplay().asyncExec(new Runnable() {
+        if (o instanceof FileInfo && !getShell().isDisposed()) {
+            getShell().getDisplay().asyncExec(new Runnable() {
                     public void run() {
                         updateLabels();
                     }
@@ -306,9 +283,9 @@ public class ClientDetailDialog implements Observer, DisposeListener {
     }
 
     /* (non-Javadoc)
-     * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+     * @see org.eclipse.jface.window.Window#close()
      */
-    public synchronized void widgetDisposed(DisposeEvent e) {
+    public boolean close() {
         Iterator i = chunkCanvases.iterator();
 
         while (i.hasNext())
@@ -316,12 +293,17 @@ public class ClientDetailDialog implements Observer, DisposeListener {
 
         clientInfo.deleteObserver(this);
         fileInfo.deleteObserver(this);
+
+        return super.close();
     }
 }
 
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.6  2003/11/10 18:57:33  zet
+use jface dialogs
+
 Revision 1.5  2003/11/01 18:46:02  zet
 swt-fox workaround
 

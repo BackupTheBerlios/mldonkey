@@ -39,6 +39,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
@@ -50,7 +51,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeView.java,v 1.4 2003/11/09 02:18:37 zet Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.5 2003/11/10 18:57:33 zet Exp $
  *
  */
 public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
@@ -303,8 +304,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
             }
         } else if (o instanceof TreeClientInfo) {
             TreeClientInfo treeClientInfo = (TreeClientInfo) o;
-            new ClientDetailDialog(treeClientInfo.getFileInfo(), treeClientInfo.getClientInfo(),
-                getCore());
+            ClientDetailDialog c = new ClientDetailDialog(tableTreeViewer.getTableTree().getShell(),
+                    treeClientInfo.getFileInfo(), treeClientInfo.getClientInfo(), getCore());
+            c.open();
         }
     }
 }
@@ -312,6 +314,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
 /*
 $Log: DownloadTableTreeView.java,v $
+Revision 1.5  2003/11/10 18:57:33  zet
+use jface dialogs
+
 Revision 1.4  2003/11/09 02:18:37  zet
 put some info in the headers
 

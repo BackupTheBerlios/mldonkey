@@ -29,20 +29,19 @@ import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import org.eclipse.jface.dialogs.Dialog;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
@@ -64,12 +63,10 @@ import java.util.Observer;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.6 2003/11/01 18:46:02 zet Exp $
+ * @version $Id: FileDetailDialog.java,v 1.7 2003/11/10 18:57:33 zet Exp $
  *
  */
-public class FileDetailDialog implements Observer, DisposeListener {
-    private Shell shell;
-    private Display desktop = Display.getCurrent();
+public class FileDetailDialog extends Dialog implements Observer {
     private FileInfo fileInfo;
     private ArrayList chunkCanvases = new ArrayList();
     private Button fileActionButton;
@@ -87,56 +84,39 @@ public class FileDetailDialog implements Observer, DisposeListener {
     private CLabel clPriority;
     private CLabel clRate;
     private CLabel clETA;
-    int leftColumn = 100;
-    int rightColumn = leftColumn * 3;
-    int width = leftColumn + rightColumn + 30;
-    int height = 420;
     private List renameList;
     private Text renameText;
+    private int leftColumn = 100;
+    private int rightColumn = leftColumn * 3;
 
-    public FileDetailDialog(final FileInfo fileInfo) {
+    public FileDetailDialog(Shell parentShell, FileInfo fileInfo) {
+        super(parentShell);
         this.fileInfo = fileInfo;
-        createContents();
     }
 
-    /**
-     * Create the dialog contents
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
-    private void createContents() {
-        shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
-
-        shell.addDisposeListener(this);
-
-        Rectangle parentBounds;
-
-        // for win32-fox
-        if (SWT.getPlatform().equals("fox")) {
-            parentBounds = shell.getDisplay().getBounds();
-        } else {
-            parentBounds = desktop.getActiveShell().getBounds();
-        }
-
-        int tlx = (parentBounds.x + (parentBounds.width / 2)) - (width / 2);
-        int tly = (parentBounds.y + (parentBounds.height / 2)) - (height / 2);
-
-        tlx = Math.min((desktop.getClientArea().width - width), Math.max(0, tlx));
-        tly = Math.min((desktop.getClientArea().height - height), Math.max(0, tly));
-
-        shell.setBounds(tlx, tly, width, height);
-
-        shell.setImage(G2GuiResources.getImage("ProgramIcon"));
-        shell.setText(G2GuiResources.getString("TT_File") + " " + fileInfo.getId() + " " +
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText(G2GuiResources.getString("TT_File") + " " + fileInfo.getId() + " " +
             G2GuiResources.getString("TT_Details").toLowerCase());
+        newShell.setImage(G2GuiResources.getImage("ProgramIcon"));
+    }
 
-        shell.setLayout(CGridLayout.createGL(1, 5, 5, 0, 5, false));
-        shell.setLayoutData(new GridData(GridData.FILL_BOTH));
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+     */
+    protected Control createDialogArea(Composite parent) {
+        Composite composite = (Composite) super.createDialogArea(parent);
+        composite.setLayout(CGridLayout.createGL(1, 5, 5, 0, 5, false));
 
-        createFileGeneralGroup(shell);
+        createFileGeneralGroup(composite);
 
-        createFileTransferGroup(shell);
+        createFileTransferGroup(composite);
 
         // MultiNet chunks or just chunks < proto 17
-        createChunkGroup(shell, G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS_INFO"), null);
+        createChunkGroup(composite, G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS_INFO"), null);
 
         // Other network chunks
         if (fileInfo.getAvails() != null) {
@@ -146,23 +126,21 @@ public class FileDetailDialog implements Observer, DisposeListener {
                 NetworkInfo networkInfo = (NetworkInfo) i.next();
 
                 if (networkInfo.isEnabled()) {
-                    createChunkGroup(shell, networkInfo.getNetworkName(), networkInfo);
+                    createChunkGroup(composite, networkInfo.getNetworkName(), networkInfo);
                 }
             }
         }
 
-        createRenameGroup(shell);
+        createRenameGroup(composite);
 
         // Separator
-        Label separator = new Label(shell, SWT.SEPARATOR | SWT.HORIZONTAL);
+        Label separator = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-        createButtons(shell);
 
         updateLabels();
         fileInfo.addObserver(this);
-        shell.pack();
-        shell.open();
+
+        return composite;
     }
 
     /**
@@ -188,7 +166,7 @@ public class FileDetailDialog implements Observer, DisposeListener {
      *
      * Create group relating to general file information
      */
-    private void createFileGeneralGroup(Shell parent) {
+    private void createFileGeneralGroup(Composite parent) {
         Group fileGeneral = new Group(parent, SWT.SHADOW_ETCHED_OUT);
 
         fileGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_FILE_INFO"));
@@ -207,7 +185,7 @@ public class FileDetailDialog implements Observer, DisposeListener {
      *
      * Create group relating to the file transfer
      */
-    private void createFileTransferGroup(Shell parent) {
+    private void createFileTransferGroup(Composite parent) {
         Group fileTransfer = new Group(parent, SWT.SHADOW_ETCHED_OUT);
 
         fileTransfer.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_TRANSFER_INFO"));
@@ -236,7 +214,7 @@ public class FileDetailDialog implements Observer, DisposeListener {
      * Create chunk group (null networkInfo=MultiNet)
      *
      */
-    private void createChunkGroup(Shell parent, String text, NetworkInfo networkInfo) {
+    private void createChunkGroup(Composite parent, String text, NetworkInfo networkInfo) {
         Group chunkGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT);
 
         int totalChunks = 0;
@@ -273,7 +251,7 @@ public class FileDetailDialog implements Observer, DisposeListener {
      * Create the rename group
      *
      */
-    private void createRenameGroup(Shell parent) {
+    private void createRenameGroup(Composite parent) {
         Group renameGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT);
 
         renameGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_ALTERNATIVE_FILENAMES"));
@@ -329,11 +307,10 @@ public class FileDetailDialog implements Observer, DisposeListener {
             });
     }
 
-    /**
-     * @param parent
-     * Create the dialog buttons
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createButtonBar(org.eclipse.swt.widgets.Composite)
      */
-    public void createButtons(Shell parent) {
+    protected Control createButtonBar(Composite parent) {
         Composite buttonComposite = new Composite(parent, SWT.NONE);
         buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         buttonComposite.setLayout(CGridLayout.createGL(3, 0, 0, 5, 0, false));
@@ -419,9 +396,11 @@ public class FileDetailDialog implements Observer, DisposeListener {
         closeButton.setText(G2GuiResources.getString("BTN_CLOSE"));
         closeButton.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent s) {
-                    shell.close();
+                    close();
                 }
             });
+
+        return parent;
     }
 
     /**
@@ -505,8 +484,8 @@ public class FileDetailDialog implements Observer, DisposeListener {
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update(Observable o, Object arg) {
-        if (o instanceof FileInfo && !shell.isDisposed()) {
-            shell.getDisplay().asyncExec(new Runnable() {
+        if (o instanceof FileInfo && !getShell().isDisposed()) {
+            getShell().getDisplay().asyncExec(new Runnable() {
                     public void run() {
                         updateLabels();
                     }
@@ -517,19 +496,24 @@ public class FileDetailDialog implements Observer, DisposeListener {
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
      */
-    public synchronized void widgetDisposed(DisposeEvent e) {
+    public boolean close() {
         Iterator i = chunkCanvases.iterator();
 
         while (i.hasNext())
             ((ChunkCanvas) i.next()).dispose();
 
         fileInfo.deleteObserver(this);
+
+        return super.close();
     }
 }
 
 
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.7  2003/11/10 18:57:33  zet
+use jface dialogs
+
 Revision 1.6  2003/11/01 18:46:02  zet
 swt-fox workaround
 

@@ -86,7 +86,7 @@ import java.util.List;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.29 2003/11/03 02:44:04 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.30 2003/11/10 18:57:33 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -311,7 +311,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         }
 
         if (selectedClient != null) {
-            menuManager.add(new ClientDetailAction(selectedClient.getFileInfo(),
+            menuManager.add(new ClientDetailAction(gView.getShell(), selectedClient.getFileInfo(),
                     selectedClient.getClientInfo(), gView.getCore()));
         }
 
@@ -405,7 +405,8 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         }
 
         public void run() {
-            new FileDetailDialog(selectedFile);
+            FileDetailDialog f = new FileDetailDialog(gView.getShell(), selectedFile);
+            f.open();
         }
     }
 
@@ -675,6 +676,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.30  2003/11/10 18:57:33  zet
+use jface dialogs
+
 Revision 1.29  2003/11/03 02:44:04  zet
 minor
 

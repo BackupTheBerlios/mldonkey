@@ -29,36 +29,43 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.widgets.Shell;
 
 
 /**
  * ClientDetailAction
  *
- * @version $Id: ClientDetailAction.java,v 1.1 2003/10/24 21:26:47 zet Exp $
+ * @version $Id: ClientDetailAction.java,v 1.2 2003/11/10 18:57:33 zet Exp $
  *
  */
 public class ClientDetailAction extends Action {
     private FileInfo fileInfo;
     private ClientInfo clientInfo;
     private CoreCommunication core;
+    private Shell parentShell;
 
-    public ClientDetailAction(FileInfo fileInfo, ClientInfo clientInfo, CoreCommunication core) {
+    public ClientDetailAction(Shell parentShell, FileInfo fileInfo, ClientInfo clientInfo, CoreCommunication core) {
         super(G2GuiResources.getString("TT_DOWNLOAD_MENU_CLIENT_DETAILS"));
         setImageDescriptor(G2GuiResources.getImageDescriptor("info"));
 
+        this.parentShell = parentShell;
         this.fileInfo = fileInfo;
         this.clientInfo = clientInfo;
         this.core = core;
     }
 
     public void run() {
-        new ClientDetailDialog(fileInfo, clientInfo, core);
+        ClientDetailDialog c = new ClientDetailDialog(parentShell, fileInfo, clientInfo, core);
+        c.open();
     }
 }
 
 
 /*
 $Log: ClientDetailAction.java,v $
+Revision 1.2  2003/11/10 18:57:33  zet
+use jface dialogs
+
 Revision 1.1  2003/10/24 21:26:47  zet
 common actions
 
