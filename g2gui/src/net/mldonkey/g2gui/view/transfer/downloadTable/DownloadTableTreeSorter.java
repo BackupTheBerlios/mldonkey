@@ -37,7 +37,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.9 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.10 2003/10/31 22:41:59 zet Exp $
  *
  */
 public class DownloadTableTreeSorter extends GSorter {
@@ -76,11 +76,11 @@ public class DownloadTableTreeSorter extends GSorter {
             lastSort = !lastSort;
         } else {
             switch (cViewer.getColumnIDs()[ columnIndex ]) {
-            case DownloadTableTreeViewer.ID:
-            case DownloadTableTreeViewer.NAME:
-            case DownloadTableTreeViewer.NETWORK:
-            case DownloadTableTreeViewer.LAST:
-            case DownloadTableTreeViewer.ETA:
+            case DownloadTableTreeView.ID:
+            case DownloadTableTreeView.NAME:
+            case DownloadTableTreeView.NETWORK:
+            case DownloadTableTreeView.LAST:
+            case DownloadTableTreeView.ETA:
                 lastSort = true;
 
                 break;
@@ -101,22 +101,22 @@ public class DownloadTableTreeSorter extends GSorter {
     public boolean isSorterProperty(Object element, String property) {
         if (element instanceof FileInfo && maintainSortOrder) {
             switch (cViewer.getColumnIDs()[ columnIndex ]) {
-            case DownloadTableTreeViewer.DOWNLOADED:
+            case DownloadTableTreeView.DOWNLOADED:
                 return (property.equals(FileInfo.CHANGED_DOWNLOADED) ? true : false);
 
-            case DownloadTableTreeViewer.PERCENT:
+            case DownloadTableTreeView.PERCENT:
                 return (property.equals(FileInfo.CHANGED_PERCENT) ? true : false);
 
-            case DownloadTableTreeViewer.AVAIL:
+            case DownloadTableTreeView.AVAIL:
                 return (property.equals(FileInfo.CHANGED_AVAIL) ? true : false);
 
-            case DownloadTableTreeViewer.RATE:
+            case DownloadTableTreeView.RATE:
                 return (property.equals(FileInfo.CHANGED_RATE) ? true : false);
 
-            case DownloadTableTreeViewer.ETA:
+            case DownloadTableTreeView.ETA:
                 return (property.equals(FileInfo.CHANGED_ETA) ? true : false);
 
-            case DownloadTableTreeViewer.LAST:
+            case DownloadTableTreeView.LAST:
                 return (property.equals(FileInfo.CHANGED_LAST) ? true : false);
 
             default:
@@ -144,32 +144,32 @@ public class DownloadTableTreeSorter extends GSorter {
             FileInfo fileInfo2 = (FileInfo) e2;
 
             switch (cViewer.getColumnIDs()[ columnIndex ]) {
-            case DownloadTableTreeViewer.ID:
+            case DownloadTableTreeView.ID:
                 return compareIntegers(fileInfo1.getId(), fileInfo2.getId());
 
-            case DownloadTableTreeViewer.NETWORK:
+            case DownloadTableTreeView.NETWORK:
                 return compareStrings(fileInfo1.getNetwork().getNetworkName(),
                     fileInfo2.getNetwork().getNetworkName());
 
-            case DownloadTableTreeViewer.NAME:
+            case DownloadTableTreeView.NAME:
                 return compareStrings(fileInfo1.getName(), fileInfo2.getName());
 
-            case DownloadTableTreeViewer.SIZE:
+            case DownloadTableTreeView.SIZE:
                 return compareLongs(fileInfo1.getSize(), fileInfo2.getSize());
 
-            case DownloadTableTreeViewer.DOWNLOADED:
+            case DownloadTableTreeView.DOWNLOADED:
                 return compareLongs(fileInfo1.getDownloaded(), fileInfo2.getDownloaded());
 
-            case DownloadTableTreeViewer.PERCENT:
+            case DownloadTableTreeView.PERCENT:
                 return compareDoubles(fileInfo1.getPerc(), fileInfo2.getPerc());
 
-            case DownloadTableTreeViewer.SOURCES:
+            case DownloadTableTreeView.SOURCES:
                 return compareIntegers(fileInfo1.getSources(), fileInfo2.getSources());
 
-            case DownloadTableTreeViewer.AVAIL:
+            case DownloadTableTreeView.AVAIL:
                 return compareIntegers(fileInfo1.getRelativeAvail(), fileInfo2.getRelativeAvail());
 
-            case DownloadTableTreeViewer.RATE:
+            case DownloadTableTreeView.RATE:
 
                 if (fileInfo1.getState().getState() == EnumFileState.DOWNLOADED) {
                     return -1;
@@ -187,10 +187,10 @@ public class DownloadTableTreeSorter extends GSorter {
                     return compareDoubles(fileInfo1.getRate(), fileInfo2.getRate());
                 }
 
-            case DownloadTableTreeViewer.CHUNKS:
+            case DownloadTableTreeView.CHUNKS:
                 return compareIntegers(fileInfo1.getNumChunks(), fileInfo2.getNumChunks());
 
-            case DownloadTableTreeViewer.ETA:
+            case DownloadTableTreeView.ETA:
                 labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
 
                 if (labelProvider.getColumnText(e1, columnIndex).equals("")) {
@@ -201,13 +201,13 @@ public class DownloadTableTreeSorter extends GSorter {
                     return compareLongs(fileInfo1.getETA(), fileInfo2.getETA());
                 }
 
-            case DownloadTableTreeViewer.PRIORITY:
+            case DownloadTableTreeView.PRIORITY:
                 return compareIntegers(fileInfo1.getPriority(), fileInfo2.getPriority());
 
-            case DownloadTableTreeViewer.LAST:
+            case DownloadTableTreeView.LAST:
                 return compareIntegers(fileInfo1.getOffset(), fileInfo2.getOffset());
 
-            case DownloadTableTreeViewer.AGE:
+            case DownloadTableTreeView.AGE:
                 return compareLongs(Long.parseLong(fileInfo1.getAge()),
                     Long.parseLong(fileInfo2.getAge()));
 
@@ -219,25 +219,25 @@ public class DownloadTableTreeSorter extends GSorter {
             TreeClientInfo treeClientInfo2 = (TreeClientInfo) e2;
 
             switch (cViewer.getColumnIDs()[ columnIndex ]) {
-            case DownloadTableTreeViewer.NETWORK:
+            case DownloadTableTreeView.NETWORK:
                 return compareIntegers(treeClientInfo1.getClientInfo().getClientid(),
                     treeClientInfo2.getClientInfo().getClientid());
 
-            case DownloadTableTreeViewer.NAME:
+            case DownloadTableTreeView.NAME:
                 return compareStrings(treeClientInfo1.getClientInfo().getClientName(),
                     treeClientInfo2.getClientInfo().getClientName());
 
-            case DownloadTableTreeViewer.SIZE:
+            case DownloadTableTreeView.SIZE:
                 labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
 
                 return compareStrings(labelProvider.getColumnText(e1, columnIndex),
                     labelProvider.getColumnText(e2, columnIndex));
 
-            case DownloadTableTreeViewer.DOWNLOADED:
+            case DownloadTableTreeView.DOWNLOADED:
                 return compareIntegers(treeClientInfo1.getClientInfo().getState().getRank(),
                     treeClientInfo2.getClientInfo().getState().getRank());
 
-            case DownloadTableTreeViewer.CHUNKS:
+            case DownloadTableTreeView.CHUNKS:
                 return compareIntegers(treeClientInfo1.getClientInfo().getNumChunks(treeClientInfo1.getFileInfo()),
                     treeClientInfo2.getClientInfo().getNumChunks(treeClientInfo2.getFileInfo()));
 
@@ -258,6 +258,9 @@ public class DownloadTableTreeSorter extends GSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.10  2003/10/31 22:41:59  zet
+rename to View
+
 Revision 1.9  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.DownloadPaneMenuListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientPaneListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableView;
-import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
+import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeView;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadPaneListener;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableView;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.85 2003/10/31 16:02:17 zet Exp $
+ * @version $Id: TransferTab.java,v 1.86 2003/10/31 22:41:59 zet Exp $
  *
  */
 public class TransferTab extends TableGuiTab {
@@ -137,7 +137,7 @@ public class TransferTab extends TableGuiTab {
 
         createUploads(mainSashForm);
 
-        gView = new DownloadTableTreeViewer(downloadComposite, clientTableView, mldonkey, this);
+        gView = new DownloadTableTreeView(downloadComposite, clientTableView, mldonkey, this);
 
         popupMenuDL.addMenuListener( aListener );
 
@@ -179,7 +179,7 @@ public class TransferTab extends TableGuiTab {
             toolItem.setImage(G2GuiResources.getImage("split-table"));
             toolItem.addSelectionListener(new SelectionAdapter() {
                     public void widgetSelected(SelectionEvent s) {
-                        ( (DownloadTableTreeViewer) gView ).toggleClientsTable();
+                        ( (DownloadTableTreeView) gView ).toggleClientsTable();
                     }
                 });
         }
@@ -261,9 +261,9 @@ public class TransferTab extends TableGuiTab {
                     int height = c.getBounds().height;
 
                     if ((width > 0) && (height > 0) && (gView != null)) {
-						( (DownloadTableTreeViewer) gView ).updateClientsTable(true);
+						( (DownloadTableTreeView) gView ).updateClientsTable(true);
                     } else {
-						( (DownloadTableTreeViewer) gView ).updateClientsTable(false);
+						( (DownloadTableTreeView) gView ).updateClientsTable(false);
                     }
                 }
             });
@@ -429,6 +429,9 @@ public class TransferTab extends TableGuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.86  2003/10/31 22:41:59  zet
+rename to View
+
 Revision 1.85  2003/10/31 16:02:17  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

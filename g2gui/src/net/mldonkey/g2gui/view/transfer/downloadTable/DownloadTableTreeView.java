@@ -39,7 +39,6 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableTreeItem;
@@ -50,10 +49,10 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.22 2003/10/31 22:36:18 zet Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.1 2003/10/31 22:41:59 zet Exp $
  *
  */
-public class DownloadTableTreeViewer extends GTableTreeView implements ICellModifier,
+public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
     IDoubleClickListener {
     public static final String BASIC_COLUMNS = "ABCDFIK";
     public static final String NAME_COLUMN = "C";
@@ -85,7 +84,7 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
      * @param mldonkey
      * @param page
      */
-    public DownloadTableTreeViewer(Composite parent, GView clientTableView,
+    public DownloadTableTreeView(Composite parent, GView clientTableView,
         final CoreCommunication core, TransferTab page) {
         super(parent, core);
         this.clientView = clientTableView;
@@ -313,157 +312,10 @@ public class DownloadTableTreeViewer extends GTableTreeView implements ICellModi
 
 
 /*
-$Log: DownloadTableTreeViewer.java,v $
-Revision 1.22  2003/10/31 22:36:18  zet
-minor
+$Log: DownloadTableTreeView.java,v $
+Revision 1.1  2003/10/31 22:41:59  zet
+rename to View
 
-Revision 1.21  2003/10/31 22:34:58  zet
-minor
-
-Revision 1.20  2003/10/31 16:02:57  zet
-use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
-
-Revision 1.19  2003/10/31 15:16:38  zet
-use a local
-
-Revision 1.18  2003/10/31 10:42:47  lemmster
-Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
-Removed IGViewer because our abstract class GPage do the job
-Use supertype/interface where possible to keep the design flexible!
-
-Revision 1.17  2003/10/31 07:24:01  zet
-fix: filestate filter - put back important isFilterProperty check
-fix: filestate filter - exclusionary fileinfo filters
-fix: 2 new null pointer exceptions (search tab)
-recommit CTabFolderColumnSelectorAction (why was this deleted from cvs???)
-- all search tab tables are column updated
-regexp helpers in one class
-rework viewers heirarchy
-filter clients table properly
-discovered sync errors and NPEs in upload table... will continue later.
-
-Revision 1.16  2003/10/29 16:56:21  lemmster
-added reasonable class hierarchy for panelisteners, viewers...
-
-Revision 1.15  2003/10/22 21:20:33  zet
-static validate
-
-Revision 1.14  2003/10/22 16:50:21  zet
-validate ids
-
-Revision 1.13  2003/10/22 01:38:31  zet
-*** empty log message ***
-
-Revision 1.12  2003/10/20 21:58:19  zet
-SWT.RIGHT labels cheap workaround..
-
-Revision 1.11  2003/10/19 21:39:32  zet
-nil
-
-Revision 1.10  2003/10/16 23:56:44  zet
-not much
-
-Revision 1.9  2003/10/16 19:58:03  zet
-icons
-
-Revision 1.8  2003/10/16 16:09:56  zet
-updateDisplay
-
-Revision 1.7  2003/10/15 22:06:32  zet
-colours
-
-Revision 1.6  2003/10/15 21:13:21  zet
-show/hide clients from rtclk menu
-
-Revision 1.5  2003/10/12 15:58:29  zet
-rewrite downloads table & more..
-
-Revision 1.4  2003/09/24 03:07:43  zet
-add # of active sources column
-
-Revision 1.3  2003/09/23 21:46:36  zet
-not much
-
-Revision 1.2  2003/09/21 23:39:31  zet
-displayTableColors preference
-
-Revision 1.1  2003/09/20 14:39:21  zet
-move transfer package
-
-Revision 1.26  2003/09/18 14:11:01  zet
-revert
-
-Revision 1.24  2003/09/16 01:19:14  zet
-null
-
-Revision 1.23  2003/09/15 22:10:32  zet
-add availability %, refresh delay option
-
-Revision 1.22  2003/08/31 00:08:59  zet
-add buttons
-
-Revision 1.21  2003/08/30 00:44:01  zet
-move tabletree menu
-
-Revision 1.20  2003/08/24 19:38:31  zet
-minor
-
-Revision 1.19  2003/08/24 16:37:04  zet
-combine the preference stores
-
-Revision 1.18  2003/08/24 02:34:16  zet
-update sorter properly
-
-Revision 1.17  2003/08/23 22:47:03  zet
-remove println
-
-Revision 1.16  2003/08/23 19:44:12  zet
-split transfer table to basic/advanced modes
-
-Revision 1.15  2003/08/23 15:21:37  zet
-remove @author
-
-Revision 1.14  2003/08/22 23:25:15  zet
-downloadtabletreeviewer: new update methods
-
-Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: zet $
-
-Revision 1.12  2003/08/22 13:47:56  dek
-selection is removed with click on empty-row
-
-Revision 1.11  2003/08/21 00:59:57  zet
-doubleclick expand
-
-Revision 1.10  2003/08/20 14:58:43  zet
-sources clientinfo viewer
-
-Revision 1.9  2003/08/18 01:42:24  zet
-centralize resource bundle
-
-Revision 1.8  2003/08/17 16:48:08  zet
-prevent rapid tree expansion from triggering double click
-
-Revision 1.7  2003/08/17 16:32:41  zet
-doubleclick
-
-Revision 1.6  2003/08/14 12:57:03  zet
-fix nullpointer in clientInfo, add icons to tables
-
-Revision 1.5  2003/08/08 20:16:13  zet
-central PreferenceLoader, abstract Console
-
-Revision 1.4  2003/08/08 02:46:31  zet
-header bar, clientinfodetails, redo tabletreeviewer
-
-Revision 1.3  2003/08/06 19:31:06  zet
-configurable cell editors
-
-Revision 1.2  2003/08/06 17:16:09  zet
-cell modifiers
-
-Revision 1.1  2003/08/04 19:22:08  zet
-trial tabletreeviewer
 
 
 */

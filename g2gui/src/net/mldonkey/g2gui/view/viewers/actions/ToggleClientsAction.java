@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
+import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeView;
 import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.jface.action.Action;
@@ -32,7 +32,7 @@ import org.eclipse.jface.action.Action;
 /**
  * ToggleClientsAction
  *
- * @version $Id: ToggleClientsAction.java,v 1.5 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ToggleClientsAction.java,v 1.6 2003/10/31 22:41:59 zet Exp $
  *
  */
 public class ToggleClientsAction extends Action {
@@ -42,7 +42,7 @@ public class ToggleClientsAction extends Action {
         super();
         this.gViewer = gViewer;
 
-        if ( ( ( DownloadTableTreeViewer ) gViewer ).clientsDisplayed()) {
+        if ( ( ( DownloadTableTreeView ) gViewer ).clientsDisplayed()) {
             setText(G2GuiResources.getString("MISC_HIDE") + G2GuiResources.getString("TT_Clients"));
             setImageDescriptor(G2GuiResources.getImageDescriptor("minus"));
         } 
@@ -53,13 +53,16 @@ public class ToggleClientsAction extends Action {
     }
 
     public void run() {
-        ( ( DownloadTableTreeViewer ) gViewer ).toggleClientsTable();
+        ( ( DownloadTableTreeView ) gViewer ).toggleClientsTable();
     }
 }
 
 
 /*
 $Log: ToggleClientsAction.java,v $
+Revision 1.6  2003/10/31 22:41:59  zet
+rename to View
+
 Revision 1.5  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

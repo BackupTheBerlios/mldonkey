@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.14 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.15 2003/10/31 22:41:59 zet Exp $
  *
  */
 public class DownloadTableTreeLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -145,7 +145,7 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 
    public Image getColumnImage( Object arg0, int arg1 ) {
 	   if ( arg0 instanceof FileInfo 
-		   && cViewer.getColumnIDs()[ arg1 ] == DownloadTableTreeViewer.NETWORK ) {
+		   && cViewer.getColumnIDs()[ arg1 ] == DownloadTableTreeView.NETWORK ) {
 		   FileInfo fileInfo = (FileInfo) arg0;
 
 		   return G2GuiResources.getNetworkImage( fileInfo.getNetwork().getNetworkType() );
@@ -154,9 +154,9 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 
 		   switch ( cViewer.getColumnIDs()[ arg1 ] ) {
 
-			   case DownloadTableTreeViewer.NETWORK:
+			   case DownloadTableTreeView.NETWORK:
 				   return G2GuiResources.getNetworkImage( clientInfo.getClientnetworkid().getNetworkType() );
-			   case DownloadTableTreeViewer.NAME:
+			   case DownloadTableTreeView.NAME:
 				   return G2GuiResources.getClientImage( (EnumState) clientInfo.getState().getState() );
 			   default:
 				   return null;
@@ -176,25 +176,25 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 
 		   switch ( cViewer.getColumnIDs()[ arg1 ] ) {
         
-			   case DownloadTableTreeViewer.ID: 
+			   case DownloadTableTreeView.ID: 
 				   return "" + fileInfo.getId();
 	
-			   case DownloadTableTreeViewer.NETWORK:
+			   case DownloadTableTreeView.NETWORK:
 				   return fileInfo.getNetwork().getNetworkName();
 	
-			   case DownloadTableTreeViewer.NAME:
+			   case DownloadTableTreeView.NAME:
 				   return fileInfo.getName();
 	
-			   case DownloadTableTreeViewer.SIZE:
+			   case DownloadTableTreeView.SIZE:
 				   return fileInfo.getStringSize();
 	
-			   case DownloadTableTreeViewer.DOWNLOADED:
+			   case DownloadTableTreeView.DOWNLOADED:
 				   return fileInfo.getStringDownloaded();
 	
-			   case DownloadTableTreeViewer.PERCENT:
+			   case DownloadTableTreeView.PERCENT:
 				   return "" + dfp.format( fileInfo.getPerc() ) + "%";
 	
-			   case DownloadTableTreeViewer.SOURCES:
+			   case DownloadTableTreeView.SOURCES:
 			       	int s = fileInfo.getSources();
 				    if (s == 0) return "-";
 				    else {
@@ -203,10 +203,10 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 		   			}
 			       	 
 	
-			   case DownloadTableTreeViewer.AVAIL:
+			   case DownloadTableTreeView.AVAIL:
 				   return "" + fileInfo.getRelativeAvail() + "%";
 	
-			   case DownloadTableTreeViewer.RATE:
+			   case DownloadTableTreeView.RATE:
 	
 				   if ( fileInfo.getState().getState() == EnumFileState.PAUSED ) {
 					   return G2GuiResources.getString( "TT_Paused" );
@@ -220,19 +220,19 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 					   return "" + df.format( fileInfo.getRate() / 1000f );
 				   }
 	
-			   case DownloadTableTreeViewer.CHUNKS:
+			   case DownloadTableTreeView.CHUNKS:
 				   return "" + fileInfo.getNumChunks();
 	
-			   case DownloadTableTreeViewer.ETA:
+			   case DownloadTableTreeView.ETA:
 				   return fileInfo.getStringETA(); 
 	
-			   case DownloadTableTreeViewer.PRIORITY:
+			   case DownloadTableTreeView.PRIORITY:
 				   return fileInfo.getStringPriority();
 	
-			   case DownloadTableTreeViewer.LAST:
+			   case DownloadTableTreeView.LAST:
 				   return fileInfo.getStringOffset();
 	
-			   case DownloadTableTreeViewer.AGE:
+			   case DownloadTableTreeView.AGE:
 				   return fileInfo.getStringAge();
 	
 			   default:
@@ -243,19 +243,19 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 
 		   switch ( cViewer.getColumnIDs()[ arg1 ] ) {
        
-			   case DownloadTableTreeViewer.NETWORK:
+			   case DownloadTableTreeView.NETWORK:
 				   return "" + treeClientInfo.getClientInfo().getClientid();
 	
-			   case DownloadTableTreeViewer.NAME:
+			   case DownloadTableTreeView.NAME:
 				   return treeClientInfo.getClientInfo().getClientName();
 	
-			   case DownloadTableTreeViewer.SIZE:
+			   case DownloadTableTreeView.SIZE:
 				   return treeClientInfo.getClientInfo().getClientConnection();
 	
-			   case DownloadTableTreeViewer.DOWNLOADED:
+			   case DownloadTableTreeView.DOWNLOADED:
 				   return treeClientInfo.getClientInfo().getClientActivity();
 	
-			   case DownloadTableTreeViewer.CHUNKS:
+			   case DownloadTableTreeView.CHUNKS:
 				   return "" + treeClientInfo.getClientInfo().getNumChunks( treeClientInfo.getFileInfo() );
 	
 			   default:
@@ -271,6 +271,9 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.15  2003/10/31 22:41:59  zet
+rename to View
+
 Revision 1.14  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

@@ -85,7 +85,7 @@ import org.eclipse.swt.widgets.Text;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.27 2003/10/31 16:30:49 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.28 2003/10/31 22:41:59 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -100,7 +100,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
     private boolean createClientTable = false;
     private boolean myDrag = false;
 
-    public DownloadTableTreeMenuListener(DownloadTableTreeViewer downloadTableTreeViewer,
+    public DownloadTableTreeMenuListener(DownloadTableTreeView downloadTableTreeViewer,
         GView clientTableViewer) {
         super(downloadTableTreeViewer);
         this.clientView = clientTableViewer;
@@ -108,7 +108,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
     public void initialize() {
         super.initialize();
-        tableTreeContentProvider = (DownloadTableTreeContentProvider) ((DownloadTableTreeViewer) gView).getTableContentProvider();
+        tableTreeContentProvider = (DownloadTableTreeContentProvider) ((DownloadTableTreeView) gView).getTableContentProvider();
 
         /*this is to delete the selection, if one clicks in an empty row of the table*/
         gView.getTable().addMouseListener(new MouseAdapter() {
@@ -300,7 +300,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         if ((selectedFile != null) && advancedMode) {
             menuManager.add(new PreviewAction());
             menuManager.add(new VerifyChunksAction());
-            menuManager.add(new ToggleClientsAction((DownloadTableTreeViewer) gView));
+            menuManager.add(new ToggleClientsAction((DownloadTableTreeView) gView));
         }
 
         if ((selectedClient != null) && advancedMode) {
@@ -679,6 +679,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.28  2003/10/31 22:41:59  zet
+rename to View
+
 Revision 1.27  2003/10/31 16:30:49  zet
 minor renames
 

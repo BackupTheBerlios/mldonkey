@@ -40,7 +40,7 @@ import java.util.Set;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.7 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.8 2003/10/31 22:41:59 zet Exp $
  *
  */
 public class DownloadTableTreeContentProvider extends GTableTreeContentProvider implements Observer {
@@ -55,7 +55,7 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
     private boolean removeTimerRunning = false;
     private boolean updateTimerRunning = false;
 
-    public DownloadTableTreeContentProvider(DownloadTableTreeViewer downloadTableTreeViewer) {
+    public DownloadTableTreeContentProvider(DownloadTableTreeView downloadTableTreeViewer) {
         super(downloadTableTreeViewer);
     }
 
@@ -307,6 +307,9 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.8  2003/10/31 22:41:59  zet
+rename to View
+
 Revision 1.7  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
