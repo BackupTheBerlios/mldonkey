@@ -23,18 +23,19 @@
 package net.mldonkey.g2gui.view.pref;
 
 import org.eclipse.jface.preference.FontFieldEditor;
-//import org.eclipse.swt.SWT;
-//import org.eclipse.swt.events.SelectionEvent;
-//import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.*;
-//import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
 /**
  * ExtendedFontFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedFontFieldEditor2.java,v 1.2 2003/07/25 03:50:53 zet Exp $ 
+ * @version $Id: ExtendedFontFieldEditor2.java,v 1.3 2003/07/26 02:30:07 zet Exp $ 
  *
  */
 public class ExtendedFontFieldEditor2 extends FontFieldEditor {
@@ -44,7 +45,8 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 	private Button fontButton;
 	private Font font;
 	private boolean hasChanged = false;
-
+	private FontData[] chosenFont;
+	
 	/**
 	 * Creates a new FontEditor
 	 * @param name ???
@@ -53,11 +55,8 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 	 * @param composite where the whole thing takes place
 	 */
 	public ExtendedFontFieldEditor2( String name, String labelText, String sampleText, Composite composite ) {
-		super(name,labelText,composite);
-		
-	// still thinking about this..		
-/*	
-	fontDialog = new FontDialog( composite.getShell() );
+		init(name, labelText);
+		fontDialog = new FontDialog( composite.getShell() );
 		this.fontLabel = new Label( composite, SWT.NONE );
 			fontLabel.setText( labelText );
 		this.fontButton = new Button( composite, SWT.NONE );
@@ -66,7 +65,8 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 					new SelectionListener() {
 						public void widgetSelected( SelectionEvent e ) {
 							fontDialog.open();
-							font = new Font( null, fontDialog.getFontData() );							
+							font = new Font( null, fontDialog.getFontData() );	
+							chosenFont = font.getFontData();						
 							fontSample.setFont( font );
 							fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 							hasChanged = true;
@@ -79,8 +79,6 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 			gridData.horizontalSpan = 1;
 			gridData.grabExcessHorizontalSpace = true;
 		fontSample.setLayoutData( gridData );
-		
-		*/
 	}
 
 	/**
@@ -103,8 +101,8 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 	 * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
 	 */
 	protected void adjustForNumColumns( int arg0 ) {
-		//( ( GridData )fontSample.getLayoutData() ).horizontalSpan = ( arg0 - 2 );
-		super.adjustForNumColumns(arg0);
+		( ( GridData )fontSample.getLayoutData() ).horizontalSpan = ( arg0 - 2 );
+		//super.adjustForNumColumns(arg0);
 	}
 
 	/* (non-Javadoc)
@@ -119,6 +117,13 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 	 * @see org.eclipse.jface.preference.FieldEditor#doLoad()
 	 */
 	protected void doLoad() {
+		chosenFont = PreferenceConverter.getFontDataArray(
+						getPreferenceStore(),
+						getPreferenceName());
+		
+		this.font = new Font(null, chosenFont);
+		fontSample.setFont(font);
+		fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 		super.doLoad();
 
 	}
@@ -135,7 +140,11 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 	 * @see org.eclipse.jface.preference.FieldEditor#doStore()
 	 */
 	protected void doStore() {
-		super.doStore();
+		if (chosenFont != null)
+			PreferenceConverter.setValue(
+				getPreferenceStore(),
+				getPreferenceName(),
+				chosenFont);
 
 	}
 
@@ -164,6 +173,9 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 
 /*
 $Log: ExtendedFontFieldEditor2.java,v $
+Revision 1.3  2003/07/26 02:30:07  zet
+seems to basically work.. i'm still not sure why we subclass?
+
 Revision 1.2  2003/07/25 03:50:53  zet
 damn fontfield.. will continue
 
