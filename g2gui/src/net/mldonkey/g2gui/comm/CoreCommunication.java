@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.19 2003/07/03 16:05:31 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.20 2003/07/04 17:46:28 lemmstercvs01 Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -39,6 +39,15 @@ public interface CoreCommunication {
 	 * Connects this object to given mldonkey-core @remote 
 	 */	
 	void connect();
+	/**
+	 * disables receiving messages from core, and should also disconnect tcp-connection
+	 * in future, not done yet
+	 */
+	void disconnect();
+	/**
+	 * @return returns wether we are connected to a mldonkey or not
+	 */
+	boolean isConnected();
 	/**
 	 * run()
 	 * starts the Core-Thread and begins to receive messages
@@ -51,50 +60,23 @@ public interface CoreCommunication {
 	 * @return the ConsoleMessage(-Buffer)
 	 */
 	ConsoleMessage getConsoleMessage();
-	
 	/**
 	 * @return Infos about all the nice networks we know about
 	 */
-	NetworkInfoIntMap getNetworkinfoMap();
+	NetworkInfoIntMap getNetworkInfoMap();
+	/**
+	 * @return all mldonkey-options
+	 */
+	OptionsInfoMap getOptionsInfoMap();
+	/**
+	 * Gets the socket the core is conntected through with mldonkey
+	 * @return The socket
+	 */
+	Socket getConnection();
 	
 	/**
 	 * Adds an Observer to this object
 	 * @param obj The Observer to add
 	 */
 	void addObserver( Observer obj );
-	
-	
-	/**
-	 * @param command the ConsoleCommand to send
-	 */
-	void sendConsoleMessage( String command );
-
-	/**
-	 * disables receiving messages from core, and should also disconnect tcp-connection
-	 * in future, not done yet
-	 * 
-	 */
-	void disconnect();
-	/**
-	 * @return returns wether we are connected to a mldonkey or not
-	 */
-	boolean isConnected();
-
-	 /**
-	 * @return all mldonkey-options
-	 */
-	OptionsInfoMap getOptions();
-	 
-	 /**
-	  * Sets the option <b> name</b> to the <b>value</b>
-	  * @param name name of the option
-	  * @param value the value
-	  */
-	void setOption( String name, String value );
-	
-	/**
-	 * Gets the socket the core is conntected through with mldonkey
-	 * @return The socket
-	 */
-	Socket getConnection();
 }

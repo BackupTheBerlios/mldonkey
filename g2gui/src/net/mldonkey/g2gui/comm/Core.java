@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.50 2003/07/02 17:12:11 dek Exp $ 
+ * @version $Id: Core.java,v 1.51 2003/07/04 17:46:28 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -112,6 +112,13 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 */
 	public void disconnect() {
 		this.connected = false;
+	}
+
+	/** (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#isConnected()
+	 */
+	public boolean isConnected() {		
+		return connected;
 	}
 
 	/**
@@ -277,72 +284,40 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	}
 	
 	/**
+	 * returns the socket
 	 * @return a Socket
 	 */
 	public Socket getConnection() {
 		return connection;
 	}
 
-	/**
-	 * @param name Option-Name
-	 * @param value OptionValue
-	 */
-	public void setOption( String name, String value ) {
-		String[] content = { name, value };			
-		EncodeMessage setOption = new EncodeMessage( Message.S_SET_OPTION, content );
-		setOption.sendMessage( connection );		
-	}
-
-	/** returns the actual Console-message Buffer
+	/** 
+	 * returns the actual Console-message Buffer
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getConsoleMessage()
 	 */
 	public ConsoleMessage getConsoleMessage() {
 		return ( ConsoleMessage ) this.consoleMessage;
 	}
-
-	/** sends a ConsoleCommand to mldonkey
-	 * @see net.mldonkey.g2gui.comm.CoreCommunication#sendConsoleMessage(java.lang.String)
-	 */
-	public void sendConsoleMessage( String command ) {
-		String[] content = {command};		
-		EncodeMessage sendConsoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, content );
-		sendConsoleMessage.sendMessage( connection );	
-		
-	}
 	/**
 	 * @return the Infos about all the nice networks we have 
 	 */
-	public NetworkInfoIntMap getNetworkinfoMap() {
+	public NetworkInfoIntMap getNetworkInfoMap() {
 		return ( NetworkInfoIntMap ) networkinfoMap;
-	}
-
-	/** (non-Javadoc)
-	 * @see net.mldonkey.g2gui.comm.CoreCommunication#isConnected()
-	 */
-	public boolean isConnected() {		
-		return connected;
 	}
 
 	/** (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getOptions()
 	 */
-	public OptionsInfoMap getOptions() {
+	public OptionsInfoMap getOptionsInfoMap() {
 		return ( OptionsInfoMap ) optionsInfoMap;
-		
 	}
-
-	/** (non-Javadoc)
-	 * @see net.mldonkey.g2gui.comm.CoreCommunication#search(java.lang.String)
-	 */
-	public void search( String searchstring ) {
-		/*dummy, without funciotn 'till now, maybe forever...*/
-		
-	}
-
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.51  2003/07/04 17:46:28  lemmstercvs01
+removed obsolet methods
+
 Revision 1.50  2003/07/02 17:12:11  dek
 removed Senseless ToDo-Tag for dummy-method
 
