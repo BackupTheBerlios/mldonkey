@@ -50,14 +50,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.66 2003/09/08 15:39:35 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.67 2003/09/08 17:28:44 zet Exp $ 
  *
  */
 public class MainTab implements ShellListener {
@@ -81,14 +83,12 @@ public class MainTab implements ShellListener {
 	public MainTab( CoreCommunication core, final Shell shell ) {
 		this.registeredTabs = new ArrayList();
 		this.mldonkey = core;
-		
-		minimizer = new Minimizer(shell, core, titleBarText);
-		
 		this.shell = shell;
 		final Shell mainShell = shell;	
 		Display display = shell.getDisplay();
 		shell.addShellListener( this );
 		G2GuiResources.initialize();
+		minimizer = new Minimizer(shell, core, titleBarText);
 		minimizer.setTitleBarText(); 
 		shell.setLayout( new FillLayout() );
 		createContents( shell );
@@ -99,6 +99,14 @@ public class MainTab implements ShellListener {
 		
 		/* set the old size of this window - must be after pack() */
 		setSizeLocation( shell );
+		
+		// what do we do when the close button is selected
+		shell.addListener (SWT.Close, new Listener () {
+			public void handleEvent (Event event) {
+				event.doit = minimizer.close();
+			}
+		});
+		
 		shell.open ();
 		
 		/* things we should do if we dispose */
@@ -360,12 +368,15 @@ public class MainTab implements ShellListener {
 	 * shellIconified(org.eclipse.swt.events.ShellEvent)
 	 */
 	public void shellIconified( ShellEvent e ) {
-		minimizer.minimize();
+		minimizer.minimize(true);
 	}
 } 
 
 /*
 $Log: MainTab.java,v $
+Revision 1.67  2003/09/08 17:28:44  zet
+more minimizer stuff
+
 Revision 1.66  2003/09/08 15:39:35  zet
 minimizer
 
