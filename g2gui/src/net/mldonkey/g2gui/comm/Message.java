@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.15 2003/06/15 16:18:58 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.16 2003/06/15 19:37:01 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -135,8 +135,13 @@ public abstract class Message {
 	 * @throws IOException Error if read on inputStream failed
 	 */
 	public static int readInt32( InputStream inputStream ) throws IOException {
-		byte[] b = new byte[ 4 ]; 
-		inputStream.read( b );
+		byte[] b = new byte[ 4 ];
+		
+		/* be sure that 4 bytes are in the stream */
+		int pos = 0;
+		while ( pos < 4 ) {
+			pos += inputStream.read( b, pos, ( int ) 4 - pos ); 
+		}
 		
 		return ( ( ( int ) b[ 0 ] ) & 0xFF ) 
 			+  ( ( ( ( int ) b[ 1 ] ) & 0xFF ) << 8 )
@@ -258,6 +263,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.16  2003/06/15 19:37:01  lemmstercvs01
+fixed a bug in readInt32()
+
 Revision 1.15  2003/06/15 16:18:58  lemmstercvs01
 some opcodes added
 
