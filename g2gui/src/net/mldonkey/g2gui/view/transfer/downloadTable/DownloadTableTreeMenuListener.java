@@ -22,10 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.ClientInfo;
@@ -55,6 +51,7 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -80,12 +77,16 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 
 /**
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.28 2003/10/31 22:41:59 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.29 2003/11/03 02:44:04 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -207,12 +208,7 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             selectedFile = null;
         }
 
-        if (o instanceof TreeClientInfo) {
-            selectedClient = (TreeClientInfo) o;
-        } else {
-            selectedClient = null;
-        }
-
+        selectedClient = (o instanceof TreeClientInfo) ? (TreeClientInfo) o : null;
         selectedClients.clear();
         selectedFiles.clear();
 
@@ -679,6 +675,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.29  2003/11/03 02:44:04  zet
+minor
+
 Revision 1.28  2003/10/31 22:41:59  zet
 rename to View
 
