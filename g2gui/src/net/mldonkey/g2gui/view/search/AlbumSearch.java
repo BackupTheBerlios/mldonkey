@@ -27,15 +27,16 @@ import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.TabFolder;
+
 
 /**
  * AlbumSearch
  *
  *
- * @version $Id: AlbumSearch.java,v 1.6 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: AlbumSearch.java,v 1.7 2003/08/29 19:09:25 dek Exp $ 
  *
  */
 public class AlbumSearch extends Search {
@@ -59,7 +60,7 @@ public class AlbumSearch extends Search {
 	 * @see net.mldonkey.g2gui.view.search.Search#
 	 * createTabFolderPage(org.eclipse.swt.widgets.TabFolder)
 	 */
-	public Control createTabFolderPage( TabFolder tabFolder ) {
+	public Control createTabFolderPage( CTabFolder tabFolder ) {
 		// create a invisible networkbox to avoid a npe in update(Observable o, Object arg);
 		this.createNetworkBox( new Group( tabFolder, SWT.NONE ), G2GuiResources.getString( "SS_NETWORK" ) );
 		this.createInputBox( new Group( tabFolder, SWT.NONE ), G2GuiResources.getString( "SS_NETWORK" ) );
@@ -75,6 +76,9 @@ public class AlbumSearch extends Search {
 
 /*
 $Log: AlbumSearch.java,v $
+Revision 1.7  2003/08/29 19:09:25  dek
+new look'n feel
+
 Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 

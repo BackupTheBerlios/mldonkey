@@ -29,25 +29,25 @@ import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.TabFolder;
 
 /**
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.9 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.10 2003/08/29 19:09:25 dek Exp $ 
  *
  */
 public class SimpleSearch extends Search {
 	private GridLayout gridLayout;
-	private Group group;
+	private Composite group;
 	private Button ok, clear, all, audio, video, image, software;
 	private GridData gridData;
 	private String selectedMedia;
@@ -71,15 +71,17 @@ public class SimpleSearch extends Search {
 	 * @see net.mldonkey.g2gui.view.search.Search#
 	 * createTabFolderPage(org.eclipse.swt.widgets.TabFolder)
 	 */
-	public Control createTabFolderPage( TabFolder tabFolder ) {
-
+	public Control createTabFolderPage( CTabFolder tabFolder ) {		
+		/* set the minimum width so, that the whole title is visible */
+		tabFolder.MIN_TAB_WIDTH = tabFolder.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
 		/* the input field */
 		gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
 		gridData.horizontalIndent = 12;
-		group = new Group( tabFolder, SWT.NONE );
+		gridData.widthHint=500;
+		group = new Composite( tabFolder, SWT.NONE );
 		group.setLayout( gridLayout );
 		group.setLayoutData( gridData );
 			
@@ -192,11 +194,14 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.10  2003/08/29 19:09:25  dek
+new look'n feel
+
 Revision 1.9  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.8  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.7  2003/08/18 01:42:24  zet
 centralize resource bundle

@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.search.AlbumSearch;
 import net.mldonkey.g2gui.view.search.Search;
@@ -36,27 +37,27 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
+
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
+
 
 /**
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.16 2003/08/29 17:33:20 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.17 2003/08/29 19:09:25 dek Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
 	private Composite tabFolderPage;
 	private GridLayout gridLayout;
 	private Group group;
-	private TabFolder tabFolder;
+	private CTabFolder tabFolder;
 	private CTabFolder cTabFolder;
 	private CoreCommunication core;
 
@@ -91,7 +92,7 @@ public class SearchTab extends GuiTab {
 	 * @see net.mldonkey.g2gui.view.GuiTab#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected void createContents( Composite parent ) {
-		/* Create a two column page */
+		/* Create a two column page */		
 		tabFolderPage = new Composite( parent, SWT.NONE );
 		GridLayout gridLayout = new GridLayout();
 		tabFolderPage.setLayout( gridLayout );
@@ -106,23 +107,26 @@ public class SearchTab extends GuiTab {
 	 * The search mask
 	 */
 	private void createLeftGroup() {
-		tabFolder = new TabFolder( tabFolderPage, SWT.NONE );
+		tabFolder = new CTabFolder( tabFolderPage, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		tabFolder.setLayoutData( new GridData( GridData.FILL_VERTICAL ) );
+				
 		Search[] tabs = this.createTab();
 		for ( int i = 0; i < tabs.length; i++ ) {
-			TabItem item = new TabItem( tabFolder, SWT.NONE );
+			CTabItem item = new CTabItem( tabFolder, SWT.NONE );
 			item.setText( tabs[ i ].getTabName() );
 			item.setControl( tabs[ i ].createTabFolderPage( tabFolder ) );
-			item.setData( tabs[ i ] );
+			item.setData( tabs[ i ] );			
 		}
+		tabFolder.setSelection(0);
 	}
+	
 
 	/**
 	 * The result mask
 	 */
 	private void createRightGroup() {
 		/* right group */
-		cTabFolder = new CTabFolder( tabFolderPage, SWT.NONE );
+		cTabFolder = new CTabFolder( tabFolderPage, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		cTabFolder.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		cTabFolder.marginWidth = 5;
 		/* set this as data, so our children in the ctabfolder know whos their dad ;) */
@@ -205,6 +209,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.17  2003/08/29 19:09:25  dek
+new look'n feel
+
 Revision 1.16  2003/08/29 17:33:20  zet
 remove headerbar
 
@@ -215,7 +222,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

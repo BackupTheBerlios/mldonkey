@@ -33,21 +33,22 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TabFolder;
+
 import org.eclipse.swt.widgets.Text;
 
 /**
  * Search
  *
  *
- * @version $Id: Search.java,v 1.14 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: Search.java,v 1.15 2003/08/29 19:09:25 dek Exp $ 
  *
  */
 public abstract class Search implements Observer {
@@ -81,7 +82,7 @@ public abstract class Search implements Observer {
 	 * @param tabFolder The tabfolder to create the control in
 	 * @return a Control filled with the content of this obj
 	 */
-	public abstract Control createTabFolderPage( TabFolder tabFolder );
+	public abstract Control createTabFolderPage( CTabFolder tabFolder );
 
 	/**
 	 * create a searchquery, fill it and send it to mldonkey
@@ -93,7 +94,7 @@ public abstract class Search implements Observer {
 	 * @param group The Group to display the box in
 	 * @param aString The Box header
 	 */
-	protected void createInputBox( Group group, String aString ) {
+	protected void createInputBox( Composite group, String aString ) {
 		/* describe the box */
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
@@ -138,7 +139,7 @@ public abstract class Search implements Observer {
 	 * @param group The Group to display the box in
 	 * @param aString The Box header
 	 */
-	protected void createNetworkBox( Group group, String aString ) {
+	protected void createNetworkBox( Composite group, String aString ) {
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
 		label = new Label( group, SWT.NONE );
@@ -205,6 +206,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.15  2003/08/29 19:09:25  dek
+new look'n feel
+
 Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 
