@@ -31,7 +31,7 @@ import java.net.Socket;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.3 2003/06/10 16:06:36 dek Exp $ 
+ * @version $Id: Core.java,v 1.4 2003/06/10 16:24:20 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -90,166 +90,148 @@ public class Core extends Thread implements CoreCommunication {
 		try {
 			i = connection.getInputStream();
 			//getting length of message (No use for this so far??):				
-			while (connected) {				
-				//getting length of message:	
-				messageLength = Message.readInt32(i);						
-				bufferStream = new BufferedInputStream(i, messageLength);
-				opCode = Message.readInt16(bufferStream);			
-				decodeMessage(opCode,messageLength, bufferStream);
+			while ( connected ) {
+				//getting length of message:
+				messageLength = Message.readInt32( i );
+				bufferStream = new BufferedInputStream( i, messageLength );
+				opCode = Message.readInt16( bufferStream );
+				decodeMessage( opCode, messageLength, bufferStream );
 			}
-		} catch (IOException e) {
+		} catch ( IOException e ) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * @param opcode
 	 * @param connection
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	private void decodeMessage(int opcode,int length, BufferedInputStream inputStream ) throws IOException {
-				switch (opcode) {
-					case Message.R_COREPROTOCOL :{
-							/*
-							 *	PayLoad:
-							 *	int32	The maximal protocol version accepted by the core 
-							 */	
-							coreProtocol = Message.readInt32(inputStream);
-							Object[] temp = new Object[1];
-							temp[0] = new Integer(16);
-							Message coreProtocolReply = new Message(Message.S_COREPROTOCOL,temp);
-							coreProtocolReply.sendMessage(connection);							
-																	
-							Object[] extension = { new Integer(1), new Byte((byte) 1)};
-							Object[][] a = { extension };
-							Message guiExtension = new Message(Message.S_GUIEXTENSION,a);
-							guiExtension.sendMessage(connection);							
-							
-							String[] aString = { this.password, this.username };
-							Message password = new Message(Message.S_PASSWORD,aString);
-							password.sendMessage(connection);
-							break;
-					}
-						
-					case Message.R_OPTIONS_INFO :{
-						/*
-						 *	PayLoad:
-						 *	List of (String,String)	The list of options with their current value 
-						 */						
-						 break;
-					}				
-					case Message.R_FILE_UPDATE_AVAILABILITY : {
-						/*
-						 *	PayLoad:
-						 *	int32	File Number
-						 *	int32	client_num
-						 *	String	Availability				
-						 */						
-						break;									
-					}
+	private void decodeMessage( int opcode, int length,	BufferedInputStream inputStream ) throws IOException 
+		{
+		switch ( opcode ) {
+			case Message.R_COREPROTOCOL :				
+					/*
+					 *	PayLoad:
+					 *	int32	The maximal protocol version accepted by the core 
+					 */
+					coreProtocol = Message.readInt32( inputStream );
+					Object[] temp = new Object[ 1 ];
+					temp[ 0 ] = new Integer( 16 );
+					Message coreProtocolReply =
+						new Message( Message.S_COREPROTOCOL, temp );
+					coreProtocolReply.sendMessage( connection );
 
+					Object[] extension = { new Integer( 1 ), new Byte( ( byte ) 1 )};
+					Object[][] a = { extension };
+					Message guiExtension =
+						new Message( Message.S_GUIEXTENSION, a );
+					guiExtension.sendMessage( connection );
 
-					case Message.R_FILE_ADD_SOURCE :
-						{
-							/*
-							 *	PayLoad:
-							 *	int32	The File Identifier 
-							 *	int32	The Source/Client Identifier 
-							 */							
-							break;
-						}
+					String[] aString = { this.password, this.username };
+					Message password = new Message( Message.S_PASSWORD, aString );
+					password.sendMessage( connection );
+					break;
 				
-					case Message.R_CLIENT_STATS :
-						{
-							/*
-							 *	PayLoad:
-							 *	int64	Total uploaded 
-							 *	int64	Total downloaded 
-							 *	int64	Total shared 
-							 *	int32	Number of shared files 
-							 *	int32	Tcp Upload Rate 
-							 *	int32	Tcp Download Rate 
-							 *	int32	Udp Upload Rate 
-							 *	int32	Udp Download Rate 
-							 *	int32	Number of current downloads 
-							 *	int32	Number of downloads finished 
-							 *	List of int32  	 Connected Networks 
-							 */							
-							break;
-						}
 
+			case Message.R_OPTIONS_INFO :				
+					/*
+					 *	PayLoad:
+					 *	List of (String,String)	The list of options with their current value 
+					 */
+					break;
+				
+			case Message.R_FILE_UPDATE_AVAILABILITY :				
+					/*
+					 *	PayLoad:
+					 *	int32	File Number
+					 *	int32	client_num
+					 *	String	Availability				
+					 */
+					break;
+				
 
-					case Message.R_CONSOLE :
-						{
-							/*
-							 *	PayLoad:
-							 *	String	Data, the core wants to be displayed on the console 
-							 */
-							String payload_text =
-							Message.readString(inputStream);
-							System.out.println(payload_text);
-							//receiving = false;
-							break;
-						}
+			case Message.R_FILE_ADD_SOURCE :				
+					/*
+					 *	PayLoad:
+					 *	int32	The File Identifier 
+					 *	int32	The Source/Client Identifier 
+					 */
+					break;				
 
-					case Message.R_NETWORK_INFO :								
-						{
-							/*
-							 *	PayLoad:
-							 *	int32	Network identifier (used in other messages for this network) 
-							 *	String	Network name 
-							 *	int8	Enabled(1) or Disabled(0) 
-							 *	String	Name of network config file 
-							 *	int64	Number of bytes uploaded on network 
-							 *	int64	Number of bytes downloaded on network 
-							 */
-							int identifier;
-							int stringlength;
-							long upload;
-							long download;
-							String network_name;
-							String network_config;
-							boolean status;
-							/*
-							 * Here is the right place to create the Network-Classes IMHO
-							 * (not yet implemented)
-							 */
-							//get network_indetifier from payload:
-							identifier = (int) Message.readInt32(inputStream);
-							//get network_name from payload:
-							network_name = Message.readString(inputStream);
-							//get enabled|disabled from payload:							
-							if (Message.readByte(inputStream) == 1) {
-								status = true;
-							} else {
-								status = false;
-							}
-							//Now follows the decoding of network_config							
-							network_config = Message.readString(inputStream);
-							//Some up / download-stats:
-							upload = Message.readInt64(inputStream);
-							download = Message.readInt64(inputStream);			
-							break;
-						}
+			case Message.R_CLIENT_STATS :				
+					/*
+					 *	PayLoad:
+					 *	int64	Total uploaded 
+					 *	int64	Total downloaded 
+					 *	int64	Total shared 
+					 *	int32	Number of shared files 
+					 *	int32	Tcp Upload Rate 
+					 *	int32	Tcp Download Rate 
+					 *	int32	Udp Upload Rate 
+					 *	int32	Udp Download Rate 
+					 *	int32	Number of current downloads 
+					 *	int32	Number of downloads finished 
+					 *	List of int32  	 Connected Networks 
+					 */
+					break;				
 
-					default :
-						{
-							System.out.println("unknown OP-Code : " + opcode + "!");
-							//receivedMessage.getStream().read(new byte[receivedMessage.getLength()], 0, receivedMessage.getLength());
-							//String payload_ascii = new String(content, 0, receivedMessage.getLength());
-							byte[] content = new byte[length];
-							//inputStream.read(content, 0, receivedMessage.getLength()-2);
-							//String payload_ascii = new String(content, 0, receivedMessage.getLength()-2);
-													//System.out.println("ASCII: "+ payload_ascii );							
-							//for (int i = 0; i < receivedMessage.getContent().length-2; i++) {
-							//	System.out.print(receivedMessage.getContent()[i]+",");							
-							//}
-							System.out.print("\n");
-							break;
-						}
-		}				
+			case Message.R_CONSOLE :				
+					/*
+					 *	PayLoad:
+					 *	String	Data, the core wants to be displayed on the console 
+					 */
+					String payloadText = Message.readString( inputStream );
+					System.out.println( payloadText );
+					//receiving = false;
+					break;
+				
+
+			case Message.R_NETWORK_INFO :				
+					/*
+					 *	PayLoad:
+					 *	int32	Network identifier (used in other messages for this network) 
+					 *	String	Network name 
+					 *	int8	Enabled(1) or Disabled(0) 
+					 *	String	Name of network config file 
+					 *	int64	Number of bytes uploaded on network 
+					 *	int64	Number of bytes downloaded on network 
+					 */
+					int identifier;
+					int stringlength;
+					long upload;
+					long download;
+					String networkName;
+					String networkConfig;
+					boolean status;
+					/*
+					 * Here is the right place to create the Network-Classes IMHO
+					 * (not yet implemented)
+					 */
+					//get network_indetifier from payload:
+					identifier = ( int ) Message.readInt32( inputStream );
+					//get network_name from payload:
+					networkName = Message.readString( inputStream );
+					//get enabled|disabled from payload:							
+					if ( Message.readByte( inputStream ) == 1 ) {
+						status = true;
+					} else {
+						status = false;
+					}
+					//Now follows the decoding of network_config							
+					networkConfig = Message.readString( inputStream );
+					//Some up / download-stats:
+					upload = Message.readInt64( inputStream );
+					download = Message.readInt64( inputStream );
+					break;
+				
+
+			default :				
+					System.out.println( "unknown OP-Code : " + opcode + "!" );
+					break;				
+		}
 	}
 
 	/**
@@ -286,12 +268,14 @@ public class Core extends Thread implements CoreCommunication {
 	public Socket getConnection() {
 		return connection;
 	}
-	
 
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.4  2003/06/10 16:24:20  dek
+Checkstyle-cleaned
+
 Revision 1.3  2003/06/10 16:06:36  dek
 now working
 
