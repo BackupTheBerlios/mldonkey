@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.29 2003/12/04 08:47:25 lemmy Exp $
+ * @version $Id: ServerInfoIntMap.java,v 1.30 2004/03/20 01:34:02 dek Exp $
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -87,8 +87,10 @@ public class ServerInfoIntMap extends InfoIntMap {
             messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 
             /* ignore fasttrack and gnutella servers */
-            if ( !network.hasServers() )
+            if ( !network.hasServers() ) {	
+            	messageBuffer.setIterator(messageBuffer.getBuffer().length);
                 return;
+            }
         }
         messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
         ServerInfo server = this.get( id );
@@ -137,6 +139,9 @@ public class ServerInfoIntMap extends InfoIntMap {
                 }
             this.setChanged();
             this.notifyObservers();
+        }
+        else{
+        	messageBuffer.setIterator(messageBuffer.getBuffer().length);
         }
     }
 
@@ -429,6 +434,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.30  2004/03/20 01:34:02  dek
+implemented gui-Proto 25 !!!!!
+
 Revision 1.29  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

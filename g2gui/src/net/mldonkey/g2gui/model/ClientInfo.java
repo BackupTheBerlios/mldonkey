@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.41 2003/12/19 22:15:27 psy Exp $
+ * @version $Id: ClientInfo.java,v 1.42 2004/03/20 01:34:02 dek Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -66,7 +66,7 @@ public class ClientInfo extends Parent {
     /**
      * Client Type
      */
-    private Enum clientType;
+    protected Enum clientType;
 
     /**
      * List of Tags
@@ -91,7 +91,7 @@ public class ClientInfo extends Parent {
     /**
      * Client Software
      */
-    private String clientSoftware = "";
+    private String clientSoftware = "";   
 
     /**
      * Client downloaded bytes
@@ -410,6 +410,13 @@ public class ClientInfo extends Parent {
         this.setChanged();
         this.notifyObservers(this);
     }
+    /**
+     * 
+     * @return the emule-mod the client is using, "" if none present
+     */
+    protected String getEmuleMod(){
+		return "";
+    }
 
     /**
      * Adds a friend to the list of friends
@@ -447,6 +454,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.42  2004/03/20 01:34:02  dek
+implemented gui-Proto 25 !!!!!
+
 Revision 1.41  2003/12/19 22:15:27  psy
 added human readable value for connectiontime passed since connection initiation
 
@@ -518,7 +528,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: psy $
+replace $user$ with $Author: dek $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

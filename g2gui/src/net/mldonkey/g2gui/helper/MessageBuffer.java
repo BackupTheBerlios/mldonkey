@@ -27,12 +27,13 @@ import java.net.UnknownHostException;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.Tag;
+import net.mldonkey.g2gui.view.G2Gui;
 
 /**
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.29 2003/12/04 08:47:28 lemmy Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.30 2004/03/20 01:34:02 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -48,6 +49,7 @@ public class MessageBuffer {
 	 * The core communcation obj
 	 */
 	private CoreCommunication core;
+	private short opCode=0;
 	
 	/**
 	 * Generates a new empty MessageBuffer
@@ -160,7 +162,10 @@ public class MessageBuffer {
 	 * @return a string
 	 */
 	public String readString() {
-		int stringLength = readInt16();					
+		int stringLength = readInt16();	
+		if (stringLength == 0xffff){
+			stringLength += readInt32();			
+		}
 		if ( stringLength > 0 ) {					
 			String result = new String( buffer, iterator, stringLength );			
 			this.iterator = this.iterator + stringLength;
@@ -264,17 +269,38 @@ public class MessageBuffer {
 	}
 
 	/**
-	 * @param bs a byte[]
+	 * @param bs
+	 *            a byte[]
 	 */
-	public void setBuffer( byte[] bs ) {
+	public void setBuffer(byte[] bs) {
+		if (G2Gui.debug) {
+			if (buffer != null) {
+				if (buffer.length != iterator) {
+					if (G2Gui.debug) 
+						System.out.println("MessageBuffer not empty after decoding OpCode:" + opCode);
+					
+				}
+			}
+		}
 		iterator = 0;
 		buffer = bs;
+	}
+
+	/**
+	 * @param opCode
+	 */
+	public void setOpcode(short opCode) {
+		this.opCode = opCode;
+		
 	}
 
 }
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.30  2004/03/20 01:34:02  dek
+implemented gui-Proto 25 !!!!!
+
 Revision 1.29  2003/12/04 08:47:28  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -310,7 +336,7 @@ Revision 1.19  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.18  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.17  2003/08/10 23:20:26  zet
 signed ints

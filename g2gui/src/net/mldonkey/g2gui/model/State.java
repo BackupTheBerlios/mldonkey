@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  *
- * @version $Id: State.java,v 1.14 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: State.java,v 1.15 2004/03/20 01:34:02 dek Exp $ 
  *
  */
 public class State extends SimpleInformation {
@@ -85,6 +85,8 @@ public class State extends SimpleInformation {
 			state = EnumState.BLACK_LISTED;
 		else if ( b == 9 )
 			state = EnumState.NOT_CONNECTED_WAS_QUEUED;
+		else if ( b == 10 )
+			state = EnumState.CONNECTED;
 	}
 	
 	/**
@@ -93,9 +95,13 @@ public class State extends SimpleInformation {
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setState( messageBuffer.readByte() );
-		if ( this.getState() == EnumState.CONNECTED_AND_QUEUED
-			 || this.getState() == EnumState.NOT_CONNECTED_WAS_QUEUED )
+		
+		if ( this.getState() == EnumState.CONNECTED_AND_QUEUED)
 			this.rank = messageBuffer.readInt32();
+		
+		if ( this.getState() == EnumState.NOT_CONNECTED_WAS_QUEUED )
+			this.rank = messageBuffer.readInt32();
+			
 	}
 	
 	/**
@@ -109,6 +115,9 @@ public class State extends SimpleInformation {
 
 /*
 $Log: State.java,v $
+Revision 1.15  2004/03/20 01:34:02  dek
+implemented gui-Proto 25 !!!!!
+
 Revision 1.14  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -119,7 +128,7 @@ Revision 1.12  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.11  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.10  2003/07/05 16:04:34  lemmy
 javadoc improved

@@ -48,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.85 2003/12/07 19:38:08 lemmy Exp $
+ * @version $Id: FileInfo.java,v 1.86 2004/03/20 01:34:02 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -95,12 +95,12 @@ public class FileInfo extends Parent implements Observer {
     /**
      * File size
      */
-    private int size;
+    private long size;
 
     /**
      * Size already downloaded
      */
-    private int downloaded;
+    private long downloaded;
 
     /**
      * Number of sources
@@ -206,6 +206,7 @@ public class FileInfo extends Parent implements Observer {
      * ETA seconds
      */
     private long etaSeconds;
+	private String comment;
 
     /**
      * Creates a new fileinfo object
@@ -256,8 +257,7 @@ public class FileInfo extends Parent implements Observer {
         relativeAvail = 0;
 
         int neededChunks = 0;
-        int availChunks = 0;
-
+        int availChunks = 0;      
         if ((avail.length() > 0) && (avail.length() == chunks.length())) {
             for (int i = 0; i < avail.length(); i++) {
                 if ((chunks.charAt(i) == '0') || (chunks.charAt(i) == '1')) {
@@ -276,12 +276,14 @@ public class FileInfo extends Parent implements Observer {
             changedProperties.add(CHANGED_AVAIL);
     }
 
-    /**
-     * @return last time each chunk has been seen
-     */
-    public String[] getChunkAges() {
-        return chunkAges;
-    }
+//		commented out, because in newer gui-protos this is a int[], has to be handled
+    //TODO adaption for newer gui protos
+//    /**
+//     * @return last time each chunk has been seen
+//     */
+//    public String[] getChunkAges() {
+//        return chunkAges;
+//    }
 
     /**
      * @return Chunks
@@ -561,12 +563,12 @@ public class FileInfo extends Parent implements Observer {
         * OffsetTime        File Last Seen
         * int32                        File Priority
         */
-        this.id = messageBuffer.readInt32();
+        this.id = messageBuffer.readInt32(); 
         this.setNetwork(messageBuffer.readInt32());
         this.names = messageBuffer.readStringList();
         this.md4 = messageBuffer.readBinary(16);
-        this.size = messageBuffer.readInt32();
-        setDownloaded(messageBuffer.readInt32());
+        setSize(messageBuffer);        
+        setDownloaded(messageBuffer);        
         this.sources = messageBuffer.readInt32();
         this.clients = messageBuffer.readInt32();
 
@@ -579,15 +581,18 @@ public class FileInfo extends Parent implements Observer {
 
         setChunks(messageBuffer.readString());
         setAvailability(messageBuffer);
-        setRate(new Double(messageBuffer.readString()).doubleValue()); // use float?
-        this.chunkAges = messageBuffer.readStringList();
-        this.age = messageBuffer.readString();
+        String speed = messageBuffer.readString();
+        setRate(new Double(speed).doubleValue()); // use float?
+        setChunkAges(messageBuffer);
+        setAge(messageBuffer);
+        
 
         /* File Format */
         this.getFormat().readStream(messageBuffer);
         this.name = messageBuffer.readString();
         setOffset(messageBuffer.readInt32());
         this.setPriority(messageBuffer.readSignedInt32());
+        readComment(messageBuffer);
         this.stringSize = RegExp.calcStringSize(this.getSize());
         updateETA();
         this.stringAge = RegExp.calcStringOfSeconds((System.currentTimeMillis() / 1000) -
@@ -596,6 +601,69 @@ public class FileInfo extends Parent implements Observer {
     }
 
     /**
+	 * @param messageBuffer
+	 */
+	protected void readComment(MessageBuffer messageBuffer) {
+		//for newer gui Protocolls
+		this.comment = "";
+	}
+	
+	/**
+	 * @param messageBuffer
+	 */
+	protected void setComment(String comment ) {
+		//for newer gui Protocolls
+		this.comment = comment;
+	}
+	
+	/**
+	 * @param messageBuffer
+	 */
+	public String getComment() {
+		//for newer gui Protocolls
+		return comment;
+	}
+
+	/**
+	 * @param messageBuffer
+	 */
+	protected void setAge(MessageBuffer messageBuffer) {
+		this.age = messageBuffer.readString();
+	}
+	
+	/**
+	 * @param messageBuffer
+	 */
+	void setAge(int age) {
+		this.age = String.valueOf(age);
+	}
+
+	/**
+	 * @param messageBuffer
+	 */
+	protected void setChunkAges(MessageBuffer messageBuffer) {
+		this.chunkAges = messageBuffer.readStringList();
+	}
+
+	/**
+	 * @param messageBuffer
+	 */
+	protected void setDownloaded(MessageBuffer messageBuffer) {
+		setDownloaded(messageBuffer.readInt32());
+		
+	}
+
+	/**
+	 * @param messageBuffer
+	 */
+	protected void setSize(MessageBuffer messageBuffer) {
+		System.out.println("setting size XX");
+		this.size = messageBuffer.readInt32();		
+	}
+	
+	
+
+	/**
      * Update a FileInfo object
      *
      * int32        Downloaded
@@ -700,7 +768,7 @@ public class FileInfo extends Parent implements Observer {
      *
      * read a list of int32(networkid) and string(avail)
      */
-    protected void setAvailability(MessageBuffer messageBuffer) {
+    protected void setAvailability(MessageBuffer messageBuffer) {    	
         this.avail = messageBuffer.readString();
         setRelativeAvail();
     }
@@ -725,7 +793,7 @@ public class FileInfo extends Parent implements Observer {
      *
      * @param int
      */
-    private void setDownloaded(int i) {
+     void setDownloaded(long i) {
         this.downloaded = i;
 
         String oldStringDownloaded = stringDownloaded;
@@ -1040,11 +1108,21 @@ public class FileInfo extends Parent implements Observer {
 
         return null;
     }
+	/**
+	 * @param size The size to set.
+	 */
+	void setSize(long size) {
+		this.size = size;
+	}
+
 }
 
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.86  2004/03/20 01:34:02  dek
+implemented gui-Proto 25 !!!!!
+
 Revision 1.85  2003/12/07 19:38:08  lemmy
 refactoring
 
@@ -1183,7 +1261,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)

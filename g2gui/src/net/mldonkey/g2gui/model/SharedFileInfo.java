@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.RegExp;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.19 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.20 2004/03/20 01:34:02 dek Exp $ 
  *
  */
 public class SharedFileInfo extends SimpleInformation {
@@ -148,7 +148,8 @@ public class SharedFileInfo extends SimpleInformation {
 			this.sharedFileName = re.getMatch( this.sharedFileName ).toString();
 		} catch ( REException e ) { System.out.println( "invalid RE in SharedFileInfo.java" ); }
 		
-		this.shareFileSize = messageBuffer.readInt32();
+		this.shareFileSize = getSharedFileSize(messageBuffer);
+		
 		this.numOfBytesUploaded = messageBuffer.readInt64();
 		this.numOfQueriesForFile = messageBuffer.readInt32();
 		this.md4 = messageBuffer.readBinary( 16 );
@@ -158,6 +159,13 @@ public class SharedFileInfo extends SimpleInformation {
 		stringOfBytesUploaded = RegExp.calcStringSize( numOfBytesUploaded );
 	}
 
+	/**
+	 * @param messageBuffer
+	 * @return
+	 */
+	protected long getSharedFileSize(MessageBuffer messageBuffer) {
+		return messageBuffer.readInt32();		
+	}
 	/**
 	 * @param messageBuffer The <code>Messagebuffer</code> to read from
 	 * @return wether the core updated this Information
@@ -243,6 +251,9 @@ public class SharedFileInfo extends SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.20  2004/03/20 01:34:02  dek
+implemented gui-Proto 25 !!!!!
+
 Revision 1.19  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -291,7 +302,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.3  2003/07/05 20:04:02  lemmy
 javadoc improved

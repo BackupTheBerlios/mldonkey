@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.Enum;
 /**
  * ClientInfo20
  *
- * @version $Id: ClientInfo20.java,v 1.3 2003/12/19 22:15:27 psy Exp $ 
+ * @version $Id: ClientInfo20.java,v 1.4 2004/03/20 01:34:02 dek Exp $ 
  *
  */
 public class ClientInfo20 extends ClientInfo19 {
@@ -54,19 +54,18 @@ public class ClientInfo20 extends ClientInfo19 {
 	 * @param messageBuffer
 	 */
 	public void readStream(int clientID, MessageBuffer messageBuffer) {
-		this.clientid = clientID;
-
+		this.clientid = clientID;		
 		this.clientnetworkid = (NetworkInfo) this.parent.getNetworkInfoMap().infoIntMap.get(messageBuffer.readInt32());
-
 		this.getClientKind().readStream(messageBuffer);
 
 		Enum oldState = this.getState().getState();
 		this.getState().readStream(messageBuffer);
+		readNewVersion(messageBuffer);
 		this.setClientType(messageBuffer.readByte());
 		this.tag = messageBuffer.readTagList();
-		this.clientName = messageBuffer.readString();
+		this.clientName = messageBuffer.readString();		
 		this.clientRating = messageBuffer.readInt32();
-		this.clientSoftware = messageBuffer.readString();
+		this.clientSoftware = messageBuffer.readString();		
 		this.clientDownloaded = messageBuffer.readInt64();
 		this.clientUploaded = messageBuffer.readInt64();
 		this.clientUploadFilename = messageBuffer.readString();
@@ -74,6 +73,8 @@ public class ClientInfo20 extends ClientInfo19 {
 		// this needs to be fixed in the core soon since core/gui clocks can be out of sync rendering this useless
 		// I've sent mail... 
 		this.clientConnectTime = messageBuffer.readInt32();
+		readEmuleMod(messageBuffer);
+		
 		this.clientConnectTimeString = "" +
 		new Date(((long) clientConnectTime + 1000000000L) * 1000L);
 
@@ -106,6 +107,20 @@ public class ClientInfo20 extends ClientInfo19 {
 		onChangedState(oldState);
 	}
 
+	/**
+	 * 
+	 */
+	protected void readNewVersion(MessageBuffer messageBuffer) {
+		// TODO Auto-generated method stub
+		
+	}
+	/**
+	 * @param messageBuffer
+	 */
+	protected void readEmuleMod(MessageBuffer messageBuffer) {		
+		//valid for gui Proto >=21
+	}
+	
 	public int getClientConnectTime() {
 		return clientConnectTime;
 	}
@@ -133,6 +148,9 @@ public class ClientInfo20 extends ClientInfo19 {
 
 /*
 $Log: ClientInfo20.java,v $
+Revision 1.4  2004/03/20 01:34:02  dek
+implemented gui-Proto 25 !!!!!
+
 Revision 1.3  2003/12/19 22:15:27  psy
 added human readable value for connectiontime passed since connection initiation
 

@@ -27,7 +27,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 /**
  * ProtocolVersionFactory
  *
- * @version $Id: ModelFactory.java,v 1.3 2004/01/28 22:15:35 psy Exp $ 
+ * @version $Id: ModelFactory.java,v 1.4 2004/03/20 01:34:02 dek Exp $ 
  *
  */
 public class ModelFactory {
@@ -46,7 +46,9 @@ public class ModelFactory {
 	
 	public static ModelFactory getFactory( int protocolVersion, CoreCommunication aCore ) {
 		if ( factory == null ) {
-			if ( protocolVersion >= 20 )
+			if ( protocolVersion >= 25 )
+				factory = new ModelFactory25();
+			else if ( protocolVersion >= 20 )
 				factory = new ModelFactory20();
 			else if ( protocolVersion >= 19 )
 				factory = new ModelFactory19();
@@ -57,7 +59,7 @@ public class ModelFactory {
 			else if ( protocolVersion >= 3 )
 				factory = new ModelFactory3();
 		}
-		core = aCore;
+		core = aCore;		
 		return factory;	
 	}
 	
@@ -196,6 +198,9 @@ public class ModelFactory {
 
 /*
 $Log: ModelFactory.java,v $
+Revision 1.4  2004/03/20 01:34:02  dek
+implemented gui-Proto 25 !!!!!
+
 Revision 1.3  2004/01/28 22:15:35  psy
 * Properly handle disconnections from the core
 * Fast inline-reconnect

@@ -36,7 +36,7 @@ import java.util.List;
  * SharedFileInfoList
  *
  *
- * @version $Id: SharedFileInfoIntMap.java,v 1.11 2003/12/04 08:47:25 lemmy Exp $
+ * @version $Id: SharedFileInfoIntMap.java,v 1.12 2004/03/20 01:34:02 dek Exp $
  *
  */
 public class SharedFileInfoIntMap extends InfoIntMap {
@@ -74,7 +74,7 @@ public class SharedFileInfoIntMap extends InfoIntMap {
             if (this.infoIntMap.contains(fileID))
                 this.detailedUpdate(messageBuffer);
             else {
-                SharedFileInfo sharedFileInfo = new SharedFileInfo();
+                SharedFileInfo sharedFileInfo = parent.getModelFactory().getSharedFileInfo();
                 sharedFileInfo.readStream(messageBuffer);
                 this.infoIntMap.put(fileID, sharedFileInfo);
 
@@ -195,6 +195,9 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: SharedFileInfoIntMap.java,v $
+Revision 1.12  2004/03/20 01:34:02  dek
+implemented gui-Proto 25 !!!!!
+
 Revision 1.11  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -231,7 +234,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.3  2003/07/05 20:04:02  lemmy
 javadoc improved

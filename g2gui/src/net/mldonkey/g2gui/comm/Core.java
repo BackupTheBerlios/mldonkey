@@ -58,7 +58,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.125 2004/03/16 17:08:43 dek Exp $ 
+ * @version $Id: Core.java,v 1.126 2004/03/20 01:34:02 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -100,7 +100,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * The protocol version we maximal speak
 	 */
-	private static final int PROTOCOL_VERSION = 20;
+	private static final int PROTOCOL_VERSION = 25;
 	/**
 	 * The protocol the core speaks
 	 */
@@ -224,8 +224,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 				// get message content
 				messageContent = Message.readStream( i, messageLength );
 			
-				messageBuffer.setBuffer( messageContent );
-				opCode = messageBuffer.readInt16();		
+				messageBuffer.setBuffer( messageContent );				
+				opCode = messageBuffer.readInt16();	
+				messageBuffer.setOpcode(opCode);
 				
 				/* decode the message content */			
 				this.decodeMessage( opCode, messageLength, messageBuffer, pollModeEnabled );
@@ -671,6 +672,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.126  2004/03/20 01:34:02  dek
+implemented gui-Proto 25 !!!!!
+
 Revision 1.125  2004/03/16 17:08:43  dek
 implemented opCode 50
 
