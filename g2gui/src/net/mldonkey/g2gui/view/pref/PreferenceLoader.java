@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.68 2004/03/26 18:38:37 dek Exp $
+ * @version $Id: PreferenceLoader.java,v 1.69 2004/03/26 22:34:39 dek Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -73,6 +73,7 @@ public class PreferenceLoader {
     // our current state, are we in the progress of relaunching or quitting?
     private static boolean relaunching = false;
     private static boolean quitting = false;
+
     
     // prevent instantiation
     private PreferenceLoader() {
@@ -92,6 +93,7 @@ public class PreferenceLoader {
     	if ( preferenceStore == null ) {
     		System.out.println("Trying to use preferences: " + file);
     		preferenceStore = new PreferenceStore( file );
+    		
     	}
     	
     	try {
@@ -105,10 +107,11 @@ public class PreferenceLoader {
     		preferenceStore.save();
     		System.out.println("Created new configfile.");
     	}
-    	preferenceStore = (PreferenceStore) setDefaults( preferenceStore );
+    	preferenceStore = (PreferenceStore) setDefaults( preferenceStore );    	
     	
     	// save the critical preferences in a hashmap for later use with needsRestart()
     	saveCritPrefs();
+    	
     }
     
     private static boolean userHomeExists() {
@@ -466,10 +469,15 @@ public class PreferenceLoader {
 	public static void setQuitting(boolean b) {
 		quitting = b;
 	}
+
+
 }
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.69  2004/03/26 22:34:39  dek
+.torrents are now correctly stored in win-registry
+
 Revision 1.68  2004/03/26 18:38:37  dek
 now the "surpress-received-clients" option is working
 

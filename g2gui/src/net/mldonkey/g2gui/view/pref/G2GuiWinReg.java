@@ -22,10 +22,12 @@
  */
 package net.mldonkey.g2gui.view.pref;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import net.mldonkey.g2gui.helper.RegExp;
+import net.mldonkey.g2gui.view.helper.VersionCheck;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
@@ -41,7 +43,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.10 2004/03/26 21:37:37 dek Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.11 2004/03/26 22:34:39 dek Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -97,7 +99,17 @@ public class G2GuiWinReg extends PreferencePage {
 
         return false;
     }
-
+	/**
+	 * helper-method
+	 * @return
+	 */
+    private static boolean userHomeExists() {
+    	if (VersionCheck.isWin32() && System.getProperty("user.home").equals("\\"))
+    		return false;
+    	
+    	return new File(System.getProperty("user.home")).exists(); 
+    }
+    
     /**
      * Create the registry file
      */
@@ -107,21 +119,26 @@ public class G2GuiWinReg extends PreferencePage {
         FileOutputStream out;
         PrintStream p;
         
+        String fileSep = System.getProperty("file.separator");
+        String userhome = System.getProperty("user.home");
+                
         currentDir = System.getProperty("user.dir") + System.getProperty("file.separator");
 
         try {
             String regFile = currentDir + appName + ".reg";
             String exeFile = currentDir + appName + ".exe";
-            String prefFile = currentDir + appName + ".pref";
-
+            
+            String pathToConf = userhome + fileSep + ".g2gui" + fileSep + appName + ".pref";
+            String prefFile = userHomeExists() ? pathToConf : currentDir + appName + ".pref" ;
+            
             exeFile = RegExp.replaceAll(exeFile, "\\\\", "\\\\");
             prefFile = RegExp.replaceAll(prefFile, "\\\\", "\\\\");
 
             out = new FileOutputStream(regFile);
             p = new PrintStream(out);
             
-            p.println("Windows Registry Editor Version 5.00");
-
+           // p.println("Windows Registry Editor Version 5.00");
+            p.println("REGEDIT4");
             for (int i = 0; i < registerLinks.length; i++) {
                 switch (registerLinks[ i ].getSelection()) {
                 case RegisterLink.REGISTER:
@@ -333,6 +350,9 @@ public class G2GuiWinReg extends PreferencePage {
 
 /*
 $Log: G2GuiWinReg.java,v $
+Revision 1.11  2004/03/26 22:34:39  dek
+.torrents are now correctly stored in win-registry
+
 Revision 1.10  2004/03/26 21:37:37  dek
 *** empty log message ***
 
