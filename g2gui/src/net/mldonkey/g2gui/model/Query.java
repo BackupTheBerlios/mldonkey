@@ -27,21 +27,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumQuery;
 
 /**
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.12 2003/07/05 14:04:12 dek Exp $ 
+ * @version $Id: Query.java,v 1.13 2003/07/06 07:36:42 lemmstercvs01 Exp $ 
  *
  */
 public class Query implements SimpleInformation {
-	
 	/**
 	 * The Type of this tree node
 	 */
-	private byte node;
-	
+	private Enum node;
 	/**
 	 * Queries for AND or OR or Hidden
 	 */
@@ -71,7 +71,6 @@ public class Query implements SimpleInformation {
 	 */
 	private String defaultValue;
 
-
 	/**
 	 * creates an empty Query-Object
 	 */
@@ -93,9 +92,9 @@ public class Query implements SimpleInformation {
    	 	 * String	Comment (present ONLY IF Node Type = 4,5,6,7,8,9,10,11 or 12) 
    	 	 * String	Default Value (present ONLY IF Node Type = 4,5,6,7,8,9,10,11 or 12) 
 		 */
-		node = messageBuffer.readByte();
+		this.setNode( messageBuffer.readByte() );
 
-		if ( node == 0 || node == 1 || node == 13 ) {
+		if ( node == EnumQuery.AND || node == EnumQuery.OR || node == EnumQuery.HIDDEN ) {
 			short listElem = messageBuffer.readInt16();
 			for ( int i = 0; i < listElem; i++ ) {				
 				Query aQuery = new Query();
@@ -103,23 +102,23 @@ public class Query implements SimpleInformation {
 				queries.add( aQuery ) ;
 			}
 		}
-		else if ( node == 2 ) {
+		else if ( node == EnumQuery.AND_NOT ) {
 			Query fQuery = new Query();
 			fQuery.readStream( messageBuffer );
 			Query sQuery = new Query();
 			sQuery.readStream( messageBuffer );
-			this.setFAndNot( fQuery );
-			this.setSAndNot( sQuery );
+			this.fAndNot = fQuery;
+			this.sAndNot = sQuery;
 		}
-		else if ( node == 3 ) {
-			this.setModule( messageBuffer.readString() );
+		else if ( node == EnumQuery.MODULE ) {
+			this.module = messageBuffer.readString();
 			Query aQuery = new Query();
 			aQuery.readStream( messageBuffer );
-			this.setMQuery( aQuery );
+			this.mQuery = aQuery;
 		}
 		else {
-			this.setComment( messageBuffer.readString() );
-			this.setDefaultValue( messageBuffer.readString() );
+			this.comment = messageBuffer.readString();
+			this.defaultValue = messageBuffer.readString();
 		}
 	}
 	
@@ -128,67 +127,66 @@ public class Query implements SimpleInformation {
 	 * via GUI-protocol)
 	 * @return the byte-array
 	 */
-	public Object[] toObjectArray() {
-		ArrayList output = new ArrayList();
-		output.add( new Byte( node ) );
+	protected Object[] toObjectArray() {
+		List output = new ArrayList();
+		output.add( new Byte( EnumQuery.getValue( ( EnumQuery ) node ) ) );
 		
-			 if ( node == 0 || node == 1 || node == 13 ) {			 	
+			if ( node == EnumQuery.AND || node == EnumQuery.OR || node == EnumQuery.HIDDEN ) {			 	
 			 	/*
 			 	 * List of Queries for AND or OR or Hidden.
 			 	 */	
 			 	 
 			 	/* setting List header */
-				output.add( new Short( ( short )queries.size() ) );	 					
+				output.add( new Short( ( short ) queries.size() ) );	 
+
 				/*now setting an entry for each Query in queries[]*/			 	
-				 	for ( int i = 0; i < queries.size(); i++ ) {	
-						Object[] querieArray = ( ( Query )queries.get( i ) ).toObjectArray();
-							for ( int j = 0; j < querieArray.length; j++ ) {
-								output.add( querieArray [ j ] );
-							}
+				for ( int i = 0; i < queries.size(); i++ ) {	
+					Object[] querieArray = ( ( Query )queries.get( i ) ).toObjectArray();
+					for ( int j = 0; j < querieArray.length; j++ ) {
+						output.add( querieArray [ j ] );
 					}
-			 }
-			else if ( node == 2  ) {
+				}
+			}
+			else if ( node == EnumQuery.AND_NOT  ) {
 				/*
 				 * Query: First Argument of Andnot
 				 */
-					Object[] fTempArray = fAndNot.toObjectArray();
-					for ( int i = 0; i < fTempArray.length; i++ ) {
-						output.add( fTempArray [ i ] );
-					}
+				Object[] fTempArray = fAndNot.toObjectArray();
+				for ( int i = 0; i < fTempArray.length; i++ ) {
+					output.add( fTempArray [ i ] );
+				}
 				 
-				 /*
-				  * Query: Second Argument of Andnot
-				  */
-					Object[] sTempArray = sAndNot.toObjectArray();
-					for ( int i = 0; i < sTempArray.length; i++ ) {
-						output.add( sTempArray [ i ] );
-					}
-				
+				/*
+				 * Query: Second Argument of Andnot
+				 */
+				Object[] sTempArray = sAndNot.toObjectArray();
+				for ( int i = 0; i < sTempArray.length; i++ ) {
+					output.add( sTempArray [ i ] );
+				}
 			}
-			else if ( node == 3  ) {
+			else if ( node == EnumQuery.MODULE  ) {
 				/*
 				 * String: 	 Name of Module
 				 */ 
-					output.add( module );
+				output.add( module );
 				/* 
 				 * Query  :	 Query inside Module
 				 */
-					Object[] tempArray = mQuery.toObjectArray();
-					for ( int i = 0; i < tempArray.length; i++ ) {
-						output.add( tempArray [ i ] );
-					}
+				Object[] tempArray = mQuery.toObjectArray();
+				for ( int i = 0; i < tempArray.length; i++ ) {
+					output.add( tempArray [ i ] );
+				}
 			}
 			else {
 				/*
 				 * String: Comment
 				 */ 
-					output.add( comment );
+				output.add( comment );
 				/* 
 				 * String: DefaultValue
 				 */				
-					output.add( defaultValue );
+				output.add( defaultValue );
 			}
-		 
 		return output.toArray();
 	}
 	
@@ -203,7 +201,7 @@ public class Query implements SimpleInformation {
 	 * @return a Query[]
 	 */
 	public Query[] getQueries() {
-		return ( Query[] )queries.toArray();
+		return ( Query[] ) queries.toArray();
 	}
 
 	/**
@@ -224,7 +222,7 @@ public class Query implements SimpleInformation {
 	 * @param query a Query to be added to our query-list
 	 */
 	public void addQuery( Query query ) {
-		this.queries.add ( query );
+		this.queries.add( query );
 	}
 
 	/**
@@ -277,66 +275,87 @@ public class Query implements SimpleInformation {
 	}
 
 	/**
-	 * @param string a string
-	 */
-	public void setComment( String string ) {
-		comment = string;
-	}
-
-	/**
-	 * @param string a string
-	 */
-	public void setDefaultValue( String string ) {
-		defaultValue = string;
-	}
-
-	/**
 	 * @return this querys type :
-	 *  0 : And(x,y,...) -> x AND y AND ... 
-	 *  1 : Or(x,y,...) -> x OR y OR ... 
-	 *  2 : Andnot(x,y) -> x AND NOT y 
-	 *  3 : Module (name, query) -> fields of 'query' to be display in a frame 'name' 
-	 *  4 : Keywords(comment, default) -> a text field, display 'comment' in front, and default value is 'default' 
-	 *  5 : Minsize(comment, default) 
-	 *  6 : Maxsize(comment, default) 
-	 *  7 : Format(comment, default) 
-	 *  8 : Media(comment, default) 
-	 *  9 : Mp3 Artist(comment, default) 
-	 *  10 : Mp3 Title(comment, default) 
-	 *  11 : Mp3 Album(comment, default) 
-	 *  12 : Mp3 Bitrate(comment, default) 
-	 *  13 : Hidden(fields) -> A list of fields whose values cannot be changed by the 
 	 */
-	public byte getNode() {
+	public Enum getNode() {
 		return node;
 	}
 
 	/**
-	 * set this querys type :<br>
-	 *  0 : And(x,y,...) -> x AND y AND ... <br>
-	 *  1 : Or(x,y,...) -> x OR y OR ... <br>
-	 *  2 : Andnot(x,y) -> x AND NOT y <br>
-	 *  3 : Module (name, query) -> fields of 'query' to be display in a frame 'name' <br>
-	 *  4 : Keywords(comment, default) -> a text field, display 'comment' in front, and default value is 'default' <br>
-	 *  5 : Minsize(comment, default) <br>
-	 *  6 : Maxsize(comment, default) <br>
-	 *  7 : Format(comment, default) <br>
-	 *  8 : Media(comment, default) <br>
-	 *  9 : Mp3 Artist(comment, default) <br>
-	 *  10 : Mp3 Title(comment, default) <br>
-	 *  11 : Mp3 Album(comment, default) <br>
-	 *  12 : Mp3 Bitrate(comment, default) <br>
-	 *  13 : Hidden(fields) -> A list of fields whose values cannot be changed by the <br>
 	 * @param b the typ to set
 	 */
-	public void setNode( byte b ) {
-		node = b;
+	private void setNode( byte b ) {
+		/*	
+ 	  	 * 0 And(x,y,...)
+ 		 * 1: Or(x,y,...)
+		 * 2: Andnot(x,y)
+		 * 3: Module (name, query)
+		 * 4: Keywords(comment, default)
+		 * 5: Minsize(comment, default)>
+		 * 6: Maxsize(comment, default)
+		 * 7: Format(comment, default)
+		 * 8: Media(comment, default)
+		 * 9: Mp3 Artist(comment, default)
+		 * 10: Mp3 Title(comment, default)
+		 * 11: Mp3 Album(comment, default)
+		 * 12: Mp3 Bitrate(comment, default)
+		 * 13: Hidden(fields)
+		 */
+		if ( b == 0 )
+			node = EnumQuery.AND;
+		else if ( b == 1 )
+			node = EnumQuery.OR;	
+		else if ( b == 2 )
+			node = EnumQuery.AND_NOT;	
+		else if ( b == 3 )
+			node = EnumQuery.MODULE;	
+		else if ( b == 4 )
+			node = EnumQuery.KEYWORDS;	
+		else if ( b == 5 )
+			node = EnumQuery.MINSIZE;	
+		else if ( b == 6 )
+			node = EnumQuery.MAXSIZE;	
+		else if ( b == 7 )
+			node = EnumQuery.FORMAT;	
+		else if ( b == 8 )
+			node = EnumQuery.MEDIA;	
+		else if ( b == 9 )
+			node = EnumQuery.MP3_ARTIST;	
+		else if ( b == 10 )
+			node = EnumQuery.MP3_TITLE;	
+		else if ( b == 11 )
+			node = EnumQuery.MP3_ALBUM;	
+		else if ( b == 12 )
+			node = EnumQuery.MP3_BITRATE;	
+		else if ( b == 13 )
+			node = EnumQuery.HIDDEN;
 	}
-
+	/**
+	 * @param string The comment to set
+	 */
+	public void setComment( String string ) {
+		this.comment = string;
+	}
+	/**
+	 * @param pattern The search pattern to set
+	 */
+	public void setDefaultValue( String pattern ) {
+		this.defaultValue = pattern;
+	}
+	/**
+	 * 
+	 * @param enum The EnumQuery to set
+	 */
+	public void setNode( EnumQuery enum ) {
+		this.node = enum;		
+	}
 }
 
 /*
 $Log: Query.java,v $
+Revision 1.13  2003/07/06 07:36:42  lemmstercvs01
+EnumQuery added
+
 Revision 1.12  2003/07/05 14:04:12  dek
 all in order for searching
 

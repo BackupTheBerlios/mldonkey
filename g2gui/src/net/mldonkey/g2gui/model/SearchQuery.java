@@ -23,24 +23,22 @@
 package net.mldonkey.g2gui.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.model.enum.EnumQuery;
 
 /**
  * SearchQuery is needed to transmit a search to the mldonkey. It needs to be created, and then filled
  * with setter(). When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.6 2003/07/05 14:04:12 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.7 2003/07/06 07:36:42 lemmstercvs01 Exp $ 
  *
  */
 public class SearchQuery {
-
-	private final byte AND = 0;
-	private final byte OR = 1;
-	private final byte ANDNOT = 2;
-	
 	/**
 	 * some options for the search : minFileSize, maxFileSize, etc...
 	 */
@@ -92,7 +90,6 @@ public class SearchQuery {
 	 */
 	private int network;
 	
-	
 	/**
 	 * Default constructor for creating a empty SearchQuery
 	 * @param core The CoreCommunication parent
@@ -109,14 +106,13 @@ public class SearchQuery {
 		
 		/*and this are the options for our search:*/
 		searchOptions = new Query();
-		searchOptions.setNode( AND );
-		
+		searchOptions.setNode( EnumQuery.AND );
 				
 		/*This is the wrapper for options & search-query*/
 		mainQuery = new Query();
-			mainQuery.addQuery( searchOptions );			
-			mainQuery.addQuery( searchQuery );			
-			
+		mainQuery.setNode( EnumQuery.AND );
+		mainQuery.addQuery( searchOptions );			
+		mainQuery.addQuery( searchQuery );			
 		
 		/*we want to search remotely, so we can set this field here*/
 		searchType = 1;
@@ -124,16 +120,12 @@ public class SearchQuery {
 		/*The normal search-type should be AND (= type 0)
 		 * could be changed by setter-method
 		 */
-		searchQuery.setNode( AND );
+		searchQuery.setNode( EnumQuery.AND );
 
-		
 		/*
 		 * default is searching in all networks:
 		 */
 		network = 0;
-		 
-		 
-		
 	}
 	/**
 	 * @param i the maximal number of wanted searchresults
@@ -154,12 +146,11 @@ public class SearchQuery {
 		for ( int i = 0; i < patterns.length; i++ ) {				
 			newQuery = new Query();
 			String pattern = patterns[i];			
-			newQuery.setNode( ( byte )4 );
+			newQuery.setNode( EnumQuery.KEYWORDS );
 			newQuery.setComment( "Search-pattern:" );
 			newQuery.setDefaultValue( pattern );
 			searchQuery.addQuery( newQuery );
 		}
-		
 	}
 	
 	/**
@@ -168,14 +159,13 @@ public class SearchQuery {
 	 */
 	public void setMaxSize( long size ) {
 		Query maxSize = new Query();
-		maxSize.setNode( ( byte ) 6 );
+		maxSize.setNode( EnumQuery.MAXSIZE );
 		maxSize.setComment( "Maximum size" );
 		maxSize.setDefaultValue( String.valueOf( size ) );
 		/*
 		 * add this query to the list in searchOptions
 		 */
 		searchOptions.addQuery( maxSize );
-		
 	}
 
 	/**
@@ -184,7 +174,7 @@ public class SearchQuery {
 	 */
 	public void setMinSize( long size ) {
 		Query minSize = new Query();
-		minSize.setNode( ( byte ) 5 );
+		minSize.setNode( EnumQuery.MINSIZE );
 		minSize.setComment( "Minimum size" );
 		minSize.setDefaultValue( String.valueOf( size ) );		
 		/*
@@ -198,7 +188,7 @@ public class SearchQuery {
 	 */
 	public void setFormat( String format_ ) {
 		Query format = new Query();
-		format.setNode( ( byte ) 6 );
+		format.setNode( EnumQuery.FORMAT );
 		format.setComment( "Format: " );
 		format.setDefaultValue( format_ );
 		/*
@@ -222,11 +212,10 @@ public class SearchQuery {
 	 * ( 2 = AND NOT ) not yet implemented
 	 * @param type The Type of this search
 	 */
-	public void setSearchType( byte type ) {
-		if ( ( type == AND ) || ( type == OR )  ) {		
-				searchQuery.setNode( type );				
+	public void setSearchType( EnumQuery enum ) {
+		if ( ( enum == EnumQuery.AND ) || ( enum == EnumQuery.OR )  ) {		
+				searchQuery.setNode( enum );				
 		}
-				
 	}
 	
 	/**
@@ -234,40 +223,38 @@ public class SearchQuery {
 	 * 
 	 */
 	public void send() {
-		ArrayList content = new ArrayList();
+		List content = new ArrayList();
 		content.add( new Integer( searchIdentifier ) );
 		
 		/* now we need to get the Query sorted out in kind of Objects[] */
-			Object[] tempArray = this.mainQuery.toObjectArray();
-			for ( int i = 0; i < tempArray.length; i++ ) {				
-				content.add( tempArray [ i ] );
-			}
+		Object[] tempArray = this.mainQuery.toObjectArray();
+		for ( int i = 0; i < tempArray.length; i++ ) {				
+			content.add( tempArray [ i ] );
+		}
 		
 		content.add( new Integer( maxSearchResults ) );
 		content.add( new Byte( searchType ) );
 		content.add( new Integer( network ) );
 		
-
 		/* create the message content */
-		
 		Object[] temp = content.toArray();
-		EncodeMessage consoleMessage = new EncodeMessage( ( short )42, content.toArray() );
+		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SEARCH_QUERY, content.toArray() );
 		consoleMessage.sendMessage( this.getParent().getConnection() );
-		//content = null;
-		//consoleMessage = null;
 	}
 
 	/**
 	 * @return our master, the coreCommunication-interface
 	 */
-	public CoreCommunication getParent() {
+	private CoreCommunication getParent() {
 		return parent;
 	}
-
 }
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.7  2003/07/06 07:36:42  lemmstercvs01
+EnumQuery added
+
 Revision 1.6  2003/07/05 14:04:12  dek
 all in order for searching
 
