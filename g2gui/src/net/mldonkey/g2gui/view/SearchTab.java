@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.Control;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.50 2003/12/07 19:36:55 lemmy Exp $ 
+ * @version $Id: SearchTab.java,v 1.51 2004/01/12 20:59:16 psy Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -133,7 +133,6 @@ public class SearchTab extends GuiTab {
 	    
 	    Composite aComposite = searchViewFrame.getChildComposite();
 		aComposite.setLayout( WidgetFactory.createGridLayout(1,0,0,0,0,false));
-
 		tabFolder = new CTabFolder( aComposite, SWT.NONE );
 		tabFolder.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 				
@@ -414,6 +413,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.51  2004/01/12 20:59:16  psy
+outsourced' label string
+
 Revision 1.50  2003/12/07 19:36:55  lemmy
 [Bug #1162] Search tab's pane position always reset to default
 
@@ -528,7 +530,7 @@ Revision 1.14  2003/08/23 14:58:38  lemmy
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

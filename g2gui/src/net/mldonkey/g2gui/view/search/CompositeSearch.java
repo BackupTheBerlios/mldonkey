@@ -27,6 +27,7 @@ import java.util.List;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -42,7 +43,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * CompositeSearch
  *
- * @version $Id: CompositeSearch.java,v 1.11 2003/12/04 08:47:29 lemmy Exp $
+ * @version $Id: CompositeSearch.java,v 1.12 2004/01/12 20:59:16 psy Exp $
  *
  */
 public class CompositeSearch extends Search {
@@ -71,7 +72,7 @@ public class CompositeSearch extends Search {
      * @see net.mldonkey.g2gui.view.search.Search#getTabName()
      */
     public String getTabName() {
-        return "Advanced Search";
+        return G2GuiResources.getString( "CS_TITLE" );
     }
 
     /* (non-Javadoc)
@@ -171,6 +172,9 @@ public class CompositeSearch extends Search {
 
 /*
 $Log: CompositeSearch.java,v $
+Revision 1.12  2004/01/12 20:59:16  psy
+outsourced' label string
+
 Revision 1.11  2003/12/04 08:47:29  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
