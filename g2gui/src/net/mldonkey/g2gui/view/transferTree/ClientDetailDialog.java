@@ -29,7 +29,6 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -49,13 +48,13 @@ import org.eclipse.swt.widgets.Text;
  * ClientDetailDialog
  *
  * @author $Author: zet $
- * @version $Id: ClientDetailDialog.java,v 1.10 2003/08/23 01:00:10 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.11 2003/08/23 15:13:00 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
 
 	private Shell shell;
-	private Display desktop = MainTab.getShell().getDisplay();
+	private Display desktop = Display.getDefault();
 	private FileInfo fileInfo;
 	private ClientInfo clientInfo;
 	private ChunkCanvas chunkCanvas, chunkCanvas2;
@@ -212,17 +211,14 @@ public class ClientDetailDialog implements Observer {
 	
 	public void update(Observable o, Object arg) {
 		if (o instanceof FileInfo) {
-			if (MainTab.getShell().isDisposed())
-				return;
+			if (clName.isDisposed()) return;
 
-			Shell shell = MainTab.getShell();
-			if (shell != null && shell.getDisplay() != null) {
-				shell.getDisplay().asyncExec(new Runnable() {
+				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						updateLabels();
 					}
 				});
-			}
+			
 		}
 	}
 	
@@ -252,6 +248,9 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.11  2003/08/23 15:13:00  zet
+remove reference to static MainTab methods
+
 Revision 1.10  2003/08/23 01:00:10  zet
 *** empty log message ***
 
@@ -260,6 +259,9 @@ new todo (close button)
 
 Revision 1.8  2003/08/22 21:22:58  lemmster
 fix $Log: ClientDetailDialog.java,v $
+fix Revision 1.11  2003/08/23 15:13:00  zet
+fix remove reference to static MainTab methods
+fix
 fix Revision 1.10  2003/08/23 01:00:10  zet
 fix *** empty log message ***
 fix

@@ -27,7 +27,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -52,13 +51,13 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  * @author $Author: zet $
- * @version $Id: FileDetailDialog.java,v 1.13 2003/08/23 01:08:17 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.14 2003/08/23 15:13:00 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
 
 	private Shell shell;
-	private Display desktop = MainTab.getShell().getDisplay();
+	private Display desktop = Display.getCurrent();
 	private FileInfo fileInfo;
 	private ChunkCanvas chunkCanvas;
 	
@@ -296,17 +295,14 @@ public class FileDetailDialog implements Observer {
 	
 	public void update(Observable o, Object arg) {
 		if (o instanceof FileInfo) {
-			if (MainTab.getShell().isDisposed())
+			if (clFileName.isDisposed())
 				return;
 
-			Shell shell = MainTab.getShell();
-			if (shell != null && shell.getDisplay() != null) {
-				shell.getDisplay().asyncExec(new Runnable() {
+				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						updateLabels();
 					}
 				});
-			}
 		}
 	}
 	
@@ -319,6 +315,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.14  2003/08/23 15:13:00  zet
+remove reference to static MainTab methods
+
 Revision 1.13  2003/08/23 01:08:17  zet
 *** empty log message ***
 
@@ -330,6 +329,9 @@ new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
+fix Revision 1.14  2003/08/23 15:13:00  zet
+fix remove reference to static MainTab methods
+fix
 fix Revision 1.13  2003/08/23 01:08:17  zet
 fix *** empty log message ***
 fix

@@ -27,7 +27,6 @@ import java.util.Observer;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
@@ -44,13 +43,12 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 
 /**
  * ChunkView
  *
- * @author $Author: dek $
- * @version $Id: ChunkCanvas.java,v 1.14 2003/08/23 14:18:17 dek Exp $ 
+ * @author $Author: zet $
+ * @version $Id: ChunkCanvas.java,v 1.15 2003/08/23 15:13:00 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -176,7 +174,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 			return;
 		} 
 			
-		Display thisDisplay = MainTab.getShell().getDisplay();
+		Display thisDisplay = Display.getCurrent();
 		
 		Color red = thisDisplay.getSystemColor( SWT.COLOR_RED );
 		Color black = thisDisplay.getSystemColor( SWT.COLOR_BLACK );
@@ -241,7 +239,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 		this.avail = fileInfo.getAvail();
 		int length = 0;
 		
-		Display thisDisplay = MainTab.getShell().getDisplay();
+		Display thisDisplay = Display.getCurrent();
 		
 		Color red = thisDisplay.getSystemColor( SWT.COLOR_RED );
 		Color black = thisDisplay.getSystemColor( SWT.COLOR_BLACK );
@@ -460,19 +458,14 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 	// runs in gui thread	
 	public void update( Observable o, Object obj ) {
-		final Shell shell = MainTab.getShell();
-		if ( !shell.isDisposed()
-			&& shell != null
-			&& shell.getDisplay() != null ) {
-			shell.getDisplay().asyncExec( new Runnable() {
+		
+			Display.getDefault().asyncExec( new Runnable() {
 				public void run() {
-					if ( !shell.isDisposed() ) {
 						if ( !isDisposed() )
 							refresh();
 						}
-				}
 			} );
-		}
+	
 	}
 
 
@@ -486,6 +479,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.15  2003/08/23 15:13:00  zet
+remove reference to static MainTab methods
+
 Revision 1.14  2003/08/23 14:18:17  dek
 some cleaning up, but didn't find a solution for the scrolling-resize of the bar.. so nothing changed in functionality
 
@@ -493,7 +489,7 @@ Revision 1.13  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.12  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.11  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

@@ -32,7 +32,6 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
-import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -60,8 +59,8 @@ import org.eclipse.swt.widgets.Table;
  * 
  * DownloadTableTreeMenuListener
  *
- * @author $Author: lemmster $
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.15 2003/08/23 09:46:18 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.16 2003/08/23 15:13:00 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -72,6 +71,7 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 	private List selectedFiles = new ArrayList();
 	private TableViewer clientTableViewer;
 	private DownloadTableTreeContentProvider tableTreeContentProvider;
+	private TableTreeViewer tableTreeViewer;
 	private boolean createClientTable = false;
 	
 	// move these external some day
@@ -114,6 +114,7 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 	public DownloadTableTreeMenuListener (TableTreeViewer tableTreeViewer, TableViewer clientTableViewer, CoreCommunication mldonkey) {
 		super( tableTreeViewer, mldonkey );
 		this.clientTableViewer = clientTableViewer;
+		this.tableTreeViewer = tableTreeViewer;
 		tableTreeContentProvider = (DownloadTableTreeContentProvider) tableTreeViewer.getContentProvider();
 
 	}
@@ -399,7 +400,7 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 		public void run() {
 			MessageBox reallyCancel =
 					new MessageBox( 
-						MainTab.getShell(),
+						tableTreeViewer.getTableTree().getShell(),
 						SWT.YES | SWT.NO | SWT.ICON_QUESTION );
 						
 			reallyCancel.setMessage( G2GuiResources.getString( "TT_REALLY_CANCEL" ) + " (" + selectedFiles.size() + ")" );
@@ -599,7 +600,7 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 				+ (useHTML ? " (html)" : ""));
 		}
 		public void run() {
-			Clipboard clipBoard = new Clipboard( MainTab.getShell().getDisplay() );
+			Clipboard clipBoard = new Clipboard( tableTreeViewer.getTableTree().getDisplay() );
 			String link = "";
 			for (int i = 0; i < selectedFiles.size(); i++) {
 			 	FileInfo aFileInfo = (FileInfo) selectedFiles.get(i);
@@ -694,6 +695,9 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.16  2003/08/23 15:13:00  zet
+remove reference to static MainTab methods
+
 Revision 1.15  2003/08/23 09:46:18  lemmster
 superclass TableMenuListener added
 
@@ -701,7 +705,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/22 14:30:45  lemmster
 verify chunks added

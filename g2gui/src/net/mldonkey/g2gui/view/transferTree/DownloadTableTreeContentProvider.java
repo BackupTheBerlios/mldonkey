@@ -38,7 +38,6 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ITreeViewerListener;
@@ -49,7 +48,7 @@ import org.eclipse.swt.custom.TableTreeEditor;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.events.TreeListener;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -57,7 +56,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTableTreeContentProvider
  *
  * @author $Author: zet $
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.13 2003/08/22 23:25:15 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.14 2003/08/23 15:13:00 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -228,15 +227,12 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(final Observable o, final Object object) {
-		if (MainTab.getShell().isDisposed()) return;
-		Shell shell = MainTab.getShell();
-		if(shell != null && shell.getDisplay()!=null) {
-			shell.getDisplay().asyncExec(new Runnable() {
+		if (tableTreeViewer.getTableTree().isDisposed()) return;
+			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					sendUpdate(o, object);
 				}
 			});
-		}	
 	}
 	
 	public void sendUpdate(Observable o, Object arg) {
@@ -548,6 +544,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.14  2003/08/23 15:13:00  zet
+remove reference to static MainTab methods
+
 Revision 1.13  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
