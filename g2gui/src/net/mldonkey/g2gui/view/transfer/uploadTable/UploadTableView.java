@@ -62,7 +62,7 @@ import java.util.Observer;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.5 2003/11/09 02:22:46 zet Exp $
+ * @version $Id: UploadTableView.java,v 1.4 2003/11/09 02:18:37 zet Exp $
  *
  */
 public class UploadTableView extends GTableView implements Observer {
@@ -130,8 +130,8 @@ public class UploadTableView extends GTableView implements Observer {
                         }
 
                         headerCLabel.setText(G2GuiResources.getString("TT_Uploads") + ": " +
-                            clientStats.getNumOfShare() + " (" +
-                            FileInfo.calcStringSize(clientStats.getTotalUp()) + ")");
+                            clientStats.getNumOfShare() + " ( " +
+                            FileInfo.calcStringSize(clientStats.getTotalUp()) + " )");
                     }
                 });
         }
@@ -373,9 +373,6 @@ public class UploadTableView extends GTableView implements Observer {
 
 /*
 $Log: UploadTableView.java,v $
-Revision 1.5  2003/11/09 02:22:46  zet
-*** empty log message ***
-
 Revision 1.4  2003/11/09 02:18:37  zet
 put some info in the headers
 

@@ -40,6 +40,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.widgets.Composite;
@@ -49,7 +50,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeView.java,v 1.3 2003/11/08 18:47:20 zet Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.4 2003/11/09 02:18:37 zet Exp $
  *
  */
 public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
@@ -85,7 +86,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      * @param page
      */
     public DownloadTableTreeView(Composite parent, GView clientTableView,
-        final CoreCommunication core, TransferTab page) {
+        final CoreCommunication core, TransferTab page, CLabel headerLabel) {
         super(parent, core);
         this.clientView = clientTableView;
         this.parent = parent;
@@ -106,7 +107,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
         columnDefaultWidths = new int[] { 50, 50, 250, 75, 75, 50, 50, 50, 50, 75, 75, 50, 75, 75 };
 
         gSorter = new DownloadTableTreeSorter(this);
-        tableTreeContentProvider = new DownloadTableTreeContentProvider(this);
+        tableTreeContentProvider = new DownloadTableTreeContentProvider(this, headerLabel);
         tableLabelProvider = new DownloadTableTreeLabelProvider(this);
         tableTreeMenuListener = new DownloadTableTreeMenuListener(this, clientTableView);
 
@@ -311,6 +312,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
 /*
 $Log: DownloadTableTreeView.java,v $
+Revision 1.4  2003/11/09 02:18:37  zet
+put some info in the headers
+
 Revision 1.3  2003/11/08 18:47:20  zet
 minor
 

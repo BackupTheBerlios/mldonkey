@@ -22,6 +22,18 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
+import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.model.FileInfoIntMap;
+import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
+import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeContentProvider;
+
+import org.eclipse.jface.viewers.Viewer;
+
+import org.eclipse.swt.custom.CLabel;
+
 import gnu.trove.TIntObjectIterator;
 
 import java.util.ArrayList;
@@ -30,29 +42,28 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
-import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.model.FileInfoIntMap;
-import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
-import net.mldonkey.g2gui.view.viewers.tableTree.GTableTreeContentProvider;
-
-import org.eclipse.jface.viewers.Viewer;
-
 
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.10 2003/11/08 19:29:06 zet Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.11 2003/11/09 02:18:37 zet Exp $
  *
  */
 public class DownloadTableTreeContentProvider extends GTableTreeContentProvider implements Observer {
     private DelayedUpdator addDelayedUpdator = new DelayedUpdator(DelayedUpdator.ADD, 456);
     private DelayedUpdator removeDelayedUpdator = new DelayedUpdator(DelayedUpdator.REMOVE, 456);
     private DelayedUpdator updateDelayedUpdator = new DelayedUpdator(DelayedUpdator.UPDATE, 0);
-    private int updateDelay = 2;
+    private int updateDelay;
+    private CLabel headerCLabel;
+    private String oldCLabelText;
+    private long lastLabelUpdate;
 
-    public DownloadTableTreeContentProvider(DownloadTableTreeView downloadTableTreeViewer) {
+    public DownloadTableTreeContentProvider(DownloadTableTreeView downloadTableTreeViewer,
+        CLabel headerCLabel) {
         super(downloadTableTreeViewer);
+        this.headerCLabel = headerCLabel;
+        this.updateDelay = 2;
+        this.oldCLabelText = "";
     }
 
     /*
@@ -184,6 +195,8 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
             } else if (arg == null) {
                 tableTreeViewer.refresh();
             }
+
+            updateCLabel(o);
         } else if (o instanceof FileInfo) {
             // updated fileInfo
             if (arg instanceof String[]) {
@@ -219,6 +232,95 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
     public void updateDisplay() {
         updateDelay = PreferenceLoader.loadInteger("updateDelay");
         updateDelayedUpdator.setDelay(updateDelay * 1000);
+    }
+
+    /**
+     * Update the header Clabel
+     * @param o
+     */
+    public void updateCLabel(Object o) {
+        if (System.currentTimeMillis() < (lastLabelUpdate + 1111)) {
+            return;
+        }
+
+        int totalFiles = 0;
+        int totalQueued = 0;
+        int totalDownloaded = 0;
+        int totalActive = 0;
+        int totalPaused = 0;
+        long activeTotal = 0;
+        long activeDownloaded = 0;
+        long queuedTotal = 0;
+        long queuedDownloaded = 0;
+        long downloadedTotal = 0;
+        long pausedTotal = 0;
+        long pausedDownloaded = 0;
+
+        if (o instanceof FileInfoIntMap) {
+            synchronized (o) {
+                FileInfoIntMap files = (FileInfoIntMap) o;
+                TIntObjectIterator it = files.iterator();
+
+                while (it.hasNext()) {
+                    it.advance();
+
+                    FileInfo fileInfo = (FileInfo) it.value();
+
+                    if (fileInfo.isInteresting()) {
+                        totalFiles++;
+
+                        if (fileInfo.getState().getState() == EnumFileState.QUEUED) {
+                            queuedTotal += fileInfo.getSize();
+                            queuedDownloaded += fileInfo.getDownloaded();
+                            totalQueued++;
+                        } else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED) {
+                            totalDownloaded++;
+                            downloadedTotal += fileInfo.getSize();
+                        } else if (fileInfo.getState().getState() == EnumFileState.PAUSED) {
+                            totalPaused++;
+                            pausedTotal += fileInfo.getSize();
+                            pausedDownloaded += fileInfo.getDownloaded();
+                        } else {
+                            totalActive++;
+                            activeTotal += fileInfo.getSize();
+                            activeDownloaded += fileInfo.getDownloaded();
+                        }
+                    }
+                }
+            }
+        }
+
+        String newText = G2GuiResources.getString("TT_Downloads") + ": " + totalActive;
+
+        if (totalActive > 0) {
+            newText += (" " + G2GuiResources.getString("TT_Active").toLowerCase() + " (" +
+            FileInfo.calcStringSize(activeDownloaded) + " / " +
+            FileInfo.calcStringSize(activeTotal) + ")");
+        }
+
+        if (totalPaused > 0) {
+            newText += (", " + G2GuiResources.getString("TT_Status0") + ": " + totalPaused + " (" +
+            FileInfo.calcStringSize(pausedDownloaded) + " / " +
+            FileInfo.calcStringSize(pausedTotal) + ")");
+        }
+
+        if (totalQueued > 0) {
+            newText += (", " + G2GuiResources.getString("TT_Queued") + ": " + totalQueued + " (" +
+            FileInfo.calcStringSize(queuedDownloaded) + " / " +
+            FileInfo.calcStringSize(queuedTotal) + ")");
+        }
+
+        if (totalDownloaded > 0) {
+            newText += (", " + G2GuiResources.getString("TT_Downloaded") + ": " + totalDownloaded +
+            " (" + FileInfo.calcStringSize(downloadedTotal) + ")");
+        }
+
+        if (!oldCLabelText.equals(newText)) {
+            headerCLabel.setText(newText);
+            oldCLabelText = newText;
+        }
+
+        lastLabelUpdate = System.currentTimeMillis();
     }
 
     /**
@@ -288,13 +390,15 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
         public void setDelay(int delay) {
             this.delay = delay;
         }
-
     }
 }
 
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.11  2003/11/09 02:18:37  zet
+put some info in the headers
+
 Revision 1.10  2003/11/08 19:29:06  zet
 coalesce delayed updators
 
