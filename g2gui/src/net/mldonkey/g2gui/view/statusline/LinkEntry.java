@@ -49,12 +49,11 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.5 2003/08/28 18:01:46 zet Exp $ 
+ * @version $Id: LinkEntry.java,v 1.6 2003/08/28 18:05:28 zet Exp $ 
  *
  */
 public class LinkEntry {
 
-	private Composite parent;
 	private Text linkEntryText;
 	private Button linkEntryButton;
 	private CoreCommunication core;
@@ -63,7 +62,6 @@ public class LinkEntry {
 	public LinkEntry(StatusLine statusLine, CoreCommunication core, Composite parent) {
 		this.statusLine = statusLine;
 		this.core = core;
-		this.parent = parent;
 		createContents(parent);
 	}
 	
@@ -146,6 +144,9 @@ public class LinkEntry {
 }
 /*
 $Log: LinkEntry.java,v $
+Revision 1.6  2003/08/28 18:05:28  zet
+remove unused parent
+
 Revision 1.5  2003/08/28 18:01:46  zet
 remove button
 
