@@ -130,7 +130,7 @@ case $host in
 	*mingw32* |*win*)
 	host=win
 	swt_dir=swt-win32
-	obj_dir=$host-obj
+	obj_dir=obj-$host
 	platform_targets=icon.o
 	;;
 
@@ -141,7 +141,7 @@ case $host in
 	# host=other
     host=$(echo $(uname) | tr A-Z a-z)
 	swt_dir=swt-$host-$widget_set
-	obj_dir=$widget_set-obj
+	obj_dir=obj-$widget_set
 	echo "SWT widget-set : $widget_set"
 	echo "SWT dir prefix : $swt_dir"
 	;;
