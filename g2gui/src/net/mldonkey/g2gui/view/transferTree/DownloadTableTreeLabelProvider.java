@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.7 2003/08/16 13:07:42 vnc Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.8 2003/08/16 13:26:42 vnc Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -56,8 +56,8 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	private Color rateAbove20Color = new Color(null, 35, 214, 0);
 	private Color rateAbove10Color = new Color(null, 30, 170, 2);
 	private Color rateAbove0Color = new Color(null, 24, 142, 4);
-	private Color clientTransferringColor = new Color(null, 23, 229, 253);
-	private Color clientRankedColor = new Color(null, 8, 162, 180);
+	private Color clientTransferringColor = new Color(null, 8, 162, 180);
+	private Color clientRankedColor = new Color(null, 23, 229, 253);
 	private DecimalFormat df = new DecimalFormat( "0.0" );
 	private DecimalFormat dfp = new DecimalFormat( "0" );
 	
@@ -227,6 +227,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.8  2003/08/16 13:26:42  vnc
+switched client transferring/ranking colors
+
 Revision 1.7  2003/08/16 13:07:42  vnc
 more file colors based on availability
 
