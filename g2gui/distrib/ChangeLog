@@ -1,3 +1,8 @@
+2003/12/01: z
+	* Transfer: Don't display preview option in popup menu if downloaded bytes == 0
+		or if a preview app has not been set
+	* Clients/Uploaders: add IP/Port/Connected time columns
+
 2003/11/30: lemmy
 	* Better cmdline handling
 
