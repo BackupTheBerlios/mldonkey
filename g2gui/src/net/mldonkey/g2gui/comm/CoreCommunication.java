@@ -23,13 +23,13 @@ package net.mldonkey.g2gui.comm;
 import java.io.IOException;
 import java.util.Observer;
 
-import net.mldonkey.g2gui.model.ConsoleMessage;
-import net.mldonkey.g2gui.model.InfoCollection;
+import net.mldonkey.g2gui.model.*;
+
 /**
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.12 2003/06/27 12:45:01 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.13 2003/06/27 12:47:19 dek Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -51,7 +51,7 @@ public interface CoreCommunication {
 	 */
 	ConsoleMessage getConsoleMessage();
 	
-	public InfoCollection getNetworkinfoMap();
+	public NetworkInfoIntMap getNetworkinfoMap();
 	
 	/**
 	 * Adds an Observer to this object
