@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.40 2003/10/17 03:35:52 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.41 2003/10/19 03:56:04 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -210,7 +210,7 @@ public class G2GuiResources {
         reg.put( "ProgramIcon", createRawImage( "mld_logo_48x48.gif" ) );
         reg.put( "G2GuiLogo", createTrans( "mld_logo_48x48.png" ) );
         reg.put( "G2GuiLogoSmall", createTrans( "mld_logo_12x12.png" ) );
-        reg.put( "G2GuiICO", createRawImage( "g2gui.ico" ) );
+        reg.put( "TrayIcon", createRawImage( "tray.ico" ) );
 
         String[] buttonNames = { "Preferences", "Statistics", "Console", "Transfers", "Search", "Servers", "Messages", "News" };
         String[] buttonFiles = { "preferences", "statistics", "console", "transfer3a", "search", "server", "messages", "news" };
@@ -427,6 +427,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.41  2003/10/19 03:56:04  zet
+rename tray icon
+
 Revision 1.40  2003/10/17 03:35:52  zet
 icons
 
