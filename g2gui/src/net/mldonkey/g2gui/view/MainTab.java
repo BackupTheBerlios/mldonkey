@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.95 2003/11/24 19:01:00 dek Exp $
+ * @version $Id: MainTab.java,v 1.96 2003/11/25 17:06:50 dek Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -201,9 +201,10 @@ public class MainTab implements ShellListener {
         gridData.grabExcessVerticalSpace = true;
         pageContainer.setLayoutData(gridData);
 
-        /* layout the coolbar, because we added icons */
+        /*restore coolbar-Layout from saved-state*/
         this.coolBar.layoutCoolBar();
         this.coolBar.restoreLayout();
+        
         statusline = new StatusLine(this);
     }
 
@@ -465,6 +466,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.96  2003/11/25 17:06:50  dek
+yet another test for coolBar
+
 Revision 1.95  2003/11/24 19:01:00  dek
 coolBar-Layout is now saved and restored
 

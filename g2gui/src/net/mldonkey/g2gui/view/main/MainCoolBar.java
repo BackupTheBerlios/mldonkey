@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.main;
 
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +40,8 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -58,7 +61,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.19 2003/11/25 16:25:58 dek Exp $
+ * @version $Id: MainCoolBar.java,v 1.20 2003/11/25 17:06:50 dek Exp $
  *
  */
 public class MainCoolBar {
@@ -73,8 +76,7 @@ public class MainCoolBar {
     private List miscToolButtons;
     private List mainToolButtons;
     protected int[] order = { 0, 1 };
-    protected Point[] itemsizes;
-
+    protected Point[] itemsizes = { new Point( 0, 0 ), new Point( 0, 0 ) };
 
 	/**
 	 * @param mainTab 
@@ -96,8 +98,6 @@ public class MainCoolBar {
      */
     private void createContent( Composite parent ) {
         composite = new Composite( parent, SWT.NONE );
-        /*save state on disposal*/        
-        
         GridLayout gridLayout = WidgetFactory.createGridLayout( 1, 0, 0, 0, 0, false );
         composite.setLayout( gridLayout );
         composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
@@ -120,13 +120,12 @@ public class MainCoolBar {
                 }
 
                 public void controlResized( ControlEvent e ) {
-                    composite.getParent().layout();
+                    composite.getParent().layout();                   
                 }
             } );
-        
-        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
-        coolbar.setLayoutData( gridData );        
 
+        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
+        coolbar.setLayoutData( gridData );
     }
 
 	/**
@@ -206,7 +205,7 @@ public class MainCoolBar {
         return menu;
     }
 
-    public void layoutCoolBar() {    	
+    public void layoutCoolBar() {
         // This seems to work in xp/gtk - z			
         for ( int j = 0; j < coolbar.getItemCount(); j++ ) {
             CoolItem tempCoolItem = coolbar.getItem( j );
@@ -237,22 +236,7 @@ public class MainCoolBar {
         CoolItem miscCoolItem = items[ 1 ];
         miscCoolItem.setControl( miscTools );
         
-        /*save state of coolbar on dispose*/
-        coolbar.addDisposeListener(new DisposeListener(){
-        	public void widgetDisposed(DisposeEvent e) {        		
-        		saveLayout();				
-        	}});
-        
-        /*update order on change of order ;-)*/
-        coolbar.addControlListener(new ControlListener(){
-
-			public void controlMoved(ControlEvent e) {
-				order = coolbar.getItemOrder();
-			}
-
-			public void controlResized(ControlEvent e) {
-				order = coolbar.getItemOrder();				
-			}});
+        addListeners();
     }
 
     /**
@@ -310,6 +294,8 @@ public class MainCoolBar {
     	
     	String[] sizes = RegExp.split( sizesString, '|' );
     	Point[] itemSizes = new Point[ sizes.length ];
+    	
+    	int[] wrap = {0,0};
 
     	int[] order = new int[ sizes.length ];
     	
@@ -328,13 +314,11 @@ public class MainCoolBar {
     	String[] orders = RegExp.split( orderString, '|' );
     	for ( int i = 0; i < orders.length; i++ ) {
     		order[ i ] = Integer.parseInt( orders[ i ] );
-    	}    
+    	} 
     	
-    	coolbar.setItemLayout( order, null, itemSizes );
-    	
-    	if ( p.isDefault("coolBarSizes") ){    		
-    		layoutCoolBar();
-    	}
+    	layoutCoolBar();
+    	coolbar.setItemLayout( order, wrap, itemSizes );
+    	if ( p.isDefault( "coolBarSizes" ) ) layoutCoolBar();
     }
     
     /**
@@ -345,9 +329,8 @@ public class MainCoolBar {
     	p.setValue( "coolbarLocked", isCoolbarLocked() );
     	p.setValue( "toolbarSmallButtons", isToolbarSmallButtons() );
     	
-    	StringBuffer sizesBuffer = new StringBuffer();
+    	StringBuffer sizesBuffer = new StringBuffer();    	
     	
-    	itemsizes = coolbar.getItemSizes();
     	for ( int i = 0; i < itemsizes.length; i++ ) {
     		sizesBuffer.append( itemsizes[ i ].x+"-"+itemsizes[ i ].y+"|" );			
     	}				
@@ -355,7 +338,7 @@ public class MainCoolBar {
     	
     	StringBuffer orderBuffer = new StringBuffer();
     	for ( int i = 0; i < order.length; i++ ) {    		
-			orderBuffer.append( order[ i ]+"|" );
+    		orderBuffer.append( order[ i ]+"|" );
     		
     	}
     	
@@ -363,36 +346,51 @@ public class MainCoolBar {
     	p.setValue( "coolBarOrder", orderBuffer.toString() );
     }
 
-	protected void udateLayoutStore() {
-		itemsizes = coolbar.getItemSizes();
+    protected void udateLayoutStore() {
+    	itemsizes = coolbar.getItemSizes();
     	order = coolbar.getItemOrder();
-	}
+    }
+
+
+    private void addListeners() {
+    	/*update order on change of order ;-)*/
+    	coolbar.addMouseListener(new MouseListener(){
+
+    		public void mouseDoubleClick(MouseEvent e) {
+    			order = coolbar.getItemOrder();
+    			itemsizes = coolbar.getItemSizes();	    			
+    		}
+
+    		public void mouseDown(MouseEvent e) {
+    			order = coolbar.getItemOrder();
+    			itemsizes = coolbar.getItemSizes();    			
+    		}
+
+    		public void mouseUp(MouseEvent e) {
+    			order = coolbar.getItemOrder();
+    			itemsizes = coolbar.getItemSizes();   			  			
+    		}
+				
+			});
+    	
+    	coolbar.addDisposeListener(new DisposeListener(){
+
+			public void widgetDisposed(DisposeEvent e) {
+				saveLayout();
+				
+			}});
+
+    }
 
 
 }
 
 /*
+
+
 $Log: MainCoolBar.java,v $
-Revision 1.19  2003/11/25 16:25:58  dek
-next testcase for vnc ;-)
-
-Revision 1.18  2003/11/24 21:17:06  dek
-removed System.out....
-
-Revision 1.17  2003/11/24 21:06:02  dek
-gtk workaround works by now?
-
-Revision 1.16  2003/11/24 20:40:17  dek
-yet another test
-
-Revision 1.15  2003/11/24 20:33:56  dek
-test for coolBar-saving on gtk
-
-Revision 1.14  2003/11/24 20:25:26  dek
-now item-order is also saved
-
-Revision 1.13  2003/11/24 19:01:00  dek
-coolBar-Layout is now saved and restored
+Revision 1.20  2003/11/25 17:06:50  dek
+yet another test for coolBar
 
 Revision 1.12  2003/11/23 17:58:03  lemmster
 removed dead/unused code
