@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiDisplay.java,v 1.8 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: G2GuiDisplay.java,v 1.9 2004/01/08 20:20:45 psy Exp $
  */
 public class G2GuiDisplay extends PreferencePage {
 	/**
@@ -69,6 +69,16 @@ public class G2GuiDisplay extends PreferencePage {
 				"displayTableColors",
 				G2GuiResources.getString( "PREF_DISPLAY_TABLE_COLORS" ),
 				composite ) );	
+
+		if (!((System.getProperty("os.name").length() > 7) &&
+				System.getProperty("os.name").substring(0, 7).equals("Windows"))) {
+			setupEditor( 
+				new BooleanFieldEditor( 
+					"displayFontAA",
+					G2GuiResources.getString( "PREF_DISPLAY_FONT_AA" ),
+					composite ) );
+		}
+		
 		
 		setupEditor( 
 			new BooleanFieldEditor( 
@@ -88,6 +98,9 @@ public class G2GuiDisplay extends PreferencePage {
 }
 /*
 $Log: G2GuiDisplay.java,v $
+Revision 1.9  2004/01/08 20:20:45  psy
+added option to control GTK's font-antialiasing
+
 Revision 1.8  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -153,7 +166,7 @@ Revision 1.17  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.16  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.15  2003/08/19 22:02:15  zet
 localise
