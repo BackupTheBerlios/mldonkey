@@ -22,13 +22,16 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.6 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.7 2003/07/04 18:35:02 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo implements SimpleInformation {
@@ -36,7 +39,6 @@ public class NetworkInfo implements SimpleInformation {
 	 * File network identifier
 	 */
 	private int network;
-	
 	/**
 	 * Network name 
 	 */	
@@ -57,6 +59,27 @@ public class NetworkInfo implements SimpleInformation {
 	 * Number of bytes downloaded on network
 	 */
 	private long downloaded;
+	/**
+	 * Thsi parent
+	 */
+	private CoreCommunication parent;
+	/**
+	 * disable
+	 */
+	private static Byte disable = new Byte( ( byte ) 0 );
+	/**
+	 * enable
+	 */
+	private static Byte enable = new Byte( ( byte ) 1 );
+	
+	/**
+	 * Creates a new NetworkInfo
+	 * @param parent
+	 */
+	public NetworkInfo( CoreCommunication parent ) {
+		this.parent = parent; 
+	}
+	
 	
 	/**
 	 * Reads a networkInfo object from the stream
@@ -72,30 +95,13 @@ public class NetworkInfo implements SimpleInformation {
 		 *	int64	Number of bytes uploaded on network 
 		 *	int64	Number of bytes downloaded on network
 		 */
-		this.setNetwork( messageBuffer.readInt32() );
-		this.setNetworkName( messageBuffer.readString() );
+		this.network = messageBuffer.readInt32();
+		this.networkName = messageBuffer.readString();
 		this.setEnabled( messageBuffer.readInt8() );
-		this.setConfigFile( messageBuffer.readString() );
-		this.setUploaded( messageBuffer.readInt64() );
-		this.setDownloaded( messageBuffer.readInt64() );
+		this.configFile = messageBuffer.readString();
+		this.uploaded = messageBuffer.readInt64();
+		this.downloaded = messageBuffer.readInt64();
 	}
-	
-	/**
-		 * @param messageBuffer The buffer to read from
-		 * @param network_id The ID of the given network ;-)
-		 * 
-		 * If invoked from NetworkInfoMap, this is nescessary,
-		 * since the network.identifier is already read
-		 */
-		public void readStream( MessageBuffer messageBuffer, int network_id ) {
-			this.setNetwork( network_id );
-			this.setNetworkName( messageBuffer.readString() );
-			this.setEnabled( messageBuffer.readInt8() );
-			this.setConfigFile( messageBuffer.readString() );
-			this.setUploaded( messageBuffer.readInt64() );
-			this.setDownloaded( messageBuffer.readInt64() );
-		
-		}
 	
 	/**
 	 * @return a long
@@ -133,39 +139,11 @@ public class NetworkInfo implements SimpleInformation {
 	}
 
 	/**
-	 * @param l a long
-	 */
-	public void setDownloaded( long l ) {
-		downloaded = l;
-	}
-
-	/**
 	 * @param b a short
 	 */
-	public void setEnabled( short b ) {
+	private void setEnabled( short b ) {
 		if ( b == 0 ) enabled = false;
 		if ( b == 1 ) enabled = true;		
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setNetwork( int i ) {
-		network = i;
-	}
-
-	/**
-	 * @param string a string
-	 */
-	public void setNetworkName( String string ) {
-		networkName = string;
-	}
-
-	/**
-	 * @param l a long
-	 */
-	public void setUploaded( long l ) {
-		uploaded = l;
 	}
 
 	/**
@@ -176,20 +154,31 @@ public class NetworkInfo implements SimpleInformation {
 	}
 
 	/**
-	 * @param string a string
+	 * Enable/Disable this network
+	 * @param bool true == enable/false == disable
 	 */
-	public void setConfigFile( String string )  {
-		configFile = string;
+	public void setEnabled( boolean bool ) {
+		Object[] temp = new Object[ 2 ];
+		temp[ 0 ] = new Integer( this.getNetwork() );
+		if ( bool ) 
+			temp[ 1 ] = enable;
+		else 
+			temp[ 1 ] = disable;
+		EncodeMessage netinfo =
+			new EncodeMessage( Message.S_ENABLE_NETWORK, temp );
+		netinfo.sendMessage( this.parent.getConnection() );
+		netinfo = null;
+		temp = null;			
 	}
-
-	
-
 }
 
 
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.7  2003/07/04 18:35:02  lemmstercvs01
+foobar
+
 Revision 1.6  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 

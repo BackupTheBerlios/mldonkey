@@ -22,15 +22,23 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumState;
 
 /**
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.5 2003/06/30 07:20:09 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.6 2003/07/04 18:35:02 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo implements SimpleInformation {
+	/**
+	 * CoreCommunication parent
+	 */
+	private CoreCommunication parent;
 	/**
 	 * Server Identifier
 	 */
@@ -77,159 +85,92 @@ public class ServerInfo implements SimpleInformation {
 	private String descOfServer;
 
 	/**
-	 * @return a State
+	 * @return The server connection state
 	 */
 	public State getConnectionState() {
 		return connectionState;
 	}
-
 	/**
-	 * @return a string
+	 * @return The description of this server
 	 */
 	public String getDescOfServer() {
 		return descOfServer;
 	}
-
 	/**
-	 * @return a string
+	 * @return The name of this server
 	 */
 	public String getNameOfServer() {
 		return nameOfServer;
 	}
-
 	/**
-	 * @return an int
+	 * @return The number of files shared on this server
 	 */
 	public int getNumOfFilesShared() {
 		return numOfFilesShared;
 	}
-
 	/**
-	 * @return an int
+	 * @return The number of users on this server
 	 */
 	public int getNumOfUsers() {
 		return numOfUsers;
 	}
-
 	/**
-	 * @return an Addr
+	 * @return The server ip address
 	 */
 	public Addr getServerAddress() {
 		return serverAddress;
 	}
-
 	/**
-	 * @return an int
+	 * @return The server identifier
 	 */
 	public int getServerId() {
 		return serverId;
 	}
-
 	/**
-	 * @return a Tag[]
+	 * @return The server metadata
 	 */
 	public Tag[] getServerMetadata() {
 		return serverMetadata;
 	}
-
 	/**
-	 * @return an int
+	 * @return The server network identifier
 	 */
 	public int getServerNetworkId() {
 		return serverNetworkId;
 	}
-
 	/**
-	 * @return a short
+	 * @return The server port
 	 */
 	public short getServerPort() {
 		return serverPort;
 	}
-
 	/**
-	 * @return an int
+	 * @return (not used)
 	 */
 	public int getServerScore() {
 		return serverScore;
 	}
-
+	/**
+	 * @return The corecommunication parent
+	 */
+	private CoreCommunication getParent() {
+		return parent;
+	}
 	/**
 	 * @param state a State
 	 */
-	public void setConnectionState( State state ) {
+	private void setConnectionState( State state ) {
 		connectionState = state;
 	}
-
-	/**
-	 * @param string a String
-	 */
-	public void setDescOfServer( String string ) {
-		descOfServer = string;
-	}
-
-	/**
-	 * @param string a String
-	 */
-	public void setNameOfServer( String string ) {
-		nameOfServer = string;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setNumOfFilesShared( int i ) {
-		numOfFilesShared = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setNumOfUsers( int i ) {
-		numOfUsers = i;
-	}
-
-	/**
-	 * @param addr an Addr
-	 */
-	public void setServerAddress( Addr addr ) {
-		serverAddress = addr;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setServerId( int i ) {
-		serverId = i;
-	}
-
-	/**
-	 * @param tags a Tag[]
-	 */
-	public void setServerMetadata( Tag[] tags ) {
-		serverMetadata = tags;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setServerNetworkId( int i ) {
-		serverNetworkId = i;
-	}
-
-	/**
-	 * @param s a short
-	 */
-	public void setServerPort( short s ) {
-		serverPort = s;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setServerScore( int i ) {
-		serverScore = i;
-	}
 	
+	/**
+	 * Creates a new serverinfo object 
+	 * @param parent The parent objct
+	 */
+	public ServerInfo( CoreCommunication parent ) {
+		this.parent = parent;
+	}
+
 	/**
 	 * Reads a ServerInfo object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
@@ -248,17 +189,17 @@ public class ServerInfo implements SimpleInformation {
  		 * String  	 Name of Server 
  		 * String  	 Description of Server
 		 */
-		this.setServerId( messageBuffer.readInt32() );
-		this.setServerNetworkId( messageBuffer.readInt32() );
+		this.serverId = messageBuffer.readInt32();
+		this.serverNetworkId = messageBuffer.readInt32();
 		this.getServerAddress().readStream( messageBuffer );
-		this.setServerPort( messageBuffer.readInt16() );
-		this.setServerScore( messageBuffer.readInt32() );
-		this.setServerMetadata( messageBuffer.readTagList() );		
-		this.setNumOfUsers( messageBuffer.readInt32() );
-		this.setNumOfFilesShared( messageBuffer.readInt32() );
+		this.serverPort = messageBuffer.readInt16();
+		this.serverScore = messageBuffer.readInt32();
+		this.serverMetadata = messageBuffer.readTagList();		
+		this.numOfUsers = messageBuffer.readInt32();
+		this.numOfFilesShared = messageBuffer.readInt32();
 		this.getConnectionState().readStream( messageBuffer );
-		this.setNameOfServer( messageBuffer.readString() );
-		this.setDescOfServer( messageBuffer.readString() );
+		this.nameOfServer = messageBuffer.readString();
+		this.descOfServer = messageBuffer.readString();
 	}
 	
 	/**
@@ -269,9 +210,45 @@ public class ServerInfo implements SimpleInformation {
 		byte state = messageBuffer.readByte();
 		this.getConnectionState().setState( state );
 	}
+	
+	/**
+	 * sets the new state of this server (connecting/disconnect/remove)
+	 * @param enum
+	 */
+	public void setState( EnumState enum ) {
+		if ( this.getConnectionState().getState() == enum ) {
+			Integer anInt = new Integer( this.getServerId() );
+			EncodeMessage state = null;
+
+			/* connect server */
+			if ( enum == EnumState.CONNECTING ) {
+				state =	new EncodeMessage( Message.S_CONNECT_SERVER, anInt );
+			}
+			/* remove server */
+			else if ( enum == EnumState.REMOVE_HOST ) {
+				state =	new EncodeMessage( Message.S_REMOVE_SERVER, anInt );
+			}
+			/* disconnect server */
+			else if ( enum == EnumState.NOT_CONNECTED ) {
+				state =	new EncodeMessage( Message.S_DISCONNECT_SERVER, anInt );
+			}
+			/* unvalid input */
+			else {
+				anInt = null;
+				return;
+			}
+				
+			state.sendMessage( this.getParent().getConnection() );
+			state = null;
+			anInt = null;
+		}
+	}
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.6  2003/07/04 18:35:02  lemmstercvs01
+$foobar
+$
 $Revision 1.5  2003/06/30 07:20:09  lemmstercvs01
 $changed to readTagList()
 $

@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: NetworkInfoIntMap.java,v 1.3 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.4 2003/07/04 18:35:02 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap {
@@ -37,7 +37,6 @@ public class NetworkInfoIntMap extends InfoIntMap {
 	 * @param communication my parent
 	 */
 	public NetworkInfoIntMap( CoreCommunication communication ) {
-		
 		super( communication );
 	}
 
@@ -54,16 +53,19 @@ public class NetworkInfoIntMap extends InfoIntMap {
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
 		int id = messageBuffer.readInt32();
-		
+
+		/* go 4bytes back in the MessageBuffer */
+		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
+
 		if ( this.infoIntMap.containsKey( id ) ) {
 			//update existing NetworkInfo-Object
 			NetworkInfo networkInfo = ( NetworkInfo ) this.infoIntMap.get( id );
-			networkInfo.readStream( messageBuffer, id );
+			networkInfo.readStream( messageBuffer );
 		}
 		else {
 			//add a new NetworkInfo-Object to the Map
-			NetworkInfo networkInfo = new NetworkInfo();
-			networkInfo.readStream( messageBuffer, id );
+			NetworkInfo networkInfo = new NetworkInfo( this.parent );
+			networkInfo.readStream( messageBuffer );
 			this.infoIntMap.put( id, networkInfo );
 		}
 	}
@@ -75,12 +77,13 @@ public class NetworkInfoIntMap extends InfoIntMap {
 	public void update( MessageBuffer messageBuffer ) {
 		// do nothing!
 	}
-	
-
 }
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.4  2003/07/04 18:35:02  lemmstercvs01
+foobar
+
 Revision 1.3  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 

@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.13 2003/07/04 11:04:14 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.14 2003/07/04 18:35:02 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements SimpleInformation {
@@ -49,7 +49,7 @@ public class FileInfo implements SimpleInformation {
 	/**
 	 * File network identifier
 	 */
-	private int network;
+	private NetworkInfo network;
 	/**
 	 * Possible file names
 	 */
@@ -182,7 +182,7 @@ public class FileInfo implements SimpleInformation {
 	/**
 	 * @return File network identifier
 	 */
-	public int getNetwork() {
+	public NetworkInfo getNetwork() {
 		return network;
 	}
 	/**
@@ -274,7 +274,7 @@ public class FileInfo implements SimpleInformation {
 		* int32			File Priority 
 		*/ 
 		this.id = messageBuffer.readInt32();
-		this.network = messageBuffer.readInt32();
+		this.setNetwork( messageBuffer.readInt32() );
 		this.names = messageBuffer.readStringList();
 		this.md4 = messageBuffer.readBinary( 16 );
 		this.size = messageBuffer.readInt32();
@@ -351,6 +351,15 @@ public class FileInfo implements SimpleInformation {
 		else 
 			priority = EnumPriority.NORMAL;		
 	}
+	
+	/**
+	 * translate the int to EnumNetwork
+	 * @param i the int
+	 */
+	private void setNetwork( int i ) {
+		this.network =
+		( NetworkInfo ) this.getParent().getNetworkInfoMap().infoIntMap.get( i );
+	}
 
 	/**
 	 * @param string The new name for this file
@@ -402,6 +411,9 @@ public class FileInfo implements SimpleInformation {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.14  2003/07/04 18:35:02  lemmstercvs01
+foobar
+
 Revision 1.13  2003/07/04 11:04:14  lemmstercvs01
 add some opcodes
 
