@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.15 2003/07/18 09:40:07 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.16 2003/07/18 09:43:15 dek Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
@@ -249,8 +249,11 @@ public class DownloadTable implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.16  2003/07/18 09:43:15  dek
+never use * / (without space) in CVS-commit-comments......
+
 Revision 1.15  2003/07/18 09:40:07  dek
-finally got rid of the flickering?? dunno /* searching CRT to test */
+finally got rid of the flickering?? dunno (* searching CRT to test *)
 
 Revision 1.14  2003/07/17 14:59:23  lemmstercvs01
 foobar

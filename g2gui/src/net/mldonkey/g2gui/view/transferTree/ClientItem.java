@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.13 2003/07/18 09:40:07 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.14 2003/07/18 09:43:15 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -166,8 +166,11 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.14  2003/07/18 09:43:15  dek
+never use * / (without space) in CVS-commit-comments......
+
 Revision 1.13  2003/07/18 09:40:07  dek
-finally got rid of the flickering?? dunno /* searching CRT to test */
+finally got rid of the flickering?? dunno (* searching CRT to test*) 
 
 Revision 1.12  2003/07/16 19:39:46  dek
 fixed exception when items were expanded after a sort()

@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * DownloadItemComparator
  *
  * @author $user$
- * @version $Id: FileInfoComparator.java,v 1.6 2003/07/18 09:40:07 dek Exp $ 
+ * @version $Id: FileInfoComparator.java,v 1.7 2003/07/18 09:43:15 dek Exp $ 
  *
  */
 public class FileInfoComparator implements Comparator {
@@ -110,8 +110,11 @@ public class FileInfoComparator implements Comparator {
 
 /*
 $Log: FileInfoComparator.java,v $
+Revision 1.7  2003/07/18 09:43:15  dek
+never use * / (without space) in CVS-commit-comments......
+
 Revision 1.6  2003/07/18 09:40:07  dek
-finally got rid of the flickering?? dunno /* searching CRT to test */
+finally got rid of the flickering?? dunno (* searching CRT to test *)
 
 Revision 1.5  2003/07/16 18:16:53  dek
 another flickering-test
