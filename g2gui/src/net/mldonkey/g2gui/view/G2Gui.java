@@ -60,7 +60,7 @@ import java.net.UnknownHostException;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.41 2003/11/08 23:53:46 zet Exp $
+ * @version $Id: G2Gui.java,v 1.42 2003/11/10 20:55:37 zet Exp $
  *
  */
 public class G2Gui {
@@ -424,7 +424,7 @@ public class G2Gui {
     }
 
     /**
-     * DOCUMENT ME!
+     * connectDeniedHandling
      */
     public static void connectDeniedHandling() {
         splashShell.dispose();
@@ -450,15 +450,14 @@ public class G2Gui {
             });
     }
 
+    /**
+     * closeApp
+     */
     public static void closeApp() {
         shell.dispose();
 
-        if (SWT.getPlatform().equals("fox") && (System.getProperty("os.name").length() > 7) &&
-                System.getProperty("os.name").substring(0, 7).equals("Windows")) {
-            // why does this not completely close
-        } else {
-            display.dispose();
-        }
+        // locks up swt-fox
+        // display.close();
     }
 
     /**
@@ -476,9 +475,7 @@ public class G2Gui {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @return ExecConsole
      */
     public static ExecConsole getCoreConsole() {
         return execConsole;
@@ -488,6 +485,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.42  2003/11/10 20:55:37  zet
+display.close/dispose locks up fox
+
 Revision 1.41  2003/11/08 23:53:46  zet
 fox
 

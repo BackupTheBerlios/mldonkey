@@ -22,12 +22,6 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -42,6 +36,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.DisposeEvent;
@@ -64,10 +59,18 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.87 2003/11/06 15:12:44 zet Exp $
+ * @version $Id: MainTab.java,v 1.88 2003/11/10 20:55:37 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -86,114 +89,116 @@ public class MainTab implements ShellListener {
      * @param core the most important thing of the gui: were do i get my data from
      * @param shell were do we live?
      */
-    public MainTab( CoreCommunication core, final Shell shell ) {
+    public MainTab(CoreCommunication core, final Shell shell) {
         this.registeredTabs = new ArrayList();
         this.mldonkey = core;
         this.shell = shell;
+
         final Shell mainShell = shell;
         Display display = shell.getDisplay();
-        shell.addShellListener( this );
-        minimizer = new Minimizer( shell, core, titleBarText );
+        shell.addShellListener(this);
+        minimizer = new Minimizer(shell, core, titleBarText);
         minimizer.setTitleBarText();
-        shell.setLayout( new FillLayout() );
-        createContents( shell );
+        shell.setLayout(new FillLayout());
+        createContents(shell);
         shell.pack();
 
         /* close the splashShell from G2Gui.java */
-        G2Gui.increaseBar( "" );
+        G2Gui.increaseBar("");
         G2Gui.getSplashShell().dispose();
 
         /* set the old size of this window - must be after pack() */
-        setSizeLocation( shell );
+        setSizeLocation(shell);
 
         // what do we do when the close button is selected
-        shell.addListener( SWT.Close, new Listener() {
-                public void handleEvent( Event event ) {
+        shell.addListener(SWT.Close,
+            new Listener() {
+                public void handleEvent(Event event) {
                     event.doit = minimizer.close();
                 }
-            } );
+            });
         shell.open();
 
         /* things we should do if we dispose */
-        shell.addDisposeListener( new DisposeListener() {
-                public synchronized void widgetDisposed( DisposeEvent e ) {
+        shell.addDisposeListener(new DisposeListener() {
+                public synchronized void widgetDisposed(DisposeEvent e) {
                     /* save the size of this window */
-                    saveSizeLocation( mainShell );
+                    saveSizeLocation(mainShell);
+
                     /* set all tabs to inactive */
                     Iterator itr = registeredTabs.iterator();
-                    while ( itr.hasNext() ) {
-                        GuiTab aTab = ( GuiTab ) itr.next();
+
+                    while (itr.hasNext()) {
+                        GuiTab aTab = (GuiTab) itr.next();
                         aTab.dispose();
                     }
+
                     // If we have created the core, kill it
-                    if ( G2Gui.getCoreConsole() != null ) {
-                        Message killCore = new EncodeMessage( Message.S_KILL_CORE );
-                        killCore.sendMessage( mldonkey );
+                    if (G2Gui.getCoreConsole() != null) {
+                        Message killCore = new EncodeMessage(Message.S_KILL_CORE);
+                        killCore.sendMessage(mldonkey);
                         G2Gui.getCoreConsole().dispose();
                     }
 
                     // disconnect from core
-                    ( ( CoreCommunication ) mldonkey ).disconnect();
+                    ((CoreCommunication) mldonkey).disconnect();
 
                     // save preferences
                     PreferenceLoader.saveStore();
                     PreferenceLoader.cleanUp();
                 }
-            } );
-        
+            });
+
         try {
-        
-	        while ( !shell.isDisposed() ) {
-	            if ( !display.readAndDispatch() )
-	                display.sleep();
-	        }
-        
+            while (!shell.isDisposed()) {
+                if (!display.readAndDispatch()) {
+                    display.sleep();
+                }
+            }
         } catch (Exception e) {
             // getCause() seems always to be null unfortunately
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw, true));
-		    ErrorDialog errorDialog = new ErrorDialog( new Shell(display), sw.toString() );
-		    errorDialog.open();
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw, true));
+
+            ErrorDialog errorDialog = new ErrorDialog(new Shell(display), sw.toString());
+            errorDialog.open();
         }
-        if (SWT.getPlatform().equals("fox") 
-                && System.getProperty("os.name").length() > 7  
-                && System.getProperty("os.name").substring(0,7).equals("Windows") ) {
-            // why does this not completely close
-        } else {
-            display.dispose();
-        }
+
+        // locks up swt-fox
+        // display.close();
     }
 
     /* ( non-Javadoc )
      * @see org.eclipse.jface.window.Window#createContents( org.eclipse.swt.widgets.Composite )
      */
-    private void createContents( Shell parent ) {
+    private void createContents(Shell parent) {
         GridData gridData;
-        mainComposite = new Composite( parent, SWT.NONE );
-        parent.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
-        new MainMenuBar( this );
+        mainComposite = new Composite(parent, SWT.NONE);
+        parent.setImage(G2GuiResources.getImage("ProgramIcon"));
+        new MainMenuBar(this);
+
         // try a margin of 1 ?
-        GridLayout gridLayout = CGridLayout.createGL( 1, 1, 1, 0, 1, false );
-        mainComposite.setLayout( gridLayout );
-        Label horLine = new Label( mainComposite, SWT.HORIZONTAL | SWT.SEPARATOR );
-        gridData = new GridData( GridData.FILL_HORIZONTAL );
-        horLine.setLayoutData( gridData );
-        this.coolBar =
-            new MainCoolBar( this, PreferenceLoader.loadBoolean( "toolbarSmallButtons" ),
-                             PreferenceLoader.loadBoolean( "coolbarLocked" ) );
-        pageContainer = new Composite( mainComposite, SWT.NONE );
-        pageContainer.setLayout( new StackLayout() );
+        GridLayout gridLayout = CGridLayout.createGL(1, 1, 1, 0, 1, false);
+        mainComposite.setLayout(gridLayout);
+
+        Label horLine = new Label(mainComposite, SWT.HORIZONTAL | SWT.SEPARATOR);
+        gridData = new GridData(GridData.FILL_HORIZONTAL);
+        horLine.setLayoutData(gridData);
+        this.coolBar = new MainCoolBar(this, PreferenceLoader.loadBoolean("toolbarSmallButtons"),
+                PreferenceLoader.loadBoolean("coolbarLocked"));
+        pageContainer = new Composite(mainComposite, SWT.NONE);
+        pageContainer.setLayout(new StackLayout());
 
         /* now we add all the tabs */
         this.addTabs();
-        gridData = new GridData( GridData.FILL_BOTH );
+        gridData = new GridData(GridData.FILL_BOTH);
         gridData.grabExcessHorizontalSpace = true;
         gridData.grabExcessVerticalSpace = true;
-        pageContainer.setLayoutData( gridData );
+        pageContainer.setLayoutData(gridData);
 
         /* layout the coolbar, because we added icons */
         this.coolBar.layoutCoolBar();
-        statusline = new StatusLine( this );
+        statusline = new StatusLine(this);
     }
 
     /**
@@ -201,29 +206,31 @@ public class MainTab implements ShellListener {
      * for the content and their button.
      */
     private void addTabs() {
-        
         this.tabs = new ArrayList();
-        if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-            tabs.add( new TransferTab( this ) );
-            tabs.add( new SearchTab( this ) );
-            tabs.add( new ServerTab( this ) );
-            tabs.add( new ConsoleTab( this ) );
-            tabs.add( new StatisticTab( this ) );
-            tabs.add( new MessagesTab( this ) );
+
+        if (PreferenceLoader.loadBoolean("advancedMode")) {
+            tabs.add(new TransferTab(this));
+            tabs.add(new SearchTab(this));
+            tabs.add(new ServerTab(this));
+            tabs.add(new ConsoleTab(this));
+            tabs.add(new StatisticTab(this));
+            tabs.add(new MessagesTab(this));
+        } else {
+            tabs.add(new TransferTab(this));
+            tabs.add(new SearchTab(this));
+            tabs.add(new StatisticTab(this));
         }
-        else {
-            tabs.add( new TransferTab( this ) );
-            tabs.add( new SearchTab( this ) );
-            tabs.add( new StatisticTab( this ) );
-        }
+
         /*setting TransferTab active if registered*/
         Iterator tabIterator = registeredTabs.iterator();
-        while ( tabIterator.hasNext() ) {
-            GuiTab tempTab = ( GuiTab ) tabIterator.next();
+
+        while (tabIterator.hasNext()) {
+            GuiTab tempTab = (GuiTab) tabIterator.next();
 
             /* set the default tab to active */
-            if ( tempTab instanceof TransferTab )
+            if (tempTab instanceof TransferTab) {
                 tempTab.setActive();
+            }
         }
     }
 
@@ -231,21 +238,21 @@ public class MainTab implements ShellListener {
      * Registers a new Tab to this MainWindow
      * @param newTab The GuiTab to register to this MainWindow
      */
-    public void registerTab( GuiTab newTab ) {
-        registeredTabs.add( newTab );
+    public void registerTab(GuiTab newTab) {
+        registeredTabs.add(newTab);
     }
 
     /**
      * Sets the given tab to the current active page
      * @param activatedTab The tab to set active
      */
-    public void setActive( GuiTab activatedTab ) {
-        //if (!getCore().isConnected()) return;	
-        if ( activeTab != null ) {
-            activeTab.getContent().setVisible( false );
+    public void setActive(GuiTab activatedTab) {
+        if (activeTab != null) {
+            activeTab.getContent().setVisible(false);
             activeTab.setInActive();
         }
-        ( ( StackLayout ) pageContainer.getLayout() ).topControl = activatedTab.getContent();
+
+        ((StackLayout) pageContainer.getLayout()).topControl = activatedTab.getContent();
         pageContainer.layout();
         activeTab = activatedTab;
     }
@@ -255,11 +262,13 @@ public class MainTab implements ShellListener {
      */
     public void openPreferences() {
         Shell prefshell = new Shell();
-        Preferences myprefs = new Preferences( PreferenceLoader.getPreferenceStore() );
-        myprefs.open( prefshell, mldonkey );
+        Preferences myprefs = new Preferences(PreferenceLoader.getPreferenceStore());
+        myprefs.open(prefshell, mldonkey);
+
         Iterator itr = registeredTabs.iterator();
-        while ( itr.hasNext() ) {
-            GuiTab aTab = ( GuiTab ) itr.next();
+
+        while (itr.hasNext()) {
+            GuiTab aTab = (GuiTab) itr.next();
             aTab.updateDisplay();
         }
     }
@@ -268,12 +277,13 @@ public class MainTab implements ShellListener {
      * Sets the size to the old value of the given shell obj
      * @param shell The shell to set the size from
      */
-    public void setSizeLocation( Shell shell ) {
-        if ( PreferenceLoader.contains( "windowBounds" ) ) {
-            if ( PreferenceLoader.loadBoolean( "windowMaximized" ) )
-                shell.setMaximized( true );
-            else
-                shell.setBounds( PreferenceLoader.loadRectangle( "windowBounds" ) );
+    public void setSizeLocation(Shell shell) {
+        if (PreferenceLoader.contains("windowBounds")) {
+            if (PreferenceLoader.loadBoolean("windowMaximized")) {
+                shell.setMaximized(true);
+            } else {
+                shell.setBounds(PreferenceLoader.loadRectangle("windowBounds"));
+            }
         }
     }
 
@@ -281,15 +291,16 @@ public class MainTab implements ShellListener {
      * Saves the size of the shell to a file
      * @param shell The shell to save the size from
      */
-    public void saveSizeLocation( Shell shell ) {
+    public void saveSizeLocation(Shell shell) {
         PreferenceStore p = PreferenceLoader.getPreferenceStore();
-        p.setValue( "coolbarLocked", coolBar.isCoolbarLocked() );
-        p.setValue( "toolbarSmallButtons", coolBar.isToolbarSmallButtons() );
-        if ( shell.getMaximized() )
-            p.setValue( "windowMaximized", shell.getMaximized() );
-        else {
-            PreferenceConverter.setValue( p, "windowBounds", shell.getBounds() );
-            p.setValue( "windowMaximized", shell.getMaximized() );
+        p.setValue("coolbarLocked", coolBar.isCoolbarLocked());
+        p.setValue("toolbarSmallButtons", coolBar.isToolbarSmallButtons());
+
+        if (shell.getMaximized()) {
+            p.setValue("windowMaximized", shell.getMaximized());
+        } else {
+            PreferenceConverter.setValue(p, "windowBounds", shell.getBounds());
+            p.setValue("windowMaximized", shell.getMaximized());
         }
     }
 
@@ -341,40 +352,40 @@ public class MainTab implements ShellListener {
     public MainCoolBar getCoolBar() {
         return coolBar;
     }
-    
+
     /**
      * @return minimizer
      */
     public Minimizer getMinimizer() {
-    	return minimizer;
+        return minimizer;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.ShellListener#
      * shellActivated(org.eclipse.swt.events.ShellEvent)
      */
-    public void shellActivated( ShellEvent e ) {
+    public void shellActivated(ShellEvent e) {
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.ShellListener#
      * shellClosed(org.eclipse.swt.events.ShellEvent)
      */
-    public void shellClosed( ShellEvent e ) {
+    public void shellClosed(ShellEvent e) {
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.ShellListener#
      * shellDeactivated(org.eclipse.swt.events.ShellEvent)
      */
-    public void shellDeactivated( ShellEvent e ) {
+    public void shellDeactivated(ShellEvent e) {
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.swt.events.ShellListener#
      * shellDeiconified(org.eclipse.swt.events.ShellEvent)
      */
-    public void shellDeiconified( ShellEvent e ) {
+    public void shellDeiconified(ShellEvent e) {
         minimizer.restore();
     }
 
@@ -382,76 +393,75 @@ public class MainTab implements ShellListener {
      * @see org.eclipse.swt.events.ShellListener#
      * shellIconified(org.eclipse.swt.events.ShellEvent)
      */
-    public void shellIconified( ShellEvent e ) {
-        minimizer.minimize( );
+    public void shellIconified(ShellEvent e) {
+        minimizer.minimize();
     }
-    
-    
-	/**
-	 * ErrorDialog
-	 */
-	private class ErrorDialog extends Dialog {
 
-		String string;
-		Shell shell;
+    /**
+     * ErrorDialog
+     */
+    private class ErrorDialog extends Dialog {
+        String string;
 
-		public ErrorDialog( Shell shell, String string) {
-		   super(shell);
-		   this.string = string;
-		   setShellStyle(getShellStyle() | SWT.RESIZE);
-		}
+        public ErrorDialog(Shell shell, String string) {
+            super(shell);
+            this.string = string;
+            setShellStyle(getShellStyle() | SWT.RESIZE);
+        }
 
-		protected void configureShell(Shell newShell) {
-		    super.configureShell( newShell );
-		    shell = newShell;
-		    shell.setSize(400,300);
-		    newShell.setText("Boog Ditekted!");
-		}
-		protected Control createDialogArea(Composite parent) {
-			Composite composite = (Composite)super.createDialogArea(parent);
-			
-			Text textInfo = new Text(composite, SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-			textInfo.setLayoutData(new GridData(GridData.FILL_BOTH));
-			textInfo.setText("Please help us to improve this product!\n" 
-			        + "Please submit a bug report detailing exactly what you were doing when this happened!\n"
-			        + "http://developer.berlios.de/bugs/?group_id=610\n\n"
-			        + "StackTrace:\n\n"
-			        + string);
-			return composite;
-		}
+        protected void configureShell(Shell newShell) {
+            super.configureShell(newShell);
+            newShell.setSize(400, 300);
+            newShell.setText("Boog Ditekted!");
+        }
 
-		protected Control createButtonBar(Composite parent) {
-			Composite composite = new Composite(parent, SWT.NONE);
-			composite.setLayout(CGridLayout.createGL(2,5,5,5,5,false));
-			composite.setLayoutData( new GridData(GridData.FILL_HORIZONTAL));
-			
-			Button launch = new Button(composite, SWT.NONE);
-			launch.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			launch.setText("Report this bug!");
-			launch.addSelectionListener( new SelectionAdapter() {
-					  public void widgetSelected( SelectionEvent s ) {
-						  Program.launch("http://developer.berlios.de/bugs/?group_id=610");
-					  }
-				  } );
-			
-			Button close = new Button(composite, SWT.NONE);
-			close.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-			close.setText(G2GuiResources.getString( "BTN_CLOSE" ));
-			close.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent s ) {
-			    shell.close();
-					}
-				} );
-	    
-			return composite;
-		}
-		
-	}
-    
+        protected Control createDialogArea(Composite parent) {
+            Composite composite = (Composite) super.createDialogArea(parent);
+
+            Text textInfo = new Text(composite,
+                    SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+            textInfo.setLayoutData(new GridData(GridData.FILL_BOTH));
+            textInfo.setText("Please help us to improve this product!\n" +
+                "Please submit a bug report detailing exactly what you were doing when this happened!\n" +
+                "http://developer.berlios.de/bugs/?group_id=610\n\n" + "StackTrace:\n\n" + string);
+
+            return composite;
+        }
+
+        protected Control createButtonBar(Composite parent) {
+            Composite composite = new Composite(parent, SWT.NONE);
+            composite.setLayout(CGridLayout.createGL(2, 5, 5, 5, 5, false));
+            composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+            Button launch = new Button(composite, SWT.NONE);
+            launch.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            launch.setText("Report this bug!");
+            launch.addSelectionListener(new SelectionAdapter() {
+                    public void widgetSelected(SelectionEvent s) {
+                        Program.launch("http://developer.berlios.de/bugs/?group_id=610");
+                    }
+                });
+
+            Button close = new Button(composite, SWT.NONE);
+            close.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+            close.setText(G2GuiResources.getString("BTN_CLOSE"));
+            close.addSelectionListener(new SelectionAdapter() {
+                    public void widgetSelected(SelectionEvent s) {
+                        close();
+                    }
+                });
+
+            return composite;
+        }
+    }
 }
+
 
 /*
 $Log: MainTab.java,v $
+Revision 1.88  2003/11/10 20:55:37  zet
+display.close/dispose locks up fox
+
 Revision 1.87  2003/11/06 15:12:44  zet
 check getProperty length
 
