@@ -1,4 +1,5 @@
 2003/10/10: z
+	* Transfer: Add veryHigh(20) & veryLow(-20) convenience priority settings
 	* Transfer: Removed rate from Downloads header 
 	* Transfer: Buffered add/remove methods so multiple calls are performed en masse
 	* Transfer: Save queued & paused filter settings
