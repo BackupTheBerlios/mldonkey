@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.23 2003/07/22 10:17:58 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.24 2003/07/22 15:57:39 zet Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
@@ -95,6 +95,7 @@ public class DownloadTable implements Observer, Runnable {
 					sort( columnIndex );
 				}
 			} );
+			column.pack();
 		}
 		table.addMouseListener( new MouseListener() {
 			public void mouseDown( MouseEvent e ) {
@@ -295,6 +296,9 @@ public class DownloadTable implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.24  2003/07/22 15:57:39  zet
+column pack
+
 Revision 1.23  2003/07/22 10:17:58  dek
 locked the updating thread while active, to avoid invalid Thread access
 
