@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.23 2003/08/31 02:21:33 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.24 2003/08/31 02:35:32 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -262,6 +262,7 @@ public class FileDetailDialog implements Observer {
 		});
 
 		Button closeButton = new Button( buttonComposite, SWT.NONE );
+		closeButton.setFocus();
 		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		closeButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
 		closeButton.addSelectionListener( new SelectionAdapter() {
@@ -368,6 +369,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.24  2003/08/31 02:35:32  zet
+setFocus
+
 Revision 1.23  2003/08/31 02:21:33  zet
 commit
 
@@ -406,6 +410,9 @@ new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
+fix Revision 1.24  2003/08/31 02:35:32  zet
+fix setFocus
+fix
 fix Revision 1.23  2003/08/31 02:21:33  zet
 fix commit
 fix

@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.19 2003/08/31 02:16:55 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.20 2003/08/31 02:35:32 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -155,6 +155,7 @@ public class ClientDetailDialog implements Observer {
 		});
 
 		Button closeButton = new Button( buttonComposite, SWT.NONE );
+		closeButton.setFocus();
 		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		closeButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
 		closeButton.addSelectionListener( new SelectionAdapter() {
@@ -264,6 +265,9 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.20  2003/08/31 02:35:32  zet
+setFocus
+
 Revision 1.19  2003/08/31 02:16:55  zet
 *** empty log message ***
 
