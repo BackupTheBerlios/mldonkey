@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Table;
  * DownloadTableTreeContentProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.4 2003/08/08 02:46:31 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.5 2003/08/08 23:29:36 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -435,8 +435,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 		if (!DownloadTableTreeViewer.displayChunkGraphs()) return;
 		
 		if (tableTreeItem.getData("tableTreeEditor") != null) {
-											
+										
 			TableTreeEditor tableTreeEditor = (TableTreeEditor) tableTreeItem.getData("tableTreeEditor");	
+			tableTreeEditor.getEditor().dispose();
 			tableTreeEditor.dispose(); 
 							
 			ChunkCanvas chunkCanvas = (ChunkCanvas) tableTreeItem.getData("thisChunkCanvas");
@@ -509,6 +510,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 			fileInfo = (FileInfo) tableTreeItem.getData();
 			tableTreeItem.setData("oldHash", new Integer(tableTreeItem.getData().hashCode()));
 		}
+			
 		chunkCanvas = new ChunkCanvas( table, SWT.NO_BACKGROUND, clientInfo, fileInfo );
 		TableTreeEditor tableTreeEditor = new TableTreeEditor(tableTreeViewer.getTableTree());
 		tableTreeEditor.horizontalAlignment = SWT.LEFT;
@@ -604,6 +606,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.5  2003/08/08 23:29:36  zet
+dispose tabletreeeditor
+
 Revision 1.4  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 
