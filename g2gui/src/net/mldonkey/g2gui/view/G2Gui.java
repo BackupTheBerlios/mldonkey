@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.44 2003/11/20 15:42:04 dek Exp $
+ * @version $Id: G2Gui.java,v 1.45 2003/11/20 15:56:02 dek Exp $
  *
  */
 public class G2Gui {
@@ -285,7 +285,8 @@ public class G2Gui {
         } catch (IOException e) {
 			errorHandling(G2GuiResources.getString("G2_IOEXCEPTION"),G2GuiResources.getString("G2_CORE_NOT_RUNNING"));
 			return null;
-        }        
+        }  
+        return socket;  
 	}
 
 	/**
@@ -417,6 +418,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.45  2003/11/20 15:56:02  dek
+missed one small thing
+
 Revision 1.44  2003/11/20 15:42:04  dek
 reconnect started
 
