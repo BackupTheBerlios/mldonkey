@@ -229,7 +229,7 @@ public class FileDetailDialog implements Observer {
 		String newName = "";
 		if ( !renameText.getText().equals("") && !renameText.getText().equals( fileInfo.getName() )) {
 			newName = renameText.getText();
-		} else if ( renameList.getSelection()[0] != null && !renameList.getSelection()[0].equals(fileInfo.getName()) ) {
+		} else if ( renameList.getSelection().length > 0 && !renameList.getSelection()[0].equals(fileInfo.getName()) ) {
 			newName = renameList.getSelection()[0];
 		}
 			

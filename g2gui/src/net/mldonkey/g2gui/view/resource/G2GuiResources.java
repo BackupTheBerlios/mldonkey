@@ -26,6 +26,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.model.NetworkInfo.Enum;
+import net.mldonkey.g2gui.model.enum.EnumState;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -77,10 +78,53 @@ public class G2GuiResources {
 			return getImage("UnknownConnectedWhite");
 	}	
 
+	public static Image getClientImage(EnumState clientState) {
+		if (clientState == EnumState.CONNECTED_DOWNLOADING)
+			return G2GuiResources.getImage("epTransferring");
+		if (clientState == EnumState.CONNECTING
+			|| clientState == EnumState.CONNECTED_INITIATING)	
+			return G2GuiResources.getImage("epConnecting");	
+		if (clientState == EnumState.CONNECTED_AND_QUEUED
+			|| clientState == EnumState.NOT_CONNECTED_WAS_QUEUED)
+			return G2GuiResources.getImage("epAsking");		
+		if (clientState == EnumState.BLACK_LISTED)
+			return G2GuiResources.getImage("epNoNeeded");
+		return G2GuiResources.getImage("epUnknown");
+	}
+	
+	public static String getRatingString(int availability) {
+		if ( availability > 400 )
+			return "" + G2GuiResources.getString( "RTLP_EXCELLENT" );
+		else if ( availability > 100 )
+			return "" + G2GuiResources.getString( "RTLP_VERYHIGH" );
+		else if ( availability > 25 )
+			return "" + G2GuiResources.getString( "RTLP_HIGH" );
+		else if ( availability > 10 )
+			return "" + G2GuiResources.getString( "RTLP_NORMAL" );
+		else
+			return "" + G2GuiResources.getString( "RTLP_LOW" );
+	}
+
+	public static Image getRatingImage(int availability) {
+		if ( availability > 400 )
+			return G2GuiResources.getImage( "epRatingExcellent" );
+		else if ( availability > 100 )
+			return G2GuiResources.getImage( "epRatingExcellent" );
+		else if ( availability > 25 )
+			return G2GuiResources.getImage( "epRatingGood" );
+		else if ( availability > 10 )
+			return G2GuiResources.getImage( "epRatingFair" );
+		else
+			return G2GuiResources.getImage( "epRatingPoor" );
+	}
+
 }
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.3  2003/08/20 14:58:43  zet
+sources clientinfo viewer
+
 Revision 1.2  2003/08/18 01:42:24  zet
 centralize resource bundle
 

@@ -37,7 +37,7 @@ import org.eclipse.swt.graphics.Image;
  * ResultTableLabelProvider
  *
  * @author $user$
- * @version $Id: ResultTableLabelProvider.java,v 1.12 2003/08/18 01:42:24 zet Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.13 2003/08/20 14:58:43 zet Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -50,9 +50,17 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 	 * getColumnImage(java.lang.Object, int)
 	 */
 	public Image getColumnImage( Object arg0, int arg1 ) {
-		if (arg0 instanceof ResultInfo && arg1 == 0) {
+		if (arg0 instanceof ResultInfo) {
 			ResultInfo resultInfo = ( ResultInfo ) arg0;
-			return G2GuiResources.getNetworkImage( resultInfo.getNetwork().getNetworkType() );
+			if (arg1 == 0)
+				return G2GuiResources.getNetworkImage( resultInfo.getNetwork().getNetworkType() );
+			else if (arg1 == 5) {
+				Tag[] tags = resultInfo.getTags();
+				if (tags != null) {					
+					Tag aTag = resultInfo.getTags()[ 0 ];
+					return G2GuiResources.getRatingImage(aTag.getValue());
+				}
+			}
 		}
 		return null;
 	}
@@ -97,16 +105,7 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 					Tag[] tags = resultInfo.getTags();
 					if (tags != null) {					
 						Tag aTag = resultInfo.getTags()[ 0 ];
-						if ( aTag.getValue() > 400 )
-							return "" + G2GuiResources.getString( "RTLP_EXCELLENT" );
-						else if ( aTag.getValue() > 100 )
-							return "" + G2GuiResources.getString( "RTLP_VERYHIGH" );
-						else if ( aTag.getValue() > 25 )
-							return "" + G2GuiResources.getString( "RTLP_HIGH" );
-						else if ( aTag.getValue() > 10 )
-							return "" + G2GuiResources.getString( "RTLP_NORMAL" );
-						else
-							return "" + G2GuiResources.getString( "RTLP_LOW" );
+						return G2GuiResources.getRatingString(aTag.getValue());
 					}
 					else return "";
 					
@@ -167,6 +166,9 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.13  2003/08/20 14:58:43  zet
+sources clientinfo viewer
+
 Revision 1.12  2003/08/18 01:42:24  zet
 centralize resource bundle
 

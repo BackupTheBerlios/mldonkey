@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.12 2003/08/17 23:13:42 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.13 2003/08/20 14:58:43 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -96,7 +96,16 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 		if (arg0 instanceof FileInfo && arg1 == 1) {
 			FileInfo fileInfo = (FileInfo) arg0;
 			return G2GuiResources.getNetworkImage( fileInfo.getNetwork().getNetworkType() );
+		} else if (arg0 instanceof TreeClientInfo) {
+			ClientInfo clientInfo = ((TreeClientInfo) arg0).getClientInfo();
+			if (arg1 == 1)
+				return G2GuiResources.getNetworkImage( clientInfo.getClientnetworkid().getNetworkType() );
+			else if (arg1 == 2)
+				return G2GuiResources.getClientImage( (EnumState) clientInfo.getState().getState() );
+			else 
+				return null;
 		}
+		
 		return null;
 	}
 	// The full row is redrawn on each update()/refresh()
@@ -226,6 +235,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.13  2003/08/20 14:58:43  zet
+sources clientinfo viewer
+
 Revision 1.12  2003/08/17 23:13:42  zet
 centralize resources, move images
 

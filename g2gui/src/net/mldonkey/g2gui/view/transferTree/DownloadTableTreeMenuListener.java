@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableTreeViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -63,13 +64,15 @@ import org.eclipse.swt.widgets.TableColumn;
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
 
-	FileInfo selectedFile;
-	TreeClientInfo selectedClient;
-	ArrayList selectedClients = new ArrayList();
-	ArrayList selectedFiles = new ArrayList();
+	private FileInfo lastSelectedFile, selectedFile;
+	private TreeClientInfo selectedClient;
+	private ArrayList selectedClients = new ArrayList();
+	private ArrayList selectedFiles = new ArrayList();
 	private TableTreeViewer tableTreeViewer;
+	private TableViewer clientTableViewer;
 	private DownloadTableTreeContentProvider tableTreeContentProvider;
 	private CoreCommunication mldonkey;
+	private boolean createClientTable = false;
 	
 	// move these external some day
 	private static String[] ExtensionNames = {
@@ -108,9 +111,10 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		CDImageExtensions, PictureExtensions
 	};
 		
-	public DownloadTableTreeMenuListener (TableTreeViewer tableTreeViewer, CoreCommunication mldonkey) {
+	public DownloadTableTreeMenuListener (TableTreeViewer tableTreeViewer, TableViewer clientTableViewer, CoreCommunication mldonkey) {
 
 		this.tableTreeViewer = tableTreeViewer;
+		this.clientTableViewer = clientTableViewer;
 		this.mldonkey = mldonkey;
 		tableTreeContentProvider = (DownloadTableTreeContentProvider) tableTreeViewer.getContentProvider();
 		
@@ -122,9 +126,16 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		IStructuredSelection sSel = (IStructuredSelection) e.getSelection();
 		Object o = sSel.getFirstElement();
 
-		if (o instanceof FileInfo)
-			selectedFile = (FileInfo) o;
-		else
+		if (o instanceof FileInfo) {
+			FileInfo fileInfo = (FileInfo) o;
+			selectedFile = fileInfo;
+			if (createClientTable && 
+				(lastSelectedFile == null || lastSelectedFile != selectedFile)) {
+				clientTableViewer.setInput(fileInfo);
+			}
+			lastSelectedFile = selectedFile;
+			
+		} else
 			selectedFile = null;
 			
 		if (o instanceof TreeClientInfo) 
@@ -142,6 +153,18 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 				selectedClients.add((TreeClientInfo) o);	
 		}
 	}
+	
+	public void updateClientsTable(boolean b) {
+		if (b) {
+			if (createClientTable != b)
+				clientTableViewer.setInput(lastSelectedFile);				
+		} else {
+			clientTableViewer.setInput(null);
+		}
+		
+		createClientTable = b;
+	}
+	
 	
 	public void menuAboutToShow(IMenuManager menuManager) {
 		fillContextMenu(menuManager);
@@ -685,6 +708,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.9  2003/08/20 14:58:43  zet
+sources clientinfo viewer
+
 Revision 1.8  2003/08/19 12:14:16  lemmster
 first try of simple/advanced mode
 

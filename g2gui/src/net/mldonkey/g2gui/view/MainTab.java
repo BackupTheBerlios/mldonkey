@@ -83,7 +83,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.42 2003/08/19 12:14:16 lemmster Exp $ 
+ * @version $Id: MainTab.java,v 1.43 2003/08/20 14:58:43 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -683,6 +683,16 @@ public class MainTab implements Listener, Observer, ShellListener {
 		reg.put( "SearchSmall", createTrans( "search_small.png" )) ;
 		reg.put( "SearchComplete", createTrans( "search_complete.png" )) ;
 		
+		reg.put( "epUnknown", createImageDescriptor("ep_unknown.gif") );
+		reg.put( "epTransferring", createImageDescriptor("ep_transferring.gif") );
+		reg.put( "epNoNeeded", createImageDescriptor("ep_noneeded.gif") );
+		reg.put( "epConnecting", createImageDescriptor("ep_connecting.gif") );
+		reg.put( "epAsking", createImageDescriptor("ep_asking.gif") );
+		
+		reg.put( "epRatingPoor", createImageDescriptor("ep_rating_poor.gif") );
+		reg.put( "epRatingFair", createImageDescriptor("ep_rating_fair.gif") );
+		reg.put( "epRatingGood", createImageDescriptor("ep_rating_good.gif") );
+		reg.put( "epRatingExcellent", createImageDescriptor("ep_rating_excellent.gif") );
 	}
 	// transparent pngs just don't work with swt 
 	private Image createTrans(String filename) {
@@ -690,6 +700,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 	}
 	private Image createTrans(String filename, Color color) {
 		return createTransparentImage( ImageDescriptor.createFromFile(MainTab.class, "images/" + filename).createImage(), color);
+	}
+	private ImageDescriptor createImageDescriptor(String filename) {
+		return ImageDescriptor.createFromFile(MainTab.class, "images/" + filename);
 	}
 	public static Shell getShell() {
 		return thisShell;
@@ -749,6 +762,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.43  2003/08/20 14:58:43  zet
+sources clientinfo viewer
+
 Revision 1.42  2003/08/19 12:14:16  lemmster
 first try of simple/advanced mode
 

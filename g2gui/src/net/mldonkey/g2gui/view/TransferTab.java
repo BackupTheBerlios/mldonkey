@@ -32,23 +32,43 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transferTree.DownloadTableTreeContentProvider;
 import net.mldonkey.g2gui.view.transferTree.DownloadTableTreeViewer;
+import net.mldonkey.g2gui.view.transferTree.clientTable.TableContentProvider;
+import net.mldonkey.g2gui.view.transferTree.clientTable.TableLabelProvider;
+import net.mldonkey.g2gui.view.transferTree.clientTable.TableMenuListener;
+import net.mldonkey.g2gui.view.transferTree.clientTable.TableSorter;
 
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.27 2003/08/18 01:42:24 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.28 2003/08/20 14:58:43 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -58,7 +78,8 @@ public class TransferTab extends GuiTab  {
 	private long timestamp = 0;
 	private Font font = new Font(null, "Helvetica", 12, SWT.BOLD); // fix later
 	public static DecimalFormat decimalFormat = new DecimalFormat( "0.0" );
-	private DownloadTableTreeViewer downloadTableTreeViewer;
+	private DownloadTableTreeViewer downloadTableTreeViewer = null;
+	private TableViewer clientTableViewer = null;
 		
 	/**
 	 * @param gui where this tab belongs to
@@ -78,23 +99,127 @@ public class TransferTab extends GuiTab  {
 	 * @see net.mldonkey.g2gui.view.G2guiTab#createContents(org.eclipse.swt.widgets.Composite)
 	 */	 
 	protected void createContents( Composite parent ) {
-		SashForm main = new SashForm( parent, SWT.VERTICAL );
+		SashForm mainSashForm = new SashForm( parent, SWT.VERTICAL );
+		Composite downloadComposite;
 		
-		Composite downloadComposite = new Composite( main, SWT.BORDER );
+		
+		if (PreferenceLoader.loadBoolean("advancedMode")) {
+					
+			SashForm downloadSashForm = new SashForm( mainSashForm, SWT.HORIZONTAL );
+			
+		
+			
+			
+			downloadComposite = new Composite( downloadSashForm, SWT.BORDER );
+			GridLayout gridLayout = new GridLayout();
+			gridLayout.numColumns = 1;
+			gridLayout.marginHeight = 0;
+			gridLayout.marginWidth = 0;
+			downloadComposite.setLayout( gridLayout );
+		
+			Composite downloadClients = new Composite(downloadSashForm, SWT.BORDER );
+			gridLayout = new GridLayout();
+			gridLayout.numColumns = 1;
+			gridLayout.marginHeight = 0;
+			gridLayout.marginWidth = 0;
+			gridLayout.verticalSpacing = 0;
+			downloadClients.setLayout( gridLayout );
+			
+			downloadClients.addControlListener(new ControlAdapter() {
+				public void controlResized(ControlEvent e) {
+						Composite c = (Composite) e.widget;
+						int width = c.getBounds().width;
+						if (width > 0 && downloadTableTreeViewer != null) 
+							downloadTableTreeViewer.updateClientsTable(true);
+				}
+			});
+		
+			createClientTableViewer(downloadClients, downloadSashForm);
+		
+			downloadSashForm.setWeights( new int[] {100,0});
+		
+		} else {
+			downloadComposite = new Composite( mainSashForm, SWT.BORDER );
+			downloadComposite.setLayout(new FillLayout());
+		}
+		
+				
+		// When we have uploaders:		
+		Composite upload = new Composite( mainSashForm, SWT.BORDER );
+		mainSashForm.setWeights( new int[] {1441,0});
+		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, clientTableViewer, mldonkey, this );
+		
+		if (headerBar) mldonkey.getFileInfoIntMap().addObserver( this );
+		
+	}
+	
+	public void createClientTableViewer(Composite parent, final SashForm parentSash) {
+
+		final String[] COLUMN_LABELS = { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
+		final int[] COLUMN_ALIGNMENT = { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
+		final int[] COLUMN_DEFAULT_WIDTHS = { 200, 100, 75, 75 };
+		clientTableViewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI);
+		Table table = clientTableViewer.getTable();
+		table.setLayoutData(new GridData(GridData.FILL_BOTH));
+		clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
+		clientTableViewer.getTable().setHeaderVisible( true );
+		
+		for (int i = 0; i < COLUMN_LABELS.length; i++) {
+			MainTab.getStore().setDefault(COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ]);
+			TableColumn tableColumn = new TableColumn(table, COLUMN_ALIGNMENT[ i ]);
+			tableColumn.setText ( G2GuiResources.getString( COLUMN_LABELS[ i ] )  );
+			tableColumn.setWidth(MainTab.getStore().getInt( COLUMN_LABELS[ i ] ));
+			final int columnIndex = i;
+			tableColumn.addDisposeListener(new DisposeListener() {
+				public synchronized void widgetDisposed( DisposeEvent e ) {
+					TableColumn thisColumn = ( TableColumn ) e.widget;
+					MainTab.getStore().setValue(COLUMN_LABELS [ columnIndex ] , thisColumn.getWidth() );
+				}
+			} );
+			tableColumn.addListener( SWT.Selection, new Listener() {
+				public void handleEvent( Event e ) {
+					TableSorter oldTS = (TableSorter) clientTableViewer.getSorter();
+					TableSorter newTS = new TableSorter();
+					newTS.setLastSort(oldTS.getLastSort());
+					newTS.setLastColumnIndex(oldTS.getLastColumnIndex());
+					newTS.setColumnIndex( columnIndex );
+					clientTableViewer.setSorter ( newTS );
+				}	
+			} ); 
+		};
+			
+		clientTableViewer.setContentProvider(new TableContentProvider());
+		clientTableViewer.setLabelProvider(new TableLabelProvider());
+		TableMenuListener tableMenuListener = new TableMenuListener( clientTableViewer, mldonkey );
+		clientTableViewer.addSelectionChangedListener( tableMenuListener );
+		MenuManager popupMenu = new MenuManager( "" );
+		popupMenu.setRemoveAllWhenShown( true );
+		popupMenu.addMenuListener( tableMenuListener );			
+		clientTableViewer.getTable().setMenu( popupMenu.createContextMenu( clientTableViewer.getTable() ) );
+		clientTableViewer.setSorter(new TableSorter());
+		
+		Composite bottomBar = new Composite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
-		downloadComposite.setLayout( gridLayout );
-				
-		// Bottom sash			
-		Composite upload = new Composite( main, SWT.BORDER );
-		main.setWeights( new int[] {1441,0});
-		// old non viewer
-		// new DownloadTable ( download, mldonkey, this );
-		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, mldonkey, this );
+		gridLayout.verticalSpacing = 0;
+		bottomBar.setLayout( gridLayout );
+		bottomBar.setLayoutData( new GridData(GridData.FILL_HORIZONTAL));
 		
-		if (headerBar) mldonkey.getFileInfoIntMap().addObserver( this );
+		Label separator1 = new Label(bottomBar,SWT.SEPARATOR|SWT.HORIZONTAL);
+		separator1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Button hideButton = new Button(bottomBar, SWT.NONE);
+		hideButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		hideButton.setText(">>>");
+		hideButton.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected (SelectionEvent s) {
+				parentSash.setWeights(new int[]{10,0});
+				if (downloadTableTreeViewer != null) 
+					downloadTableTreeViewer.updateClientsTable(false);
+			}
+		});
 		
 	}
 
@@ -148,6 +273,8 @@ public class TransferTab extends GuiTab  {
 	}
 	public void updateDisplay() {
 		downloadTableTreeViewer.updateDisplay();
+		if (clientTableViewer != null)
+			clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
 		super.updateDisplay();
 		mldonkey.getFileInfoIntMap().deleteObserver( this );
 		if (headerBar) mldonkey.getFileInfoIntMap().addObserver( this );
@@ -157,6 +284,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.28  2003/08/20 14:58:43  zet
+sources clientinfo viewer
+
 Revision 1.27  2003/08/18 01:42:24  zet
 centralize resource bundle
 

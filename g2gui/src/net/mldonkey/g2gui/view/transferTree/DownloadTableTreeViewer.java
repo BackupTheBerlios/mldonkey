@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
@@ -53,7 +54,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.9 2003/08/18 01:42:24 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.10 2003/08/20 14:58:43 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -71,6 +72,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	private CoreCommunication mldonkey;
 	private CellEditor[] cellEditors;
 	private long lastTreeEvent = 0;
+	private TableViewer clientTableViewer;
 	
 	private final String[] COLUMN_LABELS =
 		{	"TT_Download_Id",
@@ -117,8 +119,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	 * @param mldonkey 
 	 * @param page 
 	 */
-	public DownloadTableTreeViewer( Composite parent, final CoreCommunication mldonkey, TransferTab page ) 
+	public DownloadTableTreeViewer( Composite parent, TableViewer clientTableViewer, final CoreCommunication mldonkey, TransferTab page ) 
 	{
+		this.clientTableViewer = clientTableViewer;
 		this.shell = parent.getShell();
 		this.mldonkey = mldonkey;
 		displayChunkGraphs = PreferenceLoader.loadBoolean("displayChunkGraphs");
@@ -206,7 +209,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		
 		tableTree.addTreeListener(tableTreeContentProvider);
 			
-		tableTreeMenuListener = new DownloadTableTreeMenuListener(tableTreeViewer, mldonkey);
+		tableTreeMenuListener = new DownloadTableTreeMenuListener(tableTreeViewer, clientTableViewer, mldonkey);
 		
 		tableTreeViewer.addSelectionChangedListener(tableTreeMenuListener);
 	
@@ -268,7 +271,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	public static int getChunksColumn() {
 		return CHUNKS_COLUMN;
 	}
-
 	public void updateDisplay() {
 		table.setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
 		boolean newChunkValue = PreferenceLoader.loadBoolean("displayChunkGraphs");
@@ -289,12 +291,18 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		tableTreeContentProvider.setForceRefresh(PreferenceLoader.loadBoolean("forceRefresh"));
 	}
 
+	public void updateClientsTable(boolean b) {
+		tableTreeMenuListener.updateClientsTable(b);
+	}
 
 		
 }
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.10  2003/08/20 14:58:43  zet
+sources clientinfo viewer
+
 Revision 1.9  2003/08/18 01:42:24  zet
 centralize resource bundle
 

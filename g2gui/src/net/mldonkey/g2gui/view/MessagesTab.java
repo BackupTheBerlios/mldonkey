@@ -26,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
@@ -77,6 +79,8 @@ public class MessagesTab extends GuiTab {
 	private Hashtable openTabs = new Hashtable();
 	private Composite friendsComposite;
 	private TableViewer tableViewer;
+	private long lastTime = 0;
+	private boolean mustRefresh;
 	/**
 	 * @param gui
 	 */
@@ -241,10 +245,42 @@ public class MessagesTab extends GuiTab {
 		if (arg1 instanceof ClientMessage) {
 			messageFromClient((ClientMessage) arg1);
 		} else if (arg0 instanceof ClientInfoIntMap) {
-			tableViewer.refresh();
-			setRightLabel();
+			if (System.currentTimeMillis() > lastTime + 2000) {
+				tableViewer.refresh();
+				setRightLabel();
+				lastTime = System.currentTimeMillis();
+				mustRefresh = false;
+			} else {
+				if (!mustRefresh) {
+				mustRefresh = true;
+				
+				Timer refreshTimer = new Timer();
+				refreshTimer.schedule( new TimerTask() {
+						public void run () {
+							Shell shell = MainTab.getShell();
+							if(!shell.isDisposed() && shell !=null && shell.getDisplay()!=null) {
+								shell.getDisplay().asyncExec(new Runnable() {
+									public void run() {
+										runTimerUpdate();
+									}
+								});
+								
+							}
+						}
+					}, 2000);
+				}
+			}
 		}
 	}
+	
+	public void runTimerUpdate() {
+		if (mustRefresh && !MainTab.getShell().isDisposed()) {
+			tableViewer.refresh();
+			setRightLabel();
+			mustRefresh = false;
+		}
+	}
+	
 	
 	/**
 	 * 
@@ -394,6 +430,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.6  2003/08/20 14:58:43  zet
+sources clientinfo viewer
+
 Revision 1.5  2003/08/18 06:00:01  zet
 fix null pointer (I'm not even sure it is real..)
 
