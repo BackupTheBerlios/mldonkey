@@ -36,8 +36,8 @@ import org.eclipse.swt.graphics.Image;
 /**
  * TableLabelProvider
  *
- * @author $Author: lemmster $
- * @version $Id: ServerTableLabelProvider.java,v 1.1 2003/08/23 09:46:18 lemmster Exp $ 
+ *
+ * @version $Id: ServerTableLabelProvider.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ServerTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -153,6 +153,9 @@ public class ServerTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ServerTableLabelProvider.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/23 09:46:18  lemmster
 superclass TableMenuListener added
 

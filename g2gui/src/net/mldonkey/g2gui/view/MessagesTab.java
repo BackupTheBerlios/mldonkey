@@ -66,8 +66,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
- * @author $Author: lemmster $
- * @version $Id: MessagesTab.java,v 1.10 2003/08/23 14:58:38 lemmster Exp $
+ *
+ * @version $Id: MessagesTab.java,v 1.11 2003/08/23 15:21:37 zet Exp $
  */
 public class MessagesTab extends GuiTab {
 
@@ -428,6 +428,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.11  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.10  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
@@ -435,7 +438,7 @@ Revision 1.9  2003/08/23 09:47:52  lemmster
 just rename
 
 Revision 1.8  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.7  2003/08/20 22:18:56  zet
 Viewer updates

@@ -25,8 +25,8 @@ package net.mldonkey.g2gui.model.enum;
 /**
  * EnumPriority
  *
- * @author $Author: lemmster $
- * @version $Id: EnumPriority.java,v 1.3 2003/08/22 21:04:27 lemmster Exp $ 
+ *
+ * @version $Id: EnumPriority.java,v 1.4 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class EnumPriority implements Enum {
@@ -52,8 +52,11 @@ public class EnumPriority implements Enum {
 
 /*
 $Log: EnumPriority.java,v $
+Revision 1.4  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.3  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.2  2003/07/04 11:41:49  lemmstercvs01
 bugfix

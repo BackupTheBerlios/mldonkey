@@ -55,8 +55,8 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeContentProvider
  *
- * @author $Author: zet $
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.14 2003/08/23 15:13:00 zet Exp $ 
+ *
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.15 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -544,6 +544,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.15  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.14  2003/08/23 15:13:00  zet
 remove reference to static MainTab methods
 

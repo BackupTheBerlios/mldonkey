@@ -34,8 +34,8 @@ import org.eclipse.swt.graphics.Image;
 /**
  * TableLabelProvider
  *
- * @author $Author: lemmster $
- * @version $Id: FriendsTableLabelProvider.java,v 1.1 2003/08/23 09:47:46 lemmster Exp $
+ *
+ * @version $Id: FriendsTableLabelProvider.java,v 1.2 2003/08/23 15:21:37 zet Exp $
  */
 public class FriendsTableLabelProvider implements ITableLabelProvider, IColorProvider {
 
@@ -110,11 +110,14 @@ public class FriendsTableLabelProvider implements ITableLabelProvider, IColorPro
 
 /*
 $Log: FriendsTableLabelProvider.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/23 09:47:46  lemmster
 just rename
 
 Revision 1.4  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.3  2003/08/17 23:13:42  zet
 centralize resources, move images

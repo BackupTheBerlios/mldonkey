@@ -25,8 +25,8 @@ package net.mldonkey.g2gui.model;
 /**
  * Information
  *
- * @author $Author: lemmster $
- * @version $Id: Information.java,v 1.7 2003/08/22 21:03:15 lemmster Exp $ 
+ *
+ * @version $Id: Information.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public interface Information {
@@ -34,8 +34,11 @@ public interface Information {
 
 /*
 $Log: Information.java,v $
+Revision 1.8  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.6  2003/07/06 08:49:03  lemmstercvs01
 refactored

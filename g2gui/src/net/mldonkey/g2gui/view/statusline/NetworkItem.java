@@ -44,8 +44,8 @@ import org.eclipse.swt.widgets.Control;
 /**
  * NetworkItem
  *
- * @author $Author: lemmster $
- * @version $Id: NetworkItem.java,v 1.20 2003/08/21 13:13:10 lemmster Exp $ 
+ *
+ * @version $Id: NetworkItem.java,v 1.21 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -174,6 +174,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.21  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.20  2003/08/21 13:13:10  lemmster
 cleanup in networkitem
 

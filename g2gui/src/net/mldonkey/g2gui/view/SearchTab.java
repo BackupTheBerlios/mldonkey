@@ -48,8 +48,8 @@ import org.eclipse.swt.widgets.TabItem;
 /**
  * SearchTab
  *
- * @author $Author: lemmster $
- * @version $Id: SearchTab.java,v 1.14 2003/08/23 14:58:38 lemmster Exp $ 
+ *
+ * @version $Id: SearchTab.java,v 1.15 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -205,11 +205,14 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.15  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.14  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
 Revision 1.13  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/18 05:22:27  zet
 remove image.dispose

@@ -29,8 +29,8 @@ import java.net.UnknownHostException;
 /**
  * SocketPool
  *
- * @author $Author: lemmster $
- * @version $Id: SocketPool.java,v 1.12 2003/08/21 10:55:01 lemmster Exp $ 
+ *
+ * @version $Id: SocketPool.java,v 1.13 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class SocketPool extends ObjectPool {
@@ -116,8 +116,11 @@ public class SocketPool extends ObjectPool {
 
 /*
 $Log: SocketPool.java,v $
+Revision 1.13  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.12  2003/08/21 10:55:01  lemmster
-$user$ -> $Author$
+$user$ -> $Author: zet $
 
 Revision 1.11  2003/08/04 14:38:13  lemmstercvs01
 splashscreen and error handling added

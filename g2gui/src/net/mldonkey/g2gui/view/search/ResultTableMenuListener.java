@@ -52,8 +52,8 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ResultTableMenuListener
  *
- * @author $Author: lemmster $
- * @version $Id: ResultTableMenuListener.java,v 1.4 2003/08/23 10:34:33 lemmster Exp $ 
+ *
+ * @version $Id: ResultTableMenuListener.java,v 1.5 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -285,6 +285,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.5  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.4  2003/08/23 10:34:33  lemmster
 isSearchable() added
 

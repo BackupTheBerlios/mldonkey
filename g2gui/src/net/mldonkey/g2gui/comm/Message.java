@@ -29,8 +29,8 @@ import java.net.Socket;
 /**
  * Message
  *
- * @author $Author: lemmster $
- * @version $Id: Message.java,v 1.29 2003/08/22 21:03:15 lemmster Exp $ 
+ *
+ * @version $Id: Message.java,v 1.30 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public abstract class Message {
@@ -439,8 +439,11 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.30  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.29  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.28  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging

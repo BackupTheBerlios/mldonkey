@@ -36,8 +36,8 @@ import org.eclipse.jface.action.Separator;
 /**
  * NetworkItemMenuListener
  *
- * @author $Author: lemmster $
- * @version $Id: NetworkItemMenuListener.java,v 1.2 2003/08/22 19:00:25 lemmster Exp $ 
+ *
+ * @version $Id: NetworkItemMenuListener.java,v 1.3 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class NetworkItemMenuListener implements IMenuListener {
@@ -133,6 +133,9 @@ public class NetworkItemMenuListener implements IMenuListener {
 
 /*
 $Log: NetworkItemMenuListener.java,v $
+Revision 1.3  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.2  2003/08/22 19:00:25  lemmster
 support for connectMore with network id
 

@@ -29,8 +29,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * OptionsInfo
  *
- * @author $Author: lemmster $
- * @version $Id: NetworkInfoIntMap.java,v 1.13 2003/08/20 10:04:58 lemmster Exp $ 
+ *
+ * @version $Id: NetworkInfoIntMap.java,v 1.14 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
@@ -160,6 +160,9 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.14  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.13  2003/08/20 10:04:58  lemmster
 inputbox disabled when zero searchable networks are enabled
 

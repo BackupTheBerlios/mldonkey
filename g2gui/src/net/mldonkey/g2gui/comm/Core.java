@@ -52,8 +52,8 @@ import net.mldonkey.g2gui.model.UserInfo;
 /**
  * Core
  *
- * @author $Author: lemmster $
- * @version $Id: Core.java,v 1.88 2003/08/23 10:02:02 lemmster Exp $ 
+ *
+ * @version $Id: Core.java,v 1.89 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -520,6 +520,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.89  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.88  2003/08/23 10:02:02  lemmster
 use supertype where possible
 

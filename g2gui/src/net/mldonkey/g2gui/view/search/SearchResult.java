@@ -76,8 +76,8 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * SearchResult
  *
- * @author $Author: lemmster $
- * @version $Id: SearchResult.java,v 1.26 2003/08/23 14:58:38 lemmster Exp $ 
+ *
+ * @version $Id: SearchResult.java,v 1.27 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -554,6 +554,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.27  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.26  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
@@ -564,7 +567,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

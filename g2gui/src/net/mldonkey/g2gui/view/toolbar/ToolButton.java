@@ -30,8 +30,8 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * ToolButton A simple helper class made so that the coolbar can be redrawn
  *
- * @author $Author: zet $
- * @version $Id: ToolButton.java,v 1.5 2003/08/22 23:25:15 zet Exp $
+ *
+ * @version $Id: ToolButton.java,v 1.6 2003/08/23 15:21:37 zet Exp $
  * 
  */
 public class ToolButton {
@@ -117,6 +117,9 @@ public class ToolButton {
 
 /*
 $Log: ToolButton.java,v $
+Revision 1.6  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.5  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 

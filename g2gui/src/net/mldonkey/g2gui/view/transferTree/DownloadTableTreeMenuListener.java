@@ -59,8 +59,8 @@ import org.eclipse.swt.widgets.Table;
  * 
  * DownloadTableTreeMenuListener
  *
- * @author $Author: zet $
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.16 2003/08/23 15:13:00 zet Exp $ 
+ *
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.17 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -695,6 +695,9 @@ public class DownloadTableTreeMenuListener extends TableMenuListener implements 
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.17  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.16  2003/08/23 15:13:00  zet
 remove reference to static MainTab methods
 

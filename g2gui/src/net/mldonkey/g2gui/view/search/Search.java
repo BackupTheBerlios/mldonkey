@@ -46,8 +46,8 @@ import org.eclipse.swt.widgets.Text;
 /**
  * Search
  *
- * @author $Author: zet $
- * @version $Id: Search.java,v 1.13 2003/08/22 23:35:40 zet Exp $ 
+ *
+ * @version $Id: Search.java,v 1.14 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public abstract class Search implements Observer {
@@ -205,6 +205,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.14  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.13  2003/08/22 23:35:40  zet
 use JFace font registry
 

@@ -53,8 +53,8 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Starts the hole thing
  *
- * @author $Author: lemmster $
- * @version $Id: G2Gui.java,v 1.23 2003/08/23 10:02:02 lemmster Exp $ 
+ *
+ * @version $Id: G2Gui.java,v 1.24 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class G2Gui {
@@ -345,6 +345,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.24  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.23  2003/08/23 10:02:02  lemmster
 use supertype where possible
 

@@ -43,8 +43,8 @@ import org.eclipse.swt.widgets.Event;
 /**
  * ConsoleTab
  *
- * @author $Author: lemmster $
- * @version $Id: ConsoleTab.java,v 1.38 2003/08/23 09:56:15 lemmster Exp $ 
+ *
+ * @version $Id: ConsoleTab.java,v 1.39 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -170,11 +170,14 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.39  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.38  2003/08/23 09:56:15  lemmster
 use supertype instead of Core
 
 Revision 1.37  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.36  2003/08/18 01:42:24  zet
 centralize resource bundle

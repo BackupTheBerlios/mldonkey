@@ -30,8 +30,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * OptionsInfo
  *
- * @author $Author: lemmster $
- * @version $Id: OptionsInfoMap.java,v 1.21 2003/08/21 20:24:37 lemmster Exp $ 
+ *
+ * @version $Id: OptionsInfoMap.java,v 1.22 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -227,6 +227,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.22  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.21  2003/08/21 20:24:37  lemmster
 adjustment for the latest devel core
 

@@ -27,8 +27,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * SharedFileInfo
  *
- * @author $Author: lemmster $
- * @version $Id: SharedFileInfo.java,v 1.4 2003/08/22 21:03:15 lemmster Exp $ 
+ *
+ * @version $Id: SharedFileInfo.java,v 1.5 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -136,8 +136,11 @@ public class SharedFileInfo implements SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.5  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved

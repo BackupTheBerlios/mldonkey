@@ -34,8 +34,8 @@ import org.eclipse.swt.widgets.*;
 /**
  * ExtendedFontFieldEditor
  *
- * @author $Author: lemmster $
- * @version $Id: ExtendedFontFieldEditor2.java,v 1.6 2003/08/22 21:10:57 lemmster Exp $ 
+ *
+ * @version $Id: ExtendedFontFieldEditor2.java,v 1.7 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ExtendedFontFieldEditor2 extends FontFieldEditor {
@@ -176,8 +176,11 @@ public class ExtendedFontFieldEditor2 extends FontFieldEditor {
 
 /*
 $Log: ExtendedFontFieldEditor2.java,v $
+Revision 1.7  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.6  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.5  2003/07/26 17:54:14  zet
 fix pref's illegal setParent, redo graphs, other

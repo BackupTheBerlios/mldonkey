@@ -30,8 +30,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * TableSorter
  *
- * @author $Author: lemmster $
- * @version $Id: FriendsTableSorter.java,v 1.1 2003/08/23 09:47:46 lemmster Exp $ 
+ *
+ * @version $Id: FriendsTableSorter.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class FriendsTableSorter extends ViewerSorter {
@@ -72,6 +72,9 @@ public class FriendsTableSorter extends ViewerSorter {
 
 /*
 $Log: FriendsTableSorter.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/23 09:47:46  lemmster
 just rename
 

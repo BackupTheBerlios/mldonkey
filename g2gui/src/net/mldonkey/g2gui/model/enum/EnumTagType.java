@@ -25,8 +25,8 @@ package net.mldonkey.g2gui.model.enum;
 /**
  * EnumTagType
  *
- * @author $Author: lemmster $
- * @version $Id: EnumTagType.java,v 1.3 2003/08/22 21:04:27 lemmster Exp $ 
+ *
+ * @version $Id: EnumTagType.java,v 1.4 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class EnumTagType implements Enum {
@@ -80,8 +80,11 @@ public class EnumTagType implements Enum {
 
 /*
 $Log: EnumTagType.java,v $
+Revision 1.4  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.3  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.2  2003/08/02 09:27:39  lemmstercvs01
 added support for proto > 16

@@ -31,8 +31,8 @@ import net.mldonkey.g2gui.model.enum.*;
 /**
  * State
  *
- * @author $Author: lemmster $
- * @version $Id: FileState.java,v 1.14 2003/08/23 10:02:02 lemmster Exp $ 
+ *
+ * @version $Id: FileState.java,v 1.15 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -144,11 +144,14 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.15  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.14  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.13  2003/08/22 21:03:14  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/07/04 12:29:39  dek
 checkstyle

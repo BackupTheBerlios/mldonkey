@@ -43,8 +43,8 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
 /**
  * Download
  *
- * @author $Author: lemmster $
- * @version $Id: FileInfo.java,v 1.41 2003/08/23 10:02:02 lemmster Exp $ 
+ *
+ * @version $Id: FileInfo.java,v 1.42 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -699,6 +699,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.42  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.41  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
@@ -706,7 +709,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)

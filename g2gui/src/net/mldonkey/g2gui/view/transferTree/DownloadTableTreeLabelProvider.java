@@ -42,8 +42,8 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @author $Author: zet $
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.16 2003/08/23 01:04:03 zet Exp $ 
+ *
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.17 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -234,6 +234,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.17  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.16  2003/08/23 01:04:03  zet
 *** empty log message ***
 

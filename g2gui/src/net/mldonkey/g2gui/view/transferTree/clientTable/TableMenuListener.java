@@ -40,8 +40,8 @@ import org.eclipse.jface.viewers.TableViewer;
 /**
  * TableMenuListener
  *
- * @author $Author: zet $
- * @version $Id: TableMenuListener.java,v 1.1 2003/08/20 14:58:43 zet Exp $ 
+ *
+ * @version $Id: TableMenuListener.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -111,6 +111,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/20 14:58:43  zet
 sources clientinfo viewer
 

@@ -34,8 +34,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * ResultTableSorter
  *
- * @author $Author: zet $
- * @version $Id: DownloadTableTreeSorter.java,v 1.9 2003/08/22 23:25:15 zet Exp $ 
+ *
+ * @version $Id: DownloadTableTreeSorter.java,v 1.10 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
@@ -302,6 +302,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.10  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.9  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 

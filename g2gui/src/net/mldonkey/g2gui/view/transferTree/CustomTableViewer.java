@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Widget;
  * 
  * CustomTableViewer
  *
- * @author $Author: lemmster $
- * @version $Id: CustomTableViewer.java,v 1.2 2003/08/22 21:16:36 lemmster Exp $ 
+ *
+ * @version $Id: CustomTableViewer.java,v 1.3 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class CustomTableViewer extends TableViewer {
@@ -113,8 +113,11 @@ public class CustomTableViewer extends TableViewer {
 }
 /*
 $Log: CustomTableViewer.java,v $
+Revision 1.3  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.2  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.1  2003/08/20 22:18:56  zet
 Viewer updates

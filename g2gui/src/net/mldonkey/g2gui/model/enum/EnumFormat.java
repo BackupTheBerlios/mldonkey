@@ -25,8 +25,8 @@ package net.mldonkey.g2gui.model.enum;
 /**
  * EnumFormat
  *
- * @author $Author: lemmster $
- * @version $Id: EnumFormat.java,v 1.2 2003/08/22 21:04:27 lemmster Exp $ 
+ *
+ * @version $Id: EnumFormat.java,v 1.3 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class EnumFormat implements Enum {
@@ -57,8 +57,11 @@ public class EnumFormat implements Enum {
 
 /*
 $Log: EnumFormat.java,v $
+Revision 1.3  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.2  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
 Enum more improved

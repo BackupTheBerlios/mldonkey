@@ -31,8 +31,8 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
 /**
  * OptionsInfo
  *
- * @author $Author: lemmster $
- * @version $Id: OptionsInfo.java,v 1.21 2003/08/23 10:02:02 lemmster Exp $ 
+ *
+ * @version $Id: OptionsInfo.java,v 1.22 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -325,6 +325,9 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.22  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.21  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
@@ -332,7 +335,7 @@ Revision 1.20  2003/08/19 21:02:16  lemmster
 show all options in simple mode proto < 18
 
 Revision 1.19  2003/08/19 12:47:57  lemmster
-$user$ -> $Author: lemmster $
+$user$ -> $Author: zet $
 
 Revision 1.18  2003/08/19 12:46:02  lemmster
 typo fixed

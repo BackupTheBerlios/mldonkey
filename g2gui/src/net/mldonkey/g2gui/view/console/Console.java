@@ -42,8 +42,8 @@ import org.eclipse.swt.widgets.Text;
 /**
  * ConsoleTab
  *
- * @author $Author: lemmster $
- * @version $Id: Console.java,v 1.7 2003/08/22 21:10:57 lemmster Exp $ 
+ *
+ * @version $Id: Console.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class Console extends Observable implements ControlListener  {	
@@ -168,8 +168,11 @@ public class Console extends Observable implements ControlListener  {
 
 /*
 $Log: Console.java,v $
+Revision 1.8  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.6  2003/08/18 06:00:01  zet
 fix null pointer (I'm not even sure it is real..)

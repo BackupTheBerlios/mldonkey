@@ -41,8 +41,8 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 /**
  * ServerInfoList
  *
- * @author $Author: lemmster $
- * @version $Id: ServerInfoIntMap.java,v 1.18 2003/08/22 19:00:25 lemmster Exp $ 
+ *
+ * @version $Id: ServerInfoIntMap.java,v 1.19 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -435,6 +435,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.19  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.18  2003/08/22 19:00:25  lemmster
 support for connectMore with network id
 

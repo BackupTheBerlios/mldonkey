@@ -63,8 +63,8 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * ServerTab
  *
- * @author $Author: lemmster $
- * @version $Id: ServerTab.java,v 1.17 2003/08/23 15:01:32 lemmster Exp $ 
+ *
+ * @version $Id: ServerTab.java,v 1.18 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -407,6 +407,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.18  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.17  2003/08/23 15:01:32  lemmster
 update the header
 

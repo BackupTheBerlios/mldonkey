@@ -39,8 +39,8 @@ import org.eclipse.swt.widgets.Label;
  * is way too complicated for our simple needs. It has to be placed in a GridLayout, since it
  * applies a GridData object for its appearance.
  *
- * @author $Author: lemmster $
- * @version $Id: StatusLine.java,v 1.9 2003/08/22 21:06:48 lemmster Exp $ 
+ *
+ * @version $Id: StatusLine.java,v 1.10 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class StatusLine {
@@ -119,8 +119,11 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.10  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.9  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.8  2003/08/18 01:42:24  zet
 centralize resource bundle

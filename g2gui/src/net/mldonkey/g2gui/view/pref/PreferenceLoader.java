@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Display;
 /**
  * PreferenceLoader
  *
- * @author $Author: zet $
- * @version $Id: PreferenceLoader.java,v 1.11 2003/08/22 23:25:15 zet Exp $
+ *
+ * @version $Id: PreferenceLoader.java,v 1.12 2003/08/23 15:21:37 zet Exp $
  */
 public class PreferenceLoader {
 
@@ -138,6 +138,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.12  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 

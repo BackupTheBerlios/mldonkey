@@ -30,8 +30,8 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * TableContentProvider
  *
- * @author $Author: lemmster $
- * @version $Id: ServerTableContentProvider.java,v 1.1 2003/08/23 09:46:18 lemmster Exp $ 
+ *
+ * @version $Id: ServerTableContentProvider.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ServerTableContentProvider implements IStructuredContentProvider {
@@ -57,6 +57,9 @@ public class ServerTableContentProvider implements IStructuredContentProvider {
 
 /*
 $Log: ServerTableContentProvider.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/23 09:46:18  lemmster
 superclass TableMenuListener added
 

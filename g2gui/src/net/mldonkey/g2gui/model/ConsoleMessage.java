@@ -29,8 +29,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * ConsoleMessage
  * 
- *  * @author $Author: lemmster $
- * @version $Id: ConsoleMessage.java,v 1.11 2003/08/22 21:03:15 lemmster Exp $
+ *
+ * @version $Id: ConsoleMessage.java,v 1.12 2003/08/23 15:21:37 zet Exp $
  */
 public class ConsoleMessage extends Observable implements SimpleInformation {
 	
@@ -77,8 +77,11 @@ public class ConsoleMessage extends Observable implements SimpleInformation {
 }
 /*
 $Log: ConsoleMessage.java,v $
+Revision 1.12  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.11  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.10  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support

@@ -35,8 +35,8 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @author $Author: lemmster $
- * @version $Id: MainMenuBar.java,v 1.1 2003/08/23 14:58:38 lemmster Exp $ 
+ *
+ * @version $Id: MainMenuBar.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class MainMenuBar {
@@ -116,6 +116,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 

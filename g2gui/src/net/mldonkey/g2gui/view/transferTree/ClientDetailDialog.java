@@ -47,8 +47,8 @@ import org.eclipse.swt.widgets.Text;
  * 
  * ClientDetailDialog
  *
- * @author $Author: zet $
- * @version $Id: ClientDetailDialog.java,v 1.11 2003/08/23 15:13:00 zet Exp $ 
+ *
+ * @version $Id: ClientDetailDialog.java,v 1.12 2003/08/23 15:21:37 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -248,6 +248,9 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.12  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.11  2003/08/23 15:13:00  zet
 remove reference to static MainTab methods
 
@@ -259,6 +262,9 @@ new todo (close button)
 
 Revision 1.8  2003/08/22 21:22:58  lemmster
 fix $Log: ClientDetailDialog.java,v $
+fix Revision 1.12  2003/08/23 15:21:37  zet
+fix remove @author
+fix
 fix Revision 1.11  2003/08/23 15:13:00  zet
 fix remove reference to static MainTab methods
 fix

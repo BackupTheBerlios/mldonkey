@@ -38,8 +38,8 @@ import org.eclipse.jface.viewers.TableViewer;
 /**
  * TableMenuListener
  *
- * @author $Author: lemmster $
- * @version $Id: FriendsTableMenuListener.java,v 1.1 2003/08/23 09:47:46 lemmster Exp $ 
+ *
+ * @version $Id: FriendsTableMenuListener.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class FriendsTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -124,6 +124,9 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 
 /*
 $Log: FriendsTableMenuListener.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/23 09:47:46  lemmster
 just rename
 

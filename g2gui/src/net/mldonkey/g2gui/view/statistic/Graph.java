@@ -28,8 +28,8 @@ import org.eclipse.swt.graphics.Color;
  * Graph is a List of StatisticPoints only knowing the first and the last Point, a Graph also has got a Color. And 
  * knows when it was started
  * 
- * @author $Author: lemmster $
- * @version $Id: Graph.java,v 1.9 2003/08/22 21:13:11 lemmster Exp $
+ *
+ * @version $Id: Graph.java,v 1.10 2003/08/23 15:21:37 zet Exp $
  */
 public class Graph {
 	
@@ -125,8 +125,11 @@ public class Graph {
 }
 /*
 $Log: Graph.java,v $
+Revision 1.10  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.9  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.8  2003/08/09 00:42:18  zet
 dispose colors

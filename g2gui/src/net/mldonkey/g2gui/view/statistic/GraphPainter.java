@@ -34,8 +34,8 @@ import org.eclipse.swt.widgets.Display;
  * 
  * GraphPainter
  *
- * @author $Author: lemmster $
- * @version $Id: GraphPainter.java,v 1.25 2003/08/22 21:13:11 lemmster Exp $ 
+ *
+ * @version $Id: GraphPainter.java,v 1.26 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class GraphPainter {
@@ -198,8 +198,11 @@ public class GraphPainter {
 }
 /*
 $Log: GraphPainter.java,v $
+Revision 1.26  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.25  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.24  2003/08/18 13:42:43  zet
 *** empty log message ***

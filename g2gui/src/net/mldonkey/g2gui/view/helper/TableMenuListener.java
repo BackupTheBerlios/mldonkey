@@ -45,8 +45,8 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * TableMenuListener
  *
- * @author $Author: lemmster $
- * @version $Id: TableMenuListener.java,v 1.1 2003/08/23 09:46:18 lemmster Exp $ 
+ *
+ * @version $Id: TableMenuListener.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public abstract class TableMenuListener {
@@ -358,6 +358,9 @@ public abstract class TableMenuListener {
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/23 09:46:18  lemmster
 superclass TableMenuListener added
 

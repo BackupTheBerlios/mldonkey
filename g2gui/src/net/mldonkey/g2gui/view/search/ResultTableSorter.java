@@ -30,8 +30,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * ResultTableSorter
  *
- * @author $Author: lemmster $
- * @version $Id: ResultTableSorter.java,v 1.7 2003/08/22 21:10:57 lemmster Exp $ 
+ *
+ * @version $Id: ResultTableSorter.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ResultTableSorter extends ViewerSorter {
@@ -180,8 +180,11 @@ public class ResultTableSorter extends ViewerSorter {
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.8  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.6  2003/08/16 20:59:09  dek
 searching works now without errors AGAIN ;-)

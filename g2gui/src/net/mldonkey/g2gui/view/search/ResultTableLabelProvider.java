@@ -36,8 +36,8 @@ import org.eclipse.swt.graphics.Image;
 /**
  * ResultTableLabelProvider
  *
- * @author $Author: lemmster $
- * @version $Id: ResultTableLabelProvider.java,v 1.14 2003/08/22 21:10:57 lemmster Exp $ 
+ *
+ * @version $Id: ResultTableLabelProvider.java,v 1.15 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -166,8 +166,11 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.15  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.14  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer

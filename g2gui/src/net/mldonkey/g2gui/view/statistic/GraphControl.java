@@ -32,8 +32,8 @@ import org.eclipse.swt.*;
  * 
  * GraphControl
  *
- * @author $Author: lemmster $
- * @version $Id: GraphControl.java,v 1.10 2003/08/22 21:13:11 lemmster Exp $ 
+ *
+ * @version $Id: GraphControl.java,v 1.11 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class GraphControl extends Composite{
@@ -99,8 +99,11 @@ public class GraphControl extends Composite{
 
 /*
 $Log: GraphControl.java,v $
+Revision 1.11  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.10  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.9  2003/07/26 17:54:14  zet
 fix pref's illegal setParent, redo graphs, other

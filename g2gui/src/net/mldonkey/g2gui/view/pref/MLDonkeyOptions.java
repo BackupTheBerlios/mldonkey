@@ -43,8 +43,8 @@ import org.eclipse.swt.widgets.Control;
 /**
  * MLDonkeyOptions
  *
- * @author  $Author: zet $ 
- * @version $Id: MLDonkeyOptions.java,v 1.19 2003/08/19 22:06:56 zet Exp $ 
+ *
+ * @version $Id: MLDonkeyOptions.java,v 1.20 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -163,6 +163,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.20  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.19  2003/08/19 22:06:56  zet
 with the new options, heighthint doesn't seem to be needed
 

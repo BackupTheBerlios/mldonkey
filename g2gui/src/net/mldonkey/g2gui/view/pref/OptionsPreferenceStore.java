@@ -35,8 +35,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
  * of course, we could introduce some intEditors for the int-values from core, but we don't need this, right?
  * as mldonkey itself cares for wrong values... 
  *
- * @author $Author: lemmster $
- * @version $Id: OptionsPreferenceStore.java,v 1.7 2003/08/22 21:10:57 lemmster Exp $ 
+ *
+ * @version $Id: OptionsPreferenceStore.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class OptionsPreferenceStore implements IPreferenceStore {
@@ -326,8 +326,11 @@ public class OptionsPreferenceStore implements IPreferenceStore {
 
 /*
 $Log: OptionsPreferenceStore.java,v $
+Revision 1.8  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.6  2003/08/19 13:08:54  dek
 minor fix

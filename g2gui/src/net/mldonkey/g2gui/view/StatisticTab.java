@@ -40,8 +40,8 @@ import org.eclipse.swt.widgets.Label;
 
 /**
  * Statistic Tab
- * @author $Author: zet $
- * @version $Id: StatisticTab.java,v 1.18 2003/08/23 01:12:43 zet Exp $
+ *
+ * @version $Id: StatisticTab.java,v 1.19 2003/08/23 15:21:37 zet Exp $
  */
 
 public class StatisticTab extends GuiTab {
@@ -127,6 +127,9 @@ public class StatisticTab extends GuiTab {
 }
 /*
 $Log: StatisticTab.java,v $
+Revision 1.19  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.18  2003/08/23 01:12:43  zet
 remove todos
 

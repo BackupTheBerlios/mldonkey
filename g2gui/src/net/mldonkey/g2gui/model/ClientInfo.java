@@ -35,8 +35,8 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 /**
  * ClientInfo
  *
- * @author $Author: lemmster $
- * @version $Id: ClientInfo.java,v 1.20 2003/08/23 10:02:02 lemmster Exp $ 
+ *
+ * @version $Id: ClientInfo.java,v 1.21 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -283,6 +283,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.21  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.20  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
@@ -290,7 +293,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

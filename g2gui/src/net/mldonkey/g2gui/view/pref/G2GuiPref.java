@@ -29,8 +29,8 @@ import org.eclipse.swt.widgets.Control;
 /**
  * G2GuiPref
  *
- * @author $Author: lemmster $
- * @version $Id: G2GuiPref.java,v 1.2 2003/08/22 21:10:57 lemmster Exp $ 
+ *
+ * @version $Id: G2GuiPref.java,v 1.3 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class G2GuiPref extends FieldEditorPreferencePage {
@@ -106,8 +106,11 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.3  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.2  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.1  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name

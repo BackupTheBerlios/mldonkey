@@ -65,8 +65,8 @@ import org.eclipse.swt.widgets.Table;
 /**
  * TableMenuListener
  *
- * @author $Author: lemmster $
- * @version $Id: ServerTableMenuListener.java,v 1.1 2003/08/23 09:46:18 lemmster Exp $ 
+ *
+ * @version $Id: ServerTableMenuListener.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ServerTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -501,6 +501,9 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/23 09:46:18  lemmster
 superclass TableMenuListener added
 

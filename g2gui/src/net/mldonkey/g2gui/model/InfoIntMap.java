@@ -31,8 +31,8 @@ import gnu.trove.TIntObjectIterator;
 /**
  * InfoMap
  *
- * @author $Author: lemmster $
- * @version $Id: InfoIntMap.java,v 1.7 2003/08/22 21:03:15 lemmster Exp $ 
+ *
+ * @version $Id: InfoIntMap.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public abstract class InfoIntMap extends Observable implements InfoCollection {
@@ -88,8 +88,11 @@ public abstract class InfoIntMap extends Observable implements InfoCollection {
 
 /*
 $Log: InfoIntMap.java,v $
+Revision 1.8  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.6  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support

@@ -32,8 +32,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * TableSorter
  *
- * @author $Author: lemmster $
- * @version $Id: ServerTableSorter.java,v 1.1 2003/08/23 09:46:18 lemmster Exp $ 
+ *
+ * @version $Id: ServerTableSorter.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ServerTableSorter extends ViewerSorter {
@@ -201,6 +201,9 @@ public class ServerTableSorter extends ViewerSorter {
 
 /*
 $Log: ServerTableSorter.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/23 09:46:18  lemmster
 superclass TableMenuListener added
 

@@ -34,8 +34,8 @@ import org.eclipse.swt.graphics.Image;
 /**
  * G2GuiResources
  *
- * @author $Author: lemmster $
- * @version $Id: G2GuiResources.java,v 1.5 2003/08/22 21:10:57 lemmster Exp $
+ *
+ * @version $Id: G2GuiResources.java,v 1.6 2003/08/23 15:21:37 zet Exp $
  */
 public class G2GuiResources {
 	
@@ -126,8 +126,11 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.6  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image

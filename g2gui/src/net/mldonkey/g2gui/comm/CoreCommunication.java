@@ -36,8 +36,8 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
 /**
  * CoreCommunication
  *
- * @author $Author: lemmster $
- * @version $Id: CoreCommunication.java,v 1.34 2003/08/22 20:54:05 lemmster Exp $ 
+ *
+ * @version $Id: CoreCommunication.java,v 1.35 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -138,6 +138,9 @@ public interface CoreCommunication extends Runnable {
 }
 /*
 $Log: CoreCommunication.java,v $
+Revision 1.35  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.34  2003/08/22 20:54:05  lemmster
 fix for the fix ;o
 

@@ -58,8 +58,8 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * DownloadTable
  *
- * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.14 2003/08/22 23:25:15 zet Exp $ 
+ *
+ * @version $Id: DownloadTableTreeViewer.java,v 1.15 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -318,6 +318,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.15  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 

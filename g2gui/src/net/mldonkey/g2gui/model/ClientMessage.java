@@ -28,8 +28,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.comm.Message;
 
 /**
- * @author $Author: lemmster $ 
- * @version $Id: ClientMessage.java,v 1.3 2003/08/23 10:02:02 lemmster Exp $	
+ *
+ * @version $Id: ClientMessage.java,v 1.4 2003/08/23 15:21:37 zet Exp $	
  */
 public class ClientMessage extends Parent {
 
@@ -85,11 +85,14 @@ public class ClientMessage extends Parent {
 
 /*
 $Log: ClientMessage.java,v $
+Revision 1.4  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.3  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.2  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.1  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging

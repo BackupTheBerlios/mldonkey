@@ -65,8 +65,8 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Gui
  *
- * @author $Author: lemmster $
- * @version $Id: MainTab.java,v 1.54 2003/08/23 15:15:11 lemmster Exp $ 
+ *
+ * @version $Id: MainTab.java,v 1.55 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class MainTab implements Observer, ShellListener {
@@ -495,6 +495,9 @@ public class MainTab implements Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.55  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.54  2003/08/23 15:15:11  lemmster
 addTabs() proper
 

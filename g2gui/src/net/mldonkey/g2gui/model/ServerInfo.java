@@ -31,8 +31,8 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 /**
  * ServerInfo
  * 
- * @author $Author: lemmster $
- * @version $Id: ServerInfo.java,v 1.19 2003/08/23 10:02:02 lemmster Exp $
+ *
+ * @version $Id: ServerInfo.java,v 1.20 2003/08/23 15:21:37 zet Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -314,11 +314,14 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.20  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.19  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.17  2003/08/11 11:22:53  lemmstercvs01
 avoid npes

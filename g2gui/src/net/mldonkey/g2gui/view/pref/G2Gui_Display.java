@@ -38,8 +38,8 @@ import org.eclipse.swt.widgets.Control;
 /**
  * G2Gui_Display
  *
- * @author $Author: zet $
- * @version $Id: G2Gui_Display.java,v 1.17 2003/08/22 23:25:15 zet Exp $
+ *
+ * @version $Id: G2Gui_Display.java,v 1.18 2003/08/23 15:21:37 zet Exp $
  */
 public class G2Gui_Display extends FieldEditorPreferencePage {
 	private Composite parent;
@@ -142,6 +142,9 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.18  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.17  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 

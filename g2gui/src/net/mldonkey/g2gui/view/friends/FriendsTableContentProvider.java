@@ -30,8 +30,8 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * TableContentProvider
  *
- * @author $Author: lemmster $
- * @version $Id: FriendsTableContentProvider.java,v 1.1 2003/08/23 09:47:46 lemmster Exp $
+ *
+ * @version $Id: FriendsTableContentProvider.java,v 1.2 2003/08/23 15:21:37 zet Exp $
  */
 public class FriendsTableContentProvider implements IStructuredContentProvider {
 	/* (non-Javadoc)
@@ -55,11 +55,14 @@ public class FriendsTableContentProvider implements IStructuredContentProvider {
 
 /*
 $Log: FriendsTableContentProvider.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/23 09:47:46  lemmster
 just rename
 
 Revision 1.2  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.1  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging

@@ -44,8 +44,8 @@ import org.eclipse.swt.widgets.Listener;
 /**
  * G2guiTab
  *
- * @author $Author: lemmster $
- * @version $Id: GuiTab.java,v 1.25 2003/08/23 14:58:38 lemmster Exp $ 
+ *
+ * @version $Id: GuiTab.java,v 1.26 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -296,6 +296,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.26  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.25  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 
@@ -303,7 +306,7 @@ Revision 1.24  2003/08/23 01:57:36  zet
 use JFace headerfont
 
 Revision 1.23  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/18 01:42:24  zet
 centralize resource bundle

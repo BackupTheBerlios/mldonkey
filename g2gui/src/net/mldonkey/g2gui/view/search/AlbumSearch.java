@@ -34,8 +34,8 @@ import org.eclipse.swt.widgets.TabFolder;
 /**
  * AlbumSearch
  *
- * @author $Author: lemmster $
- * @version $Id: AlbumSearch.java,v 1.5 2003/08/20 10:04:41 lemmster Exp $ 
+ *
+ * @version $Id: AlbumSearch.java,v 1.6 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class AlbumSearch extends Search {
@@ -75,6 +75,9 @@ public class AlbumSearch extends Search {
 
 /*
 $Log: AlbumSearch.java,v $
+Revision 1.6  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.5  2003/08/20 10:04:41  lemmster
 inputbox disabled when zero searchable networks are enabled
 

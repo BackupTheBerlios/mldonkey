@@ -25,8 +25,8 @@ package net.mldonkey.g2gui.model.enum;
 /**
  * EnumQuery
  *
- * @author $Author: lemmster $
- * @version $Id: EnumQuery.java,v 1.3 2003/08/22 21:04:27 lemmster Exp $ 
+ *
+ * @version $Id: EnumQuery.java,v 1.4 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class EnumQuery implements Enum {
@@ -132,8 +132,11 @@ public class EnumQuery implements Enum {
 
 /*
 $Log: EnumQuery.java,v $
+Revision 1.4  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.3  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.2  2003/07/06 07:45:26  lemmstercvs01
 checkstyle applied

@@ -59,8 +59,8 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * CoolBar
  *
- * @author $Author: lemmster $
- * @version $Id: MainCoolBar.java,v 1.1 2003/08/23 14:58:38 lemmster Exp $ 
+ *
+ * @version $Id: MainCoolBar.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class MainCoolBar {
@@ -374,6 +374,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.2  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.1  2003/08/23 14:58:38  lemmster
 cleanup of MainTab, transferTree.* broken
 

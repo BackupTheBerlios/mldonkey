@@ -47,8 +47,8 @@ import org.eclipse.swt.widgets.Display;
 /**
  * ChunkView
  *
- * @author $Author: zet $
- * @version $Id: ChunkCanvas.java,v 1.15 2003/08/23 15:13:00 zet Exp $ 
+ *
+ * @version $Id: ChunkCanvas.java,v 1.16 2003/08/23 15:21:37 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -479,6 +479,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.16  2003/08/23 15:21:37  zet
+remove @author
+
 Revision 1.15  2003/08/23 15:13:00  zet
 remove reference to static MainTab methods
 
