@@ -23,13 +23,14 @@
 package net.mldonkey.g2gui.view.pref;
 import org.eclipse.jface.preference.*;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 /**
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.24 2003/08/18 14:51:58 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.25 2003/08/19 12:14:15 lemmster Exp $ 
  *
  */
 public class G2Gui extends FieldEditorPreferencePage {
@@ -41,13 +42,16 @@ public class G2Gui extends FieldEditorPreferencePage {
 	public G2Gui( String string, int i ) {
 		super( string, i );
 	}
-	
 
+	/**
+	 * create the content for this pref page
+	 */		
 	protected Control createContents( Composite myparent ) {
 		Composite parent = ( Composite ) super.createContents( myparent );
-		parent.setLayoutData(new GridData(GridData.FILL_BOTH));
+		parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		return parent;
 	}
+	
 	/** ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.PreferencePage#setPreferenceStore( org.eclipse.jface.preference.IPreferenceStore )
 	 */
@@ -57,7 +61,9 @@ public class G2Gui extends FieldEditorPreferencePage {
 		store.setDefault( "username", "admin" );
 		store.setDefault( "password", "" );
 		store.setDefault( "port", "4001" );
+		store.setDefault( "advancedMode", false );
 	}
+	
 	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
@@ -92,10 +98,21 @@ public class G2Gui extends FieldEditorPreferencePage {
 				addField( passwordField );
 				passwordField.load();
 		
+			FieldEditor booleanEditor =
+				new BooleanFieldEditor( "advancedMode", "Advanced Mode (Please restart the gui to change the Mode)", parent );
+				booleanEditor.setPreferenceStore( this.getPreferenceStore() );
+				booleanEditor.fillIntoGrid( parent, 2 );
+				addField( booleanEditor );
+				booleanEditor.load();
+				
+			( ( GridLayout )parent.getLayout() ).numColumns = 2;
 	}
 }
 /*
 $Log: G2Gui.java,v $
+Revision 1.25  2003/08/19 12:14:15  lemmster
+first try of simple/advanced mode
+
 Revision 1.24  2003/08/18 14:51:58  dek
 some more jface-work
 

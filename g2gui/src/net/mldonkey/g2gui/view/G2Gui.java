@@ -53,12 +53,13 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.16 2003/08/18 22:22:02 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.17 2003/08/19 12:14:16 lemmster Exp $ 
  *
  */
 public class G2Gui {
 	private static Socket socket;
 	private static boolean notProcessingLink = true;
+	private static boolean advancedMode;
 	private static Process p;
 	private static Thread mldonkey;
 	private static Object waiterObject;
@@ -142,7 +143,8 @@ public class G2Gui {
 		port = preferenceStore.getInt( "port" );		
 		hostname = preferenceStore.getString( "hostname" );			
 		username = preferenceStore.getString( "username" );			
-		password = preferenceStore.getString( "password" );		
+		password = preferenceStore.getString( "password" );	
+		advancedMode = preferenceStore.getBoolean( "advancedMode" );	
 		
 		/* create the socket connection to the core */
 		socket = null;
@@ -190,7 +192,7 @@ public class G2Gui {
 		/* wait as long as the core tells us to continue */
 		synchronized ( waiterObject ) {
 		
-			core = new Core( socket, username, password, waiterObject, pushmode );
+			core = new Core( socket, username, password, waiterObject, pushmode, advancedMode );
 			core.connect();
 			mldonkey = new Thread( core );
 			mldonkey.setDaemon( true );
@@ -303,6 +305,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.17  2003/08/19 12:14:16  lemmster
+first try of simple/advanced mode
+
 Revision 1.16  2003/08/18 22:22:02  zet
 attempt to fix "wait-forever" state, and loop on bad passwords..
 

@@ -33,6 +33,7 @@ import net.mldonkey.g2gui.model.NetworkInfo.Enum;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
@@ -177,7 +178,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			menuManager.add(prioritySubMenu);
 		}
 		
-		if (selectedClient != null)
+		if (selectedClient != null && PreferenceLoader.loadBoolean( "advancedMode" ))
 			menuManager.add(new AddFriendAction());
 		
 		if (selectedClient != null)
@@ -684,6 +685,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.8  2003/08/19 12:14:16  lemmster
+first try of simple/advanced mode
+
 Revision 1.7  2003/08/18 01:42:24  zet
 centralize resource bundle
 

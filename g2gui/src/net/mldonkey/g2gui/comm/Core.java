@@ -38,12 +38,13 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.83 2003/08/16 20:15:21 dek Exp $ 
+ * @version $Id: Core.java,v 1.84 2003/08/19 12:14:16 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
 	private boolean pushmodeEnabled;
 	private boolean initialized;
+	private boolean advancedMode;
 	private boolean badPassword = true;
 	/**
 	 * An waiterobj who is waiting for us in the main thread to be notified if a
@@ -130,12 +131,13 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * @param password
 	 * @param waiterObj
 	 */
-	public Core( Socket socket, String username, String password, Object waiterObj, boolean pushmodeEnabled ) {
+	public Core( Socket socket, String username, String password, Object waiterObj, boolean pushmodeEnabled, boolean advancedMode ) {
 		this.connection = socket;
 		this.username = username;
 		this.password = password;
 		this.waiterObj = waiterObj;
 		this.pushmodeEnabled = pushmodeEnabled;
+		this.advancedMode = advancedMode;
 	}
 
 	/**
@@ -260,8 +262,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;
 			
 					
-			case Message.R_SERVER_STATE : 
-					this.serverInfoMap.update( messageBuffer );
+			case Message.R_SERVER_STATE :
+					if ( advancedMode )
+						this.serverInfoMap.update( messageBuffer );
 					break;		
 					
 			case Message.R_CLIENT_INFO :
@@ -304,7 +307,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;					
 
 			case Message.R_CONSOLE :	
-					this.consoleMessage.readStream( messageBuffer );
+					if ( advancedMode )
+						this.consoleMessage.readStream( messageBuffer );
 					break;
 				
 			case Message.R_NETWORK_INFO :
@@ -318,7 +322,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;		
 					
 			case Message.R_SERVER_INFO :
-					this.serverInfoMap.readStream( messageBuffer );
+					if ( advancedMode )
+						this.serverInfoMap.readStream( messageBuffer );
 					break;
 							
 			case Message.R_DOWNLOADING_LIST :
@@ -334,10 +339,12 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;
 					
 			case Message.R_MESSAGE_FROM_CLIENT :
-					ClientMessage clientMessage = new ClientMessage(this);
-					clientMessage.readStream( messageBuffer );
-					this.setChanged();
-					this.notifyObservers( clientMessage );
+					if ( advancedMode ) {
+						ClientMessage clientMessage = new ClientMessage(this);
+						clientMessage.readStream( messageBuffer );
+						this.setChanged();
+						this.notifyObservers( clientMessage );
+					}
 					break;
 
 			default :				
@@ -476,6 +483,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.84  2003/08/19 12:14:16  lemmster
+first try of simple/advanced mode
+
 Revision 1.83  2003/08/16 20:15:21  dek
 removed unused import
 

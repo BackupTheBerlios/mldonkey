@@ -33,6 +33,7 @@ import java.util.Observer;
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
@@ -82,7 +83,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.41 2003/08/18 06:00:28 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.42 2003/08/19 12:14:16 lemmster Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -464,17 +465,25 @@ public class MainTab implements Listener, Observer, ShellListener {
 	}
 
 	/**
-	 * Here do we add the tabs, they must extend G2GuiTab. They are responsible 
+	 * Here we add the tabs, they must extend G2GuiTab. They are responsible 
 	 * for the content and their button.
 	 */
 	private void addTabs() {
-		this.tabs = new GuiTab[ 6 ];
-		tabs[ 0 ] =	new TransferTab( this );
-		tabs[ 1 ] =	new SearchTab( this );
-		tabs[ 2 ] =	new ServerTab( this );
-		tabs[ 3 ] =	new ConsoleTab( this );
-		tabs[ 4 ] =	new StatisticTab( this );
-		tabs[ 5 ] = new MessagesTab( this );
+		if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
+			this.tabs = new GuiTab[ 6 ];
+			tabs[ 0 ] =	new TransferTab( this );
+			tabs[ 1 ] =	new SearchTab( this );
+			tabs[ 2 ] =	new ServerTab( this );
+			tabs[ 3 ] =	new ConsoleTab( this );
+			tabs[ 4 ] =	new StatisticTab( this );
+			tabs[ 5 ] = new MessagesTab( this );
+		}
+		else {
+			this.tabs = new GuiTab[ 3 ];
+			tabs[ 0 ] =	new TransferTab( this );
+			tabs[ 1 ] =	new SearchTab( this );
+			tabs[ 2 ] =	new StatisticTab( this );
+		}	
 
 		/*setting TransferTab active if registered*/
 		Iterator tabIterator = registeredTabs.iterator();
@@ -740,6 +749,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.42  2003/08/19 12:14:16  lemmster
+first try of simple/advanced mode
+
 Revision 1.41  2003/08/18 06:00:28  zet
 hand cursor when hovering toolitems
 

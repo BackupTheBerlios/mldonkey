@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.ServerTab;
 import net.mldonkey.g2gui.view.StatusLine;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -55,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.16 2003/08/18 01:42:24 zet Exp $ 
+ * @version $Id: NetworkItem.java,v 1.17 2003/08/19 12:14:16 lemmster Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -250,7 +251,8 @@ public class NetworkItem implements Observer {
 		Menu menu = new Menu( shell , SWT.POP_UP );
 	
 		/* change the menu for bittorrent (doesnt have servers) */
-		if ( ( ( NetworkInfo ) cLabel.getData() ).hasServers() ) {
+		if ( ( ( NetworkInfo ) cLabel.getData() ).hasServers() 
+		&& PreferenceLoader.loadBoolean( "advancedMode") ) {
 		
 			/* manage Server */
 			item = new MenuItem( menu, SWT.PUSH );
@@ -277,26 +279,32 @@ public class NetworkItem implements Observer {
 		} );
 			
 		/* disable or enable? */
-		menu.addListener( SWT.Show, new Listener () {
-			private MenuItem item = NetworkItem.this.item;
-			public void handleEvent( Event event ) {
-				NetworkInfo networkInfo = ( NetworkInfo ) anotherCLabel.getData();
-				if ( networkInfo.isEnabled() ) {
-					stateItem.setText( "Disable" );
-					item.setEnabled( true );
+		if ( PreferenceLoader.loadBoolean( "advancedMode")
+		&& ( ( NetworkInfo ) cLabel.getData() ).hasServers() ) {
+			menu.addListener( SWT.Show, new Listener () {
+				private MenuItem item = NetworkItem.this.item;
+				public void handleEvent( Event event ) {
+					NetworkInfo networkInfo = ( NetworkInfo ) anotherCLabel.getData();
+					if ( networkInfo.isEnabled() ) {
+						stateItem.setText( "Disable" );
+						item.setEnabled( true );
+					}
+					else {
+						stateItem.setText( "Enable" );						
+						item.setEnabled( false );
+					}
 				}
-				else {
-					stateItem.setText( "Enable" );						
-					item.setEnabled( false );
-				}
-			}
-		} );
+			} );
+		}
 		return menu;
 	}
 }
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.17  2003/08/19 12:14:16  lemmster
+first try of simple/advanced mode
+
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle
 
