@@ -1,5 +1,5 @@
 2003/11/16: lemmy
-	* Search: fixed [Bug #1080] Searchbox should get focused when switching to servertab
+	* Search: fixed [Bug #1080] Searchbox should get focused when switching to searchtab
 
 2003/11/15: vnc
 	* G2submit added, a mozilla link-submit plugin (xpi) based on mozex
