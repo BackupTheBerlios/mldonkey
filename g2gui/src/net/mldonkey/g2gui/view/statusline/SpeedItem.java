@@ -22,8 +22,13 @@
  */
 package net.mldonkey.g2gui.view.statusline;
 
+import java.text.DecimalFormat;
 import java.util.Observable;
 import java.util.Observer;
+
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.view.StatusLine;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -32,15 +37,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.model.ClientStats;
-import net.mldonkey.g2gui.view.*;
-
 /**
  * SpeedItem
  *
  * @author $user$
- * @version $Id: SpeedItem.java,v 1.12 2003/08/02 19:32:14 zet Exp $ 
+ * @version $Id: SpeedItem.java,v 1.13 2003/08/15 22:05:58 zet Exp $ 
  *
  */
 public class SpeedItem implements Observer {	
@@ -49,7 +50,7 @@ public class SpeedItem implements Observer {
 	private Composite composite;
 	private StatusLine statusline;
 	private CLabel cLabelDown, cLabelUp;
-	
+	private static final DecimalFormat decimalFormat = new DecimalFormat( "0.##" );
 	/**
 	 * @param string
 	 * @param i
@@ -99,11 +100,11 @@ public class SpeedItem implements Observer {
 			public void run() {
 				if ( composite.isDisposed() ) return;
 				/* first the text */
-				cLabelDown.setText( "DL: " + stats.getTcpDownRate() + " kb/s");
-				cLabelUp.setText( "UL: " + stats.getTcpUpRate() + "kb/s" );
+				cLabelDown.setText( "" + decimalFormat.format(stats.getTcpDownRate()) + " kb/s");
+				cLabelUp.setText( "" + decimalFormat.format(stats.getTcpUpRate()) + " kb/s" );
 				/* not the tooltip */
-				cLabelDown.setToolTipText( "UDP-DL: " + stats.getUdpDownRate() );
-				cLabelUp.setToolTipText( "UDP-UL: " + stats.getUdpUpRate() );
+				cLabelDown.setToolTipText( "TCP: " + decimalFormat.format(stats.getTcpDownRate()) + " kb/s | UDP: " + decimalFormat.format(stats.getUdpDownRate()) + " kb/s | Total: " + decimalFormat.format(stats.getTcpDownRate() + stats.getUdpDownRate()) + " kb/s" );
+				cLabelUp.setToolTipText( "TCP: " + decimalFormat.format(stats.getTcpUpRate()) + " kb/s | UDP: " + decimalFormat.format(stats.getUdpUpRate()) + " kb/s | Total: " + decimalFormat.format(stats.getTcpUpRate() + stats.getUdpUpRate()) + " kb/s");
 				cLabelUp.getParent().getParent().layout();
 			}
 		} );
@@ -112,6 +113,9 @@ public class SpeedItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.13  2003/08/15 22:05:58  zet
+*** empty log message ***
+
 Revision 1.12  2003/08/02 19:32:14  zet
 layout each time
 

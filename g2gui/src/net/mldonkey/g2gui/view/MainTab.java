@@ -77,7 +77,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.35 2003/08/14 12:57:03 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.36 2003/08/15 22:05:58 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -242,9 +242,6 @@ public class MainTab implements Listener, Observer, ShellListener {
 		item.setText ( "E&xit\tCtrl+W" );
 		item.setAccelerator ( SWT.CTRL + 'W' );
 			
-		mItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
-		mItem.setText ( "View" );
-		
 		mItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
 		mItem.setText ( "Tools" );
 		
@@ -726,6 +723,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.36  2003/08/15 22:05:58  zet
+*** empty log message ***
+
 Revision 1.35  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 

@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.20 2003/08/11 00:30:10 zet Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.21 2003/08/15 22:05:58 zet Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -123,8 +123,8 @@ public class FileInfoIntMap extends InfoIntMap {
 				FileInfo fileInfo = (FileInfo) this.get( id );
 				EnumFileState oldFileState = (EnumFileState) fileInfo.getState().getState();
 				fileInfo.readStream( messageBuffer );
-				
 				EnumFileState newFileState = (EnumFileState) fileInfo.getState().getState();
+				
 				// viewer.refresh
 				if ((newFileState == EnumFileState.CANCELLED
 					|| newFileState == EnumFileState.SHARED
@@ -231,6 +231,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.21  2003/08/15 22:05:58  zet
+*** empty log message ***
+
 Revision 1.20  2003/08/11 00:30:10  zet
 show queued files
 

@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  * @author $user$
- * @version $Id: DownloadTableTreeSorter.java,v 1.5 2003/08/14 12:57:03 zet Exp $ 
+ * @version $Id: DownloadTableTreeSorter.java,v 1.6 2003/08/15 22:05:58 zet Exp $ 
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
@@ -100,10 +100,10 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 						fileInfo1.getPerc(),
 						fileInfo2.getPerc());
 						
-				case 6 : // sources
+				case 6 : // sources getSources() is 0 ?
 					return compareIntegers(
-						fileInfo1.getSources(),
-						fileInfo2.getSources());		
+						fileInfo1.getClientInfos().size(),
+						fileInfo2.getClientInfos().size());		
 
 				case 7 : // rate - paused/queued on the bottom
 						if (fileInfo1.getState().getState() == EnumFileState.DOWNLOADED)
@@ -263,6 +263,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.6  2003/08/15 22:05:58  zet
+*** empty log message ***
+
 Revision 1.5  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 

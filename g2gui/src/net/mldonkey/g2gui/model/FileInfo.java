@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.35 2003/08/10 23:20:15 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.36 2003/08/15 22:05:58 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -250,6 +250,9 @@ public class FileInfo extends Parent implements Observer {
 	public float getRate() {
 		return rate;
 	}
+	public float getRawRate() {
+		return rawRate;
+	}
 	/**
 	 * @return The overall size of this file
 	 */
@@ -403,8 +406,9 @@ public class FileInfo extends Parent implements Observer {
 	public void update( MessageBuffer messageBuffer ) {
 		this.downloaded = messageBuffer.readInt32();
 		/* translate to kb and round to two digits after comma */
-		double d = new Double( messageBuffer.readString() ).doubleValue() / 1024;
-		this.rate = ( float ) round( d );
+		double d = new Double( messageBuffer.readString() ).doubleValue();
+		this.rate = ( float ) round( d / 1024 );
+		this.rawRate = ( float ) d;
 		this.offset = messageBuffer.readInt32();
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
@@ -626,6 +630,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.36  2003/08/15 22:05:58  zet
+*** empty log message ***
+
 Revision 1.35  2003/08/10 23:20:15  zet
 signed int
 

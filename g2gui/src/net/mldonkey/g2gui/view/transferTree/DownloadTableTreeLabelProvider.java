@@ -23,6 +23,8 @@
  
 package net.mldonkey.g2gui.view.transferTree;
 
+import java.text.DecimalFormat;
+
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
@@ -41,7 +43,7 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.5 2003/08/14 12:57:03 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.6 2003/08/15 22:05:58 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -49,9 +51,13 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	private Color downloadedFileColor = new Color(null, 0,0,255);
 	private Color queuedFileColor = new Color(null, 192,192,192);
 	private Color pausedFileColor = new Color(null, 255, 0, 0);
-	private Color rateAbove20Color = new Color(null, 16, 187 ,3);
-	private Color rateAbove10Color = new Color(null, 23, 147, 3);
-	private Color rateAbove0Color = new Color(null, 13, 92, 2);
+	private Color rateAbove20Color = new Color(null, 35, 214, 0);
+	private Color rateAbove10Color = new Color(null, 30, 170, 2);
+	private Color rateAbove0Color = new Color(null, 24, 142, 4);
+	private Color clientTransferringColor = new Color(null, 23, 229, 253);
+	private Color clientRankedColor = new Color(null, 8, 162, 180);
+	private DecimalFormat df = new DecimalFormat( "0.0" );
+	private DecimalFormat dfp = new DecimalFormat( "0" );
 	
 	private CustomTableTreeViewer tableTreeViewer;
 	
@@ -75,6 +81,12 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 			if (fileInfo.getRate() > 0f) 
 				return rateAbove0Color;	
 			return null;
+		} else if (arg0 instanceof TreeClientInfo) {
+			ClientInfo clientInfo = ((TreeClientInfo) arg0).getClientInfo();
+			if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+				return clientTransferringColor;
+			else
+				return clientRankedColor;
 		}
 		return null;
 	}
@@ -105,10 +117,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 			case 4: // downloaded
 				return ""+fileInfo.getStringDownloaded();
 			case 5: // percent
-				return ""+fileInfo.getPerc();
-			case 6: // # sources   TODO: remove clientInfos.size, it is just interesting to watch atm
-					// note: clientInfos Set can contain multiple ClientInfo's with the same clientID.. why?
-				return ""+fileInfo.getSources() + "(" + fileInfo.getClientInfos().size() + ")";		
+				return ""+dfp.format(fileInfo.getPerc());
+			case 6: // # sources  fileInfo.getSources() is always 0 
+				return ""+fileInfo.getClientInfos().size();		
 			case 7: // rate
 				if (fileInfo.getState().getState() == EnumFileState.PAUSED)
 					return "Paused";
@@ -117,7 +128,7 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 				else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
 					return "Downloaded";	
 				else 
-					return ""+fileInfo.getRate();
+					return "" + df.format(fileInfo.getRawRate() / 1000f);
 			case 8: // chunks
 				return ""+fileInfo.getNumChunks();
 			case 9: // eta
@@ -194,6 +205,8 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 		rateAbove20Color.dispose();
 		rateAbove10Color.dispose();
 		rateAbove0Color.dispose();
+		clientRankedColor.dispose();
+		clientTransferringColor.dispose();
 	}
 
 	public boolean isLabelProperty(Object arg0, String arg1) {
@@ -211,6 +224,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.6  2003/08/15 22:05:58  zet
+*** empty log message ***
+
 Revision 1.5  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 

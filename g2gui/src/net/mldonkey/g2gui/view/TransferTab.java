@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Shell;
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.25 2003/08/11 00:30:10 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.26 2003/08/15 22:05:58 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -58,7 +58,7 @@ public class TransferTab extends GuiTab  {
 	private long timestamp = 0;
 	private Font font = new Font(null, "Helvetica", 12, SWT.BOLD); // fix later
 	public static ResourceBundle res = ResourceBundle.getBundle("g2gui");
-	public static DecimalFormat decimalFormat = new DecimalFormat( "#.#" );
+	public static DecimalFormat decimalFormat = new DecimalFormat( "0.0" );
 	private DownloadTableTreeViewer downloadTableTreeViewer;
 		
 	/**
@@ -103,35 +103,31 @@ public class TransferTab extends GuiTab  {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, Object arg ) {
+		
+		float totalRate = 0;
+		int totalFiles = 0;
+		int totalQueued = 0;
 
-		// no need to update so often
-		if (System.currentTimeMillis() > timestamp + 5000) {
-
-			timestamp = System.currentTimeMillis();
-			float totalRate = 0;
-			int totalFiles = 0;
-			int totalQueued = 0;
-	
-			// add precision later		
-			if (o instanceof FileInfoIntMap) {
-				synchronized(o) {
-					FileInfoIntMap files = (FileInfoIntMap)o;
-					TIntObjectIterator it = files.iterator();
-					while(it.hasNext()) {
-						it.advance();
-						FileInfo fileInfo = (FileInfo) it.value();
-						totalRate += fileInfo.getRate();
-						if (DownloadTableTreeContentProvider.isInteresting(fileInfo)) 
-							totalFiles++;
-						if (fileInfo.getState().getState() == EnumFileState.QUEUED) 
-							totalQueued++;
-					}
-				} 
-				// localise this
-				String totalQueuedString = (totalQueued > 0 ? " (" + totalQueued + " queued)" : "");
-				runLabelUpdate(totalFiles + " files, " + decimalFormat.format(totalRate) + " KB/s" + totalQueuedString);
-			}
+		// add precision later		
+		if (o instanceof FileInfoIntMap) {
+			synchronized(o) {
+				FileInfoIntMap files = (FileInfoIntMap)o;
+				TIntObjectIterator it = files.iterator();
+				while(it.hasNext()) {
+					it.advance();
+					FileInfo fileInfo = (FileInfo) it.value();
+					totalRate += fileInfo.getRawRate();
+					if (DownloadTableTreeContentProvider.isInteresting(fileInfo)) 
+						totalFiles++;
+					if (fileInfo.getState().getState() == EnumFileState.QUEUED) 
+						totalQueued++;
+				}
+			} 
+			// localise this
+			String totalQueuedString = (totalQueued > 0 ? " (" + totalQueued + " queued)" : "");
+			runLabelUpdate(totalFiles + " files, " + decimalFormat.format(totalRate / 1000f) + " KB/s" + totalQueuedString);
 		}
+	
 	}
 	
 	public void runLabelUpdate(final String text) 
@@ -162,6 +158,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.26  2003/08/15 22:05:58  zet
+*** empty log message ***
+
 Revision 1.25  2003/08/11 00:30:10  zet
 show queued files
 
