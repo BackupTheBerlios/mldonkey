@@ -43,7 +43,7 @@ import org.eclipse.swt.dnd.Transfer;
 /**
  * UploadTableMenuListener
  *
- * @version $Id: UploadTableMenuListener.java,v 1.2 2003/09/27 00:02:37 dek Exp $ 
+ * @version $Id: UploadTableMenuListener.java,v 1.3 2003/10/19 22:31:53 zet Exp $ 
  *
  */
 class UploadTableMenuListener
@@ -52,7 +52,7 @@ class UploadTableMenuListener
 	/**
 	 * CopyEd2kLinkAction
 	 *
-	 * @version $Id: UploadTableMenuListener.java,v 1.2 2003/09/27 00:02:37 dek Exp $ 
+	 * @version $Id: UploadTableMenuListener.java,v 1.3 2003/10/19 22:31:53 zet Exp $ 
 	 *
 	 */
 	private SharedFileInfoIntMap sharedFileInfoMap;
@@ -93,7 +93,7 @@ class UploadTableMenuListener
 	private class CopyEd2kLinkAction extends Action {
 		public CopyEd2kLinkAction() {
 			super();
-			setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_LINKTO" ) );
+			setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COPYTO" ) );
 		}
 		public void run() {
 			Clipboard clipboard =
@@ -121,6 +121,9 @@ class UploadTableMenuListener
 }
 /*
 $Log: UploadTableMenuListener.java,v $
+Revision 1.3  2003/10/19 22:31:53  zet
+nil
+
 Revision 1.2  2003/09/27 00:02:37  dek
 bugfixes, merged right-mouse-click menues (nothing is uglier than one-item-menues)
 
