@@ -22,13 +22,13 @@
  */
 package net.mldonkey.g2gui.view;
 
-
 import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.comm.*;
 import net.mldonkey.g2gui.model.*;
 
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
@@ -39,10 +39,12 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.5 2003/06/27 11:12:53 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.6 2003/06/30 19:11:57 dek Exp $ 
  *
  */
 public class ConsoleTab extends G2guiTab implements Observer, ControlListener, Runnable {	
+	private String consoleFont;
+	private PreferenceStore preferenceStore;
 	private ConsoleMessage consoleMessage;
 	private CoreCommunication core;
 	private Composite parent;
@@ -58,7 +60,9 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 		this.button.setText("Console");
 		createContents( this.content );
 		( ( Core ) core ).addObserver( this );
-	}
+		this.preferenceStore = new PreferenceStore("g2gui.pref");
+		this.consoleFont = preferenceStore.getString("ConsoleFont");		
+	} 
 	
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.widgets.Gui.G2guiTab#createContents(org.eclipse.swt.widgets.Composite)
@@ -71,6 +75,7 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 			 * Adding the Console-Display Text-field
 			 */			
 			infoDisplay = new Text(parent,SWT.BORDER|SWT.MULTI|SWT.H_SCROLL|SWT.V_SCROLL |SWT.READ_ONLY);
+		//infoDisplay.setFont(new Font(null,consoleFont,0,0));
 			input = new Text(parent, SWT.SINGLE | SWT.BORDER);					
 			//Send command to core
 			input.addKeyListener(new KeyAdapter() {
@@ -88,6 +93,7 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 	
 	public void handleEvent(Event event) {
 		mainWindow.setActive(this);
+		
 		infoDisplay.append(core.getConsoleMessage().getConsoleMessage());
 		core.getConsoleMessage().reset();
 	}
@@ -142,6 +148,9 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.6  2003/06/30 19:11:57  dek
+at work: setting the font to the one selected in the preference-dialog
+
 Revision 1.5  2003/06/27 11:12:53  dek
 works now
 
