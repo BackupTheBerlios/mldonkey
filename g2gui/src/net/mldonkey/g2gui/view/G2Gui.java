@@ -60,7 +60,7 @@ import java.net.UnknownHostException;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.40 2003/11/07 00:31:39 zet Exp $
+ * @version $Id: G2Gui.java,v 1.41 2003/11/08 23:53:46 zet Exp $
  *
  */
 public class G2Gui {
@@ -274,8 +274,7 @@ public class G2Gui {
                 int rc = box.open();
 
                 if (rc == SWT.NO) {
-                    shell.dispose();
-                    display.dispose();
+                    closeApp();
                 } else {
                     myPrefs.open(shell, null);
                     relaunchSelf(args);
@@ -297,8 +296,7 @@ public class G2Gui {
                 int rc = box.open();
 
                 if (rc == SWT.NO) {
-                    shell.dispose();
-                    display.dispose();
+                    closeApp();
                 } else {
                     myPrefs.open(shell, null);
                     relaunchSelf(args);
@@ -418,8 +416,7 @@ public class G2Gui {
         int rc = box.open();
 
         if (rc == SWT.NO) {
-            shell.dispose();
-            display.dispose();
+            closeApp();
         } else {
             myPrefs.open(shell, null);
             relaunchSelf(args);
@@ -437,8 +434,7 @@ public class G2Gui {
         box.setText(G2GuiResources.getString("G2_CONNECTION_DENIED"));
         box.setMessage(G2GuiResources.getString("G2_CONNECTION_ATTEMPT_DENIED"));
         box.open();
-        shell.dispose();
-        display.dispose();
+        closeApp();
     }
 
     /**
@@ -452,6 +448,17 @@ public class G2Gui {
                     progressBar.setSelection(selection + 1);
                 }
             });
+    }
+
+    public static void closeApp() {
+        shell.dispose();
+
+        if (SWT.getPlatform().equals("fox") && (System.getProperty("os.name").length() > 7) &&
+                System.getProperty("os.name").substring(0, 7).equals("Windows")) {
+            // why does this not completely close
+        } else {
+            display.dispose();
+        }
     }
 
     /**
@@ -481,6 +488,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.41  2003/11/08 23:53:46  zet
+fox
+
 Revision 1.40  2003/11/07 00:31:39  zet
 option to disable splash screen  #1064
 
