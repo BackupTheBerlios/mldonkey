@@ -45,7 +45,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.45 2003/08/31 01:46:33 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.46 2003/09/05 23:47:14 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -624,7 +624,7 @@ public class FileInfo extends Parent implements Observer {
 	 * @param size The size
 	 * @return a string represantation of this size
 	 */	
-	private static String calcStringSize( long size ) {
+	public static String calcStringSize( long size ) {
 		float k = 1024f;
 		float m = k * k;
 		float g = m * k;
@@ -634,13 +634,13 @@ public class FileInfo extends Parent implements Observer {
 	
 		DecimalFormat df = new DecimalFormat( "0.#" );
 		
-		if ( fsize > t ) 
+		if ( fsize >= t ) 
 			return new String ( df.format(fsize / t) + " TB" );
-		else if ( fsize > g ) 
+		else if ( fsize >= g ) 
 			return new String ( df.format(fsize / g) + " GB" );	
-		else if ( fsize > m ) 
+		else if ( fsize >= m ) 
 			return new String ( df.format(fsize / m) + " MB" );
-		else if ( fsize > k ) 
+		else if ( fsize >= k ) 
 			return new String ( df.format(fsize / k) + " KB" );
 		else
 			return new String ( size + "" );	
@@ -700,6 +700,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.46  2003/09/05 23:47:14  zet
+*** empty log message ***
+
 Revision 1.45  2003/08/31 01:46:33  zet
 localise
 
