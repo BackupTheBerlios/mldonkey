@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.9 2003/07/06 08:57:09 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.10 2003/07/29 09:47:13 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo extends Parent {
 	/**
@@ -40,9 +40,9 @@ public class ServerInfo extends Parent {
 	 */
 	private int serverId;
 	/**
-	 * Server Network Identifier
+	 * Server Network
 	 */
-	private int serverNetworkId;
+	private NetworkInfo network;
 	/**
 	 * Server Address
 	 */
@@ -96,7 +96,10 @@ public class ServerInfo extends Parent {
 	 * @return The name of this server
 	 */
 	public String getNameOfServer() {
-		return nameOfServer;
+		if ( nameOfServer.equals( "" ) )
+			return "<unknown>";
+		else
+			return nameOfServer;	
 	}
 	/**
 	 * @return The number of files shared on this server
@@ -131,8 +134,8 @@ public class ServerInfo extends Parent {
 	/**
 	 * @return The server network identifier
 	 */
-	public int getServerNetworkId() {
-		return serverNetworkId;
+	public NetworkInfo getNetwork() {
+		return network;
 	}
 	/**
 	 * @return The server port
@@ -180,7 +183,7 @@ public class ServerInfo extends Parent {
  		 * String  	 Description of Server
 		 */
 		this.serverId = messageBuffer.readInt32();
-		this.serverNetworkId = messageBuffer.readInt32();
+		this.setNetwork( messageBuffer.readInt32() );
 		this.getServerAddress().readStream( messageBuffer );
 		this.serverPort = messageBuffer.readInt16();
 		this.serverScore = messageBuffer.readInt32();
@@ -190,6 +193,15 @@ public class ServerInfo extends Parent {
 		this.getConnectionState().readStream( messageBuffer );
 		this.nameOfServer = messageBuffer.readString();
 		this.descOfServer = messageBuffer.readString();
+	}
+	
+	/**
+	 * translate the int to EnumNetwork
+	 * @param i the int
+	 */
+	private void setNetwork( int i ) {
+		this.network =
+		( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
 	}
 	
 	/**
@@ -236,6 +248,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.10  2003/07/29 09:47:13  lemmstercvs01
+$networkid -> networkInfo, no servename -> "<unknown>"
+$
 $Revision 1.9  2003/07/06 08:57:09  lemmstercvs01
 $getParent() removed
 $
