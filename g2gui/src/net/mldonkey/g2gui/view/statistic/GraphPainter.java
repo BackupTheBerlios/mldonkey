@@ -156,12 +156,12 @@ public class GraphPainter {
 			String vvs = String.valueOf(vv);
 			int textPosition = (int) (height - (float) (graphs[which].getLast().getValue()/10) * zoom);
 			
-			int boxWidth = drawBoardBuffer.getFontMetrics().getAverageCharWidth() * (vvs.length() + 10)  ;
-						
+			int boxWidth = drawBoardBuffer.getFontMetrics().getAverageCharWidth() * (vvs.length() + 9)  ;
+			int boxHeight = drawBoardBuffer.getFontMetrics().getHeight() + 5;		
 			drawBoardBuffer.setForeground(new Color(null,0,0,0));
 			drawBoardBuffer.setBackground(new Color(null,255,255,255));
-			drawBoardBuffer.fillRoundRectangle(startx+10,textPosition-3,boxWidth,20,7,7);
-			drawBoardBuffer.drawRoundRectangle(startx+10,textPosition-3,boxWidth,20,7,7);
+			drawBoardBuffer.fillRoundRectangle(startx+10,textPosition-3,boxWidth,boxHeight,18,18);
+			drawBoardBuffer.drawRoundRectangle(startx+10,textPosition-3,boxWidth,boxHeight,18,18);
 			drawBoardBuffer.drawText(vv + " kb/s",startx+20,textPosition);
 			drawBoardBuffer.setForeground(new Color(null, 255,255,0));
 			drawBoardBuffer.drawLine(startx+10,textPosition,startx,textPosition);
