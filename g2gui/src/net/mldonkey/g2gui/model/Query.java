@@ -22,13 +22,16 @@
  */
 package net.mldonkey.g2gui.model;
 
+
+import java.util.ArrayList;
+
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.7 2003/07/04 14:07:06 dek Exp $ 
+ * @version $Id: Query.java,v 1.8 2003/07/04 14:14:34 dek Exp $ 
  *
  */
 public class Query implements SimpleInformation {
@@ -111,6 +114,17 @@ public class Query implements SimpleInformation {
 			this.setComment( messageBuffer.readString() );
 			this.setDefaultValue( messageBuffer.readString() );
 		}
+	}
+	
+	/**
+	 * creates an byte-stream, representing this object (in order to send it to our beloved mldonkey
+	 * via GUI-protocol)
+	 * @return the byte-array
+	 */
+	public byte[] writeStream() {
+		ArrayList buffer = new ArrayList();
+		
+		return null;
 	}
 	
 	/**
@@ -258,6 +272,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.8  2003/07/04 14:14:34  dek
+added todo (but not today ;-))
+
 Revision 1.7  2003/07/04 14:07:06  dek
 *** empty log message ***
 
