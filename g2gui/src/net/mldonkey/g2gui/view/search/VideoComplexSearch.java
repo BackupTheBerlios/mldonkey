@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * VideoComplexSearch
  *
- * @version $Id: VideoComplexSearch.java,v 1.1 2003/09/03 22:15:27 lemmster Exp $ 
+ * @version $Id: VideoComplexSearch.java,v 1.2 2003/09/04 12:17:01 lemmster Exp $ 
  *
  */
 public class VideoComplexSearch extends ComplexSearch {
@@ -53,13 +53,16 @@ public class VideoComplexSearch extends ComplexSearch {
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.search.ComplexSearch#createContent(org.eclipse.swt.widgets.Control)
 	 */
-	protected Control createContent(Control aControl) {
+	protected Control createContent( Control aControl ) {
 		return null;
 	}
 }
 
 /*
 $Log: VideoComplexSearch.java,v $
+Revision 1.2  2003/09/04 12:17:01  lemmster
+lots of changes
+
 Revision 1.1  2003/09/03 22:15:27  lemmster
 advanced search introduced; not working and far from complete. just to see the design
 

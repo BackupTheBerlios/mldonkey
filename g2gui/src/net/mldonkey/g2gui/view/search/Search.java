@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.search;
 
@@ -53,222 +53,243 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.18 2003/09/03 22:15:27 lemmster Exp $ 
+ * @version $Id: Search.java,v 1.19 2003/09/04 12:17:01 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
 	protected CoreCommunication core;
-	protected SearchTab tab;
-	protected SearchQuery query;
-	protected Button okButton, stopButton, continueButton;
-	protected Text text;
+    protected SearchTab tab;
+    protected SearchQuery query;
 	protected Combo combo;
-	private GridData gridData;
-	private Label label;
-	private Composite composite;
-	private StackLayout stackLayout;
-	private Button[] buttons;
+	protected Text text;
+	protected StackLayout stackLayout;
+	protected Composite composite;
+    private Button okButton;
+    private Button stopButton;
+    private Button continueButton;
+    private GridData gridData;
+    private Label label;
+    private Button[] buttons;
 
-	/**
-	 * 
-	 * @param core The parent corecommunication
-	 * @param tab The parent searchtab
-	 */
-	public Search( CoreCommunication core, SearchTab tab ) {
-		this.core = core;
-		this.tab = tab;
-		this.core.getNetworkInfoMap().addObserver( this );
-	}
-	
-	/**
-	 * The string to display as the Tabname
-	 * @return The string name
-	 */
-	public abstract String getTabName();
+    /**
+     *
+     * @param core The parent corecommunication
+     * @param tab The parent searchtab
+     */
+    public Search( CoreCommunication core, SearchTab tab ) {
+        this.core = core;
+        this.tab = tab;
+        this.core.getNetworkInfoMap().addObserver( this );
+        this.query = new SearchQuery( core );
+    }
 
-	/**
-	 * @param tabFolder The tabfolder to create the control in
-	 * @return a Control filled with the content of this obj
-	 */
-	public abstract Control createTabFolderPage( CTabFolder tabFolder );
+    /**
+     * The string to display as the Tabname
+     * @return The string name
+     */
+    public abstract String getTabName();
 
-	/**
-	 * create a searchquery, fill it and send it to mldonkey
-	 */
-	public abstract void performSearch();
-	
-	public void setSearchButton() {
-		stackLayout.topControl = buttons[ 2 ];
-		composite.layout();
-	}
-	
-	public void setContinueButton() {
-		stackLayout.topControl = buttons[ 1 ];
-		composite.layout();
-	}
+    /**
+     * @param tabFolder The tabfolder to create the control in
+     * @return a Control filled with the content of this obj
+     */
+    public abstract Control createTabFolderPage( CTabFolder tabFolder );
 
-	public void setStopButton() {
-		stackLayout.topControl = buttons[ 0 ];
-		composite.layout();
-	}
-	
+    /**
+     * create a searchquery, fill it and send it to mldonkey
+     */
+    public abstract void performSearch();
 
-	protected void createSearchButton( Composite group ) {
-		stackLayout = new StackLayout();
-		composite = new Composite( group, SWT.NONE );
-		composite.setLayout( stackLayout );
-		
-		buttons = new Button[ 3 ];
+    /**
+     * DOCUMENT ME!
+     */
+    public void setSearchButton() {
+        stackLayout.topControl = buttons[ 2 ];
+        composite.layout();
+    }
 
-		stopButton = new Button( composite, SWT.PUSH );
-		stopButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-		stopButton.setText( G2GuiResources.getString( "SS_STOP" ) );
-		stopButton.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent event ) {
-				tab.getSearchResult().stopSearch();
-				setContinueButton();
-			}		
-		} );
-		buttons[ 0 ] = stopButton;
+    /**
+     * DOCUMENT ME!
+     */
+    public void setContinueButton() {
+        stackLayout.topControl = buttons[ 1 ];
+        composite.layout();
+    }
 
-		continueButton = new Button( composite, SWT.PUSH );
-		continueButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-		continueButton.setText( G2GuiResources.getString( "SS_CONTINUE" ) );
-		continueButton.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent event ) {
-				tab.getSearchResult().continueSearch();
-				setStopButton();
-			}		
-		} );
-		buttons[ 1 ] = continueButton;
+    /**
+     * DOCUMENT ME!
+     */
+    public void setStopButton() {
+        stackLayout.topControl = buttons[ 0 ];
+        composite.layout();
+    }
 
-		okButton = new Button( composite, SWT.PUSH );
-		okButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-		okButton.setText( G2GuiResources.getString( "SS_SEARCH" ) );
-		okButton.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent event ) {
-				performSearch();
-			}		
-		} );
-		buttons[ 2 ] = okButton;
-		
-		stackLayout.topControl = buttons[ 2 ];
-	}
+    /**
+     * DOCUMENT ME!
+     *
+     * @param group DOCUMENT ME!
+     */
+    protected Object[] createSearchButton( Composite group ) {
+        stackLayout = new StackLayout();
+        composite = new Composite( group, SWT.NONE );
+        composite.setLayout( stackLayout );
+        buttons = new Button[ 3 ];
+        stopButton = new Button( composite, SWT.PUSH );
+        stopButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        stopButton.setText( G2GuiResources.getString( "SS_STOP" ) );
+        stopButton.addSelectionListener( new SelectionAdapter() {
+                public void widgetSelected( SelectionEvent event ) {
+                    tab.getSearchResult().stopSearch();
+                    setContinueButton();
+                }
+            } );
+        buttons[ 0 ] = stopButton;
+        continueButton = new Button( composite, SWT.PUSH );
+        continueButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        continueButton.setText( G2GuiResources.getString( "SS_CONTINUE" ) );
+        continueButton.addSelectionListener( new SelectionAdapter() {
+                public void widgetSelected( SelectionEvent event ) {
+                    tab.getSearchResult().continueSearch();
+                    setStopButton();
+                }
+            } );
+        buttons[ 1 ] = continueButton;
+        okButton = new Button( composite, SWT.PUSH );
+        okButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        okButton.setText( G2GuiResources.getString( "SS_SEARCH" ) );
+        okButton.addSelectionListener( new SelectionAdapter() {
+                public void widgetSelected( SelectionEvent event ) {
+                    performSearch();
+                }
+            } );
+        buttons[ 2 ] = okButton;
+        stackLayout.topControl = buttons[ 2 ];
+        
+        return new Object[] { stackLayout, composite };
+    }
 
-	/**
-	 * Creates a blank input field for search strings
-	 * @param group The Group to display the box in
-	 * @param aString The Box header
-	 */
-	protected void createInputBox( Composite group, String aString ) {
-		/* describe the box */
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalSpan = 2;
-		label = new Label( group, SWT.NONE );
-		label.setLayoutData( gridData );
-		label.setText( aString );
-				
-		/* the box */
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalSpan = 2;
-		text = new Text( group, SWT.SINGLE | SWT.BORDER );
-		text.setLayoutData( gridData );
-		text.setFont(JFaceResources.getTextFont());
-		
-		text.addMouseListener( new MouseListener() {
-			public void mouseDoubleClick( MouseEvent e ) { }
-			public void mouseDown( MouseEvent e ) {
-				setSearchButton();
-			}
+    /**
+     * Creates a blank input field for search strings
+     * @param group The Group to display the box in
+     * @param aString The Box header
+     */
+    protected Text createInputBox( Composite group, String aString ) {
+        /* the box label */
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalSpan = 2;
+        label = new Label( group, SWT.NONE );
+        label.setLayoutData( gridData );
+        label.setText( aString );
+
+        /* the box */
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalSpan = 2;
+        text = new Text( group, SWT.SINGLE | SWT.BORDER );
+        text.setLayoutData( gridData );
+        text.setFont( JFaceResources.getTextFont() );
+        text.addMouseListener( new MouseListener() {
+            public void mouseDoubleClick( MouseEvent e ) { }
 			public void mouseUp( MouseEvent e ) { }
-		} );
-		
-		text.addKeyListener( new KeyAdapter() {
-			public void keyPressed( KeyEvent e ) {
-				if ( e.character == SWT.CR ) {
-					performSearch(); 
-				}
-			}		
-		} );
-		if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
-			text.setText( "no searchable network enabled" );
-			text.setEnabled( false );	
-		}
-	}
-	
-	/**
-	 * Creates a DropDown Box with all activated Networks inside 
-	 * (SWT.READ_ONLY)
-	 * @param group The Group to display the box in
-	 * @param aString The Box header
-	 */
-	protected void createNetworkBox( Composite group, String aString ) {
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalSpan = 2;
-		label = new Label( group, SWT.NONE );
-		label.setLayoutData( gridData );
-		label.setText( aString );
-				
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalSpan = 2;
-		combo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-		combo.setLayoutData( gridData );
-		
-		fillCombo();
-	}
-	
-	/**
-	 * fill the combo box with the networks
-	 */
-	private void fillCombo() {
-		/* get all activated networks and display them in the combo */
-		NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
-		for ( int i = 0; i < networks.length; i++ ) {
-			NetworkInfo network = networks[ i ];
-			if ( network.isEnabled() && network.isSearchable() ) {
-				combo.add( network.getNetworkName() );
-				combo.setData( network.getNetworkName(), network );
-			}	
-		}
-		if ( combo.getItemCount() > 1 ) {
-			combo.add( G2GuiResources.getString( "S_ALL" ) );
-			combo.setData( G2GuiResources.getString( "S_ALL" ), null );
-			combo.select( combo.indexOf( G2GuiResources.getString( "S_ALL" ) ) );
-			combo.setEnabled( true );
-		}
-		else {
-			combo.select( 0 );
-			combo.setEnabled( false );
-		}
-	}
+            public void mouseDown( MouseEvent e ) {
+                    setSearchButton();
+            }
+        } );
+        text.addKeyListener( new KeyAdapter() {
+            public void keyPressed( KeyEvent e ) {
+                if ( e.character == SWT.CR )
+            		performSearch();
+            }
+        } );
+        if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
+            text.setText( "no searchable network enabled" );
+            text.setEnabled( false );
+        }
 
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update( Observable o, Object arg ) {
-		if ( combo.isDisposed() ) return;
-		
-		this.combo.getDisplay().asyncExec( new Runnable() {
-			public void run() {
-				/* update the combo */
-				combo.removeAll();
-				fillCombo();
-				/* update the text */
+		return text;        
+    }
+
+    /**
+     * Creates a DropDown Box with all activated Networks inside
+     * (SWT.READ_ONLY)
+     * @param group The Group to display the box in
+     * @param aString The Box header
+     */
+    protected Combo createNetworkCombo( Composite group, String aString ) {
+		/* the combo label */
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalSpan = 2;
+        label = new Label( group, SWT.NONE );
+        label.setLayoutData( gridData );
+        label.setText( aString );
+        
+        /* the combo itself */
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalSpan = 2;
+        combo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+        combo.setLayoutData( gridData );
+        
+        /* fill the combo with values */
+        fillCombo( combo );
+        
+        return combo;
+    }
+
+    /**
+     * fill the combo box with the networks
+     */
+    private void fillCombo( Combo aCombo ) {
+        /* get all activated networks and display them in the combo */
+        NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
+        for ( int i = 0; i < networks.length; i++ ) {
+            NetworkInfo network = networks[ i ];
+            if ( network.isEnabled() && network.isSearchable() ) {
+				aCombo.add( network.getNetworkName() );
+				aCombo.setData( network.getNetworkName(), network );
+            }
+        }
+        if ( aCombo.getItemCount() > 1 ) {
+			aCombo.add( G2GuiResources.getString( "S_ALL" ) );
+			aCombo.setData( G2GuiResources.getString( "S_ALL" ), null );
+			aCombo.select( aCombo.indexOf( G2GuiResources.getString( "S_ALL" ) ) );
+			aCombo.setEnabled( true );
+        }
+        else {
+			aCombo.select( 0 );
+			aCombo.setEnabled( false );
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update( Observable o, Object arg ) {
+        if ( combo.isDisposed() ) return;
+        
+        this.combo.getDisplay().asyncExec( new Runnable() {
+            public void run() {
+                /* update the combo */
+                combo.removeAll();
+                fillCombo( combo );
+				
+                /* update the text */
 				if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
 					text.setText( "no searchable network enabled" );
-					text.setEnabled( false );	
+					text.setEnabled( false );
 				}
 				else {
 					text.setText( "" );
 					text.setEnabled( true );
 				}
-			}
-		} );
-	}
+            }
+        } );
+    }
 }
 
 /*
 $Log: Search.java,v $
+Revision 1.19  2003/09/04 12:17:01  lemmster
+lots of changes
+
 Revision 1.18  2003/09/03 22:15:27  lemmster
 advanced search introduced; not working and far from complete. just to see the design
 

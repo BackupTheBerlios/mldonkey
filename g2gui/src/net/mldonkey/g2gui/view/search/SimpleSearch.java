@@ -24,12 +24,12 @@ package net.mldonkey.g2gui.view.search;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
-import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.11 2003/08/31 12:32:04 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.12 2003/09/04 12:17:01 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -85,8 +85,10 @@ public class SimpleSearch extends Search {
 		group.setLayout( gridLayout );
 		group.setLayoutData( gridData );
 			
-			this.createInputBox( group, G2GuiResources.getString( "SS_STRING" ) );
-			this.createNetworkBox( group, G2GuiResources.getString( "SS_NETWORK" ) );
+			this.text = 
+				this.createInputBox( group, G2GuiResources.getString( "SS_STRING" ) );
+			this.combo = 
+				this.createNetworkCombo( group, G2GuiResources.getString( "SS_NETWORK" ) );
 			
 			/* media select */
 			gridData = new GridData();
@@ -145,7 +147,12 @@ public class SimpleSearch extends Search {
 					selectedMedia = "Software";
 				}	
 			} );
-			this.createSearchButton( group );
+
+			Object[] obj =
+				this.createSearchButton( composite );
+			this.stackLayout = ( StackLayout ) obj[ 0 ];
+			this.composite = ( Composite ) obj[ 1 ];
+
 		return group;		
 	}
 
@@ -154,9 +161,6 @@ public class SimpleSearch extends Search {
 	 */
 	public void performSearch() {
 		if ( ! text.getText().equals( "" ) ) {
-			/* generate a new search query */
-			SearchQuery query = new SearchQuery( core );
-			
 			/* the query string */
 			query.setSearchString( text.getText() );
 					
@@ -175,9 +179,8 @@ public class SimpleSearch extends Search {
 						
 			/* draw the empty search result */
 			new SearchResult( text.getText(), tab.getCTabFolder(),
-							   core, query.getSearchIdentifier() );	
+							  core, query.getSearchIdentifier() );	
 
-			query = null;
 			text.setText( "" );
 			
 			this.setStopButton();
@@ -187,6 +190,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.12  2003/09/04 12:17:01  lemmster
+lots of changes
+
 Revision 1.11  2003/08/31 12:32:04  lemmster
 major changes to search
 

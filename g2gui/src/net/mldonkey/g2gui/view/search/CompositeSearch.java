@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.search;
 
@@ -42,111 +42,113 @@ import org.eclipse.swt.widgets.Label;
 /**
  * CompositeSearch
  *
- * @version $Id: CompositeSearch.java,v 1.1 2003/09/03 22:15:27 lemmster Exp $ 
+ * @version $Id: CompositeSearch.java,v 1.2 2003/09/04 12:17:01 lemmster Exp $
  *
  */
 public class CompositeSearch extends Search {
-	private Combo combo;
-	private Composite composite;
-	private Label label;
-	private GridLayout gridLayout;
-	private GridData gridData;
-	private StackLayout stackLayout;
-	private List aList;
-	private Control[] searches;
-	private int size;
+    private Combo typeCombo;
+    private Composite composite;
+    private Label label;
+    private GridLayout gridLayout;
+    private GridData gridData;
+    private StackLayout stackLayout;
+    private List aList;
+    private Control[] searches;
+    private int size;
 
-	/**
-	 * @param core
-	 * @param tab
-	 */
-	public CompositeSearch(CoreCommunication core, SearchTab tab, List aList ) {
-		super(core, tab);
+    /**
+     * @param core
+     * @param tab
+     */
+    public CompositeSearch( CoreCommunication core, SearchTab tab, List aList ) {
+        super( core, tab );
 		this.aList = aList;
-	}
+        
+        /* we dont need to update anything, so deregister on der observable */
+        core.getNetworkInfoMap().deleteObserver( this );
+    }
 
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.search.Search#getTabName()
-	 */
-	public String getTabName() {
-		return "Complex Search";
-	}
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.search.Search#getTabName()
+     */
+    public String getTabName() {
+        return "Advanced Search";
+    }
 
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.search.Search#createTabFolderPage(org.eclipse.swt.custom.CTabFolder)
-	 */
-	public Control createTabFolderPage( CTabFolder tabFolder ) {
-		gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalSpan = 2;
-		gridData.horizontalIndent = 12;
-		gridData.widthHint = 500;
-		Composite mainComposite = new Composite( tabFolder, SWT.NONE );
-		mainComposite.setLayout( gridLayout );
-		mainComposite.setLayoutData( gridData );
-		
-		/* search type (music/video/other...) */
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalSpan = 2;
-		label = new Label( mainComposite, SWT.NONE );
-		label.setLayoutData( gridData );
-		label.setText( "Search Type" );
-				
-		/* store the names of the complexsearches in a string[] */
-		size = aList.size();
-		String[] searchNames = new String[ size ];
-		for ( int i = 0; i < size; i++ ) {		
-			ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
-			searchNames[ i ] = aComplexSearch.getName();			
-		}
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.search.Search#createTabFolderPage(org.eclipse.swt.custom.CTabFolder)
+     */
+    public Control createTabFolderPage( CTabFolder tabFolder ) {
+        gridLayout = new GridLayout();
+        gridLayout.numColumns = 2;
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalSpan = 2;
+        gridData.horizontalIndent = 12;
+        gridData.widthHint = 500;
+        Composite mainComposite = new Composite( tabFolder, SWT.NONE );
+        mainComposite.setLayout( gridLayout );
+        mainComposite.setLayoutData( gridData );
 
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalSpan = 2;
-		combo = new Combo( mainComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-		combo.setLayoutData( gridData );
-		combo.setItems( searchNames );
-		combo.select( 0 );
-		
-		combo.addSelectionListener( new SelectionListener() {
-			public void widgetSelected( SelectionEvent e ) {
-				Combo combo = ( Combo ) e.widget;
-				String aString = combo.getItem( combo.getSelectionIndex() );
-				for ( int i = 0; i < size; i++ ) {
-					ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
-										
-				}
-					stackLayout.topControl = searches[ 2 ];
-					composite.layout();
-			}
-			public void widgetDefaultSelected( SelectionEvent e ) {
-			}
-		} );
+        /* search type (music/video/other...) */
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalSpan = 2;
+        label = new Label( mainComposite, SWT.NONE );
+        label.setLayoutData( gridData );
+        label.setText( "Search Type" );
 
-		/* a horizontal line */
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalSpan = 2;
-		Label bar = new Label( mainComposite, SWT.SEPARATOR | SWT.HORIZONTAL );
-		bar.setLayoutData( gridData );
+        /* store the names of the complexsearches in a string[] */
+        size = aList.size();
+        String[] searchNames = new String[ size ];
+        for ( int i = 0; i < size; i++ ) {
+            ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
+            searchNames[ i ] = aComplexSearch.getName();
+        }
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalSpan = 2;
+        this.typeCombo = new Combo( mainComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+        typeCombo.setLayoutData( gridData );
+        typeCombo.setItems( searchNames );
+        typeCombo.select( 0 );
+        typeCombo.addSelectionListener( new SelectionListener() {
+			public void widgetDefaultSelected( SelectionEvent e ) { }
+            public void widgetSelected( SelectionEvent e ) {
+                Combo combo = ( Combo ) e.widget;
+                String aString = combo.getItem( combo.getSelectionIndex() );
+                for ( int i = 0; i < size; i++ ) {
+                    ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
+                    if ( aComplexSearch.getName().equals( aString ) ) {
+						stackLayout.topControl = searches[ i ];
+						composite.layout();
+						return;
+                    }
+                }
+            }
+        } );
 
-		/* the different search masks */
-		stackLayout = new StackLayout();
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		gridData.horizontalSpan = 2;
-		composite = new Composite( mainComposite, SWT.NONE );
-		composite.setLayout( stackLayout );
-		composite.setLayoutData( gridData );
-		
-		/* store the controls of the complexsearches in a control[] */
-		searches = new Control[ size ];
-		for ( int i = 0; i < size; i++ ) {		
-			ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
-			searches[ i ] = aComplexSearch.createContent( composite );			
-		}
-		stackLayout.topControl = searches[ 0 ];
-		
-		return mainComposite;
-	}
+        /* a horizontal line */
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalSpan = 2;
+        Label bar = new Label( mainComposite, SWT.SEPARATOR | SWT.HORIZONTAL );
+        bar.setLayoutData( gridData );
+        
+        /* the different search masks */
+        stackLayout = new StackLayout();
+        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        gridData.horizontalSpan = 2;
+		gridData.horizontalIndent = -6;
+        composite = new Composite( mainComposite, SWT.NONE );
+        composite.setLayout( stackLayout );
+        composite.setLayoutData( gridData );
+
+        /* store the controls of the complexsearches in a control[] */
+        searches = new Control[ size ];
+        for ( int i = 0; i < size; i++ ) {
+            ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
+            searches[ i ] = aComplexSearch.createContent( composite );
+        }
+        stackLayout.topControl = searches[ 0 ];
+        return mainComposite;
+    }
 
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
@@ -156,6 +158,9 @@ public class CompositeSearch extends Search {
 
 /*
 $Log: CompositeSearch.java,v $
+Revision 1.2  2003/09/04 12:17:01  lemmster
+lots of changes
+
 Revision 1.1  2003/09/03 22:15:27  lemmster
 advanced search introduced; not working and far from complete. just to see the design
 
