@@ -8,7 +8,7 @@
  * G2GUI is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
  * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
+import net.mldonkey.g2gui.model.SimpleInformation;
 
 import org.eclipse.jface.preference.*;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -38,7 +39,7 @@ import org.eclipse.swt.widgets.*;
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.10 2003/07/02 16:16:47 dek Exp $ 
+ * @version $Id: General.java,v 1.11 2003/07/04 18:06:47 dek Exp $ 
  *
  */
 public class General extends PreferencePage {	
@@ -70,11 +71,11 @@ public class General extends PreferencePage {
 		
 		
 	}
-	private void getOptionsFromCore(
+	private void getOptionsFromCore( 
 		boolean connected,
 		CoreCommunication mldonkey ) {
 		if ( connected ) {
-			this.options = mldonkey.getOptions();		
+			this.options = mldonkey.getOptionsInfoMap();		
 			BusyIndicator.showWhile( null, new Runnable() {			
 			public void run() {
 				while ( !( options.keySet().contains( "client_name" ) ) ) {					
@@ -91,9 +92,9 @@ public class General extends PreferencePage {
 			
 			Boolean hell = new Boolean( "false" );
 			
-			autoCommit = ( new Boolean (
+			autoCommit = ( new Boolean ( 
 				( ( OptionsInfo ) options.get( "auto_commit" ) ).getValue() ) 
-										).booleanValue();			
+										 ).booleanValue();			
 		}
 		else {
 			clientName = res.getString( "OPTIONS_NOT_CONNECTED" );
@@ -102,8 +103,8 @@ public class General extends PreferencePage {
 		}
 	}		
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.PreferencePage#createContents( org.eclipse.swt.widgets.Composite )
 	 */
 	protected Control createContents( Composite shell ) {
 		
@@ -125,26 +126,26 @@ public class General extends PreferencePage {
 	
 	
 	private void createUploadRateField( Composite shell ) {
-		this.maxHardUploadRateField = new IntegerFieldEditor( "max_hard_upload_rate", "Max. Upload (in kb/s, 0 is unlimited)", shell );
+		this.maxHardUploadRateField = new IntegerFieldEditor( "max_hard_upload_rate", "Max. Upload ( in kb/s, 0 is unlimited )", shell );
 			maxHardUploadRateField.setEnabled( connected, shell );
 			maxHardUploadRateField.setStringValue( maxHardUploadRate );		 	
-			maxHardUploadRateField.getTextControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n"
-				+ "The limit will apply on all your connections (clients and servers) and both\n"
+			maxHardUploadRateField.getTextControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s ( 0 = no limit )\n"
+				+ "The limit will apply on all your connections ( clients and servers ) and both\n"
 				+ " control and data messages." );
-			maxHardUploadRateField.getLabelControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n" 
-				+ "The limit will apply on all your connections (clients and servers) and both\n" 
+			maxHardUploadRateField.getLabelControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s ( 0 = no limit )\n" 
+				+ "The limit will apply on all your connections ( clients and servers ) and both\n" 
 				+ " control and data messages." );
 	}
 	
 	private void createDownloadRateField( Composite shell ) {
-		this.maxHardDownloadRateField = new IntegerFieldEditor( "max_hard_download_rate", "Max. Download (in kb/s, 0 is unlimited)", shell );
+		this.maxHardDownloadRateField = new IntegerFieldEditor( "max_hard_download_rate", "Max. Download ( in kb/s, 0 is unlimited )", shell );
 			maxHardDownloadRateField.setEnabled( connected, shell );
 			maxHardDownloadRateField.setStringValue( maxHardDownloadRate );
-			maxHardDownloadRateField.getTextControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n"
-				+ "The limit will apply on all your connections (clients and servers) and both\n"
+			maxHardDownloadRateField.getTextControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s ( 0 = no limit )\n"
+				+ "The limit will apply on all your connections ( clients and servers ) and both\n"
 				+ " control and data messages." );
-			maxHardDownloadRateField.getLabelControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n"
-				+ "The limit will apply on all your connections (clients and servers) and both\n"
+			maxHardDownloadRateField.getLabelControl( shell ).setToolTipText( "The maximal upload rate you can tolerate on your link in kBytes/s ( 0 = no limit )\n"
+				+ "The limit will apply on all your connections ( clients and servers ) and both\n"
 				+ " control and data messages." );
 	}
 	
@@ -160,24 +161,43 @@ public class General extends PreferencePage {
 
 	public boolean performOk() {	
 		/* only perform, if this tab has been 
-		 * initialized (checked by the existance of the clientNameField)
+		 * initialized ( checked by the existance of the clientNameField )
 		 */		
 		 if ( clientNameField != null ) {		
 		 	
 		 	/* This is the structure all Options have to ve handled to avoid senseless traffic
 		 	 * for setting options, that have not changed.
 		 	 */		 	 
-			if ( !clientName.equals( clientNameField.getStringValue() ) )
-		 		mldonkey.setOption( "client_name", clientNameField.getStringValue() );
+			if ( !clientName.equals( clientNameField.getStringValue() ) ) {
+				OptionsInfo option = new OptionsInfo();
+				option.setKey( "client_name" );
+				option.setValue( clientNameField.getStringValue() );
+				option.send( mldonkey.getConnection() );
+			}
 		 		
-			if ( !maxHardUploadRate.equals( maxHardUploadRateField.getStringValue() ) )
-				mldonkey.setOption( "max_hard_upload_rate", maxHardUploadRateField.getStringValue() );
+			if ( !maxHardUploadRate.equals( maxHardUploadRateField.getStringValue() ) ) {
+				OptionsInfo option = new OptionsInfo();
+				option.setKey( "max_hard_upload_rate" );
+				option.setValue( maxHardUploadRateField.getStringValue() );
+				option.send( mldonkey.getConnection() );
+			}
+			
 							
-			if ( !maxHardDownloadRate.equals( maxHardDownloadRateField.getStringValue() ) )
-				mldonkey.setOption( "max_hard_download_rate", maxHardDownloadRateField.getStringValue() );
+			if ( !maxHardDownloadRate.equals( maxHardDownloadRateField.getStringValue() ) ) {
+				OptionsInfo option = new OptionsInfo();
+				option.setKey( "max_hard_download_rate" );
+				option.setValue( maxHardDownloadRateField.getStringValue() );
+				option.send( mldonkey.getConnection() );
+			}
+			
 				
-			if ( autoCommitField.hasChanged() )
-				mldonkey.setOption( "auto_commit", autoCommitField.getValue() );
+			if ( autoCommitField.hasChanged() ) {
+				OptionsInfo option = new OptionsInfo();
+				option.setKey( "auto_commit" );
+				option.setValue( autoCommitField.getValue() );
+				option.send( mldonkey.getConnection() );
+			}
+			
 				
 		 	/*any more settings in here, got the syntax?*/	
 			
@@ -190,7 +210,7 @@ public class General extends PreferencePage {
 		
 	}
 
-	/* (non-Javadoc)
+	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected void createFieldEditors() {
@@ -200,6 +220,9 @@ public class General extends PreferencePage {
 
 /*
 $Log: General.java,v $
+Revision 1.11  2003/07/04 18:06:47  dek
+*** empty log message ***
+
 Revision 1.10  2003/07/02 16:16:47  dek
 extensive Checkstyle applying
 
@@ -207,10 +230,10 @@ Revision 1.9  2003/07/02 15:57:23  dek
 Checkstyle
 
 Revision 1.8  2003/07/01 13:52:31  dek
-small unimportant bugfixes (if bugfixes can be unimportant...)
+small unimportant bugfixes ( if bugfixes can be unimportant... )
 
 Revision 1.7  2003/06/30 17:29:54  dek
-Saving all the options in General works now (not validated for strings/int/yet)
+Saving all the options in General works now ( not validated for strings/int/yet )
 
 Revision 1.6  2003/06/29 20:23:41  dek
 how the hell do i get the value out of a booleanFieldeditor???
@@ -222,7 +245,7 @@ Revision 1.4  2003/06/29 18:25:03  dek
 setting clientname now works
 
 Revision 1.3  2003/06/27 18:05:46  dek
-Client name is now an option, not saveable yet, but it's displayed ;-)
+Client name is now an option, not saveable yet, but it's displayed ;- )
 
 Revision 1.2  2003/06/26 14:09:20  dek
 checkstyle
