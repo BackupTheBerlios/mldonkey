@@ -23,6 +23,11 @@
 package net.mldonkey.g2gui.view.pref;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -38,11 +43,16 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.13 2003/08/24 16:37:04 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.14 2003/08/24 18:05:01 zet Exp $
  */
 public class PreferenceLoader {
 
 	private static PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
+	private static Map fontMap = new Hashtable();
+	private static Map colorMap = new Hashtable();
+	private static List fontArray = new ArrayList();
+	private static List colorArray = new ArrayList();
+	
 	// prevent instantiation
 	private PreferenceLoader() {
 	}
@@ -93,8 +103,21 @@ public class PreferenceLoader {
 	 * @return
 	 */
 	static public Font loadFont( String preferenceString ) {
-		if (preferenceStore.contains( preferenceString )) 	
-			return new Font (null, PreferenceConverter.getFontDataArray( preferenceStore, preferenceString ) ); 
+		if (preferenceStore.contains( preferenceString )) {
+			Font newFont = new Font (null, PreferenceConverter.getFontDataArray( preferenceStore, preferenceString ));
+			if (fontMap.containsKey(preferenceString)) {
+				if (newFont.getFontData()[0].equals( ((Font) fontMap.get(preferenceString)).getFontData()[0] )) {
+					newFont.dispose();
+				} else {
+					fontArray.add(newFont);
+					fontMap.put(preferenceString, newFont);
+				}
+			} else {
+				fontArray.add(newFont);
+				fontMap.put(preferenceString, newFont);
+			}
+			return (Font) fontMap.get(preferenceString);
+		}
 		return null;
 	}
 	/**
@@ -102,8 +125,21 @@ public class PreferenceLoader {
 	 * @return
 	 */
 	static public Color loadColour (String preferenceString ) {
-		if (preferenceStore.contains( preferenceString ))
-			return new Color( null, PreferenceConverter.getColor(preferenceStore, preferenceString ) );
+		if (preferenceStore.contains( preferenceString )) {
+			Color newColor = new Color (null, PreferenceConverter.getColor( preferenceStore, preferenceString ));
+			if (colorMap.containsKey(preferenceString)) {
+				if (newColor.getRGB().equals( ((Color) colorMap.get(preferenceString)).getRGB())) {
+					newColor.dispose();
+				} else {
+					colorArray.add(newColor);
+					colorMap.put(preferenceString, newColor);
+				}
+			} else {
+				colorArray.add(newColor);
+				colorMap.put(preferenceString, newColor);
+			}
+			return (Color) colorMap.get(preferenceString);
+		}
 		return null;
 	}
 	
@@ -150,11 +186,23 @@ public class PreferenceLoader {
 	static public void initialize() {
 		loadStore();
 	}
-	
+	static public void cleanUp() {
+		Iterator fonts = fontArray.iterator();
+		while(fonts.hasNext()){
+		  ((Font) fonts.next()).dispose();
+		}
+		Iterator colors = colorArray.iterator();
+		while(colors.hasNext()){
+		  ((Color) colors.next()).dispose();
+		}
+	}
 	
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.14  2003/08/24 18:05:01  zet
+handle cleanup of colors/fonts
+
 Revision 1.13  2003/08/24 16:37:04  zet
 combine the preference stores
 
