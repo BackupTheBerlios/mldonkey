@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * TableSorter
  *
  * @author $user$
- * @version $Id: TableSorter.java,v 1.1 2003/08/05 13:50:10 lemmstercvs01 Exp $ 
+ * @version $Id: TableSorter.java,v 1.2 2003/08/06 17:38:38 lemmstercvs01 Exp $ 
  *
  */
 public class TableSorter extends ViewerSorter {
@@ -106,8 +106,7 @@ public class TableSorter extends ViewerSorter {
 		}
 		/* address */
 		if ( columnIndex == 3 ) {
-			if ( server1.getServerAddress() != null 
-			&& server2.getServerAddress() != null ) {
+			try {
 				Addr addr1 = server1.getServerAddress();
 				Addr addr2 = server2.getServerAddress();
 	
@@ -115,7 +114,10 @@ public class TableSorter extends ViewerSorter {
 					return addr1.compareTo( addr2 );
 				else
 					return addr2.compareTo( addr1 );	
-				}
+			}
+			catch ( NullPointerException e ) {
+				return 0;
+			}
 		}
 		/* port */
 		if ( columnIndex == 4 ) {
@@ -202,6 +204,9 @@ public class TableSorter extends ViewerSorter {
 
 /*
 $Log: TableSorter.java,v $
+Revision 1.2  2003/08/06 17:38:38  lemmstercvs01
+some actions still missing. but it should work for the moment
+
 Revision 1.1  2003/08/05 13:50:10  lemmstercvs01
 initial commit
 

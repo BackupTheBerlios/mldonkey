@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.13 2003/08/06 09:46:42 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.14 2003/08/06 17:38:38 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo extends Parent {
 	/**
@@ -199,13 +199,10 @@ public class ServerInfo extends Parent {
 		this.numOfUsers = messageBuffer.readInt32();
 		this.numOfFilesShared = messageBuffer.readInt32();
 		this.getConnectionState().readStream( messageBuffer );
-		/* if the state is REMOVE_HOST, we delete the serverinfo from the serverinfointmap */
-		if ( this.getConnectionState().getState() == EnumState.REMOVE_HOST ) {
-			this.parent.getServerInfoIntMap().remove( this );
-			return;
-		}
 		this.nameOfServer = messageBuffer.readString();
 		this.descOfServer = messageBuffer.readString();
+		/* if the state is REMOVE_HOST, we delete the serverinfo from the serverinfointmap */
+		this.checkForRemove();
 	}
 	
 	/**
@@ -225,6 +222,14 @@ public class ServerInfo extends Parent {
 		byte state = messageBuffer.readByte();
 		this.getConnectionState().setState( state );
 		/* if this state change to REMOVE_HOST -> remove from serverintmap */
+		this.checkForRemove();
+	}
+	
+	/**
+	 * Check this for state "REMOVE_HOST" and remove this from the serverinfointmap
+	 * and add it to the removed list
+	 */
+	private void checkForRemove() {
 		if ( this.getConnectionState().getState() == EnumState.REMOVE_HOST ) {
 			this.parent.getServerInfoIntMap().remove( this );
 		}
@@ -288,6 +293,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.14  2003/08/06 17:38:38  lemmstercvs01
+$some actions still missing. but it should work for the moment
+$
 $Revision 1.13  2003/08/06 09:46:42  lemmstercvs01
 $toString() added, some bugfixes
 $

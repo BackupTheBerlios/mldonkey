@@ -22,12 +22,11 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.trove.TIntObjectHashMap;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
-
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectIterator;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -39,14 +38,16 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.10 2003/08/06 09:47:29 lemmstercvs01 Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.11 2003/08/06 17:38:38 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
 	/**
-	 * last serverinfos changed
+	 * last serverinfos changed/added/removed
 	 */
 	private List changed = new ArrayList();
+	private List added = new ArrayList();
+	private List removed = new ArrayList();
 	
 	/**
 	 * @param communication my parent
@@ -64,6 +65,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 		synchronized ( this ) {
 			this.infoIntMap.put( key, value );
 		}
+		synchronized ( this.added ) {
+			this.added.add( value );
+		}
 	}
 
 	/**
@@ -75,23 +79,43 @@ public class ServerInfoIntMap extends InfoIntMap {
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 		if ( this.containsKey( id ) ) {
 			this.get( id ).readStream( messageBuffer );
+			synchronized ( this.changed ) {
+				this.changed.add( this.get( id ) );
+			}
 		}
 		else {
 			ServerInfo serverInfo = new ServerInfo( this.parent );
 			serverInfo.readStream( messageBuffer );
-			if ( serverInfo.getConnectionState().getState() != EnumState.REMOVE_HOST )
+			if ( serverInfo.getConnectionState().getState() != EnumState.REMOVE_HOST ) {
 				this.put( serverInfo.getServerId(), serverInfo );
+			}
 		}
 		this.setChanged();
 		this.notifyObservers( this );
 	}
 	
 	/**
-	 * Removes all entries in ids
+	 * Removes all entries in changed
 	 */
 	public void clearChanged() {
 		synchronized ( this.changed ) {
 			this.changed.clear();
+		}
+	}
+	/**
+	 * Removes all entries in added
+	 */
+	public void clearAdded() {
+		synchronized ( this.added ) {
+			this.added.clear();
+		}
+	}
+	/**
+	 * Removes all entries in removed
+	 */
+	public void clearRemoved() {
+		synchronized ( this.removed ) {
+			this.removed.clear();
 		}
 	}
 	
@@ -150,34 +174,27 @@ public class ServerInfoIntMap extends InfoIntMap {
 	}
 	
 	/**
-	 * @return The serverinfos who have changed
-	 * clear this list, after hte update at the view
+	 * @return The serverinfos who have been changed
+	 * clear this list, after the update in the view
 	 */
 	public List getChanged() {
-		return changed;
+		return this.changed;
 	}
 	
 	/**
-	 * Get a submap of this with just the server of the specific Networkinfo.Enum
-	 * @param networkInfo The network the servers should belong to or null to receive all
-	 * @return a new ServerInfoIntMap with from the selected network
+	 * @return The serverinfos who have been added
+	 * clear this list, after the update in the view
 	 */
-	public ServerInfoIntMap getByNetwork( NetworkInfo.Enum enum ) {
-		/* if null return all */
-		if ( enum == null ) return this;
-		
-		ServerInfoIntMap result = new ServerInfoIntMap( this.parent );
-		synchronized ( this ) {
-			int size = this.infoIntMap.size();
-			TIntObjectIterator itr = this.infoIntMap.iterator();
-			for ( ; size-- > 0; ) {
-				itr.advance();
-				ServerInfo server = ( ServerInfo ) itr.value();
-				if ( server.getNetwork().getNetworkType() == enum )
-					result.put( server.getServerId(), server );
-			}
-		}
-		return result;
+	public List getAdded() {
+		return this.added;
+	}
+	
+	/**
+	 * @return The serverinfos who have been removed
+	 * clear this list, after the update in the view
+	 */
+	public List getRemoved() {
+		return this.removed;
 	}
 	
 	/**
@@ -218,7 +235,10 @@ public class ServerInfoIntMap extends InfoIntMap {
 	protected void remove( ServerInfo server ) {
 		synchronized( this ) {
 			this.infoIntMap.remove( server.getServerId() );
+			this.removed.add( server );
 		}
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -234,6 +254,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 			if ( server.getNetwork().getNetworkType() == enum ) {
 				synchronized ( this ) {
 					this.infoIntMap.remove( server.getServerId() );
+				}
+				synchronized ( this.removed ) {
+					this.removed.add( server );
 				}
 			}
 		}
@@ -333,6 +356,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.11  2003/08/06 17:38:38  lemmstercvs01
+some actions still missing. but it should work for the moment
+
 Revision 1.10  2003/08/06 09:47:29  lemmstercvs01
 toString() added, some bugfixes
 

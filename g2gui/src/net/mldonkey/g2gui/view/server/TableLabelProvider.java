@@ -35,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  * @author $user$
- * @version $Id: TableLabelProvider.java,v 1.1 2003/08/05 13:50:10 lemmstercvs01 Exp $ 
+ * @version $Id: TableLabelProvider.java,v 1.2 2003/08/06 17:38:38 lemmstercvs01 Exp $ 
  *
  */
 public class TableLabelProvider implements ITableLabelProvider {
@@ -56,7 +56,6 @@ public class TableLabelProvider implements ITableLabelProvider {
 		
 		if ( columnIndex == 0 ) // network id
 			return ( ( NetworkInfo ) server.getNetwork() ).getNetworkName();
-
 		else if ( columnIndex == 1 ) // name
 			return server.getNameOfServer();
 
@@ -64,16 +63,20 @@ public class TableLabelProvider implements ITableLabelProvider {
 			return server.getDescOfServer();
 
 		else if ( columnIndex == 3 )  {// address
-			Addr addr = server.getServerAddress();
-			if ( addr.hasHostName() )
-				return addr.getAddress().getHostName();
-			else
-				return addr.getAddress().getHostAddress();
+			try {
+				Addr addr = server.getServerAddress();
+				if ( addr.hasHostName() )
+					return addr.getHostName();
+				else
+					return addr.getAddress().getHostAddress();
+			}
+			catch ( NullPointerException e ) {
+				return "";
+			}
 		}
 
 		else if ( columnIndex == 4 ) // port
 			return new Integer( server.getServerPort() ).toString();
-
 		else if ( columnIndex == 5 ) // score
 			return new Integer( server.getServerScore() ).toString();
 
@@ -141,6 +144,9 @@ public class TableLabelProvider implements ITableLabelProvider {
 
 /*
 $Log: TableLabelProvider.java,v $
+Revision 1.2  2003/08/06 17:38:38  lemmstercvs01
+some actions still missing. but it should work for the moment
+
 Revision 1.1  2003/08/05 13:50:10  lemmstercvs01
 initial commit
 

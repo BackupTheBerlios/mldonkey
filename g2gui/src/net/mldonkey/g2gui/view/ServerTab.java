@@ -22,10 +22,12 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ServerInfo;
@@ -56,7 +58,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  * @author $user$
- * @version $Id: ServerTab.java,v 1.2 2003/08/05 15:35:24 lemmstercvs01 Exp $ 
+ * @version $Id: ServerTab.java,v 1.3 2003/08/06 17:38:38 lemmstercvs01 Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable {
@@ -115,6 +117,7 @@ public class ServerTab extends GuiTab implements Runnable {
 		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		table.getTable().setLinesVisible( true );
 		table.getTable().setHeaderVisible( true );
+		table.setUseHashlookup( true );
 		
 		table.setContentProvider( new TableContentProvider() );
 		table.setLabelProvider( new TableLabelProvider() );
@@ -164,7 +167,12 @@ public class ServerTab extends GuiTab implements Runnable {
 		} );
 		
 		/* fill the table with content */
-		table.setInput(  this.core.getServerInfoIntMap() );
+		ServerInfoIntMap servers = this.core.getServerInfoIntMap();
+		this.table.setInput( servers );
+		servers.clearAdded();
+		servers.clearChanged();
+		servers.clearRemoved();
+		
 		this.statusText = "Server: " + table.getTable().getItemCount();
 		this.setColumnWidht();
 	}
@@ -193,11 +201,8 @@ public class ServerTab extends GuiTab implements Runnable {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, Object arg ) {
-		/* are we responsible for this update */
-		if ( arg instanceof ServerInfoIntMap ) {
-			this.servers = ( ServerInfoIntMap ) arg;
-			this.content.getDisplay().asyncExec( this );
-		}
+		this.servers = ( ServerInfoIntMap ) arg;
+		this.content.getDisplay().asyncExec( this );
 	}		
 
 	/* (non-Javadoc)
@@ -205,12 +210,33 @@ public class ServerTab extends GuiTab implements Runnable {
 	 */
 	public void run() {
 		int itemCount = table.getTable().getItemCount();
-		if ( itemCount != this.servers.size() ) {
-			table.refresh();
-			this.statusText = "Result: " + itemCount;
-			this.mainWindow.statusline.update( statusText );
-			this.mainWindow.statusline.updateToolTip( "" );
+		/* servers were removed */
+		if ( itemCount > this.servers.size() ) {
+			List removed = this.servers.getRemoved();
+			synchronized ( removed ) {
+				Iterator itr = removed.iterator();
+				int size = removed.size();
+				for ( ; size-- > 0; ) {
+					ServerInfo server = ( ServerInfo ) itr.next();
+					table.remove( server );
+				}
+				this.servers.clearRemoved();
+			}
 		}
+		/* new servers were received */
+		else if ( itemCount < this.servers.size() ) {
+			List added = this.servers.getAdded();
+			synchronized ( added ) {
+				Iterator itr = added.iterator();
+				int size = added.size();
+				for ( ; size-- > 0; ) {
+					ServerInfo server = ( ServerInfo ) itr.next();
+					table.add( server );
+				}
+				this.servers.clearAdded();
+			}
+		}
+		/* only the obj has changed */
 		else {
 			List changed = this.servers.getChanged();
 			synchronized ( changed ) {
@@ -223,8 +249,44 @@ public class ServerTab extends GuiTab implements Runnable {
 				this.servers.clearChanged();
 			}	
 		}
+		this.statusText = "Server: " + itemCount + " Map: " + this.servers.size() + " hasDups: " + this.hasDups();
+		this.mainWindow.statusline.update( statusText );
+		this.mainWindow.statusline.updateToolTip( "" );
 	}
 	
+	private boolean hasDups() {
+		int itemCount = table.getTable().getItemCount();
+		TableItem[] items = table.getTable().getItems();
+		Set aSet = new HashSet();
+		for ( int i = 0; i < items.length; i++ ) {
+			aSet.add( items[ i ].getData() );
+		}
+		if ( aSet.size() < itemCount )
+			return true;
+		else
+			return false;	
+	}
+	
+	/**
+	 * unregister ourself
+	 */
+	public void setInActive() {
+		this.core.getServerInfoIntMap().deleteObserver( this );
+		super.setInActive();
+	}
+	
+	/**
+	 * register ourself
+	 */
+	public void setActive() {
+		/* if we become active, refresh the table */
+		this.servers = this.core.getServerInfoIntMap();
+		table.getTable().getDisplay().asyncExec( this );
+		
+		this.core.getServerInfoIntMap().addObserver( this );
+		super.setActive();
+	}
+
 	/**
 	 * @return The text this tab wants to display in the statusline
 	 */
@@ -235,6 +297,9 @@ public class ServerTab extends GuiTab implements Runnable {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.3  2003/08/06 17:38:38  lemmstercvs01
+some actions still missing. but it should work for the moment
+
 Revision 1.2  2003/08/05 15:35:24  lemmstercvs01
 minor: column width changed
 
