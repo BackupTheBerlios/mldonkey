@@ -84,7 +84,7 @@ import java.util.List;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.11 2003/10/12 15:58:29 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.12 2003/10/12 19:43:12 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -273,10 +273,12 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
         if ( ( selectedFile != null ) && selectedFileListContainsOtherThan( EnumFileState.DOWNLOADED ) ) {
             MenuManager prioritySubMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY" ) );
+            prioritySubMenu.add( new PriorityAction( EnumPriority.VERY_HIGH ) );
             prioritySubMenu.add( new PriorityAction( EnumPriority.HIGH ) );
             prioritySubMenu.add( new PriorityAction( EnumPriority.NORMAL ) );
             prioritySubMenu.add( new PriorityAction( EnumPriority.LOW ) );
-
+			prioritySubMenu.add( new PriorityAction( EnumPriority.VERY_LOW ) );
+			
             if ( advancedMode ) {
                 prioritySubMenu.add( new Separator() );
                 prioritySubMenu.add( new CustomPriorityAction( false ) );
@@ -531,14 +533,19 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         public PriorityAction( EnumPriority e ) {
             super( "", Action.AS_CHECK_BOX );
             enumPriority = e;
-
-            if ( e == EnumPriority.HIGH ) {
-                setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_HIGH" ) );
+			
+			
+			if ( e == EnumPriority.VERY_HIGH ) {
+				setText( G2GuiResources.getString( "TT_PRIO_Very_High" ).toLowerCase() );
+			} else if ( e == EnumPriority.HIGH ) {
+                setText( G2GuiResources.getString( "TT_PRIO_High" ).toLowerCase() );
             } else if ( e == EnumPriority.NORMAL ) {
-                setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_NORMAL" ) );
+                setText( G2GuiResources.getString( "TT_PRIO_Normal" ).toLowerCase() );
             } else if ( e == EnumPriority.LOW ) {
-                setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PRIORITY_LOW" ) );
-            }
+                setText( G2GuiResources.getString( "TT_PRIO_Low" ).toLowerCase() );
+            } else if ( e == EnumPriority.VERY_LOW ) {
+				setText( G2GuiResources.getString( "TT_PRIO_Very_Low" ).toLowerCase() );
+			}
         }
 
         public void run() {
@@ -686,6 +693,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.12  2003/10/12 19:43:12  zet
+very high & low priorities
+
 Revision 1.11  2003/10/12 15:58:29  zet
 rewrite downloads table & more..
 

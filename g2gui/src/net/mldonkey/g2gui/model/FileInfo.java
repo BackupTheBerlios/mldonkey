@@ -47,7 +47,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.65 2003/10/12 15:57:11 zet Exp $
+ * @version $Id: FileInfo.java,v 1.66 2003/10/12 19:42:59 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -347,8 +347,12 @@ public class FileInfo extends Parent implements Observer {
      * @return Priority as a string
      */
     public String getStringPriority() {
-        if ( priority > 0 )
+    	if ( priority > 19 ) 
+			return G2GuiResources.getString( "TT_PRIO_Very_High" ) + "(" + priority + ")" ;
+        else if ( priority > 0 )
             return G2GuiResources.getString( "TT_PRIO_High" ) + "(" + priority + ")" ;
+        else if ( priority < -19 )
+        	return G2GuiResources.getString( "TT_PRIO_Very_Low" ) + "(" + priority + ")";    
         else if ( priority < 0 )
             return G2GuiResources.getString( "TT_PRIO_Low" ) + "(" + priority + ")" ;
         else if ( priority == 0 )
@@ -724,10 +728,15 @@ public class FileInfo extends Parent implements Observer {
     public void sendPriority( EnumPriority enum ) {
        
         int newPriority;
+        
         if ( enum == EnumPriority.LOW )
             newPriority = -10;
         else if ( enum == EnumPriority.HIGH )
             newPriority = 10;
+        else if ( enum == EnumPriority.VERY_HIGH )
+        	newPriority = 20;
+        else if ( enum == EnumPriority.VERY_LOW )
+        	newPriority = -20;
         else
             newPriority = 0;
             
@@ -952,6 +961,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.66  2003/10/12 19:42:59  zet
+very high & low priorities
+
 Revision 1.65  2003/10/12 15:57:11  zet
 store active clients
 

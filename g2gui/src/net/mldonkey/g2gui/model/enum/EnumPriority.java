@@ -26,10 +26,14 @@ package net.mldonkey.g2gui.model.enum;
  * EnumPriority
  *
  *
- * @version $Id: EnumPriority.java,v 1.4 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: EnumPriority.java,v 1.5 2003/10/12 19:42:59 zet Exp $ 
  *
  */
 public class EnumPriority implements Enum {
+	/**
+	 * Very Low priority (value is -20)
+	 */
+	public static EnumPriority VERY_LOW = new EnumPriority( -20 );
 	/**
 	 * Low priority (value is -10)
 	 */
@@ -42,7 +46,10 @@ public class EnumPriority implements Enum {
 	 * High priority (value is 10)
 	 */
 	public static EnumPriority HIGH = new EnumPriority( 10 );
-
+	/**
+	 * Very High priority (value is 20)
+	 */
+	public static EnumPriority VERY_HIGH = new EnumPriority( 20 );
 	/**
 	 * @param i the int
 	 */
@@ -52,6 +59,9 @@ public class EnumPriority implements Enum {
 
 /*
 $Log: EnumPriority.java,v $
+Revision 1.5  2003/10/12 19:42:59  zet
+very high & low priorities
+
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
