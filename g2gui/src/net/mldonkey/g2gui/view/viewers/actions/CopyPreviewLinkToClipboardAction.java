@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Display;
  * CopyPreviewLinkToClipboardAction
  *
  * @author $user$
- * @version $Id: CopyPreviewLinkToClipboardAction.java,v 1.1 2004/03/25 19:17:18 psy Exp $ 
+ * @version $Id: CopyPreviewLinkToClipboardAction.java,v 1.2 2004/03/25 20:46:58 psy Exp $ 
  *
  */
 public class CopyPreviewLinkToClipboardAction extends Action {
@@ -61,13 +61,17 @@ public class CopyPreviewLinkToClipboardAction extends Action {
             if (fileIDs.length - 1 > i)
             	link += (SWT.getPlatform().equals("win32") ? "\r\n" : "\n");
 	    }
-	
-	    clipBoard.setContents(new Object[] { link }, new Transfer[] { TextTransfer.getInstance() });
+	    
+	    if (link != "" || link != null)
+	    	clipBoard.setContents(new Object[] { link }, new Transfer[] { TextTransfer.getInstance() });
 	    clipBoard.dispose();
 	}
 }
 /*
 $Log: CopyPreviewLinkToClipboardAction.java,v $
+Revision 1.2  2004/03/25 20:46:58  psy
+*** empty log message ***
+
 Revision 1.1  2004/03/25 19:17:18  psy
 added copy preview link to clipboard action
 
