@@ -26,6 +26,7 @@ import gnu.trove.TIntObjectIterator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
@@ -45,7 +46,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.14 2003/12/04 08:47:28 lemmy Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.15 2003/12/07 19:38:09 lemmy Exp $
  *
  */
 public class DownloadTableTreeContentProvider extends GTableTreeContentProvider implements Observer {
@@ -113,25 +114,21 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
         if (element instanceof FileInfoIntMap) {
             synchronized (element) {
                 FileInfoIntMap fileInfoIntMap = (FileInfoIntMap) element;
-                ArrayList list = new ArrayList();
+                List list = new ArrayList();
                 TIntObjectIterator it = fileInfoIntMap.iterator();
-
-                while (it.hasNext()) {
+               	int size = fileInfoIntMap.size();
+               	for ( ; size-- > 0;) {
                     it.advance();
-
                     FileInfo fileInfo = (FileInfo) it.value();
-
                     if (fileInfo.isInteresting()) {
                         fileInfo.deleteObserver(this);
                         fileInfo.addObserver(this);
                         list.add(fileInfo);
                     }
                 }
-
                 return list.toArray();
             }
         }
-
         return EMPTY_ARRAY;
     }
 
@@ -376,6 +373,9 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.15  2003/12/07 19:38:09  lemmy
+refactoring
+
 Revision 1.14  2003/12/04 08:47:28  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

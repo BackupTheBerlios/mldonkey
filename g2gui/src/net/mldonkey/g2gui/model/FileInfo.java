@@ -48,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.84 2003/12/04 08:47:25 lemmy Exp $
+ * @version $Id: FileInfo.java,v 1.85 2003/12/07 19:38:08 lemmy Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -378,19 +378,42 @@ public class FileInfo extends Parent implements Observer {
      * @return Priority as a string
      */
     public String getStringPriority() {
-        if (priority > 19)
-            return G2GuiResources.getString("TT_PRIO_Very_High") + "(" + priority + ")";
-        else if (priority > 0)
-            return G2GuiResources.getString("TT_PRIO_High") + "(" + priority + ")";
-        else if (priority < -19)
-            return G2GuiResources.getString("TT_PRIO_Very_Low") + "(" + priority + ")";
-        else if (priority < 0)
-            return G2GuiResources.getString("TT_PRIO_Low") + "(" + priority + ")";
-        else if (priority == 0)
-            return G2GuiResources.getString("TT_PRIO_Normal");
-        else
-
-            return "?" + priority;
+        StringBuffer buffer = new StringBuffer();
+    	if (priority > 19) {
+    		buffer.append(G2GuiResources.getString("TT_PRIO_Very_High"));
+    		buffer.append("(");
+    		buffer.append(priority);
+    		buffer.append(")");
+    	}
+        else if (priority > 0) {
+        	buffer.append(G2GuiResources.getString("TT_PRIO_High"));
+        	buffer.append("(");
+        	buffer.append(priority);
+        	buffer.append(")");
+        }
+        else if (priority < -19) {
+        	buffer.append(G2GuiResources.getString("TT_PRIO_Very_Low"));
+        	buffer.append("(");
+        	buffer.append(priority);
+        	buffer.append(")");
+        }
+        else if (priority < 0) {
+        	buffer.append(G2GuiResources.getString("TT_PRIO_Low"));
+        	buffer.append("(");
+        	buffer.append(priority);
+        	buffer.append(")");
+        }
+        else if (priority == 0) {
+        	buffer.append(G2GuiResources.getString("TT_PRIO_Normal"));
+        	buffer.append("(");
+        	buffer.append(priority);
+        	buffer.append(")");
+        }
+        else {
+        	buffer.append("?");
+        	buffer.append(priority);
+        }
+    	return buffer.toString();
     }
 
     /**
@@ -398,6 +421,20 @@ public class FileInfo extends Parent implements Observer {
      */
     public float getRate() {
         return rate;
+    }
+    
+    /**
+     * @return The rate this file is downloading in a textual Representation
+     */
+    public String getStringRate() {
+    	if ( state.getState() == EnumFileState.DOWNLOADING ) {
+    		if ( rate == 0 )
+    			return "-";
+    		else
+    			return df.format( rate / 1000f );
+    	} else {
+    		return state.getState().toString();
+    	}
     }
 
     /**
@@ -423,6 +460,28 @@ public class FileInfo extends Parent implements Observer {
         return clientInfoWeakMap.size();
     }
 
+    /**
+     * @return Number of sources in a textual representation
+     */
+    public String getStringSources() {
+    	int s = this.getSources();
+    	if (s == 0) 
+    		return "-";
+    	else {
+    		StringBuffer buffer = new StringBuffer();
+    		int a = activeSources;
+    		if ( a > 0 ) {
+    			buffer.append( s );
+    			buffer.append( "(" );
+    			buffer.append( a );
+    			buffer.append( ")" );
+    		}
+    		else
+    			buffer.append( s );
+    		return buffer.toString();
+    	}
+    }
+    
     /**
      * @return number of actively transferring sources
      */
@@ -986,6 +1045,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.85  2003/12/07 19:38:08  lemmy
+refactoring
+
 Revision 1.84  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

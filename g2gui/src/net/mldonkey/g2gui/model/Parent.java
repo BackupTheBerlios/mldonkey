@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -32,10 +33,12 @@ import net.mldonkey.g2gui.model.enum.EnumExtension;
  * Parent
  *
  *
- * @version $Id: Parent.java,v 1.8 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: Parent.java,v 1.9 2003/12/07 19:38:09 lemmy Exp $ 
  *
  */
 public abstract class Parent extends SimpleInformation {
+	// helper class for "rounding"
+	protected final DecimalFormat df = new DecimalFormat( "0.0" );
 	/**
 	 * The CoreCommunication parent
 	 */
@@ -109,6 +112,9 @@ public abstract class Parent extends SimpleInformation {
 
 /*
 $Log: Parent.java,v $
+Revision 1.9  2003/12/07 19:38:09  lemmy
+refactoring
+
 Revision 1.8  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

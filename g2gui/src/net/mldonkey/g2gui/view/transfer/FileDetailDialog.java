@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
-import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -56,11 +55,10 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.11 2003/12/04 08:47:32 lemmy Exp $
+ * @version $Id: FileDetailDialog.java,v 1.12 2003/12/07 19:38:09 lemmy Exp $
  *
  */
 public class FileDetailDialog extends DetailDialog {
-    private DecimalFormat df = new DecimalFormat("0.0");
     private FileInfo fileInfo;
     private Button fileActionButton;
     private Button fileCancelButton;
@@ -362,7 +360,7 @@ public class FileDetailDialog extends DetailDialog {
         updateLabel(clHash, fileInfo.getMd4().toUpperCase());
         updateLabel(clSize, fileInfo.getStringSize());
         updateLabel(clAge, fileInfo.getStringAge());
-        updateLabel(clSources, Integer.toString(fileInfo.getSources()));
+        updateLabel(clSources, fileInfo.getStringSources());
         updateLabel(clChunks,
             Integer.toString(fileInfo.getNumChunks()) + " / " +
             Integer.toString(fileInfo.getChunks().length()));
@@ -370,15 +368,7 @@ public class FileDetailDialog extends DetailDialog {
         updateLabel(clRelativeAvail, fileInfo.getRelativeAvail() + "%");
         updateLabel(clLast, fileInfo.getStringOffset());
         updateLabel(clPriority, fileInfo.getStringPriority());
-
-        if (fileInfo.getState().getState() == EnumFileState.PAUSED) {
-            updateLabel(clRate, G2GuiResources.getString("TT_Paused"));
-        } else if (fileInfo.getState().getState() == EnumFileState.QUEUED) {
-            updateLabel(clRate, G2GuiResources.getString("TT_Queued"));
-        } else {
-            updateLabel(clRate, df.format(fileInfo.getRate() / 1000f) + " KB/s");
-        }
-
+        updateLabel(clRate, fileInfo.getStringRate() + " KB/s");
         updateLabel(clETA, fileInfo.getStringETA());
     }
 
@@ -395,6 +385,9 @@ public class FileDetailDialog extends DetailDialog {
 
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.12  2003/12/07 19:38:09  lemmy
+refactoring
+
 Revision 1.11  2003/12/04 08:47:32  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

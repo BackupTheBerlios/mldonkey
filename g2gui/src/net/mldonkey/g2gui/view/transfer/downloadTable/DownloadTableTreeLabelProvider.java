@@ -42,11 +42,10 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.17 2003/12/04 08:47:28 lemmy Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.18 2003/12/07 19:38:09 lemmy Exp $
  *
  */
 public class DownloadTableTreeLabelProvider extends GTableLabelProvider implements IColorProvider {
-    
     private Color availableFileColor;
     private Color unAvailableFileColor; 
     private Color downloadedFileColor;
@@ -57,7 +56,6 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
     private Color rateAbove0Color;
 	
 	private boolean displayColors = true;
-    private DecimalFormat df = new DecimalFormat( "0.0" );
     private DecimalFormat dfp = new DecimalFormat( "0" );
 
 	public DownloadTableTreeLabelProvider(GView gViewer) {
@@ -68,7 +66,7 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
      * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
      */
     public Color getBackground( Object arg0 ) {
-        return null;
+        	return null;
     }
 
     /* (non-Javadoc)
@@ -192,36 +190,19 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 				   return fileInfo.getStringDownloaded();
 	
 			   case DownloadTableTreeView.PERCENT:
-				   return "" + dfp.format( fileInfo.getPerc() ) + "%";
+				   return dfp.format( fileInfo.getPerc() ) + "%";
 	
 			   case DownloadTableTreeView.SOURCES:
-			       	int s = fileInfo.getSources();
-				    if (s == 0) return "-";
-				    else {
-						int a =	fileInfo.getActiveSources();
-				        return "" + (a > 0 ? s + "(" + a + ")" : "" + s ) ;
-		   			}
-			       	 
-	
+			   	   return fileInfo.getStringSources();
+			   	
 			   case DownloadTableTreeView.AVAIL:
-				   return "" + fileInfo.getRelativeAvail() + "%";
+				   return fileInfo.getRelativeAvail() + "%";
 	
 			   case DownloadTableTreeView.RATE:
-	
-				   if ( fileInfo.getState().getState() == EnumFileState.PAUSED ) {
-					   return G2GuiResources.getString( "TT_Paused" );
-				   } else if ( fileInfo.getState().getState() == EnumFileState.QUEUED ) {
-					   return G2GuiResources.getString( "TT_Queued" );
-				   } else if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADED ) {
-					   return G2GuiResources.getString( "TT_Downloaded" );
-				   } else {
-					 	if (fileInfo.getRate() == 0) 
-					 		return "-";	 				   	
-					   return "" + df.format( fileInfo.getRate() / 1000f );
-				   }
+				   return fileInfo.getStringRate();
 	
 			   case DownloadTableTreeView.CHUNKS:
-				   return "" + fileInfo.getNumChunks();
+				   return new Integer(fileInfo.getNumChunks()).toString();
 	
 			   case DownloadTableTreeView.ETA:
 				   return fileInfo.getStringETA(); 
@@ -271,6 +252,9 @@ public class DownloadTableTreeLabelProvider extends GTableLabelProvider implemen
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.18  2003/12/07 19:38:09  lemmy
+refactoring
+
 Revision 1.17  2003/12/04 08:47:28  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
