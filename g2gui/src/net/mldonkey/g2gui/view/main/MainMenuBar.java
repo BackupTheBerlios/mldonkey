@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.13 2003/09/20 01:41:12 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.14 2003/09/23 01:06:51 zet Exp $ 
  *
  */
 public class MainMenuBar {
@@ -137,12 +137,26 @@ public class MainMenuBar {
 		subMenu = new Menu ( shell, SWT.DROP_DOWN );
 		menuItem.setMenu( subMenu );
 		
+			// Help>Homepage
+			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.addListener( SWT.Selection, 
+				new URLListener( "http://developer.berlios.de/projects/mldonkey/" )
+			);
+			menuItem.setText( "Homepage" );
+		
 			// Help>Feedback
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
 			menuItem.addListener( SWT.Selection, 
 				new URLListener( "http://mldonkey.berlios.de/modules.php?name=Forums&file=viewforum&f=9" )
 			);
 			menuItem.setText( "Feedback Forum" );
+			
+			// Help>Bugs
+			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.addListener( SWT.Selection, 
+				new URLListener( "http://developer.berlios.de/bugs/?group_id=610" )
+			);
+			menuItem.setText( "Bugs/Suggestions" );
 			
 			// Help>FAQ
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
@@ -151,13 +165,6 @@ public class MainMenuBar {
 					"http://openfacts.berlios.de/index-en.phtml?title=MLdonkey-World,_home_of_G2gui" )
 			);
 			menuItem.setText( "FAQ" );
-			
-			// Help>Bugs
-			menuItem = new MenuItem( subMenu, SWT.PUSH );
-			menuItem.addListener( SWT.Selection, 
-				new URLListener( "http://developer.berlios.de/bugs/?group_id=610" )
-			);
-			menuItem.setText( "Bugs" );
 	
 			// Help>About
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
@@ -189,6 +196,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.14  2003/09/23 01:06:51  zet
+add Homepage
+
 Revision 1.13  2003/09/20 01:41:12  zet
 *** empty log message ***
 
