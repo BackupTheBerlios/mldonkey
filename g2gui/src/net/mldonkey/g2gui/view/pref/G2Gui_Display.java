@@ -22,7 +22,8 @@ public class G2Gui_Display extends PreferencePage  {
 	private ExtendedColorFieldEditor consoleBackground, consoleForeground,
 				consoleInputBackground, consoleInputForeground;
 	private ExtendedFontFieldEditor2 consoleFontData;
-	private BooleanFieldEditor displayChunkGraphs, displayGridLines;
+	private BooleanFieldEditor displayChunkGraphs, displayGridLines,
+							tableCellEditors;
 	private IntegerFieldEditor displayBuffer;
 	private int columns = 0;
 	
@@ -32,6 +33,7 @@ public class G2Gui_Display extends PreferencePage  {
 		
 		preferenceStore.setDefault("displayChunkGraphs", true);
 		preferenceStore.setDefault("displayGridLines", true);
+		preferenceStore.setDefault("tableCellEditors", false);
 		preferenceStore.setDefault("displayBuffer", 0);
 	}
 	
@@ -67,6 +69,10 @@ public class G2Gui_Display extends PreferencePage  {
 		displayGridLines = new BooleanFieldEditor("displayGridLines", "Display grid lines", shell);
 		setupEditor(displayGridLines);
 		
+		tableCellEditors = new BooleanFieldEditor("tableCellEditors", "Activate table cell editors", shell);
+		setupEditor(tableCellEditors);
+		
+		
 		displayBuffer = new IntegerFieldEditor("displayBuffer", "GUI update buffer (0-60 seconds)", shell);
 		displayBuffer.setValidRange(0,60);
 		setupEditor(displayBuffer);
@@ -100,6 +106,7 @@ public class G2Gui_Display extends PreferencePage  {
 		setHorizontalSpan(consoleInputBackground);
 		displayChunkGraphs.fillIntoGrid(controlshell, columns);
 		displayGridLines.fillIntoGrid(controlshell, columns);
+		tableCellEditors.fillIntoGrid(controlshell, columns);
 		displayBuffer.fillIntoGrid(controlshell, columns);
 		consoleFontData.adjustForNumColumns( columns );
 	}
@@ -130,6 +137,7 @@ public class G2Gui_Display extends PreferencePage  {
 			consoleFontData.store();
 			displayChunkGraphs.store();
 			displayGridLines.store();
+			tableCellEditors.store();
 			displayBuffer.store();
 		}	
 	 	return super.performOk();

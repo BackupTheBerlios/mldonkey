@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.2 2003/08/06 17:16:09 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.3 2003/08/06 19:31:06 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -70,6 +70,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	private DownloadTableTreeMenuListener tableTreeMenuListener;
 	private static boolean displayChunkGraphs;
 	private CoreCommunication mldonkey;
+	private CellEditor[] cellEditors;
 	
 	private final String[] COLUMN_LABELS =
 		{	"TT_Download_Id",
@@ -107,7 +108,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			SWT.RIGHT
 		};
 		
-	// set to 0 to turn off table editors
 	private static int CHUNKS_COLUMN = 8;
 		
 	/**
@@ -141,10 +141,8 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		table.setLinesVisible( loadBoolean("displayGridLines") );
 		table.setHeaderVisible( true );
 		
-		CellEditor[] cellEditors = new CellEditor[COLUMN_LABELS.length];
+		cellEditors = new CellEditor[COLUMN_LABELS.length];
 		cellEditors[2] = new TextCellEditor(table);
-		tableTreeViewer.setCellEditors(cellEditors);
-		tableTreeViewer.setCellModifier(this);
 				
 		for (int i = 0; i < COLUMN_LABELS.length; i++) {
 			TableColumn tableColumn = new TableColumn(table, COLUMN_ALIGNMENT[ i ]);
@@ -181,8 +179,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 								 
 		}
 		
-		
-		
 		DownloadTableTreeLabelProvider treeLabelProvider = new DownloadTableTreeLabelProvider();
 		tableTreeViewer.setLabelProvider(treeLabelProvider);
 		
@@ -209,8 +205,11 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		tableTreeViewer.setInput( mldonkey.getFileInfoIntMap() );
 		mldonkey.getFileInfoIntMap().addObserver( tableTreeContentProvider );
 		tableTreeContentProvider.updateAllEditors();
-	
-				
+		
+		if (loadBoolean("tableCellEditors")) {
+			tableTreeViewer.setCellEditors(cellEditors);
+			tableTreeViewer.setCellModifier(this);
+		}		
 	}
 	
 	public boolean canModify(Object element, String property) {
@@ -233,8 +232,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			
 	}
 	
-	
-	
 	public static boolean displayChunkGraphs() {
 		return displayChunkGraphs;
 	}
@@ -244,26 +241,42 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	}
 	
 	static boolean loadBoolean (String preferenceString ) {
-				PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
-					try { preferenceStore.load(); } catch ( IOException e ) { }		
+		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
+			try { preferenceStore.load(); } catch ( IOException e ) { }		
 		
-			if (preferenceStore.contains( preferenceString ))
-				return preferenceStore.getBoolean( preferenceString );
-			return true;
+		
+		preferenceStore.setDefault("displayGridLines", true);
+		preferenceStore.setDefault("tableCellEditors", false);
+				
+		if (preferenceStore.contains( preferenceString ))
+			return preferenceStore.getBoolean( preferenceString );
+		return true;
 	}	
 	
 	static int  loadInteger(String preferenceString ) {
 		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
-					try { preferenceStore.load(); } catch ( IOException e ) { }		
+			try { preferenceStore.load(); } catch ( IOException e ) { }		
+	
+		preferenceStore.setDefault("displayBuffer", 0);
 		
-			if (preferenceStore.contains( preferenceString ))
-				return preferenceStore.getInt( preferenceString );
-			return 1;
+		if (preferenceStore.contains( preferenceString ))
+			return preferenceStore.getInt( preferenceString );
+		return 0;
 	}
 
 	public void updateDisplay() {
 		table.setLinesVisible( loadBoolean("displayGridLines") );
 		boolean newChunkValue = loadBoolean("displayChunkGraphs");
+		
+		if (loadBoolean("tableCellEditors")) {
+			tableTreeViewer.setCellEditors(cellEditors);
+			tableTreeViewer.setCellModifier(this);
+		} else {
+			tableTreeViewer.setCellEditors(null);
+			tableTreeViewer.setCellModifier(null);		
+		}
+		
+		
 		tableTreeContentProvider.closeAllEditors();
 		tableTreeViewer.refresh();
 		displayChunkGraphs = newChunkValue;
@@ -277,6 +290,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.3  2003/08/06 19:31:06  zet
+configurable cell editors
+
 Revision 1.2  2003/08/06 17:16:09  zet
 cell modifiers
 
