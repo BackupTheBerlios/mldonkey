@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.82 2003/11/02 21:13:53 zet Exp $
+ * @version $Id: MainTab.java,v 1.83 2003/11/05 01:51:35 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -394,6 +394,7 @@ public class MainTab implements ShellListener {
 		public ErrorDialog( Shell shell, String string) {
 		   super(shell);
 		   this.string = string;
+		   setShellStyle(getShellStyle() | SWT.RESIZE);
 		}
 
 		protected void configureShell(Shell newShell) {
@@ -402,7 +403,6 @@ public class MainTab implements ShellListener {
 		    shell.setSize(400,300);
 		    newShell.setText("Boog Ditekted!");
 		}
-		
 		protected Control createDialogArea(Composite parent) {
 			Composite composite = (Composite)super.createDialogArea(parent);
 			
@@ -448,6 +448,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.83  2003/11/05 01:51:35  zet
+resizable error dialog
+
 Revision 1.82  2003/11/02 21:13:53  zet
 fox workaround
 
