@@ -34,7 +34,7 @@ import org.eclipse.jface.viewers.Viewer;
  * ServerTableSorter
  *
  *
- * @version $Id: ServerTableSorter.java,v 1.9 2003/12/01 16:39:25 zet Exp $
+ * @version $Id: ServerTableSorter.java,v 1.10 2003/12/01 16:39:41 zet Exp $
  *
  */
 public class ServerTableSorter extends GSorter {
@@ -43,8 +43,8 @@ public class ServerTableSorter extends GSorter {
     }
 
     /* (non-Javadoc)
-             * @see net.mldonkey.g2gui.view.viewers.GSorter#sortOrder(int)
-             */
+     * @see net.mldonkey.g2gui.view.viewers.GSorter#sortOrder(int)
+     */
     public boolean sortOrder(int columnIndex) {
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ServerTableView.NETWORK:
@@ -148,6 +148,9 @@ public class ServerTableSorter extends GSorter {
 
 /*
 $Log: ServerTableSorter.java,v $
+Revision 1.10  2003/12/01 16:39:41  zet
+*** empty log message ***
+
 Revision 1.9  2003/12/01 16:39:25  zet
 set default sort order for specific columns
 
