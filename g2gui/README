@@ -1,0 +1,79 @@
+MLdonkey G2gui
+--------------
+MLdonkey G2gui is a graphical frontend to the MLdonkey Core[1].
+It is written in java, makes use of SWT and other modern efficient libs
+and is fully gcj[2] compliant. It aims to replace the old "mlgui" in the future.
+MLdonkey is a multi-network P2P client application.
+
+G2gui comes in several flavours: Additionally to the source for compiling 
+it yourself, natively compiled (win32, linux, ...) and java bytecode 
+packages are available. 
+
+Compiling it from sources is recommended if you have a recent gcj 
+(which is part of the Gnu Compiler Colletion), but a version bigger
+than 3.2 is strictly required. If compilation fails, using natively 
+precompiled binaries is recommended. In case they also refuse to run, 
+stick to the java bytecode packages.
+
+Under linux you can choose between gtk2 and motif builds. While gtk2 is prettier,
+some people prefer motif over gtk2 due to its slightly higher responsiveness.
+You don't have any special choice under windows and MacOS.
+
+
+
+Compiling from Sources
+----------------------
+Unpack the sourcecode ball and do the following:
+$ ./configure --enable-batch
+$ make 
+
+G2gui requires some external libraries which will be automatically downloaded from
+our ftp server if you specify "--enable-batch". The casual user won't have them by
+default and configure will tell you to enable this switch to get them.
+
+
+
+Binary Packages
+---------------
+Win32 packages are statically compiled and should run out of the box on any
+decent windows system. Simply unzip the archive and start g2gui.exe.
+
+Linux packages cannot be statically compiled at the moment, so we recommend to
+check the shared ones. We try to make G2gui available for many distributions.
+To run it, simply untar the archive and type ./g2gui.
+
+
+
+Java Packages
+-------------
+g2gui-jar packages contain all end everyting, except for a java VM, 
+to run MLdonkey G2gui in its byteform. They should run without problems
+with any Sun j2re version 1.4x and higher. We've also reports of people
+successfully using the "Blackdown" kit with G2gui. "Kaffee" seems to 
+produce some memory related problems, but we've not verified this yet.
+
+* Under linux, simply run ./g2gui.sh
+* If you are under windows, run g2gui.bat
+
+
+
+Bug Reports
+-----------
+In case you found a bug, please visit our Bug Report System[4]. Thank you!
+
+
+Links and Homepages
+-------------------
+
+[1] http://mldonkey.net/
+MLdonkey Core's place, you propably need this.
+
+[2] http://gcc.gnu.org/java/
+A free open source Java compiler.
+
+[3] http://developer.berlios.de/projects/mldonkey/ 	
+    http://mldonkey.berlios.de/
+MLdonkey G2gui Project Page and News
+
+[4] http://developer.berlios.de/bugs/?group_id=610
+MLdonkey G2gzu Bug Report System
