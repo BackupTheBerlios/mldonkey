@@ -23,6 +23,9 @@
 package net.mldonkey.g2gui.view;
 
 
+import java.util.Observable;
+import java.util.Observer;
+
 import net.mldonkey.g2gui.comm.*;
 import net.mldonkey.g2gui.model.*;
 import org.eclipse.swt.SWT;
@@ -35,10 +38,10 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.3 2003/06/25 21:28:16 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.4 2003/06/27 10:36:17 lemmstercvs01 Exp $ 
  *
  */
-public class ConsoleTab extends G2guiTab implements InterFaceUI,ControlListener {	
+public class ConsoleTab extends G2guiTab implements Observer, ControlListener {	
 	private CoreCommunication core;
 	private Composite parent;
 	private Text infoDisplay;
@@ -52,8 +55,7 @@ public class ConsoleTab extends G2guiTab implements InterFaceUI,ControlListener 
 		super(gui);
 		this.button.setText("Console");
 		createContents( this.content );
-		core = gui.getCore();
-		registerListener( core );
+		( ( Core ) gui.getCore() ).addObserver( this );
 	}
 	
 	/* (non-Javadoc)
@@ -63,69 +65,36 @@ public class ConsoleTab extends G2guiTab implements InterFaceUI,ControlListener 
 		this.parent = parent;
 		parent.setLayout(null);
 		parent.addControlListener(this);		
-		registerListener( Main.getMldonkey() );			
-				/*
-				 * Adding the Console-Display Text-field
-				 */			
-				infoDisplay = new Text(parent,SWT.BORDER|SWT.MULTI|SWT.H_SCROLL|SWT.V_SCROLL |SWT.READ_ONLY);
-				input = new Text(parent, SWT.SINGLE | SWT.BORDER);					
-					//Send command to core
-					input.addKeyListener(new KeyAdapter() {
-						  public void keyPressed(KeyEvent e) {
-							if ( e.character == SWT.CR ) {
-								infoDisplay.setText(infoDisplay.getText()+input.getText()+"\n");
-								String[] command = new String[1];
-								command[0]=input.getText();
-								( new EncodeMessage( Message.S_CONSOLEMSG,command ) ).sendMessage( ( ( Core ) core ).getConnection() );
-								input.setText("");
-							}
-						  }
-				});	
-		
-			}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.snippets.InterFaceUI#notify(net.mldonkey.g2gui.model.Information)
-	 */
-	public void notify(Information anInformation) {
-		if (anInformation instanceof ConsoleMessage )
-		{
-			ConsoleMessage aConsoleMessage = (ConsoleMessage)anInformation;
-			consoleMessage = aConsoleMessage.getConsoleMessage();	
-			aConsoleMessage.reset();		
-			content.getDisplay().syncExec( new Runnable () {
-				public void run() {	
-					infoDisplay.append(consoleMessage);
-					infoDisplay.update();			
-				}
-			});
-			
-			
-			
-		}
-		/* else: we are not responsible for this Information to be displayed*/
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.widgets.InterFaceUI#registerListener(net.mldonkey.g2gui.comm.CoreCommunication)
-	 */
-	public void registerListener(CoreCommunication mldonkey) {
-		mldonkey.registerListener(this);
-		/*getting first payload of infos)*/
+			/*
+			 * Adding the Console-Display Text-field
+			 */			
+			infoDisplay = new Text(parent,SWT.BORDER|SWT.MULTI|SWT.H_SCROLL|SWT.V_SCROLL |SWT.READ_ONLY);
+			input = new Text(parent, SWT.SINGLE | SWT.BORDER);					
+			//Send command to core
+			input.addKeyListener(new KeyAdapter() {
+				public void keyPressed(KeyEvent e) {
+					if ( e.character == SWT.CR ) {
+						infoDisplay.setText(infoDisplay.getText()+input.getText()+"\n");
+						String[] command = new String[1];
+						command[0]=input.getText();
+						( new EncodeMessage( Message.S_CONSOLEMSG,command ) ).sendMessage( ( ( Core ) core ).getConnection() );
+						input.setText("");
+					}
+		  		}		
+			});	
 	}
 	
 	public void handleEvent(Event event) {
 		mainWindow.setActive(this);
 		infoDisplay.append(core.getConsoleMessage().getConsoleMessage());
 		core.getConsoleMessage().reset();
-			}
+	}
 	
-
-/*
- * Everything below here is a private kind of LayoutManager, only for this tab,
- * as none of the present ones did what i wanted it to do
- * 
- */
+	/*
+	 * Everything below here is a private kind of LayoutManager, only for this tab,
+	 * as none of the present ones did what i wanted it to do	
+	 * 
+	 */
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.ControlListener#controlMoved(org.eclipse.swt.events.ControlEvent)
 	 */
@@ -143,17 +112,33 @@ public class ConsoleTab extends G2guiTab implements InterFaceUI,ControlListener 
 			this.infoDisplay.setBounds(0,0,rect.width,(rect.height-inputheight));
 			this.input.setBounds(0,(rect.height-inputheight),rect.width,inputheight);			
 		}
-	
-			
-		
 	}
-	
 
-
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable o, Object arg) {
+		if (arg instanceof ConsoleMessage )
+		{
+			ConsoleMessage aConsoleMessage = (ConsoleMessage)arg;
+			consoleMessage = aConsoleMessage.getConsoleMessage();	
+			aConsoleMessage.reset();		
+			content.getDisplay().syncExec( new Runnable () {
+				public void run() {	
+					infoDisplay.append(consoleMessage);
+					infoDisplay.update();			
+				}
+			});
+		}
+		/* else: we are not responsible for this Information to be displayed*/
+	}
 }
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.4  2003/06/27 10:36:17  lemmstercvs01
+changed notify to observer/observable
+
 Revision 1.3  2003/06/25 21:28:16  dek
 cosmetic change, made console-output read-only
 
