@@ -42,7 +42,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
@@ -51,7 +50,7 @@ import org.eclipse.swt.events.DisposeListener;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.10 2003/10/16 19:58:03 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.11 2003/10/16 23:56:59 zet Exp $
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener, DisposeListener {
@@ -378,32 +377,25 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
     }
     
     /**
-     * ToggleClientsAction - nice and ugly
+     * ToggleClientsAction
      */
 	private class ToggleClientsAction extends Action {
-
-	   private SashForm sashForm;
-	   private boolean show;
 		
 	   public ToggleClientsAction( ) {
-	   		super();
-	   		sashForm = (SashForm) tableTreeViewer.getTableTree().getTable().getParent().getParent().getParent().getParent();
-			show = (sashForm.getWeights()[1] == 0);
-		    setText( (show ? G2GuiResources.getString( "MISC_SHOW" ) : G2GuiResources.getString( "MISC_HIDE") ) + " " + G2GuiResources.getString( "TT_Clients") );
-	  		setImageDescriptor( show ? G2GuiResources.getImageDescriptor( "plus" ) : G2GuiResources.getImageDescriptor( "minus" )  );
+			super();
+			if (downloadTableTreeViewer.clientsDisplayed() ) {
+				setText( G2GuiResources.getString( "MISC_HIDE" ) + G2GuiResources.getString( "TT_Clients") );
+				setImageDescriptor( G2GuiResources.getImageDescriptor( "minus" ) );
+			} else {
+				setText( G2GuiResources.getString( "MISC_SHOW" ) + G2GuiResources.getString( "TT_Clients") );
+				setImageDescriptor( G2GuiResources.getImageDescriptor( "plus" ) );
+			}
 	   }
 
 	   public void run() {
-	   	
-	   		SashForm sashForm = (SashForm) tableTreeViewer.getTableTree().getTable().getParent().getParent().getParent().getParent();
-	   		if ( show ) {
-		   		sashForm.setWeights(new int[] { 2, 1 } );
-	   		} else {
-				sashForm.setWeights(new int[] { 1, 0 } );
-				downloadTableTreeViewer.updateClientsTable( false );
-	   		}
+			downloadTableTreeViewer.toggleClientsTable();
 	   }
-   }
+	}
     /**
      * FileStateFilterAction
      */
@@ -616,6 +608,9 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.11  2003/10/16 23:56:59  zet
+not much
+
 Revision 1.10  2003/10/16 19:58:03  zet
 icons
 

@@ -29,8 +29,8 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 import net.mldonkey.g2gui.view.transfer.CustomTableTreeViewer;
-import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
+import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -42,6 +42,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.DisposeEvent;
@@ -50,7 +51,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.9 2003/10/16 19:58:03 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.10 2003/10/16 23:56:44 zet Exp $
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListener {
@@ -117,7 +117,6 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
     private CustomTableTreeViewer tableTreeViewer;
     private TableTree tableTree;
     private Table table;
-    private Shell shell;
     private DownloadTableTreeSorter tableTreeSorter;
     private DownloadTableTreeContentProvider tableTreeContentProvider;
     private DownloadTableTreeLabelProvider tableTreeLabelProvider;
@@ -128,8 +127,9 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
     private boolean manualDispose = false;
     private CoreCommunication mldonkey;
     private CellEditor[] cellEditors = null;
-    private CustomTableViewer clientTableViewer;
+    private ClientTableViewer clientTableViewer;
     private String columnIDs;
+    private Composite parent;
 
     /**
      * Creates a new Viewer inside the composite parent
@@ -137,9 +137,9 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
      * @param mldonkey
      * @param page
      */
-    public DownloadTableTreeViewer( Composite parent, CustomTableViewer clientTableViewer, final CoreCommunication mldonkey, TransferTab page ) {
+    public DownloadTableTreeViewer( Composite parent, ClientTableViewer clientTableViewer, final CoreCommunication mldonkey, TransferTab page ) {
         this.clientTableViewer = clientTableViewer;
-        this.shell = parent.getShell();
+        this.parent = parent;
         this.mldonkey = mldonkey;
 
 		advancedMode = PreferenceLoader.loadBoolean( "advancedMode" );
@@ -393,6 +393,30 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
     public void updateClientsTable( boolean b ) {
         tableTreeMenuListener.updateClientsTable( b );
     }
+    
+    /**
+     * @return boolean
+     */
+    public boolean clientsDisplayed() {
+    	if (clientTableViewer != null) {
+    		SashForm sashForm = (SashForm) parent.getParent().getParent();
+			return sashForm.getWeights()[1] != 0;
+    	} else {
+    		return false;
+    	}
+    }
+	
+	public void toggleClientsTable() {
+		if (clientTableViewer != null) {
+			SashForm sashForm = (SashForm) parent.getParent().getParent();
+			if ( clientsDisplayed() ) {
+				sashForm.setWeights(new int[] { 1, 0 } );
+				updateClientsTable( false );
+			} else {
+				sashForm.setWeights(new int[] { 2, 1 } );
+			}					
+		}
+	}	
 
     /* (non-Javadoc)
     * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
@@ -420,6 +444,9 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.10  2003/10/16 23:56:44  zet
+not much
+
 Revision 1.9  2003/10/16 19:58:03  zet
 icons
 

@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.72 2003/10/16 21:22:32 zet Exp $
+ * @version $Id: TransferTab.java,v 1.73 2003/10/16 23:56:53 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -130,7 +130,7 @@ public class TransferTab extends GuiTab {
         downloadViewForm.setContent( downloadComposite );
         createUploads( mainSashForm );
         downloadTableTreeViewer =
-            new DownloadTableTreeViewer( downloadComposite, (clientTableViewer != null ? clientTableViewer.getTableViewer() : null ), mldonkey, this );
+            new DownloadTableTreeViewer( downloadComposite,  clientTableViewer, mldonkey, this );
         popupMenuDL.addMenuListener( new DownloadPaneMenuListener( downloadTableTreeViewer.getTableTreeViewer(),
                                                                  mldonkey, downloadTableTreeViewer ) );
         mainSashForm.setWeights( new int[] { 1, 1 } );
@@ -155,8 +155,6 @@ public class TransferTab extends GuiTab {
 		ToolBar downloadsToolBar = new ToolBar( parentViewForm, SWT.RIGHT | SWT.FLAT );
 		ToolItem toolItem;
 		
-		
-		
 		toolItem = new ToolItem( downloadsToolBar, SWT.NONE );
 		toolItem.setToolTipText( G2GuiResources.getString( "TT_D_TT_COMMIT_ALL" ) );
 		toolItem.setImage( G2GuiResources.getImage( "commit" ) );
@@ -173,13 +171,7 @@ public class TransferTab extends GuiTab {
 			toolItem.setImage( G2GuiResources.getImage( "split-table" ) );
 			toolItem.addSelectionListener( new SelectionAdapter() {
 					 public void widgetSelected( SelectionEvent s ) {
-							SashForm sashForm = (SashForm) downloadParent;
-						if (sashForm.getWeights()[1] == 0) {
-							sashForm.setWeights( new int[] { 2, 1 } );
-						} else {
-							sashForm.setWeights( new int[] { 1, 0 } );
-							downloadTableTreeViewer.updateClientsTable( false );
-						}
+					 		downloadTableTreeViewer.toggleClientsTable();
 					 }
 				 } );	
 		}	 
@@ -416,6 +408,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.73  2003/10/16 23:56:53  zet
+not much
+
 Revision 1.72  2003/10/16 21:22:32  zet
 toggle clients icon
 
