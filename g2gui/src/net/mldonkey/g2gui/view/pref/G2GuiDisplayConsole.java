@@ -24,13 +24,12 @@ package net.mldonkey.g2gui.view.pref;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * G2GuiDisplayConsole
  *
- * @version $Id: G2GuiDisplayConsole.java,v 1.2 2003/10/31 23:33:01 zet Exp $ 
+ * @version $Id: G2GuiDisplayConsole.java,v 1.3 2003/11/01 17:26:55 zet Exp $ 
  *
  */
 public class G2GuiDisplayConsole extends PreferencePage {
@@ -74,7 +73,6 @@ public class G2GuiDisplayConsole extends PreferencePage {
 				G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_IFG" ),
 				composite ) );
 		
-		if (!SWT.getPlatform().equals("fox")) 
 		setupEditor( 
 			new ExtendedFontFieldEditor2( 
 				"consoleFontData",
@@ -88,6 +86,9 @@ public class G2GuiDisplayConsole extends PreferencePage {
 
 /*
 $Log: G2GuiDisplayConsole.java,v $
+Revision 1.3  2003/11/01 17:26:55  zet
+remove fox exclusion
+
 Revision 1.2  2003/10/31 23:33:01  zet
 disable font selector on "fox"
 
