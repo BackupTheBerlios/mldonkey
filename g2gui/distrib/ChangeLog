@@ -1,0 +1,25 @@
+2003/09/16: lemmy
+	* Statusline: Dont change the rightclick menu when switching between modes [bug #912]
+2003/09/15: Dek
+    * Preferences: renamed "General" / "Other" to "Advanced" 
+      and put it on the end of the list (only visible in advanced-mode)
+2003/09/15: lemmy
+	* Server: Save column width [bug #864]
+	* Server: Show ips in correct order [bug #883]
+	* Server: Show all connected servers (FT/Gnut/Gnut2) [bug #904]
+			  (enable in preference)
+	* Server: Update statusline text only on active window
+	* Statusline: Show correct num of servers [bug #869]
+	* Statusline: Display proper tooltip for network items
+	* Search: fix crash on AdvancedSearch [bug #886]
+	* Search: Reset state of canceled downloads from search [bug #908]
+2003/09/15: z
+	* Main: Add menuItem: File>Kill core 
+	* Console: Add rightClick menuItems: SelectAll & Clear
+	* Transfer: Add relative availability % [#866]
+	* Transfer: Add table update delay option
+	* Transfer: Add FileDetail chunk graphs for all active networks	
+	* Transfer: Fix FileDetail buttons [#897], move header menu
+	* Transfer: Fix display of files >2gb [#916]
+	* Statistics: Add header doubleClick to maximize a graph [#916]
+	* Win TrayIcon: continue updating toolTip UL/DL rates while gui is visible
