@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.54 2003/12/07 19:36:54 lemmy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.55 2003/12/23 03:40:33 psy Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -76,6 +76,7 @@ public class PreferenceLoader {
 
     public static void initialize( String file ) throws IOException {
     	if ( preferenceStore == null ) {
+    		System.out.println("Trying to use preferences: " + file);
     		preferenceStore = new PreferenceStore( file );
     	}
     	
@@ -83,9 +84,10 @@ public class PreferenceLoader {
     		preferenceStore.load();
     	}
     	catch ( IOException e ) {
-    		// no pref file is created -> lets create one (with the directory
+    		// no pref file is created -> lets create one (including all needed directories)
     		new File( new File( file ).getParent() ).mkdirs();
     		preferenceStore.save();
+    		System.out.println("Created new configfile.");
     	}
     	preferenceStore = (PreferenceStore) setDefaults( preferenceStore );
     }
@@ -368,6 +370,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.55  2003/12/23 03:40:33  psy
+minor verbosity increase
+
 Revision 1.54  2003/12/07 19:36:54  lemmy
 [Bug #1162] Search tab's pane position always reset to default
 
@@ -502,7 +507,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates
