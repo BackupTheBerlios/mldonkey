@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.28 2003/07/06 19:22:27 dek Exp $ 
+ * @version $Id: Gui.java,v 1.29 2003/07/06 19:25:45 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -361,7 +361,7 @@ public class Gui implements IG2gui, Listener {
 		pageContainerLayout.topControl = activatedTab.getContent();
 		//activatedTab.getContent().setVisible( true );
 		pageContainer.layout();		
-		activeTab = activatedTab;	
+		activeTab = activatedTab;		
 	} 
 
 	/* ( non-Javadoc )
@@ -435,6 +435,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.29  2003/07/06 19:25:45  dek
+*** empty log message ***
+
 Revision 1.28  2003/07/06 19:22:27  dek
 *** empty log message ***
 
