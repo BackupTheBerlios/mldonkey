@@ -35,10 +35,10 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.8 2003/06/13 13:09:45 dek Exp $ 
+ * @version $Id: Core.java,v 1.9 2003/06/13 15:41:33 dek Exp $ 
  *
  */
-public class Core extends Thread {
+public class Core {
 	/**
 	 * 
 	 */
@@ -93,48 +93,44 @@ public class Core extends Thread {
 	 * run()
 	 * starts the Core and begin receiving messages	 * 
 	 */
-	public synchronized void  run() {
-		this.connect();
-		
+	public void  run() {
+		this.connect();		
 		MessageBuffer messageBuffer = new MessageBuffer();		
 		int messageLength;
+		int position=0;
 		short opCode;		
 		InputStream i;
 		try {
-			i = connection.getInputStream();
-			BufferedInputStream bufferstream = new BufferedInputStream(i);		
-		byte[] content;
-		 		
-		while ( connected ) {			
-			/* getting length of message */
-			messageLength = Message.readInt32( i );
-			System.out.print("running: momentane Länge: "+messageLength+"\n");
-				content = new byte[messageLength];
-				//bufferstream.read(content,0,messageLength);
-				while (i.available()<messageLength) {
-					System.out.println("*\n*\n*\n*\n*\n*\n*\n*\n*\nstream buffer underrun: waiting....*\n*\n*\n*\n*\n*\n*\n*\n");
-					try {
-						wait();
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				notify();
-					}									
-				i.read(content,0,messageLength);						
-				messageBuffer.setBuffer(content);
-				opCode = messageBuffer.readInt16();
-				/* decode the message content */			
-				this.decodeMessage( opCode, messageBuffer);
-						
-		}
+				i = connection.getInputStream();
 			
+			BufferedInputStream bufferstream = new BufferedInputStream(i);		
+			byte[] content;
+		 		
+			while ( connected ) {											
+					/* getting length of message */
+						messageLength = Message.readInt32( i );							
+						content = new byte[messageLength];
+						position=0;
+						/* read out the message from stream, re-read if no bytes are waiting, 
+						 * untill message is completly read (thx to Jmoule for this idea ;-)
+						 */ 
+						while (position<messageLength)
+							 position+=i.read(content,position,(int)messageLength-position);
+						position=0;					
+						messageBuffer.setBuffer(content);
+						opCode = messageBuffer.readInt16();
+						/* decode the message content */			
+						this.decodeMessage( opCode, messageBuffer);
+								
+			}			
 		} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}					
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}			
+		}
+					
 		
-	}
+	
 
 	/**
 	 * @param opcode
@@ -228,7 +224,7 @@ public class Core extends Thread {
 					 * Payload:
 					 * a List of running Downloads (FileInfo)
 					 */
-					 //this.fileInfoList.readStream( messageBuffer );
+					 this.fileInfoList.readStream( messageBuffer );
 					// this.requestFileInfoList();
 					 break;
 					 
@@ -255,6 +251,9 @@ public class Core extends Thread {
 
 /*
 $Log: Core.java,v $
+Revision 1.9  2003/06/13 15:41:33  dek
+Jippieh, problem finally solved. Thx to Jmoule for the inspiration
+
 Revision 1.8  2003/06/13 13:09:45  dek
 including many debug-output
 
