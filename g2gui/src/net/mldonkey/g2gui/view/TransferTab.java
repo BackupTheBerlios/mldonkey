@@ -23,14 +23,19 @@
 package net.mldonkey.g2gui.view;
 
 import gnu.trove.TIntObjectIterator;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.InfoIntMap;
 import net.mldonkey.g2gui.model.Information;
+import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.view.download.FileInfoTableContentProvider;
+import net.mldonkey.g2gui.view.download.FileInfoTableLabelProvider;
+import net.mldonkey.g2gui.view.download.FileInfoTableViewerSorter;
 
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -41,12 +46,12 @@ import org.eclipse.swt.widgets.TableItem;
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.2 2003/06/25 00:58:23 lemmstercvs01 Exp $ 
+ * @version $Id: TransferTab.java,v 1.3 2003/06/25 18:35:36 lemmstercvs01 Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements InterFaceUI {
 
-	private Table table;
+	private TableViewer table;
 
 	/**
 	 * @param gui gui the parent Gui
@@ -56,7 +61,7 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 		this.button.setText( "Transfer" );
 		createContents( this.content );
 
-		this.registerListener( Main.getMldonkey() );
+		this.registerListener( gui.getCore() );
 	}
 
 	/**
@@ -64,23 +69,24 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 	 * @param content The Composite to display in
 	 */
 	protected void createContents( Composite content ) {
-		table = new Table( content, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
-		table.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-		table.setLinesVisible( false );
-		table.setHeaderVisible( true );
+		table = new TableViewer( content, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
 		
-		String[] titles = { "ID", "Filename", "Rate", "Downloaded", "Size", };
-		for ( int i = 0; i < titles.length; i++ ) {
-			TableColumn column = new TableColumn( table, SWT.NULL );
-			column.setText( titles [ i ] );
-		}
-		
-		// Row in table 
-		for ( int i = 0; i < titles.length; i++ ) {
-			table.getColumn( i ).pack();
-		}
+		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+		table.getTable().setLinesVisible( false );
+		table.getTable().setHeaderVisible( true );
 
-		table.setSize( table.computeSize( 750, 500 ) );
+		table.setContentProvider( new FileInfoTableContentProvider() );
+		table.setLabelProvider( new FileInfoTableLabelProvider() );
+		table.setSorter( new FileInfoTableViewerSorter() );
+		
+		String[] aString = { "ID", "Name", "Rate", "Downloaded", "Size" };
+		int[] anInt = { 25, 300, 40, 70, 70 };
+		TableColumn column = null;
+		for ( int i = 0; i < aString.length; i++ ) {
+			column = new TableColumn(table.getTable(), SWT.LEFT);
+			column.setText( aString[ i ] );
+			column.setWidth( anInt[ i ] );
+		}
 	}
 	
 	/**
@@ -88,45 +94,66 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 	 * @param anInformation The Information which has changed
 	 */
 	public void notify( final Information anInformation ) {
-		if ( anInformation instanceof FileInfoIntMap ) {
-			table.getDisplay().syncExec( new Runnable () {
-				public void run() {
-					if ( table.isDisposed () ) return;
+		if ( anInformation instanceof FileInfoIntMap )
+			table.getTable().getDisplay().syncExec( new Runnable () {
+			public void run() {
+				
+				int tablesize = table.getTable().getItemCount();
+				TableItem[] items = table.getTable().getItems();
+				TIntObjectIterator itr = ( ( InfoIntMap ) anInformation ).iterator();
+				int collsize = ( ( InfoIntMap ) anInformation ).size();
+				for ( ; collsize-- > 0;) {
+					itr.advance();     
+					FileInfo newElem = ( FileInfo ) itr.value();
 
-					int tablesize = table.getItemCount();
-					TableItem[] items = table.getItems();
-
-					TIntObjectIterator itr = ( ( InfoIntMap ) anInformation ).iterator();
-					int collsize = ( ( InfoIntMap ) anInformation ).size();
-
-					for ( ; collsize-- > 0;) {
-						itr.advance();     
-						FileInfo elem = ( FileInfo ) itr.value();
-						
-						TableItem anItem = getItemByFileInfo( table, elem );
-						
-						/* FileInfo not yet in the table */
-						if ( anItem == null ) {
-							TableItem item = new TableItem ( table, SWT.NULL );
-							item.setText( 0, new Integer( itr.key() ).toString() );
-							item.setText( 1, elem.getName() );
-							item.setText( 2, new Float( Math.round( elem.getRate() / 1024 ) ).toString() );
-							item.setText( 3, new Integer( elem.getDownloaded() ).toString() );
-							item.setText( 4, new Integer( elem.getSize() ).toString() );
-							item.setData( elem );
-						}
-						/* FileInfo already in the table, check for updates */
-						else {
-							if ( ! ( anItem.getText( 2 ).equals( new Float( Math.round( elem.getRate() / 1024 ) ).toString() ) ) ) {
-								anItem.setText( 2, new Float( elem.getRate() / 1024 ).toString() );
-							}
-						}
+					/* lets see if the item is already in the table */
+					TableItem anItem = getItemByFileInfo( table.getTable(), newElem );
+					
+					/* FileInfo not yet in the table */
+					if ( anItem == null ) {
+						createItem( table, newElem );
+					}
+					/* FileInfo already in the table, check for updates */
+					else {
+						updateItem( anItem, newElem );
 					}
 				}
-			});
-		}
+			}
+		});
 	}
 	
+	/**
+	 * 
+	 * @param table
+	 * @param fileInfo
+	 */
+	private static void createItem( TableViewer table, FileInfo fileInfo ) {
+		TableItem item = new TableItem ( table.getTable(), SWT.NULL );
+		item.setText( 0, new Integer( fileInfo.getId() ).toString() );
+		item.setText( 1, fileInfo.getName() );
+		item.setText( 2, new Float( fileInfo.getRate() / 1024 ).toString() );
+		item.setText( 3, new Integer( fileInfo.getDownloaded() ).toString() );
+		item.setText( 4, new Integer( fileInfo.getSize() ).toString() );
+		tableItemSetColor( fileInfo, item );
+		item.setData( fileInfo );
+	}
+	
+	/**
+	 * 
+	 * @param item
+	 * @param fileInfo
+	 */
+	private static void updateItem( TableItem item, FileInfo fileInfo ) {
+		if ( ! ( item.getText( 2 ).equals( new Float( fileInfo.getRate() / 1024 ).toString() )  )) {
+			item.setText( 2, new Float( fileInfo.getRate() / 1024 ).toString() );
+			item.setText( 3, new Integer( fileInfo.getDownloaded() ).toString() );
+		}
+		else if ( ! ( item.getText( 3 ).equals( new Integer( fileInfo.getDownloaded() ).toString() ) ) ) {
+			item.setText( 3, new Integer( fileInfo.getDownloaded() ).toString() );
+		}
+		item.setData( fileInfo );
+	}
+
 	/**
 	 * Checks if the table contains an id
 	 * @param id
@@ -134,14 +161,37 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 	 */
 	private static TableItem getItemByFileInfo( Table table, FileInfo fileInfo ) {
 		TableItem[] items = table.getItems();
-		
+	
 		for ( int i = 0; i < items.length; i++ ) {
 			if ( ( ( FileInfo ) items[ i ].getData() ).equals( fileInfo ) )
-				return items[ i ];				
+				return items[ i ];
 		}
 		return null;
 	}
-
+	
+	/**
+	 * 
+	 * @param newElem
+	 * @param item
+	 */	
+	private static void tableItemSetColor( FileInfo newElem, TableItem item ) {
+		if ( newElem.getState().getState() == EnumFileState.ABORTED )
+			item.setForeground( new Color( null, 160, 7, 4 ) );
+		else if ( newElem.getState().getState() == EnumFileState.CANCELLED )
+			item.setForeground( new Color( null, 160, 7, 4 ) );
+		else if ( newElem.getState().getState() == EnumFileState.DOWNLOADED )
+			item.setForeground( new Color( null, 160, 7, 4 ) );
+		else if ( newElem.getState().getState() == EnumFileState.DOWNLOADING )
+			item.setForeground( new Color( null, 160, 7, 4 ) );
+		else if ( newElem.getState().getState() == EnumFileState.NEW )
+			item.setForeground( new Color( null, 160, 7, 4 ) );
+		else if ( newElem.getState().getState() == EnumFileState.PAUSED )
+			item.setForeground( new Color( null, 160, 7, 4 ) );
+		else if ( newElem.getState().getState() == EnumFileState.QUEUED )
+			item.setForeground( new Color( null, 1, 70, 160 ) );
+		else if ( newElem.getState().getState() == EnumFileState.SHARED )
+			item.setForeground( new Color( null, 160, 7, 4 ) );
+	}
 	
 	/**
 	 * Register this object at a CoreCommunication
@@ -150,11 +200,13 @@ public class TransferTab extends G2guiTab implements InterFaceUI {
 	public void registerListener( CoreCommunication mldonkey ) {
 		mldonkey.registerListener( this );
 	}
-
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.3  2003/06/25 18:35:36  lemmstercvs01
+not nice, but working
+
 Revision 1.2  2003/06/25 00:58:23  lemmstercvs01
 no flickering anymore, next step jface TableViewer
 
