@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.55 2003/12/23 03:40:33 psy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.56 2004/01/08 21:53:58 psy Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -160,6 +160,7 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "displayGridLines", true );
         preferenceStore.setDefault( "tableCellEditors", false );
         preferenceStore.setDefault( "displayTableColors" , true );
+        preferenceStore.setDefault( "displayFontAA" , false );
         preferenceStore.setDefault( "coreExecutable", "" );
         preferenceStore.setDefault( "useCombo", false );
         preferenceStore.setDefault( "minimizeOnClose", false );
@@ -370,6 +371,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.56  2004/01/08 21:53:58  psy
+default for displayFontAA=false
+
 Revision 1.55  2003/12/23 03:40:33  psy
 minor verbosity increase
 
