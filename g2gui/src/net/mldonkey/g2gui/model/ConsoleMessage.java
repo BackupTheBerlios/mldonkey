@@ -22,14 +22,13 @@
  */
 package net.mldonkey.g2gui.model;
 
-import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * ConsoleMessage
  * 
  *  * @author ${user}
- * @version $$Id: ConsoleMessage.java,v 1.3 2003/06/18 13:30:56 dek Exp $$ 
+ * @version $$Id: ConsoleMessage.java,v 1.4 2003/06/19 08:40:20 lemmstercvs01 Exp $$ 
  */
 public class ConsoleMessage implements SimpleInformation {
 	/**
@@ -40,7 +39,7 @@ public class ConsoleMessage implements SimpleInformation {
 	/**
 	 * @return a string
 	 */
-	synchronized public String getConsoleMessage() {
+	public synchronized String getConsoleMessage() {
 		return consoleMessage;
 	}
 
@@ -55,12 +54,15 @@ public class ConsoleMessage implements SimpleInformation {
 	 * Reads a ConsoleMessage object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	public void readStream( MessageBuffer messageBuffer) {
-		this.setConsoleMessage( messageBuffer.readString());
+	public void readStream( MessageBuffer messageBuffer ) {
+		this.setConsoleMessage( messageBuffer.readString() );
 	}
 }
 /*
 $$Log: ConsoleMessage.java,v $
+$Revision 1.4  2003/06/19 08:40:20  lemmstercvs01
+$checkstyle applied
+$
 $Revision 1.3  2003/06/18 13:30:56  dek
 $Improved Communication Layer view <--> model by introducing a super-interface
 $

@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.widgets.InterFaceUI;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.26 2003/06/18 19:45:55 dek Exp $ 
+ * @version $Id: Core.java,v 1.27 2003/06/19 08:40:00 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -154,7 +154,7 @@ public class Core extends Thread implements CoreCommunication {
 	 * @param receivedMessage the thing to decode
 	 * decodes the Message and fills the core-stuff with data
 	 */
-	synchronized private void  decodeMessage( short opcode, MessageBuffer messageBuffer ) throws IOException 
+	private void  decodeMessage( short opcode, MessageBuffer messageBuffer ) throws IOException 
 		{
 		switch ( opcode ) {
 			case Message.R_COREPROTOCOL :				
@@ -221,7 +221,7 @@ public class Core extends Thread implements CoreCommunication {
 
 			case Message.R_CONSOLE :	
 					this.consoleMessage.readStream( messageBuffer );	
-					notifyListeners(consoleMessage);	
+					notifyListeners( consoleMessage );	
 								
 					break;
 				
@@ -252,31 +252,28 @@ public class Core extends Thread implements CoreCommunication {
 	}
 	
 	/**
-	 * 
-	 * @param anInterFaceUI hf
-	 * 
-	 */
-
-
-	/**
-	 * 
-	 * @param anInformation
+	 * Notifies the listener about changes
+	 * @param anInformation The Information which have changed
 	 */
 	public synchronized void notifyListeners( Information anInformation ) {
 		Iterator itr = this.registeredListeners.iterator();
 		while ( itr.hasNext() ) {
-			net.mldonkey.g2gui.view.widgets.InterFaceUI anInterFaceUI = ( net.mldonkey.g2gui.view.widgets.InterFaceUI ) itr.next();
+			InterFaceUI anInterFaceUI = ( InterFaceUI ) itr.next();
 			anInterFaceUI.notify( anInformation );
 		}
 	}
 	/**
-	 * @return
+	 * @return a Socket
 	 */
 	public Socket getConnection() {
 		return connection;
 	}
 
-public void registerListener( InterFaceUI anInterFaceUI ) {
+	/**
+	 * Adds a listener to the list of listeners
+	 * @param anInterFaceUI An InterFaceUI object
+	 */
+	public synchronized void registerListener( InterFaceUI anInterFaceUI ) {
 		if ( ! ( this.registeredListeners.contains( anInterFaceUI ) ) ) 
 			this.registeredListeners.add( anInterFaceUI );
 	}
@@ -285,6 +282,9 @@ public void registerListener( InterFaceUI anInterFaceUI ) {
 
 /*
 $Log: Core.java,v $
+Revision 1.27  2003/06/19 08:40:00  lemmstercvs01
+checkstyle applied
+
 Revision 1.26  2003/06/18 19:45:55  dek
 added getConnection
 
