@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.21 2003/08/31 01:54:25 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.22 2003/08/31 02:16:50 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -62,6 +62,8 @@ public class FileDetailDialog implements Observer {
 	private Display desktop = Display.getCurrent();
 	private FileInfo fileInfo;
 	private ChunkCanvas chunkCanvas;
+	
+	private Button fileActionButton, fileCancelButton;
 	
 	private CLabel clFileName, clHash, clSize, clAge,
 				clSources, clChunks, clTransferred, clPercent,
@@ -204,10 +206,31 @@ public class FileDetailDialog implements Observer {
 		
 		Composite buttonComposite = new Composite(shell, SWT.NONE);
 		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		buttonComposite.setLayout(CGridLayout.createGL(2,0,0,5,0,false));
+		buttonComposite.setLayout(CGridLayout.createGL(3,0,0,5,0,false));
 
-		final Button fileActionButton = new Button( buttonComposite, SWT.NONE );
-		fileActionButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));
+		if (fileInfo.getState().getState() == EnumFileState.PAUSED
+			|| fileInfo.getState().getState() == EnumFileState.DOWNLOADING) {
+				
+			fileCancelButton = new Button( buttonComposite, SWT.NONE );	
+			fileCancelButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));			
+			fileCancelButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CANCEL" ) );
+			fileCancelButton.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected (SelectionEvent s) {
+					fileInfo.setState(EnumFileState.CANCELLED);
+					fileCancelButton.setEnabled(false);
+					fileActionButton.setEnabled(false);
+				}	
+			});
+		}
+
+		fileActionButton = new Button( buttonComposite, SWT.NONE );
+		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED) {
+			gridData.horizontalSpan = 2;
+			gridData.grabExcessHorizontalSpace = true;
+		}
+		
+		fileActionButton.setLayoutData(gridData); 
 		
 		if (fileInfo.getState().getState() == EnumFileState.PAUSED)
 			fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ));
@@ -234,10 +257,10 @@ public class FileDetailDialog implements Observer {
 			}	
 		});
 
-		Button cButton = new Button( buttonComposite, SWT.NONE );
-		cButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		cButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
-		cButton.addSelectionListener( new SelectionAdapter() {
+		Button closeButton = new Button( buttonComposite, SWT.NONE );
+		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		closeButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
+		closeButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 						shell.dispose();
 			}	
@@ -341,6 +364,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.22  2003/08/31 02:16:50  zet
+cancel button
+
 Revision 1.21  2003/08/31 01:54:25  zet
 add spaces
 
@@ -373,6 +399,9 @@ new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
+fix Revision 1.22  2003/08/31 02:16:50  zet
+fix cancel button
+fix
 fix Revision 1.21  2003/08/31 01:54:25  zet
 fix add spaces
 fix
