@@ -42,10 +42,10 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
  /**
- * @version $Id: SystemTray.java,v 1.8 2004/03/10 10:36:07 dek Exp $ 
+ * @version $Id: SystemTray.java,v 1.9 2004/03/10 11:08:29 dek Exp $ 
  *
  */
-public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
+public class SystemTray implements SystemTrayIconListener,Observer {
 
 	private Menu menu;
 	private MenuManager popupMenu;
@@ -118,12 +118,9 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 	 * @param window
 	 */
 	public SystemTray(MainWindow window) {
-		this.titleBarText = "g2gui v " + VersionInfo.getVersion();
-		
+		this.titleBarText = "g2gui v " + VersionInfo.getVersion();		
 		parent = window;
-		Thread tray = new Thread(this);
-		tray.setDaemon(true);
-		tray.run();
+		start();
 	}
 
 	
@@ -133,7 +130,7 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
-	public void run() {
+	private void start() {
 		// try to load the library
 		try {
 			System.loadLibrary("DesktopIndicator");
@@ -147,15 +144,17 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 			return;
 		}
 		// the lib is loaded an ready to use
-		libLoaded=true;
-		parent.getCore().getClientStats().addObserver(this);
+		libLoaded=true;		
 		System.out.println(getClass().getName() + "g2gui.ico");
 		icon = SystemTrayIconManager.loadImage("g2gui.ico");
 		if (icon == -1) {
 			System.out.println("image icon.ico error");
+			libLoaded=false;
 			return;
 		}
-
+		
+		parent.getCore().getClientStats().addObserver(this);
+		
 		systemTrayManager = new SystemTrayIconManager(icon, titleBarText);
 		systemTrayManager.addSystemTrayIconListener(this);
 		systemTrayManager.setVisible(true);
@@ -186,7 +185,7 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 	/**
 	 * @return Returns the parent.
 	 */
-	public MainWindow getParent() {
+	MainWindow getParent() {
 		return parent;
 	}
 	
@@ -216,11 +215,20 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 			medianUpRate = medianUpRate / uploadrate.length;
 			medianDownRate = medianDownRate / downloadrate.length;
 			
-			String transferRates =
+			final String transferRates =
 					 "\nDL:" + decimalFormat.format(medianDownRate) + 
-					 " / UL:" + decimalFormat.format(medianUpRate  );
+					 " / UL:" + decimalFormat.format(medianUpRate  );			
 			
-			systemTrayManager.update(icon,titleBarText+transferRates);			
+			parent.getShell().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					Shell shell = parent.getShell();
+					/* check for widget disposed */
+					if (parent.getShell().isDisposed())
+						return;
+					systemTrayManager.update(icon,titleBarText+transferRates);	
+					
+				}
+			});
 			counter=0;		
 		}
 					
@@ -235,6 +243,9 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.9  2004/03/10 11:08:29  dek
+ Systray s now running in gui thread
+
  Revision 1.8  2004/03/10 10:36:07  dek
  javadoc comments -> normal comments
 
