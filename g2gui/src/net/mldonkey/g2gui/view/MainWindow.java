@@ -72,7 +72,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.16 2004/03/25 20:37:31 psy Exp $
+ * @version $Id: MainWindow.java,v 1.17 2004/03/26 01:15:03 psy Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText;
@@ -87,7 +87,7 @@ public class MainWindow implements ShellListener {
     private MainCoolBar coolBar;
     private Minimizer minimizer;
 	private SystemTray trayMenu;
-
+	
     /**
      * @param core the most important thing of the gui: were do i get my data from
      * @param shell were do we live?
@@ -96,12 +96,11 @@ public class MainWindow implements ShellListener {
    
     
     public MainWindow(CoreCommunication core, final Shell shell) {
-    	
         this.titleBarText = "g2gui alpha (" + G2Gui.getConnectionString() + ")";
     	this.registeredTabs = new ArrayList();
         this.mldonkey = core;
         this.shell = shell;
-
+        
         Display display = shell.getDisplay();
         shell.addShellListener(this);
         minimizer = new Minimizer(shell, core, titleBarText);
@@ -130,7 +129,6 @@ public class MainWindow implements ShellListener {
 
                     /* set all tabs to inactive */
                     Iterator itr = registeredTabs.iterator();
-
                     while (itr.hasNext()) {
                         GuiTab aTab = (GuiTab) itr.next();
                         aTab.dispose();
@@ -154,16 +152,17 @@ public class MainWindow implements ShellListener {
                     PreferenceLoader.setValue("running", false);
                     PreferenceLoader.saveStore();
                     
-                    // do not call cleanup here yet
-                    PreferenceLoader.cleanUp(); 
-                    //System.out.println("*** Dispose complete");
-                }
+                    if (!PreferenceLoader.isRelaunching())
+                    	PreferenceLoader.setQuitting(true);
+                 }
             });
+ 
         if ( SWT.getPlatform().equals("win32") )
         	trayMenu = new SystemTray(this);
 
+
         try {
-            while (!shell.isDisposed() | !PreferenceLoader.isRelaunching()) {
+            while (!PreferenceLoader.isQuitting() && !PreferenceLoader.isRelaunching() ) {
                 if (!display.readAndDispatch())
                     display.sleep();
             }
@@ -172,16 +171,16 @@ public class MainWindow implements ShellListener {
                 System.out.println(e);
             	e.printStackTrace();
             }
-            else {
-                /* getCause() seems always to be null unfortunately */
+            else { 
+                 /* getCause() seems always to be null unfortunately */
                 StringWriter sw = new StringWriter();
                 e.printStackTrace(new PrintWriter(sw, true));
 
                 ErrorDialog errorDialog = new ErrorDialog(new Shell(display), sw.toString());
-                errorDialog.open(); 
+                errorDialog.open();   
             } 
-        }
-
+        } 
+        
     }
 
     /* ( non-Javadoc )
@@ -279,7 +278,7 @@ public class MainWindow implements ShellListener {
      * Creates the preference window
      * @return true if restart will be done, false if not
      */
-    public boolean openPreferences() {
+    public void openPreferences() {
     	Shell prefshell = new Shell(shell.getDisplay());
         Preferences myprefs = new Preferences(PreferenceLoader.getPreferenceStore());
         //TODO: properly dispose
@@ -292,7 +291,7 @@ public class MainWindow implements ShellListener {
        		if(box.open() == SWT.YES)  {
        			PreferenceLoader.setRelaunching(true);
        		} else {
-       			// the use denied our restart-request, do not ask again for these changes
+       			// the user denied our restart-request, do not ask again for these changes
        			PreferenceLoader.saveCritPrefs();
        		}
         }
@@ -307,12 +306,13 @@ public class MainWindow implements ShellListener {
         // if we want to do a relaunch, return the proper values
         if (PreferenceLoader.isRelaunching()) { 
         	System.out.println("A restart is necessary! sayeth MainWindow...");
-        	G2Gui.relaunchSelf();
+        	//G2Gui.kill = true;
+        	//G2Gui.relaunchSelf();
         	// this return true is very important to not provoke an SWTException in the caller
         	// Have a look there... maybe needs something better 
-        	return true;
+        	//return true;
         }
-        return false;
+        //return false;
     }
 
     /**
@@ -510,6 +510,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.17  2004/03/26 01:15:03  psy
+more intelligent way to handle relaunches and quittings
+
 Revision 1.16  2004/03/25 20:37:31  psy
 try to make dispose better
 

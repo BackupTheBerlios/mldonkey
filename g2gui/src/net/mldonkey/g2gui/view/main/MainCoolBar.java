@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.26 2004/01/28 22:15:35 psy Exp $
+ * @version $Id: MainCoolBar.java,v 1.27 2004/03/26 01:15:03 psy Exp $
  *
  */
 public class MainCoolBar {
@@ -170,9 +170,8 @@ public class MainCoolBar {
                                 new Listener() {
                 public void handleEvent( Event event ) {
                     prefButton.setActive( true );
-                    boolean restart = mainTab.openPreferences();
-                    // needed to prevent Inv. Thread-access... needs a fix, badly... this is so ugly
-                    if (!restart) prefButton.setActive( false );
+                    mainTab.openPreferences();
+                    prefButton.setActive( false );
                 }
             } );
     }
@@ -395,6 +394,9 @@ public class MainCoolBar {
 
 
 $Log: MainCoolBar.java,v $
+Revision 1.27  2004/03/26 01:15:03  psy
+more intelligent way to handle relaunches and quittings
+
 Revision 1.26  2004/01/28 22:15:35  psy
 * Properly handle disconnections from the core
 * Fast inline-reconnect

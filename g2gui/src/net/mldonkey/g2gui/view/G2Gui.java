@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.75 2004/03/25 20:37:31 psy Exp $
+ * @version $Id: G2Gui.java,v 1.76 2004/03/26 01:15:03 psy Exp $
  *
  */
 public class G2Gui {
@@ -91,12 +91,13 @@ public class G2Gui {
     private static Display display;
 	private static Shell shell;
     private static ExecConsole execConsole = null;
-
+ 
     /**
      * Starts a new Core and launch the Gui
      * @param args Nothing to put inside
      */
     public static void main(String[] argv) {    	
+    	
     	String fileNotFound = "preference file not found on disk";
     	String configfile = null;
     	
@@ -247,7 +248,7 @@ public class G2Gui {
      * Launch
      */
     private static void launch() {
-        // create our main shell for displaying stuff
+    	// create our main shell for displaying stuff
     	shell = new Shell(display);
     	shell.setImage(G2GuiResources.getImage("TrayIcon"));
     	//if (getCoreConsole() != null) getCoreConsole().setShell(shell);
@@ -316,9 +317,13 @@ public class G2Gui {
 			// launch the view
 			Splash.increaseSplashBar("connection to core successfully created");
             new MainWindow(core, shell);
-            System.out.println("*** Mainwindow EXIT in G2GUI.java");
-            // we're done - disconnect from the core
-            core.disconnect();
+
+            /* after this point, we either relaunch or quit */
+            if (!PreferenceLoader.isQuitting())
+            	relaunchSelf();
+            else
+            	System.out.println("Shutting down.");
+ 
         }
     }
     
@@ -635,6 +640,7 @@ public class G2Gui {
         return execConsole;
     }
 
+  
     /**
      * returns a human-readable text of the connection info
      * @return String in the format username@hostname:port
@@ -647,6 +653,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.76  2004/03/26 01:15:03  psy
+more intelligent way to handle relaunches and quittings
+
 Revision 1.75  2004/03/25 20:37:31  psy
 try to make dispose better
 
