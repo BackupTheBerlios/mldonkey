@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.7 2003/09/18 09:16:47 lemmster Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.8 2003/09/25 14:24:11 dek Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -47,7 +47,7 @@ public class SharedFileInfo implements SimpleInformation {
 	/**
 	 * Shared File Size
 	 */
-	private int shareFileSize;
+	private long shareFileSize;
 	/**
 	 * Number of bytes uploaded
 	 */
@@ -60,6 +60,7 @@ public class SharedFileInfo implements SimpleInformation {
 	 * MD4
 	 */
 	private String md4;
+	private NetworkInfo network;
 	
 	/**
 	 * @return The file md4
@@ -106,7 +107,7 @@ public class SharedFileInfo implements SimpleInformation {
 	/**
 	 * @return The size of this file
 	 */
-	public int getShareFileSize() {
+	public long getShareFileSize() {
 		return shareFileSize;
 	}
 
@@ -153,12 +154,43 @@ public class SharedFileInfo implements SimpleInformation {
 				this.numOfQueriesForFile = myRequests;			
 		}		
 		return hasChanged;
+	}	
+	/**
+	 * @param md4
+	 */
+	void setMd4(String md4) {
+		this.md4 = md4;
 	}
-	
+
+	/**
+	 * translate the int to EnumNetwork
+	 * @param i the int
+	 */
+	void setNetwork( NetworkInfo network ) {
+		this.network = network;
+	}
+
+	/**
+	 * @param sharedFileName
+	 */
+	void setSharedFileName(String sharedFileName) {
+		this.sharedFileName = sharedFileName;
+	}
+
+	/**
+	 * @param shareFileSize
+	 */
+	void setShareFileSize(long shareFileSize) {
+		this.shareFileSize = shareFileSize;
+	}
+
 }
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.8  2003/09/25 14:24:11  dek
+sharedFile no has Network (not only networkID)
+
 Revision 1.7  2003/09/18 09:16:47  lemmster
 checkstyle
 
@@ -170,7 +202,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: dek $
 
 Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved

@@ -25,11 +25,12 @@ package net.mldonkey.g2gui.model;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
+
 /**
  * SharedFileInfoList
  *
  *
- * @version $Id: SharedFileInfoIntMap.java,v 1.3 2003/09/19 15:56:08 lemmster Exp $ 
+ * @version $Id: SharedFileInfoIntMap.java,v 1.4 2003/09/25 14:24:11 dek Exp $ 
  *
  */
 public class SharedFileInfoIntMap extends InfoIntMap {
@@ -45,7 +46,7 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 	 * Reads a SharedFileInfoList object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	public void readStream( MessageBuffer messageBuffer ) {
+	public void readStream( MessageBuffer messageBuffer ) {		
 		/*
 		 * 	 int32  	 Shared File Identifier 
  		 * 	 int32  	 Network Identifier 
@@ -65,8 +66,14 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 		else {
 			SharedFileInfo sharedFileInfo = new SharedFileInfo();
 			sharedFileInfo.readStream( messageBuffer );
-			this.infoIntMap.put( fileID, sharedFileInfo );			
+			this.infoIntMap.put( fileID, sharedFileInfo );
+			/*get the networkItem and assign it to this sharedInfo*/
+			NetworkInfo temp = ( NetworkInfo ) this.parent.
+							getNetworkInfoMap().infoIntMap.
+							get( sharedFileInfo.getNetworkId() );
+			sharedFileInfo.setNetwork( temp );
 		}
+		
 	}
 
 	/**
@@ -74,7 +81,7 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void update( MessageBuffer messageBuffer ) {
-		int fileID = messageBuffer.readInt32();
+		int fileID = messageBuffer.readInt32();		
 		/* go 4bytes back in the MessageBuffer */
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );			
 	
@@ -85,15 +92,17 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 					this.setChanged();
 				}
 		}
-									
+		else {
+			/*unknown file -> do nothing*/
+		}											
 		this.notifyObservers( sharedFileInfo );		
 	}
 }
 
 /*
 $Log: SharedFileInfoIntMap.java,v $
-Revision 1.3  2003/09/19 15:56:08  lemmster
-removed system.out.println(...)
+Revision 1.4  2003/09/25 14:24:11  dek
+sharedFile no has Network (not only networkID)
 
 Revision 1.2  2003/09/18 09:16:47  lemmster
 checkstyle
@@ -106,7 +115,7 @@ Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: dek $
 
 Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved
