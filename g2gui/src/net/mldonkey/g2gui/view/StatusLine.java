@@ -35,9 +35,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+
 
 /**
  * Statusline, This class handles all the Information that should be visible all the time in a
@@ -46,130 +46,130 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.18 2003/10/31 22:06:28 zet Exp $
+ * @version $Id: StatusLine.java,v 1.19 2003/11/09 04:13:38 zet Exp $
  *
  */
 public class StatusLine {
-    private CoreCommunication core;
-    private Composite composite;
-    private CLabel label;
+    private CLabel cLabel;
     private MainTab mainTab;
-    private GridLayout gridLayout;
-    private Composite mainComposite;
+    private CoreCommunication core;
+    private Composite statusLineComposite;
     private Composite linkEntryComposite;
 
     /**
      * Creates a new StatusLine obj
      * @param mainTab The <code>MainTab></code> we display our content in
      */
-    public StatusLine( MainTab mainTab ) {
-		GridData gd;
+    public StatusLine(MainTab mainTab) {
         this.mainTab = mainTab;
         this.core = mainTab.getCore();
-        mainComposite = new Composite( mainTab.getMainComposite(), SWT.BORDER );
-        gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 0, false );
-        mainComposite.setLayout( gridLayout );
-        mainComposite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        createContents();
+    }
+
+    /**
+     * createContents
+     */
+    private void createContents() {
+        // Have we spawned a core?
+        boolean spawnedCore = ((G2Gui.getCoreConsole() != null) &&
+            PreferenceLoader.loadBoolean("advancedMode"));
+
+        Composite mainComposite = new Composite(mainTab.getMainComposite(), SWT.BORDER);
+        mainComposite.setLayout(CGridLayout.createGL(1, 0, 0, 0, 0, false));
+        mainComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         /*
          * This hidden composite contains linkEntry which is displayed
          * on demand from linkEntryItem
          */
-        createLinkEntry( mainComposite );
+        createLinkEntry(mainComposite);
 
         /* the linkEntry */
-        new LinkEntry( this, this.core, linkEntryComposite );
-        this.composite = new Composite( mainComposite, SWT.NONE );
-        int numColumns = 7;
+        new LinkEntry(this, this.core, linkEntryComposite);
 
-        if ( ( G2Gui.getCoreConsole() != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) )
-            numColumns = 9;
-        gridLayout = CGridLayout.createGL( numColumns, 0, 0, 0, 0, false );
-
-        this.composite.setLayout( gridLayout );
-        composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+        statusLineComposite = new Composite(mainComposite, SWT.NONE);
+        statusLineComposite.setLayout(CGridLayout.createGL(spawnedCore ? 9 : 7, 0, 0, 0, 0, false));
+        statusLineComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         /*
-         *  the left field 
+         *  the left field
          */
-        new NetworkItem( this, this.core );
-		Label separator0 = new Label(composite, SWT.SEPARATOR |SWT.VERTICAL);
-		gd = new GridData (GridData.FILL_VERTICAL);		
-			/*heightHint of 0 is nescessary that this Label don't blow up the status-line*/
-		gd.heightHint = 0;
-		separator0.setLayoutData( gd );
-        
-        if ( ( G2Gui.getCoreConsole() != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) ){
-            new CoreConsoleItem( this, this.core );
-			Label separator = new Label(composite, SWT.SEPARATOR |SWT.VERTICAL);
-			gd = new GridData (GridData.FILL_VERTICAL);		
-			/*heightHint of 0 is nescessary that this Label don't blow up the status-line*/
-			gd.heightHint = 0;
-			separator.setLayoutData( gd );
+        new NetworkItem(this, this.core);
+        addSeparator(statusLineComposite);
+
+        if (spawnedCore) {
+            new CoreConsoleItem(this, this.core);
+            addSeparator(statusLineComposite);
         }
 
         /* the toggle for linkEntry */
-        new LinkEntryItem( this, this.core );
-		
-		Label separator1 = new Label(composite, SWT.SEPARATOR |SWT.VERTICAL);
-		gd = new GridData (GridData.FILL_VERTICAL);		
-		/*heightHint of 0 is nescessary that this Label don't blow up the status-line*/
-		gd.heightHint = 0;
-		separator1.setLayoutData( gd );
-		
+        new LinkEntryItem(this, this.core);
+
+        addSeparator(statusLineComposite);
+
         /* the fill field */
-        Composite middle = new Composite( composite, SWT.NONE );
-        middle.setLayout( new FillLayout() );
-        middle.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        label = new CLabel( middle, SWT.BORDER );
-        label.setText( "" );
-        
-		Label separator2 = new Label(composite, SWT.SEPARATOR |SWT.VERTICAL);
-		gd = new GridData (GridData.FILL_VERTICAL);		
-		/*heightHint of 0 is nescessary that this Label don't blow up the status-line*/
-		gd.heightHint = 0;
-		separator2.setLayoutData( gd );
+        Composite middle = new Composite(statusLineComposite, SWT.NONE);
+        middle.setLayout(new FillLayout());
+        middle.setLayoutData(new GridData(GridData.FILL_BOTH));
+        cLabel = new CLabel(middle, SWT.BORDER);
+        cLabel.setText("");
+
+        addSeparator(statusLineComposite);
 
         /* the right field */
-        new SpeedItem( this, this.core );
+        new SpeedItem(this, this.core);
+    }
+
+    /**
+     * @param composite
+     */
+    private void addSeparator(Composite composite) {
+        Label separator = new Label(composite, SWT.SEPARATOR | SWT.VERTICAL);
+        GridData gd = new GridData(GridData.FILL_VERTICAL);
+
+        // heightHint of 0 is nescessary so that this Label doesn't blow up the status-line
+        gd.heightHint = 0;
+        separator.setLayoutData(gd);
     }
 
     /**
      * Create the hidden linkEntryComposite
      * @param parent Composite
      */
-    public void createLinkEntry( Composite parent ) {
-        linkEntryComposite = new Composite( mainComposite, SWT.NONE );
-        gridLayout = CGridLayout.createGL( 2, 0, 0, 0, 0, false );
-        linkEntryComposite.setLayout( gridLayout );
-        GridData gd = new GridData( GridData.FILL_HORIZONTAL );
+    private void createLinkEntry(Composite parent) {
+        linkEntryComposite = new Composite(parent, SWT.NONE);
+        linkEntryComposite.setLayout(CGridLayout.createGL(2, 0, 0, 0, 0, false));
+
+        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.heightHint = 0;
-        linkEntryComposite.setLayoutData( gd );
+        linkEntryComposite.setLayoutData(gd);
     }
 
     /**
      * Updates a String at a specific position
      * @param aString The new String to display
      */
-    public void update( String aString ) {
-        if ( !composite.isDisposed() )
-            label.setText( aString );
+    public void update(String aString) {
+        if (!cLabel.isDisposed()) {
+            cLabel.setText(aString);
+        }
     }
 
     /**
      *         Sets the tooltip of the Statusbar Item
      * @param aString The tooltip to show
      */
-    public void updateToolTip( String aString ) {
-        if ( !composite.isDisposed() )
-            label.setToolTipText( aString );
+    public void updateToolTip(String aString) {
+        if (!cLabel.isDisposed()) {
+            cLabel.setToolTipText(aString);
+        }
     }
 
     /**
      * @return the Composite in which the statusline is created
      */
     public Composite getStatusline() {
-        return composite;
+        return statusLineComposite;
     }
 
     /**
@@ -187,8 +187,12 @@ public class StatusLine {
     }
 }
 
+
 /*
 $Log: StatusLine.java,v $
+Revision 1.19  2003/11/09 04:13:38  zet
+cleanup
+
 Revision 1.18  2003/10/31 22:06:28  zet
 fix status line when spawning a core
 
