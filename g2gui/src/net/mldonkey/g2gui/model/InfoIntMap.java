@@ -30,7 +30,7 @@ import gnu.trove.TIntObjectIterator;
  * InfoMap
  *
  * @author $user$
- * @version $Id: InfoIntMap.java,v 1.4 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
+ * @version $Id: InfoIntMap.java,v 1.5 2003/07/23 17:04:51 lemmstercvs01 Exp $ 
  *
  */
 public abstract class InfoIntMap implements InfoCollection {
@@ -73,10 +73,22 @@ public abstract class InfoIntMap implements InfoCollection {
 	public int size() {
 		return this.infoIntMap.size();
 	}
+	
+	/**
+	 * Does this Map contains the given key
+	 * @param key The key which should be contained
+	 * @return true/false if contains
+	 */
+	public boolean containsKey( int key ) {
+		return this.infoIntMap.contains( key );
+	}
 }
 
 /*
 $Log: InfoIntMap.java,v $
+Revision 1.5  2003/07/23 17:04:51  lemmstercvs01
+added containsKey(int key)
+
 Revision 1.4  2003/07/06 07:45:26  lemmstercvs01
 checkstyle applied
 
