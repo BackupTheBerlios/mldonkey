@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.12 2003/07/17 13:36:18 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.13 2003/07/17 13:44:30 dek Exp $ 
  *
  */
 public class DownloadTable  implements Observer, Runnable {
@@ -255,8 +255,12 @@ public class DownloadTable  implements Observer, Runnable {
 				 /* we really don't care about this one...*/
 				}
 		}
+		
+		/*only update the items, that have changed, using the FileInfoIntMap from
+		 * Core to get infos, whih files have changed
+		 */		
 		for ( int i = 0; i < files.getIds().size(); i++ ) {
-			if ( files.contains( ( ( Integer ) files.getIds().get( i ) ).intValue() ) ){			
+			if ( downloads.contains( ( ( Integer ) files.getIds().get( i ) ).intValue() ) ){			
 			DownloadItem changedItem = 
 						( DownloadItem ) downloads.get( 
 							( ( Integer ) files.getIds().get( i ) ).intValue()
@@ -270,6 +274,9 @@ public class DownloadTable  implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.13  2003/07/17 13:44:30  dek
+*** empty log message ***
+
 Revision 1.12  2003/07/17 13:36:18  dek
 "flickerfilter" applyed
 
