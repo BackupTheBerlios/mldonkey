@@ -30,7 +30,7 @@ import java.net.Socket;
 /**
  * Message
  *
- * @version $Id: Message.java,v 1.39 2003/09/23 00:10:44 zet Exp $
+ * @version $Id: Message.java,v 1.40 2003/11/26 07:41:43 zet Exp $
  *
  */
 public abstract class Message {
@@ -156,6 +156,11 @@ public abstract class Message {
      */
     public static final short S_CONNECT_FRIEND = 31;
 
+    /**
+     * Get Client Info (value is 36)
+     */
+    public static final short S_GET_CLIENT_INFO = 36;
+    
     /**
      * Get File Info (value is 37)
      */
@@ -437,6 +442,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.40  2003/11/26 07:41:43  zet
+protocolVersion 19/timer
+
 Revision 1.39  2003/09/23 00:10:44  zet
 add Preview
 

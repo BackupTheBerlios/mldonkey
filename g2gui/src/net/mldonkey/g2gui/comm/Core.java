@@ -29,10 +29,14 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.ClientInfoIntMap;
 import net.mldonkey.g2gui.model.ClientMessage;
 import net.mldonkey.g2gui.model.ClientStats;
@@ -56,7 +60,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.113 2003/11/23 17:58:03 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.114 2003/11/26 07:41:43 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -95,7 +99,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * The protocol version we maximal speak
 	 */
-	private static final int PROTOCOL_VERSION = 18;
+	private static final int PROTOCOL_VERSION = 19;
 	/**
 	 * The protocol the core speaks
 	 */
@@ -112,6 +116,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * showing our connection state
 	 */
 	private boolean connected = false;
+	
+	private Timer timer;
+	
 	/**
 	 * Store the simple informations from the core here
 	 */
@@ -179,15 +186,38 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		this.pollModeEnabled = pollModeEnabled;
 		this.advancedMode = advancedMode;
 		this.pollUpStats = PreferenceLoader.loadBoolean( "pollUpStats" );	
-			
+		startTimer();
 	}
 
+	/**
+	 * A timer to run every 5 seconds
+	 * update uploader stats
+	 */
+	public void startTimer() {
+	    if (!pollUpStats) 
+	        return;
+	    
+	    if (timer != null) 
+	        timer.cancel();
+	    
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			public void run() {
+				if (!isConnected()) { 
+				    this.cancel();
+				} else 
+				requestUpstats();
+			}
+		}, 5000L, 5000L);
+	    
+	}
+	
+	
 	/**
 	 * run()
 	 * starts the Core and begin receiving messages	 * 
 	 */
 	public void  run() {
-		
 
 		/* send the initial protocol version */
 		this.sendProtocolVersion();
@@ -215,6 +245,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			}
 		}	
 		catch ( SocketException e ) {
+		    timer.cancel();
 			if ( !initialized ) {
 				/* expect the core denies our connection attempt */
 				connected = false;
@@ -228,8 +259,12 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 				e.printStackTrace();
 		}
 		catch ( IOException e ) {
+		    timer.cancel();
 			onIOException( e );
-		}		
+		}	
+		
+		if (timer != null) 
+		    timer.cancel();
 	}
 	
 	/**
@@ -262,6 +297,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		this.connected = true;
 		Thread restarted = new Thread( this );
 		restarted.start();
+		startTimer();
 	}
 
 	/**
@@ -400,8 +436,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					/*
 					 * If we reiceive this info, we request Upload-Stats					 * 
 					 */
-					if ( pollUpStats ) 
-						requestUpstats();
+					//if ( pollUpStats ) 
+					//	requestUpstats();
 					break;	
 					
 			case Message.R_DOWNLOAD :
@@ -497,7 +533,18 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		Message upstats =
 					new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
 		upstats.sendMessage( this );		
-		upstats = null;	
+		
+		// This is sort of crazy, but it is how new_gui does it...
+		Iterator i = getClientInfoIntMap().getUploadersWeakMap().getWeakMap().keySet().iterator();
+		while (i.hasNext()) {
+		    ClientInfo clientInfo = (ClientInfo) i.next();
+		    Object[] num = new Object[ 1] ;
+		    num[0] = new Integer(clientInfo.getClientid());
+		    upstats = new EncodeMessage( Message.S_GET_CLIENT_INFO, num );
+		    upstats.sendMessage( this );
+		}
+		upstats = null;
+		
 	}
 	
 	/**
@@ -631,6 +678,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.114  2003/11/26 07:41:43  zet
+protocolVersion 19/timer
+
 Revision 1.113  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

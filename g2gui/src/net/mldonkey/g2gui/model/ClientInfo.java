@@ -22,25 +22,25 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.trove.THash;
+import gnu.trove.TIntObjectHashMap;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
-import gnu.trove.THash;
-import gnu.trove.TIntObjectHashMap;
-
 
 /**
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.31 2003/11/08 22:47:06 zet Exp $
+ * @version $Id: ClientInfo.java,v 1.32 2003/11/26 07:42:07 zet Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -88,6 +88,38 @@ public class ClientInfo extends Parent {
      * Client Chat Port (mlchat)
      */
     private int clientChatPort;
+
+    /**
+     * Client Software
+     */
+    private String clientSoftware;
+
+    /**
+     * Client downloaded bytes
+     */
+    private long clientDownloaded;
+    private String clientDownloadedString = "";
+
+    /**
+     * Client uploaded bytes
+     */
+    private long clientUploaded;
+    private String clientUploadedString = "";
+
+    /**
+     * Client IP address
+     */
+    private String clientSockAddr;
+
+    /**
+     * Filename being uploaded to client
+     */
+    private String clientUploadFilename;
+
+    /**
+     * true if clientUploadFileName != ""
+     */
+    private boolean isUploader = false;
 
     /**
      * Availability of a file (int fileId, String availability)
@@ -163,9 +195,8 @@ public class ClientInfo extends Parent {
 
         if (availability != null) {
             for (int i = 0; i < availability.length(); i++)
-                if (availability.charAt(i) == '1') {
+                if (availability.charAt(i) == '1')
                     numChunks++;
-                }
         }
 
         return numChunks;
@@ -196,25 +227,24 @@ public class ClientInfo extends Parent {
      * @param b a byte
      */
     private void setClientType(byte b) {
-        if (b == 0) {
+        if (b == 0)
             clientType = EnumClientType.SOURCE;
-        } else if (b == 1) {
+        else if (b == 1)
             clientType = EnumClientType.FRIEND;
-        } else if (b == 2) {
+        else if (b == 2)
             clientType = EnumClientType.BROWSED;
-        }
     }
 
     /**
      * @return String clientActivity
      */
     public String getClientActivity() {
-        if (this.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
+        if (this.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
             return G2GuiResources.getString("TT_Transferring").toLowerCase();
-        } else {
+        else
+
             return G2GuiResources.getString("TT_Rank").toLowerCase() + ": " +
             this.getState().getRank();
-        }
     }
 
     public boolean isConnected() {
@@ -231,24 +261,74 @@ public class ClientInfo extends Parent {
     */
     public String getDetailedClientActivity() {
         if ((this.getState().getState() == EnumState.CONNECTED_DOWNLOADING) ||
-                (this.getState().getRank() == 0)) {
+                (this.getState().getRank() == 0))
             return "" + this.getState().getState().toString();
-        } else {
+        else
+
             return "" + this.getState().getState().toString() + " (Q: " +
             this.getState().getRank() + ")";
-        }
     }
 
     /**
      * @return String clientConnection
      */
     public String getClientConnection() {
-        if (this.getClientKind().getClientMode() == EnumClientMode.FIREWALLED) {
+        if (this.getClientKind().getClientMode() == EnumClientMode.FIREWALLED)
             return G2GuiResources.getString("TT_Firewalled").toLowerCase();
-        } else {
+        else
+
             return G2GuiResources.getString("TT_Direct").toLowerCase();
-        }
     }
+    
+    /**
+     * @return clientSoftware
+     */
+    public String getClientSoftware() {
+        return clientSoftware;
+    }
+    
+    /**
+     * @return clientSockAddr
+     */
+    public String getClientSockAddr() {
+        return clientSockAddr;
+    }
+    
+    /**
+     * @return clientUploaded Bytes
+     */
+    public long getUploaded() {
+        return clientUploaded;
+    }
+    
+    /**
+     * @return clientDownloaded Bytes
+     */
+    public long getDownloaded() {
+        return clientDownloaded;
+    }
+    
+    /**
+     * @return clientUploaded String
+     */
+    public String getUploadedString() {
+        return clientUploadedString;
+    }
+    
+    /**
+     * @return clientDownloaded String
+     */
+    public String getDownloadedString() {
+        return clientDownloadedString;
+    }
+    
+    /**
+     * @return clientUploadFilename (Filename currently being uploaded to client)
+     */
+    public String getUploadFilename() {
+        return clientUploadFilename;
+    }
+    
 
     /**
      * Reads a ClientInfo object from a MessageBuffer
@@ -277,9 +357,28 @@ public class ClientInfo extends Parent {
         this.tag = messageBuffer.readTagList();
         this.clientName = messageBuffer.readString();
         this.clientRating = messageBuffer.readInt32();
-        this.clientChatPort = messageBuffer.readInt32();
+
+        if (parent.getProtoToUse() <= 18)
+            this.clientChatPort = messageBuffer.readInt32();
+        else {
+            this.clientSoftware = messageBuffer.readString();
+            this.clientDownloaded = messageBuffer.readInt64();
+            this.clientUploaded = messageBuffer.readInt64();
+            this.clientSockAddr = messageBuffer.readString();
+            this.clientUploadFilename = messageBuffer.readString();
+
+            this.clientUploadedString = RegExp.calcStringSize(clientUploaded);
+            this.clientDownloadedString = RegExp.calcStringSize(clientDownloaded);
+            
+            // Occasionally it seems the filename isn't reset to null when not uploading anymore
+            this.isUploader = !clientUploadFilename.equals("");
+        }
 
         onChangedState(oldState);
+    }
+
+    public boolean isUploader() {
+        return isUploader;
     }
 
     /**
@@ -302,16 +401,14 @@ public class ClientInfo extends Parent {
         this.setChanged();
 
         if (oldState != newState) {
-            if (newState == EnumState.CONNECTED_DOWNLOADING) {
-                this.notifyObservers(new Boolean(true));
-            } else if (oldState == EnumState.CONNECTED_DOWNLOADING) {
-                this.notifyObservers(new Boolean(false));
-            } else {
+            if (newState == EnumState.CONNECTED_DOWNLOADING)
+                this.notifyObservers(Boolean.TRUE);
+            else if (oldState == EnumState.CONNECTED_DOWNLOADING)
+                this.notifyObservers(Boolean.FALSE);
+            else
                 this.notifyObservers(this);
-            }
-        } else {
+        } else
             this.notifyObservers(this);
-        }
     }
 
     /**
@@ -361,6 +458,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.32  2003/11/26 07:42:07  zet
+protocolVersion 19/timer
+
 Revision 1.31  2003/11/08 22:47:06  zet
 update client table header
 
