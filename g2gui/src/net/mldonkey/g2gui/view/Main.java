@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.view.pref.Preferences;
  * G2GuiTest
  *
  * @author $user$
- * @version $Id: Main.java,v 1.3 2003/06/25 18:04:53 dek Exp $ 
+ * @version $Id: Main.java,v 1.4 2003/06/26 12:04:59 dek Exp $ 
  *
  */
 public class Main {
@@ -55,7 +55,7 @@ public class Main {
 		try {
 			myprefs.initialize(preferenceStore);
 		} catch (IOException e) {			
-			System.out.println("initalizing Preferences Dialog failed due to IOException");
+			
 		}		
 		if (!(preferenceStore.getBoolean("initialized"))){					
 			myprefs.open(new Shell(new Display()),null);
@@ -91,6 +91,9 @@ public class Main {
 
 /*
 $Log: Main.java,v $
+Revision 1.4  2003/06/26 12:04:59  dek
+pref-dialog accessible in main-window
+
 Revision 1.3  2003/06/25 18:04:53  dek
 Console-Tab reworked
 

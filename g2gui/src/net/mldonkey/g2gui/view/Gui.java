@@ -26,14 +26,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.pref.Preferences;
 
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 
@@ -41,13 +41,15 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.3 2003/06/25 18:04:53 dek Exp $ 
+ * @version $Id: Gui.java,v 1.4 2003/06/26 12:04:59 dek Exp $ 
  *
  */
 public class Gui extends ApplicationWindow implements IG2gui, Listener {
+	private Composite miscButtonRow;
+	private Composite buttonRow;
 	private CoreCommunication mldonkey;
 	private Composite mainComposite,
-					buttonRow,
+					tabButtonRow,
 					pageContainer;
 	private List registeredTabs = new ArrayList();
 	private G2guiTab activeTab;
@@ -98,11 +100,11 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 	 */
 	public Gui(CoreCommunication core) {
 		super( null );	
-		this.mldonkey = core;	
+		this.mldonkey = core;
 		this.setBlockOnOpen( true );
 		this.addStatusLine();		
 		this.open();		
-		Display.getCurrent().dispose();
+		//Display.getCurrent().dispose();
 	}
 	
 	/* (non-Javadoc)
@@ -117,17 +119,53 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 			mainLayout.numColumns = 1;
 			mainComposite.setLayout( mainLayout );
 			
-		buttonRow = new Composite( mainComposite, SWT.NONE );
-			RowLayout buttonRowLayout = new RowLayout();
-			buttonRowLayout.justify = true;
-			buttonRowLayout.pack = false;
-			buttonRowLayout.spacing = 5;			
-			buttonRow.setLayout( buttonRowLayout );
-						
+		this.buttonRow = new Composite( mainComposite, SWT.NONE );
 				gridData = new GridData();
 				gridData.grabExcessHorizontalSpace = true;
 				gridData.horizontalAlignment = GridData.CENTER;
-			buttonRow.setLayoutData( gridData );
+			buttonRow.setLayoutData( gridData );		
+			RowLayout buttonRowLayout = new RowLayout();			
+			buttonRowLayout.spacing =0;
+			buttonRowLayout.pack = true;
+			buttonRowLayout.justify = true;		
+			buttonRow.setLayout( buttonRowLayout );		
+		
+		tabButtonRow = new Composite( buttonRow, SWT.NONE );
+			RowLayout tabButtonRowLayout = new RowLayout();
+			tabButtonRowLayout.justify = true;
+			tabButtonRowLayout.pack = false;
+			tabButtonRowLayout.spacing = 5;		
+			tabButtonRow.setLayout( tabButtonRowLayout );
+			
+		miscButtonRow = new Composite( buttonRow, SWT.NONE );
+			RowLayout miscButtonRowLayout = new RowLayout();
+			miscButtonRowLayout.justify = true;
+			miscButtonRowLayout.pack = true;
+			miscButtonRowLayout.spacing = 5;		
+			miscButtonRow.setLayout( miscButtonRowLayout );		
+			
+			
+			
+		
+		Label spacer = new Label(miscButtonRow,SWT.SEPARATOR|SWT.VERTICAL|SWT.SHADOW_OUT);
+		spacer.setLayoutData(new RowData(4,24));
+			
+			
+		Button preferences = new Button(miscButtonRow,SWT.FLAT);
+			preferences.setText("Preferences");
+			preferences.addListener(SWT.Selection, new Listener(){
+				public void handleEvent(Event event) {	
+					Shell prefshell = new Shell();
+					Preferences myprefs = new Preferences(new PreferenceStore("g2gui.pref"));					
+					myprefs.open(prefshell,null);
+			}});
+		
+		
+
+		
+			
+			
+
 		
 		pageContainer = new Composite( mainComposite, SWT.NONE);
 		pageContainer.setLayout( new PageLayout() );						
@@ -172,7 +210,7 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 	 */
 	public Composite getButtonRow() {
 	
-		return buttonRow;
+		return tabButtonRow;
 	}
 
 	/* (non-Javadoc)
@@ -202,6 +240,9 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.4  2003/06/26 12:04:59  dek
+pref-dialog accessible in main-window
+
 Revision 1.3  2003/06/25 18:04:53  dek
 Console-Tab reworked
 

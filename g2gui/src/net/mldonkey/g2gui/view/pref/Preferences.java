@@ -23,20 +23,16 @@
 package net.mldonkey.g2gui.view.pref;
 
 import java.io.IOException;
+import net.mldonkey.g2gui.comm.CoreCommunication;
 
-import net.mldonkey.g2gui.comm.Core;
-
-import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.jface.preference.PreferenceManager;
-import org.eclipse.jface.preference.PreferenceNode;
-import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.preference.*;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.2 2003/06/25 10:42:36 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.3 2003/06/26 12:04:44 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -49,7 +45,8 @@ public class Preferences extends PreferenceManager {
 	 * @param mldonkey
 	 * @param display
 	 */
-	public Preferences(PreferenceStore preferenceStore) {		
+	public Preferences(PreferenceStore preferenceStore) {	
+		this.preferenceStore = 	preferenceStore;
 		myprefs = new PreferenceManager();		
 		myprefs.addToRoot(new PreferenceNode("G2gui", new G2Gui(preferenceStore)));
 		myprefs.addToRoot(new PreferenceNode("mldonkey", new General(preferenceStore)));
@@ -58,23 +55,25 @@ public class Preferences extends PreferenceManager {
 		
 	}
 	
-	public void open(Shell shell, Core mldonkey) {
+	public void open(Shell shell, CoreCommunication mldonkey) {
+		try {
+			initialize(preferenceStore);
+		} catch (IOException e) {
+			System.out.println("initalizing Preferences Dialog failed due to IOException");
+		}
 		prefdialog = new PreferenceDialog(shell, myprefs){
 			/* (non-Javadoc)
 			 * @see org.eclipse.jface.preference.PreferenceDialog#cancelPressed()
 			 */
-			protected void cancelPressed() {
-				this.getParentShell().dispose();
+			protected void cancelPressed() {				
+				prefdialog.close();
 			}
 			};
-		
-		prefdialog.create();
-		prefdialog.open();	
-		
-		
+	
+		prefdialog.open();
 	}
 
-	public  void initialize(PreferenceStore preferenceStore) throws IOException {
+	public void initialize(PreferenceStore preferenceStore) throws IOException {
 		try {			
 			preferenceStore.load();
 		} catch (IOException e) {
@@ -83,10 +82,21 @@ public class Preferences extends PreferenceManager {
 		}
 	}	
 
+
+	/**
+	 * @return
+	 */
+	public PreferenceManager getMyprefs() {
+		return myprefs;
+	}
+
 }
 
 /*
 $Log: Preferences.java,v $
+Revision 1.3  2003/06/26 12:04:44  dek
+pref-dialog accessible in main-window
+
 Revision 1.2  2003/06/25 10:42:36  dek
 peferenences dialog at first start
 

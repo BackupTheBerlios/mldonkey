@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.2 2003/06/25 10:42:36 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.3 2003/06/26 12:04:44 dek Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {
@@ -61,6 +61,7 @@ public class G2Gui extends PreferencePage  {
 		hostname = new StringFieldEditor("hostname", "Hostname",shell);	
 			hostname.setStringValue(preferenceStore.getDefaultString("hostname"));
 			hostname.setStringValue(preferenceStore.getString("hostname"));
+			System.out.println("loaded: "+preferenceStore.getString("hostname"));
 			
 		port = new IntegerFieldEditor("port","Port",shell);
 			port.setStringValue(preferenceStore.getDefaultString("port"));
@@ -127,6 +128,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.3  2003/06/26 12:04:44  dek
+pref-dialog accessible in main-window
+
 Revision 1.2  2003/06/25 10:42:36  dek
 peferenences dialog at first start
 
