@@ -22,16 +22,20 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.text.DecimalFormat;
+
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.10 2003/09/25 21:08:56 dek Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.11 2003/09/25 21:50:16 dek Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
+	
+	private static DecimalFormat df = new DecimalFormat( "0.#" );
 	/**
 	 * Shared File Identifier
 	 */
@@ -164,7 +168,36 @@ public class SharedFileInfo implements SimpleInformation {
 	void setNetwork( NetworkInfo network ) {
 		this.network = network;
 	}
-
+	
+	/**
+	 * creates a String from the size
+	 * @param size The size
+	 * @return a string represantation of this size
+	 */
+	public static String calcStringSize( long size ) {
+		float k = 1024f;
+		float m = k * k;
+		float g = m * k;
+		float t = g * k;
+		float fsize = ( float ) size;
+		if ( fsize >= t )
+			return new String( df.format( fsize / t ) + " TB" );
+		else if ( fsize >= g )
+			return new String( df.format( fsize / g ) + " GB" );
+		else if ( fsize >= m )
+			return new String( df.format( fsize / m ) + " MB" );
+		else if ( fsize >= k )
+			return new String( df.format( fsize / k ) + " KB" );
+		else
+			return new String( size + "" );
+	}
+	/**
+	 * 
+	 * @return String representation of Upload
+	 */
+	public String getUploadedString() {
+		return SharedFileInfo.calcStringSize( numOfBytesUploaded );
+	}
 
 	/**
 	 * @return the Network this file is uploaded to
@@ -177,6 +210,9 @@ public class SharedFileInfo implements SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.11  2003/09/25 21:50:16  dek
+added icons for networks + TableSorter
+
 Revision 1.10  2003/09/25 21:08:56  dek
 some checkstyle
 

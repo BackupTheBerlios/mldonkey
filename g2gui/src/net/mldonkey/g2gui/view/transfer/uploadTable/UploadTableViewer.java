@@ -48,14 +48,14 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.2 2003/09/25 21:48:55 dek Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.3 2003/09/25 21:50:16 dek Exp $ 
  *
  */
 public class UploadTableViewer {
 	/**
 	 * MyTableSorter
 	 *
-	 * @version $Id: UploadTableViewer.java,v 1.2 2003/09/25 21:48:55 dek Exp $ 
+	 * @version $Id: UploadTableViewer.java,v 1.3 2003/09/25 21:50:16 dek Exp $ 
 	 *
 	 */
 	
@@ -206,7 +206,7 @@ public class UploadTableViewer {
 					result = info.getSharedFileName();
 					break;
 				case 2 :
-					result = info.getDownloadedString();
+					result = info.getUploadedString();
 					break;
 				case 3 :
 					result = String.valueOf( info.getNumOfQueriesForFile() );
@@ -315,6 +315,9 @@ public class UploadTableViewer {
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.3  2003/09/25 21:50:16  dek
+added icons for networks + TableSorter
+
 Revision 1.2  2003/09/25 21:48:55  dek
 added icons for networks + TableSorter
 
