@@ -45,6 +45,9 @@ public class ConfigFile {
 			ex.printStackTrace();
 		}	
 	}
+	/**
+	 *read the login infos from the config file
+	 */
 	public void readFromFile(){
 		data =new String[3];
 		int i=0;
@@ -71,7 +74,7 @@ public class ConfigFile {
 	}	
 	/**
 	 * checks if the file exists
-	 * @return 
+	 * @return boolean  
 	 */
 	public boolean isAvailable(){
 		return new File(configfile).exists();
