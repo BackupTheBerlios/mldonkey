@@ -57,7 +57,7 @@ import java.util.Observable;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.40 2003/11/29 19:10:24 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.41 2003/11/29 19:28:38 zet Exp $
  */
 public class MessagesTab extends GuiTab {
     private CTabFolder cTabFolder;
@@ -66,10 +66,9 @@ public class MessagesTab extends GuiTab {
 
     /**
      * @param mainWindow
-     * @param resButtonString
      */
-    public MessagesTab(MainWindow mainWindow, String resButtonString) {
-        super(mainWindow, resButtonString);
+    public MessagesTab(MainWindow mainWindow) {
+        super(mainWindow, "MessagesButton");
     }
 
     /* (non-Javadoc)
@@ -371,6 +370,9 @@ public class MessagesTab extends GuiTab {
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.41  2003/11/29 19:28:38  zet
+minor string move
+
 Revision 1.40  2003/11/29 19:10:24  zet
 small update.. continue later.
 - mainwindow > tabs > viewframes(can contain gView)

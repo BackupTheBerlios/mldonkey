@@ -41,16 +41,15 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.100 2003/11/29 19:10:24 zet Exp $
+ * @version $Id: TransferTab.java,v 1.101 2003/11/29 19:28:38 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
     /**
      * @param mainWindow
-     * @param resButtonString
      */
-    public TransferTab(MainWindow mainWindow, String resButtonString) {
-        super(mainWindow, resButtonString);
+    public TransferTab(MainWindow mainWindow) {
+        super(mainWindow, "TransfersButton");
     }
 
     /* ( non-Javadoc )
@@ -109,6 +108,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.101  2003/11/29 19:28:38  zet
+minor string move
+
 Revision 1.100  2003/11/29 19:10:24  zet
 small update.. continue later.
 - mainwindow > tabs > viewframes(can contain gView)

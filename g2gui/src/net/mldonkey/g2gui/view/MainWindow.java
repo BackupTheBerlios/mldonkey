@@ -72,7 +72,7 @@ import java.util.List;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.2 2003/11/29 19:10:24 zet Exp $
+ * @version $Id: MainWindow.java,v 1.3 2003/11/29 19:28:38 zet Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -216,16 +216,16 @@ public class MainWindow implements ShellListener {
         this.tabs = new ArrayList();
 
         if (PreferenceLoader.loadBoolean("advancedMode")) {
-            tabs.add(new TransferTab(this, "TransfersButton"));
-            tabs.add(new SearchTab(this, "SearchButton"));
-            tabs.add(new ServerTab(this, "ServersButton"));
-            tabs.add(new ConsoleTab(this, "ConsoleButton"));
-            tabs.add(new StatisticTab(this, "StatisticsButton"));
-            tabs.add(new MessagesTab(this, "MessagesButton"));
+            tabs.add(new TransferTab(this));
+            tabs.add(new SearchTab(this));
+            tabs.add(new ServerTab(this));
+            tabs.add(new ConsoleTab(this));
+            tabs.add(new StatisticTab(this));
+            tabs.add(new MessagesTab(this));
         } else {
-            tabs.add(new TransferTab(this, "TransfersButton"));
-            tabs.add(new SearchTab(this, "SearchButton"));
-            tabs.add(new StatisticTab(this, "StatisticsButton"));
+            tabs.add(new TransferTab(this));
+            tabs.add(new SearchTab(this));
+            tabs.add(new StatisticTab(this));
         }
 
         /*setting TransferTab active if registered*/
@@ -464,6 +464,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.3  2003/11/29 19:28:38  zet
+minor string move
+
 Revision 1.2  2003/11/29 19:10:24  zet
 small update.. continue later.
 - mainwindow > tabs > viewframes(can contain gView)

@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.55 2003/11/29 19:10:24 zet Exp $
+ * @version $Id: ConsoleTab.java,v 1.56 2003/11/29 19:28:38 zet Exp $
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {
@@ -51,10 +51,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
     /**
      * @param mainWindow
-     * @param resButtonString
      */
-    public ConsoleTab(MainWindow mainWindow, String resButtonString) {
-        super(mainWindow, resButtonString);
+    public ConsoleTab(MainWindow mainWindow) {
+        super(mainWindow, "ConsoleButton");
     }
 
     /* ( non-Javadoc )
@@ -146,6 +145,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.56  2003/11/29 19:28:38  zet
+minor string move
+
 Revision 1.55  2003/11/29 19:10:24  zet
 small update.. continue later.
 - mainwindow > tabs > viewframes(can contain gView)

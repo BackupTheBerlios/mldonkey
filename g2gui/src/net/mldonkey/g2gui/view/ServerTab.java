@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Composite;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.53 2003/11/29 19:10:24 zet Exp $
+ * @version $Id: ServerTab.java,v 1.54 2003/11/29 19:28:38 zet Exp $
  *
  */
 public class ServerTab extends GuiTab implements Runnable {
@@ -51,10 +51,9 @@ public class ServerTab extends GuiTab implements Runnable {
     
     /**
      * @param mainWindow
-     * @param resButtonString
      */
-    public ServerTab(MainWindow mainWindow, String resButtonString) {
-        super(mainWindow, resButtonString);
+    public ServerTab(MainWindow mainWindow) {
+        super(mainWindow, "ServersButton");
         updateDisplay();
     }
 
@@ -176,6 +175,9 @@ public class ServerTab extends GuiTab implements Runnable {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.54  2003/11/29 19:28:38  zet
+minor string move
+
 Revision 1.53  2003/11/29 19:10:24  zet
 small update.. continue later.
 - mainwindow > tabs > viewframes(can contain gView)

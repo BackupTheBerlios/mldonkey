@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Control;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.47 2003/11/29 19:10:24 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.48 2003/11/29 19:28:38 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -77,10 +77,9 @@ public class SearchTab extends GuiTab {
 	
 	/**
 	 * @param mainWindow
-	 * @param resButtonString
 	 */
-	public SearchTab( MainWindow mainWindow, String resButtonString ) {
-		super(mainWindow, resButtonString );
+	public SearchTab( MainWindow mainWindow ) {
+		super(mainWindow, "SearchButton");
 	}
 
 	/**
@@ -406,6 +405,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.48  2003/11/29 19:28:38  zet
+minor string move
+
 Revision 1.47  2003/11/29 19:10:24  zet
 small update.. continue later.
 - mainwindow > tabs > viewframes(can contain gView)
