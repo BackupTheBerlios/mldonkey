@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates><codetemplate name="constructorcomment" description="Comment for created constructors" context="constructorcomment_context" enabled="true">/**
+ * ${tags}
+ */</codetemplate><codetemplate name="typecomment" description="Comment for created types" context="typecomment_context" enabled="true">/**
+ * ${type_name}
+ *
+ * @author $$user$$
+ * @version $$Id$$ 
+ *
+ */</codetemplate><codetemplate name="methodcomment" description="Comment for non-overriding methods" context="methodcomment_context" enabled="true">/**
+ * ${tags}
+ */</codetemplate><codetemplate name="overridecomment" description="Comment for overriding methods" context="overridecomment_context" enabled="true">/* (non-Javadoc)
+ * ${see_to_overridden}
+ */</codetemplate><codetemplate name="newtype" description="New classes and interfaces" context="newtype_context" enabled="true">/*
+ * Copyright 2003
+ * ${project_name} Team
+ * 
+ * 
+ * This file is part of ${project_name}.
+ *
+ * ${project_name} is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * ${project_name} is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ${project_name}; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ */
+${package_declaration}
+
+${typecomment}
+${type_declaration}
+/*
+$$Log$$
+// ${todo} Auto-generated constructor stub</codetemplate></templates>
