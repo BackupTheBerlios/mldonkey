@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.46 2003/08/29 19:30:50 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.47 2003/08/29 21:21:46 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -169,6 +169,7 @@ public class TransferTab extends GuiTab  {
 	public SashForm createClientSash( ViewForm downloadViewForm) {
 	
 		SashForm downloadSashForm = new SashForm( downloadViewForm, SWT.HORIZONTAL );
+		downloadSashForm.SASH_WIDTH = 5;
 	
 		downloadComposite = new Composite( downloadSashForm, SWT.NONE );
 		GridLayout gridLayout = CGridLayout.createGL(1,0,0,0,0,false);
@@ -334,6 +335,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.47  2003/08/29 21:21:46  zet
+sash_width
+
 Revision 1.46  2003/08/29 19:30:50  zet
 font colour
 
