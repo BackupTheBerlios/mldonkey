@@ -40,8 +40,8 @@ import org.eclipse.swt.widgets.Control;
 /**
  * MLDonkeyOptions
  *
- * @author  $Author: zet $ 
- * @version $Id: MLDonkeyOptions.java,v 1.14 2003/08/18 22:28:58 zet Exp $ 
+ * @author  $Author: dek $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.15 2003/08/19 13:08:03 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -70,31 +70,26 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 				OptionsInfo temp = ( OptionsInfo ) it.next();
 				if ( temp.getOptionType() == EnumTagType.BOOL || isboolean( temp.getValue() )) {
 					String description = temp.getDescription();
-					if ( description.equals( "" ) )
-						description = temp.getKey();
+						if ( description.equals( "" ) )	description = temp.getKey();
+					String optionHelp = temp.getOptionHelp();					
+						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
 					/*create a boolean-editor and add to page*/
 					BooleanFieldEditor bool =
-						new BooleanFieldEditor( 
-							temp.getKey(),
-							description, 
-							parent );
-							
+						new BooleanFieldEditor( temp.getKey(), description, BooleanFieldEditor.SEPARATE_LABEL, parent );
+					bool.getLabelControl( parent ).setToolTipText( optionHelp );
 					bool.setPreferenceStore( this.getPreferenceStore() );
 					addField( bool );
 					bool.fillIntoGrid( parent, 2 );
 					bool.load();
 				} else {
 					String description = temp.getDescription();
-					if ( description.equals( "" ) )
-						description = temp.getKey();
-					StringFieldEditor string =
-						new StringFieldEditor( 
-							temp.getKey(),
-							description,
-							parent );
-					string.getLabelControl( parent ).setToolTipText( 
-						temp.getKey() );
-					string.setPreferenceStore( this.getPreferenceStore() );
+						if ( description.equals( "" ) ) description = temp.getKey();
+					String optionHelp = temp.getOptionHelp();					
+						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
+					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, parent );
+						string.getLabelControl( parent ).setToolTipText( optionHelp );					
+						string.setPreferenceStore( this.getPreferenceStore() );
+						
 					Point inputSize = string.getTextControl( parent ).getSize();
 					addField( string );
 					string.fillIntoGrid( parent, 2 );
@@ -102,6 +97,8 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 					string.getTextControl( parent ).setSize( 50, inputSize.y );
 				}
 			}
+			
+		( ( GridLayout )parent.getLayout() ).numColumns = 2;
 	}
 	/**
 	 * @param string
@@ -150,6 +147,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.15  2003/08/19 13:08:03  dek
+advanced-Options included
+
 Revision 1.14  2003/08/18 22:28:58  zet
 scrolledcomposite height
 

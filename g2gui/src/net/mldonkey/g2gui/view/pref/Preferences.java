@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.17 2003/08/18 14:54:01 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.18 2003/08/19 13:08:03 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -127,24 +127,24 @@ public class Preferences extends PreferenceManager {
 			
 			String section = option.getSectionToAppear();
 			String plugin = option.getPluginToAppear();
+						
 			
-			if ( ( section == null ) && ( plugin == null ) ) {				
+			
+			if ( ( section == null ) && ( plugin == null ) && showOption(option) ) {				
 				/* create the General-section, or if already done, only add the option */
 				if ( !sections.containsKey( "General" ) ) {
 					MLDonkeyOptions temp = new MLDonkeyOptions( "General", FieldEditorPreferencePage.FLAT );
 					addToRoot( new PreferenceNode ( "General", temp ) );
 					sections.put( "General", temp );	
 					temp.setPreferenceStore( optionsStore );			
-					//temp.setVisible(false);					
-					}
-			
-			/*commented out the following, as it produces ton's of options in this tab
-			 * which made it unreadable	
-			 */
-			( ( MLDonkeyOptions  )sections.get( "General" ) ).addOption( option );
-				
+					}			
+				/*commented out the following, as it produces ton's of options in this tab
+				 * which made it unreadable	
+				 */
+				( ( MLDonkeyOptions  )sections.get( "General" ) ).addOption( option );				
 			}
-			else if ( section != null ) {				
+			
+			else if ( ( section != null ) && showOption(option) ) {				
 			/* create the section, or if already done, only add the option */
 				if ( !sections.containsKey( section ) ) {
 					MLDonkeyOptions temp = new MLDonkeyOptions( section, FieldEditorPreferencePage.FLAT );
@@ -155,7 +155,7 @@ public class Preferences extends PreferenceManager {
 				( ( MLDonkeyOptions  )sections.get( section ) ).addOption( option );
 			}
 
-			else if ( plugin != null ) {				
+			else if ( ( plugin != null ) && showOption(option) ) {				
 			/* create the pluginSection, or if already done, only add the option */
 				if ( !plugins.containsKey( plugin ) ) {
 					/*only create the plugin, if it is possible at all...*/					
@@ -173,7 +173,7 @@ public class Preferences extends PreferenceManager {
 		 /*
 		  * first the sections:
 		  */
-//this creates only the sections defined in wantedSections[]		 
+		//this creates only the sections defined in wantedSections[]		 
 		 for ( int i = 0; i < wantedSections.length; i++ ) {
 			if ( sections.containsKey( wantedSections[ i ] ) ) {
 				MLDonkeyOptions optionspage = ( MLDonkeyOptions ) sections.get( wantedSections[ i ] );
@@ -181,44 +181,29 @@ public class Preferences extends PreferenceManager {
 			}				
 		}
 		 
-			
-// this creates sections for _all_ the options we received, do we really want this?
-   		/*
-		 sections.remove( "General" ); //remove the General-page, as it is already created
-		 it = sections.keySet().iterator();
-		 while ( it.hasNext() ) {
-		 	String sectionName = ( String ) it.next();
-		 	 MLDonkeyOptions optionspage = ( MLDonkeyOptions ) sections.get( sectionName );
-				myprefs.addToRoot( new PreferenceNode ( sectionName, optionspage ) );
-		 }
-		 */
-		 
-		 
-		 
 		 /*
 		  * and now the Plugins:
 		  */
-		PreferenceNode pluginOptions = new PreferenceNode( "plugins", new MLDonkeyOptions( "Plugins", FieldEditorPreferencePage.FLAT ) );
-			addToRoot( pluginOptions );
-			
-			
-//this creates only the sections defined in wantedPlugins[]		 
+		  if (plugins.size() != 0){		 
+			PreferenceNode pluginOptions = new PreferenceNode( "plugins", new MLDonkeyOptions( "Plugins", FieldEditorPreferencePage.FLAT ) );
+			addToRoot( pluginOptions );	
+					
+			/*this creates only the sections defined in wantedPlugins[]	*/ 
 			   for ( int i = 0; i < wantedPlugins.length; i++ ) {
 				  if ( plugins.containsKey( wantedPlugins[ i ] ) ) {
 					  MLDonkeyOptions optionspage = ( MLDonkeyOptions ) plugins.get( wantedPlugins[ i ] );
 						 pluginOptions.add( new PreferenceNode ( wantedPlugins[ i ], optionspage ) );
 				  }				
-			  }		  
-		  
-//this creates sections for _all_ the pluginsInfos we received, do we really want this?
-		/*
-		it = plugins.keySet().iterator();
-		while ( it.hasNext() ) {
-		   String sectionName = ( String ) it.next();
-			MLDonkeyOptions optionspage = ( MLDonkeyOptions ) plugins.get( sectionName );
-				pluginOptions.add( new PreferenceNode ( sectionName, optionspage ) );
-		}
-		*/
+			  }	
+		  }	
+	}
+
+	private boolean showOption(OptionsInfo option) {
+		boolean showOption = (
+					(option.isAdvanced() && preferenceStore.getBoolean( "advancedMode" ))
+					|| (!option.isAdvanced() && !preferenceStore.getBoolean( "advancedMode" ))
+					);	
+		return showOption;
 	}
 		
 		
@@ -251,6 +236,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.18  2003/08/19 13:08:03  dek
+advanced-Options included
+
 Revision 1.17  2003/08/18 14:54:01  dek
 *** empty log message ***
 
