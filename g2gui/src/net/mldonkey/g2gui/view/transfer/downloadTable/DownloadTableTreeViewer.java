@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.11 2003/10/19 21:39:32 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.12 2003/10/20 21:58:19 zet Exp $
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListener {
@@ -158,7 +158,10 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 		
 
 		createColumns();
-        
+		
+		// SWT3: SWT.RIGHT labels don't show up on gtk until a resize.. why? 
+		if (SWT.getPlatform().equals("gtk")) table.getColumns()[0].pack();
+		
 		tableTreeLabelProvider = new DownloadTableTreeLabelProvider();
         tableTreeLabelProvider.setTableTreeViewer( tableTreeViewer );
         
@@ -444,6 +447,9 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.12  2003/10/20 21:58:19  zet
+SWT.RIGHT labels cheap workaround..
+
 Revision 1.11  2003/10/19 21:39:32  zet
 nil
 
