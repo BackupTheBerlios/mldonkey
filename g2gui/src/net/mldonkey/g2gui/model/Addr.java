@@ -22,9 +22,6 @@
  */
 package net.mldonkey.g2gui.model;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -34,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  *
- * @version $Id: Addr.java,v 1.13 2003/09/02 09:24:36 lemmster Exp $
+ * @version $Id: Addr.java,v 1.14 2003/10/20 19:30:13 lemmster Exp $
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -112,23 +109,35 @@ public class Addr implements SimpleInformation {
 			return -1;
 		if ( this.hasHostName() && anAddress.hasHostName() )
 			return this.getHostName().compareToIgnoreCase( anAddress.getHostName() );
+			
+		return this.compareTo( this.address.getAddress(), anAddress.address.getAddress(), 0 );
+	}
 	
-		RE regex = null;
-		/* compare by ipaddress */
-		try {
-			 regex = new RE( "\\." );
-		}
-		catch ( REException e ) {			
-			e.printStackTrace();
-		}
-		
-		Long int1 = new Long( regex.substituteAll( this.address.getHostAddress(), "" ) );
-		Long int2 = new Long( regex.substituteAll( anAddress.address.getHostAddress(), "" ) );
-		return int1.compareTo( int2 );
+	private int compareTo( byte[] aByte1, byte[] aByte2, int index ) {
+		// break condition (assume aByte1 and aByte2 have same length)
+		if ( index >= aByte1.length )
+			return 0;
+			
+		int i1 = aByte1[ index ] & 0xff;
+		int i2 = aByte2[ index ] & 0xff;	
+			
+		// 1 > 2	
+		if ( i1 > i2 )
+			return 1;
+			
+		// 1 < 2	
+		if ( i1 < i2 )
+			return -1;
+
+		// equal -> recusion
+		return this.compareTo( aByte1, aByte2, ++index );
 	}
 }
 /*
 $$Log: Addr.java,v $
+$Revision 1.14  2003/10/20 19:30:13  lemmster
+$fixed Bug #1006
+$
 $Revision 1.13  2003/09/02 09:24:36  lemmster
 $checkstyle
 $
