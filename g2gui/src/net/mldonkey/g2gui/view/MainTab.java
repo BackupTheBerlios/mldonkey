@@ -37,6 +37,7 @@ import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -49,7 +50,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.19 2003/07/27 22:54:05 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.20 2003/07/28 14:49:36 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer {
@@ -531,17 +532,12 @@ public class MainTab implements Listener, Observer {
 	 */
 	public void setSizeLocation( Shell shell ) {
 				
-		if (internalPrefStore.contains( "windowX" ) ) {
-			
+		if (internalPrefStore.contains( "windowBounds" ) ) {
 			
 			if( internalPrefStore.getBoolean( "windowMaximized" ) ) 
 				shell.setMaximized( true );   
 			else 
-				shell.setBounds( internalPrefStore.getInt( "windowX" ),
-								internalPrefStore.getInt( "windowY" ),
-								internalPrefStore.getInt( "windowWidth" ), 
-								internalPrefStore.getInt( "windowHeight" ) 
-								);
+				shell.setBounds( PreferenceConverter.getRectangle(internalPrefStore, "windowBounds") );
 		} 
 	}
 	public void getInternalPrefStoreSettings() {
@@ -558,10 +554,7 @@ public class MainTab implements Listener, Observer {
 		if ( shell.getMaximized() )
 			internalPrefStore.setValue( "windowMaximized", shell.getMaximized() );
 		else {
-			internalPrefStore.setValue( "windowWidth", shellBounds.width );	
-			internalPrefStore.setValue( "windowHeight", shellBounds.height );
-			internalPrefStore.setValue( "windowX", shellBounds.x );
-			internalPrefStore.setValue( "windowY", shellBounds.y );
+			PreferenceConverter.setValue(internalPrefStore, "windowBounds", shell.getBounds());
 			internalPrefStore.setValue( "windowMaximized", shell.getMaximized() );
 		}
 	}
@@ -600,6 +593,9 @@ public class MainTab implements Listener, Observer {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.20  2003/07/28 14:49:36  zet
+use prefconverter
+
 Revision 1.19  2003/07/27 22:54:05  zet
 coolbar small buttons
 
