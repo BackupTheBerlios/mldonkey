@@ -2,13 +2,13 @@
 # Process this file with autoconf to produce a configure script.
 
 $FULL-PACKAGE-NAME=g2gui
-$VERSION=0.1.1
+$VERSION=0.2.0CVS
 $BUG-REPORT-ADDRESS=https://developer.berlios.de/bugs/?group_id=610
 
 AC_PREREQ(2.56)
 
 AC_INIT(FULL-PACKAGE-NAME, VERSION, BUG-REPORT-ADDRESS)
-AC_CONFIG_AUX_DIR(./build-stuff)
+AC_CONFIG_AUX_DIR(build)
 AC_CANONICAL_HOST
 AC_ARG_ENABLE(batch,
         AC_HELP_STRING([--enable-batch],
@@ -26,14 +26,19 @@ AC_ARG_ENABLE(batch,
 			  if test -z $ac_cv_path_BZIP2; then
 			  	AC_MSG_ERROR([**** Could not find bzip2 needed for enable-batch! ****])
 			  fi
-			], 
+			],
 			ac_cv_enable_batch=no)
 
+
+AC_ARG_WITH(fox,
+        AC_HELP_STRING([--with-fox],
+                        [uses fox as widget-set instead of default (gtk)]),
+                        widget_set=fox)
+
 AC_ARG_WITH(motif,
-	AC_HELP_STRING([--with-motif],
-			[uses motif as widget-set instead of default (gtk)]),
-			widget_set=motif,
-			widget_set=gtk)
+	    AC_HELP_STRING([--with-motif],
+			            [uses motif as widget-set instead of default (gtk)]),
+			            widget_set=motif)
 
 
 # Checks for programs.
@@ -43,6 +48,7 @@ if test -z $ac_cv_path_GCJ; then
    AC_MSG_ERROR([**** Could not find the compiler gcj needed for this software! ****])
 fi
 GCJ_VERSION=`$ac_cv_path_GCJ -dumpversion`
+
 #check for right version-number
 oldIFS="$IFS"
 IFS="."
@@ -50,98 +56,113 @@ set version_dummy $GCJ_VERSION
 IFS="$oldIFS"
 GCJ_MAJOR=$2
 GCJ_MINOR=$3
+GCJ_MICRO=$4
+
 if test $GCJ_MAJOR -ge 3; then
 	if  test $GCJ_MINOR -ge 3; then
-	echo using gcj version $GCJ_MAJOR.$GCJ_MINOR
+	echo using gcj version $GCJ_MAJOR.$GCJ_MINOR.$GCJ_MICRO
 	else
-	AC_MSG_ERROR([**** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***])
+	AC_MSG_ERROR([**** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR.$GCJ_MICRO, you need gcj >=3.3***])
 	fi
 else
-AC_MSG_ERROR([**** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***])
+AC_MSG_ERROR([**** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR.$GCJ_MICRO, you need gcj >=3.3***])
 fi
 
 AC_PATH_PROG([FIND],[find])
 if test -z $ac_cv_path_FIND; then
    AC_MSG_ERROR([**** Could not find the program find needed for this software! ****])
-fi 
+fi
 
 
 # Checks for libraries.
 # define URLS for libs
-ac_lib_url="http://download.berlios.de/pub/mldonkey/g2gui-libs/swt3"
-jar_dir=jar-libs
-
-#define function, that checks for jars, and downloads them if nescerssary:
-
+ac_lib_url="http://download.berlios.de/pub/mldonkey/g2gui-libs/swt3m5"
+lib_dir=lib
+lib_jar_dir=jar
 src_dir=src
 AC_SUBST(SRC_DIR,[$src_dir])
 
+#define function, that checks for jars, and downloads them if nescerssary:
 define([NEEDED_FILE_PRESENT],[
-	AC_CHECK_FILE($jar_dir/$1,,	[
+	AC_CHECK_FILE($lib_jar_dir/$1,,	[
 		if test $ac_cv_enable_batch = yes; then
-			echo downloading $1
-			$ac_cv_path_WGET $ac_lib_url/$1 -P$jar_dir
-		else 
+			echo "downloading $1.tar.bz2"
+			$ac_cv_path_WGET -c $ac_lib_url/$1.tar.bz2 -P$lib_jar_dir
+            $ac_cv_path_TAR -xjf $lib_jar_dir/$1.tar.bz2 -C $lib_jar_dir
+            echo "extracted $1.tar.bz2"
+			rm $lib_jar_dir/$1.tar.bz2
+		else
 		AC_MSG_ERROR([$1 not found, use --enable-batch to auto-download])
 		fi
 	])
 ])
 
 
-NEEDED_FILE_PRESENT([boot.JDK.jar])
 NEEDED_FILE_PRESENT([gnu-regexp-1.1.4.jar])
-NEEDED_FILE_PRESENT([jface.jar])
+NEEDED_FILE_PRESENT([gnu-trove-1.0.2.jar])
+NEEDED_FILE_PRESENT([boot-2.1.jar])
+NEEDED_FILE_PRESENT([jface-2.1.jar])
+NEEDED_FILE_PRESENT([xercesImpl-2.1.jar])
+NEEDED_FILE_PRESENT([xmlParserAPIs-2.1.jar])
 NEEDED_FILE_PRESENT([Makefile.in])
-NEEDED_FILE_PRESENT([trove.jar])
-NEEDED_FILE_PRESENT([xercesImpl.jar])
-NEEDED_FILE_PRESENT([xmlParserAPIs.jar])
-
 
 #check for runtime-build dir
-AC_CHECK_FILE([$jar_dir/runtime/Makefile.in],, [
+runtime_dir=runtime-2.1
+AC_SUBST(RUNTIME_DIR,[$runtime_dir])
+AC_CHECK_FILE([$lib_jar_dir/$runtime_dir/Makefile.in],, [
 	if test $ac_cv_enable_batch = yes; then
-	        echo downloading runtime
-		$ac_cv_path_WGET $ac_lib_url/runtime.tar.bz2
-		$ac_cv_path_TAR -xjf runtime.tar.bz2
-		rm runtime.tar.bz2		
+	        echo "downloading $runtime_dir"
+		$ac_cv_path_WGET $ac_lib_url/$runtime_dir.tar.bz2 -P$lib_jar_dir
+		$ac_cv_path_TAR -xjf $lib_jar_dir/$runtime_dir.tar.bz2 -C $lib_jar_dir
+        echo "extracted $runtime_dir.tar.bz2"
+		rm $lib_jar_dir/$runtime_dir.tar.bz2
 	else
 	AC_MSG_ERROR([needed files not found, use --enable-batch to auto-download])
 	fi
 ])
 
-#now follow the platform-dependent stuff:
 
+#now follows the platform-dependent stuff:
 resources_dir=resources
-
 AC_SUBST(RES_DIR,[$resources_dir])
 
 case $host in
 	*mingw32* |*win*)
-	host=win	
-	swt_dir=swt-win
-	obj_dir=obj-win
+	host=win
+	swt_dir=swt-win32
+	obj_dir=_obj
 	platform_targets=icon.o
 	;;
+
 	*)
 	if !(test $widget_set); then
 		widget_set=gtk
 	fi
-	host=other
-	echo using widget-set : $widget_set
-	swt_dir=swt-$widget_set
-	obj_dir=obj-$widget_set
+	# host=other
+    host=$(echo $(uname) | tr A-Z a-z)
+	swt_dir=swt-$host-$widget_set
+	obj_dir=_obj
+	echo "SWT widget-set : $widget_set"
+	echo "SWT dir prefix : $swt_dir"
 	;;
 esac
 
 AC_SUBST(PLATFORM_TARGETS,[$platform_targets])
-AC_SUBST(SWT_DIR,[$swt_dir])
+AC_SUBST(SWT_DIR,[$swt_dir-ws])
 
-AC_CHECK_FILE([$jar_dir/$swt_dir/Makefile.in],, [
+# now we fetch the platform-specific jars + .so files
+
+AC_CHECK_FILE([$lib_jar_dir/$swt_dir-ws/Makefile.in],, [
 	if test $ac_cv_enable_batch = yes; then
-		echo downloading $swt_dir
-		$ac_cv_path_WGET $ac_lib_url/$swt_dir.tar.bz2
-		$ac_cv_path_TAR -xjf $swt_dir.tar.bz2
-		rm $swt_dir.tar.bz2
+		echo "downloading $swt_dir-ws"
+		$ac_cv_path_WGET $ac_lib_url/$swt_dir-ws.tar.bz2 -P$lib_jar_dir
+		$ac_cv_path_WGET $ac_lib_url/$swt_dir-os.tar.bz2 -P$lib_dir
+		## need to to some platform specific stuff (extract win32 libs into basedir?)
+        echo "downloading $swt_dir-os"
+		$ac_cv_path_TAR -xjf $lib_jar_dir/$swt_dir-ws.tar.bz2 -C $lib_jar_dir
+		$ac_cv_path_TAR -xjf $lib_dir/$swt_dir-os.tar.bz2 -C $lib_dir
+		rm $lib_jar_dir/$swt_dir-ws.tar.bz2
+		rm $lib_dir/$swt_dir-os.tar.bz2
 	else
 	AC_MSG_ERROR([needed files not found, use --enable-batch to auto-download])
 	fi
@@ -150,7 +171,11 @@ AC_CHECK_FILE([$jar_dir/$swt_dir/Makefile.in],, [
 
 # libXm.so.2.1  libswt-gnome-motif-2135.so  libswt-kde-motif-2135.so  libswt-motif-2135.so  swt.jar
 
-
+# check for bogus file and CVS directories
+if test -e src/net/mldonkey/g2gui/model/enum/EnumMaskMatcherTest.java; then
+    echo "Deleting bogus file src/net/mldonkey/g2gui/model/enum/EnumMaskMatcherTest.java"
+	rm src/net/mldonkey/g2gui/model/enum/EnumMaskMatcherTest.java
+fi
 # now creating Makefile-vars
 
 #creating obj-dir
@@ -163,7 +188,8 @@ AC_SUBST(PACKAGE_DIR,[$PWD])
 
 # Checks for library functions.
 
-AC_CONFIG_FILES([jar-libs/Makefile jar-libs/runtime/Makefile jar-libs/$swt_dir/Makefile Makefile])
-AC_OUTPUT
+# prepare other Makefiles
 
+AC_CONFIG_FILES([$lib_jar_dir/Makefile $lib_jar_dir/$swt_dir-ws/Makefile $lib_jar_dir/$runtime_dir/Makefile Makefile])
+AC_OUTPUT
 

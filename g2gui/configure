@@ -272,7 +272,7 @@ PACKAGE_VERSION='VERSION'
 PACKAGE_STRING='FULL-PACKAGE-NAME VERSION'
 PACKAGE_BUGREPORT='BUG-REPORT-ADDRESS'
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os WGET TAR BZIP2 GCJ FIND SRC_DIR RES_DIR PLATFORM_TARGETS SWT_DIR OBJ_DIR PACKAGE_DIR LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os WGET TAR BZIP2 GCJ FIND SRC_DIR RUNTIME_DIR RES_DIR PLATFORM_TARGETS SWT_DIR OBJ_DIR PACKAGE_DIR LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -796,6 +796,7 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-fox              uses fox as widget-set instead of default (gtk)
   --with-motif            uses motif as widget-set instead of default (gtk)
 
 Report bugs to <BUG-REPORT-ADDRESS>.
@@ -854,7 +855,7 @@ ac_abs_top_srcdir=`cd "$ac_dir" && cd $ac_top_srcdir && pwd`
     else
       echo "$as_me: WARNING: no configuration information is in $ac_dir" >&2
     fi
-    cd "$ac_popdir"
+    cd $ac_popdir
   done
 fi
 
@@ -1053,7 +1054,7 @@ _ASBOX
       echo "$as_me: caught signal $ac_signal"
     echo "$as_me: exit $exit_status"
   } >&5
-  rm -f core *.core &&
+  rm -f core core.* *.core &&
   rm -rf conftest* confdefs* conf$$* $ac_clean_files &&
     exit $exit_status
      ' 0
@@ -1213,7 +1214,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 ac_aux_dir=
-for ac_dir in ./build-stuff $srcdir/./build-stuff; do
+for ac_dir in build $srcdir/build; do
   if test -f $ac_dir/install-sh; then
     ac_aux_dir=$ac_dir
     ac_install_sh="$ac_aux_dir/install-sh -c"
@@ -1229,8 +1230,8 @@ for ac_dir in ./build-stuff $srcdir/./build-stuff; do
   fi
 done
 if test -z "$ac_aux_dir"; then
-  { { echo "$as_me:$LINENO: error: cannot find install-sh or install.sh in ./build-stuff $srcdir/./build-stuff" >&5
-echo "$as_me: error: cannot find install-sh or install.sh in ./build-stuff $srcdir/./build-stuff" >&2;}
+  { { echo "$as_me:$LINENO: error: cannot find install-sh or install.sh in build $srcdir/build" >&5
+echo "$as_me: error: cannot find install-sh or install.sh in build $srcdir/build" >&2;}
    { (exit 1); exit 1; }; }
 fi
 ac_config_guess="$SHELL $ac_aux_dir/config.guess"
@@ -1433,12 +1434,18 @@ else
 fi;
 
 
+
+# Check whether --with-fox or --without-fox was given.
+if test "${with_fox+set}" = set; then
+  withval="$with_fox"
+  widget_set=fox
+fi;
+
+
 # Check whether --with-motif or --without-motif was given.
 if test "${with_motif+set}" = set; then
   withval="$with_motif"
   widget_set=motif
-else
-  widget_set=gtk
 fi;
 
 
@@ -1489,6 +1496,7 @@ echo "$as_me: error: **** Could not find the compiler gcj needed for this softwa
    { (exit 1); exit 1; }; }
 fi
 GCJ_VERSION=`$ac_cv_path_GCJ -dumpversion`
+
 #check for right version-number
 oldIFS="$IFS"
 IFS="."
@@ -1496,17 +1504,19 @@ set version_dummy $GCJ_VERSION
 IFS="$oldIFS"
 GCJ_MAJOR=$2
 GCJ_MINOR=$3
+GCJ_MICRO=$4
+
 if test $GCJ_MAJOR -ge 3; then
 	if  test $GCJ_MINOR -ge 3; then
-	echo using gcj version $GCJ_MAJOR.$GCJ_MINOR
+	echo using gcj version $GCJ_MAJOR.$GCJ_MINOR.$GCJ_MICRO
 	else
-	{ { echo "$as_me:$LINENO: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***" >&5
-echo "$as_me: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***" >&2;}
+	{ { echo "$as_me:$LINENO: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR.$GCJ_MICRO, you need gcj >=3.3***" >&5
+echo "$as_me: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR.$GCJ_MICRO, you need gcj >=3.3***" >&2;}
    { (exit 1); exit 1; }; }
 	fi
 else
-{ { echo "$as_me:$LINENO: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***" >&5
-echo "$as_me: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR, you need gcj >=3.3***" >&2;}
+{ { echo "$as_me:$LINENO: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR.$GCJ_MICRO, you need gcj >=3.3***" >&5
+echo "$as_me: error: **** wrong gcj version $GCJ_MAJOR.$GCJ_MINOR.$GCJ_MICRO, you need gcj >=3.3***" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
@@ -1558,22 +1568,21 @@ fi
 
 # Checks for libraries.
 # define URLS for libs
-ac_lib_url="http://download.berlios.de/pub/mldonkey/g2gui-libs/swt3"
-jar_dir=jar-libs
-
-#define function, that checks for jars, and downloads them if nescerssary:
-
+ac_lib_url="http://download.berlios.de/pub/mldonkey/g2gui-libs/swt3m5"
+lib_dir=lib
+lib_jar_dir=jar
 src_dir=src
 SRC_DIR=$src_dir
 
 
+#define function, that checks for jars, and downloads them if nescerssary:
 
 
 
 
-	as_ac_File=`echo "ac_cv_file_$jar_dir/boot.JDK.jar" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $jar_dir/boot.JDK.jar" >&5
-echo $ECHO_N "checking for $jar_dir/boot.JDK.jar... $ECHO_C" >&6
+	as_ac_File=`echo "ac_cv_file_$lib_jar_dir/gnu-regexp-1.1.4.jar" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $lib_jar_dir/gnu-regexp-1.1.4.jar" >&5
+echo $ECHO_N "checking for $lib_jar_dir/gnu-regexp-1.1.4.jar... $ECHO_C" >&6
 if eval "test \"\${$as_ac_File+set}\" = set"; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -1581,7 +1590,7 @@ else
   { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
 echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
    { (exit 1); exit 1; }; }
-if test -r "$jar_dir/boot.JDK.jar"; then
+if test -r "$lib_jar_dir/gnu-regexp-1.1.4.jar"; then
   eval "$as_ac_File=yes"
 else
   eval "$as_ac_File=no"
@@ -1594,43 +1603,11 @@ if test `eval echo '${'$as_ac_File'}'` = yes; then
 else
 
 		if test $ac_cv_enable_batch = yes; then
-			echo downloading boot.JDK.jar
-			$ac_cv_path_WGET $ac_lib_url/boot.JDK.jar -P$jar_dir
-		else
-		{ { echo "$as_me:$LINENO: error: boot.JDK.jar not found, use --enable-batch to auto-download" >&5
-echo "$as_me: error: boot.JDK.jar not found, use --enable-batch to auto-download" >&2;}
-   { (exit 1); exit 1; }; }
-		fi
-
-fi
-
-
-
-	as_ac_File=`echo "ac_cv_file_$jar_dir/gnu-regexp-1.1.4.jar" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $jar_dir/gnu-regexp-1.1.4.jar" >&5
-echo $ECHO_N "checking for $jar_dir/gnu-regexp-1.1.4.jar... $ECHO_C" >&6
-if eval "test \"\${$as_ac_File+set}\" = set"; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  test "$cross_compiling" = yes &&
-  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
-echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
-   { (exit 1); exit 1; }; }
-if test -r "$jar_dir/gnu-regexp-1.1.4.jar"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
-echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
-if test `eval echo '${'$as_ac_File'}'` = yes; then
-  :
-else
-
-		if test $ac_cv_enable_batch = yes; then
-			echo downloading gnu-regexp-1.1.4.jar
-			$ac_cv_path_WGET $ac_lib_url/gnu-regexp-1.1.4.jar -P$jar_dir
+			echo "downloading gnu-regexp-1.1.4.jar.tar.bz2"
+			$ac_cv_path_WGET -c $ac_lib_url/gnu-regexp-1.1.4.jar.tar.bz2 -P$lib_jar_dir
+            $ac_cv_path_TAR -xjf $lib_jar_dir/gnu-regexp-1.1.4.jar.tar.bz2 -C $lib_jar_dir
+            echo "extracted gnu-regexp-1.1.4.jar.tar.bz2"
+			rm $lib_jar_dir/gnu-regexp-1.1.4.jar.tar.bz2
 		else
 		{ { echo "$as_me:$LINENO: error: gnu-regexp-1.1.4.jar not found, use --enable-batch to auto-download" >&5
 echo "$as_me: error: gnu-regexp-1.1.4.jar not found, use --enable-batch to auto-download" >&2;}
@@ -1641,9 +1618,9 @@ fi
 
 
 
-	as_ac_File=`echo "ac_cv_file_$jar_dir/jface.jar" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $jar_dir/jface.jar" >&5
-echo $ECHO_N "checking for $jar_dir/jface.jar... $ECHO_C" >&6
+	as_ac_File=`echo "ac_cv_file_$lib_jar_dir/gnu-trove-1.0.2.jar" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $lib_jar_dir/gnu-trove-1.0.2.jar" >&5
+echo $ECHO_N "checking for $lib_jar_dir/gnu-trove-1.0.2.jar... $ECHO_C" >&6
 if eval "test \"\${$as_ac_File+set}\" = set"; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -1651,7 +1628,7 @@ else
   { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
 echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
    { (exit 1); exit 1; }; }
-if test -r "$jar_dir/jface.jar"; then
+if test -r "$lib_jar_dir/gnu-trove-1.0.2.jar"; then
   eval "$as_ac_File=yes"
 else
   eval "$as_ac_File=no"
@@ -1664,11 +1641,14 @@ if test `eval echo '${'$as_ac_File'}'` = yes; then
 else
 
 		if test $ac_cv_enable_batch = yes; then
-			echo downloading jface.jar
-			$ac_cv_path_WGET $ac_lib_url/jface.jar -P$jar_dir
+			echo "downloading gnu-trove-1.0.2.jar.tar.bz2"
+			$ac_cv_path_WGET -c $ac_lib_url/gnu-trove-1.0.2.jar.tar.bz2 -P$lib_jar_dir
+            $ac_cv_path_TAR -xjf $lib_jar_dir/gnu-trove-1.0.2.jar.tar.bz2 -C $lib_jar_dir
+            echo "extracted gnu-trove-1.0.2.jar.tar.bz2"
+			rm $lib_jar_dir/gnu-trove-1.0.2.jar.tar.bz2
 		else
-		{ { echo "$as_me:$LINENO: error: jface.jar not found, use --enable-batch to auto-download" >&5
-echo "$as_me: error: jface.jar not found, use --enable-batch to auto-download" >&2;}
+		{ { echo "$as_me:$LINENO: error: gnu-trove-1.0.2.jar not found, use --enable-batch to auto-download" >&5
+echo "$as_me: error: gnu-trove-1.0.2.jar not found, use --enable-batch to auto-download" >&2;}
    { (exit 1); exit 1; }; }
 		fi
 
@@ -1676,9 +1656,9 @@ fi
 
 
 
-	as_ac_File=`echo "ac_cv_file_$jar_dir/Makefile.in" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $jar_dir/Makefile.in" >&5
-echo $ECHO_N "checking for $jar_dir/Makefile.in... $ECHO_C" >&6
+	as_ac_File=`echo "ac_cv_file_$lib_jar_dir/boot-2.1.jar" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $lib_jar_dir/boot-2.1.jar" >&5
+echo $ECHO_N "checking for $lib_jar_dir/boot-2.1.jar... $ECHO_C" >&6
 if eval "test \"\${$as_ac_File+set}\" = set"; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -1686,7 +1666,7 @@ else
   { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
 echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
    { (exit 1); exit 1; }; }
-if test -r "$jar_dir/Makefile.in"; then
+if test -r "$lib_jar_dir/boot-2.1.jar"; then
   eval "$as_ac_File=yes"
 else
   eval "$as_ac_File=no"
@@ -1699,8 +1679,163 @@ if test `eval echo '${'$as_ac_File'}'` = yes; then
 else
 
 		if test $ac_cv_enable_batch = yes; then
-			echo downloading Makefile.in
-			$ac_cv_path_WGET $ac_lib_url/Makefile.in -P$jar_dir
+			echo "downloading boot-2.1.jar.tar.bz2"
+			$ac_cv_path_WGET -c $ac_lib_url/boot-2.1.jar.tar.bz2 -P$lib_jar_dir
+            $ac_cv_path_TAR -xjf $lib_jar_dir/boot-2.1.jar.tar.bz2 -C $lib_jar_dir
+            echo "extracted boot-2.1.jar.tar.bz2"
+			rm $lib_jar_dir/boot-2.1.jar.tar.bz2
+		else
+		{ { echo "$as_me:$LINENO: error: boot-2.1.jar not found, use --enable-batch to auto-download" >&5
+echo "$as_me: error: boot-2.1.jar not found, use --enable-batch to auto-download" >&2;}
+   { (exit 1); exit 1; }; }
+		fi
+
+fi
+
+
+
+	as_ac_File=`echo "ac_cv_file_$lib_jar_dir/jface-2.1.jar" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $lib_jar_dir/jface-2.1.jar" >&5
+echo $ECHO_N "checking for $lib_jar_dir/jface-2.1.jar... $ECHO_C" >&6
+if eval "test \"\${$as_ac_File+set}\" = set"; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  test "$cross_compiling" = yes &&
+  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
+echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
+   { (exit 1); exit 1; }; }
+if test -r "$lib_jar_dir/jface-2.1.jar"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
+echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
+if test `eval echo '${'$as_ac_File'}'` = yes; then
+  :
+else
+
+		if test $ac_cv_enable_batch = yes; then
+			echo "downloading jface-2.1.jar.tar.bz2"
+			$ac_cv_path_WGET -c $ac_lib_url/jface-2.1.jar.tar.bz2 -P$lib_jar_dir
+            $ac_cv_path_TAR -xjf $lib_jar_dir/jface-2.1.jar.tar.bz2 -C $lib_jar_dir
+            echo "extracted jface-2.1.jar.tar.bz2"
+			rm $lib_jar_dir/jface-2.1.jar.tar.bz2
+		else
+		{ { echo "$as_me:$LINENO: error: jface-2.1.jar not found, use --enable-batch to auto-download" >&5
+echo "$as_me: error: jface-2.1.jar not found, use --enable-batch to auto-download" >&2;}
+   { (exit 1); exit 1; }; }
+		fi
+
+fi
+
+
+
+	as_ac_File=`echo "ac_cv_file_$lib_jar_dir/xercesImpl-2.1.jar" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $lib_jar_dir/xercesImpl-2.1.jar" >&5
+echo $ECHO_N "checking for $lib_jar_dir/xercesImpl-2.1.jar... $ECHO_C" >&6
+if eval "test \"\${$as_ac_File+set}\" = set"; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  test "$cross_compiling" = yes &&
+  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
+echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
+   { (exit 1); exit 1; }; }
+if test -r "$lib_jar_dir/xercesImpl-2.1.jar"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
+echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
+if test `eval echo '${'$as_ac_File'}'` = yes; then
+  :
+else
+
+		if test $ac_cv_enable_batch = yes; then
+			echo "downloading xercesImpl-2.1.jar.tar.bz2"
+			$ac_cv_path_WGET -c $ac_lib_url/xercesImpl-2.1.jar.tar.bz2 -P$lib_jar_dir
+            $ac_cv_path_TAR -xjf $lib_jar_dir/xercesImpl-2.1.jar.tar.bz2 -C $lib_jar_dir
+            echo "extracted xercesImpl-2.1.jar.tar.bz2"
+			rm $lib_jar_dir/xercesImpl-2.1.jar.tar.bz2
+		else
+		{ { echo "$as_me:$LINENO: error: xercesImpl-2.1.jar not found, use --enable-batch to auto-download" >&5
+echo "$as_me: error: xercesImpl-2.1.jar not found, use --enable-batch to auto-download" >&2;}
+   { (exit 1); exit 1; }; }
+		fi
+
+fi
+
+
+
+	as_ac_File=`echo "ac_cv_file_$lib_jar_dir/xmlParserAPIs-2.1.jar" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $lib_jar_dir/xmlParserAPIs-2.1.jar" >&5
+echo $ECHO_N "checking for $lib_jar_dir/xmlParserAPIs-2.1.jar... $ECHO_C" >&6
+if eval "test \"\${$as_ac_File+set}\" = set"; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  test "$cross_compiling" = yes &&
+  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
+echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
+   { (exit 1); exit 1; }; }
+if test -r "$lib_jar_dir/xmlParserAPIs-2.1.jar"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
+echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
+if test `eval echo '${'$as_ac_File'}'` = yes; then
+  :
+else
+
+		if test $ac_cv_enable_batch = yes; then
+			echo "downloading xmlParserAPIs-2.1.jar.tar.bz2"
+			$ac_cv_path_WGET -c $ac_lib_url/xmlParserAPIs-2.1.jar.tar.bz2 -P$lib_jar_dir
+            $ac_cv_path_TAR -xjf $lib_jar_dir/xmlParserAPIs-2.1.jar.tar.bz2 -C $lib_jar_dir
+            echo "extracted xmlParserAPIs-2.1.jar.tar.bz2"
+			rm $lib_jar_dir/xmlParserAPIs-2.1.jar.tar.bz2
+		else
+		{ { echo "$as_me:$LINENO: error: xmlParserAPIs-2.1.jar not found, use --enable-batch to auto-download" >&5
+echo "$as_me: error: xmlParserAPIs-2.1.jar not found, use --enable-batch to auto-download" >&2;}
+   { (exit 1); exit 1; }; }
+		fi
+
+fi
+
+
+
+	as_ac_File=`echo "ac_cv_file_$lib_jar_dir/Makefile.in" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $lib_jar_dir/Makefile.in" >&5
+echo $ECHO_N "checking for $lib_jar_dir/Makefile.in... $ECHO_C" >&6
+if eval "test \"\${$as_ac_File+set}\" = set"; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  test "$cross_compiling" = yes &&
+  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
+echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
+   { (exit 1); exit 1; }; }
+if test -r "$lib_jar_dir/Makefile.in"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
+echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
+if test `eval echo '${'$as_ac_File'}'` = yes; then
+  :
+else
+
+		if test $ac_cv_enable_batch = yes; then
+			echo "downloading Makefile.in.tar.bz2"
+			$ac_cv_path_WGET -c $ac_lib_url/Makefile.in.tar.bz2 -P$lib_jar_dir
+            $ac_cv_path_TAR -xjf $lib_jar_dir/Makefile.in.tar.bz2 -C $lib_jar_dir
+            echo "extracted Makefile.in.tar.bz2"
+			rm $lib_jar_dir/Makefile.in.tar.bz2
 		else
 		{ { echo "$as_me:$LINENO: error: Makefile.in not found, use --enable-batch to auto-download" >&5
 echo "$as_me: error: Makefile.in not found, use --enable-batch to auto-download" >&2;}
@@ -1711,116 +1846,13 @@ fi
 
 
 
-	as_ac_File=`echo "ac_cv_file_$jar_dir/trove.jar" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $jar_dir/trove.jar" >&5
-echo $ECHO_N "checking for $jar_dir/trove.jar... $ECHO_C" >&6
-if eval "test \"\${$as_ac_File+set}\" = set"; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  test "$cross_compiling" = yes &&
-  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
-echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
-   { (exit 1); exit 1; }; }
-if test -r "$jar_dir/trove.jar"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
-echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
-if test `eval echo '${'$as_ac_File'}'` = yes; then
-  :
-else
-
-		if test $ac_cv_enable_batch = yes; then
-			echo downloading trove.jar
-			$ac_cv_path_WGET $ac_lib_url/trove.jar -P$jar_dir
-		else
-		{ { echo "$as_me:$LINENO: error: trove.jar not found, use --enable-batch to auto-download" >&5
-echo "$as_me: error: trove.jar not found, use --enable-batch to auto-download" >&2;}
-   { (exit 1); exit 1; }; }
-		fi
-
-fi
-
-
-
-	as_ac_File=`echo "ac_cv_file_$jar_dir/xercesImpl.jar" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $jar_dir/xercesImpl.jar" >&5
-echo $ECHO_N "checking for $jar_dir/xercesImpl.jar... $ECHO_C" >&6
-if eval "test \"\${$as_ac_File+set}\" = set"; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  test "$cross_compiling" = yes &&
-  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
-echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
-   { (exit 1); exit 1; }; }
-if test -r "$jar_dir/xercesImpl.jar"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
-echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
-if test `eval echo '${'$as_ac_File'}'` = yes; then
-  :
-else
-
-		if test $ac_cv_enable_batch = yes; then
-			echo downloading xercesImpl.jar
-			$ac_cv_path_WGET $ac_lib_url/xercesImpl.jar -P$jar_dir
-		else
-		{ { echo "$as_me:$LINENO: error: xercesImpl.jar not found, use --enable-batch to auto-download" >&5
-echo "$as_me: error: xercesImpl.jar not found, use --enable-batch to auto-download" >&2;}
-   { (exit 1); exit 1; }; }
-		fi
-
-fi
-
-
-
-	as_ac_File=`echo "ac_cv_file_$jar_dir/xmlParserAPIs.jar" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $jar_dir/xmlParserAPIs.jar" >&5
-echo $ECHO_N "checking for $jar_dir/xmlParserAPIs.jar... $ECHO_C" >&6
-if eval "test \"\${$as_ac_File+set}\" = set"; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  test "$cross_compiling" = yes &&
-  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
-echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
-   { (exit 1); exit 1; }; }
-if test -r "$jar_dir/xmlParserAPIs.jar"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
-echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
-if test `eval echo '${'$as_ac_File'}'` = yes; then
-  :
-else
-
-		if test $ac_cv_enable_batch = yes; then
-			echo downloading xmlParserAPIs.jar
-			$ac_cv_path_WGET $ac_lib_url/xmlParserAPIs.jar -P$jar_dir
-		else
-		{ { echo "$as_me:$LINENO: error: xmlParserAPIs.jar not found, use --enable-batch to auto-download" >&5
-echo "$as_me: error: xmlParserAPIs.jar not found, use --enable-batch to auto-download" >&2;}
-   { (exit 1); exit 1; }; }
-		fi
-
-fi
-
-
-
-
 #check for runtime-build dir
-as_ac_File=`echo "ac_cv_file_$jar_dir/runtime/Makefile.in" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $jar_dir/runtime/Makefile.in" >&5
-echo $ECHO_N "checking for $jar_dir/runtime/Makefile.in... $ECHO_C" >&6
+runtime_dir=runtime-2.1
+RUNTIME_DIR=$runtime_dir
+
+as_ac_File=`echo "ac_cv_file_$lib_jar_dir/$runtime_dir/Makefile.in" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $lib_jar_dir/$runtime_dir/Makefile.in" >&5
+echo $ECHO_N "checking for $lib_jar_dir/$runtime_dir/Makefile.in... $ECHO_C" >&6
 if eval "test \"\${$as_ac_File+set}\" = set"; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -1828,7 +1860,7 @@ else
   { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
 echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
    { (exit 1); exit 1; }; }
-if test -r "$jar_dir/runtime/Makefile.in"; then
+if test -r "$lib_jar_dir/$runtime_dir/Makefile.in"; then
   eval "$as_ac_File=yes"
 else
   eval "$as_ac_File=no"
@@ -1841,10 +1873,11 @@ if test `eval echo '${'$as_ac_File'}'` = yes; then
 else
 
 	if test $ac_cv_enable_batch = yes; then
-	        echo downloading runtime
-		$ac_cv_path_WGET $ac_lib_url/runtime.tar.bz2
-		$ac_cv_path_TAR -xjf runtime.tar.bz2
-		rm runtime.tar.bz2
+	        echo "downloading $runtime_dir"
+		$ac_cv_path_WGET $ac_lib_url/$runtime_dir.tar.bz2 -P$lib_jar_dir
+		$ac_cv_path_TAR -xjf $lib_jar_dir/$runtime_dir.tar.bz2 -C $lib_jar_dir
+        echo "extracted $runtime_dir.tar.bz2"
+		rm $lib_jar_dir/$runtime_dir.tar.bz2
 	else
 	{ { echo "$as_me:$LINENO: error: needed files not found, use --enable-batch to auto-download" >&5
 echo "$as_me: error: needed files not found, use --enable-batch to auto-download" >&2;}
@@ -1854,39 +1887,43 @@ echo "$as_me: error: needed files not found, use --enable-batch to auto-download
 fi
 
 
-#now follow the platform-dependent stuff:
 
+#now follows the platform-dependent stuff:
 resources_dir=resources
-
 RES_DIR=$resources_dir
 
 
 case $host in
 	*mingw32* |*win*)
 	host=win
-	swt_dir=swt-win
-	obj_dir=obj-win
+	swt_dir=swt-win32
+	obj_dir=_obj
 	platform_targets=icon.o
 	;;
+
 	*)
 	if !(test $widget_set); then
 		widget_set=gtk
 	fi
-	host=other
-	echo using widget-set : $widget_set
-	swt_dir=swt-$widget_set
-	obj_dir=obj-$widget_set
+	# host=other
+    host=$(echo $(uname) | tr A-Z a-z)
+	swt_dir=swt-$host-$widget_set
+	obj_dir=_obj
+	echo "SWT widget-set : $widget_set"
+	echo "SWT dir prefix : $swt_dir"
 	;;
 esac
 
 PLATFORM_TARGETS=$platform_targets
 
-SWT_DIR=$swt_dir
+SWT_DIR=$swt_dir-ws
 
 
-as_ac_File=`echo "ac_cv_file_$jar_dir/$swt_dir/Makefile.in" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $jar_dir/$swt_dir/Makefile.in" >&5
-echo $ECHO_N "checking for $jar_dir/$swt_dir/Makefile.in... $ECHO_C" >&6
+# now we fetch the platform-specific jars + .so files
+
+as_ac_File=`echo "ac_cv_file_$lib_jar_dir/$swt_dir-ws/Makefile.in" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $lib_jar_dir/$swt_dir-ws/Makefile.in" >&5
+echo $ECHO_N "checking for $lib_jar_dir/$swt_dir-ws/Makefile.in... $ECHO_C" >&6
 if eval "test \"\${$as_ac_File+set}\" = set"; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -1894,7 +1931,7 @@ else
   { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
 echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
    { (exit 1); exit 1; }; }
-if test -r "$jar_dir/$swt_dir/Makefile.in"; then
+if test -r "$lib_jar_dir/$swt_dir-ws/Makefile.in"; then
   eval "$as_ac_File=yes"
 else
   eval "$as_ac_File=no"
@@ -1907,10 +1944,15 @@ if test `eval echo '${'$as_ac_File'}'` = yes; then
 else
 
 	if test $ac_cv_enable_batch = yes; then
-		echo downloading $swt_dir
-		$ac_cv_path_WGET $ac_lib_url/$swt_dir.tar.bz2
-		$ac_cv_path_TAR -xjf $swt_dir.tar.bz2
-		rm $swt_dir.tar.bz2
+		echo "downloading $swt_dir-ws"
+		$ac_cv_path_WGET $ac_lib_url/$swt_dir-ws.tar.bz2 -P$lib_jar_dir
+		$ac_cv_path_WGET $ac_lib_url/$swt_dir-os.tar.bz2 -P$lib_dir
+		## need to to some platform specific stuff (extract win32 libs into basedir?)
+        echo "downloading $swt_dir-os"
+		$ac_cv_path_TAR -xjf $lib_jar_dir/$swt_dir-ws.tar.bz2 -C $lib_jar_dir
+		$ac_cv_path_TAR -xjf $lib_dir/$swt_dir-os.tar.bz2 -C $lib_dir
+		rm $lib_jar_dir/$swt_dir-ws.tar.bz2
+		rm $lib_dir/$swt_dir-os.tar.bz2
 	else
 	{ { echo "$as_me:$LINENO: error: needed files not found, use --enable-batch to auto-download" >&5
 echo "$as_me: error: needed files not found, use --enable-batch to auto-download" >&2;}
@@ -1923,7 +1965,11 @@ fi
 
 # libXm.so.2.1  libswt-gnome-motif-2135.so  libswt-kde-motif-2135.so  libswt-motif-2135.so  swt.jar
 
-
+# check for bogus file and CVS directories
+if test -e src/net/mldonkey/g2gui/model/enum/EnumMaskMatcherTest.java; then
+    echo "Deleting bogus file src/net/mldonkey/g2gui/model/enum/EnumMaskMatcherTest.java"
+	rm src/net/mldonkey/g2gui/model/enum/EnumMaskMatcherTest.java
+fi
 # now creating Makefile-vars
 
 #creating obj-dir
@@ -1938,7 +1984,9 @@ PACKAGE_DIR=$PWD
 
 # Checks for library functions.
 
-                                        ac_config_files="$ac_config_files jar-libs/Makefile jar-libs/runtime/Makefile jar-libs/$swt_dir/Makefile Makefile"
+# prepare other Makefiles
+
+                                        ac_config_files="$ac_config_files $lib_jar_dir/Makefile $lib_jar_dir/$swt_dir-ws/Makefile $lib_jar_dir/$runtime_dir/Makefile Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -2489,9 +2537,9 @@ for ac_config_target in $ac_config_targets
 do
   case "$ac_config_target" in
   # Handling of arguments.
-  "jar-libs/Makefile" ) CONFIG_FILES="$CONFIG_FILES jar-libs/Makefile" ;;
-  "jar-libs/runtime/Makefile" ) CONFIG_FILES="$CONFIG_FILES jar-libs/runtime/Makefile" ;;
-  "jar-libs/$swt_dir/Makefile" ) CONFIG_FILES="$CONFIG_FILES jar-libs/$swt_dir/Makefile" ;;
+  "$lib_jar_dir/Makefile" ) CONFIG_FILES="$CONFIG_FILES $lib_jar_dir/Makefile" ;;
+  "$lib_jar_dir/$swt_dir-ws/Makefile" ) CONFIG_FILES="$CONFIG_FILES $lib_jar_dir/$swt_dir-ws/Makefile" ;;
+  "$lib_jar_dir/$runtime_dir/Makefile" ) CONFIG_FILES="$CONFIG_FILES $lib_jar_dir/$runtime_dir/Makefile" ;;
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -2590,6 +2638,7 @@ s,@BZIP2@,$BZIP2,;t t
 s,@GCJ@,$GCJ,;t t
 s,@FIND@,$FIND,;t t
 s,@SRC_DIR@,$SRC_DIR,;t t
+s,@RUNTIME_DIR@,$RUNTIME_DIR,;t t
 s,@RES_DIR@,$RES_DIR,;t t
 s,@PLATFORM_TARGETS@,$PLATFORM_TARGETS,;t t
 s,@SWT_DIR@,$SWT_DIR,;t t
@@ -2826,6 +2875,5 @@ if test "$no_create" != yes; then
   # would make configure fail if this is the last instruction.
   $ac_cs_success || { (exit 1); exit 1; }
 fi
-
 
 
