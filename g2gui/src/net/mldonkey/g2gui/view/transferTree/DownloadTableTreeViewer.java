@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.23 2003/09/15 22:10:32 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.24 2003/09/16 01:19:14 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -239,7 +239,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		
 		tableTreeViewer.addSelectionChangedListener(tableTreeMenuListener);
 	
-		popupMenu = new MenuManager("");
+		popupMenu = new MenuManager();
 		popupMenu.setRemoveAllWhenShown(true);
 		popupMenu.addMenuListener(tableTreeMenuListener);
 						
@@ -332,6 +332,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.24  2003/09/16 01:19:14  zet
+null
+
 Revision 1.23  2003/09/15 22:10:32  zet
 add availability %, refresh delay option
 
