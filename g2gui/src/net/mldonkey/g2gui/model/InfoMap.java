@@ -34,7 +34,7 @@ import gnu.trove.THashMap;
  * InfoMap
  *
  *
- * @version $Id: InfoMap.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: InfoMap.java,v 1.9 2003/10/22 21:02:11 zet Exp $ 
  *
  */
 public abstract class InfoMap extends Observable implements InfoCollection {
@@ -57,7 +57,7 @@ public abstract class InfoMap extends Observable implements InfoCollection {
 	 */
 	
 	public InfoMap( CoreCommunication core ) {
-		this.infoMap = new THashMap();
+	    this();
 		this.parent = core;
 	}
 	
@@ -106,6 +106,9 @@ public abstract class InfoMap extends Observable implements InfoCollection {
 
 /*
 $Log: InfoMap.java,v $
+Revision 1.9  2003/10/22 21:02:11  zet
+use this()
+
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 

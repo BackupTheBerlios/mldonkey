@@ -32,7 +32,7 @@ import gnu.trove.TIntObjectIterator;
  * InfoMap
  *
  *
- * @version $Id: InfoIntMap.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: InfoIntMap.java,v 1.9 2003/10/22 21:02:11 zet Exp $ 
  *
  */
 public abstract class InfoIntMap extends Observable implements InfoCollection {
@@ -55,9 +55,9 @@ public abstract class InfoIntMap extends Observable implements InfoCollection {
 	/**
 	 * @param communication my parent
 	 */	
-	public InfoIntMap( CoreCommunication communication ) {		
+	public InfoIntMap( CoreCommunication communication ) {	
+	    this();
 		this.parent = communication;
-		this.infoIntMap = new TIntObjectHashMap();
 	}
 	
 	/**
@@ -88,6 +88,9 @@ public abstract class InfoIntMap extends Observable implements InfoCollection {
 
 /*
 $Log: InfoIntMap.java,v $
+Revision 1.9  2003/10/22 21:02:11  zet
+use this()
+
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
