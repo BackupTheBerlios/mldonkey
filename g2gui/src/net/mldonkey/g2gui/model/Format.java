@@ -29,39 +29,39 @@ import net.mldonkey.g2gui.model.enum.*;
  * Format
  *
  * @author markus
- * @version $Id: Format.java,v 1.9 2003/07/05 15:58:05 lemmstercvs01 Exp $ 
+ * @version $Id: Format.java,v 1.10 2003/07/06 09:41:10 lemmstercvs01 Exp $ 
  *
  */
 public class Format implements SimpleInformation {
 	private Enum format;
 
-	private String extension = null;
+	private String extension;
 
-	private String kind = null;
+	private String kind;
 
-	private String codec = null;
+	private String codec;
 
-	private int vwidth = 0;
+	private int vwidth;
 
-	private int vheight = 0;
+	private int vheight;
 
-	private int vfps = 0;
+	private int vfps;
 
-	private int vrate = 0;
+	private int vrate;
 
-	private String title = null;
+	private String title;
 
-	private String artist = null;
+	private String artist;
 
-	private String album = null;
+	private String album;
 
-	private String year = null;
+	private String year;
 
-	private String comment = null;
+	private String comment;
 
-	private int tracknum = 0;
+	private int tracknum;
 
-	private int genre = 0;
+	private int genre;
 
 	/**
 	 * @return Mp3 Album (present only if File Format = EnumFormat.MP3)
@@ -215,6 +215,9 @@ public class Format implements SimpleInformation {
 
 /*
 $Log: Format.java,v $
+Revision 1.10  2003/07/06 09:41:10  lemmstercvs01
+useless initialisation removed
+
 Revision 1.9  2003/07/05 15:58:05  lemmstercvs01
 javadoc improved
 
