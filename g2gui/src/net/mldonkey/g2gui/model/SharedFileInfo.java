@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.15 2003/09/27 00:02:37 dek Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.16 2003/09/30 15:28:36 dek Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -163,7 +163,7 @@ public class SharedFileInfo implements SimpleInformation {
 	 * @param messageBuffer The <code>Messagebuffer</code> to read from
 	 * @return wether the core updated this Information
 	 */
-	public boolean update( MessageBuffer messageBuffer ) {		
+	public boolean update( MessageBuffer messageBuffer ) {			
 		boolean hasChanged = false;
 		/* we don't need the fileId, as we already know it*/
 		messageBuffer.setIterator( messageBuffer.getIterator() + 4 );
@@ -179,9 +179,31 @@ public class SharedFileInfo implements SimpleInformation {
 				this.numOfBytesUploaded = myUpload;
 				this.numOfQueriesForFile = myRequests;
 				stringOfBytesUploaded = FileInfo.calcStringSize( numOfBytesUploaded );			
-			}		
+			}			
 		return hasChanged;
 	}	
+	
+	/**
+	 * reads out some more detailed Information from mesagebuffer. 
+	 * Does a complete refresh of this object.
+	 * @param messageBuffer The <code>Messagebuffer</code> to read from
+	 * @return wether the core updated this Information
+	 */
+	public boolean detailedUpdate( MessageBuffer messageBuffer ) {
+		boolean hasChanged = false;
+		/* save previous values */
+		long oldUpload = this.numOfBytesUploaded;
+		int oldRequests = this.numOfQueriesForFile;
+		
+		readStream( messageBuffer );
+		
+		if (   ( oldUpload != this.numOfBytesUploaded ) 
+			|| ( oldRequests != this.numOfQueriesForFile ) ) 
+			{
+				hasChanged = true;				
+			}		
+		return hasChanged;
+	}
 
 	/**
 	 * translate the int to EnumNetwork
@@ -216,10 +238,16 @@ public class SharedFileInfo implements SimpleInformation {
 				+ "|/";
 	}
 
+
+
 }
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.16  2003/09/30 15:28:36  dek
+on some updates the wrong update() was called, as the core sometimes 
+sends a complete SharedInfo, not only an update, now everything is fine
+
 Revision 1.15  2003/09/27 00:02:37  dek
 bugfixes, merged right-mouse-click menues (nothing is uglier than one-item-menues)
 

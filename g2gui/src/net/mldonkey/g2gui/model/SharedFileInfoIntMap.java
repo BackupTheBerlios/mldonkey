@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfoList
  *
  *
- * @version $Id: SharedFileInfoIntMap.java,v 1.5 2003/09/26 12:25:52 dek Exp $ 
+ * @version $Id: SharedFileInfoIntMap.java,v 1.6 2003/09/30 15:28:36 dek Exp $ 
  *
  */
 public class SharedFileInfoIntMap extends InfoIntMap {
@@ -68,7 +68,7 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 		
 		if ( this.infoIntMap.contains( fileID ) ) {
-			this.update( messageBuffer );
+			this.detailedUpdate( messageBuffer );
 		}
 		else {
 			SharedFileInfo sharedFileInfo = new SharedFileInfo();
@@ -84,6 +84,32 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 	}
 
 	/**
+	 * update all fields, as we recieved a sharedInfo for already existing file, not only 
+	 * update
+	 * @param messageBuffer to read from here
+	 */
+	private void detailedUpdate( MessageBuffer messageBuffer ) {
+		
+		int fileID = messageBuffer.readInt32();	
+		/* go 4bytes back in the MessageBuffer */
+		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );	
+	
+		//update existing SharedFileInfo-Object
+		SharedFileInfo sharedFileInfo = ( SharedFileInfo ) this.infoIntMap.get( fileID );
+		if ( sharedFileInfo != null ) {
+			if ( sharedFileInfo.detailedUpdate( messageBuffer ) ) { /*returns true, if Info has changed*/
+					this.setChanged();
+					updatedFiles.add( sharedFileInfo );
+				}
+		}
+		else {
+			/*unknown file -> do nothing*/
+		}											
+		this.notifyObservers( sharedFileInfo );				
+		
+	}
+
+	/**
 	 * updates the shared-Info with received Data.
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
@@ -92,7 +118,7 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 		/* go 4bytes back in the MessageBuffer */
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );			
 	
-		//update existing NetworkInfo-Object
+		//update existing SharedFileInfo-Object
 		SharedFileInfo sharedFileInfo = ( SharedFileInfo ) this.infoIntMap.get( fileID );
 		if ( sharedFileInfo != null ) {
 			if ( sharedFileInfo.update( messageBuffer ) ) { /*returns true, if Info has changed*/
@@ -144,6 +170,10 @@ public class SharedFileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: SharedFileInfoIntMap.java,v $
+Revision 1.6  2003/09/30 15:28:36  dek
+on some updates the wrong update() was called, as the core sometimes 
+sends a complete SharedInfo, not only an update, now everything is fine
+
 Revision 1.5  2003/09/26 12:25:52  dek
 changed refresh() -> update() to avoid flickering table
 
