@@ -22,11 +22,13 @@
  */
 package net.mldonkey.g2gui.view.pref;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
+import org.eclipse.jface.preference.BooleanFieldEditor;
 /**
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiDisplay.java,v 1.1 2003/10/01 20:56:27 lemmster Exp $
+ * @version $Id: G2GuiDisplay.java,v 1.2 2003/10/08 01:12:16 zet Exp $
  */
 public class G2GuiDisplay extends PreferencePage {
 	/**
@@ -81,10 +83,26 @@ public class G2GuiDisplay extends PreferencePage {
 				G2GuiResources.getString( "PREF_DISPLAY_CONSOLE_FONT" ),
 				G2GuiResources.getString( "PREF_DISPLAY_SAMPLE" ),
 				composite ) );
+				
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"flatInterface",
+				G2GuiResources.getString( "PREF_DISPLAY_FLAT_INTERFACE" ),
+				composite ) );		
+		
+		setupEditor( 
+			new BooleanFieldEditor( 
+				"useGradient",
+				G2GuiResources.getString( "PREF_DISPLAY_USE_GRADIENT" ),
+				composite ) );			
+				
 	}
 }
 /*
 $Log: G2GuiDisplay.java,v $
+Revision 1.2  2003/10/08 01:12:16  zet
+useGradient preference
+
 Revision 1.1  2003/10/01 20:56:27  lemmster
 add class hierarchy
 
@@ -129,7 +147,7 @@ Revision 1.17  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.16  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.15  2003/08/19 22:02:15  zet
 localise

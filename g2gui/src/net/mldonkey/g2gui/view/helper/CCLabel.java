@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.helper;
 
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -33,7 +34,7 @@ import org.eclipse.swt.layout.GridData;
 /**
  * CClabel - static class to return new CLabels
  *
- * @version $Id: CCLabel.java,v 1.3 2003/09/20 01:34:08 zet Exp $
+ * @version $Id: CCLabel.java,v 1.4 2003/10/08 01:12:16 zet Exp $
  *
  */
 public class CCLabel {
@@ -54,15 +55,24 @@ public class CCLabel {
         cLabel.setImage( G2GuiResources.getImage( image ) );
         cLabel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         cLabel.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
-        cLabel.setBackground( 
-        	new Color[] { parent.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
-        		parent.getBackground() }, new int[] { 100 } );
+        
+        if (PreferenceLoader.loadBoolean( "useGradient" )) {
+        	cLabel.setBackground( 
+        		new Color[] { parent.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
+        			parent.getBackground() }, new int[] { 100 } );
+        } else {
+        	cLabel.setBackground(parent.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ));
+        }
+
         return cLabel;
     }
 }
 
 /*
 $Log: CCLabel.java,v $
+Revision 1.4  2003/10/08 01:12:16  zet
+useGradient preference
+
 Revision 1.3  2003/09/20 01:34:08  zet
 *** empty log message ***
 

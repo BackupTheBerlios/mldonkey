@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.32 2003/09/29 17:44:40 lemmster Exp $
+ * @version $Id: PreferenceLoader.java,v 1.33 2003/10/08 01:12:15 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -80,6 +80,7 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "coolbarLocked", true );
         preferenceStore.setDefault( "toolbarSmallButtons", false );
         preferenceStore.setDefault( "flatInterface", false );
+        preferenceStore.setDefault( "useGraident", true );
         PreferenceConverter.setDefault( preferenceStore, "consoleBackground",
                                         display.getSystemColor( SWT.COLOR_LIST_BACKGROUND ).getRGB() );
         PreferenceConverter.setDefault( preferenceStore, "consoleForeground",
@@ -115,6 +116,8 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "pollUpStats", true );
 		preferenceStore.setDefault( "running", false );
 		preferenceStore.setDefault( "allowMultipleInstances", false );
+		preferenceStore.setDefault( "downloadsFilterQueued", false );
+		preferenceStore.setDefault( "downloadsFilterPaused", false );
         
         return preferenceStore;
     }
@@ -224,6 +227,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.33  2003/10/08 01:12:15  zet
+useGradient preference
+
 Revision 1.32  2003/09/29 17:44:40  lemmster
 switch for search tooltips
 
@@ -291,7 +297,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates

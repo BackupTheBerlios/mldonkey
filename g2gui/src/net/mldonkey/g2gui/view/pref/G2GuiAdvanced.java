@@ -31,7 +31,7 @@ import org.eclipse.swt.SWT;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.1 2003/10/01 20:56:27 lemmster Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.2 2003/10/08 01:12:16 zet Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -67,12 +67,6 @@ public class G2GuiAdvanced extends PreferencePage {
 					composite ) );
 		
 		}	
-		
-		setupEditor( 
-			new BooleanFieldEditor( 
-				"flatInterface",
-				G2GuiResources.getString( "PREF_DISPLAY_FLAT_INTERFACE" ),
-				composite ) );
 		
 		setupEditor( 
 			new BooleanFieldEditor( 
@@ -159,6 +153,9 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.2  2003/10/08 01:12:16  zet
+useGradient preference
+
 Revision 1.1  2003/10/01 20:56:27  lemmster
 add class hierarchy
 
