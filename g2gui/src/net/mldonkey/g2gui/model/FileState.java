@@ -23,12 +23,13 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.*;
 
 /**
  * State
  *
  * @author markus
- * @version $Id: FileState.java,v 1.4 2003/06/24 09:22:44 lemmstercvs01 Exp $ 
+ * @version $Id: FileState.java,v 1.5 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -36,7 +37,7 @@ public class FileState implements SimpleInformation {
 	/**
 	 * The EnumFileState
 	 */
-	private EnumFileState state;
+	private Enum state;
 	
 	/**
 	 * The reason for state
@@ -53,7 +54,7 @@ public class FileState implements SimpleInformation {
 	/**
 	 * @return a byte
 	 */
-	public EnumFileState getState() {
+	public Enum getState() {
 		return state;
 	}
 
@@ -99,6 +100,9 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.5  2003/06/24 09:29:57  lemmstercvs01
+Enum more improved
+
 Revision 1.4  2003/06/24 09:22:44  lemmstercvs01
 better Enum added
 

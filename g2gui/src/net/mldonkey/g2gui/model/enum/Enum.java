@@ -20,44 +20,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.model;
+package net.mldonkey.g2gui.model.enum;
 
 /**
- * EnumType
+ * Enum
  *
  * @author markus
- * @version $Id: EnumType.java,v 1.1 2003/06/24 09:16:13 lemmstercvs01 Exp $ 
+ * @version $Id: Enum.java,v 1.1 2003/06/24 09:29:33 lemmstercvs01 Exp $ 
  *
  */
-public class EnumType implements Enum {
+public interface Enum {
 
-	/**
-	 * unsigned int (value is 0)
-	 */
-	public static EnumType UNSIGNED_INT = new EnumType( 0 );
-	/**
-	 * signed int (value is 1)
-	 */
-	public static EnumType SIGNED_INT = new EnumType( 1 );
-	/**
-	 * string (value is 2)
-	 */
-	public static EnumType STRING = new EnumType( 2 );
-	/**
-	 * ip address (value is 3)
-	 */
-	public static EnumType IPADDRESS = new EnumType( 3 );
-	
-	/**
-	 * Creates a new EnumType
-	 * @param anInt The value
-	 */
-	private EnumType( int anInt ) {
-	}
 }
 
 /*
-$Log: EnumType.java,v $
+$Log: Enum.java,v $
+Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
+Enum more improved
+
 Revision 1.1  2003/06/24 09:16:13  lemmstercvs01
 better Enum added
 

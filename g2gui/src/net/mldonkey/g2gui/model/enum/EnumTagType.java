@@ -20,43 +20,42 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.model;
+package net.mldonkey.g2gui.model.enum;
 
 /**
- * EnumFormat
+ * EnumTagType
  *
  * @author markus
- * @version $Id: EnumFormat.java,v 1.1 2003/06/24 09:16:13 lemmstercvs01 Exp $ 
+ * @version $Id: EnumTagType.java,v 1.1 2003/06/24 09:29:33 lemmstercvs01 Exp $ 
  *
  */
-public class EnumFormat implements Enum {
+public class EnumTagType implements Enum {
 	/**
-	 * unknow format (value is 0)
-	 */
-	public static EnumFormat UNKNOWN_FORMAT = new EnumFormat( 0 );
+	 * string (value is 0)
+	 */	
+	public static EnumTagType	STRING = new EnumTagType( 0 );
 	/**
-	 * generic format (value is 1)
+	 * bool (value is 1)
 	 */
-	public static EnumFormat GENERIC_FORMAT = new EnumFormat( 1 );
+	public static EnumTagType BOOL = new EnumTagType( 1 );
 	/**
-	 * avi file (value is 2)
+	 * file (value is 2)
 	 */
-	public static EnumFormat AVI_FILE = new EnumFormat( 2 );
-	/**
-	 * mp3 file (value is 3)
-	 */
-	public static EnumFormat MP3_FILE = new EnumFormat( 3 );
+	public static EnumTagType FILE = new EnumTagType( 2 );
 	
 	/**
-	 * Creates a new EnumFormat
-	 * @param anInt
+	 * Creates a new EnumTagType
+	 * @param anInt The value
 	 */
-	private EnumFormat( int anInt ) {
+	private EnumTagType( int anInt ) {
 	}
 }
 
 /*
-$Log: EnumFormat.java,v $
+$Log: EnumTagType.java,v $
+Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
+Enum more improved
+
 Revision 1.1  2003/06/24 09:16:13  lemmstercvs01
 better Enum added
 

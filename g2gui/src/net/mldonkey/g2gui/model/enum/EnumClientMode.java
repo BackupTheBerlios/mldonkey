@@ -20,39 +20,38 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.model;
+package net.mldonkey.g2gui.model.enum;
 
 /**
- * EnumTagType
+ * EnumClientMode
  *
  * @author markus
- * @version $Id: EnumTagType.java,v 1.1 2003/06/24 09:16:13 lemmstercvs01 Exp $ 
+ * @version $Id: EnumClientMode.java,v 1.1 2003/06/24 09:29:33 lemmstercvs01 Exp $ 
  *
  */
-public class EnumTagType implements Enum {
+public class EnumClientMode implements Enum {
 	/**
-	 * string (value is 0)
-	 */	
-	public static EnumTagType	STRING = new EnumTagType( 0 );
-	/**
-	 * bool (value is 1)
+	 * direct (value is 0)
 	 */
-	public static EnumTagType BOOL = new EnumTagType( 1 );
+	public static EnumClientMode DIRECT = new EnumClientMode( 0 );
 	/**
-	 * file (value is 2)
+	 * firewalled (value is 1)
 	 */
-	public static EnumTagType FILE = new EnumTagType( 2 );
+	public static EnumClientMode FIREWALLED = new EnumClientMode( 1 );
 	
 	/**
-	 * Creates a new EnumTagType
+	 * Creates a new EnumClientMode
 	 * @param anInt The value
 	 */
-	private EnumTagType( int anInt ) {
+	private EnumClientMode( int anInt ) {
 	}
 }
 
 /*
-$Log: EnumTagType.java,v $
+$Log: EnumClientMode.java,v $
+Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
+Enum more improved
+
 Revision 1.1  2003/06/24 09:16:13  lemmstercvs01
 better Enum added
 

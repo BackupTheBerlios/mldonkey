@@ -20,39 +20,47 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.model;
+package net.mldonkey.g2gui.model.enum;
 
 /**
- * EnumClientType
+ * EnumType
  *
  * @author markus
- * @version $Id: EnumClientType.java,v 1.1 2003/06/24 09:16:13 lemmstercvs01 Exp $ 
+ * @version $Id: EnumType.java,v 1.1 2003/06/24 09:29:33 lemmstercvs01 Exp $ 
  *
  */
-public class EnumClientType implements Enum {
+public class EnumType implements Enum {
+
 	/**
-	 * Source (value is 0)
+	 * unsigned int (value is 0)
 	 */
-	public static EnumClientType SOURCE = new EnumClientType( 0 );
+	public static EnumType UNSIGNED_INT = new EnumType( 0 );
 	/**
-	 * Friend (value is 1)
+	 * signed int (value is 1)
 	 */
-	public static EnumClientType FRIEND = new EnumClientType( 1 );
+	public static EnumType SIGNED_INT = new EnumType( 1 );
 	/**
-	 * Browsed (value is 2)
+	 * string (value is 2)
 	 */
-	public static EnumClientType BROWSED = new EnumClientType( 2 );
+	public static EnumType STRING = new EnumType( 2 );
+	/**
+	 * ip address (value is 3)
+	 */
+	public static EnumType IPADDRESS = new EnumType( 3 );
 	
 	/**
-	 * Creates a new EnumClientType
+	 * Creates a new EnumType
 	 * @param anInt The value
 	 */
-	private EnumClientType( int anInt ) {
+	private EnumType( int anInt ) {
 	}
 }
 
 /*
-$Log: EnumClientType.java,v $
+$Log: EnumType.java,v $
+Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
+Enum more improved
+
 Revision 1.1  2003/06/24 09:16:13  lemmstercvs01
 better Enum added
 

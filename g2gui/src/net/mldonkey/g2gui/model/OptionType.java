@@ -23,23 +23,24 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.*;
 
 /**
  * OptionType
  *
  * @author $user$
- * @version $Id: OptionType.java,v 1.6 2003/06/24 09:16:47 lemmstercvs01 Exp $ 
+ * @version $Id: OptionType.java,v 1.7 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
  *
  */
 public class OptionType implements SimpleInformation {
 	/**
 	 * Tag Type
 	 */
-	private EnumTagType tagType;
+	private Enum tagType;
 	/**
 	 * @return a string
 	 */
-	public EnumTagType getTagType() {
+	public Enum getTagType() {
 		return tagType;
 	}
 
@@ -66,6 +67,9 @@ public class OptionType implements SimpleInformation {
 
 /*
 $Log: OptionType.java,v $
+Revision 1.7  2003/06/24 09:29:57  lemmstercvs01
+Enum more improved
+
 Revision 1.6  2003/06/24 09:16:47  lemmstercvs01
 better Enum added
 

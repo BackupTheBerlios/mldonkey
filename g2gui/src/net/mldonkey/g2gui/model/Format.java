@@ -23,16 +23,17 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.*;
 
 /**
  * Format
  *
  * @author markus
- * @version $Id: Format.java,v 1.7 2003/06/24 09:16:48 lemmstercvs01 Exp $ 
+ * @version $Id: Format.java,v 1.8 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
  *
  */
 public class Format implements SimpleInformation {
-	private EnumFormat format;
+	private Enum format;
 
 	private String extension = null;
 
@@ -100,7 +101,7 @@ public class Format implements SimpleInformation {
 	/**
 	 * @return a byte
 	 */
-	public EnumFormat getFormat() {
+	public Enum getFormat() {
 		return format;
 	}
 
@@ -310,6 +311,9 @@ public class Format implements SimpleInformation {
 
 /*
 $Log: Format.java,v $
+Revision 1.8  2003/06/24 09:29:57  lemmstercvs01
+Enum more improved
+
 Revision 1.7  2003/06/24 09:16:48  lemmstercvs01
 better Enum added
 

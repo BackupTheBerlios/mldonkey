@@ -23,19 +23,20 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.*;
 
 /**
  * ClientKind
  *
  * @author markus
- * @version $Id: ClientKind.java,v 1.4 2003/06/24 09:16:48 lemmstercvs01 Exp $ 
+ * @version $Id: ClientKind.java,v 1.5 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
  *
  */
 public class ClientKind implements SimpleInformation {
 	/**
 	 * Client Type (direct/firewalled)
 	 */
-	private EnumClientMode clientMode;
+	private Enum clientMode;
 	/**
 	 * Ip Address (present only if client type = 0)
 	 */
@@ -70,7 +71,7 @@ public class ClientKind implements SimpleInformation {
 	/**
 	 * @return a byte
 	 */
-	public EnumClientMode getClientMode() {
+	public Enum getClientMode() {
 		return clientMode;
 	}
 
@@ -145,6 +146,9 @@ public class ClientKind implements SimpleInformation {
 
 /*
 $Log: ClientKind.java,v $
+Revision 1.5  2003/06/24 09:29:57  lemmstercvs01
+Enum more improved
+
 Revision 1.4  2003/06/24 09:16:48  lemmstercvs01
 better Enum added
 

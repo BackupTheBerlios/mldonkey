@@ -23,12 +23,13 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.*;
 
 /**
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.4 2003/06/24 09:16:48 lemmstercvs01 Exp $ 
+ * @version $Id: ClientInfo.java,v 1.5 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
  *
  */
 public class ClientInfo implements SimpleInformation {
@@ -52,7 +53,7 @@ public class ClientInfo implements SimpleInformation {
 	/**
 	 * Client Type
 	 */
-	private EnumClientType clientType;
+	private Enum clientType;
 	/**
 	 * List of Tags
 	 */
@@ -115,7 +116,7 @@ public class ClientInfo implements SimpleInformation {
 	/**
 	 * @return a byte
 	 */
-	public EnumClientType getClientType() {
+	public Enum getClientType() {
 		return clientType;
 	}
 
@@ -237,6 +238,9 @@ public class ClientInfo implements SimpleInformation {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.5  2003/06/24 09:29:57  lemmstercvs01
+Enum more improved
+
 Revision 1.4  2003/06/24 09:16:48  lemmstercvs01
 better Enum added
 

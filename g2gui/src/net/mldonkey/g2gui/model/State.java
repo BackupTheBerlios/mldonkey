@@ -23,12 +23,13 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.*;
 
 /**
  * State
  *
  * @author markus
- * @version $Id: State.java,v 1.8 2003/06/24 09:16:48 lemmstercvs01 Exp $ 
+ * @version $Id: State.java,v 1.9 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
  *
  */
 public class State implements SimpleInformation {
@@ -36,7 +37,7 @@ public class State implements SimpleInformation {
 	/**
 	 * Connections State
 	 */
-	private EnumState state;
+	private Enum state;
 	/**
 	 * Client Rank
 	 */
@@ -52,7 +53,7 @@ public class State implements SimpleInformation {
 	/**
 	 * @return a byte
 	 */
-	public EnumState getState() {
+	public Enum getState() {
 		return state;
 	}
 
@@ -111,6 +112,9 @@ public class State implements SimpleInformation {
 
 /*
 $Log: State.java,v $
+Revision 1.9  2003/06/24 09:29:57  lemmstercvs01
+Enum more improved
+
 Revision 1.8  2003/06/24 09:16:48  lemmstercvs01
 better Enum added
 

@@ -20,35 +20,46 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.model;
+package net.mldonkey.g2gui.model.enum;
 
 /**
- * EnumClientMode
+ * EnumFormat
  *
  * @author markus
- * @version $Id: EnumClientMode.java,v 1.1 2003/06/24 09:16:13 lemmstercvs01 Exp $ 
+ * @version $Id: EnumFormat.java,v 1.1 2003/06/24 09:29:33 lemmstercvs01 Exp $ 
  *
  */
-public class EnumClientMode implements Enum {
+public class EnumFormat implements Enum {
 	/**
-	 * direct (value is 0)
+	 * unknow format (value is 0)
 	 */
-	public static EnumClientMode DIRECT = new EnumClientMode( 0 );
+	public static EnumFormat UNKNOWN_FORMAT = new EnumFormat( 0 );
 	/**
-	 * firewalled (value is 1)
+	 * generic format (value is 1)
 	 */
-	public static EnumClientMode FIREWALLED = new EnumClientMode( 1 );
+	public static EnumFormat GENERIC_FORMAT = new EnumFormat( 1 );
+	/**
+	 * avi file (value is 2)
+	 */
+	public static EnumFormat AVI_FILE = new EnumFormat( 2 );
+	/**
+	 * mp3 file (value is 3)
+	 */
+	public static EnumFormat MP3_FILE = new EnumFormat( 3 );
 	
 	/**
-	 * Creates a new EnumClientMode
-	 * @param anInt The value
+	 * Creates a new EnumFormat
+	 * @param anInt
 	 */
-	private EnumClientMode( int anInt ) {
+	private EnumFormat( int anInt ) {
 	}
 }
 
 /*
-$Log: EnumClientMode.java,v $
+$Log: EnumFormat.java,v $
+Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
+Enum more improved
+
 Revision 1.1  2003/06/24 09:16:13  lemmstercvs01
 better Enum added
 

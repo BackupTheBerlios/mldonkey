@@ -20,13 +20,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.model;
+package net.mldonkey.g2gui.model.enum;
 
 /**
  * EnumFileState
  *
  * @author markus
- * @version $Id: EnumFileState.java,v 1.1 2003/06/24 09:16:13 lemmstercvs01 Exp $ 
+ * @version $Id: EnumFileState.java,v 1.1 2003/06/24 09:29:33 lemmstercvs01 Exp $ 
  *
  */
 public class EnumFileState implements Enum {
@@ -74,6 +74,9 @@ public class EnumFileState implements Enum {
 
 /*
 $Log: EnumFileState.java,v $
+Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
+Enum more improved
+
 Revision 1.1  2003/06/24 09:16:13  lemmstercvs01
 better Enum added
 

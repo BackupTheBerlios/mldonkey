@@ -23,12 +23,13 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.*;
 
 /**
  * Tag
  *
  * @author markus
- * @version $Id: Tag.java,v 1.4 2003/06/24 09:16:48 lemmstercvs01 Exp $ 
+ * @version $Id: Tag.java,v 1.5 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
  *
  */
 public class Tag implements SimpleInformation {
@@ -40,7 +41,7 @@ public class Tag implements SimpleInformation {
 	/**
 	 * Tag Type
 	 */
-	private EnumType type;
+	private Enum type;
 	/**
 	 * Tag Value
 	 */
@@ -67,7 +68,7 @@ public class Tag implements SimpleInformation {
 	/**
 	 * @return a byte
 	 */
-	public EnumType getType() {
+	public Enum getType() {
 		return type;
 	}
 
@@ -132,6 +133,9 @@ public class Tag implements SimpleInformation {
 
 /*
 $Log: Tag.java,v $
+Revision 1.5  2003/06/24 09:29:57  lemmstercvs01
+Enum more improved
+
 Revision 1.4  2003/06/24 09:16:48  lemmstercvs01
 better Enum added
 

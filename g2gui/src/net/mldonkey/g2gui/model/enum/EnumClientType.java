@@ -20,21 +20,42 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.model;
+package net.mldonkey.g2gui.model.enum;
 
 /**
- * Enum
+ * EnumClientType
  *
  * @author markus
- * @version $Id: Enum.java,v 1.1 2003/06/24 09:16:13 lemmstercvs01 Exp $ 
+ * @version $Id: EnumClientType.java,v 1.1 2003/06/24 09:29:33 lemmstercvs01 Exp $ 
  *
  */
-public interface Enum {
-
+public class EnumClientType implements Enum {
+	/**
+	 * Source (value is 0)
+	 */
+	public static EnumClientType SOURCE = new EnumClientType( 0 );
+	/**
+	 * Friend (value is 1)
+	 */
+	public static EnumClientType FRIEND = new EnumClientType( 1 );
+	/**
+	 * Browsed (value is 2)
+	 */
+	public static EnumClientType BROWSED = new EnumClientType( 2 );
+	
+	/**
+	 * Creates a new EnumClientType
+	 * @param anInt The value
+	 */
+	private EnumClientType( int anInt ) {
+	}
 }
 
 /*
-$Log: Enum.java,v $
+$Log: EnumClientType.java,v $
+Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
+Enum more improved
+
 Revision 1.1  2003/06/24 09:16:13  lemmstercvs01
 better Enum added
 
