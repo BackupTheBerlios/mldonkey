@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $Author: zet $
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.15 2003/08/22 23:25:15 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.16 2003/08/23 01:04:03 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -80,7 +80,6 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 				return rateAbove10Color;
 			if (fileInfo.getRate() > 0f) 
 				return rateAbove0Color;	
-			//TODO show 0% file availability in a red filename
 			return availableFileColor;
 		} else if (arg0 instanceof TreeClientInfo) {
 			ClientInfo clientInfo = ((TreeClientInfo) arg0).getClientInfo();
@@ -235,6 +234,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.16  2003/08/23 01:04:03  zet
+*** empty log message ***
+
 Revision 1.15  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 

@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  * @author $Author: zet $
- * @version $Id: FileDetailDialog.java,v 1.12 2003/08/23 01:00:02 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.13 2003/08/23 01:08:17 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -156,7 +156,7 @@ public class FileDetailDialog implements Observer {
 		
 		// Rename
 		Group renameGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		renameGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_ALTERNATE_FILENAMES"));
+		renameGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_FD_ALTERNATIVE_FILENAMES"));
 		
 		
 		GridLayout renameGridLayout = new GridLayout();
@@ -319,6 +319,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.13  2003/08/23 01:08:17  zet
+*** empty log message ***
+
 Revision 1.12  2003/08/23 01:00:02  zet
 *** empty log message ***
 
@@ -327,6 +330,9 @@ new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
+fix Revision 1.13  2003/08/23 01:08:17  zet
+fix *** empty log message ***
+fix
 fix Revision 1.12  2003/08/23 01:00:02  zet
 fix *** empty log message ***
 fix
