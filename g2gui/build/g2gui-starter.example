@@ -1,0 +1,71 @@
+#!/bin/bash
+# G2gui unix starter, released under GPL
+# this file is to be put in the g2gui directory, renamed to "g2gui".
+# The Makefile should take care of this.
+
+# TODO
+# - check if java vm is available
+
+LIBDIR=lib
+
+cd $(dirname $0)
+export LD_LIBRARY_PATH=$LIBDIR
+
+if [ $1 ]; then
+	echo "Params: $1 $2 $3 $4 $5 $6 $7 $8 $9"
+fi
+
+#### Scan libraries
+if [ -d $LIBDIR ]; then
+	for LIB in $(ls $LIBDIR); do
+		if [ $(echo $LIB|grep 'swt-fox') ]; then
+			echo "fox-lib detected $LIBDIR/$LIB"
+			SWT=fox
+		elif [ $(echo $LIB|grep 'swt-motif') ]; then
+			echo "motif-lib detected $LIBDIR/$LIB"
+			SWT=motif
+		elif [ $(echo $LIB|grep 'swt-gtk') ]; then
+			echo "gtk-lib detected $LIBDIR/$LIB"
+			SWT=gtk
+        ## is not likely to happen, but anyway...
+		elif [ $(echo $LIB|grep 'swt-win') ]; then
+			echo "win32-lib detected $LIBDIR/$LIB - are you sure about this? ;)"
+			SWT=win32
+		else
+			echo "lib detected: $LIBDIR/$LIB"
+		fi
+	done
+	if [ ! $SWT ]; then
+		echo "Could not find swt*.so files in $LIBDIR/ for swt-widgets. Aborting".
+		exit
+	fi
+else
+	echo "No lib/ directory found! Aborting."
+	exit
+fi
+
+#### Jar package
+if [ -e g2gui.jar ]; then
+    UNZIP=$(whereis -b unzip | cut -d ':' -f 2 | cut -c 2-)
+	echo "Jar package found: g2gui.jar, checking MANIFEST "
+    if [ -e $UNZIP ]; then
+	    JARLIST=$(unzip -p g2gui.jar META-INF/MANIFEST.MF | grep Class-Path | cut -d ':' -f 2)
+	    for JAR in $JARLIST; do
+    		if [ -e $JAR ]; then
+			    echo "JAR: $JAR found"
+		    else
+    			echo "JAR: $JAR not found"
+		    fi
+	    done
+    fi
+	echo "Starting MLdonkey G2gui (java $SWT)..."
+	java -Djava.library.path=lib -jar g2gui.jar $1 $2 $3 $4 $5 $6 $7 $8 $9
+
+#### Binary package
+elif [ -e g2gui-bin ]; then
+	echo "Starting MLdonkey G2gui (native $SWT)..."
+	./g2gui-bin $1 $2 $3 $4 $5 $6 $7 $8 $9
+fi
+
+
+echo "G2gui terminated."
