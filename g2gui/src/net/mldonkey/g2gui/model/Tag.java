@@ -24,12 +24,13 @@ package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.*;
+import net.mldonkey.g2gui.model.enum.Enum;
 
 /**
  * Tag
  *
  *
- * @version $Id: Tag.java,v 1.11 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: Tag.java,v 1.12 2005/01/02 17:01:21 lemmy Exp $ 
  *
  */
 public class Tag extends SimpleInformation {
@@ -115,6 +116,9 @@ public class Tag extends SimpleInformation {
 
 /*
 $Log: Tag.java,v $
+Revision 1.12  2005/01/02 17:01:21  lemmy
+explicitly import our enum classes to avoid problems with java 1.5 enums
+
 Revision 1.11  2004/03/21 21:00:50  dek
 implemented gui-Proto 21-25 !!!!!
 
@@ -128,7 +132,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmy $
 
 Revision 1.6  2003/07/05 20:04:02  lemmy
 javadoc improved

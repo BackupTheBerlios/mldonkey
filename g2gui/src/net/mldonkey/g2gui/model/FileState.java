@@ -27,12 +27,13 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.*;
+import net.mldonkey.g2gui.model.enum.Enum;
 
 /**
  * State
  *
  *
- * @version $Id: FileState.java,v 1.19 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: FileState.java,v 1.20 2005/01/02 17:01:21 lemmy Exp $ 
  *
  */
 public class FileState extends SimpleInformation {
@@ -148,6 +149,9 @@ public class FileState extends SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.20  2005/01/02 17:01:21  lemmy
+explicitly import our enum classes to avoid problems with java 1.5 enums
+
 Revision 1.19  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
