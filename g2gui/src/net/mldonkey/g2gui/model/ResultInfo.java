@@ -46,7 +46,7 @@ import org.eclipse.swt.program.Program;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.39 2004/09/17 22:36:48 dek Exp $
+ * @version $Id: ResultInfo.java,v 1.40 2004/11/20 23:39:25 lemmy Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -553,11 +553,16 @@ public class ResultInfo extends Parent {
      * @return This result as a link corresponding to the network
      */
     public String getLink() {
-        if ( this.getNetwork().getNetworkName().equals( "Donkey" ) )
+        EnumNetwork type = this.getNetwork().getNetworkType();
+        //fixing Core-Bug not sending the correct EnumNetwork type
+        //just remove EnumNetwork.NONE when core bug has been fixed
+        if ( type == EnumNetwork.DONKEY || type == EnumNetwork.NONE ) {
             return "ed2k://|file|" + this.getNames()[ 0 ] + "|" + this.getSize() + "|" + this.getMd4()
-                   + "|/";
-        else
+            + "|/";
+        }
+        else {
             return G2Gui.emptyString;
+        }
     }
 
     /**
@@ -731,6 +736,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.40  2004/11/20 23:39:25  lemmy
+due to the Core-Bug not sending a correct identifier for the network,getLink() always return a empty string
+
 Revision 1.39  2004/09/17 22:36:48  dek
 update for gui-Protocol 29
 
@@ -810,7 +818,7 @@ Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.13  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmy $
 
 Revision 1.12  2003/08/14 12:45:46  dek
 searching works now without errors
