@@ -32,16 +32,26 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.10 2003/07/09 08:48:58 dek Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.11 2003/07/09 08:54:29 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
-	
+	/**
+	 * The option type
+	 */
 	private EnumTagType optionType;
+	/**
+	 * The optino description
+	 */
 	private String description = "";
+	/**
+	 * The section to appear
+	 */
 	private String sectionToAppear;
+	/**
+	 * The pluginToAppear
+	 */
 	private String pluginToAppear;
-
 	/**
 	 * Options Name
 	 */
@@ -88,7 +98,6 @@ public class OptionsInfo extends Parent {
 		this.key = messageBuffer.readString();
 		this.setValue( messageBuffer.readString() );
 	}	
-
 	
 	/**
 	 * return a string representation of this object
@@ -104,9 +113,6 @@ public class OptionsInfo extends Parent {
 		result += "\n  Plugin:\t\t " + this.getPluginToAppear();
 		return result;		
 	}
-
-
-
  
 	/**
 	 * Sends the optionsinfo to the core
@@ -117,13 +123,11 @@ public class OptionsInfo extends Parent {
 		consoleMessage.sendMessage( this.parent.getConnection() );
 	}
 
-
 	/**
 	 * @param description Some more detailed Information about this option
 	 */
 	void setDescription( String description ) {
 		this.description = description;
-		
 	}
 
 	/**
@@ -131,7 +135,6 @@ public class OptionsInfo extends Parent {
 	 */
 	void setSectionToAppear( String sectionToAppear ) {
 		this.sectionToAppear = sectionToAppear;
-		
 	}
 
 	/**
@@ -144,9 +147,8 @@ public class OptionsInfo extends Parent {
 				this.optionType = EnumTagType.BOOL;
 			else if ( optionType == 2 )
 				this.optionType = EnumTagType.FILE;
-		
-		
 	}
+
 	/**
 	 * @return Some more detailed Information about this option
 	 */
@@ -186,10 +188,19 @@ public class OptionsInfo extends Parent {
 		pluginToAppear = string;
 	}
 
+	/**
+	 * @param string
+	 */
+	void setKey( String string ) {
+		key = string;
+	}
 }
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.11  2003/07/09 08:54:29  lemmstercvs01
+void setKey() added
+
 Revision 1.10  2003/07/09 08:48:58  dek
 *** empty log message ***
 
