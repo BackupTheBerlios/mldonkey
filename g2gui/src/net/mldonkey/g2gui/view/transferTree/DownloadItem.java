@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.17 2003/07/20 10:31:21 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.18 2003/07/20 11:06:36 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem implements IItemHasMenue, SelectionListener {
@@ -97,6 +97,7 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 			this.chunks =
 				new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo, 4 );
 			editor.setEditor( chunks, this, 4 );
+		updateCell( 4, "" );
 		updateCell( 5, "" );
 		updateCell( 6, "" );
 		updateCell( 7, String.valueOf( fileInfo.getSize() ) );
@@ -237,11 +238,11 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 			else if ( getText( 3 ) != null && !getText( 3 ).equals( String.valueOf( fileInfo.getRate() ) ) )
 					updateCell( 3, String.valueOf( fileInfo.getRate() ) );
 
-		/* not implemented yet
-		if ( !getText( 4 ).equals(  ) ) {
-			updateCell( X,  );			
+		if ( !getText( 4 ).equals( fileInfo.getAvail() ) ) {
+			updateCell( 4, fileInfo.getAvail() );
+			//chunks.refresh();
 		}
-		*/
+		
 		if ( getText( 5 ) != null && !getText( 5 ).equals( String.valueOf( fileInfo.getPerc() ) ) ) {
 			updateCell( 5, String.valueOf( fileInfo.getPerc() ) );			
 		}
@@ -252,7 +253,7 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 			updateCell( 7, String.valueOf(  fileInfo.getSize()  ) );			
 		}
 		
-		chunks.refresh();
+
 	}
 	/**
 	 * Sets the text of the specific Cell in this row and redraw it
@@ -267,8 +268,9 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 		int height = getBounds( column ).height;
 		//System.out.println( "drawing  "+text+" at " );
 		//System.out.println( getBounds(  column  ) );		
-		//getParent().redraw(  x, y, width, height, true  );	
+		getParent().redraw(  x, y, width, height, true  );	
 	}
+		
 	/**
 	 * @return the fileInfo, this Object represents
 	 */
@@ -404,6 +406,9 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 }
 /*
 $Log: DownloadItem.java,v $
+Revision 1.18  2003/07/20 11:06:36  dek
+still don't know, where flickering comes from (tested with CRT)
+
 Revision 1.17  2003/07/20 10:31:21  dek
 done some work on flickering & sorting
 

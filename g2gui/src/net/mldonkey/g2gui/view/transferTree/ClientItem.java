@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.15 2003/07/20 10:31:21 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.16 2003/07/20 11:06:36 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -81,7 +81,8 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 			if ( oldEditor != null )
 			oldEditor.dispose();
 		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, 6 );
-		editor.setEditor ( chunks, this, 4 );			
+		editor.setEditor ( chunks, this, 4 );
+		updateCell( 4,"" );		
 		updateCell( 2, clientInfo.getClientName() );	
 		updateCell( 6, "rank: unknown" );		
 		updateColums();	
@@ -93,6 +94,24 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 			} } );
 		
 		
+	}
+	private int numberCompleteChunks( ClientInfo clientInfo ) {
+		int result = 0;
+		int length = 0;
+		String avail = clientInfo.getFileAvailability( fileInfo );
+		if ( avail != null ) length = avail.length();
+		for ( int i = 0; i < length; i++ ) {		
+			//this availability is so low, we can assume, it is not available:			
+			if ( avail.charAt( i ) == '0' ) {
+			}
+			else if ( avail.charAt( i ) == '1' ) {
+				result++;		
+			}
+			else if ( avail.charAt( i ) == '2' ) {
+				result++;				
+			}
+		}
+		return result;
 	}
 	
 	/**
@@ -106,7 +125,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		int y = getBounds( column ).y;
 		int width = getBounds( column ).width;
 		int height = getBounds( column ).height;		
-		//getParent().redraw( x, y, width, height, true );	
+		getParent().redraw( x, y, width, height, true );	
 	}
 	
 	/**
@@ -151,7 +170,13 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		if ( clientInfo.getState().getState() == EnumState.REMOVE_HOST )
 			state = "removeHost";
 		
-		chunks.refresh();
+		String avail = clientInfo.getFileAvailability( fileInfo );
+		if ( avail == null ) avail = "";
+		if ( !getText( 4 ).equals( avail ) ) {
+			updateCell( 4, avail );
+			//chunks.refresh();
+		}
+
 	}
 
 
@@ -180,6 +205,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.16  2003/07/20 11:06:36  dek
+still don't know, where flickering comes from (tested with CRT)
+
 Revision 1.15  2003/07/20 10:31:21  dek
 done some work on flickering & sorting
 
