@@ -22,18 +22,23 @@
  */
 package net.mldonkey.g2gui.model;
 
-import gnu.trove.TIntObjectHashMap;
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.helper.ObjectWeakMap;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
+
+import gnu.trove.TIntObjectHashMap;
+
+import java.util.Iterator;
 
 
 /**
  * ClientInfoList
  *
  *
- * @version $Id: ClientInfoIntMap.java,v 1.12 2003/11/26 07:42:06 zet Exp $
+ * @version $Id: ClientInfoIntMap.java,v 1.13 2003/11/26 15:48:09 zet Exp $
  */
 public class ClientInfoIntMap extends InfoIntMap {
     /**
@@ -90,12 +95,11 @@ public class ClientInfoIntMap extends InfoIntMap {
             friendsWeakMap.add(value);
         else
             friendsWeakMap.remove(value);
-        
-        if (value.isUploader() && value.isConnected()) 
+
+        if (value.isUploader() && value.isConnected())
             uploadersWeakMap.addOrUpdate(value);
         else
             uploadersWeakMap.remove(value);
-        
     }
 
     /**
@@ -150,11 +154,33 @@ public class ClientInfoIntMap extends InfoIntMap {
     public ObjectWeakMap getUploadersWeakMap() {
         return uploadersWeakMap;
     }
+
+    /**
+     * @param core
+     */
+    public void updateUploaders(CoreCommunication core) {
+        //	This is sort of crazy, but it is how new_gui does it...
+        Iterator i = uploadersWeakMap.getKeySet().iterator();
+        Message upstats;
+
+        while (i.hasNext()) {
+            ClientInfo clientInfo = (ClientInfo) i.next();
+            Object[] num = new Object[ 1 ];
+            num[ 0 ] = new Integer(clientInfo.getClientid());
+            upstats = new EncodeMessage(Message.S_GET_CLIENT_INFO, num);
+            upstats.sendMessage(core);
+        }
+
+        upstats = null;
+    }
 }
 
 
 /*
 $Log: ClientInfoIntMap.java,v $
+Revision 1.13  2003/11/26 15:48:09  zet
+minor
+
 Revision 1.12  2003/11/26 07:42:06  zet
 protocolVersion 19/timer
 

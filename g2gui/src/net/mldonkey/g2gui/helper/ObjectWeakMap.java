@@ -27,13 +27,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 
 /**
  * ObjectWeakMap
  *
- * @version $Id: ObjectWeakMap.java,v 1.1 2003/11/26 07:41:56 zet Exp $
+ * @version $Id: ObjectWeakMap.java,v 1.2 2003/11/26 15:48:09 zet Exp $
  *
  */
 public class ObjectWeakMap extends Observable {
@@ -124,11 +125,18 @@ public class ObjectWeakMap extends Observable {
             updatedList.clear();
         }
     }
+    
+    public Set getKeySet() {
+		return weakMap.keySet();
+    }
 }
 
 
 /*
 $Log: ObjectWeakMap.java,v $
+Revision 1.2  2003/11/26 15:48:09  zet
+minor
+
 Revision 1.1  2003/11/26 07:41:56  zet
 initial
 

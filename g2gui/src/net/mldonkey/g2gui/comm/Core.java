@@ -29,14 +29,12 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.ClientInfoIntMap;
 import net.mldonkey.g2gui.model.ClientMessage;
 import net.mldonkey.g2gui.model.ClientStats;
@@ -60,7 +58,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.114 2003/11/26 07:41:43 zet Exp $ 
+ * @version $Id: Core.java,v 1.115 2003/11/26 15:48:09 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -530,21 +528,11 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 */
 	private void requestUpstats() {
 		/* requesting upload-statistics */
-		Message upstats =
-					new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
-		upstats.sendMessage( this );		
-		
-		// This is sort of crazy, but it is how new_gui does it...
-		Iterator i = getClientInfoIntMap().getUploadersWeakMap().getWeakMap().keySet().iterator();
-		while (i.hasNext()) {
-		    ClientInfo clientInfo = (ClientInfo) i.next();
-		    Object[] num = new Object[ 1] ;
-		    num[0] = new Integer(clientInfo.getClientid());
-		    upstats = new EncodeMessage( Message.S_GET_CLIENT_INFO, num );
-		    upstats.sendMessage( this );
-		}
+		Message upstats = new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
+		upstats.sendMessage( this );
 		upstats = null;
 		
+		getClientInfoIntMap().updateUploaders( this );
 	}
 	
 	/**
@@ -678,6 +666,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.115  2003/11/26 15:48:09  zet
+minor
+
 Revision 1.114  2003/11/26 07:41:43  zet
 protocolVersion 19/timer
 
