@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.30 2003/09/18 23:09:48 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.31 2003/09/22 20:20:09 lemmster Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -141,16 +141,19 @@ public class G2GuiResources {
      * @return string 
      */
     public static String getRatingString( int availability ) {
+		String result = "";
         if ( availability > 100 )
-            return "" + G2GuiResources.getString( "RTLP_EXCELLENT" );
+            result += G2GuiResources.getString( "RTLP_EXCELLENT" );
         else if ( availability > 50 )
-            return "" + G2GuiResources.getString( "RTLP_VERYHIGH" );
+			result += G2GuiResources.getString( "RTLP_VERYHIGH" );
         else if ( availability > 10 )
-            return "" + G2GuiResources.getString( "RTLP_HIGH" );
+			result += G2GuiResources.getString( "RTLP_HIGH" );
         else if ( availability > 5 )
-            return "" + G2GuiResources.getString( "RTLP_NORMAL" );
+			result += G2GuiResources.getString( "RTLP_NORMAL" );
         else
-            return "" + G2GuiResources.getString( "RTLP_LOW" );
+			result += G2GuiResources.getString( "RTLP_LOW" );
+
+		return ( result + " (" + new Integer( availability ).toString() + ")" );
     }
 
     /**
@@ -315,6 +318,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.31  2003/09/22 20:20:09  lemmster
+show # sources in search result avail table
+
 Revision 1.30  2003/09/18 23:09:48  zet
 *** empty log message ***
 
@@ -385,7 +391,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
