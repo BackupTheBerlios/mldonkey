@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.30 2003/08/04 19:21:52 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.31 2003/08/05 08:55:04 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -483,14 +483,22 @@ public class FileInfo extends Parent implements Observer {
 	 * @param enum The new priority for this file (LOW/NORMAL/HIGH)
 	 */
 	public void setPriority( EnumPriority enum ) {
+		/* first the fileid */
+		Object[] obj = new Object[ 2 ];
+		obj[ 0 ] = new Integer( this.getId() );
+		
+		/* now the new prio */
 		Integer content;
 		if ( enum == EnumPriority.LOW )
 			content = new Integer( -10 );
 		else if ( enum == EnumPriority.HIGH )
 			content = new Integer( 10 );
 		else
-			content = new Integer( 0 );	
-		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, content );
+			content = new Integer( 0 );
+		obj[ 1 ] = content;		
+		
+		/* create and send the message */
+		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, obj );
 		consoleMessage.sendMessage( this.parent.getConnection() );
 		content = null;
 		consoleMessage = null;
@@ -585,6 +593,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.31  2003/08/05 08:55:04  lemmstercvs01
+setPrio() fixed
+
 Revision 1.30  2003/08/04 19:21:52  zet
 trial tabletreeviewer
 
