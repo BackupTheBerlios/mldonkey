@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkCanvas.java,v 1.6 2003/08/04 21:05:22 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.7 2003/08/04 22:21:06 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -116,12 +116,16 @@ public class ChunkCanvas extends Canvas implements Observer {
 		} );
 		addPaintListener( new PaintListener() {
 			public void paintControl( PaintEvent e ) {
-				ChunkCanvas.this.paintControl( e );
+				synchronized( this ) {
+					ChunkCanvas.this.paintControl( e );
+				}
 			}
 		} );
 		addControlListener(new ControlListener() {
 			public void controlResized(ControlEvent e) {
-				ChunkCanvas.this.resizeImage(e);
+				synchronized( this ) {
+					ChunkCanvas.this.resizeImage(e);
+				}
 			} 
 			public void controlMoved(ControlEvent e) {
 			}
@@ -221,6 +225,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 		
 		imageData = image.getImageData();
 		if (resizedImageData == null) resizedImageData = imageData;
+		resizeImage(null);
 	
 	}
 
@@ -294,9 +299,10 @@ public class ChunkCanvas extends Canvas implements Observer {
 		}	
 		darkGray.dispose();
 		imageGC.dispose();	
-		
+
 		imageData = image.getImageData();
 		if (resizedImageData == null) resizedImageData = imageData;
+		resizeImage(null);
 	}
 
 	/**
@@ -317,12 +323,10 @@ public class ChunkCanvas extends Canvas implements Observer {
 		if ( image != null && imageData != null ) {
 						
 			if (getClientArea().width > minWidth && getClientArea().height > 0) {
-				synchronized(resizedImageData) {
-			
-				resizedImageData = imageData.scaledTo(
-					getClientArea().width, getClientArea().height);
-				}
-				
+	
+					resizedImageData = imageData.scaledTo(
+						getClientArea().width, getClientArea().height);
+					
 			} 
 	
 		}
@@ -332,18 +336,12 @@ public class ChunkCanvas extends Canvas implements Observer {
 	 * @param e
 	 */
 	protected void paintControl( PaintEvent e ) {
+	
 
 		GC canvasGC = e.gc;
 				
 		if ( image != null ) {
 			
-			synchronized(resizedImageData) {
-			
-			
-			if (resizedImageData == null) resizedImageData = imageData;
-			
-			
-				
 			int srcWidth = resizedImageData.width;			
 			int srcHeight = resizedImageData.height;	
 			int destWidth = e.width;
@@ -388,10 +386,11 @@ public class ChunkCanvas extends Canvas implements Observer {
 			
 			
 			bufferGC.dispose();
-			}
+	
 
 		} else { 
-			
+
+
 			canvasGC.setBackground(getParent().getBackground());
 			canvasGC.fillRectangle(e.x, e.y, e.width, e.height);
 					
@@ -426,9 +425,13 @@ public class ChunkCanvas extends Canvas implements Observer {
 	 * redraws this widget, with refreshed Information from FileInfo (if changed)
 	 */
 	public void refresh() {	
-		if ( this.hasChanged() ) {		
-			createImage();
+		if ( this.hasChanged() ) {	
+			
+			synchronized ( this ) {
+				createImage();
+			}
 			this.redraw();
+			
 		} 
 	}
 
@@ -455,6 +458,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.7  2003/08/04 22:21:06  zet
+more synchronized blocks
+
 Revision 1.6  2003/08/04 21:05:22  zet
 back to async
 
