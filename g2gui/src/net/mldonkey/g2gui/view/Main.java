@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.view.pref.Preferences;
  * G2GuiTest
  *
  * @author $user$
- * @version $Id: Main.java,v 1.5 2003/06/26 21:11:10 dek Exp $ 
+ * @version $Id: Main.java,v 1.6 2003/06/27 10:39:37 lemmstercvs01 Exp $ 
  *
  */
 public class Main {
@@ -63,19 +63,11 @@ public class Main {
 		String username = preferenceStore.getString("username");
 		String password = preferenceStore.getString("password");
 
-	
 		SocketPool socketPool = new SocketPool( hostname, port, username, password );
-		try {
-			mldonkey  = new Core( ( Socket ) socketPool.checkOut() );
-			mldonkey.start();
-		}
-		catch ( Exception e ) {
-			e.printStackTrace();
-		}	
+		mldonkey = mldonkey  = new Core( ( Socket ) socketPool.checkOut() );
 			
 		Gui g2gui = new Gui(mldonkey);
 		mldonkey.disconnect();
-
 	}
 
 	/**
@@ -84,11 +76,13 @@ public class Main {
 	public static Core getMldonkey() {
 		return mldonkey;
 	}
-
 }
 
 /*
 $Log: Main.java,v $
+Revision 1.6  2003/06/27 10:39:37  lemmstercvs01
+core is now Runnable
+
 Revision 1.5  2003/06/26 21:11:10  dek
 speed is shown
 
