@@ -42,20 +42,14 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.9 2003/11/08 18:47:20 zet Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.10 2003/11/08 19:29:06 zet Exp $
  *
  */
 public class DownloadTableTreeContentProvider extends GTableTreeContentProvider implements Observer {
-    private Set delayedFileInfoUpdateSet = new HashSet();
-    private Set delayedFileInfoAddSet = new HashSet();
-    private Set delayedFileInfoRemoveSet = new HashSet();
+    private DelayedUpdator addDelayedUpdator = new DelayedUpdator(DelayedUpdator.ADD, 456);
+    private DelayedUpdator removeDelayedUpdator = new DelayedUpdator(DelayedUpdator.REMOVE, 456);
+    private DelayedUpdator updateDelayedUpdator = new DelayedUpdator(DelayedUpdator.UPDATE, 0);
     private int updateDelay = 2;
-    private long lastUpdateTimeStamp = 0;
-    private long lastRemoveTimeStamp = 0;
-    private long lastAddTimeStamp = 0;
-    private boolean addTimerRunning = false;
-    private boolean removeTimerRunning = false;
-    private boolean updateTimerRunning = false;
 
     public DownloadTableTreeContentProvider(DownloadTableTreeView downloadTableTreeViewer) {
         super(downloadTableTreeViewer);
@@ -136,17 +130,19 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
         return EMPTY_ARRAY;
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         super.inputChanged(viewer, oldInput, newInput);
-        
+
         if (oldInput != null) {
             ((Observable) oldInput).deleteObserver(this);
         }
-        
+
         if (newInput != null) {
-			((Observable) newInput).addObserver(this);
+            ((Observable) newInput).addObserver(this);
         }
-        
     }
 
     /*
@@ -181,7 +177,7 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
 
                 if (fileInfo.isInteresting()) {
                     fileInfo.addObserver(this);
-                    delayedAddFileInfo(fileInfo);
+                    addDelayedUpdator.update(fileInfo);
                 }
 
                 // removeObsolete && readStream
@@ -198,10 +194,10 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
                         String[] args = (String[]) arg;
                         tableTreeViewer.update(fileInfo, (args.length > 0) ? args : null);
                     } else {
-                        delayedUpdateFileInfo(fileInfo);
+                        updateDelayedUpdator.update(fileInfo);
                     }
                 } else {
-                    delayedRemoveFileInfo(fileInfo);
+                    removeDelayedUpdator.update(fileInfo);
                 }
 
                 // ClientInfos in a TreeClientInfo
@@ -217,111 +213,91 @@ public class DownloadTableTreeContentProvider extends GTableTreeContentProvider 
         }
     }
 
-    /**
-     * @param fileInfo
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.viewers.table.GTableContentProvider#updateDisplay()
      */
-    public void delayedUpdateFileInfo(FileInfo fileInfo) {
-        if (fileInfo != null) {
-            delayedFileInfoUpdateSet.add(fileInfo);
-        }
-
-        if (System.currentTimeMillis() > (lastUpdateTimeStamp + (updateDelay * 1000))) {
-            if (delayedFileInfoUpdateSet.size() > 0) {
-                if ((tableTreeViewer != null) && !tableTreeViewer.getTableTree().isDisposed()) {
-                    tableTreeViewer.update(delayedFileInfoUpdateSet.toArray(),
-                        FileInfo.ALL_PROPERTIES);
-                }
-
-                delayedFileInfoUpdateSet.clear();
-            }
-
-            lastUpdateTimeStamp = System.currentTimeMillis();
-        } else {
-            if (!updateTimerRunning && (delayedFileInfoUpdateSet.size() > 0)) {
-                updateTimerRunning = true;
-                tableTreeViewer.getTableTree().getDisplay().timerExec((updateDelay * 1000) + 2000,
-                    new Runnable() {
-                        public void run() {
-                            delayedUpdateFileInfo(null);
-                            updateTimerRunning = false;
-                        }
-                    });
-            }
-        }
-    }
-
-    /**
-     * @param fileInfo
-     */
-    public void delayedAddFileInfo(FileInfo fileInfo) {
-        if (fileInfo != null) {
-            delayedFileInfoAddSet.add(fileInfo);
-        }
-
-        if (System.currentTimeMillis() > (lastAddTimeStamp + 789)) {
-            if (delayedFileInfoAddSet.size() > 0) {
-                if ((tableTreeViewer != null) && !tableTreeViewer.getTableTree().isDisposed()) {
-                    tableTreeViewer.add(tableTreeViewer.getInput(), delayedFileInfoAddSet.toArray());
-                }
-
-                delayedFileInfoAddSet.clear();
-            }
-
-            lastAddTimeStamp = System.currentTimeMillis();
-        } else {
-            if (!addTimerRunning && (delayedFileInfoAddSet.size() > 0)) {
-                addTimerRunning = true;
-                tableTreeViewer.getTableTree().getDisplay().timerExec(2000,
-                    new Runnable() {
-                        public void run() {
-                            delayedAddFileInfo(null);
-                            addTimerRunning = false;
-                        }
-                    });
-            }
-        }
-    }
-
-    /**
-     * @param fileInfo
-     */
-    public void delayedRemoveFileInfo(FileInfo fileInfo) {
-        if (fileInfo != null) {
-            delayedFileInfoRemoveSet.add(fileInfo);
-        }
-
-        if (System.currentTimeMillis() > (lastRemoveTimeStamp + 789)) {
-            if (delayedFileInfoRemoveSet.size() > 0) {
-                if ((tableTreeViewer != null) && !tableTreeViewer.getTableTree().isDisposed()) {
-                    tableTreeViewer.remove(delayedFileInfoRemoveSet.toArray());
-                }
-
-                delayedFileInfoRemoveSet.clear();
-            }
-
-            lastRemoveTimeStamp = System.currentTimeMillis();
-        } else {
-            if (!removeTimerRunning && (delayedFileInfoRemoveSet.size() > 0)) {
-                removeTimerRunning = true;
-                tableTreeViewer.getTableTree().getDisplay().timerExec(2000,
-                    new Runnable() {
-                        public void run() {
-                            delayedRemoveFileInfo(null);
-                            removeTimerRunning = false;
-                        }
-                    });
-            }
-        }
-    }
-
     public void updateDisplay() {
         updateDelay = PreferenceLoader.loadInteger("updateDelay");
+        updateDelayedUpdator.setDelay(updateDelay * 1000);
+    }
+
+    /**
+     * DelayedUpdator - delay updates to the table viewer
+     */
+    private class DelayedUpdator {
+        private static final int ADD = 0;
+        private static final int REMOVE = 1;
+        private static final int UPDATE = 2;
+        private Set delayedSet = new HashSet();
+        private boolean timerRunning;
+        private long timeStamp;
+        private int delay;
+        private int type;
+
+        public DelayedUpdator(int type, int delay) {
+            this.type = type;
+            this.delay = delay;
+            this.timeStamp = 0;
+            this.timerRunning = false;
+        }
+
+        public void update(FileInfo fileInfo) {
+            if (fileInfo != null) {
+                delayedSet.add(fileInfo);
+            }
+
+            if (System.currentTimeMillis() > (timeStamp + delay)) {
+                if (delayedSet.size() > 0) {
+                    if ((tableTreeViewer != null) && !tableTreeViewer.getTableTree().isDisposed()) {
+                        switch (type) {
+                        case ADD:
+                            tableTreeViewer.add(tableTreeViewer.getInput(), delayedSet.toArray());
+
+                            break;
+
+                        case REMOVE:
+                            tableTreeViewer.remove(delayedSet.toArray());
+
+                            break;
+
+                        case UPDATE:
+                            tableTreeViewer.update(delayedSet.toArray(), FileInfo.ALL_PROPERTIES);
+
+                            break;
+                        }
+                    }
+
+                    delayedSet.clear();
+                }
+
+                timeStamp = System.currentTimeMillis();
+            } else {
+                if (!timerRunning && (delayedSet.size() > 0)) {
+                    timerRunning = true;
+                    tableTreeViewer.getTableTree().getDisplay().timerExec(1000 + delay,
+                        new Runnable() {
+                            public void run() {
+                                update(null);
+                                timerRunning = false;
+                            }
+                        });
+                }
+            }
+        }
+
+        public void setDelay(int delay) {
+            this.delay = delay;
+        }
+
     }
 }
 
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.10  2003/11/08 19:29:06  zet
+coalesce delayed updators
+
 Revision 1.9  2003/11/08 18:47:20  zet
 minor
 
