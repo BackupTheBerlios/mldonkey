@@ -1,1 +1,22 @@
-MAINICON ICON "src/net/mldonkey/g2gui/view/images/tray.ico"
+MAINICON ICON "distrib/g2gui.ico"
+
+1 VERSIONINFO
+FILEVERSION 0, 3, 0, 0
+PRODUCTVERSION 0, 3, 0, 0
+FILEFLAGSMASK 0
+FILEOS 0x40000
+FILETYPE 1
+{
+ BLOCK "StringFileInfo"
+ {
+  BLOCK "040904E4"
+  {
+   VALUE "CompanyName", "g2gui-team [http://mldonkey.berlios.de]"
+   VALUE "FileDescription", "nice GUI for mldonkey"
+   VALUE "FileVersion", "0.3.0"   
+   VALUE "LegalCopyright", "GNU Public License"
+   VALUE "OriginalFilename", "g2gui.exe"
+   VALUE "ProductName", "g2gui" 
+  }
+ }
+}
