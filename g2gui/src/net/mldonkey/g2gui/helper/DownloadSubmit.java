@@ -55,7 +55,7 @@ import net.mldonkey.g2gui.helper.RegExp;
  * DownloadSubmit
  *
  * @author $user$
- * @version $Id: DownloadSubmit.java,v 1.6 2004/03/04 17:39:49 psy Exp $ 
+ * @version $Id: DownloadSubmit.java,v 1.7 2004/03/04 17:41:54 psy Exp $ 
  *
  */
 public class DownloadSubmit implements Runnable {
@@ -157,7 +157,8 @@ public class DownloadSubmit implements Runnable {
 			return(string);
 
     	} catch (UnsupportedEncodingException e) {
-			return(string);
+			System.out.println("Encoding Exception: " + e);
+    		return(string);
 		}
     }
     
@@ -319,6 +320,9 @@ public class DownloadSubmit implements Runnable {
 
 /*
 $Log: DownloadSubmit.java,v $
+Revision 1.7  2004/03/04 17:41:54  psy
+*** empty log message ***
+
 Revision 1.6  2004/03/04 17:39:49  psy
 *** empty log message ***
 
