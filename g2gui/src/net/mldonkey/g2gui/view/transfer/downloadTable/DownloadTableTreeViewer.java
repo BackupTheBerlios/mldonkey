@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.6 2003/10/15 21:13:21 zet Exp $
+ * @version $Id: DownloadTableTreeViewer.java,v 1.7 2003/10/15 22:06:32 zet Exp $
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListener {
@@ -340,6 +340,7 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 	 */
     public void updateDisplay() {
         setPreferences();
+        tableTreeLabelProvider.updateDisplay();
         tableTreeViewer.refresh();
     }
 
@@ -419,6 +420,9 @@ public class DownloadTableTreeViewer implements ICellModifier, IDoubleClickListe
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.7  2003/10/15 22:06:32  zet
+colours
+
 Revision 1.6  2003/10/15 21:13:21  zet
 show/hide clients from rtclk menu
 

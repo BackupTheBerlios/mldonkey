@@ -28,6 +28,7 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
@@ -42,23 +43,28 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.6 2003/10/13 21:36:33 zet Exp $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.7 2003/10/15 22:06:32 zet Exp $
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
     
-    private Color unAvailableFileColor = new Color( null, 128, 128, 128 );
-    private Color downloadedFileColor = new Color( null, 0, 0, 255 );
-    private Color queuedFileColor = new Color( null, 192, 192, 192 );
-    private Color pausedFileColor = new Color( null, 255, 0, 0 );
-    private Color rateAbove20Color = new Color( null, 0, 160, 0 );
-    private Color rateAbove10Color = new Color( null, 0, 140, 0 );
-    private Color rateAbove0Color = new Color( null, 0, 110, 0 );
+    private Color availableFileColor;
+    private Color unAvailableFileColor; 
+    private Color downloadedFileColor;
+    private Color queuedFileColor;
+    private Color pausedFileColor;
+    private Color rateAbove20Color; 
+    private Color rateAbove10Color;
+    private Color rateAbove0Color;
 	
 	private boolean displayColors = true;
     private DecimalFormat df = new DecimalFormat( "0.0" );
     private DecimalFormat dfp = new DecimalFormat( "0" );
     private CustomTableTreeViewer tableTreeViewer;
+
+	public DownloadTableTreeLabelProvider() {
+		updateDisplay();	
+	}
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
@@ -100,7 +106,7 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
             	return unAvailableFileColor;
             } 
             else {
-            	return null;
+            	return availableFileColor;
             }
         } else if ( arg0 instanceof TreeClientInfo ) {
             ClientInfo clientInfo = ( (TreeClientInfo) arg0 ).getClientInfo();
@@ -120,13 +126,6 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
     public void dispose() {
-        unAvailableFileColor.dispose();
-        queuedFileColor.dispose();
-        pausedFileColor.dispose();
-        downloadedFileColor.dispose();
-        rateAbove20Color.dispose();
-        rateAbove10Color.dispose();
-        rateAbove0Color.dispose();
     }
 
     /* (non-Javadoc)
@@ -155,8 +154,24 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
         tableTreeViewer = v;
     }
 
+    /**
+     * @param b
+     */
     public void displayColors( boolean b ) {
         displayColors = b;
+    }
+    
+    
+    public void updateDisplay() {
+    	
+		unAvailableFileColor = PreferenceLoader.loadColour( "downloadsUnAvailableFileColor" );
+		downloadedFileColor = PreferenceLoader.loadColour( "downloadsDownloadedFileColor" );
+		queuedFileColor = PreferenceLoader.loadColour( "downloadsQueuedFileColor" );
+		pausedFileColor = PreferenceLoader.loadColour( "downloadsPausedFileColor" );
+		availableFileColor = PreferenceLoader.loadColour( "downloadsAvailableFileColor" );
+		rateAbove0Color = PreferenceLoader.loadColour( "downloadsRateAbove0FileColor" );
+		rateAbove10Color = PreferenceLoader.loadColour( "downloadsRateAbove10FileColor" );
+		rateAbove20Color = PreferenceLoader.loadColour( "downloadsRateAbove20FileColor" );		
     }
     
 	/* (non-Javadoc)
@@ -290,6 +305,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.7  2003/10/15 22:06:32  zet
+colours
+
 Revision 1.6  2003/10/13 21:36:33  zet
 Use "-" instead of 0's
 
