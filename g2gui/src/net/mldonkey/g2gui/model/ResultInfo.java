@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.18 2003/08/28 12:41:04 lemmster Exp $ 
+ * @version $Id: ResultInfo.java,v 1.19 2003/08/31 12:22:27 lemmster Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -82,6 +82,11 @@ public class ResultInfo extends Parent {
 	 * true = Normal, false = Already Downloaded 
 	 */
 	private boolean history;
+	/**
+	 * have we downloaded this file already
+	 * (just for the gui, core not involved)
+	 */	
+	private boolean downloading;
 	/**
 	 * true if this obj contains profanity
 	 */
@@ -328,7 +333,7 @@ public class ResultInfo extends Parent {
 	private void setHistory( byte b ) {
 		if ( b == 0 )
 			history = true;
-		else 
+		else
 			history = false;
 	}
 
@@ -367,10 +372,26 @@ public class ResultInfo extends Parent {
 			return "";
 	}
 
+	/**
+	 * @return do we already have downloaded this result
+	 */
+	public boolean isDownloading() {
+		return downloading;
+	}
+
+	/**
+	 * set this download to downloaded
+	 */
+	public void setDownloading() {
+		downloading = true;
+	}
 }
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.19  2003/08/31 12:22:27  lemmster
+added boolean downloading
+
 Revision 1.18  2003/08/28 12:41:04  lemmster
 initialize with false
 
