@@ -1,8 +1,8 @@
 2003/09/25: Dek
 	* SearchTab: reworked SearchSyntax
-		Default is now: all words are AND'ed together. If you don't want
-			this use  * "OR searchpattern" 
-			or        * "ANDNOT searchpattern", which is the same as "-searchpattern"		
+		Default is now: all words are AND'ed together. If you don't want this
+			use  * "OR searchpattern" 
+			or   * "ANDNOT searchpattern", which is the same as "-searchpattern"		
 2003/09/25: lemmy
 	* Search: Fixed bug that crashed the gui
 2003/09/23: lemmy
