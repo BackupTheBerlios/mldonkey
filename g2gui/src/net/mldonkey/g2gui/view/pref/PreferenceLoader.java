@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2GUI Team
- * 
- * 
+ *
+ *
  * This file is part of G2GUI.
  *
  * G2GUI is free software; you can redistribute it and/or modify
@@ -18,11 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with G2GUI; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.pref;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -43,178 +44,222 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.20 2003/09/14 09:01:15 lemmster Exp $
+ * @version $Id: PreferenceLoader.java,v 1.21 2003/09/14 09:40:31 lemmster Exp $
  */
 public class PreferenceLoader {
+    private static PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
+    private static Map fontMap = new Hashtable();
+    private static Map colorMap = new Hashtable();
+    private static List fontArray = new ArrayList();
+    private static List colorArray = new ArrayList();
 
-	private static PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
-	private static Map fontMap = new Hashtable();
-	private static Map colorMap = new Hashtable();
-	private static List fontArray = new ArrayList();
-	private static List colorArray = new ArrayList();
-	
-	// prevent instantiation
-	private PreferenceLoader() {
-	}
-	
-	/**
-	 * @return
-	 */
-	static void loadStore() {
-		try { preferenceStore.load(); } catch ( IOException e ) { }
-		preferenceStore =  ( PreferenceStore ) setDefaults( preferenceStore );
-	}
-	/**
-	 * @param preferenceStore
-	 * @return
-	 */
-	static IPreferenceStore setDefaults(IPreferenceStore preferenceStore) {
-		Display display = Display.getDefault();
-	
-		preferenceStore.setDefault( "initialized", false );
-		preferenceStore.setDefault( "windowMaximized", false );
-		preferenceStore.setDefault( "coolbarLocked", true );
-		preferenceStore.setDefault( "toolbarSmallButtons", false );
-		preferenceStore.setDefault( "flatInterface", false );
-	
-		PreferenceConverter.setDefault(preferenceStore, "consoleBackground", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );
-		PreferenceConverter.setDefault(preferenceStore, "consoleForeground", display.getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB() );
-		PreferenceConverter.setDefault(preferenceStore, "consoleHighlight",  display.getSystemColor(SWT.COLOR_LIST_SELECTION).getRGB() );
-		PreferenceConverter.setDefault(preferenceStore, "consoleInputBackground", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );
-		PreferenceConverter.setDefault(preferenceStore, "consoleInputForeground", display.getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB() );
-		PreferenceConverter.setDefault(preferenceStore, "consoleFontData", JFaceResources.getTextFont().getFontData());
-		
-		preferenceStore.setDefault( "hostname", "localhost" );
-		preferenceStore.setDefault( "username", "admin" );
-		preferenceStore.setDefault( "password", "" );
-		preferenceStore.setDefault( "port", "4001" );
-		preferenceStore.setDefault( "advancedMode", false);
+    // prevent instantiation
+    private PreferenceLoader() {
+    }
 
-		preferenceStore.setDefault( "searchFilterPornography", false );
-		preferenceStore.setDefault( "searchFilterProfanity", false );
-		
-		preferenceStore.setDefault( "maintainSortOrder", false );
-		preferenceStore.setDefault( "displayAllServers", true );
-		preferenceStore.setDefault( "displayNodes", false );
-		preferenceStore.setDefault( "displayChunkGraphs", false );
-		preferenceStore.setDefault( "displayGridLines", true );
-		preferenceStore.setDefault( "tableCellEditors", false );
-		
-		preferenceStore.setDefault( "coreExecutable", "" );
-		
-		preferenceStore.setDefault( "useCombo", false );
-		
-		return preferenceStore;
-	}
-	
-	/**
-	 * @param preferenceString
-	 * @return
-	 */
-	static public Font loadFont( String preferenceString ) {
-		if (preferenceStore.contains( preferenceString )) {
-			Font newFont = new Font (null, PreferenceConverter.getFontDataArray( preferenceStore, preferenceString ));
-			if (fontMap.containsKey(preferenceString)) {
-				if (newFont.getFontData()[0].equals( ((Font) fontMap.get(preferenceString)).getFontData()[0] )) {
-					newFont.dispose();
-				} else {
-					fontArray.add(newFont);
-					fontMap.put(preferenceString, newFont);
-				}
-			} else {
-				fontArray.add(newFont);
-				fontMap.put(preferenceString, newFont);
-			}
-			return (Font) fontMap.get(preferenceString);
-		}
-		return null;
-	}
-	/**
-	 * @param preferenceString
-	 * @return
-	 */
-	static public Color loadColour (String preferenceString ) {
-		if (preferenceStore.contains( preferenceString )) {
-			Color newColor = new Color (null, PreferenceConverter.getColor( preferenceStore, preferenceString ));
-			if (colorMap.containsKey(preferenceString)) {
-				if (newColor.getRGB().equals( ((Color) colorMap.get(preferenceString)).getRGB())) {
-					newColor.dispose();
-				} else {
-					colorArray.add(newColor);
-					colorMap.put(preferenceString, newColor);
-				}
-			} else {
-				colorArray.add(newColor);
-				colorMap.put(preferenceString, newColor);
-			}
-			return (Color) colorMap.get(preferenceString);
-		}
-		return null;
-	}
-	
-	/**
-	 * @param preferenceString
-	 * @return
-	 */
-	static public Rectangle loadRectangle (String preferenceString ) {
-		if (preferenceStore.contains( preferenceString ))
-			return PreferenceConverter.getRectangle(preferenceStore, preferenceString);
-		return null;
-	}
+    /**
+     * @return
+     */
+    static void loadStore() {
+        try {
+            preferenceStore.load();
+        }
+        catch ( IOException e ) {
+        }
+        preferenceStore = ( PreferenceStore ) setDefaults( preferenceStore );
+    }
 
-	/**
-	 * @param preferenceString
-	 * @return
-	 */
-	static public boolean loadBoolean (String preferenceString ) {
-		if (preferenceStore.contains( preferenceString ))
-			return preferenceStore.getBoolean( preferenceString );
-		return true;
-	}	
-	
-	/**
-	 * @param preferenceString
-	 * @return
-	 */
-	static public int  loadInteger(String preferenceString ) {
-		if (preferenceStore.contains( preferenceString ))
-			return preferenceStore.getInt( preferenceString );
-		return 0;
-	}
-	
-	static public String loadString(String preferenceString ) {
-		if (preferenceStore.contains( preferenceString ))
-			return preferenceStore.getString( preferenceString );
-		return "";
-	}
-	
-	static public PreferenceStore getPreferenceStore() {
-		return preferenceStore;
-	}
-	static public void saveStore() {
-		try { preferenceStore.save(); }
-		catch ( IOException e2 ) {  }
-	}
-	static public boolean contains(String preferenceString) {
-		return preferenceStore.contains(preferenceString);
-	}
-	static public void initialize() {
-		loadStore();
-	}
-	static public void cleanUp() {
-		Iterator fonts = fontArray.iterator();
-		while(fonts.hasNext()){
-		  ((Font) fonts.next()).dispose();
-		}
-		Iterator colors = colorArray.iterator();
-		while(colors.hasNext()){
-		  ((Color) colors.next()).dispose();
-		}
-	}
-	
+    /**
+     * @param preferenceStore
+     * @return
+     */
+    static IPreferenceStore setDefaults( IPreferenceStore preferenceStore ) {
+        Display display = Display.getDefault();
+        preferenceStore.setDefault( "initialized", false );
+        preferenceStore.setDefault( "windowMaximized", false );
+        preferenceStore.setDefault( "coolbarLocked", true );
+        preferenceStore.setDefault( "toolbarSmallButtons", false );
+        preferenceStore.setDefault( "flatInterface", false );
+        PreferenceConverter.setDefault( preferenceStore, "consoleBackground",
+                                        display.getSystemColor( SWT.COLOR_LIST_BACKGROUND ).getRGB() );
+        PreferenceConverter.setDefault( preferenceStore, "consoleForeground",
+                                        display.getSystemColor( SWT.COLOR_LIST_FOREGROUND ).getRGB() );
+        PreferenceConverter.setDefault( preferenceStore, "consoleHighlight",
+                                        display.getSystemColor( SWT.COLOR_LIST_SELECTION ).getRGB() );
+        PreferenceConverter.setDefault( preferenceStore, "consoleInputBackground",
+                                        display.getSystemColor( SWT.COLOR_LIST_BACKGROUND ).getRGB() );
+        PreferenceConverter.setDefault( preferenceStore, "consoleInputForeground",
+                                        display.getSystemColor( SWT.COLOR_LIST_FOREGROUND ).getRGB() );
+        PreferenceConverter.setDefault( preferenceStore, "consoleFontData",
+                                        JFaceResources.getTextFont().getFontData() );
+        preferenceStore.setDefault( "hostname", "localhost" );
+        preferenceStore.setDefault( "username", "admin" );
+        preferenceStore.setDefault( "password", "" );
+        preferenceStore.setDefault( "port", "4001" );
+        preferenceStore.setDefault( "advancedMode", false );
+        preferenceStore.setDefault( "searchFilterPornography", false );
+        preferenceStore.setDefault( "searchFilterProfanity", false );
+        preferenceStore.setDefault( "maintainSortOrder", false );
+        preferenceStore.setDefault( "displayAllServers", true );
+        preferenceStore.setDefault( "displayNodes", false );
+        preferenceStore.setDefault( "displayChunkGraphs", false );
+        preferenceStore.setDefault( "displayGridLines", true );
+        preferenceStore.setDefault( "tableCellEditors", false );
+        preferenceStore.setDefault( "coreExecutable", "" );
+        preferenceStore.setDefault( "useCombo", false );
+        return preferenceStore;
+    }
+
+    /**
+     * @param preferenceString
+     * @return
+     */
+	public static Font loadFont( String preferenceString ) {
+        if ( preferenceStore.contains( preferenceString ) ) {
+            Font newFont =
+                new Font( null, PreferenceConverter.getFontDataArray( preferenceStore, preferenceString ) );
+            if ( fontMap.containsKey( preferenceString ) ) {
+                if ( newFont.getFontData()[ 0 ].equals( ( ( Font ) fontMap.get( preferenceString ) )
+                                                              .getFontData()[ 0 ] ) )
+                    newFont.dispose();
+                else {
+                    fontArray.add( newFont );
+                    fontMap.put( preferenceString, newFont );
+                }
+            }
+            else {
+                fontArray.add( newFont );
+                fontMap.put( preferenceString, newFont );
+            }
+            return ( Font ) fontMap.get( preferenceString );
+        }
+        return null;
+    }
+
+    /**
+     * @param preferenceString
+     * @return
+     */
+	public static Color loadColour( String preferenceString ) {
+        if ( preferenceStore.contains( preferenceString ) ) {
+            Color newColor =
+                new Color( null, PreferenceConverter.getColor( preferenceStore, preferenceString ) );
+            if ( colorMap.containsKey( preferenceString ) ) {
+                if ( newColor.getRGB().equals( ( ( Color ) colorMap.get( preferenceString ) ).getRGB() ) )
+                    newColor.dispose();
+                else {
+                    colorArray.add( newColor );
+                    colorMap.put( preferenceString, newColor );
+                }
+            }
+            else {
+                colorArray.add( newColor );
+                colorMap.put( preferenceString, newColor );
+            }
+            return ( Color ) colorMap.get( preferenceString );
+        }
+        return null;
+    }
+
+    /**
+     * @param preferenceString
+     * @return
+     */
+	public static Rectangle loadRectangle( String preferenceString ) {
+        if ( preferenceStore.contains( preferenceString ) )
+            return PreferenceConverter.getRectangle( preferenceStore, preferenceString );
+        return null;
+    }
+
+    /**
+     * @param preferenceString
+     * @return
+     */
+	public static boolean loadBoolean( String preferenceString ) {
+        if ( preferenceStore.contains( preferenceString ) )
+            return preferenceStore.getBoolean( preferenceString );
+        return true;
+    }
+
+    /**
+     * @param preferenceString
+     * @return
+     */
+	public static int loadInteger( String preferenceString ) {
+        if ( preferenceStore.contains( preferenceString ) )
+            return preferenceStore.getInt( preferenceString );
+        return 0;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param preferenceString DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+	public static String loadString( String preferenceString ) {
+        if ( preferenceStore.contains( preferenceString ) )
+            return preferenceStore.getString( preferenceString );
+        return "";
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+	public static PreferenceStore getPreferenceStore() {
+        return preferenceStore;
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    public static void saveStore() {
+        try {
+            preferenceStore.save();
+        }
+        catch ( IOException e2 ) {
+        }
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param preferenceString DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+	public static boolean contains( String preferenceString ) {
+        return preferenceStore.contains( preferenceString );
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    static public void initialize() {
+        loadStore();
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    static public void cleanUp() {
+        Iterator fonts = fontArray.iterator();
+        while ( fonts.hasNext() )
+            ( ( Font ) fonts.next() ).dispose();
+        Iterator colors = colorArray.iterator();
+        while ( colors.hasNext() )
+            ( ( Color ) colors.next() ).dispose();
+    }
 }
+
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.21  2003/09/14 09:40:31  lemmster
+save column width
+
 Revision 1.20  2003/09/14 09:01:15  lemmster
 show nodes on request
 

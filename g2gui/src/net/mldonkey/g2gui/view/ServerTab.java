@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.26 2003/09/14 09:40:31 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.27 2003/09/14 09:42:51 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -182,7 +182,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		
 		/* create the columns */
 		for ( int i = 0; i < tableColumns.length; i++ ) {
-			PreferenceStore prefStore = PreferenceLoader.getPreferenceStore();
+			final PreferenceStore prefStore = PreferenceLoader.getPreferenceStore();
 			prefStore.setDefault( tableColumns[ i ], tableWidth[ i ] );
 			tableColumn = new TableColumn( table.getTable(), SWT.LEFT );
 			tableColumn.setText( G2GuiResources.getString( tableColumns[ i ] ) );
@@ -192,7 +192,6 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			final int j = i;
 			tableColumn.addDisposeListener( new DisposeListener() {
 				public synchronized void widgetDisposed( DisposeEvent e ) {
-					PreferenceStore prefStore = PreferenceLoader.getPreferenceStore();
 					TableColumn aColumn = ( TableColumn ) e.widget;
 					prefStore.setValue( tableColumns[ j ] , aColumn.getWidth() );
 				}
@@ -405,6 +404,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.27  2003/09/14 09:42:51  lemmster
+save column width
+
 Revision 1.26  2003/09/14 09:40:31  lemmster
 save column width
 
