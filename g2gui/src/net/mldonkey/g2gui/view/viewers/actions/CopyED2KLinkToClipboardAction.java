@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * CopyED2KLinkToClipboardAction
  *
- * @version $Id: CopyED2KLinkToClipboardAction.java,v 1.1 2003/10/22 20:38:35 zet Exp $
+ * @version $Id: CopyED2KLinkToClipboardAction.java,v 1.2 2003/10/22 20:47:21 zet Exp $
  *
  */
 public class CopyED2KLinkToClipboardAction extends Action {
@@ -57,18 +57,16 @@ public class CopyED2KLinkToClipboardAction extends Action {
         String fileName;
 
         for (int i = 0; i < links.length; i++) {
-            if (i > 0) {
-                link += (SWT.getPlatform().equals("win32") ? "\r\n" : "\n");
-            }
-
             if (useHTML) {
                 // 13 = "ed2k://|file|"
-                fileName = links[ i ].substring(13, links[ i ].indexOf("|", 13) );
+                fileName = links[ i ].substring(13, links[ i ].indexOf("|", 13));
 
                 link += ("<a href=\"" + links[ i ] + "\">" + fileName + "</a>");
             } else {
                 link += links[ i ];
             }
+
+            link += (SWT.getPlatform().equals("win32") ? "\r\n" : "\n");
         }
 
         clipBoard.setContents(new Object[] { link }, new Transfer[] { TextTransfer.getInstance() });
@@ -79,6 +77,9 @@ public class CopyED2KLinkToClipboardAction extends Action {
 
 /*
 $Log: CopyED2KLinkToClipboardAction.java,v $
+Revision 1.2  2003/10/22 20:47:21  zet
+minor
+
 Revision 1.1  2003/10/22 20:38:35  zet
 common actions
 
