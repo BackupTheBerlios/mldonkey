@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.35 2003/06/27 11:56:23 dek Exp $ 
+ * @version $Id: Core.java,v 1.36 2003/06/27 12:04:02 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -221,6 +221,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 			case Message.R_CONSOLE :	
 					this.consoleMessage.readStream( messageBuffer );
+					this.setChanged();
 					this.notifyObservers( consoleMessage );						
 					break;
 				
@@ -287,6 +288,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.36  2003/06/27 12:04:02  dek
+consoleMessageFix
+
 Revision 1.35  2003/06/27 11:56:23  dek
 sending out consolemesages to observers
 
