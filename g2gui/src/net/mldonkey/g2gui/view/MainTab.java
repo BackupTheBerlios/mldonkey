@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.main.MainCoolBar;
 import net.mldonkey.g2gui.view.main.MainMenuBar;
-import net.mldonkey.g2gui.view.main.Minimizer_win32;
+import net.mldonkey.g2gui.view.main.Minimizer;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.68 2003/09/08 18:25:37 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.70 2003/09/13 11:02:45 lemmster Exp $ 
  *
  */
 public class MainTab implements ShellListener {
@@ -72,9 +72,9 @@ public class MainTab implements ShellListener {
 	private Composite mainComposite, pageContainer;
 	private List registeredTabs;
 	private GuiTab activeTab;
-	private GuiTab[] tabs;
+	private List tabs;
 	private MainCoolBar coolBar;
-	private Minimizer_win32 minimizer;
+	private Minimizer minimizer;
 	
 	/**
 	 * @param core the most important thing of the gui: were do i get my data from
@@ -87,7 +87,7 @@ public class MainTab implements ShellListener {
 		final Shell mainShell = shell;	
 		Display display = shell.getDisplay();
 		shell.addShellListener( this );
-		minimizer = new Minimizer_win32(shell, core, titleBarText);
+		minimizer = new Minimizer(shell, core, titleBarText);
 		minimizer.setTitleBarText(); 
 		shell.setLayout( new FillLayout() );
 		createContents( shell );
@@ -189,19 +189,19 @@ public class MainTab implements ShellListener {
 	 */
 	private void addTabs() {
 		if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-			this.tabs = new GuiTab[ 6 ];
-			tabs[ 0 ] =	new TransferTab( this );
-			tabs[ 1 ] =	new SearchTab( this );
-			tabs[ 2 ] =	new ServerTab( this );
-			tabs[ 3 ] =	new ConsoleTab( this );
-			tabs[ 4 ] =	new StatisticTab( this );
-			tabs[ 5 ] = new MessagesTab( this );
+			this.tabs = new ArrayList();
+			tabs.add( new TransferTab( this ) );
+			tabs.add( new SearchTab( this ) );
+			tabs.add( new ServerTab( this ) );
+			tabs.add( new ConsoleTab( this ) );
+			tabs.add( new StatisticTab( this ) );
+			tabs.add( new MessagesTab( this ) );
 		}
 		else {
-			this.tabs = new GuiTab[ 3 ];
-			tabs[ 0 ] =	new TransferTab( this );
-			tabs[ 1 ] =	new SearchTab( this );
-			tabs[ 2 ] =	new StatisticTab( this );
+			this.tabs = new ArrayList();
+			tabs.add( new TransferTab( this ) );
+			tabs.add( new SearchTab( this ) );
+			tabs.add( new StatisticTab( this ) );
 		}	
 
 		/*setting TransferTab active if registered*/
@@ -304,7 +304,7 @@ public class MainTab implements ShellListener {
 	/**
 	 * @return
 	 */
-	public GuiTab[] getTabs() {
+	public List getTabs() {
 		return this.tabs;
 	}
 
@@ -373,6 +373,12 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.70  2003/09/13 11:02:45  lemmster
+use List instead of GuiTab[] in addTabs()
+
+Revision 1.69  2003/09/08 18:27:42  zet
+*** empty log message ***
+
 Revision 1.68  2003/09/08 18:25:37  zet
 init resources in g2gui
 

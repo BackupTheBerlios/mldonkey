@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.statusline;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -47,7 +48,7 @@ import org.eclipse.swt.widgets.Control;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.23 2003/09/12 16:28:21 lemmster Exp $ 
+ * @version $Id: NetworkItem.java,v 1.24 2003/09/13 11:02:45 lemmster Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -69,9 +70,9 @@ public class NetworkItem implements Observer {
 		this.core = mldonkey;
 		
 		/* get the servertab */
-		GuiTab[] tabs = statusline.getMainTab().getTabs();
-		for ( int i = 0; i < tabs.length; i++ ) {
-			GuiTab tab = tabs[ i ];
+		List tabs = statusline.getMainTab().getTabs();
+		for ( int i = 0; i < tabs.size(); i++ ) {
+			GuiTab tab = ( GuiTab ) tabs.get( i );
 			if ( tab instanceof ServerTab ) {
 				this.serverTab = tab;
 			}
@@ -181,6 +182,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.24  2003/09/13 11:02:45  lemmster
+use List instead of GuiTab[] in addTabs()
+
 Revision 1.23  2003/09/12 16:28:21  lemmster
 ResourceBundle added
 
