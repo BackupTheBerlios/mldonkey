@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  * @author $user$
- * @version $Id: ResultInfo.java,v 1.4 2003/07/06 07:29:47 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfo.java,v 1.5 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
  *
  */
 public class ResultInfo implements SimpleInformation {
@@ -85,22 +85,22 @@ public class ResultInfo implements SimpleInformation {
 	 */
 	public String toString() {
 		String result = new String();
-		result+= "ID: "+resultID;
-		result+= "\n Network: "+ networkID;		
-		result+= "\n filenames: ";
-			for (int i = 0; i < names.length; i++) {
+		result += "ID: " + resultID;
+		result += "\n Network: " + networkID;		
+		result += "\n filenames: ";
+			for ( int i = 0; i < names.length; i++ ) {
 				result += names[ i ] + " ";
 			}
-		result+= "\n Md4: "+ md4;
-		result+= "\n FileSize: "+ size;
-		result+= "\n File-Format: "+ format;
-		result+= "\n File-Typ: "+ type;		
-		result+= "\n MetaData: ";
-		for (int i = 0; i < tags.length; i++) {
-			result+= tags[i].getName()+" - "+ tags[i].getValue();
+		result += "\n Md4: " + md4;
+		result += "\n FileSize: " + size;
+		result += "\n File-Format: " + format;
+		result += "\n File-Typ: " + type;		
+		result += "\n MetaData: ";
+		for ( int i = 0; i < tags.length; i++ ) {
+			result += tags[ i ].getName() + " - " + tags[ i ].getValue();
 					}
-		result+= "\n comment: "+ comment;
-		result+= "\n status: "+ history;		
+		result += "\n comment: " + comment;
+		result += "\n status: " + history;		
 		return result;
 	}
 
@@ -229,6 +229,9 @@ public class ResultInfo implements SimpleInformation {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.5  2003/07/06 07:45:26  lemmstercvs01
+checkstyle applied
+
 Revision 1.4  2003/07/06 07:29:47  lemmstercvs01
 javadoc improved
 

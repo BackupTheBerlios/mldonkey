@@ -30,16 +30,14 @@ import gnu.trove.TIntObjectIterator;
  * InfoMap
  *
  * @author $user$
- * @version $Id: InfoIntMap.java,v 1.3 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: InfoIntMap.java,v 1.4 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
  *
  */
 public abstract class InfoIntMap implements InfoCollection {
-	
 	/**
 	 * 
 	 */
 	protected CoreCommunication parent;
-	
 	/**
 	 * 
 	 */
@@ -51,7 +49,6 @@ public abstract class InfoIntMap implements InfoCollection {
 	public InfoIntMap() {
 		this.infoIntMap = new TIntObjectHashMap();
 	}
-	
 	
 	/**
 	 * @param communication my parent
@@ -80,6 +77,9 @@ public abstract class InfoIntMap implements InfoCollection {
 
 /*
 $Log: InfoIntMap.java,v $
+Revision 1.4  2003/07/06 07:45:26  lemmstercvs01
+checkstyle applied
+
 Revision 1.3  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 

@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.8 2003/07/05 15:58:05 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.9 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo implements SimpleInformation {
@@ -74,7 +74,7 @@ public class NetworkInfo implements SimpleInformation {
 	
 	/**
 	 * Creates a new NetworkInfo
-	 * @param parent
+	 * @param parent The parent
 	 */
 	public NetworkInfo( CoreCommunication parent ) {
 		this.parent = parent; 
@@ -176,6 +176,9 @@ public class NetworkInfo implements SimpleInformation {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.9  2003/07/06 07:45:26  lemmstercvs01
+checkstyle applied
+
 Revision 1.8  2003/07/05 15:58:05  lemmstercvs01
 javadoc improved
 

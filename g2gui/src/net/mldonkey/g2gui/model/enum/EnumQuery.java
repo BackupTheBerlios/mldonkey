@@ -26,7 +26,7 @@ package net.mldonkey.g2gui.model.enum;
  * EnumQuery
  *
  * @author $user$
- * @version $Id: EnumQuery.java,v 1.1 2003/07/06 07:36:42 lemmstercvs01 Exp $ 
+ * @version $Id: EnumQuery.java,v 1.2 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
  *
  */
 public class EnumQuery implements Enum {
@@ -86,11 +86,17 @@ public class EnumQuery implements Enum {
 	 * 13: Hidden(fields) (value is 13)
 	 */
 	public static EnumQuery HIDDEN = new EnumQuery();
+
+	/**
+	 * Creates a new EnumQuery object
+	 */	
+	private EnumQuery() {
+	}
 	
 	/**
 	 * translate the EnumQuery back to byte
-	 * @param enum
-	 * @return
+	 * @param enum The EnumQuery
+	 * @return a byte represantation of this object
 	 */
 	public static byte getValue( EnumQuery enum ) {
 		if ( enum.equals( EnumQuery.AND ) )
@@ -121,12 +127,14 @@ public class EnumQuery implements Enum {
 			return 12;
 		else
 			return 13;
-
 	}
 }
 
 /*
 $Log: EnumQuery.java,v $
+Revision 1.2  2003/07/06 07:45:26  lemmstercvs01
+checkstyle applied
+
 Revision 1.1  2003/07/06 07:36:42  lemmstercvs01
 EnumQuery added
 

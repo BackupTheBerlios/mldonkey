@@ -31,11 +31,12 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.enum.EnumQuery;
 
 /**
- * SearchQuery is needed to transmit a search to the mldonkey. It needs to be created, and then filled
- * with setter(). When complete, it can be sent with this.send().
+ * SearchQuery is needed to transmit a search to the mldonkey.
+ * It needs to be created, and then filled with setter().
+ * When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.7 2003/07/06 07:36:42 lemmstercvs01 Exp $ 
+ * @version $Id: SearchQuery.java,v 1.8 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
  *
  */
 public class SearchQuery {
@@ -206,11 +207,8 @@ public class SearchQuery {
 	}
 	
 	/**
-	 * Sets the type of this search-query <br>
-	 *  0 = AND<br>
-	 *  1 = OR <br>
-	 * ( 2 = AND NOT ) not yet implemented
-	 * @param type The Type of this search
+	 * Sets the type of this search-query
+	 * @param enum The Type of this search
 	 */
 	public void setSearchType( EnumQuery enum ) {
 		if ( ( enum == EnumQuery.AND ) || ( enum == EnumQuery.OR )  ) {		
@@ -237,8 +235,8 @@ public class SearchQuery {
 		content.add( new Integer( network ) );
 		
 		/* create the message content */
-		Object[] temp = content.toArray();
-		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SEARCH_QUERY, content.toArray() );
+		EncodeMessage consoleMessage =
+			new EncodeMessage( Message.S_SEARCH_QUERY, content.toArray() );
 		consoleMessage.sendMessage( this.getParent().getConnection() );
 	}
 
@@ -252,6 +250,9 @@ public class SearchQuery {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.8  2003/07/06 07:45:26  lemmstercvs01
+checkstyle applied
+
 Revision 1.7  2003/07/06 07:36:42  lemmstercvs01
 EnumQuery added
 

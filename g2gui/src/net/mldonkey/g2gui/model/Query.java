@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * Query
  *
  * @author $user$
- * @version $Id: Query.java,v 1.13 2003/07/06 07:36:42 lemmstercvs01 Exp $ 
+ * @version $Id: Query.java,v 1.14 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
  *
  */
 public class Query implements SimpleInformation {
@@ -131,7 +131,10 @@ public class Query implements SimpleInformation {
 		List output = new ArrayList();
 		output.add( new Byte( EnumQuery.getValue( ( EnumQuery ) node ) ) );
 		
-			if ( node == EnumQuery.AND || node == EnumQuery.OR || node == EnumQuery.HIDDEN ) {			 	
+			if ( node == EnumQuery.AND
+				|| node == EnumQuery.OR
+				|| node == EnumQuery.HIDDEN )
+			{			 	
 			 	/*
 			 	 * List of Queries for AND or OR or Hidden.
 			 	 */	
@@ -353,6 +356,9 @@ public class Query implements SimpleInformation {
 
 /*
 $Log: Query.java,v $
+Revision 1.14  2003/07/06 07:45:26  lemmstercvs01
+checkstyle applied
+
 Revision 1.13  2003/07/06 07:36:42  lemmstercvs01
 EnumQuery added
 

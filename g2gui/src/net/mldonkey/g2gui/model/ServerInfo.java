@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.6 2003/07/04 18:35:02 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.7 2003/07/06 07:45:26 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo implements SimpleInformation {
 	/**
@@ -213,7 +213,7 @@ public class ServerInfo implements SimpleInformation {
 	
 	/**
 	 * sets the new state of this server (connecting/disconnect/remove)
-	 * @param enum
+	 * @param enum The EnumQuery
 	 */
 	public void setState( EnumState enum ) {
 		if ( this.getConnectionState().getState() == enum ) {
@@ -246,6 +246,9 @@ public class ServerInfo implements SimpleInformation {
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.7  2003/07/06 07:45:26  lemmstercvs01
+$checkstyle applied
+$
 $Revision 1.6  2003/07/04 18:35:02  lemmstercvs01
 $foobar
 $

@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.14 2003/07/05 15:43:48 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.15 2003/07/06 07:45:26 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -106,7 +106,7 @@ public class FileInfoIntMap extends InfoIntMap {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void add( MessageBuffer messageBuffer ) {
-		synchronized( this ) {
+		synchronized ( this ) {
 			int id = messageBuffer.readInt32();
 			synchronized ( this.ids ) {
 				this.ids.add( new Integer( id ) );
@@ -176,7 +176,7 @@ public class FileInfoIntMap extends InfoIntMap {
 	 * Needs manual refresh() of the tableviewer.
 	 */
 	public void removeObsolete() {
-		synchronized( this ) {
+		synchronized ( this ) {
 			List temp = new ArrayList();
 			TIntObjectIterator itr = this.iterator();
 			int collsize = this.size();
@@ -185,7 +185,8 @@ public class FileInfoIntMap extends InfoIntMap {
 				FileInfo aFileInfo = ( FileInfo ) itr.value();
 				/* if EnumFileState.DOWNLOADED, remove the fileinfo from this */
 				if ( aFileInfo.getState().getState() == EnumFileState.DOWNLOADED
-					|| aFileInfo.getState().getState() == EnumFileState.CANCELLED ) {
+					|| aFileInfo.getState().getState() == EnumFileState.CANCELLED )
+				{
 					temp.add( new Integer( itr.key() ) );
 				}
 			}
@@ -199,6 +200,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.15  2003/07/06 07:45:26  lemmstercvs01
+checkstyle applied
+
 Revision 1.14  2003/07/05 15:43:48  lemmstercvs01
 javadoc improved
 
