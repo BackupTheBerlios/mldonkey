@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.11 2003/09/15 15:32:09 lemmster Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.12 2003/09/16 10:29:40 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -198,7 +198,10 @@ Yet			menuManager.add( webManager );
 	
 	public void downloadSelected() {				
 		Download download = new Download( core );
+		String anErrorString = new String();
 		int counter = 0;
+		
+		
 		for ( int i = 0; i < selectedResults.size(); i++ ) {
 			ResultInfo result = ( ResultInfo ) selectedResults.get( i );
 			download.setPossibleNames( result.getNames() );	
@@ -206,11 +209,7 @@ Yet			menuManager.add( webManager );
 			download.setForce( false );
 
 			if ( result.isDownloading() && result.getHistory() ) {
-				Shell shell = ( ( TableViewer ) tableViewer ).getTable().getShell();
-				MessageBox box = new MessageBox( shell, SWT.ICON_WARNING );
-				box.setText( G2GuiResources.getString( "ST_DOWNLOADED_TEXT" ) );
-				box.setMessage( G2GuiResources.getString( "ST_DOWNLOADED_MSG" ) );
-				box.open();
+				anErrorString += result.getNames()[ 0 ] + "\n";
 			}
 			else if ( !result.getHistory() ) {
 				Shell shell = ( ( TableViewer ) tableViewer ).getTable().getShell();
@@ -232,10 +231,22 @@ Yet			menuManager.add( webManager );
 			}
 		}
 		download = null;
+		
+		/* display the errors now */
+		if ( !anErrorString.equals( "" ) ) {
+			Shell shell = ( ( TableViewer ) tableViewer ).getTable().getShell();
+			MessageBox box = new MessageBox( shell, SWT.ICON_WARNING );
+			box.setText( G2GuiResources.getString( "ST_DOWNLOADED_TEXT" ) );
+			box.setMessage( G2GuiResources.getString( "ST_DOWNLOADED_MSG" ) 
+							+ "\n\n" + anErrorString );
+			box.open();
+		}
+		
 		/* update the statusline */
 		String statusline = G2GuiResources.getString( "ST_STARTED_DOWNLOADS" ) + counter;
 		SearchTab parent = ( SearchTab ) cTabItem.getParent().getData();
 		parent.getMainTab().getStatusline().update( statusline );	
+
 		/* update the downloaded tableitems */
 		if ( counter > 0 )
 			tableViewer.refresh();
@@ -333,6 +344,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.12  2003/09/16 10:29:40  lemmster
+open msgbox just once [bug #909]
+
 Revision 1.11  2003/09/15 15:32:09  lemmster
 reset state of canceled downloads from search [bug #908]
 
