@@ -22,13 +22,17 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.net.Socket;
+
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfo.java,v 1.4 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.5 2003/07/04 18:03:13 dek Exp $ 
  *
  */
 public class OptionsInfo implements SimpleInformation {
@@ -56,14 +60,14 @@ public class OptionsInfo implements SimpleInformation {
 	}
 
 	/**
-	 * @param string a string
+	 * @param string the OptionName
 	 */
 	public void setKey( String string ) {
 		key = string;
 	}
 
 	/**
-	 * @param string a string
+	 * @param string the OptionValue
 	 */
 	public void setValue( String string ) {
 		value = string;
@@ -88,10 +92,22 @@ public class OptionsInfo implements SimpleInformation {
 		result += ": " + this.getValue() + "\n";
 		return result;
 	}
+
+	/**
+	 * @param socket the connection to our remote mldonkey
+	 */
+	public void send( Socket socket ) {
+		String[] payLoad = { key, value };
+		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SET_OPTION, payLoad );
+		consoleMessage.sendMessage( socket );
+	}
 }
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.5  2003/07/04 18:03:13  dek
+now has a send()-method
+
 Revision 1.4  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
