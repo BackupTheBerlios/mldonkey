@@ -1,3 +1,6 @@
+2003/11/23: vnc
+	* Configure/Makefile process now supports fox, motif and gtk2
+
 2003/11/22: z
 	* Search: Fix columnSelector option on search tab 
 	* Transfer/Stats: Save sash positions/states between sessions
