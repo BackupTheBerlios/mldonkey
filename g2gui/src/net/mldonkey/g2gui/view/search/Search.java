@@ -53,21 +53,21 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.21 2003/09/04 22:04:07 lemmster Exp $
+ * @version $Id: Search.java,v 1.22 2003/09/05 14:22:10 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
 	protected CoreCommunication core;
     protected SearchTab tab;
     protected SearchQuery query;
-	protected Combo combo;
-	protected Text text;
+	protected Combo networkCombo;
+	protected Text inputText;
 	protected StackLayout stackLayout;
 	protected Composite composite;
+	protected Button[] buttons;
     private Button okButton;
     private Button stopButton;
     private Button continueButton;
-    private Button[] buttons;
 
     /**
      *
@@ -101,24 +101,24 @@ public abstract class Search implements Observer {
      * DOCUMENT ME!
      */
     public void setSearchButton() {
-        stackLayout.topControl = buttons[ 2 ];
-        composite.layout();
+		this.stackLayout.topControl = this.buttons[ 2 ];
+        this.composite.layout();
     }
 
     /**
      * DOCUMENT ME!
      */
     public void setContinueButton() {
-        stackLayout.topControl = buttons[ 1 ];
-        composite.layout();
+		this.stackLayout.topControl = this.buttons[ 1 ];
+        this.composite.layout();
     }
 
     /**
      * DOCUMENT ME!
      */
     public void setStopButton() {
-        stackLayout.topControl = buttons[ 0 ];
-        composite.layout();
+		this.stackLayout.topControl = this.buttons[ 0 ];
+        this.composite.layout();
     }
 
     /**
@@ -126,12 +126,12 @@ public abstract class Search implements Observer {
      *
      * @param group DOCUMENT ME!
      */
-    protected Object[] createSearchButton( Composite group ) {
-        stackLayout = new StackLayout();
-        composite = new Composite( group, SWT.NONE );
-        composite.setLayout( stackLayout );
-        buttons = new Button[ 3 ];
-        stopButton = new Button( composite, SWT.PUSH );
+    protected void createSearchButton( Composite group ) {
+        this.stackLayout = new StackLayout();
+        this.composite = new Composite( group, SWT.NONE );
+		this.composite.setLayout( this.stackLayout );
+        this.buttons = new Button[ 3 ];
+        stopButton = new Button( this.composite, SWT.PUSH );
         stopButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         stopButton.setText( G2GuiResources.getString( "SS_STOP" ) );
         stopButton.addSelectionListener( new SelectionAdapter() {
@@ -141,7 +141,7 @@ public abstract class Search implements Observer {
                 }
             } );
         buttons[ 0 ] = stopButton;
-        continueButton = new Button( composite, SWT.PUSH );
+        continueButton = new Button( this.composite, SWT.PUSH );
         continueButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         continueButton.setText( G2GuiResources.getString( "SS_CONTINUE" ) );
         continueButton.addSelectionListener( new SelectionAdapter() {
@@ -151,7 +151,7 @@ public abstract class Search implements Observer {
                 }
             } );
         buttons[ 1 ] = continueButton;
-        okButton = new Button( composite, SWT.PUSH );
+        okButton = new Button( this.composite, SWT.PUSH );
         okButton.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         okButton.setText( G2GuiResources.getString( "SS_SEARCH" ) );
         okButton.addSelectionListener( new SelectionAdapter() {
@@ -160,9 +160,7 @@ public abstract class Search implements Observer {
                 }
             } );
         buttons[ 2 ] = okButton;
-        stackLayout.topControl = buttons[ 2 ];
-        
-        return new Object[] { stackLayout, composite };
+		this.stackLayout.topControl = buttons[ 2 ];
     }
 
     /**
@@ -201,7 +199,6 @@ public abstract class Search implements Observer {
             aText.setText( "no searchable network enabled" );
             aText.setEnabled( false );
         }
-
 		return aText;        
     }
 
@@ -211,7 +208,7 @@ public abstract class Search implements Observer {
      * @param group The Group to display the box in
      * @param aString The Box header
      */
-    protected Combo createNetworkCombo( Composite group, String aString ) {
+    protected void createNetworkCombo( Composite group, String aString ) {
 		/* the combo label */
         GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
@@ -222,13 +219,11 @@ public abstract class Search implements Observer {
         /* the combo itself */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
-        Combo aCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-        aCombo.setLayoutData( gridData );
+        this.networkCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+		this.networkCombo.setLayoutData( gridData );
         
         /* fill the combo with values */
-        fillCombo( aCombo );
-        
-        return aCombo;
+        fillCombo( this.networkCombo );
     }
 
     /**
@@ -260,22 +255,22 @@ public abstract class Search implements Observer {
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable o, Object arg ) {
-        if ( combo.isDisposed() ) return;
+        if ( this.networkCombo.isDisposed() ) return;
         
-        this.combo.getDisplay().asyncExec( new Runnable() {
+        this.networkCombo.getDisplay().asyncExec( new Runnable() {
             public void run() {
                 /* update the combo */
-                combo.removeAll();
-                fillCombo( combo );
+				networkCombo.removeAll();
+                fillCombo( networkCombo );
 				
                 /* update the text */
 				if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
-					text.setText( "no searchable network enabled" );
-					text.setEnabled( false );
+					inputText.setText( "no searchable network enabled" );
+					inputText.setEnabled( false );
 				}
 				else {
-					text.setText( "" );
-					text.setEnabled( true );
+					inputText.setText( "" );
+					inputText.setEnabled( true );
 				}
             }
         } );
@@ -284,6 +279,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.22  2003/09/05 14:22:10  lemmster
+working version
+
 Revision 1.21  2003/09/04 22:04:07  lemmster
 use always a new searchquery
 

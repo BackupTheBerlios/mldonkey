@@ -30,7 +30,6 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -43,14 +42,11 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.14 2003/09/04 22:04:07 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.15 2003/09/05 14:22:10 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
-	private GridLayout gridLayout;
-	private Composite group;
 	private Button ok, clear, all, audio, video, image, software;
-	private GridData gridData;
 	private String selectedMedia;
 
 	/**
@@ -76,20 +72,19 @@ public class SimpleSearch extends Search {
 		/* set the minimum width so, that the whole title is visible */
 		tabFolder.MIN_TAB_WIDTH = tabFolder.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
 		/* the input field */
-		gridLayout = new GridLayout();
+		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
-		gridData = new GridData( GridData.FILL_HORIZONTAL );
+		GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
 		gridData.horizontalIndent = 12;
 		gridData.widthHint=500;
-		group = new Composite( tabFolder, SWT.NONE );
+		Composite group = new Composite( tabFolder, SWT.NONE );
 		group.setLayout( gridLayout );
 		group.setLayoutData( gridData );
 			
-			this.text = 
+			this.inputText = 
 				this.createInputBox( group, G2GuiResources.getString( "SS_STRING" ) );
-			this.combo = 
-				this.createNetworkCombo( group, G2GuiResources.getString( "SS_NETWORK" ) );
+			this.createNetworkCombo( group, G2GuiResources.getString( "SS_NETWORK" ) );
 			
 			/* media select */
 			gridData = new GridData();
@@ -149,10 +144,7 @@ public class SimpleSearch extends Search {
 				}	
 			} );
 
-			Object[] obj =
-				this.createSearchButton( group );
-			this.stackLayout = ( StackLayout ) obj[ 0 ];
-			this.composite = ( Composite ) obj[ 1 ];
+			this.createSearchButton( group );
 
 		return group;		
 	}
@@ -161,13 +153,13 @@ public class SimpleSearch extends Search {
 	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
 	 */
 	public void performSearch() {
-		if ( ! text.getText().equals( "" ) ) {
+		if ( ! inputText.getText().equals( "" ) ) {
 			query = new SearchQuery( core );
 			/* the query string */
-			query.setSearchString( text.getText() );
+			query.setSearchString( inputText.getText() );
 					
 			/* get the network id for this query */
-			Object obj = combo.getData( combo.getItem( combo.getSelectionIndex() ) );
+			Object obj = networkCombo.getData( networkCombo.getItem( networkCombo.getSelectionIndex() ) );
 			if ( obj != null ) { // if != All
 				NetworkInfo temp = ( NetworkInfo ) obj;
 				query.setNetwork( temp.getNetwork() );
@@ -180,10 +172,10 @@ public class SimpleSearch extends Search {
 			query.send();
 						
 			/* draw the empty search result */
-			new SearchResult( text.getText(), tab.getCTabFolder(),
+			new SearchResult( inputText.getText(), tab.getCTabFolder(),
 							  core, query.getSearchIdentifier() );	
 
-			text.setText( "" );
+			inputText.setText( "" );
 			
 			this.setStopButton();
 		}
@@ -192,6 +184,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.15  2003/09/05 14:22:10  lemmster
+working version
+
 Revision 1.14  2003/09/04 22:04:07  lemmster
 use always a new searchquery
 

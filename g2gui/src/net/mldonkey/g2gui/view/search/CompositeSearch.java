@@ -42,16 +42,10 @@ import org.eclipse.swt.widgets.Label;
 /**
  * CompositeSearch
  *
- * @version $Id: CompositeSearch.java,v 1.2 2003/09/04 12:17:01 lemmster Exp $
+ * @version $Id: CompositeSearch.java,v 1.3 2003/09/05 14:22:10 lemmster Exp $
  *
  */
 public class CompositeSearch extends Search {
-    private Combo typeCombo;
-    private Composite composite;
-    private Label label;
-    private GridLayout gridLayout;
-    private GridData gridData;
-    private StackLayout stackLayout;
     private List aList;
     private Control[] searches;
     private int size;
@@ -79,9 +73,9 @@ public class CompositeSearch extends Search {
      * @see net.mldonkey.g2gui.view.search.Search#createTabFolderPage(org.eclipse.swt.custom.CTabFolder)
      */
     public Control createTabFolderPage( CTabFolder tabFolder ) {
-        gridLayout = new GridLayout();
+        GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
-        gridData = new GridData( GridData.FILL_HORIZONTAL );
+        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
         gridData.horizontalIndent = 12;
         gridData.widthHint = 500;
@@ -92,7 +86,7 @@ public class CompositeSearch extends Search {
         /* search type (music/video/other...) */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
-        label = new Label( mainComposite, SWT.NONE );
+        Label label = new Label( mainComposite, SWT.NONE );
         label.setLayoutData( gridData );
         label.setText( "Search Type" );
 
@@ -105,7 +99,7 @@ public class CompositeSearch extends Search {
         }
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
-        this.typeCombo = new Combo( mainComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+        Combo typeCombo = new Combo( mainComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
         typeCombo.setLayoutData( gridData );
         typeCombo.setItems( searchNames );
         typeCombo.select( 0 );
@@ -132,12 +126,11 @@ public class CompositeSearch extends Search {
         bar.setLayoutData( gridData );
         
         /* the different search masks */
-        stackLayout = new StackLayout();
+        StackLayout aStackLayout = new StackLayout();
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
-		gridData.horizontalIndent = -6;
         composite = new Composite( mainComposite, SWT.NONE );
-        composite.setLayout( stackLayout );
+        composite.setLayout( aStackLayout );
         composite.setLayoutData( gridData );
 
         /* store the controls of the complexsearches in a control[] */
@@ -146,8 +139,23 @@ public class CompositeSearch extends Search {
             ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
             searches[ i ] = aComplexSearch.createContent( composite );
         }
-        stackLayout.topControl = searches[ 0 ];
+		aStackLayout.topControl = searches[ 0 ];
+        
         return mainComposite;
+    }
+    
+    public void setStopButton() {
+    	for ( int i = 0; i < size; i++ ) {
+			ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
+			aComplexSearch.setStopButton();
+    	}
+    }
+    
+    public void setContinueButton() {
+		for ( int i = 0; i < size; i++ ) {
+			ComplexSearch aComplexSearch = ( ComplexSearch ) aList.get( i );
+			aComplexSearch.setContinueButton();
+		}
     }
 
 	/* (non-Javadoc)
@@ -158,6 +166,9 @@ public class CompositeSearch extends Search {
 
 /*
 $Log: CompositeSearch.java,v $
+Revision 1.3  2003/09/05 14:22:10  lemmster
+working version
+
 Revision 1.2  2003/09/04 12:17:01  lemmster
 lots of changes
 
