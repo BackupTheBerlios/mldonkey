@@ -22,20 +22,17 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.main.MainCoolBar;
 import net.mldonkey.g2gui.view.main.MainMenuBar;
+import net.mldonkey.g2gui.view.main.Minimizer;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -60,12 +57,10 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.65 2003/09/03 14:49:07 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.66 2003/09/08 15:39:35 zet Exp $ 
  *
  */
-public class MainTab implements Observer, ShellListener {
-
-	private static final DecimalFormat decimalFormat = new DecimalFormat( "0.#" );
+public class MainTab implements ShellListener {
 
 	private String titleBarText = "g2gui alpha";
 	private StatusLine statusline;
@@ -77,21 +72,24 @@ public class MainTab implements Observer, ShellListener {
 	private GuiTab activeTab;
 	private GuiTab[] tabs;
 	private MainCoolBar coolBar;
+	private Minimizer minimizer;
 	
 	/**
 	 * @param core the most important thing of the gui: were do i get my data from
 	 * @param shell were do we live?
 	 */
-	public MainTab( CoreCommunication core, Shell shell ) {
+	public MainTab( CoreCommunication core, final Shell shell ) {
 		this.registeredTabs = new ArrayList();
 		this.mldonkey = core;
+		
+		minimizer = new Minimizer(shell, core, titleBarText);
 		
 		this.shell = shell;
 		final Shell mainShell = shell;	
 		Display display = shell.getDisplay();
 		shell.addShellListener( this );
 		G2GuiResources.initialize();
-		setTitleBarText( shell ); 
+		minimizer.setTitleBarText(); 
 		shell.setLayout( new FillLayout() );
 		createContents( shell );
 		shell.pack ();
@@ -102,6 +100,7 @@ public class MainTab implements Observer, ShellListener {
 		/* set the old size of this window - must be after pack() */
 		setSizeLocation( shell );
 		shell.open ();
+		
 		/* things we should do if we dispose */
 		shell.addDisposeListener( new DisposeListener() {
 			public synchronized void widgetDisposed( DisposeEvent e ) {
@@ -234,26 +233,6 @@ public class MainTab implements Observer, ShellListener {
 	} 
 
 	/**
-	 * The Gui's Title
-	 * @param shell The shell to set the title on
-	 * @param title The text to appear in the title-bar
-	 */
-	public void update( Observable arg0, Object receivedInfo ) {
-		final ClientStats clientInfo = ( ClientStats ) receivedInfo;
-		if ( !shell.isDisposed() )
-			shell.getDisplay().syncExec( new Runnable() {
-			   public void run() {
-					if ( !shell.isDisposed() ) {
-						String prependText = 
-							"(D:" + decimalFormat.format( clientInfo.getTcpDownRate()) + ")" +
-							"(U:" + decimalFormat.format( clientInfo.getTcpUpRate()) + ")";			
-						shell.setText( prependText + " : " + titleBarText );
-					}	
-				}
-			} );
-	}
-
-	/**
 	 * Create the preference window
 	 */
 	public void openPreferences() {
@@ -349,9 +328,6 @@ public class MainTab implements Observer, ShellListener {
 	public MainCoolBar getCoolBar() {
 		return coolBar;
 	}
-	public void setTitleBarText(Shell shell) {
-		shell.setText( titleBarText + " " + G2GuiResources.getString("BUILD_INFORMATION") );					
-	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.ShellListener#
@@ -376,8 +352,7 @@ public class MainTab implements Observer, ShellListener {
 	 * shellDeiconified(org.eclipse.swt.events.ShellEvent)
 	 */
 	public void shellDeiconified( ShellEvent e ) {
-		this.mldonkey.getClientStats().deleteObserver( this );
-		setTitleBarText( shell );
+		minimizer.restore();
 	}
 
 	/* (non-Javadoc)
@@ -385,12 +360,15 @@ public class MainTab implements Observer, ShellListener {
 	 * shellIconified(org.eclipse.swt.events.ShellEvent)
 	 */
 	public void shellIconified( ShellEvent e ) {
-		this.mldonkey.getClientStats().addObserver( this );
+		minimizer.minimize();
 	}
 } 
 
 /*
 $Log: MainTab.java,v $
+Revision 1.66  2003/09/08 15:39:35  zet
+minimizer
+
 Revision 1.65  2003/09/03 14:49:07  zet
 optionally spawn core from gui
 
