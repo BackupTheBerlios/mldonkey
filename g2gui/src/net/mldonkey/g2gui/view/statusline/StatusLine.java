@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view.statusline;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import org.eclipse.swt.SWT;
@@ -38,52 +39,59 @@ import org.eclipse.swt.widgets.Label;
  * It has to be placed in a GridLayout, since it applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.5 2003/06/27 13:37:28 dek Exp $ 
+ * @version $Id: StatusLine.java,v 1.6 2003/06/28 09:39:30 lemmstercvs01 Exp $ 
  *
  */
 public class StatusLine {
-	CoreCommunication mldonkey;
+	private CoreCommunication mldonkey;
 	private Composite statusline;
-	private ArrayList fields;
-	int counter = 0;
+	private List fields;
+	private int counter = 0;
 
 	/**
 	 * @param mainComposite the Composite where this status-line finds its place fpr living
 	 */
-	public StatusLine(Composite parent,CoreCommunication mldonkey) {
+	public StatusLine( Composite parent,CoreCommunication mldonkey ) {
 		fields = new ArrayList();	
 		this.mldonkey = mldonkey;
-		this.statusline = new Composite(parent,SWT.NONE);			
+		this.statusline = new Composite( parent, SWT.NONE );			
 		this.statusline.setLayout(new FillLayout());
 			GridData gridData = new GridData( GridData.FILL_HORIZONTAL );	
 			statusline.setLayoutData( gridData );		
 			
-	addField(new NetworkItem(this,mldonkey));
-	addField(new SpeedItem(this,mldonkey));
-	addField(new SimpleStatusLineItem(" other Information",SWT.NONE));
-	addField(new SimpleStatusLineItem(".....",SWT.NONE));
-	
+		addField( new NetworkItem( this,mldonkey ) );
+		addField( new SpeedItem( this,mldonkey ) );
+		addField( new SimpleStatusLineItem( " other Information", SWT.NONE ) );
+		addField( new SimpleStatusLineItem( ".....", SWT.NONE ) );
 	}
 
 	/**
 	 * @param item the StatusBarItem which should be added to our nice little statusbar
 	 */
-	public void addField(StatusLineItem item) {
-		Label newField = new Label(statusline,SWT.READ_ONLY|SWT.SINGLE|SWT.BORDER);	
-		newField.setText(item.getContent());
-		newField.setAlignment(item.getAlignment());
-		this.fields.add(newField);
-		item.setIndex(this.fields.size()-1);
+	public void addField( StatusLineItem item ) {
+		Label newField = new Label( statusline, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER );	
+		newField.setText( item.getContent() );
+		newField.setAlignment( item.getAlignment() );
+		this.fields.add( newField );
+		item.setIndex( this.fields.size() - 1 );
 	}
 	
-	public void update(int index,String content){		
-		if (!statusline.isDisposed())
-			((Label)fields.get(index)).setText(content);					
+	/**
+	 * 
+	 * @param index
+	 * @param content
+	 */
+	public void update( int index,String content ){		
+		if ( !statusline.isDisposed() )
+			( ( Label ) fields.get( index ) ).setText( content );					
 	}
 	
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public StatusLineItem[] getItems(){		
-		return (StatusLineItem[])fields.toArray();
+		return ( StatusLineItem[] ) fields.toArray();
 	}
 
 	/**
@@ -99,16 +107,16 @@ public class StatusLine {
 	 * @param tooltip The tooltip to show
 	 */
 	protected void updateTooltip(int index, String tooltip) {
-		((Label)fields.get(index)).setToolTipText(tooltip);
-		
+		if ( !statusline.isDisposed() )
+			((Label)fields.get(index)).setToolTipText(tooltip);
 	}
-
-
-
 }
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.6  2003/06/28 09:39:30  lemmstercvs01
+added isDisposed() check
+
 Revision 1.5  2003/06/27 13:37:28  dek
 tooltips added
 
