@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Shell;
  * ServerTableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.17 2003/10/31 16:30:49 zet Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.18 2003/11/05 00:10:32 zet Exp $
  *
  */
 public class ServerTableMenuListener extends TableMenuListener { 
@@ -281,9 +281,15 @@ public class ServerTableMenuListener extends TableMenuListener {
                 catch ( REException e ) {
                     e.printStackTrace();
                 }
-                if ( regex.isMatch( newText ) )
-                    return null;
-                else
+                if ( regex.isMatch( newText ) ) {
+                    int port = Integer.parseInt( newText.substring( newText.indexOf(":") + 1, newText.length() ));
+                    if (port > Short.MAX_VALUE) {
+						return G2GuiResources.getString( "TML_INVALID_INPUT" );
+                    } else {
+                        return null;
+                    }
+                
+                } else
                     return G2GuiResources.getString( "TML_INVALID_INPUT" );
             }
         }
@@ -508,6 +514,9 @@ public class ServerTableMenuListener extends TableMenuListener {
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.18  2003/11/05 00:10:32  zet
+check if port < Short.MAX (fix illegalnumberexception)
+
 Revision 1.17  2003/10/31 16:30:49  zet
 minor renames
 
