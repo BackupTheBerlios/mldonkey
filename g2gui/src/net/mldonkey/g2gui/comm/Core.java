@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.63 2003/07/12 14:11:43 dek Exp $ 
+ * @version $Id: Core.java,v 1.64 2003/07/15 18:16:40 dek Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -97,7 +97,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 	public Core( Socket connection ) {
 		this.connection = connection;
 		thisThread = new Thread( this );
+		thisThread.setDaemon( true );
 		thisThread.start();
+		
 	}
 
 	/**
@@ -157,7 +159,7 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 				this.decodeMessage( opCode, messageBuffer );
 			}			
 		} catch ( IOException e ) {
-			e.printStackTrace();
+			System.out.println( "No Connection to mldonkey" );
 		}			
 	}
 					
@@ -207,7 +209,7 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 					int clientId = messageBuffer.readInt32();
 					String availability = messageBuffer.readString();	
 					( ( ClientInfoIntMap ) this.clientInfoList ).get( clientId )
-						.putAvail( fileId, availability);
+						.putAvail( fileId, availability );
 					break;
 
 					
@@ -350,6 +352,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.64  2003/07/15 18:16:40  dek
+coreThread is now a daemon-thread (look inside Java-API to see, what this means)
+
 Revision 1.63  2003/07/12 14:11:43  dek
 made the ClientInfo-availability easier
 
