@@ -1,3 +1,5 @@
+2003/11/29:
+	* Search: ToolTip completely rewritten
 2003/11/29: z
 	* FileInfo: fix chunks availability
 	* SharedFileInfo: fix ArrayIndexOutOfBounds
