@@ -29,7 +29,9 @@ import java.io.IOException;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.pref.Preferences;
+import net.mldonkey.g2gui.view.search.SearchTab;
 import net.mldonkey.g2gui.view.statusline.*;
 
 import org.eclipse.jface.preference.PreferenceStore;
@@ -45,7 +47,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.23 2003/07/03 17:45:36 mitch Exp $ 
+ * @version $Id: Gui.java,v 1.24 2003/07/05 14:01:43 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -176,7 +178,9 @@ public class Gui implements IG2gui, Listener {
 		addTabs();				
 		statusline = new StatusLine( mainComposite, mldonkey );
 				
-		layoutCoolBar( coolbar );				
+		layoutCoolBar( coolbar );			
+
+				
 
 	} 
 	
@@ -332,13 +336,13 @@ public class Gui implements IG2gui, Listener {
 	 */
 	private void addTabs() {
 		// new TransferTab( this );
-		new DownloadTab(this);
+		new DownloadTab( this );		
 		new ConsoleTab( this );
 		/*setting TransferTab active if registered*/
 		Iterator tabIterator = registeredTabs.iterator();
 			while ( tabIterator.hasNext() ) {
 				G2guiTab tempTab = ( G2guiTab )  tabIterator.next();
-				if ( tempTab instanceof TransferTab ) {									
+				if ( tempTab instanceof DownloadTab ) {									
 					 this.setActive( tempTab );					 
 					 }
 					 					
@@ -457,6 +461,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.24  2003/07/05 14:01:43  dek
+small changes only
+
 Revision 1.23  2003/07/03 17:45:36  mitch
 exchanged TransferTab by DownloadTab
 experimental!!!
