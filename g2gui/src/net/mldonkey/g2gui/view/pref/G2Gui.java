@@ -33,18 +33,16 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.9 2003/07/01 13:52:31 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.10 2003/07/02 15:56:37 dek Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {	
 	private Composite controlshell;
 
-	private int columns=0;
-
-	private FontFieldEditor consoleTabFontField;
-	
+	private int columns = 0;
+	private FontFieldEditor consoleTabFontField;	
 	private boolean connected;
-	StringFieldEditor hostNameField,
+	private StringFieldEditor hostNameField,
 					 	userNameField,
 					 	passwordField,
 					 	portField;
@@ -180,6 +178,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.10  2003/07/02 15:56:37  dek
+Checkstyle
+
 Revision 1.9  2003/07/01 13:52:31  dek
 small unimportant bugfixes (if bugfixes can be unimportant...)
 

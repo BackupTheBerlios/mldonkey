@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.15 2003/06/28 20:08:45 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.16 2003/07/02 15:53:41 dek Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -47,7 +47,7 @@ public interface CoreCommunication {
 	
 	/**
 	 * 
-	 * @return
+	 * @return the ConsoleMessage(-Buffer)
 	 */
 	ConsoleMessage getConsoleMessage();
 	

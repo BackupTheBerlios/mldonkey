@@ -38,21 +38,21 @@ import org.eclipse.swt.widgets.*;
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.8 2003/07/01 13:52:31 dek Exp $ 
+ * @version $Id: General.java,v 1.9 2003/07/02 15:57:23 dek Exp $ 
  *
  */
 public class General extends PreferencePage {	
 	private ExtendedBooleanFieldEditor autoCommitField;
 	private IntegerFieldEditor maxHardDownloadRateField;
 	private StringFieldEditor maxHardUploadRateField;
-	private static ResourceBundle res = ResourceBundle.getBundle("g2gui");
-	OptionsInfoMap options;
-	String 	clientName,
+	private static ResourceBundle res = ResourceBundle.getBundle( "g2gui" );
+	private OptionsInfoMap options;
+	private String 	clientName,
 			maxHardUploadRate,
 			maxHardDownloadRate;
-	boolean autoCommit;
-	CoreCommunication mldonkey;
-	boolean connected;	
+	private boolean autoCommit;
+	private CoreCommunication mldonkey;
+	private boolean connected;	
 	public StringFieldEditor clientNameField;
 
 	/**
@@ -196,6 +196,9 @@ public class General extends PreferencePage {
 
 /*
 $Log: General.java,v $
+Revision 1.9  2003/07/02 15:57:23  dek
+Checkstyle
+
 Revision 1.8  2003/07/01 13:52:31  dek
 small unimportant bugfixes (if bugfixes can be unimportant...)
 
