@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.12 2003/09/10 14:54:37 zet Exp $
+ * @version $Id: ComplexSearch.java,v 1.13 2003/09/11 12:37:35 lemmster Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -131,26 +131,22 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
         }
         else {
             if ( !maxText.getText().equals( "" ) )
-                query.setMaxSize( maxText.getText(),
-                		maxCombo.getItem( maxCombo.getSelectionIndex() ) );
+                query.setMaxSize( maxText.getText(), maxCombo.getText() );
             if ( !minText.getText().equals( "" ) )
-                query.setMinSize( minText.getText(), 
-                		minCombo.getItem( minCombo.getSelectionIndex() ) );
+                query.setMinSize( minText.getText(), minCombo.getText() );
         }
 
         /* the max results */
-        if ( !resultCombo.getItem( resultCombo.getSelectionIndex() ).equals( "" ) )
-            query.setMaxSearchResults( 
-            	new Integer( 
-            		resultCombo.getItem( resultCombo.getSelectionIndex() ) ).intValue() );
+        if ( !resultCombo.getText().equals( "" ) )
+            query.setMaxSearchResults( new Integer( resultCombo.getText() ).intValue() );
 		
 		/* the extension combo */
-        if ( !extensionCombo.getItem( extensionCombo.getSelectionIndex() ).equals( "" ) )
-            query.setFormat( extensionCombo.getItem( extensionCombo.getSelectionIndex() ) );
+        if ( !extensionCombo.getText().equals( "" ) )
+            query.setFormat( extensionCombo.getText() );
 
         /* get the network id for this query */
         Object obj = 
-        	networkCombo.getData( networkCombo.getItem( networkCombo.getSelectionIndex() ) );
+        	networkCombo.getData( networkCombo.getText() );
         if ( obj != null ) { // if != All
             NetworkInfo temp = ( NetworkInfo ) obj;
             query.setNetwork( temp.getNetwork() );
@@ -408,6 +404,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.13  2003/09/11 12:37:35  lemmster
+fixed crash with combo boxes [bug #886]
+
 Revision 1.12  2003/09/10 14:54:37  zet
 still a null (with useCombo)..
 
