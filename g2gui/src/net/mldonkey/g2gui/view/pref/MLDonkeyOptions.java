@@ -8,7 +8,7 @@
  * G2GUI is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * ( at your option ) any later version.
  *
  * G2GUI is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,45 +21,41 @@
  * 
  */
 package net.mldonkey.g2gui.view.pref;
-
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.enum.EnumTagType;
-
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
 /**
  * MLDonkeyOptions
  *
  * @author  $Author: dek $ 
- * @version $Id: MLDonkeyOptions.java,v 1.10 2003/08/17 21:24:55 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.11 2003/08/18 10:36:17 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
+	private ScrolledComposite sc;
 	private Composite parent;
-
-
-	List options = new ArrayList();
-	
-	
+	private List options = new ArrayList();
 	/**
 	 * @param title
 	 * @param style
 	 */
-	protected MLDonkeyOptions(String title, int style) {
-		super(title, style);
-				// TODO Auto-generated constructor stub
+	protected MLDonkeyOptions( String title, int style ) {
+		super( title, style );		
 	}
-
-	/* (non-Javadoc)
+	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected void createFieldEditors() {
@@ -68,68 +64,84 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		 * returned the parent for these controls??? this is why i check for null and recall
 		 * it in this.createContents()
 		 */
-		if (parent != null){		
+		if ( parent != null ) {
 			Iterator it = options.iterator();
 			while ( it.hasNext() ) {
 				OptionsInfo temp = ( OptionsInfo ) it.next();
 				if ( temp.getOptionType() == EnumTagType.BOOL ) {
+					String description = temp.getDescription();
+					if ( description.equals( "" ) )
+						description = temp.getKey();
 					/*create a boolean-editor and add to page*/
 					BooleanFieldEditor bool =
-						new BooleanFieldEditor(
-												temp.getKey(),
-												temp.getDescription(),
-												parent) ;	
-									
-					bool.setPreferenceStore( this.getPreferenceStore() );				
+						new BooleanFieldEditor( 
+							temp.getKey(),
+							description,
+							parent );
+					bool.setPreferenceStore( this.getPreferenceStore() );
 					addField( bool );
-					bool.fillIntoGrid( parent, 2 );	
+					bool.fillIntoGrid( parent, 2 );
 					bool.load();
 				} else {
+					String description = temp.getDescription();
+					if ( description.equals( "" ) )
+						description = temp.getKey();
 					StringFieldEditor string =
-						new StringFieldEditor( temp.getKey(),
-										 temp.getDescription(),
-										 parent );
-					string.getLabelControl( parent ).setToolTipText( temp.getKey() );
-					string.setPreferenceStore( this.getPreferenceStore() );						
+						new StringFieldEditor( 
+							temp.getKey(),
+							description,
+							parent );
+					string.getLabelControl( parent ).setToolTipText( 
+						temp.getKey() );
+					string.setPreferenceStore( this.getPreferenceStore() );
+					Point inputSize = string.getTextControl( parent ).getSize();
 					addField( string );
-					string.fillIntoGrid( parent,2 );	
+					string.fillIntoGrid( parent, 2 );
 					string.load();
-				}			
+					string.getTextControl( parent ).setSize( 50, inputSize.y );
+				}
 			}
+			sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+			parent.layout();
 		}
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	/* ( non-Javadoc )
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
 	 */
-	protected Control createContents(Composite myparent) {
-		parent = (Composite) super.createContents(myparent);
+	protected Control createContents( Composite myparent ) {
+		parent = ( Composite ) super.createContents( myparent );
+		parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+		sc = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL );
+		sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+		sc.setLayout( new FillLayout() );
+		Composite c1 = new Composite( sc, SWT.NONE );
+		sc.setExpandHorizontal( true );
+		sc.setExpandVertical( true );
+		sc.setContent( c1 );
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		c1.setLayout( layout );
+		parent = c1;
 		createFieldEditors();
-		
 		return parent;
 	}
-
-
 	/**
-	 * @param option
+	 * @param option this option should appear on this preference-page
 	 */
-	public void addOption(OptionsInfo option) {
-		options.add(option);
+	public void addOption( OptionsInfo option ) {
+		options.add( option );
 	}
-
-
-
-	
 }
-
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.11  2003/08/18 10:36:17  dek
+added scoll-bars for long options-list
+
 Revision 1.10  2003/08/17 21:24:55  dek
-reworked options, finally, it makes full use of the jFace framework ;-)
+reworked options, finally, it makes full use of the jFace framework ;- )
 
 Revision 1.9  2003/08/17 21:22:21  dek
-reworked options, finally, it makes full use of the jFace framework ;-)
+reworked options, finally, it makes full use of the jFace framework ;- )
 
 Revision 1.8  2003/07/26 17:54:14  zet
 fix pref's illegal setParent, redo graphs, other
