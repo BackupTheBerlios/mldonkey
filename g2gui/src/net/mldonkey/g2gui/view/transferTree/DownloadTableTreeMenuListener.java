@@ -59,8 +59,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * 
  * DownloadTableTreeMenuListener
  *
- * @author $Author: zet $
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.24 2003/08/24 18:22:37 zet Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.25 2003/08/29 23:33:57 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -794,6 +793,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.25  2003/08/29 23:33:57  zet
+*** empty log message ***
+
 Revision 1.24  2003/08/24 18:22:37  zet
 *** empty log message ***
 
