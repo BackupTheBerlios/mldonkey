@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.16 2003/07/07 15:08:39 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.17 2003/07/30 19:27:01 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -147,7 +147,7 @@ public class FileInfoIntMap extends InfoIntMap {
 	 */
 	public void clearIds() {
 		synchronized ( this.ids ) {
-			this.ids.removeAll( ids );
+			this.ids.clear();
 		}
 	}
 	
@@ -200,6 +200,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.17  2003/07/30 19:27:01  lemmstercvs01
+ids.removeAll( ids ) -> ids.clear()
+
 Revision 1.16  2003/07/07 15:08:39  lemmstercvs01
 removeObsolete() finally fixed
 
