@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.31 2003/08/31 20:32:50 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.32 2003/09/01 00:44:21 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -183,6 +183,7 @@ public abstract class GuiTab implements Listener, Observer {
 		toolButton.setSmallInactiveImage(G2GuiResources.getImage(buttonName + "Small"));		
 		toolButton.useSmallButtons(this.mainWindow.getCoolBar().isToolbarSmallButtons());
 		toolButton.setActive(false);
+		toolButton.resetImage();
 		this.mainWindow.getCoolBar().getMainToolButtons().add( toolButton );	
 					
 	}
@@ -191,6 +192,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.32  2003/09/01 00:44:21  zet
+use hotimage
+
 Revision 1.31  2003/08/31 20:32:50  zet
 active button states
 

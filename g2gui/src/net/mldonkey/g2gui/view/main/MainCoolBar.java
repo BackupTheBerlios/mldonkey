@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.7 2003/08/31 20:32:50 zet Exp $ 
+ * @version $Id: MainCoolBar.java,v 1.8 2003/09/01 00:44:21 zet Exp $ 
  *
  */
 public class MainCoolBar {
@@ -173,6 +173,7 @@ public class MainCoolBar {
 		prefButton.setSmallInactiveImage( G2GuiResources.getImage( "PreferencesButtonSmall" ));
 		prefButton.useSmallButtons( toolbarSmallButtons );		
 		prefButton.setActive( false );
+		prefButton.resetImage();
 		this.miscToolButtons.add( prefButton );	
 		
 		prefButton.addListener( SWT.Selection, new Listener() {
@@ -347,6 +348,9 @@ public class MainCoolBar {
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.8  2003/09/01 00:44:21  zet
+use hotimage
+
 Revision 1.7  2003/08/31 20:32:50  zet
 active button states
 

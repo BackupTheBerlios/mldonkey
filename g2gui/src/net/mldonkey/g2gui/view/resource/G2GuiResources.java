@@ -37,9 +37,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
@@ -47,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.18 2003/08/31 20:32:50 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.19 2003/09/01 00:44:21 zet Exp $
  */
 public class G2GuiResources {
 	
@@ -158,9 +155,9 @@ public class G2GuiResources {
 		// still thinking about Active state buttons...							
 		for (int i=0; i < buttonNames.length; i++) {
 			imageRegistry.put(buttonNames[i] + "Button", createTrans(buttonFiles[i] + ".png"));
-			imageRegistry.put(buttonNames[i] + "ButtonActive", createGray(buttonFiles[i] + ".png"));
+			imageRegistry.put(buttonNames[i] + "ButtonActive", createActive(buttonFiles[i] + ".png"));
 			imageRegistry.put(buttonNames[i] + "ButtonSmall",  createTrans(buttonFiles[i] + "-16.png") );
-			imageRegistry.put(buttonNames[i] + "ButtonSmallActive", createGray(buttonFiles[i] + "-16.png"));
+			imageRegistry.put(buttonNames[i] + "ButtonSmallActive", createActive(buttonFiles[i] + "-16.png"));
 			imageRegistry.put(buttonNames[i] + "ButtonSmallTitlebar", createTrans(buttonFiles[i] + "-16.png", titlebar));
 		}
 		
@@ -221,7 +218,7 @@ public class G2GuiResources {
 		int width = src.getBounds().width;
 		int height = src.getBounds().height;
 		
-		Image result = new Image( null, new Rectangle( 0, 0, width, height ) );		
+		Image result = new Image( null, width, height );		
 		GC gc = new GC( result );
 		gc.setBackground( color );
 		gc.fillRectangle( 0, 0, width, height );							
@@ -240,31 +237,13 @@ public class G2GuiResources {
 	 * @param color
 	 * @return
 	 */
-	public static Image createGrayScale(Image src, Color color) {
+	public static Image createActiveImage(Image src, Color color) {
 		int width = src.getBounds().width;
 		int height = src.getBounds().height;
 		
-		Image result = new Image( null, new Rectangle( 0, 0, width, height ) );		
+		Image result = new Image( null, width, height );		
 		GC gc = new GC( result );
 		gc.drawImage( src, 0, 0 );
-		ImageData imageData = result.getImageData();
-		
-		for (int w = 0; w < width; w++) {
-			for (int h = 0; h < height; h++) {
-				int pixel = imageData.getPixel(w,h);
-				PaletteData paletteData = imageData.palette;
-				RGB oldRGB = paletteData.getRGB(pixel);
-		
-				if (!oldRGB.equals(color.getRGB())) {
-					int gray = (int) (oldRGB.red * .2125 + oldRGB.green * .7154 + oldRGB.blue * .0721);
-					RGB newRGB = new RGB(gray, gray, gray);
-					Color foregroundColor = new Color(null, newRGB);
-					gc.setForeground(foregroundColor);
-					gc.drawLine(w,h,w,h);
-					foregroundColor.dispose();
-				}
-			}
-		}
 		
 		// let's try a border...	
 		gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
@@ -298,14 +277,16 @@ public class G2GuiResources {
 	private static ImageDescriptor createImageDescriptor(String filename) {
 		return ImageDescriptor.createFromFile(MainTab.class, "images/" + filename);
 	}
-	private static Image createGray(String filename) {
-		
-		return createGrayScale( createTrans( filename ), Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND ) );
+	private static Image createActive(String filename) {
+		return createActiveImage( createTrans( filename ), Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND ) );
 	}
 }
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.19  2003/09/01 00:44:21  zet
+use hotimage
+
 Revision 1.18  2003/08/31 20:32:50  zet
 active button states
 

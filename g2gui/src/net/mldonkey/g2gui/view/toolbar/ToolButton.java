@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * ToolButton A simple helper class made so that the coolbar can be redrawn
  *
  *
- * @version $Id: ToolButton.java,v 1.7 2003/08/31 20:32:50 zet Exp $
+ * @version $Id: ToolButton.java,v 1.8 2003/09/01 00:44:21 zet Exp $
  * 
  */
 public class ToolButton {
@@ -69,6 +69,9 @@ public class ToolButton {
 	public void setImage(Image image) {
 		toolItem.setImage(image);
 	}
+	public void setHotImage(Image image) {
+		toolItem.setHotImage(image);
+	}
 	public ToolBar getParent() {
 		return toolItem.getParent();
 	}
@@ -90,14 +93,18 @@ public class ToolButton {
 	public void setActive(boolean toggle) {
 		toolItem.setSelection(toggle); // looks bad with these non transparent .pngs
 		active = toggle;
-		resetImage();
+		//resetImage();
 	}
 	public void useSmallButtons(boolean useSmall) {
 		useSmallButtons = useSmall;
 	}
 	public void resetImage() {
-		if (active) setImage(useSmallButtons ? smallActiveImage : bigActiveImage);
-			else	setImage(useSmallButtons ? smallInactiveImage : bigInactiveImage);
+		
+		setHotImage( useSmallButtons ? smallActiveImage : bigActiveImage );
+		setImage( useSmallButtons ? smallInactiveImage : bigInactiveImage );
+		
+		// if (active) setImage(useSmallButtons ? smallActiveImage : bigActiveImage);
+		//	else	setImage(useSmallButtons ? smallInactiveImage : bigInactiveImage);
 	}
 	public void resetItem(ToolBar newtoolbar) {
 		toolItem.dispose();
@@ -117,6 +124,9 @@ public class ToolButton {
 
 /*
 $Log: ToolButton.java,v $
+Revision 1.8  2003/09/01 00:44:21  zet
+use hotimage
+
 Revision 1.7  2003/08/31 20:32:50  zet
 active button states
 
