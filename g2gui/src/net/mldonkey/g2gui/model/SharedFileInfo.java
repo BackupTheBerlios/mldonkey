@@ -22,6 +22,9 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.regexp.RE;
+import gnu.regexp.REException;
+
 import java.text.DecimalFormat;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
@@ -30,7 +33,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.11 2003/09/25 21:50:16 dek Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.12 2003/09/26 11:55:48 dek Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -104,14 +107,14 @@ public class SharedFileInfo implements SimpleInformation {
 	/**
 	 * @return The name of this file
 	 */
-	public String getSharedFileName() {
+	public String getName() {		 
 		return sharedFileName;
 	}
 
 	/**
 	 * @return The size of this file
 	 */
-	public long getShareFileSize() {
+	public long getSize() {
 		return shareFileSize;
 	}
 
@@ -132,6 +135,15 @@ public class SharedFileInfo implements SimpleInformation {
 		this.sharedFileId = messageBuffer.readInt32();
 		this.networkId = messageBuffer.readInt32();
 		this.sharedFileName = messageBuffer.readString();
+		
+		try {
+			/*  remove the whole path in front of filename
+			 *  /path/to/file -> file 
+			 */
+			RE re = new RE( "[^/]*$" );
+			this.sharedFileName = re.getMatch( this.sharedFileName ).toString();
+		} catch ( REException e ) { System.out.println( "invalid RE in SharedFileInfo.java" ); }
+		
 		this.shareFileSize = messageBuffer.readInt32();
 		this.numOfBytesUploaded = messageBuffer.readInt64();
 		this.numOfQueriesForFile = messageBuffer.readInt32();
@@ -205,11 +217,24 @@ public class SharedFileInfo implements SimpleInformation {
 	public NetworkInfo getNetwork() {
 		return network;
 	}
+	/**
+	 * you want to have a ed2k-link from this file: here it is
+	 * @return a ed2k-link representation of this file
+	 */
+	public String getED2K() {
+		return "ed2k://|file|" + this.getName() 
+				+ "|" + this.getSize() 
+				+ "|" + this.getMd4() 
+				+ "|/";
+	}
 
 }
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.12  2003/09/26 11:55:48  dek
+right-mouse menue for upload-Table
+
 Revision 1.11  2003/09/25 21:50:16  dek
 added icons for networks + TableSorter
 

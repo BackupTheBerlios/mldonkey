@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
  * CoreCommunication
  *
  *
- * @version $Id: CoreCommunication.java,v 1.39 2003/09/25 21:04:26 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.40 2003/09/26 11:55:48 dek Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -116,7 +116,7 @@ public interface CoreCommunication extends Runnable {
 	 * 
 	 * @return the Shared Files Map
 	 */
-	SharedFileInfoIntMap getSharedFileInfoList();
+	SharedFileInfoIntMap getSharedFileInfoIntMap();
 	
 	/**
 	 * Gets the socket the core is conntected through with mldonkey
@@ -163,6 +163,9 @@ public interface CoreCommunication extends Runnable {
 }
 /*
 $Log: CoreCommunication.java,v $
+Revision 1.40  2003/09/26 11:55:48  dek
+right-mouse menue for upload-Table
+
 Revision 1.39  2003/09/25 21:04:26  dek
 first sketch of upload-Table not yet added to transferTab.
 

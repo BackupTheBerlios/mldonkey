@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.view.TransferTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -48,14 +49,14 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.3 2003/09/25 21:50:16 dek Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.4 2003/09/26 11:55:48 dek Exp $ 
  *
  */
 public class UploadTableViewer {
 	/**
 	 * MyTableSorter
 	 *
-	 * @version $Id: UploadTableViewer.java,v 1.3 2003/09/25 21:50:16 dek Exp $ 
+	 * @version $Id: UploadTableViewer.java,v 1.4 2003/09/26 11:55:48 dek Exp $ 
 	 *
 	 */
 	
@@ -63,7 +64,7 @@ public class UploadTableViewer {
 	private CoreCommunication mldonkey;
 	private Table table;
 	private final String[] COLUMN_LABELS =
-		{ "Network", "Filename", "Uploaded Bytes", "# of Queries", };
+		{ "TT_Download_Network", "TT_Download_Name", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES", };
 	private TableViewer tableviewer;
 	private boolean ascending = false;
 	
@@ -87,8 +88,7 @@ public class UploadTableViewer {
 		table.setLinesVisible( true );
 		for ( int i = 0; i < COLUMN_LABELS.length; i++ ) {
 			TableColumn tableColumn = new TableColumn( table, SWT.NONE );
-			tableColumn.setText( COLUMN_LABELS[ i ] );
-			tableColumn.setData( COLUMN_LABELS[ i ] );
+			tableColumn.setText( G2GuiResources.getString( COLUMN_LABELS[ i ] ) );			
 			tableColumn.setWidth( 80 );
 			
 			final int columnIndex = i;
@@ -116,10 +116,20 @@ public class UploadTableViewer {
 		}
 		tableviewer.setContentProvider( new MyContentProvider() );
 		tableviewer.setLabelProvider( new MyLabelProvider() );
-		tableviewer.setInput( mldonkey.getSharedFileInfoList() );
+		tableviewer.setInput( mldonkey.getSharedFileInfoIntMap() );
 		tableviewer.setSorter( new MyTableSorter() );
+		
+		UploadTableMenuListener tableMenuListener = 
+								new UploadTableMenuListener( tableviewer, mldonkey );
+		tableviewer.addSelectionChangedListener( tableMenuListener );
+		MenuManager popupMenu = new MenuManager( "" );
+		popupMenu.setRemoveAllWhenShown( true );
+		popupMenu.addMenuListener( tableMenuListener );
+		tableviewer.getTable().setMenu( popupMenu.createContextMenu( tableviewer.getTable() ) );
+		
 	}
-	private class MyContentProvider implements IStructuredContentProvider, Observer {
+	
+	class MyContentProvider implements IStructuredContentProvider, Observer {
 		/* ( non-Javadoc )
 		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements( java.lang.Object )
 		 */
@@ -135,13 +145,9 @@ public class UploadTableViewer {
 			}
 			return result;
 		}
-		/* ( non-Javadoc )
-		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-		 */
+
 		public void dispose() { }
-		/* ( non-Javadoc )
-		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged( org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object )
-		 */
+
 		public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) {
 			SharedFileInfoIntMap oldI = ( SharedFileInfoIntMap ) oldInput;
 			SharedFileInfoIntMap newI = ( SharedFileInfoIntMap ) newInput;
@@ -160,33 +166,25 @@ public class UploadTableViewer {
 				return;
 			tableviewer.getTable().getDisplay().asyncExec( new Runnable() {
 				public void run() {
-					tableviewer.refresh();
+					if ( !tableviewer.getTable().isDisposed() ) tableviewer.refresh(); 				
+				
 				}
 			} );
 		}
 	}
-	private class MyLabelProvider implements ITableLabelProvider {
-		/* ( non-Javadoc )
-		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener( org.eclipse.jface.viewers.ILabelProviderListener )
-		 */
+	
+	class MyLabelProvider implements ITableLabelProvider {
+
 		public void addListener( ILabelProviderListener listener ) { }
-		/* ( non-Javadoc )
-		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-		 */
+
 		public void dispose() { }
-		/* ( non-Javadoc )
-		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty( java.lang.Object, java.lang.String )
-		 */
+
 		public boolean isLabelProperty( Object element, String property ) {
 			return false;
 		}
-		/* ( non-Javadoc )
-		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener( org.eclipse.jface.viewers.ILabelProviderListener )
-		 */
+
 		public void removeListener( ILabelProviderListener listener ) { }
-		/* ( non-Javadoc )
-		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage( java.lang.Object, int )
-		 */
+
 		public Image getColumnImage( Object element, int columnIndex ) {
 			if ( columnIndex == 0 ) {
 				SharedFileInfo file = ( SharedFileInfo ) element;
@@ -194,16 +192,13 @@ public class UploadTableViewer {
 			}
 			return null;
 		}
-		
-		/* ( non-Javadoc )
-		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText( java.lang.Object, int )
-		 */
+
 		public String getColumnText( Object element, int columnIndex ) {
 			SharedFileInfo info = ( SharedFileInfo ) element;
 			String result = "";
 			switch ( columnIndex ) {
 				case 1 :
-					result = info.getSharedFileName();
+					result = info.getName();
 					break;
 				case 2 :
 					result = info.getUploadedString();
@@ -221,7 +216,7 @@ public class UploadTableViewer {
 			return result;
 		}
 	}
-	private class MyTableSorter extends ViewerSorter {
+	class MyTableSorter extends ViewerSorter {
 		/* set the default sort column to state */
 		private int columnIndex = 8;
 		/* set the default way to descending */
@@ -315,6 +310,9 @@ public class UploadTableViewer {
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.4  2003/09/26 11:55:48  dek
+right-mouse menue for upload-Table
+
 Revision 1.3  2003/09/25 21:50:16  dek
 added icons for networks + TableSorter
 

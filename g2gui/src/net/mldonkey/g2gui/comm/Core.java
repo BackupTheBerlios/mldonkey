@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.103 2003/09/25 21:04:26 dek Exp $ 
+ * @version $Id: Core.java,v 1.104 2003/09/26 11:55:48 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -591,7 +591,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * @return
 	 */
-	public SharedFileInfoIntMap getSharedFileInfoList() {
+	public SharedFileInfoIntMap getSharedFileInfoIntMap() {
 		return ( SharedFileInfoIntMap ) sharedFileInfoList;
 	}
 
@@ -599,6 +599,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.104  2003/09/26 11:55:48  dek
+right-mouse menue for upload-Table
+
 Revision 1.103  2003/09/25 21:04:26  dek
 first sketch of upload-Table not yet added to transferTab.
 
