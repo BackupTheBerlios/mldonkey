@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
 /**
  * OptionsInfo17
  *
- * @version $Id: OptionsInfo17.java,v 1.2 2003/12/04 08:47:25 lemmy Exp $ 
+ * @version $Id: OptionsInfo17.java,v 1.3 2004/04/19 17:34:41 dek Exp $ 
  *
  */
 public class OptionsInfo17 extends OptionsInfo {
@@ -119,29 +119,31 @@ public class OptionsInfo17 extends OptionsInfo {
 	 * @param aString The string representation of the TagType
 	 */
 	private void setOptionType( String aString ) {
-		if ( aString.equals( "String" ) )
+		if ( aString.equalsIgnoreCase( "String" ) )
 			this.optionType = EnumTagType.STRING;
-		else if ( aString.equals( "Ip List" ) )
+		else if ( aString.equalsIgnoreCase( "Ip List" ) )
 			this.optionType = EnumTagType.IP_LIST;
-		else if ( aString.equals( "Int" ) )
+		else if ( aString.equalsIgnoreCase( "Int" ) )
 			this.optionType = EnumTagType.INT;
-		else if ( aString.equals( "Bool" ) )
+		else if ( aString.equalsIgnoreCase( "Bool" ) )
 			this.optionType = EnumTagType.BOOL;
-		else if ( aString.equals( "Ip" ) )
+		else if ( aString.equalsIgnoreCase( "Ip" ) )
 			this.optionType = EnumTagType.IP;	
-		else if ( aString.equals( "Addr" ) )
+		else if ( aString.equalsIgnoreCase( "Addr" ) )
 			this.optionType = EnumTagType.ADDR;
-		else if ( aString.equals( "Integer" ) )
+		else if ( aString.equalsIgnoreCase( "Integer" ) )
 			this.optionType = EnumTagType.INT;
-		else if ( aString.equals( "Float" ) )
+		else if ( aString.equalsIgnoreCase( "Float" ) )
 			this.optionType = EnumTagType.FLOAT;
-		else if ( aString.equals( "Md4" ) )
+		else if ( aString.equalsIgnoreCase( "Md4" ) )
 			this.optionType = EnumTagType.MD4;
-		else if ( aString.equals( "Sha1" ) )			
+		else if ( aString.equalsIgnoreCase( "Sha1" ) )			
 			this.optionType = EnumTagType.SHA1;
+		else if ( aString.equalsIgnoreCase( "Int64" ) )			
+			this.optionType = EnumTagType.INT64;
 		else {
 			this.optionType = EnumTagType.STRING;						
-			System.out.println( "Unknown EnumTagType: " + aString );					
+			System.out.println( "Unknown EnumTagType: " + aString ); 					
 		}
 	}
 	/**
@@ -174,6 +176,9 @@ public class OptionsInfo17 extends OptionsInfo {
 
 /*
 $Log: OptionsInfo17.java,v $
+Revision 1.3  2004/04/19 17:34:41  dek
+New EnumTagType: Int64 and some debugging info for wrong opcode-interpretation
+
 Revision 1.2  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

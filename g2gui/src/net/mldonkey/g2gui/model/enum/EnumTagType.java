@@ -26,50 +26,54 @@ package net.mldonkey.g2gui.model.enum;
  * EnumTagType
  *
  *
- * @version $Id: EnumTagType.java,v 1.6 2003/12/04 08:47:29 lemmy Exp $ 
+ * @version $Id: EnumTagType.java,v 1.7 2004/04/19 17:34:41 dek Exp $ 
  *
  */
 public class EnumTagType extends Enum {
 	/**
 	 * display an int
 	 */
-	public static EnumTagType INT = new EnumTagType( 1 );
+	public static EnumTagType INT = new EnumTagType( 1<<0 );
 	/**
 	 * string (value is 0)
 	 */	
-	public static EnumTagType	STRING = new EnumTagType( 2 );
+	public static EnumTagType	STRING = new EnumTagType( 1<<1 );
 	/**
 	 * bool (value is 1)
 	 */
-	public static EnumTagType BOOL = new EnumTagType( 4 );
+	public static EnumTagType BOOL = new EnumTagType( 1<<2 );
 	/**
 	 * file (value is 2)
 	 */
-	public static EnumTagType FILE = new EnumTagType( 8 );
+	public static EnumTagType FILE = new EnumTagType( 1<<3 );
 	/**
 	 * display an ip list
 	 */
-	public static EnumTagType IP_LIST = new EnumTagType( 16 );
+	public static EnumTagType IP_LIST = new EnumTagType( 1<<4 );
 	/**
 	 * display an ip
 	 */
-	public static EnumTagType IP = new EnumTagType( 32 );
+	public static EnumTagType IP = new EnumTagType( 1<<5 );
 	/**
 	 * display an address
 	 */
-	public static EnumTagType ADDR = new EnumTagType( 64 );
+	public static EnumTagType ADDR = new EnumTagType( 1<<6 );
 	/**
 	 * display a float
 	 */
-	public static EnumTagType FLOAT = new EnumTagType( 128 );
+	public static EnumTagType FLOAT = new EnumTagType( 1<<7 );
 	/**
 	 * display a md4
 	 */
-	public static EnumTagType MD4 = new EnumTagType( 256 );
+	public static EnumTagType MD4 = new EnumTagType( 1<<8 );
 	/**
 	 * display a sha1
 	 */
-	public static EnumTagType SHA1 = new EnumTagType( 512 );
+	public static EnumTagType SHA1 = new EnumTagType( 1<<9 );
+	/**
+	 * display an int64
+	 */
+	public static EnumTagType INT64= new EnumTagType( 1<<10 );
 	/**
 	 * Creates a new EnumTagType
 	 * @param anInt The value
@@ -81,6 +85,9 @@ public class EnumTagType extends Enum {
 
 /*
 $Log: EnumTagType.java,v $
+Revision 1.7  2004/04/19 17:34:41  dek
+New EnumTagType: Int64 and some debugging info for wrong opcode-interpretation
+
 Revision 1.6  2003/12/04 08:47:29  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -92,7 +99,7 @@ Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.3  2003/08/22 21:04:27  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.2  2003/08/02 09:27:39  lemmy
 added support for proto > 16

@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.view.G2Gui;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.32 2004/03/25 19:25:23 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.33 2004/04/19 17:34:40 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -273,12 +273,17 @@ public class MessageBuffer {
 	 *            a byte[]
 	 */
 	public void setBuffer(byte[] bs) {
+		/*
+		 * if a new buffer is set, the processing of the old one is done so everything left is kind
+		 * of not good
+		 */
 		if (G2Gui.debug) {
 			if (buffer != null) {
 				if (buffer.length != iterator) {
-					if (G2Gui.debug) {
-						System.out.println("MessageBuffer not empty after decoding OpCode:" + opCode);
-						System.out.println("bytes left: "+(buffer.length-iterator));
+					System.out.println("MessageBuffer not empty after decoding OpCode:" + opCode);
+					System.out.println("\tbytes left: " + (buffer.length - iterator));
+					for (int i = buffer.length; i > iterator; --i) {
+						System.out.print(buffer[i] + " ");
 					}
 				}
 			}
@@ -299,6 +304,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.33  2004/04/19 17:34:40  dek
+New EnumTagType: Int64 and some debugging info for wrong opcode-interpretation
+
 Revision 1.32  2004/03/25 19:25:23  dek
 yet more profiling
 
