@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Control;
  * NetworkItem
  *
  *
- * @version $Id: NetworkItem.java,v 1.24 2003/09/13 11:02:45 lemmster Exp $ 
+ * @version $Id: NetworkItem.java,v 1.25 2003/09/14 09:18:02 lemmster Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -132,7 +132,10 @@ public class NetworkItem implements Observer {
 				cLabel.setToolTipText( network.getNetworkName() + " " +  G2GuiResources.getString( "NI_CONNECTED_TO" )
 						   + network.getConnectedServers() + " " +  G2GuiResources.getString( "NI_NODES" ) );
 		else
-			cLabel.setToolTipText( network.getNetworkName() + " " +  G2GuiResources.getString( "NI_DISABLED" ) );
+			if ( network.isVirtual() )
+				cLabel.setToolTipText( network.getNetworkName() );
+			else
+				cLabel.setToolTipText( network.getNetworkName() + " " +  G2GuiResources.getString( "NI_DISABLED" ) );
 	}
 
 	/* (non-Javadoc)
@@ -182,6 +185,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.25  2003/09/14 09:18:02  lemmster
+tooltip for multinet
+
 Revision 1.24  2003/09/13 11:02:45  lemmster
 use List instead of GuiTab[] in addTabs()
 
