@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.32 2003/07/14 19:26:41 dek Exp $ 
+ * @version $Id: Gui.java,v 1.33 2003/07/15 13:30:27 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {
@@ -151,7 +151,7 @@ public class Gui implements IG2gui, Listener {
 			MenuItem item = new MenuItem ( submenu, 0 );
 			item.addListener ( SWT.Selection, new Listener () {
 					public void handleEvent ( Event e ) {
-						shell.close();
+						shell.dispose();
 					} 
 			} );
 			item.setText ( "E&xit\tCtrl+W" );
@@ -426,6 +426,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.33  2003/07/15 13:30:27  dek
+shell.dispose() on exit, instead of shell.close()
+
 Revision 1.32  2003/07/14 19:26:41  dek
 done some clean.up work, since it seems,as if this view becomes reality..
 
