@@ -79,7 +79,7 @@ public class G2Gui_Display extends PreferencePage  {
 		tableCellEditors = new BooleanFieldEditor("tableCellEditors", "Activate table cell editors", shell);
 		setupEditor(tableCellEditors);
 		
-		forceRefresh = new BooleanFieldEditor("forceRefresh", "Force full table refresh at each update (maintains sort order)", shell);
+		forceRefresh = new BooleanFieldEditor("forceRefresh", "Force full table refresh at each update (maintains sort order, might flicker)", shell);
 		setupEditor(forceRefresh);
 				
 		displayBuffer = new IntegerFieldEditor("displayBuffer", "GUI update buffer (0-60 seconds)", shell);
@@ -164,6 +164,9 @@ public class G2Gui_Display extends PreferencePage  {
 
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.10  2003/08/17 16:57:55  zet
+*** empty log message ***
+
 Revision 1.9  2003/08/14 12:59:47  zet
 fix typo
 
