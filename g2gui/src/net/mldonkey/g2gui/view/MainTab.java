@@ -83,7 +83,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.43 2003/08/20 14:58:43 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.44 2003/08/20 16:14:17 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -266,11 +266,40 @@ public class MainTab implements Listener, Observer, ShellListener {
 		item = new MenuItem( submenu, 0);
 		item.addListener( SWT.Selection, new Listener() {
 			public void handleEvent (Event event ) {
+				Program.launch("http://mldonkey.lemmster.de/wiki/index.php/G2Gui%20FAQ");
+			}
+		} );
+		item.setText( "FAQ" );
+		
+		
+		mItem.setMenu( submenu );
+		item = new MenuItem( submenu, 0);
+		item.addListener( SWT.Selection, new Listener() {
+			public void handleEvent (Event event ) {
 				Program.launch("http://mldonkey.berlios.de/modules.php?name=Forums&file=viewtopic&t=1476");
 			}
 		} );
-		item.setText( "Feedback" );
-		mItem.setMenu(submenu );
+		item.setText( "Feedback Forum" );
+		
+		mItem.setMenu( submenu );
+		item = new MenuItem( submenu, 0);
+		item.addListener( SWT.Selection, new Listener() {
+			public void handleEvent (Event event ) {
+				Program.launch("http://mldonkey.lemmster.de/wiki/index.php/G2Gui%20TODO");
+			}
+		} );
+		item.setText( "Suggestions" );
+		
+		mItem.setMenu( submenu );
+		item = new MenuItem( submenu, 0);
+		item.addListener( SWT.Selection, new Listener() {
+			public void handleEvent (Event event ) {
+				Program.launch("http://mldonkey.lemmster.de/wiki/index.php/G2Gui%20BUGS");
+			}
+		} );
+		item.setText( "Bugs" );
+		
+		
 		
 	} 
 	
@@ -762,6 +791,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.44  2003/08/20 16:14:17  zet
+menuitems
+
 Revision 1.43  2003/08/20 14:58:43  zet
 sources clientinfo viewer
 
