@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.17 2003/08/31 00:08:59 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.18 2003/08/31 01:31:02 vaste Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -164,7 +164,7 @@ public class FileDetailDialog implements Observer {
 	
 		Composite rename = new Composite(shell, SWT.NONE);
 		
-		gridLayout = CGridLayout.createGL(2,0,0,4,0,false);
+		gridLayout = CGridLayout.createGL(3,0,0,4,0,false);
 		rename.setLayout( gridLayout );
 		rename.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
 				
@@ -197,13 +197,10 @@ public class FileDetailDialog implements Observer {
 		});
 
 
-		Label s = new Label(shell, SWT.SEPARATOR|SWT.HORIZONTAL);
-		s.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-		Button cButton = new Button( shell, SWT.FLAT );
-		cButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		cButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
-		cButton.addSelectionListener( new SelectionAdapter() {
+		Button closeButton = new Button( rename, SWT.NONE );
+		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		closeButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
+		closeButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 						shell.dispose();
 			}	
@@ -304,6 +301,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.18  2003/08/31 01:31:02  vaste
+flat buttons look strange in win; moved close button (that's the way to do it btw?)
+
 Revision 1.17  2003/08/31 00:08:59  zet
 add buttons
 
@@ -327,6 +327,9 @@ new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
+fix Revision 1.18  2003/08/31 01:31:02  vaste
+fix flat buttons look strange in win; moved close button (that's the way to do it btw?)
+fix
 fix Revision 1.17  2003/08/31 00:08:59  zet
 fix add buttons
 fix
