@@ -32,20 +32,52 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import net.mldonkey.g2gui.model.*;
+import net.mldonkey.g2gui.model.ClientInfoIntMap;
+import net.mldonkey.g2gui.model.ClientMessage;
+import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.model.ConsoleMessage;
+import net.mldonkey.g2gui.model.DefineSearchMap;
+import net.mldonkey.g2gui.model.FileInfoIntMap;
+import net.mldonkey.g2gui.model.InfoCollection;
+import net.mldonkey.g2gui.model.NetworkInfoIntMap;
+import net.mldonkey.g2gui.model.OptionsInfoMap;
+import net.mldonkey.g2gui.model.ResultInfo;
+import net.mldonkey.g2gui.model.ResultInfoIntMap;
+import net.mldonkey.g2gui.model.SearchResult;
+import net.mldonkey.g2gui.model.ServerInfoIntMap;
+import net.mldonkey.g2gui.model.SharedFileInfoList;
+import net.mldonkey.g2gui.model.SimpleInformation;
+import net.mldonkey.g2gui.model.UserInfo;
 
 /**
  * Core
  *
  * @author $Author: lemmster $
- * @version $Id: Core.java,v 1.86 2003/08/22 10:28:22 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.87 2003/08/22 19:51:09 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
+	/**
+	 * helper field which change to <code>true</code> if
+	 * the core denies our connection attempt
+	 */
 	private boolean connectionDenied;
+	/**
+	 * Should we use poll or push mode
+	 */
 	private boolean pollModeEnabled;
+	/**
+	 * just a little helper field
+	 */
 	private boolean initialized;
+	/**
+	 * is the gui running in advancedMode
+	 */
 	private boolean advancedMode;
+	/**
+	 * Set this variable to false when we receive the first message after we
+	 * expected "bad password"
+	 */
 	private boolean badPassword = true;
 	/**
 	 * An waiterobj who is waiting for us in the main thread to be notified if a
@@ -65,22 +97,21 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 */
 	private int usingVersion;
 	/**
-	 * 
+	 * The socket to work with
 	 */
 	private Socket connection;
 	/**
-	 * 
+	 * showing our connection state
 	 */
 	private boolean connected = false;
 	/**
-	 * 
+	 * Store the simple informations from the core here
 	 */
-	
 	private SimpleInformation clientStats = new ClientStats( this ),
 							   consoleMessage = new ConsoleMessage(),
 							   searchResult = new SearchResult();
 	/**
-	 * 
+	 * Store the complex informations from the core here
 	 */
 	private InfoCollection clientInfoList = new ClientInfoIntMap( this ),
 					 fileInfoMap          = new FileInfoIntMap( this ),
@@ -92,18 +123,17 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					 resultInfoMap		  = new ResultInfoIntMap( this );
 
 	/**
-	 * 
+	 * Some helper maps
 	 */
 	private TIntObjectHashMap userInfo = new TIntObjectHashMap(),
 							   resultInfo = new TIntObjectHashMap();
 
 	/**
-	 * 
+	 * Username and Password to work with
 	 */
 	private String username, password;
 	
 	/**
-	 * connect()
 	 * Connects the Core to mldonkey @remote
 	 */
 	public void connect() {		
@@ -111,7 +141,6 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	}
 	
 	/**
-	 * disconnect()
 	 * disConnects the Core from mldonkey @remote	 * 
 	 */
 	public synchronized void disconnect() {
@@ -127,10 +156,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	
 	/**
 	 * Creates a new Core obj
-	 * @param socket
-	 * @param username
-	 * @param password
-	 * @param waiterObj
+	 * @param socket The socket to work with
+	 * @param username The username for the core
+	 * @param password The password for the core
+	 * @param waiterObj The waiterobj to notify if we reach a specific stage
 	 */
 	public Core( Socket socket, String username, String password, Object waiterObj, boolean pollModeEnabled, boolean advancedMode ) {
 		this.connection = socket;
@@ -389,42 +418,6 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	}
 	
 	/**
-	 * returns the socket
-	 * @return a Socket
-	 */
-	public Socket getConnection() {
-		return connection;
-	}
-
-	/** 
-	 * returns the actual Console-message Buffer
-	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getConsoleMessage()
-	 */
-	public ConsoleMessage getConsoleMessage() {
-		return ( ConsoleMessage ) this.consoleMessage;
-	}
-	/**
-	 * @return the Infos about all the nice networks we have 
-	 */
-	public NetworkInfoIntMap getNetworkInfoMap() {
-		return ( NetworkInfoIntMap ) networkinfoMap;
-	}
-
-	/** (non-Javadoc)
-	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getOptions()
-	 */
-	public OptionsInfoMap getOptionsInfoMap() {
-		return ( OptionsInfoMap ) optionsInfoMap;
-	}
-
-	/**
-	 * @return A Map with all the resultInfos
-	 */
-	public ResultInfoIntMap getResultInfoIntMap() {
-		return ( ResultInfoIntMap ) this.resultInfoMap;
-	}
-	
-	/**
 	 * return this temp resultinfo map
 	 * @return The temp resultinfo map
 	 */
@@ -437,6 +430,13 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 */
 	public FileInfoIntMap getFileInfoIntMap() {
 		return ( FileInfoIntMap ) this.fileInfoMap;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getOptions()
+	 */
+	public OptionsInfoMap getOptionsInfoMap() {
+		return ( OptionsInfoMap ) optionsInfoMap;
 	}
 
 	/* (non-Javadoc)
@@ -488,10 +488,41 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public boolean getConnectionDenied() {
 		return this.connectionDenied;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getResultInfoIntMap()
+	 */
+	public ResultInfoIntMap getResultInfoIntMap() {
+		return ( ResultInfoIntMap ) this.resultInfoMap;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getNetworkInfoMap()
+	 */
+	public NetworkInfoIntMap getNetworkInfoMap() {
+		return ( NetworkInfoIntMap ) networkinfoMap;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getConsoleMessage()
+	 */
+	public ConsoleMessage getConsoleMessage() {
+		return ( ConsoleMessage ) this.consoleMessage;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getConnection()
+	 */
+	public Socket getConnection() {
+		return connection;
+	}
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.87  2003/08/22 19:51:09  lemmster
+added just javadoc
+
 Revision 1.86  2003/08/22 10:28:22  lemmster
 catch wrong "allowed_ips" values (connection denied)
 

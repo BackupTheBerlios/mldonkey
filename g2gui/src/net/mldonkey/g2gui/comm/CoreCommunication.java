@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
  * CoreCommunication
  *
  * @author $Author: lemmster $
- * @version $Id: CoreCommunication.java,v 1.31 2003/08/22 10:28:22 lemmster Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.32 2003/08/22 19:51:09 lemmster Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -70,7 +70,6 @@ public interface CoreCommunication extends Runnable {
 	void sendPassword( String username, String password );
 		
 	/**
-	 * 
 	 * @return the ConsoleMessage(-Buffer)
 	 */
 	ConsoleMessage getConsoleMessage();
@@ -94,7 +93,9 @@ public interface CoreCommunication extends Runnable {
 	 * @return A Map with all the resultInfo obj
 	 */
 	ResultInfoIntMap getResultInfoIntMap();
-	
+	/**
+	 * @return The map containing the clientinfo objs
+	 */
 	ClientInfoIntMap getClientInfoIntMap();
 	
 	/**
