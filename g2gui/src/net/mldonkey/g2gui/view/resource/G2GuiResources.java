@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.22 2003/09/03 14:49:07 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.23 2003/09/08 17:26:23 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -200,6 +200,7 @@ public class G2GuiResources {
         imageRegistry.put( "ProgramIcon", icon );
         imageRegistry.put( "G2GuiLogo", createTrans( "mld_logo_48x48.png" ) );
 		imageRegistry.put( "G2GuiLogoSmall", createTrans( "mld_logo_12x12.png" ) );
+		imageRegistry.put( "G2GuiICO" , ImageDescriptor.createFromFile( MainTab.class, "images/g2gui.ico" ) );
         
         String[] buttonNames =
         { "Preferences", "Statistics", "Console", "Transfers", "Search", "Servers", "Messages" };
@@ -364,6 +365,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.23  2003/09/08 17:26:23  zet
+ico
+
 Revision 1.22  2003/09/03 14:49:07  zet
 optionally spawn core from gui
 
