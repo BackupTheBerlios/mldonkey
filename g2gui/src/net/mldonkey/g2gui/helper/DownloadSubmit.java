@@ -55,7 +55,7 @@ import net.mldonkey.g2gui.helper.RegExp;
  * DownloadSubmit
  *
  * @author $user$
- * @version $Id: DownloadSubmit.java,v 1.7 2004/03/04 17:41:54 psy Exp $ 
+ * @version $Id: DownloadSubmit.java,v 1.8 2004/03/04 18:00:33 psy Exp $ 
  *
  */
 public class DownloadSubmit implements Runnable {
@@ -135,7 +135,7 @@ public class DownloadSubmit implements Runnable {
 
     private String hexDecode(String string) {
     	try {
-			return(URLDecoder.decode( string, "ISO-8859-15" ));
+			return(URLDecoder.decode( string, "latin1" ));
 		} catch (UnsupportedEncodingException e) {
 			return(string);
 		}
@@ -145,7 +145,7 @@ public class DownloadSubmit implements Runnable {
     	try {
 			/* decode the string completely and encode it again to prevent
 			 * multiple encoding */
-    		string = URLEncoder.encode( hexDecode(string), "ISO-8859-15" );
+    		string = URLEncoder.encode( hexDecode(string), "latin1" );
 
 			/* revert some important parts of the URL */
 			string = RegExp.replaceAll(string, "%3A", ":");
@@ -320,6 +320,9 @@ public class DownloadSubmit implements Runnable {
 
 /*
 $Log: DownloadSubmit.java,v $
+Revision 1.8  2004/03/04 18:00:33  psy
+*** empty log message ***
+
 Revision 1.7  2004/03/04 17:41:54  psy
 *** empty log message ***
 
