@@ -17,9 +17,9 @@ public class ConfigFile {
 	BufferedWriter bufferedwriter;
 	private String configfile="login.cfg";
 	String data[]=new String[3];
-	private int host=0;
-	private int port=1;
-	private int name=2;
+	private int HOST=0;
+	private int PORT=1;
+	private int NAME=2;
 	/**
 	 * 
 	 */
@@ -64,13 +64,13 @@ public class ConfigFile {
 		}
 	}
 	public String getHostname(){
-		return data[host];
+		return data[HOST];
 	}
 	public String getPort(){
-		return data[port];
+		return data[PORT];
 	}	
 	public String getUsername(){
-		return data[name];
+		return data[NAME];
 	}	
 	/**
 	 * checks if the file exists
