@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.32 2003/08/30 12:09:04 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.33 2003/09/15 14:47:44 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -110,6 +110,7 @@ public class Preferences extends PreferenceManager {
 		optionsStore.setInput( options );
 		Map sections = new HashMap();
 		Map plugins = new HashMap();
+		MLDonkeyOptions advanced =null;		
 		
 		/*now we iterate over the whole thing and create the preferencePages*/
 		Iterator it = options.keySet().iterator();
@@ -119,18 +120,24 @@ public class Preferences extends PreferenceManager {
 			String section = option.getSectionToAppear();			
 			String plugin = option.getPluginToAppear();						
 			
-			if ( ( section == null ) && ( plugin == null ) && showOption( option ) ) {				
-				/* create the General-section, or if already done, only add the option */
-				if ( !sections.containsKey( "General" ) ) {
-					MLDonkeyOptions temp = new MLDonkeyOptions( "General", FieldEditorPreferencePage.GRID );
-					sections.put( "General", temp );	
-					temp.setPreferenceStore( optionsStore );			
-					}			
-				/*commented out the following, as it produces ton's of options in this tab
-				 * which made it unreadable	
-				 */
-				( ( MLDonkeyOptions )sections.get( "General" ) ).addOption( option );				
+			if ( ( section == null ) && ( plugin == null ) && showOption( option ) ) {
+				if ( preferenceStore.getBoolean( "advancedMode" ) ) {
+					if ( advanced == null ){
+						advanced = new MLDonkeyOptions ( "Advanced ", FieldEditorPreferencePage.GRID );
+						advanced.setPreferenceStore( optionsStore );
+					}
+					advanced.addOption( option );
+				}
 			}
+			else if ( section != null && section.equalsIgnoreCase( "other" ) && showOption( option ) ) {
+				if ( preferenceStore.getBoolean( "advancedMode" ) ) {
+					if ( advanced == null ){
+						advanced = new MLDonkeyOptions ( "Advanced ", FieldEditorPreferencePage.GRID );
+						advanced.setPreferenceStore( optionsStore );
+					}
+					advanced.addOption( option );
+				}
+			}		
 			
 			else if ( ( section != null ) && showOption(option ) ) {								
 				/* create the section, or if already done, only add the option */
@@ -156,13 +163,13 @@ public class Preferences extends PreferenceManager {
 		}
 		/*Now we create the tree-structure, since we received all options*/
 		
-		
-		 /*
-		  * first the sections:
-		  */
-		it = sections.keySet().iterator();
-		while ( it.hasNext() ) {
-			String key = (String) it.next();		
+	
+	 /*
+	  * first the sections:
+	  */		
+		it = sections.keySet().iterator();		
+		while ( it.hasNext() ) {			
+			String key = ( String ) it.next();			
 			MLDonkeyOptions page = ( MLDonkeyOptions )sections.get( key );
 			addToRoot( ( new PreferenceNode ( key, page ) ) );			
 		}
@@ -189,6 +196,9 @@ public class Preferences extends PreferenceManager {
 					
 			
 		}	
+		/*and now add the advanced-field at the very bottom of the list*/
+		if ( advanced != null )	
+		addToRoot( ( new PreferenceNode ( "Advanced", advanced ) ) );	
 	}
 
 	private boolean showOption( OptionsInfo option ) {
@@ -231,6 +241,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.33  2003/09/15 14:47:44  dek
+Preferences: renamed "General" / "Other" to "Advanced" and put it on the end of the list (only visible in advanced-mode)
+
 Revision 1.32  2003/08/30 12:09:04  dek
 Label added, when empty prefPage (networks with old core)
 
