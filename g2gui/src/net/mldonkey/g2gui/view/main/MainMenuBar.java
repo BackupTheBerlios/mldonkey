@@ -26,6 +26,7 @@ import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuEvent;
@@ -35,12 +36,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.11 2003/09/18 15:29:46 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.12 2003/09/19 03:38:53 zet Exp $ 
  *
  */
 public class MainMenuBar {
@@ -86,8 +88,18 @@ public class MainMenuBar {
 					menuItem = new MenuItem ( fileMenu, SWT.PUSH );
 					menuItem.addListener ( SWT.Selection, new Listener () {
 						public void handleEvent ( Event e ) {
-							Message killCore = new EncodeMessage( Message.S_KILL_CORE );
-							killCore.sendMessage( mainTab.getCore() );
+							
+							MessageBox confirm =
+								new MessageBox( 
+									shell,
+									SWT.YES | SWT.NO | SWT.ICON_QUESTION );
+		
+							confirm.setMessage( G2GuiResources.getString( "MISC_AYS" ) );
+				
+							if ( confirm.open() == SWT.YES ) {
+								Message killCore = new EncodeMessage( Message.S_KILL_CORE );
+								killCore.sendMessage( mainTab.getCore() );
+							}
 						} 
 					} );
 					menuItem.setText ( "&Kill core" );
@@ -97,7 +109,7 @@ public class MainMenuBar {
 				menuItem = new MenuItem ( fileMenu, SWT.PUSH );
 				menuItem.addListener ( SWT.Selection, new Listener () {
 					public void handleEvent ( Event e ) {
-						shell.dispose();
+						shell.close();
 					} 
 				} );
 				menuItem.setText ( "E&xit\tCtrl+W" );
@@ -187,6 +199,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.12  2003/09/19 03:38:53  zet
+confirm kill
+
 Revision 1.11  2003/09/18 15:29:46  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
