@@ -31,10 +31,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Font;
 
-import java.util.StringTokenizer;
 import java.io.IOException;
 import org.eclipse.jface.preference.*;
 
@@ -45,7 +43,7 @@ import org.eclipse.swt.graphics.Color;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.5 2003/07/25 03:00:05 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.6 2003/07/25 22:11:09 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -155,21 +153,15 @@ public abstract class GuiTab implements Listener, Observer {
 		try { preferenceStore.load(); } catch ( IOException e ) { }		
 	
 		if (preferenceStore.contains( preferenceString )) 	
-		return new Font (null, new FontData ( preferenceStore.getString( preferenceString ) ) ); 
+			return new Font (null, PreferenceConverter.getFontDataArray( preferenceStore, preferenceString ) ); 
 		return null;
 	}
 	protected Color loadColour (String preferenceString ) {
 			PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
 				try { preferenceStore.load(); } catch ( IOException e ) { }		
 		
-		if (preferenceStore.contains( preferenceString )) {
-			StringTokenizer st = new StringTokenizer(preferenceStore.getString( preferenceString ), ",");
-			return new Color(null, 
-				Integer.parseInt(st.nextToken()),  
-				Integer.parseInt(st.nextToken()),  
-				Integer.parseInt(st.nextToken())  
-				);
-		}
+		if (preferenceStore.contains( preferenceString ))
+			return new Color( null, PreferenceConverter.getColor(preferenceStore, preferenceString ) );
 		return null;
 	}
 
@@ -180,6 +172,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.6  2003/07/25 22:11:09  zet
+use prefconverter
+
 Revision 1.5  2003/07/25 03:00:05  zet
 *** empty log message ***
 
