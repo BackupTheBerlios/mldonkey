@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.14 2003/08/06 17:38:38 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.15 2003/08/06 20:56:49 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo extends Parent {
 	/**
@@ -157,13 +157,7 @@ public class ServerInfo extends Parent {
 	public int getServerScore() {
 		return serverScore;
 	}
-	/**
-	 * @param state a State
-	 */
-	private void setConnectionState( State state ) {
-		connectionState = state;
-	}
-	
+
 	/**
 	 * Creates a new serverinfo object 
 	 * @param core The parent objct
@@ -201,7 +195,10 @@ public class ServerInfo extends Parent {
 		this.getConnectionState().readStream( messageBuffer );
 		this.nameOfServer = messageBuffer.readString();
 		this.descOfServer = messageBuffer.readString();
-		/* if the state is REMOVE_HOST, we delete the serverinfo from the serverinfointmap */
+		/*
+		 *  if the state is REMOVE_HOST, we delete the serverinfo from the serverinfointmap
+		 * (this is a workaround for donkey, because the ServerState msg isnt send
+		 */
 		this.checkForRemove();
 	}
 	
@@ -293,6 +290,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.15  2003/08/06 20:56:49  lemmstercvs01
+$cleanup, more efficient
+$
 $Revision 1.14  2003/08/06 17:38:38  lemmstercvs01
 $some actions still missing. but it should work for the moment
 $

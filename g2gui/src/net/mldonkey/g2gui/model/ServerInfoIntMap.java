@@ -39,12 +39,12 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.12 2003/08/06 18:53:19 lemmstercvs01 Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.13 2003/08/06 20:56:49 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
 	/**
-	 * last serverinfos changed/added/removed
+	 * last serverinfos modified/added/removed
 	 */
 	private List modified = new ArrayList();
 	private List added = new ArrayList();
@@ -79,10 +79,13 @@ public class ServerInfoIntMap extends InfoIntMap {
 		int id = messageBuffer.readInt32();
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 		if ( this.containsKey( id ) ) {
-			this.get( id ).readStream( messageBuffer );
-			synchronized ( this.modified ) {
-				this.modified.add( this.get( id ) );
-			}
+			ServerInfo server = this.get( id );
+			server.readStream( messageBuffer );
+			/* ignore removed servers */
+			if ( server.getConnectionState().getState() != EnumState.REMOVE_HOST ) 
+				synchronized ( this.modified ) {
+					this.modified.add( this.get( id ) );
+				}
 		}
 		else {
 			ServerInfo serverInfo = new ServerInfo( this.parent );
@@ -96,31 +99,6 @@ public class ServerInfoIntMap extends InfoIntMap {
 	}
 	
 	/**
-	 * Removes all entries in changed
-	 */
-	public void clearModified() {
-		synchronized ( this.modified ) {
-			this.modified.clear();
-		}
-	}
-	/**
-	 * Removes all entries in added
-	 */
-	public void clearAdded() {
-		synchronized ( this.added ) {
-			this.added.clear();
-		}
-	}
-	/**
-	 * Removes all entries in removed
-	 */
-	public void clearRemoved() {
-		synchronized ( this.removed ) {
-			this.removed.clear();
-		}
-	}
-	
-	/**
 	 * Get a ServerInfo object from this object by there id
 	 * @param id The FileInfo id
 	 * @return The FileInfo object
@@ -130,7 +108,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 	}
 
 	/**
-	 * Does nothing!
+	 * Updates a serverInfo
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void update( MessageBuffer messageBuffer ) {
@@ -138,9 +116,11 @@ public class ServerInfoIntMap extends InfoIntMap {
 		if ( this.infoIntMap.contains( id ) ) {
 			ServerInfo server = ( ServerInfo ) this.get( id );
 			server.update( messageBuffer );
-			synchronized ( this.modified ) {
-				this.modified.add( server );
-			}
+			/* ignore removed servers */
+			if ( server.getConnectionState().getState() != EnumState.REMOVE_HOST )
+				synchronized ( this.modified ) {
+					this.modified.add( server );
+				}
 			this.setChanged();
 			this.notifyObservers( this );
 		}
@@ -178,10 +158,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 * @return The serverinfos who have been changed
 	 * clear this list, after the update in the view
 	 */
-	public List getChanged() {
+	public List getModified() {
 		return this.modified;
 	}
-	
 	/**
 	 * @return The serverinfos who have been added
 	 * clear this list, after the update in the view
@@ -189,13 +168,37 @@ public class ServerInfoIntMap extends InfoIntMap {
 	public List getAdded() {
 		return this.added;
 	}
-	
 	/**
 	 * @return The serverinfos who have been removed
 	 * clear this list, after the update in the view
 	 */
 	public List getRemoved() {
 		return this.removed;
+	}
+	
+	/**
+	 * Removes all entries in changed
+	 */
+	public void clearModified() {
+		synchronized ( this.modified ) {
+			this.modified.clear();
+		}
+	}
+	/**
+	 * Removes all entries in added
+	 */
+	public void clearAdded() {
+		synchronized ( this.added ) {
+			this.added.clear();
+		}
+	}
+	/**
+	 * Removes all entries in removed
+	 */
+	public void clearRemoved() {
+		synchronized ( this.removed ) {
+			this.removed.clear();
+		}
 	}
 	
 	/**
@@ -369,6 +372,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.13  2003/08/06 20:56:49  lemmstercvs01
+cleanup, more efficient
+
 Revision 1.12  2003/08/06 18:53:19  lemmstercvs01
 changed renamed to modified (conflict with observable)
 
