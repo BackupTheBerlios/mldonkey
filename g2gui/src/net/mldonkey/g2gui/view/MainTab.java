@@ -56,11 +56,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Gui
+ * MainTab
  *
- *
- * @version $Id: MainTab.java,v 1.76 2003/10/11 21:32:39 zet Exp $
- *
+ * @version $Id: MainTab.java,v 1.77 2003/10/12 15:56:21 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -358,6 +356,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.77  2003/10/12 15:56:21  zet
+nill
+
 Revision 1.76  2003/10/11 21:32:39  zet
 remove hand cursor (looks weird on gtk)
 
