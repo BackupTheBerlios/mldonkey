@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.14 2004/03/09 19:16:27 dek Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.15 2004/03/25 18:30:37 psy Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -132,19 +132,31 @@ public class G2GuiAdvanced extends PreferencePage {
 				G2GuiResources.getString( "PREF_DISPLAY_DEFAULT_BROWSER" ), 
 		        false, 
 		        composite, true );
-			
+
+		GCJFileFieldEditor defaultPreviewerField =
+			new GCJFileFieldEditor( "defaultPreviewer", 
+			G2GuiResources.getString( "PREF_DISPLAY_DEFAULT_PREVIEWER" ), 
+	        false, 
+	        composite, true );
+
 		if ( VersionCheck.isWin32() ) {
+			defaultPreviewerField.setFileExtensions( new String[] { "*.exe;*.bat" } );
 			defaultBrowserField.setFileExtensions( new String[] { "*.exe;*.bat" } );
 		} else {
+			defaultPreviewerField.setFileExtensions( new String[] {"*"});
 			defaultBrowserField.setFileExtensions( new String[] {"*"});
 		}
 				
 		setupEditor(defaultBrowserField);		
+		setupEditor(defaultPreviewerField);
 	
 	}
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.15  2004/03/25 18:30:37  psy
+introduced http-preview
+
 Revision 1.14  2004/03/09 19:16:27  dek
 Now the Systray-Menu becomes usable, now featuring" tooltip"
 

@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.helper.ProgramExecutor;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.OptionsInfo;
@@ -80,13 +81,16 @@ import org.eclipse.swt.widgets.Text;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.io.File;
+
+
 
 
 /**
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.36 2004/03/25 14:41:13 psy Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.37 2004/03/25 18:30:37 psy Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -290,7 +294,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
             }
             
             /* new http-preview method */
-            if (!false) {
+            OptionsInfo http_port = (OptionsInfo) gView.getCore().getOptionsInfoMap().get("http_port");
+            if ( new File(PreferenceLoader.getString("defaultPreviewer")).exists() &&
+            		http_port != null ) {
             	menuManager.add(new NetPreviewAction());
             }
         
@@ -363,6 +369,16 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         return false;
     }
 
+    private String generatePreviewURL(int fileID) {
+     	OptionsInfo http_port = 
+     		(OptionsInfo) gView.getCore().getOptionsInfoMap().get("http_port");
+    	
+     	String url = "http://" + PreferenceLoader.getString("hostname") + ":" + 
+			http_port.getValue() + "/preview_download?q=" + fileID;
+     	
+     	return url;
+    }
+    
     // Menu Actions
 
     /**
@@ -395,6 +411,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
         }
     }
 
+
+
+    
     /**
      * PreviewAction
      */
@@ -405,11 +424,22 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
          }
 
          public void run() {
-             for (int i = 0; i < selectedFiles.size(); i++)
-                 ((FileInfo) selectedFiles.get(i)).preview();
+             for (int i = 0; i < selectedFiles.size(); i++) {
+             	int fileID = ((FileInfo) selectedFiles.get(i)).getId();
+             	
+             	System.out.println("URL: " + generatePreviewURL(fileID));
+             	
+             	String cmdline[] = new String[2];
+             	cmdline[0] = PreferenceLoader.getString("defaultPreviewer");
+             	cmdline[1] = generatePreviewURL(fileID);
+             	
+             	new ProgramExecutor(cmdline);
+             }
          }
      }
     
+
+     
     /**
      * FileDetailAction
      */
@@ -686,6 +716,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.37  2004/03/25 18:30:37  psy
+introduced http-preview
+
 Revision 1.36  2004/03/25 14:41:13  psy
 Added a list of files to the cancel-dialog
 Started to add the http-preview stuff...
