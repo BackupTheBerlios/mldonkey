@@ -1,18 +1,31 @@
 /*
- * Created on 07.07.2003
+ * Copyright 2003
+ * G2Gui Team
+ * 
+ * 
+ * This file is part of G2Gui.
  *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * G2Gui is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * G2Gui is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with G2Gui; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
  */
 package net.mldonkey.g2gui.view.statistic;
 
-
 import org.eclipse.swt.SWT;
-
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
 
 /**
  * @author achim
@@ -22,16 +35,15 @@ import org.eclipse.swt.graphics.*;
  */
 public class GraphCanvas extends Canvas {
 
-	Composite parent;
-	private Thread thread;
-	Image canvas;
-	final private GraphPainter gp;
+	private Composite parent;
+
+	final private GraphPainter graphPainter;
 	
 	public GraphCanvas(Composite parent) 
 	{
 		super(parent,SWT.NO_BACKGROUND);
 		this.parent = parent;
-		gp = new GraphPainter(parent);
+		graphPainter = new GraphPainter(parent);
 
 		addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
@@ -42,14 +54,21 @@ public class GraphCanvas extends Canvas {
 		
 	private void paintControl(PaintEvent e)
 	{
-		GC gc = e.gc;
-		gp.setGraphicControl(gc);
-		gp.paint();		
+		graphPainter.setGraphicControl(e.gc);
+		graphPainter.paint();		
 	}
 		
 	public void setGraph(Graph graph)
 	{
-		gp.setGraph(graph);
+		graphPainter.setGraph(graph);
 	}
 
 }
+/*
+$Log: GraphCanvas.java,v $
+Revision 1.6  2003/07/26 05:42:39  zet
+cleanup
+
+
+
+*/

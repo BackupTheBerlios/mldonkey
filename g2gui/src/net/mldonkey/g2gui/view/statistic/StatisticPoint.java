@@ -1,10 +1,27 @@
 /*
- * Created on 07.07.2003
+ * Copyright 2003
+ * G2Gui Team
+ * 
+ * 
+ * This file is part of G2Gui.
  *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * G2Gui is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * G2Gui is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with G2Gui; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
  */
 package net.mldonkey.g2gui.view.statistic;
+
 
 /**
  * @author achim
@@ -12,7 +29,7 @@ package net.mldonkey.g2gui.view.statistic;
  *A Statistic Point belongs to a Graph its unimportant to which Every Point knows its following point,
  *and the time it was created.
  */
-public class StatisticPoint {
+public class StatisticPoint  {
 	
 	StatisticPoint nextPoint;
 	StatisticPoint prevPoint;
@@ -23,7 +40,6 @@ public class StatisticPoint {
 	{
 		this.value = value;
 		createTime = System.currentTimeMillis();
-			
 	}	
 	
 	public long getTime()
@@ -38,7 +54,7 @@ public class StatisticPoint {
 	
 	public StatisticPoint getNext()
 	{
-			return nextPoint;
+		return nextPoint;
 	}
 
 	public int getValue()
@@ -53,6 +69,14 @@ public class StatisticPoint {
 	
 	public StatisticPoint getPrev()
 	{
-			return prevPoint;
+		return prevPoint;
 	}
 }
+/*
+$Log: StatisticPoint.java,v $
+Revision 1.5  2003/07/26 05:42:39  zet
+cleanup
+
+
+
+*/

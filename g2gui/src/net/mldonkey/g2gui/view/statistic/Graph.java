@@ -1,8 +1,24 @@
 /*
- * Created on 07.07.2003
+ * Copyright 2003
+ * G2Gui Team
+ * 
+ * 
+ * This file is part of G2Gui.
  *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * G2Gui is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * G2Gui is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with G2Gui; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
  */
 package net.mldonkey.g2gui.view.statistic;
 
@@ -19,22 +35,20 @@ public class Graph {
 	
 	StatisticPoint firstPoint;
 	StatisticPoint lastPoint;
-	int amount;
-	int maxValue;
-	int avgValue;
-	long sumValue;
-	long totalPoints;
-	long createTime;
-	String name;
+
+	int amount, maxValue, avgValue;
+	long createTime, totalPoints, sumValue;
 	
+	static final short MAX_POINTS = 1600;
+
+	String graphName;
 	Color graphColor;
 	
 	public Graph(Color color, String name)
 	{
-		this.name=name;
-		sumValue=totalPoints=avgValue=maxValue=0;
-		
+		graphName = name;
 		graphColor = color;
+		sumValue = totalPoints = avgValue = maxValue = 0;
 		// System.out.println("Graph created");
 		createTime = System.currentTimeMillis();
 	}
@@ -46,6 +60,7 @@ public class Graph {
 		{
 			firstPoint = new StatisticPoint(value);
 			lastPoint = firstPoint;
+			
 		}
 		else
 		{
@@ -53,8 +68,17 @@ public class Graph {
 			nextPoint.setPrev(lastPoint);
 			lastPoint.setNext(nextPoint);
 			lastPoint = nextPoint;
+						
+			if (amount >= Graph.MAX_POINTS) {
+				StatisticPoint tmpPoint = firstPoint;
+				firstPoint = firstPoint.getNext();
+				firstPoint.setPrev(null);
+				tmpPoint.setNext(null);
+				tmpPoint.setPrev(null);
+			}
 			
 		}
+		
 		if (value > maxValue) maxValue = value;
 		sumValue += value;
 		amount++;
@@ -74,14 +98,25 @@ public class Graph {
 	{
 		return graphColor;
 	}
-	public int getMax() {
+	public int getMax() 
+	{
 		return maxValue;
 	}
-	public String getName() {
-		return name;
+	public String getName() 
+	{
+		return graphName;
 	}
-	public int getAvg() {
+	public int getAvg() 
+	{
 		return avgValue;
 	}
 
 }
+/*
+$Log: Graph.java,v $
+Revision 1.6  2003/07/26 05:42:39  zet
+cleanup
+
+
+
+*/

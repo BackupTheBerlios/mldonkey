@@ -1,8 +1,24 @@
 /*
- * Created on 07.07.2003
+ * Copyright 2003
+ * G2Gui Team
+ * 
+ * 
+ * This file is part of G2Gui.
  *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * G2Gui is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * G2Gui is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with G2Gui; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
  */
 package net.mldonkey.g2gui.view.statistic;
 
@@ -28,7 +44,7 @@ public class GraphPainter {
 	 
 	 
 	private int graph;
-	private Graph graphs[] = new Graph[10];
+	private Graph graphs[] = new Graph[2];
 	private GC drawBoard;
 	final private Composite parent;
 	
@@ -68,16 +84,18 @@ public class GraphPainter {
 		GC drawBoardBuffer = new GC(imageBuffer);
 		drawBoardBuffer.setBackground(new Color(null,50,50,50));
 		drawBoardBuffer.setForeground(new Color(null,0,0,0));
-		drawBoardBuffer.fillGradientRectangle(0,0,parent.getBounds().width,parent.getBounds().height, true);
+		drawBoardBuffer.fillGradientRectangle(0,0,parent.getClientArea().width,parent.getClientArea().height, true);
 		
 		//g2d.setColor(green);
 		
 		int startx = 20;
+		
 		int k = startx;
 		int which = 0;
 		float maximum = 20f;
 		float height = (float) (parent.getClientArea().height - drawBoardBuffer.getFontMetrics().getHeight() - 2);
-		int width = parent.getBounds().width;
+		int width = parent.getClientArea().width;
+		int graphWidth = (width / 2) - startx;
 		float zoom, valueY;
 				
 		while (graphs[which]!=null)
@@ -107,13 +125,14 @@ public class GraphPainter {
 				k++;	
 			}	
 			
+			// calculate zoom
 			zoom = height / maximum ;
 			actualPoint = lastPoint;	
 			if ( ((float) (actualPoint.getValue()/10) * zoom)  >  ((height / 5f)*4f)) 
 				zoom = (zoom / 5f)*4f;
 			k=startx;
 			
-			// draw
+			// draw gradient lines
 			while ( (k<=width/2) && (actualPoint.getPrev()!=null))	{
 			
 				
@@ -122,52 +141,54 @@ public class GraphPainter {
 				
 				//drawBoardBuffer.drawLine(k,height,k,valueY);
 				
-				drawBoardBuffer.fillGradientRectangle(k,(int)height,1,(int)(valueY-height),true);
+				drawBoardBuffer.fillGradientRectangle(k,(int)height+1,1,(int)(valueY-height),true);
 				actualPoint = actualPoint.getPrev();
 				k++;
 
 			}
+			
+			
+			// draw grid
 			drawBoardBuffer.setForeground(new Color(null,0,128,64));
-			drawBoardBuffer.drawLine(startx,(int)(height+1f),width-40,(int)(height+1));
-						
-			for (int i = 0; i < 10; i++) 
-				drawBoardBuffer.drawLine(startx+i*(width/20),0,startx+i*(width/20),(int)height);
-					
-			for (int dummy=(int)(height/10);dummy<(int)height;dummy=dummy+(int)(height/10f))
-				drawBoardBuffer.drawLine(20,(int)height-dummy,width/2,(int)height-dummy);
+			
+			for (int i = startx -1 ; i < startx + graphWidth; i+=20) 
+				drawBoardBuffer.drawLine(i,0,i,(int)height + 1);
+							
+			for (int i = (int)height + 1; i > 0; i-=20)		
+				drawBoardBuffer.drawLine(startx,i,startx+graphWidth,i);
 			
 			
-			// TODO: fix this
+			// old grid scale
 			// for (int dummy=0; dummy<1; dummy++) {
 			//	int value=dummy*2;
 			//	drawBoardBuffer.drawText("  " + value,0,height-8-(int)zoom*value*10, true);
 			// }
 			
-//			just for temporary fun .. this will overflow pretty quickly
-			
-			
+			// just for temporary fun; this might overflow pretty quickly
+						
 			 drawBoardBuffer.setForeground(graphColor);
 			 drawBoardBuffer.drawText(graphs[which].getName() + 
 				 " avg: " + ((double)graphs[which].getAvg()/100) + " kb/s," +
 				 " max: " + ((double)graphs[which].getMax()/100) + " kb/s",
 				 20, parent.getClientArea().height-drawBoardBuffer.getFontMetrics().getHeight() ,true);
+				
+			// draw floating box
 			
-			double vv = (double)graphs[which].getLast().getValue()/100;
-			String vvs = String.valueOf(vv);
+			double value = (double)graphs[which].getLast().getValue()/100;
+			String boxString = String.valueOf(value) + " kb/s";
+			
 			int textPosition = (int) (height - (float) (graphs[which].getLast().getValue()/10) * zoom);
+			int boxWidth = drawBoardBuffer.textExtent(boxString).x + 20;
+			int boxHeight = drawBoardBuffer.textExtent(boxString).y + 5;	
 			
-			int boxWidth = drawBoardBuffer.getFontMetrics().getAverageCharWidth() * (vvs.length() + 9)  ;
-			int boxHeight = drawBoardBuffer.getFontMetrics().getHeight() + 5;		
 			drawBoardBuffer.setForeground(new Color(null,0,0,0));
 			drawBoardBuffer.setBackground(new Color(null,255,255,255));
 			drawBoardBuffer.fillRoundRectangle(startx+10,textPosition-3,boxWidth,boxHeight,18,18);
 			drawBoardBuffer.drawRoundRectangle(startx+10,textPosition-3,boxWidth,boxHeight,18,18);
-			drawBoardBuffer.drawText(vv + " kb/s",startx+20,textPosition);
+			drawBoardBuffer.drawText(boxString,startx+20,textPosition);
 			drawBoardBuffer.setForeground(new Color(null, 255,255,0));
 			drawBoardBuffer.drawLine(startx+10,textPosition,startx,textPosition);
-			
-			
-			
+				
 			which++;
 		}
 			
@@ -184,3 +205,11 @@ public class GraphPainter {
 	}
 
 }
+/*
+$Log: GraphPainter.java,v $
+Revision 1.18  2003/07/26 05:42:39  zet
+cleanup
+
+
+
+*/
