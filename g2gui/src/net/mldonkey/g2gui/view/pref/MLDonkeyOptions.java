@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.37 2003/08/31 20:28:17 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.38 2003/09/11 16:12:27 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {	
@@ -171,10 +171,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	protected Control createContents( Composite myparent ) {
 		if ( this.isEmpty ){
 			Composite parent = ( Composite ) super.createContents( myparent );
-			System.out.println(parent.getLayout());
 			parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 			Label emptyLabel = new Label( parent,SWT.NONE );
-			emptyLabel.setText( G2GuiResources.getString( "PREF_EMPTY" ) );
+			emptyLabel.setText( G2GuiResources.getString( "PREF_EMPTY" ) ); 
 			GridData gd = new GridData();
 			gd.verticalAlignment = GridData.CENTER;
 			gd.horizontalAlignment = GridData.CENTER;
@@ -256,6 +255,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 } 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.38  2003/09/11 16:12:27  dek
+removed debbuging-output (forgot to do this weeks ago ;-))
+
 Revision 1.37  2003/08/31 20:28:17  dek
 "please Select subentry "is now centered on the whole page, so that nobody misses it
 
