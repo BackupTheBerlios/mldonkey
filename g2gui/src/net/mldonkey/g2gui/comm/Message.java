@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.3 2003/06/11 16:41:19 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.4 2003/06/11 20:43:45 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -169,21 +169,18 @@ public abstract class Message {
 		return result;
 	}
 	/**
-	 * Creates a string from a char array
+	 * Creates a string from a binary message
 	 * @param inputStream Stream to read from
-	 * @param length Length of the char array
+	 * @param length Length of the binary message
 	 * @return a String
 	 * @throws IOException Error if read from Stream failed
 	 */
-	public static String readChar( InputStream inputStream, int length ) throws IOException {
-		if ( length > 0 ) {
-			byte[] content = new byte[ length ];
-			inputStream.read( content, 0, length );
-			String result = new String( content, 0, length );
-			return ( result );
-		} 
-		else
-			return ( "" );
+	public static String readBinary( InputStream inputStream, int length ) throws IOException {
+		String result = new String();
+		for ( int i = 0; i < length; i++ ) {
+		result += Integer.toHexString( inputStream.read() );
+		}
+		return result.toUpperCase();
 	}
 	
 	/**
@@ -315,6 +312,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.4  2003/06/11 20:43:45  lemmstercvs01
+setMd4() fixed
+
 Revision 1.3  2003/06/11 16:41:19  lemmstercvs01
 still a problem in setMd4()
 
