@@ -22,9 +22,13 @@
  */
 package net.mldonkey.g2gui.view.news;
 
+import churchillobjects.rss4j.RssChannel;
+import churchillobjects.rss4j.RssDocument;
+
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -33,60 +37,95 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import churchillobjects.rss4j.RssChannel;
-import churchillobjects.rss4j.RssDocument;
-
 /**
  * NewsFeed
  *
- * @version $Id: NewsFeed.java,v 1.2 2003/09/29 14:05:45 lemmster Exp $
+ * @version $Id: NewsFeed.java,v 1.3 2003/10/04 08:49:25 lemmster Exp $
  *
  */
 public class NewsFeed extends News {
-    private Map aMap;
-    private RssDocument doc;
-	private String title;
+    private List aList;
+    private String title;
+    private Composite composite;
+    private RssDocument aRssDocument;
 
     public NewsFeed( Control aControl, RssDocument aDoc, String aString ) {
         super( aControl );
-        this.doc = aDoc;
+        this.aRssDocument = aDoc;
+        this.aList = new ArrayList();
         this.title = aString;
-        this.create();
+        this.create( aDoc );
     }
 
     /**
      * DOCUMENT ME!
      */
-    private void create() {
-		GridLayout gridLayout = new GridLayout();
-//		gridLayout.numColumns = 3;
-//		gridLayout.makeColumnsEqualWidth = true;
-		
-		Composite composite = new Composite( ( Composite ) control, SWT.NONE );
-		composite.setLayout( gridLayout );
+    private void create( RssDocument aDoc ) {
+        composite = new Composite( ( Composite ) control, SWT.NONE );
+        composite.setLayout( new GridLayout() );
 
         CTabItem cTabItem = new CTabItem( ( CTabFolder ) control, SWT.NONE );
         cTabItem.setControl( composite );
         cTabItem.setText( title );
 
-        Enumeration enum = doc.channels();
-        while ( enum.hasMoreElements() ) {
-            NewsChan aNewsChan = new NewsChan( composite, ( RssChannel ) enum.nextElement() );
-        }
+        this.fill( aDoc );
     }
+
+	/**
+	 * DOCUMENT ME!
+	 */
+	private void disposeChildren() {
+		Iterator itr = this.aList.iterator();
+		while ( itr.hasNext() )
+			( ( NewsChan ) itr.next() ).dispose();
+		this.aList.clear();	
+	}
 
     /**
      * DOCUMENT ME!
+     *
+     * @param aDoc DOCUMENT ME!
      */
-    public void dispose() {
-        Iterator itr = this.aMap.values().iterator();
-        while ( itr.hasNext() )
-            ( ( NewsChan ) itr.next() ).dispose();
+    private void fill( RssDocument aDoc ) {
+        Enumeration enum = aDoc.channels();
+        while ( enum.hasMoreElements() ) {
+            RssChannel aChannel = ( RssChannel ) enum.nextElement();
+            aList.add( new NewsChan( composite, aChannel ) );
+        }
     }
+
+	/**
+	 * DOCUMENT ME!
+	 */
+	protected void dispose() {
+		this.disposeChildren();
+		this.composite.dispose();
+	}
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param aDoc DOCUMENT ME!
+     */
+    protected void update( RssDocument aDoc ) {
+        this.disposeChildren();
+        this.fill( aDoc );
+        this.composite.layout();
+    }
+
+	/**
+	 * @return
+	 */
+	public RssDocument getARssDocument() {
+		return aRssDocument;
+	}
 }
 
 /*
 $Log: NewsFeed.java,v $
+Revision 1.3  2003/10/04 08:49:25  lemmster
+foobar
+
 Revision 1.2  2003/09/29 14:05:45  lemmster
 update & add still not working
 

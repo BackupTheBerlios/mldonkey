@@ -39,7 +39,7 @@ import churchillobjects.rss4j.parser.RssParser;
 /**
  * NewsCreator
  *
- * @version $Id: RSSFetcher.java,v 1.2 2003/09/29 14:05:45 lemmster Exp $
+ * @version $Id: RSSFetcher.java,v 1.3 2003/10/04 08:49:25 lemmster Exp $
  *
  */
 public class RSSFetcher extends Observable implements Runnable {
@@ -107,7 +107,7 @@ public class RSSFetcher extends Observable implements Runnable {
      */
     private Map createURLMap() throws MalformedURLException {
 		/* read the urls from the preferenceLoader */
-        String[] aString = OurTools.split( PreferenceLoader.loadString( "newsSource" ), ';' );
+        String[] aString = OurTools.split( PreferenceLoader.loadString( "newsUrl" ), ';' );
 
 		/* create a synchronized map so we dont need to mess with sync around */
         Map aMap = Collections.synchronizedMap( new HashMap() );
@@ -147,10 +147,7 @@ public class RSSFetcher extends Observable implements Runnable {
 		this.newsSource.remove( anUrl );
 	}
 
-    /**
-     * @param connected
-     */
-    public void disconnect() {
+    public void stop() {
         this.connected = false;
     }
 
@@ -164,6 +161,9 @@ public class RSSFetcher extends Observable implements Runnable {
 
 /*
 $Log: RSSFetcher.java,v $
+Revision 1.3  2003/10/04 08:49:25  lemmster
+foobar
+
 Revision 1.2  2003/09/29 14:05:45  lemmster
 update & add still not working
 

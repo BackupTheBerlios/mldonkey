@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view.news;
 
+import churchillobjects.rss4j.RssChannelItem;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -32,35 +34,29 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 
-import churchillobjects.rss4j.RssChannelItem;
-
 /**
  * NewsItem
  *
- * @version $Id: NewsItem.java,v 1.2 2003/09/29 14:05:45 lemmster Exp $
+ * @version $Id: NewsItem.java,v 1.3 2003/10/04 08:49:25 lemmster Exp $
  *
  */
 public class NewsItem extends News {
     private Font boldFont;
     private Font italicFont;
     private Composite myComposite;
-    private RssChannelItem chanItem;
 
     public NewsItem( Control aControl, RssChannelItem chanItem ) {
-		super ( aControl );
-        this.chanItem = chanItem;
-        this.create();
+        super( aControl );
+        this.create( chanItem );
     }
 
     /**
      * DOCUMENT ME!
      */
-    public void create() {
-    	this.dispose();
- 
-		boldFont = new Font( control.getDisplay(), new FontData( "Arial", 10, SWT.BOLD ) );
-		italicFont = new Font( control.getDisplay(), new FontData( "Arial", 10, SWT.ITALIC ) );
-    	
+    private void create( RssChannelItem chanItem ) {
+        boldFont = new Font( control.getDisplay(), new FontData( "Arial", 10, SWT.BOLD ) );
+        italicFont = new Font( control.getDisplay(), new FontData( "Arial", 10, SWT.ITALIC ) );
+
         myComposite = new Composite( ( Composite ) control, SWT.NONE );
         myComposite.setLayout( new GridLayout() );
         myComposite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
@@ -77,7 +73,16 @@ public class NewsItem extends News {
         aText.setLayoutData( gridData );
         aText.setFont( boldFont );
         aText.setText( chanItem.getItemTitle() );
- 
+
+		/* some items dont have a description (lack of rss4j or rss version specific?)*/
+		if ( chanItem.getItemDescription() != null ) {
+			gridData = new GridData( GridData.FILL_HORIZONTAL );
+			gridData.horizontalSpan = 2;
+			aText = new Text( aGroup, SWT.NONE | SWT.READ_ONLY );
+			aText.setText( chanItem.getItemDescription() );
+			aText.setLayoutData( gridData );
+		}
+	
         aText = new Text( aGroup, SWT.NONE | SWT.READ_ONLY );
         aText.setText( "Read more..." );
         aText.setFont( italicFont );
@@ -92,9 +97,7 @@ public class NewsItem extends News {
     /**
      * DOCUMENT ME!
      */
-    public void dispose() {
-        if ( ( this.myComposite == null ) || this.myComposite.isDisposed() )
-            return;
+    protected void dispose() {
         boldFont.dispose();
         italicFont.dispose();
         myComposite.dispose();
@@ -103,6 +106,9 @@ public class NewsItem extends News {
 
 /*
 $Log: NewsItem.java,v $
+Revision 1.3  2003/10/04 08:49:25  lemmster
+foobar
+
 Revision 1.2  2003/09/29 14:05:45  lemmster
 update & add still not working
 

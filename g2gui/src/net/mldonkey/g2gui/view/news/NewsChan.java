@@ -22,9 +22,12 @@
  */
 package net.mldonkey.g2gui.view.news;
 
+import churchillobjects.rss4j.RssChannel;
+import churchillobjects.rss4j.RssChannelItem;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -33,33 +36,29 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 
-import churchillobjects.rss4j.RssChannel;
-import churchillobjects.rss4j.RssChannelItem;
-
 /**
  * NewsFeed
  *
- * @version $Id: NewsChan.java,v 1.2 2003/09/29 14:05:45 lemmster Exp $
+ * @version $Id: NewsChan.java,v 1.3 2003/10/04 08:49:25 lemmster Exp $
  *
  */
 public class NewsChan extends News {
-    private RssChannel channel;
     private List aList;
     private Group group;
 
     public NewsChan( Control aControl, RssChannel channel ) {
-		super( aControl );
-        this.update( channel );
+        super( aControl );
+        this.aList = new ArrayList();
+        this.create( channel );
     }
 
     /**
      * DOCUMENT ME!
      */
-    private void create() {
-    	System.out.println( channel.getChannelTitle() );
-		group = new Group( ( Composite ) control, SWT.NONE );
-		group.setLayout( new GridLayout() );
-		group.setText( channel.getChannelTitle() );
+    private void create( RssChannel channel ) {
+        group = new Group( ( Composite ) control, SWT.NONE );
+        group.setLayout( new GridLayout() );
+        group.setText( channel.getChannelTitle() );
 
         Enumeration items = channel.items();
         while ( items.hasMoreElements() )
@@ -68,27 +67,21 @@ public class NewsChan extends News {
 
     /**
      * DOCUMENT ME!
-     *
-     * @param aChannel DOCUMENT ME!
      */
-    public void update( RssChannel aChannel ) {
-        this.channel = aChannel;
-        this.aList = Collections.synchronizedList( new ArrayList() );
-        this.create();
-    }
-
-    /**
-     * DOCUMENT ME!
-     */
-    public void dispose() {
-        for ( int i = 0; i < aList.size(); i++ )
-            ( ( NewsItem ) aList.get( i ) ).dispose();
+    protected void dispose() {
+        Iterator itr = this.aList.iterator();
+        while ( itr.hasNext() )
+            ( ( NewsItem ) itr.next() ).dispose();
+        this.aList.clear();    
         this.group.dispose();
     }
 }
 
 /*
 $Log: NewsChan.java,v $
+Revision 1.3  2003/10/04 08:49:25  lemmster
+foobar
+
 Revision 1.2  2003/09/29 14:05:45  lemmster
 update & add still not working
 
