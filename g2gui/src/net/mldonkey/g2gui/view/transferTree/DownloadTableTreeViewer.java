@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.TableItem;
  * DownloadTable
  *
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.16 2003/08/23 19:44:12 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.17 2003/08/23 22:47:03 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -337,7 +337,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		}
 		
 		tableTreeContentProvider.closeAllEditors();
-		System.out.println("yes");
 		if (advancedMode) {
 			displayChunkGraphs = PreferenceLoader.loadBoolean("displayChunkGraphs");
 		}
@@ -355,6 +354,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.17  2003/08/23 22:47:03  zet
+remove println
+
 Revision 1.16  2003/08/23 19:44:12  zet
 split transfer table to basic/advanced modes
 
