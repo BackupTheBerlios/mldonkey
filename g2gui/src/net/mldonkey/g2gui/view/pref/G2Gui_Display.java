@@ -52,7 +52,7 @@ public class G2Gui_Display extends PreferencePage  {
 		consoleForeground = new ExtendedColorFieldEditor("consoleForeground", "Console window foreground colour", shell);
 		setupEditor(consoleForeground);
 	
-		consoleHighlight = new ExtendedColorFieldEditor("consoleHighlight", "Console window hightlight colour", shell);
+		consoleHighlight = new ExtendedColorFieldEditor("consoleHighlight", "Console window highlight colour", shell);
 		setupEditor(consoleHighlight);
 	
 		consoleInputBackground = new ExtendedColorFieldEditor("consoleInputBackground", "Console input background colour", shell);
@@ -164,6 +164,9 @@ public class G2Gui_Display extends PreferencePage  {
 
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.9  2003/08/14 12:59:47  zet
+fix typo
+
 Revision 1.8  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 
