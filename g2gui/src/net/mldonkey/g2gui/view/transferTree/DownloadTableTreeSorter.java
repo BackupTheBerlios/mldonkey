@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  * @author $user$
- * @version $Id: DownloadTableTreeSorter.java,v 1.6 2003/08/15 22:05:58 zet Exp $ 
+ * @version $Id: DownloadTableTreeSorter.java,v 1.7 2003/08/16 20:03:34 zet Exp $ 
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
@@ -107,9 +107,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 				case 7 : // rate - paused/queued on the bottom
 						if (fileInfo1.getState().getState() == EnumFileState.DOWNLOADED)
-							return 1;
-						else if (fileInfo1.getState().getState() == EnumFileState.DOWNLOADED)
 							return -1;
+						else if (fileInfo2.getState().getState() == EnumFileState.DOWNLOADED)
+							return 1;
 						else if (fileInfo1.getState().getState() == EnumFileState.QUEUED)
 							return 2;
 						else if (fileInfo2.getState().getState() == EnumFileState.QUEUED)
@@ -263,6 +263,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.7  2003/08/16 20:03:34  zet
+downloaded at top
+
 Revision 1.6  2003/08/15 22:05:58  zet
 *** empty log message ***
 
