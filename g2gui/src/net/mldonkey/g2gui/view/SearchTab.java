@@ -47,6 +47,8 @@ import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -64,7 +66,7 @@ import org.eclipse.swt.widgets.Control;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.49 2003/12/04 08:47:27 lemmy Exp $ 
+ * @version $Id: SearchTab.java,v 1.50 2003/12/07 19:36:55 lemmy Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -111,18 +113,25 @@ public class SearchTab extends GuiTab {
 		/* Create the "Left" and "Right" columns */
 		this.createLeftGroup (mainSash);
 		this.createRightGroup (mainSash);
-		
-		mainSash.setWeights( new int[] { 1, 5 } );
+		mainSash.setWeights( PreferenceLoader.getIntArray( "searchSashWeights" ) );
 	}
 
 	/**
 	 * The search mask
 	 */
 	private void createLeftGroup(SashForm mainSash) {
-	    
 	    SashViewFrame searchViewFrame = new SashViewFrame( mainSash, "TT_SearchButton", "SearchButtonSmall", this);
-
-		Composite aComposite = searchViewFrame.getChildComposite();
+	    // this is a little bit "hacky" but getWeights() on a SashForm in a DisposeListener returns always an empty intarray
+	    // so we are listening for the viewform moving and store the size in this very moment
+	    final SashForm aSash = mainSash;
+	    searchViewFrame.getViewForm().addControlListener( new ControlListener() {
+			public void controlMoved(ControlEvent e) { }
+			public void controlResized(ControlEvent e) {
+				PreferenceLoader.setValue( "searchSashWeights", aSash.getWeights() );
+			}
+	    } );
+	    
+	    Composite aComposite = searchViewFrame.getChildComposite();
 		aComposite.setLayout( WidgetFactory.createGridLayout(1,0,0,0,0,false));
 
 		tabFolder = new CTabFolder( aComposite, SWT.NONE );
@@ -405,6 +414,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.50  2003/12/07 19:36:55  lemmy
+[Bug #1162] Search tab's pane position always reset to default
+
 Revision 1.49  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -50,7 +51,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.53 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.54 2003/12/07 19:36:54 lemmy Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -196,7 +197,16 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( Enum.getPrefName( EnumState.CONNECTED, ServerPaneListener.class ), true );
 		preferenceStore.setDefault( Enum.getPrefName( EnumState.CONNECTING, ServerPaneListener.class ), true );
 		preferenceStore.setDefault( Enum.getPrefName( EnumState.CONNECTED_INITIATING, ServerPaneListener.class ), true );
-        
+
+		preferenceStore.setDefault( "searchSashWeights", "1,5" );
+
+		preferenceStore.setDefault( "UploadersPaneListenerBestFit", "-1" );
+		preferenceStore.setDefault( "ClientPaneListenerBestFit", "-1" );
+		preferenceStore.setDefault( "UploadPaneListenerBestFit", "-1" );
+		preferenceStore.setDefault( "DownloadPaneListenerBestFit", "-1" );
+		preferenceStore.setDefault( "ServerPaneListenerBestFit", "-1" );
+		
+		
         return preferenceStore;
     }
 
@@ -336,10 +346,31 @@ public class PreferenceLoader {
 	public static void setDefault(String string, int i) {
 		getPreferenceStore().setDefault(string, i);
 	}
+
+	public static void setValue(String string, int[] is) {
+		String result = "";
+		for ( int i = 0; i < is.length; i++ ) {
+			result += is[ i ] + ",";
+		}
+		getPreferenceStore().setValue( string, result.substring( 0, result.length() - 1 ) );
+	}
+
+	public static int[] getIntArray(String string) {
+		String temp = getPreferenceStore().getString( string ); 
+		String[] strings = RegExp.split( temp, ',' );
+		int[] ints = new int[ strings.length ];
+		for ( int i = 0; i < strings.length; i++ ) {
+			ints[ i ] = new Integer( strings[ i ] ).intValue();
+		}
+		return ints;
+	}
 }
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.54  2003/12/07 19:36:54  lemmy
+[Bug #1162] Search tab's pane position always reset to default
+
 Revision 1.53  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
