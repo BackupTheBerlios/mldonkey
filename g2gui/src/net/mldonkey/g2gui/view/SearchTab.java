@@ -26,6 +26,7 @@ import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.helper.CCLabel;
+import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.search.AlbumSearch;
@@ -55,7 +56,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.20 2003/09/03 14:47:54 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.21 2003/09/03 14:59:23 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -99,9 +100,8 @@ public class SearchTab extends GuiTab {
 	protected void createContents( Composite parent ) {
 		/* Create a two column page */		
 		tabFolderPage = new Composite( parent, SWT.NONE );
-		GridLayout gridLayout = new GridLayout();
+		GridLayout gridLayout = CGridLayout.createGL(2,0,0,3,0,false);
 		tabFolderPage.setLayout( gridLayout );
-		gridLayout.numColumns = 2;
 	
 		/* Create the "Left" and "Right" columns */
 		this.createLeftGroup ();
@@ -267,6 +267,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.21  2003/09/03 14:59:23  zet
+remove margin
+
 Revision 1.20  2003/09/03 14:47:54  zet
 add headers
 
