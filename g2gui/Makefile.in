@@ -4,14 +4,16 @@ FIND=@FIND@
 SED=@SED@
 OBJ_DIR=@OBJ_DIR@
 
-JAR_DIR=jar
+JAR_DIR=GCJ-jar
 SRC_DIR=src
 RES_DIR=resources
 
 SWT_ARGS=-fjni
 
 JAR_PATH=$(shell $(FIND) $(JAR_DIR) -name "*.jar" -printf "-I%p " )
-GCJ_ARGS=-c -w -Os -fjni $(JAR_PATH) -I$(JAR_DIR)/@RUNTIME_DIR@ -I$(JAR_DIR)/@SWT_DIR@ -Isrc -I.
+GCJ_ARGS=-c -w -Os -fjni $(JAR_PATH) -I$(JAR_DIR)/@SWT_DIR@ -Isrc -I.
+
+#GCJ_ARGS=-c -w -Os -fjni $(JAR_PATH) -I$(JAR_DIR)/@RUNTIME_DIR@ -I$(JAR_DIR)/@SWT_DIR@ -Isrc -I.
 
 G2GUI_JAVA_OBJECTS= $(shell $(FIND) $(SRC_DIR) -type f  -name "*.java"  ! -name ".\#*" -printf "%p ")
 G2GUI_O_OBJECTS=$(subst .java,.o,$(G2GUI_JAVA_OBJECTS))
@@ -26,7 +28,8 @@ ifeq ($(UNAME),Linux)
 	SYSTYPE=gtk
 	PROGRAM=g2gui-bin
 	LINK_ARGS= -s -static-libgcc -Wl,-rpath,.	
-	POST_COMPILE= cp ./build/g2gui-starter.example ./g2gui
+	POST_COMPILE=
+	#POST_COMPILE= cp ./build/g2gui-starter.example ./g2gui
 else
 	SYSTYPE=win
 	PROGRAM=g2gui.exe
@@ -93,6 +96,6 @@ mkobjdir :
 cleanobjs:
 	@echo "Cleaning up"
 	@find . -name "*.o" | xargs rm
-	@echo "All .o and .so files cleaned up."
+	@echo "All .o files cleaned up."
 
 clean: cleanobjs
