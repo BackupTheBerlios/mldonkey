@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.9 2003/08/31 12:27:31 dek Exp $ 
+ * @version $Id: About.java,v 1.10 2003/08/31 12:40:51 dek Exp $ 
  *
  */
 public class About {
@@ -233,6 +233,11 @@ public class About {
 	 */
 	protected void open() {
 		myShell.pack();
+		/*set the about-Dialog right in the middle of the Application*/
+		int positionX = myShell.getParent().getLocation().x + myShell.getParent().getSize().x / 2 - myShell.getSize().x / 2;
+		int positionY = myShell.getParent().getLocation().y + myShell.getParent().getSize().y / 2 - myShell.getSize().y / 2;
+		myShell.setLocation( positionX, positionY );
+		
 		myShell.open();		
 	}
 	
@@ -260,7 +265,7 @@ public class About {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.9 2003/08/31 12:27:31 dek Exp $ 
+	 * @version $Id: About.java,v 1.10 2003/08/31 12:40:51 dek Exp $ 
 	 *
 	 */
 	public class Link {
@@ -312,6 +317,9 @@ public class About {
 }
 /*
 $Log: About.java,v $
+Revision 1.10  2003/08/31 12:40:51  dek
+set position of about-dialog in middle of app
+
 Revision 1.9  2003/08/31 12:27:31  dek
 background color is now still ok, even if one has searched ;-)
 
