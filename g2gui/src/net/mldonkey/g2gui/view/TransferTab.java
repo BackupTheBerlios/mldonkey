@@ -74,7 +74,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.54 2003/09/04 20:40:49 vnc Exp $ 
+ * @version $Id: TransferTab.java,v 1.55 2003/09/13 22:25:01 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -298,7 +298,7 @@ public class TransferTab extends GuiTab  {
 				while ( it.hasNext() ) {
 					it.advance();
 					FileInfo fileInfo = ( FileInfo ) it.value();
-					totalRate += fileInfo.getRawRate();
+					totalRate += fileInfo.getRate();
 					if ( DownloadTableTreeContentProvider.isInteresting( fileInfo ) ) 
 						totalFiles++;
 					if ( fileInfo.getState().getState() == EnumFileState.QUEUED ) 
@@ -354,6 +354,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.55  2003/09/13 22:25:01  zet
+rate, !rawrate
+
 Revision 1.54  2003/09/04 20:40:49  vnc
 removed ugly "@" sign, added "files at" text instead
 
@@ -421,7 +424,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: vnc $
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression
