@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.view.search.*;
  * SearchTab
  *
  * @author $user$
- * @version $Id: SearchTab.java,v 1.1 2003/07/23 16:56:28 lemmstercvs01 Exp $ 
+ * @version $Id: SearchTab.java,v 1.2 2003/07/24 16:20:10 lemmstercvs01 Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -63,11 +63,12 @@ public class SearchTab extends GuiTab {
 		/* Set our name on the coolbar */
 		this.toolItem.setText( "Search" );
 		/* Set the toolitem image */		
-		inActiveIm = activeIm = MainTab.createTransparentImage(
+		inActiveIm = MainTab.createTransparentImage(
 				new Image( toolItem.getParent().getDisplay(),
-					"src/icons/search.png"),
-					toolItem.getParent() );
+					"src/icons/search.png" ),
+						toolItem.getParent() );
 		this.toolItem.setImage( inActiveIm );
+		activeIm = inActiveIm;
 
 		/* create the tab content */
 		this.createContents( this.content );
@@ -109,7 +110,7 @@ public class SearchTab extends GuiTab {
 		for ( int i = 0; i < tabs.length; i++ ) {
 			TabItem item = new TabItem( tabFolder, SWT.NONE );
 			item.setText( tabs[ i ].getTabName() );
-			item.setControl(tabs[ i ].createTabFolderPage( tabFolder ) );
+			item.setControl( tabs[ i ].createTabFolderPage( tabFolder ) );
 			item.setData( tabs[ i ] );
 		}
 	}
@@ -150,6 +151,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.2  2003/07/24 16:20:10  lemmstercvs01
+lots of changes
+
 Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
 initial commit
 

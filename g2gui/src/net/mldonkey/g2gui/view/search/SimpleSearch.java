@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.TabFolder;
  * SimpleSearch
  *
  * @author $user$
- * @version $Id: SimpleSearch.java,v 1.2 2003/07/23 19:49:17 zet Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.3 2003/07/24 16:20:10 lemmstercvs01 Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -52,7 +52,8 @@ public class SimpleSearch extends Search {
 	private String selectedMedia;
 
 	/**
-	 * @param core
+	 * @param core The parent CoreCommunication
+	 * @param tab The parent SearchTab
 	 */
 	public SimpleSearch( CoreCommunication core, SearchTab tab ) {
 		super( core, tab );
@@ -64,41 +65,12 @@ public class SimpleSearch extends Search {
 	public String getTabName() {
 		return "SimpleSearch";
 	}
-	
-	public void performSearch() {
-	
-		if ( ! text.getText().equals( "" ) ) {
-			/* generate a new search query */
-			SearchQuery query = new SearchQuery( core );
-				
-			/* the query string */
-			query.setSearchString( text.getText() );
-						
-			/* get the network id for this query */
-			NetworkInfo[] temp = core.getNetworkInfoMap().getNetworks();
-			for ( int i = 0; i < temp.length; i++ ) {
-				if ( temp[ i ].getNetworkName().equals( combo.getText() ) ) {
-					query.setNetwork( temp[ i ].getNetwork() );
-					break;										
-				}
-			}
-			/* which media is selected */							
-			if ( selectedMedia != null )
-			query.setMedia( selectedMedia );
-			/* now the query is ready to be send */
-			query.send();
-						
-			/* draw the empty search result */
-			new SearchResult( text.getText(), tab.getCTabFolder(), core, query.getSearchIdentifier() );	
-			text.setText("");
-		}
-		
-	}
 
 	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.search.Search#createTabFolderPage(org.eclipse.swt.widgets.TabFolder)
+	 * @see net.mldonkey.g2gui.view.search.Search#
+	 * createTabFolderPage(org.eclipse.swt.widgets.TabFolder)
 	 */
-	public Control createTabFolderPage(TabFolder tabFolder) {
+	public Control createTabFolderPage( TabFolder tabFolder ) {
 
 		/* the input field */
 		gridLayout = new GridLayout();
@@ -125,7 +97,7 @@ public class SimpleSearch extends Search {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = null;
 				}	
-			});
+			} );
 
 			gridData = new GridData();
 			gridData.horizontalSpan = 2;
@@ -136,7 +108,7 @@ public class SimpleSearch extends Search {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Audio";
 				}	
-			});
+			} );
 			
 			gridData = new GridData();
 			gridData.horizontalSpan = 2;
@@ -147,7 +119,7 @@ public class SimpleSearch extends Search {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Video";
 				}	
-			});
+			} );
 			
 			gridData = new GridData();
 			gridData.horizontalSpan = 2;
@@ -158,7 +130,7 @@ public class SimpleSearch extends Search {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Image";
 				}	
-			});
+			} );
 			
 			gridData = new GridData();
 			gridData.horizontalSpan = 2;
@@ -169,7 +141,7 @@ public class SimpleSearch extends Search {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Software";
 				}	
-			});
+			} );
 
 			/* search button */
 			ok = new Button( group, SWT.PUSH );
@@ -179,13 +151,48 @@ public class SimpleSearch extends Search {
 				public void widgetSelected( SelectionEvent event ) {
 					performSearch();
 				}		
-			});
+			} );
 		return group;		
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
+	 */
+	public void performSearch() {
+		if ( ! text.getText().equals( "" ) ) {
+			/* generate a new search query */
+			SearchQuery query = new SearchQuery( core );
+			
+			/* the query string */
+			query.setSearchString( text.getText() );
+					
+			/* get the network id for this query */
+			NetworkInfo[] temp = core.getNetworkInfoMap().getNetworks();
+			for ( int i = 0; i < temp.length; i++ ) {
+				if ( temp[ i ].getNetworkName().equals( combo.getText() ) ) {
+					query.setNetwork( temp[ i ].getNetwork() );
+					break;										
+				}
+			}
+			/* which media is selected */							
+			if ( selectedMedia != null )
+			query.setMedia( selectedMedia );
+			/* now the query is ready to be send */
+			query.send();
+						
+			/* draw the empty search result */
+			new SearchResult( text.getText(), tab.getCTabFolder(),
+							   core, query.getSearchIdentifier() );	
+			text.setText( "" );
+		}
 	}
 }
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.3  2003/07/24 16:20:10  lemmstercvs01
+lots of changes
+
 Revision 1.2  2003/07/23 19:49:17  zet
 press enter
 

@@ -31,15 +31,16 @@ import org.eclipse.jface.viewers.Viewer;
  * ResultTableContentProvider
  *
  * @author $user$
- * @version $Id: ResultTableContentProvider.java,v 1.1 2003/07/23 16:56:28 lemmstercvs01 Exp $ 
+ * @version $Id: ResultTableContentProvider.java,v 1.2 2003/07/24 16:20:10 lemmstercvs01 Exp $ 
  *
  */
 public class ResultTableContentProvider implements IStructuredContentProvider {
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#
+	 * getElements(java.lang.Object)
 	 */
-	public Object[] getElements(Object arg0) {
+	public Object[] getElements( Object arg0 ) {
 		List aList = ( List ) arg0;
 		return aList.toArray();
 	}
@@ -50,13 +51,17 @@ public class ResultTableContentProvider implements IStructuredContentProvider {
 	public void dispose() { }
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+	 * @see org.eclipse.jface.viewers.IContentProvider#
+	 * inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
-	public void inputChanged(Viewer arg0, Object arg1, Object arg2) { }
+	public void inputChanged( Viewer arg0, Object arg1, Object arg2 ) { }
 }
 
 /*
 $Log: ResultTableContentProvider.java,v $
+Revision 1.2  2003/07/24 16:20:10  lemmstercvs01
+lots of changes
+
 Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
 initial commit
 

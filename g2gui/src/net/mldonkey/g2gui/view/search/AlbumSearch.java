@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.TabFolder;
  * AlbumSearch
  *
  * @author $user$
- * @version $Id: AlbumSearch.java,v 1.1 2003/07/23 16:56:28 lemmstercvs01 Exp $ 
+ * @version $Id: AlbumSearch.java,v 1.2 2003/07/24 16:20:10 lemmstercvs01 Exp $ 
  *
  */
 public class AlbumSearch extends Search {
@@ -52,17 +52,26 @@ public class AlbumSearch extends Search {
 	}
 
 	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.search.Search#createTabFolderPage(org.eclipse.swt.widgets.TabFolder)
+	 * @see net.mldonkey.g2gui.view.search.Search#
+	 * createTabFolderPage(org.eclipse.swt.widgets.TabFolder)
 	 */
-	public Control createTabFolderPage(TabFolder tabFolder) {
-		// TODO Auto-generated method stub
+	public Control createTabFolderPage( TabFolder tabFolder ) {
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
+	 */
+	public void performSearch() {
 	}
 
 }
 
 /*
 $Log: AlbumSearch.java,v $
+Revision 1.2  2003/07/24 16:20:10  lemmstercvs01
+lots of changes
+
 Revision 1.1  2003/07/23 16:56:28  lemmstercvs01
 initial commit
 

@@ -30,6 +30,7 @@ import gnu.trove.TIntObjectIterator;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.NetworkInfoIntMap;
+import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
 
 import org.eclipse.swt.SWT;
@@ -48,12 +49,14 @@ import org.eclipse.swt.events.KeyEvent;
  * Search
  *
  * @author $user$
- * @version $Id: Search.java,v 1.3 2003/07/24 02:22:46 zet Exp $ 
+ * @version $Id: Search.java,v 1.4 2003/07/24 16:20:10 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Search {
 	protected CoreCommunication core;
 	protected SearchTab tab;
+	protected SearchQuery query;
+	
 	private GridData gridData;
 	private Label label;
 	protected Text text;
@@ -61,7 +64,8 @@ public abstract class Search {
 
 	/**
 	 * 
-	 * @param core
+	 * @param core The parent corecommunication
+	 * @param tab The parent searchtab
 	 */
 	public Search( CoreCommunication core, SearchTab tab ) {
 		this.core = core;
@@ -75,11 +79,21 @@ public abstract class Search {
 	public abstract String getTabName();
 
 	/**
-	 * @param tabFolder
-	 * @return
+	 * @param tabFolder The tabfolder to create the control in
+	 * @return a Control filled with the content of this obj
 	 */
 	public abstract Control createTabFolderPage( TabFolder tabFolder );
+
+	/**
+	 * create a searchquery, fill it and send it to mldonkey
+	 */
+	public abstract void performSearch();
 	
+	/**
+	 * Creates a blank input field for search strings
+	 * @param group The Group to display the box in
+	 * @param aString The Box header
+	 */
 	protected void createInputBox( Group group, String aString ) {
 		/* describe the box */
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -94,18 +108,20 @@ public abstract class Search {
 		text = new Text( group, SWT.SINGLE | SWT.BORDER );
 		text.setLayoutData( gridData );
 		text.addKeyListener( new KeyAdapter() {
-					public void keyPressed( KeyEvent e ) {
-						if ( e.character == SWT.CR ) {
-							performSearch(); 
-							
-						}
-					}		
-				} );	
+			public void keyPressed( KeyEvent e ) {
+				if ( e.character == SWT.CR ) {
+					performSearch(); 
+				}
+			}		
+		} );	
 	}
 	
-	public void performSearch() {
-	}
-	
+	/**
+	 * Creates a DropDown Box with all activated Networks inside 
+	 * (SWT.READ_ONLY)
+	 * @param group The Group to display the box in
+	 * @param aString The Box header
+	 */
 	protected void createNetworkBox( Group group, String aString ) {
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
 		gridData.horizontalSpan = 2;
@@ -134,16 +150,19 @@ public abstract class Search {
 		Object[] itemsArray = items.toArray();
 		String[] strings = new String[ itemsArray.length ];
 		for ( int i = 0; i < itemsArray.length; i++ ) {
-			strings[ i ] = (String) itemsArray[ i ];
+			strings[ i ] = ( String ) itemsArray[ i ];
 		}
 		combo.setItems( strings );
-		if (strings.length > 0) combo.setText( strings[ 0 ] );
-				
+		if ( strings.length > 0 )
+			combo.setText( strings[ 0 ] );
 	}
 }
 
 /*
 $Log: Search.java,v $
+Revision 1.4  2003/07/24 16:20:10  lemmstercvs01
+lots of changes
+
 Revision 1.3  2003/07/24 02:22:46  zet
 doesn't crash if no core is running
 
