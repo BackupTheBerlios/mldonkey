@@ -5,6 +5,9 @@
 	
 2003/11/21: vnc
 	* StatisticTab: fixed [Bug #1107] Big CPU-leak caused by StatisticsTab
+	
+2003/11/20: Dek
+	* Fixed bug with Gui-Protocol 17, now g2gui works with new CVS-mldonkey core
 
 2003/11/16: lemmy
 	* Search: fixed [Bug #1080] Searchbox should get focused when switching to searchtab
