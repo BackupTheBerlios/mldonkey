@@ -22,19 +22,28 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * Information
  *
  * @author markus
- * @version $Id: SimpleInformation.java,v 1.1 2003/06/18 13:30:56 dek Exp $ 
+ * @version $Id: SimpleInformation.java,v 1.2 2003/07/06 08:49:03 lemmstercvs01 Exp $ 
  *
  */
 public interface SimpleInformation extends Information {
+	/**
+	 * Reads an object from a MessageBuffer object
+	 * @param messageBuffer MessageBuffer to read from
+	 */
+	void readStream( MessageBuffer messageBuffer );
 }
 
 /*
 $Log: SimpleInformation.java,v $
+Revision 1.2  2003/07/06 08:49:03  lemmstercvs01
+refactored
+
 Revision 1.1  2003/06/18 13:30:56  dek
 Improved Communication Layer view <--> model by introducing a super-interface
 

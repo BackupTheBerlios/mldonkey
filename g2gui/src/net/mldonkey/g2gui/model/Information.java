@@ -21,26 +21,22 @@
  * 
  */
 package net.mldonkey.g2gui.model;
-import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * Information
  *
  * @author $user$
- * @version $Id: Information.java,v 1.5 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: Information.java,v 1.6 2003/07/06 08:49:03 lemmstercvs01 Exp $ 
  *
  */
 public interface Information {
-	/**
-	 * Reads an object from a MessageBuffer object
-	 * @param messageBuffer MessageBuffer to read from
-	 */
-	void readStream( MessageBuffer messageBuffer );
-
 }
 
 /*
 $Log: Information.java,v $
+Revision 1.6  2003/07/06 08:49:03  lemmstercvs01
+refactored
+
 Revision 1.5  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 
