@@ -20,14 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree.clientTable;
+package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
+import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -39,10 +39,10 @@ import org.eclipse.swt.widgets.Display;
  * TableContentProvider
  *
  *
- * @version $Id: TableContentProvider.java,v 1.7 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: ClientTableContentProvider.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
-public class TableContentProvider implements IStructuredContentProvider, Observer {
+public class ClientTableContentProvider implements IStructuredContentProvider, Observer {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
@@ -109,7 +109,10 @@ public class TableContentProvider implements IStructuredContentProvider, Observe
 }
 
 /*
-$Log: TableContentProvider.java,v $
+$Log: ClientTableContentProvider.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.7  2003/09/18 14:11:01  zet
 revert
 

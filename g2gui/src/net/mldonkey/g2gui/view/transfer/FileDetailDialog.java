@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree;
+package net.mldonkey.g2gui.view.transfer;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.33 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer, DisposeListener {
@@ -491,6 +491,9 @@ public class FileDetailDialog implements Observer, DisposeListener {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.33  2003/09/18 14:11:01  zet
 revert
 

@@ -20,9 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree;
+package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -31,7 +32,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.15 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: DownloadTableTreeSorter.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
@@ -133,6 +134,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.15  2003/09/18 14:11:01  zet
 revert
 

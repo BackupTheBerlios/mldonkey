@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree;
+package net.mldonkey.g2gui.view.transfer;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * TreeClientInfo
  *
  *
- * @version $Id: TreeClientInfo.java,v 1.8 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: TreeClientInfo.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
 public class TreeClientInfo {
@@ -65,6 +65,9 @@ public class TreeClientInfo {
 }
 /*
 $Log: TreeClientInfo.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.8  2003/09/18 14:11:01  zet
 revert
 

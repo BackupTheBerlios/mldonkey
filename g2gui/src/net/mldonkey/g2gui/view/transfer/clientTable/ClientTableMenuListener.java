@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree.clientTable;
+package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transferTree.ClientDetailDialog;
+import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -43,12 +43,12 @@ import org.eclipse.jface.viewers.TableViewer;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.6 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: ClientTableMenuListener.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
-public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
+public class ClientTableMenuListener implements ISelectionChangedListener, IMenuListener {
 
-	private TableContentProvider tableContentProvider;
+	private ClientTableContentProvider tableContentProvider;
 	private TableViewer tableViewer;
 	private CoreCommunication core;
 	private ClientInfo selectedClientInfo;
@@ -59,11 +59,11 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	 * @param The parent TableViewer
 	 * @param The CoreCommunication supporting this with data
 	 */
-	public TableMenuListener( TableViewer tableViewer, CoreCommunication core ) {
+	public ClientTableMenuListener( TableViewer tableViewer, CoreCommunication core ) {
 		super();
 		this.tableViewer = tableViewer;
 		this.core = core;
-		this.tableContentProvider = ( TableContentProvider ) this.tableViewer.getContentProvider();
+		this.tableContentProvider = ( ClientTableContentProvider ) this.tableViewer.getContentProvider();
 	}
 
 	/* (non-Javadoc)
@@ -84,7 +84,6 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			if (o instanceof ClientInfo)
 				selectedClients.add((ClientInfo) o);	
 		}	
-			
 			
 	}
 
@@ -128,7 +127,10 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 }
 
 /*
-$Log: TableMenuListener.java,v $
+$Log: ClientTableMenuListener.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.6  2003/09/18 14:11:01  zet
 revert
 

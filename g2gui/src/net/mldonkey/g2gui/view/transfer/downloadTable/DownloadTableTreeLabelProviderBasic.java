@@ -20,20 +20,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree;
+package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
 import org.eclipse.swt.graphics.Image;
 
 /**
  * DownloadTableTreeLabelProviderBasic
  *
- * @version $Id: DownloadTableTreeLabelProviderBasic.java,v 1.6 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProviderBasic.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProviderBasic
@@ -117,6 +118,9 @@ public class DownloadTableTreeLabelProviderBasic
 
 /*
 $Log: DownloadTableTreeLabelProviderBasic.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.6  2003/09/18 14:11:01  zet
 revert
 

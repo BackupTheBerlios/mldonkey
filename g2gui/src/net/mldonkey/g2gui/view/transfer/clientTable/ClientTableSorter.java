@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree.clientTable;
+package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
@@ -35,10 +35,10 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * TableSorter
  *
  *
- * @version $Id: TableSorter.java,v 1.7 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: ClientTableSorter.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
-public class TableSorter extends ViewerSorter {
+public class ClientTableSorter extends ViewerSorter {
 	
 	private boolean lastSort = true;
 	private int lastColumnIndex = 0;
@@ -47,13 +47,11 @@ public class TableSorter extends ViewerSorter {
 	/**
 	 * Creates a new viewer sorter
 	 */
-	public TableSorter() {
+	public ClientTableSorter() {
 		super();
 	}
-
 	
 	public int compare( Viewer viewer, Object obj1, Object obj2 ) {
-		
 		
 		switch (columnIndex) {
 			
@@ -79,7 +77,7 @@ public class TableSorter extends ViewerSorter {
 				String s1, s2;
 				
 				IBaseLabelProvider prov = ((ContentViewer)viewer).getLabelProvider();
-				TableLabelProvider lprov = (TableLabelProvider) ((TableViewer)viewer).getLabelProvider();
+				ClientTableLabelProvider lprov = (ClientTableLabelProvider) ((TableViewer)viewer).getLabelProvider();
 				
 				s1 = lprov.getColumnText(obj1, columnIndex);
 				s2 = lprov.getColumnText(obj2, columnIndex);
@@ -129,7 +127,10 @@ public class TableSorter extends ViewerSorter {
 }
 
 /*
-$Log: TableSorter.java,v $
+$Log: ClientTableSorter.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.7  2003/09/18 14:11:01  zet
 revert
 

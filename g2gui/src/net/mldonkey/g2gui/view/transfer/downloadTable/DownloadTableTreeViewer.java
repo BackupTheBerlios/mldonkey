@@ -20,13 +20,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree;
+package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.TransferTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
+import net.mldonkey.g2gui.view.transfer.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -52,10 +55,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
- * DownloadTable
+ * DownloadTableTreeViewer
  *
- *
- * @version $Id: DownloadTableTreeViewer.java,v 1.26 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -332,6 +334,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.26  2003/09/18 14:11:01  zet
 revert
 

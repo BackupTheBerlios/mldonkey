@@ -25,7 +25,6 @@ package net.mldonkey.g2gui.view;
 import gnu.trove.TIntObjectIterator;
 
 import java.text.DecimalFormat;
-
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -37,25 +36,19 @@ import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
-import net.mldonkey.g2gui.view.transferTree.DownloadPaneMenuListener;
-import net.mldonkey.g2gui.view.transferTree.DownloadTableTreeContentProvider;
-import net.mldonkey.g2gui.view.transferTree.DownloadTableTreeViewer;
-import net.mldonkey.g2gui.view.transferTree.clientTable.TableContentProvider;
-import net.mldonkey.g2gui.view.transferTree.clientTable.TableLabelProvider;
-import net.mldonkey.g2gui.view.transferTree.clientTable.TableMenuListener;
-import net.mldonkey.g2gui.view.transferTree.clientTable.TableSorter;
+import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
+import net.mldonkey.g2gui.view.transfer.DownloadPaneMenuListener;
+import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableViewer;
+import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeContentProvider;
+import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeViewer;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -63,16 +56,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.59 2003/09/20 01:23:18 zet Exp $
+ * @version $Id: TransferTab.java,v 1.60 2003/09/20 14:39:48 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -196,45 +185,10 @@ public class TransferTab extends GuiTab {
      * @param parentSash 
      */
     public void createClientTableViewer( Composite parent, final SashForm parentSash ) {
-        final String[] COLUMN_LABELS = { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
-        final int[] COLUMN_ALIGNMENT = { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
-        final int[] COLUMN_DEFAULT_WIDTHS = { 200, 100, 75, 75 };
-        clientTableViewer = new CustomTableViewer( parent, SWT.FULL_SELECTION | SWT.MULTI );
-        Table table = clientTableViewer.getTable();
-        table.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean( "displayGridLines" ) );
-        clientTableViewer.getTable().setHeaderVisible( true );
-        for ( int i = 0; i < COLUMN_LABELS.length; i++ ) {
-            PreferenceStore p = PreferenceLoader.getPreferenceStore();
-            p.setDefault( COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ] );
-            TableColumn tableColumn = new TableColumn( table, COLUMN_ALIGNMENT[ i ] );
-            tableColumn.setText( G2GuiResources.getString( COLUMN_LABELS[ i ] ) );
-            tableColumn.setWidth( p.getInt( COLUMN_LABELS[ i ] ) );
-            final int columnIndex = i;
-            tableColumn.addDisposeListener( new DisposeListener() {
-                    public synchronized void widgetDisposed( DisposeEvent e ) {
-                        PreferenceStore p = PreferenceLoader.getPreferenceStore();
-                        TableColumn thisColumn = ( TableColumn ) e.widget;
-                        p.setValue( COLUMN_LABELS[ columnIndex ], thisColumn.getWidth() );
-                    }
-                } );
-            tableColumn.addListener( SWT.Selection,
-                                     new Listener() {
-                    public void handleEvent( Event e ) {
-                        ( ( TableSorter ) clientTableViewer.getSorter() ).setColumnIndex( columnIndex );
-                        clientTableViewer.refresh();
-                    }
-                } );
-        }
-        clientTableViewer.setContentProvider( new TableContentProvider() );
-        clientTableViewer.setLabelProvider( new TableLabelProvider() );
-        TableMenuListener tableMenuListener = new TableMenuListener( clientTableViewer, mldonkey );
-        clientTableViewer.addSelectionChangedListener( tableMenuListener );
-        MenuManager popupMenu = new MenuManager( "" );
-        popupMenu.setRemoveAllWhenShown( true );
-        popupMenu.addMenuListener( tableMenuListener );
-        clientTableViewer.getTable().setMenu( popupMenu.createContextMenu( clientTableViewer.getTable() ) );
-        clientTableViewer.setSorter( new TableSorter() );
+     
+     	ClientTableViewer cTV = new ClientTableViewer( parent, mldonkey );
+     	clientTableViewer = cTV.getTableViewer();
+        
         Composite bottomBar = new Composite( parent, SWT.NONE );
         GridLayout gridLayout = CGridLayout.createGL( 1, 0, 0, 0, 0, false );
         bottomBar.setLayout( gridLayout );
@@ -250,7 +204,7 @@ public class TransferTab extends GuiTab {
                     if ( downloadTableTreeViewer != null )
                         downloadTableTreeViewer.updateClientsTable( false );
                 }
-            } );
+        } );
     }
 
     /**
@@ -333,6 +287,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.60  2003/09/20 14:39:48  zet
+move transfer package
+
 Revision 1.59  2003/09/20 01:23:18  zet
 *** empty log message ***
 

@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.server.ServerTableContentProvider;
 import net.mldonkey.g2gui.view.server.ServerTableLabelProvider;
 import net.mldonkey.g2gui.view.server.ServerTableMenuListener;
 import net.mldonkey.g2gui.view.server.ServerTableSorter;
-import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
+import net.mldonkey.g2gui.view.transfer.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.32 2003/09/18 09:44:57 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.33 2003/09/20 14:39:48 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -418,6 +418,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.33  2003/09/20 14:39:48  zet
+move transfer package
+
 Revision 1.32  2003/09/18 09:44:57  lemmster
 checkstyle
 

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree.clientTable;
+package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
@@ -38,10 +38,10 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: TableLabelProvider.java,v 1.5 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: ClientTableLabelProvider.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
-public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
+public class ClientTableLabelProvider implements ITableLabelProvider, IColorProvider {
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
@@ -81,13 +81,13 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 				return "";
 		}
 	}
+	
 	public String getClientConnection(ClientInfo clientInfo) {
 			if ( clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) 
 				return "firewalled";			
 			else
 				return "direct";	
 	}
-
 
 	public String getClientActivity( ClientInfo clientInfo) {
 		if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING
@@ -96,7 +96,6 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 		else 
 			return ""+clientInfo.getState().getState().toString() + " (Q: " + clientInfo.getState().getRank() +")";
 	}	
-
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
@@ -139,7 +138,10 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 }
 
 /*
-$Log: TableLabelProvider.java,v $
+$Log: ClientTableLabelProvider.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.5  2003/09/18 14:11:01  zet
 revert
 

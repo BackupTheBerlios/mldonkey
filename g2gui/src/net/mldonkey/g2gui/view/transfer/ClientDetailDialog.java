@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree;
+package net.mldonkey.g2gui.view.transfer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.27 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer, DisposeListener {
@@ -301,6 +301,9 @@ public class ClientDetailDialog implements Observer, DisposeListener {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.27  2003/09/18 14:11:01  zet
 revert
 

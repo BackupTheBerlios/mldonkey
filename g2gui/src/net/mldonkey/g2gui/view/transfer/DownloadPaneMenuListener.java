@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree;
+package net.mldonkey.g2gui.view.transfer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeContentProvider;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -43,13 +44,15 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
+ * 
  * DownloadPaneMenuListener
  *
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.4 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: DownloadPaneMenuListener.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener {
+
 
 	 private static String[] ExtensionNames = {
 		 G2GuiResources.getString("TT_DOWNLOAD_FILTER_AUDIO"), 
@@ -495,6 +498,9 @@ public class DownloadPaneMenuListener implements IMenuListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.4  2003/09/18 14:11:01  zet
 revert
 

@@ -23,7 +23,6 @@
 package net.mldonkey.g2gui.model;
 
 import java.text.DecimalFormat;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,13 +40,13 @@ import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
+import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
 /**
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.58 2003/09/20 01:31:36 zet Exp $
+ * @version $Id: FileInfo.java,v 1.59 2003/09/20 14:38:40 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -763,6 +762,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.59  2003/09/20 14:38:40  zet
+move transfer package
+
 Revision 1.58  2003/09/20 01:31:36  zet
 *** empty log message ***
 

@@ -21,7 +21,7 @@
  * 
  */
  
-package net.mldonkey.g2gui.view.transferTree;
+package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import java.text.DecimalFormat;
 
@@ -29,6 +29,8 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.transfer.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -39,7 +41,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.22 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -158,6 +160,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.22  2003/09/18 14:11:01  zet
 revert
 

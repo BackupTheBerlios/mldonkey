@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree;
+package net.mldonkey.g2gui.view.transfer;
 
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Widget;
  * CustomTableViewer
  *
  *
- * @version $Id: CustomTableViewer.java,v 1.7 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: CustomTableViewer.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
 public class CustomTableViewer extends TableViewer {
@@ -117,6 +117,9 @@ public class CustomTableViewer extends TableViewer {
 }
 /*
 $Log: CustomTableViewer.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.7  2003/09/18 14:11:01  zet
 revert
 

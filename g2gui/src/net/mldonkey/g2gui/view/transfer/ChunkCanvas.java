@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree;
+package net.mldonkey.g2gui.view.transfer;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Display;
  * ChunkView
  *
  *
- * @version $Id: ChunkCanvas.java,v 1.22 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -459,6 +459,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
 Revision 1.22  2003/09/18 14:11:01  zet
 revert
 

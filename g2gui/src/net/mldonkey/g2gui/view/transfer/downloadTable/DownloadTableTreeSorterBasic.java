@@ -20,53 +20,54 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-package net.mldonkey.g2gui.view.transferTree;
+package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
-import net.mldonkey.g2gui.model.enum.EnumPriority;
+import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 /**
- * DownloadTableTreeSorterAdvanced
+ * DownloadTableTreeSorterBasic
  *
- * @version $Id: DownloadTableTreeSorterAdvanced.java,v 1.6 2003/09/18 14:11:01 zet Exp $ 
+ * @version $Id: DownloadTableTreeSorterBasic.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
  *
  */
-public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
-	
+public class DownloadTableTreeSorterBasic extends DownloadTableTreeSorter {
+
+
+	public DownloadTableTreeSorterBasic () {
+		super();
+		// sort "rate" by default
+		columnIndex = 5;
+		lastColumnIndex = 5;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ViewerSorter#isSorterProperty(java.lang.Object, java.lang.String)
 	 */
 	public boolean isSorterProperty(Object element, String property) {
+	
+		// if you return true, the table will refresh() and flicker more often
+		// but the table maintains sort order, so try to be precise with updates.
 		if (element instanceof FileInfo
 			&& maintainSortOrder) {
-				
-			switch (columnIndex) {	
-				case 4: 
-					return (property.equals(FileInfo.CHANGED_DOWNLOADED) ? true : false);
-						
-				case 5: 
-					return (property.equals(FileInfo.CHANGED_PERCENT) ? true : false);	
-	
-				case 7:
-					return (property.equals(FileInfo.CHANGED_AVAIL) ? true : false);
-					
-				case 8: 
-					return (property.equals(FileInfo.CHANGED_RATE) ? true : false);
-	
-				case 10: 
-					return (property.equals(FileInfo.CHANGED_ETA) ? true : false);
-	
-				case 12: 
-					return (property.equals(FileInfo.CHANGED_LAST) ? true : false);
-	
-				default: 
-					return false;
-			}
+				switch (columnIndex) {	
+					case 4: 
+						return (property.equals(FileInfo.CHANGED_PERCENT) ? true : false);	
+
+					case 5: 
+						return (property.equals(FileInfo.CHANGED_RATE) ? true : false);
+
+					case 6: 
+						return (property.equals(FileInfo.CHANGED_ETA) ? true : false);
+
+					default: 
+						return false;
+				}
 		}
 		return false;
 	}
@@ -106,27 +107,12 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
 						fileInfo1.getSize(),
 						fileInfo2.getSize());
 
-				case 4 : // downloaded
-					return compareLongs(
-						fileInfo1.getDownloaded(),
-						fileInfo2.getDownloaded());
-
-				case 5 : // percent
+				case 4 : // percent
 					return compareDoubles(
 						fileInfo1.getPerc(),
 						fileInfo2.getPerc());
-					
-				case 6 : // sources getSources() is 0 ?
-					return compareIntegers(
-						fileInfo1.getClientInfos().size(),
-						fileInfo2.getClientInfos().size());		
-
-				case 7: // relative availability
-					return compareIntegers(
-						fileInfo1.getRelativeAvail(),
-						fileInfo2.getRelativeAvail());
-
-				case 8 : // rate - paused/queued on the bottom
+								
+				case 5 : // rate - paused/queued on the bottom
 						if (fileInfo1.getState().getState() == EnumFileState.DOWNLOADED)
 							return -1;
 						else if (fileInfo2.getState().getState() == EnumFileState.DOWNLOADED)
@@ -144,13 +130,8 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
 							return compareDoubles(
 								fileInfo1.getRate(),
 								fileInfo2.getRate());
-							
-				case 9 : // numChunks
-					return compareIntegers(
-						fileInfo1.getNumChunks(),
-						fileInfo2.getNumChunks());
 		
-				case 10 : // eta - nulls on the bottom
+				case 6 : // eta - nulls on the bottom
 				
 					labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
 					if (labelProvider.getColumnText(e1, columnIndex).equals("")) 
@@ -161,24 +142,7 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
 						return compareLongs(
 						fileInfo1.getETA(),
 						fileInfo2.getETA());
-					
-					
-				case 11: // priority
-					if (fileInfo1.getPriority() == EnumPriority.LOW)
-						return (lastSort ? -1 : 1);
-					else if (fileInfo1.getPriority() == EnumPriority.HIGH)
-						return (lastSort ? 1 : -1);	
-					else {
-						if (fileInfo2.getPriority() == EnumPriority.LOW)
-							return (lastSort ? 1 : -1);
-						else return (lastSort ? -1 : 1);
-					}
-			
-				case 12: // last
-					return compareIntegers(fileInfo1.getOffset(), fileInfo2.getOffset());
-				case 13: // age
-					return compareLongs (Long.parseLong(fileInfo1.getAge()), 
-										Long.parseLong(fileInfo2.getAge()));		
+				
 				default :
 					return 0;
 
@@ -208,11 +172,7 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
 					return compareIntegers(
 						treeClientInfo1.getClientInfo().getState().getRank(),
 						treeClientInfo2.getClientInfo().getState().getRank());
-					
-				case 8: // numChunks 
-				
-					return compareIntegers(treeClientInfo1.getClientInfo().getNumChunks( treeClientInfo1.getFileInfo() ),
-											treeClientInfo2.getClientInfo().getNumChunks( treeClientInfo2.getFileInfo() ) );
+			
 				default :
 					return 0;
 			}
@@ -222,13 +182,14 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
 	}
 	
 }
-/*
-$Log: DownloadTableTreeSorterAdvanced.java,v $
-Revision 1.6  2003/09/18 14:11:01  zet
-revert
 
-Revision 1.4  2003/09/15 22:10:32  zet
-add availability %, refresh delay option
+/*
+$Log: DownloadTableTreeSorterBasic.java,v $
+Revision 1.1  2003/09/20 14:39:21  zet
+move transfer package
+
+Revision 1.5  2003/09/18 14:11:01  zet
+revert
 
 Revision 1.3  2003/09/14 03:37:43  zet
 changedProperties
