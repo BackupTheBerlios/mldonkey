@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * InfoList
  * 
  * @author ${user}
- * @version $$Id: InfoCollection.java,v 1.2 2003/06/16 15:32:43 lemmstercvs01 Exp $$ 
+ * @version $$Id: InfoCollection.java,v 1.3 2003/06/17 12:10:17 lemmstercvs01 Exp $$ 
  */
 public interface InfoCollection {
 	
@@ -43,9 +43,18 @@ public interface InfoCollection {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	void update( MessageBuffer messageBuffer );
+	
+	/**
+	 * Retuns the size of this object
+	 * @return int a size
+	 */
+	int size();
 }
 /*
 $$Log: InfoCollection.java,v $
+$Revision 1.3  2003/06/17 12:10:17  lemmstercvs01
+$some methods added
+$
 $Revision 1.2  2003/06/16 15:32:43  lemmstercvs01
 $changed some modifiers
 $

@@ -29,7 +29,7 @@ import gnu.trove.TIntObjectIterator;
  * InfoMap
  *
  * @author $user$
- * @version $Id: InfoIntMap.java,v 1.1 2003/06/16 21:47:19 lemmstercvs01 Exp $ 
+ * @version $Id: InfoIntMap.java,v 1.2 2003/06/17 12:10:17 lemmstercvs01 Exp $ 
  *
  */
 public abstract class InfoIntMap implements InfoCollection {
@@ -52,10 +52,21 @@ public abstract class InfoIntMap implements InfoCollection {
 	public TIntObjectIterator iterator() {
 		return this.infoIntMap.iterator();
 	}
+
+	/**
+	 * The number of elems in this object
+	 * @return int the size
+	 */
+	public int size() {
+		return this.infoIntMap.size();
+	}
 }
 
 /*
 $Log: InfoIntMap.java,v $
+Revision 1.2  2003/06/17 12:10:17  lemmstercvs01
+some methods added
+
 Revision 1.1  2003/06/16 21:47:19  lemmstercvs01
 just refactored (name changed)
 

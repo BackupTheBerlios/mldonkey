@@ -30,7 +30,7 @@ import java.util.List;
  * InfoList
  *
  * @author $user$
- * @version $Id: InfoList.java,v 1.6 2003/06/16 15:32:43 lemmstercvs01 Exp $ 
+ * @version $Id: InfoList.java,v 1.7 2003/06/17 12:10:17 lemmstercvs01 Exp $ 
  *
  */
 public abstract class InfoList implements InfoCollection {
@@ -53,10 +53,22 @@ public abstract class InfoList implements InfoCollection {
 	public Iterator iterator() {
 		return this.infoList.iterator();
 	}
+	
+	/**
+	 * The number of elems in this object
+	 * @return int a size
+	 */
+	public int size() {
+		return this.infoList.size();
+	}
+	
 }
 
 /*
 $Log: InfoList.java,v $
+Revision 1.7  2003/06/17 12:10:17  lemmstercvs01
+some methods added
+
 Revision 1.6  2003/06/16 15:32:43  lemmstercvs01
 changed some modifiers
 

@@ -22,13 +22,16 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.util.Collection;
+import java.util.Set;
+
 import gnu.trove.THashMap;
 
 /**
  * InfoMap
  *
  * @author $user$
- * @version $Id: InfoMap.java,v 1.2 2003/06/16 21:48:38 lemmstercvs01 Exp $ 
+ * @version $Id: InfoMap.java,v 1.3 2003/06/17 12:10:17 lemmstercvs01 Exp $ 
  *
  */
 public abstract class InfoMap implements InfoCollection {
@@ -43,10 +46,55 @@ public abstract class InfoMap implements InfoCollection {
 	public InfoMap() {
 		this.infoMap = new THashMap();
 	}
+	
+	/**
+	 * An EntrySet of this Map
+	 * @return An EntrySet of this Map
+	 */
+	public Set entrySet() {
+		return this.infoMap.entrySet();
+	}
+	
+	/**
+	 * A Set of keys
+	 * @return A Set of keys
+	 */
+	public Set keySet() {
+		return this.infoMap.keySet();
+	}
+	
+	/**
+	 * A Collection of values
+	 * @return A Collection of values
+	 */
+	public Collection values() {
+		return this.infoMap.values();
+	}
+	
+	/**
+	 * Get a specific Information object 
+	 * @param key An object key
+	 * @return An Information object
+	 */
+	public Information get( Object key ) {
+		return ( Information ) this.infoMap.get( key );
+	}
+	
+	/**
+	 * The number of elems in this object
+	 * @return int a size
+	 */
+	public int size() {
+		return this.infoMap.size();
+	}
+	
 }
 
 /*
 $Log: InfoMap.java,v $
+Revision 1.3  2003/06/17 12:10:17  lemmstercvs01
+some methods added
+
 Revision 1.2  2003/06/16 21:48:38  lemmstercvs01
 class hierarchy changed
 
