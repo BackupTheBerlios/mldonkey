@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.*;
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.4 2003/06/29 18:25:03 dek Exp $ 
+ * @version $Id: General.java,v 1.5 2003/06/29 18:58:57 dek Exp $ 
  *
  */
 public class General extends PreferencePage {
@@ -83,13 +83,21 @@ public class General extends PreferencePage {
 	 * options that have changed
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
-	public boolean performOk(){			
-		 if (clientNameField!= null){		 
+	public boolean performOk(){	
+		/* only perform, if this tab has been 
+		 * initialized (checked by the existance of the clientNameField)
+		 */		
+		 if (clientNameField!= null){		
+		 	
+		 	/* This is the structure all Options have to ve handled to avoid senseless traffic
+		 	 * for setting options, that have not changed.
+		 	 */		 	 
 			if (!clientName.equals(clientNameField.getStringValue()))
 		 		{mldonkey.setOption("client_name",clientNameField.getStringValue());
 		 		}
-		 }
-		 //Dek - ([emule.de] AND [emule] suck)
+		 	/*any more settings in here, got the syntax?*/	
+		 		
+		 }		
 		return super.performOk();		
 	}
 	
@@ -101,6 +109,9 @@ public class General extends PreferencePage {
 
 /*
 $Log: General.java,v $
+Revision 1.5  2003/06/29 18:58:57  dek
+saving values to disk/mldonkey starts working
+
 Revision 1.4  2003/06/29 18:25:03  dek
 setting clientname now works
 
