@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Composite;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.39 2003/10/21 17:00:45 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.40 2003/10/21 17:06:27 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -213,10 +213,20 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		( ( ServerTableViewer ) ourTableViewer ).updateDisplay();
 		super.updateDisplay();
 	}
+
+	/**
+	 * @return
+	 */
+	public OurTableViewer getOurTableViewer() {
+		return ourTableViewer;
+	}
 }
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.40  2003/10/21 17:06:27  lemmster
+fix manage servers from statusline
+
 Revision 1.39  2003/10/21 17:00:45  lemmster
 class hierarchy for tableviewer
 

@@ -28,6 +28,7 @@ import net.mldonkey.g2gui.view.ServerTab;
 import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.server.ServerTableViewer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -38,7 +39,7 @@ import org.eclipse.jface.action.Separator;
  * NetworkItemMenuListener
  *
  *
- * @version $Id: NetworkItemMenuListener.java,v 1.8 2003/10/17 03:36:43 zet Exp $
+ * @version $Id: NetworkItemMenuListener.java,v 1.9 2003/10/21 17:06:27 lemmster Exp $
  *
  */
 public class NetworkItemMenuListener implements IMenuListener {
@@ -126,7 +127,8 @@ public class NetworkItemMenuListener implements IMenuListener {
 
         public void run() {
             statusline.getMainTab().setActive( serverTab );
-            ( ( ServerTab ) serverTab ).setFilter( network.getNetworkType() );
+            ( ( ServerTableViewer )( ( ServerTab ) serverTab ).getOurTableViewer() )
+            	.setFilter( network.getNetworkType() );
         }
     }
 
@@ -144,6 +146,9 @@ public class NetworkItemMenuListener implements IMenuListener {
 
 /*
 $Log: NetworkItemMenuListener.java,v $
+Revision 1.9  2003/10/21 17:06:27  lemmster
+fix manage servers from statusline
+
 Revision 1.8  2003/10/17 03:36:43  zet
 use toolbar
 
