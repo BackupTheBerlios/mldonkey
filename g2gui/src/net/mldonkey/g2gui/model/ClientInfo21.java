@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.view.G2Gui;
 /**
  * ClientInfo21.java
  *
- * @version $Id: ClientInfo21.java,v 1.4 2004/03/26 18:11:03 dek Exp $ 
+ * @version $Id: ClientInfo21.java,v 1.5 2004/03/27 15:31:53 dek Exp $ 
  *
  */
 public class ClientInfo21 extends ClientInfo20 {
@@ -78,6 +78,10 @@ public class ClientInfo21 extends ClientInfo20 {
 		super.readState(messageBuffer);
 		if (this.getState() == EnumState.CONNECTED_DOWNLOADING) {
 			fileNumber = messageBuffer.readInt32();
+			/*we know, we are a client for this file, 
+			 * so we put ourselves in the list*/
+			if (parent.getFileInfoIntMap().contains(fileNumber))
+				parent.getFileInfoIntMap().get(fileNumber).addClientInfo(this);
 		}		
 		
 	}
@@ -91,6 +95,9 @@ public class ClientInfo21 extends ClientInfo20 {
 
 /*
  $Log: ClientInfo21.java,v $
+ Revision 1.5  2004/03/27 15:31:53  dek
+ put client info in file-list if know to be uploading
+
  Revision 1.4  2004/03/26 18:11:03  dek
  some more profiling and mem-saving option (hopefully)  introduced
 
