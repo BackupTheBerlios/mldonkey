@@ -46,7 +46,7 @@ import gnu.trove.TIntArrayList;
 /**
  * GraphHistory
  *
- * @version $Id: GraphHistory.java,v 1.1 2003/09/20 22:08:41 zet Exp $
+ * @version $Id: GraphHistory.java,v 1.2 2003/10/17 15:47:14 zet Exp $
  *
  */
 public class GraphHistory implements PaintListener {
@@ -55,7 +55,11 @@ public class GraphHistory implements PaintListener {
     private Canvas canvas;
     private TIntArrayList maxList;
     private TIntArrayList avgList;
-
+	
+	private Color gridColor = PreferenceLoader.loadColour( "graphGridColor" );
+	private Color backgroundColor = PreferenceLoader.loadColour( "graphBackgroundColor" );
+	private Color textColor = PreferenceLoader.loadColour( "graphTextColor" );
+   
     public GraphHistory( Graph graph ) {
         this.graph = graph;
         this.maxList = graph.getMaxList(  );
@@ -96,13 +100,10 @@ public class GraphHistory implements PaintListener {
         Image imageBuffer = new Image( shell.getDisplay(  ), shell.getClientArea(  ) );
         GC gc = new GC( imageBuffer );
 
-        Color black = shell.getDisplay(  ).getSystemColor( SWT.COLOR_BLACK );
-
-        gc.setBackground( black );
+        gc.setBackground( backgroundColor );
         gc.fillRectangle( 0, 0, shell.getClientArea(  ).width, shell.getClientArea(  ).height );
 
         // draw grid
-        Color gridColor = new Color( null, 0, 128, 64 );
         gc.setForeground( gridColor );
 
         // vertical lines
@@ -113,8 +114,6 @@ public class GraphHistory implements PaintListener {
         for ( int i = (int) height + 1; i > 0; i -= 20 )
             gc.drawLine( 0, i, width + 1, i );
 
-        gridColor.dispose(  );
-
         // looks worse when under the grid     
         drawGraph( gc );
 
@@ -124,11 +123,8 @@ public class GraphHistory implements PaintListener {
     }
 
     private void drawGraph( GC gc ) {
-        Color black = shell.getDisplay(  ).getSystemColor( SWT.COLOR_BLACK );
-        Color white = shell.getDisplay(  ).getSystemColor( SWT.COLOR_WHITE );
-
         if ( maxList.size(  ) == 0 ) {
-            gc.setForeground( white );
+            gc.setForeground( textColor );
             gc.drawText( "No hourly history available yet...", 0, 0 );
 
             return;
@@ -157,7 +153,7 @@ public class GraphHistory implements PaintListener {
         float zoom = ( height - 10f ) / maximum;
         int xCoord = 0;
 
-        gc.setForeground( white );
+        gc.setForeground( textColor );
 
         for ( int i = 0; i < maxList.size(  ); i++ ) {
             maxValue = maxList.getQuick( i );
@@ -187,6 +183,9 @@ public class GraphHistory implements PaintListener {
 
 /*
 $Log: GraphHistory.java,v $
+Revision 1.2  2003/10/17 15:47:14  zet
+graph colour prefs
+
 Revision 1.1  2003/09/20 22:08:41  zet
 basic graph hourly history
 
