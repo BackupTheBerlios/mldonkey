@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.36 2004/04/14 11:29:05 dek Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.37 2004/11/20 23:41:44 lemmy Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener,KeyListener {
@@ -153,8 +153,9 @@ Yet			menuManager.add( webManager );
 			
 				webServicesMenu.add( new WebServicesAction( WebServicesAction.BITZI, selectedResult.getSize(), selectedResult.getMd4() ) ) ;
 				webServicesMenu.add( new WebServicesAction( WebServicesAction.FILEDONKEY, selectedResult.getSize(), selectedResult.getMd4() ) ) ;
-				webServicesMenu.add( new WebServicesAction( WebServicesAction.JIGLE, selectedResult.getSize(), selectedResult.getMd4() ) ) ;
-				webServicesMenu.add( new WebServicesAction( WebServicesAction.SHAREREACTOR, selectedResult.getSize(), selectedResult.getLink() ) );
+//			  Sharereactor/Jigle are out of order due to legal issues
+//				webServicesMenu.add( new WebServicesAction( WebServicesAction.JIGLE, selectedResult.getSize(), selectedResult.getMd4() ) ) ;
+//				webServicesMenu.add( new WebServicesAction( WebServicesAction.SHAREREACTOR, selectedResult.getSize(), selectedResult.getLink() ) );
 				webServicesMenu.add( new WebServicesAction( WebServicesAction.DONKEY_FAKES, selectedResult.getSize(), selectedResult.getLink() ) );
 			
 			menuManager.add( webServicesMenu );
@@ -314,6 +315,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.37  2004/11/20 23:41:44  lemmy
+fix: [Bug #2803] Make WebServices Configurable
+
 Revision 1.36  2004/04/14 11:29:05  dek
 now one can start a download from searchresult by hitting [ENTER]
 

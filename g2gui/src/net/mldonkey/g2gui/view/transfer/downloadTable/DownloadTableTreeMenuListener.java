@@ -92,7 +92,7 @@ import java.io.File;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.42 2004/03/31 10:01:09 psy Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.43 2004/11/20 23:41:44 lemmy Exp $
  *
  */
 public class DownloadTableTreeMenuListener extends GTableMenuListener
@@ -351,10 +351,11 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
                     selectedFile.getSize(), selectedFile.getMd4()));
             webServicesMenu.add(new WebServicesAction(WebServicesAction.FILEDONKEY,
                     selectedFile.getSize(), selectedFile.getMd4()));
-            webServicesMenu.add(new WebServicesAction(WebServicesAction.JIGLE,
-                    selectedFile.getSize(), selectedFile.getMd4()));
-            webServicesMenu.add(new WebServicesAction(WebServicesAction.SHAREREACTOR,
-                    selectedFile.getSize(), selectedFile.getED2K()));
+//          Sharereactor/Jigle is out of order due to legal issues
+//            webServicesMenu.add(new WebServicesAction(WebServicesAction.JIGLE,
+//                    selectedFile.getSize(), selectedFile.getMd4()));
+//            webServicesMenu.add(new WebServicesAction(WebServicesAction.SHAREREACTOR,
+//                    selectedFile.getSize(), selectedFile.getED2K()));
             webServicesMenu.add(new WebServicesAction(WebServicesAction.DONKEY_FAKES,
                     selectedFile.getSize(), selectedFile.getED2K()));
             menuManager.add(webServicesMenu);
@@ -738,6 +739,9 @@ public class DownloadTableTreeMenuListener extends GTableMenuListener
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.43  2004/11/20 23:41:44  lemmy
+fix: [Bug #2803] Make WebServices Configurable
+
 Revision 1.42  2004/03/31 10:01:09  psy
 equip preview-URL with username and password
 
@@ -930,7 +934,7 @@ Revision 1.14  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.13  2003/08/22 21:16:36  lemmy
-replace $user$ with $Author: psy $
+replace $user$ with $Author: lemmy $
 
 Revision 1.12  2003/08/22 14:30:45  lemmy
 verify chunks added

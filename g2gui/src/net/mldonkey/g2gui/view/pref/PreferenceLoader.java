@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.69 2004/03/26 22:34:39 dek Exp $
+ * @version $Id: PreferenceLoader.java,v 1.70 2004/11/20 23:41:43 lemmy Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -238,6 +238,10 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( "DownloadPaneListenerBestFit", "-1" );
 		preferenceStore.setDefault( "ServerPaneListenerBestFit", "-1" );
 		
+		// we want this in the g2gui.pref file without a frontend in the gui
+		preferenceStore.setDefault( "WEBSERVICE.URL.BITZI", "http://bitzi.com/lookup/" );
+		preferenceStore.setDefault( "WEBSERVICE.URL.FILEDONKEY", "http://www.filedonkey.com/file.html?md4=" );
+		preferenceStore.setDefault( "WEBSERVICE.URL.DONKEYFAKES", "http://donkeyfakes.gambri.net/index.php?action=search&ed2k=" );
 		
         return preferenceStore;
     }
@@ -475,6 +479,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.70  2004/11/20 23:41:43  lemmy
+fix: [Bug #2803] Make WebServices Configurable
+
 Revision 1.69  2004/03/26 22:34:39  dek
 .torrents are now correctly stored in win-registry
 
@@ -658,7 +665,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmy
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmy $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates

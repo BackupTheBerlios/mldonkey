@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.view.helper.WebLauncher;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
@@ -31,14 +32,15 @@ import org.eclipse.jface.action.Action;
 /**
  * WebServicesAction
  *
- * @version $Id: WebServicesAction.java,v 1.7 2003/11/28 00:57:03 zet Exp $
+ * @version $Id: WebServicesAction.java,v 1.8 2004/11/20 23:41:43 lemmy Exp $
  *
  */
 public class WebServicesAction extends Action {
-    public static final int JIGLE = 0;
+//  Sharereactor/Jigle are out of order due to legal issues
+//    public static final int JIGLE = 0;
     public static final int BITZI = 1;
     public static final int FILEDONKEY = 2;
-    public static final int SHAREREACTOR = 3;
+//    public static final int SHAREREACTOR = 3;
     public static final int DONKEY_FAKES = 4;
     private String string;
     private long fileSize;
@@ -51,12 +53,13 @@ public class WebServicesAction extends Action {
         this.string = string;
 
         switch (type) {
-        case JIGLE:
-            setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_JIGLE_LOOKUP"));
-            setImageDescriptor(G2GuiResources.getImageDescriptor("Jigle"));
-
-            break;
-
+//      Sharereactor/Jigle are out of order due to legal issues
+//        case JIGLE:
+//            setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_JIGLE_LOOKUP"));
+//            setImageDescriptor(G2GuiResources.getImageDescriptor("Jigle"));
+//
+//            break;
+//
         case BITZI:
             setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_BITZI_LOOKUP"));
             setImageDescriptor(G2GuiResources.getImageDescriptor("Bitzi"));
@@ -69,11 +72,11 @@ public class WebServicesAction extends Action {
 
             break;
 
-        case SHAREREACTOR:
-            setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_SR_FAKECHECK"));
-            setImageDescriptor(G2GuiResources.getImageDescriptor("ShareReactor"));
-
-            break;
+//        case SHAREREACTOR:
+//            setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_SR_FAKECHECK"));
+//            setImageDescriptor(G2GuiResources.getImageDescriptor("ShareReactor"));
+//
+//            break;
 
         case DONKEY_FAKES:
             setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_WEB_DONKEY_FAKES"));
@@ -85,28 +88,28 @@ public class WebServicesAction extends Action {
 
     public void run() {
         switch (type) {
-        case JIGLE:
-            WebLauncher.openLink("http://www.jigle.com/search?p=ed2k:" + fileSize + ":" + string);
-
-            break;
-
+//      Sharereactor/Jigle are out of order due to legal issues
+//        case JIGLE:
+//            WebLauncher.openLink(PreferenceLoader.getString("WEBSERVICE.URL.JIGLE") + fileSize + ":" + string);
+//
+//            break;
+//
         case BITZI:
-            WebLauncher.openLink("http://bitzi.com/lookup/" + string);
+            WebLauncher.openLink(PreferenceLoader.getString("WEBSERVICE.URL.BITZI") + string);
 
             break;
 
         case FILEDONKEY:
-            WebLauncher.openLink("http://www.filedonkey.com/file.html?md4=" + string);
+            WebLauncher.openLink(PreferenceLoader.getString("WEBSERVICE.URL.FILEDONKEY") + string);
 
             break;
-
-        case SHAREREACTOR:
-            WebLauncher.openLink("http://www.sharereactor.com/fakesearch.php?search=" + string);
-
-            break;
+//        case SHAREREACTOR:
+//            WebLauncher.openLink("http://www.sharereactor.com/fakesearch.php?search=" + string);
+//
+//            break;
 
         case DONKEY_FAKES:
-            WebLauncher.openLink("http://donkeyfakes.gambri.net/fakecheck/update/fakecheck.php?ed2k=" + string);
+            WebLauncher.openLink( PreferenceLoader.getString("WEBSERVICE.URL.DONKEYFAKES") + string);
 
             break;
         }
@@ -116,6 +119,9 @@ public class WebServicesAction extends Action {
 
 /*
 $Log: WebServicesAction.java,v $
+Revision 1.8  2004/11/20 23:41:43  lemmy
+fix: [Bug #2803] Make WebServices Configurable
+
 Revision 1.7  2003/11/28 00:57:03  zet
 use Weblauncher
 
