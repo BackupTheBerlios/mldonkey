@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * CopyED2KLinkToClipboardAction
  *
- * @version $Id: CopyED2KLinkToClipboardAction.java,v 1.3 2003/10/22 23:24:46 zet Exp $
+ * @version $Id: CopyED2KLinkToClipboardAction.java,v 1.4 2004/03/15 23:26:21 psy Exp $
  *
  */
 public class CopyED2KLinkToClipboardAction extends Action {
@@ -67,7 +67,8 @@ public class CopyED2KLinkToClipboardAction extends Action {
                     link += links[ i ];
                 }
 
-                link += (SWT.getPlatform().equals("win32") ? "\r\n" : "\n");
+                if (links.length - 1 > i && links[ i + 1] != "")
+                	link += (SWT.getPlatform().equals("win32") ? "\r\n" : "\n");
             }
         }
 
@@ -79,6 +80,9 @@ public class CopyED2KLinkToClipboardAction extends Action {
 
 /*
 $Log: CopyED2KLinkToClipboardAction.java,v $
+Revision 1.4  2004/03/15 23:26:21  psy
+removed trailing \n and \r from links
+
 Revision 1.3  2003/10/22 23:24:46  zet
 ignore empty links
 
