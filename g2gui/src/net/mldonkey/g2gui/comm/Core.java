@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.53 2003/07/05 15:37:48 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.54 2003/07/06 08:50:12 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -183,7 +183,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;		
 
 			case Message.R_RESULT_INFO :
-					ResultInfo result = new ResultInfo();
+					ResultInfo result = new ResultInfo( this );
 					result.readStream( messageBuffer );
 					this.resultInfo.put( result.getResultID(), result );
 					this.setChanged();	
@@ -324,6 +324,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.54  2003/07/06 08:50:12  lemmstercvs01
+ResultInfo() -> ResultInfo( this )
+
 Revision 1.53  2003/07/05 15:37:48  lemmstercvs01
 UserInfo added
 
