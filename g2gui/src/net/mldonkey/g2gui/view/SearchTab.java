@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.view.search.*;
  * SearchTab
  *
  * @author $user$
- * @version $Id: SearchTab.java,v 1.7 2003/07/29 10:10:22 lemmstercvs01 Exp $ 
+ * @version $Id: SearchTab.java,v 1.8 2003/07/31 14:23:57 lemmstercvs01 Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -144,12 +144,12 @@ public class SearchTab extends GuiTab {
 				/* set the new statusline */
 				if ( cTabFolder.getItemCount() != 0 ) {
 					SearchResult nResult = ( SearchResult ) cTabFolder.getSelection().getData();
-					mainWindow.statusline.update( 1, nResult.getStatusLine() );
-					mainWindow.statusline.updateTooltip( 1, "" );
+					mainWindow.statusline.update( nResult.getStatusLine() );
+					mainWindow.statusline.updateToolTip( "" );
 				}
 				else {
-					mainWindow.statusline.update( 1, "" );
-					mainWindow.statusline.updateTooltip( 1, "" );
+					mainWindow.statusline.update( "" );
+					mainWindow.statusline.updateToolTip( "" );
 				}
 			}
 		} );
@@ -158,13 +158,13 @@ public class SearchTab extends GuiTab {
 			public void focusGained( FocusEvent e ) {
 			}
 
-			public void focusLost(FocusEvent e) { 
+			public void focusLost( FocusEvent e ) { 
 				/* we are in focus, set our result count */
 				CTabFolder item = ( CTabFolder ) e.widget;
 				if ( item.getSelection() != null ) {
 					SearchResult result = ( SearchResult ) item.getSelection().getData();
-					mainWindow.statusline.update( 1, result.getStatusLine() );
-					mainWindow.statusline.updateTooltip( 1, "" );
+					mainWindow.statusline.update( result.getStatusLine() );
+					mainWindow.statusline.updateToolTip( "" );
 				}
 			}
 		} );	
@@ -214,6 +214,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.8  2003/07/31 14:23:57  lemmstercvs01
+statusline reworked
+
 Revision 1.7  2003/07/29 10:10:22  lemmstercvs01
 moved icon folder out of src/
 

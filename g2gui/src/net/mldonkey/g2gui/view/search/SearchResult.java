@@ -78,7 +78,7 @@ import org.eclipse.swt.custom.CLabel;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.9 2003/07/31 04:10:28 zet Exp $ 
+ * @version $Id: SearchResult.java,v 1.10 2003/07/31 14:20:00 lemmstercvs01 Exp $ 
  *
  */
 //TODO search timeout, add resource bundle, add image handle, fake search, real links depending on network								   
@@ -175,7 +175,7 @@ public class SearchResult implements Observer, Runnable {
 		if ( cTabFolder.getSelection() == cTabItem ) {
 			SearchTab parent = ( SearchTab ) cTabFolder.getData();
 			this.statusline = "Results: " + table.getTable().getItemCount();
-			parent.getMainTab().statusline.update( 1, this.statusline );
+			parent.getMainTab().statusline.update( this.statusline );
 		}
 	}
 	
@@ -216,7 +216,7 @@ public class SearchResult implements Observer, Runnable {
 		/* display 0 searchresults for the moment */
 		SearchTab parent = ( SearchTab ) cTabFolder.getData();
 		this.statusline = "Results: 0";
-		parent.getMainTab().statusline.update( 1, this.statusline );
+		parent.getMainTab().statusline.update( this.statusline );
 	}
 
 	/**
@@ -230,7 +230,7 @@ public class SearchResult implements Observer, Runnable {
 		table.getTable().setHeaderVisible( true );
 		table.getTable().setMenu( createRightClickMenu() );
 
-		table.setUseHashlookup(true);  // more mem, but faster
+		table.setUseHashlookup( true );  // more mem, but faster
 		table.setContentProvider( new ResultTableContentProvider() );
 		table.setLabelProvider( new ResultTableLabelProvider() );
 		table.setSorter( resultTableSorter );
@@ -615,6 +615,9 @@ public class SearchResult implements Observer, Runnable {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.10  2003/07/31 14:20:00  lemmstercvs01
+statusline reworked
+
 Revision 1.9  2003/07/31 04:10:28  zet
 searchresult changes
 
