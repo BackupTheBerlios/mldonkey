@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.32 2003/08/05 15:38:29 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.33 2003/08/06 17:09:48 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -110,6 +110,7 @@ public class FileInfo extends Parent implements Observer {
 	 * File last seen
 	 */
 	private int offset;
+	private String stringOffset;
 	/**
 	 * last time each chunk has been seen
 	 */
@@ -118,6 +119,7 @@ public class FileInfo extends Parent implements Observer {
 	 * when download started
 	 */
 	private String age;
+	private String stringAge;
 	/**
 	 * File Format object
 	 */
@@ -228,6 +230,18 @@ public class FileInfo extends Parent implements Observer {
 	 */
 	public Enum getPriority() {
 		return priority;
+	}
+	
+	// localise ..
+	public String getStringPriority() {
+		if (priority == EnumPriority.HIGH)
+			return "High";
+		else if (priority == EnumPriority.LOW)
+			return "Low";
+		else if (priority == EnumPriority.NORMAL)
+			return "Normal";
+		else 
+			return "???";
 	}
 	/**
 	 * @return The rate this file is downloading
@@ -370,7 +384,9 @@ public class FileInfo extends Parent implements Observer {
 		if (rawRate == 0) this.etaSeconds = Long.MAX_VALUE;
 		else this.etaSeconds = (long) ((getSize() - getDownloaded()) / (rawRate + 1));
 		
-		this.stringETA = calcStringETA ();
+		this.stringETA = calcStringOfSeconds ( this.etaSeconds );
+		this.stringAge = calcStringOfSeconds ( System.currentTimeMillis() / 1000 - Long.parseLong(this.age)  );
+		this.stringOffset = calcStringOfSeconds( this.offset );	
 			
 		if (this.state.getState() == EnumFileState.DOWNLOADING
 			|| this.state.getState() == EnumFileState.PAUSED) {
@@ -553,14 +569,12 @@ public class FileInfo extends Parent implements Observer {
 	public String getStringDownloaded () {
 		return stringDownloaded;
 	}
-	private String calcStringETA () {
-			
-		long remainingSeconds = this.etaSeconds;
+	private String calcStringOfSeconds (long inSeconds) {
 		
-		if (remainingSeconds < 1) return "";
+		if (inSeconds < 1) return "";
 				
-		long days = remainingSeconds / 60 / 60 / 24;
-		long rest = remainingSeconds - days * 60 * 60 * 24;
+		long days = inSeconds / 60 / 60 / 24;
+		long rest = inSeconds - days * 60 * 60 * 24;
 		long hours = rest / 60 / 60;
 		rest = rest - hours * 60 * 60;
 		long minutes = rest / 60;
@@ -573,6 +587,13 @@ public class FileInfo extends Parent implements Observer {
 	}
 	public String getStringETA () {
 		return stringETA;
+	}
+
+	public String getStringOffset () {
+		return stringOffset;	
+	}
+	public String getStringAge() {
+		return stringAge;
 	}
 	
 	public long getETA() {
@@ -594,6 +615,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.33  2003/08/06 17:09:48  zet
+string types added
+
 Revision 1.32  2003/08/05 15:38:29  lemmstercvs01
 set obj=null after message is send
 
