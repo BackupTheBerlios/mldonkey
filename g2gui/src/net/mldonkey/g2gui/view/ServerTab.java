@@ -33,6 +33,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.server.ServerPaneListener;
 import net.mldonkey.g2gui.view.server.ServerTableView;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
+import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
 import org.eclipse.jface.action.IMenuListener;
@@ -51,7 +52,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.47 2003/11/04 20:38:27 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.48 2003/11/09 23:09:57 lemmster Exp $ 
  *
  */
 public class ServerTab extends TableGuiTab implements Runnable, DisposeListener {
@@ -96,6 +97,7 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 		createPaneToolBar( viewForm, aListener);
 
 		gView = new ServerTableView( composite, core );
+		gView.addDisposeListener( aListener );
 
 		/* fill the table with content */
 		servers = core.getServerInfoIntMap();
@@ -151,7 +153,7 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 		this.setStatusLine();
 
 		/* refresh the table if "show connected servers only" is true and the filter is activated */
-		if ( PreferenceLoader.loadBoolean( "displayAllServers" )
+		if ( FilterAction.isFiltered( this.gView, EnumState.CONNECTED )
 		&& this.servers.getConnected() != itemCount ) {
 			if ( StateGViewerFilter.matches( gView, EnumState.CONNECTED ) )
 				gView.refresh();
@@ -215,6 +217,10 @@ public class ServerTab extends TableGuiTab implements Runnable, DisposeListener 
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.48  2003/11/09 23:09:57  lemmster
+remove "Show connected Servers only"
+added filter saving in searchtab
+
 Revision 1.47  2003/11/04 20:38:27  zet
 update for transparent gifs
 

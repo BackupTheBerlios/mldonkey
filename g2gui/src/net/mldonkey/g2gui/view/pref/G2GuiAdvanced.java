@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.4 2003/10/16 22:02:45 zet Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.5 2003/11/09 23:09:57 lemmster Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -77,12 +77,6 @@ public class G2GuiAdvanced extends PreferencePage {
 
 		if ( advanced ) {
 		
-			setupEditor( 
-				new BooleanFieldEditor( 
-					"displayAllServers",
-					G2GuiResources.getString( "PREF_DISPLAY_CONN_SERV" ),
-					composite ) );
-						
 			setupEditor( 
 				new BooleanFieldEditor( 
 					"displayNodes",
@@ -144,6 +138,10 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.5  2003/11/09 23:09:57  lemmster
+remove "Show connected Servers only"
+added filter saving in searchtab
+
 Revision 1.4  2003/10/16 22:02:45  zet
 move some options
 

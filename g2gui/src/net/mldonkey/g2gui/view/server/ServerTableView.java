@@ -23,12 +23,7 @@
 package net.mldonkey.g2gui.view.server;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
-import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
-import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
-import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
 import org.eclipse.swt.SWT;
@@ -37,12 +32,11 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTableView.java,v 1.2 2003/11/06 13:52:33 lemmster Exp $ 
+ * @version $Id: ServerTableView.java,v 1.3 2003/11/09 23:09:57 lemmster Exp $ 
  *
  */
 public class ServerTableView extends GTableView {
-	private boolean oldValue = PreferenceLoader.loadBoolean( "displayAllServers" );
-	private boolean oldValue2 = PreferenceLoader.loadBoolean( "displayTableColors" );
+	private boolean oldValue = PreferenceLoader.loadBoolean( "displayTableColors" );
 	
 	public static final int NETWORK = 0;
 	public static final int NAME = 1;
@@ -99,46 +93,35 @@ public class ServerTableView extends GTableView {
 	    addMenuListener();
 	}
 	
-	//wtf
+	/* (non-Javadoc)
+	 * Method declared in Viewer.
+	 * This implementatation additionaly unmaps all the elements.
+	 */
 	public void setInput( Object object ) {
 	    sViewer.setInput( object );
 	}
+	
 	/**
 	 * Updates this table on preference close
 	 */
 	public void updateDisplay() {
 	    super.updateDisplay();
-		/* only update on pref change */
-		//TODO does this hole thing makes sense for the users point of view?
-		boolean displayConnServers = PreferenceLoader.loadBoolean( "displayAllServers" );
-		if ( oldValue != displayConnServers ) {
-			// update the state filter
-			if ( displayConnServers ) {
-				// first remove all EnumState filters
-				StateFilterAction.removeFilters( this );
-				// now add the new one
-				GViewerFilter filter = new StateGViewerFilter(this);
-				filter.add( EnumState.CONNECTED );
-				getTableViewer().addFilter( filter );
-			}
-			else {
-				FilterAction action = new StateFilterAction( "", this, EnumState.CONNECTED );
-				action.run();
-			}
-			this.oldValue = displayConnServers;
-		}
 		// displayTableColors changed?
 		boolean temp2 = PreferenceLoader.loadBoolean( "displayTableColors" );
-		if ( oldValue2 != temp2 ) {
+		if ( oldValue != temp2 ) {
 			( ( ServerTableLabelProvider ) getTableViewer().getLabelProvider() ).setColors( temp2 );
 			getTableViewer().refresh();
-			this.oldValue2 = temp2;
+			this.oldValue = temp2;
 		}
 	}
 }
 
 /*
 $Log: ServerTableView.java,v $
+Revision 1.3  2003/11/09 23:09:57  lemmster
+remove "Show connected Servers only"
+added filter saving in searchtab
+
 Revision 1.2  2003/11/06 13:52:33  lemmster
 filters back working
 

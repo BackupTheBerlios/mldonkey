@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -44,7 +46,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.40 2003/11/07 00:31:39 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.41 2003/11/09 23:09:57 lemmster Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -129,7 +131,6 @@ public class PreferenceLoader {
         preferenceStore.setDefault( "maintainSortOrder", false );
         preferenceStore.setDefault( "updateDelay", 0 );
         preferenceStore.setDefault( "useGradient", true );
-        preferenceStore.setDefault( "displayAllServers", true );
         preferenceStore.setDefault( "displayNodes", false );
         preferenceStore.setDefault( "displayChunkGraphs", false );
         preferenceStore.setDefault( "displayGridLines", true );
@@ -149,7 +150,16 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( "clientSashHorizontal", true );
 		preferenceStore.setDefault( "transferSashVertical", true );
 		
-		
+		preferenceStore.setDefault( G2GuiResources.getString( "ENS_NOT_CONNECTED" ), false );		
+		preferenceStore.setDefault( G2GuiResources.getString( "ENS_CONNECTING" ), false );		
+		preferenceStore.setDefault( G2GuiResources.getString( "ENS_CONNECTED_INITIATING" ), false );		
+		preferenceStore.setDefault( G2GuiResources.getString( "ENS_CONNECTED_DOWNLOADING" ), false );		
+		preferenceStore.setDefault( G2GuiResources.getString( "ENS_CONNECTED" ), false );		
+		preferenceStore.setDefault( G2GuiResources.getString( "ENS_CONNECTED_AND_QUEUED" ), false );		
+		preferenceStore.setDefault( G2GuiResources.getString( "ENS_NEW_HOST" ), false );		
+		preferenceStore.setDefault( G2GuiResources.getString( "ENS_REMOVE_HOST" ), false );		
+		preferenceStore.setDefault( G2GuiResources.getString( "ENS_BLACK_LISTED" ), false );		
+		preferenceStore.setDefault( G2GuiResources.getString( "ENS_NOT_CONNECTED_WAS_QUEUED" ), false );		
 		
 		
         
@@ -261,6 +271,10 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.41  2003/11/09 23:09:57  lemmster
+remove "Show connected Servers only"
+added filter saving in searchtab
+
 Revision 1.40  2003/11/07 00:31:39  zet
 option to disable splash screen  #1064
 
@@ -352,7 +366,7 @@ Revision 1.11  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates
