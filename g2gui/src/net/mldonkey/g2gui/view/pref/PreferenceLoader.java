@@ -44,10 +44,10 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.26 2003/09/21 23:40:01 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.27 2003/09/25 03:41:03 zet Exp $
  */
 public class PreferenceLoader {
-    private static PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
+    private static PreferenceStore preferenceStore;
     private static Map fontMap = new Hashtable();
     private static Map colorMap = new Hashtable();
     private static List fontArray = new ArrayList();
@@ -198,7 +198,13 @@ public class PreferenceLoader {
     }
 
     public static void initialize() {
+    	preferenceStore = new PreferenceStore( "g2gui.pref" );
         loadStore();
+    }
+    
+    public static void initialize(String file) {
+		preferenceStore = new PreferenceStore( file );
+		loadStore();
     }
     
 	public static void cleanUp() {
@@ -213,6 +219,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.27  2003/09/25 03:41:03  zet
+-c <pref file>
+
 Revision 1.26  2003/09/21 23:40:01  zet
 displayTableColors preference
 

@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.30 2003/09/18 15:30:27 zet Exp $
+ * @version $Id: G2Gui.java,v 1.31 2003/09/25 03:41:12 zet Exp $
  *
  */
 public class G2Gui {
@@ -95,7 +95,21 @@ public class G2Gui {
     public static void main( String[] args ) {
         display = new Display();
         G2GuiResources.initialize();
-        PreferenceLoader.initialize();
+        
+        // -c <path/preferenceFile>
+        if (args.length > 1 && args[0].equals( "-c" )) {
+        	PreferenceLoader.initialize( args[1] );
+        	String newArgs[] = new String[args.length - 2];
+        	for (int i = 2; i < args.length; i++) {
+        		newArgs[i-2] = args[i];
+        		System.out.println(newArgs[i-2]);
+        	}
+        	args = newArgs;
+        	
+        } else {
+			PreferenceLoader.initialize();
+        }
+   
         preferenceStore = PreferenceLoader.getPreferenceStore();
         launch( args );
     }
@@ -396,6 +410,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.31  2003/09/25 03:41:12  zet
+-c <pref file>
+
 Revision 1.30  2003/09/18 15:30:27  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
