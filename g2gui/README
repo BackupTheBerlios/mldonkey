@@ -52,7 +52,7 @@ with any Sun j2re version 1.4x and higher. We've also reports of people
 successfully using the "Blackdown" kit with G2gui. "Kaffee" seems to 
 produce some memory related problems, but we've not verified this yet.
 
-* Under linux, simply run ./g2gui.sh
+* Under linux, simply run g2gui.sh
 * If you are under windows, run g2gui.bat
 
 
