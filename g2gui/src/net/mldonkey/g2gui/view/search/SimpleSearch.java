@@ -26,23 +26,27 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.17 2003/09/07 08:10:56 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.18 2003/09/07 16:12:20 zet Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -85,6 +89,47 @@ public class SimpleSearch extends Search {
 			this.inputText = 
 				this.createInputBox( group, G2GuiResources.getString( "SS_STRING" ) );
 			this.createNetworkCombo( group, G2GuiResources.getString( "SS_NETWORK" ) );
+			
+		if (PreferenceLoader.loadBoolean("useCombo")) {
+			
+		String[] items = { 
+					G2GuiResources.getString( "SS_ALL" ), 
+					G2GuiResources.getString( "SS_AUDIO" ),
+					G2GuiResources.getString( "SS_VIDEO" ),
+					G2GuiResources.getString( "SS_IMAGE" ),
+					G2GuiResources.getString( "SS_Software" ) 
+				};
+			
+				Label fileTypeLabel = new Label( group, SWT.NONE );
+				fileTypeLabel.setText("File type:");
+				fileTypeLabel.setLayoutData( new GridData(GridData.HORIZONTAL_ALIGN_FILL ));
+		
+				final Combo fileTypeCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+				fileTypeCombo.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
+				fileTypeCombo.setItems( items );
+				fileTypeCombo.select( 0 );
+				fileTypeCombo.addSelectionListener(new SelectionListener() {
+					public void widgetDefaultSelected(SelectionEvent e) {}
+					public void widgetSelected(SelectionEvent e) {
+						switch (fileTypeCombo.getSelectionIndex()) {
+							case 1: selectedMedia = "Audio"; 
+									break;
+							case 2: selectedMedia = "Video";
+									break;
+							case 3: selectedMedia = "Image";
+									break;
+							case 4: selectedMedia = "Software";
+									break;
+							default: selectedMedia = null;
+									break;
+						}
+					}
+			
+				});	
+			
+	} else {
+				
+			
 			
 			/* media select */
 			gridData = new GridData();
@@ -144,6 +189,8 @@ public class SimpleSearch extends Search {
 				}	
 			} );
 
+	}
+
 			this.createSearchButton( group );
 
 		return group;		
@@ -184,6 +231,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.18  2003/09/07 16:12:20  zet
+combo
+
 Revision 1.17  2003/09/07 08:10:56  lemmster
 back to radiobuttons
 
@@ -209,7 +259,7 @@ Revision 1.9  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.8  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.7  2003/08/18 01:42:24  zet
 centralize resource bundle

@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.18 2003/09/03 18:19:40 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.19 2003/09/07 16:12:33 zet Exp $
  */
 public class PreferenceLoader {
 
@@ -100,6 +100,8 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( "tableCellEditors", false );
 		
 		preferenceStore.setDefault( "coreExecutable", "" );
+		
+		preferenceStore.setDefault( "useCombo", false );
 		
 		return preferenceStore;
 	}
@@ -212,6 +214,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.19  2003/09/07 16:12:33  zet
+combo
+
 Revision 1.18  2003/09/03 18:19:40  zet
 remove unused
 
