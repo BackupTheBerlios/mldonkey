@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.36 2003/09/27 12:33:32 dek Exp $ 
+ * @version $Id: ServerTab.java,v 1.37 2003/10/11 20:19:18 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -205,12 +205,16 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		table.getTable().setMenu( popupMenu.createContextMenu( table.getTable() ) );
 		
 		/* create the columns */
+		int w;
 		for ( int i = 0; i < tableColumns.length; i++ ) {
 			final PreferenceStore prefStore = PreferenceLoader.getPreferenceStore();
 			prefStore.setDefault( tableColumns[ i ], tableWidth[ i ] );
 			tableColumn = new TableColumn( table.getTable(), tableAlign[ i ] );
 			tableColumn.setText( G2GuiResources.getString( tableColumns[ i ] ) );
-			tableColumn.setWidth( prefStore.getInt( tableColumns[ i ] ) );
+			
+			// gtk renders an error when setWidth == 0
+			w = prefStore.getInt( tableColumns[ i ] );
+			tableColumn.setWidth( ( ( w == 0 && SWT.getPlatform().equals("gtk") ) ? tableWidth[ i ] : w ) );
 			
 			/* read the new tablewidth to the prefstore */
 			final int j = i;
@@ -441,6 +445,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.37  2003/10/11 20:19:18  zet
+Don't TableColumn.setWidth(0) on gtk
+
 Revision 1.36  2003/09/27 12:33:32  dek
 server-Table has now same show-Gridlines-behaviour as download-Table
 
