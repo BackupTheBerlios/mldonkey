@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.transferTree;
 
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -164,6 +165,7 @@ public class FileDetailDialog implements Observer {
 	
 		renameGroup.setLayoutData(  new GridData(GridData.FILL_HORIZONTAL));
 				
+		Arrays.sort(fileInfo.getNames(), String.CASE_INSENSITIVE_ORDER);		
 		renameList = new List(renameGroup, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
 		for (int i = 0; i < fileInfo.getNames().length; i++) 
 			renameList.add(fileInfo.getNames()[ i ]);
@@ -172,6 +174,12 @@ public class FileDetailDialog implements Observer {
 		listGD.heightHint = 80;
 		listGD.widthHint = width - 50;
 		renameList.setLayoutData(listGD); 
+		renameList.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected (SelectionEvent s) {
+				String lItem = renameList.getSelection()[0];
+				renameText.setText(lItem);
+			}
+		});
 	
 		Composite rename = new Composite(shell, SWT.NONE);
 		GridLayout renameCGridLayout = new GridLayout();
