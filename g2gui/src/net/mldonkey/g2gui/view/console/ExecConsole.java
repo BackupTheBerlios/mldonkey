@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ExecConsole : to spawn and watch an executable in a shell/console
  *
- * @version $Id: ExecConsole.java,v 1.3 2003/09/20 01:22:17 zet Exp $
+ * @version $Id: ExecConsole.java,v 1.4 2003/09/20 22:07:40 zet Exp $
  *
  */
 public class ExecConsole implements Observer {
@@ -117,7 +117,7 @@ public class ExecConsole implements Observer {
                               + outputConsole.getLineDelimiter() + outputConsole.getLineDelimiter() );
         Menu popupMenu = new Menu( outputConsole );
         MenuItem copyItem = new MenuItem( popupMenu, SWT.PUSH );
-        copyItem.setText( "Copy" );
+        copyItem.setText( G2GuiResources.getString( "MISC_COPY" ) );
         copyItem.addListener( SWT.Selection,
                               new Listener() {
                 public void handleEvent( Event event ) {
@@ -234,6 +234,9 @@ public class ExecConsole implements Observer {
 
 /*
 $Log: ExecConsole.java,v $
+Revision 1.4  2003/09/20 22:07:40  zet
+*** empty log message ***
+
 Revision 1.3  2003/09/20 01:22:17  zet
 *** empty log message ***
 
