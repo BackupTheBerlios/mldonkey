@@ -1,5 +1,8 @@
+2003/10/04: z
+	* Transfer: Add absolute/relative file priority settings (rt-clk menu)
+
 2003/10/01: z
-	* Transfer&Statistics: Add: Flip sash menuItem ( horizontal | vertical )
+	* Transfer&Statistics: Add Flip sash menuItem ( horizontal | vertical )
 
 2003/09/29: 
 	*** Release version 0.1.1 ***
