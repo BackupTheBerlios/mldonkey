@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.59 2003/09/20 14:38:40 zet Exp $
+ * @version $Id: FileInfo.java,v 1.60 2003/09/23 00:10:44 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -665,6 +665,14 @@ public class FileInfo extends Parent implements Observer {
         Message chunks = new EncodeMessage( Message.S_VERIFY_ALL_CHUNKS, new Integer( this.getId() ) );
         chunks.sendMessage( this.parent );
     }
+    
+    /**
+     * Preview the file
+     */
+    public void preview() {
+    	Message preview = new EncodeMessage( Message.S_PREVIEW, new Integer( this.getId() ) );
+    	preview.sendMessage( this.parent );
+    }
 
     /**
      * @param name Save file as (name)
@@ -762,6 +770,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.60  2003/09/23 00:10:44  zet
+add Preview
+
 Revision 1.59  2003/09/20 14:38:40  zet
 move transfer package
 

@@ -30,7 +30,7 @@ import java.net.Socket;
 /**
  * Message
  *
- * @version $Id: Message.java,v 1.38 2003/09/18 23:24:07 zet Exp $
+ * @version $Id: Message.java,v 1.39 2003/09/23 00:10:44 zet Exp $
  *
  */
 public abstract class Message {
@@ -145,6 +145,11 @@ public abstract class Message {
      * Send Console Message (value is 29)
      */
     public static final short S_CONSOLEMSG = 29;
+    
+    /**
+     * Send Preview (value is 30)
+     */
+    public static final short S_PREVIEW = 30;
 
     /**
      * Connect Friend (value is 31)
@@ -432,6 +437,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.39  2003/09/23 00:10:44  zet
+add Preview
+
 Revision 1.38  2003/09/18 23:24:07  zet
 use bufferedinputstream 
 & mods for the annoying gcj project
