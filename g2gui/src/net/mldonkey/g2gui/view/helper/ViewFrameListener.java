@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ViewFrameListener
  *
- * @version $Id: ViewFrameListener.java,v 1.10 2004/02/23 15:28:08 psy Exp $
+ * @version $Id: ViewFrameListener.java,v 1.11 2004/02/24 14:21:19 psy Exp $
  *
  */
 public abstract class ViewFrameListener implements IMenuListener, DisposeListener {
@@ -144,7 +144,9 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
     protected void setBestFit() {
     	/* do not forget to substract the offset */
     	int i = PreferenceLoader.getInt( this.getClass().getName() + "BestFit" ) - 10;
-    	if ( i > -1 )
+    	
+    	/* make sure that the column actually exists */
+    	if ( i > -1 && i <= gView.getRealColumnCount() )
     		new BestFitColumnAction( gView, i ).run();
     }
 
@@ -180,6 +182,9 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
 
 /*
 $Log: ViewFrameListener.java,v $
+Revision 1.11  2004/02/24 14:21:19  psy
+improved setBestFit() to check if the column actually exists
+
 Revision 1.10  2004/02/23 15:28:08  psy
 dynamic columns are saved properly now, only the searchtab needs some more fixing
 
