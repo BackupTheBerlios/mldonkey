@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.20 2003/07/28 14:49:36 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.21 2003/07/28 17:08:03 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer {
@@ -60,7 +60,7 @@ public class MainTab implements Listener, Observer {
 	public static List miscToolButtons = new ArrayList();
 	public static List mainToolButtons = new ArrayList();
 	public static boolean toolbarSmallButtons = false;
-	private static boolean toolbarLocked = false;
+	private boolean coolbarLocked = true;
 	private StatusLine statusline;
 	private CoreCommunication mldonkey;
 	private Composite mainComposite, coolbarComposite, pageContainer;
@@ -307,9 +307,11 @@ public class MainTab implements Listener, Observer {
 		/* lock CoolBar */
 		final MenuItem lockItem = new MenuItem( menu, SWT.CHECK );
 		lockItem.setText( "Lock the Toolbars" );
+		lockItem.setSelection(coolbarLocked);
 		lockItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
 				thiscoolBar.setLocked( lockItem.getSelection() );
+				coolbarLocked = lockItem.getSelection() ;
 			}
 		} );
 		
@@ -340,6 +342,7 @@ public class MainTab implements Listener, Observer {
 			tempCoolItem.setSize( pSize );
 			tempCoolItem.setMinimumSize( pSize );
 		}
+		coolBar.setLocked(coolbarLocked);
 	} 
 	
 	private void toggleSmallButtons(boolean toggle) {
@@ -541,7 +544,10 @@ public class MainTab implements Listener, Observer {
 		} 
 	}
 	public void getInternalPrefStoreSettings() {
+		internalPrefStore.setDefault("coolbarLocked", coolbarLocked);
+		
 		toolbarSmallButtons = internalPrefStore.getBoolean("toolbarSmallButtons");
+		coolbarLocked = internalPrefStore.getBoolean("coolbarLocked");
 	}
 	
 	/**
@@ -549,8 +555,10 @@ public class MainTab implements Listener, Observer {
 	 * @param shell The shell to save the size from
 	 */
 	public void saveSizeLocation( Shell shell ) {
-		Rectangle shellBounds = shell.getBounds();
+		
+		internalPrefStore.setValue( "coolbarLocked", coolbarLocked );
 		internalPrefStore.setValue( "toolbarSmallButtons", toolbarSmallButtons );
+	
 		if ( shell.getMaximized() )
 			internalPrefStore.setValue( "windowMaximized", shell.getMaximized() );
 		else {
@@ -593,6 +601,9 @@ public class MainTab implements Listener, Observer {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.21  2003/07/28 17:08:03  zet
+lock coolbar
+
 Revision 1.20  2003/07/28 14:49:36  zet
 use prefconverter
 
