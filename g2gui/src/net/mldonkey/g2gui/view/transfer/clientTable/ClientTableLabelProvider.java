@@ -38,7 +38,7 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.3 2003/09/23 01:28:23 zet Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.4 2003/09/24 03:07:43 zet Exp $
  *
  */
 public class ClientTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -72,7 +72,7 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
 
         switch ( columnIndex ) {
         case 0:
-            return "" + clientInfo.getClientActivity( );
+            return "" + clientInfo.getDetailedClientActivity( );
 
         case 1:
             return "" + clientInfo.getClientName(  );
@@ -133,6 +133,9 @@ public class ClientTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.4  2003/09/24 03:07:43  zet
+add # of active sources column
+
 Revision 1.3  2003/09/23 01:28:23  zet
 remove unneeded
 

@@ -23,13 +23,14 @@
 package net.mldonkey.g2gui.model;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -39,6 +40,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
+import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
@@ -46,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.60 2003/09/23 00:10:44 zet Exp $
+ * @version $Id: FileInfo.java,v 1.61 2003/09/24 03:09:57 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -59,7 +61,12 @@ public class FileInfo extends Parent implements Observer {
     public static final String CHANGED_ETA = "eta";
     public static final String CHANGED_LAST = "last";
     public static final String CHANGED_AVAIL = "avail";
-    private List changedProperties = Collections.synchronizedList( new ArrayList() );
+    public static final String CHANGED_ACTIVE = "active";
+    
+    /**
+     * A set (no duplicates) of changed properties
+     */
+    private Set changedProperties = Collections.synchronizedSet( new HashSet() );
     /**
      * Decimal format for calcStringSize
      */
@@ -93,6 +100,12 @@ public class FileInfo extends Parent implements Observer {
      * Number of sources
      */
     private int sources;
+
+    /**
+     * Number of active sources
+     */
+    private int activeSources;
+    
     /**
      * Number of clients
      */
@@ -339,6 +352,12 @@ public class FileInfo extends Parent implements Observer {
         // TODO: use sources when it is not 0.
         return clientInfos.size();
     }
+    /**
+     * @return number of actively transferring sources
+     */
+    public int getActiveSources() {
+    	return activeSources;
+    }
 
     /**
      * @return File status
@@ -468,6 +487,8 @@ public class FileInfo extends Parent implements Observer {
     public void addClientInfo( ClientInfo clientInfo ) {
         this.clientInfos.put( clientInfo, null );
         clientInfo.addObserver( this );
+		if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+			setActiveSources( +1 );
         this.setChanged();
         this.notifyObservers( clientInfo );
     }
@@ -479,6 +500,7 @@ public class FileInfo extends Parent implements Observer {
     public void removeClientInfo( ClientInfo clientInfo ) {
         this.clientInfos.remove( clientInfo );
         clientInfo.deleteObserver( this );
+        setActiveSources( 0 );
         this.setChanged();
         this.notifyObservers( clientInfo );
     }
@@ -598,6 +620,32 @@ public class FileInfo extends Parent implements Observer {
         this.stringOffset = calcStringOfSeconds( this.offset );
         if ( !oldStringOffset.equals( stringOffset ) )
             changedProperties.add( CHANGED_LAST );
+    }
+    
+    /**
+     * Calculate # of active sources
+     */
+    private void setActiveSources( int i ) {
+		
+		int oldActiveSources = activeSources;
+		
+		if ( i == 0 ) {
+	    	activeSources = 0;
+	    	Iterator it = clientInfos.keySet().iterator();
+	    	while (it.hasNext()) {
+	    		ClientInfo clientInfo = (ClientInfo) it.next();
+	    		if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+	    			activeSources++;
+	    	}
+	
+		} else {
+			activeSources += i;
+		}
+
+    	if (oldActiveSources != activeSources) {
+    		changedProperties.add( CHANGED_ACTIVE );
+			notifyChangedProperties();
+    	}
     }
 
     /**
@@ -756,20 +804,26 @@ public class FileInfo extends Parent implements Observer {
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable o, Object obj ) {
-        if ( o instanceof ClientInfo ) {
+        if ( o instanceof ClientInfo && obj instanceof Boolean ) {
             ClientInfo clientInfo = ( ClientInfo ) o;
             this.setChanged();
             // this client is now interesting.. notify the viewer
-            if ( obj == null )
+            if ( ((Boolean) obj).equals(Boolean.TRUE) ) {
+                setActiveSources( +1 );
                 this.notifyObservers( new TreeClientInfo( this, clientInfo ) );
-            else
+            } else {
+            	setActiveSources( -1 );
                 this.notifyObservers( clientInfo );
+            }
         }
     }
 }
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.61  2003/09/24 03:09:57  zet
+add # of active sources column
+
 Revision 1.60  2003/09/23 00:10:44  zet
 add Preview
 

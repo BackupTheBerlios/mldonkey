@@ -59,7 +59,7 @@ import java.util.Set;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.2 2003/09/20 22:40:43 zet Exp $
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.3 2003/09/24 03:07:43 zet Exp $
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, TreeListener {
@@ -79,7 +79,8 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 		  FileInfo.CHANGED_PERCENT, 
 		  FileInfo.CHANGED_AVAIL, 
 		  FileInfo.CHANGED_ETA,
-		  FileInfo.CHANGED_LAST
+		  FileInfo.CHANGED_LAST,
+		  FileInfo.CHANGED_ACTIVE
 	  };
     
 
@@ -589,6 +590,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.3  2003/09/24 03:07:43  zet
+add # of active sources column
+
 Revision 1.2  2003/09/20 22:40:43  zet
 *** empty log message ***
 

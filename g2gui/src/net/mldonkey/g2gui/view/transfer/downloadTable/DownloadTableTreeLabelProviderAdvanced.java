@@ -35,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadtableTreeLabelProviderAdvanced
  *
- * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.2 2003/09/21 23:39:31 zet Exp $
+ * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.3 2003/09/24 03:07:43 zet Exp $
  *
  */
 public class DownloadTableTreeLabelProviderAdvanced extends DownloadTableTreeLabelProvider {
@@ -90,11 +90,14 @@ public class DownloadTableTreeLabelProviderAdvanced extends DownloadTableTreeLab
 
             case 6: // # sources  
                 return "" + fileInfo.getSources(  );
+                
+            case 7: // # active sources
+            	return "" + fileInfo.getActiveSources( );    
 
-            case 7: // Relative availability %
+            case 8: // Relative availability %
                 return "" + fileInfo.getRelativeAvail(  ) + "%";
 
-            case 8: // rate
+            case 9: // rate
 
                 if ( fileInfo.getState(  ).getState(  ) == EnumFileState.PAUSED ) {
                     return G2GuiResources.getString( "TT_Paused" );
@@ -106,19 +109,19 @@ public class DownloadTableTreeLabelProviderAdvanced extends DownloadTableTreeLab
                     return "" + df.format( fileInfo.getRate(  ) / 1000f );
                 }
 
-            case 9: // chunks
+            case 10: // chunks
                 return "" + fileInfo.getNumChunks(  );
 
-            case 10: // eta
+            case 11: // eta
                 return "" + getFileETA( fileInfo );
 
-            case 11: // priority
+            case 12: // priority
                 return fileInfo.getStringPriority(  );
 
-            case 12: // last
+            case 13: // last
                 return fileInfo.getStringOffset(  );
 
-            case 13: // age
+            case 14: // age
                 return fileInfo.getStringAge(  );
 
             default:
@@ -140,7 +143,7 @@ public class DownloadTableTreeLabelProviderAdvanced extends DownloadTableTreeLab
             case 4: // client activity
                 return "" + treeClientInfo.getClientInfo(  ).getClientActivity(  );
 
-            case 8: // num chunks
+            case 10: // num chunks
                 return "" + treeClientInfo.getClientInfo(  ).getNumChunks( treeClientInfo.getFileInfo(  ) );
 
             default:
@@ -155,6 +158,9 @@ public class DownloadTableTreeLabelProviderAdvanced extends DownloadTableTreeLab
 
 /*
 $Log: DownloadTableTreeLabelProviderAdvanced.java,v $
+Revision 1.3  2003/09/24 03:07:43  zet
+add # of active sources column
+
 Revision 1.2  2003/09/21 23:39:31  zet
 displayTableColors preference
 

@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.28 2003/09/18 15:29:25 zet Exp $ 
+ * @version $Id: ClientInfo.java,v 1.29 2003/09/24 03:09:57 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -193,6 +193,18 @@ public class ClientInfo extends Parent {
 	}	
 	
 	/**
+     * @param clientInfo
+     * @return String clientDetailedActivity
+     */
+    public String getDetailedClientActivity() {   
+		 if ( ( this.getState(  ).getState(  ) == EnumState.CONNECTED_DOWNLOADING ) || ( this.getState(  ).getRank(  ) == 0 ) ) {   
+			 return "" + this.getState(  ).getState(  ).toString(  );   
+		 } else {   
+			 return "" + this.getState(  ).getState(  ).toString(  ) + " (Q: " + this.getState(  ).getRank(  ) + ")";   
+		 }   
+	 } 
+	
+	/**
 	 * @return String clientConnection
 	 */
 	public String getClientConnection() {
@@ -238,17 +250,8 @@ public class ClientInfo extends Parent {
 		this.clientName = messageBuffer.readString();
 		this.clientRating = messageBuffer.readInt32();
 		this.clientChatPort = messageBuffer.readInt32();
-		this.setChanged();
 		
-		Enum newState = getState().getState();
-		if ( ( oldState != newState ) 
-			&& ( oldState == EnumState.CONNECTED_DOWNLOADING 
-			|| newState == EnumState.CONNECTED_DOWNLOADING ) ) {
-				this.notifyObservers();
-		} 
-		else {
-			this.notifyObservers( this );
-		}
+		onChangedState( oldState );
 	}
 	
 	/**
@@ -259,14 +262,27 @@ public class ClientInfo extends Parent {
 		
 		Enum oldState = getState().getState();
 		this.getState().update( messageBuffer );
+		
+		onChangedState(oldState);
+		
+	}
+	
+	/**
+     * @param oldState
+     */
+    public void onChangedState (Enum oldState) {
 		Enum newState = getState().getState();
-				
+		
 		this.setChanged();
 		
-		if ( ( oldState != newState ) 
-			&& ( oldState == EnumState.CONNECTED_DOWNLOADING 
-				|| newState == EnumState.CONNECTED_DOWNLOADING ) ) {
-				this.notifyObservers();
+		if ( oldState != newState ) {
+			if (newState == EnumState.CONNECTED_DOWNLOADING) {
+				this.notifyObservers( new Boolean(true) );	
+			} else if (oldState == EnumState.CONNECTED_DOWNLOADING) {
+				this.notifyObservers( new Boolean(false) );
+			} else {
+				this.notifyObservers( this );
+			}
 		}
 		else {
 			this.notifyObservers( this );
@@ -322,6 +338,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.29  2003/09/24 03:09:57  zet
+add # of active sources column
+
 Revision 1.28  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away

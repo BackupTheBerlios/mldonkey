@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * DownloadTableTreeSorterAdvanced
  *
- * @version $Id: DownloadTableTreeSorterAdvanced.java,v 1.3 2003/09/23 03:32:09 zet Exp $
+ * @version $Id: DownloadTableTreeSorterAdvanced.java,v 1.4 2003/09/24 03:07:43 zet Exp $
  *
  */
 public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
@@ -51,16 +51,19 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
             case 5:
                 return ( property.equals( FileInfo.CHANGED_PERCENT ) ? true : false );
 
-            case 7:
+			case 7:
+				return ( property.equals( FileInfo.CHANGED_ACTIVE ) ? true : false );
+					
+            case 8:
                 return ( property.equals( FileInfo.CHANGED_AVAIL ) ? true : false );
 
-            case 8:
+            case 9:
                 return ( property.equals( FileInfo.CHANGED_RATE ) ? true : false );
 
-            case 10:
+            case 11:
                 return ( property.equals( FileInfo.CHANGED_ETA ) ? true : false );
 
-            case 12:
+            case 13:
                 return ( property.equals( FileInfo.CHANGED_LAST ) ? true : false );
 
             default:
@@ -109,10 +112,13 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
             case 6: // sources 
                 return compareIntegers( fileInfo1.getSources( ), fileInfo2.getSources(  ) );
 
-            case 7: // relative availability
+			case 7: // active sources
+				return compareIntegers( fileInfo1.getActiveSources( ), fileInfo2.getActiveSources( ) );
+
+            case 8: // relative availability
                 return compareIntegers( fileInfo1.getRelativeAvail(  ), fileInfo2.getRelativeAvail(  ) );
 
-            case 8: // rate - paused/queued on the bottom
+            case 9: // rate - paused/queued on the bottom
 
                 if ( fileInfo1.getState(  ).getState(  ) == EnumFileState.DOWNLOADED ) {
                     return -1;
@@ -131,10 +137,10 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
                     return compareDoubles( fileInfo1.getRate(  ), fileInfo2.getRate(  ) );
                 }
 
-            case 9: // numChunks
+            case 10: // numChunks
                 return compareIntegers( fileInfo1.getNumChunks(  ), fileInfo2.getNumChunks(  ) );
 
-            case 10: // eta - nulls on the bottom
+            case 11: // eta - nulls on the bottom
                 labelProvider = (ITableLabelProvider) ( (TableTreeViewer) viewer ).getLabelProvider(  );
 
                 if ( labelProvider.getColumnText( e1, columnIndex ).equals( "" ) ) {
@@ -145,7 +151,7 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
                     return compareLongs( fileInfo1.getETA(  ), fileInfo2.getETA(  ) );
                 }
 
-            case 11: // priority
+            case 12: // priority
 
                 if ( fileInfo1.getPriority(  ) == EnumPriority.LOW ) {
                     return ( lastSort ? ( -1 ) : 1 );
@@ -159,10 +165,10 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
                     }
                 }
 
-            case 12: // last
+            case 13: // last
                 return compareIntegers( fileInfo1.getOffset(  ), fileInfo2.getOffset(  ) );
 
-            case 13: // age
+            case 14: // age
                 return compareLongs( Long.parseLong( fileInfo1.getAge(  ) ), Long.parseLong( fileInfo2.getAge(  ) ) );
 
             default:
@@ -188,7 +194,7 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
                 return compareIntegers( treeClientInfo1.getClientInfo(  ).getState(  ).getRank(  ),
                     treeClientInfo2.getClientInfo(  ).getState(  ).getRank(  ) );
 
-            case 8: // numChunks 
+            case 10: // numChunks 
                 return compareIntegers( treeClientInfo1.getClientInfo(  ).getNumChunks( treeClientInfo1.getFileInfo(  ) ),
                     treeClientInfo2.getClientInfo(  ).getNumChunks( treeClientInfo2.getFileInfo(  ) ) );
 
@@ -202,6 +208,9 @@ public class DownloadTableTreeSorterAdvanced extends DownloadTableTreeSorter {
 
 /*
 $Log: DownloadTableTreeSorterAdvanced.java,v $
+Revision 1.4  2003/09/24 03:07:43  zet
+add # of active sources column
+
 Revision 1.3  2003/09/23 03:32:09  zet
 *** empty log message ***
 

@@ -33,13 +33,13 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.2 2003/09/21 23:39:31 zet Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.3 2003/09/24 03:07:43 zet Exp $
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
     // set the default sort column to "rate"
-    protected int columnIndex = 8;
-    protected int lastColumnIndex = 8;
+    protected int columnIndex = 9;
+    protected int lastColumnIndex = 9;
 
     // last sort ascending = fase
     protected boolean lastSort = false;
@@ -154,6 +154,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.3  2003/09/24 03:07:43  zet
+add # of active sources column
+
 Revision 1.2  2003/09/21 23:39:31  zet
 displayTableColors preference
 
