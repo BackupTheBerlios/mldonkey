@@ -1,3 +1,6 @@
+2004/01/29
+	* Removed duplicated code from G2Gui.initializeSocket(...)
+
 2004/01/28
 	* Properly handle disconnections from the core
 	* Fast inline-reconnect

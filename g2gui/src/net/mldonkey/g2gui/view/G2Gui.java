@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.63 2004/01/28 22:15:34 psy Exp $
+ * @version $Id: G2Gui.java,v 1.64 2004/01/29 08:25:04 lemmy Exp $
  *
  */
 public class G2Gui {
@@ -348,15 +348,14 @@ public class G2Gui {
     }
 
     /**
-	 * initialize the socket
+	 * initialize the socket (push or poll mode)
 	 */
     public static Socket initializeSocket( boolean mode ) {
 		// create the socket connection to the core and handle the errors
         Socket aSocket = null;
     	try {
-            ObjectPool socketPool = new SocketPool(hostname, port);
-            aSocket = (Socket) socketPool.checkOut();
-        } catch (UnknownHostException e) {
+    		aSocket = initializeSocket();
+    	} catch (UnknownHostException e) {
         	errorHandling(G2GuiResources.getString("G2_INVALID_ADDRESS"), 
         		G2GuiResources.getString("G2_ILLEGAL_ADDRESS"), mode, true);			
             return null;
@@ -369,19 +368,15 @@ public class G2Gui {
         return aSocket;  
 	}
 
-    // TODO: this is duplicate code, make this one throw something in the future
-    public static Socket initializeSocket() {
-    	// create the socket connection to the core and handle the errors
-    	Socket aSocket = null;
-    	try {
-    		ObjectPool socketPool = new SocketPool(hostname, port);
-    		aSocket = (Socket) socketPool.checkOut();
-    	} catch (UnknownHostException e) {
-      		return null;
-    	} catch (IOException e) {
-      		return null;
-    	}  
-    	return aSocket;  
+    /**
+     * Initialize the Socket 
+     * @return A socket obj
+     * @throws UnknownHostException
+     * @throws IOException
+     */
+    public static Socket initializeSocket() throws UnknownHostException, IOException {
+   		ObjectPool socketPool = new SocketPool(hostname, port);
+   		return (Socket) socketPool.checkOut();
     }
     
     /**
@@ -617,6 +612,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.64  2004/01/29 08:25:04  lemmy
+removed duplicated code
+
 Revision 1.63  2004/01/28 22:15:34  psy
 * Properly handle disconnections from the core
 * Fast inline-reconnect

@@ -28,6 +28,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -57,7 +58,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.123 2004/01/28 22:15:34 psy Exp $ 
+ * @version $Id: Core.java,v 1.124 2004/01/29 08:25:04 lemmy Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -276,15 +277,21 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 */
 	public boolean reconnect() {		
 		if (G2Gui.debug) System.out.println("Inline Reconnect");
-		Socket newsocket = G2Gui.initializeSocket(); 
-		if (newsocket != null) {
-			this.connection = newsocket;
-			this.connected = true;
-			Thread restarted = new Thread( this );
-			restarted.start();
-			return true;
+		Socket newSocket = null;
+		try {
+			newSocket = G2Gui.initializeSocket();
+		} catch (UnknownHostException e) {
+			return false;
+		} catch (IOException e) {
+			return false;
 		}
-		return false;
+		
+		// if we pass this point, newsocket cant be null
+		this.connection = newSocket;
+		this.connected = true;
+		Thread restarted = new Thread( this );
+		restarted.start();
+		return true;
 	}
 
 	/**
@@ -660,6 +667,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.124  2004/01/29 08:25:04  lemmy
+removed duplicated code
+
 Revision 1.123  2004/01/28 22:15:34  psy
 * Properly handle disconnections from the core
 * Fast inline-reconnect
