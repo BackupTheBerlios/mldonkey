@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.40 2003/12/04 08:47:25 lemmy Exp $
+ * @version $Id: ClientInfo.java,v 1.41 2003/12/19 22:15:27 psy Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -330,6 +330,11 @@ public class ClientInfo extends Parent {
         return "";
     }
 
+    public String getClientConnectTimePassedString() {
+    	return "";
+    }
+    
+    
     /**
      * Reads a ClientInfo object from a MessageBuffer
      * @param messageBuffer The MessageBuffer to read from
@@ -442,6 +447,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.41  2003/12/19 22:15:27  psy
+added human readable value for connectiontime passed since connection initiation
+
 Revision 1.40  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -510,7 +518,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

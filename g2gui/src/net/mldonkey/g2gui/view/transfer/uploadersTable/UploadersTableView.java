@@ -57,7 +57,7 @@ import java.util.Observer;
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadersTableView.java,v 1.10 2003/12/04 08:47:31 lemmy Exp $
+ * @version $Id: UploadersTableView.java,v 1.11 2003/12/19 22:15:27 psy Exp $
  *
  */
 public class UploadersTableView extends GTableView {
@@ -260,7 +260,7 @@ public class UploadersTableView extends GTableView {
                 return clientInfo.getUploadedString();
 
             case UploadersTableView.CONNECT_TIME:
-                return clientInfo.getClientConnectTimeString();
+                return clientInfo.getClientConnectTimePassedString();
 
             case UploadersTableView.DOWNLOADED:
                 return clientInfo.getDownloadedString();
@@ -414,6 +414,9 @@ public class UploadersTableView extends GTableView {
 
 /*
 $Log: UploadersTableView.java,v $
+Revision 1.11  2003/12/19 22:15:27  psy
+added human readable value for connectiontime passed since connection initiation
+
 Revision 1.10  2003/12/04 08:47:31  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
