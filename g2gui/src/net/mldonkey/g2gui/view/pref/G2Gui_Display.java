@@ -38,8 +38,8 @@ import org.eclipse.swt.widgets.Control;
 /**
  * G2Gui_Display
  *
- * @author $Author: lemmster $
- * @version $Id: G2Gui_Display.java,v 1.16 2003/08/22 21:10:57 lemmster Exp $
+ * @author $Author: zet $
+ * @version $Id: G2Gui_Display.java,v 1.17 2003/08/22 23:25:15 zet Exp $
  */
 public class G2Gui_Display extends FieldEditorPreferencePage {
 	private Composite parent;
@@ -130,18 +130,23 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 				
 		setupEditor( new BooleanFieldEditor( "tableCellEditors", G2GuiResources.getString("PREF_DISPLAY_CELLEDITORS"), parent ) );
 				
-		setupEditor( new BooleanFieldEditor( "forceRefresh", G2GuiResources.getString("PREF_DISPLAY_FULL_REFRESH"),parent ) );
+		// setupEditor( new BooleanFieldEditor( "forceRefresh", G2GuiResources.getString("PREF_DISPLAY_FULL_REFRESH"),parent ) );
+			
+		setupEditor( new BooleanFieldEditor( "maintainSortOrder", G2GuiResources.getString("PREF_DISPLAY_SORT_ORDER"),parent ) );	
 				
-		IntegerFieldEditor displayBuffer = new IntegerFieldEditor( "displayBuffer", G2GuiResources.getString("PREF_DISPLAY_UPDATE_BUFFER"),parent );
-		displayBuffer.setValidRange( 0, 60 );
-		setupEditor( displayBuffer );
+	//	IntegerFieldEditor displayBuffer = new IntegerFieldEditor( "displayBuffer", G2GuiResources.getString("PREF_DISPLAY_UPDATE_BUFFER"),parent );
+	//	displayBuffer.setValidRange( 0, 60 );
+	//	setupEditor( displayBuffer );
 		arrangeFields();
 	}
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.17  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.16  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.15  2003/08/19 22:02:15  zet
 localise

@@ -27,7 +27,7 @@ import java.util.Observer;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -38,8 +38,8 @@ import org.eclipse.swt.widgets.Display;
  * 
  * TableContentProvider
  *
- * @author $Author: lemmster $
- * @version $Id: TableContentProvider.java,v 1.2 2003/08/22 21:17:25 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: TableContentProvider.java,v 1.3 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class TableContentProvider implements IStructuredContentProvider, Observer {
@@ -77,19 +77,27 @@ public class TableContentProvider implements IStructuredContentProvider, Observe
 	}
 	
 	public void update(Observable o, final Object obj) {
-		if (obj instanceof ClientInfo) {
+		if (obj instanceof ClientInfo || obj instanceof TreeClientInfo) {
 			Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				refreshTable((ClientInfo) obj);
-			}
-		});
+				public void run() {
+					refreshTable(obj);
+				}
+			});
 		}
 	}
 	
 	// delay for 5 seconds to prevent too much flicker
 	// it seems like you must do a full refresh() to maintain sort order
-	public void refreshTable(ClientInfo clientInfo) {
-		if (clientTableViewer != null || !MainTab.getShell().isDisposed()) {
+	public void refreshTable(Object obj) {
+		ClientInfo clientInfo = null; 
+		if (obj instanceof ClientInfo) {
+			clientInfo = (ClientInfo) obj;
+		} else if (obj instanceof TreeClientInfo) {
+			clientInfo = ((TreeClientInfo) obj).getClientInfo();
+		}
+		
+		if (clientTableViewer != null 
+			&& !clientTableViewer.getTable().isDisposed()) {
 			if (System.currentTimeMillis() > lastUpdateTime + 5000) {
 				clientTableViewer.refresh();
 				lastUpdateTime = System.currentTimeMillis();
@@ -102,8 +110,11 @@ public class TableContentProvider implements IStructuredContentProvider, Observe
 
 /*
 $Log: TableContentProvider.java,v $
+Revision 1.3  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.2  2003/08/22 21:17:25  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.1  2003/08/20 14:58:43  zet
 sources clientinfo viewer

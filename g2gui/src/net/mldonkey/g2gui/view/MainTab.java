@@ -82,8 +82,8 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * Gui
  *
- * @author $Author: lemmster $
- * @version $Id: MainTab.java,v 1.50 2003/08/21 16:26:15 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: MainTab.java,v 1.51 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -703,7 +703,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 		reg.put( "MessagesButtonSmallWhite", createTrans( "messages-16.png", white ) );
 		
 		reg.put( "DownArrow", createTrans( "down.png" ) );
-		reg.put( "UpArrow", createTrans( "down.png" ) );
+		reg.put( "UpArrow", createTrans( "up.png" ) );
 		
 		reg.put( "SearchSmall", createTrans( "search_small.png" )) ;
 		reg.put( "SearchComplete", createTrans( "search_complete.png" )) ;
@@ -787,6 +787,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.51  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.50  2003/08/21 16:26:15  lemmster
 changed links in menubar
 

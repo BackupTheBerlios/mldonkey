@@ -38,12 +38,13 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
+import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
 
 /**
  * Download
  *
- * @author $Author: lemmster $
- * @version $Id: FileInfo.java,v 1.39 2003/08/22 21:03:15 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: FileInfo.java,v 1.40 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -110,7 +111,7 @@ public class FileInfo extends Parent implements Observer {
 	 * File last seen
 	 */
 	private int offset;
-	private String stringOffset;
+	private String stringOffset="";
 	/**
 	 * last time each chunk has been seen
 	 */
@@ -137,12 +138,17 @@ public class FileInfo extends Parent implements Observer {
 	 */
 	private Set clientInfos = Collections.synchronizedSet( new HashSet() );
 
-	private String stringSize;
-	private String stringDownloaded;
-	private String stringETA;
+	private String stringSize="";
+	private String stringDownloaded="";
+	private String stringETA = "";
 	private long etaSeconds;
 
-	
+	public boolean changedRate;
+	public boolean changedDownloaded;
+	public boolean changedLast;
+	public boolean changedPercent;
+	public boolean changedETA;
+		
 	/**
 	 * @return time when download started
 	 */
@@ -334,12 +340,20 @@ public class FileInfo extends Parent implements Observer {
 		this.names = messageBuffer.readStringList();
 		this.md4 = messageBuffer.readBinary( 16 );
 		this.size = messageBuffer.readInt32();
+	
 		this.downloaded = messageBuffer.readInt32();
+		
 		this.sources = messageBuffer.readInt32();
 		this.clients = messageBuffer.readInt32();
 		
 		/* File State */
+		
+		Enum oldState = this.state.getState();
+		
 		this.getState().readStream( messageBuffer );
+		
+		changedRate = (oldState != this.state.getState() ? true : false); 
+		
 		this.chunks = messageBuffer.readString();
 		
 		int cnt = 0;
@@ -350,7 +364,7 @@ public class FileInfo extends Parent implements Observer {
 		numChunks = cnt;
 
 		/* read a list of int32(networkid) and string(avail) */
-		if ( parent.getProtoToUse() > 17 ) {			
+		if ( parent.getProtoToUse() > 17 ) {
 			this.avails = new HashMap();
 			int listElem = messageBuffer.readInt16();
 			for ( int i = 0; i < listElem; i++ ) {
@@ -371,7 +385,11 @@ public class FileInfo extends Parent implements Observer {
 		/* translate to kb and round to two digits after comma */
 		double d = new Double( messageBuffer.readString() ).doubleValue();
 		this.rate = ( float ) round( d / 1024 );
+		float oldRawRate = rawRate;
 		this.rawRate = ( float ) d;
+		
+		if (oldRawRate != rawRate) changedRate = true;
+		
 		this.chunkage = messageBuffer.readStringList();
 		this.age = messageBuffer.readString();
 		
@@ -379,30 +397,41 @@ public class FileInfo extends Parent implements Observer {
 		this.getFormat().readStream( messageBuffer );
 		String oldname = this.name;
 		this.name = messageBuffer.readString();
+		
 		this.offset = messageBuffer.readInt32();
+		
 		this.setPriority( messageBuffer.readSignedInt32() );
+		
+		int oldPercent = (int) this.perc;
+		
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
+		
+		changedPercent = (oldPercent != (int) this.perc ? true : false);
 	
 		this.stringSize = calcStringSize( this.size );
+		
+		String oldStringDownloaded = stringDownloaded;
 		this.stringDownloaded = calcStringSize( this.downloaded );
-
+		changedDownloaded = (!oldStringDownloaded.equals(stringDownloaded) ? true : false); 
+		
 		if (rawRate == 0) this.etaSeconds = Long.MAX_VALUE;
 		else this.etaSeconds = (long) ((getSize() - getDownloaded()) / (rawRate + 1));
 		
+		String oldStringETA = stringETA;
 		this.stringETA = calcStringOfSeconds ( this.etaSeconds );
-		this.stringAge = calcStringOfSeconds ( System.currentTimeMillis() / 1000 - Long.parseLong(this.age)  );
-		this.stringOffset = calcStringOfSeconds( this.offset );	
-			
-		if (this.state.getState() == EnumFileState.DOWNLOADING
-			|| this.state.getState() == EnumFileState.PAUSED
-			|| this.state.getState() == EnumFileState.QUEUED
-			|| this.state.getState() == EnumFileState.DOWNLOADED) {
-				this.setChanged();
-				this.notifyObservers( this );
-		}
 		
+		changedETA = (!oldStringETA.equals(stringETA) ? true : false);
+		
+		this.stringAge = calcStringOfSeconds ( System.currentTimeMillis() / 1000 - Long.parseLong(this.age)  );
 	
+		String oldStringOffset = stringOffset;
+		this.stringOffset = calcStringOfSeconds( this.offset );	
+		
+		changedLast = (!oldStringOffset.equals(stringOffset) ? true : false);
+
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -410,14 +439,45 @@ public class FileInfo extends Parent implements Observer {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void update( MessageBuffer messageBuffer ) {
+
+		int oldDownloaded = this.downloaded;
 		this.downloaded = messageBuffer.readInt32();
-		/* translate to kb and round to two digits after comma */
+		
+		changedDownloaded = (oldDownloaded != this.downloaded ? true : false);
+		
+		float oldRawRate = this.rawRate;
 		double d = new Double( messageBuffer.readString() ).doubleValue();
 		this.rawRate = ( float ) d;
 		this.rate = ( float ) round( d / 1024 );
+		
+		changedRate = (oldRawRate != rawRate ? true : false);
+		
+		int oldOffset = this.offset;
 		this.offset = messageBuffer.readInt32();
+
+		String oldStringOffset = stringOffset;
+		this.stringOffset = calcStringOfSeconds( this.offset );	
+		changedLast = (!oldStringOffset.equals(stringOffset) ? true : false);
+
+		int oldPercent = (int) this.perc;
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
+
+		changedPercent = (oldPercent != (int) this.perc ? true : false);
+
+		if (rawRate == 0) this.etaSeconds = Long.MAX_VALUE;
+		else this.etaSeconds = (long) ((getSize() - getDownloaded()) / (rawRate + 1));
+		
+		String oldStringDownloaded = stringDownloaded;
+		this.stringDownloaded = calcStringSize( this.downloaded );
+		changedDownloaded = (!oldStringDownloaded.equals(stringDownloaded) ? true : false);
+		
+		String oldStringETA = stringETA;
+		this.stringETA = calcStringOfSeconds ( this.etaSeconds );
+		changedETA = (!oldStringETA.equals(stringETA) ? true : false);
+
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 
 	/**
@@ -563,26 +623,26 @@ public class FileInfo extends Parent implements Observer {
 	 * @param size The size
 	 * @return a string represantation of this size
 	 */	
-	private String calcStringSize( long size ) {
-			float k = 1024f;
-			float m = k * k;
-			float g = m * k;
-			float t = g * k;
+	private static String calcStringSize( long size ) {
+		float k = 1024f;
+		float m = k * k;
+		float g = m * k;
+		float t = g * k;
+	
+		float fsize = (float) size;
+	
+		DecimalFormat df = new DecimalFormat( "0.#" );
 		
-			float fsize = (float) size;
-		
-			DecimalFormat df = new DecimalFormat( "0.#" );
-			
-			if ( fsize > t ) 
-				return new String ( df.format(fsize / t) + " TB" );
-			else if ( fsize > g ) 
-				return new String ( df.format(fsize / g) + " GB" );	
-			else if ( fsize > m ) 
-				return new String ( df.format(fsize / m) + " MB" );
-			else if ( fsize > k ) 
-				return new String ( df.format(fsize / k) + " KB" );
-			else
-				return new String ( size + "" );	
+		if ( fsize > t ) 
+			return new String ( df.format(fsize / t) + " TB" );
+		else if ( fsize > g ) 
+			return new String ( df.format(fsize / g) + " GB" );	
+		else if ( fsize > m ) 
+			return new String ( df.format(fsize / m) + " MB" );
+		else if ( fsize > k ) 
+			return new String ( df.format(fsize / k) + " KB" );
+		else
+			return new String ( size + "" );	
 	}
 	public String getStringSize () {
 		return stringSize;
@@ -590,9 +650,9 @@ public class FileInfo extends Parent implements Observer {
 	public String getStringDownloaded () {
 		return stringDownloaded;
 	}
-	private String calcStringOfSeconds (long inSeconds) {
+	private static String calcStringOfSeconds (long inSeconds) {
 		
-		if (inSeconds < 1) return "";
+		if (inSeconds < 1) return "0m";
 				
 		long days = inSeconds / 60 / 60 / 24;
 		long rest = inSeconds - days * 60 * 60 * 24;
@@ -604,7 +664,7 @@ public class FileInfo extends Parent implements Observer {
 		if (days > 100) return "";
 		if (days > 0) return "" + days + "d";
 		if (hours > 0) return "" + hours + "h" + (minutes > 0 ? " " + minutes + "m" : "");
-		return "" + minutes + "m" + (seconds > 0 ? " " + seconds + "s" : "");
+		return "" + minutes + "m";
 	}
 	public String getStringETA () {
 		return stringETA;
@@ -624,10 +684,13 @@ public class FileInfo extends Parent implements Observer {
 	// hack
 	public void update (Observable o, Object obj) {
 		if (o instanceof ClientInfo) {
-			
 			ClientInfo clientInfo = (ClientInfo) o;
 			this.setChanged();
-			this.notifyObservers( clientInfo );
+			if (obj == null) {
+				this.notifyObservers( new TreeClientInfo(this, clientInfo));
+			} else {
+				this.notifyObservers( clientInfo );
+			}
 			
 		}
 	}
@@ -636,8 +699,11 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.40  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)

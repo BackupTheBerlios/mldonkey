@@ -37,15 +37,11 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
 /**
  * FileInfoList
  *
- * @author $Author: lemmster $
- * @version $Id: FileInfoIntMap.java,v 1.22 2003/08/22 21:03:15 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: FileInfoIntMap.java,v 1.23 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
-	/**
-	 * id of last file changed in the map
-	 */
-	private List ids = new ArrayList();
 
 	/**
 	 * @param communication my parent
@@ -101,9 +97,10 @@ public class FileInfoIntMap extends InfoIntMap {
 		int id = messageBuffer.readInt32();
 		if (this.infoIntMap.containsKey(id)) {
 			this.get(id).update(messageBuffer);
-			this.setChanged();
-			this.notifyObservers( this );
 		}
+		this.setChanged();
+		this.notifyObservers ( this );
+	
 	}
 	
 	/**
@@ -113,32 +110,15 @@ public class FileInfoIntMap extends InfoIntMap {
 	public void add( MessageBuffer messageBuffer ) {
 		synchronized ( this ) {
 			int id = messageBuffer.readInt32();
-			synchronized ( this.ids ) {
-				this.ids.add( new Integer( id ) );
-			}
+		
+			this.setChanged();
+			this.notifyObservers ( this );
 		
 			/* go 4bytes back in the MessageBuffer */
 			messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 			if ( this.infoIntMap.containsKey( id ) ) {
 				FileInfo fileInfo = (FileInfo) this.get( id );
-				EnumFileState oldFileState = (EnumFileState) fileInfo.getState().getState();
 				fileInfo.readStream( messageBuffer );
-				EnumFileState newFileState = (EnumFileState) fileInfo.getState().getState();
-				
-				// viewer.refresh
-				if ((newFileState == EnumFileState.CANCELLED
-					|| newFileState == EnumFileState.SHARED
-					|| newFileState == EnumFileState.ABORTED
-					|| newFileState == EnumFileState.NEW
-					) && oldFileState != newFileState) {
-					this.setChanged();
-					this.notifyObservers();
-				// viewer.update
-				} else {
-					this.setChanged();
-					this.notifyObservers( this );
-				}
-									
 			} else {
 				FileInfo fileInfo = new FileInfo( this.parent );
 				fileInfo.readStream( messageBuffer );
@@ -157,25 +137,6 @@ public class FileInfoIntMap extends InfoIntMap {
 	 */
 	public FileInfo get( int id ) {
 		return ( FileInfo ) this.infoIntMap.get( id );
-	}
-	
-	/**
-	 * A list of fileinfo ids, which changed since last update.
-	 * Use clearIds() after update
-	 * Need manual refresh() of the tableviewer
-	 * @return The fileinfo id which changed last
-	 */
-	public List getIds() {
-		return ids;
-	}
-	
-	/**
-	 * Removes all entries in ids
-	 */
-	public void clearIds() {
-		synchronized ( this.ids ) {
-			this.ids.clear();
-		}
 	}
 
 	/**
@@ -231,8 +192,11 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.23  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.22  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.21  2003/08/15 22:05:58  zet
 *** empty log message ***

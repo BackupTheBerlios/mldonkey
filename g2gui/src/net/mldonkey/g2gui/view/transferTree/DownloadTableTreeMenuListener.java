@@ -24,12 +24,12 @@ package net.mldonkey.g2gui.view.transferTree;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.NetworkInfo;
-import net.mldonkey.g2gui.model.NetworkInfo.Enum;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.view.MainTab;
@@ -60,8 +60,8 @@ import org.eclipse.swt.widgets.TableColumn;
  * 
  * DownloadTableTreeMenuListener
  *
- * @author $Author: lemmster $
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.13 2003/08/22 21:16:36 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.14 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -96,7 +96,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	};
 	
 	private static String[] ArchiveExtensions = {
-		"gz", "zip", "ace", "rar"
+		"gz", "zip", "ace", "rar", "tar", "tgz", "bz2"
 	};
 	
 	private static String[] CDImageExtensions = {
@@ -180,6 +180,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			&& selectedFile.getState().getState() == EnumFileState.DOWNLOADED)
 			menuManager.add(new CommitAction());
 
+		if (selectedFile != null)
+			menuManager.add(new FileDetailAction());
+
 		if (selectedFile != null
 			&& selectedFile.getState().getState() == EnumFileState.DOWNLOADING)
 			menuManager.add(new PauseAction());
@@ -211,10 +214,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		
 		if (selectedClient != null)
 			menuManager.add(new ClientDetailAction());
-		
-		if (selectedFile != null)
-			menuManager.add(new FileDetailAction());
-		
 
 		if (selectedFile != null) {
 			menuManager.add(new LinkToClipboardAction(false));
@@ -269,10 +268,11 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		
 		filterSubMenu.add(new Separator());
 		
-		for (int i = 0; i < ExtensionNames.length; i++ ) {
-			String extensionName = ExtensionNames [ i ];
+		for (int i = 0; i < Extensions.length; i++ ) {
+			String[] extensions = Extensions [ i ];
+			String extensionName = ExtensionNames [i ];
 			ExtensionsFilterAction eFA = new ExtensionsFilterAction(extensionName, Extensions[ i ]);
-			if (isFiltered(extensionName)) eFA.setChecked(true);
+			if (isFiltered(extensions)) eFA.setChecked(true);
 			filterSubMenu.add(eFA);
 		}
 		
@@ -281,16 +281,21 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	}
 		
 	// Helpers
-		
-	public boolean isFiltered(Enum networkType) {
-		ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
-		for (int i = 0; i < viewerFilters.length; i++) {
-			if (viewerFilters [ i ] instanceof NetworkFilter)
-				if (((NetworkFilter) viewerFilters[ i ]).getNetworkType().equals(networkType))
-					return true; 
-		}
-		return false;
+			
+	public boolean isFiltered( NetworkInfo.Enum networkType ) {
+			ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+			for ( int i = 0; i < viewerFilters.length; i++ ) {
+				if ( viewerFilters [ i ] instanceof NetworkFilter ) {
+					NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
+					for ( int j = 0; j < filter.getNetworkType().size(); j++ ) {
+						if ( filter.getNetworkType().get( j ).equals( networkType ) )
+							return true;					
+					}
+				}
+			}
+			return false;
 	}
+	
 	
 	public boolean isFiltered(EnumFileState fileState) {
 		ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
@@ -302,19 +307,24 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		return false;
 	}
 	
-	public boolean isFiltered(String name) {
-			ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
-			for (int i = 0; i < viewerFilters.length; i++) {
-				if (viewerFilters [ i ] instanceof FileExtensionsFilter)
-					if (((FileExtensionsFilter) viewerFilters[ i ]).getName().equals(name))
-						return true; 
-			}
-			return false;
-	}	
-		
-		
+	
+	public boolean isFiltered( String[] extensions ) {
+				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+				for ( int i = 0; i < viewerFilters.length; i++ ) {
+					if ( viewerFilters [ i ] instanceof FileExtensionsFilter ) {
+						FileExtensionsFilter filter = ( FileExtensionsFilter ) viewerFilters[ i ];
+						for ( int j = 0; j < filter.getFileExtensionList().size(); j++ ) {
+								String[] fileExtensions = (String[]) filter.getFileExtensionList().get(j);
+								if (fileExtensions.equals( extensions ) )
+								return true;					
+						}
+					}
+				}
+				return false;
+		}
+			
 	public void toggleFilter(ViewerFilter viewerFilter, boolean toggle) {
-		tableTreeContentProvider.closeAllEditors();
+	//	tableTreeContentProvider.closeAllEditors();
 	
 		if (toggle) 
 			tableTreeViewer.addFilter(viewerFilter);
@@ -484,7 +494,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			this.expand = expand;
 		}
 		public void run() {
-			tableTreeContentProvider.closeAllEditors();
+		//	tableTreeContentProvider.closeAllEditors();
 			if (expand) tableTreeViewer.expandAll();
 			else tableTreeViewer.collapseAll();
 			tableTreeContentProvider.updateAllEditors();
@@ -503,32 +513,51 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 				toggleFilter(viewerFilters[ i ], false);
 		}
 	}	
-		
-	class NetworkFilterAction extends Action {
+	
+	private class NetworkFilterAction extends Action {
+		private NetworkInfo.Enum networkType;
 
-		public Enum networkType;
-
-		public NetworkFilterAction(String name, Enum networkType) {
+		public NetworkFilterAction( String name, NetworkInfo.Enum networkType ) {
 			super(name, Action.AS_CHECK_BOX);
 			this.networkType = networkType;
 		}
 		public void run() {
-			
-			if (!isChecked()) {
+			if ( !isChecked() ) {
 				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
-				for (int i = 0; i < viewerFilters.length; i++) {
-					if (viewerFilters[i] instanceof NetworkFilter)
-						if (((NetworkFilter) viewerFilters[i]).getNetworkType() == networkType) {
-							toggleFilter(viewerFilters[i], false);
-						}
+				for ( int i = 0; i < viewerFilters.length; i++ ) {
+					if ( viewerFilters[i] instanceof NetworkFilter ) {
+						NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
+						for ( int j = 0; j < filter.getNetworkType().size(); j++ ) {
+							if ( filter.getNetworkType().get( j ) == networkType )
+								if ( filter.getNetworkType().size() == 1 )
+									toggleFilter( viewerFilters[ i ], false );
+								else {
+									filter.remove( networkType );
+									tableTreeViewer.refresh();
+									tableTreeContentProvider.updateAllEditors();
+								}									
+						}	
+					}
 				}
-			} else {
-				toggleFilter(new NetworkFilter(networkType), true);
 			}
-
+			else {
+				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+				for ( int i = 0; i < viewerFilters.length; i++ ) {
+					if ( viewerFilters[i] instanceof NetworkFilter ) {
+						NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
+						filter.add( networkType );
+						tableTreeViewer.refresh();
+						tableTreeContentProvider.updateAllEditors();
+						return;
+					}
+				}
+				NetworkFilter filter = new NetworkFilter();
+				filter.add( networkType );
+				toggleFilter( filter, true );
+			}
 		}
-	}
-	
+	}	
+
 	class FileStateFilterAction extends Action {
 
 		public EnumFileState fileState;
@@ -552,35 +581,54 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			}
 		}
 	}
-	
-	
-	class ExtensionsFilterAction extends Action {
-
-		public String extensionsName;
-		public String[] fileExtensions;
-
-		public ExtensionsFilterAction(String extensionsName, String[] fileExtensions) {
-			super(extensionsName, Action.AS_CHECK_BOX);
-			this.extensionsName = extensionsName;
-			this.fileExtensions = fileExtensions;
+	private class ExtensionsFilterAction extends Action {
+		public String[] extensions;
+		
+		public ExtensionsFilterAction( String name, String[] extensions ) {
+			super(name, Action.AS_CHECK_BOX);
+			this.extensions = extensions;
+			
 		}
 		public void run() {
-		
-			if (!isChecked()) {
+			if ( !isChecked() ) {
 				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
-				for (int i = 0; i < viewerFilters.length; i++) {
-					if (viewerFilters[i] instanceof FileExtensionsFilter)
-						if (((FileExtensionsFilter) viewerFilters[i]).getName().equals( extensionsName )) {
-							toggleFilter(viewerFilters[i], false);
-						}
+				for ( int i = 0; i < viewerFilters.length; i++ ) {
+					if ( viewerFilters[i] instanceof FileExtensionsFilter ) {
+						FileExtensionsFilter filter = ( FileExtensionsFilter ) viewerFilters[ i ];
+						for ( int j = 0; j < filter.getFileExtensionList().size(); j++ ) {
+							String[] fileExtensions = (String[]) filter.getFileExtensionList().get( j );
+							if ( fileExtensions.equals( extensions )  ) {
+								if (filter.getFileExtensionList().size() == 1) {
+									toggleFilter( viewerFilters[ i ], false );
+								} else {
+									filter.remove( fileExtensions );
+									tableTreeViewer.refresh();
+									tableTreeContentProvider.updateAllEditors();
+								}									
+							}
+						}	
+					}
 				}
-			} else {
-				toggleFilter(new FileExtensionsFilter(extensionsName, fileExtensions ), true);
 			}
-
+			else {
+				ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
+				for ( int i = 0; i < viewerFilters.length; i++ ) {
+					if ( viewerFilters[i] instanceof FileExtensionsFilter ) {
+						FileExtensionsFilter filter = ( FileExtensionsFilter ) viewerFilters[ i ];
+						filter.add( extensions );
+						tableTreeViewer.refresh();
+						tableTreeContentProvider.updateAllEditors();
+						return;
+					}
+				}
+				FileExtensionsFilter filter = new FileExtensionsFilter();
+				filter.add( extensions );
+				toggleFilter( filter, true );
+				tableTreeContentProvider.updateAllEditors();
+			}
 		}
-	}
-
+	}	
+	
 	class LinkToClipboardAction extends Action {
 		
 		private boolean useHTML = false;
@@ -642,26 +690,40 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	}
 	
 	// Filters	
-		
-	public class NetworkFilter extends ViewerFilter {
-		
-		private Enum networkType;
-		
-		public NetworkFilter(Enum enum) {
-			this.networkType = enum;	
-		}	
-		
-		public Enum getNetworkType () {
+	public static class NetworkFilter extends ViewerFilter {
+		private List networkType;
+
+		public NetworkFilter() {
+			this.networkType = new ArrayList();
+		}
+
+		public List getNetworkType() {
 			return networkType;
 		}
-		
-		public boolean select(Viewer viewer, Object parentElement, Object element) {
+
+		public boolean add(NetworkInfo.Enum enum) {
+			return this.networkType.add(enum);
+		}
+
+		public boolean remove(NetworkInfo.Enum enum) {
+			return this.networkType.remove(enum);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+		 */
+		public boolean select(
+			Viewer viewer,
+			Object parentElement,
+			Object element) {
 			if (element instanceof FileInfo) {
 				FileInfo fileInfo = (FileInfo) element;
-				if (fileInfo.getNetwork().getNetworkType() == networkType)
-					return true;
-				else 
-					return false;
+				for (int i = 0; i < this.networkType.size(); i++) {
+					if (fileInfo.getNetwork().getNetworkType()
+						== networkType.get(i))
+						return true;
+				}
+				return false;
 			}
 			return true;
 		}
@@ -690,42 +752,57 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			return true;
 		}
 	}
+	public static class FileExtensionsFilter extends ViewerFilter {
+		private List fileExtensionsList;
 
-	
-	public class FileExtensionsFilter extends ViewerFilter {
-
-		private String[] fileExtensions;
-		private String filterName;
-
-		public FileExtensionsFilter(String filterName, String[] fileExtensions) {
-			this.fileExtensions = fileExtensions;
-			this.filterName = filterName;
+		public FileExtensionsFilter() {
+			this.fileExtensionsList = new ArrayList();
 		}
 
-		public String getName() {
-			return filterName;
+		public List getFileExtensionList() {
+			return fileExtensionsList;
 		}
 
-		public boolean select(Viewer viewer, Object parentElement, Object element) {
+		public boolean add(String[] extensions) {
+			return this.fileExtensionsList.add(extensions);
+		}
+
+		public boolean remove(String[] extensions) {
+			return this.fileExtensionsList.remove(extensions);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+		 */
+		public boolean select(
+			Viewer viewer,
+			Object parentElement,
+			Object element) {
 			if (element instanceof FileInfo) {
 				FileInfo fileInfo = (FileInfo) element;
-				for (int i = 0; i < fileExtensions.length; i++) {
-					if (fileInfo.getName().toLowerCase().endsWith("." + fileExtensions[i]))
-						return true;
+				for (int i = 0; i < this.fileExtensionsList.size(); i++) {
+					String[] fileExtensions = (String[]) fileExtensionsList.get(i);
+					for (int j = 0; j < fileExtensions.length; j++) {
+						if (fileInfo.getName().toLowerCase().endsWith("." + fileExtensions[j]))
+							return true;
+					}	
 				}
 				return false;
 			}
 			return true;
 		}
 	}
-	
+		
 }
 
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.14  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/22 14:30:45  lemmster
 verify chunks added

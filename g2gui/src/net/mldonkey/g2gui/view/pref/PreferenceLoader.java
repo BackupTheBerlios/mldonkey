@@ -27,6 +27,7 @@ import java.io.IOException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -35,8 +36,8 @@ import org.eclipse.swt.widgets.Display;
 /**
  * PreferenceLoader
  *
- * @author $Author: lemmster $
- * @version $Id: PreferenceLoader.java,v 1.10 2003/08/22 21:10:57 lemmster Exp $
+ * @author $Author: zet $
+ * @version $Id: PreferenceLoader.java,v 1.11 2003/08/22 23:25:15 zet Exp $
  */
 public class PreferenceLoader {
 
@@ -66,6 +67,7 @@ public class PreferenceLoader {
 		PreferenceConverter.setDefault(preferenceStore, "consoleHighlight",  display.getSystemColor(SWT.COLOR_LIST_SELECTION).getRGB() );
 		PreferenceConverter.setDefault(preferenceStore, "consoleInputBackground", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );
 		PreferenceConverter.setDefault(preferenceStore, "consoleInputForeground", display.getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB() );
+		PreferenceConverter.setDefault(preferenceStore, "consoleFontData", JFaceResources.getTextFont().getFontData());
 		
 		preferenceStore.setDefault( "hostname", "localhost" );
 		preferenceStore.setDefault( "username", "admin" );
@@ -73,13 +75,12 @@ public class PreferenceLoader {
 		preferenceStore.setDefault( "port", "4001" );
 		preferenceStore.setDefault( "advancedMode", false);
 
+		preferenceStore.setDefault( "maintainSortOrder", false );
 		preferenceStore.setDefault( "displayAllServers", true );
 		preferenceStore.setDefault( "displayChunkGraphs", false );
 		preferenceStore.setDefault( "displayGridLines", true );
 		preferenceStore.setDefault( "tableCellEditors", false );
-		preferenceStore.setDefault( "displayBuffer", 2 );
 		preferenceStore.setDefault( "displayHeaderBar", true );
-		preferenceStore.setDefault( "forceRefresh", false );
 		return preferenceStore;
 	}
 	
@@ -137,8 +138,11 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.11  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.10  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.9  2003/08/19 21:44:35  zet
 PreferenceLoader updates

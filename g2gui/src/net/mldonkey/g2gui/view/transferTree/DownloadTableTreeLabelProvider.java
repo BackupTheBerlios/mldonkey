@@ -42,8 +42,8 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadTableTreeLabelProvider
  *
- * @author $Author: lemmster $
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.14 2003/08/22 21:16:36 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.15 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -221,7 +221,7 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	}
 
 	public boolean isLabelProperty(Object arg0, String arg1) {
-		return false;
+		return true;
 	}
 	public void removeListener(ILabelProviderListener arg0) {
 	}
@@ -235,8 +235,11 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.15  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.14  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer

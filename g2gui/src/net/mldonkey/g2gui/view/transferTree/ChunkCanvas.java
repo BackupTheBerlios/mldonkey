@@ -48,8 +48,8 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ChunkView
  *
- * @author $Author: lemmster $
- * @version $Id: ChunkCanvas.java,v 1.12 2003/08/22 21:16:36 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: ChunkCanvas.java,v 1.13 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -319,7 +319,6 @@ public class ChunkCanvas extends Canvas implements Observer {
 		}
 	}
 	
-	
 	protected void resizeImage( ControlEvent e ) {
 		if ( image != null && imageData != null ) {
 					
@@ -337,7 +336,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 	protected void paintControl( PaintEvent e ) {
 
 		GC canvasGC = e.gc;
-			
+		
 		// does this help? probably not...	
 		if (canvasGC == null) return;	
 
@@ -347,7 +346,6 @@ public class ChunkCanvas extends Canvas implements Observer {
 			int srcHeight = resizedImageData.height;	
 			int destWidth = e.width;
 			int destHeight = e.height;			
-		
 			Image bufferImage = new Image(null, resizedImageData);			
 						
 			GC bufferGC = new GC( bufferImage );
@@ -462,15 +460,23 @@ public class ChunkCanvas extends Canvas implements Observer {
 			});
 		}
 	}
-	
-	
-	
+
+
+	public int getHash() {
+		if (type == isClientInfo) 
+			return clientInfo.hashCode();
+		else
+			return fileInfo.hashCode();
+	}
 }
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.13  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.12  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.11  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

@@ -30,12 +30,13 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
+import net.mldonkey.g2gui.model.enum.EnumState;
 
 /**
  * ClientInfo
  *
- * @author $Author: lemmster $
- * @version $Id: ClientInfo.java,v 1.18 2003/08/22 21:03:15 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: ClientInfo.java,v 1.19 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -205,15 +206,23 @@ public class ClientInfo extends Parent {
 					.infoIntMap.get( messageBuffer.readInt32() );
 		
 		this.getClientKind().readStream( messageBuffer );
+		Enum oldState = this.getState().getState();
 		this.getState().readStream( messageBuffer );
 		this.setClientType( messageBuffer.readByte() );
 		this.tag = messageBuffer.readTagList();
 		this.clientName = messageBuffer.readString();
 		this.clientRating = messageBuffer.readInt32();
 		this.clientChatPort = messageBuffer.readInt32();
-		
 		this.setChanged();
-		this.notifyObservers( this );
+		
+		Enum newState = getState().getState();
+		if ((oldState != newState) 
+			&& (oldState == EnumState.CONNECTED_DOWNLOADING 
+			|| newState == EnumState.CONNECTED_DOWNLOADING) ) {
+				this.notifyObservers();
+		} else {
+			this.notifyObservers( this );
+		}
 	}
 	
 	/**
@@ -221,9 +230,20 @@ public class ClientInfo extends Parent {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void update( MessageBuffer messageBuffer ) {
+		
+		Enum oldState = getState().getState();
 		this.getState().update( messageBuffer );
+		Enum newState = getState().getState();
+				
 		this.setChanged();
-		this.notifyObservers( this );
+		
+		if ((oldState != newState) 
+			&& (oldState == EnumState.CONNECTED_DOWNLOADING 
+				|| newState == EnumState.CONNECTED_DOWNLOADING) ) {
+				this.notifyObservers();
+		} else {
+			this.notifyObservers( this );
+		}
 	}
 	
 	/**
@@ -263,8 +283,11 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.19  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

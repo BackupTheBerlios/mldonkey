@@ -58,8 +58,8 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * DownloadTable
  *
- * @author $Author: lemmster $
- * @version $Id: DownloadTableTreeViewer.java,v 1.13 2003/08/22 21:16:36 lemmster Exp $ 
+ * @author $user$
+ * @version $Id: DownloadTableTreeViewer.java,v 1.14 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -129,10 +129,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		this.shell = parent.getShell();
 		this.mldonkey = mldonkey;
 		displayChunkGraphs = PreferenceLoader.loadBoolean("displayChunkGraphs");
-				
-		for (int i = 0; i < COLUMN_LABELS.length ; i++)
-			MainTab.getStore().setDefault(COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ]);
-	
 		createTableTreeViewer(parent, mldonkey);
 	}
 	
@@ -153,11 +149,16 @@ public class DownloadTableTreeViewer implements ICellModifier {
 				
 		for (int i = 0; i < COLUMN_LABELS.length; i++) {
 			TableColumn tableColumn = new TableColumn(table, COLUMN_ALIGNMENT[ i ]);
+			MainTab.getStore().setDefault(COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ]);
 			tableColumn.setText ( G2GuiResources.getString( COLUMN_LABELS[ i ] )  );
 			tableColumn.setWidth(MainTab.getStore().getInt(COLUMN_LABELS [ i ] ));
-			MainTab.getStore().setDefault(COLUMN_LABELS [ i ] + "_Resizable", true);
-			tableColumn.setResizable(MainTab.getStore().getBoolean(COLUMN_LABELS [ i ] + "_Resizable" ));
+			if (MainTab.getStore().getDefaultInt(COLUMN_LABELS[ i ]) <= 1) {
+				MainTab.getStore().setDefault(COLUMN_LABELS [ i ] + "_Resizable", false);
+			} else {
+				MainTab.getStore().setDefault(COLUMN_LABELS [ i ] + "_Resizable", true);
+			}
 			tableColumn.setData(COLUMN_LABELS[ i ]);
+			tableColumn.setResizable(MainTab.getStore().getBoolean(COLUMN_LABELS [ i ] + "_Resizable"));
 						
 			final int columnIndex = i;
 			tableColumn.addDisposeListener(new DisposeListener() {
@@ -174,11 +175,12 @@ public class DownloadTableTreeViewer implements ICellModifier {
 					DownloadTableTreeSorter dTTS = new DownloadTableTreeSorter();
 					dTTS.setLastColumnIndex( downloadTableTreeSorter.getLastColumnIndex() );
 					dTTS.setLastSort( downloadTableTreeSorter.getLastSort() );
+					dTTS.setMaintainSortOrder( downloadTableTreeSorter.getMaintainSortOrder() );
 					downloadTableTreeSorter = dTTS;
 					// set the column to sort
 					downloadTableTreeSorter.setColumnIndex( columnIndex );
 					// close all child editors and sort
-					tableTreeContentProvider.closeAllEditors();
+				//	tableTreeContentProvider.closeAllEditors();
 					tableTreeViewer.setSorter( downloadTableTreeSorter );
 					tableTreeContentProvider.updateAllEditors();
 				}	
@@ -209,7 +211,8 @@ public class DownloadTableTreeViewer implements ICellModifier {
 					if (tableTreeViewer.getExpandedState(fileInfo)) 
 						tableTreeViewer.collapseToLevel(fileInfo, AbstractTreeViewer.ALL_LEVELS);
 					else 
-						tableTreeViewer.expandToLevel(fileInfo,AbstractTreeViewer.ALL_LEVELS);			
+						tableTreeViewer.expandToLevel(fileInfo,AbstractTreeViewer.ALL_LEVELS);	
+					tableTreeContentProvider.updateAllEditors();		
 				
 				} else if (o instanceof TreeClientInfo) {
 					TreeClientInfo treeClientInfo = (TreeClientInfo) o;
@@ -221,11 +224,8 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		treeLabelProvider.setTableTreeViewer(tableTreeViewer);
 		tableTreeViewer.setLabelProvider(treeLabelProvider);
 		
-		
 		tableTreeContentProvider = new DownloadTableTreeContentProvider();
 		tableTreeContentProvider.setDownloadTableTreeViewer(this);
-		tableTreeContentProvider.setUpdateBuffer( PreferenceLoader.loadInteger("displayBuffer") );
-		tableTreeContentProvider.setForceRefresh( PreferenceLoader.loadBoolean("forceRefresh") );
 		tableTreeViewer.setContentProvider(tableTreeContentProvider);
 		tableTreeViewer.setUseHashlookup(true);
 		
@@ -243,6 +243,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 						
 		tableTree.setMenu(popupMenu.createContextMenu(tableTree));
 		
+		downloadTableTreeSorter.setMaintainSortOrder( PreferenceLoader.loadBoolean("maintainSortOrder"));
 		tableTreeViewer.setSorter(downloadTableTreeSorter);	
 		tableTreeViewer.setInput( mldonkey.getFileInfoIntMap() );
 		mldonkey.getFileInfoIntMap().addObserver( tableTreeContentProvider );
@@ -301,25 +302,27 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			tableTreeViewer.setCellModifier(null);		
 		}
 		
-		tableTreeContentProvider.closeAllEditors();
+		//tableTreeContentProvider.closeAllEditors();
 		tableTreeViewer.refresh();
 		displayChunkGraphs = newChunkValue;
 		tableTreeContentProvider.updateAllEditors();
-		tableTreeContentProvider.setUpdateBuffer( PreferenceLoader.loadInteger("displayBuffer") );
-		tableTreeContentProvider.setForceRefresh(PreferenceLoader.loadBoolean("forceRefresh"));
+		if (tableTreeViewer.getSorter() != null)
+			((DownloadTableTreeSorter) tableTreeViewer.getSorter()).setMaintainSortOrder( PreferenceLoader.loadBoolean("maintainSortOrder"));
+	
 	}
 
 	public void updateClientsTable(boolean b) {
 		tableTreeMenuListener.updateClientsTable(b);
 	}
-
-		
 }
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.14  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.13  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/22 13:47:56  dek
 selection is removed with click on empty-row

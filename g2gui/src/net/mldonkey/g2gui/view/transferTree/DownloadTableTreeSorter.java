@@ -34,8 +34,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 /**
  * ResultTableSorter
  *
- * @author $Author: lemmster $
- * @version $Id: DownloadTableTreeSorter.java,v 1.8 2003/08/22 21:16:36 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.9 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
@@ -45,6 +45,7 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 	// last sort ascending = fase
 	private boolean lastSort = false;
 	private ITableLabelProvider labelProvider;
+	private boolean maintainSortOrder = false;
 	/**
 	 * Creates a new viewer sorter
 	 */
@@ -56,6 +57,37 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 		if(element instanceof FileInfo) return 1;
 		if(element instanceof TreeClientInfo) return 2;
 		return 3;
+	}
+		
+	public boolean isSorterProperty(Object element, String property) {
+		
+		// if you return true, the table will refresh() and flicker more often
+		// but the table maintains sort order, so try to be precise with updates.
+		if ((columnIndex == 4 
+			|| columnIndex == 5
+			|| columnIndex == 7
+			|| columnIndex == 9
+			|| columnIndex == 11) 
+			&& (element instanceof FileInfo)
+			&& maintainSortOrder) {		
+
+			FileInfo fileInfo = (FileInfo) element;
+			switch (columnIndex) {
+				case 4:
+					return (fileInfo.changedDownloaded ? true : false);
+				case 5:	
+					return (fileInfo.changedPercent ? true : false);
+				case 7:
+					return (fileInfo.changedRate ? true : false); 
+				case 9:
+					return (fileInfo.changedETA ? true : false);
+				case 11:
+					return (fileInfo.changedLast ? true : false);
+				default: 
+					return false;
+			}
+		}
+		return false;
 	}
 		
 	public int compare(Viewer viewer, Object e1, Object e2) {
@@ -144,13 +176,13 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 						
 				case 10: // priority
 					if (fileInfo1.getPriority() == EnumPriority.LOW)
-						return -1;
+						return (lastSort ? -1 : 1);
 					else if (fileInfo1.getPriority() == EnumPriority.HIGH)
-						return 1;	
+						return (lastSort ? 1 : -1);	
 					else {
 						if (fileInfo2.getPriority() == EnumPriority.LOW)
-							return 1;
-						else return -1;
+							return (lastSort ? 1 : -1);
+						else return (lastSort ? -1 : 1);
 					}
 				
 				case 11: // last
@@ -259,12 +291,22 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 	public void setLastSort(boolean b) {
 		lastSort = b;
 	}
+	public boolean getMaintainSortOrder() {
+		return maintainSortOrder;
+	}
+	public void setMaintainSortOrder(boolean b) {
+		maintainSortOrder=b;
+	}
+	
 }
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.9  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.8  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.7  2003/08/16 20:03:34  zet
 downloaded at top

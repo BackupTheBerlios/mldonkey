@@ -37,8 +37,8 @@ import org.eclipse.swt.widgets.Widget;
  * 
  * CustomTableTreeViewer
  *
- * @author $Author: lemmster $
- * @version $Id: CustomTableTreeViewer.java,v 1.4 2003/08/22 21:16:36 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: CustomTableTreeViewer.java,v 1.5 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class CustomTableTreeViewer extends TableTreeViewer {
@@ -106,12 +106,14 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 			}
 		}
 	}
-	
 }
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.5  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.4  2003/08/22 21:16:36  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.3  2003/08/20 22:18:56  zet
 Viewer updates

@@ -29,8 +29,8 @@ import net.mldonkey.g2gui.model.FileInfo;
  * 
  * TreeClientInfo
  *
- * @author $Author: lemmster $
- * @version $Id: TreeClientInfo.java,v 1.3 2003/08/22 21:22:58 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: TreeClientInfo.java,v 1.4 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class TreeClientInfo {
@@ -48,11 +48,30 @@ public class TreeClientInfo {
 	public ClientInfo getClientInfo() {
 		return clientInfo;
 	}
+	
+	public boolean equals( Object o ) {
+			if (o instanceof TreeClientInfo) {
+				ClientInfo c = (ClientInfo) ((TreeClientInfo)o).getClientInfo();
+				FileInfo f = (FileInfo) ((TreeClientInfo)o).getFileInfo();
+				if (c.equals(this.getClientInfo()) && f.equals(this.getFileInfo()))
+					return true;
+				else
+					return false;
+			} else {
+				return false;
+			}
+		}
 
 }
 /*
 $Log: TreeClientInfo.java,v $
+Revision 1.4  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.3  2003/08/22 21:22:58  lemmster
-fix $Log$
+fix $Log: TreeClientInfo.java,v $
+fix Revision 1.4  2003/08/22 23:25:15  zet
+fix downloadtabletreeviewer: new update methods
+fix
 
 */

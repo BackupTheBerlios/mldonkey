@@ -67,8 +67,8 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * Main
  *
- * @author $Author: lemmster $
- * @version $Id: TransferTab.java,v 1.32 2003/08/22 21:06:48 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: TransferTab.java,v 1.33 2003/08/22 23:25:15 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -235,6 +235,7 @@ public class TransferTab extends GuiTab  {
 		float totalRate = 0;
 		int totalFiles = 0;
 		int totalQueued = 0;
+		int totalDownloaded = 0;
 
 		// add precision later		
 		if (o instanceof FileInfoIntMap) {
@@ -249,11 +250,22 @@ public class TransferTab extends GuiTab  {
 						totalFiles++;
 					if (fileInfo.getState().getState() == EnumFileState.QUEUED) 
 						totalQueued++;
+					else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED) 
+						totalDownloaded++;	
 				}
 			} 
 			// localise this
-			String totalQueuedString = (totalQueued > 0 ? " (" + totalQueued + " queued)" : "");
-			runLabelUpdate(totalFiles + " files, " + decimalFormat.format(totalRate / 1000f) + " KB/s" + totalQueuedString);
+			String extra = "";
+			
+			if (totalQueued > 0 || totalDownloaded > 0) {
+				extra = " (";
+				if (totalQueued > 0) extra += "queued: " + totalQueued;
+				if (totalQueued > 0 && totalDownloaded > 0) extra += ", ";
+				if (totalDownloaded > 0) extra += "downloaded: " + totalDownloaded;
+				extra += ")";
+			}
+						
+			runLabelUpdate(totalFiles + " files, " + decimalFormat.format(totalRate / 1000f) + " KB/s" + extra);
 		}
 	
 	}
@@ -288,8 +300,11 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.33  2003/08/22 23:25:15  zet
+downloadtabletreeviewer: new update methods
+
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author$
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression
