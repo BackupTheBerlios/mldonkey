@@ -22,6 +22,12 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -36,7 +42,6 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.DisposeEvent;
@@ -59,18 +64,11 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 
 /**
  * MainTab
  *
- * @version $Id: MainTab.java,v 1.88 2003/11/10 20:55:37 zet Exp $
+ * @version $Id: MainTab.java,v 1.89 2003/11/13 00:21:59 zet Exp $
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -165,7 +163,9 @@ public class MainTab implements ShellListener {
         }
 
         // locks up swt-fox
-        // display.close();
+        if (!SWT.getPlatform().equals("fox")) {
+            display.close();
+        }
     }
 
     /* ( non-Javadoc )
@@ -459,6 +459,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.89  2003/11/13 00:21:59  zet
+*** empty log message ***
+
 Revision 1.88  2003/11/10 20:55:37  zet
 display.close/dispose locks up fox
 
