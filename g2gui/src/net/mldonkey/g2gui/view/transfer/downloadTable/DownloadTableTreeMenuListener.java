@@ -64,7 +64,7 @@ import java.util.List;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.4 2003/09/23 00:11:00 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.5 2003/09/23 01:22:45 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -254,15 +254,15 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     }
 	
 	class PreviewAction extends Action {
-		   public PreviewAction(  ) {
-			   super(  );
-			   setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PREVIEW" ) );
-		   }
-		   public void run(  ) {
-			   for ( int i = 0; i < selectedFiles.size(  ); i++ )
-				   ( (FileInfo) selectedFiles.get( i ) ).preview(  );
-		   }
+	   public PreviewAction(  ) {
+		   super(  );
+		   setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PREVIEW" ) );
 	   }
+	   public void run(  ) {
+		   for ( int i = 0; i < selectedFiles.size(  ); i++ )
+			   ( (FileInfo) selectedFiles.get( i ) ).preview(  );
+	   }
+	}
 
     class FileDetailAction extends Action {
         public FileDetailAction(  ) {
@@ -473,6 +473,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.5  2003/09/23 01:22:45  zet
+*** empty log message ***
+
 Revision 1.4  2003/09/23 00:11:00  zet
 add Preview
 
