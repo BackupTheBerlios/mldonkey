@@ -22,40 +22,39 @@
  */
 package net.mldonkey.g2gui.helper;
 
-import java.io.UnsupportedEncodingException;
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.OutputStreamWriter;
 import java.io.FilterOutputStream;
-
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.ServerSocket;
-import java.net.URLDecoder;
-import java.net.NetworkInterface;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.List;
 
-import net.mldonkey.g2gui.view.*;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.helper.RegExp;
+import net.mldonkey.g2gui.view.G2Gui;
+
+import org.eclipse.swt.SWT;
 
 
 /**
  * DownloadSubmit
  *
  * @author $user$
- * @version $Id: DownloadSubmit.java,v 1.9 2004/03/06 17:12:51 psy Exp $ 
+ * @version $Id: DownloadSubmit.java,v 1.10 2004/03/16 12:54:32 dek Exp $ 
  *
  */
 public class DownloadSubmit implements Runnable {
@@ -190,16 +189,15 @@ public class DownloadSubmit implements Runnable {
      */
     private void serveTorrent(File localfile) {
 		ServerSocket server;
-		
 		/* search for a free port we can bind to */
 		for (int i = 0; i <= 20; i++) {
-			try {
-				server = new ServerSocket(submitPort + i);
-
+			
+			try {				
+				server = new ServerSocket(submitPort+i);
 				String link = "http://" + getMyIP() + ":" + server.getLocalPort() + "/g2gui-prepared.torrent";
 				if (G2Gui.debug) System.out.println("INTERNAL HTTPD: " + link + " (waiting max " + SERVETIME + " seconds)");
-				
-				sendLink(link);
+								
+				sendLink(link);				
 				/* is it dangerous to send the link before the internal httpd has been set up?
 				 * This could produce complications if the mld-core machine is really fast and
 				 * the local gui-machine is very very slow.
@@ -264,7 +262,7 @@ public class DownloadSubmit implements Runnable {
 				break;
 			/* otherwise the for-loop will try with the next port */
 			} catch (IOException e) {
-				if (G2Gui.debug) System.out.println("Socket-binding exception: " + e);
+				if (G2Gui.debug) System.out.println("Socket-binding exception: "+e);
 			}
 		}
 		
@@ -277,17 +275,21 @@ public class DownloadSubmit implements Runnable {
      * @return a string which contains our IP
      * @throws SocketException when IP-determination somehow went wrong
      */
-    private String getMyIP() throws SocketException {
+    private String getMyIP() throws IOException  {
     	String myIP = "";
 		
     	if ( submitHost != null ) {
     		if (G2Gui.debug) System.out.println("Overriding IP-autodetection!");
     		return submitHost;
     	}
-    	/* get a list of network-devices */
-    	Enumeration test = NetworkInterface.getNetworkInterfaces();
     	
-    	/* cycle through the devices */
+    	if (SWT.getPlatform().equals("win32")){
+    		return getWin32IP();
+    	}
+    	/* get a list of network-devices */
+    	Enumeration test = NetworkInterface.getNetworkInterfaces();			
+
+		/* cycle through the devices */
 		while ( test.hasMoreElements() ) {
 			NetworkInterface netface = (NetworkInterface) test.nextElement(); 
 			
@@ -309,10 +311,62 @@ public class DownloadSubmit implements Runnable {
 		return myIP;
     }
 
+	/**
+	 * @return the Ip-adress determined by ipconfig.exe (only win32)
+	 */
+	private String getWin32IP() throws IOException {
+		String ipAdress = "0.0.0.0";
+		System.out.println("win32 IP-detection started");
+		File executable = new File("ipconfig.exe");
+		Process execProcess = Runtime.getRuntime().exec(executable.toString());
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(execProcess.getInputStream()));
+		String buffer = "";
+		/* now searching for IP-adress in STDOUT : */
+		while (((buffer = in.readLine()) != null)) {			
+			/* strip all leading " " */
+			while (buffer.startsWith(" ")||buffer.startsWith("\t")) {				
+				buffer = buffer.substring(1);
+			}			
+			/* is this the line we want? */
+			if ( buffer.startsWith("IP") || buffer.startsWith("Ip") ) {				
+				String[] parts = RegExp.split(buffer, ':');
+				String tempIp=ipAdress;
+				
+				if ( parts.length == 2 ) {
+					/* the second entry in this array is the IP-adress */
+					tempIp = parts[1];
+					
+					/* now remove " " at beginning and end */
+					while (tempIp.startsWith(" ")||tempIp.startsWith("\t")) {
+						tempIp = tempIp.substring(1);
+					}
+					while (ipAdress.endsWith(" ")) {
+						tempIp = tempIp.substring(0, ipAdress.length() - 1);
+					}
+				}				
+				/*now check if we have found 0.0.0.0 or a real IP*/
+				if ( !tempIp.equals("0.0.0.0") ){
+					ipAdress=tempIp;
+				}
+			} 
+			
+		}
+		if (ipAdress.equals("0.0.0.0")){	
+			/*we were not able to determine IP adress is such a way*/
+			throw new IOException();
+						
+		}
+		return ipAdress;
+	}
+
 }
 
 /*
 $Log: DownloadSubmit.java,v $
+Revision 1.10  2004/03/16 12:54:32  dek
+win32 IP-detection using ipconfig
+
 Revision 1.9  2004/03/06 17:12:51  psy
 removed filename-checks, we don't really need them and they made problems with gcj hex-en-/de-coding
 
