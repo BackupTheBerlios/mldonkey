@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.comm.Message;
  * Download
  *
  *
- * @version $Id: Download.java,v 1.10 2003/09/02 09:26:52 lemmster Exp $ 
+ * @version $Id: Download.java,v 1.11 2003/09/18 03:51:27 zet Exp $ 
  *
  */
 public class Download implements Sendable {
@@ -64,9 +64,9 @@ public class Download implements Sendable {
 	 */
 	public void setForce( boolean b ) {
 		if ( b ) 
-			force = 0;
+			force = 1;
 		else
-			force = 1;	
+			force = 0;	
 	}
 	/**
 	 * @param strings All possible FileNames
@@ -97,6 +97,9 @@ public class Download implements Sendable {
 
 /*
 $Log: Download.java,v $
+Revision 1.11  2003/09/18 03:51:27  zet
+reverse setforce
+
 Revision 1.10  2003/09/02 09:26:52  lemmster
 checkstyle
 
@@ -107,7 +110,7 @@ Revision 1.8  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.6  2003/07/23 16:56:28  lemmstercvs01
 initial commit
