@@ -1,5 +1,5 @@
 2004/03/22: Dek
-	*Core-Communication: Implemented GUI-Protocol Version 21...25
+	* Core-Communication: Implemented GUI-Protocol Version 21...25
 
 2004/03/16: Dek
 	*FileDetail Dialog: Infos (e.g. hash, filename) are now 
