@@ -35,13 +35,14 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * StateGViewerFilter
  *
- * @version $Id: StateGViewerFilter.java,v 1.4 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: StateGViewerFilter.java,v 1.5 2003/10/31 16:48:51 zet Exp $
  *
  */
 public class StateGViewerFilter extends GViewerFilter {
-    private boolean exclusion = false;
+    private boolean exclusion;
 
     public StateGViewerFilter() {
+        this(false);
     }
 
     public StateGViewerFilter(boolean exclusion) {
@@ -125,6 +126,9 @@ public class StateGViewerFilter extends GViewerFilter {
 
 /*
 $Log: StateGViewerFilter.java,v $
+Revision 1.5  2003/10/31 16:48:51  zet
+minor
+
 Revision 1.4  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
