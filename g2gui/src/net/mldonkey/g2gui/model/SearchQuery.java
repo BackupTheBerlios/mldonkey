@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.26 2003/09/18 15:29:25 zet Exp $ 
+ * @version $Id: SearchQuery.java,v 1.27 2003/09/25 15:51:45 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -151,33 +151,79 @@ public class SearchQuery implements Sendable {
 					case AND :					
 						newQuery.setNode( EnumQuery.KEYWORDS );
 						newQuery.setComment( "Search-pattern:" );
-						pattern = pattern.substring( 1 );
-						newQuery.setDefaultValue( pattern );
-						andQuerys.add( newQuery );						
+						if ( pattern != null ){
+							newQuery.setDefaultValue( pattern );
+							andQuerys.add( newQuery );
+						}
+						else if ( i < patterns.length ) {
+							i++;
+							pattern = patterns[ i ];
+							newQuery.setDefaultValue( pattern );
+							andQuerys.add( newQuery );
+						}
+						/*if AND was last keyword, ignore */												
 						break;
 					case ANDNOT :					
 						newQuery.setNode( EnumQuery.KEYWORDS );
 						newQuery.setComment( "Search-pattern:" );
-						pattern = pattern.substring( 1 );
-						newQuery.setDefaultValue( pattern );
-						andNotQuerys.add( newQuery );						
-						break;						
-					default :					
-					newQuery.setNode( EnumQuery.KEYWORDS );
-					newQuery.setComment( "Search-pattern:" );
-					newQuery.setDefaultValue( pattern );					
-					orQuerys.add( newQuery );
-						break;
+						if ( pattern != null ){
+							newQuery.setDefaultValue( pattern );
+							andNotQuerys.add( newQuery );
+						}
+						else if ( i < patterns.length ) {
+							i++;
+							pattern = patterns[ i ];
+							newQuery.setDefaultValue( pattern );
+							andNotQuerys.add( newQuery );
+						}
+						/*if ANDNOT was last keyword, ignore */												
+						break;					
+					case OR :
+						newQuery.setNode( EnumQuery.KEYWORDS );
+						newQuery.setComment( "Search-pattern:" );
+						if ( pattern != null ){
+							newQuery.setDefaultValue( pattern );
+							orQuerys.add( newQuery );
+						}
+						else if ( i < patterns.length ) {
+							i++;
+							pattern = patterns[ i ];
+							newQuery.setDefaultValue( pattern );
+							orQuerys.add( newQuery );
+						}
+						/*if OR was last keyword, ignore */												
+						break;	
 				} 
 			}
 	}
 	
 	private short determineSearchType( String pattern ) {
-		if ( pattern.charAt( 0 ) == '+' )
-			return AND;
-		else if ( pattern.charAt( 0 ) == '-' )
-			return ANDNOT;
-		else return OR;
+		if ( pattern.charAt( 0 ) == '+' ){
+			/* strip first caracter: */
+			pattern = pattern.substring( 1 );			
+			return AND;			
+		}			
+		else if ( pattern.charAt( 0 ) == '-' ){
+			/* strip first caracter: */
+			pattern = pattern.substring( 1 );
+			return ANDNOT;			
+		}
+		else if ( pattern.equals( "OR" ) ){
+			/* set pattern to "null", take this as sign to use the following pattern */
+			pattern = null;
+			return OR;			
+		}
+		else if ( pattern.equals( "AND" ) ){
+			/* set pattern to "null", take this as sign to use the following pattern */
+			pattern = null;
+			return AND;			
+		}
+		else if ( pattern.equals( "ANDNOT" ) ){
+			/* set pattern to "null", take this as sign to use the following pattern */
+			pattern = null;
+			return ANDNOT;			
+		}							
+		else return AND;
 	}
 
 	
@@ -510,6 +556,13 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.27  2003/09/25 15:51:45  dek
+changed search-behaviour (AND is default)
+explanation:
+"OR xyz" 
+"+xyz" == "AND xyz" == "xyz" default behaviour
+"-xyz" == "ANDNOT xyz"
+
 Revision 1.26  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
@@ -547,7 +600,7 @@ Revision 1.17  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.16  2003/08/22 21:03:14  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.15  2003/08/09 15:32:45  dek
 removed unused import
