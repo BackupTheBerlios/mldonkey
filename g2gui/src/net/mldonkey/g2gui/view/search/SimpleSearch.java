@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.25 2003/11/24 08:37:24 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.26 2003/11/24 08:56:22 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -98,8 +98,6 @@ public class SimpleSearch extends Search {
 		if ( ! inputText.getText().equals( "" ) ) {
 
 			String aText = this.inputText.getText();
-			if ( this.inputText.indexOf( aText ) != -1 )
-				this.inputText.remove( aText );
 			this.inputText.add( aText, 0 );
 
 			query = new SearchQuery( core );
@@ -132,6 +130,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.26  2003/11/24 08:56:22  lemmster
+fix [Bug #1132] search combo retains duplicates (better solution)
+
 Revision 1.25  2003/11/24 08:37:24  lemmster
 fix [Bug #1132] search combo retains duplicates
 

@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.19 2003/11/24 08:37:24 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.20 2003/11/24 08:56:22 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -184,16 +184,8 @@ public class MusicComplexSearch extends ComplexSearch {
              && album.equals( "" ) ) return;
 
     	// set the combo text
-    	if ( this.inputText.indexOf( input ) != -1 )
-    		this.inputText.remove( input );
     	this.inputText.add( input, 0 );
-
-    	if ( this.albumText.indexOf( album ) != -1 )
-    		this.albumText.remove( album );
     	this.albumText.add( album, 0 );
-
-    	if ( this.artistText.indexOf( artist ) != -1 )
-    		this.artistText.remove( artist );
 		this.artistText.add( artist, 0 );
 		
 		/* create an empty query */
@@ -223,6 +215,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.20  2003/11/24 08:56:22  lemmster
+fix [Bug #1132] search combo retains duplicates (better solution)
+
 Revision 1.19  2003/11/24 08:37:24  lemmster
 fix [Bug #1132] search combo retains duplicates
 

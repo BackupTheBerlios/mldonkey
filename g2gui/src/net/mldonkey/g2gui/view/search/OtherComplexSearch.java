@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * OtherComplexSearch
  *
- * @version $Id: OtherComplexSearch.java,v 1.9 2003/11/24 08:37:24 lemmster Exp $ 
+ * @version $Id: OtherComplexSearch.java,v 1.10 2003/11/24 08:56:22 lemmster Exp $ 
  *
  */
 public class OtherComplexSearch extends ComplexSearch {
@@ -120,8 +120,6 @@ public class OtherComplexSearch extends ComplexSearch {
 		String aText = this.inputText.getText();
 		if ( aText.equals( "" ) ) return;
 
-		if ( this.inputText.indexOf( aText ) != -1 )
-			this.inputText.remove( aText );
 		this.inputText.add( aText, 0 );
 
 		/* create an empty query */
@@ -145,6 +143,9 @@ public class OtherComplexSearch extends ComplexSearch {
 
 /*
 $Log: OtherComplexSearch.java,v $
+Revision 1.10  2003/11/24 08:56:22  lemmster
+fix [Bug #1132] search combo retains duplicates (better solution)
+
 Revision 1.9  2003/11/24 08:37:24  lemmster
 fix [Bug #1132] search combo retains duplicates
 

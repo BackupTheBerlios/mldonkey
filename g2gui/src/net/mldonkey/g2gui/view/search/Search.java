@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Label;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.33 2003/11/23 19:22:35 lemmster Exp $
+ * @version $Id: Search.java,v 1.34 2003/11/24 08:56:22 lemmster Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -104,7 +104,7 @@ public abstract class Search implements Observer {
 
         /* the box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-	    Combo combo = new Combo( group, SWT.SINGLE | SWT.BORDER );
+	    Combo combo = new MyCombo( group, SWT.SINGLE | SWT.BORDER );
         combo.setLayoutData( gridData );
         combo.setFont( JFaceResources.getTextFont() );
         combo.addKeyListener( new KeyAdapter() {
@@ -313,10 +313,34 @@ public abstract class Search implements Observer {
     public boolean setFocus() {
     	return this.inputText.setFocus();
     }
+
+	/**
+	 * 
+	 * MyCombo
+	 *
+	 */
+    private class MyCombo extends Combo {
+		public MyCombo( Composite parent, int style ) {
+			super( parent, style );
+		}
+
+		public void add( String aString, int index ) {
+			if ( indexOf( aString ) != -1 )
+				remove( aString );
+			super.add( aString, index );
+		}
+		// overwrite this method to get subclassing possible
+		// this is API-illegal
+		protected void checkSubclass () {
+		}
+    }
 }
 
 /*
 $Log: Search.java,v $
+Revision 1.34  2003/11/24 08:56:22  lemmster
+fix [Bug #1132] search combo retains duplicates (better solution)
+
 Revision 1.33  2003/11/23 19:22:35  lemmster
 fixed: [ Bug #1119] Search field a combo holding previous searches
 
