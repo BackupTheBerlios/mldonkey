@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.8 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.9 2004/03/26 20:24:46 dek Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -60,16 +60,20 @@ public class G2GuiWinReg extends PreferencePage {
      */
     protected void createFieldEditors() {
         Composite composite = getFieldEditorParent();
-        composite.setLayout(WidgetFactory.createGridLayout(1, 5, 5, 5, 5, false));
+        composite.setLayout(WidgetFactory.createGridLayout(2, 5, 5, 5, 5, false));
 
-        registerLinks = new RegisterLink[ 3 ];
+        registerLinks = new RegisterLink[ 4 ];
 
-        registerLinks[ 0 ] = new RegisterLink("ed2k", composite);
-        registerLinks[ 1 ] = new RegisterLink("magnet", composite);
-        registerLinks[ 2 ] = new RegisterLink("sig2dat", composite);
+        registerLinks[ 0 ] = new RegisterLink("ed2k://","ed2k", composite);
+        registerLinks[ 1 ] = new RegisterLink("magnet://","magnet", composite);
+        registerLinks[ 2 ] = new RegisterLink("sig2dat://","sig2dat", composite);
+        registerLinks[ 3 ] = new RegisterLink(".torrent",".torrent", composite);
+        
 
         Button button = new Button(composite, SWT.NONE);
-        button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        button.setLayoutData(gd);
         button.setText(G2GuiResources.getString("BTN_UPDATE_REGISTRY"));
 
         button.addSelectionListener(new SelectionAdapter() {
@@ -121,12 +125,12 @@ public class G2GuiWinReg extends PreferencePage {
             for (int i = 0; i < registerLinks.length; i++) {
                 switch (registerLinks[ i ].getSelection()) {
                 case RegisterLink.REGISTER:
-                    registerType(p, registerLinks[ i ].getText(), exeFile, prefFile);
+                    registerType(p, registerLinks[ i ].getName(), exeFile, prefFile);
 
                     break;
 
                 case RegisterLink.UNREGISTER:
-                    unregisterType(p, registerLinks[ i ].getText());
+                    unregisterType(p, registerLinks[ i ].getName());
 
                     break;
 
@@ -179,6 +183,34 @@ public class G2GuiWinReg extends PreferencePage {
         p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell\\open\\command]");
         p.println("@=\"\\\"" + exeFile + "\\\" \\\"-c\\\" \\\"" + prefFile + "\\\" \\\"-l\\\" \\\"%1\\\"\"");
     }
+    
+    /**
+     * 
+     * @param p
+     * @param name is kind of ".xyz"
+     * @param exeFile
+     * @param prefFile
+     */
+    private void registerExtension(PrintStream p, String name, String exeFile, String prefFile){
+    	
+    	p.println("[HKEY_CLASSES_ROOT\\" + name + "]");
+    	p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell]");
+    	p.println("[HKEY_CLASSES_ROOT\\" + name + "\\DefaultIcon]");
+    	p.println("@=\"\\\"" + exeFile + "\"");
+    	
+    	p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell\\open]");
+    	p.println("[HKEY_CLASSES_ROOT\\" + name + "\\shell\\open\\command]");
+    	p.println("@=\"\\\"" + exeFile + "\\\" \\\"-c\\\" \\\"" + prefFile + "\\\" \\\"-l\\\" \\\"%1\\\"\"");
+    	
+    	
+    }
+    /*
+    
+    [HKEY_CLASSES_ROOT\.torrent\shell\open\command]
+    @="\"C:\\Gnu\\msys\\1.0\\home\\g2gui-test\\g2gui\\g2gui.exe\" \"%1\""
+    [HKEY_CLASSES_ROOT\.torrent\DefaultIcon]
+    @="C:\\Programme\\Kazaa Lite\\dksigtool.exe"
+    */
 
     /**
      * @param p
@@ -195,11 +227,13 @@ public class G2GuiWinReg extends PreferencePage {
         public static final int NO_CHANGE = 0;
         public static final int REGISTER = 1;
         public static final int UNREGISTER = 2;
-        private int selection;
-        private String text;
+        private int selection;       
+		private String caption;
+		private String name;
 
-        public RegisterLink(String text, Composite parent) {
-            this.text = text;
+        public RegisterLink(String caption, String name, Composite parent) {
+        	this.caption = caption;
+            this.name = name;
             selection = NO_CHANGE;
             createContents(parent);
         }
@@ -211,11 +245,11 @@ public class G2GuiWinReg extends PreferencePage {
             Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
             group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             group.setLayout(WidgetFactory.createGridLayout(1, 5, 5, 5, 5, false));
-            group.setText(text + "://");
-
+            group.setText(caption);
             createButton(group, G2GuiResources.getString("BTN_NO_CHANGE"), NO_CHANGE);
             createButton(group, G2GuiResources.getString("BTN_REGISTER"), REGISTER);
             createButton(group, G2GuiResources.getString("BTN_UNREGISTER"), UNREGISTER);
+           
         }
 
         /**
@@ -246,8 +280,8 @@ public class G2GuiWinReg extends PreferencePage {
         /**
          * @return String 
          */
-        public String getText() {
-            return text;
+        public String getName() {
+            return name;
         }
     }
 }
@@ -255,6 +289,9 @@ public class G2GuiWinReg extends PreferencePage {
 
 /*
 $Log: G2GuiWinReg.java,v $
+Revision 1.9  2004/03/26 20:24:46  dek
+.torrent is added to registry
+
 Revision 1.8  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
