@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.model.SearchQuery;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -45,8 +46,8 @@ import org.eclipse.swt.widgets.Text;
 /**
  * Search
  *
- * @author $Author: vaste $
- * @version $Id: Search.java,v 1.12 2003/08/22 14:33:06 vaste Exp $ 
+ * @author $Author: zet $
+ * @version $Id: Search.java,v 1.13 2003/08/22 23:35:40 zet Exp $ 
  *
  */
 public abstract class Search implements Observer {
@@ -111,7 +112,13 @@ public abstract class Search implements Observer {
 		// for a possible candidate if we need to include them ourselves
 		//
 		// temporarily changed font as an example:
-		text.setFont(new org.eclipse.swt.graphics.Font(null, "Courier New", 10, SWT.NORMAL));
+	
+	
+		//	text.setFont(new org.eclipse.swt.graphics.Font(null, "Courier New", 10, SWT.NORMAL));
+		// use JFace font registry (no font leaks...)
+		
+		text.setFont(JFaceResources.getTextFont());
+		
 		text.addKeyListener( new KeyAdapter() {
 			public void keyPressed( KeyEvent e ) {
 				if ( e.character == SWT.CR ) {
@@ -198,6 +205,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.13  2003/08/22 23:35:40  zet
+use JFace font registry
+
 Revision 1.12  2003/08/22 14:33:06  vaste
 temporarily changed font to monospaced as an example (ugly hack)
 
