@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.21 2003/09/11 10:47:29 lemmster Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.22 2003/09/11 11:01:38 lemmster Exp $ 
  *
  */
 public class MessageBuffer {
@@ -227,12 +227,10 @@ public class MessageBuffer {
 	 * @return a string represantation of the ip
 	 */
 	private String numericToText( byte[] src ) {
-		String result =
-		( src[ 0 ] & 0xff ) + "."
-		+ ( src[ 1 ] & 0xff ) + "."
-		+ ( src[ 2 ] & 0xff ) + "."
-		+ ( src[ 3 ] & 0xff );
-		return result;
+		return ( src[ 0 ] & 0xff ) + "."
+				+ ( src[ 1 ] & 0xff ) + "."
+				+ ( src[ 2 ] & 0xff ) + "."
+				+ ( src[ 3 ] & 0xff );
 	}
 	
 
@@ -255,6 +253,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.22  2003/09/11 11:01:38  lemmster
+fixed ip addi order [bug #883]
+
 Revision 1.21  2003/09/11 10:47:29  lemmster
 ip addresses in correct order
 
