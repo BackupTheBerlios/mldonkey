@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.11 2003/09/23 14:47:53 zet Exp $
+ * @version $Id: TableMenuListener.java,v 1.12 2003/10/13 19:55:22 zet Exp $
  *
  */
 public abstract class TableMenuListener extends CMenuListener {
@@ -556,6 +556,9 @@ public abstract class TableMenuListener extends CMenuListener {
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.12  2003/10/13 19:55:22  zet
+remove high ascii
+
 Revision 1.11  2003/09/23 14:47:53  zet
 rename MenuListener to avoid conflict with swt MenuListener
 
@@ -563,7 +566,7 @@ Revision 1.10  2003/09/18 10:04:57  lemmster
 checkstyle
 
 Revision 1.9  2003/09/17 20:07:44  lemmster
-avoid NPE´s in search
+avoid NPEs in search
 
 Revision 1.8  2003/09/14 13:24:30  lemmster
 add header button to servertab

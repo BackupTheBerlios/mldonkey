@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.23 2003/09/18 09:16:47 lemmster Exp $
+ * @version $Id: ResultInfo.java,v 1.24 2003/10/13 19:54:32 zet Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -467,11 +467,14 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.24  2003/10/13 19:54:32  zet
+remove high ascii
+
 Revision 1.23  2003/09/18 09:16:47  lemmster
 checkstyle
 
 Revision 1.22  2003/09/17 20:07:44  lemmster
-avoid NPE´s in search
+avoid NPEs in search
 
 Revision 1.21  2003/09/15 15:32:09  lemmster
 reset state of canceled downloads from search [bug #908]
@@ -498,7 +501,7 @@ Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.13  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.12  2003/08/14 12:45:46  dek
 searching works now without errors
