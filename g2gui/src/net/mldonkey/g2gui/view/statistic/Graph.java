@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,115 +18,195 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.statistic;
 
 import org.eclipse.swt.graphics.Color;
 
 /**
- * Graph is a List of StatisticPoints only knowing the first and the last Point, a Graph also has got a Color. And 
- * knows when it was started
- * 
+ * Graph is a List of StatisticPoints only knowing the first and the last Point,
+ * a Graph also has got a Color. And knows when it was started
  *
- * @version $Id: Graph.java,v 1.13 2003/09/16 01:18:52 zet Exp $
+ *
+ * @version $Id: Graph.java,v 1.14 2003/09/18 11:28:51 lemmster Exp $
  */
 public class Graph {
-	
-	public static final short MAX_POINTS = 1600;
+    public static final short MAX_POINTS = 1600;
+    private int[] iPoints = new int[ MAX_POINTS ];
+    private int insertAt = 0;
+    private String graphName;
+    private Color graphColor1;
+    private Color graphColor2;
+    private int amount;
+    private int maxValue;
+    private int avgValue;
+    private long sumValue;
 
-	private int[] iPoints = new int[MAX_POINTS];
-	private int insertAt = 0; 
-	
-	private String graphName;
-	private Color graphColor1, graphColor2;
-	
-	private int amount, maxValue, avgValue;
-	private long sumValue;
-	
-	public Graph(String name, Color color1, Color color2)
-	{
-		graphName = name;
-		graphColor1 = color1;
-		graphColor2 = color2;
-		sumValue = avgValue = maxValue = 0;
-	}
-	
-	public int getInsertAt() {
-		return insertAt;
-	}
+	/**
+	 * DOCUMENT ME!
+	 * 
+	 * @param name DOCUMENT ME!
+	 * @param color1 DOCUMENT ME!
+	 * @param color2 DOCUMENT ME!
+	 */
+    public Graph( String name, Color color1, Color color2 ) {
+        graphName = name;
+        graphColor1 = color1;
+        graphColor2 = color2;
+        sumValue = 0;
+        avgValue = 0;
+        maxValue = 0;
+    }
 
-	public int getPointAt(int i) {
-		return iPoints[i];
-	}
-	
-	public int findMax( int width ) {
-		int max = 20;
-		int searchPoint = insertAt - 1;
-		
-		if (width > amount) width = amount;
-		
-		for (int i = 0; i < width ; i++) {
-			if (searchPoint < 0) searchPoint = MAX_POINTS - 1;
-			if (iPoints[searchPoint] > max) max = iPoints[searchPoint];
-			searchPoint--;
-		}
-		return max;
-	}
-	
-	public int getNewestPoint() {
-		int newestPoint = insertAt - 1;
-		if (newestPoint < 0) newestPoint = MAX_POINTS - 1;
-		return iPoints[newestPoint];
-	}
-	
-	public void addPoint(int value) {
-		if (insertAt > MAX_POINTS - 1)
-			insertAt = 0;
-		
-		iPoints[insertAt++] = value;
-		
-		if (value > maxValue) maxValue = value;
-		sumValue += value;
-		amount++;
-		avgValue = (int) (sumValue/(long)amount);
-		
-	}
-	
-	public int getAmount() {
-		return amount;
-	}
-	
-	public Color getGraphColor1() {
-		return graphColor1;
-	}
-	public Color getGraphColor2() {
-		return graphColor2;
-	}
-	
-	public int getMax() {
-		return maxValue;
-	}
-	
-	public String getName() {
-		return graphName;
-	}
-	
-	public int getAvg() {
-		return avgValue;
-	}
-	
-	public Color getColor1() {
-		return graphColor1;
-	}
-	
-	public Color getColor2() {
-		return graphColor2;
-	}
-		
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public int getInsertAt(  ) {
+        return insertAt;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param i DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public int getPointAt( int i ) {
+        return iPoints[ i ];
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param width DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public int findMax( int width ) {
+        int max = 20;
+        int searchPoint = insertAt - 1;
+        if ( width > amount )
+            width = amount;
+        for ( int i = 0; i < width; i++ ) {
+            if ( searchPoint < 0 )
+                searchPoint = MAX_POINTS - 1;
+            if ( iPoints[ searchPoint ] > max )
+                max = iPoints[ searchPoint ];
+            searchPoint--;
+        }
+        return max;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public int getNewestPoint(  ) {
+        int newestPoint = insertAt - 1;
+        if ( newestPoint < 0 )
+            newestPoint = MAX_POINTS - 1;
+        return iPoints[ newestPoint ];
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param value DOCUMENT ME!
+     */
+    public void addPoint( int value ) {
+        if ( insertAt > ( MAX_POINTS - 1 ) )
+            insertAt = 0;
+        iPoints[ insertAt++ ] = value;
+        if ( value > maxValue )
+            maxValue = value;
+        sumValue += value;
+        amount++;
+        avgValue = ( int ) ( sumValue / ( long ) amount );
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public int getAmount(  ) {
+        return amount;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public Color getGraphColor1(  ) {
+        return graphColor1;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public Color getGraphColor2(  ) {
+        return graphColor2;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public int getMax(  ) {
+        return maxValue;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public String getName(  ) {
+        return graphName;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public int getAvg(  ) {
+        return avgValue;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public Color getColor1(  ) {
+        return graphColor1;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public Color getColor2(  ) {
+        return graphColor2;
+    }
 }
+
 /*
 $Log: Graph.java,v $
+Revision 1.14  2003/09/18 11:28:51  lemmster
+checkstyle
+
 Revision 1.13  2003/09/16 01:18:52  zet
 min size/check bounds
 
@@ -140,7 +220,7 @@ Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.9  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.8  2003/08/09 00:42:18  zet
 dispose colors
