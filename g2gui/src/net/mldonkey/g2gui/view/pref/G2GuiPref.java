@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.17 2003/11/11 17:31:10 zet Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.18 2003/11/13 01:00:15 zet Exp $ 
  *
  */
 public class G2GuiPref extends PreferencePage {
@@ -89,9 +89,13 @@ public class G2GuiPref extends PreferencePage {
 					addField( executableField );
 					executableField.load();	
 			
-			String[] winExtensions = { "*.exe;*.bat" };
-			if ( SWT.getPlatform().equals( "win32" ) ) executableField.setFileExtensions( winExtensions );
-				
+			if ((System.getProperty("os.name").length() > 7) &&
+		        System.getProperty("os.name").substring(0, 7).equals("Windows")) {
+			    executableField.setFileExtensions( new String[] { "*.exe;*.bat" } );
+			} else {
+			    executableField.setFileExtensions( new String[] {"*"});
+			}
+			    
 			FieldEditor mulitpleInstancesEditor =
 				new BooleanFieldEditor( "allowMultipleInstances",
 					G2GuiResources.getString( "PREF_ALLOW_MULIPLE" ), composite );
@@ -120,6 +124,9 @@ public class G2GuiPref extends PreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.18  2003/11/13 01:00:15  zet
+fix #1079
+
 Revision 1.17  2003/11/11 17:31:10  zet
 tooltip
 
