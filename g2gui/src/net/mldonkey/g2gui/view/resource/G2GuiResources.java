@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.42 2003/10/22 01:37:35 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.43 2003/10/22 23:43:13 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -184,7 +184,9 @@ public class G2GuiResources {
      *
      */
     public static Image getRatingImage( int availability ) {
-        if ( availability > 100 ) {
+        if ( availability < 0 ) {
+            return G2GuiResources.getImage( "epRatingFake" );
+        } else if ( availability > 100 ) {
             return G2GuiResources.getImage( "epRatingExcellent" );
         } else if ( availability > 50 ) {
             return G2GuiResources.getImage( "epRatingExcellent" );
@@ -249,7 +251,8 @@ public class G2GuiResources {
         reg.put( "epRatingFair", createRawMImage( "ep_rating_fair.gif" ) );
         reg.put( "epRatingGood", createRawMImage( "ep_rating_good.gif" ) );
         reg.put( "epRatingExcellent", createRawMImage( "ep_rating_excellent.gif" ) );
-
+        reg.put( "epRatingFake", createRawMImage("ep_rating_fake.gif" ) );
+        
 		reg.put( "SearchSmall", createRawMImage( "search_small.gif" ) );
 		reg.put( "SearchComplete", createRawMImage( "search_complete.gif" ) );
         
@@ -430,6 +433,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.43  2003/10/22 23:43:13  zet
+fake graphic
+
 Revision 1.42  2003/10/22 01:37:35  zet
 add column selector to server/search (might not be finished yet..)
 
