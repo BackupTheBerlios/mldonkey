@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.15 2003/09/19 15:19:14 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.16 2003/09/21 09:57:01 lemmster Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -314,7 +314,7 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
      * @param labelText DOCUMENT ME!
      * @param type DOCUMENT ME!
      */
-    protected void createSizeText( Composite group, String labelText, int type ) {
+    private void createSizeText( Composite group, String labelText, int type ) {
         /* the max size label */
         GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
         Label label = new Label( group, SWT.NONE );
@@ -406,6 +406,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.16  2003/09/21 09:57:01  lemmster
+protected -> private
+
 Revision 1.15  2003/09/19 15:19:14  lemmster
 reworked
 
