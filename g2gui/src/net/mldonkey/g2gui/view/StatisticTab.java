@@ -35,8 +35,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -48,7 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.23 2003/08/29 22:13:44 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.24 2003/09/13 22:24:42 zet Exp $
  */
 
 public class StatisticTab extends GuiTab {
@@ -127,11 +125,6 @@ public class StatisticTab extends GuiTab {
 		mainSash.setWeights( new int[] { 0, 10 } );	 		
 	}
 
-	public void mouseUp( MouseEvent arg0 ) {}
-
-	public void run() {
-	}
-
 	public void update( Observable arg0, Object receivedInfo ) {
 		ClientStats clientInfo = ( ClientStats ) receivedInfo;
 		uploadsGraphControl.addPointToGraph( clientInfo.getTcpUpRate() );
@@ -144,14 +137,20 @@ public class StatisticTab extends GuiTab {
 		// Do not remove Observer
 		super.setInActive();
 	}
-	
-	public void widgetDisposed( DisposeEvent arg0 ) {
-		
+	public void dispose() {
+		super.dispose();
+		uploadsGraphColor1.dispose();
+		uploadsGraphColor2.dispose();
+		downloadsGraphColor1.dispose();
+		downloadsGraphColor2.dispose();
 	}
 
 }
 /*
 $Log: StatisticTab.java,v $
+Revision 1.24  2003/09/13 22:24:42  zet
+int[] array
+
 Revision 1.23  2003/08/29 22:13:44  zet
 fix icon
 
