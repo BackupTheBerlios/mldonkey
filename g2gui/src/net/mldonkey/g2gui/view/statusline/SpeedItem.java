@@ -22,21 +22,23 @@
  */
 package net.mldonkey.g2gui.view.statusline;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import org.eclipse.swt.widgets.Composite;
 
+import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
-import net.mldonkey.g2gui.model.Information;
-import net.mldonkey.g2gui.view.InterFaceUI;
 
 /**
  * SpeedItem
  *
  * @author $user$
- * @version $Id: SpeedItem.java,v 1.1 2003/06/26 21:11:10 dek Exp $ 
+ * @version $Id: SpeedItem.java,v 1.2 2003/06/27 10:36:17 lemmstercvs01 Exp $ 
  *
  */
-public class SpeedItem extends StatusLineItem implements InterFaceUI{	
+public class SpeedItem extends StatusLineItem implements Observer {	
 
 	private StatusLine statusline;
 	private Composite parent;
@@ -49,42 +51,36 @@ public class SpeedItem extends StatusLineItem implements InterFaceUI{
 	public SpeedItem(Composite parent,StatusLine statusline, CoreCommunication mldonkey) {
 		super();
 		this.parent = parent;
-		registerListener(mldonkey);	
 		content = "";
-		this.statusline = statusline;		
+		this.statusline = statusline;
+		( ( Core ) mldonkey ).addObserver( this );
+		
 	}
 
-	/**
-		 * Receive a notification about a change
-		 * @param anInformation The Information which has changed
-		 */
-		public void notify( final Information anInformation ) {	
-			if (anInformation instanceof ClientStats){
-				ClientStats temp = (ClientStats) anInformation;
-				final float down = temp.getTcpDownRate();
-				final float up = 	temp.getTcpUpRate();
-						
-				parent.getDisplay().syncExec( new Runnable () {
-					public void run() {					
-						statusline.update(position," UL: "+up+" DL: "+down);
-					}
-				});
-			}
-		}
-
-
 	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.InterFaceUI#registerListener(net.mldonkey.g2gui.comm.CoreCommunication)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
-	public void registerListener(CoreCommunication mldonkey) {
-		mldonkey.registerListener(this);
-		
+	public void update(Observable o, Object arg) {
+		if (arg instanceof ClientStats){
+			ClientStats temp = (ClientStats) arg;
+			final float down = temp.getTcpDownRate();
+			final float up = 	temp.getTcpUpRate();
+						
+			parent.getDisplay().syncExec( new Runnable () {
+				public void run() {					
+					statusline.update(position," UL: "+up+" DL: "+down);
+				}
+			});
+		}
 	}
 
 }
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.2  2003/06/27 10:36:17  lemmstercvs01
+changed notify to observer/observable
+
 Revision 1.1  2003/06/26 21:11:10  dek
 speed is shown
 

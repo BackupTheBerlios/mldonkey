@@ -25,24 +25,23 @@ package net.mldonkey.g2gui.comm;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Observable;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.*;
-import net.mldonkey.g2gui.view.InterFaceUI;
-
-
 
 /**
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.33 2003/06/26 23:07:32 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.34 2003/06/27 10:41:19 lemmstercvs01 Exp $ 
  *
  */
-public class Core extends Thread implements CoreCommunication {
+public class Core extends Observable implements Runnable, CoreCommunication {
+	/**
+	 * 
+	 */
+	private Thread thisThread;
 	/**
 	 * 
 	 */
@@ -55,10 +54,6 @@ public class Core extends Thread implements CoreCommunication {
 	 * 
 	 */
 	private int coreProtocol = 0;
-	/**
-	 * 
-	 */
-	private List registeredListeners = new ArrayList();
 	/**
 	 * 
 	 */
@@ -92,6 +87,8 @@ public class Core extends Thread implements CoreCommunication {
 	 */
 	public Core( Socket connection ) {
 		this.connection = connection;
+		thisThread = new Thread( this );
+		thisThread.start();
 	}
 
 	/**
@@ -212,12 +209,14 @@ public class Core extends Thread implements CoreCommunication {
 					
 			case Message.R_CLIENT_STATS :				
 					clientStats.readStream( messageBuffer );
-					this.notifyListeners( clientStats );
+					this.setChanged();	
+					this.notifyObservers( clientStats );
 					break;	
 					
 			case Message.R_DOWNLOAD :
 					( ( FileInfoIntMap )this.fileInfoMap ).add( messageBuffer );
-					this.notifyListeners( fileInfoMap );
+					this.setChanged();
+					this.notifyObservers( fileInfoMap );
 					break;					
 
 			case Message.R_CONSOLE :	
@@ -251,17 +250,6 @@ public class Core extends Thread implements CoreCommunication {
 	}
 	
 	/**
-	 * Notifies the listener about changes
-	 * @param anInformation The Information which have changed
-	 */
-	public synchronized void notifyListeners( Information anInformation ) {
-		Iterator itr = this.registeredListeners.iterator();
-		while ( itr.hasNext() ) {
-			InterFaceUI anInterFaceUI = ( InterFaceUI ) itr.next();
-			anInterFaceUI.notify( anInformation );
-		}
-	}
-	/**
 	 * @return a Socket
 	 */
 	public Socket getConnection() {
@@ -269,30 +257,10 @@ public class Core extends Thread implements CoreCommunication {
 	}
 
 	/**
-	 * Adds a listener to the list of listeners
-	 * @param anInterFaceUI An InterFaceUI object
-	 */
-	public synchronized void registerListener( InterFaceUI anInterFaceUI ) {
-		if ( ! ( this.registeredListeners.contains( anInterFaceUI ) ) ) 
-			this.registeredListeners.add( anInterFaceUI );
-	}
-	
-	/**
-	 * Removes a listener from the list of listeners
-	 * @param anInterFaceUI The InterFaceUI to remove
-	 */
-	public synchronized void removeListener( InterFaceUI anInterFaceUI ) {
-		if ( this.registeredListeners.contains( anInterFaceUI ) )
-			this.registeredListeners.remove( anInterFaceUI );
-	}
-	
-
-	/**
 	 * @param name Option-Name
 	 * @param value OptionValue
 	 */
 	public void setOption( String name, String value ) {
-		
 		String[] content = { name, value };		
 		EncodeMessage setOption = new EncodeMessage( Message.S_SET_OPTION, content );
 		setOption.sendMessage( connection );		
@@ -304,11 +272,13 @@ public class Core extends Thread implements CoreCommunication {
 	public ConsoleMessage getConsoleMessage() {
 		return (ConsoleMessage) this.consoleMessage;
 	}
-
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.34  2003/06/27 10:41:19  lemmstercvs01
+changed notify to observer/observable
+
 Revision 1.33  2003/06/26 23:07:32  lemmstercvs01
 added removeListeners()
 
