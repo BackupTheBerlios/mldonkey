@@ -51,7 +51,7 @@ import org.eclipse.swt.events.DisposeListener;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.7 2003/10/12 23:14:08 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.8 2003/10/14 23:23:43 zet Exp $
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener, DisposeListener {
@@ -554,6 +554,14 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
             return true;
         }
+        
+        public boolean isFilterProperty(Object element, String property) {
+        	
+        	if ( property.equals( FileInfo.CHANGED_RATE ) )
+        		return true;
+        	return false;
+        	
+        }
     }
 
     /**
@@ -606,6 +614,9 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.8  2003/10/14 23:23:43  zet
+check properties
+
 Revision 1.7  2003/10/12 23:14:08  zet
 show clients menuitem
 
