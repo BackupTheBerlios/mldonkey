@@ -48,11 +48,20 @@ public class PreferenceLoader {
 		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
 		try { preferenceStore.load(); } catch ( IOException e ) { }
 		
+		preferenceStore = setDefaults(preferenceStore);
+		return preferenceStore;
+	}
+	
+	/**
+	 * @param preferenceStore
+	 * @return
+	 */
+	static PreferenceStore setDefaults(PreferenceStore preferenceStore) {
+		preferenceStore.setDefault("displayChunkGraphs", true);
 		preferenceStore.setDefault("displayGridLines", true);
 		preferenceStore.setDefault("tableCellEditors", false);
 		preferenceStore.setDefault("displayBuffer", 2);
 		preferenceStore.setDefault("displayHeaderBar", true);
-		
 		return preferenceStore;
 	}
 	
@@ -104,3 +113,11 @@ public class PreferenceLoader {
 	
 
 }
+/*
+$Log: PreferenceLoader.java,v $
+Revision 1.2  2003/08/08 21:11:15  zet
+set defaults in central location
+
+
+
+*/

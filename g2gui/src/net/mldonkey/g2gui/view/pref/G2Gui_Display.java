@@ -31,11 +31,8 @@ public class G2Gui_Display extends PreferencePage  {
 		super( "Display" );
 		setPreferenceStore(preferenceStore);
 		
-		preferenceStore.setDefault("displayChunkGraphs", true);
-		preferenceStore.setDefault("displayGridLines", true);
-		preferenceStore.setDefault("tableCellEditors", false);
-		preferenceStore.setDefault("displayBuffer", 2);
-		preferenceStore.setDefault("displayHeaderBar", true);
+		preferenceStore = PreferenceLoader.setDefaults(preferenceStore);
+				
 	}
 	
 	protected void setupEditor(FieldEditor e) {
@@ -151,3 +148,11 @@ public class G2Gui_Display extends PreferencePage  {
 
 }
 
+/*
+$Log: G2Gui_Display.java,v $
+Revision 1.6  2003/08/08 21:11:15  zet
+set defaults in central location
+
+
+
+*/
