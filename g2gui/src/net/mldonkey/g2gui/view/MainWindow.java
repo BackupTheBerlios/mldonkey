@@ -22,12 +22,6 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -45,6 +39,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.DisposeEvent;
@@ -66,11 +61,18 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.1 2003/11/29 17:00:34 zet Exp $
+ * @version $Id: MainWindow.java,v 1.2 2003/11/29 19:10:24 zet Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText = "g2gui alpha";
@@ -99,7 +101,7 @@ public class MainWindow implements ShellListener {
         minimizer = new Minimizer(shell, core, titleBarText);
         minimizer.setTitleBarText();
         shell.setLayout(new FillLayout());
-		Splash.increaseSplashBar("creating tabs");
+        Splash.increaseSplashBar("creating tabs");
         createContents(shell);
         shell.pack();
 
@@ -142,7 +144,7 @@ public class MainWindow implements ShellListener {
 
                     // disconnect from core
                     mldonkey.disconnect();
-                    
+
                     // save preferences
                     PreferenceLoader.saveStore();
                     PreferenceLoader.cleanUp();
@@ -151,28 +153,25 @@ public class MainWindow implements ShellListener {
 
         try {
             while (!shell.isDisposed()) {
-                if (!display.readAndDispatch()) {
+                if (!display.readAndDispatch())
                     display.sleep();
-                }
             }
         } catch (Exception e) {
-        	if ( G2Gui.debug ) {
-        		e.printStackTrace();
-        	}
-        	else {
-        		// getCause() seems always to be null unfortunately
-	            StringWriter sw = new StringWriter();
-	            e.printStackTrace(new PrintWriter(sw, true));
-	
-	            ErrorDialog errorDialog = new ErrorDialog(new Shell(display), sw.toString());
-	            errorDialog.open();
-        	}
-        }	
+            if (G2Gui.debug)
+                e.printStackTrace();
+            else {
+                // getCause() seems always to be null unfortunately
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw, true));
+
+                ErrorDialog errorDialog = new ErrorDialog(new Shell(display), sw.toString());
+                errorDialog.open();
+            }
+        }
 
         // locks up swt-fox
-        if (!SWT.getPlatform().equals("fox")) {
+        if (!SWT.getPlatform().equals("fox"))
             display.close();
-        }
     }
 
     /* ( non-Javadoc )
@@ -196,6 +195,7 @@ public class MainWindow implements ShellListener {
 
         /* now we add all the tabs */
         this.addTabs();
+
         GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.grabExcessHorizontalSpace = true;
         gridData.grabExcessVerticalSpace = true;
@@ -204,7 +204,7 @@ public class MainWindow implements ShellListener {
         /*restore coolbar-Layout from saved-state*/
         this.coolBar.layoutCoolBar();
         this.coolBar.restoreLayout();
-        
+
         statusline = new StatusLine(this);
     }
 
@@ -216,16 +216,16 @@ public class MainWindow implements ShellListener {
         this.tabs = new ArrayList();
 
         if (PreferenceLoader.loadBoolean("advancedMode")) {
-            tabs.add(new TransferTab(this));
-            tabs.add(new SearchTab(this));
-            tabs.add(new ServerTab(this));
-            tabs.add(new ConsoleTab(this));
-            tabs.add(new StatisticTab(this));
-            tabs.add(new MessagesTab(this));
+            tabs.add(new TransferTab(this, "TransfersButton"));
+            tabs.add(new SearchTab(this, "SearchButton"));
+            tabs.add(new ServerTab(this, "ServersButton"));
+            tabs.add(new ConsoleTab(this, "ConsoleButton"));
+            tabs.add(new StatisticTab(this, "StatisticsButton"));
+            tabs.add(new MessagesTab(this, "MessagesButton"));
         } else {
-            tabs.add(new TransferTab(this));
-            tabs.add(new SearchTab(this));
-            tabs.add(new StatisticTab(this));
+            tabs.add(new TransferTab(this, "TransfersButton"));
+            tabs.add(new SearchTab(this, "SearchButton"));
+            tabs.add(new StatisticTab(this, "StatisticsButton"));
         }
 
         /*setting TransferTab active if registered*/
@@ -235,9 +235,8 @@ public class MainWindow implements ShellListener {
             GuiTab tempTab = (GuiTab) tabIterator.next();
 
             /* set the default tab to active */
-            if (tempTab instanceof TransferTab) {
+            if (tempTab instanceof TransferTab)
                 tempTab.setActive();
-            }
         }
     }
 
@@ -286,11 +285,10 @@ public class MainWindow implements ShellListener {
      */
     public void setSizeLocation(Shell shell) {
         if (PreferenceLoader.contains("windowBounds")) {
-            if (PreferenceLoader.loadBoolean("windowMaximized")) {
+            if (PreferenceLoader.loadBoolean("windowMaximized"))
                 shell.setMaximized(true);
-            } else {
+            else
                 shell.setBounds(PreferenceLoader.loadRectangle("windowBounds"));
-            }
         }
     }
 
@@ -301,9 +299,9 @@ public class MainWindow implements ShellListener {
     public void saveSizeLocation(Shell shell) {
         PreferenceStore p = PreferenceLoader.getPreferenceStore();
 
-        if (shell.getMaximized()) {
+        if (shell.getMaximized())
             p.setValue("windowMaximized", shell.getMaximized());
-        } else {
+        else {
             PreferenceConverter.setValue(p, "windowBounds", shell.getBounds());
             p.setValue("windowMaximized", shell.getMaximized());
         }
@@ -428,9 +426,9 @@ public class MainWindow implements ShellListener {
             textInfo.setLayoutData(new GridData(GridData.FILL_BOTH));
             textInfo.setText("Please help us to improve this product!\n" +
                 "Please submit a bug report detailing *exactly* what you were doing when this happened!!!\n" +
-                "http://developer.berlios.de/bugs/?group_id=610\n\n" + 
-                SWT.getPlatform() + "/" + SWT.getVersion() + "/" +  VersionInfo.getVersion() + "\n" +
-                "StackTrace:\n\n" + string);
+                "http://developer.berlios.de/bugs/?group_id=610\n\n" + SWT.getPlatform() + "/" +
+                SWT.getVersion() + "/" + VersionInfo.getVersion() + "\n" + "StackTrace:\n\n" +
+                string);
 
             return composite;
         }
@@ -466,6 +464,10 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.2  2003/11/29 19:10:24  zet
+small update.. continue later.
+- mainwindow > tabs > viewframes(can contain gView)
+
 Revision 1.1  2003/11/29 17:00:34  zet
 rename MainTab->MainWindow (since it isn't a Tab)
 

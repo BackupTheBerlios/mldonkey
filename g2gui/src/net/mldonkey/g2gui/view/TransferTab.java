@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view;
 
+import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableView;
@@ -30,7 +31,6 @@ import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeView;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadViewFrame;
 import net.mldonkey.g2gui.view.transfer.uploadTable.UploadViewFrame;
 import net.mldonkey.g2gui.view.transfer.uploadersTable.UploadersViewFrame;
-import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
@@ -41,21 +41,16 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.99 2003/11/29 17:21:22 zet Exp $
+ * @version $Id: TransferTab.java,v 1.100 2003/11/29 19:10:24 zet Exp $
  *
  */
-public class TransferTab extends GViewGuiTab {
-    private GView clientTableView = null;
-    private GView uploadTableView = null;
-    private GView uploadersTableView = null;
-
+public class TransferTab extends GuiTab {
     /**
-     * @param gui where this tab belongs to
+     * @param mainWindow
+     * @param resButtonString
      */
-    public TransferTab(MainWindow gui) {
-        super(gui);
-        createButton("TransfersButton");
-        createContents(getContent());
+    public TransferTab(MainWindow mainWindow, String resButtonString) {
+        super(mainWindow, resButtonString);
     }
 
     /* ( non-Javadoc )
@@ -63,12 +58,9 @@ public class TransferTab extends GViewGuiTab {
      */
     protected void createContents(Composite composite) {
         String sashPrefString = "transferSash";
-
         SashForm sashForm = WidgetFactory.createSashForm(composite, sashPrefString);
-
         createDownloadsViews(sashForm);
         createUploadsView(sashForm);
-
         WidgetFactory.loadSashForm(sashForm, sashPrefString);
     }
 
@@ -88,59 +80,23 @@ public class TransferTab extends GViewGuiTab {
     }
 
     private void createDownloadsView(SashForm sashForm) {
-        gView = new DownloadViewFrame(sashForm, "TT_Downloads", "TransfersButtonSmall", this).getGView();
+        addViewFrame(new DownloadViewFrame(sashForm, "TT_Downloads", "TransfersButtonSmall", this));
     }
 
-    // gView must be initialized before this is called
     private void createClientsView(SashForm sashForm) {
-        clientTableView = new ClientViewFrame(sashForm, "TT_Clients", "TransfersButtonSmall", this,
-                gView).getGView();
-        ((DownloadTableTreeView) gView).setClientTableView((ClientTableView) clientTableView);
+        DownloadTableTreeView downloadTableTreeView = (DownloadTableTreeView) ((ViewFrame) getViewFrameList().get(0)).getGView();
+        ClientViewFrame clientViewFrame = new ClientViewFrame(sashForm, "TT_Clients",
+                "TransfersButtonSmall", this, downloadTableTreeView);
+        downloadTableTreeView.setClientTableView((ClientTableView) clientViewFrame.getGView());
+        addViewFrame(clientViewFrame);
     }
 
     private void createUploadsView(SashForm sashForm) {
         String sashPrefString = "uploadsSash";
         SashForm sashForm2 = WidgetFactory.createSashForm(sashForm, sashPrefString);
-
-        uploadTableView = new UploadViewFrame(sashForm2, "TT_Uploads", "UpArrowBlue", this).getGView();
-        uploadersTableView = new UploadersViewFrame(sashForm2, "TT_Uploaders", "UpArrowBlue", this).getGView();
-
+        addViewFrame(new UploadViewFrame(sashForm2, "TT_Uploads", "UpArrowBlue", this));
+        addViewFrame(new UploadersViewFrame(sashForm2, "TT_Uploaders", "UpArrowBlue", this));
         WidgetFactory.loadSashForm(sashForm2, sashPrefString);
-    }
-
-    /* ( non-Javadoc )
-     * @see net.mldonkey.g2gui.view.GuiTab#updateDisplay()
-     */
-    public void updateDisplay() {
-        gView.updateDisplay();
-        uploadTableView.updateDisplay();
-        uploadersTableView.updateDisplay();
-
-        if (clientTableView != null)
-            clientTableView.updateDisplay();
-
-        super.updateDisplay();
-    }
-
-    /**
-     * @return GView
-     */
-    public GView getClientGView() {
-        return this.clientTableView;
-    }
-
-    /**
-     * @return GView
-     */
-    public GView getUploadGView() {
-        return this.uploadTableView;
-    }
-    
-    /**
-     * @return GView
-     */
-    public GView getUploadersGView() {
-        return this.uploadersTableView;
     }
 
     /* (non-Javadoc)
@@ -148,32 +104,15 @@ public class TransferTab extends GViewGuiTab {
      */
     public void update(Observable o, Object obj) {
     }
-    
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.GuiTab#setActive()
-     */
-    public void setActive() {
-        gView.setActive(true);
-        uploadersTableView.setActive(true);
-        uploadTableView.setActive(true);
-        clientTableView.setActive(true);
-        super.setActive();
-    }
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.GuiTab#setInActive()
-	 */
-	public void setInActive() {
-	   gView.setActive(false);
-	   uploadersTableView.setActive(false);
-	   uploadTableView.setActive(false);
-	   clientTableView.setActive(false);
-	   super.setInActive();
-   }
 }
 
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.100  2003/11/29 19:10:24  zet
+small update.. continue later.
+- mainwindow > tabs > viewframes(can contain gView)
+
 Revision 1.99  2003/11/29 17:21:22  zet
 minor cleanup
 

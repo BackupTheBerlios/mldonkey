@@ -22,12 +22,6 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Observable;
-
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.ClientMessage;
 import net.mldonkey.g2gui.view.console.Console;
@@ -50,22 +44,32 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Observable;
 
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.39 2003/11/29 17:21:22 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.40 2003/11/29 19:10:24 zet Exp $
  */
-public class MessagesTab extends GViewGuiTab {
+public class MessagesTab extends GuiTab {
     private CTabFolder cTabFolder;
     private Hashtable openTabs = new Hashtable();
     private MessagesViewFrame messagesViewFrame;
 
-    public MessagesTab(MainWindow gui) {
-        super(gui);
-        createButton("MessagesButton");
-        createContents(getContent());
+    /**
+     * @param mainWindow
+     * @param resButtonString
+     */
+    public MessagesTab(MainWindow mainWindow, String resButtonString) {
+        super(mainWindow, resButtonString);
     }
 
     /* (non-Javadoc)
@@ -86,15 +90,19 @@ public class MessagesTab extends GViewGuiTab {
      * @param main
      */
     private void createLeftSash(SashForm parent) {
-        gView = new FriendsViewFrame(parent, "FR_FRIENDS", "MessagesButtonSmall", this).getGView();
+        FriendsViewFrame friendsViewFrame = new FriendsViewFrame(parent, "FR_FRIENDS",
+                "MessagesButtonSmall", this);
 
-        gView.getTable().addMouseListener(new MouseAdapter() {
+        friendsViewFrame.getGView().getTable().addMouseListener(new MouseAdapter() {
                 public void mouseDoubleClick(MouseEvent e) {
-                    TableItem[] currentItems = gView.getTable().getSelection();
+                    if (e.widget instanceof Table) {
+                        Table table = (Table) e.widget;
+                        TableItem[] currentItems = table.getSelection();
 
-                    for (int i = 0; i < currentItems.length; i++) {
-                        ClientInfo selectedClientInfo = (ClientInfo) currentItems[ i ].getData();
-                        openTab(selectedClientInfo);
+                        for (int i = 0; i < currentItems.length; i++) {
+                            ClientInfo selectedClientInfo = (ClientInfo) currentItems[ i ].getData();
+                            openTab(selectedClientInfo);
+                        }
                     }
                 }
             });
@@ -363,6 +371,10 @@ public class MessagesTab extends GViewGuiTab {
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.40  2003/11/29 19:10:24  zet
+small update.. continue later.
+- mainwindow > tabs > viewframes(can contain gView)
+
 Revision 1.39  2003/11/29 17:21:22  zet
 minor cleanup
 

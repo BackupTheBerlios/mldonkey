@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.54 2003/11/29 17:21:22 zet Exp $
+ * @version $Id: ConsoleTab.java,v 1.55 2003/11/29 19:10:24 zet Exp $
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {
@@ -50,12 +50,11 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
     private Console console;
 
     /**
-     * @param gui the main gui, which takes care of all our tabs
+     * @param mainWindow
+     * @param resButtonString
      */
-    public ConsoleTab(MainWindow gui) {
-        super(gui);
-        createButton("ConsoleButton");
-        createContents(getContent());
+    public ConsoleTab(MainWindow mainWindow, String resButtonString) {
+        super(mainWindow, resButtonString);
     }
 
     /* ( non-Javadoc )
@@ -63,7 +62,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
      */
     protected void createContents(Composite parent) {
         ViewFrame viewFrame = new ViewFrame(parent, "TT_ConsoleButton", "ConsoleButtonSmall", this);
-
+        
         console = new Console(viewFrame.getChildComposite(), SWT.NONE);
         console.addObserver(this);
 
@@ -147,6 +146,10 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.55  2003/11/29 19:10:24  zet
+small update.. continue later.
+- mainwindow > tabs > viewframes(can contain gView)
+
 Revision 1.54  2003/11/29 17:21:22  zet
 minor cleanup
 

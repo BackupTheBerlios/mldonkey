@@ -22,9 +22,8 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.util.Observer;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
@@ -35,11 +34,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observer;
+
+
 /**
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.41 2003/11/29 17:21:22 zet Exp $
+ * @version $Id: GuiTab.java,v 1.42 2003/11/29 19:10:24 zet Exp $
  *
  */
 public abstract class GuiTab implements Listener, Observer {
@@ -62,30 +66,36 @@ public abstract class GuiTab implements Listener, Observer {
      * The ToolItem
      */
     protected ToolButton toolButton;
-   
 
     /**
-     * @param gui the gui, to which this tab belongs
+     * A list of this tab's contained ViewFrames
      */
-    public GuiTab( MainWindow mainWindow ) {
+    protected List viewFrameList;
+
+    /**
+     * @param mainWindow
+     * @param resButtonString
+     */
+    public GuiTab(MainWindow mainWindow, String resButtonString) {
         this.mainWindow = mainWindow;
 
-        this.contentComposite = new Composite( mainWindow.getPageContainer(), SWT.NONE );
-        this.contentComposite.setLayout( new FillLayout() );
-        this.contentComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        this.contentComposite.setVisible( false );
-    
-        this.toolButton = new ToolButton( mainWindow.getCoolBar().getMainTools(), SWT.PUSH );
-        this.toolButton.addListener( SWT.Selection, this );
+        this.contentComposite = new Composite(mainWindow.getPageContainer(), SWT.NONE);
+        this.contentComposite.setLayout(new FillLayout());
+        this.contentComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        this.contentComposite.setVisible(false);
 
-        this.mainWindow.registerTab( this );
+        this.createButton(resButtonString);
+
+        this.mainWindow.registerTab(this);
+
+        createContents(this.contentComposite);
     }
 
     /**
      * Creates the content for the tab
      * @param parent The parent composite
      */
-    protected abstract void createContents( Composite parent );
+    protected abstract void createContents(Composite parent);
 
     /**
      * @return The text to display in the statusline for this tab
@@ -105,7 +115,7 @@ public abstract class GuiTab implements Listener, Observer {
      * To call if the MainWindow dispose
      */
     public void dispose() {
-        this.mainWindow.getCore().deleteObserver( this );
+        this.mainWindow.getCore().deleteObserver(this);
     }
 
     /**
@@ -114,7 +124,8 @@ public abstract class GuiTab implements Listener, Observer {
      */
     public void setInActive() {
         this.active = false;
-        this.toolButton.setActive( false );
+        this.toolButton.setActive(false);
+        toggleAllViewFramesActive(false);
     }
 
     /**
@@ -122,16 +133,60 @@ public abstract class GuiTab implements Listener, Observer {
      */
     public void setActive() {
         this.active = true;
-        this.mainWindow.setActive( this );
-        this.toolButton.setActive( true );
+        this.mainWindow.setActive(this);
+        this.toolButton.setActive(true);
+        toggleAllViewFramesActive(true);
 
         /* does the mainwindow already have a statusline */
-        if ( this.mainWindow.getStatusline() != null ) {
-            this.mainWindow.getStatusline().update( this.getStatusText() );
-            this.mainWindow.getStatusline().updateToolTip( this.getStatusTip() );
+        if (this.mainWindow.getStatusline() != null) {
+            this.mainWindow.getStatusline().update(this.getStatusText());
+            this.mainWindow.getStatusline().updateToolTip(this.getStatusTip());
         }
     }
 
+    /**
+     * @param true if active, false otherwise
+     */
+    public void toggleAllViewFramesActive(boolean b) {
+        if (viewFrameList == null) return;
+        for (int i = 0; i < viewFrameList.size(); ++i) {
+            ViewFrame viewFrame = (ViewFrame) viewFrameList.get(i);
+
+            if (viewFrame.getGView() != null)
+                viewFrame.getGView().setActive(b);
+        }
+    }
+
+    /**
+     * Update all viewFrame's gView's 
+     */
+    public void allViewFramesUpdateDisplay() {
+        if (viewFrameList == null) return;
+        for (int i = 0; i < viewFrameList.size(); ++i) {
+            ViewFrame viewFrame = (ViewFrame) viewFrameList.get(i);
+
+            if (viewFrame.getGView() != null)
+                viewFrame.getGView().updateDisplay();
+        }
+    }
+
+    /**
+     * @param viewFrame
+     */
+    public void addViewFrame(ViewFrame viewFrame) {
+        if (viewFrameList == null) 
+            viewFrameList = new ArrayList();
+        
+        viewFrameList.add(viewFrame);
+    }
+    
+    /**
+     * @return viewFrameList
+     */
+    public List getViewFrameList() {
+        return viewFrameList;
+    }
+    
     /**
      * @return wether this tab is actually beeing displayed or sleeping in the background..
      */
@@ -143,7 +198,7 @@ public abstract class GuiTab implements Listener, Observer {
      * what to do, when we are selected: bring us in front of the whole thing
      * @param event the Button-press event from the CoolBar
      */
-    public void handleEvent( Event event ) {
+    public void handleEvent(Event event) {
         setActive();
     }
 
@@ -159,31 +214,34 @@ public abstract class GuiTab implements Listener, Observer {
      */
     public void updateDisplay() {
         getContent().layout();
+        allViewFramesUpdateDisplay();
     }
 
     /**
-     * @param buttonName 
+     * @param buttonName
      */
-    public void createButton( String buttonName ) {
-        toolButton.setText( G2GuiResources.getString("TT_" + buttonName) );
-        toolButton.setToolTipText( G2GuiResources.getString("TT_" + buttonName + "ToolTip") );
-        toolButton.setBigActiveImage( G2GuiResources.getImage( buttonName + "Active" ) );
-        toolButton.setBigInactiveImage( G2GuiResources.getImage( buttonName ) );
-        toolButton.setSmallActiveImage( G2GuiResources.getImage( buttonName + "SmallActive" ) );
-        toolButton.setSmallInactiveImage( G2GuiResources.getImage( buttonName + "Small" ) );
-        toolButton.useSmallButtons( this.mainWindow.getCoolBar().isToolbarSmallButtons() );
-        toolButton.setActive( false );
+    public void createButton(String buttonName) {
+        toolButton = new ToolButton(mainWindow.getCoolBar().getMainTools(), SWT.PUSH);
+        toolButton.addListener(SWT.Selection, this);
+        toolButton.setText(G2GuiResources.getString("TT_" + buttonName));
+        toolButton.setToolTipText(G2GuiResources.getString("TT_" + buttonName + "ToolTip"));
+        toolButton.setBigActiveImage(G2GuiResources.getImage(buttonName + "Active"));
+        toolButton.setBigInactiveImage(G2GuiResources.getImage(buttonName));
+        toolButton.setSmallActiveImage(G2GuiResources.getImage(buttonName + "SmallActive"));
+        toolButton.setSmallInactiveImage(G2GuiResources.getImage(buttonName + "Small"));
+        toolButton.useSmallButtons(this.mainWindow.getCoolBar().isToolbarSmallButtons());
+        toolButton.setActive(false);
         toolButton.resetImage();
-        this.mainWindow.getCoolBar().getMainToolButtons().add( toolButton );
+        this.mainWindow.getCoolBar().getMainToolButtons().add(toolButton);
     }
-    
+
     /**
      * @return mainWindow
      */
     public MainWindow getMainWindow() {
         return mainWindow;
     }
-    
+
     /**
      * @return CoreCommunication
      */
@@ -192,8 +250,13 @@ public abstract class GuiTab implements Listener, Observer {
     }
 }
 
+
 /*
 $Log: GuiTab.java,v $
+Revision 1.42  2003/11/29 19:10:24  zet
+small update.. continue later.
+- mainwindow > tabs > viewframes(can contain gView)
+
 Revision 1.41  2003/11/29 17:21:22  zet
 minor cleanup
 

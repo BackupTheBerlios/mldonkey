@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.helper.SashViewFrame;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -65,30 +64,23 @@ import org.eclipse.swt.widgets.Control;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.46 2003/11/29 17:21:22 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.47 2003/11/29 19:10:24 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
 	private CTabFolder tabFolder;
 	private CTabFolder cTabFolder;
-	private CoreCommunication core;
 	private StackLayout stackLayout;
 	private Composite composite;
 	private Button[] buttons;
 	private MenuManager resultsPopupMenu;
 	
 	/**
-	 * Create a new Search Tab
-	 * @param gui The parent Tab Page
+	 * @param mainWindow
+	 * @param resButtonString
 	 */
-	public SearchTab( MainWindow gui ) {
-		super( gui );
-		/* associate this tab with the corecommunication */
-		this.core = gui.getCore();
-		/* Set our name on the coolbar */
-		createButton( "SearchButton" );
-		/* create the tab content */
-		this.createContents(getContent());
+	public SearchTab( MainWindow mainWindow, String resButtonString ) {
+		super(mainWindow, resButtonString );
 	}
 
 	/**
@@ -98,16 +90,16 @@ public class SearchTab extends GuiTab {
 	private Search[] createTab() {
 		if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
 			List aList = new ArrayList();
-			aList.add( new MusicComplexSearch( core, this ) );
-			aList.add( new OtherComplexSearch( core, this ) );
+			aList.add( new MusicComplexSearch( getCore(), this ) );
+			aList.add( new OtherComplexSearch( getCore(), this ) );
 			
 			return new Search[] {
-				new SimpleSearch( core, this ),
-				new CompositeSearch( core, this, aList )
+				new SimpleSearch( getCore(), this ),
+				new CompositeSearch( getCore(), this, aList )
 			};
 		}
 		else
-			return new Search[] { new SimpleSearch( core, this ) };	
+			return new Search[] { new SimpleSearch( getCore(), this ) };	
 	}
 
 	/* (non-Javadoc)
@@ -414,6 +406,10 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.47  2003/11/29 19:10:24  zet
+small update.. continue later.
+- mainwindow > tabs > viewframes(can contain gView)
+
 Revision 1.46  2003/11/29 17:21:22  zet
 minor cleanup
 

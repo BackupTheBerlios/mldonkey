@@ -22,44 +22,39 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.util.Observable;
+
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.server.ServerViewFrame;
+import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
 import org.eclipse.jface.viewers.TableViewer;
-
 import org.eclipse.swt.widgets.Composite;
-
-import java.util.Observable;
 
 
 /**
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.52 2003/11/29 17:21:22 zet Exp $
+ * @version $Id: ServerTab.java,v 1.53 2003/11/29 19:10:24 zet Exp $
  *
  */
-public class ServerTab extends GViewGuiTab implements Runnable {
+public class ServerTab extends GuiTab implements Runnable {
     private String statusText = "";
     private ServerInfoIntMap servers;
-
-    // TODO: Move view's content to its content provider, reg d
+    private GView gView;
+	// TODO: Move view's content to its content provider, reg d
     
     /**
-     * @param gui The main gui tab
+     * @param mainWindow
+     * @param resButtonString
      */
-    public ServerTab(MainWindow gui) {
-        super(gui);
-
-        /* Set our name on the coolbar */
-        createButton("ServersButton");
-
-        /* create the tab content */
-        this.createContents(getContent());
+    public ServerTab(MainWindow mainWindow, String resButtonString) {
+        super(mainWindow, resButtonString);
         updateDisplay();
     }
 
@@ -67,8 +62,11 @@ public class ServerTab extends GViewGuiTab implements Runnable {
      * @see net.mldonkey.g2gui.view.GuiTab#createContents(org.eclipse.swt.widgets.Composite)
      */
     protected void createContents(Composite parent) {
-        gView = new ServerViewFrame(parent, "TT_ServersButton", "ServersButtonSmall", this).getGView();
-
+        ServerViewFrame sVF = new ServerViewFrame(parent, "TT_ServersButton", "ServersButtonSmall", this);
+		addViewFrame(sVF);
+        gView = sVF.getGView();
+        
+        
         /* fill the table with content */
         servers = getCore().getServerInfoIntMap();
         gView.getViewer().setInput(servers);
@@ -169,11 +167,19 @@ public class ServerTab extends GViewGuiTab implements Runnable {
         gView.updateDisplay();
         super.updateDisplay();
     }
+    
+    public GView getGView() {
+        return gView;
+    }
 }
 
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.53  2003/11/29 19:10:24  zet
+small update.. continue later.
+- mainwindow > tabs > viewframes(can contain gView)
+
 Revision 1.52  2003/11/29 17:21:22  zet
 minor cleanup
 
