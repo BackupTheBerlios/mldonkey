@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -39,20 +40,21 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.12 2003/07/03 01:56:45 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.13 2003/07/03 10:13:09 dek Exp $ 
  *
  */
 public class ConsoleTab extends G2guiTab implements Observer, ControlListener, Runnable {	
-	private String consoleFont;
+	private String[] consoleFont;
 	private PreferenceStore preferenceStore;
 	private ConsoleMessage consoleMessage;
 	private CoreCommunication core;
 	private Composite parent;
 	private Text infoDisplay;	
 	private Text input;
+	private Font font;
 
 	/**
-	 * @param gui
+	 * @param gui the main gui, which takes care of all our tabs
 	 */
 	public ConsoleTab( Gui gui ) {
 		super( gui );
@@ -60,22 +62,27 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 		this.toolItem.setText( "Console" );		
 		createContents( this.content );
 		( ( Core ) core ).addObserver( this );
-		this.preferenceStore = new PreferenceStore( "g2gui.pref" );
-		this.consoleFont = preferenceStore.getString( "ConsoleFont" );		
+		//this.consoleFont = preferenceStore.getString( "consoleFont" ).split( "|" );
+		//System.out.println("loaded: "+preferenceStore.getString( "consoleFont" ));
+		
+		
+		
+				
 	} 
 	
 	/* ( non-Javadoc )
 	 * @see net.mldonkey.g2gui.view.widgets.Gui.G2guiTab#createContents( org.eclipse.swt.widgets.Composite )
 	 */
-	protected void createContents( Composite parent ) {		
-		this.parent = parent;
+	protected void createContents( Composite parent ) {	
+		this.parent = parent;		
 		parent.setLayout( null );
 		parent.addControlListener( this );		
 			/*
-			 * Adding the Console-Display Text-field
+			 * Adding the Console-Display Text-field, and creating the saved font
 			 */			
 			infoDisplay = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
-		//infoDisplay.setFont( new Font( null, consoleFont, 0, 0 ) );
+				infoDisplay.setFont( loadFont() );
+				
 			input = new Text( parent, SWT.SINGLE | SWT.BORDER );					
 			//Send command to core
 			input.addKeyListener( new KeyAdapter() {
@@ -90,12 +97,31 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 		  		}		
 			} );	
 	}
+	private Font loadFont() {
+		this.preferenceStore = new PreferenceStore( "g2gui.pref" );
+			try { preferenceStore.load(); } catch ( IOException e ) { }		
+		this.consoleFont = preferenceStore.getString( "consoleFont" ).split( ":" );			
+		if ( preferenceStore.getString( "consoleFont" ).equals( "" ) )
+			consoleFont = null;						
+		if ( consoleFont != null ) {
+			font = new Font( null,
+					 new FontData( consoleFont[ 0 ], 
+					 		Integer.parseInt( consoleFont[ 1 ] ), 
+					 		Integer.parseInt( consoleFont[ 2 ] ) ) ) ;
+		}
+		else font = infoDisplay.getFont();
+		return font;
+	}
 	
+	/** what to do, if this tab becomes active
+	 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+	 */
 	public void handleEvent( Event event ) {
 		mainWindow.setActive( this );
 		
 		infoDisplay.append( core.getConsoleMessage().getConsoleMessage() );
 		core.getConsoleMessage().reset();
+		infoDisplay.setFont( loadFont() );
 	}
 	
 	/*
@@ -146,6 +172,9 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.13  2003/07/03 10:13:09  dek
+saving font now works
+
 Revision 1.12  2003/07/03 01:56:45  zet
 attempt(?) to save window size/pos & table column widths between sessions
 

@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.*;
  * ExtendedFontFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedFontFieldEditor.java,v 1.4 2003/07/03 09:42:34 dek Exp $ 
+ * @version $Id: ExtendedFontFieldEditor.java,v 1.5 2003/07/03 10:14:56 dek Exp $ 
  *
  */
 public class ExtendedFontFieldEditor extends FieldEditor {
@@ -148,10 +148,10 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 		String result = "";
 		if ( font != null && font.getFontData() != null )	{
 			result += font.getFontData()[0].getName();
-			result += " | ";
+			result += ":";
+			result += font.getFontData()[0].getHeight();			
+			result += ":";
 			result += font.getFontData()[0].getStyle();
-			result += " | ";
-			result += font.getFontData()[0].getHeight();
 			}
 		return result;
 	}
@@ -160,6 +160,9 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 
 /*
 $Log: ExtendedFontFieldEditor.java,v $
+Revision 1.5  2003/07/03 10:14:56  dek
+saving font now works
+
 Revision 1.4  2003/07/03 09:42:34  dek
 now saving Font as string representation
 
