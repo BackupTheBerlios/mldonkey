@@ -28,17 +28,19 @@ import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+
 
 /**
  * CoreConsoleItem
  *
- * @version $Id: CoreConsoleItem.java,v 1.4 2003/09/23 21:58:14 zet Exp $
+ * @version $Id: CoreConsoleItem.java,v 1.5 2003/10/31 22:06:38 zet Exp $
  *
  */
 public class CoreConsoleItem {
@@ -46,33 +48,39 @@ public class CoreConsoleItem {
     private Composite composite;
     private boolean linkEntryToggle = false;
 
-	/**
-	 * @param statusLine 
-	 * @param mldonkey 
-	 */
-    public CoreConsoleItem( StatusLine statusLine, CoreCommunication mldonkey ) {
+    /**
+     * @param statusLine
+     * @param mldonkey
+     */
+    public CoreConsoleItem(StatusLine statusLine, CoreCommunication mldonkey) {
         this.statusLine = statusLine;
         this.composite = statusLine.getStatusline();
         createContents();
     }
 
     public void createContents() {
-        Composite linkComposite = new Composite( composite, SWT.BORDER );
-        linkComposite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
-        linkComposite.setLayout( new FillLayout() );
-        CLabel link = new CLabel( linkComposite, SWT.BORDER );
-        link.setImage( G2GuiResources.getImage( "G2GuiLogoSmall" ) );
-        link.setToolTipText( G2GuiResources.getString( "CORE_CONSOLE_TOOLTIP" ) );
-        link.addMouseListener( new MouseAdapter() {
-            public void mouseDown( MouseEvent e ) {
-                G2Gui.getCoreConsole().getShell().open();
-            }
-        } );
+		Composite linkComposite = new Composite( composite, SWT.NONE );
+		linkComposite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER  | GridData.FILL_VERTICAL ) );
+		linkComposite.setLayout( new FillLayout() );
+        
+		ToolBar toolBar = new ToolBar(linkComposite, SWT.FLAT);
+        final ToolItem toolItem = new ToolItem(toolBar, SWT.NONE);
+        toolItem.setImage(G2GuiResources.getImage("G2GuiLogoSmall"));
+        toolItem.setToolTipText(G2GuiResources.getString("CORE_CONSOLE_TOOLTIP"));
+        toolItem.addSelectionListener(new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent e) {
+                    G2Gui.getCoreConsole().getShell().open();
+                }
+            });
     }
 }
 
+
 /*
 $Log: CoreConsoleItem.java,v $
+Revision 1.5  2003/10/31 22:06:38  zet
+fix status line when spawning a core
+
 Revision 1.4  2003/09/23 21:58:14  zet
 not much..
 

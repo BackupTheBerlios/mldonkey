@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.17 2003/10/22 15:46:06 dek Exp $
+ * @version $Id: StatusLine.java,v 1.18 2003/10/31 22:06:28 zet Exp $
  *
  */
 public class StatusLine {
@@ -83,7 +83,7 @@ public class StatusLine {
         int numColumns = 7;
 
         if ( ( G2Gui.getCoreConsole() != null ) && PreferenceLoader.loadBoolean( "advancedMode" ) )
-            numColumns = 8;
+            numColumns = 9;
         gridLayout = CGridLayout.createGL( numColumns, 0, 0, 0, 0, false );
 
         this.composite.setLayout( gridLayout );
@@ -189,6 +189,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.18  2003/10/31 22:06:28  zet
+fix status line when spawning a core
+
 Revision 1.17  2003/10/22 15:46:06  dek
 flattened status bar
 
@@ -214,7 +217,7 @@ Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.9  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.8  2003/08/18 01:42:24  zet
 centralize resource bundle
