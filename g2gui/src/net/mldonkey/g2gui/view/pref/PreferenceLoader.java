@@ -26,8 +26,10 @@ import java.io.IOException;
 
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author  
@@ -53,11 +55,14 @@ public class PreferenceLoader {
 	 * @return
 	 */
 	static PreferenceStore setDefaults(PreferenceStore preferenceStore) {
-		preferenceStore.setDefault( "consoleBackground", "0,0,0" );
-		preferenceStore.setDefault( "consoleForeground", "192,192,192" );
-		preferenceStore.setDefault( "consoleHighlight", "255,255,255" );
-		preferenceStore.setDefault( "consoleInputBackground", "0,0,0" );
-		preferenceStore.setDefault( "consoleInputForeground", "192,192,192" );
+		Display display = Display.getDefault();
+	
+		PreferenceConverter.setDefault(preferenceStore, "consoleBackground", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );
+		PreferenceConverter.setDefault(preferenceStore, "consoleForeground", display.getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB() );
+		PreferenceConverter.setDefault(preferenceStore, "consoleHighlight",  display.getSystemColor(SWT.COLOR_LIST_SELECTION).getRGB() );
+		PreferenceConverter.setDefault(preferenceStore, "consoleInputBackground", display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB() );
+		PreferenceConverter.setDefault(preferenceStore, "consoleInputForeground", display.getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB() );
+		
 		preferenceStore.setDefault( "displayAllServers", true );
 		preferenceStore.setDefault( "displayChunkGraphs", false );
 		preferenceStore.setDefault( "displayGridLines", true );
@@ -116,6 +121,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.5  2003/08/17 21:05:38  zet
+Use system default colours
+
 Revision 1.4  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 
