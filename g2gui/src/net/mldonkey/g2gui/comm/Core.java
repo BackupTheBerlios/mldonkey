@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.14 2003/06/15 09:58:30 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.15 2003/06/15 16:19:29 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread {
@@ -55,16 +55,18 @@ public class Core extends Thread {
 	private Information networkinfo = new NetworkInfo(),
 						fileAddSources = new FileAddSource(),
 						clientStats = new ClientStats(),
-						consoleMessage = new ConsoleMessage(),
-						optionsInfo = new OptionsInfo();
+						consoleMessage = new ConsoleMessage();
 	/**
 	 * 
 	 */
-	private InfoList clientInfoList = new ClientInfoList(),
-					 fileInfoList = new FileInfoList(),
-					 serverInfoList = new ServerInfoList(),
+	private InfoCollection clientInfoList = new ClientInfoList(),
+					 fileInfoMap = new FileInfoList(),
+					 serverInfoMap = new ServerInfoList(),
 					 addSectionOptionList = new AddSomeOptionList(),
-					 addPluginOptionList = new AddSomeOptionList();	
+					 addPluginOptionList = new AddSomeOptionList(),
+					 sharedFileInfoList = new SharedFileInfoList(),	
+					 optionsInfoMap = new OptionsInfoMap();
+
 	/**
 	 * 
 	 */
@@ -151,7 +153,7 @@ public class Core extends Thread {
 					break;
 
 			case Message.R_OPTIONS_INFO :
-					this.optionsInfo.readStream( messageBuffer );				
+					this.optionsInfoMap.readStream( messageBuffer );				
 					break;
 				
 			case Message.R_FILE_UPDATE_AVAILABILITY :				
@@ -181,9 +183,13 @@ public class Core extends Thread {
 					this.badPassword = true;						
 					this.disconnect();
 					break;
+					
+			case Message.R_SHARED_FILE_INFO :
+					this.sharedFileInfoList.readStream( messageBuffer );
+					break;		
 
 			case Message.R_FILE_DOWNLOAD_UPDATE :
-					this.fileInfoList.update( messageBuffer );
+					this.fileInfoMap.update( messageBuffer );
 					break;	
 					
 			case Message.R_CLIENT_STATS :				
@@ -198,11 +204,11 @@ public class Core extends Thread {
 					break;
 					
 			case Message.R_SERVER_INFO :
-					this.serverInfoList.readStream( messageBuffer );
+					this.serverInfoMap.readStream( messageBuffer );
 					break;
 							
 			case Message.R_DOWNLOADING_LIST :
-					this.fileInfoList.readStream( messageBuffer );
+					this.fileInfoMap.readStream( messageBuffer );
 					break;
 					 
 			case Message.R_DOWNLOADED_LIST :
@@ -232,6 +238,9 @@ public class Core extends Thread {
 
 /*
 $Log: Core.java,v $
+Revision 1.15  2003/06/15 16:19:29  lemmstercvs01
+some opcodes added
+
 Revision 1.14  2003/06/15 09:58:30  lemmstercvs01
 some opcodes added
 

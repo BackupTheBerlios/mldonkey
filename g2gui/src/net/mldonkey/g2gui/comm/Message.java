@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.14 2003/06/15 09:58:30 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.15 2003/06/15 16:18:58 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -107,6 +107,10 @@ public abstract class Message {
 	 * Receive File Download Update (value is 46)
 	 */
 	public static final short R_FILE_DOWNLOAD_UPDATE = 46;
+	/**
+	 * Receive Shared File Info (value is 48)
+	 */
+	public static final short R_SHARED_FILE_INFO = 48;
 	/**
 	 * Receive Client Stats (value is 49)
 	 */
@@ -254,6 +258,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.15  2003/06/15 16:18:58  lemmstercvs01
+some opcodes added
+
 Revision 1.14  2003/06/15 09:58:30  lemmstercvs01
 some opcodes added
 
