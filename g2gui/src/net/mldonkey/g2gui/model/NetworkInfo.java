@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.12 2003/07/30 19:26:19 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.13 2003/07/31 14:08:54 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -143,6 +143,32 @@ public class NetworkInfo extends Parent {
 	public String getNetworkName() {
 		return networkName;
 	}
+	
+	/**
+	 * @return a short represantation of the networkname
+	 */
+	public String getNetworkShortName() {
+		if ( this.networkType == Enum.DONKEY )
+			return "DK";
+		else if ( this.networkType == Enum.FT )
+			return "FT";
+		else if ( this.networkType == Enum.SOULSEEK )
+			return "SS";
+		else if ( this.networkType == Enum.BT )
+			return "BT";
+		else if ( this.networkType == Enum.OV )
+			return "OV";
+		else if ( this.networkType == Enum.GNUT )
+			return "G1";
+		else if ( this.networkType == Enum.GNUT2 )
+			return "G2";
+		else if ( this.networkType == Enum.DC )
+			return "DC";
+		else if ( this.networkType == Enum.OPENNP )
+			return "OFT";
+		else
+			return "";	
+	}
 
 	/**
 	 * @return Traffic uploaded to this network
@@ -170,13 +196,13 @@ public class NetworkInfo extends Parent {
 	 * Enable/Disable this network
 	 * @param bool true == enable/false == disable
 	 */
-	public void setEnabled( boolean bool ) {
+	public void setEnabled() {
 		Object[] temp = new Object[ 2 ];
 		temp[ 0 ] = new Integer( this.getNetwork() );
-		if ( bool ) 
-			temp[ 1 ] = enable;
-		else 
+		if ( this.isEnabled() ) 
 			temp[ 1 ] = disable;
+		else 
+			temp[ 1 ] = enable;
 		EncodeMessage netinfo =
 			new EncodeMessage( Message.S_ENABLE_NETWORK, temp );
 		netinfo.sendMessage( this.parent.getConnection() );
@@ -207,6 +233,8 @@ public class NetworkInfo extends Parent {
 			networkType = Enum.OV;
 		else if ( string.equals( "Gnutella" ) )
 			networkType = Enum.GNUT;
+		else if ( string.equals( "Gnutella2" ) )
+			networkType = Enum.GNUT2;	
 		else if ( string.equals( "Direct Connect" ) )
 			networkType = Enum.DC;
 		else if ( string.equals( "Open Napster" ) )
@@ -226,9 +254,13 @@ public class NetworkInfo extends Parent {
 		 */
 		public static Enum SOULSEEK = new Enum();
 		/**
-		 * Gnutella 1/2
+		 * Gnutella 1
 		 */
 		public static Enum GNUT = new Enum();
+		/**
+		 * Gnutella 2
+		 */
+		public static Enum GNUT2 = new Enum();
 		/**
 		 * Overnet
 		 */
@@ -261,6 +293,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.13  2003/07/31 14:08:54  lemmstercvs01
+added gnutella2, edited setEnable(), added getNetworkShortName()
+
 Revision 1.12  2003/07/30 19:26:19  lemmstercvs01
 hasServers() added, use it to exclude networks in servertab without servers
 
