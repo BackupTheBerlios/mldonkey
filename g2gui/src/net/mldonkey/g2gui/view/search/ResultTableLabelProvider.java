@@ -30,17 +30,22 @@ import net.mldonkey.g2gui.model.Tag;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Color;
 
 /**
  * ResultTableLabelProvider
  *
  * @author $user$
- * @version $Id: ResultTableLabelProvider.java,v 1.3 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.4 2003/07/31 04:11:00 zet Exp $ 
  *
  */
-public class ResultTableLabelProvider implements ITableLabelProvider {
+public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
+	
 	private ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
+	private Color alreadyDownloadedColor = new Color(null, 41, 174, 57);
+	
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#
@@ -66,27 +71,35 @@ public class ResultTableLabelProvider implements ITableLabelProvider {
 		 * Comment
 		 * downloaded
 		 */
+		
+		if ( arg0 instanceof ResultInfo ) {
 		ResultInfo resultInfo = ( ResultInfo ) arg0;
 		
-		if ( arg1 == 0 ) // network id
-			return ( ( NetworkInfo ) resultInfo.getNetwork() ).getNetworkName();
-		else if ( arg1 == 1 ) // name
-			return resultInfo.getNames()[ 0 ];
-		else if ( arg1 == 2 ) // size
-			return resultInfo.getStringSize();
-		else if ( arg1 == 3 ) // format
-			return resultInfo.getFormat();
-		else if ( arg1 == 4 ) // type
-			return resultInfo.getType();
-		else if ( arg1 == 5 ) { //metadata
-			Tag aTag = resultInfo.getTags()[ 0 ];
-			if ( aTag.getValue() > 20 )
-				return bundle.getString( "RTLP_HIGH" );
-			else if ( aTag.getValue() > 10 )
-				return bundle.getString( "RTLP_NORMAL" );
-			else
-				return bundle.getString( "RTLP_LOW" );
-		}	
+			switch ( arg1 ) {
+						
+				case 0: // network id
+					return "" + ( ( NetworkInfo ) resultInfo.getNetwork() ).getNetworkName();
+				case 1: // name
+					return resultInfo.getNames()[ 0 ];
+				case 2: // size
+					return resultInfo.getStringSize();
+				case 3: // format
+					return resultInfo.getFormat();
+				case 4: // type
+					return resultInfo.getType();
+				case 5: // metadata
+					Tag aTag = resultInfo.getTags()[ 0 ];
+					if ( aTag.getValue() > 20 )
+						return "" + bundle.getString( "RTLP_HIGH" );
+					else if ( aTag.getValue() > 10 )
+						return "" + bundle.getString( "RTLP_NORMAL" );
+					else
+						return "" + bundle.getString( "RTLP_LOW" );
+				default: 
+					return "";
+			
+			}	
+		}
 		return "";
 	}
 
@@ -114,10 +127,26 @@ public class ResultTableLabelProvider implements ITableLabelProvider {
 	 * removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
 	 */
 	public void removeListener( ILabelProviderListener arg0 ) { }
+	
+	public Color getBackground (Object arg0) {
+		return null;
+	}
+	public Color getForeground (Object arg0) {
+		if (arg0 instanceof ResultInfo) {
+			ResultInfo resultInfo = (ResultInfo) arg0;
+			if ( !resultInfo.getHistory() )
+				return alreadyDownloadedColor;
+		}
+		return null;
+	}
+		
 }
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.4  2003/07/31 04:11:00  zet
+searchresult changes
+
 Revision 1.3  2003/07/27 18:45:47  lemmstercvs01
 lots of changes
 

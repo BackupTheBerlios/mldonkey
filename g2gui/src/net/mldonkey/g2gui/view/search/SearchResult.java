@@ -52,7 +52,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
@@ -73,12 +72,13 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.custom.CLabel;
 
 /**
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.8 2003/07/30 19:09:35 vnc Exp $ 
+ * @version $Id: SearchResult.java,v 1.9 2003/07/31 04:10:28 zet Exp $ 
  *
  */
 //TODO search timeout, add resource bundle, add image handle, fake search, real links depending on network								   
@@ -86,7 +86,7 @@ public class SearchResult implements Observer, Runnable {
 	private MainTab mainTab;
 	private CTabFolder cTabFolder;
 	private String searchString;
-	private CoreCommunication core;
+	private static CoreCommunication core;
 	private int searchId;
 	private ResultInfoIntMap results;
 	private TableViewer table;
@@ -94,10 +94,12 @@ public class SearchResult implements Observer, Runnable {
 	private Image image;
 	private CTabItem cTabItem;
 	private TableColumn tableColumn;
-	private boolean ascending = false;
 	private String statusline;
+	private ResultTableSorter resultTableSorter = new ResultTableSorter();
 	
-	private ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
+	private int count = 0;
+	
+	private static ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
 
 	/* if you modify this, change the LayoutProvider and tableWidth */
 	private String[] tableColumns = { bundle.getString( "SR_NETWORK" ), 
@@ -117,16 +119,17 @@ public class SearchResult implements Observer, Runnable {
 	 * @param searchId The identifier to this search
 	 */
 	protected SearchResult( String aString, CTabFolder parent,
-								 CoreCommunication core, int searchId ) {
+								 CoreCommunication theCore, int searchId ) {
+								 	
 		this.searchString = aString;
 		this.cTabFolder = parent;
 		this.searchId = searchId;
-		this.core = core;
-		
+		core = theCore;
+	
 		/* draw the display */
 		this.createContent();
 		/* register ourself to the core */
-		this.core.addObserver( this );
+		core.addObserver( this );
 	}
 	
 	/* (non-Javadoc)
@@ -154,12 +157,11 @@ public class SearchResult implements Observer, Runnable {
 		if ( table == null ) {
 			/* remove the old label "searching..." */
 			label.dispose();
-		
 			this.createTable();
 		
 			/* fill the table with content */
 			table.setInput(  this.results.get( searchId ) );
-			this.modifiyItems();
+			//this.modifyItems();
 			this.setColumnWidth();
 		} 
 		else {
@@ -167,8 +169,6 @@ public class SearchResult implements Observer, Runnable {
 			int temp = ( ( List ) results.get( searchId ) ).size();
 			if ( table.getTable().getItemCount() != temp ) {
 				table.refresh();
-				System.out.println("* adding a result update to the list");
-				this.modifiyItems();
 			}
 		}
 		/* are we active? set the statusline text */
@@ -183,7 +183,7 @@ public class SearchResult implements Observer, Runnable {
 	 * unregister ourself (Observer) by the core
 	 */
 	private void unregister() {
-		this.core.deleteObserver( this );
+		core.deleteObserver( this );
 	}
 	
 	/**
@@ -230,10 +230,11 @@ public class SearchResult implements Observer, Runnable {
 		table.getTable().setHeaderVisible( true );
 		table.getTable().setMenu( createRightClickMenu() );
 
+		table.setUseHashlookup(true);  // more mem, but faster
 		table.setContentProvider( new ResultTableContentProvider() );
 		table.setLabelProvider( new ResultTableLabelProvider() );
-		table.setSorter( new ResultTableSorter() );
-		
+		table.setSorter( resultTableSorter );
+			
 		/* create the columns */
 		for ( int i = 0; i < tableColumns.length; i++ ) {
 			tableColumn = new TableColumn( table.getTable(), SWT.LEFT );
@@ -244,24 +245,16 @@ public class SearchResult implements Observer, Runnable {
 			final int columnIndex = i;
 			tableColumn.addListener( SWT.Selection, new Listener() {
 				public void handleEvent( Event e ) {
-					/* set the column to sort */
-					( ( ResultTableSorter ) table.getSorter() ).setColumnIndex( columnIndex );
-					/* set the way to sort (ascending/descending) */
-					( ( ResultTableSorter ) table.getSorter() ).setLastSort( ascending );
-
-					/* get the data for all tableitems */
-					TableItem[] items = table.getTable().getItems();
-					ResultInfo[] temp = new ResultInfo[ items.length ];
-					for ( int i = 0; i < items.length; i++ )
-							temp[ i ] = ( ResultInfo ) items[ i ].getData();
-
-					/* reverse sorting way */
-					ascending = ascending ? false : true;
-
-					table.getSorter().sort( table, temp );
-					table.refresh();
+					// duplicate to reset the sorter 
+					ResultTableSorter rTS = new ResultTableSorter();
+					rTS.setLastColumnIndex( resultTableSorter.getLastColumnIndex() );
+					rTS.setLastSort( resultTableSorter.getLastSort() );
+					resultTableSorter = rTS;
+					// set the column to sort
+					resultTableSorter.setColumnIndex( columnIndex );
+					table.setSorter( resultTableSorter );
 				}	
-			} );
+			} ); 
 		}
 
 		/* add a resize listener */
@@ -270,7 +263,6 @@ public class SearchResult implements Observer, Runnable {
 				SearchResult.this.setColumnWidth();
 			}
 		} );
-		
 		
 		final ToolTipHandler tooltip = new ToolTipHandler( table.getTable().getShell() );
 		tooltip.activateHoverHelp( table.getTable() );
@@ -416,59 +408,6 @@ public class SearchResult implements Observer, Runnable {
 	}
 	
 	/**
-	 * Sets the foreground color of an item to green if its already downloaded,
-	 * sets some data for the tooltiptext
-	 */
-	private void modifiyItems() {
-		TableItem[] items = table.getTable().getItems();
-		for ( int i = 0; i < items.length; i ++ ) {
-			TableItem item = items[ i ];
-			ResultInfo aResult = ( ( ResultInfo ) items[ i ].getData() );
-
-			/* sets the color for each table item depending on its history */
-			if ( !aResult.getHistory() )
-				item.setForeground( new Color( items[ 0 ].getDisplay(), 41, 174, 57 ) );
-
-			/* sets the tooltip image */
-			Program p;
-			if ( !aResult.getFormat().equals( "" ) )
-				p = Program.findProgram( aResult.getFormat() );
-			else {
-				String temp = aResult.getNames()[ 0 ];
-				int index = temp.lastIndexOf( "." );
-				try {
-					temp = temp.substring( index );
-				}
-				catch ( Exception e ) {
-					p = null;
-				}
-				p = Program.findProgram( temp );
-			}
-				
-			if ( p != null ) {
-				ImageData data = p.getImageData();
-				if ( data != null ) {
-					image = new Image( table.getTable().getDisplay(), data );
-					item.setData( "TIP_IMAGE", image );
-				}
-			}
-			
-			/* sets the tooltip text */	
-			String aString = bundle.getString( "ST_TT_NAME" ) + aResult.getNames()[ 0 ] + "\n";
-			if ( !aResult.getFormat().equals( "" ) )
-				aString += bundle.getString( "ST_TT_FORMAT" ) + aResult.getFormat() + "\n";
-				aString += bundle.getString( "ST_TT_LINK" ) + aResult.getLink() + "\n";
-				aString += bundle.getString( "ST_TT_NETWORK" )
-												 + aResult.getNetwork().getNetworkName() + "\n";
-				aString += bundle.getString( "ST_TT_SIZE" ) + aResult.getStringSize() + "\n";
-				aString += bundle.getString( "ST_TT_SOURCES" ) + aResult.getTags()[ 0 ].getValue();
-			if ( !aResult.getHistory() )
-				aString = aString + "\n" + bundle.getString( "ST_TT_DOWNLOADED" );
-			item.setData( "TIP_TEXT", aString );
-		}
-	}
-	
-	/**
 	 * Sets the size for the columns
 	 */
 	private void setColumnWidth() {
@@ -502,10 +441,10 @@ public class SearchResult implements Observer, Runnable {
 		/* tell the core to forget the search */
 		Object[] temp = { new Integer( searchId ), new Byte( ( byte ) 1 ) };
 		EncodeMessage message = new EncodeMessage( Message.S_CLOSE_SEARCH, temp );
-		message.sendMessage( this.core.getConnection() );
+		message.sendMessage( core.getConnection() );
 		message = null;
 					
-		/* we want no longer receive result for this search */
+		/* no longer receive results for this search */
 		this.unregister();
 	}
 	
@@ -518,7 +457,8 @@ public class SearchResult implements Observer, Runnable {
 	 */
 	protected static class ToolTipHandler {
 		private Shell  tipShell;
-		private Label  tipLabelImage, tipLabelText;
+		private CLabel  tipLabelImage;
+		private Label tipLabelText;
 		private Widget tipWidget; // widget this tooltip is hovering over
 		private Point  tipPosition; // the position being hovered over
 	
@@ -532,18 +472,19 @@ public class SearchResult implements Observer, Runnable {
 	
 			tipShell = new Shell( parent.getShell(), SWT.ON_TOP );
 			GridLayout gridLayout = new GridLayout();
-			gridLayout.numColumns = 2;
+			gridLayout.numColumns = 1;
 			gridLayout.marginWidth = 2;
 			gridLayout.marginHeight = 2;
 			tipShell.setLayout( gridLayout );
 	
 			tipShell.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
 			
-			tipLabelImage = new Label( tipShell, SWT.NONE );
+			tipLabelImage = new CLabel( tipShell, SWT.NONE );
+			tipLabelImage.setAlignment(SWT.LEFT);
 			tipLabelImage.setForeground( display.getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
 			tipLabelImage.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
 			tipLabelImage.setLayoutData( 
-				new GridData( GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER ) );
+				new GridData( GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_BEGINNING ) );
 	
 			tipLabelText = new Label( tipShell, SWT.NONE );
 			tipLabelText.setForeground( display.getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
@@ -592,16 +533,56 @@ public class SearchResult implements Observer, Runnable {
 					
 					tipWidget = widget;
 
-					/* get the data from the widget */					
-					String text = ( String ) widget.getData( "TIP_TEXT" );
-					Image image = ( Image ) widget.getData( "TIP_IMAGE" );
+				
+					// Create the tooltip on demand
+					if (widget instanceof TableItem) {
+						TableItem tableItem = (TableItem) widget; 
+						ResultInfo aResult = ( ResultInfo ) tableItem.getData();
+						
+						Image image = null;
+						Program p;
+						
+						if ( !aResult.getFormat().equals( "" ) )
+								p = Program.findProgram( aResult.getFormat() );
+						else {
+							String temp = aResult.getNames()[ 0 ];
+							int index = temp.lastIndexOf( "." );
+							try {
+								temp = temp.substring( index );
+							}
+							catch ( Exception e ) {
+								p = null;
+							}
+							p = Program.findProgram( temp );
+						}
+						
+						if ( p != null ) {
+							ImageData data = p.getImageData();
+							if ( data != null ) 
+								image = new Image( null, data );
+						}			
+				
+						String imageText = aResult.getNames()[ 0 ];
+						String aString = "";
+						if ( !aResult.getFormat().equals( "" ) )
+							aString += bundle.getString( "ST_TT_FORMAT" ) + aResult.getFormat() + "\n";
+							aString += bundle.getString( "ST_TT_LINK" ) + aResult.getLink() + "\n";
+							aString += bundle.getString( "ST_TT_NETWORK" )
+															 + aResult.getNetwork().getNetworkName() + "\n";
+							aString += bundle.getString( "ST_TT_SIZE" ) + aResult.getStringSize() + "\n";
+							aString += bundle.getString( "ST_TT_SOURCES" ) + aResult.getTags()[ 0 ].getValue();
+						if ( !aResult.getHistory() )
+							aString = aString + "\n" + bundle.getString( "ST_TT_DOWNLOADED" );
+						
 					
-					/* set the text/image for the tooltip */
-					if ( text != null )
-						tipLabelText.setText( text );
-					else
-						tipLabelText.setText( "" );
-					tipLabelImage.setImage( image ); // accepts null
+					// set the text/image for the tooltip 
+						if ( aString != null )
+							tipLabelText.setText( aString );
+						else
+							tipLabelText.setText( "" );
+							
+						tipLabelImage.setImage( image ); // accepts null;
+						tipLabelImage.setText ( imageText ); 
 					
 					/* pack/layout the tooltip */
 					tipShell.pack();
@@ -609,6 +590,7 @@ public class SearchResult implements Observer, Runnable {
 					setHoverLocation( tipShell, tipPosition );
 					
 					tipShell.setVisible( true );
+				}
 				}
 			} );
 		}
@@ -633,8 +615,8 @@ public class SearchResult implements Observer, Runnable {
 
 /*
 $Log: SearchResult.java,v $
-Revision 1.8  2003/07/30 19:09:35  vnc
-refactored setColumnWidth() typo
+Revision 1.9  2003/07/31 04:10:28  zet
+searchresult changes
 
 Revision 1.7  2003/07/29 10:11:48  lemmstercvs01
 moved icon folder out of src/

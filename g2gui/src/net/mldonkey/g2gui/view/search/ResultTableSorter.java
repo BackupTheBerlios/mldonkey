@@ -31,13 +31,14 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  * @author $user$
- * @version $Id: ResultTableSorter.java,v 1.2 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
+ * @version $Id: ResultTableSorter.java,v 1.3 2003/07/31 04:11:10 zet Exp $ 
  *
  */
 public class ResultTableSorter extends ViewerSorter {
-	/* set the default column to sort to name */
+	// set the default column to sort to name
 	private int columnIndex = 1;
-	/* set the default way to descending */
+	private int lastColumnIndex = 1;
+	// last sort ascending = true
 	private boolean lastSort = true;
 	
 	/**
@@ -71,62 +72,50 @@ public class ResultTableSorter extends ViewerSorter {
 	public int compare( Viewer viewer, Object obj1, Object obj2 ) {
 		ResultInfo result1 = ( ResultInfo ) obj1;
 		ResultInfo result2 = ( ResultInfo ) obj2;
+
+		String aString1, aString2;
 		
-		/* network */
-		if ( columnIndex == 0 ) {
-			String aString1 = result1.getNetwork().getNetworkName();
-			String aString2 = result2.getNetwork().getNetworkName();
-			if ( lastSort )
-				return aString1.compareToIgnoreCase( aString2 );
-			else
-				return aString2.compareToIgnoreCase( aString1 );
+		switch (columnIndex) {
+			
+			case 0: // network name
+				aString1 = result1.getNetwork().getNetworkName();
+				aString2 = result2.getNetwork().getNetworkName();
+				return (lastSort ? aString1.compareToIgnoreCase( aString2 )
+								: aString2.compareToIgnoreCase( aString1 ) );
+								
+			case 1: // filename
+				aString1 = result1.getNames()[ 0 ];
+				aString2 = result2.getNames()[ 0 ];
+				return ( lastSort ? aString1.compareToIgnoreCase( aString2 )
+						 		: aString2.compareToIgnoreCase( aString1 ) );
+						 		
+			case 2: // filesize
+				Long aLong1 = new Long( result1.getSize() );
+				Long aLong2 = new Long( result2.getSize() );
+				return ( lastSort ? aLong1.compareTo( aLong2 ) 
+								: aLong2.compareTo( aLong1) );
+								
+			case 3: // format 
+				aString1 = result1.getFormat();
+				aString2 = result2.getFormat();
+				return ( lastSort ? aString1.compareToIgnoreCase( aString2 ) 
+								: aString2.compareToIgnoreCase( aString1 ) );
+		
+			case 4: // media
+				aString1 = result1.getType();
+				aString2 = result2.getType();
+				return ( lastSort ? aString1.compareToIgnoreCase( aString2 )
+								: aString2.compareToIgnoreCase( aString1 ) );
+		
+			case 5: // availability 
+				Integer anInt1 = new Integer ( result1.getTags()[ 0 ].getValue() );
+				Integer anInt2 = new Integer ( result2.getTags()[ 0 ].getValue() );
+				return ( lastSort ? anInt1.compareTo( anInt2 ) 
+								: anInt2.compareTo( anInt1 ) );	
+		
+			default:
+				return 0;
 		}
-		/* name */
-		if ( columnIndex == 1 ) {
-			String aString1 = result1.getNames()[ 0 ];
-			String aString2 = result2.getNames()[ 0 ];
-			if ( lastSort )
-				return aString1.compareToIgnoreCase( aString2 );
-			else
-				return aString2.compareToIgnoreCase( aString1 );
-		}
-		/* size */
-		if ( columnIndex == 2 ) {
-			Integer anInt1 = new Integer( result1.getSize() );
-			Integer anInt2 = new Integer( result2.getSize() );
-			if ( lastSort )
-				return anInt1.compareTo( anInt2 );
-			else
-				return anInt2.compareTo( anInt1 );
-		}
-		/* format */
-		if ( columnIndex == 3 ) {
-			String aString1 = result1.getFormat();
-			String aString2 = result2.getFormat();
-			if ( lastSort )
-				return aString1.compareToIgnoreCase( aString2 );
-			else
-				return aString2.compareToIgnoreCase( aString1 );
-		}
-		/* media */
-		if ( columnIndex == 4 ) {
-			String aString1 = result1.getNames()[ 0 ];
-			String aString2 = result2.getNames()[ 0 ];
-			if ( lastSort )
-				return aString1.compareToIgnoreCase( aString2 );
-			else
-				return aString2.compareToIgnoreCase( aString1 );
-		}
-		/* avail */
-		if ( columnIndex == 5 ) {
-			String aString1 = result1.getNames()[ 0 ];
-			String aString2 = result2.getNames()[ 0 ];
-			if ( lastSort )
-				return aString1.compareToIgnoreCase( aString2 );
-			else
-				return aString2.compareToIgnoreCase( aString1 );
-		}
-		return 0;
 	}
 	
 	/**
@@ -135,19 +124,36 @@ public class ResultTableSorter extends ViewerSorter {
 	 */
 	public void setColumnIndex( int i ) {
 		columnIndex = i;
+		if (columnIndex == lastColumnIndex)
+			lastSort = !lastSort;
+		else {
+			if (i == 0 || i == 1)
+				lastSort = true;
+			else
+				lastSort = false;
+		}
+		lastColumnIndex = columnIndex;
 	}
-
-	/**
-	 * @param i The ascending or descending
-	 */
-	public void setLastSort( boolean i ) {
-		lastSort = i;
+	public int getLastColumnIndex() {
+		return lastColumnIndex;
+	}
+	public void setLastColumnIndex(int i) {
+		lastColumnIndex = i;
+	}
+	public boolean getLastSort() {
+		return lastSort;
+	}
+	public void setLastSort(boolean b) {
+		lastSort = b;
 	}
 
 }
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.3  2003/07/31 04:11:10  zet
+searchresult changes
+
 Revision 1.2  2003/07/27 18:45:47  lemmstercvs01
 lots of changes
 
