@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.21 2004/03/25 18:07:25 dek Exp $
+ * @version $Id: GView.java,v 1.22 2004/03/26 20:21:49 psy Exp $
  *
  */
 public abstract class GView {
@@ -347,7 +347,9 @@ public abstract class GView {
                     public synchronized void widgetDisposed(DisposeEvent e) {
                         TableColumn thisColumn = (TableColumn) e.widget;
 
-                        if (!manualDispose)
+                        if (!manualDispose && 
+                        		columnLabels[ arrayItem ] != "" && 
+                        		!PreferenceLoader.isRelaunching() )
                         	PreferenceLoader.setValue(columnLabels[ arrayItem ], thisColumn.getWidth());
                     }
                 });
@@ -535,6 +537,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.22  2004/03/26 20:21:49  psy
+do not save tablecolumns when restarting (because they are 0 on manual dispose)
+
 Revision 1.21  2004/03/25 18:07:25  dek
 profiling
 
