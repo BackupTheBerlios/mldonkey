@@ -33,12 +33,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.18 2003/07/18 09:58:00 dek Exp $ 
+ * @version $Id: TransferTab.java,v 1.19 2003/07/23 04:08:07 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -51,7 +52,18 @@ public class TransferTab extends GuiTab  {
 		super( gui );
 		this.mldonkey = gui.getCore();		
 		this.toolItem.setText( "testTab" );		
-		createContents( this.content );
+		
+		activeIm = 
+		inActiveIm = MainTab.createTransparentImage ( 
+							new Image(toolItem.getParent().getDisplay(), 
+							"src/icons/transfer2.png"),
+						toolItem.getParent());
+				
+		toolItem.setText(bundle.getString("TT_TransferButton"));
+		toolItem.setToolTipText(bundle.getString("TT_TransferButtonToolTip"));
+		toolItem.setImage(inActiveIm); 
+		createContents(this.content);
+		
 	}
 	
 	/* (non-Javadoc)
@@ -75,6 +87,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.19  2003/07/23 04:08:07  zet
+looks better with icons
+
 Revision 1.18  2003/07/18 09:58:00  dek
 checkstyle
 

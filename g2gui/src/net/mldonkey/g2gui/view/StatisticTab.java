@@ -2,7 +2,7 @@ package net.mldonkey.g2gui.view;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.ResourceBundle;
+
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
 import org.eclipse.swt.events.DisposeEvent;
@@ -24,9 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 public class StatisticTab
 	extends GuiTab
 	implements Observer {
-
-
-	ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
+	
 	GraphControl graphControl;
 
 	

@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view;
 
 import java.util.Observer;
-
+import java.util.ResourceBundle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.2 2003/07/17 15:10:35 lemmstercvs01 Exp $ 
+ * @version $Id: GuiTab.java,v 1.3 2003/07/23 04:08:07 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -69,6 +69,7 @@ public abstract class GuiTab implements Listener, Observer {
 	 */
 	private MainTab gui;
 	
+	protected ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
 	/**
 	 * @param gui the gui, to which this tab belongs
 	 */
@@ -143,6 +144,9 @@ public abstract class GuiTab implements Listener, Observer {
 }
 /*
 $Log: GuiTab.java,v $
+Revision 1.3  2003/07/23 04:08:07  zet
+looks better with icons
+
 Revision 1.2  2003/07/17 15:10:35  lemmstercvs01
 foobar
 

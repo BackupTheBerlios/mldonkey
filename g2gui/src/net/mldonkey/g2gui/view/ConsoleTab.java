@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.18 2003/07/22 18:10:15 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.19 2003/07/23 04:08:07 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -60,9 +60,18 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 	public ConsoleTab( MainTab gui ) {
 		super( gui );
 		this.core = gui.getCore();		
-		this.toolItem.setText( "Console" );		
-		createContents( this.content );
-		toolItem.setImage( inActiveIm );
+		activeIm = 
+		inActiveIm = MainTab.createTransparentImage ( 
+							new Image(toolItem.getParent().getDisplay(), 
+							"src/icons/console.png"),
+						toolItem.getParent());
+				
+		toolItem.setText(bundle.getString("TT_ConsoleButton"));
+		toolItem.setToolTipText(bundle.getString("TT_ConsoleButtonToolTip"));
+		toolItem.setImage(inActiveIm); 
+		createContents(this.content);
+		
+		
 	} 
 	
 	/* ( non-Javadoc )
@@ -163,6 +172,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.19  2003/07/23 04:08:07  zet
+looks better with icons
+
 Revision 1.18  2003/07/22 18:10:15  zet
 console linedelimiter
 

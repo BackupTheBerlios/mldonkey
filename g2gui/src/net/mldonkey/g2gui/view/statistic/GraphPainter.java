@@ -124,7 +124,7 @@ public class GraphPainter {
 			drawBoardBuffer.drawLine(startx,height+1,width-40,height+1);
 			
 			for (int i = 0; i < 10; i++) 
-				drawBoardBuffer.drawLine(startx+i*(width/20),0,startx+i*(width/20),height+20);
+				drawBoardBuffer.drawLine(startx+i*(width/20),0,startx+i*(width/20),height);
 		
 				
 			for (int dummy=height/10;dummy<height;dummy=dummy+height/10)

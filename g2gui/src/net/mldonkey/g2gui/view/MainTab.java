@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.view;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-
+import java.util.ResourceBundle;
 import java.io.IOException;
 
 import net.mldonkey.g2gui.comm.Core;
@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.7 2003/07/22 16:41:38 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.8 2003/07/23 04:08:07 zet Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -57,7 +57,7 @@ public class MainTab implements Listener {
 	private GuiTab activeTab;
 	private Menu mainMenuBar;	
 	private PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
-	
+	private ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
 	/**
 	 * @param core the most important thing of the gui: were do i get my data from
 	 * @param shell were do we live?
@@ -128,7 +128,8 @@ public class MainTab implements Listener {
 		CoolBar coolbar = createCoolBar( mainComposite );				
 			
 		ToolItem pref = new ToolItem( miscTools, SWT.NONE );				
-		pref.setText( "Preferences" );	
+		pref.setText(bundle.getString("TT_PreferencesButton"));
+		pref.setToolTipText(bundle.getString("TT_PreferencesButtonToolTip"));
 		pref.setImage( MainTab.createTransparentImage( 
 							new Image( pref.getParent().getDisplay(),
 								 "src/icons/preferences.png" ), 
@@ -453,6 +454,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.8  2003/07/23 04:08:07  zet
+looks better with icons
+
 Revision 1.7  2003/07/22 16:41:38  zet
 register statistics tab
 
