@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
+import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.download.FileInfoTableContentProvider;
 import net.mldonkey.g2gui.view.download.FileInfoTableLabelProvider;
 import net.mldonkey.g2gui.view.download.RowComparator;
@@ -58,7 +59,7 @@ import org.eclipse.swt.events.*;
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.14 2003/07/03 01:56:45 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.15 2003/07/03 16:27:16 lemmstercvs01 Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements Observer {
@@ -187,6 +188,7 @@ public class TransferTab extends G2guiTab implements Observer {
 		menuItem.setText( res.getString( "TT_Menu0" ) );
 		menuItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
+				( ( FileInfo ) item.getData() ).setState( EnumFileState.PAUSED );
 			}
 		});
 
@@ -195,6 +197,7 @@ public class TransferTab extends G2guiTab implements Observer {
 		menuItem.setText( res.getString( "TT_Menu1" ) );
 		menuItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
+				( ( FileInfo ) item.getData() ).setState( EnumFileState.DOWNLOADING );
 			}
 		});
 
@@ -285,6 +288,9 @@ public class TransferTab extends G2guiTab implements Observer {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.15  2003/07/03 16:27:16  lemmstercvs01
+pause/resume event added
+
 Revision 1.14  2003/07/03 01:56:45  zet
 attempt(?) to save window size/pos & table column widths between sessions
 
