@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.15 2003/08/18 12:34:44 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.16 2003/08/18 22:22:02 zet Exp $ 
  *
  */
 public class G2Gui {
@@ -70,7 +70,7 @@ public class G2Gui {
 	private static int port;
 	private static int[] count;
 	private static MessageBox box;
-	private static Display display;
+	private static Display display = null;
 	private static Shell shell, splashShell;
 	private static ProgressBar progressBar;
 	private static FormLayout formLayout;
@@ -83,19 +83,21 @@ public class G2Gui {
 	 * @param args Nothing to put inside
 	 */
 	public static void main( String[] args ) {		
-		if ( containsLink(args) ) notProcessingLink = false;
-		
-		/* initializing */		
 		display = new Display();
-		shell = new Shell( display );
-		
 		ImageRegistry reg = G2GuiResources.getImageRegistry();
 		reg.put("splashScreen", ImageDescriptor.createFromFile(G2Gui.class, "images/splash.png") );	
+		launch( args );
+	}
+	
+	public static void launch( String[] args ) {
+		if ( containsLink(args) ) notProcessingLink = false;
 		
+		shell = new Shell( display );
+				
 		preferenceStore = new PreferenceStore( "g2gui.pref" );	
 		myPrefs = new Preferences( preferenceStore );
 		splashShell = new Shell( shell, SWT.ON_TOP );	
-		box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
+		box = new MessageBox( shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
 		waiterObject = new Object();
 		
 		if (notProcessingLink){		
@@ -120,7 +122,7 @@ public class G2Gui {
 			int x = ( displayRect.width - shellRect.width ) / 2;
 			int y = ( displayRect.height - shellRect.height ) / 2;
 			splashShell.setLocation( x, y );
-			splashShell.open(); //TODO disabled for developing
+			splashShell.open(); 
 			
 			increaseBar( "Starting the model" );
 		}
@@ -152,58 +154,67 @@ public class G2Gui {
 			splashShell.dispose();
 			box.setText( G2GuiResources.getString( "G2_INVALID_ADDRESS") );
 			box.setMessage( G2GuiResources.getString( "G2_ILLEGAL_ADDRESS" ) );
-			box.open();
-			myPrefs.open( shell, null );
-			relaunchSelf(args);
+			int rc = box.open();
+			if (rc == SWT.NO) {
+				shell.dispose();
+				display.dispose();
+			} else {
+				myPrefs.open( shell, null );
+				relaunchSelf(args);
+			}
+			return;
 		}
 		catch ( IOException e ) {
 			splashShell.dispose();
 			box.setText( G2GuiResources.getString( "G2_IOEXCEPTION") );
 			box.setMessage( G2GuiResources.getString( "G2_CORE_NOT_RUNNING" ) );
-			box.open();
-			myPrefs.open( shell, null );
-			relaunchSelf(args);
+			int rc = box.open();
+			if (rc == SWT.NO) {
+				shell.dispose();
+				display.dispose();
+			} else {
+				myPrefs.open( shell, null );
+				relaunchSelf(args);
+			}
+			return;
 		}
 		
 		/* launch the model */
-		boolean pushmode = ! notProcessingLink;
-		core = new Core( socket, username, password, waiterObject, pushmode );
-		core.connect();
-		mldonkey = new Thread( core );
-		mldonkey.setDaemon( true );
-		mldonkey.start();
 		preferenceStore.setValue("initialized", true);
 		try {
 			preferenceStore.save();
-		} catch (IOException e2) {
-			
-		}
+		} catch (IOException e2) { }
 		
-		while ( true ) {
-			/* wait as long as the core tells us to continue */
-			synchronized ( waiterObject ) {
-				try {
-					waiterObject.wait();
-				}
-				catch ( InterruptedException e1 ) { }
+		
+		boolean pushmode = ! notProcessingLink;
+		/* wait as long as the core tells us to continue */
+		synchronized ( waiterObject ) {
+		
+			core = new Core( socket, username, password, waiterObject, pushmode );
+			core.connect();
+			mldonkey = new Thread( core );
+			mldonkey.setDaemon( true );
+			mldonkey.start();
+			
+			try {
+				waiterObject.wait();
 			}
-			/* did the core receive "bad password" */
-			if ( core.getBadPassword() ) {
-				badPasswordHandling(args);
+			catch ( InterruptedException e1 ) { }
+		}
+		/* did the core receive "bad password" */
+		if ( core.getBadPassword() ) {
+			core.disconnect();
+			badPasswordHandling(args);
+		} else {
+
+			if (notProcessingLink){
+				increaseBar( "Starting the view" ); 			
+				MainTab g2gui = new MainTab( core, shell );
+			} else {
+				shell.dispose();
+				display.dispose();			
+				sendDownloadLink(args);
 			}
-			/* user/pass was valid, leave the loop */
-			else
-				break;
-		}
-		if (notProcessingLink){
-			increaseBar( "Starting the view" ); 			
-			/* launch the view */	
-			MainTab g2gui = new MainTab( core, shell );
-		}
-		else {
-			shell.dispose();
-			display.dispose();			
-			sendDownloadLink(args);
 		}
 		core.disconnect();
 	}
@@ -240,10 +251,8 @@ public class G2Gui {
 	 */
 	private static void relaunchSelf(String[] args) {
 		shell.dispose();
-		display.dispose();
-		G2Gui.main( args );
+		launch( args );
 	}
-	
 	
 	/**
 	 * Raise an messagebox on badpassword exception
@@ -252,14 +261,17 @@ public class G2Gui {
 	public static void badPasswordHandling(String[] args) {
 		splashShell.dispose();
 		/* raise a warning msg */
-		box = new MessageBox( shell, SWT.ICON_WARNING | SWT.OK );
+		box = new MessageBox( shell, SWT.ICON_WARNING | SWT.YES | SWT.NO );
 		box.setText( G2GuiResources.getString( "G2_LOGIN_INVALID" ) );
 		box.setMessage( G2GuiResources.getString( "G2_USER_PASS" ) );
-		box.open();
-		/* dont launch the gui but launch the password box */
-		myPrefs.open( shell, null );
-		/* send the password again */
-		relaunchSelf(args);
+		int rc = box.open();
+		if (rc == SWT.NO) {
+			shell.dispose();
+			display.dispose();
+		} else {
+			myPrefs.open( shell, null );
+			relaunchSelf(args);
+		}
 	}
 
 	/**
@@ -291,6 +303,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.16  2003/08/18 22:22:02  zet
+attempt to fix "wait-forever" state, and loop on bad passwords..
+
 Revision 1.15  2003/08/18 12:34:44  dek
 now the initialized-stuff works again
 
