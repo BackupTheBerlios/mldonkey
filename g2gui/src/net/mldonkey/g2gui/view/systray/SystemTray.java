@@ -45,7 +45,7 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
 /**
- * @version $Id: SystemTray.java,v 1.17 2004/03/14 19:43:56 dek Exp $
+ * @version $Id: SystemTray.java,v 1.18 2004/03/14 20:54:02 dek Exp $
  *  
  */
 public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
@@ -153,9 +153,10 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 	public void run() {
 		
 		libLoaded = SystemTrayIconManager.libLoaded;
+		if (!libLoaded) return;
 
 		parent.getCore().getClientStats().addObserver(this);
-
+		
 		icon = G2GuiResources.getImageDescriptor("TrayIcon").createImage().handle;
 				
 		systemTrayManager = new SystemTrayIconManager(icon, titleBarText);
@@ -283,6 +284,9 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.18  2004/03/14 20:54:02  dek
+ *** empty log message ***
+
  Revision 1.17  2004/03/14 19:43:56  dek
  *** empty log message ***
 
