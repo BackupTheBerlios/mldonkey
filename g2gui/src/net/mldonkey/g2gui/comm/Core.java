@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.64 2003/07/15 18:16:40 dek Exp $ 
+ * @version $Id: Core.java,v 1.65 2003/07/17 15:10:22 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -99,7 +99,7 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 		thisThread = new Thread( this );
 		thisThread.setDaemon( true );
 		thisThread.start();
-		
+		this.connect();
 	}
 
 	/**
@@ -129,7 +129,6 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 	 * starts the Core and begin receiving messages	 * 
 	 */
 	public void  run() {
-		this.connect();		
 		MessageBuffer messageBuffer = new MessageBuffer();		
 		int messageLength;
 		int position = 0;
@@ -352,6 +351,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.65  2003/07/17 15:10:22  lemmstercvs01
+remove this.connect() in run()
+
 Revision 1.64  2003/07/15 18:16:40  dek
 coreThread is now a daemon-thread (look inside Java-API to see, what this means)
 
