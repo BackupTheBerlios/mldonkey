@@ -32,9 +32,13 @@ import net.mldonkey.g2gui.view.TransferTab;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableTreeViewer;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
+import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
@@ -49,10 +53,10 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.1 2003/08/04 19:22:08 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.2 2003/08/06 17:16:09 zet Exp $ 
  *
  */
-public class DownloadTableTreeViewer  {
+public class DownloadTableTreeViewer implements ICellModifier {
 
 	private TableTreeViewer tableTreeViewer;
 	private TableTree tableTree;
@@ -78,11 +82,13 @@ public class DownloadTableTreeViewer  {
 			"TT_Download_Rate",
 			"TT_Download_Chunks",
 			"TT_Download_ETA",
-			"TT_Download_Priority"	
+			"TT_Download_Priority",	
+			"TT_Download_Last",
+			"TT_Download_Age"
 		};
 	
 	private final int[] COLUMN_DEFAULT_WIDTHS =
-		{ 50, 50, 250, 75, 75, 50, 50, 50, 75, 75, 50 };
+		{ 50, 50, 250, 75, 75, 50, 50, 50, 75, 75, 50, 75, 75};
 
 	private final int[] COLUMN_ALIGNMENT =
 		{
@@ -96,7 +102,9 @@ public class DownloadTableTreeViewer  {
 			SWT.RIGHT,
 			SWT.LEFT,
 			SWT.RIGHT,
-			SWT.LEFT
+			SWT.LEFT,
+			SWT.RIGHT,
+			SWT.RIGHT
 		};
 		
 	// set to 0 to turn off table editors
@@ -129,9 +137,15 @@ public class DownloadTableTreeViewer  {
 		
 		tableTree.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
 		
+		tableTreeViewer.setColumnProperties(COLUMN_LABELS);
 		table.setLinesVisible( loadBoolean("displayGridLines") );
 		table.setHeaderVisible( true );
 		
+		CellEditor[] cellEditors = new CellEditor[COLUMN_LABELS.length];
+		cellEditors[2] = new TextCellEditor(table);
+		tableTreeViewer.setCellEditors(cellEditors);
+		tableTreeViewer.setCellModifier(this);
+				
 		for (int i = 0; i < COLUMN_LABELS.length; i++) {
 			TableColumn tableColumn = new TableColumn(table, COLUMN_ALIGNMENT[ i ]);
 			tableColumn.setText ( res.getString( COLUMN_LABELS[ i ] )  );
@@ -167,10 +181,13 @@ public class DownloadTableTreeViewer  {
 								 
 		}
 		
+		
+		
 		DownloadTableTreeLabelProvider treeLabelProvider = new DownloadTableTreeLabelProvider();
 		tableTreeViewer.setLabelProvider(treeLabelProvider);
 		
 		tableTreeContentProvider = new DownloadTableTreeContentProvider();
+		tableTreeContentProvider.setUpdateBuffer( loadInteger("displayBuffer") );
 		tableTreeViewer.setContentProvider(tableTreeContentProvider);
 		tableTreeViewer.setUseHashlookup(true);
 		
@@ -192,9 +209,31 @@ public class DownloadTableTreeViewer  {
 		tableTreeViewer.setInput( mldonkey.getFileInfoIntMap() );
 		mldonkey.getFileInfoIntMap().addObserver( tableTreeContentProvider );
 		tableTreeContentProvider.updateAllEditors();
-		tableTreeContentProvider.setUpdateBuffer( loadInteger("displayBuffer") );
+	
 				
 	}
+	
+	public boolean canModify(Object element, String property) {
+		if (element instanceof FileInfo) 
+			return true;
+		return false;
+	}
+	
+	public Object getValue(Object element, String property) {
+		FileInfo fileInfo = (FileInfo) element;
+		return fileInfo.getName();
+	}
+	
+	public void modify(Object element, String property, Object value) {
+		
+		TableTreeItem item = (TableTreeItem) element;
+		FileInfo fileInfo = (FileInfo) item.getData();
+		String newName = ((String) value).trim();
+		if (newName.length() > 0) fileInfo.setName(newName);
+			
+	}
+	
+	
 	
 	public static boolean displayChunkGraphs() {
 		return displayChunkGraphs;
@@ -238,6 +277,9 @@ public class DownloadTableTreeViewer  {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.2  2003/08/06 17:16:09  zet
+cell modifiers
+
 Revision 1.1  2003/08/04 19:22:08  zet
 trial tabletreeviewer
 
