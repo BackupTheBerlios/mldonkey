@@ -23,9 +23,8 @@
 package net.mldonkey.g2gui.view.statusline;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.comm.EncodeMessage;
-import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.RegExp;
+import net.mldonkey.g2gui.helper.DownloadSubmit;
 import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -56,11 +55,13 @@ import gnu.regexp.RE;
 import gnu.regexp.REException;
 import gnu.regexp.REMatch;
 
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.21 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: LinkEntry.java,v 1.22 2004/03/02 23:39:29 psy Exp $
  *
  */
 public class LinkEntry {
@@ -128,8 +129,9 @@ public class LinkEntry {
      */
     public void enterLinks(Text linkEntryText) {
         String input = linkEntryText.getText();
+        List linkList = new ArrayList();
+        
         RE regex = null;
-
         try {
             regex = new RE("(ed2k://\\|file\\|[^\\|]+\\|(\\d+)\\|([\\dabcdef]+)\\|)" +
                     "|(sig2dat:///?\\|File:[^\\|]+\\|Length:.+?\\|UUHash:\\=.+?\\=)" +
@@ -141,16 +143,18 @@ public class LinkEntry {
             e.printStackTrace();
         }
 
+        /* with our prepared regex we now extract all links */
         REMatch[] matches = regex.getAllMatches(input);
 
+        /* put all matches in a list */
         for (int i = 0; i < matches.length; i++) {
             String link = RegExp.replaceAll(matches[ i ].toString(), "\"", "");
             link = RegExp.replaceAll(link, "\n", "");
-
-            Message dllLink = new EncodeMessage(Message.S_DLLINK, link);
-            dllLink.sendMessage(core);
+            linkList.add(link);
         }
-
+        /* submit those links */
+        new DownloadSubmit(linkList, core);
+        
         statusLine.update(G2GuiResources.getString("LE_LINKS_SENT") + " " + matches.length);
         linkEntryText.setText("");
     }
@@ -191,6 +195,9 @@ public class LinkEntry {
 
 /*
 $Log: LinkEntry.java,v $
+Revision 1.22  2004/03/02 23:39:29  psy
+replaced raw-socket link-submission
+
 Revision 1.21  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

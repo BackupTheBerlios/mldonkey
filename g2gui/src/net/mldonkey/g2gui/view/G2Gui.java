@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.69 2004/03/01 21:00:31 psy Exp $
+ * @version $Id: G2Gui.java,v 1.70 2004/03/02 23:39:29 psy Exp $
  *
  */
 public class G2Gui {
@@ -338,7 +338,7 @@ public class G2Gui {
     	// connection denied
     	if ( connectCore(true) ) {
     		System.out.println("Connection fine, sending links!");
-    		new DownloadSubmit( aLink, core.getConnection(), submitHost, submitPort );
+    		new DownloadSubmit( aLink, core, submitHost, submitPort );
     	}
     }
 
@@ -645,6 +645,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.70  2004/03/02 23:39:29  psy
+replaced raw-socket link-submission
+
 Revision 1.69  2004/03/01 21:00:31  psy
 * Moved linksubmitter from G2gui.java to DownloadSubmit.java
 * added .torrent http-server

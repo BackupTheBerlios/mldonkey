@@ -45,24 +45,27 @@ import java.util.Enumeration;
 import java.util.List;
 
 import net.mldonkey.g2gui.view.*;
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.RegExp;
+
+
 /**
  * DownloadSubmit
  *
  * @author $user$
- * @version $Id: DownloadSubmit.java,v 1.3 2004/03/02 00:23:26 psy Exp $ 
+ * @version $Id: DownloadSubmit.java,v 1.4 2004/03/02 23:39:29 psy Exp $ 
  *
  */
 public class DownloadSubmit implements Runnable {
 	private List submitList;
-	private Socket socket;
+	private CoreCommunication core;
 	private String submitHost;
 	private int submitPort = 4081;
 	
 	/* how many seconds should the torrent be served? */
-	private final static int SERVETIME = 10;
+	private final static int SERVETIME = 30;
 
 	
 	/**
@@ -73,8 +76,8 @@ public class DownloadSubmit implements Runnable {
 	 * @param aLink a List of links and/or torrent-files
 	 * @param aSocket a raw established socket to the mldonkey core
 	 */
-	public DownloadSubmit( List aLink, Socket aSocket ) {
-		this( aLink, aSocket, null, 0 );
+	public DownloadSubmit( List aLink, CoreCommunication aCore ) {
+		this( aLink, aCore, null, 0 );
 	} 
 
 	/**
@@ -87,14 +90,14 @@ public class DownloadSubmit implements Runnable {
 	 * @param sHost which host/ip should we tell the core to get the torrent from?
 	 * @param sPort which port should we tell the core to get the torrent from?
 	 */
-	public DownloadSubmit( List aLink, Socket aSocket, String sHost, int sPort ) {
+	public DownloadSubmit( List aLink, CoreCommunication aCore, String sHost, int sPort ) {
 		if ( sPort > 0 )
 			submitPort = sPort;
 		if ( sHost != null )
 			submitHost = sHost;
 
 		submitList = aLink;
-		socket = aSocket;
+		core = aCore;
 
 		/* set up the submitter as daemon-thread */
 		Thread submitter = new Thread(this);
@@ -163,7 +166,7 @@ public class DownloadSubmit implements Runnable {
      * @param link a single link
      */
     private void sendLink(String link) {
-     	/* ed2k://-links are hexDecoded for nicer filenames,
+    	/* ed2k://-links are hexDecoded for nicer filenames,
      	 * http://-links are hexEncoded */
 		if ( link.toLowerCase().startsWith("ed2k://") ) {
 			link = hexDecode(link);
@@ -173,12 +176,8 @@ public class DownloadSubmit implements Runnable {
 		if (G2Gui.debug) System.out.println("SENDING: " + link);
 		/* create a nice package and send it to the core */
 		EncodeMessage linkMessage = new EncodeMessage(Message.S_DLLINK, link );
-	    try {
-	        Message.writeStream(socket, linkMessage.getHeader(), linkMessage.getContent());
-	    } 
-	    catch (IOException e) {
-	        e.printStackTrace();
-	    }
+		linkMessage.sendMessage(core);
+
 	    linkMessage = null;
     }
 
@@ -318,6 +317,9 @@ public class DownloadSubmit implements Runnable {
 
 /*
 $Log: DownloadSubmit.java,v $
+Revision 1.4  2004/03/02 23:39:29  psy
+replaced raw-socket link-submission
+
 Revision 1.3  2004/03/02 00:23:26  psy
 more hex-encoding related stuff
 
