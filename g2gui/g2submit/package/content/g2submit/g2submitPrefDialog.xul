@@ -14,21 +14,21 @@
 	  <caption label="MLdonkey G2 Submit / Link Catcher Plugin"/>
       <description><html:img src="mld_logo_48x48_crome.gif" align="left" hspace="10" ></html:img>
         You need to set the absolute path to your favourite program for
-		handling links ('g2gui' for example).<html:br />
-        <html:b>%r</html:b>&#160;is the link variable. Windows g2gui.exe needs the additial -c switch to specify g2gui.pref
+		handling links (MLdonkey G2Gui for example). Tip:<html:br />
+        <html:b>%l</html:b>&#160;is an optional link variable.
 		</description>
 
   <groupbox id="prefG2guiLinuxExample">
       <caption label="Linux Example"/>
       <description><html:img src="fileicon.png" align="left" hspace="10" ></html:img>
-        /home/user/g2gui/g2gui -l %r
+        /home/user/g2gui/g2gui
 	  </description>
   </groupbox>
 
   <groupbox id="prefG2guiWindowsExample">
       <caption label="Windows Example"/>
       <description><html:img src="fileicon.png" align="left" hspace="10" ></html:img>
-        c:\progr~1\g2gui\g2gui.exe -l %r -c c:\progr~1\g2gui\g2gui.pref
+        c:\progr~1\g2gui\g2gui.exe
 	  </description>
   </groupbox>
 
@@ -93,11 +93,19 @@
                       prefstring="g2submit.intercept.magnet"
                       oncommand="changeG2submitPrefs();" />
 			  </row>
+              <row>
+                 <description>
+				    Http:
+             	  </description>
+                       <textbox size="40" id="prefG2submitHttpClient"
+                        prefstring="g2submit.command.http"
+                        onblur="changeG2submitPrefs();" />
+			  </row> 
 		  </rows>
       </grid>
   </groupbox>
 
-<description><html:a target="_new" style="color: blue" href="http://mldonkey.berlios.de/">MLdonkey G2 Submit</html:a>&#160;Version: 0.2 by vnc (G2gui Team). Based on&#160;<html:a target="_new" style="color: blue" href="http://mozex.mozdev.org/">mozex</html:a>&#160;(C) Tomas Styblo &lt;tripie@cpan.org&gt;</description>
+<description><html:a target="_new" style="color: blue" href="http://mldonkey.berlios.de/">MLdonkey G2 Submit</html:a>&#160;Version: 0.2.2 by vnc (G2gui Team). Based on&#160;<html:a target="_new" style="color: blue" href="http://mozex.mozdev.org/">mozex</html:a>&#160;(C) Tomas Styblo &lt;tripie@cpan.org&gt;</description>
 
 </dialog>
 

@@ -27,7 +27,7 @@ var err = initInstall("g2submit", "g2submit", version);
 logComment("initInstall: " + err);
 
 // profile installs only work since 2003-03-06
-const INST_TO_PROFILE = "Do you wish to install g2submit to your user profile ?\nThis means it doesn't need reinstalling when you update Mozilla/Firebird.\n\nAlternatively, you may click \"Cancel\" to install g2submit to the application directory.\n(Root privileges may be required in UNIX.)\n\n\n\nIMPORTANT NOTE: You MUST NOT change the installation location\nwhen you are upgrading a previous installation of g2submit.\nIt also means that in case you are UPGRADING g2submit version 1.04 or older\n then you MUST click \"Cancel\" now and install g2submit to the application directory.";
+const INST_TO_PROFILE = "Do you wish to install g2submit to your user profile ?\nPress <Cancel> for application directory.";
 var instToProfile = confirm(INST_TO_PROFILE);
 var chromef = instToProfile ? getFolder("Profile", "chrome") : getFolder("chrome");
 var jar = getFolder(chromef, "g2submit.jar");
@@ -48,7 +48,7 @@ if (verifyDiskSpace(getFolder("Program"), srDest))
 
     if (err == SUCCESS) {
         performInstall(); 
-        alert("Please restart Mozilla/Firebird to complete the installation."); 
+        //alert("Please restart Mozilla/Firebird to complete the installation."); 
     }
     else {
         cancelInstall(err);

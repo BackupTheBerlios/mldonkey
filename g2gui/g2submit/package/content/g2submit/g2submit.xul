@@ -24,16 +24,19 @@ Copyright (C) 2002 Tomas Styblo <tripie@cpan.org>
     <script type="application/x-javascript" src="chrome://g2submit/content/g2submit-pref.js"/>
     <script type="application/x-javascript" src="g2submit.js"/>
     <popup id="contentAreaContextMenu">
-        <menu id="g2submit-menu" label="G2 Submit " accesskey="x">
+        <menu id="g2submit-menu" label="G2 Submit " accesskey="g">
             <menupopup>
-				<menuitem id="g2submit-link-ed2k" label="submit ed2k => G2gui"
+				<menuitem id="g2submit-link-ed2k" label="submit ed2k://" accesskey="e"
                     oncommand="g2submitED2KClient()"/>
-                <menuitem id="g2submit-link-torrent" label="submit torrent => G2gui"
+                <menuitem id="g2submit-link-torrent" label="submit .torrent" accesskey="t"
                     oncommand="g2submitTorrentClient()"/>
-				<menuitem id="g2submit-link-sig2dat" label="submit sig2dat => G2gui"
+				<menuitem id="g2submit-link-sig2dat" label="submit sig2dat://" accesskey="s"
                     oncommand="g2submitSig2datClient()"/>
-                <menuitem id="g2submit-link-magnet" label="submit magnet => G2gui"
+                <menuitem id="g2submit-link-magnet" label="submit magnet://" accesskey="m"
                     oncommand="g2submitMagnetClient()"/>
+                <menuitem id="g2submit-link-http" label="submit http://" accesskey="h"
+                    oncommand="g2submitHttpClient()"/>
+
 		</menupopup>
         </menu>
     </popup>

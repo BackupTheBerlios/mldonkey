@@ -103,6 +103,9 @@ function g2submitHandleMouseDown(evt) {
             !(link_type == "sig2dat"));
 		document.getElementById("g2submit-link-magnet").setAttribute('disabled',
             !(link_type == "magnet"));
+		document.getElementById("g2submit-link-http").setAttribute('disabled',
+            !(link_type == "http"));
+        
 
 	}
 }
@@ -163,7 +166,7 @@ function g2submitED2KClient() {
     if (g2submit_link_node) {
         var href = g2submit_link_node.getAttribute("href");
         var esc = {
-            'r': href
+            'l': href
         };
         g2submitRunProgram("ed2k client", g2submitGetPrefCommand("ed2k"), esc);
     }
@@ -197,9 +200,42 @@ function g2submitTorrentClient() {
             }
 	    }
         var esc = {
-            'r': href
+            'l': href
         };
         g2submitRunProgram("torrent client", g2submitGetPrefCommand("torrent"), esc);
+	} else {
+        g2submitError("no link node found");
+	}
+}
+
+function g2submitHttpClient() {
+	if (g2submit_link_node) {
+        var href = g2submit_link_node.getAttribute("href");
+        if (href.length == 0) {
+            g2submitError("url is empty");
+        }
+        else {
+            if (href.indexOf("://") == -1) {
+                // convert to absolute URL
+                var base = g2submit_document.URL;
+                if (base.charAt(base.length - 1) == '/') {
+                    href = base + href;
+                }
+                else {
+                    if (href.charAt(0) == '/') {
+                        href = base.substring(0,
+                            base.indexOf('/', base.indexOf("//") + 2)) + href;
+                    }
+                    else {
+                        href = base.substring(0, base.lastIndexOf('/')) + '/' + href;
+                    }
+                }
+            }
+	    }
+        var esc = {
+            'l': href
+        };
+        g2submitRunProgram("http client", g2submitGetPrefCommand("http"), esc);
 	} else {
         g2submitError("no link node found");
 	}
@@ -209,7 +245,7 @@ function g2submitSig2datClient() {
     if (g2submit_link_node) {
         var href = g2submit_link_node.getAttribute("href");
         var esc = {
-            'r': href
+            'l': href
         };
         g2submitRunProgram("sig2dat client", g2submitGetPrefCommand("sig2dat"), esc);
     }
@@ -222,7 +258,7 @@ function g2submitMagnetClient() {
     if (g2submit_link_node) {
         var href = g2submit_link_node.getAttribute("href");
         var esc = {
-            'r': href
+            'l': href
         };
         g2submitRunProgram("magnet client", g2submitGetPrefCommand("magnet"), esc);
     }
@@ -238,6 +274,8 @@ function g2submitRunProgram(context, cmd, esc) {
         return false; // no command is set
     }
 
+	var replaced = false;
+
     var args = new Array();
     var scmd = cmd.split(/\ /);
     var executable = scmd.shift();
@@ -248,6 +286,8 @@ function g2submitRunProgram(context, cmd, esc) {
     }
 
     for (var i = 0; i < scmd.length; i++) {
+        
+        
         var param = scmd[i];
         var buf = "";
         if (param.length == 0) {
@@ -263,6 +303,7 @@ function g2submitRunProgram(context, cmd, esc) {
                 }
                 else {
                     buf += esc[a];
+                    replaced = true;
                 }
             }
             else {
@@ -272,6 +313,11 @@ function g2submitRunProgram(context, cmd, esc) {
         //buf += scmd[i];
 		args.push(buf);
     }
+	
+	// incase that no %l has been given, we add it automatically 
+	if (replaced == false) {
+		args.push(esc['l']);
+	}
 
     try {
         var exec = Components.classes["@mozilla.org/file/local;1"].

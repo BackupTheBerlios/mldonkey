@@ -26,7 +26,7 @@ Copyright (C) 2002 Tomas Styblo <tripie@cpan.org>
     </RDF:Seq>
 
     <RDF:Description about="urn:mozilla:package:g2submit"
-        chrome:displayName="MLdonkey G2 Submit 0.2"
+        chrome:displayName="MLdonkey G2 Submit 0.2.2"
         chrome:author="vnc (G2gui Team)"
         chrome:authorURL="http://mldonkey.berlios.de/"
         chrome:name="g2submit"

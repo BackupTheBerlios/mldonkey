@@ -59,6 +59,8 @@ function initG2submitPref() {
         g2submitReadPref("command.sig2dat");
     document.getElementById("prefG2submitMagnetClient").value =
         g2submitReadPref("command.magnet");
+    document.getElementById("prefG2submitHttpClient").value =
+        g2submitReadPref("command.http");
 }
 
 function initG2submitPrefPanel() {
@@ -83,5 +85,7 @@ function changeG2submitPrefs() {
     g2submit_prefs.setCharPref("command.sig2dat",
         document.getElementById("prefG2submitSig2datClient").value);
     g2submit_prefs.setCharPref("command.magnet",
-        document.getElementById("prefG2submitSig2datClient").value);
+        document.getElementById("prefG2submitMagnetClient").value);
+    g2submit_prefs.setCharPref("command.http",
+        document.getElementById("prefG2submitHttpClient").value);
 }
