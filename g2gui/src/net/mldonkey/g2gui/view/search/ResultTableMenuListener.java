@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.26 2003/10/31 07:24:01 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.27 2003/10/31 13:16:33 lemmster Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -73,14 +73,14 @@ public class ResultTableMenuListener extends TableMenuListener implements ISelec
 	 * @param core The CoreCommunication supporting this with data
 	 * @param cTabItem The CTabItem in which the table res
 	 */
-	public ResultTableMenuListener( ResultTableViewer rTableViewer ) {
+	public ResultTableMenuListener( ResultTablePage rTableViewer ) {
 		super( rTableViewer );
 		this.selectedResults = new ArrayList();
 	}
 	
 	public void initialize() {
 	    super.initialize();
-	    this.cTabItem = ((ResultTableViewer) gViewer).getCTabItem();
+	    this.cTabItem = ((ResultTablePage) gViewer).getCTabItem();
 	    this.core = gViewer.getCore();
 		this.resultInfoMap = this.core.getResultInfoIntMap();
 	}
@@ -305,6 +305,10 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.27  2003/10/31 13:16:33  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.26  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

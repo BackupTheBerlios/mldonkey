@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view.viewers;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.PaneGuiTab;
 
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Control;
@@ -30,7 +31,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * SashGPaneListener
  *
- * @version $Id: SashGPaneListener.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $ 
+ * @version $Id: SashGPaneListener.java,v 1.4 2003/10/31 13:16:32 lemmster Exp $ 
  *
  */
 public abstract class SashGPaneListener extends GPaneListener {
@@ -41,8 +42,8 @@ public abstract class SashGPaneListener extends GPaneListener {
 	 * @param gViewer
 	 * @param core
 	 */
-	public SashGPaneListener( GPage gViewer, CoreCommunication core, SashForm aSashForm, Control aControl ) {
-		super( gViewer, core );
+	public SashGPaneListener( PaneGuiTab aPaneGuiTab, CoreCommunication core, SashForm aSashForm, Control aControl ) {
+		super( aPaneGuiTab, core );
 		this.sashForm = aSashForm;
 		this.control = aControl;
 	}
@@ -50,6 +51,10 @@ public abstract class SashGPaneListener extends GPaneListener {
 
 /*
 $Log: SashGPaneListener.java,v $
+Revision 1.4  2003/10/31 13:16:32  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.3  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

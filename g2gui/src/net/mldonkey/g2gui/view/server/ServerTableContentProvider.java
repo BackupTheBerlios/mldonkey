@@ -29,12 +29,12 @@ import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
  * ServerTableContentProvider
  *
  *
- * @version $Id: ServerTableContentProvider.java,v 1.4 2003/10/31 07:24:01 zet Exp $ 
+ * @version $Id: ServerTableContentProvider.java,v 1.5 2003/10/31 13:16:32 lemmster Exp $ 
  *
  */
 public class ServerTableContentProvider extends GTableContentProvider {
 
-    public ServerTableContentProvider( ServerTableViewer sTableViewer) {
+    public ServerTableContentProvider( ServerTablePage sTableViewer) {
         super(sTableViewer);
     }
     
@@ -49,6 +49,10 @@ public class ServerTableContentProvider extends GTableContentProvider {
 
 /*
 $Log: ServerTableContentProvider.java,v $
+Revision 1.5  2003/10/31 13:16:32  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.4  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

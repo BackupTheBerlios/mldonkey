@@ -23,9 +23,10 @@
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.PaneGuiTab;
+import net.mldonkey.g2gui.view.TransferTab;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GPage;
 import net.mldonkey.g2gui.view.viewers.SashGPaneListener;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
@@ -43,7 +44,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadPaneListener.java,v 1.2 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: UploadPaneListener.java,v 1.3 2003/10/31 13:16:33 lemmster Exp $
  *
  */
 public class UploadPaneListener extends SashGPaneListener {
@@ -53,21 +54,24 @@ public class UploadPaneListener extends SashGPaneListener {
      * @param aSashForm
      * @param aControl
      */
-    public UploadPaneListener(GPage gViewer, CoreCommunication core, SashForm aSashForm,
+    public UploadPaneListener(PaneGuiTab aPaneGuiTab, CoreCommunication core, SashForm aSashForm,
         Control aControl) {
-        super(gViewer, core, aSashForm, aControl);
+        super(aPaneGuiTab, core, aSashForm, aControl);
     }
 
     public void menuAboutToShow(IMenuManager menuManager) {
+		// get the gpage
+		this.gPage = ( (TransferTab) paneGuiTab ).getUploadGPage();
+
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
         // refresh table
         menuManager.add(new Separator());
-        menuManager.add(new RefreshUploadsAction(gViewer));
+        menuManager.add(new RefreshUploadsAction(gPage));
 
         // columnSelector
         if (advancedMode) {
-            menuManager.add(new ColumnSelectorAction(gViewer));
+            menuManager.add(new ColumnSelectorAction(gPage));
         }
 
         // filter submenu			
@@ -75,7 +79,7 @@ public class UploadPaneListener extends SashGPaneListener {
                     "TT_DOWNLOAD_MENU_FILTER"));
 
         // all filters
-        filterSubMenu.add(new AllFilterAction(gViewer));
+        filterSubMenu.add(new AllFilterAction(gPage));
         filterSubMenu.add(new Separator());
 
         // network filters
@@ -93,6 +97,10 @@ public class UploadPaneListener extends SashGPaneListener {
 
 /*
 $Log: UploadPaneListener.java,v $
+Revision 1.3  2003/10/31 13:16:33  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.2  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

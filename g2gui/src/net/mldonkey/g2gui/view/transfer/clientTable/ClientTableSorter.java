@@ -35,11 +35,11 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ClientTableSorter
  *
- * @version $Id: ClientTableSorter.java,v 1.6 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ClientTableSorter.java,v 1.7 2003/10/31 13:16:32 lemmster Exp $
  *
  */
 public class ClientTableSorter extends GSorter {
-    public ClientTableSorter(ClientTableViewer cTableViewer) {
+    public ClientTableSorter(ClientTablePage cTableViewer) {
         super(cTableViewer);
     }
 
@@ -48,7 +48,7 @@ public class ClientTableSorter extends GSorter {
      */
     public int compare(Viewer viewer, Object obj1, Object obj2) {
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ClientTableViewer.STATE:
+        case ClientTablePage.STATE:
 
             ClientInfo clientInfo1 = (ClientInfo) obj1;
             ClientInfo clientInfo2 = (ClientInfo) obj2;
@@ -85,6 +85,10 @@ public class ClientTableSorter extends GSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.7  2003/10/31 13:16:32  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.6  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

@@ -44,7 +44,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * ClientTableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.9 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.10 2003/10/31 13:16:32 lemmster Exp $
  *
  */
 public class ClientTableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -54,7 +54,7 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
     /**
      * @param The parent ClientTableViewer
      */
-    public ClientTableMenuListener(ClientTableViewer cTableViewer) {
+    public ClientTableMenuListener(ClientTablePage cTableViewer) {
         super(cTableViewer);
     }
 
@@ -105,6 +105,10 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.10  2003/10/31 13:16:32  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.9  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

@@ -41,7 +41,7 @@ import org.eclipse.swt.custom.CTabItem;
 /**
  * SearchPaneListener
  *
- * @version $Id: ResultPaneListener.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: ResultPaneListener.java,v 1.4 2003/10/31 13:16:33 lemmster Exp $
  *
  */
 public class ResultPaneListener extends GPaneListener {
@@ -76,14 +76,14 @@ public class ResultPaneListener extends GPaneListener {
 
             // filters available if currentTab has a table
             if (cTabFolder.getSelection() != null && cTabFolder.getSelection().getData("gTableViewer") != null) {
-                gViewer = (GTablePage) cTabFolder.getSelection().getData("gTableViewer");
+                gPage = (GTablePage) cTabFolder.getSelection().getData("gTableViewer");
 
                 // filter submenu			
                 MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
                             "TT_DOWNLOAD_MENU_FILTER"));
 
                 // all filters
-                filterSubMenu.add(new AllFilterAction(gViewer));
+                filterSubMenu.add(new AllFilterAction(gPage));
                 filterSubMenu.add(new Separator());
 
                 // network filters
@@ -98,6 +98,10 @@ public class ResultPaneListener extends GPaneListener {
 
 /*
 $Log: ResultPaneListener.java,v $
+Revision 1.4  2003/10/31 13:16:33  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.3  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

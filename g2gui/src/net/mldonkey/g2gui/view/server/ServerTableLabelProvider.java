@@ -39,7 +39,7 @@ import org.eclipse.swt.graphics.Image;
  * ServerTableLabelProvider
  *
  *
- * @version $Id: ServerTableLabelProvider.java,v 1.8 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ServerTableLabelProvider.java,v 1.9 2003/10/31 13:16:32 lemmster Exp $
  *
  */
 public class ServerTableLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -48,7 +48,7 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
     private Color connectingColor = new Color(null, 255, 165, 0);
     private Color disconnectColor = new Color(null, 192, 192, 192);
 
-    public ServerTableLabelProvider(ServerTableViewer sTableViewer) {
+    public ServerTableLabelProvider(ServerTablePage sTableViewer) {
         super(sTableViewer);
     }
 
@@ -57,7 +57,7 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
      */
     public Image getColumnImage(Object element, int columnIndex) {
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ServerTableViewer.NETWORK:
+        case ServerTablePage.NETWORK:
 
             ServerInfo server = (ServerInfo) element;
 
@@ -77,16 +77,16 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
         ServerInfo server = (ServerInfo) element;
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ServerTableViewer.NETWORK:
+        case ServerTablePage.NETWORK:
             return " " + ((NetworkInfo) server.getNetwork()).getNetworkName();
 
-        case ServerTableViewer.NAME:
+        case ServerTablePage.NAME:
             return server.getNameOfServer();
 
-        case ServerTableViewer.DESCRIPTION:
+        case ServerTablePage.DESCRIPTION:
             return server.getDescOfServer();
 
-        case ServerTableViewer.ADDRESS:
+        case ServerTablePage.ADDRESS:
 
             try {
                 Addr addr = server.getServerAddress();
@@ -100,22 +100,22 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
                 return "0.0.0.0";
             }
 
-        case ServerTableViewer.PORT:
+        case ServerTablePage.PORT:
             return "" + server.getServerPort();
 
-        case ServerTableViewer.SCORE:
+        case ServerTablePage.SCORE:
             return "" + server.getServerScore();
 
-        case ServerTableViewer.USERS:
+        case ServerTablePage.USERS:
             return "" + server.getNumOfUsers();
 
-        case ServerTableViewer.FILES:
+        case ServerTablePage.FILES:
             return "" + server.getNumOfFilesShared();
 
-        case ServerTableViewer.STATE:
+        case ServerTablePage.STATE:
             return server.getConnectionState().getState().toString();
 
-        case ServerTableViewer.FAVORITE:
+        case ServerTablePage.FAVORITE:
             return G2GuiResources.getString(server.isFavorite() ? "TLP_TRUE" : "TLP_FALSE");
 
         default:
@@ -171,6 +171,10 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ServerTableLabelProvider.java,v $
+Revision 1.9  2003/10/31 13:16:32  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.8  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

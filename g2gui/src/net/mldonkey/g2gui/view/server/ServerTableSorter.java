@@ -32,11 +32,11 @@ import org.eclipse.jface.viewers.Viewer;
  * ServerTableSorter
  *
  *
- * @version $Id: ServerTableSorter.java,v 1.6 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ServerTableSorter.java,v 1.7 2003/10/31 13:16:32 lemmster Exp $
  *
  */
 public class ServerTableSorter extends GSorter {
-    public ServerTableSorter(ServerTableViewer sTableViewer) {
+    public ServerTableSorter(ServerTablePage sTableViewer) {
         super(sTableViewer);
     }
 
@@ -49,16 +49,16 @@ public class ServerTableSorter extends GSorter {
         ServerInfo server2 = (ServerInfo) obj2;
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ServerTableViewer.NETWORK:
+        case ServerTablePage.NETWORK:
             return compareStrings(server1.getNetwork().getNetworkName(), server2.getNetwork().getNetworkName());
 
-        case ServerTableViewer.NAME:
+        case ServerTablePage.NAME:
             return compareStrings(server1.getNameOfServer(), server2.getNameOfServer());
 
-        case ServerTableViewer.DESCRIPTION:
+        case ServerTablePage.DESCRIPTION:
             return compareStrings(server1.getDescOfServer(), server2.getDescOfServer());
 
-        case ServerTableViewer.ADDRESS:
+        case ServerTablePage.ADDRESS:
 
             try {
                 Addr addr1 = server1.getServerAddress();
@@ -73,19 +73,19 @@ public class ServerTableSorter extends GSorter {
                 return 0;
             }
 
-        case ServerTableViewer.PORT:
+        case ServerTablePage.PORT:
             return compareIntegers(server1.getServerPort(), server2.getServerPort());
 
-        case ServerTableViewer.SCORE:
+        case ServerTablePage.SCORE:
             return compareIntegers(server1.getServerScore(), server2.getServerScore());
 
-        case ServerTableViewer.USERS:
+        case ServerTablePage.USERS:
             return compareIntegers(server1.getNumOfUsers(), server2.getNumOfUsers());
 
-        case ServerTableViewer.FILES:
+        case ServerTablePage.FILES:
             return compareIntegers(server1.getNumOfFilesShared(), server2.getNumOfFilesShared());
 
-        case ServerTableViewer.STATE:
+        case ServerTablePage.STATE:
 
             EnumState state1 = (EnumState) server1.getConnectionState().getState();
             EnumState state2 = (EnumState) server2.getConnectionState().getState();
@@ -96,7 +96,7 @@ public class ServerTableSorter extends GSorter {
                 return state2.compareTo(state1);
             }
 
-        case ServerTableViewer.FAVORITE:
+        case ServerTablePage.FAVORITE:
 
             boolean bool1 = server1.isFavorite();
             boolean bool2 = server2.isFavorite();
@@ -134,6 +134,10 @@ public class ServerTableSorter extends GSorter {
 
 /*
 $Log: ServerTableSorter.java,v $
+Revision 1.7  2003/10/31 13:16:32  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.6  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

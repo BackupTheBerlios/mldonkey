@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.viewers;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
+import net.mldonkey.g2gui.view.PaneGuiTab;
 import net.mldonkey.g2gui.view.viewers.actions.NetworkFilterAction;
 
 import org.eclipse.jface.action.IMenuListener;
@@ -35,21 +36,28 @@ import org.eclipse.swt.events.DisposeListener;
 /**
  * GPaneListener
  *
- * @version $Id: GPaneListener.java,v 1.3 2003/10/31 10:42:47 lemmster Exp $
+ * @version $Id: GPaneListener.java,v 1.4 2003/10/31 13:16:32 lemmster Exp $
  *
  */
 public abstract class GPaneListener implements IMenuListener, DisposeListener {
-    protected GPage gViewer;
+    protected GPage gPage;
+    protected PaneGuiTab paneGuiTab;
     protected CoreCommunication core;
 
-    public GPaneListener(GPage gViewer, CoreCommunication core) {
-        this.gViewer = gViewer;
+    public GPaneListener( PaneGuiTab aPaneGuiTab, CoreCommunication core) {
+        this.paneGuiTab = aPaneGuiTab;
+        if (paneGuiTab != null )	
+	        this.gPage = paneGuiTab.getGPage();
         this.core = core;
 
         // for stats the gViewer is null
-        if (gViewer != null) {
-            this.gViewer.addDisposeListener(this);
+        if (gPage != null) {
+            this.gPage.addDisposeListener(this);
         }
+    }
+    
+    public void menuAboutToShow() {
+    	this.gPage = paneGuiTab.getGPage();
     }
 
     protected void createNetworkFilterSubMenu(MenuManager menu) {
@@ -59,7 +67,7 @@ public abstract class GPaneListener implements IMenuListener, DisposeListener {
             NetworkInfo network = networks[ i ];
 
             if (network.isEnabled() && network.isSearchable()) {
-                menu.add(new NetworkFilterAction(gViewer, network));
+                menu.add(new NetworkFilterAction(gPage, network));
             }
         }
     }
@@ -74,6 +82,10 @@ public abstract class GPaneListener implements IMenuListener, DisposeListener {
 
 /*
 $Log: GPaneListener.java,v $
+Revision 1.4  2003/10/31 13:16:32  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.3  2003/10/31 10:42:47  lemmster
 Renamed GViewer, GTableViewer and GTableTreeViewer to GPage... to avoid mix-ups with StructuredViewer...
 Removed IGViewer because our abstract class GPage do the job

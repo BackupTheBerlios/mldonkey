@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Shell;
  * ServerTableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.14 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.15 2003/10/31 13:16:32 lemmster Exp $
  *
  */
 public class ServerTableMenuListener extends TableMenuListener { 
@@ -78,7 +78,7 @@ public class ServerTableMenuListener extends TableMenuListener {
      * @param tableViewer The TableViewer
      * @param core The CoreCommunication supporting this with data
      */
-    public ServerTableMenuListener( ServerTableViewer sTableViewer) {
+    public ServerTableMenuListener( ServerTablePage sTableViewer) {
         super( sTableViewer);
         
     }    
@@ -508,6 +508,10 @@ public class ServerTableMenuListener extends TableMenuListener {
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.15  2003/10/31 13:16:32  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.14  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters

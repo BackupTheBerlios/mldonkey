@@ -31,11 +31,11 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: ResultTableSorter.java,v 1.14 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: ResultTableSorter.java,v 1.15 2003/10/31 13:16:33 lemmster Exp $
  *
  */
 public class ResultTableSorter extends GSorter {
-    public ResultTableSorter(ResultTableViewer rTableViewer) {
+    public ResultTableSorter(ResultTablePage rTableViewer) {
         super(rTableViewer);
     }
 
@@ -48,22 +48,22 @@ public class ResultTableSorter extends GSorter {
         ResultInfo result2 = (ResultInfo) obj2;
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
-        case ResultTableViewer.NETWORK:
+        case ResultTablePage.NETWORK:
             return compareStrings(result1.getNetwork().getNetworkName(), result2.getNetwork().getNetworkName());
 
-        case ResultTableViewer.NAME:
+        case ResultTablePage.NAME:
             return compareStrings(result1.getName(), result2.getName());
 
-        case ResultTableViewer.SIZE:
+        case ResultTablePage.SIZE:
             return compareLongs(result1.getSize(), result2.getSize());
 
-        case ResultTableViewer.FORMAT:
+        case ResultTablePage.FORMAT:
             return compareStrings(result1.getFormat(), result2.getFormat());
 
-        case ResultTableViewer.MEDIA:
+        case ResultTablePage.MEDIA:
             return compareStrings(result1.getType(), result2.getType());
 
-        case ResultTableViewer.AVAILABILITY:
+        case ResultTablePage.AVAILABILITY:
             return compareIntegers(result1.getAvail(), result2.getAvail());
 
         default:
@@ -75,6 +75,10 @@ public class ResultTableSorter extends GSorter {
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.15  2003/10/31 13:16:33  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.14  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
@@ -105,7 +109,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.6  2003/08/16 20:59:09  dek
 searching works now without errors AGAIN ;-)

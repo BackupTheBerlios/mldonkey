@@ -38,10 +38,11 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * GraphPaneListener
  *
- * @version $Id: GraphPaneListener.java,v 1.1 2003/10/29 16:56:21 lemmster Exp $ 
+ * @version $Id: GraphPaneListener.java,v 1.2 2003/10/31 13:16:33 lemmster Exp $ 
  *
  */
 public class GraphPaneListener extends SashGPaneListener {
+	//TODO move strings into resource bundle
 	private GraphControl graphControl;
 	public GraphPaneListener( SashForm sashForm, Control control, GraphControl graphControl ) {
 		super( null, null, sashForm, control );
@@ -100,6 +101,10 @@ public class GraphPaneListener extends SashGPaneListener {
 
 /*
 $Log: GraphPaneListener.java,v $
+Revision 1.2  2003/10/31 13:16:33  lemmster
+Rename Viewer -> Page
+Constructors changed
+
 Revision 1.1  2003/10/29 16:56:21  lemmster
 added reasonable class hierarchy for panelisteners, viewers...
 
