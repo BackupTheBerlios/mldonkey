@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.8 2003/08/28 18:41:51 zet Exp $ 
+ * @version $Id: LinkEntry.java,v 1.9 2003/08/29 19:30:50 zet Exp $ 
  *
  */
 public class LinkEntry {
@@ -72,6 +72,7 @@ public class LinkEntry {
 		linkEntryCLabel.setText(G2GuiResources.getString("LE_HEADER"));
 		linkEntryCLabel.setImage(G2GuiResources.getImage("UpArrowBlue"));
 		linkEntryCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		linkEntryCLabel.setForeground(linkEntryViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
 		linkEntryCLabel.setBackground(new Color[]{linkEntryViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 										linkEntryViewForm.getBackground()},
 										new int[] {100});	
@@ -143,6 +144,9 @@ public class LinkEntry {
 }
 /*
 $Log: LinkEntry.java,v $
+Revision 1.9  2003/08/29 19:30:50  zet
+font colour
+
 Revision 1.8  2003/08/28 18:41:51  zet
 cleanup
 

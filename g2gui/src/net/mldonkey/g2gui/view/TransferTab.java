@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.45 2003/08/29 18:28:42 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.46 2003/08/29 19:30:50 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -104,6 +104,7 @@ public class TransferTab extends GuiTab  {
 
 		downloadCLabel = new CLabel(downloadViewForm, SWT.LEFT );	
 		downloadCLabel.setText(G2GuiResources.getString("TT_Downloads"));
+		downloadCLabel.setForeground(downloadViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
 		downloadCLabel.setImage(G2GuiResources.getImage("TransfersButtonSmallTitlebar"));
 		downloadCLabel.setBackground(new Color[]{downloadViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 									downloadViewForm.getBackground()},
@@ -141,6 +142,7 @@ public class TransferTab extends GuiTab  {
 		uploadsCLabel.setText(G2GuiResources.getString("TT_Uploads"));
 		uploadsCLabel.setImage(G2GuiResources.getImage("TransfersButtonSmallTitlebar"));
 		uploadsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		uploadsCLabel.setForeground(uploadsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
 		uploadsCLabel.setBackground(new Color[]{uploadsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 										uploadsViewForm.getBackground()},
 										new int[] {100});	
@@ -332,6 +334,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.46  2003/08/29 19:30:50  zet
+font colour
+
 Revision 1.45  2003/08/29 18:28:42  zet
 remove import Shell
 

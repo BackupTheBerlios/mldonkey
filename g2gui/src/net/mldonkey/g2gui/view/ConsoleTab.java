@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.43 2003/08/29 17:33:20 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.44 2003/08/29 19:30:50 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -84,9 +84,12 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 		CLabel consoleCLabel = new CLabel(consoleViewForm, SWT.LEFT );	
 		consoleCLabel.setText(G2GuiResources.getString("TT_ConsoleButton"));
 		consoleCLabel.setImage(G2GuiResources.getImage("ConsoleButtonSmallTitlebar"));
+		consoleCLabel.setForeground(consoleViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
 		consoleCLabel.setBackground(new Color[]{consoleViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 												consoleViewForm.getBackground()},
 												new int[] {100});	
+												
+	
 		
 		console = new Console ( consoleComposite, SWT.NONE );
 		console.addObserver( this );
@@ -190,6 +193,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.44  2003/08/29 19:30:50  zet
+font colour
+
 Revision 1.43  2003/08/29 17:33:20  zet
 remove headerbar
 

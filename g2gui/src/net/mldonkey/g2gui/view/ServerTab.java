@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.22 2003/08/29 17:33:20 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.23 2003/08/29 19:30:50 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -153,6 +153,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		CLabel serverCLabel = new CLabel(serverViewForm, SWT.LEFT );	
 		serverCLabel.setText(G2GuiResources.getString("TT_ServersButton"));
 		serverCLabel.setImage(G2GuiResources.getImage("ServersButtonSmallTitlebar"));
+		serverCLabel.setForeground(serverViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
 		serverCLabel.setBackground(new Color[]{serverViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 					serverViewForm.getBackground()},
 					new int[] {100});	
@@ -427,6 +428,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.23  2003/08/29 19:30:50  zet
+font colour
+
 Revision 1.22  2003/08/29 17:33:20  zet
 remove headerbar
 

@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.19 2003/08/29 17:33:20 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.20 2003/08/29 19:30:50 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
 
@@ -122,6 +122,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 		
 		friendsCLabel = new CLabel(friendsViewForm, SWT.LEFT );
 		friendsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		friendsCLabel.setForeground(friendsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
 		friendsCLabel.setBackground(new Color[]{friendsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 												friendsViewForm.getBackground()},
 												new int[] {100});
@@ -424,6 +425,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.20  2003/08/29 19:30:50  zet
+font colour
+
 Revision 1.19  2003/08/29 17:33:20  zet
 remove headerbar
 
