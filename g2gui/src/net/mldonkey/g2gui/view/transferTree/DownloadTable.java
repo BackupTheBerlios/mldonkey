@@ -53,11 +53,10 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.9 2003/07/16 08:51:22 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.10 2003/07/16 18:11:07 dek Exp $ 
  *
  */
 public class DownloadTable  implements Observer, Runnable {
-	private FileInfo changedFileInfo;
 	private int lastSortColumn = -1;
 	protected IItemHasMenue selectedItem;
 	private TransferMain page;
@@ -207,12 +206,7 @@ public class DownloadTable  implements Observer, Runnable {
 		if ( arg instanceof FileInfoIntMap ) {
 			files = ( FileInfoIntMap ) arg;
 			if ( page.isActive() ) {
-				TIntObjectIterator it = files.iterator();
-				while ( it.hasNext() ) {
-					it.advance();
-					changedFileInfo = ( FileInfo ) it.value();
 				tableTree.getDisplay().syncExec( this );
-				}
 			}
 		}
 	}
@@ -224,22 +218,24 @@ public class DownloadTable  implements Observer, Runnable {
 	 */
 	public void run() {
 			TIntObjectIterator it = files.iterator();
-
+			while ( it.hasNext() ) {
+				it.advance();
+				FileInfo fileInfo = ( FileInfo ) it.value();
 				/* only process downloading and paused files
 				 * remove canceled files from table*/
-				if ( changedFileInfo.getState().getState() == EnumFileState.DOWNLOADING 
-					|| changedFileInfo.getState().getState() == EnumFileState.PAUSED ) 
+				if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING 
+					|| fileInfo.getState().getState() == EnumFileState.PAUSED ) 
 					{					
-					if ( downloads.containsKey( changedFileInfo.getId() ) ) {
-						downloads.get( changedFileInfo.getId() );
+					if ( downloads.containsKey( fileInfo.getId() ) ) {
+						downloads.get( fileInfo.getId() );
 						DownloadItem existingItem =
-									( DownloadItem ) downloads.get( changedFileInfo.getId() );
+									( DownloadItem ) downloads.get( fileInfo.getId() );
 						existingItem.update();
 					}
 					else {					
 					DownloadItem newItem =
-						new DownloadItem( tableTree, SWT.NONE, changedFileInfo );
-					downloads.put( changedFileInfo.getId(), newItem );
+						new DownloadItem( tableTree, SWT.NONE, fileInfo );
+					downloads.put( fileInfo.getId(), newItem );
 					TableColumn[] cols = tableTree.getTable().getColumns();
 					
 						for ( int i = 0; i < cols.length; i++ ) {
@@ -247,22 +243,22 @@ public class DownloadTable  implements Observer, Runnable {
 						}				
 					}	
 				}	
-				else if ( downloads.containsKey( changedFileInfo.getId() ) ) {	
+				else if ( downloads.containsKey( fileInfo.getId() ) ) {	
 					/* remove this file from the downloadList if contained*/					
-						( ( DownloadItem ) downloads.get( changedFileInfo.getId() ) ).dispose();
-						downloads.remove( changedFileInfo.getId() );												
+						( ( DownloadItem ) downloads.get( fileInfo.getId() ) ).dispose();
+						downloads.remove( fileInfo.getId() );												
 					
 				}
 				else {
 				 /* we really don't care about this one...*/
 				}
-				
+		}		
 	}
 }
 /*
 $Log: DownloadTable.java,v $
-Revision 1.9  2003/07/16 08:51:22  dek
-trying to reduce table-flickering (with success??)
+Revision 1.10  2003/07/16 18:11:07  dek
+returned to prev. version
 
 Revision 1.8  2003/07/15 20:13:56  dek
 sorting works now, chunk-display is kind of broken, when sorting with expanded tree-items...
