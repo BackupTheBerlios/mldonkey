@@ -60,7 +60,7 @@ public class DownloadTab
 	TableViewer table;
 	TableItem popupItem;
 	Menu popupMenu;
-	MenuItem pauseItem,resumeItem,cancelItem,renameItem,linkItem,fakeItem,prio1Item,prio2Item,prio3Item;
+	MenuItem pauseItem,resumeItem,cancelItem,renameItem,linkItem,clearItem,fakeItem,prio1Item,prio2Item,prio3Item;
 	
 	/**
 	 * default constructor
@@ -121,6 +121,9 @@ public class DownloadTab
 		linkItem = new MenuItem(popupMenu,SWT.PUSH);
 		linkItem.setText(bundle.getString("TT_Menu4"));
 		linkItem.addSelectionListener(this);
+		clearItem = new MenuItem(popupMenu,SWT.PUSH);
+		clearItem.setText(bundle.getString("TT_Menu8"));
+		clearItem.addSelectionListener(this);
 		fakeItem = new MenuItem(popupMenu,SWT.PUSH);
 		fakeItem.setText(bundle.getString("TT_Menu5"));
 		fakeItem.addSelectionListener(this);		
@@ -155,9 +158,19 @@ public class DownloadTab
 	public void mouseUp(MouseEvent arg0) {}
 
 	public void run() {
-		if(table.getInput()==null) table.setInput(fileInfoMap);
-		if(fileInfoMap.size()==table.getTable().getItemCount() && fileInfoMap.getId()!=0 && fileInfoMap.contains(fileInfoMap.getId())) table.update(fileInfoMap.get(fileInfoMap.getId()),null);
-		else table.refresh();
+		/* table not filled yet */
+		if(table.getInput() == null) table.setInput(fileInfoMap);
+		/* if same size and fileInfoMap.ids != 0 */
+		if( fileInfoMap.size() == table.getTable().getItemCount() 
+		&& fileInfoMap.getIds().size() != 0 ) {
+			for ( int i = 0; i < fileInfoMap.getIds().size(); i++ ) {
+				if ( fileInfoMap.contains( ((Integer) fileInfoMap.getIds().get( i )).intValue() ))
+					table.update( fileInfoMap.get( ((Integer) fileInfoMap.getIds().get( i )).intValue() ), null );
+			}
+			fileInfoMap.clearIds();
+		}
+		else
+			table.refresh();
 	}
 
 	public void update(Observable arg0, Object arg1) {
@@ -181,7 +194,6 @@ public class DownloadTab
 			} 
 			if(item==cancelItem) {
 				file.setState(EnumFileState.CANCELLED);
-//				fileInfoMap.removeObsolete();
 				table.update(file,null);
 			}
 			if(item==linkItem) {
@@ -190,6 +202,10 @@ public class DownloadTab
 				clipBoard.setContents(new Object[]{link},new Transfer[] {TextTransfer.getInstance()});
 				clipBoard.dispose();
 			}
+			if(item==clearItem) {
+				fileInfoMap.removeObsolete();
+				table.refresh();
+			}	
 			if(item==fakeItem) {
 				String link = "ed2k://|file|"+file.getName()+"|"+file.getSize()+"|"+file.getMd4()+"|/";
 				Program.findProgram(".htm").execute("http://edonkeyfakes.ath.cx/fakecheck/update/fakecheck.php?ed2k="+link);
