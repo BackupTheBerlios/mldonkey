@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.16 2003/08/08 20:16:13 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.17 2003/08/09 14:41:26 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -145,6 +145,7 @@ public abstract class GuiTab implements Listener, Observer {
 	 * To call if the MainWindow dispose
 	 */
 	public void dispose() {
+		font.dispose();
 		this.gui.getCore().deleteObserver( this );
 	}
 
@@ -298,6 +299,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.17  2003/08/09 14:41:26  zet
+dispose font
+
 Revision 1.16  2003/08/08 20:16:13  zet
 central PreferenceLoader, abstract Console
 
