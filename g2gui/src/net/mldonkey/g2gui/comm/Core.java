@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.65 2003/07/17 15:10:22 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.66 2003/07/22 16:03:24 zet Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -157,7 +157,7 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 				/* decode the message content */			
 				this.decodeMessage( opCode, messageBuffer );
 			}			
-		} catch ( IOException e ) {
+		} catch ( Exception e ) {
 			System.out.println( "No Connection to mldonkey" );
 		}			
 	}
@@ -351,6 +351,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.66  2003/07/22 16:03:24  zet
+There is no IOException if core is not open
+
 Revision 1.65  2003/07/17 15:10:22  lemmstercvs01
 remove this.connect() in run()
 
