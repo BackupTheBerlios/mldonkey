@@ -35,11 +35,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 /**
  * MLDonkeyOptions
  *
  * @author $user$
- * @version $Id: MLDonkeyOptions.java,v 1.6 2003/07/10 13:56:07 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.7 2003/07/26 03:07:12 zet Exp $ 
  *
  */
 public class MLDonkeyOptions extends PreferencePage {
@@ -59,7 +62,21 @@ public class MLDonkeyOptions extends PreferencePage {
 	/** (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createContents( Composite parent ) {		
+	protected Control createContents( Composite parent ) {	
+		
+		computeSize();
+
+		ScrolledComposite scrollParent =
+			   new ScrolledComposite(parent, SWT.V_SCROLL|SWT.H_SCROLL);
+		scrollParent.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+			
+		Composite composite = new Composite(scrollParent, SWT.NONE);
+		composite.setLayout(layout);
+		scrollParent.setContent(composite);
+
 		Iterator it = options.keySet().iterator();
 		while ( it.hasNext() ) {			
 		
@@ -86,7 +103,7 @@ public class MLDonkeyOptions extends PreferencePage {
 				ExtendedBooleanFieldEditor temp = new ExtendedBooleanFieldEditor(
 											optionName, 
 											description, 
-											parent );
+											composite );
 				temp.setSelection( new Boolean( value ).booleanValue() );
 				temp.setToolTipText( optionName );				
 				fields.put( optionName, temp );
@@ -95,7 +112,7 @@ public class MLDonkeyOptions extends PreferencePage {
 			   ExtendedStringFieldEditor temp = new ExtendedStringFieldEditor(
 										   optionName, 
 										   description, 
-										   parent );
+										   composite );
 			   temp.setStringValue( value );
 			   temp.setToolTipText( optionName );				
 			   fields.put( optionName, temp );
@@ -109,10 +126,11 @@ public class MLDonkeyOptions extends PreferencePage {
 			noOptions.setText( "please select a subentry from the list" );
 			this.noDefaultAndApplyButton();
 		}
-		
+				
+		composite.setSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		parent.layout();
 		this.initialized = true;
-		return null;
+		return scrollParent;
 	}
 	/**
 	 * @param option This Option should be displayed on this preferencePage
@@ -178,6 +196,9 @@ public class MLDonkeyOptions extends PreferencePage {
 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.7  2003/07/26 03:07:12  zet
+scrollbars
+
 Revision 1.6  2003/07/10 13:56:07  dek
 empty-pages have no Default/apply-buttons anymore
 
