@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.16 2004/03/22 15:12:50 dek Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.17 2004/03/22 19:17:58 dek Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
@@ -64,6 +64,7 @@ public class ClientDetailDialog extends DetailDialog {
     private StyledText clSoftware;
     private StyledText clHash;
     private StyledText clPort;
+	private StyledText transferringFileName;
 
     public ClientDetailDialog(Shell parentShell, FileInfo fileInfo, ClientInfo clientInfo,
         CoreCommunication core) {
@@ -130,6 +131,14 @@ public class ClientDetailDialog extends DetailDialog {
         clPort = createLine(clientGeneral, "TT_DOWNLOAD_CD_PORT", false);
         clUploaded = createLine(clientGeneral, "TT_DOWNLOAD_CD_UPLOADED", false);
         clDownloaded = createLine(clientGeneral, "TT_DOWNLOAD_CD_DOWNLOADED", false);
+        
+        int fileNumber = clientInfo.getState().getFileNumber();
+        if (fileNumber != -1){
+        	FileInfo transferringFile = core.getFileInfoIntMap().get(fileNumber);
+        	if (transferringFile!=null){
+        		transferringFileName = createLine(clientGeneral,"TT_DOWNLOAD_CD_FILE",true);
+        	}
+        }
     }
 
     /**
@@ -201,6 +210,11 @@ public class ClientDetailDialog extends DetailDialog {
         updateLabel(clSoftware, clientInfo.getClientSoftware());
         updateLabel(clUploaded, clientInfo.getUploadedString());
         updateLabel(clDownloaded, clientInfo.getDownloadedString());
+        if (transferringFileName != null){
+        	int fileNumber = clientInfo.getState().getFileNumber();
+        	FileInfo file = core.getFileInfoIntMap().get(fileNumber);
+        	updateLabel(transferringFileName,file.getName());
+        }
     }
 
     /* (non-Javadoc)
@@ -219,6 +233,9 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.17  2004/03/22 19:17:58  dek
+identified mysterious state-id as fileID currently beeing x-ferred
+
 Revision 1.16  2004/03/22 15:12:50  dek
 changed selection behaviour in detail-dialog
 

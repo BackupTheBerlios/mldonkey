@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  *
- * @version $Id: State.java,v 1.15 2004/03/20 01:34:02 dek Exp $ 
+ * @version $Id: State.java,v 1.16 2004/03/22 19:17:58 dek Exp $ 
  *
  */
 public class State extends SimpleInformation {
@@ -59,6 +59,10 @@ public class State extends SimpleInformation {
 	 */
 	public Enum getState() {
 		return state;
+	}
+	
+	public int getFileNumber(){
+		return -1;
 	}
 
 	/**
@@ -115,6 +119,9 @@ public class State extends SimpleInformation {
 
 /*
 $Log: State.java,v $
+Revision 1.16  2004/03/22 19:17:58  dek
+identified mysterious state-id as fileID currently beeing x-ferred
+
 Revision 1.15  2004/03/20 01:34:02  dek
 implemented gui-Proto 25 !!!!!
 

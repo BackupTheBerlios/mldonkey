@@ -21,17 +21,16 @@ package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.G2Gui;
 
 /**
  * State21.java
  * 
- * @version $Id: State21.java,v 1.2 2004/03/22 18:47:39 dek Exp $
+ * @version $Id: State21.java,v 1.3 2004/03/22 19:17:58 dek Exp $
  *  
  */
 public class State21 extends State {
 
-	private int unkown;
+	private int fileNumber = -2;
 
 	/**
 	 * Reads a State object from a MessageBuffer
@@ -41,18 +40,21 @@ public class State21 extends State {
 	 */
 	public void readStream(MessageBuffer messageBuffer) {
 		super.readStream(messageBuffer);
-
 		if (this.getState() == EnumState.CONNECTED_DOWNLOADING) {
-			unkown = messageBuffer.readInt32();
-			if (G2Gui.debug) {
-				System.out.println("[State21.java]decoded unknown int-field: " + unkown);
-			}
+			fileNumber = messageBuffer.readInt32();
 		}
+	}
+	
+	public int getFileNumber(){
+		return fileNumber;
 	}
 }
 
 /*
  * $Log: State21.java,v $
+ * Revision 1.3  2004/03/22 19:17:58  dek
+ * identified mysterious state-id as fileID currently beeing x-ferred
+ *
  * Revision 1.2  2004/03/22 18:47:39  dek
  * Still some Gui-Protocoll enhancements
  * Revision 1.1 2004/03/21 21:00:50 dek implemented gui-Proto 21-25 !!!!!

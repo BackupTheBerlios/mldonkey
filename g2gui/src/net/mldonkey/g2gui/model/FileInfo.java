@@ -48,7 +48,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.89 2004/03/22 18:47:39 dek Exp $
+ * @version $Id: FileInfo.java,v 1.90 2004/03/22 19:17:58 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -698,23 +698,28 @@ public class FileInfo extends Parent implements Observer {
     }
 
     /**
-     * Put the client into this list of clientinfos
-     * @param clientInfo The clientInfo to put into this map
-     */
-    public void addClientInfo(ClientInfo clientInfo) {
-        this.clientInfoWeakMap.add(clientInfo);
-        clientInfo.addObserver(this);
+	 * Put the client into this list of clientinfos
+	 * 
+	 * @param clientInfo
+	 *            The clientInfo to put into this map
+	 */
+	public void addClientInfo(ClientInfo clientInfo) {
+		this.clientInfoWeakMap.add(clientInfo);
+		clientInfo.addObserver(this);
 
-        if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
-            setActiveSources(+1);
+		if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
+			if (clientInfo.getState().getFileNumber() == -1
+				|| clientInfo.getState().getFileNumber() == id) {
+				
+				setActiveSources(+1);
+				if (findTreeClientInfo(clientInfo) == null)
+					treeClientInfoSet.add(new TreeClientInfo(this, clientInfo));
+			}
+		}
 
-            if (findTreeClientInfo(clientInfo) == null)
-                treeClientInfoSet.add(new TreeClientInfo(this, clientInfo));
-        }
-
-        this.setChanged();
-        this.notifyObservers(clientInfo);
-    }
+		this.setChanged();
+		this.notifyObservers(clientInfo);
+	}
 
     /**
      * Removes a clientinfo from this list of clientinfos
@@ -1126,6 +1131,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.90  2004/03/22 19:17:58  dek
+identified mysterious state-id as fileID currently beeing x-ferred
+
 Revision 1.89  2004/03/22 18:47:39  dek
 Still some Gui-Protocoll enhancements
 
