@@ -77,7 +77,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.3 2003/07/25 22:34:51 lemmstercvs01 Exp $ 
+ * @version $Id: SearchResult.java,v 1.4 2003/07/27 16:38:41 vnc Exp $ 
  *
  */
 //TODO search timeout, add resource bundle, add image handle, fake search, real links depending on network								   
@@ -451,8 +451,8 @@ public class SearchResult implements Observer, Runnable {
 			String aString = "Filename: " + aResult.getNames()[ 0 ] + "\n";
 			if ( !aResult.getFormat().equals( "" ) )
 				aString = aString + "Format: " + aResult.getFormat() + "\n";
-				aString += "ed2k-link: " + aResult.getLink();
 				aString += "Network: " + aResult.getNetwork().getNetworkName() + "\n";
+				aString += "link: " + aResult.getLink() + "\n";
 				aString += "Size: " + aResult.getStringSize() + "\n";
 				aString += "Sources: " + aResult.getTags()[ 0 ].getValue();
 			if ( !aResult.getHistory() )
@@ -611,6 +611,9 @@ public class SearchResult implements Observer, Runnable {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.4  2003/07/27 16:38:41  vnc
+cosmetics in tooltip
+
 Revision 1.3  2003/07/25 22:34:51  lemmstercvs01
 lots of changes
 
