@@ -38,6 +38,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -45,7 +46,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadPaneMenuListener
  *
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.1 2003/08/30 00:44:01 zet Exp $ 
+ * @version $Id: DownloadPaneMenuListener.java,v 1.2 2003/09/01 01:38:30 zet Exp $ 
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener {
@@ -374,7 +375,8 @@ public class DownloadPaneMenuListener implements IMenuListener {
 		
 		public  void run () {
 			if (!isChecked()) {
-				tableColumn.setWidth(0);
+				// gtk doesn't support column width 0
+				tableColumn.setWidth(SWT.getPlatform().equals("gtk") ? 1 : 0);
 				tableColumn.setResizable(false);
 			} else {
 				tableColumn.setResizable(true);
@@ -493,6 +495,9 @@ public class DownloadPaneMenuListener implements IMenuListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.2  2003/09/01 01:38:30  zet
+gtk workaround
+
 Revision 1.1  2003/08/30 00:44:01  zet
 move tabletree menu
 
