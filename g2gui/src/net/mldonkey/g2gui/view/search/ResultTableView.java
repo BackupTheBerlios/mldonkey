@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.search;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ResultInfo;
+import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -35,97 +36,108 @@ import net.mldonkey.g2gui.view.viewers.table.GTableView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
 
+import java.util.Arrays;
+
+
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableView.java,v 1.6 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: ResultTableView.java,v 1.7 2003/11/24 20:35:11 zet Exp $
  *
  */
 public class ResultTableView extends GTableView {
-    private MouseListener aMouseListener;
-    
     public static final int NETWORK = 0;
     public static final int NAME = 1;
     public static final int SIZE = 2;
     public static final int FORMAT = 3;
     public static final int MEDIA = 4;
     public static final int AVAILABILITY = 5;
+    private MouseListener aMouseListener;
 
-    public ResultTableView(Composite parent, CoreCommunication aCore, CTabItem aCTabItem, MouseListener aMouseListener, GuiTab searchTab) {
+    public ResultTableView(Composite parent, CoreCommunication aCore, CTabItem aCTabItem,
+        MouseListener aMouseListener, GuiTab searchTab) {
         super(parent, aCore);
         this.aMouseListener = aMouseListener;
         aCTabItem.setData("gView", this);
-        
+
         preferenceString = "result";
-        columnLabels = new String[] { "SR_NETWORK", "SR_NAME", "SR_SIZE", "SR_FORMAT", "SR_MEDIA", "SR_AVAIL" };
+        columnLabels = new String[] {
+                "SR_NETWORK", "SR_NAME", "SR_SIZE", "SR_FORMAT", "SR_MEDIA", "SR_AVAIL"
+            };
 
         columnDefaultWidths = new int[] { 58, 300, 65, 45, 50, 70 };
 
         columnAlignment = new int[] { SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
 
-		// content provider
-        tableContentProvider =  new ResultTableContentProvider( this );
-		// label provider
-        tableLabelProvider = new ResultTableLabelProvider( this );
-		// table sorter
-        gSorter = new ResultTableSorter( this );
-		// table menu listener
-        tableMenuListener = new ResultTableMenuListener( this, aCTabItem, searchTab );
+        // content provider
+        tableContentProvider = new ResultTableContentProvider(this);
+
+        // label provider
+        tableLabelProvider = new ResultTableLabelProvider(this);
+
+        // table sorter
+        gSorter = new ResultTableSorter(this);
+
+        // table menu listener
+        tableMenuListener = new ResultTableMenuListener(this, aCTabItem, searchTab);
 
         this.createContents(parent);
     }
 
-	/* (non-Javadoc)
-	 * Method declared in Viewer.
-	 * This implementatation additionaly unmaps all the elements.
-	 */
-    public void setInput( Object object ) {
-        sViewer.setInput( object );
+    /* (non-Javadoc)
+     * Method declared in Viewer.
+     * This implementatation additionaly unmaps all the elements.
+     */
+    public void setInput(Object object) {
+        sViewer.setInput(object);
     }
 
-	public GTableMenuListener getMenuListener() {
-		return this.tableMenuListener;
-	}
-    
+    public GTableMenuListener getMenuListener() {
+        return this.tableMenuListener;
+    }
+
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.helper.OurTableViewer#create()
      */
     protected void createContents(Composite parent) {
         super.createContents(parent);
-		sViewer.addSelectionChangedListener((ResultTableMenuListener) tableMenuListener);
-		
+        sViewer.addSelectionChangedListener((ResultTableMenuListener) tableMenuListener);
+
         // add optional filters
-        if (PreferenceLoader.loadBoolean("searchFilterPornography")) {
+        if (PreferenceLoader.loadBoolean("searchFilterPornography"))
             sViewer.addFilter(new WordViewerFilter(WordViewerFilter.PORNOGRAPHY_FILTER_TYPE));
-        } 
-        else if (PreferenceLoader.loadBoolean("searchFilterProfanity")) {
+        else if (PreferenceLoader.loadBoolean("searchFilterProfanity"))
             sViewer.addFilter(new WordViewerFilter(WordViewerFilter.PROFANITY_FILTER_TYPE));
-        }
 
         /* add a menuListener to make the first menu item bold */
         addMenuListener();
+
         /* add a mouse-listener to catch double-clicks */
-		getTableViewer().getTable().addMouseListener(aMouseListener);
+        getTableViewer().getTable().addMouseListener(aMouseListener);
 
         /* just show tooltip on user request */
         if (PreferenceLoader.loadBoolean("showSearchTooltip")) {
@@ -147,6 +159,10 @@ public class ResultTableView extends GTableView {
         private Label tipLabelText;
         private Widget tipWidget; // widget this tooltip is hovering over
         private Point tipPosition; // the position being hovered over
+        private Composite parent;
+        private List namesList;
+        private Point pt;
+        private Font boldFont;
 
         /**
          * Creates a new tooltip handler
@@ -154,21 +170,44 @@ public class ResultTableView extends GTableView {
          * @param parent the parent Shell
          */
         public ToolTipHandler(Composite parent) {
-            final Display display = parent.getDisplay();
-            tipShell = new Shell(parent.getShell(), SWT.ON_TOP);
+            this.parent = parent;
+            this.pt = new Point(0, 0);
 
-            GridLayout gridLayout = WidgetFactory.createGridLayout(1, 2, 2, 0, 0, false);
-            tipShell.setLayout(gridLayout);
+            Display display = parent.getDisplay();
+            tipShell = new Shell(parent.getShell(), SWT.ON_TOP);
+            tipShell.addDisposeListener(new DisposeListener() {
+                    public void widgetDisposed(DisposeEvent e) {
+                        if (boldFont != null)
+                            boldFont.dispose();
+                    }
+                });
+
+            tipShell.setLayout(WidgetFactory.createGridLayout(1, 2, 2, 0, 0, false));
             tipShell.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+
             tipLabelImage = new CLabel(tipShell, SWT.NONE);
+
+            FontData[] fontDataArray = tipLabelImage.getFont().getFontData();
+
+            for (int i = 0; i < fontDataArray.length; i++)
+                fontDataArray[ i ].setStyle(SWT.BOLD);
+
+            boldFont = new Font(null, fontDataArray);
+            tipLabelImage.setFont(boldFont);
             tipLabelImage.setAlignment(SWT.LEFT);
             tipLabelImage.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
             tipLabelImage.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-            tipLabelImage.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_BEGINNING));
+            tipLabelImage.setLayoutData(new GridData(GridData.FILL_HORIZONTAL |
+                    GridData.HORIZONTAL_ALIGN_BEGINNING));
+
+            Label separator = new Label(tipShell, SWT.HORIZONTAL | SWT.SEPARATOR);
+            separator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
             tipLabelText = new Label(tipShell, SWT.NONE);
             tipLabelText.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
             tipLabelText.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-            tipLabelText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
+            tipLabelText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL |
+                    GridData.VERTICAL_ALIGN_CENTER));
         }
 
         /**
@@ -177,132 +216,145 @@ public class ResultTableView extends GTableView {
          * @control the control on which to enable hoverhelp
          */
         public void activateHoverHelp(final Control control) {
-            /*
-             * Get out of the way if we attempt to activate the control underneath the tooltip
-             */
+            // hide on click
             control.addMouseListener(new MouseAdapter() {
                     public void mouseDown(MouseEvent e) {
-                        if (tipShell.isVisible()) {
+                        if (tipShell.isVisible())
                             tipShell.setVisible(false);
-                        }
                     }
                 });
 
-            /*
-             * Trap hover events to pop-up tooltip
-             */
+            // hide on Exit, activate on Hover
             control.addMouseTrackListener(new MouseTrackAdapter() {
                     public void mouseExit(MouseEvent e) {
-                        if (tipShell.isVisible()) {
+                        if (tipShell.isVisible() && ((pt.x != e.x) && (pt.y != e.y)))
                             tipShell.setVisible(false);
-                        }
 
                         tipWidget = null;
                     }
 
                     public void mouseHover(MouseEvent event) {
-                        if (event.widget == null) {
+                        if (event.widget == null)
                             return;
-                        }
 
-                        Point pt = new Point(event.x, event.y);
+                        pt.x = event.x;
+                        pt.y = event.y;
+                        tipPosition = control.toDisplay(pt);
+
+                        // if cursor is within the tooltip (for use with namesList/scrollbars)
+                        if (tipShell.isVisible() && tipShell.getBounds().contains(tipPosition))
+                            return;
+
                         Widget widget = event.widget;
 
                         /* get the selected item from the table */
-                        Table w = (Table) widget;
-                        widget = w.getItem(pt);
+                        Table table = (Table) widget;
+                        widget = table.getItem(pt);
 
                         if (widget == null) {
                             tipShell.setVisible(false);
                             tipWidget = null;
                         }
 
-                        if (widget == tipWidget) {
+                        if (widget == tipWidget)
                             return;
-                        }
 
                         tipWidget = widget;
 
                         // Create the tooltip on demand
-                        if (widget instanceof TableItem) {
-                            TableItem tableItem = (TableItem) widget;
-                            ResultInfo aResult = (ResultInfo) tableItem.getData();
-                            Program p;
+                        TableItem tableItem = (TableItem) widget;
+                        ResultInfo aResult = (ResultInfo) tableItem.getData();
 
-                            if (!aResult.getFormat().equals("")) {
-                                p = Program.findProgram(aResult.getFormat());
-                            } else {
-                                String temp = aResult.getName();
-                                int index = temp.lastIndexOf(".");
+                        // Find the associated program
+                        Program p = null;
 
-                                try {
-                                    temp = temp.substring(index);
-                                } catch (Exception e) {
-                                    p = null;
-                                }
+                        if (!aResult.getFormat().equals(""))
+                            p = Program.findProgram(aResult.getFormat());
+                        else {
+                            int index;
+                            String fileName = aResult.getName();
 
-                                p = Program.findProgram(temp);
-                            }
+                            if ((fileName != null) && ((index = fileName.lastIndexOf(".")) != -1))
+                                p = Program.findProgram(fileName.substring(index));
+                        }
 
-                            if (p != null) {
+                        // Set the program image:
+                        Image programImage = null;
+
+                        if (p != null) {
+                            if ((programImage = G2GuiResources.getImage(p.getName())) == null) {
                                 ImageData data = p.getImageData();
 
                                 if (data != null) {
-                                    if (G2GuiResources.getImage(p.getName()) == null) {
-                                        G2GuiResources.getImageRegistry().put(p.getName(), new Image(null, data));
-                                    }
+                                    programImage = new Image(null, data);
+                                    G2GuiResources.getImageRegistry().put(p.getName(), programImage);
                                 }
                             }
-
-                            String imageText = aResult.getName();
-                            String aString = "";
-
-                            if (!aResult.getFormat().equals("")) {
-                                aString += (G2GuiResources.getString("ST_TT_FORMAT") + aResult.getFormat() + "\n");
-                            }
-
-                            aString += (G2GuiResources.getString("ST_TT_LINK") + aResult.getLink() + "\n");
-                            aString += (G2GuiResources.getString("ST_TT_NETWORK") + aResult.getNetwork().getNetworkName() + "\n");
-                            aString += (G2GuiResources.getString("ST_TT_SIZE") + aResult.getStringSize() + "\n");
-                            aString += (G2GuiResources.getString("ST_TT_AVAIL") + aResult.getAvail() + " " +
-                            G2GuiResources.getString("ST_TT_SOURCES") + "\n");
-
-                            if (aResult.getType().equals("Audio")) {
-                                if (!aResult.getBitrate().equals("")) {
-                                    aString += (G2GuiResources.getString("ST_TT_BITRATE") + aResult.getBitrate() + "\n");
-                                }
-
-                                if (!aResult.getLength().equals("")) {
-                                    aString += (G2GuiResources.getString("ST_TT_LENGTH") + aResult.getLength());
-                                }
-                            }
-
-                            if (!aResult.getHistory()) {
-                                aString = aString + "\n" + G2GuiResources.getString("ST_TT_DOWNLOADED");
-                            }
-
-                            // set the text/image for the tooltip 
-                            if (aString != null) {
-                                tipLabelText.setText(aString);
-                            } else {
-                                tipLabelText.setText("");
-                            }
-
-                            /* load the image only if we have a associated programm */
-                            if (p != null) {
-                                tipLabelImage.setImage(G2GuiResources.getImage(p.getName()));
-                            } else {
-                                tipLabelImage.setImage(null);
-                            }
-
-                            tipLabelImage.setText(imageText);
-
-                            /* pack/layout the tooltip */
-                            tipShell.pack();
-                            tipPosition = control.toDisplay(pt);
-                            setHoverLocation(tipShell, tipPosition);
-                            tipShell.setVisible(true);
                         }
+
+                        tipLabelImage.setImage(programImage);
+                        tipLabelImage.setText(aResult.getName());
+
+                        String aString = "";
+
+                        if (aResult.getNetwork().getNetworkType() == EnumNetwork.DONKEY)
+                            aString += (G2GuiResources.getString("ST_TT_MD4") +
+                            aResult.getMd4().toUpperCase() + "\n");
+
+                        if (!aResult.getFormat().equals(""))
+                            aString += (G2GuiResources.getString("ST_TT_FORMAT") +
+                            aResult.getFormat() + "\n");
+
+                        aString += (G2GuiResources.getString("ST_TT_NETWORK") +
+                        aResult.getNetwork().getNetworkName() + "\n");
+
+                        aString += (G2GuiResources.getString("ST_TT_SIZE") +
+                        aResult.getStringSize() + "\n");
+
+                        aString += (G2GuiResources.getString("ST_TT_AVAIL") + aResult.getAvail() +
+                        " " + G2GuiResources.getString("ST_TT_SOURCES") + "\n");
+
+                        if (aResult.getType().equals("Audio")) {
+                            if (!aResult.getBitrate().equals(""))
+                                aString += (G2GuiResources.getString("ST_TT_BITRATE") +
+                                aResult.getBitrate() + "\n");
+
+                            if (!aResult.getLength().equals(""))
+                                aString += (G2GuiResources.getString("ST_TT_LENGTH") +
+                                aResult.getLength());
+                        }
+
+                        if (!aResult.getHistory())
+                            aString += ("\n" + G2GuiResources.getString("ST_TT_DOWNLOADED"));
+
+                        // set the text/image for the tooltip 
+                        tipLabelText.setText((aString != null) ? aString : "");
+
+                        /* pack/layout the tooltip */
+                        if ((namesList != null) && !namesList.isDisposed())
+                            namesList.dispose();
+
+                        tipShell.pack();
+
+                        if ((aResult.getNames() != null) && (aResult.getNames().length > 1)) {
+                            Arrays.sort(aResult.getNames(), String.CASE_INSENSITIVE_ORDER);
+
+                            namesList = new List(tipShell, SWT.BORDER | SWT.H_SCROLL |
+                                    SWT.V_SCROLL);
+
+                            GridData gridData = new GridData();
+                            gridData.heightHint = 50;
+                            gridData.widthHint = tipShell.getBounds().width;
+                            namesList.setLayoutData(gridData);
+
+                            for (int i = 0; i < aResult.getNames().length; i++)
+                                namesList.add(aResult.getNames()[ i ]);
+
+                            tipShell.pack();
+                        }
+
+                        setHoverLocation(tipShell, tipPosition);
+                        tipShell.setVisible(true);
                     }
                 });
         }
@@ -316,8 +368,10 @@ public class ResultTableView extends GTableView {
         private void setHoverLocation(Shell shell, Point position) {
             Rectangle displayBounds = shell.getDisplay().getBounds();
             Rectangle shellBounds = shell.getBounds();
-            shellBounds.x = Math.max(Math.min(position.x, displayBounds.width - shellBounds.width), 0);
-            shellBounds.y = Math.max(Math.min(position.y + 16, displayBounds.height - shellBounds.height), 0);
+            shellBounds.x = Math.max(Math.min(position.x, displayBounds.width - shellBounds.width),
+                    0);
+            shellBounds.y = Math.max(Math.min(position.y, // + 16,
+                        displayBounds.height - shellBounds.height), 0);
             shell.setBounds(shellBounds);
         }
     }
@@ -326,6 +380,9 @@ public class ResultTableView extends GTableView {
 
 /*
 $Log: ResultTableView.java,v $
+Revision 1.7  2003/11/24 20:35:11  zet
+show filenames in tooltip
+
 Revision 1.6  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
