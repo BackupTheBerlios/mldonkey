@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  * @author markus
- * @version $Id: FileState.java,v 1.7 2003/07/03 16:12:39 lemmstercvs01 Exp $ 
+ * @version $Id: FileState.java,v 1.8 2003/07/03 18:43:19 lemmstercvs01 Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -105,22 +105,29 @@ public class FileState implements SimpleInformation {
 	protected void setState( EnumFileState state, int id, CoreCommunication core ) {
 		EncodeMessage sendState = null;
 		Object[] content = new Object[ 2 ];
+		short opcode = 23;
 		content[ 0 ] = new Integer( id );
 			
 		/* unpause */
 		if ( this.getState() == EnumFileState.PAUSED 
 		&& state == EnumFileState.DOWNLOADING ) {
 			content[ 1 ] = resume;
-			sendState = new EncodeMessage( ( short ) 23, content );
-			sendState.sendMessage( core.getConnection() );
 		}
 		/* pause */
 		else if ( this.getState() == EnumFileState.DOWNLOADING
 			  && state == EnumFileState.PAUSED ){
 			content[ 1 ] = pause;
-			sendState = new EncodeMessage( ( short ) 23, content );
-			sendState.sendMessage( core.getConnection() );
 		}
+		/* cancel */
+		else if ( state == EnumFileState.CANCELLED ) {
+			/* to cancel the dl we need a different opcode */
+			opcode = 11;
+			content = new Object[ 1 ];
+			content[ 0 ] = new Integer( id );
+		}
+		/* generate and send the message */
+		sendState = new EncodeMessage( opcode, content );
+		sendState.sendMessage( core.getConnection() );
 		/* little gc by ourself */
 		sendState = null;
 		content = null;
@@ -129,6 +136,9 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.8  2003/07/03 18:43:19  lemmstercvs01
+cancel should work. untested
+
 Revision 1.7  2003/07/03 16:12:39  lemmstercvs01
 setState() to protected. not needed outside model.*
 
