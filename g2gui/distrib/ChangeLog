@@ -51,6 +51,7 @@
 	* Transfer: Add rightClick menuItem: Preview
 	* Transfer: Add preference option to disable colors in table 
 	* Transfer: Change filesources to weakly reference # clients [#865]
+	* Transfer: DoubleClick Downloads header to show/hide uploader stats table
 	* Statistics: Add header doubleClick to maximize a graph [#916]
 	* Statistics: Add basic hourly graph history (access in graph menu)
 	* Statistics: Add doubleClick on graph action to cycle between 
