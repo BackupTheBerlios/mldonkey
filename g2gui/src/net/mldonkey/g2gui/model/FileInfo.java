@@ -50,7 +50,7 @@ import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.76 2003/11/23 20:26:58 dek Exp $
+ * @version $Id: FileInfo.java,v 1.77 2003/11/23 20:29:25 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -706,6 +706,11 @@ public class FileInfo extends Parent implements Observer {
                 if (aNetwork.getNetworkType() == EnumNetwork.MULTINET) {
                 	this.avail = messageBuffer.readString();                
                 } else {
+                	/* 
+                	 * avail is only set if it is null
+                	 * so that a following MULTINET can overwrite this value 
+                	 * and is not re-overwritten at this place
+                	 */
                 	String tempAvail = messageBuffer.readString();
                 	if ( this.avail == null ) this.avail = tempAvail;
                 	this.avails.put(aNetwork, tempAvail);                	                
@@ -1105,8 +1110,8 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
-Revision 1.76  2003/11/23 20:26:58  dek
-fixed fix for NPE @ avail
+Revision 1.77  2003/11/23 20:29:25  dek
+re-added comment...
 
 Revision 1.75  2003/11/23 20:21:05  dek
 MULTINET can overwirte avail
