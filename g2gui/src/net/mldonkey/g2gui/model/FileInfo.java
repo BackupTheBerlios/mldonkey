@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.36 2003/08/15 22:05:58 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.37 2003/08/16 20:20:21 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -391,7 +391,9 @@ public class FileInfo extends Parent implements Observer {
 		this.stringOffset = calcStringOfSeconds( this.offset );	
 			
 		if (this.state.getState() == EnumFileState.DOWNLOADING
-			|| this.state.getState() == EnumFileState.PAUSED) {
+			|| this.state.getState() == EnumFileState.PAUSED
+			|| this.state.getState() == EnumFileState.QUEUED
+			|| this.state.getState() == EnumFileState.DOWNLOADED) {
 				this.setChanged();
 				this.notifyObservers( this );
 		}
@@ -407,8 +409,8 @@ public class FileInfo extends Parent implements Observer {
 		this.downloaded = messageBuffer.readInt32();
 		/* translate to kb and round to two digits after comma */
 		double d = new Double( messageBuffer.readString() ).doubleValue();
-		this.rate = ( float ) round( d / 1024 );
 		this.rawRate = ( float ) d;
+		this.rate = ( float ) round( d / 1024 );
 		this.offset = messageBuffer.readInt32();
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
@@ -630,6 +632,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.37  2003/08/16 20:20:21  zet
+minor
+
 Revision 1.36  2003/08/15 22:05:58  zet
 *** empty log message ***
 
