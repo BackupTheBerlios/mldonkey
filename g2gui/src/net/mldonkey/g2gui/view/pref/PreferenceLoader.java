@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.47 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.48 2003/11/24 21:13:39 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore;
@@ -163,6 +163,8 @@ public class PreferenceLoader {
 		
 		preferenceStore.setDefault( "transferSashOrientation", SWT.VERTICAL );
 		preferenceStore.setDefault( "transferSashMaximized", -1 );
+		
+		PreferenceConverter.setDefault( preferenceStore, "viewerFontData", JFaceResources.getDefaultFont().getFontData() );     
 		
 		preferenceStore.setDefault( G2GuiResources.getString( "ENS_NOT_CONNECTED" ), false );		
 		preferenceStore.setDefault( G2GuiResources.getString( "ENS_CONNECTING" ), false );		
@@ -283,6 +285,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.48  2003/11/24 21:13:39  zet
+default viewer font
+
 Revision 1.47  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

@@ -56,7 +56,7 @@ import java.util.Map;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.8 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: GView.java,v 1.9 2003/11/24 21:13:39 zet Exp $
  *
  */
 public abstract class GView {
@@ -181,6 +181,7 @@ public abstract class GView {
      */
     public void updateDisplay() {
         getTable().setLinesVisible(PreferenceLoader.loadBoolean("displayGridLines"));
+		getTable().setFont(PreferenceLoader.loadFont("viewerFontData"));
     }
 
     /**
@@ -384,6 +385,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.9  2003/11/24 21:13:39  zet
+default viewer font
+
 Revision 1.8  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

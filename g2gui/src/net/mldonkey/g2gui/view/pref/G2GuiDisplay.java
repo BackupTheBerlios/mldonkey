@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiDisplay.java,v 1.6 2003/11/07 00:31:39 zet Exp $
+ * @version $Id: G2GuiDisplay.java,v 1.7 2003/11/24 21:13:39 zet Exp $
  */
 public class G2GuiDisplay extends PreferencePage {
 	/**
@@ -75,12 +75,22 @@ public class G2GuiDisplay extends PreferencePage {
 				"displayGridLines",
 				G2GuiResources.getString( "PREF_DISPLAY_GRID" ),
 				composite ) );		
-					
+				
+		setupEditor( 
+			new ExtendedFontFieldEditor2( 
+				"viewerFontData",
+				G2GuiResources.getString( "PREF_DISPLAY_V_FONT" ),
+				G2GuiResources.getString( "PREF_DISPLAY_SAMPLE" ),
+				composite ) );			
+		
 				
 	}
 }
 /*
 $Log: G2GuiDisplay.java,v $
+Revision 1.7  2003/11/24 21:13:39  zet
+default viewer font
+
 Revision 1.6  2003/11/07 00:31:39  zet
 option to disable splash screen  #1064
 
