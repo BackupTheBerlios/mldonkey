@@ -43,11 +43,13 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.6 2003/08/15 22:05:58 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.7 2003/08/16 13:07:42 vnc Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
 	
+	private Color unAvailableFileColor = new Color(null, 255,0,0);
+	private Color availableFileColor = new Color(null, 255,165,0);
 	private Color downloadedFileColor = new Color(null, 0,0,255);
 	private Color queuedFileColor = new Color(null, 192,192,192);
 	private Color pausedFileColor = new Color(null, 255, 0, 0);
@@ -80,7 +82,8 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 				return rateAbove10Color;
 			if (fileInfo.getRate() > 0f) 
 				return rateAbove0Color;	
-			return null;
+			//TODO show 0% file availability in a red filename
+			return availableFileColor;
 		} else if (arg0 instanceof TreeClientInfo) {
 			ClientInfo clientInfo = ((TreeClientInfo) arg0).getClientInfo();
 			if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
@@ -224,6 +227,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.7  2003/08/16 13:07:42  vnc
+more file colors based on availability
+
 Revision 1.6  2003/08/15 22:05:58  zet
 *** empty log message ***
 
