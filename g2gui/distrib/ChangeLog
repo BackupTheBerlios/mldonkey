@@ -12,6 +12,7 @@
 	* Added icons to the popup/pulldown menus
 
 2003/10/13: z
+	* LinkEntry: ctrl+enter = submit
 	* Transfer: Add WebServices Bitzi, FileDonkey & Jigle hash lookup (rt-click menu)
 	* Win TrayIcon: Fix File->Exit bug  (when minimize to systray is active)
 
@@ -21,7 +22,7 @@
 	* Transfer: Buffered add/remove methods so multiple calls are performed en masse
 	* Transfer: Save queued & paused filter settings
 	* Transfer: Save last sort column 
-	* Transfer: Add ColumnSelector!: add|remove|move columns 
+	* Transfer: Created ColumnSelector!: add|remove|move columns 
 	* Transfer: Rewrote TableTreeEditor (chunkGraph) integration (moved into the Viewer)
 	* Transfer: Fixed TableTreeEditor.run crash on +/- selection (SWT bug)
 	* About: Add version information (+ titlebar)
