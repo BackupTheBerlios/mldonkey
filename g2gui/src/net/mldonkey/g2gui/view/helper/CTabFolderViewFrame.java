@@ -23,56 +23,55 @@
 package net.mldonkey.g2gui.view.helper;
 
 import net.mldonkey.g2gui.view.GuiTab;
+import net.mldonkey.g2gui.view.viewers.GView;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.SashForm;
 
 
 /**
- * SashViewFrame
+ * CTabFolderViewFrame
  *
- * @version $Id: SashViewFrame.java,v 1.3 2003/11/29 17:02:27 zet Exp $
+ * @version $Id: CTabFolderViewFrame.java,v 1.1 2003/11/29 17:02:27 zet Exp $
  *
  */
-public class SashViewFrame extends ViewFrame {
-    protected SashForm parentSashForm;
-    
+public class CTabFolderViewFrame extends SashViewFrame {
+    protected CTabFolder cTabFolder;
 
-    public SashViewFrame(SashForm parentSashForm, String prefString, String prefImageString,
+    public CTabFolderViewFrame(SashForm parentSashForm, String prefString, String prefImageString,
         GuiTab guiTab) {
         super(parentSashForm, prefString, prefImageString, guiTab);
-        this.parentSashForm = parentSashForm;
+        this.cTabFolder = new CTabFolder(childComposite, SWT.NONE);
     }
 
-    
-    
-    
     /**
      * @param gPaneListener
      */
-    public void createPaneListener(SashViewFrameListener sashViewFrameListener) {
-        setupPaneListener(sashViewFrameListener);
+    public void createPaneListener(CTabFolderViewFrameListener cTabFolderViewFrameListener) {
+        setupPaneListener(cTabFolderViewFrameListener);
+
         cLabel.addMouseListener(new MaximizeSashMouseAdapter(cLabel, menuManager,
                 getParentSashForm(), getControl()));
     }
 
-    public SashForm getParentSashForm() {
-        return parentSashForm;
+    public CTabFolder getCTabFolder() {
+        return cTabFolder;
     }
- 
+
+    public GView getGView() {
+        if ((cTabFolder.getSelection() != null) &&
+                (cTabFolder.getSelection().getData("gView") != null))
+            return (GView) cTabFolder.getSelection().getData("gView");
+
+        return null;
+    }
 }
 
 
 /*
-$Log: SashViewFrame.java,v $
-Revision 1.3  2003/11/29 17:02:27  zet
+$Log: CTabFolderViewFrame.java,v $
+Revision 1.1  2003/11/29 17:02:27  zet
 more viewframes.. will continue later.
-
-Revision 1.2  2003/11/29 01:51:53  zet
-a few more viewframe changes.. will continue later.
-
-Revision 1.1  2003/11/28 01:06:21  zet
-not much- slowly expanding viewframe - will continue later
-
-
 
 */

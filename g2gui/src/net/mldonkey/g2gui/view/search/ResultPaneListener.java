@@ -22,12 +22,12 @@
  */
 package net.mldonkey.g2gui.view.search;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumRating;
+import net.mldonkey.g2gui.view.helper.CTabFolderViewFrame;
+import net.mldonkey.g2gui.view.helper.CTabFolderViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GPaneListener;
 import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
@@ -36,27 +36,24 @@ import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 
 
 /**
- * SearchPaneListener
+ * ResultPaneListener
  *
- * @version $Id: ResultPaneListener.java,v 1.9 2003/11/22 02:16:36 zet Exp $
+ * @version $Id: ResultPaneListener.java,v 1.10 2003/11/29 17:02:27 zet Exp $
  *
  */
-public class ResultPaneListener extends GPaneListener {
-    private CTabFolder cTabFolder;
+public class ResultPaneListener extends CTabFolderViewFrameListener {
 	private Enum[] states;
 
     /**
      * @param gViewer
      * @param core
      */
-    public ResultPaneListener(CTabFolder cTabFolder, CoreCommunication core) {
-        super(null, core);
-        this.cTabFolder = cTabFolder;
+    public ResultPaneListener(CTabFolderViewFrame cTabFolderViewFrame) {
+        super(cTabFolderViewFrame);
         this.states = new Enum[] { EnumRating.EXCELLENT, EnumRating.VERYHIGH, EnumRating.HIGH, EnumRating.NORMAL, EnumRating.LOW };
     }
 
@@ -110,6 +107,9 @@ public class ResultPaneListener extends GPaneListener {
 
 /*
 $Log: ResultPaneListener.java,v $
+Revision 1.10  2003/11/29 17:02:27  zet
+more viewframes.. will continue later.
+
 Revision 1.9  2003/11/22 02:16:36  zet
 advancedMode typo
 

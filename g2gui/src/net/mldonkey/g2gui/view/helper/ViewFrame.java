@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * ViewFrame
  *
- * @version $Id: ViewFrame.java,v 1.6 2003/11/29 01:51:53 zet Exp $
+ * @version $Id: ViewFrame.java,v 1.7 2003/11/29 17:02:27 zet Exp $
  *
  */
 public class ViewFrame {
@@ -113,7 +113,7 @@ public class ViewFrame {
     }
 
     public CoreCommunication getCore() {
-        return getGuiTab().getMainTab().getCore();
+        return getGuiTab().getMainWindow().getCore();
     }
 
     public Composite getChildComposite() {
@@ -160,6 +160,9 @@ public class ViewFrame {
 
 /*
 $Log: ViewFrame.java,v $
+Revision 1.7  2003/11/29 17:02:27  zet
+more viewframes.. will continue later.
+
 Revision 1.6  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 

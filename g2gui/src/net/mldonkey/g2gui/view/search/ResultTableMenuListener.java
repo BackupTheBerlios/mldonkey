@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.32 2003/11/25 01:13:13 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.33 2003/11/29 17:02:27 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -224,7 +224,7 @@ Yet			menuManager.add( webManager );
 		/* update the statusline */
 		String statusline = G2GuiResources.getString( "ST_STARTED_DOWNLOADS" ) + counter;
 		SearchTab parent = ( SearchTab ) cTabItem.getParent().getData();
-		parent.getMainTab().getStatusline().update( statusline );	
+		parent.getMainWindow().getStatusline().update( statusline );	
 
 		/* update the downloaded tableitems */
 		if ( counter > 0 )
@@ -298,6 +298,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.33  2003/11/29 17:02:27  zet
+more viewframes.. will continue later.
+
 Revision 1.32  2003/11/25 01:13:13  zet
 include filesize for webservice>jigle lookup
 

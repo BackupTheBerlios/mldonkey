@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Label;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.65 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.66 2003/11/29 17:02:27 zet Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -168,7 +168,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
             SearchTab parent = (SearchTab) cTabFolder.getData();
             int itemCount = ( (CustomTableViewer) gView.getViewer() ).getTable().getItemCount();
             this.statusline = "Results: " + itemCount;
-            parent.getMainTab().getStatusline().update(this.statusline);
+            parent.getMainWindow().getStatusline().update(this.statusline);
         }
     }
 
@@ -220,7 +220,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         SearchTab parent = (SearchTab) cTabFolder.getData();
 
         this.statusline = "Results: 0";
-        parent.getMainTab().getStatusline().update(this.statusline);
+        parent.getMainWindow().getStatusline().update(this.statusline);
     }
 
     /**
@@ -322,6 +322,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.66  2003/11/29 17:02:27  zet
+more viewframes.. will continue later.
+
 Revision 1.65  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
@@ -461,7 +464,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ViewFrameListener
  *
- * @version $Id: ViewFrameListener.java,v 1.4 2003/11/29 01:51:53 zet Exp $
+ * @version $Id: ViewFrameListener.java,v 1.5 2003/11/29 17:02:27 zet Exp $
  *
  */
 public abstract class ViewFrameListener implements IMenuListener, DisposeListener {
@@ -72,6 +72,8 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
     }
 
     protected void createSortByColumnSubMenu(IMenuManager menuManager) {
+        if (viewFrame.getGView() == null) return;
+        
         MenuManager sortSubMenu = new MenuManager(G2GuiResources.getString("MISC_SORT"));
 
         for (int i = 0; i < viewFrame.getGView().getTable().getColumnCount(); i++)
@@ -87,6 +89,9 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
 
 /*
 $Log: ViewFrameListener.java,v $
+Revision 1.5  2003/11/29 17:02:27  zet
+more viewframes.. will continue later.
+
 Revision 1.4  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 

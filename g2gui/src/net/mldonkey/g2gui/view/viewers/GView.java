@@ -58,7 +58,7 @@ import java.util.Map;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.12 2003/11/29 01:51:53 zet Exp $
+ * @version $Id: GView.java,v 1.13 2003/11/29 17:02:27 zet Exp $
  *
  */
 public abstract class GView {
@@ -124,13 +124,9 @@ public abstract class GView {
         return core;
     }
 
-    /* (non-Javadoc)
-     * @see net.mldonkey.g2gui.view.viewers.IGViewer#addDisposeListener(net.mldonkey.g2gui.view.viewers.GPaneListener)
+    /**
+     * @param listener
      */
-    public void addDisposeListener(GPaneListener listener) {
-        getTable().addDisposeListener(listener);
-    }
-
     public void addDisposeListener(ViewFrameListener listener) {
         getTable().addDisposeListener(listener);
     }
@@ -402,6 +398,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.13  2003/11/29 17:02:27  zet
+more viewframes.. will continue later.
+
 Revision 1.12  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 
