@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.27 2003/07/06 19:18:08 dek Exp $ 
+ * @version $Id: Gui.java,v 1.28 2003/07/06 19:22:27 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -222,6 +222,11 @@ public class Gui implements IG2gui, Listener {
 		final CoolBar coolBar = new CoolBar ( parent, SWT.FLAT );
 			gridData = new GridData( GridData.FILL_HORIZONTAL );
 			
+		coolBar.addControlListener( new ControlListener() {
+			public void controlMoved( ControlEvent e ) { mainComposite.layout(); }
+			public void controlResized( ControlEvent e ) { mainComposite.layout(); }
+			} );
+			
 			coolBar.setLayoutData( gridData );
 		Menu toolmenu = createToolBarRMMenu( coolBar );
 				for ( int i = 0; i < 2; i++ ) { 			
@@ -355,7 +360,7 @@ public class Gui implements IG2gui, Listener {
 		if ( activeTab != null ) activeTab.getContent().setVisible( false );
 		pageContainerLayout.topControl = activatedTab.getContent();
 		//activatedTab.getContent().setVisible( true );
-		pageContainer.layout();
+		pageContainer.layout();		
 		activeTab = activatedTab;	
 	} 
 
@@ -430,6 +435,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.28  2003/07/06 19:22:27  dek
+*** empty log message ***
+
 Revision 1.27  2003/07/06 19:18:08  dek
 hey, there is already a StackLayout....
 
