@@ -117,9 +117,17 @@ public class Graph {
 		return avgValue;
 	}
 
+	public void dispose() {
+		graphColor1.dispose();
+		graphColor2.dispose();
+	}
+
 }
 /*
 $Log: Graph.java,v $
+Revision 1.8  2003/08/09 00:42:18  zet
+dispose colors
+
 Revision 1.7  2003/07/26 17:54:14  zet
 fix pref's illegal setParent, redo graphs, other
 

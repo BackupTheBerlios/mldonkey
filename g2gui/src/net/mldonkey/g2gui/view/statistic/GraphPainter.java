@@ -22,11 +22,13 @@
  */
 package net.mldonkey.g2gui.view.statistic;
 
-import org.eclipse.swt.graphics.*;
-
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -61,14 +63,21 @@ public class GraphPainter {
 	}
 	
 	public void paint() {
+			
+		Display display = parent.getDisplay();
+		
+		Color black = display.getSystemColor(SWT.COLOR_BLACK);
+		Color white = display.getSystemColor(SWT.COLOR_WHITE);
+		Color yellow = display.getSystemColor(SWT.COLOR_YELLOW);
 				
 		// create a buffer
 		Image imageBuffer = new Image(null, parent.getBounds());
 		GC drawBoardBuffer = new GC(imageBuffer);
 				
 		// set canvas background color
-		drawBoardBuffer.setBackground(new Color(null,50,50,50));
-		drawBoardBuffer.setForeground(new Color(null,0,0,0));
+		Color canvasBackgroundColor = new Color(null, 50,50, 50);
+		drawBoardBuffer.setBackground(canvasBackgroundColor);
+		drawBoardBuffer.setForeground(black);
 		drawBoardBuffer.fillGradientRectangle(0,0,parent.getClientArea().width,parent.getClientArea().height, true);
 		
 		//g2d.setColor(green);
@@ -113,7 +122,8 @@ public class GraphPainter {
 		}
 					
 		// draw grid
-		drawBoardBuffer.setForeground(new Color(null,0,128,64));
+		Color gridColor = new Color(null, 0, 128, 64);
+		drawBoardBuffer.setForeground(gridColor);
 		
 		// vertical lines
 		for (int i = startx -1 ; i < startx + graphWidth; i+=20) 
@@ -131,7 +141,8 @@ public class GraphPainter {
 			
 		// just for temporary fun; this might overflow pretty quickly
 						
-		drawBoardBuffer.setForeground(new Color(null, 250, 250, 250));
+		Color textColor = new Color(null, 250, 250, 250);
+		drawBoardBuffer.setForeground(textColor);
 		drawBoardBuffer.drawText(graph.getName() + 
 		 " avg: " + ((double)graph.getAvg()/100) + " kb/s," +
 		 " max: " + ((double)graph.getMax()/100) + " kb/s",
@@ -152,18 +163,21 @@ public class GraphPainter {
 		int boxWidth = drawBoardBuffer.textExtent(boxString).x + 20;
 		int boxHeight = drawBoardBuffer.textExtent(boxString).y + 5;	
 			
-		drawBoardBuffer.setForeground(new Color(null,0,0,0));
-		drawBoardBuffer.setBackground(new Color(null,255,255,255));
+		drawBoardBuffer.setForeground(black);
+		drawBoardBuffer.setBackground(white);
 		drawBoardBuffer.fillRoundRectangle(startx+10,textPosition,boxWidth,boxHeight,18,18);
 		drawBoardBuffer.drawRoundRectangle(startx+10,textPosition,boxWidth,boxHeight,18,18);
 		drawBoardBuffer.drawText(boxString,startx+20,textPosition+2);
-		drawBoardBuffer.setForeground(new Color(null, 255,255,0));
+		drawBoardBuffer.setForeground(yellow);
 		drawBoardBuffer.drawLine(startx+10,linePositionEnd,startx,linePosition);
 				
 		// output buffer to the display
 		drawBoard.drawImage(imageBuffer, 0,0);
 		imageBuffer.dispose();
 		drawBoardBuffer.dispose();
+		canvasBackgroundColor.dispose();
+		gridColor.dispose();
+		textColor.dispose();
 	}
 
 	/* (non-Javadoc)
@@ -176,6 +190,9 @@ public class GraphPainter {
 }
 /*
 $Log: GraphPainter.java,v $
+Revision 1.22  2003/08/09 00:42:04  zet
+dispose colors
+
 Revision 1.21  2003/07/27 00:07:53  zet
 minor
 
