@@ -26,7 +26,7 @@ package net.mldonkey.g2gui.helper;
  * MessageBuffer
  *
  * @author $user$
- * @version $Id: MessageBuffer.java,v 1.4 2003/06/14 12:47:51 lemmstercvs01 Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.5 2003/06/15 21:26:19 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -149,8 +149,10 @@ public class MessageBuffer {
 	 */
 	public String readBinary( int length ) {
 		StringBuffer result = new StringBuffer();
-		for ( int i = 0; i < length; i++ ) {
-			result.append( Integer.toHexString( readByte() ) );
+		for ( int i = 0; i < length; i++ ) {			
+			short temp = readInt8();			
+			if ( temp < 10 ) result.append( 0 );
+			result.append( Integer.toHexString( temp ) );			
 		}
 		return result.toString();
 	}
@@ -188,6 +190,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.5  2003/06/15 21:26:19  dek
+fixed readBinary
+
 Revision 1.4  2003/06/14 12:47:51  lemmstercvs01
 checkstyle applied
 
