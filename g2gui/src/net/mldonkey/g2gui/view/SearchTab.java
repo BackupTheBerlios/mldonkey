@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.43 2003/11/28 13:24:17 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.44 2003/11/28 13:36:17 lemmster Exp $ 
  *
  */
 public class SearchTab extends PaneGuiTab {
@@ -223,12 +223,13 @@ public class SearchTab extends PaneGuiTab {
 		cTabFolder.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		/* set this as data, so our children in the ctabfolder know whos their dad ;) */
 		cTabFolder.setData( this );
-		cTabFolder.setSelectionBackground(
-			new Color[] { cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
-				cTabFolder.getBackground() }, new int[] { 75 } );
-		cTabFolder.setSelectionForeground(
-			cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
-		
+		if (PreferenceLoader.loadBoolean("useGradient")) {
+			cTabFolder.setSelectionBackground(
+				new Color[] { cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
+					cTabFolder.getBackground() }, new int[] { 75 } );
+			cTabFolder.setSelectionForeground(
+				cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
+		}
 		/* add a "X" and listen for close event */
 		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
 			public void itemClosed( CTabFolderEvent event ) {
@@ -458,6 +459,9 @@ public class SearchTab extends PaneGuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.44  2003/11/28 13:36:17  lemmster
+useGradient in headerbars
+
 Revision 1.43  2003/11/28 13:24:17  lemmster
 useGradient in headerbars
 
