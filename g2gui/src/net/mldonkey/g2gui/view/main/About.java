@@ -33,6 +33,8 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
@@ -40,6 +42,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -47,7 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.7 2003/08/30 18:20:50 dek Exp $ 
+ * @version $Id: About.java,v 1.8 2003/08/30 22:35:53 dek Exp $ 
  *
  */
 public class About {
@@ -87,14 +90,46 @@ public class About {
 		createUpperPart( upperPart );
 		upperPart.layout();
 		
-		Label bar = new Label( parent, SWT.SEPARATOR | SWT.HORIZONTAL );
-			bar.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		Label bar1 = new Label( parent, SWT.SEPARATOR | SWT.HORIZONTAL );
+			bar1.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 			
 		Composite lowerPart = new Composite ( parent, SWT.NONE );
 			lowerPart.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 			lowerPart.setLayout( new GridLayout() );		
 		createLowerPart( lowerPart );
 		lowerPart.layout();
+		
+		Label bar2 = new Label( parent, SWT.SEPARATOR | SWT.HORIZONTAL );
+			bar2.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		
+		Composite buttonRow = new Composite ( parent, SWT.NONE );		
+			buttonRow.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+			buttonRow.setLayout( new GridLayout() );
+		createButtons(buttonRow);
+		
+		
+	}
+
+	/**
+	 * @param buttonRow
+	 */
+	private void createButtons(Composite parent) {
+		Button ok = new Button(parent,SWT.CENTER);
+		GridData gd = new GridData();
+		gd.horizontalAlignment = GridData.END;
+		gd.grabExcessHorizontalSpace = true;
+		ok.setLayoutData(gd);
+		ok.setText("     OK     ");
+		
+		ok.addSelectionListener(new SelectionListener(){
+
+			public void widgetSelected(SelectionEvent e) {
+				myShell.dispose();			
+				
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) { }
+		} );
 		
 	}
 
@@ -122,7 +157,7 @@ public class About {
 		String moreThanksHeader = "We thank furthermore:\n";
 		String moreThanks = " * The dude who made the java ssh2 for use in eclipse\n"
 		+ "  * The dude who invented Wikis and the creator of phpWiki\n"
-		+ "  * The Freenode IRC network\n\n";
+		+ "  * The Freenode IRC network";
 
 		
 		Color fg = parent.getForeground();
@@ -225,7 +260,7 @@ public class About {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.7 2003/08/30 18:20:50 dek Exp $ 
+	 * @version $Id: About.java,v 1.8 2003/08/30 22:35:53 dek Exp $ 
 	 *
 	 */
 	public class Link {
@@ -277,6 +312,9 @@ public class About {
 }
 /*
 $Log: About.java,v $
+Revision 1.8  2003/08/30 22:35:53  dek
+added OK-Button
+
 Revision 1.7  2003/08/30 18:20:50  dek
 minor changes & checkstyle
 
