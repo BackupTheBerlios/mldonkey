@@ -47,7 +47,11 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -60,7 +64,7 @@ import org.eclipse.swt.widgets.Text;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.5 2003/09/08 16:10:36 lemmster Exp $
+ * @version $Id: TableMenuListener.java,v 1.6 2003/09/08 16:37:52 lemmster Exp $
  *
  */
 public abstract class TableMenuListener {
@@ -150,10 +154,15 @@ public abstract class TableMenuListener {
 
     protected class RefineFilter extends ViewerFilter {
         private String refineString;
+        private boolean caseInSensitive = true;
         
-        public void setIncrementString( String aString ) {
+        public void setRefineString( String aString ) {
         	this.refineString = aString;
         	tableViewer.refresh();	
+        }
+        
+        public void toggleCaseInSensitive() {
+        	this.caseInSensitive = !this.caseInSensitive;
         }
         
         /* (non-Javadoc)
@@ -162,18 +171,20 @@ public abstract class TableMenuListener {
         public boolean select( Viewer viewer, Object parentElement, Object element ) {
             if ( this.refineString == null ) return true;
             
-            if ( element instanceof ServerInfo ) {
-				ServerInfo aServerInfo = ( ServerInfo ) element;
-				if ( aServerInfo.getNameOfServer().startsWith( this.refineString ) ) {
-					return true;
-				}
-            }
-            else if ( element instanceof ResultInfo ) {
-            	ResultInfo aResultInfo = ( ResultInfo ) element;
-				if ( aResultInfo.getNames()[ 0 ].startsWith( this.refineString ) ) {
-					return true;
-				}
-            }
+            String aString = null;
+            if ( element instanceof ServerInfo )
+				aString = ( ( ServerInfo ) element ).getNameOfServer();
+            else if ( element instanceof ResultInfo )
+            	aString = ( ( ResultInfo ) element ).getNames()[ 0 ];
+
+			if ( this.caseInSensitive ) {
+				aString = aString.toLowerCase();
+				refineString = refineString.toLowerCase();
+			}
+
+			if ( aString.startsWith( this.refineString ) )
+				return true;
+
             return false;
         }
     }
@@ -429,10 +440,8 @@ public abstract class TableMenuListener {
 			 * Method declared on Dialog.
 			 */
 			protected Control createDialogArea( Composite parent ) {
-				// create composite
 				Composite composite = ( Composite ) super.createDialogArea( parent );
 
-				// create message
 				if ( this.dialogMessage != null ) {
 					Label label = new Label( composite, SWT.WRAP );
 					label.setText( this.dialogMessage );
@@ -454,12 +463,29 @@ public abstract class TableMenuListener {
 				text.addModifyListener(	new ModifyListener() {
 						public void modifyText( ModifyEvent e ) {
 							if ( text.getText().equals( "" ) )
-								( ( RefineFilter ) incrementalViewerFilter).setIncrementString( null );
+								( ( RefineFilter ) incrementalViewerFilter).setRefineString( null );
 							else
-								( ( RefineFilter ) incrementalViewerFilter).setIncrementString( text.getText() );
+								( ( RefineFilter ) incrementalViewerFilter).setRefineString( text.getText() );
 						}
 					}
 				);
+				
+				GridLayout gridLayout = new GridLayout();
+				gridLayout.numColumns = 2;
+				gridLayout.marginWidth = 0;
+				Composite aSubComposite = new Composite( composite, SWT.NONE );
+				aSubComposite.setLayout( gridLayout );
+				
+				Button caseButton = new Button( aSubComposite, SWT.CHECK );
+				caseButton.addSelectionListener( new SelectionListener() {
+					public void widgetDefaultSelected(SelectionEvent e) { }
+					public void widgetSelected( SelectionEvent e ) {
+						( ( RefineFilter ) incrementalViewerFilter).toggleCaseInSensitive();
+					}
+				} );
+				
+				Label label = new Label( aSubComposite, SWT.NONE );
+				label.setText( G2GuiResources.getString( "TML_REFINE_CASE" ) );
 
 				return composite;
 			}
@@ -578,6 +604,9 @@ public abstract class TableMenuListener {
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.6  2003/09/08 16:37:52  lemmster
+refine search toggleable for case sensitive
+
 Revision 1.5  2003/09/08 16:10:36  lemmster
 RefineSearch added
 
