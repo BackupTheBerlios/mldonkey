@@ -22,24 +22,16 @@
  */
 package net.mldonkey.g2gui.view;
 
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GPage;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * PaneGuiTab
  *
- * @version $Id: PaneGuiTab.java,v 1.1 2003/10/31 13:20:31 lemmster Exp $ 
+ * @version $Id: PaneGuiTab.java,v 1.2 2003/10/31 15:14:56 zet Exp $ 
  *
  */
 public abstract class PaneGuiTab extends GuiTab {
@@ -58,22 +50,24 @@ public abstract class PaneGuiTab extends GuiTab {
 		final MenuManager popupMenu = new MenuManager( "" );
 		popupMenu.setRemoveAllWhenShown( true );
 		popupMenu.addMenuListener( aMenuManager );
-
-		// create the button itself
-		ToolItem toolItem = new ToolItem( aToolBar, SWT.NONE );
-		toolItem.setToolTipText( G2GuiResources.getString( "TT_MISC_BUTTON" ) );
-		//TODO why is this fu**ing "dropdown" image not working? a color depth swt cant handle?
-		toolItem.setImage( G2GuiResources.getImage( "dropdown" ) );
-		toolItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent s ) {
-				Rectangle rect = ( (ToolItem) s.widget ).getBounds();
-				Menu menu = popupMenu.createContextMenu( aToolBar );
-				Point pt = new Point( rect.x, rect.y + rect.height );
-				pt = aToolBar.toDisplay( pt );
-				menu.setLocation( pt.x, pt.y );
-				menu.setVisible( true );
-			}
-		} );
+		
+// this is incorrect and duplicates the existing menu
+//
+//		// create the button itself
+//		ToolItem toolItem = new ToolItem( aToolBar, SWT.NONE );
+//		toolItem.setToolTipText( G2GuiResources.getString( "TT_MISC_BUTTON" ) );
+//		//TODO why is this fu**ing "dropdown" image not working? a color depth swt cant handle?
+//		toolItem.setImage( G2GuiResources.getImage( "dropdown" ) );
+//		toolItem.addSelectionListener( new SelectionAdapter() {
+//			public void widgetSelected( SelectionEvent s ) {
+//				Rectangle rect = ( (ToolItem) s.widget ).getBounds();
+//				Menu menu = popupMenu.createContextMenu( aToolBar );
+//				Point pt = new Point( rect.x, rect.y + rect.height );
+//				pt = aToolBar.toDisplay( pt );
+//				menu.setLocation( pt.x, pt.y );
+//				menu.setVisible( true );
+//			}
+//		} );
 	}
 	
 	public abstract GPage getGPage();
@@ -81,6 +75,9 @@ public abstract class PaneGuiTab extends GuiTab {
 
 /*
 $Log: PaneGuiTab.java,v $
+Revision 1.2  2003/10/31 15:14:56  zet
+remove duplicate dropdown
+
 Revision 1.1  2003/10/31 13:20:31  lemmster
 added PaneGuiTab and TableGuiTab
 added "dropdown" button to all PaneGuiTabs (not finished yet, continue on monday)
