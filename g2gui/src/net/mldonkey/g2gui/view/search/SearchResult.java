@@ -78,7 +78,7 @@ import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.41 2003/09/15 15:32:09 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.42 2003/09/16 09:24:11 lemmster Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -534,18 +534,21 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
                                                + aResult.getStringSize() + "\n"
                                             );
                             aString += ( 
-                                               G2GuiResources.getString( "ST_TT_SOURCES" )
-                                               + aResult.getTags()[ 0 ].getValue() + "\n"
+                                               G2GuiResources.getString( "ST_TT_AVAIL" )
+                                               + aResult.getTags()[ 0 ].getValue() + " "
+											   + G2GuiResources.getString( "ST_TT_SOURCES" ) + "\n"
                                             );
                             if ( aResult.getType().equals( "Audio" ) ) {
-                            	aString += ( 
-                            				G2GuiResources.getString( "ST_TT_BITRATE" )
-                            				+ aResult.getBitrate() + "\n"
-                            				 );
-                            	aString += ( 
-                            				G2GuiResources.getString( "ST_TT_LENGTH" )
-                            				+ aResult.getLength() 
-                            				 );
+                            	if ( !aResult.getBitrate().equals( "" ) )
+	                            	aString += ( 
+	                            				G2GuiResources.getString( "ST_TT_BITRATE" )
+	                            				+ aResult.getBitrate() + "\n"
+	                            				 );
+								if ( !aResult.getLength().equals( "" ) )
+	                            	aString += ( 
+	                            				G2GuiResources.getString( "ST_TT_LENGTH" )
+	                            				+ aResult.getLength() 
+	                            				 );
                             }
                             if ( !aResult.getHistory() )
                                 aString = aString + "\n" + G2GuiResources.getString( "ST_TT_DOWNLOADED" );
@@ -592,6 +595,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.42  2003/09/16 09:24:11  lemmster
+adjust source rating
+
 Revision 1.41  2003/09/15 15:32:09  lemmster
 reset state of canceled downloads from search [bug #908]
 

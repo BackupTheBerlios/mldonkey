@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.25 2003/09/13 22:23:20 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.26 2003/09/16 09:24:11 lemmster Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -153,13 +153,13 @@ public class G2GuiResources {
      * @return DOCUMENT ME!
      */
     public static String getRatingString( int availability ) {
-        if ( availability > 400 )
+        if ( availability > 100 )
             return "" + G2GuiResources.getString( "RTLP_EXCELLENT" );
-        else if ( availability > 100 )
+        else if ( availability > 50 )
             return "" + G2GuiResources.getString( "RTLP_VERYHIGH" );
-        else if ( availability > 25 )
-            return "" + G2GuiResources.getString( "RTLP_HIGH" );
         else if ( availability > 10 )
+            return "" + G2GuiResources.getString( "RTLP_HIGH" );
+        else if ( availability > 5 )
             return "" + G2GuiResources.getString( "RTLP_NORMAL" );
         else
             return "" + G2GuiResources.getString( "RTLP_LOW" );
@@ -172,18 +172,18 @@ public class G2GuiResources {
      *
      * @return DOCUMENT ME!
      */
-    public static Image getRatingImage( int availability ) {
-        if ( availability > 400 )
-            return G2GuiResources.getImage( "epRatingExcellent" );
-        else if ( availability > 100 )
-            return G2GuiResources.getImage( "epRatingExcellent" );
-        else if ( availability > 25 )
-            return G2GuiResources.getImage( "epRatingGood" );
-        else if ( availability > 10 )
-            return G2GuiResources.getImage( "epRatingFair" );
-        else
-            return G2GuiResources.getImage( "epRatingPoor" );
-    }
+	public static Image getRatingImage( int availability ) {
+		if ( availability > 100 )
+			return G2GuiResources.getImage( "epRatingExcellent" );
+		else if ( availability > 50 )
+			return G2GuiResources.getImage( "epRatingExcellent" );
+		else if ( availability > 10 )
+			return G2GuiResources.getImage( "epRatingGood" );
+		else if ( availability > 5 )
+			return G2GuiResources.getImage( "epRatingFair" );
+		else
+			return G2GuiResources.getImage( "epRatingPoor" );
+	}
 
     /**
      * DOCUMENT ME!
@@ -363,6 +363,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.26  2003/09/16 09:24:11  lemmster
+adjust source rating
+
 Revision 1.25  2003/09/13 22:23:20  zet
 *** empty log message ***
 
@@ -418,7 +421,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
