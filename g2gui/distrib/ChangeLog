@@ -1,6 +1,3 @@
-2003/09/26: Dek
-	* Transfer: Added Uploads-Table (yes, the gui-protocol still needs some more Information)
-			    Double-click on download-header-bar to toggle uploads-table.
 2003/09/25: Dek
 	* SearchTab: reworked SearchSyntax
 		Default is now: all words are AND'ed together. If you don't want this
@@ -54,10 +51,11 @@
 	* Transfer: Add rightClick menuItem: Preview
 	* Transfer: Add preference option to disable colors in table 
 	* Transfer: Change filesources to weakly reference # clients [#865]
-	* Transfer: DoubleClick Downloads header to show/hide Upload stats table
 	* Statistics: Add header doubleClick to maximize a graph [#916]
 	* Statistics: Add basic hourly graph history (access in graph menu)
 	* Statistics: Add doubleClick on graph action to cycle between 
 					flat|line|gradient style (gradient == highest CPU)
 	* Win TrayIcon: Add preference option to disable minimize on close [#947]
 	* Win TrayIcon: continue updating toolTip UL/DL rates while gui is visible
+2003/09/10: vnc
+	*** Initial release of version 0.1 ***
