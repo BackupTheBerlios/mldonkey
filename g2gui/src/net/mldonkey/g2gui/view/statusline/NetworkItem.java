@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.18 2003/08/19 14:34:36 lemmster Exp $ 
+ * @version $Id: NetworkItem.java,v 1.19 2003/08/20 22:16:33 lemmster Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -116,7 +116,6 @@ public class NetworkItem implements Observer {
 			cLabel = new CLabel( composite, SWT.NONE );
 			cLabel.setData( network );
 			cLabel.setMenu( this.createRightClickMenu() );
-//			cLabel.setText( network.getNetworkShortName() );
 			/* set the network name and status as tooltip */
 			cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
 			/* by default, the network is not connected */
@@ -142,7 +141,7 @@ public class NetworkItem implements Observer {
 			if ( core.getProtoToUse() >= 18 ) {
 				/* get the servers the network is connected to */
 				int numConnected = network.getConnectedServers();
-				if ( numConnected > 0 ) { //TODO get min # of servers
+				if ( numConnected > 0 ) { 
 					/* we are connected, the "CONNECTED" to true */
 					cLabel.setData( "CONNECTED", new Boolean( true ) );
 					/* alter the tooltip text, to reflect that we are connected */
@@ -177,7 +176,7 @@ public class NetworkItem implements Observer {
 				if ( core.getProtoToUse() >= 18 ) {
 					/* get the servers the network is connected to */
 					int numConnected = network.getConnectedServers();
-					if ( numConnected > 0 ) { //TODO get min # of servers
+					if ( numConnected > 0 ) { 
 						/* we are connected, the "CONNECTED" to true */
 						cLabel.setData( "CONNECTED", new Boolean( true ) );
 						/* alter the tooltip text, to reflect that we are connected */
@@ -215,25 +214,44 @@ public class NetworkItem implements Observer {
 			|| networkInfo.getNetworkType() == NetworkInfo.Enum.GNUT2
 			|| networkInfo.getNetworkType() == NetworkInfo.Enum.SOULSEEK 
 			|| networkInfo.getNetworkType() == NetworkInfo.Enum.DC ) {
-	
-			if ( enabled ) {	
-			
+
+			if ( enabled ) {
+				int maxConnnectedServers = core.getOptionsInfoMap().getMaxConnectedServers( networkInfo );	
+				int currentConnectedServers = networkInfo.getConnectedServers();
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED" ) ).booleanValue();
-				if ( connected || core.getProtoToUse() < 18 ) // connected to servers
+				/* connect and connected servers == max_connected_servers */
+				if ( ( connected && currentConnectedServers >= maxConnnectedServers )
+				|| core.getProtoToUse() < 18 )
 					return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Connected" );
-				else // not connected to servers 
+				/* connect but connected servers < max_connected_servers */
+				else if ( connected && currentConnectedServers < maxConnnectedServers )
+					return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "BadConnected" );
+				/* not connected to servers */
+				else
 					return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Disconnected" ); 
 			}
 			else 	
 				return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Disabled" );					
 			}
 		// but not for these:
+		else if ( networkInfo.getNetworkType() == NetworkInfo.Enum.BT
+		|| networkInfo.getNetworkType() == NetworkInfo.Enum.MULTINET ) {
+			if ( enabled ) 
+				return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Connected" );
+			else	
+				return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "Disabled" );
+		}
 		else {
-		
 			if ( enabled ) { 
 				connected = ( ( Boolean ) cLabel.getData( "CONNECTED" ) ).booleanValue();
-				if ( connected || core.getProtoToUse() < 18 ) 
+				int maxConnnectedServers = core.getOptionsInfoMap().getMaxConnectedServers( networkInfo );	
+				int currentConnectedServers = networkInfo.getConnectedServers();
+				if ( ( connected && currentConnectedServers >= maxConnnectedServers )
+				|| core.getProtoToUse() < 18 )
 					return G2GuiResources.getImage( "UnknownConnected" );
+				/* connect but connected servers < max_connected_servers */
+				else if ( connected && currentConnectedServers < maxConnnectedServers )
+					return G2GuiResources.getImage( networkInfo.getNetworkShortName() + "BadConnected" );
 				else 
 					return G2GuiResources.getImage( "UnknownDisconnected" );
 			}
@@ -301,6 +319,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.19  2003/08/20 22:16:33  lemmster
+badconnect is display too. added some icons
+
 Revision 1.18  2003/08/19 14:34:36  lemmster
 dont dispose() the image if its from the imageregistry
 

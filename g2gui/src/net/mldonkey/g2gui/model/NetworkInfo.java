@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.20 2003/08/19 12:15:05 lemmster Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.21 2003/08/20 22:20:08 lemmster Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -359,6 +359,8 @@ public class NetworkInfo extends Parent {
 			return "DC";
 		else if ( this.networkType == Enum.OPENNP )
 			return "ONP";
+		else if ( this.networkType == Enum.MULTINET )
+			return "MULTI"; 
 		else
 			return "";	
 	}
@@ -506,6 +508,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.21  2003/08/20 22:20:08  lemmster
+badconnect is display too. added some icons
+
 Revision 1.20  2003/08/19 12:15:05  lemmster
 support for proto=18
 

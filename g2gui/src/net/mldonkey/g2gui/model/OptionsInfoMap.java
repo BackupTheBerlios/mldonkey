@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.17 2003/08/04 16:57:00 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.18 2003/08/20 22:20:08 lemmster Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -145,18 +145,81 @@ public class OptionsInfoMap extends InfoMap {
 		return result;
 	}
 
-	/** (non-Javadoc)
-	 * @see net.mldonkey.g2gui.model.InfoCollection#update(net.mldonkey.g2gui.helper.MessageBuffer)
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.model.InfoCollection#
+	 * update(net.mldonkey.g2gui.helper.MessageBuffer)
 	 */
 	public void update( MessageBuffer messageBuffer ) {
 		/*
 		 * does nothing
 		 */
 	}
+	
+	/**
+	 * Gets the value max_connected_servers/ultrapeers for the given network
+	 * @param network The network
+	 * @return max_connected_servers/ultrapeers
+	 */
+	public int getMaxConnectedServers( NetworkInfo network ) {
+		/* does this networkinfo has servers/supernodes */
+		if ( network.hasServers() || network.hasSupernodes() ) {
+			OptionsInfo option = null;
+			String prefix = null;
+			if ( network.getNetworkType() == NetworkInfo.Enum.FT ) {
+				/* first the option-prefix */
+				option = ( OptionsInfo ) this.infoMap.get( "FT-options_prefix" );
+				prefix = option.getValue();
+				/* now the max_connected_server/peers */
+				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_ultrapeers" );
+				return new Integer( option.getValue() ).intValue();
+			}
+			if ( network.getNetworkType() == NetworkInfo.Enum.GNUT ) {
+				/* first the option-prefix */
+				option = ( OptionsInfo ) this.infoMap.get( "GNUT2-options_prefix" );
+				prefix = option.getValue();
+				/* now the max_connected_server/peers */
+				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_ultrapeers" );
+				return new Integer( option.getValue() ).intValue();
+			}
+			if ( network.getNetworkType() == NetworkInfo.Enum.GNUT2 ) {
+				/* first the option-prefix */
+				option = ( OptionsInfo ) this.infoMap.get( "GNUT2-options_prefix" );
+				prefix = option.getValue();
+				/* now the max_connected_server/peers */
+				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_ultrapeers" );
+				return new Integer( option.getValue() ).intValue();
+			}
+			if ( network.getNetworkType() == NetworkInfo.Enum.DC ) {
+				/* first the option-prefix */
+				option = ( OptionsInfo ) this.infoMap.get( "DC-options_prefix" );
+				prefix = option.getValue();
+				/* now the max_connected_server/peers */
+				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
+				return new Integer( option.getValue() ).intValue();
+			}
+			if ( network.getNetworkType() == NetworkInfo.Enum.OPENNP ) {
+				/* first the option-prefix */
+				option = ( OptionsInfo ) this.infoMap.get( "OpenNap-options_prefix" );
+				prefix = option.getValue();
+				/* now the max_connected_server/peers */
+				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
+				return new Integer( option.getValue() ).intValue();
+			}
+			if ( network.getNetworkType() == NetworkInfo.Enum.DONKEY ) {
+				/* now the max_connected_server/peers */
+				option = ( OptionsInfo ) this.infoMap.get( "max_connected_servers" );
+				return new Integer( option.getValue() ).intValue();
+			}
+		}
+		return 0;
+	}
 }
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.18  2003/08/20 22:20:08  lemmster
+badconnect is display too. added some icons
+
 Revision 1.17  2003/08/04 16:57:00  lemmstercvs01
 better way to set the value
 

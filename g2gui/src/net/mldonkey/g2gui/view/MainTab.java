@@ -83,7 +83,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.44 2003/08/20 16:14:17 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.45 2003/08/20 22:16:33 lemmster Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -693,16 +693,21 @@ public class MainTab implements Listener, Observer, ShellListener {
 		}
 		
 		String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "Unknown" };
-		String[] fileNames = { "directconnect", "edonkey2000", "gnutella", "gnutella",
+		String[] fileNames = { "directconnect", "edonkey2000", "gnutella", "gnutella2",
 								"kazaa", "soulseek", "unknown" };
 								
 		for (int i = 0; i < shortNames.length; i++) {
 			reg.put( shortNames[i] + "Connected", createTrans( fileNames[i] + "_connected.png" ) );
 			reg.put( shortNames[i] + "Disconnected", createTrans( fileNames[i] + "_disconnected.png" ) );
 			reg.put( shortNames[i] + "Disabled", createTrans( fileNames[i] + "_disabled.png" ) );
-		//	reg.put( shortNames[i] + "BadConnected", createTrans( fileNames[i] + "_badconnected.png" ) );
-			reg.put( shortNames[i] + "ConnectedWhite", createTrans( fileNames[i] + "_connected.png", white ));
+			reg.put( shortNames[i] + "BadConnected", createTrans( fileNames[i] + "_badconnected.png" ) );
+			reg.put( shortNames[i] + "ConnectedWhite", createTrans( fileNames[i] + "_connected.png", white ) );
 		}
+		/* some icons for networks without all states */
+		reg.put( "BTConnected", createTrans( "bt_connected.png" ) );
+		reg.put( "BTDisabled", createTrans( "bt_disabled.png" ) );
+		reg.put( "MULTIConnected", createTrans( "multinet_connected.png" ) );
+		reg.put( "MULTIDisabled", createTrans( "multinet_disabled.png" ) );
 			
 		reg.put( "MessagesButtonSmallWhite", createTrans( "messages-16.png", white ) );
 		
@@ -791,6 +796,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.45  2003/08/20 22:16:33  lemmster
+badconnect is display too. added some icons
+
 Revision 1.44  2003/08/20 16:14:17  zet
 menuitems
 
