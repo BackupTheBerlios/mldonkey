@@ -30,6 +30,8 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTreeEditor;
 import org.eclipse.swt.custom.TableTreeItem;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -38,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.7 2003/07/15 18:14:47 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.8 2003/07/15 20:17:27 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -72,7 +74,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		this.downloadItem = parent;
 		this.fileInfo = downloadItem.getFileInfo();
 		this.downloadItem = parent;
-		TableTreeEditor editor = new TableTreeEditor( this.getParent() );		
+		final TableTreeEditor editor = new TableTreeEditor( this.getParent() );		
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
 		Control oldEditor = editor.getEditor();
@@ -82,6 +84,12 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		editor.setEditor ( chunks, this, 4 );			
 		setText( 2, clientInfo.getClientName() );	
 		updateColums();	
+		addDisposeListener(new DisposeListener(){
+			public void widgetDisposed(DisposeEvent e) {
+				editor.dispose();
+				chunks.dispose();	
+				
+			}});
 		
 		
 	}
@@ -145,6 +153,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.8  2003/07/15 20:17:27  dek
+ok, sorting with opened chunkbars works also now, forgot disposeListener()
+
 Revision 1.7  2003/07/15 18:14:47  dek
 Wow, nice piece of work already done, it works, looks nice, but still lots of things to do
 
