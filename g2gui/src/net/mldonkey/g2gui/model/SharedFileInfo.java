@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.5 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.6 2003/09/17 13:49:09 dek Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -132,15 +132,42 @@ public class SharedFileInfo implements SimpleInformation {
 		this.numOfQueriesForFile = messageBuffer.readInt32();
 		this.md4 = messageBuffer.readBinary( 16 );
 	}
+
+	/**
+	 * @param messageBuffer
+	 * @return wether the core updated this Information
+	 */
+	public boolean update(MessageBuffer messageBuffer) {		
+		boolean hasChanged = false;
+		/* we don't need the fileId, as we already know it*/
+		messageBuffer.setIterator( messageBuffer.getIterator() + 4 );
+		
+		/* we just update values*/		
+		long myUpload = messageBuffer.readInt64();
+		int myRequests = messageBuffer.readInt32();
+		
+		if (   ( myUpload != this.numOfBytesUploaded ) 
+			|| ( myRequests != this.numOfQueriesForFile ) ) {
+				hasChanged = true;
+				this.numOfBytesUploaded = myUpload;
+				this.numOfQueriesForFile = myRequests;			
+		}		
+		return hasChanged;
+	}
+	
 }
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.6  2003/09/17 13:49:09  dek
+now the gui refreshes the upload-stats, add and observer to SharedFileInfoIntMap
+to get notice of changes in # of requests and # of uploaded bytes
+
 Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.3  2003/07/05 20:04:02  lemmstercvs01
 javadoc improved

@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.model.RoomInfoIntMap;
 import net.mldonkey.g2gui.model.SearchResult;
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
-import net.mldonkey.g2gui.model.SharedFileInfoList;
+import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.model.SimpleInformation;
 import net.mldonkey.g2gui.model.UserInfo;
 
@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.96 2003/09/16 01:18:31 zet Exp $ 
+ * @version $Id: Core.java,v 1.97 2003/09/17 13:49:09 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -117,12 +117,12 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	private InfoCollection clientInfoList = new ClientInfoIntMap( this ),
 					 fileInfoMap          = new FileInfoIntMap( this ),
 					 serverInfoMap        = new ServerInfoIntMap( this ),
-					 sharedFileInfoList   = new SharedFileInfoList( this ),	
+					 sharedFileInfoList   = new SharedFileInfoIntMap( this ),	
 					 optionsInfoMap       = new OptionsInfoMap( this ),
 					 networkinfoMap       = new NetworkInfoIntMap( this ),
 					 defineSearchMap      = new DefineSearchMap( this ),
 					 resultInfoMap		  = new ResultInfoIntMap( this ),
-					 roomInfoIntMap       = new RoomInfoIntMap( this );
+					 roomInfoIntMap       = new RoomInfoIntMap( this );					 
 
 	/**
 	 * Some helper maps
@@ -319,7 +319,11 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					
 			case Message.R_ROOM_INFO :
 					this.roomInfoIntMap.readStream( messageBuffer );			
-					break;				
+					break;		
+					
+			case Message.R_SHARED_FILE_UPLOAD :
+					this.sharedFileInfoList.update( messageBuffer );	
+					break;
 					
 			case Message.R_BAD_PASSWORD :
 					/* tell the master thread to continue */
@@ -350,6 +354,11 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 						initialized = true;
 					}
 					clientStats.readStream( messageBuffer );
+					
+					/*
+					 * If we reiceive this info, we request Upload-Stats					 * 
+					 */
+					requestUpstats();
 					break;	
 					
 			case Message.R_DOWNLOAD :
@@ -432,8 +441,15 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		Message coreProtocol =
 					new EncodeMessage( Message.S_COREPROTOCOL, temp );
 		coreProtocol.sendMessage( connection );
-		coreProtocol = null;
-		
+		coreProtocol = null;		
+	}
+	
+	private void requestUpstats(){
+		/* requesting upload-statistics */
+		Message upstats =
+					new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
+		upstats.sendMessage( connection );		
+		upstats = null;	
 	}
 	
 	/**
@@ -553,6 +569,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.97  2003/09/17 13:49:09  dek
+now the gui refreshes the upload-stats, add and observer to SharedFileInfoIntMap
+to get notice of changes in # of requests and # of uploaded bytes
+
 Revision 1.96  2003/09/16 01:18:31  zet
 try to handle socket disconnection in a central location
 

@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  *
- * @version $Id: Message.java,v 1.33 2003/09/16 01:18:31 zet Exp $ 
+ * @version $Id: Message.java,v 1.34 2003/09/17 13:49:09 dek Exp $ 
  *
  */
 public abstract class Message {
@@ -254,6 +254,10 @@ public abstract class Message {
 	 */
 	public static final short R_ROOM_INFO  = 31;	
 	/**
+	 * Receive a Shared File Upload Info (value is 34): 
+	 */
+	public static final short R_SHARED_FILE_UPLOAD = 34;
+	/**
 	 * Receive Add Section Option (value is 36)
 	 */
 	public static final short R_ADD_SECTION_OPTION = 36;
@@ -296,7 +300,8 @@ public abstract class Message {
 	/**
 	 * Receive a List of complete Downloads (value is 54)
 	 */
-	public static final short R_DOWNLOADED_LIST = 54;
+	public static final short R_DOWNLOADED_LIST = 54;	
+
 
 	/**
 	 * @param inputStream
@@ -452,6 +457,10 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.34  2003/09/17 13:49:09  dek
+now the gui refreshes the upload-stats, add and observer to SharedFileInfoIntMap
+to get notice of changes in # of requests and # of uploaded bytes
+
 Revision 1.33  2003/09/16 01:18:31  zet
 try to handle socket disconnection in a central location
 
@@ -466,7 +475,7 @@ Revision 1.30  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.29  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.28  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
