@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.19 2003/09/23 05:30:40 lemmster Exp $ 
+ * @version $Id: About.java,v 1.20 2003/10/08 22:24:23 zet Exp $ 
  *
  */
 public class About extends Dialog {
@@ -61,7 +61,7 @@ public class About extends Dialog {
 	private List linklist = new ArrayList();	
 	private Composite myShell;
 	private Color background = Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND );
-	
+	private final String version = "0.1.1";
 
 	/**
 	 * @param shell were this dialog lives
@@ -183,7 +183,7 @@ public class About extends Dialog {
 			gd.verticalAlignment = GridData.CENTER;
 			gd.horizontalAlignment = GridData.CENTER;
 		info.setLayoutData( gd );		
-		info.setText(  "G2gui is (c) 2003 by the G2gui team, \n" 
+		info.setText(  "G2gui v" + version + " is (c) 2003 by the G2gui team, \n" 
 					 + "all of our own java code is released under \n" 
 					 + "the  " );	
 					 	
@@ -245,7 +245,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.19 2003/09/23 05:30:40 lemmster Exp $ 
+	 * @version $Id: About.java,v 1.20 2003/10/08 22:24:23 zet Exp $ 
 	 *
 	 */
 	public class Link {
@@ -297,6 +297,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.20  2003/10/08 22:24:23  zet
+include a version #
+
 Revision 1.19  2003/09/23 05:30:40  lemmster
 fixed typo
 
