@@ -22,40 +22,36 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.trove.THash;
+import gnu.trove.TIntObjectHashMap;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
-import gnu.trove.THash;
-import gnu.trove.TIntObjectHashMap;
-
-import java.util.Date;
-
 
 /**
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.36 2003/12/01 13:28:02 zet Exp $
+ * @version $Id: ClientInfo.java,v 1.37 2003/12/01 14:43:45 lemmster Exp $
  *
  */
 public class ClientInfo extends Parent {
     /**
      * Client Id
      */
-    private int clientid;
+    protected int clientid;
 
     /**
      * Client Network Id
      */
-    private NetworkInfo clientnetworkid;
+    protected NetworkInfo clientnetworkid;
 
     /**
      * Client Kind
@@ -75,17 +71,17 @@ public class ClientInfo extends Parent {
     /**
      * List of Tags
      */
-    private Tag[] tag;
+    protected Tag[] tag;
 
     /**
      * Client Name
      */
-    private String clientName;
+    protected String clientName;
 
     /**
      * Client Rate
      */
-    private int clientRating;
+    protected int clientRating;
 
     /**
      * Client Chat Port (mlchat)
@@ -93,6 +89,8 @@ public class ClientInfo extends Parent {
     private int clientChatPort;
 
     /**
+<<<<<<< ClientInfo.java
+=======
      * Client Software
      */
     private String clientSoftware = "";
@@ -126,6 +124,7 @@ public class ClientInfo extends Parent {
     private boolean isUploader = false;
 
     /**
+>>>>>>> 1.36
      * Availability of a file (int fileId, String availability)
      * small initial capacity
      */
@@ -134,7 +133,7 @@ public class ClientInfo extends Parent {
     /**
      * @param core with this object, we make our main cimmunication (the main-Layer)
      */
-    public ClientInfo(CoreCommunication core) {
+    ClientInfo(CoreCommunication core) {
         super(core);
     }
 
@@ -230,7 +229,7 @@ public class ClientInfo extends Parent {
     /**
      * @param b a byte
      */
-    private void setClientType(byte b) {
+    protected void setClientType(byte b) {
         if (b == 0)
             clientType = EnumClientType.SOURCE;
         else if (b == 1)
@@ -288,50 +287,50 @@ public class ClientInfo extends Parent {
      * @return clientSoftware
      */
     public String getClientSoftware() {
-        return clientSoftware;
+    	return "";
     }
 
     /**
      * @return clientUploaded Bytes
      */
     public long getUploaded() {
-        return clientUploaded;
+    	return 0;
     }
 
     /**
      * @return clientDownloaded Bytes
      */
     public long getDownloaded() {
-        return clientDownloaded;
+    	return 0;
     }
 
     /**
      * @return clientUploaded String
      */
     public String getUploadedString() {
-        return clientUploadedString;
+    	return "";
     }
 
     /**
      * @return clientDownloaded String
      */
     public String getDownloadedString() {
-        return clientDownloadedString;
+    	return "";
     }
-
+    
     /**
      * @return clientUploadFilename (Filename currently being uploaded to client)
      */
     public String getUploadFilename() {
-        return clientUploadFilename;
+    	return "";
     }
 
     public int getClientConnectTime() {
-        return clientConnectTime;
+    	return 0;
     }
 
     public String getClientConnectTimeString() {
-        return clientConnectTimeString;
+        return "";
     }
 
     /**
@@ -361,35 +360,12 @@ public class ClientInfo extends Parent {
         this.tag = messageBuffer.readTagList();
         this.clientName = messageBuffer.readString();
         this.clientRating = messageBuffer.readInt32();
-
-        if (parent.getProtoToUse() <= 18)
-            this.clientChatPort = messageBuffer.readInt32();
-        else {
-            this.clientSoftware = messageBuffer.readString();
-            this.clientDownloaded = messageBuffer.readInt64();
-            this.clientUploaded = messageBuffer.readInt64();
-            this.clientUploadFilename = messageBuffer.readString();
-
-            // this needs to be fixed in the core soon since core/gui clocks can be out of sync rendering this useless
-            // I've sent mail... 
-            if (parent.getProtoToUse() >= 20) {
-                this.clientConnectTime = messageBuffer.readInt32();
-                this.clientConnectTimeString = "" +
-                    new Date(((long) clientConnectTime + 1000000000L) * 1000L);
-            }
-
-            this.clientUploadedString = RegExp.calcStringSize(clientUploaded);
-            this.clientDownloadedString = RegExp.calcStringSize(clientDownloaded);
-
-            // Occasionally it seems the filename isn't reset to null when not uploading anymore
-            this.isUploader = !clientUploadFilename.equals("");
-        }
-
+        this.clientChatPort = messageBuffer.readInt32();
         onChangedState(oldState);
     }
 
     public boolean isUploader() {
-        return isUploader;
+        return false;
     }
 
     /**
@@ -469,6 +445,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.37  2003/12/01 14:43:45  lemmster
+ProtocolVersion handling completely rewritten
+
 Revision 1.36  2003/12/01 13:28:02  zet
 updates for ipaddr
 
@@ -525,7 +504,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
