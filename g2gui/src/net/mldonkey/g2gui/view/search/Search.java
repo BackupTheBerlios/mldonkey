@@ -45,8 +45,8 @@ import org.eclipse.swt.widgets.Text;
 /**
  * Search
  *
- * @author $user$
- * @version $Id: Search.java,v 1.10 2003/08/19 15:03:43 lemmster Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: Search.java,v 1.11 2003/08/20 10:04:41 lemmster Exp $ 
  *
  */
 public abstract class Search implements Observer {
@@ -111,7 +111,11 @@ public abstract class Search implements Observer {
 					performSearch(); 
 				}
 			}		
-		} );	
+		} );
+		if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
+			text.setText( "no searchable network enabled" );
+			text.setEnabled( false );	
+		}
 	}
 	
 	/**
@@ -168,8 +172,18 @@ public abstract class Search implements Observer {
 		
 		this.combo.getDisplay().asyncExec( new Runnable() {
 			public void run() {
+				/* update the combo */
 				combo.removeAll();
 				fillCombo();
+				/* update the text */
+				if ( core.getNetworkInfoMap().getEnabledAndSearchable() == 0 ) {
+					text.setText( "no searchable network enabled" );
+					text.setEnabled( false );	
+				}
+				else {
+					text.setText( "" );
+					text.setEnabled( true );
+				}
 			}
 		} );
 	}
@@ -177,6 +191,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.11  2003/08/20 10:04:41  lemmster
+inputbox disabled when zero searchable networks are enabled
+
 Revision 1.10  2003/08/19 15:03:43  lemmster
 bugfix in update
 

@@ -34,8 +34,8 @@ import org.eclipse.swt.widgets.TabFolder;
 /**
  * AlbumSearch
  *
- * @author $user$
- * @version $Id: AlbumSearch.java,v 1.4 2003/08/18 01:42:24 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: AlbumSearch.java,v 1.5 2003/08/20 10:04:41 lemmster Exp $ 
  *
  */
 public class AlbumSearch extends Search {
@@ -62,6 +62,7 @@ public class AlbumSearch extends Search {
 	public Control createTabFolderPage( TabFolder tabFolder ) {
 		// create a invisible networkbox to avoid a npe in update(Observable o, Object arg);
 		this.createNetworkBox( new Group( tabFolder, SWT.NONE ), G2GuiResources.getString( "SS_NETWORK" ) );
+		this.createInputBox( new Group( tabFolder, SWT.NONE ), G2GuiResources.getString( "SS_NETWORK" ) );
 		return null;
 	}
 
@@ -74,6 +75,9 @@ public class AlbumSearch extends Search {
 
 /*
 $Log: AlbumSearch.java,v $
+Revision 1.5  2003/08/20 10:04:41  lemmster
+inputbox disabled when zero searchable networks are enabled
+
 Revision 1.4  2003/08/18 01:42:24  zet
 centralize resource bundle
 

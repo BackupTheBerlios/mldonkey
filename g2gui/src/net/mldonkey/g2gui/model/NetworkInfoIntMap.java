@@ -29,8 +29,8 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * OptionsInfo
  *
- * @author $user$
- * @version $Id: NetworkInfoIntMap.java,v 1.12 2003/08/19 14:33:48 lemmster Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: NetworkInfoIntMap.java,v 1.13 2003/08/20 10:04:58 lemmster Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
@@ -122,6 +122,25 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 	}
 	
 	/**
+	 * Shows the number of enabled networks which are searchable
+	 * @return The number of the networks
+	 */
+	public int getEnabledAndSearchable() {
+		TIntObjectIterator itr = this.infoIntMap.iterator();
+		int size = this.infoIntMap.size();
+		int result = 0;
+		synchronized ( this ) { 
+			for ( ; size > 0; size-- ) {
+				itr.advance();
+				NetworkInfo elem = ( NetworkInfo ) itr.value();
+				if ( elem.isEnabled() && elem.isSearchable() )
+					result++;
+			}
+		}
+		return result;
+	}
+	
+	/**
 	 * sets the connected servers of a networkinfo
 	 * @param i The new number of connected Servers
 	 * @param network The network
@@ -141,6 +160,9 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.13  2003/08/20 10:04:58  lemmster
+inputbox disabled when zero searchable networks are enabled
+
 Revision 1.12  2003/08/19 14:33:48  lemmster
 update NetworkInfo only on change
 
