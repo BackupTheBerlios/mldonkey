@@ -25,7 +25,6 @@ package net.mldonkey.g2gui.view.statusline;
 import gnu.regexp.RE;
 import gnu.regexp.REException;
 import gnu.regexp.REMatch;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -33,10 +32,17 @@ import net.mldonkey.g2gui.view.StatusLine;
 import net.mldonkey.g2gui.view.helper.CCLabel;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transfer.UniformResourceLocator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -49,7 +55,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.14 2003/09/20 01:36:19 zet Exp $
+ * @version $Id: LinkEntry.java,v 1.15 2003/09/26 04:19:22 zet Exp $
  *
  */
 public class LinkEntry {
@@ -91,9 +97,15 @@ public class LinkEntry {
                     enterLinks( linkEntryText );
                 }
             } );
+            
         linkEntryViewForm.setTopLeft( linkEntryCLabel );
         linkEntryViewForm.setContent( linkEntryText );
         linkEntryViewForm.setTopRight( linkEntryToolBar );
+
+		if (SWT.getPlatform().equals("win32") 
+			&& PreferenceLoader.loadBoolean("dragAndDrop") ) {
+				activateDropTarget( linkEntryText );
+		}
     }
 
     /**
@@ -143,10 +155,40 @@ public class LinkEntry {
         String result = regex.substituteAll( input, replaceWith );
         return result;
     }
+    
+    private void activateDropTarget( final Text linkEntryText ) {
+    	
+		DropTarget dropTarget = new DropTarget(linkEntryText, DND.DROP_COPY | DND.DROP_DEFAULT | DND.DROP_LINK);
+		final UniformResourceLocator uRL = UniformResourceLocator.getInstance();
+		final TextTransfer textTransfer = TextTransfer.getInstance();
+		dropTarget.setTransfer(new Transfer[] { uRL, textTransfer });
+		dropTarget.addDropListener(new DropTargetAdapter() {
+    
+			public void dragEnter(DropTargetEvent event) {
+				event.detail = DND.DROP_COPY;
+				for (int i = 0; i < event.dataTypes.length; i++) {
+					if (uRL.isSupportedType(event.dataTypes[i])) {
+						event.detail = DND.DROP_LINK;
+						break;
+					}
+				}
+			}
+			public void drop(DropTargetEvent event) {
+				if (event.data == null) return;
+				linkEntryText.append( (String) event.data );
+			}
+		});
+    	
+    }
+    
+    
 }
 
 /*
 $Log: LinkEntry.java,v $
+Revision 1.15  2003/09/26 04:19:22  zet
+add dropTarget
+
 Revision 1.14  2003/09/20 01:36:19  zet
 *** empty log message ***
 
