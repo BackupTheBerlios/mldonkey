@@ -58,7 +58,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	* execute the Java VM with corresponding arguments, MessageBox if javaw.exe
 	* is not found or fails for other reasons
 	*/
-	MessageBox(NULL,arguments,executable,MB_OK);
+	//MessageBox(NULL,arguments,executable,MB_OK);
 	if(ShellExecute(NULL,NULL,executable,arguments,".",SW_SHOWNORMAL)<=(HINSTANCE)32)
 	{
 		MessageBox(NULL,
