@@ -37,7 +37,9 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -46,7 +48,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.42 2003/08/29 16:06:54 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.43 2003/08/29 17:33:20 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -79,6 +81,13 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 		Composite consoleComposite = new Composite(consoleViewForm, SWT.NONE);
 		consoleComposite.setLayout( new FillLayout() );
 		
+		CLabel consoleCLabel = new CLabel(consoleViewForm, SWT.LEFT );	
+		consoleCLabel.setText(G2GuiResources.getString("TT_ConsoleButton"));
+		consoleCLabel.setImage(G2GuiResources.getImage("ConsoleButtonSmallTitlebar"));
+		consoleCLabel.setBackground(new Color[]{consoleViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+												consoleViewForm.getBackground()},
+												new int[] {100});	
+		
 		console = new Console ( consoleComposite, SWT.NONE );
 		console.addObserver( this );
 
@@ -86,6 +95,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 		loadPreferences();
 	
 		consoleViewForm.setContent(consoleComposite);
+		consoleViewForm.setTopLeft(consoleCLabel);
 
 	}
 	
@@ -180,6 +190,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.43  2003/08/29 17:33:20  zet
+remove headerbar
+
 Revision 1.42  2003/08/29 16:06:54  zet
 optional shadow
 

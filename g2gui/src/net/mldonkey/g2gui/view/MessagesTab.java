@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.18 2003/08/29 00:55:02 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.19 2003/08/29 17:33:20 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
 
@@ -77,6 +77,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 	private CustomTableViewer tableViewer;
 	private long lastTime = 0;
 	private int mustRefresh = 0;
+	private CLabel friendsCLabel;
 	/**
 	 * @param gui
 	 */
@@ -119,17 +120,17 @@ public class MessagesTab extends GuiTab implements Runnable {
 		Composite friendsComposite = new Composite( friendsViewForm, SWT.NONE );
 		friendsComposite.setLayout( new FillLayout() );
 		
-		CLabel friendsHeaderLabel = new CLabel(friendsViewForm, SWT.LEFT );
-		friendsHeaderLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		friendsHeaderLabel.setBackground(new Color[]{friendsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+		friendsCLabel = new CLabel(friendsViewForm, SWT.LEFT );
+		friendsCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		friendsCLabel.setBackground(new Color[]{friendsViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
 												friendsViewForm.getBackground()},
 												new int[] {100});
 										
-		friendsHeaderLabel.setText(G2GuiResources.getString("FR_FRIENDS"));
-		friendsHeaderLabel.setImage(G2GuiResources.getImage("MessagesButtonSmallTrans"));
+		friendsCLabel.setText(G2GuiResources.getString("FR_FRIENDS"));
+		friendsCLabel.setImage(G2GuiResources.getImage("MessagesButtonSmallTrans"));
 		createFriendsTable(friendsComposite);
 		
-		friendsViewForm.setTopLeft(friendsHeaderLabel);
+		friendsViewForm.setTopLeft(friendsCLabel);
 		friendsViewForm.setContent(friendsComposite);
 	}
 
@@ -278,8 +279,7 @@ public class MessagesTab extends GuiTab implements Runnable {
 	 * 
 	 */
 	public void setRightLabel() {
-		setRightLabel(G2GuiResources.getString("FR_FRIENDS") + ": " + tableViewer.getTable().getItemCount() 
-				+ ", " + G2GuiResources.getString("FR_TABS") + ": " + openTabs.size());
+		friendsCLabel.setText(G2GuiResources.getString("FR_FRIENDS") + ": " + tableViewer.getTable().getItemCount()); 
 	}
 	
 	/**
@@ -424,6 +424,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.19  2003/08/29 17:33:20  zet
+remove headerbar
+
 Revision 1.18  2003/08/29 00:55:02  zet
 change timer
 

@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.10 2003/08/28 17:07:03 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.11 2003/08/29 17:33:20 zet Exp $
  */
 public class G2GuiResources {
 	
@@ -138,6 +138,7 @@ public class G2GuiResources {
 
 	private static void createImageRegistry () {
 		Color white = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
+		Color titlebar = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
 		
 		// hack to use transparent .gif in titlebar
 		ImageData source = ImageDescriptor.createFromFile(G2Gui.class, "images/mld_logo_48x48.gif").getImageData();
@@ -148,13 +149,14 @@ public class G2GuiResources {
 		//reg.put("ProgramIcon", createTrans("mld_logo_48x48.png"));	
 		
 		String[] buttonNames = { "Preferences", "Statistics", "Console",
-									"Transfers", "Search", "Server", "Messages" };
+									"Transfers", "Search", "Servers", "Messages" };
 		String[] buttonFiles = { "preferences", "statistics", "console",
 									"transfer3a", "search", "server", "messages" };							
 									
 		for (int i=0; i < buttonNames.length; i++) {
 			imageRegistry.put(buttonNames[i] + "Button", createTrans(buttonFiles[i] + ".png"));
 			imageRegistry.put(buttonNames[i] + "ButtonSmall", createTrans(buttonFiles[i] + "-16.png"));
+			imageRegistry.put(buttonNames[i] + "ButtonSmallTitlebar", createTrans(buttonFiles[i] + "-16.png", titlebar));
 		}
 		
 		String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "ONP", "Unknown" };
@@ -244,6 +246,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.11  2003/08/29 17:33:20  zet
+remove headerbar
+
 Revision 1.10  2003/08/28 17:07:03  zet
 gif not png
 

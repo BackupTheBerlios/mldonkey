@@ -25,28 +25,23 @@ package net.mldonkey.g2gui.view;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.view.helper.CGridLayout;
-import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
 /**
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.29 2003/08/29 15:43:43 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.30 2003/08/29 17:33:20 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -73,10 +68,7 @@ public abstract class GuiTab implements Listener, Observer {
 	
 	private boolean hasObserver;
 	
-	protected Composite pageHeaderPlaceHolder, pageHeader, subContent;
-	protected boolean headerBar;
-	protected CLabel leftLabel, rightLabel;
-	protected Label separator1, separator2;
+	protected Composite subContent;
 	protected String tabName;
 	
 	/**
@@ -91,14 +83,6 @@ public abstract class GuiTab implements Listener, Observer {
 		this.content.setLayout( gridLayout );
 		this.content.setLayoutData( new GridData(GridData.FILL_BOTH));
 		this.content.setVisible( false );
-		
-		this.pageHeaderPlaceHolder = new Composite( content, SWT.NONE );
-		gridLayout = CGridLayout.createGL(1,0,0,0,0,false);
-		
-		this.pageHeaderPlaceHolder.setLayout( gridLayout );
-		this.pageHeaderPlaceHolder.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-		createHeader( pageHeaderPlaceHolder, PreferenceLoader.loadBoolean("displayHeaderBar") );
 					
 		this.subContent = new Composite( content , SWT.NONE);
 		this.subContent.setLayout( new FillLayout());
@@ -187,26 +171,7 @@ public abstract class GuiTab implements Listener, Observer {
 	}
 	
 	public void updateDisplay() {
-		if (headerBar != PreferenceLoader.loadBoolean("displayHeaderBar")) {
-			if (pageHeader != null
-				&& !pageHeader.isDisposed()) { 
-					separator1.dispose();
-					separator2.dispose();
-					pageHeader.dispose();
-				} 
-			headerBar = !headerBar;
-			GridData GD = new GridData(GridData.FILL_HORIZONTAL);
-			if (!headerBar) {
-				GD.heightHint = 0;
-			} else {
-				createHeader( pageHeaderPlaceHolder, headerBar );
-				GD.heightHint = pageHeader.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
-			}
-			this.pageHeaderPlaceHolder.setLayoutData(GD);
-		}
 		
-		setLeftLabel(tabName);
-		setRightLabel("");
 		content.layout();
 	}
 	
@@ -225,67 +190,16 @@ public abstract class GuiTab implements Listener, Observer {
 		toolButton.useSmallButtons(this.mainWindow.getCoolBar().isToolbarSmallButtons());
 		toolButton.setActive(false);
 		this.mainWindow.getCoolBar().getMainToolButtons().add( toolButton );	
-		
-		setLeftLabel(tabName);
 					
-	}
-	
-	public void createHeader(Composite thisContent, boolean createMe) {
-
-		if (createMe) {
-			// if I use white as a foreground colour, I can't read it anymore..
-			Color backgroundColor = this.mainWindow.getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
-			
-			separator1 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
-			separator1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			
-			pageHeader = new Composite(thisContent, SWT.NONE);
-			
-			separator2 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
-			separator2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	
-			GridLayout gridLayout = CGridLayout.createGL(2,0,0,0,0,false);
-			pageHeader.setLayout(gridLayout);
-			pageHeader.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			
-			leftLabel = new CLabel(pageHeader, SWT.LEFT);
-			leftLabel.setFont(JFaceResources.getHeaderFont());
-			leftLabel.setBackground(new Color[]{pageHeader.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-									pageHeader.getBackground()},
-									new int[] {100});	
-			leftLabel.setForeground(pageHeader.getBackground());
-			leftLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	
-			rightLabel = new CLabel(pageHeader, SWT.RIGHT);
-			rightLabel.setText("");
-			rightLabel.setFont(JFaceResources.getHeaderFont());
-			rightLabel.setForeground(pageHeader.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
-			rightLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		
-			headerBar = true;
-		} 
-		else {
-			GridData x = new GridData(GridData.FILL_HORIZONTAL);
-			x.heightHint = 0;
-			pageHeaderPlaceHolder.setLayoutData(x);
-		}
-	}
-	public void setLeftLabel(String text) {
-		if (headerBar && leftLabel != null && !leftLabel.isDisposed())
-			leftLabel.setText(text);
-		
-	}
-	public void setRightLabel(String text) {
-		if (headerBar && rightLabel != null && !rightLabel.isDisposed()) {
-			rightLabel.setText(text);
-			rightLabel.getParent().layout();
-		}
 	}
 
 }
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.30  2003/08/29 17:33:20  zet
+remove headerbar
+
 Revision 1.29  2003/08/29 15:43:43  zet
 try gradient headerbar
 

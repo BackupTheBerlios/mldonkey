@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.TabItem;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.15 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.16 2003/08/29 17:33:20 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -140,12 +140,12 @@ public class SearchTab extends GuiTab {
 				/* set the new statusline */
 				if ( cTabFolder.getItemCount() != 0 ) {
 					SearchResult nResult = ( SearchResult ) cTabFolder.getSelection().getData();
-					setRightLabel( nResult.getStatusLine() );
+					//setRightLabel( nResult.getStatusLine() );
 					mainWindow.getStatusline().update( nResult.getStatusLine() );
 					mainWindow.getStatusline().updateToolTip( "" );
 				}
 				else {
-					setRightLabel( "" );
+					//setRightLabel( "" );
 					mainWindow.getStatusline().update( "" );
 					mainWindow.getStatusline().updateToolTip( "" );
 				}
@@ -162,7 +162,7 @@ public class SearchTab extends GuiTab {
 				CTabFolder item = ( CTabFolder ) e.widget;
 				if ( item.getSelection() != null ) {
 					SearchResult result = ( SearchResult ) item.getSelection().getData();
-					setRightLabel( result.getStatusLine() );
+					//setRightLabel( result.getStatusLine() );
 					mainWindow.getStatusline().update( result.getStatusLine() );
 					mainWindow.getStatusline().updateToolTip( "" );
 				}
@@ -205,6 +205,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.16  2003/08/29 17:33:20  zet
+remove headerbar
+
 Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 

@@ -21,8 +21,8 @@
  * 
  */
 package net.mldonkey.g2gui.view.pref;
-import java.util.ArrayList;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -40,12 +40,10 @@ import org.eclipse.swt.widgets.Group;
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Display.java,v 1.22 2003/08/29 17:13:29 dek Exp $
+ * @version $Id: G2Gui_Display.java,v 1.23 2003/08/29 17:33:20 zet Exp $
  */
 public class G2Gui_Display extends FieldEditorPreferencePage {
 	private Composite parent;
-	private ArrayList fieldEditorArray = new ArrayList();
-	private int columns = 0;
 	/**
 	 * 
 	 * @param string The name of the OptionsPage
@@ -178,12 +176,6 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 
 		setupEditor( 
 			new BooleanFieldEditor( 
-				"displayHeaderBar",
-				G2GuiResources.getString( "PREF_DISPLAY_HEADER" ),
-				parent ) );
-
-		setupEditor( 
-			new BooleanFieldEditor( 
 				"displayChunkGraphs",
 				G2GuiResources.getString( "PREF_DISPLAY_CHUNK" ),
 				parent ) );
@@ -200,24 +192,19 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 				G2GuiResources.getString( "PREF_DISPLAY_CELLEDITORS" ),
 				parent ) );
 
-		// setupEditor(  new BooleanFieldEditor(   "forceRefresh", G2GuiResources.getString(  "PREF_DISPLAY_FULL_REFRESH"  ),parent   )   );
-
 		setupEditor( 
 			new BooleanFieldEditor( 
 				"maintainSortOrder",
 				G2GuiResources.getString( "PREF_DISPLAY_SORT_ORDER" ),
 				parent ) );
 
-		//	IntegerFieldEditor displayBuffer = new IntegerFieldEditor(   "displayBuffer", G2GuiResources.getString(  "PREF_DISPLAY_UPDATE_BUFFER"  ),parent   );
-
-		//	displayBuffer.setValidRange(   0, 60   );
-
-		//	setupEditor(   displayBuffer   );
-
 	}
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.23  2003/08/29 17:33:20  zet
+remove headerbar
+
 Revision 1.22  2003/08/29 17:13:29  dek
 all content is now within a group, do you like it, or should i revert changes?
 
@@ -238,7 +225,7 @@ Revision 1.17  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.16  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.15  2003/08/19 22:02:15  zet
 localise

@@ -73,7 +73,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Main
  *
  *
- * @version $Id: TransferTab.java,v 1.41 2003/08/29 16:06:54 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.42 2003/08/29 17:33:20 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -85,6 +85,7 @@ public class TransferTab extends GuiTab  {
 	public static DecimalFormat decimalFormat = new DecimalFormat( "0.0" );
 	private DownloadTableTreeViewer downloadTableTreeViewer = null;
 	private CustomTableViewer clientTableViewer = null;
+	private CLabel downloadCLabel;
 		
 	/**
 	 * @param gui where this tab belongs to
@@ -108,6 +109,15 @@ public class TransferTab extends GuiTab  {
 		Composite downloadComposite;
 		
 		ViewForm downloadViewForm = new ViewForm( mainSashForm, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		
+		downloadCLabel = new CLabel(downloadViewForm, SWT.LEFT );	
+		downloadCLabel.setText(G2GuiResources.getString("TT_TransfersButton"));
+		downloadCLabel.setImage(G2GuiResources.getImage("TransfersButtonSmallTitlebar"));
+		downloadCLabel.setBackground(new Color[]{downloadViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+									downloadViewForm.getBackground()},
+									new int[] {100});	
+		
+		downloadViewForm.setTopLeft(downloadCLabel);
 		
 		if (PreferenceLoader.loadBoolean("advancedMode")) {
 					
@@ -170,7 +180,8 @@ public class TransferTab extends GuiTab  {
 		mainSashForm.setWeights( new int[] {1441,0});
 		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, clientTableViewer, mldonkey, this );
 		
-		if (headerBar) mldonkey.getFileInfoIntMap().addObserver( this );
+		//if (headerBar) 
+		mldonkey.getFileInfoIntMap().addObserver( this );
 		
 	}
 	
@@ -277,7 +288,7 @@ public class TransferTab extends GuiTab  {
 				extra += ")";
 			}
 						
-			runLabelUpdate("Files: " + totalFiles + ", " + decimalFormat.format(totalRate / 1000f) + " KB/s" + extra);
+			runLabelUpdate(totalFiles + " @ " + decimalFormat.format(totalRate / 1000f) + " KB/s" + extra);
 		}
 	
 	}
@@ -288,7 +299,7 @@ public class TransferTab extends GuiTab  {
 			if(!shell.isDisposed() && shell !=null && shell.getDisplay()!=null) {
 				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-							setRightLabel(text);
+						downloadCLabel.setText(G2GuiResources.getString("TT_TransfersButton") + ": " + text);
 					}
 				});
 			}
@@ -304,14 +315,17 @@ public class TransferTab extends GuiTab  {
 		if (clientTableViewer != null)
 			clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
 		super.updateDisplay();
-		mldonkey.getFileInfoIntMap().deleteObserver( this );
-		if (headerBar) mldonkey.getFileInfoIntMap().addObserver( this );
+	//	mldonkey.getFileInfoIntMap().deleteObserver( this );
+	//	if (headerBar) mldonkey.getFileInfoIntMap().addObserver( this );
 		
 	}
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.42  2003/08/29 17:33:20  zet
+remove headerbar
+
 Revision 1.41  2003/08/29 16:06:54  zet
 optional shadow
 

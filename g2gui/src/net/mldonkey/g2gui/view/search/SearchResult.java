@@ -78,7 +78,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.33 2003/08/29 00:54:42 zet Exp $ 
+ * @version $Id: SearchResult.java,v 1.34 2003/08/29 17:33:20 zet Exp $ 
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {	
@@ -181,7 +181,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			SearchTab parent = ( SearchTab ) cTabFolder.getData();
 			int itemCount = table.getTable().getItemCount();
 			this.statusline = "Results: " + itemCount;
-			parent.setRightLabel( "Results: " + itemCount );
+		//	parent.setRightLabel( "Results: " + itemCount );
 			parent.getMainTab().getStatusline().update( this.statusline );
 		}
 	}
@@ -237,7 +237,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		
 		/* display 0 searchresults for the moment */
 		SearchTab parent = ( SearchTab ) cTabFolder.getData();
-		parent.setRightLabel( "Results: 0" );
+		//parent.setRightLabel( "Results: 0" );
 		this.statusline = "Results: 0";
 		parent.getMainTab().getStatusline().update( this.statusline );
 	}
@@ -556,6 +556,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.34  2003/08/29 17:33:20  zet
+remove headerbar
+
 Revision 1.33  2003/08/29 00:54:42  zet
 Move wordFilter public
 

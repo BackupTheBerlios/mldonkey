@@ -41,6 +41,7 @@ import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -48,6 +49,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -64,7 +66,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.21 2003/08/29 16:06:54 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.22 2003/08/29 17:33:20 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -111,8 +113,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		/* associate this tab with the corecommunication */
 		this.core = gui.getCore();
 		/* Set our name on the coolbar */
-		createButton( "ServerButton", "Server",	"Server tab" );
-		
+		createButton( "ServersButton", 
+						G2GuiResources.getString( "TT_ServersButton" ),
+						G2GuiResources.getString( "TT_ServersButtonToolTip" ) );
 		/* proto <= 16 does not support favorites */					
 		if ( this.core.getProtoToUse() <= 16 ) {
 			this.tableColumns = new String[]
@@ -147,10 +150,18 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		
 		ViewForm serverViewForm = new ViewForm( parent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		
+		CLabel serverCLabel = new CLabel(serverViewForm, SWT.LEFT );	
+		serverCLabel.setText(G2GuiResources.getString("TT_ServersButton"));
+		serverCLabel.setImage(G2GuiResources.getImage("ServersButtonSmallTitlebar"));
+		serverCLabel.setBackground(new Color[]{serverViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+					serverViewForm.getBackground()},
+					new int[] {100});	
+		
 		this.composite = new Composite( serverViewForm, SWT.NONE );
 		composite.setLayout( new FillLayout() );
 	
 		serverViewForm.setContent( this.composite );
+		serverViewForm.setTopLeft(serverCLabel);
 
 		this.createTable();
 	}
@@ -240,7 +251,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		}
 		
 		int itemCount = table.getTable().getItemCount();
-		setRightLabel("Total: " + itemCount);
+		//setRightLabel("Total: " + itemCount);
 		/* dont update the statusline, still null */
 		this.statusText = G2GuiResources.getString( "SVT_SERVERS" ) + itemCount;
 	}
@@ -294,7 +305,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			this.servers.clearModified();
 		}
 		int itemCount = table.getTable().getItemCount();	
-		setRightLabel( "Total: " + itemCount );
+		//setRightLabel( "Total: " + itemCount );
 		this.setStatusLine();
 		
 		/* refresh the table if "show connected servers only" is true and the filter is activated */
@@ -416,6 +427,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.22  2003/08/29 17:33:20  zet
+remove headerbar
+
 Revision 1.21  2003/08/29 16:06:54  zet
 optional shadow
 
