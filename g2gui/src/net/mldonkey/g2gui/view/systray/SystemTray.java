@@ -84,18 +84,21 @@ public class SystemTray implements SystemTrayIconListener, Runnable {
 		});
 
 	}
-	public void mouseClickedRightButton(
-		final int x,
-		final int y,
-		SystemTrayIconManager source) {
+	public void mouseClickedRightButton( final int x, final int y, final SystemTrayIconManager source) {
 
 		parent.getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				/* check for widget disposed */
 				if (parent.getShell().isDisposed())
 					return;
-				Menu menu = popupMenu.createContextMenu(parent.getShell());
-				menu.setLocation(x, y);
+				
+				if ( menu != null && menu.isVisible() ){
+					menu.setVisible(false);
+					return;
+					}
+				
+				menu = popupMenu.createContextMenu(parent.getShell());
+				menu.setLocation(x-5, y-5);
 				menu.setVisible(true);
 			}
 		});
