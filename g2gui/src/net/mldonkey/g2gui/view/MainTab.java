@@ -47,11 +47,14 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -73,12 +76,13 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.40 2003/08/18 01:42:24 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.41 2003/08/18 06:00:28 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -91,7 +95,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 	public static boolean toolbarSmallButtons = false;
 	public static final DecimalFormat decimalFormat = new DecimalFormat( "#.#" );
 	public StatusLine statusline;
-
+	final Cursor handCursor = new Cursor (Display.getDefault(), SWT.CURSOR_HAND);
 	private final String titleBarText = "g2gui alpha";
 	private boolean coolbarLocked = true;
 	private CoreCommunication mldonkey;
@@ -146,7 +150,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 					GuiTab aTab = ( GuiTab ) itr.next();
 					aTab.dispose();
 				}
-				
+				handCursor.dispose();
 				/* kill the core communication */
 				( ( Core )mldonkey ).disconnect();				
 			}
@@ -342,9 +346,11 @@ public class MainTab implements Listener, Observer, ShellListener {
 		Menu toolmenu = createToolBarRMMenu( coolbar );
 		
 		mainTools = new ToolBar( coolbar, (toolbarSmallButtons ? SWT.RIGHT : 0) | SWT.FLAT) ;	
+		mainTools.addMouseTrackListener(new ToolBarMouseTrackListener(mainTools));				
 		mainTools.setMenu(toolmenu);
 			
 		miscTools = new ToolBar( coolbar, (toolbarSmallButtons ? SWT.RIGHT : 0) | SWT.FLAT) ;	
+		miscTools.addMouseTrackListener(new ToolBarMouseTrackListener(miscTools));
 		miscTools.setMenu(toolmenu);
 	}
 	
@@ -704,10 +710,39 @@ public class MainTab implements Listener, Observer, ShellListener {
 	public GuiTab[] getTabs() {
 		return this.tabs;
 	}	
+	// Since a ToolItem is a lowly widget..
+	public class ToolBarMouseTrackListener implements MouseTrackListener {
+		ToolBar toolBar;
+		public ToolBarMouseTrackListener(final ToolBar toolBar) {
+			this.toolBar = toolBar;
+		}
+		public void checkForItem(MouseEvent event) {
+			Point pt = new Point(event.x, event.y);
+			ToolBar t = (ToolBar) event.widget;
+			if (t.getItem(pt) instanceof ToolItem)
+				toolBar.setCursor(handCursor);
+			else
+				toolBar.setCursor(null);
+		}
+		public void mouseHover(MouseEvent event) {
+			checkForItem(event);
+		}
+		public void mouseEnter(MouseEvent event) {
+			checkForItem(event);
+		}
+		public void mouseExit(MouseEvent event) {
+			toolBar.setCursor(null);
+		}
+	}
+	
+	
 } 
 
 /*
 $Log: MainTab.java,v $
+Revision 1.41  2003/08/18 06:00:28  zet
+hand cursor when hovering toolitems
+
 Revision 1.40  2003/08/18 01:42:24  zet
 centralize resource bundle
 
