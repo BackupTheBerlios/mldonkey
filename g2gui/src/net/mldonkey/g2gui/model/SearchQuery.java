@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.25 2003/09/06 16:44:12 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.26 2003/09/18 15:29:25 zet Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -466,7 +466,7 @@ public class SearchQuery implements Sendable {
 		/* create the message content */
 		Message consoleMessage =
 			new EncodeMessage( Message.S_SEARCH_QUERY, content.toArray() );
-		consoleMessage.sendMessage( this.getParent().getConnection() );
+		consoleMessage.sendMessage( this.getParent() );
 	}
 
 	/**
@@ -510,6 +510,10 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.26  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.25  2003/09/06 16:44:12  dek
 boolean algebra is no so easy ;-)  All entry in ANDNOT should be OR'ed together...
 
@@ -543,7 +547,7 @@ Revision 1.17  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.16  2003/08/22 21:03:14  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: zet $
 
 Revision 1.15  2003/08/09 15:32:45  dek
 removed unused import

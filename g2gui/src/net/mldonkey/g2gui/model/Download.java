@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.comm.Message;
  * Download
  *
  *
- * @version $Id: Download.java,v 1.11 2003/09/18 03:51:27 zet Exp $ 
+ * @version $Id: Download.java,v 1.12 2003/09/18 15:29:25 zet Exp $ 
  *
  */
 public class Download implements Sendable {
@@ -90,13 +90,17 @@ public class Download implements Sendable {
 		temp[ 1 ] = new Integer( resultID );
 		temp[ 2 ] = new Byte( ( byte ) force );
 		Message message = new EncodeMessage( Message.S_DOWNLOAD, temp );
-		message.sendMessage( this.core.getConnection() );
+		message.sendMessage( this.core );
 		message = null;
 	}
 }
 
 /*
 $Log: Download.java,v $
+Revision 1.12  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.11  2003/09/18 03:51:27  zet
 reverse setforce
 

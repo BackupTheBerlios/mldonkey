@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.27 2003/09/18 09:16:47 lemmster Exp $ 
+ * @version $Id: ClientInfo.java,v 1.28 2003/09/18 15:29:25 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -292,7 +292,7 @@ public class ClientInfo extends Parent {
 	public static void addFriend( CoreCommunication core, int id ) {
 		Message addFriend =
 			new EncodeMessage( Message.S_ADD_CLIENT_FRIEND, new Integer( id ) );
-		addFriend.sendMessage( core.getConnection() );
+		addFriend.sendMessage( core );
 		addFriend = null;
 	}
 
@@ -304,7 +304,7 @@ public class ClientInfo extends Parent {
 	public static void removeFriend( CoreCommunication core, int id ) {
 		Message removeFriend =
 			new EncodeMessage( Message.S_REMOVE_FRIEND, new Integer( id ) );
-		removeFriend.sendMessage( core.getConnection() );
+		removeFriend.sendMessage( core );
 		removeFriend = null;
 	}
 
@@ -315,13 +315,17 @@ public class ClientInfo extends Parent {
 	public static void removeAllFriends( CoreCommunication core ) {
 		Message removeAllFriends =
 			new EncodeMessage( Message.S_REMOVE_ALL_FRIENDS );
-		removeAllFriends.sendMessage( core.getConnection() );
+		removeAllFriends.sendMessage( core );
 		removeAllFriends = null;
 	}
 }
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.28  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.27  2003/09/18 09:16:47  lemmster
 checkstyle
 
@@ -350,7 +354,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

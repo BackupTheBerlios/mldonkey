@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * NetworkInfo
  *
  *
- * @version $Id: NetworkInfo.java,v 1.28 2003/09/18 09:16:47 lemmster Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.29 2003/09/18 15:29:25 zet Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -401,7 +401,7 @@ public class NetworkInfo extends Parent {
 			temp[ 1 ] = enable;
 		Message netinfo =
 			new EncodeMessage( Message.S_ENABLE_NETWORK, temp );
-		netinfo.sendMessage( this.parent.getConnection() );
+		netinfo.sendMessage( this.parent );
 		netinfo = null;
 		temp = null;			
 	}
@@ -553,6 +553,10 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.29  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.28  2003/09/18 09:16:47  lemmster
 checkstyle
 
@@ -569,7 +573,7 @@ Revision 1.24  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.23  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/21 13:13:10  lemmster
 cleanup in networkitem

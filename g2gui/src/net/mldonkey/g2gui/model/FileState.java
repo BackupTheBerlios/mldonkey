@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  *
- * @version $Id: FileState.java,v 1.15 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: FileState.java,v 1.16 2003/09/18 15:29:25 zet Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -135,7 +135,7 @@ public class FileState implements SimpleInformation {
 		}
 		/* generate and send the message */
 		sendState = new EncodeMessage( opcode, content );
-		sendState.sendMessage( core.getConnection() );
+		sendState.sendMessage( core );
 		/* little gc by ourself */
 		sendState = null;
 		content = null;
@@ -144,6 +144,10 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.16  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 

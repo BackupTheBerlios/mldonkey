@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.46 2003/09/18 09:44:57 lemmster Exp $
+ * @version $Id: ConsoleTab.java,v 1.47 2003/09/18 15:30:27 zet Exp $
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {
@@ -172,8 +172,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
         if ( o instanceof Console ) {
             String[] command = new String[ 1 ];
             command[ 0 ] = ( String ) arg;
-            ( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage( ( ( CoreCommunication ) core )
-                                                                                .getConnection() );
+            ( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage( core );
         }
         else if ( o instanceof ConsoleMessage ) {
             this.consoleMessage = ( ConsoleMessage ) arg;
@@ -192,6 +191,10 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.47  2003/09/18 15:30:27  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.46  2003/09/18 09:44:57  lemmster
 checkstyle
 
@@ -220,7 +223,7 @@ Revision 1.38  2003/08/23 09:56:15  lemmster
 use supertype instead of Core
 
 Revision 1.37  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.36  2003/08/18 01:42:24  zet
 centralize resource bundle

@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.12 2003/09/18 11:37:24 lemmster Exp $
+ * @version $Id: LinkEntry.java,v 1.13 2003/09/18 15:30:17 zet Exp $
  *
  */
 public class LinkEntry {
@@ -125,7 +125,7 @@ public class LinkEntry {
             String link = replaceAll( matches[ i ].toString(), "\"", "" );
             link = replaceAll( link, "\n", "" );
             Message dllLink = new EncodeMessage( Message.S_DLLINK, link );
-            dllLink.sendMessage( core.getConnection() );
+            dllLink.sendMessage( core );
         }
         statusLine.update( G2GuiResources.getString( "LE_LINKS_SENT" ) + " " + matches.length );
         linkEntryText.setText( "" );
@@ -155,6 +155,10 @@ public class LinkEntry {
 
 /*
 $Log: LinkEntry.java,v $
+Revision 1.13  2003/09/18 15:30:17  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.12  2003/09/18 11:37:24  lemmster
 checkstyle
 

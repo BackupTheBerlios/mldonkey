@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.10 2003/09/18 10:12:53 lemmster Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.11 2003/09/18 15:29:46 zet Exp $ 
  *
  */
 public class MainMenuBar {
@@ -87,7 +87,7 @@ public class MainMenuBar {
 					menuItem.addListener ( SWT.Selection, new Listener () {
 						public void handleEvent ( Event e ) {
 							Message killCore = new EncodeMessage( Message.S_KILL_CORE );
-							killCore.sendMessage( mainTab.getCore().getConnection() );
+							killCore.sendMessage( mainTab.getCore() );
 						} 
 					} );
 					menuItem.setText ( "&Kill core" );
@@ -187,6 +187,10 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.11  2003/09/18 15:29:46  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.10  2003/09/18 10:12:53  lemmster
 checkstyle
 

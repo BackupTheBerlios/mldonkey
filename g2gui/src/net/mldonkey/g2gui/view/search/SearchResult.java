@@ -78,7 +78,7 @@ import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
  * SearchResult
  *
  *
- * @version $Id: SearchResult.java,v 1.45 2003/09/18 10:39:21 lemmster Exp $
+ * @version $Id: SearchResult.java,v 1.46 2003/09/18 15:30:05 zet Exp $
  *
  */
 public class SearchResult implements Observer, Runnable, DisposeListener {
@@ -395,7 +395,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
         /* tell the core to forget the search */
         Object[] temp = { new Integer( searchId ), new Byte( ( byte ) 1 ) };
         Message message = new EncodeMessage( Message.S_CLOSE_SEARCH, temp );
-        message.sendMessage( core.getConnection() );
+        message.sendMessage( core );
         message = null;
 
         /* no longer receive results for this search */
@@ -603,6 +603,10 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.46  2003/09/18 15:30:05  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.45  2003/09/18 10:39:21  lemmster
 checkstyle
 
@@ -670,7 +674,7 @@ Revision 1.24  2003/08/23 08:30:07  lemmster
 added defaultItem to the table
 
 Revision 1.23  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/20 22:18:56  zet
 Viewer updates

@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.29 2003/09/18 09:44:57 lemmster Exp $
+ * @version $Id: G2Gui.java,v 1.30 2003/09/18 15:30:27 zet Exp $
  *
  */
 public class G2Gui {
@@ -295,13 +295,19 @@ public class G2Gui {
     }
 
     /**
-     *
+     * Send a link - raw socket without a core
      */
     private static void sendDownloadLink( String[] args ) {
-        //TODO creating message and send it out		
+        	
         Object[] content = args;
-        Message link = new EncodeMessage( Message.S_DLLINK, content );
-        link.sendMessage( socket );
+        EncodeMessage link = new EncodeMessage( Message.S_DLLINK, content );
+        
+        try {
+       		Message.writeStream( socket, link.getHeader(), link.getContent() );
+        } catch ( IOException e ) {
+        	e.printStackTrace();
+        }
+
     }
 
     /**
@@ -390,6 +396,10 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.30  2003/09/18 15:30:27  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.29  2003/09/18 09:44:57  lemmster
 checkstyle
 

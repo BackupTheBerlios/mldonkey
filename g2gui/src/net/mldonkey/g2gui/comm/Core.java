@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.99 2003/09/18 08:56:27 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.100 2003/09/18 15:29:25 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -216,13 +216,26 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			}
 		}
 		catch ( IOException e ) {
-			// we disconnect.. now what?
-			connected = false;
-			this.setChanged();
-			this.notifyObservers( e );
-			//e.printStackTrace();
+			onIOException( e );
 		}		
 	}
+	
+	public void sendMessage ( byte[] messageHeader, byte[] messageContent ) {
+		
+		try {
+			Message.writeStream( this.getConnection(), messageHeader, messageContent );
+		} catch ( IOException e ) {
+			onIOException( e );
+		}
+		
+	}
+	
+	public void onIOException( IOException e ) {
+		connected = false;
+		this.setChanged();
+		this.notifyObservers( e );
+	}
+	
 					
 	/**
 	 * @param opcode
@@ -428,7 +441,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			output.add( new Byte( ( byte )1 ) ); 
 			
 			Message pushmode = new EncodeMessage( Message.S_GUIEXTENSION, output.toArray() );
-			pushmode.sendMessage( getConnection() );			
+			pushmode.sendMessage( this );			
 		}
 		
 	}
@@ -442,7 +455,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		temp[ 0 ] = new Integer( PROTOCOL_VERSION );
 		Message coreProtocol =
 					new EncodeMessage( Message.S_COREPROTOCOL, temp );
-		coreProtocol.sendMessage( connection );
+		coreProtocol.sendMessage( this );
 		coreProtocol = null;		
 	}
 	
@@ -453,7 +466,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		/* requesting upload-statistics */
 		Message upstats =
 					new EncodeMessage( Message.S_REFRESH_UPLOAD_STATS );
-		upstats.sendMessage( connection );		
+		upstats.sendMessage( this );		
 		upstats = null;	
 	}
 	
@@ -515,7 +528,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		/* send the password/username */
 		String[] aString = { password, username };
 		Message message = new EncodeMessage( Message.S_PASSWORD, aString );
-		message.sendMessage( connection );
+		message.sendMessage( this );
 		message = null;
 	}
 
@@ -578,6 +591,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.100  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.99  2003/09/18 08:56:27  lemmster
 checkstyle
 

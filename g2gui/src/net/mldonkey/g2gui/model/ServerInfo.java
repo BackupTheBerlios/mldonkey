@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.21 2003/09/18 09:16:47 lemmster Exp $
+ * @version $Id: ServerInfo.java,v 1.22 2003/09/18 15:29:25 zet Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -264,7 +264,7 @@ public class ServerInfo extends Parent {
 			return;
 		}
 			
-		state.sendMessage( this.parent.getConnection() );
+		state.sendMessage( this.parent );
 		state = null;
 		anInt = null;
 	}
@@ -314,6 +314,10 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.22  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.21  2003/09/18 09:16:47  lemmster
 checkstyle
 
@@ -324,7 +328,7 @@ Revision 1.19  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.17  2003/08/11 11:22:53  lemmstercvs01
 avoid npes

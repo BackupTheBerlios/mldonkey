@@ -22,16 +22,15 @@
  */
 package net.mldonkey.g2gui.comm;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.net.Socket;
 
 /**
  * Message
  *
- *
- * @version $Id: Message.java,v 1.36 2003/09/18 08:56:27 lemmster Exp $
+ * @version $Id: Message.java,v 1.37 2003/09/18 15:29:25 zet Exp $
  *
  */
 public abstract class Message {
@@ -367,6 +366,26 @@ public abstract class Message {
      */
     public static final short R_DOWNLOADED_LIST = 54;
 
+	/**
+	 * @param Socket socket
+	 * @param byte[] messageHeader
+	 * @param byte[] messageContent
+	 * @throws IOException
+	 * 
+	 * Write a message (with optional content) to the socket
+	 */
+	public static void writeStream ( Socket socket, byte[] messageHeader, byte[] messageContent ) throws IOException {
+		
+		BufferedOutputStream bufferedOutputStream = new BufferedOutputStream( socket.getOutputStream() );
+	
+		bufferedOutputStream.write( messageHeader );
+		if ( messageContent != null ) {
+			bufferedOutputStream.write( messageContent );
+		}
+		bufferedOutputStream.flush();
+		
+	}
+
     /**
      * @param inputStream
      * @param length
@@ -375,7 +394,7 @@ public abstract class Message {
      *
      * Read the stream, return byte[] of length.  Create an IOException on failure.
      */
-    static byte[] readStream( InputStream inputStream, int length ) throws IOException {
+    public static byte[] readStream( InputStream inputStream, int length ) throws IOException {
         byte[] b = new byte[ length ];
         int result;
         int pos = 0;
@@ -395,8 +414,9 @@ public abstract class Message {
      * @throws IOException
      * Read an in32 from InputStream
      */
-    static int readInt32( InputStream inputStream ) throws IOException {
+    public static int readInt32( InputStream inputStream ) throws IOException {
         byte[] b = readStream( inputStream, 4 );
+        
         return ( ( ( int ) b[ 0 ] ) & 0xFF )
         	+ ( ( ( ( int ) b[ 1 ] ) & 0xFF ) << 8 )
             + ( ( ( ( int ) b[ 2 ] ) & 0xFF ) << 16 )
@@ -405,14 +425,17 @@ public abstract class Message {
 
     /**
      * Sends a message to the core
-     * @param connection Socket to work with
-     * @return boolean true/false
+     * @param CoreCommunication to work with
      */
-    public abstract boolean sendMessage( Socket connection );
+    public abstract void sendMessage( CoreCommunication core );
 }
 
 /*
 $Log: Message.java,v $
+Revision 1.37  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.36  2003/09/18 08:56:27  lemmster
 checkstyle
 
@@ -437,7 +460,7 @@ Revision 1.30  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.29  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.28  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging

@@ -22,19 +22,14 @@
  */
 package net.mldonkey.g2gui.comm;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import java.net.Socket;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
  * EncodeMessage
  *
- * @version $Id: EncodeMessage.java,v 1.10 2003/09/18 08:56:27 lemmster Exp $
+ * @version $Id: EncodeMessage.java,v 1.11 2003/09/18 15:29:25 zet Exp $
  *
  */
 public class EncodeMessage extends Message {
@@ -46,10 +41,21 @@ public class EncodeMessage extends Message {
      * The message length
      */
     private int length;
+    
+    /**
+     * The message header
+     */
+    private byte[] header;
+    
     /**
      * The message content
      */
-    private ByteArrayOutputStream content;
+	private byte[] content;
+
+	/**
+	 * A dynamically sized byteArray
+	 */
+    private ByteArrayOutputStream byteArray;
 
     /**
      * Generates a new message object
@@ -59,11 +65,12 @@ public class EncodeMessage extends Message {
     public EncodeMessage( short opCode, Object[] content ) {
         this.opCode = opCode;
         this.length = 2;
-        this.content = new ByteArrayOutputStream();
+        this.byteArray = new ByteArrayOutputStream();
         if ( content != null ) {
-            createContent( content );
-            this.length += this.content.size();
+            this.content = createContent( content );
+            this.length += this.content.length;
         }
+        this.header = createHeader();
     }
 
     /**
@@ -86,38 +93,32 @@ public class EncodeMessage extends Message {
     /**
      * Reads the message into the socket
      * @param connection a socket connection
-     * @return boolean true/false
      */
-    public boolean sendMessage( Socket connection ) {
-        try {
-            BufferedOutputStream bufferedOutputStream =
-                new BufferedOutputStream( connection.getOutputStream() );
-
-            // messageHeader: (int) messageLength (short) opCode 
-            ByteBuffer messageHeader = ByteBuffer.allocate( 6 );
-            messageHeader.order( ByteOrder.LITTLE_ENDIAN );
-            messageHeader.putInt( this.length ).putShort( this.opCode );
-
-            // write the message to the stream
-            bufferedOutputStream.write( messageHeader.array() );
-            if ( this.content.size() > 0 ) {
-                bufferedOutputStream.write( this.content.toByteArray() );
-                this.content.reset();
-            }
-            bufferedOutputStream.flush();
-            return true;
-        }
-        catch ( IOException e ) {
-            return false;
-        }
+    public void sendMessage( CoreCommunication core ) {
+		core.sendMessage( this.header, this.content );
+      	this.byteArray.reset();
     }
+    
+	/**
+	 * @return byte[]
+	 * 
+	 * Create and return the header based on the content size
+	 */
+	public byte[] createHeader() {
+
+		ByteBuffer messageHeader = ByteBuffer.allocate( 6 );
+		messageHeader.order( ByteOrder.LITTLE_ENDIAN );
+		messageHeader.putInt( this.length ).putShort( this.opCode );
+		return messageHeader.array();
+
+	}	
 
     /**
      * Creates the message payload from a given object array
      * @param content object array which represense the payload
      * @return a byte array
      */
-    private void createContent( Object[] content ) {
+    private byte[] createContent( Object[] content ) {
         /* Cycle through content array */
         for ( int i = 0; i < content.length; i++ ) {
             /* If content object is an array, cycle through it */
@@ -127,14 +128,17 @@ public class EncodeMessage extends Message {
                 /* Append the (short) array length to the message */
                 appendNumber( new Short( ( short ) objectArray.length ) );
                 /* Append the array contents to the message */
-                for ( int j = 0; j < objectArray.length; j++ )
+                for ( int j = 0; j < objectArray.length; j++ ) {
                     appendObject( objectArray[ j ] );
-
+                }
             }
             /* Append the content to the message */
             else
                 appendObject( content[ i ] );
         }
+        
+        return byteArray.toByteArray();
+        
     }
 
     /**
@@ -144,7 +148,7 @@ public class EncodeMessage extends Message {
      */
     private void appendObject( Object object ) {
         if ( object instanceof Byte )
-            this.content.write( ( ( Byte ) object ).byteValue() );
+            this.byteArray.write( ( ( Byte ) object ).byteValue() );
         else if ( object instanceof Number )
             appendNumber( ( Number ) object );
         else if ( object instanceof String ) {
@@ -152,12 +156,12 @@ public class EncodeMessage extends Message {
 
             /* Append the (short) length of the string, and then the string */
             appendNumber( new Short( ( short ) string.length() ) );
-            this.content.write( string.getBytes(), 0, string.length() );
+            this.byteArray.write( string.getBytes(), 0, string.length() );
         }
     }
 
     /**
-     * @param object
+     * @param number
      *
      * Append a number to the content in LITTLE_ENDIAN
      * must be one of: Short, Integer, or Long
@@ -179,26 +183,32 @@ public class EncodeMessage extends Message {
             byteBuffer.order( ByteOrder.LITTLE_ENDIAN );
             byteBuffer.putLong( ( ( Long ) number ).longValue() );
         }
-        this.content.write( byteBuffer.array(), 0, byteBuffer.capacity() );
+        this.byteArray.write( byteBuffer.array(), 0, byteBuffer.capacity() );
     }
-
+   
+	/**
+	 * @return header
+	 */
+    
+    public byte[] getHeader() {
+    	return header;
+    }
+    
     /**
-     * @return
+     * @return content
      */
-    private int getLength() {
-        return length;
+    public byte[] getContent() {
+    	return content;
     }
-
-    /**
-     * @return
-     */
-    private short getOpCode() {
-        return opCode;
-    }
+    
 }
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.11  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.10  2003/09/18 08:56:27  lemmster
 checkstyle
 
@@ -212,7 +222,7 @@ Revision 1.7  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.6  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.5  2003/08/04 19:22:21  zet
 trial tabletreeviewer

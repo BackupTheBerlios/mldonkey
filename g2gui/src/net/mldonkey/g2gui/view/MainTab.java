@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.72 2003/09/18 09:44:57 lemmster Exp $
+ * @version $Id: MainTab.java,v 1.73 2003/09/18 15:30:46 zet Exp $
  *
  */
 public class MainTab implements ShellListener {
@@ -124,7 +124,7 @@ public class MainTab implements ShellListener {
                     // If we have created the core, kill it
                     if ( G2Gui.getCoreConsole() != null ) {
                         Message killCore = new EncodeMessage( Message.S_KILL_CORE );
-                        killCore.sendMessage( mldonkey.getConnection() );
+                        killCore.sendMessage( mldonkey );
                         G2Gui.getCoreConsole().dispose();
                     }
 
@@ -360,6 +360,10 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.73  2003/09/18 15:30:46  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.72  2003/09/18 09:44:57  lemmster
 checkstyle
 

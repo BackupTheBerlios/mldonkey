@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  *
- * @version $Id: FileInfoIntMap.java,v 1.26 2003/09/18 09:16:47 lemmster Exp $
+ * @version $Id: FileInfoIntMap.java,v 1.27 2003/09/18 15:29:25 zet Exp $
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -140,7 +140,7 @@ public class FileInfoIntMap extends InfoIntMap {
      */
     public void add( String url ) {
         Message dllink = new EncodeMessage( Message.S_DLLINK, url );
-        dllink.sendMessage( this.parent.getConnection() );
+        dllink.sendMessage( this.parent );
         dllink = null;
     }
 
@@ -184,6 +184,10 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.27  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.26  2003/09/18 09:16:47  lemmster
 checkstyle
 
@@ -197,7 +201,7 @@ Revision 1.23  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.22  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.21  2003/08/15 22:05:58  zet
 *** empty log message ***

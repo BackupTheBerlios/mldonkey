@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * AddFriend
  *
- * @version $Id: AddFriend.java,v 1.5 2003/09/18 09:54:45 lemmster Exp $
+ * @version $Id: AddFriend.java,v 1.6 2003/09/18 15:29:46 zet Exp $
  */
 public class AddFriend {
     private Shell shell;
@@ -88,7 +88,7 @@ public class AddFriend {
                 public void widgetSelected( SelectionEvent s ) {
                     String string = "afr " + host.getText() + " " + port.getText();
                     Message consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, string );
-                    consoleMessage.sendMessage( core.getConnection() );
+                    consoleMessage.sendMessage( core );
                     consoleMessage = null;
                     shell.close();
                 }
@@ -109,6 +109,10 @@ public class AddFriend {
 
 /*
 $Log: AddFriend.java,v $
+Revision 1.6  2003/09/18 15:29:46  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.5  2003/09/18 09:54:45  lemmster
 checkstyle
 

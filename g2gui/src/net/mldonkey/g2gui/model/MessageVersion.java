@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.comm.Message;
  * MessageVersion
  *
  *
- * @version $Id: MessageVersion.java,v 1.5 2003/09/18 09:16:47 lemmster Exp $ 
+ * @version $Id: MessageVersion.java,v 1.6 2003/09/18 15:29:25 zet Exp $ 
  *
  */
 public class MessageVersion implements Sendable {
@@ -82,13 +82,17 @@ public class MessageVersion implements Sendable {
 	 */
 	public void send() {
 		Message message = new EncodeMessage( Message.S_MESSAGE_VERSION, this.versions.toArray() );
-		message.sendMessage( this.core.getConnection() );
+		message.sendMessage( this.core );
 		message = null;
 	}
 }
 
 /*
 $Log: MessageVersion.java,v $
+Revision 1.6  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.5  2003/09/18 09:16:47  lemmster
 checkstyle
 
@@ -96,7 +100,7 @@ Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.3  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.2  2003/08/02 09:54:17  lemmstercvs01
 replaced socket with corecommunication

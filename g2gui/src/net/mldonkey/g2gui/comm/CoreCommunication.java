@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
  * CoreCommunication
  *
  *
- * @version $Id: CoreCommunication.java,v 1.37 2003/09/02 10:00:33 lemmster Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.38 2003/09/18 15:29:25 zet Exp $ 
  *
  */
 public interface CoreCommunication extends Runnable {
@@ -139,14 +139,28 @@ public interface CoreCommunication extends Runnable {
 	 * @param obj The Observer to add
 	 */
 	void addObserver( Observer obj );
+	
 	/**
 	 * Removes an Observer from this object
 	 * @param obj The Observer to remove
 	 */
 	void deleteObserver( Observer obj );
+	
+	/**
+	 * Send a message
+	 * @param messageHeader
+	 * @param messageContent
+	 */
+	void sendMessage ( byte[] messageHeader, byte[] messageContent );
+		
+	
 }
 /*
 $Log: CoreCommunication.java,v $
+Revision 1.38  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.37  2003/09/02 10:00:33  lemmster
 getDefineSearch()
 

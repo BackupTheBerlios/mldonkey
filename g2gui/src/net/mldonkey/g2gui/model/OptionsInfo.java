@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
  * OptionsInfo
  *
  *
- * @version $Id: OptionsInfo.java,v 1.23 2003/09/18 09:16:47 lemmster Exp $ 
+ * @version $Id: OptionsInfo.java,v 1.24 2003/09/18 15:29:25 zet Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -107,7 +107,7 @@ public class OptionsInfo extends Parent {
 		obj[ 0 ] = this.key;
 		obj[ 1 ] = aString;
 		Message message = new EncodeMessage( Message.S_SET_OPTION, obj );
-		message.sendMessage( this.parent.getConnection() );
+		message.sendMessage( this.parent );
 		message = null;
 		obj = null;
 	}
@@ -211,7 +211,7 @@ public class OptionsInfo extends Parent {
 	public void send() {
 		String[] payLoad = { this.getKey(), this.getValue() };
 		Message consoleMessage = new EncodeMessage( Message.S_SET_OPTION, payLoad );
-		consoleMessage.sendMessage( this.parent.getConnection() );
+		consoleMessage.sendMessage( this.parent );
 	}
 
 	/**
@@ -325,6 +325,10 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.24  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.23  2003/09/18 09:16:47  lemmster
 checkstyle
 
@@ -338,7 +342,7 @@ Revision 1.20  2003/08/19 21:02:16  lemmster
 show all options in simple mode proto < 18
 
 Revision 1.19  2003/08/19 12:47:57  lemmster
-$user$ -> $Author: lemmster $
+$user$ -> $Author: zet $
 
 Revision 1.18  2003/08/19 12:46:02  lemmster
 typo fixed

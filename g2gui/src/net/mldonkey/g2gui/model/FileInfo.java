@@ -47,7 +47,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.56 2003/09/18 09:16:47 lemmster Exp $
+ * @version $Id: FileInfo.java,v 1.57 2003/09/18 15:29:25 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -627,7 +627,7 @@ public class FileInfo extends Parent implements Observer {
         string = "rename " + this.getId() + " \"" + string + "\"";
         /* create the message content */
         Message consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, string );
-        consoleMessage.sendMessage( this.parent.getConnection() );
+        consoleMessage.sendMessage( this.parent );
         consoleMessage = null;
     }
 
@@ -651,7 +651,7 @@ public class FileInfo extends Parent implements Observer {
 
         /* create and send the message */
         Message consoleMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, obj );
-        consoleMessage.sendMessage( this.parent.getConnection() );
+        consoleMessage.sendMessage( this.parent );
         content = null;
         obj = null;
         consoleMessage = null;
@@ -669,7 +669,7 @@ public class FileInfo extends Parent implements Observer {
      */
     public void verifyChunks() {
         Message chunks = new EncodeMessage( Message.S_VERIFY_ALL_CHUNKS, new Integer( this.getId() ) );
-        chunks.sendMessage( this.parent.getConnection() );
+        chunks.sendMessage( this.parent );
     }
 
     /**
@@ -680,7 +680,7 @@ public class FileInfo extends Parent implements Observer {
         obj[ 0 ] = new Integer( this.getId() );
         obj[ 1 ] = name;
         Message saveAs = new EncodeMessage( Message.S_SAVE_FILE_AS, obj );
-        saveAs.sendMessage( this.parent.getConnection() );
+        saveAs.sendMessage( this.parent );
         obj = null;
         saveAs = null;
     }
@@ -808,6 +808,10 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.57  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.56  2003/09/18 09:16:47  lemmster
 checkstyle
 
@@ -860,7 +864,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)

@@ -45,7 +45,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.23 2003/09/18 09:16:47 lemmster Exp $
+ * @version $Id: ServerInfoIntMap.java,v 1.24 2003/09/18 15:29:25 zet Exp $
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -282,14 +282,14 @@ public class ServerInfoIntMap extends InfoIntMap {
     public void connectMore( NetworkInfo network ) {
         if ( parent.getProtoToUse() < 18 ) {
             Message message = new EncodeMessage( Message.S_CONNECT_MORE );
-            message.sendMessage( this.parent.getConnection() );
+            message.sendMessage( this.parent );
             message = null;
         }
 
         //TODO we are waiting for the new opcode to send connectMore with the networkid
         else {
             Message message = new EncodeMessage( Message.S_CONNECT_MORE );
-            message.sendMessage( this.parent.getConnection() );
+            message.sendMessage( this.parent );
             message = null;
         }
     }
@@ -299,7 +299,7 @@ public class ServerInfoIntMap extends InfoIntMap {
      */
     public void cleanOld() {
         Message message = new EncodeMessage( Message.S_CLEAN_OLD );
-        message.sendMessage( this.parent.getConnection() );
+        message.sendMessage( this.parent );
         message = null;
     }
 
@@ -390,7 +390,7 @@ public class ServerInfoIntMap extends InfoIntMap {
         obj[ 1 ] = address.getAddress();
         obj[ 2 ] = new Short( port );
         Message message = new EncodeMessage( Message.S_ADD_SERVER, obj );
-        message.sendMessage( this.parent.getConnection() );
+        message.sendMessage( this.parent );
         message = null;
     }
 
@@ -421,7 +421,7 @@ public class ServerInfoIntMap extends InfoIntMap {
             ip = regex.substituteAll( server.getServerAddress().getAddress().toString(), "" );
         }
         Message message = new EncodeMessage( Message.S_CONSOLEMSG, ip );
-        message.sendMessage( this.parent.getConnection() );
+        message.sendMessage( this.parent );
         ip = null;
         message = null;
     }
@@ -441,7 +441,7 @@ public class ServerInfoIntMap extends InfoIntMap {
         aString += ( suffix + " " );
         aString += url;
         Message message = new EncodeMessage( Message.S_CONSOLEMSG, aString );
-        message.sendMessage( this.parent.getConnection() );
+        message.sendMessage( this.parent );
         message = null;
         aString = null;
     }
@@ -463,6 +463,10 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.24  2003/09/18 15:29:25  zet
+centralize writeStream in core
+handle IOException rather than throwing it away
+
 Revision 1.23  2003/09/18 09:16:47  lemmster
 checkstyle
 
