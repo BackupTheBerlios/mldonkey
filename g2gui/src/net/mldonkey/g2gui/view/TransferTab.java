@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.88 2003/11/06 15:40:50 zet Exp $
+ * @version $Id: TransferTab.java,v 1.89 2003/11/08 12:04:05 vnc Exp $
  *
  */
 public class TransferTab extends TableGuiTab {
@@ -298,7 +298,7 @@ public class TransferTab extends TableGuiTab {
             downloadCLabel.getDisplay().asyncExec(new Runnable() {
                     public void run() {
                         if (!downloadCLabel.isDisposed()) {
-                            downloadCLabel.setText(G2GuiResources.getString("TT_Downloads") + ": " + aText);
+                            downloadCLabel.setText(aText);
                         }
                     }
                 });
@@ -363,8 +363,10 @@ public class TransferTab extends TableGuiTab {
         String newText = "";
 
         if (totalActive > 0) {
-            newText += (totalActive + " / " + totalFiles + " " + G2GuiResources.getString("TT_Active").toLowerCase() + " (" +
+            newText += (G2GuiResources.getString("TT_Downloads") + ": " + totalActive + " " + G2GuiResources.getString("TT_Active").toLowerCase() + " (" +
             FileInfo.calcStringSize(activeDownloaded) + " / " + FileInfo.calcStringSize(activeTotal) + ")");
+        } else {
+			newText += (G2GuiResources.getString("TT_Downloads") + ": " + totalActive);
         }
 
         if (totalPaused > 0) {
@@ -429,6 +431,9 @@ public class TransferTab extends TableGuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.89  2003/11/08 12:04:05  vnc
+minor TT-header info adjustments
+
 Revision 1.88  2003/11/06 15:40:50  zet
 typo
 
@@ -603,7 +608,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: vnc $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression
