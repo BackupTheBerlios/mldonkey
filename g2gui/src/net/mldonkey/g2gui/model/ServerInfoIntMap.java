@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.3 2003/06/26 17:57:46 lemmstercvs01 Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.4 2003/06/27 10:35:53 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -73,7 +73,6 @@ public class ServerInfoIntMap extends InfoIntMap {
 			serverInfo.readStream( messageBuffer );
 			this.put( serverInfo.getServerId(), serverInfo );
 		}
-
 	}
 	
 	/**
@@ -112,6 +111,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.4  2003/06/27 10:35:53  lemmstercvs01
+removed unneeded calls
+
 Revision 1.3  2003/06/26 17:57:46  lemmstercvs01
 added workaround for bug in core proto
 

@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: OptionsInfoMap.java,v 1.7 2003/06/24 09:15:27 lemmstercvs01 Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.8 2003/06/27 10:35:53 lemmstercvs01 Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -62,7 +62,6 @@ public class OptionsInfoMap extends InfoMap {
 			OptionsInfo optionsInfo = new OptionsInfo();
 			optionsInfo.readStream( messageBuffer );
 			this.infoMap.put( optionsInfo.getKey(), optionsInfo );
-			parent.notifyListeners( this );
 		}
 		
 	}
@@ -99,6 +98,9 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.8  2003/06/27 10:35:53  lemmstercvs01
+removed unneeded calls
+
 Revision 1.7  2003/06/24 09:15:27  lemmstercvs01
 checkstyle applied
 

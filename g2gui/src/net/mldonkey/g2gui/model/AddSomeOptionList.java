@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * AddSomeOptionList
  *
  * @author $user$
- * @version $Id: AddSomeOptionList.java,v 1.4 2003/06/20 15:15:22 dek Exp $ 
+ * @version $Id: AddSomeOptionList.java,v 1.5 2003/06/27 10:35:53 lemmstercvs01 Exp $ 
  *
  */
 public class AddSomeOptionList extends InfoList {
@@ -58,7 +58,6 @@ public class AddSomeOptionList extends InfoList {
 		AddSomeOption someOption = new AddSomeOption();
 		someOption.readStream( messageBuffer );
 		this.infoList.add( someOption );
-		parent.notifyListeners( this );
 	}
 	
 	/**
@@ -85,6 +84,9 @@ public class AddSomeOptionList extends InfoList {
 
 /*
 $Log: AddSomeOptionList.java,v $
+Revision 1.5  2003/06/27 10:35:53  lemmstercvs01
+removed unneeded calls
+
 Revision 1.4  2003/06/20 15:15:22  dek
 humm, some interface-changes, hope, it didn't break anything ;-)
 

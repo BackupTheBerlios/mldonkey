@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ConsoleMessage
  * 
  *  * @author ${user}
- * @version $$Id: ConsoleMessage.java,v 1.6 2003/06/25 18:04:53 dek Exp $$ 
+ * @version $$Id: ConsoleMessage.java,v 1.7 2003/06/27 10:35:53 lemmstercvs01 Exp $$ 
  */
 public class ConsoleMessage implements SimpleInformation {
 	
@@ -59,10 +59,6 @@ public class ConsoleMessage implements SimpleInformation {
 	public void setConsoleMessage( String string ) {
 		if (consoleMessage==null) consoleMessage = string;	
 			else consoleMessage += string;
-		/* tell our parent, that we have changed, and that this should be
-		 * said to all the listeners
-		 */		
-		parent.notifyListeners( this );
 	}
 	
 	/**
@@ -85,6 +81,9 @@ public class ConsoleMessage implements SimpleInformation {
 }
 /*
 $$Log: ConsoleMessage.java,v $
+$Revision 1.7  2003/06/27 10:35:53  lemmstercvs01
+$removed unneeded calls
+$
 $Revision 1.6  2003/06/25 18:04:53  dek
 $Console-Tab reworked
 $
