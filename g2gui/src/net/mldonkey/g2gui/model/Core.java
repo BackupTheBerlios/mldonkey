@@ -31,7 +31,7 @@ import java.net.Socket;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.5 2003/06/10 16:29:25 dek Exp $ 
+ * @version $Id: Core.java,v 1.6 2003/06/10 16:43:17 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -47,17 +47,13 @@ public class Core extends Thread implements CoreCommunication {
 	/**
 	 * Core()
 	 * 
-	 * @param host_ Hostname
-	 * @param port_ Port
-	 * @param username_ Username
-	 * @param password_ Passwort
+	 * @param username_ Username for authentification with mldonkey-core
+	 * @param password_ Passwort for authentification with mldonkey-core
 	 * @param connection_ the socket, where the whole thing takes place
 	 */
-	public Core( String host_, int port_, String username_, String password_, Socket connection_ ) {
+	public Core( String username_, String password_, Socket connection_ ) {
 		this.username = username_;
 		this.password = password_;
-		this.host = host_;
-		this.port = port_;
 		this.connection = connection_;
 	}
 
@@ -65,8 +61,7 @@ public class Core extends Thread implements CoreCommunication {
 	 * connect()
 	 * Connects the Core to mldonkey @remote
 	 */
-	public void connect() {
-		System.out.println( "connect to host " + host + ":" + port );
+	public void connect() {		
 		this.connected = true;
 	}
 	/**
@@ -273,6 +268,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.6  2003/06/10 16:43:17  dek
+removed senseless parameters from constructor
+
 Revision 1.5  2003/06/10 16:29:25  dek
 let's rock: everything is working ;-)
 
