@@ -49,14 +49,14 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.6 2003/09/26 15:45:59 dek Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.7 2003/09/26 17:02:03 zet Exp $ 
  *
  */
 public class UploadTableViewer {
 	/**
 	 * MyTableSorter
 	 *
-	 * @version $Id: UploadTableViewer.java,v 1.6 2003/09/26 15:45:59 dek Exp $ 
+	 * @version $Id: UploadTableViewer.java,v 1.7 2003/09/26 17:02:03 zet Exp $ 
 	 *
 	 */
 	
@@ -216,23 +216,17 @@ public class UploadTableViewer {
 			 * { "TT_Download_Network", "TT_UPLOAD_UPLOAD", "TT_UPLOAD_QUERIES","TT_Download_Name" };
 			 */
 			switch ( columnIndex ) {
-				case 3 :
-					result = info.getName();
-					break;
-				case 1 :
-					result = info.getUploadedString();
-					break;
-				case 2 :
-					result = String.valueOf( info.getNumOfQueriesForFile() );
-					break;
 				case 0 :
-					result = info.getNetwork().getNetworkName();
-					break;
+					return "" + info.getNetwork().getNetworkName();
+				case 1 :
+					return "" + info.getUploadedString();
+				case 2 :
+					return "" + String.valueOf( info.getNumOfQueriesForFile() );
+				case 3 :
+					return "" + info.getName();
 				default :
-					result = "";
-					break;
+					return "";
 			}
-			return result;
 		}
 	}
 	class MyTableSorter extends ViewerSorter {
@@ -280,14 +274,6 @@ public class UploadTableViewer {
 					else
 						result = aString2.compareToIgnoreCase( aString1 );			
 					break;				
-				case 3 : /*filename*/	
-					aString1 = sharedFile1.getNetwork().getNetworkName();
-					aString2 = sharedFile2.getNetwork().getNetworkName();
-					if ( lastSort )
-						result = aString1.compareToIgnoreCase( aString2 );
-					else
-						result = aString2.compareToIgnoreCase( aString1 );					
-					break;				
 				case 1 :/*upload*/
 					aLong1 = new Long( sharedFile1.getNumOfBytesUploaded() );
 					aLong2 = new Long( sharedFile2.getNumOfBytesUploaded() );
@@ -304,6 +290,15 @@ public class UploadTableViewer {
 					else 
 						result = aLong2.compareTo( aLong1 );			
 					break;
+				case 3 : /*filename*/	
+					aString1 = sharedFile1.getNetwork().getNetworkName();
+					aString2 = sharedFile2.getNetwork().getNetworkName();
+					if ( lastSort )
+						result = aString1.compareToIgnoreCase( aString2 );
+					else
+						result = aString2.compareToIgnoreCase( aString1 );					
+					break;						
+					
 				default :
 					break;
 			}
@@ -329,6 +324,10 @@ public class UploadTableViewer {
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.7  2003/09/26 17:02:03  zet
+reorder case statements
+return instead of falling through
+
 Revision 1.6  2003/09/26 15:45:59  dek
 we now have upload-stats (well, kind of...)
 
