@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.18 2003/09/14 12:13:22 dek Exp $ 
+ * @version $Id: About.java,v 1.19 2003/09/23 05:30:40 lemmster Exp $ 
  *
  */
 public class About extends Dialog {
@@ -123,7 +123,7 @@ public class About extends Dialog {
 		G2GuiResources.getString( "ABOUT_DEVEL" );
 		
 		String develHeader = G2GuiResources.getString( "ABOUT_DEVEL" ) + "\n";
-		String devels = "Dek, lemmy, VNC, and z\n\n";
+		String devels = "Dek, lemmy, VNC and z\n\n";
 
 		String contributorHeader = G2GuiResources.getString( "ABOUT_CONTRIB" ) + "\n";
 		String contributors = "housetier, mitch, and vaste\n\n";
@@ -245,7 +245,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.18 2003/09/14 12:13:22 dek Exp $ 
+	 * @version $Id: About.java,v 1.19 2003/09/23 05:30:40 lemmster Exp $ 
 	 *
 	 */
 	public class Link {
@@ -297,6 +297,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.19  2003/09/23 05:30:40  lemmster
+fixed typo
+
 Revision 1.18  2003/09/14 12:13:22  dek
 removed Todo
 
