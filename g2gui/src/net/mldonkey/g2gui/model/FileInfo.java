@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.17 2003/07/06 08:49:33 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.18 2003/07/06 08:57:09 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo extends Parent {
@@ -231,12 +231,6 @@ public class FileInfo extends Parent {
 		return perc;
 	}
 	/**
-	 * @return The parent corecommunication
-	 */
-	private CoreCommunication getParent() {
-		return parent;
-	}
-	/**
 	 * Creates a new fileinfo object
 	 * @param core The CoreCommunication parent
 	 */
@@ -354,7 +348,7 @@ public class FileInfo extends Parent {
 	 */
 	private void setNetwork( int i ) {
 		this.network =
-		( NetworkInfo ) this.getParent().getNetworkInfoMap().infoIntMap.get( i );
+		( NetworkInfo ) this.parent.getNetworkInfoMap().infoIntMap.get( i );
 	}
 
 	/**
@@ -366,7 +360,7 @@ public class FileInfo extends Parent {
 		content[ 1 ] = string;
 		/* create the message content */
 		EncodeMessage consoleMessage = new EncodeMessage( Message.S_CONSOLEMSG, content );
-		consoleMessage.sendMessage( this.getParent().getConnection() );
+		consoleMessage.sendMessage( this.parent.getConnection() );
 		content = null;
 		consoleMessage = null;
 	}
@@ -383,7 +377,7 @@ public class FileInfo extends Parent {
 		else
 			content = new Integer( 0 );	
 		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SAVE_FILE_AS, content );
-		consoleMessage.sendMessage( this.getParent().getConnection() );
+		consoleMessage.sendMessage( this.parent.getConnection() );
 		content = null;
 		consoleMessage = null;
 	}
@@ -392,7 +386,7 @@ public class FileInfo extends Parent {
 	 * @param enum The new state of this file
 	 */
 	public void setState( EnumFileState enum ) {
-		this.getState().setState( enum, this.getId(), this.getParent() );
+		this.getState().setState( enum, this.getId(), this.parent );
 	}
 	
 	/**
@@ -401,12 +395,15 @@ public class FileInfo extends Parent {
 	public void verifyChunks() {
 		EncodeMessage chunks =
 			new EncodeMessage( Message.S_VERIFY_ALL_CHUNKS, new Integer( this.getId() ) );
-		chunks.sendMessage( this.getParent().getConnection() );
+		chunks.sendMessage( this.parent.getConnection() );
 	}
 }	
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.18  2003/07/06 08:57:09  lemmstercvs01
+getParent() removed
+
 Revision 1.17  2003/07/06 08:49:33  lemmstercvs01
 better oo added
 

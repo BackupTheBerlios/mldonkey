@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.8 2003/07/06 08:49:33 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.9 2003/07/06 08:57:09 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo extends Parent {
 	/**
@@ -147,12 +147,6 @@ public class ServerInfo extends Parent {
 		return serverScore;
 	}
 	/**
-	 * @return The corecommunication parent
-	 */
-	private CoreCommunication getParent() {
-		return parent;
-	}
-	/**
 	 * @param state a State
 	 */
 	private void setConnectionState( State state ) {
@@ -234,7 +228,7 @@ public class ServerInfo extends Parent {
 				return;
 			}
 				
-			state.sendMessage( this.getParent().getConnection() );
+			state.sendMessage( this.parent.getConnection() );
 			state = null;
 			anInt = null;
 		}
@@ -242,6 +236,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.9  2003/07/06 08:57:09  lemmstercvs01
+$getParent() removed
+$
 $Revision 1.8  2003/07/06 08:49:33  lemmstercvs01
 $better oo added
 $
