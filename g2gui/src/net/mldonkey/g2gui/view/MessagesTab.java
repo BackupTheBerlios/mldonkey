@@ -46,6 +46,10 @@ import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MenuEvent;
+import org.eclipse.swt.events.MenuListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -53,7 +57,10 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
 
 /**
  * @author
@@ -123,12 +130,43 @@ public class MessagesTab extends GuiTab {
 		tableViewer.addSelectionChangedListener( tableMenuListener );
 		MenuManager popupMenu = new MenuManager( "" );
 		popupMenu.setRemoveAllWhenShown( true );
-		popupMenu.addMenuListener( tableMenuListener );
+		popupMenu.addMenuListener( tableMenuListener );			
 		tableViewer.getTable().setMenu( popupMenu.createContextMenu( tableViewer.getTable() ) );
 		tableViewer.setSorter(new TableSorter());
-		
+				
 		tableViewer.setInput(core.getClientInfoIntMap().getFriendsList());
 		setRightLabel();
+		
+		
+		/*add default-action to menu (hack, but i didn't find this is 
+		 * menuManager etc.)*/
+		Menu menu = tableViewer.getTable().getMenu();
+		menu.addMenuListener(new MenuListener(){
+			public void menuHidden(MenuEvent e) {}
+
+			public void menuShown(MenuEvent e) {
+				Menu menu = tableViewer.getTable().getMenu();
+				MenuItem[] items = menu.getItems();
+				menu.setDefaultItem(items [( items.length - 1) ] );				
+			}
+			});
+			
+		/*add the double-click handler to open message-window on double-click*/
+		tableViewer.getTable().addMouseListener(new MouseListener(){
+			public void mouseDoubleClick(MouseEvent e) {
+				TableItem[] currentItems = tableViewer.getTable().getSelection();
+								
+				for ( int i = 0; i < currentItems.length;	 i ++ ) {					
+					ClientInfo selectedClientInfo = ( ClientInfo ) currentItems[ i ].getData();
+					openTab(selectedClientInfo);
+					
+				}
+			}
+			public void mouseDown(MouseEvent e) {}
+			public void mouseUp(MouseEvent e) {}
+			});
+		
+		
 		
 	}
 
@@ -356,6 +394,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.3  2003/08/17 10:11:03  dek
+double-click on friend opens window for friend
+
 Revision 1.2  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables
 
