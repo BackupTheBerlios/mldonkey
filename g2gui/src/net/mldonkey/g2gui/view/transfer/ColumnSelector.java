@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.4 2003/10/19 18:03:48 zet Exp $
+ * @version $Id: ColumnSelector.java,v 1.5 2003/10/19 22:16:11 zet Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -118,7 +118,7 @@ public class ColumnSelector extends Dialog {
         
 		// Needs more height on gtk
         GridData gd = new GridData( GridData.FILL_BOTH );
-		gd.heightHint = 330;
+		gd.heightHint = allColumnIDs.length() * 30;
         leftList.setLayoutData( gd );
 
         Composite arrowComposite = new Composite( parent, SWT.NONE );
@@ -233,6 +233,9 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.5  2003/10/19 22:16:11  zet
+height
+
 Revision 1.4  2003/10/19 18:03:48  zet
 remove shell
 
