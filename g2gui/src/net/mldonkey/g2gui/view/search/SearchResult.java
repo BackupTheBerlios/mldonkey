@@ -34,6 +34,7 @@ import net.mldonkey.g2gui.model.Download;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
 import net.mldonkey.g2gui.view.MainTab;
+import net.mldonkey.g2gui.view.SearchTab;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -77,11 +78,12 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.5 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
+ * @version $Id: SearchResult.java,v 1.6 2003/07/29 09:44:45 lemmstercvs01 Exp $ 
  *
  */
 //TODO search timeout, add resource bundle, add image handle, fake search, real links depending on network								   
 public class SearchResult implements Observer, Runnable {
+	private MainTab mainTab;
 	private CTabFolder cTabFolder;
 	private String searchString;
 	private CoreCommunication core;
@@ -93,6 +95,7 @@ public class SearchResult implements Observer, Runnable {
 	private CTabItem cTabItem;
 	private TableColumn tableColumn;
 	private boolean ascending = false;
+	private String statusline;
 	
 	private ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
 
@@ -113,7 +116,8 @@ public class SearchResult implements Observer, Runnable {
 	 * @param core The core to communicate with
 	 * @param searchId The identifier to this search
 	 */
-	protected SearchResult( String aString, CTabFolder parent, CoreCommunication core, int searchId ) {
+	protected SearchResult( String aString, CTabFolder parent,
+								 CoreCommunication core, int searchId ) {
 		this.searchString = aString;
 		this.cTabFolder = parent;
 		this.searchId = searchId;
@@ -166,6 +170,12 @@ public class SearchResult implements Observer, Runnable {
 				this.modifiyItems();
 			}
 		}
+		/* are we active? set the statusline text */
+		if ( cTabFolder.getSelection() == cTabItem ) {
+			SearchTab parent = ( SearchTab ) cTabFolder.getData();
+			this.statusline = "Results: " + table.getTable().getItemCount();
+			parent.getMainTab().statusline.update( 1, this.statusline );
+		}
 	}
 	
 	/**
@@ -202,6 +212,10 @@ public class SearchResult implements Observer, Runnable {
 				( ( SearchResult ) cTabItem.getData() ).dispose();
 			} 
 		} );
+		/* display 0 searchresults for the moment */
+		SearchTab parent = ( SearchTab ) cTabFolder.getData();
+		this.statusline = "Results: 0";
+		parent.getMainTab().statusline.update( 1, this.statusline );
 	}
 
 	/**
@@ -471,8 +485,15 @@ public class SearchResult implements Observer, Runnable {
 		}
 		/* sets the size of the name (add each column you want to set dynamicly) */
 		columns[ 1 ].setWidth( totalWidth );
-	}	
+	}
 	
+	/**
+	 * @return The string to display in the statusline
+	 */
+	public String getStatusLine() {
+		return this.statusline;
+	}
+   
 	/**
 	 * dispose this search result
 	 */
@@ -611,6 +632,9 @@ public class SearchResult implements Observer, Runnable {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.6  2003/07/29 09:44:45  lemmstercvs01
+added support for the statusline
+
 Revision 1.5  2003/07/27 18:45:47  lemmstercvs01
 lots of changes
 

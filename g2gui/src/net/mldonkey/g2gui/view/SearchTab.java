@@ -29,6 +29,10 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -36,6 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Widget;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.search.*;
@@ -44,7 +49,7 @@ import net.mldonkey.g2gui.view.search.*;
  * SearchTab
  *
  * @author $user$
- * @version $Id: SearchTab.java,v 1.4 2003/07/27 22:39:36 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.5 2003/07/29 09:42:46 lemmstercvs01 Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -64,9 +69,9 @@ public class SearchTab extends GuiTab {
 		/* associate this tab with the corecommunication */
 		this.core = gui.getCore();
 		/* Set our name on the coolbar */
-		createButton("SearchButton", 
-							bundle.getString("TT_SearchButton"),
-							bundle.getString("TT_SearchButtonToolTip"));
+		createButton( "SearchButton", 
+							bundle.getString( "TT_SearchButton" ),
+							bundle.getString( "TT_SearchButtonToolTip" ) );
 		/* create the tab content */
 		this.createContents( this.content );
 	}
@@ -120,6 +125,8 @@ public class SearchTab extends GuiTab {
 		cTabFolder = new CTabFolder( tabFolderPage, SWT.NONE );
 		cTabFolder.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		cTabFolder.marginWidth = 5;
+		/* set this as data, so our children in the ctabfolder know whos their dad ;) */
+		cTabFolder.setData( this );
 		
 		/* add a "X" and listen for close event */
 		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
@@ -136,8 +143,34 @@ public class SearchTab extends GuiTab {
 				/* close the tab item */
 				if ( event.item != null )
 					event.item.dispose();
+
+				/* set the new statusline */
+				if ( cTabFolder.getItemCount() != 0 ) {
+					SearchResult nResult = ( SearchResult ) cTabFolder.getSelection().getData();
+					mainWindow.statusline.update( 1, nResult.getStatusLine() );
+					mainWindow.statusline.updateTooltip( 1, "" );
+				}
+				else {
+					mainWindow.statusline.update( 1, "" );
+					mainWindow.statusline.updateTooltip( 1, "" );
+				}
 			}
 		} );
+		
+		cTabFolder.addFocusListener( new FocusListener () {
+			public void focusGained( FocusEvent e ) {
+			}
+
+			public void focusLost(FocusEvent e) { 
+				/* we are in focus, set our result count */
+				CTabFolder item = ( CTabFolder ) e.widget;
+				if ( item.getSelection() != null ) {
+					SearchResult result = ( SearchResult ) item.getSelection().getData();
+					mainWindow.statusline.update( 1, result.getStatusLine() );
+					mainWindow.statusline.updateTooltip( 1, "" );
+				}
+			}
+		} );	
 
 		//VNC need real colors
 /*		Color fgColor = new Color( cTabFolder.getDisplay(), 10, 10, 10 );
@@ -153,6 +186,19 @@ public class SearchTab extends GuiTab {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update( Observable o, Object arg ) { }
+	
+	/**
+	 * The string for the statusline
+	 */
+	public String getStatusText() {
+		/* we have items */
+		if ( cTabFolder.getItemCount() != 0 ) {
+			CTabItem item = cTabFolder.getSelection();
+			SearchResult result = ( SearchResult ) item.getData();
+			return result.getStatusLine();
+		}
+		return "";
+	}
 
 	/**
 	 * @return The TabFolder where you can add TabItems
@@ -160,10 +206,20 @@ public class SearchTab extends GuiTab {
 	public CTabFolder getCTabFolder() {
 		return cTabFolder;
 	}
+	
+	/**
+	 * @return The parent maintab window
+	 */
+	public MainTab getMainTab() {
+		return this.mainWindow;
+	}
 }
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.5  2003/07/29 09:42:46  lemmstercvs01
+added support for the statusline
+
 Revision 1.4  2003/07/27 22:39:36  zet
 small buttons toggle (in popup) for main cool menu
 
