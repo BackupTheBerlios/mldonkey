@@ -30,10 +30,11 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * OptionsInfo
  *
  * @author $user$
- * @version $Id: NetworkInfoIntMap.java,v 1.7 2003/07/28 08:17:41 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.8 2003/07/31 14:09:09 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap {
+	
 	/**
 	 * @param communication my parent
 	 */
@@ -60,7 +61,9 @@ public class NetworkInfoIntMap extends InfoIntMap {
 			//add a new NetworkInfo-Object to the Map
 			NetworkInfo networkInfo = new NetworkInfo( this.parent );
 			networkInfo.readStream( messageBuffer );
-			this.infoIntMap.put( id, networkInfo );
+			synchronized ( this ) {
+				this.infoIntMap.put( id, networkInfo );
+			}
 		}
 	}
 	
@@ -71,9 +74,19 @@ public class NetworkInfoIntMap extends InfoIntMap {
 	public void update( MessageBuffer messageBuffer ) {
 		// do nothing!
 	}
+
+	/**
+	 * Get the networkinfo to this key
+	 * @param key the key of the networkinfo
+	 * @return the networkinfo to the key
+	 */	
+	public NetworkInfo get( int key ) {
+		return ( NetworkInfo ) this.infoIntMap.get( key );
+	}
 	
 	/**
-	 * returns an array with all networks known to this networkMap
+	 * returns an array with all networks known to this NetworkMap
+	 * (remember, an Iterator is much faster. so use it instead if you iterate often)
 	 * @return all known networks
 	 */
 	public NetworkInfo[] getNetworks() {
@@ -82,7 +95,6 @@ public class NetworkInfoIntMap extends InfoIntMap {
 		for ( int i = 0; i < temp.length; i++ ) {
 			result[ i ] = ( NetworkInfo ) temp [ i ];
 		}
-		
 		return result;		
 	}
 	
@@ -94,11 +106,13 @@ public class NetworkInfoIntMap extends InfoIntMap {
 	public NetworkInfo getByEnum( NetworkInfo.Enum enum ) {
 		TIntObjectIterator itr = this.infoIntMap.iterator();
 		int size = this.infoIntMap.size();
-		for ( ; size > 0; size-- ) {
-			itr.advance();
-			NetworkInfo elem = ( NetworkInfo ) itr.value();
-			if ( elem.getNetworkType() == enum ) {
-				return elem;
+		synchronized ( this ) { 
+			for ( ; size > 0; size-- ) {
+				itr.advance();
+				NetworkInfo elem = ( NetworkInfo ) itr.value();
+				if ( elem.getNetworkType() == enum ) {
+					return elem;
+				}
 			}
 		}
 		return null;
@@ -107,6 +121,9 @@ public class NetworkInfoIntMap extends InfoIntMap {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.8  2003/07/31 14:09:09  lemmstercvs01
+synchronized(...) added
+
 Revision 1.7  2003/07/28 08:17:41  lemmstercvs01
 added getByEnum()
 
