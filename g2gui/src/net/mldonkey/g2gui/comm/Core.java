@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.59 2003/07/06 16:40:03 dek Exp $ 
+ * @version $Id: Core.java,v 1.60 2003/07/06 17:56:49 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -207,19 +207,13 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 						.putAvail( file, messageBuffer.readString() );
 					break;
 
-/*			case 666 :
-					( ( FileInfoIntMap ) this.fileInfoMap ).get( messageBuffer.readInt32() )
-						.addClientInfo( ( ( ClientInfoIntMap ) this.clientInfoList )
-							.get( messageBuffer.readInt32() ) );
-					break;
-*/
 					
 			case Message.R_FILE_ADD_SOURCE :
 					int fileIdentifier = messageBuffer.readInt32();
 					int clientIdentifier = messageBuffer.readInt32();
 					/*check for null-objects...*/
 					if ( ( ( FileInfoIntMap  )this.fileInfoMap   ).contains( fileIdentifier   ) )					
-						if ( ( ( ClientInfoIntMap)this.clientInfoList).get(clientIdentifier) != null ){						
+						if ( ( ( ClientInfoIntMap )this.clientInfoList ).get( clientIdentifier ) != null ) {						
 						/*everything's fine, we can execute:*/
 							( ( FileInfoIntMap ) this.fileInfoMap ).get( fileIdentifier )
 								.addClientInfo( ( ( ClientInfoIntMap ) this.clientInfoList )
@@ -343,6 +337,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.60  2003/07/06 17:56:49  dek
+small change
+
 Revision 1.59  2003/07/06 16:40:03  dek
 NPE fixed
 
