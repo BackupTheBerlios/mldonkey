@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.23 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: StatusLine.java,v 1.24 2004/04/05 22:42:10 psy Exp $
  *
  */
 public class StatusLine {
@@ -111,7 +111,7 @@ public class StatusLine {
         Composite middle = new Composite(statusLineComposite, SWT.NONE);
         middle.setLayout(new FillLayout());
         middle.setLayoutData(new GridData(GridData.FILL_BOTH));
-        cLabel = new CLabel(middle, SWT.BORDER);
+        cLabel = new CLabel(middle, SWT.NONE);
         cLabel.setText("");
 
         addSeparator(statusLineComposite);
@@ -190,6 +190,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.24  2004/04/05 22:42:10  psy
+widget cosmetics: removed border from statusline
+
 Revision 1.23  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -233,7 +236,7 @@ Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.9  2003/08/22 21:06:48  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: psy $
 
 Revision 1.8  2003/08/18 01:42:24  zet
 centralize resource bundle
