@@ -23,12 +23,15 @@
 package net.mldonkey.g2gui.view.search;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumRating;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GPaneListener;
 import net.mldonkey.g2gui.view.viewers.GView;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
+import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -40,11 +43,12 @@ import org.eclipse.swt.custom.CTabItem;
 /**
  * SearchPaneListener
  *
- * @version $Id: ResultPaneListener.java,v 1.6 2003/11/08 18:25:54 zet Exp $
+ * @version $Id: ResultPaneListener.java,v 1.7 2003/11/10 08:54:47 lemmster Exp $
  *
  */
 public class ResultPaneListener extends GPaneListener {
     private CTabFolder cTabFolder;
+	private Enum[] states;
 
     /**
      * @param gViewer
@@ -53,6 +57,7 @@ public class ResultPaneListener extends GPaneListener {
     public ResultPaneListener(CTabFolder cTabFolder, CoreCommunication core) {
         super(null, core);
         this.cTabFolder = cTabFolder;
+        this.states = new Enum[] { EnumRating.EXCELLENT, EnumRating.VERYHIGH, EnumRating.HIGH, EnumRating.NORMAL, EnumRating.LOW };
     }
 
     /* (non-Javadoc)
@@ -87,6 +92,11 @@ public class ResultPaneListener extends GPaneListener {
 
                 // network filters
                 createNetworkFilterSubMenu(filterSubMenu);
+                
+                // state (avail) filter
+                filterSubMenu.add(new Separator());
+                for ( int i = 0; i < states.length; i++ )
+					filterSubMenu.add( new StateFilterAction( states[ i ].toString(), gView,  states[ i ] ) );
 
                 menuManager.add(filterSubMenu);
             }
@@ -97,6 +107,9 @@ public class ResultPaneListener extends GPaneListener {
 
 /*
 $Log: ResultPaneListener.java,v $
+Revision 1.7  2003/11/10 08:54:47  lemmster
+rating filter in searchresult
+
 Revision 1.6  2003/11/08 18:25:54  zet
 use GView instead of GTableViewer
 

@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.26 2003/11/10 08:35:13 lemmster Exp $
+ * @version $Id: ResultInfo.java,v 1.27 2003/11/10 08:54:47 lemmster Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -103,6 +103,11 @@ public class ResultInfo extends Parent {
      * (just for the gui, core not involved)
      */
     private boolean downloading;
+
+	/**
+	 * The rating for this result
+	 */
+	private Enum rating;
 
     /**
      * true if this obj contains profanity
@@ -263,6 +268,7 @@ public class ResultInfo extends Parent {
                 containsFake = true;
         }
         
+        this.setRating();
     }
 
     /**
@@ -490,18 +496,7 @@ public class ResultInfo extends Parent {
     	// use StringBuffer, concat with "+" is slow and this method is called often
 		StringBuffer result = new StringBuffer();
 
-		if (this.getRating() == EnumRating.EXCELLENT)
-			result.append( G2GuiResources.getString("RTLP_EXCELLENT") );
-		else if (this.getRating() == EnumRating.VERYHIGH)
-			result.append( G2GuiResources.getString("RTLP_VERYHIGH") );
-		else if (this.getRating() == EnumRating.HIGH)
-			result.append( G2GuiResources.getString("RTLP_HIGH") );
-		else if (this.getRating() == EnumRating.NORMAL)
-			result.append( G2GuiResources.getString("RTLP_NORMAL") );
-		else
-			result.append( G2GuiResources.getString("RTLP_LOW") );
-
-		// append the exact avail
+		result.append( this.getRating().toString() );
 		result.append( "(" );
 		result.append( this.getAvail() );
 		result.append( ")" );
@@ -533,16 +528,20 @@ public class ResultInfo extends Parent {
      * @return
      */
     public Enum getRating() {
+		return rating;
+    }
+    
+    private void setRating() {
 		if (this.getAvail() > 100)
-			return EnumRating.EXCELLENT;
+			this.rating = EnumRating.EXCELLENT;
 		else if (this.getAvail() > 50)
-			return EnumRating.VERYHIGH;
+			this.rating = EnumRating.VERYHIGH;
 		else if (this.getAvail() > 10)
-			return EnumRating.HIGH;
+			this.rating = EnumRating.HIGH;
 		else if (this.getAvail() > 5)
-			return EnumRating.NORMAL;
+			this.rating = EnumRating.NORMAL;
 		else
-			return EnumRating.LOW;
+			this.rating = EnumRating.LOW;
     }
 
     /**
@@ -569,6 +568,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.27  2003/11/10 08:54:47  lemmster
+rating filter in searchresult
+
 Revision 1.26  2003/11/10 08:35:13  lemmster
 move getRating... into ResultInfo
 

@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.viewers.filters;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.view.viewers.GView;
@@ -34,7 +35,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * StateGViewerFilter
  *
- * @version $Id: StateGViewerFilter.java,v 1.7 2003/11/06 13:52:32 lemmster Exp $
+ * @version $Id: StateGViewerFilter.java,v 1.8 2003/11/10 08:54:47 lemmster Exp $
  *
  */
 public class StateGViewerFilter extends GViewerFilter {
@@ -56,35 +57,28 @@ public class StateGViewerFilter extends GViewerFilter {
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         if (element instanceof ServerInfo) {
             ServerInfo server = (ServerInfo) element;
-
-            if (aMatcher.matches(server.getConnectionState().getState())) {
+            if (aMatcher.matches(server.getConnectionState().getState()))
                 return !exclusion;
-            }
-
             return exclusion;
         }
-
         if (element instanceof FileInfo) {
             FileInfo fileInfo = (FileInfo) element;
-
-            if (aMatcher.matches(fileInfo.getState().getState())) {
+            if (aMatcher.matches(fileInfo.getState().getState()))
                 return !exclusion;
-            }
-
             return exclusion;
         }
-
 		if (element instanceof ClientInfo) {
 			ClientInfo clientInfo = (ClientInfo) element;
-
-			if (aMatcher.matches(clientInfo.getState().getState())) {
+			if (aMatcher.matches(clientInfo.getState().getState()))
 				return !exclusion;
-			}
-
 			return exclusion;
 		}
-        
-        
+		if (element instanceof ResultInfo) {
+			ResultInfo resultInfo = (ResultInfo) element;
+			if (aMatcher.matches(resultInfo.getRating()))
+				return !exclusion;
+			return exclusion;
+		} 
         
         return !exclusion;
     }
@@ -117,6 +111,9 @@ public class StateGViewerFilter extends GViewerFilter {
 
 /*
 $Log: StateGViewerFilter.java,v $
+Revision 1.8  2003/11/10 08:54:47  lemmster
+rating filter in searchresult
+
 Revision 1.7  2003/11/06 13:52:32  lemmster
 filters back working
 

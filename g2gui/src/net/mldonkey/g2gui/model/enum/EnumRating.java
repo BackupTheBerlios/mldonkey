@@ -22,34 +22,45 @@
  */
 package net.mldonkey.g2gui.model.enum;
 
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
 /**
  * EnumRating
  *
- * @version $Id: EnumRating.java,v 1.1 2003/11/10 08:35:13 lemmster Exp $ 
+ * @version $Id: EnumRating.java,v 1.2 2003/11/10 08:54:47 lemmster Exp $ 
  *
  */
 public class EnumRating extends Enum {
+	private String string;
 	
-	public static EnumRating EXCELLENT = new EnumRating(1);
+	public static EnumRating EXCELLENT = new EnumRating(1, G2GuiResources.getString("RTLP_EXCELLENT"));
 
-	public static EnumRating VERYHIGH = new EnumRating(2);
+	public static EnumRating VERYHIGH = new EnumRating(2, G2GuiResources.getString("RTLP_VERYHIGH"));
 
-	public static EnumRating HIGH = new EnumRating(4);
+	public static EnumRating HIGH = new EnumRating(4, G2GuiResources.getString("RTLP_HIGH"));
 
-	public static EnumRating NORMAL = new EnumRating(8);
+	public static EnumRating NORMAL = new EnumRating(8, G2GuiResources.getString("RTLP_NORMAL"));
 
-	public static EnumRating LOW = new EnumRating(16);
+	public static EnumRating LOW = new EnumRating(16, G2GuiResources.getString("RTLP_LOW"));
 	
 	/**
 	 * @param i
 	 */
-	private EnumRating(int i) {
+	private EnumRating(int i, String aString) {
 		super(i);
+		string = aString;
+	}
+	
+	public String toString() {
+		return string;
 	}
 }
 
 /*
 $Log: EnumRating.java,v $
+Revision 1.2  2003/11/10 08:54:47  lemmster
+rating filter in searchresult
+
 Revision 1.1  2003/11/10 08:35:13  lemmster
 move getRating... into ResultInfo
 
