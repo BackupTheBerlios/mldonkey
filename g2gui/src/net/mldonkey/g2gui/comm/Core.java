@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.67 2003/07/23 17:04:26 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.68 2003/07/23 17:39:59 vnc Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -99,8 +99,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 		this.connection = connection;
 		thisThread = new Thread( this );
 		thisThread.setDaemon( true );
-		thisThread.start();
 		this.connect();
+		thisThread.start();
+		
 	}
 
 	/**
@@ -364,6 +365,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.68  2003/07/23 17:39:59  vnc
+made core instance connect properly under linux
+
 Revision 1.67  2003/07/23 17:04:26  lemmstercvs01
 modified SEARCH_RESULT and RESULT_INFO
 
