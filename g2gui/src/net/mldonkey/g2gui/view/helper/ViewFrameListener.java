@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ViewFrameListener
  *
- * @version $Id: ViewFrameListener.java,v 1.7 2003/12/17 13:06:03 lemmy Exp $
+ * @version $Id: ViewFrameListener.java,v 1.8 2003/12/17 13:17:37 lemmy Exp $
  *
  */
 public abstract class ViewFrameListener implements IMenuListener, DisposeListener {
@@ -72,7 +72,7 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
         for (int i = 0; i < networks.length; i++) {
             NetworkInfo network = networks[ i ];
 
-            if (network.isEnabled() && network.isSearchable())
+            if (network.isEnabled() && !network.isVirtual())
                 menu.add(new NetworkFilterAction(viewFrame.getGView(), network));
         }
     }
@@ -178,6 +178,9 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
 
 /*
 $Log: ViewFrameListener.java,v $
+Revision 1.8  2003/12/17 13:17:37  lemmy
+show all enabled and !virtual networks in the panelistener network filter
+
 Revision 1.7  2003/12/17 13:06:03  lemmy
 save all panelistener states correctly to the prefstore
 
