@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  *
- * @version $Id: Console.java,v 1.14 2003/09/18 09:54:45 lemmster Exp $
+ * @version $Id: Console.java,v 1.15 2003/09/20 01:22:17 zet Exp $
  *
  */
 public class Console extends Observable implements ControlListener {
@@ -158,9 +158,8 @@ public class Console extends Observable implements ControlListener {
     }
 
     /**
-     * DOCUMENT ME!
      *
-     * @param message DOCUMENT ME!
+     * @param String message 
      */
     public void append( String message ) {
         if ( infoDisplay.getLineCount() > MAX_LINES )
@@ -174,108 +173,50 @@ public class Console extends Observable implements ControlListener {
         infoDisplay.showSelection();
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public String getLineDelimiter() {
         return infoDisplay.getLineDelimiter();
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param font DOCUMENT ME!
-     */
     public void setDisplayFont( Font font ) {
         infoDisplay.setFont( font );
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param font DOCUMENT ME!
-     */
+   
     public void setInputFont( Font font ) {
         input.setFont( font );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param color DOCUMENT ME!
-     */
     public void setDisplayForeground( Color color ) {
         infoDisplay.setForeground( color );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param color DOCUMENT ME!
-     */
     public void setDisplayBackground( Color color ) {
         infoDisplay.setBackground( color );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param color DOCUMENT ME!
-     */
     public void setInputForeground( Color color ) {
         input.setForeground( color );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param color DOCUMENT ME!
-     */
     public void setInputBackground( Color color ) {
         input.setBackground( color );
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void setFocus() {
         input.setFocus();
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param color DOCUMENT ME!
-     */
     public void setHighlightColor( Color color ) {
         highlightColor = color;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param i DOCUMENT ME!
-     */
     public void setClientId( int i ) {
         clientId = i;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public int getClientId() {
         return clientId;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public String getTimeStamp() {
         SimpleDateFormat sdFormatter = new SimpleDateFormat( "[HH:mm:ss] " );
         Date oToday = new Date();
@@ -285,6 +226,9 @@ public class Console extends Observable implements ControlListener {
 
 /*
 $Log: Console.java,v $
+Revision 1.15  2003/09/20 01:22:17  zet
+*** empty log message ***
+
 Revision 1.14  2003/09/18 09:54:45  lemmster
 checkstyle
 
@@ -307,7 +251,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.6  2003/08/18 06:00:01  zet
 fix null pointer (I'm not even sure it is real..)

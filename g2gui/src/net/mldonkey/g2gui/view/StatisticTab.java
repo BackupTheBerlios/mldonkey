@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.26 2003/09/18 09:44:57 lemmster Exp $
+ * @version $Id: StatisticTab.java,v 1.27 2003/09/20 01:24:25 zet Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
@@ -73,9 +73,7 @@ public class StatisticTab extends GuiTab {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param parent DOCUMENT ME!
+     * @param parent 
      */
     protected void createContents( Composite parent ) {
         final SashForm mainSash = new SashForm( parent, SWT.VERTICAL );
@@ -143,11 +141,9 @@ public class StatisticTab extends GuiTab {
         mainSash.setWeights( new int[] { 0, 10 } );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param arg0 DOCUMENT ME!
-     * @param receivedInfo DOCUMENT ME!
+
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable arg0, Object receivedInfo ) {
         ClientStats clientInfo = ( ClientStats ) receivedInfo;
@@ -156,19 +152,15 @@ public class StatisticTab extends GuiTab {
         uploadsGraphControl.redraw();
         downloadsGraphControl.redraw();
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param removeObserver DOCUMENT ME!
-     */
+  
     public void setInActive( boolean removeObserver ) {
         // Do not remove Observer
         super.setInActive();
     }
 
-    /**
-     * DOCUMENT ME!
+  
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.GuiTab#dispose()
      */
     public void dispose() {
         super.dispose();
@@ -182,22 +174,11 @@ public class StatisticTab extends GuiTab {
         private SashForm sashForm;
         private Control control;
 		
-		/**
-		 * DOCUMENT ME!
-		 * 
-		 * @param sashForm DOCUMENT ME!
-		 * @param control DOCUMENT ME!
-		 */
         public MaximizeSashMouseAdapter( SashForm sashForm, Control control ) {
             this.sashForm = sashForm;
             this.control = control;
         }
 
-        /**
-         * DOCUMENT ME!
-         *
-         * @param e DOCUMENT ME!
-         */
         public void mouseDoubleClick( MouseEvent e ) {
             if ( sashForm.getMaximizedControl() == null )
                 sashForm.setMaximizedControl( control );
@@ -209,6 +190,9 @@ public class StatisticTab extends GuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.27  2003/09/20 01:24:25  zet
+*** empty log message ***
+
 Revision 1.26  2003/09/18 09:44:57  lemmster
 checkstyle
 
@@ -237,7 +221,7 @@ Revision 1.18  2003/08/23 01:12:43  zet
 remove todos
 
 Revision 1.17  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle

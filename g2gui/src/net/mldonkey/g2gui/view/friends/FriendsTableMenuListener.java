@@ -42,7 +42,7 @@ import org.eclipse.jface.viewers.TableViewer;
 /**
  * TableMenuListener
  *
- * @version $Id: FriendsTableMenuListener.java,v 1.5 2003/09/18 09:54:45 lemmster Exp $
+ * @version $Id: FriendsTableMenuListener.java,v 1.6 2003/09/20 01:20:26 zet Exp $
  *
  */
 public class FriendsTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -103,9 +103,6 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
             setText( G2GuiResources.getString( "FR_MENU_REMOVE_FRIEND" ) + num );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
         public void run() {
             for ( int i = 0; i < selectedClients.size(); i++ ) {
                 ClientInfo clientInfo = ( ClientInfo ) selectedClients.get( i );
@@ -123,9 +120,6 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
             setText( G2GuiResources.getString( "FR_MENU_REMOVE_ALL_FRIENDS" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
         public void run() {
             ClientInfo.removeAllFriends( core );
         }
@@ -141,9 +135,6 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
             setText( G2GuiResources.getString( "FR_MENU_SEND_MESSAGE" ) + num );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
         public void run() {
             for ( int i = 0; i < selectedClients.size(); i++ ) {
                 ClientInfo clientInfo = ( ClientInfo ) selectedClients.get( i );
@@ -160,10 +151,7 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
             super();
             setText( G2GuiResources.getString( "FR_MENU_ADD_BY_IP" ) );
         }
-
-        /**
-         * DOCUMENT ME!
-         */
+        
         public void run() {
             new AddFriend( core );
         }
@@ -172,6 +160,9 @@ public class FriendsTableMenuListener implements ISelectionChangedListener, IMen
 
 /*
 $Log: FriendsTableMenuListener.java,v $
+Revision 1.6  2003/09/20 01:20:26  zet
+*** empty log message ***
+
 Revision 1.5  2003/09/18 09:54:45  lemmster
 checkstyle
 

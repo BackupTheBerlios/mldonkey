@@ -72,7 +72,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.58 2003/09/18 13:01:23 lemmster Exp $
+ * @version $Id: TransferTab.java,v 1.59 2003/09/20 01:23:18 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -85,8 +85,6 @@ public class TransferTab extends GuiTab {
     private MenuManager popupMenu;
 
     /**
-     * DOCUMENT ME! 
-     * 
      * @param gui where this tab belongs to
      */
     public TransferTab( MainTab gui ) {
@@ -127,7 +125,7 @@ public class TransferTab extends GuiTab {
     /**
      * Create the download pane header with popup menu
      * 
-     * @param parentViewForm DOCUMENT ME!
+     * @param parentViewForm 
      */
     public void createDownloadHeader( ViewForm parentViewForm ) {
         popupMenu = new MenuManager( "" );
@@ -140,7 +138,7 @@ public class TransferTab extends GuiTab {
     /**
      * Create the uploads window
      *
-     * @param mainSashForm DOCUMENT ME!
+     * @param mainSashForm 
      */
     public void createUploads( final SashForm mainSashForm ) {
         ViewForm uploadsViewForm =
@@ -166,7 +164,7 @@ public class TransferTab extends GuiTab {
     /**
      * Create the hidden client view form
      *
-     * @param parentSash DOCUMENT ME!
+     * @param parentSash 
      */
     public void createClientViewForm( SashForm parentSash ) {
         ViewForm clientViewForm =
@@ -194,8 +192,8 @@ public class TransferTab extends GuiTab {
     /**
      * Create the hidden client table viewer
      *
-     * @param parent DOCUMENT ME!
-     * @param parentSash DOCUMENT ME!
+     * @param parent 
+     * @param parentSash 
      */
     public void createClientTableViewer( Composite parent, final SashForm parentSash ) {
         final String[] COLUMN_LABELS = { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
@@ -258,7 +256,7 @@ public class TransferTab extends GuiTab {
     /**
      * Update the label, in the gui thread
      * 
-     * @param text DOCUMENT ME!
+     * @param text 
      */
     public void runLabelUpdate( final String text ) {
         if ( !downloadCLabel.isDisposed() )
@@ -335,6 +333,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.59  2003/09/20 01:23:18  zet
+*** empty log message ***
+
 Revision 1.58  2003/09/18 13:01:23  lemmster
 checkstyle
 
@@ -414,7 +415,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

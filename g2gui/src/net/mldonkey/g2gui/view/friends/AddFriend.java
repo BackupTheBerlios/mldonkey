@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * AddFriend
  *
- * @version $Id: AddFriend.java,v 1.6 2003/09/18 15:29:46 zet Exp $
+ * @version $Id: AddFriend.java,v 1.7 2003/09/20 01:20:26 zet Exp $
  */
 public class AddFriend {
     private Shell shell;
@@ -51,9 +51,7 @@ public class AddFriend {
     private int height = 200;
 
 	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param core DOCUMENT ME!
+	 * @param core 
 	 */
     public AddFriend( final CoreCommunication core ) {
         shell = new Shell( SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
@@ -109,6 +107,9 @@ public class AddFriend {
 
 /*
 $Log: AddFriend.java,v $
+Revision 1.7  2003/09/20 01:20:26  zet
+*** empty log message ***
+
 Revision 1.6  2003/09/18 15:29:46  zet
 centralize writeStream in core
 handle IOException rather than throwing it away

@@ -71,7 +71,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.28 2003/09/18 09:44:57 lemmster Exp $
+ * @version $Id: MessagesTab.java,v 1.29 2003/09/20 01:26:36 zet Exp $
  */
 public class MessagesTab extends GuiTab implements Runnable {
     private CoreCommunication core;
@@ -106,9 +106,7 @@ public class MessagesTab extends GuiTab implements Runnable {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param main DOCUMENT ME!
+     * @param main 
      */
     private void createLeftSash( Composite main ) {
 		// what will this become on other networks?
@@ -128,9 +126,7 @@ public class MessagesTab extends GuiTab implements Runnable {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param parent DOCUMENT ME!
+     * @param parent 
      */
     public void createFriendsTable( Composite parent ) {
         tableViewer = new CustomTableViewer( parent, SWT.NONE | SWT.MULTI );
@@ -241,9 +237,6 @@ public class MessagesTab extends GuiTab implements Runnable {
             } );
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void closeAllTabs() {
         Iterator iterator = openTabs.keySet().iterator();
         while ( iterator.hasNext() ) {
@@ -273,13 +266,7 @@ public class MessagesTab extends GuiTab implements Runnable {
         else if ( arg0 instanceof Console )
             messageToClient( ( Console ) arg0, ( String ) arg1 );
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param arg0 DOCUMENT ME!
-     * @param arg1 DOCUMENT ME!
-     */
+   
     public void runUpdate( Observable arg0, Object arg1 ) {
         if ( arg1 instanceof ClientMessage )
             messageFromClient( ( ClientMessage ) arg1 );
@@ -294,9 +281,6 @@ public class MessagesTab extends GuiTab implements Runnable {
         }
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void run() {
         if ( !cTabFolder.isDisposed() ) {
             lastTime = System.currentTimeMillis();
@@ -306,17 +290,11 @@ public class MessagesTab extends GuiTab implements Runnable {
         }
     }
 
-    /**
-     *
-     */
     public void setFriendsLabel() {
         friendsCLabel.setText( G2GuiResources.getString( "FR_FRIENDS" ) + ": "
                                + tableViewer.getTable().getItemCount() );
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void setTabsLabel() {
         String extra = "";
         if ( cTabFolder.getSelection() != null )
@@ -326,20 +304,17 @@ public class MessagesTab extends GuiTab implements Runnable {
     }
 
     /**
-     * DOCUMENT ME!
      *
-     * @param console DOCUMENT ME!
-     * @param messageText DOCUMENT ME!
+     * @param console 
+     * @param messageText 
      */
     public void messageToClient( Console console, String messageText ) {
         ClientMessage.sendMessage( core, console.getClientId(), messageText );
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param id DOCUMENT ME!
-     * @param textMessage DOCUMENT ME!
+     * @param id 
+     * @param textMessage 
      */
     public void sendTabMessage( int id, String textMessage ) {
         ClientInfo clientInfo = core.getClientInfoIntMap().get( id );
@@ -349,9 +324,7 @@ public class MessagesTab extends GuiTab implements Runnable {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param message DOCUMENT ME!
+     * @param message 
      */
     public void messageFromClient( ClientMessage message ) {
         mainWindow.getStatusline().update( "New message!" );
@@ -396,12 +369,10 @@ public class MessagesTab extends GuiTab implements Runnable {
     }
 
     /**
-     * DOCUMENT ME!
+     * @param id 
+     * @param tabText 
      *
-     * @param id DOCUMENT ME!
-     * @param tabText DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @return tabItem
      */
     public CTabItem addCTabItem( int id, String tabText ) {
         CTabItem tabItem = new CTabItem( cTabFolder, SWT.NONE );
@@ -421,9 +392,7 @@ public class MessagesTab extends GuiTab implements Runnable {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param clientInfo DOCUMENT ME!
+     * @param clientInfo 
      */
     public void openTab( ClientInfo clientInfo ) {
         if ( !openTabs.containsKey( new Integer( clientInfo.getClientid() ) ) ) {
@@ -436,9 +405,7 @@ public class MessagesTab extends GuiTab implements Runnable {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @return String timestamp
      */
     public String getTimeStamp() {
         SimpleDateFormat sdFormatter = new SimpleDateFormat( "[HH:mm:ss] " );
@@ -447,19 +414,14 @@ public class MessagesTab extends GuiTab implements Runnable {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param cTabItem DOCUMENT ME!
+     * @param cTabItem 
      */
     public void setItemFocus( CTabItem cTabItem ) {
         cTabFolder.setSelection( cTabItem );
         Console console = ( Console ) cTabItem.getData( "console" );
         console.setFocus();
     }
-
-    /**
-     * DOCUMENT ME!
-     */
+   
     public void setActive() {
         super.setActive();
         if ( cTabFolder.getSelection() != null )
@@ -467,9 +429,7 @@ public class MessagesTab extends GuiTab implements Runnable {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param console DOCUMENT ME!
+     * @param console 
      */
     public void setPreferences( Console console ) {
         console.setDisplayFont( PreferenceLoader.loadFont( "consoleFontData" ) );
@@ -484,6 +444,9 @@ public class MessagesTab extends GuiTab implements Runnable {
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.29  2003/09/20 01:26:36  zet
+*** empty log message ***
+
 Revision 1.28  2003/09/18 09:44:57  lemmster
 checkstyle
 
@@ -545,7 +508,7 @@ Revision 1.9  2003/08/23 09:47:52  lemmster
 just rename
 
 Revision 1.8  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.7  2003/08/20 22:18:56  zet
 Viewer updates

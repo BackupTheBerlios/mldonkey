@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * TableSorter
  *
  *
- * @version $Id: FriendsTableSorter.java,v 1.3 2003/09/18 09:54:45 lemmster Exp $
+ * @version $Id: FriendsTableSorter.java,v 1.4 2003/09/20 01:20:26 zet Exp $
  *
  */
 public class FriendsTableSorter extends ViewerSorter {
@@ -44,16 +44,7 @@ public class FriendsTableSorter extends ViewerSorter {
     public FriendsTableSorter() {
         super();
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param viewer DOCUMENT ME!
-     * @param obj1 DOCUMENT ME!
-     * @param obj2 DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+   
     public int compare( Viewer viewer, Object obj1, Object obj2 ) {
         ClientInfo clientInfo1 = ( ClientInfo ) obj1;
         ClientInfo clientInfo2 = ( ClientInfo ) obj2;
@@ -62,15 +53,7 @@ public class FriendsTableSorter extends ViewerSorter {
             return compareStrings( clientInfo1.getClientName(), clientInfo2.getClientName() );
         }
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param aString1 DOCUMENT ME!
-     * @param aString2 DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+   
     public int compareStrings( String aString1, String aString2 ) {
         if ( aString1.equals( "" ) )
             return 1;
@@ -82,6 +65,9 @@ public class FriendsTableSorter extends ViewerSorter {
 
 /*
 $Log: FriendsTableSorter.java,v $
+Revision 1.4  2003/09/20 01:20:26  zet
+*** empty log message ***
+
 Revision 1.3  2003/09/18 09:54:45  lemmster
 checkstyle
 

@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ExecConsole : to spawn and watch an executable in a shell/console
  *
- * @version $Id: ExecConsole.java,v 1.2 2003/09/18 09:54:45 lemmster Exp $
+ * @version $Id: ExecConsole.java,v 1.3 2003/09/20 01:22:17 zet Exp $
  *
  */
 public class ExecConsole implements Observer {
@@ -79,10 +79,7 @@ public class ExecConsole implements Observer {
         createContents();
         runExec();
     }
-
-    /**
-     * DOCUMENT ME!
-     */
+  
     public void createContents() {
         shell = new Shell( SWT.CLOSE | SWT.TITLE | SWT.RESIZE | SWT.BORDER );
         shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
@@ -135,9 +132,6 @@ public class ExecConsole implements Observer {
         }
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void runExec() {
         try {
             File executable = new File( PreferenceLoader.loadString( "coreExecutable" ) );
@@ -157,13 +151,7 @@ public class ExecConsole implements Observer {
             System.out.println( "exec:" + e );
         }
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param o DOCUMENT ME!
-     * @param obj DOCUMENT ME!
-     */
+  
     public void update( final Observable o, Object obj ) {
         if ( obj instanceof String ) {
             final String newLine = ( String ) obj;
@@ -177,13 +165,7 @@ public class ExecConsole implements Observer {
                     } );
         }
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param streamMonitor DOCUMENT ME!
-     * @param newLine DOCUMENT ME!
-     */
+  
     public void appendLine( StreamMonitor streamMonitor, String newLine ) {
         if ( outputConsole.getLineCount() > MAX_LINES )
             outputConsole.replaceTextRange( 0, outputConsole.getOffsetAtLine( 5 ), "" );
@@ -205,18 +187,10 @@ public class ExecConsole implements Observer {
         outputConsole.showSelection();
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public Shell getShell() {
         return shell;
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void dispose() {
         stdoutMonitor.stop();
         stderrMonitor.stop();
@@ -234,25 +208,14 @@ public class ExecConsole implements Observer {
             this.type = type;
         }
 
-        /**
-         * DOCUMENT ME!
-         */
         public void stop() {
             keepAlive = false;
         }
 
-        /**
-         * DOCUMENT ME!
-         *
-         * @return DOCUMENT ME!
-         */
         public int getType() {
             return type;
         }
 
-        /**
-         * DOCUMENT ME!
-         */
         public void run() {
             try {
                 String line;
@@ -271,6 +234,9 @@ public class ExecConsole implements Observer {
 
 /*
 $Log: ExecConsole.java,v $
+Revision 1.3  2003/09/20 01:22:17  zet
+*** empty log message ***
+
 Revision 1.2  2003/09/18 09:54:45  lemmster
 checkstyle
 
