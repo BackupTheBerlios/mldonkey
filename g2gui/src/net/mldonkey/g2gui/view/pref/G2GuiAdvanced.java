@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.7 2003/11/27 15:49:24 zet Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.8 2003/11/27 20:32:38 zet Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -139,7 +139,7 @@ public class G2GuiAdvanced extends PreferencePage {
 		GCJFileFieldEditor defaultBrowserField =
 				new GCJFileFieldEditor( "defaultWebBrowser", 
 				G2GuiResources.getString( "PREF_DISPLAY_DEFAULT_BROWSER" ), 
-		        true, 
+		        false, 
 		        composite );
 			
 		if ((System.getProperty("os.name").length() > 7) &&
@@ -155,6 +155,9 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.8  2003/11/27 20:32:38  zet
+no abs paths
+
 Revision 1.7  2003/11/27 15:49:24  zet
 filebrowser
 
