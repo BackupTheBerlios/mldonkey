@@ -8,9 +8,9 @@
  * G2Gui is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * ( at your option ) any later version.
+ * (at your option) any later version.
  *
- * G2Gui is distributed in the hope that it will be useful, 
+ * G2Gui is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -33,16 +33,12 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
-
-
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -62,7 +58,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.18 2003/11/24 21:17:06 dek Exp $
+ * @version $Id: MainCoolBar.java,v 1.19 2003/11/25 16:25:58 dek Exp $
  *
  */
 public class MainCoolBar {
@@ -76,15 +72,16 @@ public class MainCoolBar {
     private ToolBar mainTools;
     private List miscToolButtons;
     private List mainToolButtons;
-	protected int[] order = { 0, 1 };
-	protected Point[] itemsizes;
+    protected int[] order = { 0, 1 };
+    protected Point[] itemsizes;
+
 
 	/**
 	 * @param mainTab 
 	 * @param size 
 	 * @param locked 
 	 */
-    public MainCoolBar( MainTab mainTab, boolean size, boolean locked ) {    	
+    public MainCoolBar( MainTab mainTab, boolean size, boolean locked ) {
         this.toolbarSmallButtons = size;
         this.coolbarLocked = locked;
         this.mainTab = mainTab;
@@ -99,55 +96,37 @@ public class MainCoolBar {
      */
     private void createContent( Composite parent ) {
         composite = new Composite( parent, SWT.NONE );
+        /*save state on disposal*/        
+        
         GridLayout gridLayout = WidgetFactory.createGridLayout( 1, 0, 0, 0, 0, false );
         composite.setLayout( gridLayout );
         composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         createCoolBar();
         createToolBars();
         createCoolItems();
-        createMiscTools(); 
-        
-        coolbar.addControlListener( new ControlListener() {
-
-        	public void controlMoved( ControlEvent e ) {
-        		composite.getParent().layout();        		
-        	}
-
-        	public void controlResized( ControlEvent e ) {
-        		composite.getParent().layout();
-        	}
-        } );
-        
-        coolbar.addPaintListener(new PaintListener(){
-			public void paintControl(PaintEvent e) {
-				/*
-				 * this listener is to keep the Layoutinfos up to date,
-				 * since the paint-listener iss called everytime 
-				 * something has changed. I know, this is a hack, but gtk forces 
-				 * me to do so, since i can't call coolbar.getItemSizes() at 
-				 * dispose-time on gtk
-				 */
-				order = coolbar.getItemOrder();
-				itemsizes = coolbar.getItemSizes();
-			}});
+        createMiscTools();
     }
 
-	/**
+    /**
      * Creates a new Coolbar obj
      * @param parent The parent Composite to display in
      * @return a new CoolBar obj
      */
     private void createCoolBar() {
         coolbar = new CoolBar( this.composite, SWT.FLAT );
+        coolbar.addControlListener( new ControlListener() {
+                public void controlMoved( ControlEvent e ) {
+                    composite.getParent().layout();                   
+                }
 
-
-        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
-        coolbar.setLayoutData( gridData );
+                public void controlResized( ControlEvent e ) {
+                    composite.getParent().layout();
+                }
+            } );
         
-        coolbar.addDisposeListener( new DisposeListener(){
-			public void widgetDisposed( DisposeEvent e ) {
-				saveLayout();				
-			}} );
+        GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
+        coolbar.setLayoutData( gridData );        
+
     }
 
 	/**
@@ -188,7 +167,7 @@ public class MainCoolBar {
         prefButton.setActive( false );
         prefButton.resetImage();
         this.miscToolButtons.add( prefButton );
-        prefButton.addListener( SWT.Selection, 
+        prefButton.addListener( SWT.Selection,
                                 new Listener() {
                 public void handleEvent( Event event ) {
                     prefButton.setActive( true );
@@ -227,11 +206,11 @@ public class MainCoolBar {
         return menu;
     }
 
-    public void layoutCoolBar() {
+    public void layoutCoolBar() {    	
         // This seems to work in xp/gtk - z			
         for ( int j = 0; j < coolbar.getItemCount(); j++ ) {
             CoolItem tempCoolItem = coolbar.getItem( j );
-            ToolBar tempToolBar = ( ToolBar ) tempCoolItem.getControl();            
+            ToolBar tempToolBar = ( ToolBar ) tempCoolItem.getControl();
             Point pSize = tempToolBar.computeSize( SWT.DEFAULT, SWT.DEFAULT );
             pSize = tempCoolItem.computeSize( pSize.x, pSize.y );
             tempCoolItem.setSize( pSize );
@@ -257,6 +236,23 @@ public class MainCoolBar {
         mainCoolItem.setControl( mainTools );
         CoolItem miscCoolItem = items[ 1 ];
         miscCoolItem.setControl( miscTools );
+        
+        /*save state of coolbar on dispose*/
+        coolbar.addDisposeListener(new DisposeListener(){
+        	public void widgetDisposed(DisposeEvent e) {        		
+        		saveLayout();				
+        	}});
+        
+        /*update order on change of order ;-)*/
+        coolbar.addControlListener(new ControlListener(){
+
+			public void controlMoved(ControlEvent e) {
+				order = coolbar.getItemOrder();
+			}
+
+			public void controlResized(ControlEvent e) {
+				order = coolbar.getItemOrder();				
+			}});
     }
 
     /**
@@ -300,7 +296,6 @@ public class MainCoolBar {
     public void setToolbarSmallButtons( boolean b ) {
         toolbarSmallButtons = b;
     }
-
     
     /**
      * resores the saved Layout and applies it to the coolBar
@@ -328,12 +323,12 @@ public class MainCoolBar {
     		int x = Integer.parseInt( coordinates[ 0 ] );
     		int y = Integer.parseInt( coordinates[ 1 ] );
     		itemSizes[ i ] = new Point( x, y );     		
-		}    	
+    	}    	
     	
     	String[] orders = RegExp.split( orderString, '|' );
     	for ( int i = 0; i < orders.length; i++ ) {
     		order[ i ] = Integer.parseInt( orders[ i ] );
-		}    
+    	}    
     	
     	coolbar.setItemLayout( order, null, itemSizes );
     	
@@ -342,33 +337,45 @@ public class MainCoolBar {
     	}
     }
     
-	/**
-	 *  saves the Layout of the coolbar when beein disposed
-	 */
-	public void saveLayout() {
-		PreferenceStore p = PreferenceLoader.getPreferenceStore();
-		p.setValue( "coolbarLocked", isCoolbarLocked() );
-		p.setValue( "toolbarSmallButtons", isToolbarSmallButtons() );
-		
-		StringBuffer sizesBuffer = new StringBuffer();
-		
-		for ( int i = 0; i < itemsizes.length; i++ ) {
-			sizesBuffer.append( itemsizes[ i ].x+"-"+itemsizes[ i ].y+"|" );			
-		}				
-		
-		StringBuffer orderBuffer = new StringBuffer();
-		for ( int i = 0; i < order.length; i++ ) {
+    /**
+     *  saves the Layout of the coolbar when beein disposed
+     */
+    public void saveLayout() {
+    	PreferenceStore p = PreferenceLoader.getPreferenceStore();
+    	p.setValue( "coolbarLocked", isCoolbarLocked() );
+    	p.setValue( "toolbarSmallButtons", isToolbarSmallButtons() );
+    	
+    	StringBuffer sizesBuffer = new StringBuffer();
+    	
+    	itemsizes = coolbar.getItemSizes();
+    	for ( int i = 0; i < itemsizes.length; i++ ) {
+    		sizesBuffer.append( itemsizes[ i ].x+"-"+itemsizes[ i ].y+"|" );			
+    	}				
+    	
+    	
+    	StringBuffer orderBuffer = new StringBuffer();
+    	for ( int i = 0; i < order.length; i++ ) {    		
 			orderBuffer.append( order[ i ]+"|" );
-			
-		}
-		
-		p.setValue( "coolBarSizes", sizesBuffer.toString() );	
-		p.setValue( "coolBarOrder", orderBuffer.toString() );
+    		
+    	}
+    	
+    	p.setValue( "coolBarSizes", sizesBuffer.toString() );	
+    	p.setValue( "coolBarOrder", orderBuffer.toString() );
+    }
+
+	protected void udateLayoutStore() {
+		itemsizes = coolbar.getItemSizes();
+    	order = coolbar.getItemOrder();
 	}
+
+
 }
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.19  2003/11/25 16:25:58  dek
+next testcase for vnc ;-)
+
 Revision 1.18  2003/11/24 21:17:06  dek
 removed System.out....
 
@@ -394,7 +401,7 @@ Revision 1.11  2003/11/22 02:24:30  zet
 widgetfactory & save sash postions/states between sessions
 
 Revision 1.10  2003/10/11 21:32:32  zet
-remove hand cursor ( looks weird on gtk )
+remove hand cursor (looks weird on gtk)
 
 Revision 1.9  2003/09/18 10:12:53  lemmster
 checkstyle
