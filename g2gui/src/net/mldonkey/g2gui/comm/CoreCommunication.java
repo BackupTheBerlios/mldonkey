@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.20 2003/07/04 17:46:28 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.21 2003/07/17 14:06:53 lemmstercvs01 Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -79,4 +79,9 @@ public interface CoreCommunication {
 	 * @param obj The Observer to add
 	 */
 	void addObserver( Observer obj );
+	/**
+	 * Removes an Observer from this object
+	 * @param obj The Observer to remove
+	 */
+	void deleteObserver( Observer obj );
 }
