@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.18 2003/07/27 22:39:36 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.19 2003/07/27 22:54:05 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer {
@@ -380,14 +380,9 @@ public class MainTab implements Listener, Observer {
 		prefButton.setText(bundle.getString("TT_PreferencesButton"));
 		prefButton.setToolTipText(bundle.getString("TT_PreferencesButtonToolTip"));
 		
-		Image bigImage = MainTab.createTransparentImage( 
-						MainTab.getImageFromRegistry("PreferencesButton"),
-						prefButton.getParent());
-						
-		Image smallImage = MainTab.createTransparentImage( 
-						MainTab.getImageFromRegistry("PreferencesButtonSmall"),
-						prefButton.getParent());					
-					
+		Image bigImage = MainTab.getImageFromRegistry("PreferencesButton");
+		Image smallImage = MainTab.getImageFromRegistry("PreferencesButtonSmall");
+				
 		prefButton.setBigActiveImage(bigImage);
 		prefButton.setBigInactiveImage(bigImage);
 		prefButton.setSmallActiveImage(smallImage);
@@ -573,7 +568,6 @@ public class MainTab implements Listener, Observer {
 	
 	// find something better
 	private void createImageRegistry () {
-		String imagePath = "src/icons/";
 		
 		imageRegistry.put("ProgramIcon", createTrans("mld_logo_48x48.png"));
 	
@@ -594,6 +588,7 @@ public class MainTab implements Listener, Observer {
 			
 	}
 	// transparent pngs on gtk still require this, but it is noticable on win :(
+	// will all buttons require the same background colour as thisShell? not sure yet...
 	private Image createTrans(String filename) {
 		String imagePath = "src/icons/";
 		return createTransparentImage(new Image(null, imagePath + filename), thisShell);
@@ -605,6 +600,9 @@ public class MainTab implements Listener, Observer {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.19  2003/07/27 22:54:05  zet
+coolbar small buttons
+
 Revision 1.18  2003/07/27 22:39:36  zet
 small buttons toggle (in popup) for main cool menu
 

@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.9 2003/07/27 22:39:36 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.10 2003/07/27 22:54:05 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -169,14 +169,9 @@ public abstract class GuiTab implements Listener, Observer {
 	
 	public void createButton(String buttonName, String buttonText, String buttonToolTip) {
 		
-		Image big = MainTab.createTransparentImage ( 
-									MainTab.getImageFromRegistry(buttonName),
-									toolButton.getParent());
-									
-		Image small = MainTab.createTransparentImage ( 
-									MainTab.getImageFromRegistry(buttonName + "Small"),
-									toolButton.getParent());						
-									
+		Image big = MainTab.getImageFromRegistry(buttonName);
+		Image small = MainTab.getImageFromRegistry(buttonName + "Small");
+								
 		toolButton.setText(buttonText);
 		toolButton.setToolTipText(buttonToolTip);
 		toolButton.setBigActiveImage(big);
@@ -191,6 +186,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.10  2003/07/27 22:54:05  zet
+coolbar small buttons
+
 Revision 1.9  2003/07/27 22:39:36  zet
 small buttons toggle (in popup) for main cool menu
 
