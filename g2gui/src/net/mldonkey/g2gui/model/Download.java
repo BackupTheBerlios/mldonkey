@@ -26,7 +26,7 @@ package net.mldonkey.g2gui.model;
  * Download
  *
  * @author markus
- * @version $Id: Download.java,v 1.3 2003/06/12 07:40:04 lemmstercvs01 Exp $ 
+ * @version $Id: Download.java,v 1.4 2003/06/12 10:36:04 lemmstercvs01 Exp $ 
  *
  */
 public class Download {
@@ -354,11 +354,22 @@ public class Download {
 	public void setClients( int i ) {
 		clients = i;
 	}
+	
+	/**
+	 * @return A string representation of this object
+	 */
+	public String toString() {
+		String result =  new String(this.getName());
+		return result;
+	}
 
 }
 
 /*
 $Log: Download.java,v $
+Revision 1.4  2003/06/12 10:36:04  lemmstercvs01
+toString() added
+
 Revision 1.3  2003/06/12 07:40:04  lemmstercvs01
 added number of clients
 
