@@ -1,3 +1,6 @@
+2003/11/21: vnc
+	* Fixed big CPU-leak caused by StatisticsTab
+
 2003/11/16: lemmy
 	* Search: fixed [Bug #1080] Searchbox should get focused when switching to searchtab
 
