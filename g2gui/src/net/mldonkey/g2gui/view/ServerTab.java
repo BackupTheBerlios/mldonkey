@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.18 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.19 2003/08/25 20:38:26 vnc Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -99,8 +99,8 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	/* 0 sets the tablewidth dynamcliy */
 	private int[] tableWidth =
 	{
-		45, 120, 0, 97,
-		50, 55, 45, 50,
+		70, 160, 0, 120,
+		50, 55, 55, 60,
 		80, 50
 	};
 	
@@ -130,8 +130,8 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			};	
 			this.tableWidth = new int[]
 			{
-				45, 120, 0, 97,
-				50, 55, 45, 50,
+				70, 160, 0, 120,
+				50, 55, 55, 60,
 				80
 			};
 		}
@@ -203,7 +203,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		/* add a resize listener */
 		composite.addControlListener( new ControlAdapter() {
 		public void controlResized( ControlEvent e ) {
-				ServerTab.this.setColumnWidht();
+				ServerTab.this.setColumnWidth();
 			}
 		} );
 		
@@ -243,7 +243,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	/**
 	 * sets the columnwidth for each column
 	 */
-	private void setColumnWidht() {
+	private void setColumnWidth() {
 		/* the total width of the table */
 		int totalWidth = table.getTable().getSize().x - 25; //why is it 25 to width?
 		/* our tablecolumns */
@@ -257,7 +257,11 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			}
 		}
 		/* sets the size of the name (add each column you want to set dynamicly) */
-		columns[ 2 ].setWidth( totalWidth );
+		/* note by vnc: this resize makes problems in GTK, setColumnWidth is called a bit too often
+		 * while the table is not properly in shape/displaying, resulting in a too large totalWidth 
+		 */
+		//columns[ 2 ].setWidth( totalWidth );
+
 	}
 
 	/* (non-Javadoc)
@@ -407,6 +411,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.19  2003/08/25 20:38:26  vnc
+GTK layout cleanups, slight typo refactoring
+
 Revision 1.18  2003/08/23 15:21:37  zet
 remove @author
 
