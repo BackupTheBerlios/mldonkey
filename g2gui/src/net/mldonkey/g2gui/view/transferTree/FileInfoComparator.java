@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * DownloadItemComparator
  *
  * @author $user$
- * @version $Id: FileInfoComparator.java,v 1.9 2003/07/20 10:31:21 dek Exp $ 
+ * @version $Id: FileInfoComparator.java,v 1.10 2003/07/20 10:37:23 dek Exp $ 
  *
  */
 class FileInfoComparator implements Comparator {
@@ -82,9 +82,9 @@ class FileInfoComparator implements Comparator {
 				result = r13.compareTo( r23 );
 				break;
 			case 4 :
-			Float r14 = new Float( row1.getPerc() );
-			Float r24 = new Float( row2.getPerc() );
-			result = r14.compareTo( r24 );
+				Integer r14 = numberCompleteChunks( row1 );
+				Integer r24 = numberCompleteChunks( row2 );
+				result = r14.compareTo( r24 );							
 				break;
 			case 5 :
 				Float r15 = new Float( row1.getPerc() );
@@ -107,10 +107,40 @@ class FileInfoComparator implements Comparator {
 		}
 		return result;
 	}
+	
+	/**
+	 * @param chunks
+	 */
+	private Integer numberCompleteChunks( FileInfo fileInfo ) {
+		String chunks = fileInfo.getChunks();
+		String avail = fileInfo.getAvail();
+		int result = 0;
+		int length = 0;		
+		if ( avail.length() != 0 ) 
+				length = avail.length();
+				
+		byte[] temp = avail.getBytes();	
+		
+		for ( int i = 0; i < avail.length(); i++ ) {
+			//this availability is so low, we can assume, it is not available:			
+			if ( temp[ i ] == 0 ) {	
+			}			
+			if ( chunks.charAt( i ) == '2' ) {			
+				result++;
+			}
+			if ( chunks.charAt( i ) == '3' ) {			
+				result++;
+			}
+		}
+		return new Integer( result );
+	}
 }
 
 /*
 $Log: FileInfoComparator.java,v $
+Revision 1.10  2003/07/20 10:37:23  dek
+sorting now chunk-bar of download-item
+
 Revision 1.9  2003/07/20 10:31:21  dek
 done some work on flickering & sorting
 
