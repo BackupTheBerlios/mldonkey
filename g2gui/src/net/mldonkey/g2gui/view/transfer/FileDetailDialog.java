@@ -63,7 +63,7 @@ import java.util.Observer;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.3 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: FileDetailDialog.java,v 1.4 2003/10/13 21:13:01 zet Exp $
  *
  */
 public class FileDetailDialog implements Observer, DisposeListener {
@@ -319,7 +319,7 @@ public class FileDetailDialog implements Observer, DisposeListener {
                 ( fileInfo.getState().getState() == EnumFileState.QUEUED ) ) {
             fileCancelButton = new Button( buttonComposite, SWT.NONE );
             fileCancelButton.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END ) );
-            fileCancelButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CANCEL" ) );
+            fileCancelButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CANCEL" ) + " " + G2GuiResources.getString( "TT_File" )  );
             fileCancelButton.addSelectionListener( new SelectionAdapter() {
                     public void widgetSelected( SelectionEvent s ) {
                         MessageBox reallyCancel = new MessageBox( fileCancelButton.getShell(), SWT.YES | SWT.NO | SWT.ICON_QUESTION );
@@ -347,11 +347,11 @@ public class FileDetailDialog implements Observer, DisposeListener {
         fileActionButton.setLayoutData( gridData );
 
         if ( ( fileInfo.getState().getState() == EnumFileState.PAUSED ) || ( fileInfo.getState().getState() == EnumFileState.QUEUED ) ) {
-            fileActionButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ) );
+            fileActionButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ) + " " + G2GuiResources.getString( "TT_File" ) );
         } else if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING ) {
-            fileActionButton.setText( "  " + G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ) + "  " );
+            fileActionButton.setText( "  " + G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ) + " " + G2GuiResources.getString( "TT_File" ) + "  " );
         } else if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADED ) {
-            fileActionButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT" ) );
+            fileActionButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT" ) + " " + G2GuiResources.getString( "TT_File" ) );
         }
 
         // until we have an unQueue function..
@@ -363,10 +363,10 @@ public class FileDetailDialog implements Observer, DisposeListener {
                 public void widgetSelected( SelectionEvent s ) {
                     if ( fileInfo.getState().getState() == EnumFileState.PAUSED ) {
                         fileInfo.setState( EnumFileState.DOWNLOADING );
-                        fileActionButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ) );
+                        fileActionButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ) + " " + G2GuiResources.getString( "TT_File" ) );
                     } else if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING ) {
                         fileInfo.setState( EnumFileState.PAUSED );
-                        fileActionButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ) );
+                        fileActionButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ) + " " + G2GuiResources.getString( "TT_File" ) );
                     } else if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADED ) {
                         if ( renameText.getText().equals( "" ) ) {
                             fileInfo.saveFileAs( fileInfo.getName() );
@@ -495,6 +495,9 @@ public class FileDetailDialog implements Observer, DisposeListener {
 
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.4  2003/10/13 21:13:01  zet
+nil
+
 Revision 1.3  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 
