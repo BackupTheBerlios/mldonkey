@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.94 2003/09/08 18:25:16 zet Exp $ 
+ * @version $Id: Core.java,v 1.95 2003/09/14 16:22:58 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -279,9 +279,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			case Message.R_FILE_UPDATE_AVAILABILITY :
 					int fileId = messageBuffer.readInt32();
 					int clientId = messageBuffer.readInt32();
-					String availability = messageBuffer.readString();	
-					( ( ClientInfoIntMap ) this.clientInfoList ).get( clientId )
-						.putAvail( fileId, availability );
+					String availability = messageBuffer.readString();
+					if (( ( ClientInfoIntMap ) this.clientInfoList ).containsKey( clientId ))
+						( ( ClientInfoIntMap ) this.clientInfoList ).get( clientId )
+							.putAvail( fileId, availability );
 					break;
 
 					
@@ -556,6 +557,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.95  2003/09/14 16:22:58  zet
+null check
+
 Revision 1.94  2003/09/08 18:25:16  zet
 *** empty log message ***
 
