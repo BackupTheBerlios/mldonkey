@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Label;
  * It has to be placed in a GridLayout, since it applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.1 2003/06/26 14:04:59 dek Exp $ 
+ * @version $Id: StatusLine.java,v 1.2 2003/06/26 14:11:58 dek Exp $ 
  *
  */
 public class StatusLine {
@@ -46,7 +46,8 @@ public class StatusLine {
 	/**
 	 * @param mainComposite the Composite where this status-line finds its place fpr living
 	 */
-	public StatusLine(Composite parent) {		
+	public StatusLine(Composite parent) {
+		fields = new ArrayList();		
 		this.statusline = new Composite(parent,SWT.NONE);			
 		this.statusline.setLayout(new FillLayout());
 			GridData gridData = new GridData( GridData.FILL_HORIZONTAL );	
@@ -77,6 +78,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.2  2003/06/26 14:11:58  dek
+NPE fixed ;-)
+
 Revision 1.1  2003/06/26 14:04:59  dek
 Class statusline for easy information display
 
