@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
  * applies a GridData object for its appearance.
  *
  * @author $user$
- * @version $Id: StatusLine.java,v 1.5 2003/08/02 12:56:47 zet Exp $ 
+ * @version $Id: StatusLine.java,v 1.6 2003/08/02 19:32:43 zet Exp $ 
  *
  */
 public class StatusLine {
@@ -62,6 +62,9 @@ public class StatusLine {
 		
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 3;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.horizontalSpacing = 0;
 			
 		this.composite.setLayout( gridLayout);
 		composite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );	
@@ -110,6 +113,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.6  2003/08/02 19:32:43  zet
+marginwidths
+
 Revision 1.5  2003/08/02 12:56:47  zet
 size statusline
 
