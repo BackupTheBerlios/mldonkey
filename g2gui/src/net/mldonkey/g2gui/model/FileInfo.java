@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.52 2003/09/16 01:26:44 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.53 2003/09/16 15:54:15 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -151,7 +151,7 @@ public class FileInfo extends Parent implements Observer {
 	/**
 	 * Percent (Downloaded/Size)*100
 	 */
-	private double perc;
+	private int perc;
 	/**
 	 * A weak keyset of clients associated with this file
 	 */
@@ -302,7 +302,6 @@ public class FileInfo extends Parent implements Observer {
 	}
 	/**
 	 * @return The rate this file is downloading
-	 * 			(rounded to two decimal places)
 	 */
 	public float getRate() {
 		return rate;
@@ -493,16 +492,6 @@ public class FileInfo extends Parent implements Observer {
 		this.setChanged();
 		this.notifyObservers( clientInfo );
 	}
-	
-	/**
-	 * Rounds a double to two decimal places
-	 * @param d The double to round
-	 * @return a rounden double
-	 */
-	private static double round( double d ) {
-		d = ( double )( ( int )( d * 100 + 0.5 ) ) / 100;
-		return d;
-	}
 
 	/**
 	 * Compares two FileInfo objects by their md4
@@ -595,11 +584,13 @@ public class FileInfo extends Parent implements Observer {
 			changedProperties.add(CHANGED_DOWNLOADED);
 		}
 		
-		int oldPercent = (int) this.perc;
-		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
-		this.perc = d2;
-
-		if (oldPercent != (int) this.perc) {
+		int oldPercent = this.perc;
+		if (this.getSize() > 0) { 
+			this.perc = ( int ) ( ( float ) this.getDownloaded() / ( float ) this.getSize() * 100f );
+		} else {
+			this.perc = 0;
+		}
+		if (oldPercent != this.perc) {
 			changedProperties.add(CHANGED_PERCENT);
 		}
 	}
@@ -795,6 +786,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.53  2003/09/16 15:54:15  zet
+(int) perc
+
 Revision 1.52  2003/09/16 01:26:44  zet
 fix #916 bigfile
 
