@@ -43,7 +43,7 @@ import java.util.Observer;
  *
  * ClientTableContentProvider
  *
- * @version $Id: ClientTableContentProvider.java,v 1.8 2003/11/08 22:47:15 zet Exp $
+ * @version $Id: ClientTableContentProvider.java,v 1.9 2003/11/14 20:29:50 zet Exp $
  *
  */
 public class ClientTableContentProvider extends GTableContentProvider implements Observer {
@@ -118,6 +118,7 @@ public class ClientTableContentProvider extends GTableContentProvider implements
     }
 
     public void updateHeader(Object input) {
+        if (input == null) return;
         FileInfo fileInfo = (FileInfo) input;
         int totalClients = 0;
         int totalConnected = 0;
@@ -140,6 +141,9 @@ public class ClientTableContentProvider extends GTableContentProvider implements
 
 /*
 $Log: ClientTableContentProvider.java,v $
+Revision 1.9  2003/11/14 20:29:50  zet
+null check (maybe #1086, not sure)
+
 Revision 1.8  2003/11/08 22:47:15  zet
 update client table header
 
