@@ -24,11 +24,12 @@ import java.io.IOException;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.model.ConsoleMessage;
+import net.mldonkey.g2gui.model.InfoCollection;
 /**
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.11 2003/06/27 11:07:52 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.12 2003/06/27 12:45:01 dek Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -50,9 +51,15 @@ public interface CoreCommunication {
 	 */
 	ConsoleMessage getConsoleMessage();
 	
+	public InfoCollection getNetworkinfoMap();
+	
 	/**
 	 * Adds an Observer to this object
 	 * @param obj The Observer to add
 	 */
 	void addObserver( Observer obj );
+	/**
+	 * @param string
+	 */
+	void sendConsoleMessage( String command );
 }

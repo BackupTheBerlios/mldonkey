@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.36 2003/06/27 12:04:02 dek Exp $ 
+ * @version $Id: Core.java,v 1.37 2003/06/27 12:45:01 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -284,10 +284,20 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		sendConsoleMessage.sendMessage( connection );	
 		
 	}
+	/**
+	 * @return
+	 */
+	public InfoCollection getNetworkinfoMap() {
+		return networkinfoMap;
+	}
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.37  2003/06/27 12:45:01  dek
+getNetWorkInfoMap() added
+
 Revision 1.36  2003/06/27 12:04:02  dek
 consoleMessageFix
 
