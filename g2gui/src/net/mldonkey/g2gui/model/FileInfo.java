@@ -45,13 +45,16 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
 /**
- * Download
+ * FileInfo
  *
- *
- * @version $Id: FileInfo.java,v 1.64 2003/10/05 00:55:13 zet Exp $
+ * @version $Id: FileInfo.java,v 1.65 2003/10/12 15:57:11 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
+	/**
+	 * Decimal format for calcStringSize
+	 */
+	private static final DecimalFormat df = new DecimalFormat( "0.#" );
     /**
      * Static strings used internally for tableviewer updates
      */
@@ -62,16 +65,20 @@ public class FileInfo extends Parent implements Observer {
     public static final String CHANGED_LAST = "last";
     public static final String CHANGED_AVAIL = "avail";
     public static final String CHANGED_ACTIVE = "active";
-    
+	public static final String[] ALL_PROPERTIES = {
+			CHANGED_RATE, 
+			CHANGED_DOWNLOADED, 
+			CHANGED_PERCENT, 
+			CHANGED_AVAIL, 
+			CHANGED_ETA,
+			CHANGED_LAST, 
+			CHANGED_ACTIVE
+		};
+
     /**
      * A set (no duplicates) of changed properties
      */
     private Set changedProperties = Collections.synchronizedSet( new HashSet() );
-    /**
-     * Decimal format for calcStringSize
-     */
-    private static DecimalFormat df = new DecimalFormat( "0.#" );
-
     /**
      * File identifier
      */
@@ -165,14 +172,29 @@ public class FileInfo extends Parent implements Observer {
      */
     private int perc;
     /**
+     * A set of active clients associated with this file
+     */	
+    private Set treeClientInfoSet = Collections.synchronizedSet( new HashSet() );
+    /**
      * A weak keyset of clients associated with this file
      */
     private Map clientInfos = Collections.synchronizedMap( new WeakHashMap( 4 ) );
+    /**
+     * String size
+     */
     private String stringSize = "";
+    /**
+     * String downloaded
+     */
     private String stringDownloaded = "";
+	/**
+	 * String ETA
+	 */
     private String stringETA = "";
+    /**
+     * ETA seconds
+     */
     private long etaSeconds;
-
     /**
      * @return String time when download started
      */
@@ -238,6 +260,9 @@ public class FileInfo extends Parent implements Observer {
         return chunks;
     }
    
+   	/**
+   	 * @return numChunks
+   	 */
     public int getNumChunks() {
         return numChunks;
     }
@@ -357,7 +382,7 @@ public class FileInfo extends Parent implements Observer {
      */
     public int getSources() {
         // return sources; 
-        // TODO: use sources when it is not 0.
+        // TODO: use "sources" when core sends it
         return clientInfos.size();
     }
     /**
@@ -393,6 +418,13 @@ public class FileInfo extends Parent implements Observer {
      */
     public Map getClientInfos() {
         return clientInfos;
+    }
+    
+    /**
+     * @return treeClientInfoSet
+     */
+    public Set getTreeClientInfoSet() {
+    	return treeClientInfoSet;
     }
 
     /**
@@ -495,8 +527,10 @@ public class FileInfo extends Parent implements Observer {
     public void addClientInfo( ClientInfo clientInfo ) {
         this.clientInfos.put( clientInfo, null );
         clientInfo.addObserver( this );
-		if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+		if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING) {
 			setActiveSources( +1 );
+			treeClientInfoSet.add(new TreeClientInfo(this, clientInfo));
+		}
         this.setChanged();
         this.notifyObservers( clientInfo );
     }
@@ -508,6 +542,7 @@ public class FileInfo extends Parent implements Observer {
     public void removeClientInfo( ClientInfo clientInfo ) {
         this.clientInfos.remove( clientInfo );
         clientInfo.deleteObserver( this );
+        removeTreeClientInfo( clientInfo );
         setActiveSources( 0 );
         this.setChanged();
         this.notifyObservers( clientInfo );
@@ -773,15 +808,24 @@ public class FileInfo extends Parent implements Observer {
         else
             return new String( size + "" );
     }
-
+	/**
+	 * @return stringSize
+	 */
     public String getStringSize() {
         return stringSize;
     }
 
+	/**
+	 * @return stringDownloaded
+	 */
     public String getStringDownloaded() {
         return stringDownloaded;
     }
 
+	/**
+	 * @param inSeconds
+	 * @return stringOfSeconds
+	 */
     private static String calcStringOfSeconds( long inSeconds ) {
         if ( inSeconds < 1 )
             return "0m";
@@ -800,50 +844,117 @@ public class FileInfo extends Parent implements Observer {
         return "" + minutes + "m";
     }
  
+ 	/**
+ 	 * @return stringETA
+ 	 */
     public String getStringETA() {
+		if (getState().getState() == EnumFileState.QUEUED 
+			|| getState().getState() == EnumFileState.PAUSED)
+			return "";
+		
         return stringETA;
     }
 
+	/**
+	 * @return stringOffset (Last seen complete)
+	 */
     public String getStringOffset() {
         return stringOffset;
     }
 
+	/**
+	 * @return stringAge (Age of download)
+	 */
     public String getStringAge() {
         return stringAge;
     }
  
+ 	/**
+ 	 * @return eta
+ 	 */
     public long getETA() {
         return etaSeconds;
     }
 
+	/**
+	 * @return ed2kLink
+	 */
 	public String getED2K() {
 		return "ed2k://|file|" + this.getName() 
 				+ "|" + this.getSize() 
 				+ "|" + this.getMd4() 
 				+ "|/";
 	}
-
+	
     /* (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable o, Object obj ) {
         if ( o instanceof ClientInfo && obj instanceof Boolean ) {
             ClientInfo clientInfo = ( ClientInfo ) o;
-            this.setChanged();
             // this client is now interesting.. notify the viewer
             if ( ((Boolean) obj).equals(Boolean.TRUE) ) {
                 setActiveSources( +1 );
-                this.notifyObservers( new TreeClientInfo( this, clientInfo ) );
+                TreeClientInfo treeClientInfo = new TreeClientInfo( this, clientInfo );
+                treeClientInfoSet.add( treeClientInfo );
+				this.setChanged();
+                this.notifyObservers( treeClientInfo );
             } else {
-            	setActiveSources( -1 );
-                this.notifyObservers( clientInfo );
+            	TreeClientInfo foundTreeClientInfo;
+            	if ( (foundTreeClientInfo = removeTreeClientInfo(clientInfo)) != null) {
+            		foundTreeClientInfo.setDelete();	
+            		setActiveSources( -1 );
+                	this.setChanged();
+                	this.notifyObservers( foundTreeClientInfo );
+            	}
             }
         }
     }
+   
+   	/**
+   	 * @return boolean if this FileInfo is interesting to display in downloadsTable
+   	 */
+	public boolean isInteresting() {
+		if ( getState().getState() == EnumFileState.DOWNLOADING  
+			|| getState().getState() == EnumFileState.PAUSED  
+			|| getState().getState() == EnumFileState.DOWNLOADED  
+			|| getState().getState() == EnumFileState.QUEUED ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @param clientInfo
+	 * @return treeClientInfo 
+	 */	
+	public TreeClientInfo removeTreeClientInfo( ClientInfo clientInfo ) {
+		Iterator i = treeClientInfoSet.iterator();
+		TreeClientInfo foundTreeClientInfo = null;
+		
+		while( i.hasNext() ) {
+			TreeClientInfo treeClientInfo = (TreeClientInfo) i.next();
+			if ( clientInfo == treeClientInfo.getClientInfo() ) {
+				foundTreeClientInfo = treeClientInfo;
+				break;
+			}
+		}
+
+		if ( foundTreeClientInfo != null )
+			treeClientInfoSet.remove(foundTreeClientInfo);
+		
+		return foundTreeClientInfo;
+		
+	}
+    
 }
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.65  2003/10/12 15:57:11  zet
+store active clients
+
 Revision 1.64  2003/10/05 00:55:13  zet
 set priority as any #
 
