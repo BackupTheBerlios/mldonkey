@@ -63,7 +63,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.29 2003/09/19 17:51:39 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.30 2003/09/22 19:50:07 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -164,16 +164,12 @@ public class SearchTab extends GuiTab {
 		}
 		tabFolder.setSelection( 0 );
 
-		// listen for focus to resize the control when the tab gets active		
-		tabFolder.addFocusListener( new FocusListener() {
-			public void focusGained( FocusEvent e ) {
-				//TODO resize CTabItem to fit with the button (any ideas?)
-			}
-			public void focusLost( FocusEvent e ) {
-			}
-		} );
-		
-		createSearchButton( aComposite );
+		gridLayout = new GridLayout();
+		gridLayout.marginHeight = 0;
+		Composite anotherComposite = new Composite( aComposite, SWT.NONE );
+		anotherComposite.setLayout( gridLayout );
+		anotherComposite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		createSearchButton( anotherComposite );
 		
 		searchViewForm.setContent( aComposite );
 		searchViewForm.setTopLeft( searchCLabel );
@@ -387,6 +383,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.30  2003/09/22 19:50:07  lemmster
+searchbutton a little bit more beautiful.
+
 Revision 1.29  2003/09/19 17:51:39  lemmster
 minor bugfix
 
