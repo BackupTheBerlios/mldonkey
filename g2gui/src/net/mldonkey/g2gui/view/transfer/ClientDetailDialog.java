@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -46,24 +46,24 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.14 2003/12/04 08:47:32 lemmy Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.15 2004/03/16 19:27:00 dek Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
     private CoreCommunication core;
     private FileInfo fileInfo;
     private ClientInfo clientInfo;
-    private CLabel clName;
-    private CLabel clRating;
-    private CLabel clActivity;
-    private CLabel clKind;
-    private CLabel clNetwork;
-    private CLabel clSockAddr;
-    private CLabel clUploaded;
-    private CLabel clDownloaded;
-    private CLabel clSoftware;
-    private CLabel clHash;
-    private CLabel clPort;
+    private StyledText clName;
+    private StyledText clRating;
+    private StyledText clActivity;
+    private StyledText clKind;
+    private StyledText clNetwork;
+    private StyledText clSockAddr;
+    private StyledText clUploaded;
+    private StyledText clDownloaded;
+    private StyledText clSoftware;
+    private StyledText clHash;
+    private StyledText clPort;
 
     public ClientDetailDialog(Shell parentShell, FileInfo fileInfo, ClientInfo clientInfo,
         CoreCommunication core) {
@@ -217,6 +217,9 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.15  2004/03/16 19:27:00  dek
+Infos in Detail-Dialogs are now "copy-and-paste" enabled [TM]
+
 Revision 1.14  2003/12/04 08:47:32  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

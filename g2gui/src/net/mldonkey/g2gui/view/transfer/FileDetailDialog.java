@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -55,25 +55,25 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.12 2003/12/07 19:38:09 lemmy Exp $
+ * @version $Id: FileDetailDialog.java,v 1.13 2004/03/16 19:27:00 dek Exp $
  *
  */
 public class FileDetailDialog extends DetailDialog {
     private FileInfo fileInfo;
     private Button fileActionButton;
     private Button fileCancelButton;
-    private CLabel clFileName;
-    private CLabel clHash;
-    private CLabel clSize;
-    private CLabel clAge;
-    private CLabel clSources;
-    private CLabel clChunks;
-    private CLabel clTransferred;
-    private CLabel clRelativeAvail;
-    private CLabel clLast;
-    private CLabel clPriority;
-    private CLabel clRate;
-    private CLabel clETA;
+    private StyledText clFileName;
+    private StyledText clHash;
+    private StyledText clSize;
+    private StyledText clAge;
+    private StyledText clSources;
+    private StyledText clChunks;
+    private StyledText clTransferred;
+    private StyledText clRelativeAvail;
+    private StyledText clLast;
+    private StyledText clPriority;
+    private StyledText clRate;
+    private StyledText clETA;
     private List renameList;
     private Text renameText;
 
@@ -385,6 +385,9 @@ public class FileDetailDialog extends DetailDialog {
 
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.13  2004/03/16 19:27:00  dek
+Infos in Detail-Dialogs are now "copy-and-paste" enabled [TM]
+
 Revision 1.12  2003/12/07 19:38:09  lemmy
 refactoring
 

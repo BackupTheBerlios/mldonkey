@@ -35,9 +35,11 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -46,13 +48,14 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * DetailDialog
  *
- * @version $Id: DetailDialog.java,v 1.4 2003/12/04 08:47:32 lemmy Exp $
+ * @version $Id: DetailDialog.java,v 1.5 2004/03/16 19:27:00 dek Exp $
  *
  */
 public abstract class DetailDialog extends Dialog implements Observer {
     protected ArrayList chunkCanvases = new ArrayList();
     private int leftColumn = 100;
     private int rightColumn = leftColumn * 3;
+    protected Color background = Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND );
 
     protected DetailDialog(Shell parentShell) {
         super(parentShell);
@@ -73,15 +76,19 @@ public abstract class DetailDialog extends Dialog implements Observer {
      * @param longlabel
      * @return
      */
-    protected CLabel createLine(Composite composite, String resString, boolean longLabel) {
-        Label label = new Label(composite, SWT.NONE);
+    protected StyledText createLine(Composite composite, String resString, boolean longLabel) {    	
+        
+    	Label label = new Label(composite, SWT.NONE);
         label.setText(G2GuiResources.getString(resString));
 
         GridData gridData = new GridData();
         gridData.widthHint = leftColumn;
         label.setLayoutData(gridData);
-
-        CLabel cLabel = new CLabel(composite, SWT.NONE);
+        
+        StyledText sText = new StyledText( composite, SWT.READ_ONLY );
+        sText.setCaret( null );
+        sText.setBackground( background );
+       
         gridData = new GridData();
 
         if (longLabel) {
@@ -91,9 +98,9 @@ public abstract class DetailDialog extends Dialog implements Observer {
             gridData.widthHint = leftColumn;
         }
 
-        cLabel.setLayoutData(gridData);
-
-        return cLabel;
+        sText.setLayoutData(gridData);
+        
+        return sText;
     }
 
     /**
@@ -139,10 +146,12 @@ public abstract class DetailDialog extends Dialog implements Observer {
      * @param cLabel
      * @param string
      */
-    protected void updateLabel(CLabel cLabel, String string) {
-        if (!cLabel.isDisposed()) {
-            cLabel.setText(string);
-            cLabel.setToolTipText((string.length() > 10) ? string : "");
+    protected void updateLabel(StyledText styledText, String string) {
+        if (!styledText.isDisposed()) {
+        	if ( !styledText.getText().equals(string) ){
+	            styledText.setText(string);
+	            styledText.setToolTipText((string.length() > 10) ? string : "");
+        	}
         }
     }
 
@@ -180,6 +189,9 @@ public abstract class DetailDialog extends Dialog implements Observer {
 
 /*
 $Log: DetailDialog.java,v $
+Revision 1.5  2004/03/16 19:27:00  dek
+Infos in Detail-Dialogs are now "copy-and-paste" enabled [TM]
+
 Revision 1.4  2003/12/04 08:47:32  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
