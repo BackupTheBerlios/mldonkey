@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.22 2003/07/23 17:02:18 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.23 2003/07/28 17:15:47 lemmstercvs01 Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -74,6 +74,10 @@ public interface CoreCommunication {
 	 * @return all our current running downloads
 	 */
 	FileInfoIntMap getFileInfoIntMap();
+	/**
+	 * @return all the known servers
+	 */
+	ServerInfoIntMap getServerInfoIntMap();
 	/**
 	 * 
 	 * @return A Map with all the resultInfo obj

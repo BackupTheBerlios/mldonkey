@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.70 2003/07/27 22:39:36 zet Exp $ 
+ * @version $Id: Core.java,v 1.71 2003/07/28 17:16:51 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -160,6 +160,8 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 				this.decodeMessage( opCode, messageBuffer );
 			}			
 		} catch ( Exception e ) {
+			//TODO remove debug e.printStackTrace()
+			e.printStackTrace();
 			connected = false;
 			e.printStackTrace();
 			System.out.println( "No Connection to mldonkey" );
@@ -230,6 +232,8 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 					
 			case Message.R_SERVER_STATE : 
 					this.serverInfoMap.update( messageBuffer );
+					this.setChanged();
+					this.notifyObservers( serverInfoMap );
 					break;		
 					
 			case Message.R_CLIENT_INFO :
@@ -293,6 +297,8 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 					
 			case Message.R_SERVER_INFO :
 					this.serverInfoMap.readStream( messageBuffer );
+					this.setChanged();
+					this.notifyObservers( serverInfoMap );
 					break;
 							
 			case Message.R_DOWNLOADING_LIST :
@@ -363,10 +369,20 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 		return ( FileInfoIntMap ) this.fileInfoMap;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getServerInfoIntMap()
+	 */
+	public ServerInfoIntMap getServerInfoIntMap() {
+		return ( ServerInfoIntMap ) this.serverInfoMap;
+	}
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.71  2003/07/28 17:16:51  lemmstercvs01
+getServerInfoIntMap() added
+
 Revision 1.70  2003/07/27 22:39:36  zet
 small buttons toggle (in popup) for main cool menu
 
