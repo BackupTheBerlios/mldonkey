@@ -25,15 +25,14 @@ package net.mldonkey.g2gui.model;
 /**
  * ModelFactory25.java
  *
- * @version $Id: ModelFactory25.java,v 1.2 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: ModelFactory25.java,v 1.3 2004/03/21 21:08:58 dek Exp $ 
  *
  */
 public class ModelFactory25 extends ModelFactory24 {
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.model.ModelFactory24#getFileInfo()
 	 */
-	public FileInfo getFileInfo() {
-		// TODO Auto-generated method stub
+	public FileInfo getFileInfo() {		
 		return new FileInfo25(core);
 	}
 	
@@ -47,6 +46,9 @@ public class ModelFactory25 extends ModelFactory24 {
 
 /*
  $Log: ModelFactory25.java,v $
+ Revision 1.3  2004/03/21 21:08:58  dek
+ removed stubs
+
  Revision 1.2  2004/03/21 21:00:50  dek
  implemented gui-Proto 21-25 !!!!!
 

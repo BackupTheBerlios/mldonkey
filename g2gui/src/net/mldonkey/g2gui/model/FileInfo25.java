@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
 /**
  * FileInfo25.java
  *
- * @version $Id: FileInfo25.java,v 1.2 2004/03/21 21:00:50 dek Exp $ 
+ * @version $Id: FileInfo25.java,v 1.3 2004/03/21 21:08:58 dek Exp $ 
  *
  */
 public class FileInfo25 extends FileInfo24 {
@@ -38,7 +38,6 @@ public class FileInfo25 extends FileInfo24 {
 	 */
 	FileInfo25(CoreCommunication core) {
 		super(core);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -61,6 +60,9 @@ public class FileInfo25 extends FileInfo24 {
 
 /*
  $Log: FileInfo25.java,v $
+ Revision 1.3  2004/03/21 21:08:58  dek
+ removed stubs
+
  Revision 1.2  2004/03/21 21:00:50  dek
  implemented gui-Proto 21-25 !!!!!
 
