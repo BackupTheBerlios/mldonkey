@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.26 2003/09/03 14:49:07 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.27 2003/09/03 15:50:39 zet Exp $ 
  *
  */
 public class G2Gui {
@@ -101,6 +101,8 @@ public class G2Gui {
 	 * spawn core
 	 */
 	public static void spawnCore() {
+		
+		if (PreferenceLoader.loadString("coreExecutable").equals("")) return;
 		
 		File coreEXE = new File( PreferenceLoader.loadString("coreExecutable") );
 		
@@ -375,6 +377,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.27  2003/09/03 15:50:39  zet
+workaround for garbage windows gcc: java.io.IOException: GetFullPathName failed
+
 Revision 1.26  2003/09/03 14:49:07  zet
 optionally spawn core from gui
 
