@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.27 2003/08/24 18:41:46 zet Exp $ 
+ * @version $Id: Preferences.java,v 1.28 2003/08/25 13:14:12 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -78,7 +78,7 @@ public class Preferences extends PreferenceManager {
 				 * @see org.eclipse.jface.window.Window#setShellStyle(int)
 				 */
 					protected void setShellStyle( int newShellStyle ) {					
-						super.setShellStyle( SWT.DIALOG_TRIM );
+						super.setShellStyle( SWT.DIALOG_TRIM |SWT.APPLICATION_MODAL );
 					}
 				};
 		
@@ -227,6 +227,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.28  2003/08/25 13:14:12  dek
+now integegerFields have the same width as StringInputFields
+
 Revision 1.27  2003/08/24 18:41:46  zet
 try to remove horizontal scrollbars from prefs
 
@@ -244,7 +247,7 @@ Revision 1.23  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.22  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.21  2003/08/20 11:51:52  dek
 renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name

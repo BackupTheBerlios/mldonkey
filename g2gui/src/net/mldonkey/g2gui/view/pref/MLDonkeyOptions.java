@@ -36,22 +36,26 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Text;
 /**
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.23 2003/08/24 18:41:46 zet Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.24 2003/08/25 13:14:57 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	private ScrolledComposite sc;
 	private Composite parent;
 	private List options = new ArrayList();
+	private final int inputFieldLength = 30;
 	/**
 	 * @param title
 	 * @param style
@@ -95,11 +99,34 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 					String optionHelp = temp.getOptionHelp();					
 						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
 							
-					/*create a IntegerFieldEditor and add to page*/
-					IntegerFieldEditor integer = new IntegerFieldEditor( temp.getKey(), description, parent, 25 );
+					/*create a IntegerFieldEditor and add to page
+					 * 
+					 * this is kind of hacky, but i don't see another way to get the stuff
+					 * with the different-sized inputs done...
+					 */
+					
+					IntegerFieldEditor integer = new IntegerFieldEditor( temp.getKey(), description, parent ) {
+							/* (non-Javadoc)
+							 * @see org.eclipse.jface.preference.StringFieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite, int)
+							 */
+							protected void doFillIntoGrid( Composite parent, int numColumns ) {
+								getLabelControl( parent );
+								Text textField = getTextControl( parent );
+								GridData gd = new GridData();
+								gd.horizontalSpan = numColumns - 1;							
+								GC gc = new GC( textField );
+									try {
+										Point extent = gc.textExtent( "X" );
+										gd.widthHint = inputFieldLength * extent.x;
+									} finally {
+										gc.dispose();
+									}						
+								textField.setLayoutData( gd );
+							}
+						};					
 						integer.getLabelControl( parent ).setToolTipText( optionHelp );
 						integer.setPreferenceStore( this.getPreferenceStore() );					
-						//integer.fillIntoGrid( parent, 2 );
+						integer.fillIntoGrid( parent, 2 );
 						integer.load();
 					addField( integer );
 				} 
@@ -108,11 +135,11 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 						if ( description.equals( "" ) ) description = temp.getKey();
 					String optionHelp = temp.getOptionHelp();					
 						if ( optionHelp.equals( "" ) ) optionHelp = temp.getKey();
-					// with a very long string, the pref pages looks bad. limit to 25?
-					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, 25, parent ); 
+					// with a very long string, the pref pages looks bad. limit to inputFieldLength?
+					StringFieldEditor string = new StringFieldEditor( temp.getKey(), description, inputFieldLength, parent ); 
 						string.getLabelControl( parent ).setToolTipText( optionHelp );					
 						string.setPreferenceStore( this.getPreferenceStore() );
-						//string.fillIntoGrid( parent, 2 );
+						string.fillIntoGrid( parent, 2 );
 						string.load();
 					addField( string );
 				}
@@ -177,6 +204,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.24  2003/08/25 13:14:57  dek
+now integegerFields have the same width as StringInputFields
+
 Revision 1.23  2003/08/24 18:41:46  zet
 try to remove horizontal scrollbars from prefs
 
