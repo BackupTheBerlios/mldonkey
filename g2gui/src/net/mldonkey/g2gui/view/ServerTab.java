@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.27 2003/09/14 09:42:51 lemmster Exp $ 
+ * @version $Id: ServerTab.java,v 1.28 2003/09/14 10:01:24 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -99,9 +99,8 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	/* 0 sets the tablewidth dynamcliy */
 	private int[] tableWidth =
 	{
-		70, 160, 0, 120,
-		50, 55, 55, 60,
-		80, 50
+		70, 160, 0, 120, 50,
+		55, 55, 60, 80, 50
 	};
 	
 	/**
@@ -404,6 +403,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.28  2003/09/14 10:01:24  lemmster
+save column width [bug #864]
+
 Revision 1.27  2003/09/14 09:42:51  lemmster
 save column width
 
