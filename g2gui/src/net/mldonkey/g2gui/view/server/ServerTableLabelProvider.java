@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view.server;
 import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
+import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.IColorProvider;
@@ -37,11 +38,13 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: ServerTableLabelProvider.java,v 1.2 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ServerTableLabelProvider.java,v 1.3 2003/09/14 10:19:48 lemmster Exp $ 
  *
  */
 public class ServerTableLabelProvider implements ITableLabelProvider, IColorProvider {
 	private Color connectColor = new Color( null, 41, 174, 57 );
+	private Color connectingColor = new Color( null, 255,165,0 );
+	private Color disconnectColor = new Color( null, 192,192,192 );
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
@@ -140,6 +143,10 @@ public class ServerTableLabelProvider implements ITableLabelProvider, IColorProv
 			ServerInfo server = ( ServerInfo ) arg0;
 			if ( server.isConnected() ) 
 				return connectColor;
+			if ( server.getConnectionState().getState() == EnumState.CONNECTING )
+				return connectingColor;
+			if ( server.getConnectionState().getState() == EnumState.NOT_CONNECTED )
+				return disconnectColor;		
 			return null;
 	}
 
@@ -153,6 +160,9 @@ public class ServerTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ServerTableLabelProvider.java,v $
+Revision 1.3  2003/09/14 10:19:48  lemmster
+different colors for the server state (forum request)
+
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 
