@@ -1711,41 +1711,6 @@ fi
 
 
 
-	as_ac_File=`echo "ac_cv_file_$jar_dir/rss4j.jar" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $jar_dir/rss4j.jar" >&5
-echo $ECHO_N "checking for $jar_dir/rss4j.jar... $ECHO_C" >&6
-if eval "test \"\${$as_ac_File+set}\" = set"; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  test "$cross_compiling" = yes &&
-  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
-echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
-   { (exit 1); exit 1; }; }
-if test -r "$jar_dir/rss4j.jar"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
-echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
-if test `eval echo '${'$as_ac_File'}'` = yes; then
-  :
-else
-
-		if test $ac_cv_enable_batch = yes; then
-			echo downloading rss4j.jar
-			$ac_cv_path_WGET $ac_lib_url/rss4j.jar -P$jar_dir
-		else
-		{ { echo "$as_me:$LINENO: error: rss4j.jar not found, use --enable-batch to auto-download" >&5
-echo "$as_me: error: rss4j.jar not found, use --enable-batch to auto-download" >&2;}
-   { (exit 1); exit 1; }; }
-		fi
-
-fi
-
-
-
 	as_ac_File=`echo "ac_cv_file_$jar_dir/trove.jar" | $as_tr_sh`
 echo "$as_me:$LINENO: checking for $jar_dir/trove.jar" >&5
 echo $ECHO_N "checking for $jar_dir/trove.jar... $ECHO_C" >&6
