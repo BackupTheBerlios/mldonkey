@@ -46,7 +46,7 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
 /**
- * @version $Id: SystemTray.java,v 1.19 2004/03/19 14:16:03 dek Exp $
+ * @version $Id: SystemTray.java,v 1.20 2004/03/19 16:53:26 dek Exp $
  *  
  */
 public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
@@ -160,7 +160,17 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 		parent.getCore().getClientStats().addObserver(this);
 		
 		iconImage = G2GuiResources.getImageDescriptor("TrayIcon").createImage();
+		
+		/*
+		 * following line has to be commented out for gcj-compilation on linux
+		 * my guess is, this needs some makefile magic
+		 */		
+		/***************/
+		// NO_LINUX_START
 		icon = iconImage.handle;
+		// NO_LINUX_END
+		/****************/
+
 				
 		systemTrayManager = new SystemTrayIconManager(icon, titleBarText);
 		systemTrayManager.addSystemTrayIconListener(this);
@@ -267,6 +277,9 @@ public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.20  2004/03/19 16:53:26  dek
+ Makefile magic for win-only feature
+
  Revision 1.19  2004/03/19 14:16:03  dek
  *** empty log message ***
 
