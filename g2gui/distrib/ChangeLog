@@ -1,9 +1,16 @@
+2004/03/25: vnc
+	* TransferTable: 
+		- Download-Cancel dialog now list the files before canceling
+		- Http-preview is now possible using a suitable player (xine, mplayer, vlc...)
+		  it needs to be specified in the adv. preferences
+		- Added "Copy preview-link to clipboard"
+
 2004/03/22: Dek
 	* Core-Communication: Implemented GUI-Protocol Version 21...25
 
 2004/03/16: Dek
 	* FileDetail Dialog: Infos (e.g. hash, filename) are now 
-	copy-and-paste enabled[TM]
+	  copy-and-paste enabled[TM]
 	
 2004/03/10: Dek
 	* SysTray: applied TomTom's patch [Patch #82]
