@@ -22,19 +22,22 @@
  */
 package net.mldonkey.g2gui.view.transferTree;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
-import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.view.helper.CGridLayout;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -44,41 +47,45 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * 
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.24 2003/09/14 16:23:56 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.25 2003/09/14 21:54:13 zet Exp $ 
  *
  */  
-public class ClientDetailDialog implements Observer {
+public class ClientDetailDialog implements Observer, DisposeListener {
 
 	private Shell shell;
+	private CoreCommunication core;
 	private Display desktop = Display.getDefault();
 	private FileInfo fileInfo;
 	private ClientInfo clientInfo;
-	private ChunkCanvas chunkCanvas, chunkCanvas2;
+
 	private CLabel clName, clRating, clActivity, clKind, clNetwork;
-	
+	private ArrayList chunkCanvases = new ArrayList();
+
 	int leftColumn = 100;
 	int rightColumn = leftColumn * 3;
 	int width = leftColumn + rightColumn + 30;
 	int height = 420;
 	
-	private List renameList;
-	private Text renameText;
-	
 	public ClientDetailDialog ( FileInfo fileInfo, final ClientInfo clientInfo, final CoreCommunication core ) 
 	{
-	
 		this.fileInfo = fileInfo;
 		this.clientInfo = clientInfo;
-		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
+		this.core = core;
+		createContents();
+	}
 	
+	/**
+	 * Create dialog contents
+	 */
+	public void createContents() {
+		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
+		shell.addDisposeListener( this );
 		shell.setBounds( (desktop.getBounds().width - width) / 2,
 								  (desktop.getBounds().height - height) / 2,
 								  width, height);
@@ -93,53 +100,89 @@ public class ClientDetailDialog implements Observer {
 		shell.setLayout( gridLayout );
 		shell.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		// General
-		Group clientGeneral = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		clientGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_INFO"));
+		createGeneralGroup(shell);
 		
-		gridLayout = CGridLayout.createGL(4,5,2,0,0,false);
-		clientGeneral.setLayout(gridLayout);
-		
-		clName = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NAME"), true);
-		clNetwork = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NETWORK"), false);
-		clRating = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_RATING"), false);
-		clActivity = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_ACTIVITY"), false);
-		clKind = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_KIND"), false);
+		createChunkGroup(shell, G2GuiResources.getString("TT_DOWNLOAD_CD_LOCAL_CHUNKS"), null);
+		createChunkGroup(shell, G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_CHUNKS"), clientInfo);
 	
-		clientGeneral.setLayoutData( new GridData(GridData.FILL_HORIZONTAL ) );
+		createButtons(shell);
 
-		// Chunk	
+		updateLabels();
+		fileInfo.addObserver(this);
+		clientInfo.addObserver(this);
+		shell.pack();
+		shell.open();
+	}
+
+
+	/**
+	 * @param parent
+	 * 
+	 * Create general client information
+	 */
+	public void createGeneralGroup(Shell parent) {
+		
+		 Group clientGeneral = new Group(parent, SWT.SHADOW_ETCHED_OUT );
+		 clientGeneral.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_INFO"));
+		
+		 clientGeneral.setLayout(CGridLayout.createGL(4,5,2,0,0,false));
+		
+		 clName = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NAME"), true);
+		 clNetwork = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_NETWORK"), false);
+		 clRating = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_RATING"), false);
+		 clActivity = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_ACTIVITY"), false);
+		 clKind = createLine(clientGeneral, G2GuiResources.getString("TT_DOWNLOAD_CD_KIND"), false);
+	
+		 clientGeneral.setLayoutData( new GridData(GridData.FILL_HORIZONTAL ) );
+
+	}
+	
+	/**
+	 * @param shell
+	 * @param text
+	 * @param clientInfo
+	 * 
+	 * Create chunk group (clientInfo=null to display fileInfo chunks)
+	 */
+	public void createChunkGroup(Shell shell, String text, ClientInfo clientInfo) {
+		
 		Group chunkGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		chunkGroup.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_LOCAL_CHUNKS"));
-
-		gridLayout = CGridLayout.createGL(1,5,5,0,0,false);
-		chunkGroup.setLayout(gridLayout);
-			
+		
+		String totalChunks = "";
+		// clientInfo.getFileAvail is not synched. TIntObjHash.. 
+		if (clientInfo == null) {
+			totalChunks = " (" + fileInfo.getAvail().length() + ")";
+		} 
+		
+		chunkGroup.setText(text + totalChunks);
+		chunkGroup.setLayout(CGridLayout.createGL(1,5,5,0,0,false));
 		chunkGroup.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) ) ;
-					
-		chunkCanvas = new ChunkCanvas( chunkGroup, SWT.NO_BACKGROUND, null, fileInfo, null );
-		fileInfo.addObserver( chunkCanvas );
+				
+		ChunkCanvas chunkCanvas = new ChunkCanvas( chunkGroup, SWT.NO_BACKGROUND, clientInfo, fileInfo, null );
+		
+		if (clientInfo == null) 
+			fileInfo.addObserver( chunkCanvas );
+		else {
+			clientInfo.addObserver( chunkCanvas );
+		}
+		
+		chunkCanvases.add(chunkCanvas);
+		
 		GridData canvasGD = new GridData(GridData.FILL_HORIZONTAL);
 		canvasGD.heightHint = 28;
 		chunkCanvas.setLayoutData(canvasGD);
+	
+	}
+	
+	/**
+	 * @param parent
+	 * 
+	 * Create dialog buttons
+	 * 
+	 */
+	private void createButtons(Shell parent) {
 		
-		// Client Chunk	
-		Group chunkGroup2 = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		chunkGroup2.setText(G2GuiResources.getString("TT_DOWNLOAD_CD_CLIENT_CHUNKS"));
-		
-		gridLayout = CGridLayout.createGL(1,5,5,0,0,false);
-		chunkGroup2.setLayout(gridLayout);
-		
-		chunkGroup2.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) ) ;
-				
-		chunkCanvas2 = new ChunkCanvas( chunkGroup2, SWT.NO_BACKGROUND, clientInfo, fileInfo, null );
-		clientInfo.addObserver( chunkCanvas );
-		GridData canvasGD2 = new GridData(GridData.FILL_HORIZONTAL);
-		canvasGD2.heightHint = 28;
-		chunkCanvas2.setLayoutData(canvasGD2);
-
-
-		Composite buttonComposite = new Composite(shell, SWT.NONE);
+		Composite buttonComposite = new Composite(parent, SWT.NONE);
 		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		buttonComposite.setLayout(CGridLayout.createGL(2,0,0,5,0,false));
 
@@ -164,33 +207,21 @@ public class ClientDetailDialog implements Observer {
 		closeButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
 		closeButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
-						shell.dispose();
+						shell.close();
 			}	
 		});
-
-		updateLabels();
-		fileInfo.addObserver(this);
-		clientInfo.addObserver(this);
-		shell.pack();
-		shell.open();
-		
 	}
-
-	private void renameFile() {
-		
-		String newName = "";
-		if ( !renameText.getText().equals("") && !renameText.getText().equals( fileInfo.getName() )) {
-			newName = renameText.getText();
-		} else if ( renameList.getSelection()[0] != null && !renameList.getSelection()[0].equals(fileInfo.getName()) ) {
-			newName = renameList.getSelection()[0];
-		}
-			
-		if (!newName.equals("")) {
-			fileInfo.setName(newName);
-		}
-		
-	}
-
+	
+	
+	/**
+	 * @param composite
+	 * @param label
+	 * @param longlabel
+	 * @return CLabel
+	 * 
+	 * Create a Label/CLabel combination for information display
+	 * 
+	 */
 	private CLabel createLine(Composite composite, String label, boolean longlabel) {
 		
 		Label aLabel = new Label(composite, SWT.NONE);
@@ -213,16 +244,26 @@ public class ClientDetailDialog implements Observer {
 		
 	}
 	
+	/**
+	 * Update labels
+	 */
 	public void updateLabels() {
 		
 		updateLabel(clName, clientInfo.getClientName());
 		updateLabel(clRating, "" + clientInfo.getClientRating());
 		updateLabel(clActivity, clientInfo.getClientActivity());
-		updateLabel(clKind, getClientConnection(clientInfo));
+		updateLabel(clKind, clientInfo.getClientConnection());
 		updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
 		
 	}
 	
+	/**
+	 * @param cLabel
+	 * @param string
+	 * 
+	 * Update a label
+	 * 
+	 */
 	public void updateLabel(CLabel cLabel, String string) {
 		if (!cLabel.isDisposed()) {
 			cLabel.setText(string);
@@ -232,10 +273,12 @@ public class ClientDetailDialog implements Observer {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
 	public void update(Observable o, Object arg) {
-		if (o instanceof FileInfo) {
-			if (clName.isDisposed()) return;
-			clName.getDisplay().asyncExec(new Runnable() {
+		if (o instanceof FileInfo && !shell.isDisposed()) {
+			shell.getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					updateLabels();
 				}
@@ -243,23 +286,24 @@ public class ClientDetailDialog implements Observer {
 		}
 	}
 	
-	public void dispose() {
-		chunkCanvas.dispose();
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+	 */
+	public synchronized void widgetDisposed( DisposeEvent e ) {
+		Iterator i = chunkCanvases.iterator();
+		while ( i.hasNext() )
+			( ( ChunkCanvas ) i.next() ).dispose();
+		
 		clientInfo.deleteObserver(this);
 		fileInfo.deleteObserver(this);
 	}
-
-	public String getClientConnection(ClientInfo clientInfo) {
-		if ( clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) 
-			return G2GuiResources.getString( "TT_Firewalled" ).toLowerCase();			
-		else
-			return G2GuiResources.getString( "TT_Direct" ).toLowerCase();	
-	}
 	
-
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.25  2003/09/14 21:54:13  zet
+fix rate
+
 Revision 1.24  2003/09/14 16:23:56  zet
 multi network avails
 
