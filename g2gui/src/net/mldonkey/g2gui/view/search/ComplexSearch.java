@@ -32,6 +32,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -46,10 +48,10 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.5 2003/09/05 14:22:10 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.6 2003/09/05 16:50:19 lemmster Exp $
  *
  */
-public abstract class ComplexSearch extends Search implements Listener {
+public abstract class ComplexSearch extends Search implements Listener, MouseListener {
     protected Text maxText;
     protected Text minText;
     protected Combo maxCombo;
@@ -148,6 +150,7 @@ public abstract class ComplexSearch extends Search implements Listener {
 		this.extensionCombo.setLayoutData( gridData );
 		this.extensionCombo.setItems( items );
 		this.extensionCombo.select( 0 );
+		this.extensionCombo.addMouseListener( this );
 
         /* the max result box */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -156,6 +159,7 @@ public abstract class ComplexSearch extends Search implements Listener {
 		this.resultCombo.setLayoutData( gridData );
 		this.resultCombo.setItems( resultItems );
 		this.resultCombo.select( 0 );
+		this.resultCombo.addMouseListener( this );
 		/* add a keylistener to deny unvalid input */
 		this.resultCombo.addKeyListener( new KeyListener() {
 			public void keyReleased(KeyEvent e) { }
@@ -213,6 +217,7 @@ public abstract class ComplexSearch extends Search implements Listener {
         this.maxText = new Text( aComposite, SWT.SINGLE | SWT.BORDER );
 		this.maxText.setLayoutData( gridData );
 		this.maxText.addListener( SWT.Verify, this );
+		this.maxText.addMouseListener( this );
 
 		/* the max size combo */
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -221,12 +226,14 @@ public abstract class ComplexSearch extends Search implements Listener {
 		this.maxCombo.setLayoutData( gridData );
 		this.maxCombo.setItems( items );
 		this.maxCombo.select( 0 );
+		this.maxCombo.addMouseListener( this );
 
         /* the min size text */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
 		this.minText = new Text( aComposite, SWT.SINGLE | SWT.BORDER );
 		this.minText.setLayoutData( gridData );
 		this.minText.addListener( SWT.Verify, this );
+		this.minText.addMouseListener( this );
 
 		/* the max size combo */
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
@@ -235,6 +242,7 @@ public abstract class ComplexSearch extends Search implements Listener {
 		this.minCombo.setLayoutData( gridData );
 		this.minCombo.setItems( items );
 		this.minCombo.select( 0 );
+		this.minCombo.addMouseListener( this );
     }
 
 	/**
@@ -280,10 +288,26 @@ public abstract class ComplexSearch extends Search implements Listener {
 		super.update( o, arg );
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
+	 */
+	public void mouseDoubleClick( MouseEvent e ) { }
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
+	 */
+	public void mouseUp( MouseEvent e ) { }
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
+	 */
+	public void mouseDown( MouseEvent e ) {
+		setSearchButton();
+	}
 }
-
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.6  2003/09/05 16:50:19  lemmster
+set search button correctly, verify input for result count
+
 Revision 1.5  2003/09/05 14:22:10  lemmster
 working version
 

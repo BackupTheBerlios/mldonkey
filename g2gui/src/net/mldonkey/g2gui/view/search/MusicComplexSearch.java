@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.6 2003/09/05 14:22:10 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.7 2003/09/05 16:50:19 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -91,10 +91,11 @@ public class MusicComplexSearch extends ComplexSearch {
         gridData = new GridData( GridData.FILL_HORIZONTAL );
         gridData.horizontalSpan = 2;
         String[] bitrateItems = { "", "96kb", "128kb", "196kb" };
-        bitrateCombo = new Combo( aComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-        bitrateCombo.setLayoutData( gridData );
-        bitrateCombo.setItems( bitrateItems );
-        bitrateCombo.select( 0 );
+        this.bitrateCombo = new Combo( aComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+		this.bitrateCombo.setLayoutData( gridData );
+		this.bitrateCombo.setItems( bitrateItems );
+		this.bitrateCombo.select( 0 );
+		this.bitrateCombo.addMouseListener( this );
 
         /* the network combo */
         this.createNetworkCombo( aComposite, G2GuiResources.getString( "SS_NETWORK" ) );
@@ -163,6 +164,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.7  2003/09/05 16:50:19  lemmster
+set search button correctly, verify input for result count
+
 Revision 1.6  2003/09/05 14:22:10  lemmster
 working version
 
