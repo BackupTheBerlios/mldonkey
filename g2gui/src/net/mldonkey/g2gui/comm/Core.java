@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.62 2003/07/08 17:44:59 dek Exp $ 
+ * @version $Id: Core.java,v 1.63 2003/07/12 14:11:43 dek Exp $ 
  *
  */
 public class Core extends Observable implements DisposeListener, Runnable, CoreCommunication {
@@ -203,9 +203,11 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 					break;
 				
 			case Message.R_FILE_UPDATE_AVAILABILITY :
-					FileInfo file = ( ( FileInfoIntMap ) this.fileInfoMap ).get( messageBuffer.readInt32() );
-					( ( ClientInfoIntMap ) this.clientInfoList ).get( messageBuffer.readInt32() )
-						.putAvail( file, messageBuffer.readString() );
+					int fileId = messageBuffer.readInt32();
+					int clientId = messageBuffer.readInt32();
+					String availability = messageBuffer.readString();	
+					( ( ClientInfoIntMap ) this.clientInfoList ).get( clientId )
+						.putAvail( fileId, availability);
 					break;
 
 					
@@ -254,6 +256,8 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 			case Message.R_FILE_DOWNLOAD_UPDATE :
 					this.fileInfoMap.update( messageBuffer );
+					this.setChanged();
+					this.notifyObservers( fileInfoMap );
 					break;	
 					
 			case Message.R_CLIENT_STATS :				
@@ -346,6 +350,9 @@ public class Core extends Observable implements DisposeListener, Runnable, CoreC
 
 /*
 $Log: Core.java,v $
+Revision 1.63  2003/07/12 14:11:43  dek
+made the ClientInfo-availability easier
+
 Revision 1.62  2003/07/08 17:44:59  dek
 *** empty log message ***
 

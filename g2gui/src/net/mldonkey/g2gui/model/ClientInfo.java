@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.10 2003/07/12 13:59:39 dek Exp $ 
+ * @version $Id: ClientInfo.java,v 1.11 2003/07/12 14:11:51 dek Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -129,6 +129,7 @@ public class ClientInfo extends Parent {
 	public String getFileAvailability( FileInfo fileInfo ) {
 		String availability =
 		  ( String ) ( ( TIntObjectHashMap ) this.avail ).get( fileInfo.getId() );
+		  
 		return availability;
 	}
 
@@ -199,16 +200,19 @@ public class ClientInfo extends Parent {
 	
 	/**
 	 * Adds the availability of a file into this list of availability
-	 * @param fileInfo The file 
+	 * @param fileId The fileId
 	 * @param avail The availability of this file
 	 */
-	public void putAvail( FileInfo fileInfo, String avail ) {
-		( ( TIntObjectHashMap ) this.avail ).put( fileInfo.getId(), avail );
+	public void putAvail( int fileId, String avail ) {
+		( ( TIntObjectHashMap ) this.avail ).put( fileId, avail );
 	}
 }
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.11  2003/07/12 14:11:51  dek
+made the ClientInfo-availability easier
+
 Revision 1.10  2003/07/12 13:59:39  dek
 availability is strange: it doesn't seem to make it's way to clients...
 
