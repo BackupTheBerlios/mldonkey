@@ -28,16 +28,34 @@ import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.viewers.GSorter;
 
 import org.eclipse.jface.viewers.Viewer;
+
+
 /**
  * ServerTableSorter
  *
  *
- * @version $Id: ServerTableSorter.java,v 1.8 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ServerTableSorter.java,v 1.9 2003/12/01 16:39:25 zet Exp $
  *
  */
 public class ServerTableSorter extends GSorter {
     public ServerTableSorter(ServerTableView sTableViewer) {
         super(sTableViewer);
+    }
+
+    /* (non-Javadoc)
+             * @see net.mldonkey.g2gui.view.viewers.GSorter#sortOrder(int)
+             */
+    public boolean sortOrder(int columnIndex) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
+        case ServerTableView.NETWORK:
+        case ServerTableView.NAME:
+        case ServerTableView.DESCRIPTION:
+        case ServerTableView.STATE:
+            return true;
+
+        default:
+            return false;
+        }
     }
 
     /*
@@ -50,7 +68,8 @@ public class ServerTableSorter extends GSorter {
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ServerTableView.NETWORK:
-            return compareStrings(server1.getNetwork().getNetworkName(), server2.getNetwork().getNetworkName());
+            return compareStrings(server1.getNetwork().getNetworkName(),
+                server2.getNetwork().getNetworkName());
 
         case ServerTableView.NAME:
             return compareStrings(server1.getNameOfServer(), server2.getNameOfServer());
@@ -64,11 +83,11 @@ public class ServerTableSorter extends GSorter {
                 Addr addr1 = server1.getServerAddress();
                 Addr addr2 = server2.getServerAddress();
 
-                if (lastSort) {
+                if (lastSort)
                     return addr1.compareTo(addr2);
-                } else {
+                else
+
                     return addr2.compareTo(addr1);
-                }
             } catch (NullPointerException e) {
                 return 0;
             }
@@ -90,11 +109,11 @@ public class ServerTableSorter extends GSorter {
             EnumState state1 = (EnumState) server1.getConnectionState().getState();
             EnumState state2 = (EnumState) server2.getConnectionState().getState();
 
-            if (lastSort) {
+            if (lastSort)
                 return state1.compareTo(state2);
-            } else {
+            else
+
                 return state2.compareTo(state1);
-            }
 
         case ServerTableView.FAVORITE:
 
@@ -102,28 +121,23 @@ public class ServerTableSorter extends GSorter {
             boolean bool2 = server2.isFavorite();
 
             if (lastSort) {
-                if ((bool1 && bool2) || ((bool1 == false) && (bool2 == false))) {
+                if ((bool1 && bool2) || ((bool1 == false) && (bool2 == false)))
                     return 0;
-                }
             }
 
-            if (bool1 && (bool2 == false)) {
+            if (bool1 && (bool2 == false))
                 return 1;
-            }
 
-            if ((bool1 == false) && bool2) {
+            if ((bool1 == false) && bool2)
                 return -1;
-            } else if ((bool2 && bool1) || ((bool2 == false) && (bool1 == false))) {
+            else if ((bool2 && bool1) || ((bool2 == false) && (bool1 == false)))
                 return 0;
-            }
 
-            if (bool2 && (bool1 == false)) {
+            if (bool2 && (bool1 == false))
                 return 1;
-            }
 
-            if ((bool2 == false) && bool1) {
+            if ((bool2 == false) && bool1)
                 return -1;
-            }
 
         default:
             return 0;
@@ -134,6 +148,9 @@ public class ServerTableSorter extends GSorter {
 
 /*
 $Log: ServerTableSorter.java,v $
+Revision 1.9  2003/12/01 16:39:25  zet
+set default sort order for specific columns
+
 Revision 1.8  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

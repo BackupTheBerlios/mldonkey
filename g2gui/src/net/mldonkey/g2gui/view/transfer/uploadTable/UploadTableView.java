@@ -60,7 +60,7 @@ import java.util.Observer;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.9 2003/11/27 21:42:33 zet Exp $
+ * @version $Id: UploadTableView.java,v 1.10 2003/12/01 16:39:25 zet Exp $
  *
  */
 public class UploadTableView extends GTableView implements Observer {
@@ -262,6 +262,20 @@ public class UploadTableView extends GTableView implements Observer {
             super(uTableViewer);
         }
 
+        /* (non-Javadoc)
+         * @see net.mldonkey.g2gui.view.viewers.GSorter#sortOrder(int)
+         */
+        public boolean sortOrder(int columnIndex) {
+            switch (cViewer.getColumnIDs()[ columnIndex ]) {
+            case UploadTableView.BYTES:
+            case UploadTableView.REQUESTS:
+                return false;
+
+            default:
+                return true;
+            }
+        }
+
         /*
          * (non-Javadoc)
          * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
@@ -350,6 +364,9 @@ public class UploadTableView extends GTableView implements Observer {
 
 /*
 $Log: UploadTableView.java,v $
+Revision 1.10  2003/12/01 16:39:25  zet
+set default sort order for specific columns
+
 Revision 1.9  2003/11/27 21:42:33  zet
 integrate ViewFrame a little more.. more to come.
 

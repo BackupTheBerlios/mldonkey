@@ -33,12 +33,29 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ClientTableSorter
  *
- * @version $Id: ClientTableSorter.java,v 1.13 2003/12/01 13:28:16 zet Exp $
+ * @version $Id: ClientTableSorter.java,v 1.14 2003/12/01 16:39:25 zet Exp $
  *
  */
 public class ClientTableSorter extends GSorter {
     public ClientTableSorter(ClientTableView cTableViewer) {
         super(cTableViewer);
+    }
+
+    /* (non-Javadoc)
+                     * @see net.mldonkey.g2gui.view.viewers.GSorter#sortOrder(int)
+                     */
+    public boolean sortOrder(int columnIndex) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
+        case ClientTableView.UPLOADED:
+        case ClientTableView.DOWNLOADED:
+        case ClientTableView.CONNECT_TIME:
+        case ClientTableView.SOCK_ADDR:
+        case ClientTableView.PORT:
+            return false;
+
+        default:
+            return true;
+        }
     }
 
     /* (non-Javadoc)
@@ -101,6 +118,9 @@ public class ClientTableSorter extends GSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.14  2003/12/01 16:39:25  zet
+set default sort order for specific columns
+
 Revision 1.13  2003/12/01 13:28:16  zet
 add port info
 

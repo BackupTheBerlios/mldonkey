@@ -57,7 +57,7 @@ import java.util.Observer;
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadersTableView.java,v 1.8 2003/12/01 13:28:16 zet Exp $
+ * @version $Id: UploadersTableView.java,v 1.9 2003/12/01 16:39:25 zet Exp $
  *
  */
 public class UploadersTableView extends GTableView {
@@ -288,6 +288,23 @@ public class UploadersTableView extends GTableView {
             super(uTableViewer);
         }
 
+        /* (non-Javadoc)
+         * @see net.mldonkey.g2gui.view.viewers.GSorter#sortOrder(int)
+         */
+        public boolean sortOrder(int columnIndex) {
+            switch (cViewer.getColumnIDs()[ columnIndex ]) {
+            case UploadersTableView.UPLOADED:
+            case UploadersTableView.DOWNLOADED:
+            case UploadersTableView.CONNECT_TIME:
+            case UploadersTableView.SOCK_ADDR:
+            case UploadersTableView.PORT:
+                return false;
+
+            default:
+                return true;
+            }
+        }
+
         /*
          * (non-Javadoc)
          * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
@@ -397,6 +414,9 @@ public class UploadersTableView extends GTableView {
 
 /*
 $Log: UploadersTableView.java,v $
+Revision 1.9  2003/12/01 16:39:25  zet
+set default sort order for specific columns
+
 Revision 1.8  2003/12/01 13:28:16  zet
 add port info
 

@@ -28,6 +28,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 
@@ -35,7 +36,7 @@ import org.eclipse.swt.events.DisposeListener;
 /**
  * GSorter - Generic sorter
  *
- * @version $Id: GSorter.java,v 1.4 2003/11/28 22:38:06 zet Exp $
+ * @version $Id: GSorter.java,v 1.5 2003/12/01 16:39:25 zet Exp $
  *
  */
 public class GSorter extends ViewerSorter implements DisposeListener {
@@ -74,13 +75,11 @@ public class GSorter extends ViewerSorter implements DisposeListener {
      * @return int
      */
     public int compareStrings(String aString1, String aString2) {
-        if (aString1.equals("")) {
+        if (aString1.equals(""))
             return 1;
-        }
 
-        if (aString2.equals("")) {
+        if (aString2.equals(""))
             return -1;
-        }
 
         return (lastSort ? aString1.compareToIgnoreCase(aString2)
                          : aString2.compareToIgnoreCase(aString1));
@@ -92,13 +91,11 @@ public class GSorter extends ViewerSorter implements DisposeListener {
      * @return
      */
     public int compareIntegers(int anInt1, int anInt2) {
-        if (anInt1 == 0) {
+        if (anInt1 == 0)
             return 1;
-        }
 
-        if (anInt2 == 0) {
+        if (anInt2 == 0)
             return -1;
-        }
 
         return (lastSort ? (anInt1 - anInt2) : (anInt2 - anInt1));
     }
@@ -147,15 +144,21 @@ public class GSorter extends ViewerSorter implements DisposeListener {
     public int compareAddrs(Addr addr1, Addr addr2) {
         return (lastSort ? addr1.compareTo(addr2) : addr2.compareTo(addr1));
     }
-    
-    
+
     /**
      * @param i
      */
     public void setColumnIndex(int i) {
         columnIndex = i;
-        lastSort = (columnIndex == lastColumnIndex) ? (!lastSort) : true;
+        lastSort = (columnIndex == lastColumnIndex) ? (!lastSort) : sortOrder(columnIndex);
         lastColumnIndex = columnIndex;
+    }
+
+    /**
+     * @return true to sort in ascendingOrder, false for descending
+     */
+    public boolean sortOrder(int columnIndex) {
+        return true;
     }
 
     /**
@@ -213,6 +216,9 @@ public class GSorter extends ViewerSorter implements DisposeListener {
 
 /*
 $Log: GSorter.java,v $
+Revision 1.5  2003/12/01 16:39:25  zet
+set default sort order for specific columns
+
 Revision 1.4  2003/11/28 22:38:06  zet
 coalesce addr use
 

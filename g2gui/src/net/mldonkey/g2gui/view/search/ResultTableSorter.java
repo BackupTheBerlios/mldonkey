@@ -31,12 +31,26 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: ResultTableSorter.java,v 1.16 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ResultTableSorter.java,v 1.17 2003/12/01 16:39:25 zet Exp $
  *
  */
 public class ResultTableSorter extends GSorter {
     public ResultTableSorter(ResultTableView rTableViewer) {
         super(rTableViewer);
+    }
+
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.viewers.GSorter#sortOrder(int)
+     */
+    public boolean sortOrder(int columnIndex) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
+        case ResultTableView.NETWORK:
+        case ResultTableView.NAME:
+            return true;
+
+        default:
+            return false;
+        }
     }
 
     /*
@@ -49,7 +63,8 @@ public class ResultTableSorter extends GSorter {
 
         switch (cViewer.getColumnIDs()[ columnIndex ]) {
         case ResultTableView.NETWORK:
-            return compareStrings(result1.getNetwork().getNetworkName(), result2.getNetwork().getNetworkName());
+            return compareStrings(result1.getNetwork().getNetworkName(),
+                result2.getNetwork().getNetworkName());
 
         case ResultTableView.NAME:
             return compareStrings(result1.getName(), result2.getName());
@@ -75,6 +90,9 @@ public class ResultTableSorter extends GSorter {
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.17  2003/12/01 16:39:25  zet
+set default sort order for specific columns
+
 Revision 1.16  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

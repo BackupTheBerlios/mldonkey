@@ -37,7 +37,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ResultTableSorter
  *
- * @version $Id: DownloadTableTreeSorter.java,v 1.10 2003/10/31 22:41:59 zet Exp $
+ * @version $Id: DownloadTableTreeSorter.java,v 1.11 2003/12/01 16:39:25 zet Exp $
  *
  */
 public class DownloadTableTreeSorter extends GSorter {
@@ -55,44 +55,30 @@ public class DownloadTableTreeSorter extends GSorter {
      * @see org.eclipse.jface.viewers.ViewerSorter#category(java.lang.Object)
      */
     public int category(Object element) {
-        if (element instanceof FileInfo) {
+        if (element instanceof FileInfo)
             return 1;
-        }
-        else if (element instanceof TreeClientInfo) {
+        else if (element instanceof TreeClientInfo)
             return 2;
-        }
 
         return 3;
     }
 
-    /**
-     * Sets the column index
-     * @param i The column index to sort
+
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.viewers.GSorter#sortOrder(int)
      */
-    public void setColumnIndex(int i) {
-        columnIndex = i;
+    public boolean sortOrder(int columnIndex) {
+        switch (cViewer.getColumnIDs()[ columnIndex ]) {
+        case DownloadTableTreeView.ID:
+        case DownloadTableTreeView.NAME:
+        case DownloadTableTreeView.NETWORK:
+        case DownloadTableTreeView.LAST:
+        case DownloadTableTreeView.ETA:
+            return true;
 
-        if (columnIndex == lastColumnIndex) {
-            lastSort = !lastSort;
-        } else {
-            switch (cViewer.getColumnIDs()[ columnIndex ]) {
-            case DownloadTableTreeView.ID:
-            case DownloadTableTreeView.NAME:
-            case DownloadTableTreeView.NETWORK:
-            case DownloadTableTreeView.LAST:
-            case DownloadTableTreeView.ETA:
-                lastSort = true;
-
-                break;
-
-            default:
-                lastSort = false;
-
-                break;
-            }
+        default:
+            return false;
         }
-
-        lastColumnIndex = columnIndex;
     }
 
     /* (non-Javadoc)
@@ -134,9 +120,8 @@ public class DownloadTableTreeSorter extends GSorter {
         int cat1 = category(e1);
         int cat2 = category(e2);
 
-        if (cat1 != cat2) {
+        if (cat1 != cat2)
             return cat1 - cat2;
-        }
 
         // fill in all columns
         if (e1 instanceof FileInfo) {
@@ -171,21 +156,21 @@ public class DownloadTableTreeSorter extends GSorter {
 
             case DownloadTableTreeView.RATE:
 
-                if (fileInfo1.getState().getState() == EnumFileState.DOWNLOADED) {
+                if (fileInfo1.getState().getState() == EnumFileState.DOWNLOADED)
                     return -1;
-                } else if (fileInfo2.getState().getState() == EnumFileState.DOWNLOADED) {
+                else if (fileInfo2.getState().getState() == EnumFileState.DOWNLOADED)
                     return 1;
-                } else if (fileInfo1.getState().getState() == EnumFileState.QUEUED) {
+                else if (fileInfo1.getState().getState() == EnumFileState.QUEUED)
                     return 2;
-                } else if (fileInfo2.getState().getState() == EnumFileState.QUEUED) {
+                else if (fileInfo2.getState().getState() == EnumFileState.QUEUED)
                     return -2;
-                } else if (fileInfo1.getState().getState() == EnumFileState.PAUSED) {
+                else if (fileInfo1.getState().getState() == EnumFileState.PAUSED)
                     return 3;
-                } else if (fileInfo2.getState().getState() == EnumFileState.PAUSED) {
+                else if (fileInfo2.getState().getState() == EnumFileState.PAUSED)
                     return -3;
-                } else {
+                else
+
                     return compareDoubles(fileInfo1.getRate(), fileInfo2.getRate());
-                }
 
             case DownloadTableTreeView.CHUNKS:
                 return compareIntegers(fileInfo1.getNumChunks(), fileInfo2.getNumChunks());
@@ -193,13 +178,13 @@ public class DownloadTableTreeSorter extends GSorter {
             case DownloadTableTreeView.ETA:
                 labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
 
-                if (labelProvider.getColumnText(e1, columnIndex).equals("")) {
+                if (labelProvider.getColumnText(e1, columnIndex).equals(""))
                     return 1;
-                } else if (labelProvider.getColumnText(e2, columnIndex).equals("")) {
+                else if (labelProvider.getColumnText(e2, columnIndex).equals(""))
                     return -1;
-                } else {
+                else
+
                     return compareLongs(fileInfo1.getETA(), fileInfo2.getETA());
-                }
 
             case DownloadTableTreeView.PRIORITY:
                 return compareIntegers(fileInfo1.getPriority(), fileInfo2.getPriority());
@@ -258,6 +243,9 @@ public class DownloadTableTreeSorter extends GSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.11  2003/12/01 16:39:25  zet
+set default sort order for specific columns
+
 Revision 1.10  2003/10/31 22:41:59  zet
 rename to View
 
