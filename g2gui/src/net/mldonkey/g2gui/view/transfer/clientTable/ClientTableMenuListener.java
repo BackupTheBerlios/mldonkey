@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * ClientTableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.6 2003/10/22 01:38:19 zet Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.7 2003/10/23 01:23:06 zet Exp $
  *
  */
 public class ClientTableMenuListener extends GTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -127,8 +127,6 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
         }
 
         public void run() {
-            System.out.println(tableViewer);
-            
             new ClientDetailDialog((FileInfo) tableViewer.getInput(), selectedClientInfo, core);
         }
     }
@@ -137,6 +135,9 @@ public class ClientTableMenuListener extends GTableMenuListener implements ISele
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.7  2003/10/23 01:23:06  zet
+remove println debug
+
 Revision 1.6  2003/10/22 01:38:19  zet
 add column selector to server/search (might not be finished yet..)
 
