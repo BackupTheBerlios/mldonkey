@@ -24,13 +24,19 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Observer;
 
-import net.mldonkey.g2gui.model.*;
+import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.model.ConsoleMessage;
+import net.mldonkey.g2gui.model.FileInfoIntMap;
+import net.mldonkey.g2gui.model.NetworkInfoIntMap;
+import net.mldonkey.g2gui.model.OptionsInfoMap;
+import net.mldonkey.g2gui.model.ResultInfoIntMap;
+import net.mldonkey.g2gui.model.ServerInfoIntMap;
 
 /**
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.25 2003/08/01 20:33:22 zet Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.26 2003/08/02 09:57:46 lemmstercvs01 Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -110,5 +116,5 @@ public interface CoreCommunication {
 	void deleteObserver( Observer obj );
 }
 /*
- * 
+ * $Log
  */
