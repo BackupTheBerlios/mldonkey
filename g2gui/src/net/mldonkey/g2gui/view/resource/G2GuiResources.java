@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.48 2003/11/04 17:03:32 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.49 2003/11/04 18:05:42 vnc Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -209,8 +209,8 @@ public class G2GuiResources {
         ImageRegistry reg = G2GuiResources.getImageRegistry();
 
         reg.put( "splashScreen", createRawImage( "splash.png" ) );
-        reg.put( "ProgramIcon", createRawImage( "mld_logo_48x48.gif" ) );
-        reg.put( "G2GuiLogo", createTrans( "mld_logo_48x48.png" ) );
+        reg.put( "ProgramIcon", createRawImage( "mld_logo_48x48_crome.gif" ) );
+        reg.put( "G2GuiLogo", createTrans( "mld_logo_48x48_crome.gif" ) );
         reg.put( "G2GuiLogoSmall", createTrans( "mld_logo_12x12.png" ) );
         reg.put( "TrayIcon", createRawImage( "tray.ico" ) );
 
@@ -429,6 +429,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.49  2003/11/04 18:05:42  vnc
+more conversions png->gif
+
 Revision 1.48  2003/11/04 17:03:32  zet
 update for trans
 
@@ -554,7 +557,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: vnc $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
