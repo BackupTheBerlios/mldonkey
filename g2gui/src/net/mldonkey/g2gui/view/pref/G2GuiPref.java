@@ -30,7 +30,6 @@ import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -42,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.8 2003/09/03 18:22:26 dek Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.9 2003/09/03 18:22:45 dek Exp $ 
  *
  */
 public class G2GuiPref extends FieldEditorPreferencePage {
@@ -150,6 +149,9 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.9  2003/09/03 18:22:45  dek
+removed unused import
+
 Revision 1.8  2003/09/03 18:22:26  dek
 fixed size from now on
 
