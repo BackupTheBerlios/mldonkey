@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,199 +18,165 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view;
 
-import java.util.Observable;
-
 import net.mldonkey.g2gui.model.ServerInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
-import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.server.ServerPaneListener;
-import net.mldonkey.g2gui.view.server.ServerTableView;
-import net.mldonkey.g2gui.view.viewers.GPaneListener;
+import net.mldonkey.g2gui.view.server.ServerViewFrame;
 import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.filters.StateGViewerFilter;
 
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.layout.FillLayout;
+
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.ToolBar;
+
+import java.util.Observable;
+
 
 /**
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.49 2003/11/22 02:24:29 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.50 2003/11/29 01:51:53 zet Exp $
  *
  */
-public class ServerTab extends TableGuiTab implements Runnable, DisposeListener {
-	private MenuManager popupMenu;
-	private String statusText = "";
-	private ServerInfoIntMap servers;
+public class ServerTab extends TableGuiTab implements Runnable {
+    private String statusText = "";
+    private ServerInfoIntMap servers;
 
-	/**
-	 * @param gui The main gui tab
-	 */
-	public ServerTab( MainTab gui ) {
-		super( gui );
-		/* associate this tab with the corecommunication */
-		this.core = gui.getCore();
-		/* Set our name on the coolbar */
-		createButton( "ServersButton" );
+    // TODO: Move view's content to its content provider, reg d
+    
+    /**
+     * @param gui The main gui tab
+     */
+    public ServerTab(MainTab gui) {
+        super(gui);
 
-		/* create the tab content */
-		this.createContents( this.subContent );
-		updateDisplay();			
-	}
+        /* Set our name on the coolbar */
+        createButton("ServersButton");
 
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.GuiTab#createContents(org.eclipse.swt.widgets.Composite)
-	 */
-	protected void createContents( Composite parent ) {
-		ViewForm viewForm = WidgetFactory.createViewForm(parent);
-		CLabel ccLabel = WidgetFactory.createCLabel( viewForm, "TT_ServersButton", "ServersButtonSmall" );
-			
-		Composite composite = new Composite( viewForm, SWT.NONE );
-		composite.setLayout( new FillLayout() );
-	
-		viewForm.setContent( composite );
-		viewForm.setTopLeft( ccLabel );
-		
-		GPaneListener aListener = new ServerPaneListener(this, core);
-		createPaneToolBar( viewForm, aListener);
+        /* create the tab content */
+        this.createContents(this.subContent);
+        updateDisplay();
+    }
 
-		gView = new ServerTableView( composite, core );
-		gView.addDisposeListener( aListener );
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.GuiTab#createContents(org.eclipse.swt.widgets.Composite)
+     */
+    protected void createContents(Composite parent) {
+        gView = new ServerViewFrame(parent, "TT_ServersButton", "ServersButtonSmall", this).getGView();
 
-		/* fill the table with content */
-		servers = core.getServerInfoIntMap();
-		gView.getViewer().setInput( servers );
-		servers.clearAdded();
+        /* fill the table with content */
+        servers = getCore().getServerInfoIntMap();
+        gView.getViewer().setInput(servers);
+        servers.clearAdded();
 
-		int itemCount = gView.getTable().getItemCount();
-		this.statusText = G2GuiResources.getString( "SVT_SERVERS" ) + itemCount;
-		
-		popupMenu = new MenuManager( "" );
-		popupMenu.setRemoveAllWhenShown( true );
-		popupMenu.addMenuListener( aListener );
-		( (ServerPaneListener) aListener ).initialize();
-		ccLabel.addMouseListener( new HeaderBarMouseAdapter( ccLabel, popupMenu ) );
-	}
+        int itemCount = gView.getTable().getItemCount();
+        this.statusText = G2GuiResources.getString("SVT_SERVERS") + itemCount;
+    }
 
-	private void createPaneToolBar( ViewForm aViewForm, IMenuListener menuListener ) {
-		ToolBar toolBar = new ToolBar(aViewForm, SWT.RIGHT | SWT.FLAT);
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update(Observable o, Object arg) {
+        if (gView.getTable().isDisposed())
+            return;
 
-		super.createPaneToolBar( toolBar, menuListener );   
+        this.content.getDisplay().asyncExec(this);
+    }
 
-		aViewForm.setTopRight( toolBar );
-	}
+    /* (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
+    public void run() {
+        /* still running? */
+        if (gView.getTable().isDisposed())
+            return;
 
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update( Observable o, Object arg ) {
-		if ( gView.getTable().isDisposed() ) return;
-		this.content.getDisplay().asyncExec( this );
-	}		
+        synchronized (this.servers.getRemoved()) {
+            ((TableViewer) gView.getViewer()).remove(this.servers.getRemoved().toArray());
+            this.servers.clearRemoved();
+        }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
-	public void run() {
-		/* still running? */
-		if (gView.getTable().isDisposed() ) return;
-		
-		synchronized ( this.servers.getRemoved() ) {
-			( (TableViewer) gView.getViewer() ).remove( this.servers.getRemoved().toArray() );
-			this.servers.clearRemoved();
-		}
-		synchronized ( this.servers.getAdded() ) {
-			( (TableViewer) gView.getViewer() ).add( this.servers.getAdded().toArray() );
-			this.servers.clearAdded();
-		}
-		synchronized ( this.servers.getModified() ) {
-			( (TableViewer) gView.getViewer() ).update( this.servers.getModified().toArray(), null );
-			this.servers.clearModified();
-		}
-		int itemCount = gView.getTable().getItemCount();	
-		this.setStatusLine();
+        synchronized (this.servers.getAdded()) {
+            ((TableViewer) gView.getViewer()).add(this.servers.getAdded().toArray());
+            this.servers.clearAdded();
+        }
 
-		/* refresh the table if "show connected servers only" is true and the filter is activated */
-		if ( FilterAction.isFiltered( this.gView, EnumState.CONNECTED )
-		&& this.servers.getConnected() != itemCount ) {
-			if ( StateGViewerFilter.matches( gView, EnumState.CONNECTED ) )
-				gView.refresh();
-		}
-	}
-	
-	/**
-	 * unregister ourself at the observable
-	 */
-	public void setInActive() {
-		this.core.getServerInfoIntMap().deleteObserver( this );
-		super.setInActive();
-	}
-	
-	/**
-	 * register ourself at the observable
-	 */
-	public void setActive() {
-		/* if we become active, refresh the table */
-		this.servers = this.core.getServerInfoIntMap();
-		gView.getShell().getDisplay().asyncExec( this );
-		this.setStatusLine();
-		
-		this.core.getServerInfoIntMap().addObserver( this );
-		super.setActive();
-	}
-	
-	/**
-	 * Sets the statusline to the current value
-	 */
-	private void setStatusLine() {
-		if ( !this.isActive() ) return;
-		this.statusText = G2GuiResources.getString( "SVT_SERVERS" ) + servers.getConnected();
-		this.mainWindow.getStatusline().update( this.statusText );
-		this.mainWindow.getStatusline().updateToolTip( "" );
-	}
-	
-	/**
-	 * @return The text this tab wants to display in the statusline
-	 */
-	public String getStatusText() {
-		return this.statusText;
-	}
+        synchronized (this.servers.getModified()) {
+            ((TableViewer) gView.getViewer()).update(this.servers.getModified().toArray(), null);
+            this.servers.clearModified();
+        }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.DisposeListener#
-	 * widgetDisposed(org.eclipse.swt.events.DisposeEvent)
-	 */
-	public void widgetDisposed( DisposeEvent e ) {
-		this.core.getServerInfoIntMap().deleteObserver( this );
-	}
-	
-	/**
-	 * Updates this tab on preference close
-	 */
-	public void updateDisplay() {
-		( ( ServerTableView ) gView ).updateDisplay();
-		super.updateDisplay();
-	}
+        int itemCount = gView.getTable().getItemCount();
+        this.setStatusLine();
+
+        /* refresh the table if "show connected servers only" is true and the filter is activated */
+        if (FilterAction.isFiltered(this.gView, EnumState.CONNECTED) &&
+                (this.servers.getConnected() != itemCount)) {
+            if (StateGViewerFilter.matches(gView, EnumState.CONNECTED))
+                gView.refresh();
+        }
+    }
+
+    /**
+     * unregister ourself at the observable
+     */
+    public void setInActive() {
+        getCore().getServerInfoIntMap().deleteObserver(this);
+        super.setInActive();
+    }
+
+    /**
+     * register ourself at the observable
+     */
+    public void setActive() {
+        /* if we become active, refresh the table */
+        this.servers = getCore().getServerInfoIntMap();
+        gView.getShell().getDisplay().asyncExec(this);
+        this.setStatusLine();
+
+        getCore().getServerInfoIntMap().addObserver(this);
+        super.setActive();
+    }
+
+    /**
+     * Sets the statusline to the current value
+     */
+    private void setStatusLine() {
+        if (!this.isActive())
+            return;
+
+        this.statusText = G2GuiResources.getString("SVT_SERVERS") + servers.getConnected();
+        this.mainWindow.getStatusline().update(this.statusText);
+        this.mainWindow.getStatusline().updateToolTip("");
+    }
+
+    /**
+     * @return The text this tab wants to display in the statusline
+     */
+    public String getStatusText() {
+        return this.statusText;
+    }
+
+    /**
+     * Updates this tab on preference close
+     */
+    public void updateDisplay() {
+        gView.updateDisplay();
+        super.updateDisplay();
+    }
 }
+
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.50  2003/11/29 01:51:53  zet
+a few more viewframe changes.. will continue later.
+
 Revision 1.49  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

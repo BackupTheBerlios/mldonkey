@@ -25,10 +25,15 @@ package net.mldonkey.g2gui.view.helper;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.GView;
+
+import org.eclipse.jface.action.MenuManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -40,7 +45,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * ViewFrame
  *
- * @version $Id: ViewFrame.java,v 1.5 2003/11/28 01:06:21 zet Exp $
+ * @version $Id: ViewFrame.java,v 1.6 2003/11/29 01:51:53 zet Exp $
  *
  */
 public class ViewFrame {
@@ -50,9 +55,10 @@ public class ViewFrame {
     protected Composite parent;
     protected Composite childComposite;
     protected ToolBar toolBar;
+    protected MenuManager menuManager;
+    protected GView gView;
 
-    public ViewFrame(Composite composite, String prefString, String prefImageString,
-        GuiTab guiTab) {
+    public ViewFrame(Composite composite, String prefString, String prefImageString, GuiTab guiTab) {
         this.parent = composite;
         this.guiTab = guiTab;
 
@@ -65,6 +71,23 @@ public class ViewFrame {
 
         viewForm.setContent(childComposite);
         viewForm.setTopLeft(cLabel);
+    }
+
+    protected void setupPaneListener(ViewFrameListener viewFrameListener) {
+        menuManager = new MenuManager("");
+        menuManager.setRemoveAllWhenShown(true);
+        menuManager.addMenuListener(viewFrameListener);
+
+        cLabel.addDisposeListener(new DisposeListener() {
+                public void widgetDisposed(DisposeEvent e) {
+                    menuManager.dispose();
+                }
+            });
+    }
+
+    public void createPaneListener(ViewFrameListener viewFrameListener) {
+        setupPaneListener(viewFrameListener);
+        cLabel.addMouseListener(new HeaderBarMouseAdapter(cLabel, menuManager));
     }
 
     public void createPaneToolBar() {
@@ -113,6 +136,10 @@ public class ViewFrame {
         return getViewForm();
     }
 
+    public GView getGView() {
+        return gView;
+    }
+
     public void updateCLabelText(String string) {
         if ((cLabel != null) && !cLabel.isDisposed())
             if (!cLabel.getText().equals(string))
@@ -133,6 +160,9 @@ public class ViewFrame {
 
 /*
 $Log: ViewFrame.java,v $
+Revision 1.6  2003/11/29 01:51:53  zet
+a few more viewframe changes.. will continue later.
+
 Revision 1.5  2003/11/28 01:06:21  zet
 not much- slowly expanding viewframe - will continue later
 

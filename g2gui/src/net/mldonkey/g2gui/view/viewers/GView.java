@@ -22,11 +22,9 @@
  */
 package net.mldonkey.g2gui.view.viewers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
+import net.mldonkey.g2gui.view.helper.ViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.filters.AlwaysFalseGViewerFilter;
@@ -39,6 +37,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -52,11 +51,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.11 2003/11/27 21:42:33 zet Exp $
+ * @version $Id: GView.java,v 1.12 2003/11/29 01:51:53 zet Exp $
  *
  */
 public abstract class GView {
@@ -72,6 +74,7 @@ public abstract class GView {
     protected GTableLabelProvider tableLabelProvider;
     protected StructuredViewer sViewer;
     protected ViewFrame viewFrame;
+    protected boolean isActive;
 
     public abstract GTableContentProvider getTableContentProvider();
 
@@ -128,6 +131,10 @@ public abstract class GView {
         getTable().addDisposeListener(listener);
     }
 
+    public void addDisposeListener(ViewFrameListener listener) {
+        getTable().addDisposeListener(listener);
+    }
+
     /**
      * @param aClass
      * @return GViewerFilter
@@ -135,9 +142,8 @@ public abstract class GView {
     public GViewerFilter getFilter(Class aClass) {
         Map aMap = (Map) this.getViewer().getData(GViewerFilter.class.getName());
 
-        if (aMap.containsKey(aClass.getName())) {
+        if (aMap.containsKey(aClass.getName()))
             return (GViewerFilter) aMap.get(aClass.getName());
-        }
 
         return new AlwaysFalseGViewerFilter(this);
     }
@@ -150,9 +156,8 @@ public abstract class GView {
         if (aViewerFilter instanceof GViewerFilter) {
             GViewerFilter filter = (GViewerFilter) aViewerFilter;
 
-            if (!filter.isNotAlwaysFalse()) {
+            if (!filter.isNotAlwaysFalse())
                 return;
-            }
         }
 
         Map aMap = (Map) getViewer().getData(GViewerFilter.class.getName());
@@ -167,9 +172,8 @@ public abstract class GView {
         if (aViewerFilter instanceof GViewerFilter) {
             GViewerFilter filter = (GViewerFilter) aViewerFilter;
 
-            if (!filter.isNotAlwaysFalse()) {
+            if (!filter.isNotAlwaysFalse())
                 return;
-            }
         }
 
         Map aMap = (Map) getViewer().getData(GViewerFilter.class.getName());
@@ -182,7 +186,7 @@ public abstract class GView {
      */
     public void updateDisplay() {
         getTable().setLinesVisible(PreferenceLoader.loadBoolean("displayGridLines"));
-		getTable().setFont(PreferenceLoader.loadFont("viewerFontData"));
+        getTable().setFont(PreferenceLoader.loadFont("viewerFontData"));
     }
 
     /**
@@ -196,9 +200,8 @@ public abstract class GView {
                 public void menuShown(MenuEvent e) {
                     Menu aMenu = getTable().getMenu();
 
-                    if (!((StructuredViewer) getViewer()).getSelection().isEmpty()) {
+                    if (!((StructuredViewer) getViewer()).getSelection().isEmpty())
                         aMenu.setDefaultItem(aMenu.getItem(0));
-                    }
                 }
             });
     }
@@ -208,14 +211,12 @@ public abstract class GView {
      * @return true if String contains valid columnIDs, else false
      */
     public static boolean validColumnIDs(String selected, String allowed) {
-        if (selected.equals("") || (selected.length() > allowed.length())) {
+        if (selected.equals("") || (selected.length() > allowed.length()))
             return false;
-        }
 
         for (int i = 0; i < selected.length(); i++) {
-            if (allowed.indexOf(selected.charAt(i)) == -1) {
+            if (allowed.indexOf(selected.charAt(i)) == -1)
                 return false;
-            }
         }
 
         return true;
@@ -227,9 +228,9 @@ public abstract class GView {
     protected void loadColumnIDs() {
         String prefCols = PreferenceLoader.loadString(preferenceString + "TableColumns");
 
-        if (validColumnIDs(prefCols, allColumns)) {
+        if (validColumnIDs(prefCols, allColumns))
             columnIDs = prefCols;
-        } else {
+        else {
             columnIDs = allColumns;
 
             PreferenceStore p = PreferenceLoader.getPreferenceStore();
@@ -254,9 +255,8 @@ public abstract class GView {
         // The SWT TableColumn DisposeEvent.widget returns a width of 0 when manually disposing
         manualDispose = true;
 
-        for (int i = tableColumns.length - 1; i > -1; i--) {
+        for (int i = tableColumns.length - 1; i > -1; i--)
             tableColumns[ i ].dispose();
-        }
 
         manualDispose = false;
 
@@ -267,16 +267,16 @@ public abstract class GView {
             TableColumn tableColumn = new TableColumn(table, columnAlignment[ arrayItem ]);
             p.setDefault(columnLabels[ arrayItem ], columnDefaultWidths[ arrayItem ]);
             tableColumn.setText(G2GuiResources.getString(columnLabels[ arrayItem ]));
+
             int oldWidth = p.getInt(columnLabels[ arrayItem ]);
-            tableColumn.setWidth(oldWidth > 0 ? oldWidth : columnDefaultWidths[ arrayItem ] );
+            tableColumn.setWidth((oldWidth > 0) ? oldWidth : columnDefaultWidths[ arrayItem ]);
 
             tableColumn.addDisposeListener(new DisposeListener() {
                     public synchronized void widgetDisposed(DisposeEvent e) {
                         TableColumn thisColumn = (TableColumn) e.widget;
 
-                        if (!manualDispose) {
+                        if (!manualDispose)
                             p.setValue(columnLabels[ arrayItem ], thisColumn.getWidth());
-                        }
                     }
                 });
 
@@ -293,19 +293,18 @@ public abstract class GView {
      * @param column
      */
     public void sortByColumn(int column) {
-		gSorter.setColumnIndex(column);
-		refresh();
+        gSorter.setColumnIndex(column);
+        refresh();
     }
-    
+
     /**
      * createContents
      */
     protected void createContents() {
         sViewer.setData(GViewerFilter.class.getName(), new HashMap());
 
-        for (int i = 0; i < columnLabels.length; i++) {
+        for (int i = 0; i < columnLabels.length; i++)
             allColumns += String.valueOf((char) (ColumnSelector.MAGIC_NUMBER + i));
-        }
 
         Table table = getTable();
         table.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -351,8 +350,9 @@ public abstract class GView {
      */
     public void resetFilters() {
         this.sViewer.resetFilters();
-		Map aMap = (Map) getViewer().getData(GViewerFilter.class.getName());
-		aMap.clear();
+
+        Map aMap = (Map) getViewer().getData(GViewerFilter.class.getName());
+        aMap.clear();
     }
 
     /**
@@ -382,18 +382,29 @@ public abstract class GView {
     public ViewFrame getViewFrame() {
         return viewFrame;
     }
-    
+
     /**
      * StructuredViewer#refresh
      */
     public void refresh() {
         this.sViewer.refresh();
     }
+
+    public void setActive(boolean a) {
+        isActive = a;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
 }
 
 
 /*
 $Log: GView.java,v $
+Revision 1.12  2003/11/29 01:51:53  zet
+a few more viewframe changes.. will continue later.
+
 Revision 1.11  2003/11/27 21:42:33  zet
 integrate ViewFrame a little more.. more to come.
 

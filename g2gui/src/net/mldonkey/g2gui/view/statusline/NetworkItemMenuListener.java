@@ -41,7 +41,7 @@ import org.eclipse.jface.action.Separator;
  * NetworkItemMenuListener
  *
  *
- * @version $Id: NetworkItemMenuListener.java,v 1.13 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: NetworkItemMenuListener.java,v 1.14 2003/11/29 01:51:53 zet Exp $
  *
  */
 public class NetworkItemMenuListener implements IMenuListener {
@@ -129,7 +129,7 @@ public class NetworkItemMenuListener implements IMenuListener {
 
         public void run() {
             statusline.getMainTab().setActive( serverTab );
-			GView gView = ( ( ServerTab ) serverTab ).getView();
+			GView gView = ( ( ServerTab ) serverTab ).getGView();
 			FilterAction action = new NetworkFilterAction( gView, network );
 			( ( NetworkFilterAction ) action ).removeAllNetworkFilter();
 			action.setChecked( true );
@@ -151,6 +151,9 @@ public class NetworkItemMenuListener implements IMenuListener {
 
 /*
 $Log: NetworkItemMenuListener.java,v $
+Revision 1.14  2003/11/29 01:51:53  zet
+a few more viewframe changes.. will continue later.
+
 Revision 1.13  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

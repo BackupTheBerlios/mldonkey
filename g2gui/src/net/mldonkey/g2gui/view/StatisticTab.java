@@ -26,30 +26,21 @@ import java.util.Observable;
 
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.ClientStats;
-import net.mldonkey.g2gui.view.helper.MaximizeSashMouseAdapter;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
-import net.mldonkey.g2gui.view.statistic.GraphPaneListener;
-import net.mldonkey.g2gui.view.viewers.GPaneListener;
+import net.mldonkey.g2gui.view.statistic.GraphViewFrame;
 import net.mldonkey.g2gui.view.viewers.GView;
 
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.44 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: StatisticTab.java,v 1.45 2003/11/29 01:51:53 zet Exp $
  */
 public class StatisticTab extends PaneGuiTab {
     private GraphControl uploadsGraphControl;
@@ -66,102 +57,44 @@ public class StatisticTab extends PaneGuiTab {
         super(gui);
         createButton("StatisticsButton");
         createContents(this.subContent);
-        gui.getCore().getClientStats().addObserver(this);
+        getCore().getClientStats().addObserver(this);
     }
 
     /**
      * @param parent
      */
     protected void createContents(Composite parent) {
-        SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
-        mainSash.setLayout(new FillLayout());
-
-        // Top composite for stats (when available)
-        createStatsComposite(mainSash);
-
-        // Graph sash
-        createGraphSash(mainSash);
-
-        // Keep top sash hidden until it is useful 
-        mainSash.setWeights(new int[] { 0, 10 });
-    }
-
-    /**
-     * Create stats sash
-     * @param mainSash
-     */
-    private void createStatsComposite(final SashForm mainSash) {
-        ViewForm statsViewForm = WidgetFactory.createViewForm(mainSash);
-
-        CLabel statsCLabel = WidgetFactory.createCLabel(statsViewForm, "TT_StatisticsButton",
-                "StatisticsButtonSmall");
-        Composite statsComposite = new Composite(statsViewForm, SWT.NONE);
-        statsComposite.setLayout(new FillLayout());
-
-        Button b = new Button(statsComposite, SWT.NONE);
-        b.setText("<gui protocol needs more stats>");
-        b.addSelectionListener(new SelectionAdapter() {
-                public void widgetSelected(SelectionEvent s) {
-                    mainSash.setWeights(new int[] { 0, 100 });
-                }
-            });
-        statsViewForm.setTopLeft(statsCLabel);
-        statsViewForm.setContent(statsComposite);
+        createGraphSash(parent);
     }
 
     /**
      * @param parent
      */
-    private void createGraphSash(SashForm parent) {
+    private void createGraphSash(Composite parent) {
         String graphSashPrefString = "graphSash";
         SashForm graphSash = WidgetFactory.createSashForm(parent, graphSashPrefString);
 
-        downloadsGraphControl = createGraph(graphSash, "TT_Downloads");
-        uploadsGraphControl = createGraph(graphSash, "TT_Uploads");
+        createDownloadsGraph(graphSash);
+        createUploadsGraph(graphSash);
 
         WidgetFactory.loadSashForm(graphSash, graphSashPrefString);
     }
 
-    /**
-    * Create a graph
-    *
-    * @param graphSash
-    * @param titleText
-    * @param graphName
-    * @param color1
-    * @param color2
-    * @return GraphControl
-    */
-    public GraphControl createGraph(SashForm graphSash, String titleResString) {
-        final MenuManager popupMenu = new MenuManager();
-        popupMenu.setRemoveAllWhenShown(true);
-
-        String graphName = G2GuiResources.getString(titleResString);
-        ViewForm graphViewForm = WidgetFactory.createViewForm(graphSash);
-        CLabel cLabel = WidgetFactory.createCLabel(graphViewForm, titleResString, "StatisticsButtonSmall");
-
-        String showResString = "TT_Uploads";
-
-        if (titleResString.equals(showResString)) {
-            uploadsHeaderCLabel = cLabel;
-            showResString = "TT_Downloads";
-        } else {
-            downloadsHeaderCLabel = cLabel;
-        }
-
-        GraphControl graphControl = new GraphControl(graphViewForm, graphName);
-        GPaneListener aListener = new GraphPaneListener(graphSash, graphViewForm, graphControl,
-                showResString);
-
-        popupMenu.addMenuListener(aListener);
-        graphViewForm.setTopLeft(cLabel);
-        graphViewForm.setContent(graphControl);
-        cLabel.addMouseListener(new MaximizeSashMouseAdapter(cLabel, popupMenu, graphSash,
-                graphViewForm));
-
-        return graphControl;
+    private void createDownloadsGraph(SashForm graphSash) {
+        GraphViewFrame graphViewFrame = createGraph(graphSash, "TT_Downloads");
+        downloadsGraphControl = graphViewFrame.getGraphControl();
+        downloadsHeaderCLabel = graphViewFrame.getCLabel();
     }
-    
+
+    private void createUploadsGraph(SashForm graphSash) {
+        GraphViewFrame graphViewFrame = createGraph(graphSash, "TT_Uploads");
+        uploadsGraphControl = graphViewFrame.getGraphControl();
+        uploadsHeaderCLabel = graphViewFrame.getCLabel();
+    }
+
+    private GraphViewFrame createGraph(SashForm graphSash, String titleResString) {
+        return new GraphViewFrame(graphSash, titleResString, "StatisticsButtonSmall", this);
+    }
 
     /* (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
@@ -170,10 +103,12 @@ public class StatisticTab extends PaneGuiTab {
         ClientStats clientStats = (ClientStats) receivedInfo;
         uploadsGraphControl.addPointToGraph(clientStats.getTcpUpRate());
         downloadsGraphControl.addPointToGraph(clientStats.getTcpDownRate());
-        if ( this.isActive() ) {
-        	uploadsGraphControl.redraw();
-        	downloadsGraphControl.redraw();
+
+        if (this.isActive()) {
+            uploadsGraphControl.redraw();
+            downloadsGraphControl.redraw();
         }
+
         updateHeaderLabels(clientStats);
     }
 
@@ -183,18 +118,16 @@ public class StatisticTab extends PaneGuiTab {
      */
     public void updateHeaderLabels(final ClientStats clientStats) {
         if (System.currentTimeMillis() > (lastTimeStamp + 5000)) {
-            if ((uploadsHeaderCLabel == null) || uploadsHeaderCLabel.isDisposed()) {
+            if ((uploadsHeaderCLabel == null) || uploadsHeaderCLabel.isDisposed())
                 return;
-            }
 
             uploadsHeaderCLabel.getDisplay().asyncExec(new Runnable() {
                     public void run() {
-                        if ((uploadsHeaderCLabel == null) || uploadsHeaderCLabel.isDisposed()) {
+                        if ((uploadsHeaderCLabel == null) || uploadsHeaderCLabel.isDisposed())
                             return;
-                        }
 
                         uploadsHeaderCLabel.setText(G2GuiResources.getString("TT_Uploads") + ": " +
-							RegExp.calcStringSize(clientStats.getTotalUp()) + " " +
+                            RegExp.calcStringSize(clientStats.getTotalUp()) + " " +
                             G2GuiResources.getString("TT_Total"));
 
                         downloadsHeaderCLabel.setText(G2GuiResources.getString("TT_Downloads") +
@@ -229,6 +162,9 @@ public class StatisticTab extends PaneGuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.45  2003/11/29 01:51:53  zet
+a few more viewframe changes.. will continue later.
+
 Revision 1.44  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
@@ -312,7 +248,7 @@ Revision 1.18  2003/08/23 01:12:43  zet
 remove todos
 
 Revision 1.17  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle

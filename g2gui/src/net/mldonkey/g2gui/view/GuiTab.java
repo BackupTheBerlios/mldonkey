@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view;
 
 import java.util.Observer;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
@@ -40,7 +41,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.38 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: GuiTab.java,v 1.39 2003/11/29 01:51:53 zet Exp $
  *
  */
 public abstract class GuiTab implements Listener, Observer {
@@ -195,10 +196,17 @@ public abstract class GuiTab implements Listener, Observer {
     public MainTab getMainTab() {
         return gui;
     }
+    
+    public CoreCommunication getCore() {
+        return gui.getCore();
+    }
 }
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.39  2003/11/29 01:51:53  zet
+a few more viewframe changes.. will continue later.
+
 Revision 1.38  2003/11/24 01:33:27  zet
 move some classes
 

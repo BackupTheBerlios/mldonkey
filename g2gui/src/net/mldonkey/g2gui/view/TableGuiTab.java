@@ -28,11 +28,11 @@ import net.mldonkey.g2gui.view.viewers.GView;
 /**
  * TableGuiTab
  *
- * @version $Id: TableGuiTab.java,v 1.3 2003/10/31 16:02:17 zet Exp $ 
+ * @version $Id: TableGuiTab.java,v 1.4 2003/11/29 01:51:53 zet Exp $ 
  *
  */
 public abstract class TableGuiTab extends PaneGuiTab {
-	protected CoreCommunication core;
+	protected CoreCommunication cfore;
 	protected GView gView;
 
 	/**
@@ -40,13 +40,6 @@ public abstract class TableGuiTab extends PaneGuiTab {
 	 */
 	public TableGuiTab(MainTab gui) {
 		super(gui);
-	}
-
-	/**
-	 * @return
-	 */
-	public GView getView() {
-		return gView;
 	}
 	
 	public GView getGView() {
@@ -56,6 +49,9 @@ public abstract class TableGuiTab extends PaneGuiTab {
 
 /*
 $Log: TableGuiTab.java,v $
+Revision 1.4  2003/11/29 01:51:53  zet
+a few more viewframe changes.. will continue later.
+
 Revision 1.3  2003/10/31 16:02:17  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

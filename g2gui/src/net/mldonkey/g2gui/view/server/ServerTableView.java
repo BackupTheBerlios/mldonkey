@@ -22,7 +22,7 @@
  */
 package net.mldonkey.g2gui.view.server;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.viewers.table.GTableView;
 
@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ServerTableViewer
  *
- * @version $Id: ServerTableView.java,v 1.3 2003/11/09 23:09:57 lemmster Exp $ 
+ * @version $Id: ServerTableView.java,v 1.4 2003/11/29 01:51:53 zet Exp $ 
  *
  */
 public class ServerTableView extends GTableView {
@@ -54,8 +54,8 @@ public class ServerTableView extends GTableView {
 	 * @param composite
 	 * @param core
 	 */
-	public ServerTableView( Composite parent, CoreCommunication aCore ) {
-		super( parent, aCore );
+	public ServerTableView( ViewFrame viewFrame ) {
+		super( viewFrame );
 		preferenceString = "server";
 		
 		/* proto <= 16 does not support favorites */					
@@ -82,7 +82,7 @@ public class ServerTableView extends GTableView {
 		tableMenuListener = new ServerTableMenuListener( this );
 		
 
-		this.createContents( parent );
+		this.createContents( viewFrame.getChildComposite() );
 	}
 
 	protected void createContents( Composite parent ) {
@@ -118,6 +118,9 @@ public class ServerTableView extends GTableView {
 
 /*
 $Log: ServerTableView.java,v $
+Revision 1.4  2003/11/29 01:51:53  zet
+a few more viewframe changes.. will continue later.
+
 Revision 1.3  2003/11/09 23:09:57  lemmster
 remove "Show connected Servers only"
 added filter saving in searchtab

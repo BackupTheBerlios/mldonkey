@@ -20,42 +20,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-package net.mldonkey.g2gui.view.helper;
+package net.mldonkey.g2gui.view.server;
 
-import org.eclipse.swt.custom.SashForm;
+import net.mldonkey.g2gui.view.GuiTab;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
+
+import org.eclipse.swt.widgets.Composite;
 
 
 /**
- * ViewFrameListener
+ * ServerViewFrame
  *
- * @version $Id: SashViewFrameListener.java,v 1.2 2003/11/29 01:51:53 zet Exp $
+ * @version $Id: ServerViewFrame.java,v 1.1 2003/11/29 01:51:53 zet Exp $
  *
  */
-public abstract class SashViewFrameListener extends ViewFrameListener {
-	protected SashForm sashForm;
+public class ServerViewFrame extends ViewFrame {
+    public ServerViewFrame(Composite composite, String prefString, String prefImageString,
+        GuiTab guiTab) {
+        super(composite, prefString, prefImageString, guiTab);
 
-	public SashViewFrameListener(SashViewFrame sashViewFrame) {
-	    super(sashViewFrame);
-		this.sashForm = sashViewFrame.getParentSashForm();
-	}
-
-	public void menuAboutToShow() {
-	}
+        gView = new ServerTableView(this);
+        createPaneListener(new ServerPaneListener(this));
+    }
 }
 
 
 /*
-$Log: SashViewFrameListener.java,v $
-Revision 1.2  2003/11/29 01:51:53  zet
+$Log: ServerViewFrame.java,v $
+Revision 1.1  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 
-Revision 1.1  2003/11/28 01:06:21  zet
-not much- slowly expanding viewframe - will continue later
-
-Revision 1.2  2003/11/24 01:33:27  zet
-move some classes
-
-Revision 1.1  2003/11/22 02:24:29  zet
-widgetfactory & save sash postions/states between sessions
 
 */

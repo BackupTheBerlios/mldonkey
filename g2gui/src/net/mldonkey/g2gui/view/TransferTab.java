@@ -41,7 +41,7 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.96 2003/11/26 07:43:15 zet Exp $
+ * @version $Id: TransferTab.java,v 1.97 2003/11/29 01:51:53 zet Exp $
  *
  */
 public class TransferTab extends TableGuiTab {
@@ -54,7 +54,6 @@ public class TransferTab extends TableGuiTab {
      */
     public TransferTab(MainTab gui) {
         super(gui);
-        this.core = gui.getCore();
         createButton("TransfersButton");
         createContents(this.subContent);
     }
@@ -136,17 +135,48 @@ public class TransferTab extends TableGuiTab {
     public GView getUploadGView() {
         return this.uploadTableView;
     }
+    
+    /**
+     * @return GView
+     */
+    public GView getUploadersGView() {
+        return this.uploadersTableView;
+    }
 
     /* (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update(Observable o, Object obj) {
     }
+    
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.GuiTab#setActive()
+     */
+    public void setActive() {
+        gView.setActive(true);
+        uploadersTableView.setActive(true);
+        uploadTableView.setActive(true);
+        clientTableView.setActive(true);
+        super.setActive();
+    }
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.GuiTab#setInActive()
+	 */
+	public void setInActive() {
+	   gView.setActive(false);
+	   uploadersTableView.setActive(false);
+	   uploadTableView.setActive(false);
+	   clientTableView.setActive(false);
+	   super.setInActive();
+   }
 }
 
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.97  2003/11/29 01:51:53  zet
+a few more viewframe changes.. will continue later.
+
 Revision 1.96  2003/11/26 07:43:15  zet
 quick attempt at an uploaders table w/proto 19 - still in progress...
 

@@ -22,13 +22,12 @@
  */
 package net.mldonkey.g2gui.view.server;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.PaneGuiTab;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
+import net.mldonkey.g2gui.view.helper.ViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.GPaneListener;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
@@ -45,21 +44,21 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.10 2003/11/14 00:46:04 zet Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.11 2003/11/29 01:51:53 zet Exp $ 
  *
  */
-public class ServerPaneListener extends GPaneListener {
+public class ServerPaneListener extends ViewFrameListener {
 	private Enum[] states;
 	/**
 	 * @param gViewer
 	 * @param core
 	 */
-	public ServerPaneListener(PaneGuiTab aPaneGuiTab, CoreCommunication core) {
-		super(aPaneGuiTab, core);
+	public ServerPaneListener(ViewFrame viewFrame) {
+		super(viewFrame);
+		initialize();
 	}
 	
 	public void initialize() {
-		super.menuAboutToShow();
 		this.states = new Enum[] { EnumState.BLACK_LISTED, EnumState.CONNECTED, 
 									EnumState.CONNECTED_INITIATING, EnumState.CONNECTING,
 									EnumState.NOT_CONNECTED };
@@ -121,6 +120,9 @@ public class ServerPaneListener extends GPaneListener {
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.11  2003/11/29 01:51:53  zet
+a few more viewframe changes.. will continue later.
+
 Revision 1.10  2003/11/14 00:46:04  zet
 sort by column menu item (for macOS)
 

@@ -22,10 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer.clientTable;
 
-import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
-
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -34,20 +30,25 @@ import net.mldonkey.g2gui.view.viewers.CustomTableViewer;
 import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
 
 import org.eclipse.jface.viewers.Viewer;
+
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Display;
+
+import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
  *
  * ClientTableContentProvider
  *
- * @version $Id: ClientTableContentProvider.java,v 1.11 2003/11/27 21:42:33 zet Exp $
+ * @version $Id: ClientTableContentProvider.java,v 1.12 2003/11/29 01:51:53 zet Exp $
  *
  */
 public class ClientTableContentProvider extends GTableContentProvider implements Observer {
     private long lastUpdateTime;
-    
+
     public ClientTableContentProvider(ClientTableView cTableViewer, CLabel headerCLabel) {
         super(cTableViewer);
     }
@@ -87,9 +88,11 @@ public class ClientTableContentProvider extends GTableContentProvider implements
         if (obj instanceof ClientInfo || obj instanceof TreeClientInfo)
             Display.getDefault().asyncExec(new Runnable() {
                     public void run() {
-                        refreshTable(obj);
+                        if (gView.isActive())
+                            refreshTable(obj);
                     }
                 });
+
     }
 
     // delay for 5 seconds to prevent too much flicker
@@ -130,14 +133,18 @@ public class ClientTableContentProvider extends GTableContentProvider implements
             }
         }
 
-        gView.getViewFrame().updateCLabelText(G2GuiResources.getString("TT_Clients") + ": " + totalConnected +
-            " / " + totalClients + " " + G2GuiResources.getString("ENS_CONNECTED").toLowerCase());
+        gView.getViewFrame().updateCLabelText(G2GuiResources.getString("TT_Clients") + ": " +
+            totalConnected + " / " + totalClients + " " +
+            G2GuiResources.getString("ENS_CONNECTED").toLowerCase());
     }
 }
 
 
 /*
 $Log: ClientTableContentProvider.java,v $
+Revision 1.12  2003/11/29 01:51:53  zet
+a few more viewframe changes.. will continue later.
+
 Revision 1.11  2003/11/27 21:42:33  zet
 integrate ViewFrame a little more.. more to come.
 
