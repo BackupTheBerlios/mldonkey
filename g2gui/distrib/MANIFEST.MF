@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Main-Class: net.mldonkey.g2gui.view.G2Gui
-Class-Path: boot.jar  g2gui.jar  gnu-regexp-1.1.4.jar  jface.jar  libgcj-3.3.1.jar  runtime.jar  swt.jar  trove.jar
+Class-Path: g2gui.jar gnu-regexp-1.1.4.jar trove.jar jface.jar runtime.jar boot.jar swt.jar swt-pi.jar swt-mozilla.jar
 
