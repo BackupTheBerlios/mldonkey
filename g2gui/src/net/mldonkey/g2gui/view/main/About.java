@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.10 2003/08/31 12:40:51 dek Exp $ 
+ * @version $Id: About.java,v 1.11 2003/08/31 15:48:23 zet Exp $ 
  *
  */
 public class About {
@@ -139,14 +139,16 @@ public class About {
 		about.setCaret( null );
 		about.setBackground( background );
 		
-		String develHeader = "Active Devs and Management:\n";
-		String devels = "Dek, Lemmy, VNC, Z\n\n";
+		String develHeader = "Original developers ( code & icons ):\n";
+		String devels = "Dek, Lemmy, VNC, and z\n\n";
 		
-		String contributorHeader = "Contributors:\n";
-		String contributors = "housetier, mitch, vaste\n\n";
+		String contributorHeader = "Other contributors and testers:\n";
+		String contributors = "housetier, mitch, and vaste\n\n";
 		
-		String thankHeader = "We thank following projects for code and libs:\n";
-		String thank = "  * The KDE project for icons (GPL)\n"
+		String thankHeader = "We thank the following projects for code and libs:\n";
+		String thank = 
+		  "  * The mldonkey core developers! (GPL)\n"
+		+ "  * The KDE project for icons (GPL)\n"
 		+ "  * The creator of the Noia KDE icon set for his/her icons (GPL)\n"
 		+ "  * The creator of the lush KDE icon set for his/her icons (GPL)\n"
 		+ "  * The creator of the Nuvola KDE icon set for his/her icons (GPL)\n"
@@ -154,8 +156,9 @@ public class About {
 		+ "  * The Gnu/Trove and Regex project (GPL)\n"
 		+ "  * The whole Eclipse and SWT team (CPL)\n\n";
 		
-		String moreThanksHeader = "We thank furthermore:\n";
-		String moreThanks = " * The dude who made the java ssh2 for use in eclipse\n"
+		String moreThanksHeader = "We also thank:\n";
+		String moreThanks = 
+		  "  * The dude who made the java ssh2 for use in eclipse\n"
 		+ "  * The dude who invented Wikis and the creator of phpWiki\n"
 		+ "  * The Freenode IRC network";
 
@@ -265,7 +268,7 @@ public class About {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.10 2003/08/31 12:40:51 dek Exp $ 
+	 * @version $Id: About.java,v 1.11 2003/08/31 15:48:23 zet Exp $ 
 	 *
 	 */
 	public class Link {
@@ -317,6 +320,9 @@ public class About {
 }
 /*
 $Log: About.java,v $
+Revision 1.11  2003/08/31 15:48:23  zet
+add core devs
+
 Revision 1.10  2003/08/31 12:40:51  dek
 set position of about-dialog in middle of app
 
