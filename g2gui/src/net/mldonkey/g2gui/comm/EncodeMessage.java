@@ -22,15 +22,15 @@
  */
 package net.mldonkey.g2gui.comm;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.Socket;
 
 /**
  * Message
  *
  * @author ${user}
- * @version $Id: EncodeMessage.java,v 1.1 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+ * @version $Id: EncodeMessage.java,v 1.2 2003/06/13 11:03:06 lemmstercvs01 Exp $ 
  *
  */
 public class EncodeMessage extends Message {
@@ -107,8 +107,8 @@ public class EncodeMessage extends Message {
 	 */
 	public boolean sendMessage( Socket connection ) {
 		try {
-
-			OutputStream out = connection.getOutputStream();
+			
+			BufferedOutputStream bOut = new BufferedOutputStream( connection.getOutputStream() );
 			
 			byte[] temp = Message.merge( Message.toBytes( this.length ), 
 										  Message.toBytes( this.opCode ) );
@@ -117,8 +117,11 @@ public class EncodeMessage extends Message {
 				temp2 = Message.merge( temp, this.content );
 			else
 				temp2 = temp;
-				
-			out.write( temp2 );			
+			
+			temp = null;
+			bOut.write( temp2 );
+			temp2 = null;
+			bOut.flush();
 			return true;
 		}
 		catch ( IOException e ) {
@@ -289,6 +292,9 @@ public class EncodeMessage extends Message {
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.2  2003/06/13 11:03:06  lemmstercvs01
+changed OutputStream to BufferedOutputStream
+
 Revision 1.1  2003/06/12 22:23:06  lemmstercvs01
 lots of changes
 
