@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.57 2003/08/23 16:18:44 lemmster Exp $ 
+ * @version $Id: MainTab.java,v 1.58 2003/08/23 23:50:26 zet Exp $ 
  *
  */
 public class MainTab implements Observer, ShellListener {
@@ -67,7 +67,7 @@ public class MainTab implements Observer, ShellListener {
 	private static PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
 
 
-	private final String titleBarText = "g2gui alpha";
+	private String titleBarText = "g2gui alpha";
 	private StatusLine statusline;
 	private Object waiterObject;
 	private Shell shell;
@@ -90,10 +90,11 @@ public class MainTab implements Observer, ShellListener {
 		final Shell mainShell = shell;	
 		Display display = shell.getDisplay();
 		shell.addShellListener( this );
-		shell.setText( titleBarText );					
-		shell.setLayout( new FillLayout() );
-
 		G2GuiResources.initialize();
+		
+		setTitleBarText( shell ); 
+		shell.setLayout( new FillLayout() );
+		
 		createInternalPrefStore();
 		createContents( shell );
 					
@@ -376,6 +377,9 @@ public class MainTab implements Observer, ShellListener {
 	public MainCoolBar getCoolBar() {
 		return coolBar;
 	}
+	public void setTitleBarText(Shell shell) {
+		shell.setText( titleBarText + " " + G2GuiResources.getString("BUILD_INFORMATION") );					
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.ShellListener#
@@ -401,7 +405,7 @@ public class MainTab implements Observer, ShellListener {
 	 */
 	public void shellDeiconified( ShellEvent e ) {
 		this.mldonkey.getClientStats().deleteObserver( this );
-		shell.setText( titleBarText );
+		setTitleBarText( shell );
 	}
 
 	/* (non-Javadoc)
@@ -415,6 +419,9 @@ public class MainTab implements Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.58  2003/08/23 23:50:26  zet
+add build # to titlebar
+
 Revision 1.57  2003/08/23 16:18:44  lemmster
 fixed locked/button size
 
