@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: Console.java,v 1.1 2003/08/08 20:16:13 zet Exp $ 
+ * @version $Id: Console.java,v 1.2 2003/08/10 00:38:17 zet Exp $ 
  *
  */
 public class Console extends Observable implements ControlListener  {	
@@ -133,12 +133,19 @@ public class Console extends Observable implements ControlListener  {
 	public void setInputBackground(Color color) {
 		input.setBackground(color);
 	}
+	public void setFocus() {
+		input.setFocus();
+	}
+	
 	
 }
 
 
 /*
 $Log: Console.java,v $
+Revision 1.2  2003/08/10 00:38:17  zet
+setFocus on activation
+
 Revision 1.1  2003/08/08 20:16:13  zet
 central PreferenceLoader, abstract Console
 

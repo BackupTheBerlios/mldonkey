@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.31 2003/08/09 16:04:46 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.32 2003/08/10 00:38:17 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -94,6 +94,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 		console.addObserver( this );
 		this.core.getConsoleMessage().addObserver( this );
 		super.setActive();
+		console.setFocus();
 	}
 		
 	/**
@@ -157,6 +158,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.32  2003/08/10 00:38:17  zet
+setFocus on activation
+
 Revision 1.31  2003/08/09 16:04:46  dek
 added gnu.regexp for compiling with gcj
 you can get it at:
