@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.Shell;
  * TableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.3 2003/09/08 15:43:34 lemmster Exp $ 
+ * @version $Id: ServerTableMenuListener.java,v 1.4 2003/09/14 11:38:50 lemmster Exp $ 
  *
  */
 public class ServerTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -119,6 +119,10 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 		if ( selectedServer != null
 			&& selectedServer.getConnectionState().getState() == EnumState.NOT_CONNECTED )
 			menuManager.add( new ConnectAction() );
+		
+		/* connect more (with the network) */
+		if ( selectedServer != null )
+			menuManager.add( new ConnectMoreAction() );	
 
 		/* add server/servers */
 		MenuManager addManager = new MenuManager( G2GuiResources.getString( "TML_ADD_SERVER_BY" ) );
@@ -490,6 +494,9 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.4  2003/09/14 11:38:50  lemmster
+connectMore in right click menu
+
 Revision 1.3  2003/09/08 15:43:34  lemmster
 work in progress
 
