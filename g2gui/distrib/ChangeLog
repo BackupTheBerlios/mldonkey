@@ -1,3 +1,8 @@
+2003/10/19: z
+	* Transfer: Add column selector to clients table
+	* Center splash on primary monitor (dualhead), center dialogs on main window
+	* Upgrade to SWT3 (gtk tooltip bug fixed, gtk column-alignment fixed) 
+
 2003/10/15: z
 	* StatusLine: Fix: BitTorrent tooltip
 	* StatusLine: Use ToolItem buttons
