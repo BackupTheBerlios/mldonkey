@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.20 2003/07/21 15:12:39 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.21 2003/07/28 21:54:47 zet Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -138,6 +138,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 	 * @param text what do we want do display in this cell
 	 */
 	private void updateCell( int column, String text ) {
+		if (isDisposed()) return;
 		if ( getText( column ) == null
 			|| !getText( column ).equals( text  ) )
 			{ 				
@@ -201,6 +202,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.21  2003/07/28 21:54:47  zet
+check isDisposed
+
 Revision 1.20  2003/07/21 15:12:39  dek
 concurrent thread-exceptions solved??
 

@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.23 2003/07/22 23:28:15 zet Exp $ 
+ * @version $Id: DownloadItem.java,v 1.24 2003/07/28 21:55:11 zet Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem implements IItemHasMenue, SelectionListener {
@@ -257,6 +257,7 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 	 * @param text what do we want do display in this cell
 	 */
 	private void updateCell( int column, String text ) {
+		if (isDisposed()) return;
 		if ( getText( column ) == null
 			|| !getText( column ).equals( text  ) )
 			{ 				
@@ -405,6 +406,9 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 }
 /*
 $Log: DownloadItem.java,v $
+Revision 1.24  2003/07/28 21:55:11  zet
+check isDisposed
+
 Revision 1.23  2003/07/22 23:28:15  zet
 stat graph - no flicker on windows and other craziness
 
