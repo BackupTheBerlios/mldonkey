@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.15 2003/08/02 09:55:16 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.16 2003/08/04 15:06:24 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -108,7 +108,7 @@ public class NetworkInfo extends Parent {
 		this.downloaded = messageBuffer.readInt64();
 		
 		if ( parent.getProtoToUse() >= 18 )
-			//this.connectedServers = messageBuffer.readInt32();
+			this.connectedServers = messageBuffer.readInt32();
 		
 		/* set the networktype by networkname */
 		this.setNetworkType( this.networkName );
@@ -316,6 +316,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.16  2003/08/04 15:06:24  lemmstercvs01
+bugfix
+
 Revision 1.15  2003/08/02 09:55:16  lemmstercvs01
 observers changed
 
