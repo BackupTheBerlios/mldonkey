@@ -52,15 +52,15 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.21 2003/09/14 04:17:19 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.22 2003/09/14 04:23:25 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, TreeListener {
-		
-	private static Object[] EMPTY_ARRAY = new Object[0];	
+	
+	private final static int CHUNKS_COLUMN = DownloadTableTreeViewer.getChunksColumn();
+	private final static Object[] EMPTY_ARRAY = new Object[0];	
+	
 	public CustomTableTreeViewer tableTreeViewer = null;
-	public Table table = null;
-	public int CHUNKS_COLUMN = DownloadTableTreeViewer.getChunksColumn();
 	public Map parentChildrenMap = new Hashtable();
 	public List tableTreeEditorList = Collections.synchronizedList(new ArrayList());
 	private DownloadTableTreeViewer downloadTableTreeViewer = null;
@@ -171,7 +171,6 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	public void inputChanged(Viewer tableTreeViewer, Object oldInput, Object newInput) {
 		if (tableTreeViewer instanceof CustomTableTreeViewer) {
 			this.tableTreeViewer = (CustomTableTreeViewer) tableTreeViewer;
-			this.table = this.tableTreeViewer.getTableTree().getTable();
 		}
 	}
 	
@@ -402,7 +401,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 			tableTreeItem.setData("oldHash", new Integer(tableTreeItem.getData().hashCode()));
 		}
 			
-		chunkCanvas = new ChunkCanvas( table, SWT.NO_BACKGROUND, clientInfo, fileInfo );
+		chunkCanvas = new ChunkCanvas( tableTreeViewer.getTableTree().getTable(), SWT.NO_BACKGROUND, clientInfo, fileInfo );
 		TableTreeEditor tableTreeEditor = new TableTreeEditor(tableTreeViewer.getTableTree());
 		
 		tableTreeEditorList.add(tableTreeEditor);
@@ -516,6 +515,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.22  2003/09/14 04:23:25  zet
+remove unneeded
+
 Revision 1.21  2003/09/14 04:17:19  zet
 remove unneeded meth
 
