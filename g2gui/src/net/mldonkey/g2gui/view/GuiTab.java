@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.Color;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.6 2003/07/25 22:11:09 zet Exp $ 
+ * @version $Id: GuiTab.java,v 1.7 2003/07/26 00:51:43 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -75,6 +75,8 @@ public abstract class GuiTab implements Listener, Observer {
 	 * The master Gui
 	 */
 	private MainTab gui;
+	
+	private boolean hasObserver;
 	
 	protected ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
 	/**
@@ -111,8 +113,11 @@ public abstract class GuiTab implements Listener, Observer {
 	 * is called from the gui, when this tab is set to background 
 	 * (because another tab was activated)	
 	 */
-	public void setInActive() {			
-		this.gui.getCore().deleteObserver( this );
+	public void setInActive(boolean removeObserver) {			
+		if (removeObserver) {
+			this.gui.getCore().deleteObserver( this );
+			hasObserver = false;
+		}
 		this.active = false;
 		this.toolItem.setImage( inActiveIm );		
 	}
@@ -121,7 +126,10 @@ public abstract class GuiTab implements Listener, Observer {
 	 * is called when this tab is set to foreground 
 	 */
 	public void setActive() {		
-		this.gui.getCore().addObserver( this );
+		if (!hasObserver) {
+			this.gui.getCore().addObserver( this );
+			hasObserver=true;
+		}
 		this.active = true;		
 		this.mainWindow.setActive( this );
 		this.toolItem.setImage( activeIm );
@@ -172,6 +180,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.7  2003/07/26 00:51:43  zet
+stats graph continues to observe when inactive
+
 Revision 1.6  2003/07/25 22:11:09  zet
 use prefconverter
 

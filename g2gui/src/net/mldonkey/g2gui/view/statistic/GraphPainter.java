@@ -76,7 +76,7 @@ public class GraphPainter {
 		int k = startx;
 		int which = 0;
 		float maximum = 20f;
-		float height = (float) parent.getBounds().height - 20f;
+		float height = (float) (parent.getClientArea().height - drawBoardBuffer.getFontMetrics().getHeight() - 2);
 		int width = parent.getBounds().width;
 		float zoom, valueY;
 				
@@ -144,19 +144,24 @@ public class GraphPainter {
 			// }
 			
 //			just for temporary fun .. this will overflow pretty quickly
+			
+			
 			 drawBoardBuffer.setForeground(graphColor);
 			 drawBoardBuffer.drawText(graphs[which].getName() + 
 				 " avg: " + ((double)graphs[which].getAvg()/100) + " kb/s," +
 				 " max: " + ((double)graphs[which].getMax()/100) + " kb/s",
-				 20, (int)height+2,true);
+				 20, parent.getClientArea().height-drawBoardBuffer.getFontMetrics().getHeight() ,true);
 			
 			double vv = (double)graphs[which].getLast().getValue()/100;
+			String vvs = String.valueOf(vv);
 			int textPosition = (int) (height - (float) (graphs[which].getLast().getValue()/10) * zoom);
 			
+			int boxWidth = drawBoardBuffer.getFontMetrics().getAverageCharWidth() * (vvs.length() + 10)  ;
+						
 			drawBoardBuffer.setForeground(new Color(null,0,0,0));
 			drawBoardBuffer.setBackground(new Color(null,255,255,255));
-			drawBoardBuffer.fillRoundRectangle(startx+10,textPosition-3,80,20,7,7);
-			drawBoardBuffer.drawRoundRectangle(startx+10,textPosition-3,80,20,7,7);
+			drawBoardBuffer.fillRoundRectangle(startx+10,textPosition-3,boxWidth,20,7,7);
+			drawBoardBuffer.drawRoundRectangle(startx+10,textPosition-3,boxWidth,20,7,7);
 			drawBoardBuffer.drawText(vv + " kb/s",startx+20,textPosition);
 			drawBoardBuffer.setForeground(new Color(null, 255,255,0));
 			drawBoardBuffer.drawLine(startx+10,textPosition,startx,textPosition);

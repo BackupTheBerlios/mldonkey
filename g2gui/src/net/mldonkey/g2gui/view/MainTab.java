@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.13 2003/07/25 03:50:53 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.14 2003/07/26 00:51:43 zet Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -373,7 +373,7 @@ public class MainTab implements Listener {
 		
 		if ( activeTab != null ) {
 			activeTab.getContent().setVisible( false );
-			activeTab.setInActive();
+			activeTab.setInActive(true);
 		} 
 		( ( StackLayout ) pageContainer.getLayout() ).topControl 
 											= activatedTab.getContent();		
@@ -472,6 +472,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.14  2003/07/26 00:51:43  zet
+stats graph continues to observe when inactive
+
 Revision 1.13  2003/07/25 03:50:53  zet
 damn fontfield.. will continue
 

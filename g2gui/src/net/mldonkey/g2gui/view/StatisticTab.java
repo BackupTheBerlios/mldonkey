@@ -78,7 +78,11 @@ public class StatisticTab
 				
 		}
 	}
-
+	
+	public void setInActive(boolean removeObserver) {
+		super.setInActive(false);
+	}
+	
 	public void widgetDisposed(DisposeEvent arg0) {
 		// TODO store Column position
 	}
