@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.9 2003/06/13 08:47:41 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.10 2003/06/13 11:23:24 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -101,128 +101,20 @@ public abstract class Message {
 	public static final short R_DOWNLOADED_LIST = 54;
 
 	/**
-	 * Reads a Byte from an InputStream
-	 * @param inputStream Stream to read the byte from
-	 * @return	short
-	 * @throws IOException Error if read on inputStream failed
-	 */
-	public static byte readByte( InputStream inputStream ) throws IOException {
-		byte result = ( byte ) inputStream.read();		
-		return result;
-	}
-
-	/**
-	 * Reads a Int8 from an InputStream
-	 * @param inputStream Stream to read the byte from
-	 * @return	short
-	 * @throws IOException Error if read on inputStream failed
-	 */
-	public static short readInt8( InputStream inputStream ) throws IOException {
-		short result = ( short ) inputStream.read();
-		if ( result < 0 ) {
-			result += 256;
-		}
-		return result;
-	}
-	/**
-	 * Reads an int16 from an InputStream
-	 * @param inputStream Stream to read the int16 from
-	 * @return short
-	 * @throws IOException Error if read on inputStream failed
-	 */
-	public static short readInt16( InputStream inputStream ) throws IOException {
-		return ( short ) ( readInt8( inputStream ) + 256 * readInt8( inputStream ) );
-	}
-	/**
 	 * Reads an int32 from an InputStream
 	 * @param inputStream Stream to read the int32 from
 	 * @return int
 	 * @throws IOException Error if read on inputStream failed
 	 */
 	public static int readInt32( InputStream inputStream ) throws IOException {
-		return  ( readInt8( inputStream ) + 256
-			  * ( readInt8( inputStream ) + 256
-			  * ( readInt8( inputStream ) + 256
-			  * ( readInt8( inputStream ) ) ) ) );
+		byte[] b = new byte[ 4 ]; 
+		inputStream.read( b );
+		
+		return (((int) b[0]) & 0xFF) +
+			   ((((int) b[1]) & 0xFF) << 8) +
+			   ((((int) b[2]) & 0xFF) << 16) +
+			   ((((int) b[3]) & 0xFF) << 24);
 	}
-	/**
-	 * Reads a long from an InputStream
-	 * @param inputStream Stream to read the int64 from
-	 * @return long
-	 * @throws IOException Error if read on inputStream failed
-	 */
-	public static long readInt64( InputStream inputStream ) throws IOException {
-		return    ( readInt8( inputStream ) + 256
-				* ( readInt8( inputStream ) + 256 
-				* ( readInt8( inputStream ) + 256 
-				* ( readInt8( inputStream ) + 256 
-				* ( readInt8( inputStream ) + 256 
-				* ( readInt8( inputStream ) + 256
-				* ( readInt8( inputStream ) + 256
-				* ( readInt8( inputStream ) ) ) ) ) ) ) ) );		
-	}
-	/**
-	 * Reads a String from an InputStream
-	 * @param inputStream Stream to read the string from
-	 * @return String
-	 * @throws IOException Error if read on inputStream failed
-	 */
-	public static String readString( InputStream inputStream ) throws IOException {
-		int value = readInt16( inputStream );
-		if ( value > 0 ) {
-			byte[] content = new byte[ value ];
-			inputStream.read( content, 0, value );
-			String result = new String( content, 0, value );
-			return ( result );
-		} 
-		else
-			return ( "" );
-	}
-	
-	/**
-	 * Reads a String[] from an InputStream
-	 * @param inputStream Stream to read from
-	 * @return String[]
-	 * @throws IOException Error if read on InputStream failed
-	 */
-	public static String[] readStringList( InputStream inputStream ) throws IOException {
-		short listElem = readInt16( inputStream );
-		String[] result = new String[ listElem ];
-		for ( int i = 0; i < listElem; i++ ) {
-			result[ i ] = readString( inputStream );
-		}
-		return result;
-	}
-	/**
-	 * Creates a string from a binary message
-	 * @param inputStream Stream to read from
-	 * @param length Length of the binary message
-	 * @return a String
-	 * @throws IOException Error if read from Stream failed
-	 */
-	public static String readBinary( InputStream inputStream, int length ) throws IOException {
-		StringBuffer result = new StringBuffer();
-		for ( int i = 0; i < length; i++ ) {
-			result.append( Integer.toHexString( inputStream.read() ) );
-		}
-		return result.toString();
-	}
-	
-	/**
-	 * Reads a int[] from an InputStream
-	 * @param inputStream Stream to read from
-	 * @return int[]
-	 * @throws IOException Error if read on InputStream failed
-	 */
-	public static int[] readInt32List( InputStream inputStream ) throws IOException {
-		short listElem = readInt16( inputStream );
-		int[] result = new int[ listElem ];
-		for ( int i = 0; i < listElem; i++ ) {
-			result[ i ] = readInt32( inputStream ); 
-		}
-		return result;
-	}
-	
 	/**
 	 * Creates a 2 byte array of int16 from a short
 	 * @param aShort short object to create a byte array with
@@ -342,6 +234,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.10  2003/06/13 11:23:24  lemmstercvs01
+modified readInt32, deleted all other readXX()
+
 Revision 1.9  2003/06/13 08:47:41  lemmstercvs01
 changed String to StringBuffer in readBinary()
 
