@@ -47,7 +47,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
  * DownloadPaneMenuListener
  *
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.3 2003/09/23 15:00:02 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.4 2003/09/23 15:24:24 zet Exp $
  *
  */
 public class DownloadPaneMenuListener extends CMenuListener implements IMenuListener {
@@ -99,6 +99,9 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         this.tableTreeContentProvider = (DownloadTableTreeContentProvider) tableTreeViewer.getContentProvider(  );
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
+     */
     public void menuAboutToShow( IMenuManager menuManager ) {
     
         menuManager.add( new ExpandCollapseAction( true ) );
@@ -163,7 +166,7 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         menuManager.add( filterSubMenu );
     }
 
-    public boolean isFiltered( NetworkInfo.Enum networkType ) {
+    private boolean isFiltered( NetworkInfo.Enum networkType ) {
         ViewerFilter[] viewerFilters = tableTreeViewer.getFilters(  );
 
         for ( int i = 0; i < viewerFilters.length; i++ ) {
@@ -181,7 +184,7 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         return false;
     }
 
-    public boolean isFiltered( EnumFileState fileState ) {
+    private boolean isFiltered( EnumFileState fileState ) {
         ViewerFilter[] viewerFilters = tableTreeViewer.getFilters(  );
 
         for ( int i = 0; i < viewerFilters.length; i++ ) {
@@ -195,7 +198,7 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         return false;
     }
 
-    public boolean isFiltered( String[] extensions ) {
+    private boolean isFiltered( String[] extensions ) {
         ViewerFilter[] viewerFilters = tableTreeViewer.getFilters(  );
 
         for ( int i = 0; i < viewerFilters.length; i++ ) {
@@ -225,7 +228,10 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         tableTreeContentProvider.updateAllEditors(  );
     }
 
-    class ExpandCollapseAction extends Action {
+    /**
+     * ExpandCollapseAction
+     */
+    private class ExpandCollapseAction extends Action {
         private boolean expand;
 
         public ExpandCollapseAction( boolean expand ) {
@@ -252,7 +258,10 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         }
     }
 
-    class AllFiltersAction extends Action {
+    /**
+     * AllFiltersAction
+     */
+    private class AllFiltersAction extends Action {
         public AllFiltersAction(  ) {
             super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILTER_ALL" ), Action.AS_CHECK_BOX );
         }
@@ -263,6 +272,9 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         }
     }
 
+    /**
+     * NetworkFilterAction
+     */
     private class NetworkFilterAction extends Action {
         private NetworkInfo.Enum networkType;
 
@@ -313,7 +325,10 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         }
     }
 
-    class FileStateFilterAction extends Action {
+    /**
+     * FileStateFilterAction
+     */
+    private class FileStateFilterAction extends Action {
         public EnumFileState fileState;
 
         public FileStateFilterAction( String name, EnumFileState fileState ) {
@@ -338,6 +353,9 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         }
     }
 
+    /**
+     * ExtensionsFilterAction
+     */
     private class ExtensionsFilterAction extends Action {
         public String[] extensions;
 
@@ -391,8 +409,13 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         }
     }
 
-    // Filters	
-    public static class NetworkFilter extends ViewerFilter {
+// Filters
+
+
+    /**
+     * NetworkFilter
+     */
+    private static class NetworkFilter extends ViewerFilter {
         private List networkType;
 
         public NetworkFilter(  ) {
@@ -431,7 +454,10 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         }
     }
 
-    public class FileStateFilter extends ViewerFilter {
+    /**
+     * FileStateFilter
+     */
+    private class FileStateFilter extends ViewerFilter {
         private EnumFileState fileState;
 
         public FileStateFilter( EnumFileState enum ) {
@@ -457,7 +483,10 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
         }
     }
 
-    public static class FileExtensionsFilter extends ViewerFilter {
+    /**
+     * FileExtensionsFilter
+     */
+    private static class FileExtensionsFilter extends ViewerFilter {
         private List fileExtensionsList;
 
         public FileExtensionsFilter(  ) {
@@ -504,6 +533,9 @@ public class DownloadPaneMenuListener extends CMenuListener implements IMenuList
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.4  2003/09/23 15:24:24  zet
+not much..
+
 Revision 1.3  2003/09/23 15:00:02  zet
 extend CMenuListener
 

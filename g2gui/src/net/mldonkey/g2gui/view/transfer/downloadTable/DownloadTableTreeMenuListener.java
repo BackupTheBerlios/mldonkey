@@ -22,6 +22,10 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
@@ -30,6 +34,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.transfer.ClientDetailDialog;
+import net.mldonkey.g2gui.view.transfer.CustomTableTreeViewer;
 import net.mldonkey.g2gui.view.transfer.FileDetailDialog;
 import net.mldonkey.g2gui.view.transfer.TreeClientInfo;
 
@@ -41,30 +46,24 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.jface.viewers.TableViewer;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 
 /**
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.5 2003/09/23 01:22:45 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.6 2003/09/23 15:24:24 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -73,42 +72,37 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
     private TreeClientInfo selectedClient;
     private List selectedClients = new ArrayList(  );
     private List selectedFiles = new ArrayList(  );
-    private TableTreeViewer tableTreeViewer;
+    private CustomTableTreeViewer tableTreeViewer;
     private TableViewer clientTableViewer;
     private DownloadTableTreeContentProvider tableTreeContentProvider;
-    private CoreCommunication mldonkey;
+    private CoreCommunication core;
     private boolean createClientTable = false;
 
-    public DownloadTableTreeMenuListener( TableTreeViewer tableTreeViewer, TableViewer clientTableViewer, CoreCommunication mldonkey ) {
+    public DownloadTableTreeMenuListener( final CustomTableTreeViewer tableTreeViewer, TableViewer clientTableViewer, CoreCommunication mldonkey ) {
         this.tableTreeViewer = tableTreeViewer;
         this.clientTableViewer = clientTableViewer;
-        this.mldonkey = mldonkey;
+        this.core = mldonkey;
         tableTreeContentProvider = (DownloadTableTreeContentProvider) tableTreeViewer.getContentProvider(  );
 
         /*this is to delete the selection, if one clicks in an empty row of the table*/
-        tableTreeViewer.getTableTree(  ).getTable(  ).addMouseListener( new MouseListener(  ) {
-                public void mouseDoubleClick( MouseEvent e ) {
-                }
-
+        tableTreeViewer.getTableTree(  ).getTable(  ).addMouseListener( new MouseAdapter(  ) {
                 public void mouseDown( MouseEvent e ) {
                     Table table = (Table) e.widget;
                     TableItem item = table.getItem( new Point( e.x, e.y ) );
-
                     if ( item == null ) {
-                        table.setSelection( new int[ 0 ] );
+                    	tableTreeViewer.setSelectionToWidget(null, false);
                         selectedFiles.clear(  );
                         selectedClients.clear(  );
                         selectedClient = null;
                         selectedFile = null;
                     }
                 }
-
-                public void mouseUp( MouseEvent e ) {
-                }
             } );
     }
 
-    // Interface implementers
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+     */
     public void selectionChanged( SelectionChangedEvent e ) {
         IStructuredSelection sSel = (IStructuredSelection) e.getSelection(  );
         Object o = sSel.getFirstElement(  );
@@ -221,8 +215,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
     }
 
-    // Helpers
-    public boolean selectedFileListContains( EnumFileState e ) {
+// Helpers
+
+    private boolean selectedFileListContains( EnumFileState e ) {
         for ( int i = 0; i < selectedFiles.size(  ); i++ )
             if ( ( (FileInfo) selectedFiles.get( i ) ).getState(  ).getState(  ) == e ) {
                 return true;
@@ -231,7 +226,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         return false;
     }
 
-    public boolean selectedFileListContainsOtherThan( EnumFileState e ) {
+    private boolean selectedFileListContainsOtherThan( EnumFileState e ) {
         for ( int i = 0; i < selectedFiles.size(  ); i++ )
             if ( ( (FileInfo) selectedFiles.get( i ) ).getState(  ).getState(  ) != e ) {
                 return true;
@@ -240,8 +235,12 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         return false;
     }
 
-    // Menu Actions
-    class VerifyChunksAction extends Action {
+// Menu Actions
+	
+    /**
+     * VerifyChunksAction
+     */
+    private class VerifyChunksAction extends Action {
         public VerifyChunksAction(  ) {
             super(  );
             setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_VERIFY_CHUNKS" ) );
@@ -253,7 +252,10 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
     }
 	
-	class PreviewAction extends Action {
+	/**
+     * PreviewAction
+     */
+    private class PreviewAction extends Action {
 	   public PreviewAction(  ) {
 		   super(  );
 		   setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PREVIEW" ) );
@@ -264,7 +266,10 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	   }
 	}
 
-    class FileDetailAction extends Action {
+    /**
+     * FileDetailAction
+     */
+    private class FileDetailAction extends Action {
         public FileDetailAction(  ) {
             super(  );
             setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILE_DETAILS" ) );
@@ -275,7 +280,10 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
     }
 
-    class AddFriendAction extends Action {
+    /**
+     * AddFriendAction
+     */
+    private class AddFriendAction extends Action {
         public AddFriendAction(  ) {
             super(  );
             setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
@@ -284,23 +292,29 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         public void run(  ) {
             for ( int i = 0; i < selectedClients.size(  ); i++ ) {
                 TreeClientInfo selectedClientInfo = (TreeClientInfo) selectedClients.get( i );
-                ClientInfo.addFriend( mldonkey, selectedClientInfo.getClientInfo(  ).getClientid(  ) );
+                ClientInfo.addFriend( core, selectedClientInfo.getClientInfo(  ).getClientid(  ) );
             }
         }
     }
 
-    class ClientDetailAction extends Action {
+    /**
+     * ClientDetailAction
+     */
+    private class ClientDetailAction extends Action {
         public ClientDetailAction(  ) {
             super(  );
             setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CLIENT_DETAILS" ) );
         }
 
         public void run(  ) {
-            new ClientDetailDialog( selectedClient.getFileInfo(  ), selectedClient.getClientInfo(  ), mldonkey );
+            new ClientDetailDialog( selectedClient.getFileInfo(  ), selectedClient.getClientInfo(  ), core );
         }
     }
 
-    class PauseAction extends Action {
+    /**
+     * PauseAction
+     */
+    private class PauseAction extends Action {
         public PauseAction(  ) {
             super(  );
             setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ) );
@@ -317,9 +331,12 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
     }
 
-    class CommitAction extends Action {
-        String commitAs;
-        boolean manualInput = false;
+    /**
+     * CommitAction
+     */
+    private class CommitAction extends Action {
+        private String commitAs;
+        private boolean manualInput = false;
 
         public CommitAction(  ) {
             super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT_SELECTED" ) );
@@ -364,7 +381,10 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
     }
 
-    class ResumeAction extends Action {
+    /**
+     * ResumeAction
+     */
+    private class ResumeAction extends Action {
         public ResumeAction(  ) {
             super(  );
             setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ) );
@@ -381,7 +401,10 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
     }
 
-    class CancelAction extends Action {
+    /**
+     * CancelAction
+     */
+    private class CancelAction extends Action {
         public CancelAction(  ) {
             super(  );
             setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CANCEL" ) );
@@ -403,13 +426,16 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
                     }
 
                     // this conceptually breaks core/gui synchronicity and should be removed ASAP.
-                    mldonkey.getResultInfoIntMap(  ).setDownloading( fileInfo, false );
+                    core.getResultInfoIntMap(  ).setDownloading( fileInfo, false );
                 }
             }
         }
     }
 
-    class PriorityAction extends Action {
+    /**
+     * PriorityAction
+     */
+    private class PriorityAction extends Action {
         private EnumPriority enumPriority;
 
         public PriorityAction( EnumPriority e ) {
@@ -440,7 +466,10 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
         }
     }
 
-    class LinkToClipboardAction extends Action {
+    /**
+     * LinkToClipboardAction
+     */
+    private class LinkToClipboardAction extends Action {
         private boolean useHTML = false;
 
         public LinkToClipboardAction( boolean useHTML ) {
@@ -473,6 +502,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.6  2003/09/23 15:24:24  zet
+not much..
+
 Revision 1.5  2003/09/23 01:22:45  zet
 *** empty log message ***
 

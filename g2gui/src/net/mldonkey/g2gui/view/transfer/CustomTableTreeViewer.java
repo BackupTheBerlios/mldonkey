@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view.transfer;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -38,7 +40,7 @@ import org.eclipse.swt.widgets.Widget;
  * CustomTableTreeViewer
  *
  *
- * @version $Id: CustomTableTreeViewer.java,v 1.1 2003/09/20 14:39:21 zet Exp $ 
+ * @version $Id: CustomTableTreeViewer.java,v 1.2 2003/09/23 15:24:24 zet Exp $ 
  *
  */
 public class CustomTableTreeViewer extends TableTreeViewer {
@@ -49,6 +51,9 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 
 	public Widget objectToItem(Object element) {
 		return findItem(element);
+	}
+	public void setSelectionToWidget ( List v, boolean reveal ) {
+		super.setSelectionToWidget( v, reveal );
 	}
 
 	public Item getParentItem(Item item) {
@@ -115,6 +120,9 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 }
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.2  2003/09/23 15:24:24  zet
+not much..
+
 Revision 1.1  2003/09/20 14:39:21  zet
 move transfer package
 

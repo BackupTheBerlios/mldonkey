@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.TableViewer;
  * TableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.2 2003/09/21 23:39:31 zet Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.3 2003/09/23 15:24:24 zet Exp $
  *
  */
 public class ClientTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -98,14 +98,14 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
         /* disconnect */
         if ( selectedClientInfo != null ) {
             menuManager.add( new AddFriendAction(  ) );
-        }
-
-        if ( selectedClientInfo != null ) {
             menuManager.add( new ClientDetailAction(  ) );
         }
     }
 
-    class AddFriendAction extends Action {
+    /**
+     * AddFriendAction
+     */
+    private class AddFriendAction extends Action {
         public AddFriendAction(  ) {
             super(  );
             setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
@@ -119,6 +119,9 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
         }
     }
 
+    /**
+     * ClientDetailAction
+     */
     class ClientDetailAction extends Action {
         public ClientDetailAction(  ) {
             super(  );
@@ -134,6 +137,9 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.3  2003/09/23 15:24:24  zet
+not much..
+
 Revision 1.2  2003/09/21 23:39:31  zet
 displayTableColors preference
 
