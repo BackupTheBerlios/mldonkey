@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.26 2003/09/16 09:24:11 lemmster Exp $
+ * @version $Id: G2GuiResources.java,v 1.27 2003/09/16 20:21:59 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -217,7 +217,7 @@ public class G2GuiResources {
         }
         String[] shortNames = { "DC", "DK", "G1", "G2", "FT", "SS", "ONP", "Unknown" };
         String[] fileNames =
-        { "directconnect", "edonkey2000", "gnutella", "gnutella2", "kazaa", "soulseek", "unknown", "unknown" };
+        { "directconnect", "edonkey2000", "gnutella", "gnutella2", "kazaa", "soulseek", "opennap", "unknown" };
         for ( int i = 0; i < shortNames.length; i++ ) {
             reg.put( shortNames[ i ] + "Connected", createTrans( fileNames[ i ] + "_connected.png" ) );
             reg.put( shortNames[ i ] + "Disconnected",
@@ -363,6 +363,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.27  2003/09/16 20:21:59  zet
+opennap
+
 Revision 1.26  2003/09/16 09:24:11  lemmster
 adjust source rating
 
@@ -421,7 +424,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
