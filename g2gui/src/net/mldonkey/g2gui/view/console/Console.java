@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  *
- * @version $Id: Console.java,v 1.17 2003/10/15 19:39:50 zet Exp $
+ * @version $Id: Console.java,v 1.18 2003/10/21 21:13:09 dek Exp $
  *
  */
 public class Console extends Observable implements ControlListener {
@@ -152,9 +152,8 @@ public class Console extends Observable implements ControlListener {
                     }
                     /*next two cases are for brwosing through command-history*/                     
                    else if ( e.keyCode == SWT.ARROW_UP ) {
-					if ( numOfCommands != 0 ) {	
-						/*additional +" " is nescessary, because ARROW_UP also steps one char back*/					
-						input.setText( ( String ) commandHistory.get( recentCommand ) + " " );
+					if ( numOfCommands != 0 ) {												
+						input.setText( ( String ) commandHistory.get( recentCommand ));
 						/*set the cursor at the end of the line*/
 						input.setSelection( input.getText().length() );
 						if ( recentCommand > 0 )					                	
@@ -261,6 +260,9 @@ public class Console extends Observable implements ControlListener {
 
 /*
 $Log: Console.java,v $
+Revision 1.18  2003/10/21 21:13:09  dek
+small cosmetic fix
+
 Revision 1.17  2003/10/15 19:39:50  zet
 icons
 
@@ -292,7 +294,7 @@ Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.7  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.6  2003/08/18 06:00:01  zet
 fix null pointer (I'm not even sure it is real..)
