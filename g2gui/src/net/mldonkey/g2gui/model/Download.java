@@ -26,27 +26,77 @@ package net.mldonkey.g2gui.model;
  * Download
  *
  * @author markus
- * @version $Id: Download.java,v 1.1 2003/06/11 12:54:44 lemmstercvs01 Exp $ 
+ * @version $Id: Download.java,v 1.2 2003/06/11 15:32:33 lemmstercvs01 Exp $ 
  *
  */
 public class Download {
-
+	/**
+	 * File identifier
+	 */
 	private int id;
+	/**
+	 * File network identifier
+	 */
 	private int network;
+	/**
+	 * Possible file names
+	 */
 	private String[] names;
+	/**
+	 * File md4
+	 */
 	private String md4;
+	/**
+	 * File size
+	 */
 	private int size;
+	/**
+	 * Size already downloaded
+	 */
 	private int downloaded;
+	/**
+	 * Number of sources
+	 */
 	private int sources;
+	/**
+	 * Chunks
+	 */
 	private String chunks;
+	/**
+	 * 
+	 */
 	private String avail;
+	/**
+	 * Download rate
+	 */
 	private float rate;
+	/**
+	 * File name
+	 */
 	private String name;
+	/**
+	 * File priority inside mldonkey
+	 */
 	private int priority;
+	/**
+	 * File last seen
+	 */
 	private int offset;
+	/**
+	 * last time each chunk has been seen
+	 */
 	private String[] chunkage;
+	/**
+	 * when download started
+	 */
 	private String age;
+	/**
+	 * File Format object
+	 */
 	private Format format;
+	/**
+	 * File State object
+	 */
 	private State state;
 
 	/**
@@ -291,6 +341,9 @@ public class Download {
 
 /*
 $Log: Download.java,v $
+Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
+still in progress
+
 Revision 1.1  2003/06/11 12:54:44  lemmstercvs01
 initial commit
 

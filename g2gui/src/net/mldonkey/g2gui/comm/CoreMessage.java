@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreMessage
  *
  * @author markus
- * @version $Id: CoreMessage.java,v 1.1 2003/06/11 12:56:10 lemmstercvs01 Exp $ 
+ * @version $Id: CoreMessage.java,v 1.2 2003/06/11 15:32:33 lemmstercvs01 Exp $ 
  *
  */
 public class CoreMessage extends Message {
@@ -59,7 +59,7 @@ public class CoreMessage extends Message {
 		aDownload.setId( readInt32( inputStream ) );
 		aDownload.setNetwork( readInt32( inputStream ) );
 		aDownload.setNames( readStringList( inputStream ) );
-		aDownload.setMd4( readChar( inputStream, 16 ) );
+		aDownload.setMd4( readCharList( inputStream, 16 ) );
 		aDownload.setSize( readInt32( inputStream ) );
 		aDownload.setDownloaded( readInt32( inputStream ) );
 		aDownload.setSources( readInt32( inputStream ) );
@@ -163,6 +163,9 @@ public class CoreMessage extends Message {
 
 /*
 $Log: CoreMessage.java,v $
+Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
+still in progress
+
 Revision 1.1  2003/06/11 12:56:10  lemmstercvs01
 moved from model -> comm
 

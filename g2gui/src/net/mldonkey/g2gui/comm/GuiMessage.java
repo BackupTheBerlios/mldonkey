@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author ${user}
- * @version $Id: GuiMessage.java,v 1.1 2003/06/11 12:56:10 lemmstercvs01 Exp $ 
+ * @version $Id: GuiMessage.java,v 1.2 2003/06/11 15:32:33 lemmstercvs01 Exp $ 
  *
  */
 public class GuiMessage extends Message {
@@ -61,6 +61,16 @@ public class GuiMessage extends Message {
 		this.length = this.content.length + 2;
 	}
 	
+	/**
+	 * Generates a new message object without content
+	 * @param opCode the opcode for the message
+	 */
+	public GuiMessage( short opCode ) {
+		this.opCode = opCode;
+		this.content = null;
+		this.length = 2;
+	}
+	
 	
 	/**
 	 * Reads the message into the socket
@@ -73,8 +83,14 @@ public class GuiMessage extends Message {
 			OutputStream out = connection.getOutputStream();
 			
 			byte[] temp = Message.merge( Message.toBytes( this.length ), 
-										  Message.toBytes( this.opCode ) ); 
-			byte[] temp2 = Message.merge( temp, this.content );
+										  Message.toBytes( this.opCode ) );
+			
+			byte[] temp2;
+			if ( this.content != null )
+				temp2 = Message.merge( temp, this.content );
+			else
+				temp2 = temp;
+				
 			out.write( temp2 );			
 			return true;
 		}
@@ -246,6 +262,9 @@ public class GuiMessage extends Message {
 
 /*
 $Log: GuiMessage.java,v $
+Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
+still in progress
+
 Revision 1.1  2003/06/11 12:56:10  lemmstercvs01
 moved from model -> comm
 

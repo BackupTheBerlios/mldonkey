@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.ClientStats;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.1 2003/06/11 12:56:10 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.2 2003/06/11 15:32:33 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -131,9 +131,11 @@ public class Core extends Thread implements CoreCommunication {
 					String[] aString = { this.password, this.username };
 					Message password = new GuiMessage( Message.S_PASSWORD, aString );
 					password.sendMessage( connection );
+					
+					Message downloadingFiles = new GuiMessage( Message.S_GETDOWNLOADING_FILES );
+					downloadingFiles.sendMessage( connection );
+					
 					break;
-				
-
 			case Message.R_OPTIONS_INFO :				
 					/*
 					 *	PayLoad:
@@ -289,6 +291,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
+still in progress
+
 Revision 1.1  2003/06/11 12:56:10  lemmstercvs01
 moved from model -> comm
 

@@ -28,26 +28,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.mldonkey.snippets.Main;
-
 /**
  * SocketPool
  *
- * @author $user$
- * @version $Id: SocketPool.java,v 1.2 2003/06/09 17:33:21 lemmstercvs01 Exp $ 
+ * @author ${user}
+ * @version $Id: SocketPool.java,v 1.3 2003/06/11 15:32:33 lemmstercvs01 Exp $ 
  *
  */
 public class SocketPool {
 	
 	/**
 	 * This Object represents the currently <CODE>used</CODE> sockets
-	 * @author Markus Kuppe <lemmy@berlios.de>
 	 */
 	protected List used;
 	
 	/**
 	 * This Object represents the currently <CODE>unused<CODE> sockets
-	 * @author Markus Kuppe <lemmy@berlios.de>
 	 */
 	protected List unused;
 	
@@ -63,13 +59,11 @@ public class SocketPool {
 	
 	/**
 	 * Amount of Socket Connections to initial create
-	 * @author Markus Kuppe <lemmy@berlios.de>
 	 */
 	protected int min = 3;
 	
 	/**
 	 * Maximum amount of Socket Connections to hold
-	 * @author Markus Kuppe <lemmy@berlios.de>
 	 */
 	protected int max = 6;
 
@@ -103,7 +97,6 @@ public class SocketPool {
 	
 		}
 		catch ( IOException e ) {
-			Main.debug( 3, this.address + " unreachable" );
 		}
 			return socket;
 	}
@@ -168,6 +161,9 @@ public class SocketPool {
 
 /*
 $Log: SocketPool.java,v $
+Revision 1.3  2003/06/11 15:32:33  lemmstercvs01
+still in progress
+
 Revision 1.2  2003/06/09 17:33:21  lemmstercvs01
 checkstyle applied
 

@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.1 2003/06/11 12:56:10 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.2 2003/06/11 15:32:33 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -47,6 +47,10 @@ public abstract class Message {
 	 * Send GuiExtension (value is 47)
 	 */
 	public static final short S_GUIEXTENSION = 47;
+	/**
+	 * 
+	 */
+	public static final short S_GETDOWNLOADING_FILES = 45;
 	/**
 	 * Send Password (value is 52)
 	 */
@@ -149,6 +153,20 @@ public abstract class Message {
 		else
 			return ( "" );
 	}
+
+	/**
+	 * Reads a char array from an InputStream
+	 * @param inputStream Stream to read from
+	 * @param length length to read from the stream
+	 * @return String
+	 * @throws IOException Error if read on InputStream failed
+	 */
+	public static char readChar( InputStream inputStream ) throws IOException {
+		char result = ( char ) inputStream.read();
+		return result;
+	}
+
+
 	
 	/**
 	 * Reads a String[] from an InputStream
@@ -158,11 +176,25 @@ public abstract class Message {
 	 */
 	public static String[] readStringList( InputStream inputStream ) throws IOException {
 		short listElem = readInt16( inputStream );
-		String[] result = null;
+		String[] result = new String[ listElem ];
 		for ( int i = 0; i < listElem; i++ ) {
 			result[ i ] = readString( inputStream );
 		}
 		return result;
+	}
+	/**
+	 * Creates a string from a char array
+	 * @param inputStream Stream to read from
+	 * @param length Length of the char array
+	 * @return a String
+	 * @throws IOException Error if read from Stream failed
+	 */
+	public static String readCharList( InputStream inputStream, int length ) throws IOException {
+		StringBuffer result = new StringBuffer( length );
+		for ( int i = 0; i < length; i++ ){
+			result.append( readChar( inputStream ) );
+		}
+		return result.toString();
 	}
 	
 	/**
@@ -180,21 +212,6 @@ public abstract class Message {
 		return result;
 	}
 	
-	/**
-	 * Reads a char array from an InputStream
-	 * @param inputStream Stream to read from
-	 * @param length length to read from the stream
-	 * @return String
-	 * @throws IOException Error if read on InputStream failed
-	 */
-	public static String readChar( InputStream inputStream, int length ) throws IOException {
-		StringBuffer result = null;
-		for ( int i = 0; i < length; i++ ) {
-			result.setCharAt( i, ( char ) inputStream.read() );
-		}
-		return result.toString();
-	}
-
 	/**
 	 * Creates a 2 byte array of int16 from a short
 	 * @param aShort short object to create a byte array with
@@ -309,6 +326,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.2  2003/06/11 15:32:33  lemmstercvs01
+still in progress
+
 Revision 1.1  2003/06/11 12:56:10  lemmstercvs01
 moved from model -> comm
 
