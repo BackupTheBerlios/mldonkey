@@ -27,19 +27,19 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 /**
- * G2Gui
+ * G2GuiPref
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.26 2003/08/19 17:12:56 zet Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.1 2003/08/20 11:51:52 dek Exp $ 
  *
  */
-public class G2Gui extends FieldEditorPreferencePage {
+public class G2GuiPref extends FieldEditorPreferencePage {
 	
 	/**
 	 * @param string name
 	 * @param i style (SWT.XYZ)
 	 */
-	public G2Gui( String string, int i ) {
+	public G2GuiPref( String string, int i ) {
 		super( string, i );
 	}
 
@@ -105,7 +105,10 @@ public class G2Gui extends FieldEditorPreferencePage {
 	}
 }
 /*
-$Log: G2Gui.java,v $
+$Log: G2GuiPref.java,v $
+Revision 1.1  2003/08/20 11:51:52  dek
+renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
+
 Revision 1.26  2003/08/19 17:12:56  zet
 set defaults
 

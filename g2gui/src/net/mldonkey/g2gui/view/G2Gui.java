@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.19 2003/08/19 21:44:35 zet Exp $ 
+ * @version $Id: G2Gui.java,v 1.20 2003/08/20 11:51:52 dek Exp $ 
  *
  */
 public class G2Gui {
@@ -314,6 +314,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.20  2003/08/20 11:51:52  dek
+renamed pref.g2gui to pref.g2guiPref for not having 2 classes with same name
+
 Revision 1.19  2003/08/19 21:44:35  zet
 PreferenceLoader updates
 
