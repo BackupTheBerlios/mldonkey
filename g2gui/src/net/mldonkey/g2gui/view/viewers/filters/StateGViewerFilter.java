@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * StateGViewerFilter
  *
- * @version $Id: StateGViewerFilter.java,v 1.9 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: StateGViewerFilter.java,v 1.10 2003/11/28 00:58:06 zet Exp $
  *
  */
 public class StateGViewerFilter extends GViewerFilter {
@@ -87,11 +87,8 @@ public class StateGViewerFilter extends GViewerFilter {
      * @see org.eclipse.jface.viewers.ViewerFilter#isFilterProperty(java.lang.Object, java.lang.String)
      */
     public boolean isFilterProperty(Object element, String property) {
-        if (element instanceof FileInfo) {
-            if (property.equals(FileInfo.CHANGED_RATE))
-                return true;
-            return false;
-        }
+        if (element instanceof FileInfo) 
+            return property.equals(FileInfo.CHANGED_RATE);
         return true;
     }
 
@@ -102,15 +99,16 @@ public class StateGViewerFilter extends GViewerFilter {
      */
     public static boolean matches(GView gViewer, Enum enum) {
 	    GViewerFilter filter = gViewer.getFilter( StateGViewerFilter.class );
-	    if (filter.matches(enum))
-     	   return true;
-        return false;
+	    return filter.matches(enum);
     }
 }
 
 
 /*
 $Log: StateGViewerFilter.java,v $
+Revision 1.10  2003/11/28 00:58:06  zet
+*** empty log message ***
+
 Revision 1.9  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
