@@ -45,10 +45,10 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
 /**
- * @version $Id: SystemTray.java,v 1.14 2004/03/11 13:37:38 dek Exp $
+ * @version $Id: SystemTray.java,v 1.15 2004/03/13 14:34:12 dek Exp $
  *  
  */
-public class SystemTray implements SystemTrayIconListener, Observer {
+public class SystemTray implements SystemTrayIconListener, Observer, Runnable {
 
 	private Menu menu;
 	private MenuManager popupMenu;
@@ -141,7 +141,8 @@ public class SystemTray implements SystemTrayIconListener, Observer {
 	public SystemTray(MainWindow window) {
 		this.titleBarText = "g2gui v " + VersionInfo.getVersion();
 		parent = window;
-		start();
+		Thread tray = new Thread(this);
+		tray.start();
 	}
 
 	/*
@@ -149,7 +150,7 @@ public class SystemTray implements SystemTrayIconListener, Observer {
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
-	private void start() {
+	public void run() {
 		// try to load the library
 		try {
 			System.loadLibrary("DesktopIndicator");
@@ -274,15 +275,14 @@ public class SystemTray implements SystemTrayIconListener, Observer {
 		}
 
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
+
 
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.15  2004/03/13 14:34:12  dek
+ gui thread was not a good thing for gui [TM] it crashed with gcj
+
  Revision 1.14  2004/03/11 13:37:38  dek
  now icon is loaded from G2GUIRESSOURCES
 
