@@ -1,12 +1,34 @@
 /*
- * Created on 14.06.2003
+ * Copyright 2003
+ * G2Gui Team
+ * 
+ * 
+ * This file is part of G2Gui.
+ *
+ * G2Gui is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * G2Gui is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with G2Gui; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
  */
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
- * @author markus
+ * ServerInfo
+ * 
+ * @author ${user}
+ * @version $$Id: ServerInfo.java,v 1.2 2003/06/14 20:30:44 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo implements Information {
 	/**
@@ -57,176 +79,154 @@ public class ServerInfo implements Information {
 	/**
 	 * @return a State
 	 */
-	public State getConnectionState()
-	{
+	public State getConnectionState() {
 		return connectionState;
 	}
 
 	/**
 	 * @return a string
 	 */
-	public String getDescOfServer()
-	{
+	public String getDescOfServer() {
 		return descOfServer;
 	}
 
 	/**
 	 * @return a string
 	 */
-	public String getNameOfServer()
-	{
+	public String getNameOfServer() {
 		return nameOfServer;
 	}
 
 	/**
 	 * @return an int
 	 */
-	public int getNumOfFilesShared()
-	{
+	public int getNumOfFilesShared() {
 		return numOfFilesShared;
 	}
 
 	/**
 	 * @return an int
 	 */
-	public int getNumOfUsers()
-	{
+	public int getNumOfUsers() {
 		return numOfUsers;
 	}
 
 	/**
 	 * @return an Addr
 	 */
-	public Addr getServerAddress()
-	{
+	public Addr getServerAddress() {
 		return serverAddress;
 	}
 
 	/**
 	 * @return an int
 	 */
-	public int getServerId()
-	{
+	public int getServerId() {
 		return serverId;
 	}
 
 	/**
 	 * @return a Tag[]
 	 */
-	public Tag[] getServerMetadata()
-	{
+	public Tag[] getServerMetadata() {
 		return serverMetadata;
 	}
 
 	/**
 	 * @return an int
 	 */
-	public int getServerNetworkId()
-	{
+	public int getServerNetworkId() {
 		return serverNetworkId;
 	}
 
 	/**
 	 * @return a short
 	 */
-	public short getServerPort()
-	{
+	public short getServerPort() {
 		return serverPort;
 	}
 
 	/**
 	 * @return an int
 	 */
-	public int getServerScore()
-	{
+	public int getServerScore() {
 		return serverScore;
 	}
 
 	/**
 	 * @param state a State
 	 */
-	public void setConnectionState( State state )
-	{
+	public void setConnectionState( State state ) {
 		connectionState = state;
 	}
 
 	/**
 	 * @param string a String
 	 */
-	public void setDescOfServer( String string )
-	{
+	public void setDescOfServer( String string ) {
 		descOfServer = string;
 	}
 
 	/**
 	 * @param string a String
 	 */
-	public void setNameOfServer( String string )
-	{
+	public void setNameOfServer( String string ) {
 		nameOfServer = string;
 	}
 
 	/**
 	 * @param i an int
 	 */
-	public void setNumOfFilesShared( int i )
-	{
+	public void setNumOfFilesShared( int i ) {
 		numOfFilesShared = i;
 	}
 
 	/**
 	 * @param i an int
 	 */
-	public void setNumOfUsers( int i )
-	{
+	public void setNumOfUsers( int i ) {
 		numOfUsers = i;
 	}
 
 	/**
 	 * @param addr an Addr
 	 */
-	public void setServerAddress( Addr addr )
-	{
+	public void setServerAddress( Addr addr ) {
 		serverAddress = addr;
 	}
 
 	/**
 	 * @param i an int
 	 */
-	public void setServerId( int i )
-	{
+	public void setServerId( int i ) {
 		serverId = i;
 	}
 
 	/**
 	 * @param tags a Tag[]
 	 */
-	public void setServerMetadata( Tag[] tags )
-	{
+	public void setServerMetadata( Tag[] tags ) {
 		serverMetadata = tags;
 	}
 
 	/**
 	 * @param i an int
 	 */
-	public void setServerNetworkId( int i )
-	{
+	public void setServerNetworkId( int i ) {
 		serverNetworkId = i;
 	}
 
 	/**
 	 * @param s a short
 	 */
-	public void setServerPort( short s )
-	{
+	public void setServerPort( short s ) {
 		serverPort = s;
 	}
 
 	/**
 	 * @param i an int
 	 */
-	public void setServerScore( int i )
-	{
+	public void setServerScore( int i ) {
 		serverScore = i;
 	}
 	
@@ -269,3 +269,9 @@ public class ServerInfo implements Information {
 		this.setDescOfServer( messageBuffer.readString() );
 	}
 }
+/*
+$$Log: ServerInfo.java,v $
+$Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
+$cosmetic changes
+$$
+*/
