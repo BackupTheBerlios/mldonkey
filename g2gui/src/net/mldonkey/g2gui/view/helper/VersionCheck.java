@@ -28,7 +28,7 @@ import org.eclipse.swt.SWT;
 /**
  * VersionCheck - Since fox returns "fox" to the getPlatform() method on all platforms
  *
- * @version $Id: VersionCheck.java,v 1.6 2004/02/18 13:23:25 psy Exp $
+ * @version $Id: VersionCheck.java,v 1.7 2004/03/01 20:58:27 psy Exp $
  *
  */
 public class VersionCheck {
@@ -113,7 +113,7 @@ public class VersionCheck {
 	 * JavaVersion and OsVersion 
 	 */
 	public static String getInfoString() {
-		return getJavaVersion() + "\n" + getOsVersion() + "\n" + 
+		return getJavaVersion() + "\n" + getOsVersion() + ", " +
 			getSWTPlatform() + "/" + getSWTVersion();
 	}
 }
@@ -121,6 +121,9 @@ public class VersionCheck {
 
 /*
 $Log: VersionCheck.java,v $
+Revision 1.7  2004/03/01 20:58:27  psy
+minor cosmetic change
+
 Revision 1.6  2004/02/18 13:23:25  psy
 added check for motif
 
