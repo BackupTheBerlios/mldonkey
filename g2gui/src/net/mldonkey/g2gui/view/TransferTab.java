@@ -40,6 +40,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -56,7 +57,7 @@ import org.eclipse.swt.widgets.TableItem;
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.12 2003/06/30 21:39:04 dek Exp $ 
+ * @version $Id: TransferTab.java,v 1.13 2003/07/02 11:21:59 dek Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements Observer {
@@ -70,7 +71,11 @@ public class TransferTab extends G2guiTab implements Observer {
 	 */
 	public TransferTab( IG2gui gui ) {
 		super( gui );
-		this.toolItem.setText( res.getString( "TT_Button" ) );
+		toolItem.setText( res.getString( "TT_Button" ) );
+		toolItem.setImage(Gui.createTransparentImage( 
+							new Image(toolItem.getParent().getDisplay(),
+									"src/icons/transfer2.png" ),
+									toolItem.getParent() ) );
 		createContents( this.content );
 
 		gui.getCore().addObserver( this );
@@ -266,6 +271,9 @@ public class TransferTab extends G2guiTab implements Observer {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.13  2003/07/02 11:21:59  dek
+transfer Icon
+
 Revision 1.12  2003/06/30 21:39:04  dek
 CoolBar
 

@@ -37,12 +37,14 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+import com.sun.rsasign.g;
+
 
 /**
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.16 2003/07/02 00:18:37 zet Exp $ 
+ * @version $Id: Gui.java,v 1.17 2003/07/02 11:21:59 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {	
@@ -142,7 +144,7 @@ public class Gui implements IG2gui, Listener {
 			
 		ToolItem pref = new ToolItem( miscTools,SWT.NONE );				
 			pref.setText( "Preferences" );	
-			pref.setImage(createTransparentImage( 
+			pref.setImage(Gui.createTransparentImage( 
 					new Image(pref.getParent().getDisplay(),
 							"src/icons/preferences.png" ),
 							  pref.getParent() ) );
@@ -173,7 +175,7 @@ public class Gui implements IG2gui, Listener {
 	 * @param control where is our image laid in, to check for the background-color
 	 * @return
 	 */
-	public Image createTransparentImage( Image src, Control control ){
+	public static Image createTransparentImage( Image src, Control control ){
 		int width = src.getBounds().width;
 		int height = src.getBounds().height;
 		
@@ -181,7 +183,9 @@ public class Gui implements IG2gui, Listener {
 		GC gc = new GC( result );
 				gc.setBackground(control.getBackground( ));
 				gc.fillRectangle( 0, 0, width, height );							
-				gc.drawImage( src, 0, 0 );			
+				gc.drawImage( src, 0, 0 );
+			
+						
 				gc.dispose();		
 		return result;
 			
@@ -315,6 +319,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.17  2003/07/02 11:21:59  dek
+transfer Icon
+
 Revision 1.16  2003/07/02 00:18:37  zet
 layoutCoolBar changes - tested on xp/gtk
 
