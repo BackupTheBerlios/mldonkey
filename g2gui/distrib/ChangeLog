@@ -1,5 +1,9 @@
+2003/11/30: z
+	* Uploads: Add temporary share/unshare convenience buttons
+
 2003/11/29:
 	* Search: ToolTip completely rewritten
+
 2003/11/29: z
 	* FileInfo: fix chunks availability
 	* SharedFileInfo: fix ArrayIndexOutOfBounds
