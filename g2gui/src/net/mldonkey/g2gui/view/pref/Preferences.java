@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.25 2003/08/24 11:33:19 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.26 2003/08/24 14:45:22 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -158,22 +158,29 @@ public class Preferences extends PreferenceManager {
 		 /*
 		  * first the sections:
 		  */
-		it = sections.values().iterator();
-		while ( it.hasNext() ) {			
-			MLDonkeyOptions page = ( MLDonkeyOptions )it.next();
-			addToRoot( ( new PreferenceNode ( "", page ) ) );			
+		it = sections.keySet().iterator();
+		while ( it.hasNext() ) {
+			String key = (String) it.next();		
+			MLDonkeyOptions page = ( MLDonkeyOptions )sections.get( key );
+			addToRoot( ( new PreferenceNode ( key, page ) ) );			
 		}
 		 
 		 /*
-		  * and now the Plugins:
+		  * and now the Plugins: first try to get the PrefPage "Networks", where all the "enabled"
+		  * options are, if this doesn't exist, create it. And then put all the plugins below this one
 		  */
 		if ( plugins.size() != 0 ) {		 
-			PreferenceNode pluginOptions = new PreferenceNode( "plugins", new MLDonkeyOptions( "Plugins", FieldEditorPreferencePage.FLAT ) );
-			addToRoot( pluginOptions );	
-			it = plugins.values().iterator();
-			while ( it.hasNext() ) {			
-					MLDonkeyOptions page = ( MLDonkeyOptions )it.next();
-					pluginOptions.add( ( new PreferenceNode ( "", page ) ) );			
+			IPreferenceNode pluginOptions = find( "Networks" );
+			if ( pluginOptions == null ){
+				pluginOptions = new PreferenceNode( "Networks", new MLDonkeyOptions( "Networks", FieldEditorPreferencePage.FLAT ) );
+				addToRoot( pluginOptions );	
+			}
+				
+			it = plugins.keySet().iterator();
+			while ( it.hasNext() ) {
+				String key = (String) it.next();		
+				MLDonkeyOptions page = ( MLDonkeyOptions )plugins.get( key );
+				pluginOptions.add( ( new PreferenceNode ( key, page ) ) );			
 			}
 					
 			
@@ -220,6 +227,9 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.26  2003/08/24 14:45:22  dek
+put plugins below Networks-treeItem, seems to be more logic to me
+
 Revision 1.25  2003/08/24 11:33:19  dek
 removed cancelpsressed handler, which is not needed anymore, because
 we use this superb FieldEditorPrefPages ;-)
