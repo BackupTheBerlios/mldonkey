@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  * @author ${user}
- * @version $$Id: ServerInfo.java,v 1.10 2003/07/29 09:47:13 lemmstercvs01 Exp $$ 
+ * @version $$Id: ServerInfo.java,v 1.11 2003/07/30 19:29:36 lemmstercvs01 Exp $$ 
  */
 public class ServerInfo extends Parent {
 	/**
@@ -140,8 +140,14 @@ public class ServerInfo extends Parent {
 	/**
 	 * @return The server port
 	 */
-	public short getServerPort() {
-		return serverPort;
+	public int getServerPort() {
+		/*
+		 * NOTE: port is an unsigned short and should
+		 * be AND'ed with 0xFFFFL so that it can be treated
+		 * as an signed integer.
+		 */
+		int result = ( int ) ( serverPort & 0xFFFFL );
+		return result;
 	}
 	/**
 	 * @return (not used)
@@ -245,9 +251,19 @@ public class ServerInfo extends Parent {
 			anInt = null;
 		}
 	}
+	
+	/**
+	 * @return true/false if the server is in our favorites list
+	 */
+	public boolean isFavorite() {
+		return true;
+	}
 }
 /*
 $$Log: ServerInfo.java,v $
+$Revision 1.11  2003/07/30 19:29:36  lemmstercvs01
+$public short getServerPort() -> public int getServerPort() to fix negativ ports
+$
 $Revision 1.10  2003/07/29 09:47:13  lemmstercvs01
 $networkid -> networkInfo, no servename -> "<unknown>"
 $
