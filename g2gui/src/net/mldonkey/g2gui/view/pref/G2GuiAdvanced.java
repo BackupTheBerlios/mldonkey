@@ -22,6 +22,7 @@
  */
 package net.mldonkey.g2gui.view.pref;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.helper.VersionCheck;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -32,7 +33,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.11 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.12 2004/01/08 21:44:40 psy Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -136,8 +137,7 @@ public class G2GuiAdvanced extends PreferencePage {
 		        false, 
 		        composite, true );
 			
-		if ((System.getProperty("os.name").length() > 7) &&
-			System.getProperty("os.name").substring(0, 7).equals("Windows")) {
+		if ( VersionCheck.isWin32() ) {
 			defaultBrowserField.setFileExtensions( new String[] { "*.exe;*.bat" } );
 		} else {
 			defaultBrowserField.setFileExtensions( new String[] {"*"});
@@ -149,6 +149,9 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.12  2004/01/08 21:44:40  psy
+make use of isWin32()
+
 Revision 1.11  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
