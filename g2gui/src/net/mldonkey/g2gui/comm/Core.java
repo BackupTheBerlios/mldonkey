@@ -22,11 +22,11 @@
  */
 package net.mldonkey.g2gui.comm;
 
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.Observable;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.*;
@@ -35,10 +35,10 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.7 2003/06/13 12:03:33 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.8 2003/06/13 13:09:45 dek Exp $ 
  *
  */
-public class Core extends Observable {
+public class Core extends Thread {
 	/**
 	 * 
 	 */
@@ -93,27 +93,47 @@ public class Core extends Observable {
 	 * run()
 	 * starts the Core and begin receiving messages	 * 
 	 */
-	public void run() throws IOException {
+	public synchronized void  run() {
 		this.connect();
 		
-		MessageBuffer messageBuffer = new MessageBuffer();
-		
+		MessageBuffer messageBuffer = new MessageBuffer();		
 		int messageLength;
-		short opCode;
-		
-		InputStream i = connection.getInputStream();
-		BufferedInputStream bufferStream;
+		short opCode;		
+		InputStream i;
+		try {
+			i = connection.getInputStream();
+			BufferedInputStream bufferstream = new BufferedInputStream(i);		
+		byte[] content;
 		 		
-		while ( connected ) {
+		while ( connected ) {			
 			/* getting length of message */
 			messageLength = Message.readInt32( i );
-			byte[] content = new byte[messageLength];
-			i.read(content);
-			messageBuffer.setBuffer(content);
-			opCode = messageBuffer.readInt16();
-			/* decode the message content */
-			this.decodeMessage( opCode, messageBuffer);
+			System.out.print("running: momentane Länge: "+messageLength+"\n");
+				content = new byte[messageLength];
+				//bufferstream.read(content,0,messageLength);
+				while (i.available()<messageLength) {
+					System.out.println("*\n*\n*\n*\n*\n*\n*\n*\n*\nstream buffer underrun: waiting....*\n*\n*\n*\n*\n*\n*\n*\n");
+					try {
+						wait();
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				notify();
+					}									
+				i.read(content,0,messageLength);						
+				messageBuffer.setBuffer(content);
+				opCode = messageBuffer.readInt16();
+				/* decode the message content */			
+				this.decodeMessage( opCode, messageBuffer);
+						
 		}
+			
+		} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}					
+		
 	}
 
 	/**
@@ -201,51 +221,15 @@ public class Core extends Observable {
 					break;
 				
 
-			case Message.R_NETWORK_INFO :				
-					/*
-					 *	PayLoad:
-					 *	int32	Network identifier (used in other messages for this network) 
-					 *	String	Network name 
-					 *	int8	Enabled(1) or Disabled(0) 
-					 *	String	Name of network config file 
-					 *	int64	Number of bytes uploaded on network 
-					 *	int64	Number of bytes downloaded on network 
-					 */
-					int identifier;
-					int stringlength;
-					long upload;
-					long download;
-					String networkName;
-					String networkConfig;
-					boolean status;
-					/*
-					 * Here is the right place to create the Network-Classes IMHO
-					 * (not yet implemented)
-					 */
-					//get network_indetifier from payload:
-					identifier = ( int ) messageBuffer.readInt32();
-					//get network_name from payload:
-					networkName = messageBuffer.readString();
-					//get enabled|disabled from payload:							
-					if ( messageBuffer.readByte() == 1 ) {
-						status = true;
-					} else {
-						status = false;
-					}
-					//Now follows the decoding of network_config							
-					networkConfig = messageBuffer.readString();
-					//Some up / download-stats:
-					upload = messageBuffer.readInt64();
-					download = messageBuffer.readInt64();
-					break;
+
 					
 			case Message.R_DOWNLOADING_LIST :
 					/*
 					 * Payload:
 					 * a List of running Downloads (FileInfo)
 					 */
-					 this.fileInfoList.readStream( messageBuffer );
-					 this.requestFileInfoList();
+					 //this.fileInfoList.readStream( messageBuffer );
+					// this.requestFileInfoList();
 					 break;
 					 
 			case Message.R_DOWNLOADED_LIST :
@@ -271,6 +255,9 @@ public class Core extends Observable {
 
 /*
 $Log: Core.java,v $
+Revision 1.8  2003/06/13 13:09:45  dek
+including many debug-output
+
 Revision 1.7  2003/06/13 12:03:33  lemmstercvs01
 changed to use MessageBuffer
 
