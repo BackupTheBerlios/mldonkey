@@ -22,8 +22,6 @@
  */
 package net.mldonkey.g2gui.model;
 
-import gnu.trove.THash;
-import gnu.trove.TIntObjectHashMap;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
@@ -35,12 +33,17 @@ import net.mldonkey.g2gui.model.enum.EnumClientType;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import gnu.trove.THash;
+import gnu.trove.TIntObjectHashMap;
+
+import java.util.Date;
+
 
 /**
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.34 2003/11/28 08:23:28 lemmster Exp $
+ * @version $Id: ClientInfo.java,v 1.35 2003/11/30 23:42:56 zet Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -109,12 +112,19 @@ public class ClientInfo extends Parent {
     /**
      * Client IP address
      */
+    private String clientSockAddrString = "";
     private Addr clientSockAddr;
 
     /**
      * Filename being uploaded to client
      */
     private String clientUploadFilename = "";
+
+    /**
+     * clientConnectTime
+     */
+    private int clientConnectTime;
+    private String clientConnectTimeString = "";
 
     /**
      * true if clientUploadFileName != ""
@@ -279,56 +289,67 @@ public class ClientInfo extends Parent {
 
             return G2GuiResources.getString("TT_Direct").toLowerCase();
     }
-    
+
     /**
      * @return clientSoftware
      */
     public String getClientSoftware() {
         return clientSoftware;
     }
-    
+
+    public String getClientSockAddrString() {
+        return clientSockAddrString;
+    }
+
     /**
      * @return clientSockAddr
      */
     public Addr getClientSockAddr() {
         return clientSockAddr;
     }
-    
+
     /**
      * @return clientUploaded Bytes
      */
     public long getUploaded() {
         return clientUploaded;
     }
-    
+
     /**
      * @return clientDownloaded Bytes
      */
     public long getDownloaded() {
         return clientDownloaded;
     }
-    
+
     /**
      * @return clientUploaded String
      */
     public String getUploadedString() {
         return clientUploadedString;
     }
-    
+
     /**
      * @return clientDownloaded String
      */
     public String getDownloadedString() {
         return clientDownloadedString;
     }
-    
+
     /**
      * @return clientUploadFilename (Filename currently being uploaded to client)
      */
     public String getUploadFilename() {
         return clientUploadFilename;
     }
-    
+
+    public int getClientConnectTime() {
+        return clientConnectTime;
+    }
+
+    public String getClientConnectTimeString() {
+        return clientConnectTimeString;
+    }
 
     /**
      * Reads a ClientInfo object from a MessageBuffer
@@ -364,13 +385,26 @@ public class ClientInfo extends Parent {
             this.clientSoftware = messageBuffer.readString();
             this.clientDownloaded = messageBuffer.readInt64();
             this.clientUploaded = messageBuffer.readInt64();
+
             //TODO change this to "messageBuffer.readInetAdress()" when the core sends a correct inetaddress
-            this.clientSockAddr = Addr.getAddr( messageBuffer.readString() );
+            
+            // bavard removed this for some unknown reason. I hope it comes back (sent mail)
+            // this.clientSockAddrString =  messageBuffer.readString()
+            this.clientSockAddr = Addr.getAddr(this.clientSockAddrString);
+
             this.clientUploadFilename = messageBuffer.readString();
+
+            // this needs to be fixed in the core soon since core/gui clocks can be out of sync rendering this useless
+            // I've sent mail... 
+            if (parent.getProtoToUse() >= 20) {
+                this.clientConnectTime = messageBuffer.readInt32();
+                this.clientConnectTimeString = "" +
+                    new Date(((long) clientConnectTime + 1000000000L) * 1000L);
+            }
 
             this.clientUploadedString = RegExp.calcStringSize(clientUploaded);
             this.clientDownloadedString = RegExp.calcStringSize(clientDownloaded);
-            
+
             // Occasionally it seems the filename isn't reset to null when not uploading anymore
             this.isUploader = !clientUploadFilename.equals("");
         }
@@ -459,6 +493,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.35  2003/11/30 23:42:56  zet
+updates for latest mldonkey cvs
+
 Revision 1.34  2003/11/28 08:23:28  lemmster
 use Addr instead of String
 
@@ -509,7 +546,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

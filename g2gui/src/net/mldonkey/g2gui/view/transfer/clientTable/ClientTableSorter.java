@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * ClientTableSorter
  *
- * @version $Id: ClientTableSorter.java,v 1.11 2003/11/28 22:37:53 zet Exp $
+ * @version $Id: ClientTableSorter.java,v 1.12 2003/11/30 23:42:56 zet Exp $
  *
  */
 public class ClientTableSorter extends GSorter {
@@ -57,7 +57,11 @@ public class ClientTableSorter extends GSorter {
 
         case ClientTableView.SOCK_ADDR:
             return compareAddrs(clientInfo1.getClientSockAddr(), clientInfo2.getClientSockAddr());
-            
+
+        case ClientTableView.CONNECT_TIME:
+            return compareIntegers(clientInfo1.getClientConnectTime(),
+                clientInfo2.getClientConnectTime());
+
         case ClientTableView.STATE:
 
             if (clientInfo1.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
@@ -92,6 +96,9 @@ public class ClientTableSorter extends GSorter {
 
 /*
 $Log: ClientTableSorter.java,v $
+Revision 1.12  2003/11/30 23:42:56  zet
+updates for latest mldonkey cvs
+
 Revision 1.11  2003/11/28 22:37:53  zet
 coalesce addr use
 

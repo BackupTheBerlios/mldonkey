@@ -50,7 +50,7 @@ import java.util.Set;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.81 2003/11/29 13:05:25 lemmster Exp $
+ * @version $Id: FileInfo.java,v 1.82 2003/11/30 23:42:56 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -534,7 +534,7 @@ public class FileInfo extends Parent implements Observer {
         this.setPriority(messageBuffer.readSignedInt32());
         this.stringSize = RegExp.calcStringSize(this.getSize());
         updateETA();
-        this.stringAge = calcStringOfSeconds((System.currentTimeMillis() / 1000) -
+        this.stringAge = RegExp.calcStringOfSeconds((System.currentTimeMillis() / 1000) -
                 Long.parseLong(this.age));
         notifyChangedProperties();
     }
@@ -740,7 +740,7 @@ public class FileInfo extends Parent implements Observer {
         this.offset = i;
 
         String oldStringOffset = stringOffset;
-        this.stringOffset = calcStringOfSeconds(this.offset);
+        this.stringOffset = RegExp.calcStringOfSeconds(this.offset);
 
         if (!oldStringOffset.equals(stringOffset))
             changedProperties.add(CHANGED_LAST);
@@ -782,7 +782,7 @@ public class FileInfo extends Parent implements Observer {
             this.etaSeconds = (long) ((getSize() - getDownloaded()) / (this.rate + 1));
 
         String oldStringETA = stringETA;
-        this.stringETA = calcStringOfSeconds(this.etaSeconds);
+        this.stringETA = RegExp.calcStringOfSeconds(this.etaSeconds);
 
         if (stringETA.equals(""))
             stringETA = "-";
@@ -899,33 +899,6 @@ public class FileInfo extends Parent implements Observer {
      */
     public String getStringDownloaded() {
         return stringDownloaded;
-    }
-
-    /**
-     * @param inSeconds
-     * @return stringOfSeconds
-     */
-    private static String calcStringOfSeconds(long inSeconds) {
-        if (inSeconds < 1)
-            return "0m";
-
-        long days = inSeconds / 60 / 60 / 24;
-        long rest = inSeconds - (days * 60 * 60 * 24);
-        long hours = rest / 60 / 60;
-        rest = rest - (hours * 60 * 60);
-
-        long minutes = rest / 60;
-
-        if (days > 99)
-            return "";
-
-        if (days > 0)
-            return "" + days + "d";
-
-        if (hours > 0)
-            return "" + hours + "h" + ((minutes > 0) ? (" " + minutes + "m") : "");
-
-        return "" + minutes + "m";
     }
 
     /**
@@ -1055,6 +1028,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.82  2003/11/30 23:42:56  zet
+updates for latest mldonkey cvs
+
 Revision 1.81  2003/11/29 13:05:25  lemmster
 ToolTip complete reworked (to be continued)
 
@@ -1181,7 +1157,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)

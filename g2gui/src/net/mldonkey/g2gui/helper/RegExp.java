@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * RegExp
  *
- * @version $Id: RegExp.java,v 1.2 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: RegExp.java,v 1.3 2003/11/30 23:42:56 zet Exp $
  *
  */
 public class RegExp {
@@ -117,11 +117,39 @@ public class RegExp {
 			return new String(size + "");
 		}
 	}
+	
+	public static String calcStringOfSeconds(long inSeconds) {
+			if (inSeconds < 60)
+				return "0m";
+
+			long days = inSeconds / 60 / 60 / 24;
+			long rest = inSeconds - (days * 60 * 60 * 24);
+			long hours = rest / 60 / 60;
+			rest = rest - (hours * 60 * 60);
+
+			long minutes = rest / 60;
+
+			if (days > 9999)
+				return "";
+
+			if (days > 0)
+				return "" + days + "d";
+
+			if (hours > 0)
+				return "" + hours + "h" + ((minutes > 0) ? (" " + minutes + "m") : "");
+
+			return "" + minutes + "m";
+		}
+	
+	
 }
 
 
 /*
 $Log: RegExp.java,v $
+Revision 1.3  2003/11/30 23:42:56  zet
+updates for latest mldonkey cvs
+
 Revision 1.2  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

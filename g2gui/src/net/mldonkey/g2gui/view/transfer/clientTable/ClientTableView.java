@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableView.java,v 1.6 2003/11/27 21:42:33 zet Exp $
+ * @version $Id: ClientTableView.java,v 1.7 2003/11/30 23:42:56 zet Exp $
  *
  */
 public class ClientTableView extends GTableView {
@@ -43,9 +43,10 @@ public class ClientTableView extends GTableView {
     public static final int SOFTWARE = 2;
     public static final int UPLOADED = 3;
     public static final int DOWNLOADED = 4;
-    public static final int SOCK_ADDR = 5;
-    public static final int KIND = 6;
-    public static final int STATE = 7;
+    public static final int CONNECT_TIME = 5;
+    public static final int SOCK_ADDR = 6;
+    public static final int KIND = 7;
+    public static final int STATE = 8;
 
     public ClientTableView(ViewFrame viewFrame) {
         super(viewFrame);
@@ -53,12 +54,14 @@ public class ClientTableView extends GTableView {
         preferenceString = "client";
         columnLabels = new String[] {
                 "TT_CT_NETWORK", "TT_CT_NAME", "TT_CT_SOFTWARE", "TT_CT_UPLOADED",
-                "TT_CT_DOWNLOADED", "TT_CT_SOCK_ADDR", "TT_CT_KIND", "TT_CT_STATE"
+                "TT_CT_DOWNLOADED", "TT_CT_CONNECT_TIME", "TT_CT_SOCK_ADDR", "TT_CT_KIND",
+                "TT_CT_STATE"
             };
         columnAlignment = new int[] {
-                SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.LEFT
+                SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT,
+                SWT.LEFT
             };
-        columnDefaultWidths = new int[] { 100, 100, 75, 75, 75, 100, 75, 150 };
+        columnDefaultWidths = new int[] { 100, 100, 75, 75, 75, 75, 100, 75, 150 };
 
         gSorter = new ClientTableSorter(this);
         tableContentProvider = new ClientTableContentProvider(this, viewFrame.getCLabel());
@@ -92,6 +95,9 @@ public class ClientTableView extends GTableView {
 
 /*
 $Log: ClientTableView.java,v $
+Revision 1.7  2003/11/30 23:42:56  zet
+updates for latest mldonkey cvs
+
 Revision 1.6  2003/11/27 21:42:33  zet
 integrate ViewFrame a little more.. more to come.
 

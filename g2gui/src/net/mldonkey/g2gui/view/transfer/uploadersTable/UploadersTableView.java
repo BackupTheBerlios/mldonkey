@@ -22,12 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer.uploadersTable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
 import net.mldonkey.g2gui.helper.ObjectWeakMap;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
@@ -48,15 +42,22 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadersTableView.java,v 1.6 2003/11/29 13:01:11 lemmster Exp $
+ * @version $Id: UploadersTableView.java,v 1.7 2003/11/30 23:42:56 zet Exp $
  *
  */
 public class UploadersTableView extends GTableView {
@@ -65,10 +66,11 @@ public class UploadersTableView extends GTableView {
     private static final int SOFTWARE = 2;
     private static final int UPLOADED = 3;
     private static final int DOWNLOADED = 4;
-    private static final int SOCK_ADDR = 5;
-    private static final int KIND = 6;
-    private static final int STATE = 7;
-    private static final int FILENAME = 8;
+    private static final int CONNECT_TIME = 5;
+    private static final int SOCK_ADDR = 6;
+    private static final int KIND = 7;
+    private static final int STATE = 8;
+    private static final int FILENAME = 9;
     private ObjectWeakMap objectWeakMap;
     private long lastTimeStamp;
 
@@ -83,13 +85,14 @@ public class UploadersTableView extends GTableView {
         preferenceString = "uploaders";
         columnLabels = new String[] {
                 "TT_UT_NETWORK", "TT_UT_NAME", "TT_UT_SOFTWARE", "TT_UT_UPLOADED",
-                "TT_UT_DOWNLOADED", "TT_UT_SOCK_ADDR", "TT_UT_KIND", "TT_UT_STATE", "TT_UT_FILENAME"
+                "TT_UT_DOWNLOADED", "TT_UT_CONNECT_TIME", "TT_UT_SOCK_ADDR", "TT_UT_KIND",
+                "TT_UT_STATE", "TT_UT_FILENAME"
             };
 
-        columnDefaultWidths = new int[] { 100, 100, 100, 100, 100, 100, 100, 150, 200 };
+        columnDefaultWidths = new int[] { 100, 100, 100, 100, 100, 100, 100, 100, 150, 200 };
         columnAlignment = new int[] {
-                SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.LEFT,
-                SWT.LEFT
+                SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT,
+                SWT.LEFT, SWT.LEFT
             };
 
         gSorter = new UploadersTableSorter(this);
@@ -255,6 +258,9 @@ public class UploadersTableView extends GTableView {
             case UploadersTableView.UPLOADED:
                 return clientInfo.getUploadedString();
 
+            case UploadersTableView.CONNECT_TIME:
+                return clientInfo.getClientConnectTimeString();
+
             case UploadersTableView.DOWNLOADED:
                 return clientInfo.getDownloadedString();
 
@@ -310,6 +316,10 @@ public class UploadersTableView extends GTableView {
 
             case UploadersTableView.SOCK_ADDR:
                 return compareAddrs(clientInfo1.getClientSockAddr(), clientInfo2.getClientSockAddr());
+
+            case UploadersTableView.CONNECT_TIME:
+                return compareIntegers(clientInfo1.getClientConnectTime(),
+                    clientInfo2.getClientConnectTime());
 
             // else fall through
             default:
@@ -378,6 +388,9 @@ public class UploadersTableView extends GTableView {
 
 /*
 $Log: UploadersTableView.java,v $
+Revision 1.7  2003/11/30 23:42:56  zet
+updates for latest mldonkey cvs
+
 Revision 1.6  2003/11/29 13:01:11  lemmster
 Addr.getString() renamed to the more natural word name Addr.toString()
 

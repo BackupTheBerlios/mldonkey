@@ -35,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
  *
  * ClientTableLabelProvider
  *
- * @version $Id: ClientTableLabelProvider.java,v 1.14 2003/11/29 13:01:11 lemmster Exp $
+ * @version $Id: ClientTableLabelProvider.java,v 1.15 2003/11/30 23:42:56 zet Exp $
  *
  */
 public class ClientTableLabelProvider extends GTableLabelProvider implements ITableLabelProvider {
@@ -91,6 +91,9 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
         case ClientTableView.SOCK_ADDR:
             return clientInfo.getClientSockAddr().toString();
+            
+        case ClientTableView.CONNECT_TIME:
+            return clientInfo.getClientConnectTimeString();
 
         default:
             return "";
@@ -101,6 +104,9 @@ public class ClientTableLabelProvider extends GTableLabelProvider implements ITa
 
 /*
 $Log: ClientTableLabelProvider.java,v $
+Revision 1.15  2003/11/30 23:42:56  zet
+updates for latest mldonkey cvs
+
 Revision 1.14  2003/11/29 13:01:11  lemmster
 Addr.getString() renamed to the more natural word name Addr.toString()
 
@@ -159,7 +165,7 @@ Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:17:25  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.1  2003/08/20 14:58:43  zet
 sources clientinfo viewer
