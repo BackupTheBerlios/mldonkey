@@ -42,7 +42,7 @@ import com.gc.systray.SystemTrayIconListener;
 import com.gc.systray.SystemTrayIconManager;
 
  /**
- * @version $Id: SystemTray.java,v 1.7 2004/03/10 10:31:44 dek Exp $ 
+ * @version $Id: SystemTray.java,v 1.8 2004/03/10 10:36:07 dek Exp $ 
  *
  */
 public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
@@ -62,12 +62,11 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 	private float[] uploadrate = new float[5];
 	private float[] downloadrate = new float[5];
 	private int counter=0;
-	/** holds the status if the native library is loaded */
+	
+	/* holds the status if the native library is loaded */
 	private boolean libLoaded=false;
 
-	/**
-	 * SystemTrayIconListener implementation
-	 */
+	/* SystemTrayIconListener implementation */
 	public void mouseClickedLeftButton( final int x, final int y, SystemTrayIconManager source) {
 		parent.getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -236,6 +235,9 @@ public class SystemTray implements SystemTrayIconListener, Runnable,Observer {
 }
 /*
  $Log: SystemTray.java,v $
+ Revision 1.8  2004/03/10 10:36:07  dek
+ javadoc comments -> normal comments
+
  Revision 1.7  2004/03/10 10:31:44  dek
  added header and footer
 
