@@ -1,3 +1,7 @@
+2003/10/15: z
+	* Transfer: User definable colors (in preferences)
+	* Added icons to the popup/pulldown menus
+
 2003/10/13: z
 	* Transfer: Add WebServices Bitzi, FileDonkey & Jigle hash lookup (rt-click menu)
 	* Win TrayIcon: Fix File->Exit bug  (when minimize to systray is active)
