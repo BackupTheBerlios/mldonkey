@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.12 2003/07/03 21:16:16 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.13 2003/07/04 11:04:14 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements SimpleInformation {
@@ -240,7 +240,10 @@ public class FileInfo implements SimpleInformation {
 	private CoreCommunication getParent() {
 		return parent;
 	}
-
+	/**
+	 * Creates a new fileinfo object
+	 * @param core The CoreCommunication parent
+	 */
 	public FileInfo( CoreCommunication core ) {
 		this.parent = core;
 	}
@@ -296,7 +299,7 @@ public class FileInfo implements SimpleInformation {
 		this.name = messageBuffer.readString();
 		this.offset = messageBuffer.readInt32();
 		this.setPriority( messageBuffer.readInt32() );
-		double d2 = round( ( (double)this.getDownloaded() / (double)this.getSize() ) * 100 );
+		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
 	}
 	
@@ -310,7 +313,7 @@ public class FileInfo implements SimpleInformation {
 		double d = new Double( messageBuffer.readString() ).doubleValue() / 1024;
 		this.rate = ( float ) round( d );
 		this.offset = messageBuffer.readInt32();
-		double d2 = round( ( (double)this.getDownloaded() / (double)this.getSize() ) * 100 );
+		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
 	}
 	
@@ -364,7 +367,7 @@ public class FileInfo implements SimpleInformation {
 	}
 
 	/**
-	 * @param i The new priority for this file
+	 * @param enum The new priority for this file
 	 */
 	public void setPriority( EnumPriority enum ) {
 		Integer content;
@@ -381,15 +384,27 @@ public class FileInfo implements SimpleInformation {
 	}
 
 	/**
-	 * @param state The new state of this file
+	 * @param enum The new state of this file
 	 */
 	public void setState( EnumFileState enum ) {
 		this.getState().setState( enum, this.getId(), this.getParent() );
+	}
+	
+	/**
+	 * Verify all chunks of this fileinfo
+	 */
+	public void verifyChunks() {
+		EncodeMessage chunks =
+			new EncodeMessage( Message.S_VERIFY_ALL_CHUNKS, new Integer( this.getId() ) );
+		chunks.sendMessage( this.getParent().getConnection() );
 	}
 }	
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.13  2003/07/04 11:04:14  lemmstercvs01
+add some opcodes
+
 Revision 1.12  2003/07/03 21:16:16  lemmstercvs01
 setName() and setPriority() added, Priority from int to Enum
 

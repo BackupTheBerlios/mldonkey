@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  * @author markus
- * @version $Id: FileState.java,v 1.9 2003/07/03 21:15:06 lemmstercvs01 Exp $ 
+ * @version $Id: FileState.java,v 1.10 2003/07/04 11:04:14 lemmstercvs01 Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -116,7 +116,7 @@ public class FileState implements SimpleInformation {
 		}
 		/* pause */
 		else if ( this.getState() == EnumFileState.DOWNLOADING
-			  && state == EnumFileState.PAUSED ){
+			  && state == EnumFileState.PAUSED ) {
 			content[ 1 ] = pause;
 		}
 		/* cancel */
@@ -137,6 +137,9 @@ public class FileState implements SimpleInformation {
 
 /*
 $Log: FileState.java,v $
+Revision 1.10  2003/07/04 11:04:14  lemmstercvs01
+add some opcodes
+
 Revision 1.9  2003/07/03 21:15:06  lemmstercvs01
 opcodes now from Message
 

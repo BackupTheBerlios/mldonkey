@@ -22,14 +22,19 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.trove.TIntObjectIterator;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumFileState;
 
 /**
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.6 2003/07/03 19:21:11 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.7 2003/07/04 11:04:14 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -131,11 +136,50 @@ public class FileInfoIntMap extends InfoIntMap {
 	public int getId() {
 		return id;
 	}
-
+	
+	/**
+	 * Adds a new download to this map
+	 * @param url The url of the new download
+	 */
+	public void add( String url ) {
+		EncodeMessage dllink =
+			new EncodeMessage( Message.S_DLLINK, url );
+		dllink.sendMessage( this.parent.getConnection() );
+		dllink = null;	
+	}
+	
+	/**
+	 * Removes a download from this map
+	 * @param key The fileinfo id
+	 */
+	public void remove( int key ) {
+		this.get( key ).setState( EnumFileState.CANCELLED );
+	}
+	
+	/**
+	 * Removes all compelte downloads from this map
+	 * (EnumFileState == DOWNLOADED)
+	 * Needs manual refresh() of the tableviewer.
+	 */
+	public void removeComplete() {
+		TIntObjectIterator itr = this.iterator();
+		int collsize = this.size();
+		for ( ; collsize-- > 0;) {
+			itr.advance();
+			FileInfo aFileInfo = ( FileInfo ) itr.value();
+			/* if EnumFileState.DOWNLOADED, remove the fileinfo from this */
+			if ( aFileInfo.getState().getState() == EnumFileState.DOWNLOADED ) {
+				this.infoIntMap.remove( itr.key() );
+			}
+		}
+	}
 }
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.7  2003/07/04 11:04:14  lemmstercvs01
+add some opcodes
+
 Revision 1.6  2003/07/03 19:21:11  lemmstercvs01
 javadoc added
 
