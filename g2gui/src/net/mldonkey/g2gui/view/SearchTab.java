@@ -28,6 +28,7 @@ import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.helper.CCLabel;
+import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.search.CompositeSearch;
@@ -36,7 +37,9 @@ import net.mldonkey.g2gui.view.search.OtherComplexSearch;
 import net.mldonkey.g2gui.view.search.Search;
 import net.mldonkey.g2gui.view.search.SearchResult;
 import net.mldonkey.g2gui.view.search.SimpleSearch;
+import net.mldonkey.g2gui.view.viewers.CTabFolderColumnSelectorPaneListener;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
@@ -65,7 +68,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.35 2003/10/22 01:36:59 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.36 2003/10/28 00:35:58 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -78,6 +81,7 @@ public class SearchTab extends GuiTab {
 	private StackLayout stackLayout;
 	private Composite composite;
 	private Button[] buttons;
+	private MenuManager resultsPopupMenu;
 	
 	/**
 	 * Create a new Search Tab
@@ -213,6 +217,11 @@ public class SearchTab extends GuiTab {
 								 G2GuiResources.getString( "ST_RESULTS" ), "SearchButtonSmallTitlebar" );
 		
 		cTabFolder = new CTabFolder( searchResultsViewForm, SWT.NONE );
+		
+		resultsPopupMenu = new MenuManager( "" );
+		resultsPopupMenu.setRemoveAllWhenShown( true );
+		resultsPopupMenu.addMenuListener(new CTabFolderColumnSelectorPaneListener(cTabFolder));
+		searchResultsCLabel.addMouseListener( new HeaderBarMouseAdapter( searchResultsCLabel, resultsPopupMenu ) );
 		
 		searchResultsViewForm.setContent( cTabFolder );
 		searchResultsViewForm.setTopLeft( searchResultsCLabel );
@@ -427,6 +436,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.36  2003/10/28 00:35:58  zet
+move columnselector into the pane
+
 Revision 1.35  2003/10/22 01:36:59  zet
 add column selector to server/search (might not be finished yet..)
 

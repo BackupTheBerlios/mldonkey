@@ -35,7 +35,6 @@ import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.helper.TableMenuListener;
 import net.mldonkey.g2gui.view.helper.WordFilter;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
-import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 import net.mldonkey.g2gui.view.viewers.actions.CopyED2KLinkToClipboardAction;
 import net.mldonkey.g2gui.view.viewers.actions.WebServicesAction;
 
@@ -60,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * ResultTableMenuListener
  *
  *
- * @version $Id: ResultTableMenuListener.java,v 1.22 2003/10/24 21:26:11 zet Exp $ 
+ * @version $Id: ResultTableMenuListener.java,v 1.23 2003/10/28 00:36:06 zet Exp $ 
  *
  */
 public class ResultTableMenuListener extends TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -209,9 +208,6 @@ Yet			menuManager.add( webManager );
 			/* close search */
 			menuManager.add( new CloseAction() );
 		}
-		
-		menuManager.add( new ColumnSelectorAction( gTableViewer ) );
-		
 	}
 	
 	/**
@@ -339,6 +335,9 @@ Yet			menuManager.add( webManager );
 
 /*
 $Log: ResultTableMenuListener.java,v $
+Revision 1.23  2003/10/28 00:36:06  zet
+move columnselector into the pane
+
 Revision 1.22  2003/10/24 21:26:11  zet
 add donkey fakes web service
 

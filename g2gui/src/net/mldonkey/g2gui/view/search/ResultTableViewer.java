@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableViewer.java,v 1.3 2003/10/22 02:25:10 zet Exp $
+ * @version $Id: ResultTableViewer.java,v 1.4 2003/10/28 00:36:06 zet Exp $
  *
  */
 public class ResultTableViewer extends GTableViewer {
@@ -75,7 +75,8 @@ public class ResultTableViewer extends GTableViewer {
         super(parent, aCore);
         this.cTabItem = aCTabItem;
         this.aMouseListener = aMouseListener;
-		
+        this.cTabItem.setData("gTableViewer", this);
+        
         preferenceString = "result";
         columnLabels = new String[] { "SR_NETWORK", "SR_NAME", "SR_SIZE", "SR_FORMAT", "SR_MEDIA", "SR_AVAIL" };
 
@@ -324,6 +325,9 @@ public class ResultTableViewer extends GTableViewer {
 
 /*
 $Log: ResultTableViewer.java,v $
+Revision 1.4  2003/10/28 00:36:06  zet
+move columnselector into the pane
+
 Revision 1.3  2003/10/22 02:25:10  zet
 +prefString
 
