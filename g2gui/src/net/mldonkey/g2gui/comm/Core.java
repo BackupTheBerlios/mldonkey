@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.InterFaceUI;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.31 2003/06/25 18:04:53 dek Exp $ 
+ * @version $Id: Core.java,v 1.32 2003/06/26 17:34:40 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -212,6 +212,7 @@ public class Core extends Thread implements CoreCommunication {
 					
 			case Message.R_CLIENT_STATS :				
 					clientStats.readStream( messageBuffer );
+					this.notifyListeners( clientStats );
 					break;	
 					
 			case Message.R_DOWNLOAD :
@@ -299,6 +300,9 @@ public class Core extends Thread implements CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.32  2003/06/26 17:34:40  dek
+added client-Stat to Information-broadcast
+
 Revision 1.31  2003/06/25 18:04:53  dek
 Console-Tab reworked
 
