@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.TableColumn;
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
 
 	FileInfo selectedFile;
+	TreeClientInfo selectedClient;
 	ArrayList selectedFiles = new ArrayList();
 	public static ResourceBundle res = ResourceBundle.getBundle("g2gui");
 	private TableTreeViewer tableTreeViewer;
@@ -121,6 +122,11 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		else
 			selectedFile = null;
 			
+		if (o instanceof TreeClientInfo) 
+			selectedClient = (TreeClientInfo) o;
+		else
+			selectedClient = null;
+			
 		selectedFiles.clear();	
 		for (Iterator it = sSel.iterator(); it.hasNext(); ) {
 			o = it.next();
@@ -156,6 +162,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			prioritySubMenu.add(new PriorityLowAction());
 			menuManager.add(prioritySubMenu);
 		}
+		
+		if (selectedClient != null)
+			menuManager.add(new ClientDetailAction());
 		
 		if (selectedFile != null)
 			menuManager.add(new FileDetailAction());
@@ -264,6 +273,18 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		}
 		
 	}
+	
+	class ClientDetailAction extends Action {
+		public ClientDetailAction() {
+			super();
+			setText("Client details");
+		}
+		public void run() {
+			new ClientDetailDialog(selectedClient.getFileInfo(), selectedClient.getClientInfo());
+		}
+		
+	}	
+	
 	
 		
 	class PauseAction extends Action {
@@ -554,6 +575,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.3  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.2  2003/08/06 17:14:50  zet
 file details
 

@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.29 2003/08/05 13:49:44 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.30 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -154,8 +154,13 @@ public class MainTab implements Listener, Observer, ShellListener {
 		horLine.setLayoutData( gridData );
 		
 		coolbarComposite = new Composite (mainComposite, SWT.NONE);
-		coolbarComposite.setLayout (new GridLayout ());
-		coolbarComposite.setLayoutData (new GridData (GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
+		GridLayout coolBarGL = new GridLayout();
+		coolBarGL.marginHeight = 0;
+		coolBarGL.marginWidth = 0;
+		coolBarGL.horizontalSpacing = 0;
+		coolBarGL.verticalSpacing = 0;
+		coolbarComposite.setLayout ( coolBarGL );
+		coolbarComposite.setLayoutData (new GridData ( GridData.FILL_HORIZONTAL ));
 		
 		coolbar = createCoolBar( coolbarComposite );
 		createToolBars();
@@ -253,6 +258,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 		return result;
 	} 
+	
 	
 	/**
 	 * Creates a new Coolbar obj
@@ -633,6 +639,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.30  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.29  2003/08/05 13:49:44  lemmstercvs01
 support for servertab added
 

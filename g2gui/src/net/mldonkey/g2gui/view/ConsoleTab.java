@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.28 2003/08/01 17:21:18 lemmstercvs01 Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.29 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -64,7 +64,7 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 		createButton( "ConsoleButton", 
 						bundle.getString( "TT_ConsoleButton" ),
 						bundle.getString( "TT_ConsoleButtonToolTip" ) );
-		createContents( this.content );
+		createContents( this.subContent );
 	} 
 	
 	/* ( non-Javadoc )
@@ -159,6 +159,7 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 		infoDisplay.setForeground ( loadColour( "consoleForeground" ) );
 		input.setBackground ( loadColour( "consoleInputBackground" ) );
 		input.setForeground ( loadColour( "consoleInputForeground" ) );
+		super.updateDisplay();
 	}
 
 	/* (non-Javadoc)
@@ -203,6 +204,9 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.29  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.28  2003/08/01 17:21:18  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

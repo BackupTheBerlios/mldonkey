@@ -45,7 +45,7 @@ public class StatisticTab extends GuiTab {
 					bundle.getString( "TT_StatisticsButton" ),
 					bundle.getString( "TT_StatisticsButtonToolTip" ) );
 				
-		createContents( this.content );
+		createContents( this.subContent );
 		gui.getCore().getClientStats().addObserver( this );
 	}
 
@@ -86,7 +86,6 @@ public class StatisticTab extends GuiTab {
 
 	public void update( Observable arg0, Object receivedInfo ) {
 		ClientStats clientInfo = ( ClientStats ) receivedInfo;
-		
 		uploadsGraphControl.addPointToGraph( clientInfo.getTcpUpRate() );
 		downloadsGraphControl.addPointToGraph( clientInfo.getTcpDownRate() );
 		uploadsGraphControl.redraw();

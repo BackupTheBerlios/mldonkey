@@ -22,27 +22,31 @@
  */
 package net.mldonkey.g2gui.view;
 
+import java.io.IOException;
 import java.util.Observer;
 import java.util.ResourceBundle;
+
+import net.mldonkey.g2gui.view.toolbar.ToolButton;
+
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.graphics.Font;
-import net.mldonkey.g2gui.view.toolbar.ToolButton;
-
-import java.io.IOException;
-import org.eclipse.jface.preference.*;
-
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.13 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: GuiTab.java,v 1.14 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -69,7 +73,15 @@ public abstract class GuiTab implements Listener, Observer {
 	
 	private boolean hasObserver;
 	
+	protected Composite pageHeaderPlaceHolder, pageHeader, subContent;
+	protected boolean headerBar;
+	
 	protected ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
+	
+	private Font font = new Font(null, "Helvetica", 12, SWT.BOLD); // fix later
+	protected CLabel leftLabel, rightLabel;
+	protected String tabName;
+	
 	/**
 	 * @param gui the gui, to which this tab belongs
 	 */
@@ -77,8 +89,31 @@ public abstract class GuiTab implements Listener, Observer {
 		this.mainWindow = gui;		
 		
 		this.content = new Composite( gui.getPageContainer(), SWT.NONE );
-		this.content.setLayout( new FillLayout() );
+		GridLayout contentGD = new GridLayout();
+		contentGD.marginHeight = 0;
+		contentGD.marginWidth = 0;
+		contentGD.verticalSpacing = 0;
+		contentGD.horizontalSpacing = 0;
+		
+		this.content.setLayout( contentGD );
+		this.content.setLayoutData( new GridData(GridData.FILL_BOTH));
 		this.content.setVisible( false );
+		
+		this.pageHeaderPlaceHolder = new Composite( content, SWT.NONE );
+		contentGD = new GridLayout();
+		contentGD.marginHeight = 0;
+		contentGD.marginWidth = 0;
+		contentGD.verticalSpacing = 0;
+		contentGD.horizontalSpacing = 0;
+		this.pageHeaderPlaceHolder.setLayout( contentGD );
+		
+		this.pageHeaderPlaceHolder.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		createHeader( pageHeaderPlaceHolder, loadBoolean("displayHeaderBar") );
+					
+		this.subContent = new Composite( content , SWT.NONE);
+		this.subContent.setLayout( new FillLayout());
+		subContent.setLayoutData( new GridData(GridData.FILL_BOTH));
 		
 		toolButton = new ToolButton( ( ( MainTab )gui ).getMainTools(), SWT.PUSH );		
 		toolButton.addListener( SWT.Selection, this );
@@ -158,6 +193,10 @@ public abstract class GuiTab implements Listener, Observer {
 	public Composite getContent() {
 		return content;
 	}
+	public Composite getSubContent() {
+		return subContent;
+	}
+	
 	static Font loadFont2( String preferenceString ) {
 		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
 		try { preferenceStore.load(); } catch ( IOException e ) { }		
@@ -176,9 +215,18 @@ public abstract class GuiTab implements Listener, Observer {
 	}
 
 	public void updateDisplay() {
+		if (headerBar != loadBoolean("displayHeaderBar")) {
+			pageHeader.dispose();
+			headerBar = !headerBar;
+			createHeader( pageHeaderPlaceHolder, headerBar );
+		}
+		setLeftLabel(tabName);
+		setRightLabel("");
+		content.layout();
 	}
 	
 	public void createButton(String buttonName, String buttonText, String buttonToolTip) {
+		tabName = buttonText;
 		
 		Image big = MainTab.getImageFromRegistry(buttonName);
 		Image small = MainTab.getImageFromRegistry(buttonName + "Small");
@@ -191,12 +239,91 @@ public abstract class GuiTab implements Listener, Observer {
 		toolButton.setSmallInactiveImage(small);		
 		toolButton.useSmallButtons(MainTab.toolbarSmallButtons);
 		toolButton.setActive(false);
-		MainTab.mainToolButtons.add( toolButton );			
+		MainTab.mainToolButtons.add( toolButton );	
+		
+		setLeftLabel(tabName);
+					
 	}
+	
+	public void createHeader(Composite thisContent, boolean createMe) {
+
+	if (createMe) {
+	
+		Color backgroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
+		Color foregroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_WHITE);
+	
+		pageHeader = new Composite(thisContent, SWT.BORDER);
+		pageHeader.setBackground(backgroundColor);
+
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		layout.marginWidth = 10;
+		pageHeader.setLayout(layout);
+		pageHeader.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		// fix font/color later
+		leftLabel = new CLabel(pageHeader, SWT.NONE);
+		leftLabel.setFont(font);
+		leftLabel.setBackground(backgroundColor);
+		leftLabel.setForeground(foregroundColor);
+		leftLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		rightLabel = new CLabel(pageHeader, SWT.NONE);
+		rightLabel.setText("");
+		rightLabel.setFont(font);
+		rightLabel.setForeground(foregroundColor);
+		rightLabel.setBackground(backgroundColor);
+		
+		rightLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+	
+		headerBar = true;
+	} else {
+		// hack -- what is the right way to do this? 
+		pageHeader = new Composite(thisContent, SWT.NONE);
+		GridData x = new GridData();
+		x.widthHint = 1;
+		x.heightHint = 1;
+		pageHeader.setLayoutData(x);
+		headerBar = false;
+	}
+	
+	
+	}
+	public void setLeftLabel(String text) {
+		if (headerBar && leftLabel != null && !leftLabel.isDisposed())
+			leftLabel.setText(text);
+		
+	}
+	public void setRightLabel(String text) {
+		if (headerBar && rightLabel != null && !rightLabel.isDisposed()) {
+			rightLabel.setText(text);
+			rightLabel.getParent().layout();
+		}
+	}
+	
+	// preference loading has to be centralized in the future
+	static boolean loadBoolean(String preferenceString) {
+		PreferenceStore preferenceStore = new PreferenceStore("g2gui.pref");
+		try {
+			preferenceStore.load();
+		} catch (IOException e) {
+		}
+
+		preferenceStore.setDefault("displayHeaderBar", true);
+	
+		if (preferenceStore.contains(preferenceString))
+			return preferenceStore.getBoolean(preferenceString);
+		return true;
+	}
+	
+	
 }
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.14  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.13  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

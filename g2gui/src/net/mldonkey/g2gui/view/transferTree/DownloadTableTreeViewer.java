@@ -34,7 +34,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
@@ -53,12 +52,12 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.3 2003/08/06 19:31:06 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.4 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
 
-	private TableTreeViewer tableTreeViewer;
+	private CustomTableTreeViewer tableTreeViewer;
 	private TableTree tableTree;
 	private Table table;
 	private Shell shell;
@@ -131,7 +130,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	
 	public void createTableTreeViewer(Composite parent, final CoreCommunication mldonkey) {
 			
-		tableTreeViewer = new TableTreeViewer ( parent,  SWT.MULTI | SWT.FULL_SELECTION );
+		tableTreeViewer = new CustomTableTreeViewer ( parent,  SWT.MULTI | SWT.FULL_SELECTION );
 		tableTree = tableTreeViewer.getTableTree();
 		table = tableTree.getTable();
 		
@@ -180,7 +179,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		}
 		
 		DownloadTableTreeLabelProvider treeLabelProvider = new DownloadTableTreeLabelProvider();
+		treeLabelProvider.setTableTreeViewer(tableTreeViewer);
 		tableTreeViewer.setLabelProvider(treeLabelProvider);
+		
 		
 		tableTreeContentProvider = new DownloadTableTreeContentProvider();
 		tableTreeContentProvider.setUpdateBuffer( loadInteger("displayBuffer") );
@@ -257,7 +258,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
 			try { preferenceStore.load(); } catch ( IOException e ) { }		
 	
-		preferenceStore.setDefault("displayBuffer", 0);
+		preferenceStore.setDefault("displayBuffer", 2);
 		
 		if (preferenceStore.contains( preferenceString ))
 			return preferenceStore.getInt( preferenceString );
@@ -276,7 +277,6 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			tableTreeViewer.setCellModifier(null);		
 		}
 		
-		
 		tableTreeContentProvider.closeAllEditors();
 		tableTreeViewer.refresh();
 		displayChunkGraphs = newChunkValue;
@@ -290,6 +290,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.4  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.3  2003/08/06 19:31:06  zet
 configurable cell editors
 

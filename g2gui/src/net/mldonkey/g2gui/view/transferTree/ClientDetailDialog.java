@@ -25,18 +25,16 @@ package net.mldonkey.g2gui.view.transferTree;
 import java.util.Observable;
 import java.util.Observer;
 
+import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
+import net.mldonkey.g2gui.model.enum.EnumClientMode;
+import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -51,16 +49,15 @@ import org.eclipse.swt.widgets.Text;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class FileDetailDialog implements Observer {
+public class ClientDetailDialog implements Observer {
 
 	private Shell shell;
 	private Display desktop = MainTab.getShell().getDisplay();
 	private FileInfo fileInfo;
-	private ChunkCanvas chunkCanvas;
+	private ClientInfo clientInfo;
+	private ChunkCanvas chunkCanvas, chunkCanvas2;
 	
-	private CLabel clFileName, clHash, clSize, clAge,
-				clSources, clChunks, clTransferred, clPercent,
-				clLast, clPriority, clRate, clETA;
+	private CLabel clName, clRating, clActivity, clKind, clNetwork;
 	
 	int leftColumn = 100;
 	int rightColumn = leftColumn * 3;
@@ -70,9 +67,10 @@ public class FileDetailDialog implements Observer {
 	private List renameList;
 	private Text renameText;
 	
-	public FileDetailDialog (FileInfo fileInfo) 
+	public ClientDetailDialog (FileInfo fileInfo, ClientInfo clientInfo ) 
 	{
 		this.fileInfo = fileInfo;
+		this.clientInfo = clientInfo;
 		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL );
 	
 		shell.setBounds( (desktop.getBounds().width - width) / 2,
@@ -80,7 +78,8 @@ public class FileDetailDialog implements Observer {
 								  width, height);
 								  
 		shell.setImage(MainTab.getImageFromRegistry("TransfersButton"));
-		shell.setText( "File " + fileInfo.getId() + " details");						  
+		
+		shell.setText( "Client " + clientInfo.getClientid() + " details");						  
 								  
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
@@ -93,8 +92,8 @@ public class FileDetailDialog implements Observer {
 		shell.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		// General
-		Group fileGeneral = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		fileGeneral.setText("File information");
+		Group clientGeneral = new Group(shell, SWT.SHADOW_ETCHED_OUT );
+		clientGeneral.setText("Client information");
 		GridLayout generalGridLayout = new GridLayout();
 		generalGridLayout.numColumns = 4;
 		generalGridLayout.marginWidth = 5;
@@ -102,41 +101,19 @@ public class FileDetailDialog implements Observer {
 		generalGridLayout.horizontalSpacing = 0;
 		generalGridLayout.verticalSpacing = 0;
 		
-		fileGeneral.setLayout(generalGridLayout);
+		clientGeneral.setLayout(generalGridLayout);
 		
-		clFileName = createLine(fileGeneral, "Filename:", true);
-		clHash = createLine(fileGeneral, "Hash:", true);
-		clSize = createLine(fileGeneral, "Size:", false);
-	 	clAge = createLine(fileGeneral, "Age:", false);
+		clName = createLine(clientGeneral, "Name:", true);
+		clNetwork = createLine(clientGeneral, "Network:", false);
+		clRating = createLine(clientGeneral, "Rating:", false);
+		clActivity = createLine(clientGeneral, "Activity:", false);
+		clKind = createLine(clientGeneral, "Kind:", false);
 	
-		fileGeneral.setLayoutData( new GridData(GridData.FILL_HORIZONTAL ) );
+		clientGeneral.setLayoutData( new GridData(GridData.FILL_HORIZONTAL ) );
 
-		// Transfer		
-		Group fileTransfer = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		fileTransfer.setText("Transfer information");
-		GridLayout transferGridLayout = new GridLayout();
-		transferGridLayout.numColumns = 4;
-		transferGridLayout.marginWidth = 5;
-		transferGridLayout.marginHeight = 2;
-		transferGridLayout.horizontalSpacing = 0;
-		transferGridLayout.verticalSpacing = 0;
-	
-		fileTransfer.setLayout(transferGridLayout);
- 
-		clSources = createLine(fileTransfer, "Sources:", false);
-		clChunks = createLine(fileTransfer, "Chunks:", false);
-		clTransferred = createLine(fileTransfer, "Transferred:", false);
-		clPercent = createLine(fileTransfer, "Percent:", false);
-		clLast = createLine(fileTransfer, "Last seen:", false);
-		clPriority = createLine(fileTransfer, "Priority", false);
-		clRate = createLine(fileTransfer, "Rate:", false);
-		clETA = createLine(fileTransfer, "ETA:", false);
-		
-		fileTransfer.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
-		
 		// Chunk	
 		Group chunkGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		chunkGroup.setText("Chunks");
+		chunkGroup.setText("Local file chunks");
 		GridLayout chunkGridLayout = new GridLayout();
 		chunkGridLayout.numColumns = 1;
 		chunkGridLayout.marginWidth = 5;
@@ -150,66 +127,25 @@ public class FileDetailDialog implements Observer {
 		canvasGD.heightHint = 28;
 		chunkCanvas.setLayoutData(canvasGD);
 		
-		// Rename
-		Group renameGroup = new Group(shell, SWT.SHADOW_ETCHED_OUT );
-		renameGroup.setText("Alternate filenames");
+		// Client Chunk	
+		Group chunkGroup2 = new Group(shell, SWT.SHADOW_ETCHED_OUT );
+		chunkGroup2.setText("Client file chunks");
+		GridLayout chunkGridLayout2 = new GridLayout();
+		chunkGridLayout2.numColumns = 1;
+		chunkGridLayout2.marginWidth = 5;
+		chunkGroup2.setLayout(chunkGridLayout);
 		
-		GridLayout renameGridLayout = new GridLayout();
-		renameGridLayout.numColumns = 1;
-		renameGridLayout.marginWidth = 5;
-		renameGridLayout.marginHeight = 2;
-		renameGroup.setLayout(renameGridLayout);
-	
-		renameGroup.setLayoutData(  new GridData(GridData.FILL_HORIZONTAL));
+		chunkGroup2.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) ) ;
 				
-		renameList = new List(renameGroup, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
-		for (int i = 0; i < fileInfo.getNames().length; i++) 
-			renameList.add(fileInfo.getNames()[ i ]);
-		
-		GridData listGD = new GridData();
-		listGD.heightHint = 80;
-		listGD.widthHint = width - 50;
-		renameList.setLayoutData(listGD); 
-	
-		Composite rename = new Composite(shell, SWT.NONE);
-		GridLayout renameCGridLayout = new GridLayout();
-		renameCGridLayout.numColumns = 2;
-		renameCGridLayout.marginWidth = 0;
-		renameCGridLayout.marginHeight = 0;
-		renameCGridLayout.horizontalSpacing = 4;
-
-		rename.setLayout( renameCGridLayout );
-		rename.setLayoutData( new GridData(GridData.FILL_HORIZONTAL) );
-				
-		renameText = new Text(rename, SWT.BORDER);
-		renameText.setText(fileInfo.getName());
-		
-		GridData data = new GridData( GridData.FILL_HORIZONTAL );
-		data.widthHint = 50;
-		renameText.setLayoutData(data);
-		
-		Button renameButton = new Button(rename, SWT.NONE);
-		renameButton.setText("Rename");
-		
-		renameText.addKeyListener( new KeyAdapter() {
-			public void keyPressed( KeyEvent e ) {
-				if ( e.character == SWT.CR ) {
-					renameFile();
-					renameText.setText("");
-				}
-			}		
-		} );	
-				
-		renameButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-	
-		renameButton.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected (SelectionEvent s) {
-				renameFile();
-			}
-		});
+		chunkCanvas2 = new ChunkCanvas( chunkGroup2, SWT.NO_BACKGROUND, clientInfo, fileInfo );
+		clientInfo.addObserver( chunkCanvas );
+		GridData canvasGD2 = new GridData(GridData.FILL_HORIZONTAL);
+		canvasGD2.heightHint = 28;
+		chunkCanvas2.setLayoutData(canvasGD2);
 
 		updateLabels();
 		fileInfo.addObserver(this);
+		clientInfo.addObserver(this);
 		shell.pack();
 		shell.open();
 		
@@ -254,21 +190,11 @@ public class FileDetailDialog implements Observer {
 	
 	public void updateLabels() {
 		
-		updateLabel(clFileName, fileInfo.getName());
-		updateLabel(clHash, fileInfo.getMd4().toUpperCase());
-		updateLabel(clSize, fileInfo.getStringSize());
-		updateLabel(clAge, fileInfo.getStringAge());
-	
-		updateLabel(clSources, Integer.toString(fileInfo.getSources()));
-		updateLabel(clChunks, Integer.toString(fileInfo.getNumChunks())
-							+ " of " + Integer.toString(fileInfo.getChunks().length()));
-		updateLabel(clTransferred, fileInfo.getStringDownloaded());
-		updateLabel(clPercent, Double.toString(fileInfo.getPerc()) + "%");
-		updateLabel(clLast, fileInfo.getStringOffset());
-		updateLabel(clPriority, fileInfo.getStringPriority());
-		updateLabel(clRate, String.valueOf(fileInfo.getRate()) + " KB/s");
-		updateLabel(clETA, fileInfo.getStringETA());
-		
+		updateLabel(clName, clientInfo.getClientName());
+		updateLabel(clRating, "" + clientInfo.getClientRating());
+		updateLabel(clActivity, getClientActivity(clientInfo));
+		updateLabel(clKind, getClientConnection(clientInfo));
+		updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
 		
 	}
 	
@@ -299,8 +225,25 @@ public class FileDetailDialog implements Observer {
 	
 	public void dispose() {
 		chunkCanvas.dispose();
+		clientInfo.deleteObserver(this);
 		fileInfo.deleteObserver(this);
-		
 	}
+
+	public String getClientConnection(ClientInfo clientInfo) {
+		if (clientInfo.getClientKind().getClientMode()
+			== EnumClientMode.FIREWALLED)
+			return "firewalled";
+		else
+			return "direct";
+	}
+
+	public String getClientActivity(ClientInfo clientInfo) {
+		if (clientInfo.getState().getState()
+			== EnumState.CONNECTED_DOWNLOADING)
+			return "transferring";
+		else
+			return "rank: " + clientInfo.getState().getRank();
+	}
+
 
 }

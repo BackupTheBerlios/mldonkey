@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.14 2003/08/04 19:21:52 zet Exp $ 
+ * @version $Id: ClientInfo.java,v 1.15 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -131,6 +131,16 @@ public class ClientInfo extends Parent {
 		  
 		return availability;
 	}
+	
+	public int getNumChunks( FileInfo fileInfo ) {
+		int numChunks = 0;
+		String availability = getFileAvailability ( fileInfo );
+		if (availability == null) return 0;
+		
+		for (int i = 0; i < availability.length() ; i++) 
+			if (availability.charAt(i) == '1') numChunks++;
+		return numChunks;
+	}
 
 	/**
 	 * @return The client type
@@ -216,6 +226,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.15  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.14  2003/08/04 19:21:52  zet
 trial tabletreeviewer
 

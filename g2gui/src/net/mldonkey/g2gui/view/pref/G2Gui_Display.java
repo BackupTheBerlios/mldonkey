@@ -23,7 +23,7 @@ public class G2Gui_Display extends PreferencePage  {
 				consoleInputBackground, consoleInputForeground;
 	private ExtendedFontFieldEditor2 consoleFontData;
 	private BooleanFieldEditor displayChunkGraphs, displayGridLines,
-							tableCellEditors;
+							tableCellEditors, displayHeaderBar;
 	private IntegerFieldEditor displayBuffer;
 	private int columns = 0;
 	
@@ -34,7 +34,8 @@ public class G2Gui_Display extends PreferencePage  {
 		preferenceStore.setDefault("displayChunkGraphs", true);
 		preferenceStore.setDefault("displayGridLines", true);
 		preferenceStore.setDefault("tableCellEditors", false);
-		preferenceStore.setDefault("displayBuffer", 0);
+		preferenceStore.setDefault("displayBuffer", 2);
+		preferenceStore.setDefault("displayHeaderBar", true);
 	}
 	
 	protected void setupEditor(FieldEditor e) {
@@ -63,6 +64,9 @@ public class G2Gui_Display extends PreferencePage  {
 		consoleFontData = new ExtendedFontFieldEditor2("consoleFontData", "Console window font", "Sample",  shell);
 		setupEditor(consoleFontData);
 		
+		displayHeaderBar = new BooleanFieldEditor("displayHeaderBar", "Display header bar", shell);
+		setupEditor(displayHeaderBar);
+		
 		displayChunkGraphs = new BooleanFieldEditor("displayChunkGraphs", "Display chunk graphs", shell);
 		setupEditor(displayChunkGraphs);
 		
@@ -71,7 +75,6 @@ public class G2Gui_Display extends PreferencePage  {
 		
 		tableCellEditors = new BooleanFieldEditor("tableCellEditors", "Activate table cell editors", shell);
 		setupEditor(tableCellEditors);
-		
 		
 		displayBuffer = new IntegerFieldEditor("displayBuffer", "GUI update buffer (0-60 seconds)", shell);
 		displayBuffer.setValidRange(0,60);
@@ -104,6 +107,7 @@ public class G2Gui_Display extends PreferencePage  {
 		setHorizontalSpan(consoleBackground);
 		setHorizontalSpan(consoleInputForeground);
 		setHorizontalSpan(consoleInputBackground);
+		displayHeaderBar.fillIntoGrid(controlshell, columns);
 		displayChunkGraphs.fillIntoGrid(controlshell, columns);
 		displayGridLines.fillIntoGrid(controlshell, columns);
 		tableCellEditors.fillIntoGrid(controlshell, columns);
@@ -135,6 +139,7 @@ public class G2Gui_Display extends PreferencePage  {
 			consoleInputBackground.store();
 			consoleInputForeground.store();
 			consoleFontData.store();
+			displayHeaderBar.store();
 			displayChunkGraphs.store();
 			displayGridLines.store();
 			tableCellEditors.store();

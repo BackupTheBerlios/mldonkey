@@ -40,27 +40,28 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.2 2003/08/06 17:14:17 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.3 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
 	
 	private Color queuedFileColor = new Color(null, 41, 174, 57);
 	private Color pausedFileColor = new Color(null, 255, 0, 0);
+	private CustomTableTreeViewer tableTreeViewer;
 	
 	public Color getBackground (Object arg0) {
 			return null;
 	}
 	
-	public Color getForeground (Object arg0) {
+	public Color getForeground(Object arg0) {
 		if (arg0 instanceof FileInfo) {
 			FileInfo fileInfo = (FileInfo) arg0;
-			if ( fileInfo.getState().getState() == EnumFileState.QUEUED ) 
+			if (fileInfo.getState().getState() == EnumFileState.QUEUED)
 				return queuedFileColor;
-				
-			if (fileInfo.getState().getState() == EnumFileState.PAUSED )
+
+			if (fileInfo.getState().getState() == EnumFileState.PAUSED)
 				return pausedFileColor;
-				
+
 			return null;
 		}
 		return null;
@@ -69,7 +70,8 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	public Image getColumnImage(Object arg0, int arg1) {
 		return null;
 	}
-	
+	// The full row is redrawn on each update()/refresh()
+	// *&@%#%*# jface
 	public String getColumnText(Object arg0, int arg1) {
 			
 		if (arg0 instanceof FileInfo) {
@@ -88,7 +90,8 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 				return ""+fileInfo.getStringDownloaded();
 			case 5: // percent
 				return ""+fileInfo.getPerc();
-			case 6: // # sources   TODO: remove clientInfos.size
+			case 6: // # sources   TODO: remove clientInfos.size, it is just interesting to watch atm
+					// note: clientInfos Set can contain multiple ClientInfo's with the same clientID.. why?
 				return ""+fileInfo.getSources() + "(" + fileInfo.getClientInfos().size() + ")";		
 			case 7: // rate
 				if (fileInfo.getState().getState() == EnumFileState.PAUSED)
@@ -118,18 +121,21 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 				return "";
 			} 
 		
-		} else if (arg0 instanceof ClientInfo) {
-			ClientInfo clientInfo = ( ClientInfo ) arg0;
+		} else if (arg0 instanceof TreeClientInfo) {
+			TreeClientInfo treeClientInfo = ( TreeClientInfo ) arg0;
 			
 			switch(arg1) {
 				case 1: // id
-					return ""+clientInfo.getClientid();
+					return ""+treeClientInfo.getClientInfo().getClientid();
 				case 2: // client name
-					return ""+clientInfo.getClientName();
+					return ""+treeClientInfo.getClientInfo().getClientName();
 				case 3: // client connection
-					return ""+getClientConnection(clientInfo);
+					return ""+getClientConnection(treeClientInfo.getClientInfo());
 				case 4: // client activity
-					return ""+getClientActivity(clientInfo);
+					return ""+getClientActivity(treeClientInfo.getClientInfo());
+				case 8: // num chunks
+					return ""+treeClientInfo.getClientInfo().getNumChunks( treeClientInfo.getFileInfo() );
+					
 				default: 
 					return "";
 			}
@@ -171,15 +177,21 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	public boolean isLabelProperty(Object arg0, String arg1) {
 		return false;
 	}
-
 	public void removeListener(ILabelProviderListener arg0) {
 	}
+	public void setTableTreeViewer(CustomTableTreeViewer v) {
+		tableTreeViewer = v;
+	}
+	
 	
 
 }
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.3  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.2  2003/08/06 17:14:17  zet
 2 new columns
 

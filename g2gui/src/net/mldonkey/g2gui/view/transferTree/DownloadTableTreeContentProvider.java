@@ -26,10 +26,8 @@ import gnu.trove.TIntObjectIterator;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -42,7 +40,6 @@ import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ITreeViewerListener;
-import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -50,6 +47,7 @@ import org.eclipse.swt.custom.TableTreeEditor;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.events.TreeListener;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
@@ -57,23 +55,22 @@ import org.eclipse.swt.widgets.Table;
  * DownloadTableTreeContentProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.3 2003/08/06 19:29:55 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.4 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
 		
 	private static Object[] EMPTY_ARRAY = new Object[0];	
-	public TableTreeViewer tableTreeViewer = null;
+	public CustomTableTreeViewer tableTreeViewer = null;
 	public Table table = null;
 	public int CHUNKS_COLUMN = DownloadTableTreeViewer.getChunksColumn();
 	
 	// ...
 	public List hadChildren = Collections.synchronizedList(new ArrayList());
 	public List objectsToUpdate = Collections.synchronizedList(new ArrayList());
-	public Map clientsForUpdate = new Hashtable();
 	
 	private int tmpDisplayBuffer = -1;
-	private int displayBuffer = 1;
+	private int displayBuffer = 2;
 	private int refreshType = 0;
 	private long lastTimeStamp = 0;
 
@@ -82,17 +79,19 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
 	 * Called at every tree expansion
 	 */
-	public Object[] getChildren(Object arg0) {
-		if (arg0 instanceof FileInfo) {
+	public Object[] getChildren(Object parent) {
+		if (parent instanceof FileInfo) {
 
 			ArrayList list = new ArrayList();
-			FileInfo file = (FileInfo) arg0;
-			synchronized (file.getClientInfos()) {
-				Iterator it = file.getClientInfos().iterator();
+			FileInfo fileInfo = (FileInfo) parent;
+			synchronized (fileInfo.getClientInfos()) {
+				Iterator it = fileInfo.getClientInfos().iterator();
 				while (it.hasNext()) {
 					ClientInfo clientInfo = (ClientInfo) it.next();
-					if (isInteresting(clientInfo))
-						list.add(clientInfo);
+					if (isInteresting(clientInfo)) {
+						list.add(new TreeClientInfo(fileInfo, clientInfo));
+					}
+				
 				}
 				return list.toArray();
 			}
@@ -105,13 +104,14 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
 	 */
 	
-	public boolean hasChildren(Object arg0) {
+	public boolean hasChildren(Object parent) {
 
-		if (arg0 instanceof FileInfo) {
+		if (parent instanceof FileInfo) {
 			
-			FileInfo fileInfo = (FileInfo) arg0;
+			FileInfo fileInfo = (FileInfo) parent;
 			synchronized (fileInfo.getClientInfos()) {
 				Iterator it = fileInfo.getClientInfos().iterator();
+				
 				while (it.hasNext()) {
 					ClientInfo clientInfo = (ClientInfo) it.next();
 					if (isInteresting(clientInfo)) {
@@ -131,7 +131,12 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 *  (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
 	 */
-	public Object getParent(Object arg0) {
+
+	public Object getParent(Object child) {
+		if (child instanceof TreeClientInfo) {
+			TreeClientInfo treeClientInfo = (TreeClientInfo) child;
+			return treeClientInfo.getFileInfo();
+		}
 		return null;
 	}
 
@@ -139,14 +144,13 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 *  (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
-	public Object[] getElements(Object arg0) {
+	public Object[] getElements(Object element) {
 	
-		if (arg0 instanceof FileInfoIntMap) {
-			synchronized (arg0) {
-				FileInfoIntMap files = (FileInfoIntMap) arg0;
+		if (element instanceof FileInfoIntMap) {
+			synchronized (element) {
+				FileInfoIntMap fileInfoIntMap = (FileInfoIntMap) element;
 				ArrayList list = new ArrayList();
-				TIntObjectIterator it = files.iterator();
-				int c = 0;
+				TIntObjectIterator it = fileInfoIntMap.iterator();
 				while (it.hasNext()) {
 					it.advance();
 					FileInfo fileInfo = (FileInfo) it.value();
@@ -175,8 +179,8 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
 	public void inputChanged(Viewer tableTreeViewer, Object oldInput, Object newInput) {
-		if (tableTreeViewer instanceof TableTreeViewer) {
-			this.tableTreeViewer = (TableTreeViewer) tableTreeViewer;
+		if (tableTreeViewer instanceof CustomTableTreeViewer) {
+			this.tableTreeViewer = (CustomTableTreeViewer) tableTreeViewer;
 			this.table = this.tableTreeViewer.getTableTree().getTable();
 		}
 	}
@@ -196,179 +200,155 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	/*
 	 * should this clientInfo be displayed
 	 */
-	public static boolean isInteresting( ClientInfo clientInfo ) {
-		
-			if // we are downloading from this client, so he is interesting 
-				( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
-				return true;
-			else if // we are connected to this client and have a queue-rank != 0 and smaller 200
-				( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED
-						&& clientInfo.getState().getRank() != 0 
-						&& clientInfo.getState().getRank() < 200
-				)
-				return true;
-			else if // we were connected to this client but have a queue-rank != 0 and smaller 200
-				( clientInfo.getState().getState() == EnumState.NOT_CONNECTED_WAS_QUEUED
-						&& clientInfo.getState().getRank() != 0
-						&& clientInfo.getState().getRank() < 200 
-				)
-				return true;
-			else
-				return false;
+	public static boolean isInteresting(ClientInfo clientInfo) {
+
+		// we are downloading from this client, so he is interesting 
+		if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
+			return true;
+		 // we are connected to this client and have a queue-rank != 0 and smaller 200
+		else if (clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED
+				&& clientInfo.getState().getRank() != 0
+				&& clientInfo.getState().getRank() < 200)
+			return true;
+		// we were connected to this client but have a queue-rank != 0 and smaller 200
+		else if ( clientInfo.getState().getState() == EnumState.NOT_CONNECTED_WAS_QUEUED
+				&& clientInfo.getState().getRank() != 0
+				&& clientInfo.getState().getRank() < 200)
+			return true;
+		else
+			return false;
 	}
 	
-	
 	public String getClientActivity( ClientInfo clientInfo) {
-			if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
-				return "transferring";
-			else 
-				return  "rank: " + clientInfo.getState().getRank() ;
-		}		
+		if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
+			return "transferring";
+		else 
+			return  "rank: " + clientInfo.getState().getRank() ;
+	}		
 	
 	/*
 	 *  (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
-	public void update(Observable o, Object arg) {
-
-		if (refreshType == 3) runTableUpdate(null);
-
-		// listen for new FileInfos and Observe them.
+	public void update(final Observable o, final Object object) {
+		if (MainTab.getShell().isDisposed()) return;
+		Shell shell = MainTab.getShell();
+		if(shell != null && shell.getDisplay()!=null) {
+			shell.getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					sendUpdate(o, object);
+				}
+			});
+		}	
+	}
+	
+	public void sendUpdate(Observable o, Object arg) {
+		
+		if (tableTreeViewer == null) return;
 		if (o instanceof FileInfoIntMap) {
+			// new fileInfo - observe it
 			if (arg instanceof FileInfo) {
 				FileInfo fileInfo = (FileInfo) arg;
 				fileInfo.addObserver(this);
-				refreshType = 3;
-				runTableUpdate(null);
-			} else if (arg == null) {
-				// removed old or reread fileinfolist
-				refreshType = 3;
-				runTableUpdate(null);
+				scheduleUpdate(null);
+			} 
+			// remove old, or reread fileinfolist
+			// fixthis: when a file is cancelled, this one is called, then the one above re-adds it.. 
+			else if (arg == null) {
+				scheduleUpdate(null);
 			}
+				
 		}
-		// listen for FileInfo changes 
 		else if (o instanceof FileInfo) {
 			FileInfo fileInfo = (FileInfo) o;
 			// FileInfo updated	
 			if (arg instanceof FileInfo) {
 				FileInfo fileInfoArg = (FileInfo) arg;
+				// if it is no longer interesting..
 				if (!isInteresting(fileInfoArg)) {
-					refreshType = 3;
-					runTableUpdate(null);
+					closeAllEditors();
+					tableTreeViewer.refresh(fileInfoArg);
+					updateAllEditors();
 				}
 				// we just started the app, and it already had interesting clients
 				else if ( fileInfo.getRate() > 0 && !hadChildren.contains(fileInfo)) {
 					hasChildren(fileInfo);
-					refreshType = 3;
-					runTableUpdate(null);
+					TableTreeItem item = (TableTreeItem) tableTreeViewer.objectToItem(arg);
+					tableTreeViewer.updatePlus(item, fileInfo);
 				// update with this new info	
-				} else {				 
-					if (refreshType == 0) refreshType = 1;
-					runTableUpdate(fileInfoArg);
-				}
-				// FileInfo.clientInfos updated
-			} else if (arg instanceof ClientInfo) {
+				} else {	
+				// close editors?  if sort order changes, maybe!
+					scheduleUpdate(fileInfoArg);
+				}	
 		
+			} else if (arg instanceof ClientInfo) {
 				ClientInfo clientInfo = (ClientInfo) arg;
 				// removed a client
 				if (!fileInfo.getClientInfos().contains(clientInfo)) {
-					refreshType = 3;
-					runTableUpdate(null);
+					TableTreeItem item = (TableTreeItem) tableTreeViewer.objectToItem(arg);
+					TableTreeItem parentItem = (TableTreeItem) tableTreeViewer.getParentItem(item);
+					if (tableTreeViewer.getExpandedState(fileInfo)) {
+						scheduleUpdate(null);
+					} else {
+						tableTreeViewer.updatePlus(parentItem, arg);
+					}
 				}
 				else if (isInteresting(clientInfo)) {
-					
-								
+					//didn't have children, but now needs a +
 					if (!hadChildren.contains(fileInfo)) {
 						hasChildren(fileInfo);
-						refreshType = 3;
-						runTableUpdate(null);
-					} else { 
-						
-						if (refreshType == 0) refreshType = 1;
-						
-						// Hashtable's are sync'd, but this arrayList is not 
-						// this is a temp attempt to use update instead of refresh (flickering)
-						// if clientInfo is in an
-						// a) unexpanded fileInfo
-						// b) expanded fileInfo + already displayed
-						// --> must determine (access viewer) in the SWT thread	
-						if (clientsForUpdate.containsKey(fileInfo)) {
-							ArrayList arrayList = (ArrayList) clientsForUpdate.get(fileInfo);
-							if (!arrayList.contains(clientInfo))
-								arrayList.add(clientInfo);
-						} else {
-							ArrayList arrayList = new ArrayList();
-							arrayList.add(clientInfo);
-							clientsForUpdate.put(fileInfo, arrayList);
+						TableTreeItem parentItem = (TableTreeItem) tableTreeViewer.objectToItem(fileInfo);
+						tableTreeViewer.updatePlus(parentItem, fileInfo);
+					} 
+					else if (tableTreeViewer != null && tableTreeViewer.getExpandedState(fileInfo)) {
+						TableTreeItem parentItem = (TableTreeItem) tableTreeViewer.objectToItem(fileInfo);
+						Item[] items = tableTreeViewer.getItems(parentItem);
+						if (items != null) {
+							boolean found = false;
+							for (int i = 0; i < items.length; i++) {
+								TreeClientInfo treeClientInfo = (TreeClientInfo) items[ i ].getData();
+								if (treeClientInfo != null 
+									&& treeClientInfo.getFileInfo().hashCode() == fileInfo.hashCode()
+									&& treeClientInfo.getClientInfo().hashCode() == clientInfo.hashCode()) {
+										scheduleUpdate(treeClientInfo);
+										found = true;
+									}
+							}
+							if (!found) {
+								scheduleUpdate(null);
+							}
+							
+						} else {		
+							scheduleUpdate(null);			
 						}
-
-					}
-
-				}
-				// From queued to unqueued state and now interesting ?
-			} else if (arg == null) {
-				refreshType = 3;
-				runTableUpdate(null);
-			}
-		}
-
-	}
-	
-/*	
-
-		// How to know when an existing source in FileInfo.clientInfos 
-	// becomes interesting?
-	
-	// isExpandable calls hasChildren
-	// why do some files have a rate, but no interesting clients? 
-
-	/* this is wrong, these clients never seem to be interesting (rank of 0)...
-	   - rank comes separately?
-
-		else if (arg instanceof FileInfo) {
-			FileInfo fileInfo = (FileInfo) arg;
-			ArrayList newClientsList = (ArrayList) fileInfo.getNewClients();
-			if (newClientsList.size() > 0) {
-
-				if (tableTreeViewer!=null && (!tableTreeViewer.isExpandable(fileInfo)
-					|| tableTreeViewer.getExpandedState(fileInfo))) {
-					boolean foundInteresting = false;
-					
-					for (int i = 0; i < newClientsList.size(); i++) {
-						ClientInfo clientInfo =
-							(ClientInfo) newClientsList.get(i);
-						if (isInteresting(clientInfo)) {
-							foundInteresting = true;
-						} else {
-						
-						}
-					}
-					if (foundInteresting)
-						runTableUpdate(null, 1);
-				}
-				fileInfo.clearNewClients();
-			} else {
-				if (fileInfo.getState().getState() == EnumFileState.CANCELLED || 
-					fileInfo.getState().getState() == EnumFileState.ABORTED) {
-						fileInfo.deleteObserver( this );
-						runTableUpdate(null, 2);			
 					}
 				
+				}
 			}
+			// From queued to unqueued state and now interesting ?
+			 else if (arg == null) {
+			 	scheduleUpdate(null);
+			 }
 		}
-	 */	
+	
+	}
 
 	/*
 	 * run table update 
 	 */
-	public void runTableUpdate(final Object object) {
+	public void scheduleUpdate(Object object) {
 		
-		if (object != null && !objectsToUpdate.contains(object)) {
-			objectsToUpdate.add(object);
+		
+		if (object==null) refreshType = 3;
+		
+		if (refreshType != 3 
+			&& object != null
+			&& !objectsToUpdate.contains(object) ) {
+				objectsToUpdate.add(object);
+				refreshType = 1;
 		}
 
-	
-		if (System.currentTimeMillis() > lastTimeStamp + (1000*displayBuffer)) {
+		if (refreshType != 0 && System.currentTimeMillis() > lastTimeStamp + (1000*displayBuffer)) {
 					
 			// try to prevent initial refresh flood upon first starting the app		
 			if (lastTimeStamp == 0) {
@@ -378,85 +358,28 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 				displayBuffer=tmpDisplayBuffer;
 				tmpDisplayBuffer = -1;
 			}
-					
 									
 			lastTimeStamp = System.currentTimeMillis();
 		
-			final int rType = refreshType;
-			refreshType = 0;
-					
-			if (MainTab.getShell().isDisposed()) return;
-	
-			Shell shell = MainTab.getShell();
-			if(shell != null && shell.getDisplay()!=null) {
-			
-			shell.getDisplay().asyncExec(new Runnable() {
-				public void run() {
-			
-				int newRefreshType = rType;
-			
-				// Now we are in SWT thread, test out all added clientInfos
-				// trying to update() rather than refresh()..
-				if (newRefreshType < 2 && !clientsForUpdate.isEmpty()) {
-				
-					for (Iterator i = clientsForUpdate.keySet().iterator(); i.hasNext();) {
-						FileInfo fileInfo = (FileInfo)i.next();
-						// if not expanded, don't bother
-						if (tableTreeViewer != null && tableTreeViewer.getExpandedState(fileInfo)) {
-							
-							
-							// Unfortunately, getVisibleExpandedElements() only returns FileInfo's...
-							
-							
-//							ArrayList visibleElements = new ArrayList(Arrays.asList(tableTreeViewer.getVisibleExpandedElements()));			
-//							ArrayList arrayList = (ArrayList)clientsForUpdate.get(fileInfo);
-//							
-//							for (int j = 0; j < arrayList.size(); j++ ) {
-//								
-//								if (!visibleElements.contains(( ClientInfo) arrayList.get(j))) {
-//									System.out.println("not visible, full refresh required");
-//									newRefreshType = 3;
-//									break;					
-//								} else {
-//									System.out.println("it is visible!");
-//									objectsToUpdate.add(arrayList.get(j));
-//								}
-//							}
-//							if (newRefreshType == 3) break;
-						
-							newRefreshType = 3;
-							break;
-						
-						} else {
-						
-							break;	
-						}
-					
-				
-					}
-				}		
-				clientsForUpdate.clear();
-							
-				if ( tableTreeViewer != null ) {
-					if (newRefreshType == 2) {
-						closeAllChildEditors();
-						tableTreeViewer.refresh();
-					} else if (newRefreshType == 3) {
+			if ( tableTreeViewer != null ) {
+
+				switch(refreshType) {
+					case 1:
+						tableTreeViewer.update(objectsToUpdate.toArray(),null);
+						break;
+					case 2:
+					case 3:
+					default:
 						closeAllEditors();
 						tableTreeViewer.refresh();
-					} else {
-						tableTreeViewer.update(objectsToUpdate.toArray(),null);
-					}
-					objectsToUpdate.clear();
-					updateAllEditors();
+						break;
 				}
+				updateAllEditors();		
+				objectsToUpdate.clear();	
+				refreshType = 0;
 			}
-		});
-		
-			}
-		
 		}
-	}	
+	}				
 
 	/*
 	 *  (non-Javadoc)
@@ -501,6 +424,8 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 // Hack to update TableTreeEditors
 // A viewer can keep TableTreeItems in place while moving the associated data,
 // but a TableTreeEditor seems permanently afixed to a TableTreeItem
+// setData("..") are also afixed to a TableTreeItem 
+// @#!$*(& jface
 
 	/*
 	 * close TreeTableEditor associated with tableTreeItem
@@ -515,7 +440,12 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 			tableTreeEditor.dispose(); 
 							
 			ChunkCanvas chunkCanvas = (ChunkCanvas) tableTreeItem.getData("thisChunkCanvas");
-			((Observable) tableTreeItem.getData()).deleteObserver(chunkCanvas);
+			if (tableTreeItem.getData() instanceof FileInfo)
+				((Observable) tableTreeItem.getData()).deleteObserver(chunkCanvas);
+			else {
+				TreeClientInfo treeClientInfo = (TreeClientInfo) tableTreeItem.getData();
+				treeClientInfo.getClientInfo().deleteObserver(chunkCanvas);
+			}
 			chunkCanvas.dispose();
 			
 			tableTreeItem.setData("tableTreeEditor", null);
@@ -567,25 +497,35 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 		
 		ChunkCanvas chunkCanvas;
 		FileInfo fileInfo;
+		TreeClientInfo treeClientInfo;
 		ClientInfo clientInfo = null;
 		
-		if (tableTreeItem.getData() instanceof ClientInfo) {
-			clientInfo = (ClientInfo) tableTreeItem.getData();
-			fileInfo = (FileInfo) tableTreeItem.getParentItem().getData();
+		if (tableTreeItem.getData() instanceof TreeClientInfo) {
+			treeClientInfo = (TreeClientInfo) tableTreeItem.getData();
+			clientInfo = treeClientInfo.getClientInfo();
+			fileInfo = treeClientInfo.getFileInfo();
+			tableTreeItem.setData("oldHash", new Integer(clientInfo.hashCode()));
 		} else {  // hope for a fileInfo
 			fileInfo = (FileInfo) tableTreeItem.getData();
+			tableTreeItem.setData("oldHash", new Integer(tableTreeItem.getData().hashCode()));
 		}
 		chunkCanvas = new ChunkCanvas( table, SWT.NO_BACKGROUND, clientInfo, fileInfo );
 		TableTreeEditor tableTreeEditor = new TableTreeEditor(tableTreeViewer.getTableTree());
 		tableTreeEditor.horizontalAlignment = SWT.LEFT;
 		tableTreeEditor.grabHorizontal = true;
 		
-		tableTreeItem.setData("oldHash", new Integer(tableTreeItem.getData().hashCode()));
 		tableTreeItem.setData("thisChunkCanvas", chunkCanvas);	
 		tableTreeItem.setData("tableTreeEditor", tableTreeEditor);
 		
 		tableTreeEditor.setEditor( chunkCanvas, tableTreeItem, CHUNKS_COLUMN );
-		( (Observable) tableTreeItem.getData() ).addObserver( chunkCanvas );
+		
+		if (tableTreeItem.getData() instanceof TreeClientInfo) {
+			treeClientInfo = (TreeClientInfo) tableTreeItem.getData();
+			clientInfo = treeClientInfo.getClientInfo();
+			clientInfo.addObserver( chunkCanvas );
+		} else {
+			( (Observable) tableTreeItem.getData() ).addObserver( chunkCanvas );
+		}
 	
 	}
 
@@ -602,15 +542,26 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 		for (int j = 0; j < children.length; j++) {
 			TableTreeItem child = children [ j ];
 		
-			if (child.getData() instanceof ClientInfo) {
+			if (child.getData() instanceof TreeClientInfo) {
 				if (child.getData("tableTreeEditor") == null) 
 					openEditor(child);
-				else {
-					Integer oldHash = (Integer) child.getData("oldHash");
-					if ( !oldHash.equals( new Integer ( child.getData().hashCode() ) ) ) {
+				else { 
+					TreeClientInfo treeClientInfo = (TreeClientInfo) child.getData();
+					FileInfo parentFileInfo = (FileInfo) parent.getData();
+					if (treeClientInfo.getFileInfo().hashCode() == parentFileInfo.hashCode()) {
+						ClientInfo clientInfo = treeClientInfo.getClientInfo();
+						Integer oldHash = (Integer) child.getData("oldHash");
+						if ( !oldHash.equals( new Integer ( clientInfo.hashCode() ) ) ) {
+							closeEditor(child);
+							openEditor(child);
+						}
+					} else {
+						
 						closeEditor(child);
 						openEditor(child);
+						
 					}
+		
 				}
 			}	
 		}
@@ -653,6 +604,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.4  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.3  2003/08/06 19:29:55  zet
 minor
 

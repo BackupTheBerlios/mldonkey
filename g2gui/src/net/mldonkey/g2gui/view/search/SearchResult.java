@@ -78,7 +78,7 @@ import org.eclipse.swt.custom.CLabel;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.11 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: SearchResult.java,v 1.12 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 //TODO search timeout, add resource bundle, add image handle, fake search, real links depending on network								   
@@ -173,7 +173,9 @@ public class SearchResult implements Observer, Runnable {
 		/* are we active? set the statusline text */
 		if ( cTabFolder.getSelection() == cTabItem ) {
 			SearchTab parent = ( SearchTab ) cTabFolder.getData();
-			this.statusline = "Results: " + table.getTable().getItemCount();
+			int itemCount = table.getTable().getItemCount();
+			this.statusline = "Results: " + itemCount;
+			parent.setRightLabel("Results: " + itemCount);
 			parent.getMainTab().statusline.update( this.statusline );
 		}
 	}
@@ -214,6 +216,7 @@ public class SearchResult implements Observer, Runnable {
 		} );
 		/* display 0 searchresults for the moment */
 		SearchTab parent = ( SearchTab ) cTabFolder.getData();
+		parent.setRightLabel("Results: 0");
 		this.statusline = "Results: 0";
 		parent.getMainTab().statusline.update( this.statusline );
 	}
@@ -614,6 +617,9 @@ public class SearchResult implements Observer, Runnable {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.12  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.11  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

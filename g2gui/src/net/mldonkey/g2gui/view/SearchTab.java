@@ -46,7 +46,7 @@ import net.mldonkey.g2gui.view.search.*;
  * SearchTab
  *
  * @author $user$
- * @version $Id: SearchTab.java,v 1.8 2003/07/31 14:23:57 lemmstercvs01 Exp $ 
+ * @version $Id: SearchTab.java,v 1.9 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -70,7 +70,7 @@ public class SearchTab extends GuiTab {
 							bundle.getString( "TT_SearchButton" ),
 							bundle.getString( "TT_SearchButtonToolTip" ) );
 		/* create the tab content */
-		this.createContents( this.content );
+		this.createContents( this.subContent );
 	}
 
 	/**
@@ -144,10 +144,12 @@ public class SearchTab extends GuiTab {
 				/* set the new statusline */
 				if ( cTabFolder.getItemCount() != 0 ) {
 					SearchResult nResult = ( SearchResult ) cTabFolder.getSelection().getData();
+					setRightLabel( nResult.getStatusLine() );
 					mainWindow.statusline.update( nResult.getStatusLine() );
 					mainWindow.statusline.updateToolTip( "" );
 				}
 				else {
+					setRightLabel("");
 					mainWindow.statusline.update( "" );
 					mainWindow.statusline.updateToolTip( "" );
 				}
@@ -163,6 +165,7 @@ public class SearchTab extends GuiTab {
 				CTabFolder item = ( CTabFolder ) e.widget;
 				if ( item.getSelection() != null ) {
 					SearchResult result = ( SearchResult ) item.getSelection().getData();
+					setRightLabel( result.getStatusLine() );
 					mainWindow.statusline.update( result.getStatusLine() );
 					mainWindow.statusline.updateToolTip( "" );
 				}
@@ -214,6 +217,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.9  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.8  2003/07/31 14:23:57  lemmstercvs01
 statusline reworked
 

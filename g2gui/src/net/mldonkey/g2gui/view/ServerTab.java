@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.TableItem;
  * ServerTab
  *
  * @author $user$
- * @version $Id: ServerTab.java,v 1.6 2003/08/07 13:25:37 lemmstercvs01 Exp $ 
+ * @version $Id: ServerTab.java,v 1.7 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -129,7 +129,8 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		}
 
 		/* create the tab content */
-		this.createContents( this.content );
+		this.createContents( this.subContent );
+			
 	}
 
 	/* (non-Javadoc)
@@ -208,8 +209,10 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		this.table.setInput( servers );
 		servers.clearAdded();
 		
+		int itemCount = table.getTable().getItemCount();
+		setRightLabel("Total: " + itemCount);
 		/* dont update the statusline, still null */
-		this.statusText = res.getString( "SVT_SERVERS" ) + table.getTable().getItemCount();
+		this.statusText = res.getString( "SVT_SERVERS" ) + itemCount;
 	}
 
 	/**
@@ -267,6 +270,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 				this.servers.clearModified();
 			}	
 		}
+		setRightLabel("Total: " + itemCount);
 		this.setStatusLine();
 	}
 	
@@ -317,6 +321,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.7  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.6  2003/08/07 13:25:37  lemmstercvs01
 ResourceBundle added
 

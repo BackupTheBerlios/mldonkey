@@ -21,7 +21,7 @@
  * 
  */
 package net.mldonkey.g2gui.view.transferTree;
-import net.mldonkey.g2gui.model.ClientInfo;
+
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  * @author $user$
- * @version $Id: DownloadTableTreeSorter.java,v 1.2 2003/08/06 17:15:24 zet Exp $ 
+ * @version $Id: DownloadTableTreeSorter.java,v 1.3 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
@@ -44,12 +44,18 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 	private int lastColumnIndex = 2;
 	// last sort ascending = true
 	private boolean lastSort = true;
-	
+	private ITableLabelProvider labelProvider;
 	/**
 	 * Creates a new viewer sorter
 	 */
 	public DownloadTableTreeSorter() {
 		super();
+	}
+	
+	public int category(Object element) {
+		if(element instanceof FileInfo) return 1;
+		if(element instanceof TreeClientInfo) return 2;
+		return 3;
 	}
 		
 	public int compare(Viewer viewer, Object e1, Object e2) {
@@ -120,7 +126,7 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 			
 				case 9 : // eta - nulls on the bottom
 					
-					ITableLabelProvider labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
+					labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
 					if (labelProvider.getColumnText(e1, columnIndex).equals("")) 
 						return 1;
 					else if (labelProvider.getColumnText(e2, columnIndex).equals("")) 
@@ -152,30 +158,35 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 			}
 		} else {
-			ClientInfo clientInfo1 = (ClientInfo) e1;
-			ClientInfo clientInfo2 = (ClientInfo) e2;
+			TreeClientInfo treeClientInfo1 = (TreeClientInfo) e1;
+			TreeClientInfo treeClientInfo2 = (TreeClientInfo) e2;
+									
 			switch (columnIndex) {
 
 				case 1 : // id
 					return compareIntegers(
-						clientInfo1.getClientid(),
-						clientInfo2.getClientid());
+						treeClientInfo1.getClientInfo().getClientid(),
+						treeClientInfo2.getClientInfo().getClientid());
 
 				case 2 : // name
 					return compareStrings(
-						clientInfo1.getClientName(),
-						clientInfo2.getClientName());
+						treeClientInfo1.getClientInfo().getClientName(),
+						treeClientInfo2.getClientInfo().getClientName());
 						
 				case 3 : // direct/firewall
-					ITableLabelProvider labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
+					labelProvider = (ITableLabelProvider) ((TableTreeViewer) viewer).getLabelProvider();
 					return compareStrings(labelProvider.getColumnText(e1, columnIndex),
 								labelProvider.getColumnText(e2, columnIndex));
 
 				case 4 : // rank
 					return compareIntegers(
-						clientInfo1.getState().getRank(),
-						clientInfo2.getState().getRank());
-
+						treeClientInfo1.getClientInfo().getState().getRank(),
+						treeClientInfo2.getClientInfo().getState().getRank());
+						
+				case 8: // numChunks 
+					
+					return compareIntegers(treeClientInfo1.getClientInfo().getNumChunks( treeClientInfo1.getFileInfo() ),
+											treeClientInfo2.getClientInfo().getNumChunks( treeClientInfo2.getFileInfo() ) );
 				default :
 					return 0;
 			}
@@ -198,21 +209,21 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 	}
 
 	public int compareDoubles(Double aDouble1, Double aDouble2) {
-			return ( lastSort ? aDouble1.compareTo( aDouble2 )
-							: aDouble2.compareTo( aDouble1 ) );
+		return ( lastSort ? aDouble1.compareTo( aDouble2 )
+						: aDouble2.compareTo( aDouble1 ) );
 	}
 
 	public int compareDoubles(double aDouble1, double aDouble2) {
-			return compareDoubles(new Double(aDouble1), new Double(aDouble2));
+		return compareDoubles(new Double(aDouble1), new Double(aDouble2));
 	}
 
 	public int compareLongs(Long aLong1, Long aLong2) {
-			return ( lastSort ? aLong1.compareTo( aLong2 )
-							: aLong2.compareTo( aLong1 ) );
+		return ( lastSort ? aLong1.compareTo( aLong2 )
+						: aLong2.compareTo( aLong1 ) );
 	}
 	
 	public int compareLongs(long aLong1, long aLong2) {
-				return compareLongs(new Long(aLong1), new Long(aLong2));
+		return compareLongs(new Long(aLong1), new Long(aLong2));
 	}
 	
 	/**
@@ -247,6 +258,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.3  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.2  2003/08/06 17:15:24  zet
 2 new columns
 

@@ -39,7 +39,6 @@ import net.mldonkey.g2gui.view.transferTree.DownloadTableTreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -49,7 +48,7 @@ import org.eclipse.swt.widgets.Shell;
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.23 2003/08/06 17:10:50 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.24 2003/08/08 02:46:31 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -72,7 +71,7 @@ public class TransferTab extends GuiTab  {
 		createButton("TransfersButton", 
 						bundle.getString("TT_TransfersButton"),
 						bundle.getString("TT_TransfersButtonToolTip"));
-		createContents(this.content);
+		createContents(this.subContent);
 		
 	}
 	
@@ -88,44 +87,7 @@ public class TransferTab extends GuiTab  {
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
 		downloadComposite.setLayout( gridLayout );
-			
-			
-		// all this junk for right alignment? 	
-		Composite downloadHeader = new Composite(downloadComposite, SWT.NONE);
-		downloadHeader.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.marginWidth = 10;
-		downloadHeader.setLayout(layout);
-		downloadHeader.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL));
-
-		Composite c = new Composite(downloadHeader, SWT.NONE);
-		GridData data = new GridData();
-		data.horizontalAlignment = GridData.FILL;
-		c.setLayoutData(data);
-
-		// fix font/color later
-		Label transferHeader = new Label(c, SWT.NONE);
-		transferHeader.setText(res.getString("TT_Transfer_Header"));
-		transferHeader.setFont(font);
-		transferHeader.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		transferHeader.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-
-		GridLayout layout2 = new GridLayout();
-		layout2.marginWidth = layout2.marginHeight = 0;
-		c.setLayout(layout2);
-
-		label = new Label(downloadHeader, SWT.NONE);
-		label.setText("");
-		label.setFont(font);
-		label.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		label.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-	
-		data = new GridData();
-		data.horizontalAlignment = GridData.END;
-		data.grabExcessHorizontalSpace = true;
-		label.setLayoutData(data);
-	
+				
 		// Bottom sash			
 		Composite upload = new Composite( main, SWT.BORDER );
 		main.setWeights( new int[] {11,1});
@@ -133,7 +95,7 @@ public class TransferTab extends GuiTab  {
 		// new DownloadTable ( download, mldonkey, this );
 		downloadTableTreeViewer = new DownloadTableTreeViewer ( downloadComposite, mldonkey, this );
 		
-		mldonkey.getFileInfoIntMap().addObserver( this );
+		if (headerBar) mldonkey.getFileInfoIntMap().addObserver( this );
 		
 	}
 
@@ -178,10 +140,7 @@ public class TransferTab extends GuiTab  {
 			if(!shell.isDisposed() && shell !=null && shell.getDisplay()!=null) {
 				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						if (!label.isDisposed()) {
-							label.setText(text);
-							label.getParent().layout();
-						}
+							setRightLabel(text);
 					}
 				});
 			}
@@ -194,11 +153,18 @@ public class TransferTab extends GuiTab  {
 	}
 	public void updateDisplay() {
 		downloadTableTreeViewer.updateDisplay();
+		super.updateDisplay();
+		mldonkey.getFileInfoIntMap().deleteObserver( this );
+		if (headerBar) mldonkey.getFileInfoIntMap().addObserver( this );
+		
 	}
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.24  2003/08/08 02:46:31  zet
+header bar, clientinfodetails, redo tabletreeviewer
+
 Revision 1.23  2003/08/06 17:10:50  zet
 check for shell.isdisposed
 
