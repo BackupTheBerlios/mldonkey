@@ -4,6 +4,7 @@
 2003/11/24: z
 	* Search: Display alternative filenames in the tooltip if available
 	* Preferences: Add default font preference for tables
+	* Web Services: Fix Jigle lookup parameters (filesize)
 	
 2003/11/24: Dek   
 	* ToolBar now keeps its state over sessions [Bug #1122] 
