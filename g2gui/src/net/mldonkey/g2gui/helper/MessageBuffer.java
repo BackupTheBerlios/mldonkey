@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  * @author $user$
- * @version $Id: MessageBuffer.java,v 1.13 2003/07/02 16:23:30 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.14 2003/07/06 07:39:49 lemmstercvs01 Exp $ 
  *
  */
 public class MessageBuffer {
@@ -215,7 +215,10 @@ public class MessageBuffer {
 	 */
 	private String numericToText( byte[] src ) {
 		String result =
-		( src[3] & 0xff ) + "." + ( src[2] & 0xff ) + "." + ( src[1] & 0xff ) + "." + ( src[0] & 0xff );
+		( src[3] & 0xff ) + "."
+		+ ( src[2] & 0xff ) + "."
+		+ ( src[1] & 0xff ) + "."
+		+ ( src[0] & 0xff );
 		return result;
 	}
 	
@@ -239,6 +242,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.14  2003/07/06 07:39:49  lemmstercvs01
+checkstyle applied
+
 Revision 1.13  2003/07/02 16:23:30  dek
 Checkstyle
 
