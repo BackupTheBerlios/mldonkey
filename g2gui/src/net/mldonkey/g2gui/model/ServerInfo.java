@@ -35,7 +35,7 @@ import net.mldonkey.g2gui.view.G2Gui;
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.32 2004/09/10 18:09:17 lemmy Exp $
+ * @version $Id: ServerInfo.java,v 1.33 2004/09/17 22:36:48 dek Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -65,11 +65,11 @@ public class ServerInfo extends Parent {
 	/**
 	 * Number of Users
 	 */
-	private int numOfUsers;
+	protected long numOfUsers;
 	/**
 	 * Number of Files shared
 	 */
-	private int numOfFilesShared;
+	protected long numOfFilesShared;
 	
 	/**
 	 * Name of Server
@@ -82,7 +82,7 @@ public class ServerInfo extends Parent {
 	/**
 	 * Is this server a favorite
 	 */
-	private boolean favorite;
+	protected boolean favorite;
 	private Enum state;
 	
 
@@ -125,13 +125,13 @@ public class ServerInfo extends Parent {
 	/**
 	 * @return The number of files shared on this server
 	 */
-	public int getNumOfFilesShared() {
+	public long getNumOfFilesShared() {
 		return numOfFilesShared;
 	}
 	/**
 	 * @return The number of users on this server
 	 */
-	public int getNumOfUsers() {
+	public long getNumOfUsers() {
 		return numOfUsers;
 	}
 	/**
@@ -206,26 +206,48 @@ public class ServerInfo extends Parent {
 		this.serverId = messageBuffer.readInt32();
 		this.setNetwork( messageBuffer.readInt32() );
 		this.getServerAddress().readStream( messageBuffer );
-		this.serverPort = messageBuffer.readInt16();
+		this.serverPort = messageBuffer.readInt16();	
 		this.serverScore = messageBuffer.readInt32();
 		this.serverMetadata = messageBuffer.readTagList();		
-		this.numOfUsers = messageBuffer.readInt32();
-		this.numOfFilesShared = messageBuffer.readInt32();
+		readNumOfUsers(messageBuffer);	
+		readNumOfFilesShared(messageBuffer);	
 		readState( messageBuffer );
 		this.nameOfServer = messageBuffer.readString();
 		this.descOfServer = messageBuffer.readString();
+
 		/*
 		 *  if the state is REMOVE_HOST, we delete the serverinfo from the serverinfointmap
 		 * (this is a workaround for donkey, because the ServerState msg isnt send
 		 */
 		this.checkForRemove();
+		readPreferred(messageBuffer);
 	}
 	
 	/**
 	 * @param messageBuffer
 	 */
-	protected void readState(MessageBuffer messageBuffer) {
-		
+	protected void readNumOfFilesShared(MessageBuffer messageBuffer) {
+		this.numOfFilesShared = messageBuffer.readInt32();		
+	}
+
+	/**
+	 * @param messageBuffer
+	 */
+	protected void readNumOfUsers(MessageBuffer messageBuffer) {
+		this.numOfUsers = messageBuffer.readInt32();		
+	}
+
+	/**
+	 * @param messageBuffer
+	 */
+	protected void readPreferred(MessageBuffer messageBuffer) {
+		//For gui proto > 28		
+	}
+
+	/**
+	 * @param messageBuffer
+	 */
+	protected void readState(MessageBuffer messageBuffer) {		
 		this.state = StateHandler.getStatefromByte(messageBuffer.readByte());
 	}
 	
@@ -341,6 +363,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.33  2004/09/17 22:36:48  dek
+update for gui-Protocol 29
+
 Revision 1.32  2004/09/10 18:09:17  lemmy
 use the get(int i) method of networkinfointmap instead of working on the TIntObjectMap directly
 
@@ -386,7 +411,7 @@ Revision 1.19  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
 Revision 1.18  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.17  2003/08/11 11:22:53  lemmy
 avoid npes

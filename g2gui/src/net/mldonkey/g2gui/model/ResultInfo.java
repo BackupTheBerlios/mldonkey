@@ -46,7 +46,7 @@ import org.eclipse.swt.program.Program;
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.38 2004/09/10 18:10:34 lemmy Exp $
+ * @version $Id: ResultInfo.java,v 1.39 2004/09/17 22:36:48 dek Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -73,7 +73,8 @@ public class ResultInfo extends Parent {
     /**
      * MD4
      */
-    private String md4 = "";
+    
+    protected String md4 = "";
 
     /**
      * Size
@@ -246,14 +247,16 @@ public class ResultInfo extends Parent {
         this.resultID = messageBuffer.readInt32();
         this.setNetworkID( messageBuffer.readInt32() );
         this.names = messageBuffer.readStringList();
-        this.md4 = messageBuffer.readBinary( 16 );
+        readMD4(messageBuffer);       
         setSize(messageBuffer);        
         this.format = messageBuffer.readString();
         this.type = messageBuffer.readString();
         this.tags = messageBuffer.readTagList();
         this.comment = messageBuffer.readString();
         this.setHistory( messageBuffer.readByte() );
+        readDate(messageBuffer);
         this.stringSize = RegExp.calcStringSize( this.getSize() );
+        
         for ( int i = 0; i < names.length; i++ ) {
             if ( ( profanityFilterRE != null ) && ( profanityFilterRE.getMatch( names[ i ] ) != null ) ) {
                 containsProfanity = true;
@@ -279,6 +282,21 @@ public class ResultInfo extends Parent {
     }
 
     /**
+	 * @param messageBuffer
+	 */
+    protected void readDate(MessageBuffer messageBuffer) {
+		//Do nothing here, needed proto >26		
+	}
+
+	/**
+	 * @param messageBuffer
+	 */
+	protected void readMD4(MessageBuffer messageBuffer) {
+		this.md4 = messageBuffer.readBinary( 16 );
+		
+	}
+
+	/**
 	 * @param messageBuffer
 	 */
 	protected void setSize(MessageBuffer messageBuffer) {
@@ -713,6 +731,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.39  2004/09/17 22:36:48  dek
+update for gui-Protocol 29
+
 Revision 1.38  2004/09/10 18:10:34  lemmy
 use the get(int i) method of networkinfointmap instead of working on the TIntObjectMap directly
 
@@ -789,7 +810,7 @@ Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.13  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.12  2003/08/14 12:45:46  dek
 searching works now without errors

@@ -34,7 +34,7 @@ import org.eclipse.jface.viewers.Viewer;
  * ServerTableSorter
  *
  *
- * @version $Id: ServerTableSorter.java,v 1.12 2004/03/25 19:25:23 dek Exp $
+ * @version $Id: ServerTableSorter.java,v 1.13 2004/09/17 22:36:50 dek Exp $
  *
  */
 public class ServerTableSorter extends GSorter {
@@ -99,10 +99,10 @@ public class ServerTableSorter extends GSorter {
             return compareIntegers(server1.getServerScore(), server2.getServerScore());
 
         case ServerTableView.USERS:
-            return compareIntegers(server1.getNumOfUsers(), server2.getNumOfUsers());
+            return compareLongs(server1.getNumOfUsers(), server2.getNumOfUsers());
 
         case ServerTableView.FILES:
-            return compareIntegers(server1.getNumOfFilesShared(), server2.getNumOfFilesShared());
+            return compareLongs(server1.getNumOfFilesShared(), server2.getNumOfFilesShared());
 
         case ServerTableView.STATE:
 
@@ -148,6 +148,9 @@ public class ServerTableSorter extends GSorter {
 
 /*
 $Log: ServerTableSorter.java,v $
+Revision 1.13  2004/09/17 22:36:50  dek
+update for gui-Protocol 29
+
 Revision 1.12  2004/03/25 19:25:23  dek
 yet more profiling
 

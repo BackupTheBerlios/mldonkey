@@ -58,7 +58,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.128 2004/09/10 17:59:09 dek Exp $ 
+ * @version $Id: Core.java,v 1.129 2004/09/17 22:36:50 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -100,7 +100,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * The protocol version we maximal speak
 	 */
-	private static final int PROTOCOL_VERSION = 26;
+	private static final int PROTOCOL_VERSION = 29;
 	/**
 	 * The protocol the core speaks
 	 */
@@ -676,6 +676,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.129  2004/09/17 22:36:50  dek
+update for gui-Protocol 29
+
 Revision 1.128  2004/09/10 17:59:09  dek
 Work-around for core-bug
 

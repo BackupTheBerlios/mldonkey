@@ -27,7 +27,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 /**
  * ProtocolVersionFactory
  *
- * @version $Id: ModelFactory.java,v 1.7 2004/03/25 19:25:23 dek Exp $ 
+ * @version $Id: ModelFactory.java,v 1.8 2004/09/17 22:36:48 dek Exp $ 
  *
  */
 public class ModelFactory {
@@ -47,7 +47,13 @@ public class ModelFactory {
 	public static ModelFactory getFactory( int protocolVersion, CoreCommunication aCore ) {
 		if ( factory == null ) {
 			
-			if ( protocolVersion >= 25 )			
+			if ( protocolVersion >= 29 )			
+				factory = new ModelFactory29();
+			else if ( protocolVersion >= 28 )			
+				factory = new ModelFactory28();
+			else if ( protocolVersion >= 27 )			
+				factory = new ModelFactory27();
+			else if ( protocolVersion >= 25 )			
 				factory = new ModelFactory25();			
 			else if ( protocolVersion >= 24 )			
 				factory = new ModelFactory24();
@@ -206,6 +212,9 @@ public class ModelFactory {
 
 /*
 $Log: ModelFactory.java,v $
+Revision 1.8  2004/09/17 22:36:48  dek
+update for gui-Protocol 29
+
 Revision 1.7  2004/03/25 19:25:23  dek
 yet more profiling
 

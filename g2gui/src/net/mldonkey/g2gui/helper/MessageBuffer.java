@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.view.G2Gui;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.35 2004/09/10 17:59:09 dek Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.36 2004/09/17 22:36:50 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -156,6 +156,7 @@ public class MessageBuffer {
 				* ( readInt8() + 256
 				* ( readInt8() ) ) ) ) ) ) ) );		
 	}
+
 	/**
 	 * Reads a String from MessageBuffer
 	 * @return a string
@@ -286,6 +287,7 @@ public class MessageBuffer {
 						System.out.print(buffer[i] + " ");
 					}
 					System.out.print("\n");
+					System.out.println(new String(buffer,iterator,buffer.length - iterator));
 				}
 			}
 		}
@@ -305,6 +307,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.36  2004/09/17 22:36:50  dek
+update for gui-Protocol 29
+
 Revision 1.35  2004/09/10 17:59:09  dek
 Work-around for core-bug
 

@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.31 2004/03/25 19:25:23 dek Exp $
+ * @version $Id: ServerInfoIntMap.java,v 1.32 2004/09/17 22:36:48 dek Exp $
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -104,7 +104,7 @@ public class ServerInfoIntMap extends InfoIntMap {
                 }
         }
         else {
-            ServerInfo serverInfo = new ServerInfo( this.parent );
+        	ServerInfo serverInfo  = parent.getModelFactory().getServerInfo();            
             serverInfo.readStream( messageBuffer );
             if ( serverInfo.getState() != EnumState.REMOVE_HOST )
                 this.put( serverInfo.getServerId(), serverInfo );
@@ -434,6 +434,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.32  2004/09/17 22:36:48  dek
+update for gui-Protocol 29
+
 Revision 1.31  2004/03/25 19:25:23  dek
 yet more profiling
 
