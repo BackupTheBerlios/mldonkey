@@ -31,8 +31,8 @@ import net.mldonkey.g2gui.model.enum.EnumTagType;
 /**
  * OptionsInfo
  *
- * @author $user$
- * @version $Id: OptionsInfo.java,v 1.18 2003/08/19 12:46:02 lemmster Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: OptionsInfo.java,v 1.19 2003/08/19 12:47:57 lemmster Exp $ 
  *
  */
 public class OptionsInfo extends Parent {
@@ -325,6 +325,9 @@ public class OptionsInfo extends Parent {
 
 /*
 $Log: OptionsInfo.java,v $
+Revision 1.19  2003/08/19 12:47:57  lemmster
+$user$ -> $Author$
+
 Revision 1.18  2003/08/19 12:46:02  lemmster
 typo fixed
 
