@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author ${user}
- * @version $Id: EncodeMessage.java,v 1.2 2003/06/13 11:03:06 lemmstercvs01 Exp $ 
+ * @version $Id: EncodeMessage.java,v 1.3 2003/07/03 21:12:50 lemmstercvs01 Exp $ 
  *
  */
 public class EncodeMessage extends Message {
@@ -68,6 +68,19 @@ public class EncodeMessage extends Message {
 	}
 	
 	/**
+	 * Generates a new message object
+	 * @param opcode the opcode for the message
+	 * @param content an object as message content
+	 */
+	public EncodeMessage( short opcode, Object content ) {
+		this.opCode = opcode;
+		Object[] temp = { content };	
+		this.content = createContent( temp );
+		/* message length = content length + opcode length */
+		this.length = this.content.length + 2;
+	}
+	
+	/**
 	 * Generates a new message object without content
 	 * @param opCode the opcode for the message
 	 */
@@ -76,29 +89,6 @@ public class EncodeMessage extends Message {
 		this.content = null;
 		this.length = 2;
 	}
-	
-	/**
-	 * Sets a new Message
-	 * @param opCode the opcode for the message
-	 * @param content an object array with the message content
-	 */
-	public void setMessage( short opCode, Object[] content ) {
-		this.opCode = opCode;
-		this.content = createContent( content );
-		/* message length = content length + opcode length */
-		this.length = this.content.length + 2;
-	}
-
-	/**
-	 * Sets a message object without content
-	 * @param opCode the opcode for the message
-	 */
-	public void setMessage( short opCode ) {
-		this.opCode = opCode;
-		this.content = null;
-		this.length = 2;
-	}
-	
 	
 	/**
 	 * Reads the message into the socket
@@ -128,7 +118,6 @@ public class EncodeMessage extends Message {
 			return false;
 		}
 	}
-
 	
 	/**
 	 * Creates the message payload from a given object array
@@ -292,6 +281,9 @@ public class EncodeMessage extends Message {
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.3  2003/07/03 21:12:50  lemmstercvs01
+new EncodeMessage(short, Object) added
+
 Revision 1.2  2003/06/13 11:03:06  lemmstercvs01
 changed OutputStream to BufferedOutputStream
 
