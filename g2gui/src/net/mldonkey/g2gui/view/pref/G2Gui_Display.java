@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Group;
  * G2Gui_Display
  *
  *
- * @version $Id: G2Gui_Display.java,v 1.23 2003/08/29 17:33:20 zet Exp $
+ * @version $Id: G2Gui_Display.java,v 1.24 2003/08/29 18:30:29 dek Exp $
  */
 public class G2Gui_Display extends FieldEditorPreferencePage {
 	private Composite parent;
@@ -76,7 +76,7 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 				gl.verticalSpacing = 10;
 			group.setLayout( gl );
 			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-			group.setText( getTitle() );		
+			
 		
 		ScrolledComposite sc = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {		
 			public Point computeSize( int wHint, int hHint, boolean changed ) 
@@ -202,6 +202,9 @@ public class G2Gui_Display extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.24  2003/08/29 18:30:29  dek
+removed name, added shadow to mldonkey-options for previewing
+
 Revision 1.23  2003/08/29 17:33:20  zet
 remove headerbar
 
@@ -225,7 +228,7 @@ Revision 1.17  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.16  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.15  2003/08/19 22:02:15  zet
 localise

@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Group;
  * G2GuiPref
  *
  *
- * @version $Id: G2GuiPref.java,v 1.4 2003/08/29 17:13:29 dek Exp $ 
+ * @version $Id: G2GuiPref.java,v 1.5 2003/08/29 18:30:29 dek Exp $ 
  *
  */
 public class G2GuiPref extends FieldEditorPreferencePage {
@@ -59,7 +59,6 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 				gl.verticalSpacing = 10;
 			group.setLayout( gl );
 			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-			group.setText( getTitle() );		
 		
 		ScrolledComposite sc = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {		
 			public Point computeSize( int wHint, int hHint, boolean changed ) 
@@ -141,6 +140,9 @@ public class G2GuiPref extends FieldEditorPreferencePage {
 }
 /*
 $Log: G2GuiPref.java,v $
+Revision 1.5  2003/08/29 18:30:29  dek
+removed name, added shadow to mldonkey-options for previewing
+
 Revision 1.4  2003/08/29 17:13:29  dek
 all content is now within a group, do you like it, or should i revert changes?
 

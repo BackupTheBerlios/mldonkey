@@ -37,6 +37,7 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -50,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * MLDonkeyOptions
  *
  *
- * @version $Id: MLDonkeyOptions.java,v 1.32 2003/08/29 17:13:29 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.33 2003/08/29 18:30:29 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {	
@@ -165,23 +166,19 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	/* ( non-Javadoc )
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
 	 */
-	protected Control createContents( Composite myparent ) {
+	protected Control createContents( Composite myparent ) {		
+		ViewForm optionViewForm = new ViewForm( myparent, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
+		optionViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		
-		Group group = new Group( myparent, SWT.NONE );
-			GridLayout gl = new GridLayout( 1, false );
-				gl.horizontalSpacing = 10;
-				gl.verticalSpacing = 10;
-			group.setLayout( gl );
-			group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-			group.setText( getTitle() );		
-		
-		ScrolledComposite sc = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL ) {		
+		ScrolledComposite sc = new ScrolledComposite( optionViewForm, SWT.H_SCROLL | SWT.V_SCROLL ) {		
 			public Point computeSize( int wHint, int hHint, boolean changed ) 
 			/* This method prevents the window from becoming huge (as in hight and width) 
 			 * when reopening "General" (or equivalents)
 			 */ 
 				{ return new Point( SWT.DEFAULT, SWT.DEFAULT ); }
 		};
+		
+		optionViewForm.setContent(sc);
 		
 		sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 			sc.setLayout( new FillLayout() );
@@ -192,8 +189,8 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		sc.setExpandHorizontal( true );
 		sc.setExpandVertical( true );
 		sc.setContent( parent );
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;		
+		( ( GridLayout ) parent.getLayout() ).marginHeight = 5 ;
+		( ( GridLayout ) parent.getLayout() ).marginWidth = 5 ;
 		
 		sc.setMinSize( parent.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 		parent.layout();
@@ -232,6 +229,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 } 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.33  2003/08/29 18:30:29  dek
+removed name, added shadow to mldonkey-options for previewing
+
 Revision 1.32  2003/08/29 17:13:29  dek
 all content is now within a group, do you like it, or should i revert changes?
 
