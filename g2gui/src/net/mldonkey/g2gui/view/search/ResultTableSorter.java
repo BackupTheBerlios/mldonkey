@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  * @author $user$
- * @version $Id: ResultTableSorter.java,v 1.4 2003/07/31 11:55:39 zet Exp $ 
+ * @version $Id: ResultTableSorter.java,v 1.5 2003/08/15 22:51:50 dek Exp $ 
  *
  */
 public class ResultTableSorter extends ViewerSorter {
@@ -104,8 +104,21 @@ public class ResultTableSorter extends ViewerSorter {
 				return compareStrings( aString1, aString2 );
 										
 			case 5: // availability 
-				Integer anInt1 = new Integer ( result1.getTags()[ 0 ].getValue() );
-				Integer anInt2 = new Integer ( result2.getTags()[ 0 ].getValue() );
+			Integer anInt1;
+			Integer anInt2;
+			/* null-checks important to avoid crashes because of accessing non-existant
+			 * array[0]
+			 */			
+				if ( result1.getTags() != null )				
+					anInt1 = new Integer ( result1.getTags()[ 0 ].getValue() );				
+				else 
+					anInt1 = new Integer(0);
+									
+				if ( result2.getTags() != null )			
+					anInt2 = new Integer ( result2.getTags()[ 0 ].getValue() );				
+				else 
+					anInt2 = new Integer(0);
+				
 				return ( lastSort ? anInt1.compareTo( anInt2 ) 
 								: anInt2.compareTo( anInt1 ) );	
 		
@@ -157,6 +170,9 @@ public class ResultTableSorter extends ViewerSorter {
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.5  2003/08/15 22:51:50  dek
+searching works now without errors again :-)
+
 Revision 1.4  2003/07/31 11:55:39  zet
 sort with empty strings at bottom
 
