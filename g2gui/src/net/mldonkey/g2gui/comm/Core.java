@@ -55,7 +55,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.106 2003/10/12 15:55:18 zet Exp $ 
+ * @version $Id: Core.java,v 1.107 2003/10/13 08:28:09 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -189,7 +189,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		/* send the initial protocol version */
 		this.sendProtocolVersion();
 		
-		MessageBuffer messageBuffer = new MessageBuffer();		
+		MessageBuffer messageBuffer = new MessageBuffer( this );		
 		int messageLength;
 		int position = 0;
 		short opCode;		
@@ -226,23 +226,28 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		}		
 	}
 	
+	/**
+	 * sends a Message to the core
+	 */
 	public void sendMessage ( byte[] messageHeader, byte[] messageContent ) {
-		
 		try {
 			Message.writeStream( this.getConnection(), messageHeader, messageContent );
-		} catch ( IOException e ) {
+		} 
+		catch ( IOException e ) {
 			onIOException( e );
 		}
-		
 	}
 	
+	/**
+	 * handle an Exception from the run() method
+	 * @param e The Exception to handle
+	 */
 	public void onIOException( IOException e ) {
 		connected = false;
 		this.setChanged();
 		this.notifyObservers( e );
 	}
 	
-					
 	/**
 	 * @param opcode
 	 * @param connection
@@ -605,6 +610,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.107  2003/10/13 08:28:09  lemmster
+use readSignednt32() depending of the core protocol version
+
 Revision 1.106  2003/10/12 15:55:18  zet
 remove clean
 

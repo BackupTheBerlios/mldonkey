@@ -25,16 +25,21 @@ package net.mldonkey.g2gui.helper;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.Tag;
 
 /**
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.24 2003/10/12 21:17:31 zet Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.25 2003/10/13 08:28:09 lemmster Exp $ 
  *
  */
 public class MessageBuffer {
+	/**
+	 * The <code>CoreCommunication</code> for this objs
+	 */
+	private CoreCommunication core;
 	/**
 	 * The iterator for the byte[]
 	 */
@@ -47,7 +52,8 @@ public class MessageBuffer {
 	/**
 	 * Generates a new empty MessageBuffer
 	 */	
-	public MessageBuffer() {
+	public MessageBuffer( CoreCommunication aCore ) {
+		this.core = aCore;
 		this.iterator = 0;
 	}
 
@@ -115,9 +121,10 @@ public class MessageBuffer {
 	public int readSignedInt32() {
 		int result = 0;
 		for ( int i = 0; i < 4; i++ ) 
-			// TODO: for devel-6+:
-			// result |= ( ( int ) (readByte() & 0xFF) << ( i * 8 ) );
-			result |= ( ( int ) (readByte()) << ( i * 8 ) );
+			if ( core.getProtoToUse() > 16 )
+				result |= ( ( int ) ( readByte() & 0xFF ) << ( i * 8 ) );
+			else
+				result |= ( ( int ) ( readByte() ) << ( i * 8 ) );
 		return result;
 	}
 	
@@ -255,6 +262,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.25  2003/10/13 08:28:09  lemmster
+use readSignednt32() depending of the core protocol version
+
 Revision 1.24  2003/10/12 21:17:31  zet
 compat priority w/2.5.4
 
@@ -275,7 +285,7 @@ Revision 1.19  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.17  2003/08/10 23:20:26  zet
 signed ints
