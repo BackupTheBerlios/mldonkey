@@ -22,12 +22,6 @@
  */
 package net.mldonkey.g2gui.view.pref;
 
-import java.io.IOException;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.OptionsInfo;
 import net.mldonkey.g2gui.model.OptionsInfoMap;
@@ -39,13 +33,22 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferenceStore;
+
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
+
+import java.io.IOException;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 
 /**
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.38 2003/10/17 15:35:48 zet Exp $
+ * @version $Id: Preferences.java,v 1.39 2003/11/06 03:27:38 zet Exp $
  *
  */
 public class Preferences extends PreferenceManager {
@@ -56,66 +59,77 @@ public class Preferences extends PreferenceManager {
     /**
      * @param preferenceStore where to store the values at
      */
-    public Preferences( PreferenceStore preferenceStore ) {
+    public Preferences(PreferenceStore preferenceStore) {
         this.preferenceStore = preferenceStore;
 
-		/* main page */
-		PreferencePage g2gui = new G2GuiPref( "G2Gui", FieldEditorPreferencePage.GRID );
-        g2gui.setPreferenceStore( preferenceStore );
-        PreferenceNode g2GuiRootNode = new PreferenceNode( "G2gui", g2gui );
+        /* main page */
+        PreferencePage g2gui = new G2GuiPref("G2Gui", FieldEditorPreferencePage.GRID);
+        g2gui.setPreferenceStore(preferenceStore);
 
-		/* display page */
-        if ( PreferenceLoader.loadBoolean( "advancedMode" ) ) {
-            PreferencePage preferencePage = new G2GuiDisplay( "Display", FieldEditorPreferencePage.GRID );
-            preferencePage.setPreferenceStore( preferenceStore );
-		   
-		    PreferenceNode g2guiDisplayNode = new PreferenceNode( "Display", preferencePage );
-		
-				preferencePage = new G2GuiDisplayConsole( "Console", FieldEditorPreferencePage.GRID );
-				preferencePage.setPreferenceStore( preferenceStore );
-				g2guiDisplayNode.add( new PreferenceNode( "Console" , preferencePage ) );
-          
-       			preferencePage = new G2GuiDisplayDownloads( "Downloads", FieldEditorPreferencePage.GRID );
-        		preferencePage.setPreferenceStore( preferenceStore );
-         		g2guiDisplayNode.add( new PreferenceNode( "Downloads", preferencePage ) );
-         		
-				preferencePage = new G2GuiDisplayGraphs( "Graphs", FieldEditorPreferencePage.GRID );
-				preferencePage.setPreferenceStore( preferenceStore );
-				g2guiDisplayNode.add( new PreferenceNode( "Graphs", preferencePage ) );
-            
-			g2GuiRootNode.add( g2guiDisplayNode );
+        PreferenceNode g2GuiRootNode = new PreferenceNode("G2gui", g2gui);
+
+        /* display page */
+        if (PreferenceLoader.loadBoolean("advancedMode")) {
+            PreferencePage preferencePage = new G2GuiDisplay("Display",
+                    FieldEditorPreferencePage.GRID);
+            preferencePage.setPreferenceStore(preferenceStore);
+
+            PreferenceNode g2guiDisplayNode = new PreferenceNode("Display", preferencePage);
+
+            preferencePage = new G2GuiDisplayConsole("Console", FieldEditorPreferencePage.GRID);
+            preferencePage.setPreferenceStore(preferenceStore);
+            g2guiDisplayNode.add(new PreferenceNode("Console", preferencePage));
+
+            preferencePage = new G2GuiDisplayDownloads("Downloads", FieldEditorPreferencePage.GRID);
+            preferencePage.setPreferenceStore(preferenceStore);
+            g2guiDisplayNode.add(new PreferenceNode("Downloads", preferencePage));
+
+            preferencePage = new G2GuiDisplayGraphs("Graphs", FieldEditorPreferencePage.GRID);
+            preferencePage.setPreferenceStore(preferenceStore);
+            g2guiDisplayNode.add(new PreferenceNode("Graphs", preferencePage));
+
+            g2GuiRootNode.add(g2guiDisplayNode);
         }
-        
+
         /* news page */
-        PreferencePage g2guiNews = new G2GuiNews( "News", FieldEditorPreferencePage.GRID );
-		g2guiNews.setPreferenceStore( preferenceStore );
-		g2GuiRootNode.add( new PreferenceNode( "News", g2guiNews ) );
+        PreferencePage preferencePage = new G2GuiNews("News", FieldEditorPreferencePage.GRID);
+        preferencePage.setPreferenceStore(preferenceStore);
+        g2GuiRootNode.add(new PreferenceNode("News", preferencePage));
 
-		/* advanced page */
-		PreferencePage g2guiAdvanced = new G2GuiAdvanced( "Advanced", FieldEditorPreferencePage.GRID );
-        g2guiAdvanced.setPreferenceStore( preferenceStore );
-        g2GuiRootNode.add( new PreferenceNode( "Advanced", g2guiAdvanced ) );
+        /* advanced page */
+        preferencePage = new G2GuiAdvanced("Advanced", FieldEditorPreferencePage.GRID);
+        preferencePage.setPreferenceStore(preferenceStore);
+        g2GuiRootNode.add(new PreferenceNode("Advanced", preferencePage));
 
-		/* add all of this to the root node */
-        addToRoot( g2GuiRootNode );
+        /* windows registry page */
+        if (SWT.getPlatform().equals("win32") ||
+                System.getProperty("os.name").substring(0,7).equals("Windows")) {
+            preferencePage = new G2GuiWinReg("Windows Registry", FieldEditorPreferencePage.NONE);
+            preferencePage.setPreferenceStore(preferenceStore);
+            g2GuiRootNode.add(new PreferenceNode("Windows Registry", preferencePage));
+        }
+
+        /* add all of this to the root node */
+        addToRoot(g2GuiRootNode);
     }
 
     /**
      * @param shell the parent shell, where this pref-window has to be opened
      * @param mldonkey the Core we want to configure
      */
-    public void open( Shell shell, CoreCommunication mldonkey ) {
+    public void open(Shell shell, CoreCommunication mldonkey) {
         try {
-            initialize( preferenceStore );
+            initialize(preferenceStore);
+        } catch (IOException e) {
+            System.out.println("initalizing Preferences Dialog failed due to IOException");
         }
-        catch ( IOException e ) {
-            System.out.println( "initalizing Preferences Dialog failed due to IOException" );
-        }
-        prefdialog = new PreferenceDialog( shell, this );
-        PreferenceDialog.setDefaultImage( G2GuiResources.getImage( "ProgramIcon" ) );
-        if ( ( mldonkey != null ) && ( mldonkey.isConnected() ) ) {
+
+        prefdialog = new PreferenceDialog(shell, this);
+        PreferenceDialog.setDefaultImage(G2GuiResources.getImage("ProgramIcon"));
+
+        if ((mldonkey != null) && (mldonkey.isConnected())) {
             this.connected = true;
-            createMLDonkeyOptions( connected, mldonkey );
+            createMLDonkeyOptions(connected, mldonkey);
         }
 
         //myprefs.addToRoot( new PreferenceNode
@@ -130,57 +144,65 @@ public class Preferences extends PreferenceManager {
      * @param connected are we connected to the Core
      * @param mldonkey the Core were i get all my options from
      */
-    private void createMLDonkeyOptions( boolean connected, CoreCommunication mldonkey ) {
+    private void createMLDonkeyOptions(boolean connected, CoreCommunication mldonkey) {
         OptionsInfoMap options = mldonkey.getOptionsInfoMap();
         OptionsPreferenceStore optionsStore = new OptionsPreferenceStore();
-        optionsStore.setInput( options );
+        optionsStore.setInput(options);
+
         Map sections = new HashMap();
         Map plugins = new HashMap();
         MLDonkeyOptions advanced = null;
+
         /*now we iterate over the whole thing and create the preferencePages*/
         Iterator it = options.keySet().iterator();
-        while ( it.hasNext() ) {
-            OptionsInfo option = ( OptionsInfo ) options.get( it.next() );
+
+        while (it.hasNext()) {
+            OptionsInfo option = (OptionsInfo) options.get(it.next());
             String section = option.getSectionToAppear();
             String plugin = option.getPluginToAppear();
-            if ( ( section == null ) && ( plugin == null ) && showOption( option ) ) {
-                if ( preferenceStore.getBoolean( "advancedMode" ) ) {
-                    if ( advanced == null ) {
-                        advanced = new MLDonkeyOptions( "Advanced ", FieldEditorPreferencePage.GRID );
-                        advanced.setPreferenceStore( optionsStore );
+
+            if ((section == null) && (plugin == null) && showOption(option)) {
+                if (preferenceStore.getBoolean("advancedMode")) {
+                    if (advanced == null) {
+                        advanced = new MLDonkeyOptions("Advanced ", FieldEditorPreferencePage.GRID);
+                        advanced.setPreferenceStore(optionsStore);
                     }
-                    advanced.addOption( option );
+
+                    advanced.addOption(option);
                 }
-            }
-            else if ( ( section != null ) && section.equalsIgnoreCase( "other" ) && showOption( option ) ) {
-                if ( preferenceStore.getBoolean( "advancedMode" ) ) {
-                    if ( advanced == null ) {
-                        advanced = new MLDonkeyOptions( "Advanced ", FieldEditorPreferencePage.GRID );
-                        advanced.setPreferenceStore( optionsStore );
+            } else if ((section != null) && section.equalsIgnoreCase("other") &&
+                    showOption(option)) {
+                if (preferenceStore.getBoolean("advancedMode")) {
+                    if (advanced == null) {
+                        advanced = new MLDonkeyOptions("Advanced ", FieldEditorPreferencePage.GRID);
+                        advanced.setPreferenceStore(optionsStore);
                     }
-                    advanced.addOption( option );
+
+                    advanced.addOption(option);
                 }
-            }
-            else if ( ( section != null ) && showOption( option ) ) {
+            } else if ((section != null) && showOption(option)) {
                 /* create the section, or if already done, only add the option */
-                if ( !sections.containsKey( section ) ) {
-                    MLDonkeyOptions temp = new MLDonkeyOptions( section, FieldEditorPreferencePage.GRID );
+                if (!sections.containsKey(section)) {
+                    MLDonkeyOptions temp = new MLDonkeyOptions(section,
+                            FieldEditorPreferencePage.GRID);
 
                     //myprefs.addToRoot( new PreferenceNode ( section, temp ) );
-                    sections.put( section, temp );
-                    temp.setPreferenceStore( optionsStore );
+                    sections.put(section, temp);
+                    temp.setPreferenceStore(optionsStore);
                 }
-                ( ( MLDonkeyOptions ) sections.get( section ) ).addOption( option );
-            }
-            else if ( ( plugin != null ) && showOption( option ) ) {
+
+                ((MLDonkeyOptions) sections.get(section)).addOption(option);
+            } else if ((plugin != null) && showOption(option)) {
                 /* create the pluginSection, or if already done, only add the option */
-                if ( !plugins.containsKey( plugin ) ) {
+                if (!plugins.containsKey(plugin)) {
                     /*only create the plugin, if it is possible at all...*/
-                    MLDonkeyOptions temp = new MLDonkeyOptions( plugin, FieldEditorPreferencePage.GRID );
-                    plugins.put( plugin, temp );
-                    temp.setPreferenceStore( optionsStore );
+                    MLDonkeyOptions temp = new MLDonkeyOptions(plugin,
+                            FieldEditorPreferencePage.GRID);
+                    plugins.put(plugin, temp);
+                    temp.setPreferenceStore(optionsStore);
                 }
-                ( ( MLDonkeyOptions ) plugins.get( plugin ) ).addOption( option );
+
+                ((MLDonkeyOptions) plugins.get(plugin)).addOption(option);
             }
         }
 
@@ -189,34 +211,41 @@ public class Preferences extends PreferenceManager {
          * first the sections:
          */
         it = sections.keySet().iterator();
-        while ( it.hasNext() ) {
-            String key = ( String ) it.next();
-            MLDonkeyOptions page = ( MLDonkeyOptions ) sections.get( key );
-            addToRoot( ( new PreferenceNode( key, page ) ) );
+
+        while (it.hasNext()) {
+            String key = (String) it.next();
+            MLDonkeyOptions page = (MLDonkeyOptions) sections.get(key);
+            addToRoot((new PreferenceNode(key, page)));
         }
+
         /*
          * and now the Plugins: first try to get the PrefPage "Networks", where all the "enabled"
          * options are, if this doesn't exist, create it. And then put all the plugins below this one
          */
-        if ( plugins.size() != 0 ) {
-            IPreferenceNode pluginOptions = find( "Networks" );
-            if ( pluginOptions == null ) {
-                MLDonkeyOptions emptyItem = new MLDonkeyOptions( "Networks", FieldEditorPreferencePage.FLAT );
-                pluginOptions = new PreferenceNode( "Networks", emptyItem );
-                emptyItem.isEmpty( true );
-                addToRoot( pluginOptions );
+        if (plugins.size() != 0) {
+            IPreferenceNode pluginOptions = find("Networks");
+
+            if (pluginOptions == null) {
+                MLDonkeyOptions emptyItem = new MLDonkeyOptions("Networks",
+                        FieldEditorPreferencePage.FLAT);
+                pluginOptions = new PreferenceNode("Networks", emptyItem);
+                emptyItem.isEmpty(true);
+                addToRoot(pluginOptions);
             }
+
             it = plugins.keySet().iterator();
-            while ( it.hasNext() ) {
-                String key = ( String ) it.next();
-                MLDonkeyOptions page = ( MLDonkeyOptions ) plugins.get( key );
-                pluginOptions.add( ( new PreferenceNode( key, page ) ) );
+
+            while (it.hasNext()) {
+                String key = (String) it.next();
+                MLDonkeyOptions page = (MLDonkeyOptions) plugins.get(key);
+                pluginOptions.add((new PreferenceNode(key, page)));
             }
         }
 
         /*and now add the advanced-field at the very bottom of the list*/
-        if ( advanced != null )
-            addToRoot( ( new PreferenceNode( "Advanced", advanced ) ) );
+        if (advanced != null) {
+            addToRoot((new PreferenceNode("Advanced", advanced)));
+        }
     }
 
     /**
@@ -226,11 +255,13 @@ public class Preferences extends PreferenceManager {
      *
      * @return DOCUMENT ME!
      */
-    private boolean showOption( OptionsInfo option ) {
-        if ( preferenceStore.getBoolean( "advancedMode" ) )
+    private boolean showOption(OptionsInfo option) {
+        if (preferenceStore.getBoolean("advancedMode")) {
             return true;
-        else if ( option.isAdvanced() )
+        } else if (option.isAdvanced()) {
             return false;
+        }
+
         return true;
     }
 
@@ -240,12 +271,11 @@ public class Preferences extends PreferenceManager {
      * @param preferenceStore the preferneceStore we want to initialize
      * @throws IOException some nice IO-Exception if the initialization failed
      */
-    public void initialize( PreferenceStore preferenceStore )
+    public void initialize(PreferenceStore preferenceStore)
         throws IOException {
         try {
             preferenceStore.load();
-        }
-        catch ( IOException e ) {
+        } catch (IOException e) {
             preferenceStore.save();
             preferenceStore.load();
         }
@@ -259,8 +289,12 @@ public class Preferences extends PreferenceManager {
     }
 }
 
+
 /*
 $Log: Preferences.java,v $
+Revision 1.39  2003/11/06 03:27:38  zet
+add windows registry page
+
 Revision 1.38  2003/10/17 15:35:48  zet
 graph prefs
 
