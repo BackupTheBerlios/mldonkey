@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Composite;
  * G2Gui_Display
  *
  *
- * @version $Id: G2GuiAdvanced.java,v 1.12 2004/01/08 21:44:40 psy Exp $
+ * @version $Id: G2GuiAdvanced.java,v 1.13 2004/03/01 21:12:21 psy Exp $
  */
 public class G2GuiAdvanced extends PreferencePage {
 
@@ -57,7 +57,7 @@ public class G2GuiAdvanced extends PreferencePage {
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected void createFieldEditors() {
-		boolean advanced = getPreferenceStore().getBoolean( "advancedMode" );
+		//boolean advanced = getPreferenceStore().getBoolean( "advancedMode" );
 
 		Composite composite = getFieldEditorParent();
 		
@@ -76,7 +76,7 @@ public class G2GuiAdvanced extends PreferencePage {
 				G2GuiResources.getString( "PREF_DISPLAY_POLL_UPSTATS" ),
 				composite ) );
 
-		if ( advanced ) {
+		if ( advancedMode() ) {
 		
 			setupEditor( 
 				new BooleanFieldEditor( 
@@ -97,14 +97,6 @@ public class G2GuiAdvanced extends PreferencePage {
 				G2GuiResources.getString( "PREF_SEARCH_FILTER_PROFANITY" ),
 				composite ) );
 
-		if ( advanced ) 
-		
-		setupEditor( 
-			new BooleanFieldEditor( 
-				"displayChunkGraphs",
-				G2GuiResources.getString( "PREF_DISPLAY_CHUNK" ),
-				composite ) );
-
 		setupEditor( 
 			new BooleanFieldEditor( 
 				"tableCellEditors",
@@ -117,11 +109,7 @@ public class G2GuiAdvanced extends PreferencePage {
 				G2GuiResources.getString( "PREF_DISPLAY_DRAG_AND_DROP" ),
 				composite ) );
 				
-		setupEditor( 
-			new BooleanFieldEditor( 
-				"maintainSortOrder",
-				G2GuiResources.getString( "PREF_DISPLAY_SORT_ORDER" ),
-				composite ) );
+
 
 		IntegerFieldEditor updateDelayEditor = new IntegerFieldEditor ( 
 				"updateDelay",
@@ -149,6 +137,10 @@ public class G2GuiAdvanced extends PreferencePage {
 }
 /*
 $Log: G2GuiAdvanced.java,v $
+Revision 1.13  2004/03/01 21:12:21  psy
+removed download-table font config (use global one instead)
+started re-arranging the preferences (to be continued...)
+
 Revision 1.12  2004/01/08 21:44:40  psy
 make use of isWin32()
 

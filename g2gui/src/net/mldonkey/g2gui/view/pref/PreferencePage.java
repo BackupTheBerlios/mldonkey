@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * GuiPreferences
  *
- * @version $Id: PreferencePage.java,v 1.3 2003/12/04 08:47:27 lemmy Exp $ 
+ * @version $Id: PreferencePage.java,v 1.4 2004/03/01 21:12:21 psy Exp $ 
  *
  */
 public abstract class PreferencePage extends FieldEditorPreferencePage {
@@ -113,10 +113,24 @@ public abstract class PreferencePage extends FieldEditorPreferencePage {
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected abstract void createFieldEditors();
+
+	/**
+	 * Are we in advanced mode?
+	 * @return true if we are in advanced mode
+	 */
+	protected boolean advancedMode() {
+		return getPreferenceStore().getBoolean( "advancedMode" );
+	}
+	
+
 }
 
 /*
 $Log: PreferencePage.java,v $
+Revision 1.4  2004/03/01 21:12:21  psy
+removed download-table font config (use global one instead)
+started re-arranging the preferences (to be continued...)
+
 Revision 1.3  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

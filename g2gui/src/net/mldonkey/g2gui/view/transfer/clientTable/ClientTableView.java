@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableView.java,v 1.9 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: ClientTableView.java,v 1.10 2004/03/01 21:12:22 psy Exp $
  *
  */
 public class ClientTableView extends GTableView {
@@ -89,13 +89,17 @@ public class ClientTableView extends GTableView {
         Table table = getTableViewer().getTable();
         table.setBackground(PreferenceLoader.loadColour("downloadsBackgroundColor"));
         table.setForeground(PreferenceLoader.loadColour("downloadsAvailableColor"));
-        table.setFont(PreferenceLoader.loadFont("downloadsFontData"));
+        table.setFont(PreferenceLoader.loadFont("viewerFontData"));
     }
 }
 
 
 /*
 $Log: ClientTableView.java,v $
+Revision 1.10  2004/03/01 21:12:22  psy
+removed download-table font config (use global one instead)
+started re-arranging the preferences (to be continued...)
+
 Revision 1.9  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.59 2004/02/29 17:08:50 psy Exp $
+ * @version $Id: PreferenceLoader.java,v 1.60 2004/03/01 21:12:21 psy Exp $
  */
 public class PreferenceLoader {
     private static boolean restart = false;
@@ -143,8 +143,7 @@ public class PreferenceLoader {
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove20FileColor", new RGB(0,160,0) );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove10FileColor", new RGB(0,140,0) );
 		PreferenceConverter.setDefault( preferenceStore, "downloadsRateAbove0FileColor", new RGB(0,110,0) );
-        PreferenceConverter.setDefault( preferenceStore, "downloadsFontData", JFaceResources.getDefaultFont().getFontData() );     
-                 
+               
 		PreferenceConverter.setDefault( preferenceStore, "graphUploadsColor1", display.getSystemColor( SWT.COLOR_BLUE ).getRGB() );
 		PreferenceConverter.setDefault( preferenceStore, "graphUploadsColor2", new RGB(0,0,125) );
 		PreferenceConverter.setDefault( preferenceStore, "graphDownloadsColor1", display.getSystemColor( SWT.COLOR_GREEN ).getRGB() );
@@ -440,6 +439,10 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.60  2004/03/01 21:12:21  psy
+removed download-table font config (use global one instead)
+started re-arranging the preferences (to be continued...)
+
 Revision 1.59  2004/02/29 17:08:50  psy
 little javadoc
 

@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeView.java,v 1.11 2004/02/05 20:44:43 psy Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.12 2004/03/01 21:12:21 psy Exp $
  *
  */
 public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
@@ -220,7 +220,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
     public void setPreferences() {
         Table table = getTable();
         table.setBackground(PreferenceLoader.loadColour("downloadsBackgroundColor"));
-        table.setFont(PreferenceLoader.loadFont("downloadsFontData"));
+        table.setFont(PreferenceLoader.loadFont("viewerFontData"));
 
         if (PreferenceLoader.loadBoolean("tableCellEditors")) {
             tableTreeViewer.setCellEditors(cellEditors);
@@ -302,6 +302,10 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
 /*
 $Log: DownloadTableTreeView.java,v $
+Revision 1.12  2004/03/01 21:12:21  psy
+removed download-table font config (use global one instead)
+started re-arranging the preferences (to be continued...)
+
 Revision 1.11  2004/02/05 20:44:43  psy
 hopefully fixed dynamic column behaviour under gtk by introducing a
 bogus column.

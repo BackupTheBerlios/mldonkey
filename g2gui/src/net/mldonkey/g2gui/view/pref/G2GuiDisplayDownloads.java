@@ -24,12 +24,16 @@ package net.mldonkey.g2gui.view.pref;
 
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 
 /**
  * G2GuiDisplayDownloads
  *
- * @version $Id: G2GuiDisplayDownloads.java,v 1.4 2003/11/01 17:26:55 zet Exp $ 
+ * @version $Id: G2GuiDisplayDownloads.java,v 1.5 2004/03/01 21:12:21 psy Exp $ 
  *
  */
 public class G2GuiDisplayDownloads extends PreferencePage {
@@ -44,12 +48,31 @@ public class G2GuiDisplayDownloads extends PreferencePage {
     protected void createFieldEditors() {
 		Composite composite = getFieldEditorParent();
 		
+		if ( advancedMode() ) {
+			setupEditor( 
+					new BooleanFieldEditor( 
+						"maintainSortOrder",
+						G2GuiResources.getString( "PREF_DISPLAY_SORT_ORDER" ),
+						composite ) );
+			
+			setupEditor( 
+					new BooleanFieldEditor( 
+						"displayChunkGraphs",
+						G2GuiResources.getString( "PREF_DISPLAY_CHUNK" ),
+						composite ) );
+		}
+		Label bar1 = new Label( composite, SWT.SEPARATOR | SWT.HORIZONTAL );
+			bar1.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+		
+		Label bar2 = new Label( composite, SWT.SEPARATOR | SWT.HORIZONTAL );
+			bar2.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+
+			
 		setupEditor( 
 			new ExtendedColorFieldEditor( 
 				"downloadsBackgroundColor",
 				G2GuiResources.getString( "PREF_DISPLAY_D_BACKGROUND" ),
 				composite ) );
-		
 		
 		setupEditor( 
 			new ExtendedColorFieldEditor( 
@@ -98,20 +121,17 @@ public class G2GuiDisplayDownloads extends PreferencePage {
 				"downloadsRateAbove0FileColor",
 				G2GuiResources.getString( "PREF_DISPLAY_D_RATE0" ),
 				composite ) );		
-		
-		setupEditor( 
-			new ExtendedFontFieldEditor2( 
-				"downloadsFontData",
-				G2GuiResources.getString( "PREF_DISPLAY_D_FONT" ),
-				G2GuiResources.getString( "PREF_DISPLAY_SAMPLE" ),
-				composite ) );			
-		
+
     }
 
 }
 
 /*
 $Log: G2GuiDisplayDownloads.java,v $
+Revision 1.5  2004/03/01 21:12:21  psy
+removed download-table font config (use global one instead)
+started re-arranging the preferences (to be continued...)
+
 Revision 1.4  2003/11/01 17:26:55  zet
 remove fox exclusion
 
