@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.16 2003/08/31 12:32:04 lemmster Exp $ 
+ * @version $Id: Search.java,v 1.17 2003/09/01 11:09:43 lemmster Exp $ 
  *
  */
 public abstract class Search implements Observer {
@@ -208,6 +208,7 @@ public abstract class Search implements Observer {
 			text.setText( "no searchable network enabled" );
 			text.setEnabled( false );	
 		}
+		text.setFocus();
 	}
 	
 	/**
@@ -283,6 +284,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.17  2003/09/01 11:09:43  lemmster
+show downloading files
+
 Revision 1.16  2003/08/31 12:32:04  lemmster
 major changes to search
 

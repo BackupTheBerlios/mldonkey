@@ -42,6 +42,7 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -52,7 +53,7 @@ import org.eclipse.swt.widgets.Group;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.18 2003/08/31 12:32:04 lemmster Exp $ 
+ * @version $Id: SearchTab.java,v 1.19 2003/09/01 11:09:43 lemmster Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -133,6 +134,11 @@ public class SearchTab extends GuiTab {
 		cTabFolder.marginWidth = 5;
 		/* set this as data, so our children in the ctabfolder know whos their dad ;) */
 		cTabFolder.setData( this );
+		cTabFolder.setSelectionBackground( new Color[]{ cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
+											cTabFolder.getBackground() },
+											new int[] { 75 } );
+		cTabFolder.setSelectionForeground( cTabFolder.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
+
 		
 		/* add a "X" and listen for close event */
 		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
@@ -160,8 +166,7 @@ public class SearchTab extends GuiTab {
 		
 		/* add a focus listener to set the status line */
 		cTabFolder.addFocusListener( new FocusListener () {
-			public void focusGained( FocusEvent e ) {
-			}
+			public void focusGained( FocusEvent e ) { }
 
 			public void focusLost( FocusEvent e ) { 
 				/* we are in focus, set our result count */
@@ -235,6 +240,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.19  2003/09/01 11:09:43  lemmster
+show downloading files
+
 Revision 1.18  2003/08/31 12:32:04  lemmster
 major changes to search
 

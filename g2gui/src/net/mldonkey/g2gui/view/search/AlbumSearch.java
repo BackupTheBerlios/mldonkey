@@ -1,8 +1,8 @@
 /*
  * Copyright 2003
  * G2Gui Team
- * 
- * 
+ *
+ *
  * This file is part of G2Gui.
  *
  * G2Gui is free software; you can redistribute it and/or modify
@@ -18,64 +18,68 @@
  * You should have received a copy of the GNU General Public License
  * along with G2Gui; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  */
 package net.mldonkey.g2gui.view.search;
-
-import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.view.SearchTab;
-import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
 
 /**
  * AlbumSearch
  *
  *
- * @version $Id: AlbumSearch.java,v 1.7 2003/08/29 19:09:25 dek Exp $ 
+ * @version $Id: AlbumSearch.java,v 1.8 2003/09/01 11:09:43 lemmster Exp $
  *
  */
 public class AlbumSearch extends Search {
+    /**
+     * @param core
+     */
+    public AlbumSearch( CoreCommunication core, SearchTab tab ) {
+        super( core, tab );
+    }
 
-	/**
-	 * @param core
-	 */
-	public AlbumSearch( CoreCommunication core, SearchTab tab ) {
-		super( core, tab );
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.search.Search#getTabName()
+     */
+    public String getTabName() {
+        return "AlbumSearch";
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.search.Search#
+     * createTabFolderPage(org.eclipse.swt.widgets.TabFolder)
+     */
+    public Control createTabFolderPage( CTabFolder tabFolder ) {
+        // create a invisible networkbox to avoid a npe in update(Observable o, Object arg);
+        this.createNetworkBox( new Group( tabFolder, SWT.NONE ),
+                               G2GuiResources.getString( "SS_NETWORK" ) );
+        this.createInputBox( new Group( tabFolder, SWT.NONE ),
+                             G2GuiResources.getString( "SS_NETWORK" ) );
 
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.search.Search#getTabName()
-	 */
-	public String getTabName() {
-		return "AlbumSearch";
-	}
+        return null;
+    }
 
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.search.Search#
-	 * createTabFolderPage(org.eclipse.swt.widgets.TabFolder)
-	 */
-	public Control createTabFolderPage( CTabFolder tabFolder ) {
-		// create a invisible networkbox to avoid a npe in update(Observable o, Object arg);
-		this.createNetworkBox( new Group( tabFolder, SWT.NONE ), G2GuiResources.getString( "SS_NETWORK" ) );
-		this.createInputBox( new Group( tabFolder, SWT.NONE ), G2GuiResources.getString( "SS_NETWORK" ) );
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
-	 */
-	public void performSearch() {
-	}
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.search.Search#performSearch()
+     */
+    public void performSearch() {
+    }
 }
 
 /*
 $Log: AlbumSearch.java,v $
+Revision 1.8  2003/09/01 11:09:43  lemmster
+show downloading files
+
 Revision 1.7  2003/08/29 19:09:25  dek
 new look'n feel
 
