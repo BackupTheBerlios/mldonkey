@@ -23,26 +23,19 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectIterator;
 
 /**
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoList.java,v 1.2 2003/06/14 20:30:44 lemmstercvs01 Exp $$ 
+ * @version $$Id: ClientInfoList.java,v 1.3 2003/06/14 23:04:08 lemmstercvs01 Exp $$ 
  */
-public class ClientInfoList implements Information, InfoList {
-	/**
-	 * The intern representation of ClientInfoList
-	 */
-	private TIntObjectHashMap clientInfoList;
-	
+public class ClientInfoList extends InfoList {
 	/**
 	 * Creates a new ClientInfoList
 	 */
 	public ClientInfoList() {
-		this.clientInfoList = new TIntObjectHashMap();
+		super();
 	}
 	
 	/**
@@ -65,33 +58,19 @@ public class ClientInfoList implements Information, InfoList {
 	}
 	
 	/**
-	 * Get the ClientInfo object value to the given key
-	 * @param key The Key
-	 * @return a ClientInfo object
-	 */
-	public ClientInfo get( int key ) {
-		return this.get( key );
-	}
-	
-	/**
-	 * Get a ClientInfoList iterator
-	 * @return an iterator
-	 */
-	public TIntObjectIterator iterator() {
-		return this.clientInfoList.iterator();
-	}
-	
-	/**
 	 * Update a specific element in the List
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void update( MessageBuffer messageBuffer ) {
 		int key = messageBuffer.readInt32();
-		( ( ClientInfo ) this.get( key ) ).update( messageBuffer );
+		( ( ClientInfo ) this.infoList.get( key ) ).update( messageBuffer );
 	}
 }
 /*
 $$Log: ClientInfoList.java,v $
+$Revision 1.3  2003/06/14 23:04:08  lemmstercvs01
+$change from interface to abstract superclass
+$
 $Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
 $cosmetic changes
 $$

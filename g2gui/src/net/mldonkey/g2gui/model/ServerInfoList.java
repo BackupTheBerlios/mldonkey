@@ -1,35 +1,52 @@
 /*
- * Created on 14.06.2003
+ * Copyright 2003
+ * G2Gui Team
+ * 
+ * 
+ * This file is part of G2Gui.
+ *
+ * G2Gui is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * G2Gui is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with G2Gui; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
  */
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectIterator;
 
 /**
- * @author markus
+ * ServerInfoList
+ *
+ * @author $user$
+ * @version $Id: ServerInfoList.java,v 1.2 2003/06/14 23:04:08 lemmstercvs01 Exp $ 
+ *
  */
-public class ServerInfoList implements InfoList {
-	/**
-	 * 
-	 */
-	private TIntObjectHashMap serverInfoList;
+public class ServerInfoList extends InfoList {
 	
 	/**
 	 * Generates a empty ServerInfoList object
 	 */
 	public ServerInfoList() {
-		this.serverInfoList = new TIntObjectHashMap();
+		super();
 	}
-	
+
 	/**
 	 * Store a key/value pair in this object
 	 * @param key The Key
 	 * @param value The FileInfo object
 	 */
 	public void put( int key, ServerInfo value ) {
-		this.serverInfoList.put( key, value );
+		this.infoList.put( key, value );
 	}
 
 	/**
@@ -43,28 +60,25 @@ public class ServerInfoList implements InfoList {
 	}
 	
 	/**
-	 * Update a specific element in the List
-	 * @param messageBuffer The MessageBuffer to read from
-	 */
-	public void update( MessageBuffer messageBuffer ) {
-		//this.get( messageBuffer.readInt32() ).update( messageBuffer );
-	}
-	
-	/**
 	 * Get a ServerInfo object from this object by there id
 	 * @param id The FileInfo id
 	 * @return The FileInfo object
 	 */
 	public ServerInfo get( int id ) {
-		return ( ServerInfo ) this.serverInfoList.get( id );
-	}
-	
-	/**
-	 * Get an Iterator
-	 * @return an Iterator
-	 */
-	public TIntObjectIterator iterator() {
-		return this.serverInfoList.iterator();
+		return ( ServerInfo ) this.infoList.get( id );
 	}
 
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.model.InfoList#update(net.mldonkey.g2gui.helper.MessageBuffer)
+	 */
+	public void update(MessageBuffer messageBuffer) {
+		// do nothing
+	}
 }
+
+/*
+$Log: ServerInfoList.java,v $
+Revision 1.2  2003/06/14 23:04:08  lemmstercvs01
+change from interface to abstract superclass
+
+*/

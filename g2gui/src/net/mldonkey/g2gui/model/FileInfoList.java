@@ -22,29 +22,21 @@
  */
 package net.mldonkey.g2gui.model;
 
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectIterator;
-
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
 /**
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoList.java,v 1.6 2003/06/14 19:30:41 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoList.java,v 1.7 2003/06/14 23:04:08 lemmstercvs01 Exp $ 
  *
  */
-public class FileInfoList implements Information, InfoList {
-	/**
-	 * 
-	 */
-	private TIntObjectHashMap fileInfoList;
-	
+public class FileInfoList extends InfoList {
 	/**
 	 * Generates a empty FileInfoList object
 	 */
 	public FileInfoList() {
-		this.fileInfoList = new TIntObjectHashMap();
+		super();
 	}
 	
 	/**
@@ -53,7 +45,7 @@ public class FileInfoList implements Information, InfoList {
 	 * @param value The FileInfo object
 	 */
 	public void put( int key, FileInfo value ) {
-		this.fileInfoList.put( key, value );
+		this.infoList.put( key, value );
 	}
 
 	/**
@@ -65,7 +57,7 @@ public class FileInfoList implements Information, InfoList {
 		short listElem = messageBuffer.readInt16();
 
 		/* clear the list */
-		this.fileInfoList.clear();
+		this.infoList.clear();
 
 		/* insert the new FileInfo objects */
 		for ( int i = 0; i < listElem; i++ ) {
@@ -89,20 +81,15 @@ public class FileInfoList implements Information, InfoList {
 	 * @return The FileInfo object
 	 */
 	public FileInfo get( int id ) {
-		return ( FileInfo ) this.fileInfoList.get( id );
-	}
-	
-	/**
-	 * Get an Iterator
-	 * @return an Iterator
-	 */
-	public TIntObjectIterator iterator() {
-		return this.fileInfoList.iterator();
+		return ( FileInfo ) this.infoList.get( id );
 	}
 }
 
 /*
 $Log: FileInfoList.java,v $
+Revision 1.7  2003/06/14 23:04:08  lemmstercvs01
+change from interface to abstract superclass
+
 Revision 1.6  2003/06/14 19:30:41  lemmstercvs01
 interface added
 

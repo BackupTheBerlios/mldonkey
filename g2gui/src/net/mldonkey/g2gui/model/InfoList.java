@@ -23,27 +23,45 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectIterator;
 
 /**
  * InfoList
  * 
  * @author ${user}
- * @version $$Id: InfoList.java,v 1.2 2003/06/14 20:30:44 lemmstercvs01 Exp $$ 
+ * @version $$Id: InfoList.java,v 1.3 2003/06/14 23:04:08 lemmstercvs01 Exp $$ 
  */
-public interface InfoList {
+public abstract class InfoList {
 	/**
-	 * Update an InformationObject from a MessageStream
-	 * @param messageBuffer The MessageBuffer to read from
+	 * 
 	 */
-	void update( MessageBuffer messageBuffer ); 
+	protected TIntObjectHashMap infoList;
+	
 	/**
-	 * Reads an InformationObject from a MessageStream
-	 * @param messageBuffer The MessageBuffer to read from
+	 * Generates a empty ServerInfoList object
 	 */
-	void readStream( MessageBuffer messageBuffer );
+	public InfoList() {
+		this.infoList = new TIntObjectHashMap();
+	}
+	
+	/**
+	 * Get an Iterator
+	 * @return an Iterator
+	 */
+	public TIntObjectIterator iterator() {
+		return this.infoList.iterator();
+	}
+	
+	public abstract void readStream( MessageBuffer messageBuffer );
+
+	public abstract void update( MessageBuffer messageBuffer );
 }
 /*
 $$Log: InfoList.java,v $
+$Revision 1.3  2003/06/14 23:04:08  lemmstercvs01
+$change from interface to abstract superclass
+$
 $Revision 1.2  2003/06/14 20:30:44  lemmstercvs01
 $cosmetic changes
 $$
