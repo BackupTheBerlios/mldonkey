@@ -43,7 +43,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.37 2003/08/16 20:20:21 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.38 2003/08/22 14:28:56 dek Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -350,7 +350,7 @@ public class FileInfo extends Parent implements Observer {
 		numChunks = cnt;
 
 		/* read a list of int32(networkid) and string(avail) */
-		if ( parent.getProtoToUse() > 17 ) {
+		if ( parent.getProtoToUse() > 17 ) {			
 			this.avails = new HashMap();
 			int listElem = messageBuffer.readInt16();
 			for ( int i = 0; i < listElem; i++ ) {
@@ -358,7 +358,11 @@ public class FileInfo extends Parent implements Observer {
 				String aString = messageBuffer.readString();
 				NetworkInfo network = parent.getNetworkInfoMap().get( networkID );
 				this.avails.put( network, aString );
-				this.avail = aString; //TODO just hack until overall avail is sent by the core
+				/*TODO still just a hack until overall avail is sent by the core				
+				 *  but this is a more failsafe-way
+				 */
+				 if ( aString.length() == chunks.length() )
+					this.avail = aString;
 			}
 		}
 		else
@@ -632,6 +636,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.38  2003/08/22 14:28:56  dek
+more failsafe hack ;-)
+
 Revision 1.37  2003/08/16 20:20:21  zet
 minor
 
