@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.20 2003/07/20 13:03:26 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.21 2003/07/20 21:45:40 dek Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
@@ -231,65 +231,68 @@ public class DownloadTable implements Observer, Runnable {
 	public void update( Observable o, Object arg ) {
 		if ( arg instanceof FileInfoIntMap ) {
 			files = ( FileInfoIntMap ) arg;
-			if ( page.isActive() ) {
+			if ( page.isActive() ) {				
 				if ( !tableTree.isDisposed() )
-					tableTree.getDisplay().syncExec( this );
+					tableTree.getDisplay().asyncExec( this );
 			}
 		}
 	}
-	/** (  non-Javadoc  )u
+	/** (   non-Javadoc   )u
 	 * @see java.lang.Runnable#run()
 	 */
-	public void run() {		
-		TIntObjectIterator it = files.iterator();
-		while ( it.hasNext() ) {
-			it.advance();
-			FileInfo fileInfo = ( FileInfo ) it.value();
-			/* only process downloading and paused files
-			 * remove canceled files from table*/
-			if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING
-				|| fileInfo.getState().getState() == EnumFileState.PAUSED ) 
-				{
-				if ( downloads.containsKey( fileInfo.getId() ) ) {
-					downloads.get( fileInfo.getId() );
-					DownloadItem existingItem =
-						( DownloadItem ) downloads.get( fileInfo.getId() );					
-				} else {
-					DownloadItem newItem =
-						new DownloadItem( tableTree, SWT.NONE, fileInfo );
-					downloads.put( fileInfo.getId(), newItem );
-					TableColumn[] cols = tableTree.getTable().getColumns();
-					for ( int i = 0; i < cols.length; i++ ) {
-						cols[ i ].pack();
+	public void run() {
+		synchronized ( files ) {
+			TIntObjectIterator it = files.iterator();
+			while ( it.hasNext() ) {
+				it.advance();
+				FileInfo fileInfo = ( FileInfo ) it.value();
+				/* only process downloading and paused files
+				 * remove canceled files from table*/
+				if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING
+					|| fileInfo.getState().getState() == EnumFileState.PAUSED ) {
+					if ( downloads.containsKey( fileInfo.getId() ) ) {
+						downloads.get( fileInfo.getId() );
+						DownloadItem existingItem =
+							( DownloadItem ) downloads.get( fileInfo.getId() );
+					} else {
+						DownloadItem newItem =
+							new DownloadItem( tableTree, SWT.NONE, fileInfo );
+						downloads.put( fileInfo.getId(), newItem );
+						TableColumn[] cols = tableTree.getTable().getColumns();
+						for ( int i = 0; i < cols.length; i++ ) {
+							cols[ i ].pack();
+						}
 					}
+				} else if ( downloads.containsKey( fileInfo.getId() ) ) {
+					/* remove this file from the downloadList if contained*/
+					( ( DownloadItem ) downloads.get( fileInfo.getId() ) ).dispose();
+					downloads.remove( fileInfo.getId() );
+					//tableTree.redraw();
+				} else {
+					/* we really don't care about this one...*/
 				}
-			} else if ( downloads.containsKey( fileInfo.getId() ) ) {
-				/* remove this file from the downloadList if contained*/
-				 ( ( DownloadItem ) downloads.get( fileInfo.getId() ) ).dispose();
-				downloads.remove( fileInfo.getId() );
-				//tableTree.redraw();
-			} else {
-				/* we really don't care about this one...*/
 			}
-		}
-		/*only update the items, that have changed, using the FileInfoIntMap from
-		 * Core to get infos, whih files have changed
-		 */
-		for ( int i = 0; i < files.getIds().size(); i++ ) {
-			if ( downloads
-				.contains( ( ( Integer ) files.getIds().get( i ) ).intValue() ) ) 
-				{
+			/*only update the items, that have changed, using the FileInfoIntMap from
+			 * Core to get infos, whih files have changed
+			 */
+			for ( int i = 0; i < files.getIds().size(); i++ ) {
+				if ( downloads
+					.contains( ( ( Integer ) files.getIds().get( i ) ).intValue() ) ) {
 					DownloadItem changedItem =
 						( DownloadItem ) downloads.get( 
 							( ( Integer ) files.getIds().get( i ) ).intValue() );
 					changedItem.update();
 				}
+			}
+			files.clearIds();
 		}
-		files.clearIds();
 	}
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.21  2003/07/20 21:45:40  dek
+dead-lock fixed (still needs some testing)
+
 Revision 1.20  2003/07/20 13:03:26  dek
 selected items remain selected, except, when the selected item was a ClientItem
 
