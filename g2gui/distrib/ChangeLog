@@ -1,3 +1,8 @@
+2004/04/05: Dek
+	* removed external Tray-support, now we need swt 3044 from eclipse's 3.0M8
+		just for saving one dll and the ugly workarounds for win32-only Trays
+		
+
 2004/03/31: vnc
 	* Preview: [Bug #1747] Equip preview-URL with username and password
 	* Tables: Improved dynamic column handling again
