@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.15 2003/09/02 14:27:03 dek Exp $ 
+ * @version $Id: About.java,v 1.16 2003/09/03 15:02:52 zet Exp $ 
  *
  */
 public class About extends Dialog {
@@ -124,7 +124,7 @@ public class About extends Dialog {
 		G2GuiResources.getString( "ABOUT_DEVEL" );
 		
 		String develHeader = G2GuiResources.getString( "ABOUT_DEVEL" ) + "\n";
-		String devels = "Dek, lemmy, VNC and z\n\n";
+		String devels = "Dek, lemmy, VNC, and z\n\n";
 
 		String contributorHeader = G2GuiResources.getString( "ABOUT_CONTRIB" ) + "\n";
 		String contributors = "housetier, mitch, and vaste\n\n";
@@ -184,7 +184,7 @@ public class About extends Dialog {
 			gd.verticalAlignment = GridData.CENTER;
 			gd.horizontalAlignment = GridData.CENTER;
 		info.setLayoutData( gd );		
-		info.setText(  "G2gui is (c) 2003 by G2gui team, \n" 
+		info.setText(  "G2gui is (c) 2003 by the G2gui team, \n" 
 					 + "all of our own java code is released under \n" 
 					 + "the  " );	
 					 	
@@ -246,7 +246,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.15 2003/09/02 14:27:03 dek Exp $ 
+	 * @version $Id: About.java,v 1.16 2003/09/03 15:02:52 zet Exp $ 
 	 *
 	 */
 	public class Link {
@@ -298,6 +298,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.16  2003/09/03 15:02:52  zet
++the
+
 Revision 1.15  2003/09/02 14:27:03  dek
 i18n of About Dialog (only bold headers, as i want other stuff hardcoded)
 
