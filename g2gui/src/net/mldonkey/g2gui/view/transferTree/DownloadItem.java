@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.21 2003/07/20 22:10:06 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.22 2003/07/21 15:12:39 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem implements IItemHasMenue, SelectionListener {
@@ -71,6 +71,27 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 	private TIntObjectHashMap namedclients = new TIntObjectHashMap();
 	private FileInfo fileInfo;
 	private TableTreeEditor editor;
+	
+	/**
+	 * the colums of the table <br> 
+	 * ID = 0<br> 
+	 * NETWORK = 1<br> 
+	 * FILENAME = 2<br> 
+	 * RATE = 3<br> 
+	 * CHUNKS = 4<br> 
+	 * PERCENT = 5<br> 
+	 * DOWNLOADED = 6<br> 
+	 * SIZE = 7<br> 
+	 */ 
+	private final int ID = 0,
+					  NETWORK = 1,
+					  FILENAME = 2,
+					  RATE = 3,
+					  CHUNKS = 4,
+					  PERCENT = 5,
+					  DOWNLOADED = 6,
+					  SIZE = 7;
+
 	/**
 	 * @param parent where this Item should appear
 	 * @param style the style
@@ -86,45 +107,23 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 		/*
 		 * Now fill the columns with initial values, that never change...
 		 */
-		updateCell( 0, String.valueOf( fileInfo.getId() ) );
-		updateCell( 1, fileInfo.getNetwork().getNetworkName() );
-		updateCell( 2, "" );
-		updateCell( 3, "" );
+		updateCell( ID, String.valueOf( fileInfo.getId() ) );
+		updateCell( NETWORK, fileInfo.getNetwork().getNetworkName() );
+		updateCell( SIZE, String.valueOf( fileInfo.getSize() ) );
 		/*creating the chunkb-bar*/		
 			Control oldEditor = editor.getEditor();
 			if ( oldEditor != null )
 				oldEditor.dispose();
 			this.chunks =
-				new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo, 4 );
-			editor.setEditor( chunks, this, 4 );
-		updateCell( 4, "" );
-		updateCell( 5, "" );
-		updateCell( 6, "" );
-		updateCell( 7, String.valueOf( fileInfo.getSize() ) );
-		updateColumns();
-		synchronized ( fileInfo.getClientInfos() ){
-		Iterator it = fileInfo.getClientInfos().iterator();
-			while ( it.hasNext() ) {
-				ClientInfo clientInfo = ( ClientInfo ) it.next();
-				if ( isInteresting( clientInfo ) ) {
-					if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
-						namedclients.get( clientInfo.getClientid() );
-						ClientItem existingItem =
-							( ClientItem ) namedclients.get( clientInfo.getClientid() );
-						existingItem.update();
-					} else {
-						ClientItem newItem =
-							new ClientItem( this, SWT.NONE, clientInfo );
-						namedclients.put( clientInfo.getClientid(), newItem );
-					}
-				} else if ( namedclients.contains( clientInfo.getClientid() ) ) {
-					ClientItem toBeRemovedItem =
-						( ClientItem ) namedclients.get( clientInfo.getClientid() );
-					toBeRemovedItem.dispose();
-					namedclients.remove( clientInfo.getClientid() );
-				}
-			}
-		}
+				new ChunkView( this.getParent().getTable(), SWT.NONE, fileInfo, CHUNKS );
+			editor.setEditor( chunks, this, CHUNKS );
+
+
+		
+		/*initial update() to fill the row with values, from now on,
+		 * this is invoked by observer-calls
+		 */
+		update();		
 		addDisposeListener( new DisposeListener() {
 			public void widgetDisposed( DisposeEvent e ) {
 				chunks.dispose();
@@ -152,16 +151,17 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 		if /*we are downloading from this client, so he is interesting*/
 			( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
 			return true;
-		else if /*we are connected to this client and have a queue-rank != 0 and smaller 500*/
+		else if /*we are connected to this client and have a queue-rank != 0 and smaller 200*/
 			( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED
 					&& clientInfo.getState().getRank() != 0 
-					&& clientInfo.getState().getRank() < 500
-					)
+					&& clientInfo.getState().getRank() < 200
+			)
 			return true;
-		else if /*we were connected to this client but have a queue-rank != 0 and smaller 500*/
+		else if /*we were connected to this client but have a queue-rank != 0 and smaller 200*/
 			( clientInfo.getState().getState() == EnumState.NOT_CONNECTED_WAS_QUEUED
 					&& clientInfo.getState().getRank() != 0
-					&& clientInfo.getState().getRank() < 500 )
+					&& clientInfo.getState().getRank() < 200 
+			)
 			return true;
 		else
 			return false;
@@ -198,64 +198,56 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 		}
 	}
 	void update() {
-		updateColumns();
-		Iterator it = fileInfo.getClientInfos().iterator();
-		while ( it.hasNext() ) {
-			ClientInfo clientInfo = ( ClientInfo ) it.next();
-			// Here comes the question, wether we want to add this clientInfo, or not?? at the moment, 
-			// all clientInfos are accepted
-			if ( isInteresting( clientInfo ) ) {
-				if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
-					namedclients.get( clientInfo.getClientid() );
-					ClientItem existingItem =
+		synchronized ( fileInfo.getClientInfos().iterator() ) {
+			updateColumns();
+			Iterator it = fileInfo.getClientInfos().iterator();
+			while ( it.hasNext() ) {
+				ClientInfo clientInfo = ( ClientInfo ) it.next();
+				// Here comes the question, wether we want to add this clientInfo, or not?? at the moment, 
+				// all clientInfos are accepted
+				if ( isInteresting( clientInfo ) ) {
+					if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
+						namedclients.get( clientInfo.getClientid() );
+						ClientItem existingItem =
+							( ClientItem ) namedclients.get( 
+								clientInfo.getClientid() );
+						existingItem.update();
+					} else {
+						ClientItem newItem =
+							new ClientItem( this, SWT.NONE, clientInfo );
+						namedclients.put( clientInfo.getClientid(), newItem );
+					}
+				} else if ( namedclients.contains( clientInfo.getClientid() ) ) {
+					ClientItem toBeRemovedItem =
 						( ClientItem ) namedclients.get( clientInfo.getClientid() );
-					existingItem.update();
-				} else {
-					ClientItem newItem =
-						new ClientItem( this, SWT.NONE, clientInfo );
-					namedclients.put( clientInfo.getClientid(), newItem );
+					toBeRemovedItem.dispose();
+					namedclients.remove( clientInfo.getClientid() );
 				}
-			} else if ( namedclients.contains( clientInfo.getClientid() ) ) {
-				ClientItem toBeRemovedItem =
-					( ClientItem ) namedclients.get( clientInfo.getClientid() );
-				toBeRemovedItem.dispose();
-				namedclients.remove( clientInfo.getClientid() );
 			}
 		}
 	}
 	private void updateColumns() {
 		//"ID"|"Network"|"Filename"|"Rate"|"Chunks"|"%"|"Downloaded"|"Size"
 		//  0     1           2        3       4      5    6            7		
-		if ( getText( 0 ) != null && !getText( 0 ).equals( String.valueOf( fileInfo.getId() ) ) ) {
-			updateCell( 0, String.valueOf( fileInfo.getId() ) );			
-		}
-		if ( getText( 1 ) != null && !getText( 1 ).equals( fileInfo.getNetwork().getNetworkName() ) ) {
-			updateCell( 1, fileInfo.getNetwork().getNetworkName() );			
-		}
-		if ( getText( 2 ) != null && !getText( 2 ).equals( fileInfo.getName() ) ) {
-			updateCell( 2, fileInfo.getName()  );			
-		}
+		
+		updateCell( ID, String.valueOf( fileInfo.getId() ) );	
+		updateCell( NETWORK, fileInfo.getNetwork().getNetworkName() );
+		updateCell( FILENAME, fileInfo.getName()  );
+		
 		/*descision, what to display in rate-column, rate, or paused??*/
-			if ( fileInfo.getState().getState() == EnumFileState.PAUSED ) {		
-				if ( getText( 3 ) != null && !getText( 3 ).equals( "paused" ) ) {
-				updateCell( 3, "paused" );			
-				}
-			}			
-			else if ( getText( 3 ) != null && !getText( 3 ).equals( String.valueOf( fileInfo.getRate() ) ) )
-					updateCell( 3, String.valueOf( fileInfo.getRate() ) );
-
-		chunks.refresh();
+		String temp;
+			if ( fileInfo.getState().getState() == EnumFileState.PAUSED ) 
+				temp = "paused" ;
+			else 
+				temp = String.valueOf( fileInfo.getRate() );			 
+		updateCell( RATE, temp );
 		
+		updateCell( PERCENT, String.valueOf( fileInfo.getPerc() ) );
+		updateCell( DOWNLOADED, String.valueOf( fileInfo.getDownloaded() ) );
+		updateCell( SIZE, String.valueOf(  fileInfo.getSize()  ) );	
 		
-		if ( getText( 5 ) != null && !getText( 5 ).equals( String.valueOf( fileInfo.getPerc() ) ) ) {
-			updateCell( 5, String.valueOf( fileInfo.getPerc() ) );			
-		}
-		if ( getText( 6 ) != null && !getText( 6 ).equals( String.valueOf( fileInfo.getDownloaded() ) ) ) {
-			updateCell( 6, String.valueOf( fileInfo.getDownloaded() ) );			
-		}
-		if ( getText( 7 ) != null && !getText( 7 ).equals( String.valueOf(  fileInfo.getSize()  ) ) ) {
-			updateCell( 7, String.valueOf(  fileInfo.getSize()  ) );			
-		}
+		chunks.refresh();		
+	
 		
 
 	}
@@ -265,14 +257,17 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 	 * @param text what do we want do display in this cell
 	 */
 	private void updateCell( int column, String text ) {
-		setText( column, text );
-		int x = getBounds( column ).x;
-		int y = getBounds( column ).y;
-		int width = getBounds( column ).width;
-		int height = getBounds( column ).height;
-		//System.out.println( "drawing  "+text+" at " );
-		//System.out.println( getBounds(  column  ) );		
-		getParent().redraw(  x, y, width, height, true  );	
+		if ( getText( column ) == null
+			|| !getText( column ).equals( text  ) )
+			{ 				
+				setText( column, text );
+				int x = getBounds( column ).x;
+				int y = getBounds( column ).y;
+				int width = getBounds( column ).width;
+				int height = getBounds( column ).height;	
+				getParent().redraw(  x, y, width, height, true  );	
+			}
+		
 	}
 		
 	/**
@@ -410,6 +405,9 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 }
 /*
 $Log: DownloadItem.java,v $
+Revision 1.22  2003/07/21 15:12:39  dek
+concurrent thread-exceptions solved??
+
 Revision 1.21  2003/07/20 22:10:06  dek
 synchronized() added
 

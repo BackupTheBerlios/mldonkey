@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTable.java,v 1.21 2003/07/20 21:45:40 dek Exp $ 
+ * @version $Id: DownloadTable.java,v 1.22 2003/07/21 15:12:39 dek Exp $ 
  *
  */
 public class DownloadTable implements Observer, Runnable {
@@ -249,7 +249,8 @@ public class DownloadTable implements Observer, Runnable {
 				/* only process downloading and paused files
 				 * remove canceled files from table*/
 				if ( fileInfo.getState().getState() == EnumFileState.DOWNLOADING
-					|| fileInfo.getState().getState() == EnumFileState.PAUSED ) {
+					|| fileInfo.getState().getState() == EnumFileState.PAUSED )
+					{
 					if ( downloads.containsKey( fileInfo.getId() ) ) {
 						downloads.get( fileInfo.getId() );
 						DownloadItem existingItem =
@@ -277,12 +278,13 @@ public class DownloadTable implements Observer, Runnable {
 			 */
 			for ( int i = 0; i < files.getIds().size(); i++ ) {
 				if ( downloads
-					.contains( ( ( Integer ) files.getIds().get( i ) ).intValue() ) ) {
-					DownloadItem changedItem =
-						( DownloadItem ) downloads.get( 
-							( ( Integer ) files.getIds().get( i ) ).intValue() );
-					changedItem.update();
-				}
+					.contains( ( ( Integer ) files.getIds().get( i ) ).intValue() ) ) 
+					{
+						DownloadItem changedItem =
+							( DownloadItem ) downloads.get( 
+								( ( Integer ) files.getIds().get( i ) ).intValue() );
+						changedItem.update();
+					}
 			}
 			files.clearIds();
 		}
@@ -290,6 +292,9 @@ public class DownloadTable implements Observer, Runnable {
 }
 /*
 $Log: DownloadTable.java,v $
+Revision 1.22  2003/07/21 15:12:39  dek
+concurrent thread-exceptions solved??
+
 Revision 1.21  2003/07/20 21:45:40  dek
 dead-lock fixed (still needs some testing)
 

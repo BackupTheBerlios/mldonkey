@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.19 2003/07/20 12:35:07 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.20 2003/07/21 15:12:39 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -62,6 +62,26 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 	private FileInfo fileInfo;
 	
 	private TableTreeEditor editor;
+	
+	/**
+	 * the colums of the table <br> 
+	 * ID = 0<br> 
+	 * NETWORK = 1<br> 
+	 * FILENAME = 2<br> 
+	 * RATE = 3<br> 
+	 * CHUNKS = 4<br> 
+	 * PERCENT = 5<br> 
+	 * DOWNLOADED = 6<br> 
+	 * SIZE = 7<br> 
+	 */ 
+	private final int ID = 0,
+					  NETWORK = 1,
+					  CLIENTNAME = 2,
+					  RATE = 3,
+					  CHUNKS = 4,
+					  PERCENT = 5,
+					  RANK = 6,
+					  SIZE = 7;
 
 	/**
 	 * @param parent for wich downloaditem this object delivers detailed infos
@@ -80,12 +100,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		Control oldEditor = editor.getEditor();
 			if ( oldEditor != null )
 			oldEditor.dispose();
-		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, 6 );
-		editor.setEditor ( chunks, this, 4 );
-		updateCell( 4, "" );
-		updateCell( 2, clientInfo.getClientName() );
-		updateCell( 3, "" );		
-		updateCell( 6, "rank: unknown" );		
+		this.chunks = new ChunkView( this.getParent().getTable(), SWT.NONE, clientInfo, fileInfo, CHUNKS );
+		editor.setEditor ( chunks, this, CHUNKS );
+		updateCell( CLIENTNAME, clientInfo.getClientName() );
 		updateColums();	
 		addDisposeListener( new DisposeListener() {
 			public void widgetDisposed( DisposeEvent e ) {				
@@ -121,12 +138,17 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 	 * @param text what do we want do display in this cell
 	 */
 	private void updateCell( int column, String text ) {
-		setText( column, text );		
-		int x = getBounds( column ).x;
-		int y = getBounds( column ).y;
-		int width = getBounds( column ).width;
-		int height = getBounds( column ).height;		
-		getParent().redraw( x, y, width, height, true );	
+		if ( getText( column ) == null
+			|| !getText( column ).equals( text  ) )
+			{ 				
+				setText( column, text );
+				int x = getBounds( column ).x;
+				int y = getBounds( column ).y;
+				int width = getBounds( column ).width;
+				int height = getBounds( column ).height;	
+				getParent().redraw(  x, y, width, height, true  );	
+			}
+		
 	}
 	
 	/**
@@ -139,16 +161,16 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 		if ( clientInfo.getClientKind().getClientMode() == EnumClientMode.FIREWALLED ) 
 			connection = "firewalled";			
 		else
-			connection = "direct";
+			connection = "direct";			
+		updateCell( 3, connection );
+			
+		String rank  = "";
+		if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
+			rank = "transfering";
+		else 
+			rank =  "rank: " + clientInfo.getState().getRank() ;
+		updateCell( RANK, rank );	
 		
-		if ( !getText( 3 ).equals( connection ) )
-			updateCell( 3, connection );
-		
-		if ( !getText( 6 ).equals( "rank: " + clientInfo.getState().getRank() )
-			&& !( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING ) ) 
-				updateCell( 6, "rank: " + clientInfo.getState().getRank() );		
-		else if ( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
-			updateCell( 6, "transfering" );	
 			
 		chunks.refresh();
 	}
@@ -179,6 +201,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.20  2003/07/21 15:12:39  dek
+concurrent thread-exceptions solved??
+
 Revision 1.19  2003/07/20 12:35:07  dek
 saving some CPU time, when only sorting clientItems of expanded DownloadItems
 
