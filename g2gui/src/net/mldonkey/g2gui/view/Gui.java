@@ -31,6 +31,7 @@ import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.statusline.*;
+import net.mldonkey.g2gui.view.transferTree.TransferMain;
 
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -46,7 +47,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.30 2003/07/10 19:27:28 dek Exp $ 
+ * @version $Id: Gui.java,v 1.31 2003/07/12 21:50:07 dek Exp $ 
  *
  */
 public class Gui implements IG2gui, Listener {
@@ -301,6 +302,7 @@ public class Gui implements IG2gui, Listener {
 		// new TransferTab( this );
 		new DownloadTab( this );		
 		new ConsoleTab( this );
+		new TransferMain(this);
 		/*setting TransferTab active if registered*/
 		Iterator tabIterator = registeredTabs.iterator();
 			while ( tabIterator.hasNext() ) {
@@ -423,6 +425,9 @@ public class Gui implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.31  2003/07/12 21:50:07  dek
+transferTree is in experimantal preView-state...
+
 Revision 1.30  2003/07/10 19:27:28  dek
 some idle-race cleanup
 
