@@ -29,7 +29,6 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.statusline.*;
 
-import org.eclipse.jface.action.*;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.*;
 import org.eclipse.swt.SWT;
@@ -42,7 +41,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.6 2003/06/26 21:11:10 dek Exp $ 
+ * @version $Id: Gui.java,v 1.7 2003/06/26 21:31:29 lemmstercvs01 Exp $ 
  *
  */
 public class Gui extends ApplicationWindow implements IG2gui, Listener {
@@ -235,6 +234,9 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 
 /*
 $Log: Gui.java,v $
+Revision 1.7  2003/06/26 21:31:29  lemmstercvs01
+unnecessary importer removed
+
 Revision 1.6  2003/06/26 21:11:10  dek
 speed is shown
 
