@@ -45,7 +45,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.46 2003/09/05 23:47:14 zet Exp $ 
+ * @version $Id: FileInfo.java,v 1.47 2003/09/10 14:46:19 zet Exp $ 
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -275,7 +275,8 @@ public class FileInfo extends Parent implements Observer {
 	 * @return Number of sources for this file
 	 */
 	public int getSources() {
-		return sources;
+		// return sources; // TODO: use sources when it is not 0.
+		return clientInfos.size();
 	}
 	/**
 	 * @return File status
@@ -700,6 +701,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.47  2003/09/10 14:46:19  zet
+sources
+
 Revision 1.46  2003/09/05 23:47:14  zet
 *** empty log message ***
 

@@ -33,7 +33,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadtableTreeLabelProviderAdvanced
  *
- * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.2 2003/08/31 01:46:33 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.3 2003/09/10 14:46:07 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLabelProvider {
@@ -72,8 +72,8 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 				return ""+fileInfo.getStringDownloaded();
 			case 5: // percent
 				return ""+dfp.format(fileInfo.getPerc()) + "%";
-			case 6: // # sources  fileInfo.getSources() is always 0 
-				return ""+fileInfo.getClientInfos().size();		
+			case 6: // # sources  
+				return ""+fileInfo.getSources();		
 			case 7: // rate
 				if (fileInfo.getState().getState() == EnumFileState.PAUSED)
 					return G2GuiResources.getString( "TT_Paused" );
@@ -124,6 +124,9 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 }
 /*
 $Log: DownloadTableTreeLabelProviderAdvanced.java,v $
+Revision 1.3  2003/09/10 14:46:07  zet
+sources
+
 Revision 1.2  2003/08/31 01:46:33  zet
 localise
 
