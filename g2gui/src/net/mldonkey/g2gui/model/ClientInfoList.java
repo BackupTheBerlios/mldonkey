@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoList.java,v 1.3 2003/06/14 23:04:08 lemmstercvs01 Exp $$ 
+ * @version $$Id: ClientInfoList.java,v 1.4 2003/06/15 13:14:06 lemmstercvs01 Exp $$ 
  */
 public class ClientInfoList extends InfoList {
 	/**
@@ -54,7 +54,7 @@ public class ClientInfoList extends InfoList {
 	 * @param value The ClientInfo object
 	 */
 	public void put( int key, ClientInfo value ) {
-		this.put( key, value );
+		this.infoList.put( key, value );
 	}
 	
 	/**
@@ -68,6 +68,9 @@ public class ClientInfoList extends InfoList {
 }
 /*
 $$Log: ClientInfoList.java,v $
+$Revision 1.4  2003/06/15 13:14:06  lemmstercvs01
+$fixed a bug in put()
+$
 $Revision 1.3  2003/06/14 23:04:08  lemmstercvs01
 $change from interface to abstract superclass
 $
