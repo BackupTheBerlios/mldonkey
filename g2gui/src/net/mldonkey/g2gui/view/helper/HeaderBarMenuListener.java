@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * HeaderBarMenusListener - helper for HeaderBar Menus
  *
- * @version $Id: HeaderBarMenuListener.java,v 1.2 2003/10/01 21:16:16 zet Exp $
+ * @version $Id: HeaderBarMenuListener.java,v 1.3 2003/10/15 18:24:20 zet Exp $
  *
  */
 public class HeaderBarMenuListener implements IMenuListener {
@@ -79,8 +79,10 @@ public class HeaderBarMenuListener implements IMenuListener {
 
             if ( sashForm.getMaximizedControl(  ) == null ) {
                 setText( G2GuiResources.getString( "MISC_MAXIMIZE" ) );
+				setImageDescriptor( G2GuiResources.getImageDescriptor( "maximize" ) );
             } else {
                 setText( G2GuiResources.getString( "MISC_RESTORE" ) );
+				setImageDescriptor( G2GuiResources.getImageDescriptor( "restore" ) );
             }
         }
         public void run(  ) {
@@ -94,6 +96,7 @@ public class HeaderBarMenuListener implements IMenuListener {
     public class FlipSashAction extends Action {
 		public FlipSashAction(  ) {
 			super( G2GuiResources.getString( "MISC_FLIP_SASH" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "rotate" ) );
 		}
 		public void run(  ) {
 			flipSash( );
@@ -105,6 +108,9 @@ public class HeaderBarMenuListener implements IMenuListener {
 
 /*
 $Log: HeaderBarMenuListener.java,v $
+Revision 1.3  2003/10/15 18:24:20  zet
+icons
+
 Revision 1.2  2003/10/01 21:16:16  zet
 add flip sash menuitem
 

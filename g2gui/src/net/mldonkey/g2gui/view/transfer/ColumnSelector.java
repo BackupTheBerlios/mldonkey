@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.1 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: ColumnSelector.java,v 1.2 2003/10/15 18:25:00 zet Exp $
  *
  */
 public class ColumnSelector {
@@ -84,7 +84,7 @@ public class ColumnSelector {
     public void createContents() {
         shell = new Shell( SWT.BORDER | SWT.TITLE | SWT.APPLICATION_MODAL );
         shell.setBounds( ( desktop.getBounds().width - width ) / 2, ( desktop.getBounds().height - height ) / 2, width, height );
-        shell.setImage( G2GuiResources.getImage( "ProgramIcon" ) );
+        shell.setImage( G2GuiResources.getImage( "table" ) );
         shell.setText( G2GuiResources.getString( "TT_ColumnSelector" ) );
         shell.setLayout( new FillLayout() );
 
@@ -237,6 +237,9 @@ public class ColumnSelector {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.2  2003/10/15 18:25:00  zet
+icons
+
 Revision 1.1  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 

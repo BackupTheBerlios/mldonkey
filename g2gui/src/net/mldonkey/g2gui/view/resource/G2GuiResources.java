@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.35 2003/10/15 15:33:09 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.36 2003/10/15 18:24:51 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -265,6 +265,18 @@ public class G2GuiResources {
         reg.put( "commit", createRawMImage( "commit.gif" ) );
         reg.put( "commit_question", createRawMImage( "commit_question.gif" ) );
         reg.put( "edonkey", createRawMImage( "edonkey.gif" ) );
+        reg.put( "globe", createRawMImage( "globe.gif" ) );
+        reg.put( "preferences", createRawMImage( "preferences.gif" ) );
+        reg.put( "rotate", createRawMImage( "rotate.gif" ) );
+        reg.put( "collapseAll", createRawMImage( "collapseall.gif" ) );
+        reg.put( "expandAll", createRawMImage( "expandall.gif") );
+        reg.put( "plus" , createRawMImage( "plus.gif" ) );
+        reg.put( "minus" , createRawMImage( "minus.gif" ) );
+        reg.put( "maximize", createRawMImage( "maximize.gif" ) );
+        reg.put( "restore", createRawMImage( "restore.gif" ) );
+        reg.put( "table", createRawMImage( "table.gif" ) );
+        
+        
     }
 
     /**
@@ -410,6 +422,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.36  2003/10/15 18:24:51  zet
+icons
+
 Revision 1.35  2003/10/15 15:33:09  zet
 split images directory
 

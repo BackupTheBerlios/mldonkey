@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * MenuBar
  *
- * @version $Id: MainMenuBar.java,v 1.16 2003/10/13 18:36:17 zet Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.17 2003/10/15 18:24:44 zet Exp $ 
  *
  */
 public class MainMenuBar {
@@ -84,6 +84,8 @@ public class MainMenuBar {
 					&& G2Gui.getCoreConsole() == null ) {
 				
 					menuItem = new MenuItem ( fileMenu, SWT.PUSH );
+					menuItem.setText ( "&Kill core" );
+					menuItem.setImage( G2GuiResources.getImage( "cancel" ) );
 					menuItem.addListener ( SWT.Selection, new Listener () {
 						public void handleEvent ( Event e ) {
 							
@@ -100,19 +102,24 @@ public class MainMenuBar {
 							}
 						} 
 					} );
-					menuItem.setText ( "&Kill core" );
+					
 				}
+				
+				// File>Separator
+				menuItem = new MenuItem( fileMenu, SWT.SEPARATOR );
 				
 				// File>Exit
 				menuItem = new MenuItem ( fileMenu, SWT.PUSH );
+				menuItem.setText ( "E&xit\tCtrl+W" );
+				menuItem.setImage( G2GuiResources.getImage( "X" ) );
+				menuItem.setAccelerator ( SWT.CTRL + 'W' );
 				menuItem.addListener ( SWT.Selection, new Listener () {
 					public void handleEvent ( Event e ) {
 						mainTab.getMinimizer().forceClose();
 						shell.close();
 					} 
 				} );
-				menuItem.setText ( "E&xit\tCtrl+W" );
-				menuItem.setAccelerator ( SWT.CTRL + 'W' );
+				
 				
 			}
 		} );
@@ -125,12 +132,14 @@ public class MainMenuBar {
 		
 			// Tools>Preferences
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.setImage( G2GuiResources.getImage( "preferences" ) );
+			menuItem.setText( "Preferences" );
 			menuItem.addListener( SWT.Selection, new Listener() {
 				public void handleEvent( Event event ) {	
 					mainTab.openPreferences();
 				}
 			} );
-			menuItem.setText( "Preferences" );
+			
 	
 		// Help
 		menuItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
@@ -140,42 +149,53 @@ public class MainMenuBar {
 		
 			// Help>Homepage
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.setText( "Homepage" );
+			menuItem.setImage( G2GuiResources.getImage( "globe" ) );
 			menuItem.addListener( SWT.Selection, 
 				new URLListener( "http://developer.berlios.de/projects/mldonkey/" )
 			);
-			menuItem.setText( "Homepage" );
+		
 		
 			// Help>Feedback
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.setText( "Feedback Forum" );
+			menuItem.setImage( G2GuiResources.getImage( "globe" ) );
 			menuItem.addListener( SWT.Selection, 
 				new URLListener( "http://mldonkey.berlios.de/modules.php?name=Forums&file=viewforum&f=9" )
 			);
-			menuItem.setText( "Feedback Forum" );
 			
 			// Help>Bugs
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.setText( "Bugs/Suggestions" );
+			menuItem.setImage( G2GuiResources.getImage( "globe" ) );
 			menuItem.addListener( SWT.Selection, 
 				new URLListener( "http://developer.berlios.de/bugs/?group_id=610" )
 			);
-			menuItem.setText( "Bugs/Suggestions" );
+			
 			
 			// Help>FAQ
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.setText( "FAQ" );
+			menuItem.setImage( G2GuiResources.getImage( "globe" ) );
 			menuItem.addListener( SWT.Selection, 
 				new URLListener( 
 					"http://openfacts.berlios.de/index-en.phtml?title=MLdonkey_G2gui" )
 			);
-			menuItem.setText( "FAQ" );
+			
+			// Help>Separator
+			menuItem = new MenuItem( subMenu, SWT.SEPARATOR );
 	
 			// Help>About
 			menuItem = new MenuItem( subMenu, SWT.PUSH );
+			menuItem.setText( "About" );
+			menuItem.setImage( G2GuiResources.getImage( "commit_question" ) );
 			menuItem.addListener( SWT.Selection, new Listener() {
 				public void handleEvent( Event event ) {	
 					About about = new About( shell );
 					about.open();
 				}
 			} );
-			menuItem.setText( "About" );
+			
 	}	
 	
 	/**
@@ -197,6 +217,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.17  2003/10/15 18:24:44  zet
+icons
+
 Revision 1.16  2003/10/13 18:36:17  zet
 fix file->exit (w/tray) bug
 

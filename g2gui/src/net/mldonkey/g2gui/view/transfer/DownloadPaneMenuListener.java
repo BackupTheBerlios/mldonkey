@@ -51,7 +51,7 @@ import org.eclipse.swt.events.DisposeListener;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.8 2003/10/14 23:23:43 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.9 2003/10/15 18:25:00 zet Exp $
  *
  */
 public class DownloadPaneMenuListener implements IMenuListener, DisposeListener {
@@ -281,8 +281,10 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
             if ( expand ) {
                 setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_EXPANDALL" ) );
+                setImageDescriptor( G2GuiResources.getImageDescriptor( "expandAll" ) );
             } else {
                 setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_COLLAPSEALL" ) );
+				setImageDescriptor( G2GuiResources.getImageDescriptor( "collapseAll" ) );
             }
 
             this.expand = expand;
@@ -369,6 +371,7 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
     private class ColumnSelectorAction extends Action {
         public ColumnSelectorAction() {
             super( G2GuiResources.getString( "TT_ColumnSelector" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "table" ) );
         }
 
         public void run() {
@@ -389,6 +392,7 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 	   		sashForm = (SashForm) tableTreeViewer.getTableTree().getTable().getParent().getParent().getParent().getParent();
 			show = (sashForm.getWeights()[1] == 0);
 		    setText( (show ? G2GuiResources.getString( "MISC_SHOW" ) : G2GuiResources.getString( "MISC_HIDE") ) + " " + G2GuiResources.getString( "TT_Clients") );
+	  		setImageDescriptor( show ? G2GuiResources.getImageDescriptor( "plus" ) : G2GuiResources.getImageDescriptor( "minus" )  );
 	   }
 
 	   public void run() {
@@ -614,6 +618,9 @@ public class DownloadPaneMenuListener implements IMenuListener, DisposeListener 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.9  2003/10/15 18:25:00  zet
+icons
+
 Revision 1.8  2003/10/14 23:23:43  zet
 check properties
 
