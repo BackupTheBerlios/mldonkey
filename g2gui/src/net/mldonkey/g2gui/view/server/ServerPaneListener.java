@@ -45,7 +45,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.7 2003/11/09 23:10:07 lemmster Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.8 2003/11/10 08:11:47 lemmster Exp $ 
  *
  */
 public class ServerPaneListener extends GPaneListener {
@@ -68,8 +68,6 @@ public class ServerPaneListener extends GPaneListener {
 		boolean temp = false;
 		GViewerFilter aFilter = new StateGViewerFilter(gView);
 		for ( int i = 0; i < this.states.length; i++ ) {
-			String aString = states[ i ].toString();
-			boolean bool = PreferenceLoader.loadBoolean( aString );
 			if ( PreferenceLoader.loadBoolean( states[ i ].toString() ) ) {
 				aFilter.add( states[ i ] );
 				temp = true;
@@ -120,6 +118,9 @@ public class ServerPaneListener extends GPaneListener {
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.8  2003/11/10 08:11:47  lemmster
+removed debug
+
 Revision 1.7  2003/11/09 23:10:07  lemmster
 remove "Show connected Servers only"
 added filter saving in searchtab
