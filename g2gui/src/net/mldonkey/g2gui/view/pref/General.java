@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.*;
  * General
  *
  * @author $user$
- * @version $Id: General.java,v 1.7 2003/06/30 17:29:54 dek Exp $ 
+ * @version $Id: General.java,v 1.8 2003/07/01 13:52:31 dek Exp $ 
  *
  */
 public class General extends PreferencePage {	
@@ -62,8 +62,14 @@ public class General extends PreferencePage {
 		super( "General Settings" );	
 		
 		this.connected = connected;		
-		this.mldonkey = mldonkey;
+		this.mldonkey = mldonkey;			
 		
+		
+		
+	}
+	private void getOptionsFromCore(
+		boolean connected,
+		CoreCommunication mldonkey) {
 		if (connected){
 			this.options = mldonkey.getOptions();		
 			BusyIndicator.showWhile(null,new Runnable(){			
@@ -84,16 +90,13 @@ public class General extends PreferencePage {
 			
 			autoCommit = ( new Boolean (
 				( ( OptionsInfo ) options.get( "auto_commit" ) ).getValue() ) 
-										).booleanValue();
-			
+										).booleanValue();			
 		}
 		else {
 			clientName = res.getString("OPTIONS_NOT_CONNECTED");
 			maxHardUploadRate = res.getString("OPTIONS_NOT_CONNECTED");
 			maxHardDownloadRate = res.getString("OPTIONS_NOT_CONNECTED");
 		}
-		
-		
 	}		
 
 	/* (non-Javadoc)
@@ -101,18 +104,12 @@ public class General extends PreferencePage {
 	 */
 	protected Control createContents( Composite shell ) {
 		
+			getOptionsFromCore(connected, mldonkey);
 		 	createClientNameField(shell);
 			createDownloadRateField(shell);
 			createUploadRateField(shell);
-			createAutoCommitField(shell);
-		
-		
-				
-
-				
-		 				
-		
-		
+			createAutoCommitField(shell);	
+					
 		return null;
 	}
 	
@@ -127,7 +124,7 @@ public class General extends PreferencePage {
 	private void createUploadRateField(Composite shell) {
 		this.maxHardUploadRateField = new IntegerFieldEditor("max_hard_upload_rate", "Max. Upload (in kb/s, 0 is unlimited)",shell);
 			maxHardUploadRateField.setEnabled(connected,shell);
-			maxHardUploadRateField.setStringValue(maxHardUploadRate);
+			maxHardUploadRateField.setStringValue(maxHardUploadRate);		 	
 			maxHardUploadRateField.getTextControl(shell).setToolTipText("The maximal upload rate you can tolerate on your link in kBytes/s (0 = no limit)\n" +
 				"The limit will apply on all your connections (clients and servers) and both\n" +
 				" control and data messages.");
@@ -151,7 +148,7 @@ public class General extends PreferencePage {
 	private void createClientNameField(Composite shell) {
 		this.clientNameField = new StringFieldEditor("client_name", "Client Name",shell);
 			clientNameField.setEnabled(connected,shell);
-			clientNameField.setStringValue(clientName);
+			clientNameField.setStringValue(clientName);			
 			clientNameField.getTextControl(shell).setToolTipText("Small name of client");
 			clientNameField.getLabelControl(shell).setToolTipText("Small name of client");			
 	}
@@ -171,7 +168,7 @@ public class General extends PreferencePage {
 		 		
 			if (!maxHardUploadRate.equals(maxHardUploadRateField.getStringValue()))
 				mldonkey.setOption("max_hard_upload_rate",maxHardUploadRateField.getStringValue());
-				
+							
 			if (!maxHardDownloadRate.equals(maxHardDownloadRateField.getStringValue()))
 				mldonkey.setOption("max_hard_download_rate",maxHardDownloadRateField.getStringValue());
 				
@@ -193,15 +190,15 @@ public class General extends PreferencePage {
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected void createFieldEditors() {
-		
-		
-		
-		
 	}
+
 }
 
 /*
 $Log: General.java,v $
+Revision 1.8  2003/07/01 13:52:31  dek
+small unimportant bugfixes (if bugfixes can be unimportant...)
+
 Revision 1.7  2003/06/30 17:29:54  dek
 Saving all the options in General works now (not validated for strings/int/yet)
 

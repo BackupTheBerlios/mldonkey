@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.8 2003/06/30 21:42:45 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.9 2003/07/01 13:52:31 dek Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {	
@@ -44,8 +44,11 @@ public class G2Gui extends PreferencePage  {
 	private FontFieldEditor consoleTabFontField;
 	
 	private boolean connected;
-	StringFieldEditor hostNameField,userNameField,passwordField;
-	IntegerFieldEditor portField;
+	StringFieldEditor hostNameField,
+					 	userNameField,
+					 	passwordField,
+					 	portField;
+					 	
 	PreferenceStore preferenceStore;
 	/**
 	 * @param preferenceStore
@@ -57,7 +60,7 @@ public class G2Gui extends PreferencePage  {
 		preferenceStore.setDefault("hostname","localhost");
 		preferenceStore.setDefault("username","admin");
 		preferenceStore.setDefault("password","");
-		preferenceStore.setDefault("port",(int)4001);
+		preferenceStore.setDefault("port","4001");
 
 	}
 
@@ -71,7 +74,7 @@ public class G2Gui extends PreferencePage  {
 			hostNameField.setStringValue(preferenceStore.getString("hostname"));
 			computeColumn(hostNameField.getNumberOfControls());					
 			
-		portField = new IntegerFieldEditor("port","Port",shell);
+		portField = new StringFieldEditor("port","Port",shell);
 			portField.setStringValue(preferenceStore.getDefaultString("port"));
 			portField.setStringValue(preferenceStore.getString("port"));			
 			computeColumn(portField.getNumberOfControls());
@@ -133,7 +136,7 @@ public class G2Gui extends PreferencePage  {
 		preferenceStore.setValue("initialized",true);
 		preferenceStore.setValue("hostname",hostNameField.getStringValue());
 		preferenceStore.setValue("username",userNameField.getStringValue());
-		preferenceStore.setValue("port",portField.getIntValue());
+		preferenceStore.setValue("port",portField.getStringValue());
 		preferenceStore.setValue("password",passwordField.getStringValue());
 		
 		/*the next one gets the wrong thing, have to find out, how to obtain the selected
@@ -177,6 +180,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.9  2003/07/01 13:52:31  dek
+small unimportant bugfixes (if bugfixes can be unimportant...)
+
 Revision 1.8  2003/06/30 21:42:45  dek
 and removed debugging  system.out.println
 
