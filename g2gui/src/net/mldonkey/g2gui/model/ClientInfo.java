@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.8 2003/07/06 12:47:22 lemmstercvs01 Exp $ 
+ * @version $Id: ClientInfo.java,v 1.9 2003/07/12 13:53:21 dek Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -67,7 +67,7 @@ public class ClientInfo extends Parent {
 	/**
 	 * Client Rate
 	 */
-	private int clientRate;
+	private int clientRating;
 	/**
 	 * Client Chat Port (mlchat)
 	 */
@@ -113,10 +113,22 @@ public class ClientInfo extends Parent {
 	}
 
 	/**
-	 * @return The client rate
+	 * @return This clients Rating (not used yet)
 	 */
-	public int getClientRate() {
-		return clientRate;
+	public int getClientRating() {		
+		return clientRating;
+		
+	}
+	
+	/**
+	 *returns a string with file-availability-Information
+	 * @param fileInfo which file do you wnat the availability for?
+	 * @return String representation of the avail.
+	 */
+	public String getFileAvailability( FileInfo fileInfo ) {
+		String availability =
+		  ( String ) ( ( THashMap ) this.avail ).get( fileInfo );
+		return availability;
 	}
 
 	/**
@@ -172,7 +184,7 @@ public class ClientInfo extends Parent {
 		this.setClientType( messageBuffer.readByte() );
 		this.tag = messageBuffer.readTagList();
 		this.clientName = messageBuffer.readString();
-		this.clientRate = messageBuffer.readInt32();
+		this.clientRating = messageBuffer.readInt32();
 		this.clientChatPort = messageBuffer.readInt32();
 	}
 	
@@ -190,12 +202,15 @@ public class ClientInfo extends Parent {
 	 * @param avail The availability of this file
 	 */
 	public void putAvail( FileInfo fileInfo, String avail ) {
-		( ( THashMap) this.avail ).put( fileInfo, avail );
+		( ( THashMap ) this.avail ).put( fileInfo, avail );
 	}
 }
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.9  2003/07/12 13:53:21  dek
+some new methods, to be able to show the information
+
 Revision 1.8  2003/07/06 12:47:22  lemmstercvs01
 bugfix for fileUpdateAvailability
 
