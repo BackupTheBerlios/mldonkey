@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Composite;
  * applies a GridData object for its appearance.
  *
  *
- * @version $Id: StatusLine.java,v 1.11 2003/08/25 12:24:09 zet Exp $ 
+ * @version $Id: StatusLine.java,v 1.12 2003/08/28 16:07:48 zet Exp $ 
  *
  */
 public class StatusLine {
@@ -75,18 +75,7 @@ public class StatusLine {
 		
 		// This hidden composite contains linkEntry which is displayed 
 		// on demand from linkEntryItem
-		linkEntryComposite = new Composite( mainComposite, SWT.NONE );
-		gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 0;
-
-		linkEntryComposite.setLayout(gridLayout);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.heightHint = 0;
-		linkEntryComposite.setLayoutData(gd);
+		createLinkEntry( mainComposite );
 		
 		// the linkEntry
 		new LinkEntry(this, this.core, linkEntryComposite);
@@ -120,6 +109,29 @@ public class StatusLine {
 		
 		/* the right field */
 		new SpeedItem( this, this.core );
+		
+	}
+	
+	
+	/**
+	 * Create the hidden linkEntryComposite
+	 * @param parent Composite
+	 */
+	public void createLinkEntry( Composite parent ) {
+		
+		linkEntryComposite = new Composite( mainComposite, SWT.NONE );
+				
+		gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.verticalSpacing = 0;
+
+		linkEntryComposite.setLayout(gridLayout);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.heightHint = 0;
+		linkEntryComposite.setLayoutData(gd);
 		
 	}
 
@@ -163,6 +175,9 @@ public class StatusLine {
 
 /*
 $Log: StatusLine.java,v $
+Revision 1.12  2003/08/28 16:07:48  zet
+update linkentry
+
 Revision 1.11  2003/08/25 12:24:09  zet
 Toggleable link entry.  It should parse links from pasted HTML as well.
 

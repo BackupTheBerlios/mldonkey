@@ -33,8 +33,12 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -43,7 +47,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.2 2003/08/26 21:14:45 zet Exp $ 
+ * @version $Id: LinkEntry.java,v 1.3 2003/08/28 16:07:48 zet Exp $ 
  *
  */
 public class LinkEntry {
@@ -62,20 +66,37 @@ public class LinkEntry {
 	}
 	
 	public void createContents(Composite parent) {
+		
+		ViewForm linkEntryViewForm = new ViewForm( parent, SWT.BORDER );
+		linkEntryViewForm.setLayoutData(new GridData(GridData.FILL_BOTH));	
 			
-		linkEntryText = new Text(parent, SWT.WRAP | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
-		linkEntryText.setLayoutData(new GridData(GridData.FILL_BOTH));
+		CLabel linkEntryCLabel = new CLabel(linkEntryViewForm, SWT.LEFT | SWT.SHADOW_OUT );	
+		linkEntryCLabel.setText(G2GuiResources.getString("LE_HEADER"));
+		linkEntryCLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		linkEntryCLabel.setBackground(new Color[]{linkEntryViewForm.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+										linkEntryViewForm.getBackground()},
+										new int[] {100});	
+			
+			
+		linkEntryText = new Text(linkEntryViewForm, SWT.WRAP | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
+		linkEntryText.setLayoutData(new FillLayout());
 		linkEntryText.setFont(JFaceResources.getTextFont());
 
-		linkEntryButton = new Button(parent, SWT.NONE);
+		
+
+		linkEntryButton = new Button(linkEntryViewForm, SWT.FLAT);
 		linkEntryButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.FILL_VERTICAL));
 		linkEntryButton.setText(G2GuiResources.getString("LE_BUTTON"));
-		linkEntryButton.setToolTipText(G2GuiResources.getString("LE_BUTTON_TOOLTIP"));
 		linkEntryButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 				enterLinks(linkEntryText.getText());
 			}
 		});
+		
+		linkEntryViewForm.setTopLeft(linkEntryCLabel);
+		linkEntryViewForm.setContent(linkEntryText);
+		linkEntryViewForm.setTopRight(linkEntryButton);
+		
 	}
 
 	// bleah. When do magnet links terminate? or ".torrent?value=x..."?  I don't know..
@@ -122,6 +143,9 @@ public class LinkEntry {
 }
 /*
 $Log: LinkEntry.java,v $
+Revision 1.3  2003/08/28 16:07:48  zet
+update linkentry
+
 Revision 1.2  2003/08/26 21:14:45  zet
 ignore case
 

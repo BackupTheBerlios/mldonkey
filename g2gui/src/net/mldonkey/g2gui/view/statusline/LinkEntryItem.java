@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * LinkEntryItem
  *
- * @version $Id: LinkEntryItem.java,v 1.1 2003/08/25 12:24:09 zet Exp $ 
+ * @version $Id: LinkEntryItem.java,v 1.2 2003/08/28 16:07:48 zet Exp $ 
  *
  */
 public class LinkEntryItem {
@@ -68,7 +68,7 @@ public class LinkEntryItem {
 			public void mouseDown(MouseEvent e) {
 				GridData g = new GridData(GridData.FILL_HORIZONTAL);
 				if (linkEntryToggle) g.heightHint = 0;
-					else g.heightHint = 50;
+					else g.heightHint = 75;
 				linkEntryToggle = !linkEntryToggle;
 				linkEntryComposite.setLayoutData(g);
 				statusLine.getMainTab().getMainComposite().layout();
@@ -83,6 +83,9 @@ public class LinkEntryItem {
 }
 /*
 $Log: LinkEntryItem.java,v $
+Revision 1.2  2003/08/28 16:07:48  zet
+update linkentry
+
 Revision 1.1  2003/08/25 12:24:09  zet
 Toggleable link entry.  It should parse links from pasted HTML as well.
 
