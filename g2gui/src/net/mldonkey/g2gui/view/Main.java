@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.view.pref.Preferences;
  * G2GuiTest
  *
  * @author $user$
- * @version $Id: Main.java,v 1.2 2003/06/25 10:42:36 dek Exp $ 
+ * @version $Id: Main.java,v 1.3 2003/06/25 18:04:53 dek Exp $ 
  *
  */
 public class Main {
@@ -57,10 +57,8 @@ public class Main {
 		} catch (IOException e) {			
 			System.out.println("initalizing Preferences Dialog failed due to IOException");
 		}		
-		if (!(preferenceStore.getBoolean("initialized"))){
-			Shell myss = new Shell(new Display());
-			myss.open();
-			myprefs.open(myss,null);
+		if (!(preferenceStore.getBoolean("initialized"))){					
+			myprefs.open(new Shell(new Display()),null);
 			}
 		int port = preferenceStore.getInt("port");
 		String hostname = preferenceStore.getString("hostname");
@@ -77,7 +75,7 @@ public class Main {
 			e.printStackTrace();
 		}	
 			
-		Gui g2gui = new Gui(null);
+		Gui g2gui = new Gui(mldonkey);
 		mldonkey.disconnect();
 
 	}
@@ -93,6 +91,9 @@ public class Main {
 
 /*
 $Log: Main.java,v $
+Revision 1.3  2003/06/25 18:04:53  dek
+Console-Tab reworked
+
 Revision 1.2  2003/06/25 10:42:36  dek
 peferenences dialog at first start
 

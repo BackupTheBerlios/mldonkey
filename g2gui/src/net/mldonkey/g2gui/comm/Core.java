@@ -39,7 +39,7 @@ import net.mldonkey.g2gui.view.InterFaceUI;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.30 2003/06/24 20:52:49 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.31 2003/06/25 18:04:53 dek Exp $ 
  *
  */
 public class Core extends Thread implements CoreCommunication {
@@ -288,10 +288,20 @@ public class Core extends Thread implements CoreCommunication {
 		setOption.sendMessage( connection );		
 	}
 
+	/* returns the actual Console-message Buffer
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getConsoleMessage()
+	 */
+	public ConsoleMessage getConsoleMessage() {
+		return (ConsoleMessage) this.consoleMessage;
+	}
+
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.31  2003/06/25 18:04:53  dek
+Console-Tab reworked
+
 Revision 1.30  2003/06/24 20:52:49  lemmstercvs01
 refactored
 

@@ -22,6 +22,7 @@ package net.mldonkey.g2gui.comm;
 
 import java.io.IOException;
 
+import net.mldonkey.g2gui.model.ConsoleMessage;
 import net.mldonkey.g2gui.model.Information;
 import net.mldonkey.g2gui.view.InterFaceUI;
 
@@ -29,7 +30,7 @@ import net.mldonkey.g2gui.view.InterFaceUI;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.7 2003/06/24 20:53:13 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.8 2003/06/25 18:04:53 dek Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -55,4 +56,6 @@ public interface CoreCommunication {
 	 * @param info this info
 	 */
 	void notifyListeners( Information info );
+	
+	ConsoleMessage getConsoleMessage();
 }

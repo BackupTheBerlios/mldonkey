@@ -22,13 +22,15 @@
  */
 package net.mldonkey.g2gui.view;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * IG2gui
  *
  * @author $user$
- * @version $Id: IG2gui.java,v 1.1 2003/06/24 20:44:54 lemmstercvs01 Exp $ 
+ * @version $Id: IG2gui.java,v 1.2 2003/06/25 18:04:53 dek Exp $ 
  *
  */
 public interface IG2gui {
@@ -49,6 +51,8 @@ public interface IG2gui {
 	 * @return the Content-Area
 	 */
 	Composite getPageContainer();
+	
+	CoreCommunication getCore();
 
 	/**
 	 * @param tab I want to be active!!!!
@@ -60,6 +64,9 @@ public interface IG2gui {
 
 /*
 $Log: IG2gui.java,v $
+Revision 1.2  2003/06/25 18:04:53  dek
+Console-Tab reworked
+
 Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
 refactored
 

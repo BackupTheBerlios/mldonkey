@@ -22,34 +22,28 @@
  */
 package net.mldonkey.g2gui.view;
 
-import net.mldonkey.g2gui.comm.Core;
-import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.comm.EncodeMessage;
-import net.mldonkey.g2gui.comm.Message;
-import net.mldonkey.g2gui.model.ConsoleMessage;
-import net.mldonkey.g2gui.model.Information;
 
+import net.mldonkey.g2gui.comm.*;
+import net.mldonkey.g2gui.model.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.widgets.*;
+
 
 /**
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.1 2003/06/24 20:44:54 lemmstercvs01 Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.2 2003/06/25 18:04:53 dek Exp $ 
  *
  */
-public class ConsoleTab extends G2guiTab implements InterFaceUI {
-	private Core mldonkey;		
-	private Text infoDisplay;
+public class ConsoleTab extends G2guiTab implements InterFaceUI,ControlListener {	
 	private CoreCommunication core;
+	private Composite parent;
+	private Text infoDisplay;
 	private String consoleMessage;
-	 Text input;
+	private Text input;
 
 	/**
 	 * @param gui
@@ -58,54 +52,35 @@ public class ConsoleTab extends G2guiTab implements InterFaceUI {
 		super(gui);
 		this.button.setText("Console");
 		createContents( this.content );
-		mldonkey = Main.getMldonkey();
-		registerListener( mldonkey );
+		core = gui.getCore();
+		registerListener( core );
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.widgets.Gui.G2guiTab#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected void createContents(Composite parent) {		
-		
-		registerListener( Main.getMldonkey() );
-				/*
-				 * Now we set the Layout for this very special Tab 
-				 */		
-				GridLayout gridLayout = new GridLayout();
-					gridLayout.numColumns = 1;
-					gridLayout.verticalSpacing = 10;
-				parent.setLayout(gridLayout);
-			
-				GridData gridData = new GridData(GridData.FILL_BOTH);			
-					gridData.horizontalAlignment = GridData.FILL;
-					gridData.verticalAlignment = GridData.BEGINNING;					
+		this.parent = parent;
+		parent.setLayout(null);
+		parent.addControlListener(this);		
+		registerListener( Main.getMldonkey() );			
 				/*
 				 * Adding the Console-Display Text-field
 				 */			
-				infoDisplay = new Text(parent,SWT.MULTI|SWT.H_SCROLL|SWT.V_SCROLL);	
-					infoDisplay.setLayoutData(gridData);
-   			
-				gridData = new GridData(GridData.FILL_BOTH);			
-					gridData.horizontalAlignment = GridData.FILL;
-					gridData.verticalAlignment = GridData.BEGINNING;
-					gridData.grabExcessHorizontalSpace = true;
-			
-				final Text input = new Text(parent, SWT.SINGLE | SWT.BORDER);
-					gridData.horizontalAlignment = GridData.FILL;
-					input.setLayoutData(gridData);
+				infoDisplay = new Text(parent,SWT.MULTI|SWT.H_SCROLL|SWT.V_SCROLL);
+				input = new Text(parent, SWT.SINGLE | SWT.BORDER);					
 					//Send command to core
 					input.addKeyListener(new KeyAdapter() {
 						  public void keyPressed(KeyEvent e) {
-							if (e.character == SWT.CR) {
+							if ( e.character == SWT.CR ) {
 								infoDisplay.setText(infoDisplay.getText()+input.getText()+"\n");
 								String[] command = new String[1];
 								command[0]=input.getText();
-								(new EncodeMessage(Message.S_CONSOLEMSG,command)).sendMessage(mldonkey.getConnection());
+								( new EncodeMessage( Message.S_CONSOLEMSG,command ) ).sendMessage( ( ( Core ) core ).getConnection() );
 								input.setText("");
 							}
 						  }
-				});
-			
+				});	
 		
 			}
 
@@ -116,14 +91,12 @@ public class ConsoleTab extends G2guiTab implements InterFaceUI {
 		if (anInformation instanceof ConsoleMessage )
 		{
 			ConsoleMessage aConsoleMessage = (ConsoleMessage)anInformation;
-			consoleMessage = aConsoleMessage.getConsoleMessage();
-			
+			consoleMessage = aConsoleMessage.getConsoleMessage();	
+			aConsoleMessage.reset();		
 			content.getDisplay().syncExec( new Runnable () {
 				public void run() {	
 					infoDisplay.append(consoleMessage);
-					infoDisplay.update();
-					if (infoDisplay.getSize().y<infoDisplay.getLineCount())					
-					content.layout();			
+					infoDisplay.update();			
 				}
 			});
 			
@@ -138,6 +111,40 @@ public class ConsoleTab extends G2guiTab implements InterFaceUI {
 	 */
 	public void registerListener(CoreCommunication mldonkey) {
 		mldonkey.registerListener(this);
+		/*getting first payload of infos)*/
+	}
+	
+	public void handleEvent(Event event) {
+		mainWindow.setActive(this);
+		infoDisplay.append(core.getConsoleMessage().getConsoleMessage());
+		core.getConsoleMessage().reset();
+			}
+	
+
+/*
+ * Everything below here is a private kind of LayoutManager, only for this tab,
+ * as none of the present ones did what i wanted it to do
+ * 
+ */
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.ControlListener#controlMoved(org.eclipse.swt.events.ControlEvent)
+	 */
+	public void controlMoved(ControlEvent e) {		
+		/*do nothing*/		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.ControlListener#controlResized(org.eclipse.swt.events.ControlEvent)
+	 */
+	public void controlResized(ControlEvent e) {
+		if ((this.infoDisplay!=null) && (this.input!=null)){
+			Rectangle rect = this.parent.getClientArea ();	
+			int inputheight =this.input.computeSize( SWT.DEFAULT, SWT.DEFAULT, true ).y;		
+			this.infoDisplay.setBounds(0,0,rect.width,(rect.height-inputheight));
+			this.input.setBounds(0,(rect.height-inputheight),rect.width,inputheight);			
+		}
+	
+			
 		
 	}
 	
@@ -147,6 +154,9 @@ public class ConsoleTab extends G2guiTab implements InterFaceUI {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.2  2003/06/25 18:04:53  dek
+Console-Tab reworked
+
 Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
 refactored
 

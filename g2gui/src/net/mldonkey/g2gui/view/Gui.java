@@ -25,6 +25,8 @@ package net.mldonkey.g2gui.view;
 import java.util.List;
 import java.util.ArrayList;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+
 import org.eclipse.jface.window.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -39,10 +41,11 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: Gui.java,v 1.2 2003/06/24 20:58:36 dek Exp $ 
+ * @version $Id: Gui.java,v 1.3 2003/06/25 18:04:53 dek Exp $ 
  *
  */
 public class Gui extends ApplicationWindow implements IG2gui, Listener {
+	private CoreCommunication mldonkey;
 	private Composite mainComposite,
 					buttonRow,
 					pageContainer;
@@ -93,8 +96,9 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 	/**
 	 * @param arg0 You know, what a shell is, right?
 	 */
-	public Gui( Shell arg0 ) {
-		super( arg0 );		
+	public Gui(CoreCommunication core) {
+		super( null );	
+		this.mldonkey = core;	
 		this.setBlockOnOpen( true );
 		this.addStatusLine();		
 		this.open();		
@@ -105,6 +109,7 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 	 * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createContents( Composite parent ) {
+		parent.setSize(640,480);
 		GridData gridData;		
 		mainComposite = new Composite( parent, SWT.NONE );
 		
@@ -115,7 +120,8 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 		buttonRow = new Composite( mainComposite, SWT.NONE );
 			RowLayout buttonRowLayout = new RowLayout();
 			buttonRowLayout.justify = true;
-			buttonRowLayout.pack = false;			
+			buttonRowLayout.pack = false;
+			buttonRowLayout.spacing = 5;			
 			buttonRow.setLayout( buttonRowLayout );
 						
 				gridData = new GridData();
@@ -141,7 +147,7 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 	 * for the content and their button.
 	 */
 	private void addTabs() {
-		new TransferTab( this );
+		new TransferTab(this );
 		new ConsoleTab( this );
 	}
 	
@@ -183,12 +189,22 @@ public class Gui extends ApplicationWindow implements IG2gui, Listener {
 		if ( activeTab != null ) activeTab.getContent().setVisible( false );
 		activatedTab.getContent().setVisible( true );
 		pageContainer.layout();
-		activeTab = activatedTab;
+		activeTab = activatedTab;	
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.IG2gui#getCore()
+	 */
+	public CoreCommunication getCore() {		
+		return mldonkey;
 	}
 }
 
 /*
 $Log: Gui.java,v $
+Revision 1.3  2003/06/25 18:04:53  dek
+Console-Tab reworked
+
 Revision 1.2  2003/06/24 20:58:36  dek
 removed border from Content-Composite
 
