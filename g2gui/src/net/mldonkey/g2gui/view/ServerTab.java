@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Composite;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.55 2003/12/04 08:47:27 lemmy Exp $
+ * @version $Id: ServerTab.java,v 1.56 2003/12/20 18:32:10 psy Exp $
  *
  */
 public class ServerTab extends GuiTab implements Runnable {
@@ -147,7 +147,9 @@ public class ServerTab extends GuiTab implements Runnable {
         if (!this.isActive())
             return;
 
-        this.statusText = G2GuiResources.getString("SVT_SERVERS") + servers.getConnected();
+        this.statusText = G2GuiResources.getString("SVT_SERVERS") + " " + 
+        	gView.getTable().getItemCount() + " / " + servers.size() + ", " + 
+        	G2GuiResources.getString("ENS_CONNECTED") + ": " + servers.getConnected();
         this.getMainWindow().getStatusline().update(this.statusText);
         this.getMainWindow().getStatusline().updateToolTip("");
     }
@@ -175,6 +177,9 @@ public class ServerTab extends GuiTab implements Runnable {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.56  2003/12/20 18:32:10  psy
+increased verbosiveness of servertab statusline a little
+
 Revision 1.55  2003/12/04 08:47:27  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
