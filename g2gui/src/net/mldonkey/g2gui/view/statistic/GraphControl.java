@@ -30,9 +30,9 @@ public class GraphControl extends Composite{
 		setLayout(new FillLayout());
 		layout(true);
 			
-		System.out.println("parent widget" + parent.getBounds());
+	//	System.out.println("parent widget" + parent.getBounds());
 		uploadGraph = new Graph( new Color(null,244,0,0) );
-		downloadGraph = new Graph(new Color(null,0,244,0) );
+		downloadGraph = new Graph(new Color(null,0,0,244) );
 		
 		// this.setSize(400,200);
 		//graphCanvas1.redraw();
@@ -69,8 +69,8 @@ public class GraphControl extends Composite{
 		if ( !parent.isDisposed() )				
 					parent.getDisplay().asyncExec( new Runnable () {
 						public void run() {
-							graphCanvas1.redraw();
-							graphCanvas2.redraw();
+							if (!graphCanvas1.isDisposed()) graphCanvas1.redraw();
+							if (!graphCanvas2.isDisposed()) graphCanvas2.redraw();
 						}
 					});
 	}

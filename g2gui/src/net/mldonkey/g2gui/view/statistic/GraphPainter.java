@@ -35,7 +35,7 @@ public class GraphPainter {
 	
 	public GraphPainter(Composite parent_)
 	{
-		System.out.println("GraphPainter added");
+		//System.out.println("GraphPainter added");
 		
 		parent = parent_;
 	}
@@ -73,77 +73,83 @@ public class GraphPainter {
 		GC drawBoardBuffer = new GC(imageBuffer);
 		drawBoardBuffer.setBackground(new Color(null,50,50,50));
 		drawBoardBuffer.setForeground(new Color(null,0,0,0));
-						
 		drawBoardBuffer.fillGradientRectangle(0,0,parent.getBounds().width,parent.getBounds().height, true);
+		
 		//g2d.setColor(green);
 		
+		int startx = 20;
+		int k = startx;
 		int which = 0;
-		int maximum = 20;
-		while (graphs[which]!=null)
+		float maximum = 20f;
+		float height = (float) parent.getBounds().height - 20f;
+		int width = parent.getBounds().width;
+		float zoom, valueY;
 		
-		{
-			int red = graphs[which].getGraphColor().getRed();
-			int blue = graphs[which].getGraphColor().getBlue();
-			int green = graphs[which].getGraphColor().getGreen();
-
-			
-			Color graphColor = new Color(null,red,blue,green);
-			drawBoardBuffer.setBackground(graphColor);
-			drawBoardBuffer.setForeground(new Color(null, red > 100 ? red - 100 : red,
-														  blue > 100 ? blue - 100 : blue, 
-														  green > 100 ? green - 100 : green));
-			int width = parent.getBounds().width;
-			int height = parent.getBounds().height-20;
-			int fac = 0;
-			
-
+		
+		while (graphs[which]!=null)
+		{	
 			StatisticPoint lastPoint = graphs[which].getLast();
 			StatisticPoint actualPoint = lastPoint;
+					
+			int red = graphs[which].getGraphColor().getRed();
+			int green = graphs[which].getGraphColor().getGreen();
+			int blue = graphs[which].getGraphColor().getBlue();
+										
+			Color graphColor = new Color(null,red,green,blue);
+			drawBoardBuffer.setBackground(graphColor);
+			drawBoardBuffer.setForeground(new Color(null, red > 100 ? red - 100 : red,
+														  green > 100 ? green - 100 : green, 
+														  blue > 100 ? blue - 100 : blue));
+			zoom = 0;
+			valueY = 0;
 			
-			int startx = 20;
-			int k = startx;
-			int valueY = 0;
-			while ( (k<=width) && (actualPoint.getPrev()!=null))
+			while ( (k<=width/2) && (actualPoint.getPrev()!=null))
 			{
-				//System.out.println("drawPoint");
-				valueY = (int)(actualPoint.getValue())/10;
-				if (valueY > maximum) 
-				{
-					maximum = valueY;
 				
-				} 
-				fac = height/maximum; 
+				valueY = (float) (actualPoint.getValue()/10);
+				if (valueY > maximum) maximum = valueY; 
+				actualPoint = actualPoint.getPrev();
+				k++;	
+			}	
+			
+			zoom = height / maximum ;
+			actualPoint = lastPoint;	
+			if ( ((float) (actualPoint.getValue()/10) * zoom)  >  ((height / 5f)*4f)) zoom = (zoom / 5f)*4f;
+			k=startx;
+			while ( (k<=width/2) && (actualPoint.getPrev()!=null))	{
+			
 				
-				valueY = height - valueY*fac;
+				valueY = (float) (actualPoint.getValue()/10);	
+				valueY = height - (valueY * zoom);
 				
 				//drawBoardBuffer.drawLine(k,height,k,valueY);
 				
-				drawBoardBuffer.fillGradientRectangle(k,height,1,valueY-height,true);
+				drawBoardBuffer.fillGradientRectangle(k,(int)height,1,(int)(valueY-height),true);
 				actualPoint = actualPoint.getPrev();
 				k++;
 
 			}
 			drawBoardBuffer.setForeground(new Color(null,0,128,64));
-			drawBoardBuffer.drawLine(startx,height+1,width-40,height+1);
+			drawBoardBuffer.drawLine(startx,(int)(height+1f),width-40,(int)(height+1));
 			
 			for (int i = 0; i < 10; i++) 
-				drawBoardBuffer.drawLine(startx+i*(width/20),0,startx+i*(width/20),height);
+				drawBoardBuffer.drawLine(startx+i*(width/20),0,startx+i*(width/20),(int)height);
 					
-			for (int dummy=height/10;dummy<height;dummy=dummy+height/10)
-				drawBoardBuffer.drawLine(20,height-dummy,width/2,height-dummy);
+			for (int dummy=(int)(height/10);dummy<(int)height;dummy=dummy+(int)(height/10f))
+				drawBoardBuffer.drawLine(20,(int)height-dummy,width/2,(int)height-dummy);
 			
 			
 			// TODO: fix this
 			for (int dummy=0; dummy<1; dummy++) {
 			int value=dummy*2;
-			drawBoardBuffer.drawText("  " + value,0,height-8-fac*value*10, true);
+		//	drawBoardBuffer.drawText("  " + value,0,height-8-(int)zoom*value*10, true);
 			}
 			
 			double vv = (double)graphs[which].getLast().getValue()/100;
 			
 			
 			//System.out.println("wert:" + (height-(int)vv));
-			int textPosition = height - graphs[which].getLast().getValue()/10*fac;
+			int textPosition = (int) (height - (float) (graphs[which].getLast().getValue()/10) * zoom);
 			Color aimColor = new Color(null,0,0,0);
 			drawBoardBuffer.setForeground(aimColor);
 			drawBoardBuffer.setBackground(new Color(null,255,255,255));
@@ -151,13 +157,13 @@ public class GraphPainter {
 			drawBoardBuffer.drawRoundRectangle(startx+10,textPosition-3,80,20,7,7);
 			drawBoardBuffer.drawText(vv + " KB/s",startx+20,textPosition);
 			drawBoardBuffer.setForeground(new Color(null, 255,255,0));
-			drawBoardBuffer.drawLine(startx+10,textPosition,startx,height - graphs[which].getLast().getValue()/10*fac);
+			drawBoardBuffer.drawLine(startx+10,textPosition,startx,textPosition);
 	
 		
 			which++;
 			
 			
-		};
+		}
 		
 		
 		drawBoard.drawImage(imageBuffer, 0,0);

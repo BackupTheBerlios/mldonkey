@@ -27,7 +27,7 @@ public class Graph {
 	public Graph(Color color)
 	{
 		graphColor = color;
-		System.out.println("Graph created");
+		// System.out.println("Graph created");
 		createTime = System.currentTimeMillis();
 	}
 	
