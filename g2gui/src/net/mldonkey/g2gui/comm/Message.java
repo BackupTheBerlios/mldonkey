@@ -30,7 +30,7 @@ import java.net.Socket;
 /**
  * Message
  *
- * @version $Id: Message.java,v 1.40 2003/11/26 07:41:43 zet Exp $
+ * @version $Id: Message.java,v 1.41 2003/11/28 13:11:10 zet Exp $
  *
  */
 public abstract class Message {
@@ -235,7 +235,12 @@ public abstract class Message {
      * Send Message Version (value is 55)
      */
     public static final short S_MESSAGE_VERSION = 55;
-
+    
+    /**
+     * Rename File (value is 56)
+     */
+    public static final short S_RENAME_FILE = 56;
+    
     /**
      * Receive Core Protocol (value is 0)
      */
@@ -442,6 +447,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.41  2003/11/28 13:11:10  zet
+support patch 2372
+
 Revision 1.40  2003/11/26 07:41:43  zet
 protocolVersion 19/timer
 
