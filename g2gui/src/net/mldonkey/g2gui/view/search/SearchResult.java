@@ -78,7 +78,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.7 2003/07/29 10:11:48 lemmstercvs01 Exp $ 
+ * @version $Id: SearchResult.java,v 1.8 2003/07/30 19:09:35 vnc Exp $ 
  *
  */
 //TODO search timeout, add resource bundle, add image handle, fake search, real links depending on network								   
@@ -160,13 +160,14 @@ public class SearchResult implements Observer, Runnable {
 			/* fill the table with content */
 			table.setInput(  this.results.get( searchId ) );
 			this.modifiyItems();
-			this.setColumnWidht();
+			this.setColumnWidth();
 		} 
 		else {
 			/* has our result changed */
 			int temp = ( ( List ) results.get( searchId ) ).size();
 			if ( table.getTable().getItemCount() != temp ) {
 				table.refresh();
+				System.out.println("* adding a result update to the list");
 				this.modifiyItems();
 			}
 		}
@@ -266,7 +267,7 @@ public class SearchResult implements Observer, Runnable {
 		/* add a resize listener */
 		cTabFolder.addControlListener( new ControlAdapter() {
 		public void controlResized( ControlEvent e ) {
-				SearchResult.this.setColumnWidht();
+				SearchResult.this.setColumnWidth();
 			}
 		} );
 		
@@ -470,7 +471,7 @@ public class SearchResult implements Observer, Runnable {
 	/**
 	 * Sets the size for the columns
 	 */
-	private void setColumnWidht() {
+	private void setColumnWidth() {
 		/* the total width of the table */
 		int totalWidth = table.getTable().getSize().x - 25; //why is it 25 to width?
 		/* our tablecolumns */
@@ -632,6 +633,9 @@ public class SearchResult implements Observer, Runnable {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.8  2003/07/30 19:09:35  vnc
+refactored setColumnWidth() typo
+
 Revision 1.7  2003/07/29 10:11:48  lemmstercvs01
 moved icon folder out of src/
 
