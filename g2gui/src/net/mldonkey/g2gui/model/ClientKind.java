@@ -23,13 +23,14 @@
 package net.mldonkey.g2gui.model;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import net.mldonkey.g2gui.model.enum.*;
+import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumClientMode;
 
 /**
  * ClientKind
  *
  *
- * @version $Id: ClientKind.java,v 1.8 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ClientKind.java,v 1.9 2003/12/01 13:28:02 zet Exp $ 
  *
  */
 public class ClientKind implements SimpleInformation {
@@ -38,13 +39,9 @@ public class ClientKind implements SimpleInformation {
 	 */
 	private Enum clientMode;
 	/**
-	 * Ip Address (present only if client type = 0)
-	 */
-	private int ipAddress;
-	/**
 	 * Port (present only if client type = 0)
 	 */
-	private short port;
+	private int port;
 	/**
 	 * Client Name (present only if client type = 1)
 	 */
@@ -53,6 +50,12 @@ public class ClientKind implements SimpleInformation {
 	 * Client Hash (present only if client type = 1)
 	 */
 	private String clientHash;
+	
+	
+	/**
+	 * IpAddr (present only if client type = 0)
+	 */
+	private Addr addr = new Addr();
 
 	/**
 	 * @return The client hash identifier
@@ -76,18 +79,17 @@ public class ClientKind implements SimpleInformation {
 	}
 
 	/**
-	 * @return The client ip address
-	 * (if ClientMode == EnumClientMode.DIRECT)
+	 * @return IpAddr
 	 */
-	public int getIpAddress() {
-		return ipAddress;
+	public Addr getAddr() {
+	    return addr;
 	}
 
 	/**
 	 * @return The client port
 	 * (if ClientMode == EnumClientMode.DIRECT)
 	 */
-	public short getPort() {
+	public int getPort() {
 		return port;
 	}
 
@@ -108,18 +110,22 @@ public class ClientKind implements SimpleInformation {
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setClientMode( messageBuffer.readByte() );
 		if ( this.getClientMode() == EnumClientMode.DIRECT ) {
-			this.ipAddress = messageBuffer.readInt32();
-			this.port = messageBuffer.readInt16();
+			this.addr.readStream( false, messageBuffer );
+			this.port = messageBuffer.readUnsignedInt16();
 		}
 		else {
 			this.clientName = messageBuffer.readString();
 			this.clientHash = messageBuffer.readBinary( 16 );
+			this.addr = Addr.getAddr("0.0.0.0");
 		}
 	}
 }
 
 /*
 $Log: ClientKind.java,v $
+Revision 1.9  2003/12/01 13:28:02  zet
+updates for ipaddr
+
 Revision 1.8  2003/08/23 15:21:37  zet
 remove @author
 

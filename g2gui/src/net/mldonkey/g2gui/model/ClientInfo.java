@@ -43,7 +43,7 @@ import java.util.Date;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.35 2003/11/30 23:42:56 zet Exp $
+ * @version $Id: ClientInfo.java,v 1.36 2003/12/01 13:28:02 zet Exp $
  *
  */
 public class ClientInfo extends Parent {
@@ -108,13 +108,7 @@ public class ClientInfo extends Parent {
      */
     private long clientUploaded = 0;
     private String clientUploadedString = "";
-
-    /**
-     * Client IP address
-     */
-    private String clientSockAddrString = "";
-    private Addr clientSockAddr;
-
+   
     /**
      * Filename being uploaded to client
      */
@@ -297,17 +291,6 @@ public class ClientInfo extends Parent {
         return clientSoftware;
     }
 
-    public String getClientSockAddrString() {
-        return clientSockAddrString;
-    }
-
-    /**
-     * @return clientSockAddr
-     */
-    public Addr getClientSockAddr() {
-        return clientSockAddr;
-    }
-
     /**
      * @return clientUploaded Bytes
      */
@@ -385,13 +368,6 @@ public class ClientInfo extends Parent {
             this.clientSoftware = messageBuffer.readString();
             this.clientDownloaded = messageBuffer.readInt64();
             this.clientUploaded = messageBuffer.readInt64();
-
-            //TODO change this to "messageBuffer.readInetAdress()" when the core sends a correct inetaddress
-            
-            // bavard removed this for some unknown reason. I hope it comes back (sent mail)
-            // this.clientSockAddrString =  messageBuffer.readString()
-            this.clientSockAddr = Addr.getAddr(this.clientSockAddrString);
-
             this.clientUploadFilename = messageBuffer.readString();
 
             // this needs to be fixed in the core soon since core/gui clocks can be out of sync rendering this useless
@@ -493,6 +469,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.36  2003/12/01 13:28:02  zet
+updates for ipaddr
+
 Revision 1.35  2003/11/30 23:42:56  zet
 updates for latest mldonkey cvs
 
