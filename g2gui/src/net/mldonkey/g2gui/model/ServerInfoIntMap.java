@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.model;
 import gnu.trove.TIntObjectHashMap;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,14 +39,14 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfoList
  *
  * @author $user$
- * @version $Id: ServerInfoIntMap.java,v 1.11 2003/08/06 17:38:38 lemmstercvs01 Exp $ 
+ * @version $Id: ServerInfoIntMap.java,v 1.12 2003/08/06 18:53:19 lemmstercvs01 Exp $ 
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
 	/**
 	 * last serverinfos changed/added/removed
 	 */
-	private List changed = new ArrayList();
+	private List modified = new ArrayList();
 	private List added = new ArrayList();
 	private List removed = new ArrayList();
 	
@@ -79,8 +80,8 @@ public class ServerInfoIntMap extends InfoIntMap {
 		messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
 		if ( this.containsKey( id ) ) {
 			this.get( id ).readStream( messageBuffer );
-			synchronized ( this.changed ) {
-				this.changed.add( this.get( id ) );
+			synchronized ( this.modified ) {
+				this.modified.add( this.get( id ) );
 			}
 		}
 		else {
@@ -97,9 +98,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 	/**
 	 * Removes all entries in changed
 	 */
-	public void clearChanged() {
-		synchronized ( this.changed ) {
-			this.changed.clear();
+	public void clearModified() {
+		synchronized ( this.modified ) {
+			this.modified.clear();
 		}
 	}
 	/**
@@ -137,8 +138,8 @@ public class ServerInfoIntMap extends InfoIntMap {
 		if ( this.infoIntMap.contains( id ) ) {
 			ServerInfo server = ( ServerInfo ) this.get( id );
 			server.update( messageBuffer );
-			synchronized ( this.changed ) {
-				this.changed.add( server );
+			synchronized ( this.modified ) {
+				this.modified.add( server );
 			}
 			this.setChanged();
 			this.notifyObservers( this );
@@ -178,7 +179,7 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 * clear this list, after the update in the view
 	 */
 	public List getChanged() {
-		return this.changed;
+		return this.modified;
 	}
 	
 	/**
@@ -311,7 +312,19 @@ public class ServerInfoIntMap extends InfoIntMap {
 	 */
 	public void addToBlackList( int key ) {
 		ServerInfo server = ( ServerInfo ) this.infoIntMap.get( key );
-		String ip = server.getServerAddress().getAddress().toString();
+		String ip = null;
+		if ( server.getServerAddress().hasHostName() ) {
+			try {
+				InetAddress addi = InetAddress.getByName( server.getServerAddress().getHostName() );
+				ip = addi.getHostAddress();
+			}
+			catch (UnknownHostException e) {
+				ip = "";
+			}
+		}
+		else
+			ip = server.getServerAddress().getAddress().toString().replaceAll( "/", "" );
+
 		Message message = new EncodeMessage( Message.S_CONSOLEMSG, ip );
 		message.sendMessage( this.parent.getConnection() );
 		ip = null;
@@ -356,6 +369,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.12  2003/08/06 18:53:19  lemmstercvs01
+changed renamed to modified (conflict with observable)
+
 Revision 1.11  2003/08/06 17:38:38  lemmstercvs01
 some actions still missing. but it should work for the moment
 
