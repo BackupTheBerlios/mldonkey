@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * AddFriend
  *
- * @version $Id: AddFriend.java,v 1.2 2003/08/29 21:05:09 zet Exp $
+ * @version $Id: AddFriend.java,v 1.3 2003/08/31 00:08:59 zet Exp $
  */
 public class AddFriend {
 
@@ -86,7 +86,7 @@ public class AddFriend {
 		
 		Button okButton = new Button(shell, SWT.NONE);
 		okButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		okButton.setText(G2GuiResources.getString( "FR_ADD_OK" ));
+		okButton.setText(G2GuiResources.getString( "BTN_OK" ));
 		okButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 				String string = "afr " + host.getText() + " " + port.getText();
@@ -100,7 +100,7 @@ public class AddFriend {
 
 		Button cancelButton = new Button(shell, SWT.NONE);
 		cancelButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		cancelButton.setText(G2GuiResources.getString( "FR_ADD_CANCEL" )); 		
+		cancelButton.setText(G2GuiResources.getString( "BTN_CANCEL" )); 		
 		cancelButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
 				shell.close();
@@ -114,6 +114,9 @@ public class AddFriend {
 }
 /*
 $Log: AddFriend.java,v $
+Revision 1.3  2003/08/31 00:08:59  zet
+add buttons
+
 Revision 1.2  2003/08/29 21:05:09  zet
 remove imports
 

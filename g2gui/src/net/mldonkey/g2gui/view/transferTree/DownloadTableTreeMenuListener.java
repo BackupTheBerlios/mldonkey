@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.TableItem;
  * 
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.26 2003/08/30 00:44:01 zet Exp $ 
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.27 2003/08/31 00:08:59 zet Exp $ 
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -262,7 +262,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 			setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_CLIENT_DETAILS"));
 		}
 		public void run() {
-			new ClientDetailDialog(selectedClient.getFileInfo(), selectedClient.getClientInfo());
+			new ClientDetailDialog(selectedClient.getFileInfo(), selectedClient.getClientInfo(), mldonkey);
 		}
 		
 	}	
@@ -396,6 +396,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.27  2003/08/31 00:08:59  zet
+add buttons
+
 Revision 1.26  2003/08/30 00:44:01  zet
 move tabletree menu
 

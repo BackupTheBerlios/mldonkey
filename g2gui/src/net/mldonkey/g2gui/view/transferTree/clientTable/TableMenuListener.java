@@ -43,7 +43,7 @@ import org.eclipse.jface.viewers.TableViewer;
  * TableMenuListener
  *
  *
- * @version $Id: TableMenuListener.java,v 1.3 2003/08/28 22:53:22 zet Exp $ 
+ * @version $Id: TableMenuListener.java,v 1.4 2003/08/31 00:08:59 zet Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -120,7 +120,7 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			setText(G2GuiResources.getString("TT_DOWNLOAD_MENU_CLIENT_DETAILS"));
 		}
 		public void run() {
-			new ClientDetailDialog((FileInfo) tableViewer.getInput(), selectedClientInfo);
+			new ClientDetailDialog((FileInfo) tableViewer.getInput(), selectedClientInfo, core);
 		}
 		
 	}	
@@ -129,6 +129,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.4  2003/08/31 00:08:59  zet
+add buttons
+
 Revision 1.3  2003/08/28 22:53:22  zet
 add client details action
 

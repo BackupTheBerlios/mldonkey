@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view.transferTree;
 import java.util.Observable;
 import java.util.Observer;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.enum.EnumClientMode;
@@ -34,8 +35,11 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -49,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * ClientDetailDialog
  *
  *
- * @version $Id: ClientDetailDialog.java,v 1.13 2003/08/28 22:44:30 zet Exp $ 
+ * @version $Id: ClientDetailDialog.java,v 1.14 2003/08/31 00:08:59 zet Exp $ 
  *
  */  
 public class ClientDetailDialog implements Observer {
@@ -69,7 +73,7 @@ public class ClientDetailDialog implements Observer {
 	private List renameList;
 	private Text renameText;
 	
-	public ClientDetailDialog (FileInfo fileInfo, ClientInfo clientInfo ) 
+	public ClientDetailDialog ( FileInfo fileInfo, final ClientInfo clientInfo, final CoreCommunication core ) 
 	{
 	
 		this.fileInfo = fileInfo;
@@ -133,6 +137,33 @@ public class ClientDetailDialog implements Observer {
 		GridData canvasGD2 = new GridData(GridData.FILL_HORIZONTAL);
 		canvasGD2.heightHint = 28;
 		chunkCanvas2.setLayoutData(canvasGD2);
+
+
+		Composite buttonComposite = new Composite(shell, SWT.NONE);
+		buttonComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		buttonComposite.setLayout(CGridLayout.createGL(2,0,0,5,0,false));
+
+		final Button addFriendButton = new Button( buttonComposite, SWT.FLAT );
+		addFriendButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));
+		addFriendButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ));
+		addFriendButton.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected (SelectionEvent s) {
+				ClientInfo.addFriend(core, clientInfo.getClientid());
+				addFriendButton.setText(G2GuiResources.getString( "BTN_OK" ));
+				addFriendButton.setEnabled(false);
+			}	
+		});
+
+		Button cButton = new Button( buttonComposite, SWT.FLAT );
+		cButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		cButton.setText(G2GuiResources.getString( "BTN_CLOSE" ));
+		cButton.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected (SelectionEvent s) {
+						shell.dispose();
+			}	
+		});
+		
+
 
 		updateLabels();
 		fileInfo.addObserver(this);
@@ -237,6 +268,9 @@ public class ClientDetailDialog implements Observer {
 }
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.14  2003/08/31 00:08:59  zet
+add buttons
+
 Revision 1.13  2003/08/28 22:44:30  zet
 GridLayout helper class
 
@@ -254,6 +288,9 @@ new todo (close button)
 
 Revision 1.8  2003/08/22 21:22:58  lemmster
 fix $Log: ClientDetailDialog.java,v $
+fix Revision 1.14  2003/08/31 00:08:59  zet
+fix add buttons
+fix
 fix Revision 1.13  2003/08/28 22:44:30  zet
 fix GridLayout helper class
 fix

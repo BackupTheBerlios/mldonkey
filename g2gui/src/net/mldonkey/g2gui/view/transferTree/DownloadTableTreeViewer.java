@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.21 2003/08/30 00:44:01 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.22 2003/08/31 00:08:59 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -212,7 +212,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 				
 				} else if (o instanceof TreeClientInfo) {
 					TreeClientInfo treeClientInfo = (TreeClientInfo) o;
-					new ClientDetailDialog(treeClientInfo.getFileInfo(), treeClientInfo.getClientInfo());
+					new ClientDetailDialog(treeClientInfo.getFileInfo(), treeClientInfo.getClientInfo(), mldonkey);
 				}
 			}
 		});
@@ -329,6 +329,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.22  2003/08/31 00:08:59  zet
+add buttons
+
 Revision 1.21  2003/08/30 00:44:01  zet
 move tabletree menu
 
