@@ -22,22 +22,48 @@
  */
 package net.mldonkey.g2gui.view.friends;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+import net.mldonkey.g2gui.model.ClientInfo;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 /**
  * TableContentProvider
  *
  *
- * @version $Id: FriendsTableContentProvider.java,v 1.2 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: FriendsTableContentProvider.java,v 1.3 2003/08/31 15:37:30 zet Exp $
  */
-public class FriendsTableContentProvider implements IStructuredContentProvider {
+public class FriendsTableContentProvider implements IStructuredContentProvider, Observer {
+	
+	public TableViewer viewer;
+	public List observedClients = Collections.synchronizedList(new ArrayList());
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
 	public Object[] getElements( Object inputElement ) {
+		
+		for (int i = 0; i < observedClients.size(); i++) {
+			ClientInfo clientInfo = (ClientInfo) observedClients.get(i);
+			if (clientInfo != null) {
+				clientInfo.deleteObserver( this );
+			}
+		}
+		
+		observedClients.clear();
+		
+		for (int i = 0; i < ((List) inputElement).size(); i++) {
+			((ClientInfo) ((List) inputElement).get(i)).addObserver(this);
+			observedClients.add((ClientInfo) ((List) inputElement).get(i));
+		}
+				
 		return ((List) inputElement).toArray();
 	}
 
@@ -50,11 +76,31 @@ public class FriendsTableContentProvider implements IStructuredContentProvider {
 	 * @see org.eclipse.jface.viewers.IContentProvider#
 	 * inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
-	public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) { }
+	public void inputChanged( Viewer viewer, Object oldInput, Object newInput ) { 
+		this.viewer = (TableViewer) viewer;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update (final Observable o, Object obj) {
+		if (o instanceof ClientInfo && viewer != null) {
+			viewer.getTable().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (viewer != null)
+						viewer.update((ClientInfo) o, null);
+				}
+			});
+		}
+	}
+	
 }
 
 /*
 $Log: FriendsTableContentProvider.java,v $
+Revision 1.3  2003/08/31 15:37:30  zet
+friend icons
+
 Revision 1.2  2003/08/23 15:21:37  zet
 remove @author
 

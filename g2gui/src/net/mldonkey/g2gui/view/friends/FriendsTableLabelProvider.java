@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view.friends;
 
 import net.mldonkey.g2gui.model.ClientInfo;
+import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.viewers.IColorProvider;
@@ -35,7 +36,7 @@ import org.eclipse.swt.graphics.Image;
  * TableLabelProvider
  *
  *
- * @version $Id: FriendsTableLabelProvider.java,v 1.3 2003/08/25 21:18:43 zet Exp $
+ * @version $Id: FriendsTableLabelProvider.java,v 1.4 2003/08/31 15:37:30 zet Exp $
  */
 public class FriendsTableLabelProvider implements ITableLabelProvider, IColorProvider {
 
@@ -45,7 +46,16 @@ public class FriendsTableLabelProvider implements ITableLabelProvider, IColorPro
 	 
 	 // Will transparent .pngs ever work?
 	public Image getColumnImage( Object element, int columnIndex ) {
-		return G2GuiResources.getImage("MessagesButtonSmallTrans");
+		ClientInfo clientInfo = ( ClientInfo ) element;
+		if (clientInfo.getState().getState() == EnumState.CONNECTED
+			|| clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED
+			|| clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING
+			|| clientInfo.getState().getState() == EnumState.CONNECTED_INITIATING)
+		
+			return G2GuiResources.getImage("MessagesButtonSmallTrans");
+		else 
+			return G2GuiResources.getImage("MessagesButtonSmallTransBW");
+			
 	}
 
 	/* (non-Javadoc)
@@ -110,6 +120,9 @@ public class FriendsTableLabelProvider implements ITableLabelProvider, IColorPro
 
 /*
 $Log: FriendsTableLabelProvider.java,v $
+Revision 1.4  2003/08/31 15:37:30  zet
+friend icons
+
 Revision 1.3  2003/08/25 21:18:43  zet
 localise/update friendstab
 

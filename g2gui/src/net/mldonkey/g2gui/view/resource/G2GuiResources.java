@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.16 2003/08/31 12:32:56 lemmster Exp $
+ * @version $Id: G2GuiResources.java,v 1.17 2003/08/31 15:37:30 zet Exp $
  */
 public class G2GuiResources {
 	
@@ -178,7 +178,8 @@ public class G2GuiResources {
 		imageRegistry.put( "MULTIConnectedWhite", createTrans( "multinet_connected.png", white ) );
 		imageRegistry.put( "MULTIDisabled", createTrans( "multinet_disabled.png" ) );
 		
-		imageRegistry.put("MessagesButtonSmallTrans",ImageDescriptor.createFromFile(MainTab.class, "images/messages-16.gif"));	
+		imageRegistry.put( "MessagesButtonSmallTrans",ImageDescriptor.createFromFile(MainTab.class, "images/messages-16.gif") );	
+		imageRegistry.put( "MessagesButtonSmallTransBW",ImageDescriptor.createFromFile(MainTab.class, "images/messages-16-bw.gif") );	
 		
 		imageRegistry.put( "DownArrow", createTrans( "down.png" ) );
 		imageRegistry.put( "UpArrow", createTrans( "up.png" ) );
@@ -250,11 +251,8 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
-Revision 1.16  2003/08/31 12:32:56  lemmster
-major changes to search
-
-Revision 1.15  2003/08/31 12:29:32  dek
-changed getter for background-color (for transparent images)
+Revision 1.17  2003/08/31 15:37:30  zet
+friend icons
 
 Revision 1.14  2003/08/30 18:23:51  dek
 added g2guiLogo (png)
@@ -284,7 +282,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image
