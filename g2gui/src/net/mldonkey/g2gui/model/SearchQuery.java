@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.23 2003/09/06 11:46:57 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.24 2003/09/06 11:50:34 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -84,11 +84,6 @@ public class SearchQuery implements Sendable {
 	 */
 	private int searchIdentifier;
 	
-	/**
-	 * what do we want to search, this is the field we have to fill
-	 * (Query where default fields are filled with the values entered by the user)
-	 */
-	private Query searchQuery;
 	
 	/** 
 	 * Maximal number of results (used ?) 
@@ -365,6 +360,7 @@ public class SearchQuery implements Sendable {
 	 */
 	public void send() {
 		
+		Query searchQuery = new Query();
 		/* if we have only one SearchQuery or SearchOptions,
 		 * we don't need to build the whole tree-structure
 		 * and we can directly set the searchQuery /searchOptions
@@ -515,6 +511,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.24  2003/09/06 11:50:34  dek
+NPE-fix (removed to much ;-))
+
 Revision 1.23  2003/09/06 11:46:57  dek
 now we have google-style searching:
 +PATTERN (= AND)
