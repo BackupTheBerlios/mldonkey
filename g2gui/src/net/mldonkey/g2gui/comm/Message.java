@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  *
- * @version $Id: Message.java,v 1.31 2003/08/24 16:54:38 dek Exp $ 
+ * @version $Id: Message.java,v 1.32 2003/09/02 09:24:36 lemmster Exp $ 
  *
  */
 public abstract class Message {
@@ -367,21 +367,12 @@ public abstract class Message {
 	 * @param anInt int to create a byte array with
 	 * @return a byte array of int32
 	 */
-//	public static byte[] toBytes( int anInt ) {			
-//			byte[] result = new byte[ 4 ];
-//			for ( int j = 0; j < 4; j++ ) {
-//				result[ j ] = ( byte ) ( anInt % 256 );
-//				anInt = anInt / 256;
-//			}
-//			return result;
-//		}
-	// does this work? (with negatives)
 	public static byte[] toBytes( int anInt ) {
 		byte[] result = new byte [ 4 ];
-		result[0] = (byte) (anInt & 0xFF);
-		result[1] = (byte) ((anInt & 0xFFFF) >> 8);
-		result[2] = (byte) ((anInt & 0xFFFFFF) >> 16);
-		result[3] = (byte) ((anInt & 0x7FFFFFFF) >> 24);
+		result[0] = ( byte ) ( anInt & 0xFF );
+		result[1] = ( byte ) ( ( anInt & 0xFFFF ) >> 8 );
+		result[2] = ( byte ) ( ( anInt & 0xFFFFFF ) >> 16 );
+		result[3] = ( byte ) ( ( anInt & 0x7FFFFFFF ) >> 24 );
 		
 		return result;
 	}
@@ -443,6 +434,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.32  2003/09/02 09:24:36  lemmster
+checkstyle
+
 Revision 1.31  2003/08/24 16:54:38  dek
 RoomInfo is now read from stream to Map, ready for use to implement
 all the room-stuff
@@ -451,7 +445,7 @@ Revision 1.30  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.29  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmster $
 
 Revision 1.28  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging

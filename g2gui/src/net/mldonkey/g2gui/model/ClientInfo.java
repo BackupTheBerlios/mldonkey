@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ClientInfo
  *
  *
- * @version $Id: ClientInfo.java,v 1.22 2003/08/24 02:22:12 zet Exp $ 
+ * @version $Id: ClientInfo.java,v 1.23 2003/09/02 09:24:36 lemmster Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -142,10 +142,10 @@ public class ClientInfo extends Parent {
 	public int getNumChunks( FileInfo fileInfo ) {
 		int numChunks = 0;
 		String availability = getFileAvailability ( fileInfo );
-		if (availability == null) return 0;
+		if ( availability == null ) return 0;
 		
-		for (int i = 0; i < availability.length() ; i++) 
-			if (availability.charAt(i) == '1') numChunks++;
+		for ( int i = 0; i < availability.length() ; i++ ) 
+			if ( availability.charAt( i ) == '1' ) numChunks++;
 		return numChunks;
 	}
 
@@ -193,11 +193,16 @@ public class ClientInfo extends Parent {
 	 * Reads a ClientInfo object from a MessageBuffer
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	public void readStream (MessageBuffer messageBuffer) {
+	public void readStream( MessageBuffer messageBuffer ) {
 		int clientID = messageBuffer.readInt32();
 		readStream ( clientID, messageBuffer );
 	}
 	
+	/**
+	 * 
+	 * @param clientID
+	 * @param messageBuffer
+	 */
 	public void readStream( int clientID, MessageBuffer messageBuffer ) {
 		this.clientid = clientID;
 		
@@ -216,11 +221,12 @@ public class ClientInfo extends Parent {
 		this.setChanged();
 		
 		Enum newState = getState().getState();
-		if ((oldState != newState) 
-			&& (oldState == EnumState.CONNECTED_DOWNLOADING 
-			|| newState == EnumState.CONNECTED_DOWNLOADING) ) {
+		if ( ( oldState != newState ) 
+			&& ( oldState == EnumState.CONNECTED_DOWNLOADING 
+			|| newState == EnumState.CONNECTED_DOWNLOADING ) ) {
 				this.notifyObservers();
-		} else {
+		} 
+		else {
 			this.notifyObservers( this );
 		}
 	}
@@ -237,11 +243,12 @@ public class ClientInfo extends Parent {
 				
 		this.setChanged();
 		
-		if ((oldState != newState) 
-			&& (oldState == EnumState.CONNECTED_DOWNLOADING 
-				|| newState == EnumState.CONNECTED_DOWNLOADING) ) {
+		if ( ( oldState != newState ) 
+			&& ( oldState == EnumState.CONNECTED_DOWNLOADING 
+				|| newState == EnumState.CONNECTED_DOWNLOADING ) ) {
 				this.notifyObservers();
-		} else {
+		}
+		else {
 			this.notifyObservers( this );
 		}
 	}
@@ -257,21 +264,21 @@ public class ClientInfo extends Parent {
 		this.notifyObservers( this );
 	}
 
-	public static void addFriend(CoreCommunication core, int id) {
+	public static void addFriend( CoreCommunication core, int id ) {
 		Message addFriend =
-			new EncodeMessage( Message.S_ADD_CLIENT_FRIEND, new Integer(id) );
+			new EncodeMessage( Message.S_ADD_CLIENT_FRIEND, new Integer( id ) );
 		addFriend.sendMessage( core.getConnection() );
 		addFriend = null;
 	}
 
-	public static void removeFriend(CoreCommunication core, int id) {
+	public static void removeFriend( CoreCommunication core, int id ) {
 		Message removeFriend =
-			new EncodeMessage( Message.S_REMOVE_FRIEND, new Integer(id) );
+			new EncodeMessage( Message.S_REMOVE_FRIEND, new Integer( id ) );
 		removeFriend.sendMessage( core.getConnection() );
 		removeFriend = null;
 	}
 
-	public static void removeAllFriends(CoreCommunication core) {
+	public static void removeAllFriends( CoreCommunication core ) {
 		Message removeAllFriends =
 			new EncodeMessage( Message.S_REMOVE_ALL_FRIENDS );
 		removeAllFriends.sendMessage( core.getConnection() );
@@ -282,6 +289,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.23  2003/09/02 09:24:36  lemmster
+checkstyle
+
 Revision 1.22  2003/08/24 02:22:12  zet
 *** empty log message ***
 
@@ -295,7 +305,7 @@ Revision 1.19  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.17  2003/08/14 12:57:03  zet
 fix nullpointer in clientInfo, add icons to tables

@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  *
- * @version $Id: Addr.java,v 1.12 2003/08/23 15:21:37 zet Exp $
+ * @version $Id: Addr.java,v 1.13 2003/09/02 09:24:36 lemmster Exp $
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -97,12 +97,12 @@ public class Addr implements SimpleInformation {
 			try {
 				this.address = messageBuffer.readInetAddress();
 			}
-			catch (UnknownHostException e) { }
+			catch ( UnknownHostException e ) { }
 	}
 
 	/**
-	 * @param anAddress
-	 * @return
+	 * @param anAddress The address to compare
+	 * @return an Int
 	 */
 	public int compareTo( Addr anAddress ) {
 		/* compare between hasHostName() */
@@ -113,7 +113,7 @@ public class Addr implements SimpleInformation {
 		if ( this.hasHostName() && anAddress.hasHostName() )
 			return this.getHostName().compareToIgnoreCase( anAddress.getHostName() );
 	
-		RE regex=null;
+		RE regex = null;
 		/* compare by ipaddress */
 		try {
 			 regex = new RE( "\\." );
@@ -122,18 +122,21 @@ public class Addr implements SimpleInformation {
 			e.printStackTrace();
 		}
 		
-		Long int1 = new Long( regex.substituteAll( this.address.getHostAddress(),"" ) );
-		Long int2 = new Long( regex.substituteAll( anAddress.address.getHostAddress(),"" ) );
+		Long int1 = new Long( regex.substituteAll( this.address.getHostAddress(), "" ) );
+		Long int2 = new Long( regex.substituteAll( anAddress.address.getHostAddress(), "" ) );
 		return int1.compareTo( int2 );
 	}
 }
 /*
 $$Log: Addr.java,v $
+$Revision 1.13  2003/09/02 09:24:36  lemmster
+$checkstyle
+$
 $Revision 1.12  2003/08/23 15:21:37  zet
 $remove @author
 $
 $Revision 1.11  2003/08/22 21:03:15  lemmster
-$replace $user$ with $Author: zet $
+$replace $user$ with $Author: lemmster $
 $
 $Revision 1.10  2003/08/11 11:23:06  lemmstercvs01
 $fix sort by string

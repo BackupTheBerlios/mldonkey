@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.91 2003/08/26 19:28:40 dek Exp $ 
+ * @version $Id: Core.java,v 1.92 2003/09/02 09:24:36 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -391,7 +391,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					
 			case Message.R_MESSAGE_FROM_CLIENT :
 					if ( advancedMode ) {
-						ClientMessage clientMessage = new ClientMessage(this);
+						ClientMessage clientMessage = new ClientMessage( this );
 						clientMessage.readStream( messageBuffer );
 						this.setChanged();
 						this.notifyObservers( clientMessage );
@@ -547,6 +547,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.92  2003/09/02 09:24:36  lemmster
+checkstyle
+
 Revision 1.91  2003/08/26 19:28:40  dek
 different first messages for push / pull-mode, so the gui starts faster in each case
 

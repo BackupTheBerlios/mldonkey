@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  *
- * @version $Id: MessageBuffer.java,v 1.19 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.20 2003/09/02 09:24:36 lemmster Exp $ 
  *
  */
 public class MessageBuffer {
@@ -98,7 +98,7 @@ public class MessageBuffer {
 	}
 	/**
 	 * Reads an int32 from from MessageBuffer	
-	 * @return a int32 
+	 * @return an int32 
 	 */
 	public  int readInt32() {
 		return  ( readInt8() + 256
@@ -107,10 +107,15 @@ public class MessageBuffer {
 			  * ( readInt8() ) ) ) );
 		
 	}
+	
+	/**
+	 * Reads an signed Int32 from the MessageBuffer
+	 * @return an int32
+	 */
 	public int readSignedInt32() {
 		int result = 0;
-		for (int i = 0; i < 4; i++) 
-			result |= ((int) readByte() << (i * 8));
+		for ( int i = 0; i < 4; i++ ) 
+			result |= ( ( int ) readByte() << ( i * 8 ) );
 		return result;
 	}
 	
@@ -250,11 +255,14 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.20  2003/09/02 09:24:36  lemmster
+checkstyle
+
 Revision 1.19  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.17  2003/08/10 23:20:26  zet
 signed ints

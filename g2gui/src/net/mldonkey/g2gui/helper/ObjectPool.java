@@ -32,7 +32,7 @@ import java.util.List;
  * ObjectPool
  *
  *
- * @version $Id: ObjectPool.java,v 1.5 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: ObjectPool.java,v 1.6 2003/09/02 09:24:36 lemmster Exp $ 
  *
  */
 public abstract class ObjectPool {
@@ -72,11 +72,12 @@ public abstract class ObjectPool {
 	 */
 	protected abstract Object create() throws UnknownHostException, IOException ;
 	
-	
 	/**
 	 * Get a Object from the Pool
-	 * @return an Object 
-	 */
+	 * @return an obj
+	 * @throws UnknownHostException When the host is not valid
+	 * @throws IOException When an IOException occure
+	 */	
 	public synchronized Object checkOut() throws UnknownHostException, IOException {
 		Object obj = null;
 		
@@ -129,11 +130,14 @@ public abstract class ObjectPool {
 
 /*
 $Log: ObjectPool.java,v $
+Revision 1.6  2003/09/02 09:24:36  lemmster
+checkstyle
+
 Revision 1.5  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.4  2003/08/21 10:53:50  lemmster
-$user$ -> $Author: zet $
+$user$ -> $Author: lemmster $
 
 Revision 1.3  2003/08/21 10:13:14  dek
 removed " malformed UTF-8 character" (only in comment)

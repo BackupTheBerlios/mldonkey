@@ -30,7 +30,7 @@ import java.net.UnknownHostException;
  * SocketPool
  *
  *
- * @version $Id: SocketPool.java,v 1.13 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: SocketPool.java,v 1.14 2003/09/02 09:24:36 lemmster Exp $ 
  *
  */
 public class SocketPool extends ObjectPool {
@@ -63,8 +63,8 @@ public class SocketPool extends ObjectPool {
 	 * Initialize the SocketPool by hostname and port
 	 * @param address The address to connect to
 	 * @param port The port to connect to
-	 * @param username The username for the core account
-	 * @param password The password for the core account
+	 * @throws UnknownHostException When the host is not valid
+	 * @throws IOException When an IOException occure
 	 */
 	public SocketPool( String address, int port ) throws UnknownHostException, IOException {
 		super();
@@ -116,11 +116,14 @@ public class SocketPool extends ObjectPool {
 
 /*
 $Log: SocketPool.java,v $
+Revision 1.14  2003/09/02 09:24:36  lemmster
+checkstyle
+
 Revision 1.13  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.12  2003/08/21 10:55:01  lemmster
-$user$ -> $Author: zet $
+$user$ -> $Author: lemmster $
 
 Revision 1.11  2003/08/04 14:38:13  lemmstercvs01
 splashscreen and error handling added

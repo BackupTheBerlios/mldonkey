@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.comm.Message;
  * Download
  *
  *
- * @version $Id: Download.java,v 1.9 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: Download.java,v 1.10 2003/09/02 09:26:52 lemmster Exp $ 
  *
  */
 public class Download implements Sendable {
@@ -51,6 +51,10 @@ public class Download implements Sendable {
 	 */
 	private CoreCommunication core;
 
+	/**
+	 * Creates a new download
+	 * @param core The parent core obj
+	 */
 	public Download( CoreCommunication core ) {
 		this.core = core;		
 	}
@@ -93,6 +97,9 @@ public class Download implements Sendable {
 
 /*
 $Log: Download.java,v $
+Revision 1.10  2003/09/02 09:26:52  lemmster
+checkstyle
+
 Revision 1.9  2003/08/23 15:21:37  zet
 remove @author
 
@@ -100,7 +107,7 @@ Revision 1.8  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.7  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.6  2003/07/23 16:56:28  lemmstercvs01
 initial commit
