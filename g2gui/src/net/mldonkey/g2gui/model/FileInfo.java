@@ -22,8 +22,8 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.21 2003/07/06 12:47:22 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.22 2003/07/07 15:09:28 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo extends Parent {
@@ -120,7 +120,7 @@ public class FileInfo extends Parent {
 	/**
 	 * Which clients this file have
 	 */
-	private List clientInfos = new ArrayList();
+	private Set clientInfos = new HashSet();
 
 	/**
 	 * @return time when download started
@@ -240,7 +240,7 @@ public class FileInfo extends Parent {
 	/**
 	 * @return The clients serving this file
 	 */
-	public List getClientInfos() {
+	public Set getClientInfos() {
 		return clientInfos;
 	}
 
@@ -327,6 +327,10 @@ public class FileInfo extends Parent {
 	 */
 	public boolean addClientInfo( ClientInfo clientInfo ) {
 		return this.clientInfos.add( clientInfo );
+	}
+	
+	public boolean removeClientInfo( ClientInfo clientInfo ) {
+		return this.clientInfos.remove( clientInfo );
 	}
 	
 	/**
@@ -423,6 +427,9 @@ public class FileInfo extends Parent {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.22  2003/07/07 15:09:28  lemmstercvs01
+HashSet() instead of ArrayList()
+
 Revision 1.21  2003/07/06 12:47:22  lemmstercvs01
 bugfix for fileUpdateAvailability
 
