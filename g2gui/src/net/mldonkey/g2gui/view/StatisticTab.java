@@ -26,15 +26,21 @@ import java.util.Observable;
 
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.view.helper.CCLabel;
+import net.mldonkey.g2gui.view.helper.HeaderBarMouseAdapter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.statistic.Graph;
 import net.mldonkey.g2gui.view.statistic.GraphControl;
+import net.mldonkey.g2gui.view.statistic.GraphHistory;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -44,57 +50,69 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.MessageBox;
+
 
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.27 2003/09/20 01:24:25 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.28 2003/09/20 22:08:50 zet Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
-    private String uploadsGraphName = "Uploads";
     private Color uploadsGraphColor1 = new Color( null, 255, 0, 0 );
     private Color uploadsGraphColor2 = new Color( null, 125, 0, 0 );
     private GraphControl downloadsGraphControl;
-    private String downloadsGraphName = "Downloads";
     private Color downloadsGraphColor1 = new Color( null, 0, 0, 255 );
     private Color downloadsGraphColor2 = new Color( null, 0, 0, 125 );
 
     /**
      * default constructor
-     * @param gui The GUI-Objekt representing the top-level gui-layer
+     * @param gui object representing the top level gui layer
      */
     public StatisticTab( MainTab gui ) {
         super( gui );
-        createButton( "StatisticsButton", G2GuiResources.getString( "TT_StatisticsButton" ),
-                      G2GuiResources.getString( "TT_StatisticsButtonToolTip" ) );
+        createButton( "StatisticsButton", G2GuiResources.getString( "TT_StatisticsButton" ), G2GuiResources.getString( "TT_StatisticsButtonToolTip" ) );
         createContents( this.subContent );
-        gui.getCore().getClientStats().addObserver( this );
+        gui.getCore(  ).getClientStats(  ).addObserver( this );
     }
 
     /**
-     * @param parent 
+     * @param parent
      */
     protected void createContents( Composite parent ) {
-        final SashForm mainSash = new SashForm( parent, SWT.VERTICAL );
-        mainSash.setLayout( new FillLayout() );
+        SashForm mainSash = new SashForm( parent, SWT.VERTICAL );
+        mainSash.setLayout( new FillLayout(  ) );
 
         /* Top composite for other stats */
-        ViewForm statsViewForm =
-            new ViewForm( mainSash,
-                          SWT.BORDER
-                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+        createStatsComposite( mainSash );
+
+        /* Bottom Sash for graphs */
+        SashForm graphSash = new SashForm( mainSash, SWT.HORIZONTAL );
+
+        downloadsGraphControl = createGraph( graphSash, "TT_Downloads", downloadsGraphColor1, downloadsGraphColor2 );
+        uploadsGraphControl = createGraph( graphSash, "TT_Uploads", uploadsGraphColor1, uploadsGraphColor2 );
+
+        /* Until top composite has stats */
+        mainSash.setWeights( new int[] { 0, 10 } );
+    }
+
+    /**
+     * Create stats sash
+     * @param mainSash
+     */
+    private void createStatsComposite( final SashForm mainSash ) {
+        ViewForm statsViewForm = new ViewForm( mainSash, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
         statsViewForm.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-        CLabel statsCLabel =
-            CCLabel.createCL( statsViewForm, "TT_StatisticsButton", "StatisticsButtonSmallTitlebar" );
+        CLabel statsCLabel = CCLabel.createCL( statsViewForm, "TT_StatisticsButton", "StatisticsButtonSmallTitlebar" );
 
         Composite statsComposite = new Composite( statsViewForm, SWT.NONE );
-        statsComposite.setLayout( new FillLayout() );
+        statsComposite.setLayout( new FillLayout(  ) );
 
         Button b = new Button( statsComposite, SWT.NONE );
         b.setText( "<gui protocol needs more stats>" );
-        b.addSelectionListener( new SelectionAdapter() {
+        b.addSelectionListener( new SelectionAdapter(  ) {
                 public void widgetSelected( SelectionEvent s ) {
                     mainSash.setWeights( new int[] { 0, 100 } );
                 }
@@ -102,94 +120,155 @@ public class StatisticTab extends GuiTab {
 
         statsViewForm.setTopLeft( statsCLabel );
         statsViewForm.setContent( statsComposite );
-
-        /* Bottom graph for Sash */
-        SashForm graphSash = new SashForm( mainSash, SWT.HORIZONTAL );
-
-        ViewForm downloadsGraphViewForm =
-            new ViewForm( graphSash,
-                          SWT.BORDER
-                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-
-        ViewForm uploadsGraphViewForm =
-            new ViewForm( graphSash,
-                          SWT.BORDER
-                          | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
-
-        CLabel downloadsCLabel =
-            CCLabel.createCL( downloadsGraphViewForm, "TT_Downloads", "StatisticsButtonSmallTitlebar" );
-        CLabel uploadsCLabel =
-            CCLabel.createCL( uploadsGraphViewForm, "TT_Uploads", "StatisticsButtonSmallTitlebar" );
-
-        downloadsGraphControl =
-            new GraphControl( downloadsGraphViewForm, downloadsGraphName, downloadsGraphColor1,
-                              downloadsGraphColor2 );
-        uploadsGraphControl =
-            new GraphControl( uploadsGraphViewForm, uploadsGraphName, 
-            				  uploadsGraphColor1, uploadsGraphColor2 );
-
-        downloadsGraphViewForm.setTopLeft( downloadsCLabel );
-        downloadsGraphViewForm.setContent( downloadsGraphControl );
-        uploadsGraphViewForm.setTopLeft( uploadsCLabel );
-        uploadsGraphViewForm.setContent( uploadsGraphControl );
-
-        /* the both clabes */
-        uploadsCLabel.addMouseListener( new MaximizeSashMouseAdapter( graphSash, uploadsGraphViewForm ) );
-        downloadsCLabel.addMouseListener( new MaximizeSashMouseAdapter( graphSash, downloadsGraphViewForm ) );
-
-        /* Until top composite has stats */
-        mainSash.setWeights( new int[] { 0, 10 } );
     }
 
+    /**
+    * Create a graph
+    *
+    * @param graphSash
+    * @param titleText
+    * @param graphName
+    * @param color1
+    * @param color2
+    * @return GraphControl
+    */
+    public GraphControl createGraph( SashForm graphSash, String titleResString, Color color1, Color color2 ) {
+        final MenuManager popupMenu = new MenuManager(  );
+        popupMenu.setRemoveAllWhenShown( true );
+
+        String graphName = G2GuiResources.getString( titleResString );
+
+        ViewForm graphViewForm = new ViewForm( graphSash, SWT.BORDER | ( PreferenceLoader.loadBoolean( "flatInterface" ) ? SWT.FLAT : SWT.NONE ) );
+        CLabel cLabel = CCLabel.createCL( graphViewForm, titleResString, "StatisticsButtonSmallTitlebar" );
+
+        GraphControl graphControl = new GraphControl( graphViewForm, graphName, color1, color2 );
+
+        popupMenu.addMenuListener( new GraphMenuListener( graphControl ) );
+
+        graphViewForm.setTopLeft( cLabel );
+        graphViewForm.setContent( graphControl );
+
+        cLabel.addMouseListener( new MaximizeSashMouseAdapter( cLabel, popupMenu, graphSash, graphViewForm, graphControl ) );
+
+        return graphControl;
+    }
 
     /* (non-Javadoc)
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable arg0, Object receivedInfo ) {
-        ClientStats clientInfo = ( ClientStats ) receivedInfo;
-        uploadsGraphControl.addPointToGraph( clientInfo.getTcpUpRate() );
-        downloadsGraphControl.addPointToGraph( clientInfo.getTcpDownRate() );
-        uploadsGraphControl.redraw();
-        downloadsGraphControl.redraw();
-    }
-  
-    public void setInActive( boolean removeObserver ) {
-        // Do not remove Observer
-        super.setInActive();
+        ClientStats clientInfo = (ClientStats) receivedInfo;
+        uploadsGraphControl.addPointToGraph( clientInfo.getTcpUpRate(  ) );
+        downloadsGraphControl.addPointToGraph( clientInfo.getTcpDownRate(  ) );
+        uploadsGraphControl.redraw(  );
+        downloadsGraphControl.redraw(  );
     }
 
-  
+    public void setInActive( boolean removeObserver ) {
+        // Do not remove Observer
+        super.setInActive(  );
+    }
+
     /* (non-Javadoc)
      * @see net.mldonkey.g2gui.view.GuiTab#dispose()
      */
-    public void dispose() {
-        super.dispose();
-        uploadsGraphColor1.dispose();
-        uploadsGraphColor2.dispose();
-        downloadsGraphColor1.dispose();
-        downloadsGraphColor2.dispose();
+    public void dispose(  ) {
+        super.dispose(  );
+        uploadsGraphColor1.dispose(  );
+        uploadsGraphColor2.dispose(  );
+        downloadsGraphColor1.dispose(  );
+        downloadsGraphColor2.dispose(  );
     }
 
-    public class MaximizeSashMouseAdapter extends MouseAdapter {
+    /**
+     * MaximizeSashMouseAdapter
+     */
+    public class MaximizeSashMouseAdapter extends HeaderBarMouseAdapter {
         private SashForm sashForm;
         private Control control;
-		
-        public MaximizeSashMouseAdapter( SashForm sashForm, Control control ) {
+        private GraphControl graphControl;
+
+        public MaximizeSashMouseAdapter( CLabel cLabel, MenuManager menuManager, 
+        			SashForm sashForm, Control control, GraphControl graphControl ) {
+            super( cLabel, menuManager );
             this.sashForm = sashForm;
             this.control = control;
+            this.graphControl = graphControl;
         }
 
         public void mouseDoubleClick( MouseEvent e ) {
-            if ( sashForm.getMaximizedControl() == null )
+            if ( sashForm.getMaximizedControl(  ) == null ) {
                 sashForm.setMaximizedControl( control );
-            else
+            } else {
                 sashForm.setMaximizedControl( null );
+            }
+        }
+    }
+
+    /**
+     * GraphMenuListener
+     */
+    public class GraphMenuListener implements IMenuListener {
+        GraphControl graphControl;
+
+        public GraphMenuListener( GraphControl graphControl ) {
+            this.graphControl = graphControl;
+        }
+
+        public void menuAboutToShow( IMenuManager menuManager ) {
+            menuManager.add( new GraphHistoryAction( graphControl.getGraph(  ) ) );
+            menuManager.add( new ClearGraphHistoryAction( graphControl.getGraph(  ) ) );
+        }
+    }
+
+    /**
+    * GraphHistoryAction
+    */
+    public class GraphHistoryAction extends Action {
+        Graph graph;
+
+        public GraphHistoryAction( Graph graph ) {
+            super( "Graph history" );
+            this.graph = graph;
+        }
+
+        public void run(  ) {
+            new GraphHistory( graph );
+        }
+    }
+
+    /**
+    * ClearGraphHistoryAction
+    */
+    public class ClearGraphHistoryAction extends Action {
+        Graph graph;
+
+        public ClearGraphHistoryAction( Graph graph ) {
+            super( "Clear graph history" );
+            this.graph = graph;
+        }
+
+        public void run(  ) {
+			MessageBox confirm =
+				new MessageBox( 
+					downloadsGraphControl.getShell(),
+					SWT.YES | SWT.NO | SWT.ICON_QUESTION );
+
+			confirm.setMessage( G2GuiResources.getString( "MISC_AYS" ) );
+
+			if ( confirm.open() == SWT.YES ) {
+				graph.clearHistory();
+			}
         }
     }
 }
 
+
 /*
 $Log: StatisticTab.java,v $
+Revision 1.28  2003/09/20 22:08:50  zet
+basic graph hourly history
+
 Revision 1.27  2003/09/20 01:24:25  zet
 *** empty log message ***
 

@@ -23,192 +23,193 @@
 package net.mldonkey.g2gui.view.statistic;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
+
+import gnu.trove.TIntArrayList;
+
 
 /**
- * Graph is a List of StatisticPoints only knowing the first and the last Point,
- * a Graph also has got a Color. And knows when it was started
+ * Graph
  *
- *
- * @version $Id: Graph.java,v 1.15 2003/09/18 11:30:18 lemmster Exp $
+ * @version $Id: Graph.java,v 1.16 2003/09/20 22:08:41 zet Exp $
  */
-public class Graph {
+public class Graph implements Runnable {
     public static final short MAX_POINTS = 1600;
+    public static final short MAX_GRAPH_TYPES = 2;
+    public static final int ONE_HOUR = 60 * 60000;
     private int[] iPoints = new int[ MAX_POINTS ];
     private int insertAt = 0;
     private String graphName;
     private Color graphColor1;
     private Color graphColor2;
+
+    // arrayLists of primatives can't be synch'd..
+    private TIntArrayList maxList, avgList;
+    
+    private int graphType;
+    private long sumValue;
+    private long hourlySumValue;
     private int amount;
     private int maxValue;
     private int avgValue;
-    private long sumValue;
+    private int hourlyAmount;
+    private int hourlyMaxValue;
+    private int hourlyAvgValue;
 
-	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param name DOCUMENT ME!
-	 * @param color1 DOCUMENT ME!
-	 * @param color2 DOCUMENT ME!
-	 */
     public Graph( String name, Color color1, Color color2 ) {
-        graphName = name;
-        graphColor1 = color1;
-        graphColor2 = color2;
-        sumValue = 0;
-        avgValue = 0;
-        maxValue = 0;
+        this.graphName = name;
+        this.graphColor1 = color1;
+        this.graphColor2 = color2;
+
+        this.maxList = new TIntArrayList( 0 );
+        this.avgList = new TIntArrayList( 0 );
+
+        sumValue = hourlySumValue = 0;
+        graphType = avgValue = maxValue = 0;
+        hourlyMaxValue = 0;
+        hourlyAvgValue = 0;
+
+        Display.getDefault(  ).timerExec( ONE_HOUR, this );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public int getInsertAt() {
+    public int getInsertAt(  ) {
         return insertAt;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param i DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public int getPointAt( int i ) {
         return iPoints[ i ];
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param width DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public int findMax( int width ) {
         int max = 20;
         int searchPoint = insertAt - 1;
-        if ( width > amount )
+
+        if ( width > amount ) {
             width = amount;
+        }
+
         for ( int i = 0; i < width; i++ ) {
-            if ( searchPoint < 0 )
+            if ( searchPoint < 0 ) {
                 searchPoint = MAX_POINTS - 1;
-            if ( iPoints[ searchPoint ] > max )
+            }
+
+            if ( iPoints[ searchPoint ] > max ) {
                 max = iPoints[ searchPoint ];
+            }
+
             searchPoint--;
         }
+
         return max;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public int getNewestPoint() {
+    public int getNewestPoint(  ) {
         int newestPoint = insertAt - 1;
-        if ( newestPoint < 0 )
+
+        if ( newestPoint < 0 ) {
             newestPoint = MAX_POINTS - 1;
+        }
+
         return iPoints[ newestPoint ];
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param value DOCUMENT ME!
-     */
     public void addPoint( int value ) {
-        if ( insertAt > ( MAX_POINTS - 1 ) )
+        if ( insertAt > ( MAX_POINTS - 1 ) ) {
             insertAt = 0;
+        }
+
         iPoints[ insertAt++ ] = value;
-        if ( value > maxValue )
+
+        if ( value > maxValue ) {
             maxValue = value;
+        }
+
         sumValue += value;
         amount++;
-        avgValue = ( int ) ( sumValue / ( long ) amount );
+        avgValue = (int) ( sumValue / (long) amount );
+
+        if ( value > hourlyMaxValue ) {
+            hourlyMaxValue = value;
+        }
+
+        hourlySumValue += value;
+        hourlyAmount++;
+        hourlyAvgValue = (int) ( hourlySumValue / (long) hourlyAmount );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public int getAmount() {
+    public int getAmount(  ) {
         return amount;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public Color getGraphColor1() {
+    public Color getGraphColor1(  ) {
         return graphColor1;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public Color getGraphColor2() {
+    public Color getGraphColor2(  ) {
         return graphColor2;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public int getMax() {
+    public int getMax(  ) {
         return maxValue;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public String getName() {
+    public String getName(  ) {
         return graphName;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public int getAvg() {
+    public int getAvg(  ) {
         return avgValue;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public Color getColor1() {
+    public Color getColor1(  ) {
         return graphColor1;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public Color getColor2() {
+    public Color getColor2(  ) {
         return graphColor2;
+    }
+
+    public void run(  ) {
+        maxList.add( hourlyMaxValue );
+        avgList.add( hourlyAvgValue );
+
+        hourlyMaxValue = hourlyAvgValue = 0;
+        hourlySumValue = hourlyAmount = 0;
+
+        Display.getDefault(  ).timerExec( ONE_HOUR, this );
+    }
+
+    public void toggleDisplay(  ) {
+        graphType++;
+
+        if ( graphType > MAX_GRAPH_TYPES ) {
+            graphType = 0;
+        }
+    }
+
+    public int getGraphType(  ) {
+        return graphType;
+    }
+
+    public TIntArrayList getMaxList(  ) {
+        return maxList;
+    }
+
+    public TIntArrayList getAvgList(  ) {
+        return avgList;
+    }
+
+    public void clearHistory(  ) {
+        maxList.clear(  );
+        avgList.clear(  );
     }
 }
 
+
 /*
 $Log: Graph.java,v $
-Revision 1.15  2003/09/18 11:30:18  lemmster
-checkstyle
-
-Revision 1.14  2003/09/18 11:28:51  lemmster
-checkstyle
+Revision 1.16  2003/09/20 22:08:41  zet
+basic graph hourly history
 
 Revision 1.13  2003/09/16 01:18:52  zet
 min size/check bounds
@@ -223,7 +224,7 @@ Revision 1.10  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.9  2003/08/22 21:13:11  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.8  2003/08/09 00:42:18  zet
 dispose colors
