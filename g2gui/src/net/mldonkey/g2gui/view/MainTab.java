@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.28 2003/08/04 14:38:55 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.29 2003/08/05 13:49:44 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -98,6 +98,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 					
 		shell.pack ();
 		/* close the splashShell from G2Gui.java */
+		G2Gui.increaseBar( "" );
 		G2Gui.getSplashShell().dispose();
 		G2Gui.getImage().dispose();
 		
@@ -419,6 +420,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 	private void addTabs() {
 		new TransferTab( this );
 		new SearchTab( this );
+		new ServerTab( this );
 		new ConsoleTab( this );
 		new StatisticTab( this );
 		/*setting TransferTab active if registered*/
@@ -594,7 +596,10 @@ public class MainTab implements Listener, Observer, ShellListener {
 		imageRegistry.put("TransfersButtonSmall", createTrans("transfer2-16.png"));
 		
 		imageRegistry.put("SearchButton", createTrans("search.png"));
-		imageRegistry.put("SearchButtonSmall", createTrans("search-16.png")); 
+		imageRegistry.put("SearchButtonSmall", createTrans("search-16.png"));
+		
+		imageRegistry.put( "ServerButton", createTrans( "server.png" ) );
+		imageRegistry.put( "ServerButtonSmall", createTrans( "server-16.png" ) ); 
 			
 	}
 	// transparent pngs on gtk still require this, but it is noticable on win :(
@@ -628,6 +633,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.29  2003/08/05 13:49:44  lemmstercvs01
+support for servertab added
+
 Revision 1.28  2003/08/04 14:38:55  lemmstercvs01
 splashscreen and error handling added (resending on badpassword doenst work atm)
 
