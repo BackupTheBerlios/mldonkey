@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.2 2003/11/06 15:26:25 zet Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.3 2003/11/09 16:44:13 zet Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -149,10 +149,11 @@ public class G2GuiWinReg extends PreferencePage {
      * @param regFile
      */
     private void updateRegistry(String regFile) {
-        String[] cmd = new String[ 2 ];
+        String[] cmd = new String[ 3 ];
 
         cmd[ 0 ] = "regedit.exe";
-        cmd[ 1 ] = regFile;
+        cmd[ 1 ] = "/s";
+        cmd[ 2 ] = regFile;
 
         Runtime rt = Runtime.getRuntime();
 
@@ -256,6 +257,9 @@ public class G2GuiWinReg extends PreferencePage {
 
 /*
 $Log: G2GuiWinReg.java,v $
+Revision 1.3  2003/11/09 16:44:13  zet
+silent
+
 Revision 1.2  2003/11/06 15:26:25  zet
 use System instead of io.File
 
