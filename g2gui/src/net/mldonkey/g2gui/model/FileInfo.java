@@ -41,7 +41,7 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.28 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.29 2003/08/04 16:56:16 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo extends Parent {
@@ -450,7 +450,7 @@ public class FileInfo extends Parent {
 			content = new Integer( 10 );
 		else
 			content = new Integer( 0 );	
-		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SAVE_FILE_AS, content );
+		EncodeMessage consoleMessage = new EncodeMessage( Message.S_SET_FILE_PRIO, content );
 		consoleMessage.sendMessage( this.parent.getConnection() );
 		content = null;
 		consoleMessage = null;
@@ -509,6 +509,9 @@ public class FileInfo extends Parent {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.29  2003/08/04 16:56:16  lemmstercvs01
+use the correct opcode for msg sending
+
 Revision 1.28  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 
