@@ -28,30 +28,44 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.SharedFileInfo;
 import net.mldonkey.g2gui.model.SharedFileInfoIntMap;
 import net.mldonkey.g2gui.view.TransferTab;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
+
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableViewer.java,v 1.1 2003/09/25 18:28:07 dek Exp $ 
+ * @version $Id: UploadTableViewer.java,v 1.2 2003/09/25 21:48:55 dek Exp $ 
  *
  */
 public class UploadTableViewer {
+	/**
+	 * MyTableSorter
+	 *
+	 * @version $Id: UploadTableViewer.java,v 1.2 2003/09/25 21:48:55 dek Exp $ 
+	 *
+	 */
+	
 	private Shell shell;
 	private CoreCommunication mldonkey;
 	private Table table;
 	private final String[] COLUMN_LABELS =
 		{ "Network", "Filename", "Uploaded Bytes", "# of Queries", };
 	private TableViewer tableviewer;
+	private boolean ascending = false;
 	
 	/**
 	 * @param parent the place where this table lives
@@ -76,10 +90,34 @@ public class UploadTableViewer {
 			tableColumn.setText( COLUMN_LABELS[ i ] );
 			tableColumn.setData( COLUMN_LABELS[ i ] );
 			tableColumn.setWidth( 80 );
+			
+			final int columnIndex = i;
+			tableColumn.addListener( SWT.Selection, new Listener() {
+				public void handleEvent( Event e ) {
+					/* set the column to sort */
+					( ( MyTableSorter ) tableviewer.getSorter() ).setColumnIndex( columnIndex );
+					/* set the way to sort (ascending/descending) */
+					( ( MyTableSorter ) tableviewer.getSorter() ).setLastSort( ascending );
+
+					/* get the data for all tableitems */
+					TableItem[] items = tableviewer.getTable().getItems();
+					SharedFileInfo[] temp = new SharedFileInfo[ items.length ];
+					for ( int i = 0; i < items.length; i++ )
+							temp[ i ] = ( SharedFileInfo ) items[ i ].getData();
+
+					/* reverse sorting way */
+					ascending = ascending ? false : true;
+
+					tableviewer.getSorter().sort( tableviewer, temp );
+					tableviewer.refresh();
+				}	
+			} );
+			
 		}
 		tableviewer.setContentProvider( new MyContentProvider() );
 		tableviewer.setLabelProvider( new MyLabelProvider() );
 		tableviewer.setInput( mldonkey.getSharedFileInfoList() );
+		tableviewer.setSorter( new MyTableSorter() );
 	}
 	private class MyContentProvider implements IStructuredContentProvider, Observer {
 		/* ( non-Javadoc )
@@ -129,13 +167,6 @@ public class UploadTableViewer {
 	}
 	private class MyLabelProvider implements ITableLabelProvider {
 		/* ( non-Javadoc )
-		 * @see org.eclipse.jface.viewers.ILabelProvider#getImage( java.lang.Object )
-		 */
-		public Image getImage( Object element ) {
-			System.out.println( "LP: get Image" );
-			return null;
-		}
-		/* ( non-Javadoc )
 		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener( org.eclipse.jface.viewers.ILabelProviderListener )
 		 */
 		public void addListener( ILabelProviderListener listener ) { }
@@ -147,7 +178,6 @@ public class UploadTableViewer {
 		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty( java.lang.Object, java.lang.String )
 		 */
 		public boolean isLabelProperty( Object element, String property ) {
-			System.out.println( "isLabelProperty" );
 			return false;
 		}
 		/* ( non-Javadoc )
@@ -158,8 +188,13 @@ public class UploadTableViewer {
 		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage( java.lang.Object, int )
 		 */
 		public Image getColumnImage( Object element, int columnIndex ) {
+			if ( columnIndex == 0 ) {
+				SharedFileInfo file = ( SharedFileInfo ) element;
+				return G2GuiResources.getNetworkImage( file.getNetwork().getNetworkType() );
+			}
 			return null;
 		}
+		
 		/* ( non-Javadoc )
 		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText( java.lang.Object, int )
 		 */
@@ -171,13 +206,13 @@ public class UploadTableViewer {
 					result = info.getSharedFileName();
 					break;
 				case 2 :
-					result = String.valueOf( info.getNumOfBytesUploaded() );
+					result = info.getDownloadedString();
 					break;
 				case 3 :
 					result = String.valueOf( info.getNumOfQueriesForFile() );
 					break;
 				case 0 :
-					result = String.valueOf( info.getNetwork().getNetworkName() );
+					result = info.getNetwork().getNetworkName();
 					break;
 				default :
 					result = "";
@@ -186,9 +221,103 @@ public class UploadTableViewer {
 			return result;
 		}
 	}
+	private class MyTableSorter extends ViewerSorter {
+		/* set the default sort column to state */
+		private int columnIndex = 8;
+		/* set the default way to descending */
+		private boolean lastSort = true;
+		
+		/**
+		 * Returns a negative, zero, or positive number depending on whether
+		 * the first element is less than, equal to, or greater than
+		 * the second element.
+		 * <p>
+		 * The default implementation of this method is based on
+		 * comparing the elements' categories as computed by the <code>category</code>
+		 * framework method. Elements within the same category are further
+		 * subjected to a case insensitive compare of their label strings, either
+		 * as computed by the content viewer's label provider, or their
+		 * <code>toString</code> values in other cases. Subclasses may override.
+		 * </p>
+		 *
+		 * @param viewer the viewer
+		 * @param obj1 the first element
+		 * @param obj2 the second element
+		 * @return a negative number if the first element is less  than the
+		 *  second element; the value <code>0</code> if the first element is
+		 *  equal to the second element; and a positive number if the first
+		 *  element is greater than the second element
+		 */
+		public int compare( Viewer viewer, Object obj1, Object obj2 ) {
+			SharedFileInfo sharedFile1 = ( SharedFileInfo ) obj1;
+			SharedFileInfo sharedFile2 = ( SharedFileInfo ) obj2;
+			int result = 0;
+			String aString1 = "" ;
+			String aString2 = "" ;
+			Long aLong1 = new Long( 0 );
+			Long aLong2 = new Long( 0 );
+			
+			switch ( columnIndex ) {				
+				case 0 :	/*network*/	
+					aString1 = sharedFile1.getNetwork().getNetworkName();
+					aString2 = sharedFile2.getNetwork().getNetworkName();
+					if ( lastSort )
+						result = aString1.compareToIgnoreCase( aString2 );
+					else
+						result = aString2.compareToIgnoreCase( aString1 );			
+					break;				
+				case 1 : /*filename*/	
+					aString1 = sharedFile1.getNetwork().getNetworkName();
+					aString2 = sharedFile2.getNetwork().getNetworkName();
+					if ( lastSort )
+						result = aString1.compareToIgnoreCase( aString2 );
+					else
+						result = aString2.compareToIgnoreCase( aString1 );					
+					break;				
+				case 2 :/*upload*/
+					aLong1 = new Long( sharedFile1.getNumOfBytesUploaded() );
+					aLong2 = new Long( sharedFile2.getNumOfBytesUploaded() );
+					if ( lastSort )
+						result = aLong1.compareTo( aLong2 );
+					else 
+						result = aLong2.compareTo( aLong1 );								
+					break;				
+				case 3 :/*queries*/	
+					aLong1 = new Long( sharedFile1.getNumOfQueriesForFile() );
+					aLong2 = new Long( sharedFile2.getNumOfQueriesForFile() );
+					if ( lastSort )
+						result = aLong1.compareTo( aLong2 );
+					else 
+						result = aLong2.compareTo( aLong1 );			
+					break;
+				default :
+					break;
+			}
+			return result;
+			
+		}
+		
+		/**
+		 * Sets the column index
+		 * @param i The column index to sort
+		 */
+		public void setColumnIndex( int i ) {
+			columnIndex = i;
+		}
+
+		/**
+		 * @param i The ascending or descending
+		 */
+		public void setLastSort( boolean i ) {
+			lastSort = i;
+		}
+	}
 }
 /*
 $Log: UploadTableViewer.java,v $
+Revision 1.2  2003/09/25 21:48:55  dek
+added icons for networks + TableSorter
+
 Revision 1.1  2003/09/25 18:28:07  dek
 first sketch of upload-Table not yet added to transferTab.
 
