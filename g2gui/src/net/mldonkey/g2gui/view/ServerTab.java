@@ -60,8 +60,8 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * ServerTab
  *
- * @author $Author: zet $
- * @version $Id: ServerTab.java,v 1.10 2003/08/18 01:42:24 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: ServerTab.java,v 1.11 2003/08/20 21:34:22 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -209,8 +209,11 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		servers.clearAdded();
 		
 		/* set the state filter if preference says so */
-		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) )
-			table.addFilter( new TableMenuListener.EnumStateFilter( EnumState.CONNECTED ) );
+		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) ) {
+			TableMenuListener.EnumStateFilter filter = new TableMenuListener.EnumStateFilter();
+			filter.add( EnumState.CONNECTED );
+			table.addFilter( filter );
+		}
 		
 		int itemCount = table.getTable().getItemCount();
 		setRightLabel("Total: " + itemCount);
@@ -272,8 +275,10 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			for ( int i = 0; i < filters.length; i++ )
 				if ( filters[ i ] instanceof TableMenuListener.EnumStateFilter ) {
 					TableMenuListener.EnumStateFilter filter = ( EnumStateFilter ) filters[ i ];
-					if ( filter.getState() == EnumState.CONNECTED )
-						table.refresh();
+					for ( int j = 0; j < filter.getEnumState().size(); j++ ) {
+						if ( filter.getEnumState().get( j ) == EnumState.CONNECTED )
+							table.refresh();
+					}
 				}
 		}
 	}
@@ -335,7 +340,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 			if ( filters[ i ] instanceof TableMenuListener.NetworkFilter )
 				table.removeFilter( filters[ i ] );
 		}
-		table.addFilter( new TableMenuListener.NetworkFilter( enum ) );
+		TableMenuListener.NetworkFilter filter = new TableMenuListener.NetworkFilter();
+		filter.add( enum );
+		table.addFilter( filter );
 	}
 	
 	/**
@@ -343,15 +350,31 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 */
 	public void updateDisplay() {
 		/* update the state filter */
-		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) )
-			table.addFilter( new TableMenuListener.EnumStateFilter( EnumState.CONNECTED ) );
+		if ( PreferenceLoader.loadBoolean( "displayAllServers" ) ) {
+			/* first remove all EnumState filters */
+			for ( int i = 0; i < table.getFilters().length; i++ ) {
+				if ( table.getFilters()[ i ] instanceof TableMenuListener.EnumStateFilter )
+					table.removeFilter( table.getFilters()[ i ] );
+			}
+			/* now add the new one */
+			TableMenuListener.EnumStateFilter filter = new TableMenuListener.EnumStateFilter();
+			filter.add( EnumState.CONNECTED );
+			table.addFilter( filter );
+		}
 		else {
 			ViewerFilter[] filters = table.getFilters();
 			for ( int i = 0; i < filters.length; i++ ) {
-				TableMenuListener.EnumStateFilter filter = ( EnumStateFilter ) filters[ i ];
-				if ( filter instanceof TableMenuListener.EnumStateFilter
-				&& filter.getState() == EnumState.CONNECTED )
-					table.removeFilter( filter ); 				
+				if ( table.getFilters()[ i ] instanceof TableMenuListener.EnumStateFilter ) {
+					TableMenuListener.EnumStateFilter filter = ( EnumStateFilter ) filters[ i ];
+					if ( filter.contains( EnumState.CONNECTED ) ) {
+						if (  filter.getEnumState().size() == 1 )
+							table.removeFilter( filter );
+						else {
+							filter.remove( EnumState.CONNECTED );
+							table.refresh();
+						}
+					}
+				}
 			}
 		}
 		super.updateDisplay();
@@ -360,6 +383,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.11  2003/08/20 21:34:22  lemmster
+additive filters
+
 Revision 1.10  2003/08/18 01:42:24  zet
 centralize resource bundle
 

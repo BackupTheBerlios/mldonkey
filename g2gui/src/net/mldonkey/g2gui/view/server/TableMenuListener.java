@@ -67,8 +67,8 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * TableMenuListener
  *
- * @author $Author: zet $
- * @version $Id: TableMenuListener.java,v 1.11 2003/08/18 01:42:24 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: TableMenuListener.java,v 1.12 2003/08/20 21:34:22 lemmster Exp $ 
  *
  */
 public class TableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -204,10 +204,13 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	public boolean isFiltered( NetworkInfo.Enum networkType ) {
 		ViewerFilter[] viewerFilters = tableViewer.getFilters();
 		for ( int i = 0; i < viewerFilters.length; i++ ) {
-			if ( viewerFilters [ i ] instanceof NetworkFilter )
-				if ( ( ( NetworkFilter ) viewerFilters[ i ] ).getNetworkType().equals(networkType ) )
-					return true; 
-	
+			if ( viewerFilters [ i ] instanceof NetworkFilter ) {
+				NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
+				for ( int j = 0; j < filter.getNetworkType().size(); j++ ) {
+					if ( filter.getNetworkType().get( j ).equals( networkType ) )
+						return true;					
+				}
+			}
 		}
 		return false;
 	}
@@ -215,10 +218,13 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	public boolean isFiltered( EnumState state ) {
 		ViewerFilter[] viewerFilters = tableViewer.getFilters();
 		for ( int i = 0; i < viewerFilters.length; i++ ) {
-			if ( viewerFilters [ i ] instanceof EnumStateFilter )
-				if ( ( ( EnumStateFilter ) viewerFilters[ i ] ).getEnumState().equals( state ) )
-					return true; 
-	
+			if ( viewerFilters [ i ] instanceof EnumStateFilter ) {
+				EnumStateFilter filter = ( EnumStateFilter ) viewerFilters[ i ];
+				for ( int j = 0; j < filter.getEnumState().size(); j++ ) {
+					if ( filter.getEnumState().get( j ).equals( state ) )
+						return true;					
+				}
+			}
 		}
 		return false;
 	}
@@ -463,13 +469,33 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			if ( !isChecked() ) {
 				ViewerFilter[] viewerFilters = tableViewer.getFilters();
 				for ( int i = 0; i < viewerFilters.length; i++ ) {
-					if ( viewerFilters[i] instanceof NetworkFilter )
-						if ( ( ( NetworkFilter ) viewerFilters[ i ] ).getNetworkType() == networkType ) {
-							toggleFilter( viewerFilters[ i ], false );
-						}
+					if ( viewerFilters[i] instanceof NetworkFilter ) {
+						NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
+						for ( int j = 0; j < filter.getNetworkType().size(); j++ ) {
+							if ( filter.getNetworkType().get( j ) == networkType )
+								if ( filter.getNetworkType().size() == 1 )
+									toggleFilter( viewerFilters[ i ], false );
+								else {
+									filter.remove( networkType );
+									tableViewer.refresh();
+								}									
+						}	
+					}
 				}
-			} else {
-				toggleFilter( new NetworkFilter( networkType ), true );
+			}
+			else {
+				ViewerFilter[] viewerFilters = tableViewer.getFilters();
+				for ( int i = 0; i < viewerFilters.length; i++ ) {
+					if ( viewerFilters[i] instanceof NetworkFilter ) {
+						NetworkFilter filter = ( NetworkFilter ) viewerFilters[ i ];
+						filter.add( networkType );
+						tableViewer.refresh();
+						return;
+					}
+				}
+				NetworkFilter filter = new NetworkFilter();
+				filter.add( networkType );
+				toggleFilter( filter, true );
 			}
 		}
 	}
@@ -486,13 +512,33 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 			if ( !isChecked() ) {
 				ViewerFilter[] viewerFilters = tableViewer.getFilters();
 				for ( int i = 0; i < viewerFilters.length; i++ ) {
-					if ( viewerFilters[i] instanceof EnumStateFilter )
-						if ( ( ( EnumStateFilter ) viewerFilters[ i ] ).getEnumState() == state ) {
-							toggleFilter( viewerFilters[ i ], false );
-						}
+					if ( viewerFilters[i] instanceof EnumStateFilter ) {
+						EnumStateFilter filter = ( EnumStateFilter ) viewerFilters[ i ];
+						for ( int j = 0; j < filter.getEnumState().size(); j++ ) {
+							if ( filter.getEnumState().get( j ) == state )
+								if ( filter.getEnumState().size() == 1 )
+									toggleFilter( viewerFilters[ i ], false );
+								else {
+									filter.remove( state );
+									tableViewer.refresh();
+								}									
+						}	
+					}
 				}
-			} else {
-				toggleFilter( new EnumStateFilter( state ), true );
+			}
+			else {
+				ViewerFilter[] viewerFilters = tableViewer.getFilters();
+				for ( int i = 0; i < viewerFilters.length; i++ ) {
+					if ( viewerFilters[i] instanceof EnumStateFilter ) {
+						EnumStateFilter filter = ( EnumStateFilter ) viewerFilters[ i ];
+						filter.add( state );
+						tableViewer.refresh();
+						return;
+					}
+				}
+				EnumStateFilter filter = new EnumStateFilter();
+				filter.add( state );
+				toggleFilter( filter, true );
 			}
 		}		
 	}
@@ -525,15 +571,23 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 	}		
 	
 	public static class NetworkFilter extends ViewerFilter {
-		private NetworkInfo.Enum networkType;
+		private List networkType;
 		
-		public NetworkFilter( NetworkInfo.Enum enum ) {
-			this.networkType = enum;	
+		public NetworkFilter() {
+			this.networkType = new ArrayList();	
 		}	
 		
-		public NetworkInfo.Enum getNetworkType () {
+		public List getNetworkType () {
 			return networkType;
 		}
+		
+		public boolean add( NetworkInfo.Enum enum ) {
+			return this.networkType.add( enum );
+		}
+		
+		public boolean remove( NetworkInfo.Enum enum ) {
+			return this.networkType.remove( enum );
+		}		 
 
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
@@ -541,25 +595,38 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		public boolean select( Viewer viewer, Object parentElement, Object element ) {
 			if ( element instanceof ServerInfo ) {
 				ServerInfo server = ( ServerInfo ) element;
-				if ( server.getNetwork().getNetworkType() == networkType )
-					return true;
-				else 
-					return false;
+				for ( int i = 0; i < this.networkType.size(); i++ ) {
+					if ( server.getNetwork().getNetworkType() == networkType.get( i ) )
+						return true;
+				}	
+				return false;
 			}
 			return true;
 		}
 	}
 	
 	public static  class EnumStateFilter extends ViewerFilter {
-		private EnumState state;
+		private List state;
 		
-		public EnumStateFilter( EnumState state ) {
-			this.state = state;
+		public EnumStateFilter() {
+			this.state = new ArrayList();
 		}
 		
-		public EnumState getEnumState() {
+		public List getEnumState() {
 			return this.state;
 		}
+		
+		public boolean add( EnumState enum ) {
+			return this.state.add( enum );
+		}
+		
+		public boolean remove( EnumState state ) {
+			return this.state.remove( state );
+		}
+		
+		public boolean contains( EnumState state ) {
+			return this.state.contains( state );
+		}			 
 
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.viewers.ViewerFilter#
@@ -568,17 +635,14 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if ( element instanceof ServerInfo ) {
 				ServerInfo server = ( ServerInfo ) element;
-				if ( server.getConnectionState().getState() == state )
-					return true;
-				else 
-					return false;
+				for ( int i = 0; i < this.state.size(); i++ ) {
+					if ( server.getConnectionState().getState() == state.get( i ) )
+						return true;
+				}	
+				return false;
 			}
 			return true;
 		}
-		
-		public EnumState getState() {
-			return this.state;
-		}			
 	}
 	
 	private class MyInputDialog extends InputDialog {
@@ -667,6 +731,9 @@ public class TableMenuListener implements ISelectionChangedListener, IMenuListen
 
 /*
 $Log: TableMenuListener.java,v $
+Revision 1.12  2003/08/20 21:34:22  lemmster
+additive filters
+
 Revision 1.11  2003/08/18 01:42:24  zet
 centralize resource bundle
 
