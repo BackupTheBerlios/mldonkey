@@ -25,15 +25,24 @@ package net.mldonkey.g2gui.helper;
 import java.io.IOException;
 import java.net.Socket;
 
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
+
 /**
  * SocketPool
  *
  * @author ${user}
- * @version $Id: SocketPool.java,v 1.6 2003/06/12 22:23:06 lemmstercvs01 Exp $ 
+ * @version $Id: SocketPool.java,v 1.7 2003/06/13 10:45:23 lemmstercvs01 Exp $ 
  *
  */
 public class SocketPool extends ObjectPool {
 	
+	private int protocolver = 16;
+
+	private String username;
+
+	private String password;
+
 	/**
 	 * Address of sockets in the pool
 	 */
@@ -64,11 +73,13 @@ public class SocketPool extends ObjectPool {
 	 * @param address The address to connect to
 	 * @param port The port to connect to
 	 */
-	public SocketPool( String address, int port ) {
+	public SocketPool( String address, int port, String username, String password ) {
 		super();
 
 		this.address = address;
 		this.port = port;
+		this.username = username;
+		this.password = password;
 		
 		/* spawn Sockets for min */
 		for ( int i = 0; i < initial; i++ ) {
@@ -85,6 +96,27 @@ public class SocketPool extends ObjectPool {
 		Socket socket = null;
 		try {
 			socket = new Socket( this.address, this.port );
+			
+			/* send the core protocol version */
+			Object[] temp = new Object[ 1 ];
+			temp[ 0 ] = new Integer( protocolver );		
+			Message coreProtocol =
+				new EncodeMessage( Message.S_COREPROTOCOL, temp );			
+			coreProtocol.sendMessage( socket );
+			coreProtocol = null;
+			
+			/* send the gui extensions (poll mode) */			
+			Object[] extension = { new Integer( 1 ), new Byte( ( byte ) 1 )};
+			Object[][] a = { extension };
+			Message guiExtension = new EncodeMessage( Message.S_GUIEXTENSION, a );
+			guiExtension.sendMessage( socket );
+			guiExtension = null;
+
+			/* send the password/username */
+			String[] aString = { this.password, this.username };
+			Message password = new EncodeMessage( Message.S_PASSWORD, aString );
+			password.sendMessage( socket );
+			password = null;
 		}
 		catch ( IOException e ) {
 		}
@@ -118,6 +150,9 @@ public class SocketPool extends ObjectPool {
 
 /*
 $Log: SocketPool.java,v $
+Revision 1.7  2003/06/13 10:45:23  lemmstercvs01
+send protocol, user/pass, gui extension in socketpool
+
 Revision 1.6  2003/06/12 22:23:06  lemmstercvs01
 lots of changes
 
