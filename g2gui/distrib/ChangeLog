@@ -1,6 +1,7 @@
 2003/09/23: lemmy
 	* Statusline: Display manage nodes for FT/Gnut/Gnut2
 	* Server: Tables colors switchable
+	* Server: Server link in right-click menu (just ed2k)
 	* Search: Copy to... works with multiple files
 2003/09/22: lemmy
 	* Server: Integer columns right- instead of left-aligned [bug #934]

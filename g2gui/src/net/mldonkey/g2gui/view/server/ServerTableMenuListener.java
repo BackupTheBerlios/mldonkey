@@ -54,6 +54,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -66,7 +69,7 @@ import org.eclipse.swt.widgets.Shell;
  * TableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.8 2003/09/18 11:31:03 lemmster Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.9 2003/09/24 09:35:57 lemmster Exp $
  *
  */
 public class ServerTableMenuListener extends TableMenuListener implements ISelectionChangedListener,
@@ -121,6 +124,10 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
         /* connect more (with the network) */
         if ( selectedServer != null )
             menuManager.add( new ConnectMoreAction() );
+            
+        /* copy server name to clipboard */
+        menuManager.add( new CopyServerLink() );
+            
         /* add server/servers */
         MenuManager addManager = new MenuManager( G2GuiResources.getString( "TML_ADD_SERVER_BY" ) );
         addManager.add( new AddServerAction() );
@@ -174,21 +181,49 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
         menuManager.add( filterSubMenu );
     }
 
+
     private class DisconnectAction extends Action {
         public DisconnectAction() {
             super();
             setText( G2GuiResources.getString( "TML_DISCONNECT" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
         public void run() {
             for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
                 serverInfoMap.disconnect( server.getServerId() );
             }
         }
+    }
+    
+    private class CopyServerLink extends Action {
+    	public CopyServerLink() {
+    		super();
+    		setText( G2GuiResources.getString( "TML_COPYTO" ) );
+    	}
+    	
+    	/*
+    	 * (non-Javadoc)
+    	 * @see org.eclipse.jface.action.IAction#run()
+    	 */
+    	public void run() {
+			Clipboard clipboard =
+				new Clipboard( ( ( TableViewer ) tableViewer ).getTable().getDisplay() );
+			String aString = "";
+			for ( int i = 0; i < selectedServers.size(); i++ ) {
+				ServerInfo server = ( ServerInfo ) selectedServers.get( i );
+				if ( aString.length() > 0 )
+					aString += ( SWT.getPlatform().equals( "win32" ) ? "\r\n" : "\n" );
+				aString += server.getLink();
+			}
+			clipboard.setContents( new Object[] { aString },
+								new Transfer[] { TextTransfer.getInstance() } );
+			clipboard.dispose();						
+    	}
     }
 
     private class ConnectAction extends Action {
@@ -197,9 +232,10 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
             setText( G2GuiResources.getString( "TML_CONNECT" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
         public void run() {
             for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
@@ -214,9 +250,10 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
             setText( G2GuiResources.getString( "TML_CONNECT_MORE" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
         public void run() {
             for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
@@ -233,9 +270,10 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
             setText( G2GuiResources.getString( "TML_ADD_SERVER" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
         public void run() {
             dialog =
                 new MyInputDialog( ( ( TableViewer ) tableViewer ).getTable().getShell(),
@@ -323,9 +361,10 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
             setText( G2GuiResources.getString( "TML_ADD_SERVERS" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
         public void run() {
             dialog =
                 new InputDialog( ( ( TableViewer ) tableViewer ).getTable().getShell(),
@@ -364,9 +403,10 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
             setText( G2GuiResources.getString( "TML_REMOVE_SERVER" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
         public void run() {
             for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
@@ -381,9 +421,10 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
             setText( G2GuiResources.getString( "TML_REMOVE_SERVERS" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
         public void run() {
             serverInfoMap.cleanOld();
         }
@@ -395,9 +436,10 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
             setText( G2GuiResources.getString( "TML_ADD_TO_BLACKLIST" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
         public void run() {
             for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
@@ -412,9 +454,10 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
             setText( "Manual Refresh (for developing)" );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
         public void run() {
             ( ( TableViewer ) tableViewer ).getTable().getDisplay().asyncExec( new Runnable() {
                     public void run() {
@@ -430,9 +473,10 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
             setText( G2GuiResources.getString( "TML_FAVORITES" ) );
         }
 
-        /**
-         * DOCUMENT ME!
-         */
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
         public void run() {
             for ( int i = 0; i < selectedServers.size(); i++ ) {
                 ServerInfo server = ( ServerInfo ) selectedServers.get( i );
@@ -528,6 +572,9 @@ public class ServerTableMenuListener extends TableMenuListener implements ISelec
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.9  2003/09/24 09:35:57  lemmster
+serverlink in menulistener
+
 Revision 1.8  2003/09/18 11:31:03  lemmster
 checkstyle
 

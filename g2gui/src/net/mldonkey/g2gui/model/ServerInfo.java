@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.22 2003/09/18 15:29:25 zet Exp $
+ * @version $Id: ServerInfo.java,v 1.23 2003/09/24 09:35:57 lemmster Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -90,6 +90,27 @@ public class ServerInfo extends Parent {
 	public State getConnectionState() {
 		return connectionState;
 	}
+	
+	/**
+	 * For the moment just ed2k supported
+	 * @return A String with a link for this server
+	 */
+	public String getLink() {
+		if ( this.network.getNetworkType() == NetworkInfo.Enum.DONKEY ) {
+			/* |server|ip|port|preference */
+			String aString = "ed2k://|" + this.getNameOfServer();
+
+			if ( this.getServerAddress().hasHostName() )
+				aString += "|" + this.getServerAddress().getHostName();
+			else
+				aString += "|" + this.getServerAddress().getAddress().getHostAddress();	
+
+			aString += "|" + this.getServerPort();				
+			return aString;
+		}			
+		return "only ed2k links are working atm! more to come";		
+	}
+	
 	/**
 	 * @return The description of this server
 	 */
@@ -314,6 +335,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.23  2003/09/24 09:35:57  lemmster
+serverlink in menulistener
+
 Revision 1.22  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
@@ -328,7 +352,7 @@ Revision 1.19  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.18  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.17  2003/08/11 11:22:53  lemmstercvs01
 avoid npes
