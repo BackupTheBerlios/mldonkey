@@ -82,8 +82,8 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * Gui
  *
- * @author $user$
- * @version $Id: MainTab.java,v 1.49 2003/08/21 16:07:16 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: MainTab.java,v 1.50 2003/08/21 16:26:15 lemmster Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -266,7 +266,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 		item = new MenuItem( submenu, 0);
 		item.addListener( SWT.Selection, new Listener() {
 			public void handleEvent (Event event ) {
-				Program.launch("http://mldonkey.lemmster.de/wiki/index.php/G2Gui%20FAQ");
+				Program.launch( "https://developer.berlios.de/docman/?group_id=610" );
 			}
 		} );
 		item.setText( "FAQ" );
@@ -276,7 +276,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 		item = new MenuItem( submenu, 0);
 		item.addListener( SWT.Selection, new Listener() {
 			public void handleEvent (Event event ) {
-				Program.launch("http://mldonkey.berlios.de/modules.php?name=Forums&file=viewtopic&t=1476");
+				Program.launch( "http://mldonkey.berlios.de/modules.php?name=Forums&file=viewforum&f=9" );
 			}
 		} );
 		item.setText( "Feedback Forum" );
@@ -285,22 +285,10 @@ public class MainTab implements Listener, Observer, ShellListener {
 		item = new MenuItem( submenu, 0);
 		item.addListener( SWT.Selection, new Listener() {
 			public void handleEvent (Event event ) {
-				Program.launch("http://mldonkey.lemmster.de/wiki/index.php/G2Gui%20TODO");
-			}
-		} );
-		item.setText( "Suggestions" );
-		
-		mItem.setMenu( submenu );
-		item = new MenuItem( submenu, 0);
-		item.addListener( SWT.Selection, new Listener() {
-			public void handleEvent (Event event ) {
-				Program.launch("http://mldonkey.lemmster.de/wiki/index.php/G2Gui%20BUGS");
+				Program.launch( "https://developer.berlios.de/bugs/?group_id=610" );
 			}
 		} );
 		item.setText( "Bugs" );
-		
-		
-		
 	} 
 	
 	/**
@@ -799,6 +787,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.50  2003/08/21 16:26:15  lemmster
+changed links in menubar
+
 Revision 1.49  2003/08/21 16:07:16  zet
 pref button
 
