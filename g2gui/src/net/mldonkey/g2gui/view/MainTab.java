@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.75 2003/09/25 01:03:24 zet Exp $
+ * @version $Id: MainTab.java,v 1.76 2003/10/11 21:32:39 zet Exp $
  *
  */
 public class MainTab implements ShellListener {
@@ -119,7 +119,6 @@ public class MainTab implements ShellListener {
                         GuiTab aTab = ( GuiTab ) itr.next();
                         aTab.dispose();
                     }
-                    coolBar.getHandCursor().dispose();
                     // If we have created the core, kill it
                     if ( G2Gui.getCoreConsole() != null ) {
                         Message killCore = new EncodeMessage( Message.S_KILL_CORE );
@@ -359,6 +358,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.76  2003/10/11 21:32:39  zet
+remove hand cursor (looks weird on gtk)
+
 Revision 1.75  2003/09/25 01:03:24  zet
 remove unused waiterObject
 

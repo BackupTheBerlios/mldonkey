@@ -35,36 +35,30 @@ import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.9 2003/09/18 10:12:53 lemmster Exp $
+ * @version $Id: MainCoolBar.java,v 1.10 2003/10/11 21:32:32 zet Exp $
  *
  */
 public class MainCoolBar {
     private static PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
-    private final Cursor handCursor = new Cursor( Display.getDefault(), SWT.CURSOR_HAND );
     private boolean toolbarSmallButtons;
     private boolean coolbarLocked = true;
     private Shell shell;
@@ -77,11 +71,9 @@ public class MainCoolBar {
     private List mainToolButtons;
 
 	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param mainTab DOCUMENT ME!
-	 * @param size DOCUMENT ME!
-	 * @param locked DOCUMENT ME!
+	 * @param mainTab 
+	 * @param size 
+	 * @param locked 
 	 */
     public MainCoolBar( MainTab mainTab, boolean size, boolean locked ) {
         this.toolbarSmallButtons = size;
@@ -94,9 +86,7 @@ public class MainCoolBar {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param parent DOCUMENT ME!
+     * @param parent 
      */
     private void createContent( Composite parent ) {
         composite = new Composite( parent, SWT.NONE );
@@ -130,10 +120,8 @@ public class MainCoolBar {
         coolbar.setLayoutData( gridData );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param toggle DOCUMENT ME!
+	/**
+     * @param toggle 
      */
     private void toggleSmallButtons( boolean toggle ) {
         toolbarSmallButtons = !toolbarSmallButtons;
@@ -160,9 +148,6 @@ public class MainCoolBar {
         layoutCoolBar();
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     private void createMiscTools() {
         final ToolButton prefButton = new ToolButton( miscTools, SWT.NONE );
         prefButton.setText( G2GuiResources.getString( "TT_PreferencesButton" ) );
@@ -186,11 +171,8 @@ public class MainCoolBar {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param coolBar DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @param coolBar 
+     * @return 
      */
     private Menu createToolBarRMMenu( CoolBar coolBar ) {
         Menu menu = new Menu( shell, SWT.POP_UP );
@@ -217,9 +199,6 @@ public class MainCoolBar {
         return menu;
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void layoutCoolBar() {
         // This seems to work in xp/gtk - z			
         for ( int j = 0; j < coolbar.getItemCount(); j++ ) {
@@ -233,22 +212,14 @@ public class MainCoolBar {
         coolbar.setLocked( coolbarLocked );
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     protected void createToolBars() {
         Menu toolmenu = createToolBarRMMenu( coolbar );
         mainTools = new ToolBar( coolbar, ( toolbarSmallButtons ? SWT.RIGHT : 0 ) | SWT.FLAT );
-        mainTools.addMouseTrackListener( new ToolBarMouseTrackListener( mainTools ) );
         mainTools.setMenu( toolmenu );
         miscTools = new ToolBar( coolbar, ( toolbarSmallButtons ? SWT.RIGHT : 0 ) | SWT.FLAT );
-        miscTools.addMouseTrackListener( new ToolBarMouseTrackListener( miscTools ) );
         miscTools.setMenu( toolmenu );
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void createCoolItems() {
         for ( int i = 0; i < 2; i++ ) {
             CoolItem item = new CoolItem( coolbar, SWT.NONE );
@@ -261,129 +232,55 @@ public class MainCoolBar {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @return 
      */
     public boolean isCoolbarLocked() {
         return coolbarLocked;
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @return 
      */
     public List getMainToolButtons() {
         return mainToolButtons;
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @return 
      */
     public boolean isToolbarSmallButtons() {
         return toolbarSmallButtons;
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @return 
      */
     public ToolBar getMainTools() {
         return mainTools;
     }
-
+  
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public Cursor getHandCursor() {
-        return handCursor;
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param b DOCUMENT ME!
+     * @param b 
      */
     public void setCoolbarLocked( boolean b ) {
         coolbarLocked = b;
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param b DOCUMENT ME!
+     * @param b 
      */
     public void setToolbarSmallButtons( boolean b ) {
         toolbarSmallButtons = b;
     }
 
-    /**
-     *
-     * ToolBarMouseTrackListener
-     *
-     */
-    public class ToolBarMouseTrackListener implements MouseTrackListener {
-        private ToolBar toolBar;
 
-		/**
-		 * Creates a new ToolBarMouseTrackListener
-		 * @param toolBar DOCUMENT ME!
-		 */
-        public ToolBarMouseTrackListener( final ToolBar toolBar ) {
-            this.toolBar = toolBar;
-        }
-
-        /**
-         * DOCUMENT ME!
-         *
-         * @param event DOCUMENT ME!
-         */
-        public void checkForItem( MouseEvent event ) {
-            Point pt = new Point( event.x, event.y );
-            ToolBar t = ( ToolBar ) event.widget;
-            if ( t.getItem( pt ) instanceof ToolItem )
-                toolBar.setCursor( handCursor );
-            else
-                toolBar.setCursor( null );
-        }
-
-        /**
-         * DOCUMENT ME!
-         *
-         * @param event DOCUMENT ME!
-         */
-        public void mouseHover( MouseEvent event ) {
-            checkForItem( event );
-        }
-
-        /**
-         * DOCUMENT ME!
-         *
-         * @param event DOCUMENT ME!
-         */
-        public void mouseEnter( MouseEvent event ) {
-            checkForItem( event );
-        }
-
-        /**
-         * DOCUMENT ME!
-         *
-         * @param event DOCUMENT ME!
-         */
-        public void mouseExit( MouseEvent event ) {
-            toolBar.setCursor( null );
-        }
-    }
 }
 
 /*
 $Log: MainCoolBar.java,v $
+Revision 1.10  2003/10/11 21:32:32  zet
+remove hand cursor (looks weird on gtk)
+
 Revision 1.9  2003/09/18 10:12:53  lemmster
 checkstyle
 
