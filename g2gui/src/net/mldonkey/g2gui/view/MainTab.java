@@ -83,7 +83,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.48 2003/08/21 13:13:10 lemmster Exp $ 
+ * @version $Id: MainTab.java,v 1.49 2003/08/21 16:07:16 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -470,7 +470,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 		
 	private void createMiscTools() {
 	
-		ToolButton prefButton = new ToolButton ( miscTools, SWT.NONE );
+		final ToolButton prefButton = new ToolButton ( miscTools, SWT.NONE );
 		prefButton.setText(G2GuiResources.getString("TT_PreferencesButton"));
 		prefButton.setToolTipText(G2GuiResources.getString("TT_PreferencesButtonToolTip"));
 		
@@ -488,6 +488,7 @@ public class MainTab implements Listener, Observer, ShellListener {
 		prefButton.addListener( SWT.Selection, new Listener() {
 			public void handleEvent( Event event ) {
 				openPreferences();	
+				prefButton.setActive(false);
 			}
 		} );
 	
@@ -798,6 +799,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.49  2003/08/21 16:07:16  zet
+pref button
+
 Revision 1.48  2003/08/21 13:13:10  lemmster
 cleanup in networkitem
 
