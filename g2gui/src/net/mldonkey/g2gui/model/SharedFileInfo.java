@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * SharedFileInfo
  *
  *
- * @version $Id: SharedFileInfo.java,v 1.13 2003/09/26 17:00:54 zet Exp $ 
+ * @version $Id: SharedFileInfo.java,v 1.14 2003/09/26 18:01:46 zet Exp $ 
  *
  */
 public class SharedFileInfo implements SimpleInformation {
@@ -177,7 +177,8 @@ public class SharedFileInfo implements SimpleInformation {
 			{
 				hasChanged = true;
 				this.numOfBytesUploaded = myUpload;
-				this.numOfQueriesForFile = myRequests;			
+				this.numOfQueriesForFile = myRequests;
+				stringOfBytesUploaded = FileInfo.calcStringSize( numOfBytesUploaded );			
 			}		
 		return hasChanged;
 	}	
@@ -219,6 +220,9 @@ public class SharedFileInfo implements SimpleInformation {
 
 /*
 $Log: SharedFileInfo.java,v $
+Revision 1.14  2003/09/26 18:01:46  zet
+update string
+
 Revision 1.13  2003/09/26 17:00:54  zet
 remove duplicate code, calc string once per update
 
