@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.MessageBox;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.18 2003/07/20 11:06:36 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.19 2003/07/20 11:47:04 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem implements IItemHasMenue, SelectionListener {
@@ -238,10 +238,8 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 			else if ( getText( 3 ) != null && !getText( 3 ).equals( String.valueOf( fileInfo.getRate() ) ) )
 					updateCell( 3, String.valueOf( fileInfo.getRate() ) );
 
-		if ( !getText( 4 ).equals( fileInfo.getAvail() ) ) {
-			updateCell( 4, fileInfo.getAvail() );
-			//chunks.refresh();
-		}
+		chunks.refresh();
+		
 		
 		if ( getText( 5 ) != null && !getText( 5 ).equals( String.valueOf( fileInfo.getPerc() ) ) ) {
 			updateCell( 5, String.valueOf( fileInfo.getPerc() ) );			
@@ -406,6 +404,9 @@ public class DownloadItem extends TableTreeItem implements IItemHasMenue, Select
 }
 /*
 $Log: DownloadItem.java,v $
+Revision 1.19  2003/07/20 11:47:04  dek
+foobar
+
 Revision 1.18  2003/07/20 11:06:36  dek
 still don't know, where flickering comes from (tested with CRT)
 

@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkView.java,v 1.8 2003/07/18 15:45:16 dek Exp $ 
+ * @version $Id: ChunkView.java,v 1.9 2003/07/20 11:47:04 dek Exp $ 
  *
  */
 public class ChunkView extends Canvas {
@@ -196,8 +196,6 @@ public class ChunkView extends Canvas {
 			gc.drawLine( i, 0, i, 1  );			
 		}	
 		gc.dispose();	
-		
-		
 	}
 
 	/**
@@ -219,28 +217,29 @@ public class ChunkView extends Canvas {
 		byte[] temp = avail.getBytes();		
 		
 		if ( image != null ) image.dispose();
-		image = new Image( getDisplay(), length, 127 );
+		image = new Image( getDisplay(), length, 12 );
 		GC gc = new GC( image );
 		for ( int i = 0; i < avail.length(); i++ ) {		
-			short height = temp[ i ]	;
+			int height = temp[ i ] / 10	;			
+			if ( height < 1 ) height = 1;
 			gc.setForeground( blue );	
 			
 			//this availability is so low, we can assume, it is not available:			
 			if ( temp[ i ] == 0 ) {			
 				gc.setForeground( red );
-				height = 127;
+				height = 12;
 			}
 			
 			if ( chunks.charAt( i ) == '2' ) {			
 				gc.setForeground( black );
-				height = 127;
+				height = 12;
 			}
 			if ( chunks.charAt( i ) == '3' ) {			
 				gc.setForeground( yellow );
-				height = 127;
+				height = 12;
 			}
 									
-			gc.drawLine( i, 127, i, 127 - height );			
+			gc.drawLine( i, 12, i, 12 - height );			
 		}	
 		gc.dispose();	
 		
@@ -294,36 +293,39 @@ public class ChunkView extends Canvas {
 	}
 
 
+	private boolean hasChanged() {
+		boolean result = false;
+		
+		if ( type == isFileInfo ) {
+			boolean part1 = !( chunks.hashCode() == fileInfo.getChunks().hashCode() );
+			boolean part2 = !( avail.hashCode() == fileInfo.getAvail().hashCode() );
+			result = part1 || part2;
+		
+		}		
+		else if ( type == isClientInfo ) {
+			String tempAvail = clientInfo.getFileAvailability( fileInfo );
+			if ( avail != null  )				
+				result = !( tempAvail.hashCode() == avail.hashCode() );
+		}		
+		return result;		
+	}
+
 
 	/**
 	 * redraws this widget, with refreshed Information from FileInfo (if changed)
 	 */
-	public void refresh() {		
-		if ( type == isFileInfo ) {
-			
-			/*only redraw image if one of the chunks or avail-strings have changed */
-			if ( !( chunks.equals( fileInfo.getChunks() ) )
-			  || !( avail.equals(  fileInfo.getAvail()  ) ) ) 
-					createImage();
-			else this.redraw( 0, 0, 0, 0, false );
-		}
-		else if ( type == isClientInfo ) {		
-			/*redraw if avail is not null, and has changed...*/
-			String tempAvail = clientInfo.getFileAvailability( fileInfo );
-			if ( avail != null  )
-				if ( !tempAvail.equals( avail ) )
-					createImage();
-				else {
-					this.redraw( 0, 0, 0, 0, false );
-					 }
-			else this.redraw( 0, 0, 0, 0, false );
-		}
+	public void refresh() {	
+		if ( this.hasChanged() )
+			createImage();
 		
 	}
 }
 
 /*
 $Log: ChunkView.java,v $
+Revision 1.9  2003/07/20 11:47:04  dek
+foobar
+
 Revision 1.8  2003/07/18 15:45:16  dek
 still working on flicker...
 

@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.16 2003/07/20 11:06:36 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.17 2003/07/20 11:47:04 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem implements IItemHasMenue {
@@ -169,14 +169,7 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 			state = "NOT_CONNECTED_WAS_QUEUED";	
 		if ( clientInfo.getState().getState() == EnumState.REMOVE_HOST )
 			state = "removeHost";
-		
-		String avail = clientInfo.getFileAvailability( fileInfo );
-		if ( avail == null ) avail = "";
-		if ( !getText( 4 ).equals( avail ) ) {
-			updateCell( 4, avail );
-			//chunks.refresh();
-		}
-
+		chunks.refresh();
 	}
 
 
@@ -205,6 +198,9 @@ public class ClientItem extends TableTreeItem implements IItemHasMenue {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.17  2003/07/20 11:47:04  dek
+foobar
+
 Revision 1.16  2003/07/20 11:06:36  dek
 still don't know, where flickering comes from (tested with CRT)
 
