@@ -53,8 +53,10 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
@@ -66,7 +68,7 @@ import java.util.Arrays;
 /**
  * ResultTableViewer
  *
- * @version $Id: ResultTableView.java,v 1.7 2003/11/24 20:35:11 zet Exp $
+ * @version $Id: ResultTableView.java,v 1.8 2003/11/26 23:58:16 zet Exp $
  *
  */
 public class ResultTableView extends GTableView {
@@ -179,6 +181,14 @@ public class ResultTableView extends GTableView {
                     public void widgetDisposed(DisposeEvent e) {
                         if (boldFont != null)
                             boldFont.dispose();
+                    }
+                });
+
+            // Don't close when you press ESC in the namesList
+            tipShell.addListener(SWT.Close,
+                new Listener() {
+                    public void handleEvent(Event e) {
+                        e.doit = false;
                     }
                 });
 
@@ -380,6 +390,9 @@ public class ResultTableView extends GTableView {
 
 /*
 $Log: ResultTableView.java,v $
+Revision 1.8  2003/11/26 23:58:16  zet
+fix #1137 (ESC in tooltip)
+
 Revision 1.7  2003/11/24 20:35:11  zet
 show filenames in tooltip
 
