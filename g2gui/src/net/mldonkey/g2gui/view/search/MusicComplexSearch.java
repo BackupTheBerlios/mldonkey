@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.20 2003/11/24 08:56:22 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.21 2003/11/27 15:33:33 zet Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -152,7 +152,7 @@ public class MusicComplexSearch extends ComplexSearch {
      */
     public void update( Observable o, Object arg ) {
         super.update( o, arg );
-        if ( artistText.isDisposed() )
+        if ( artistText == null || artistText.isDisposed() )
             return;
         artistText.getDisplay().asyncExec( new Runnable() {
             public void run() {
@@ -215,6 +215,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.21  2003/11/27 15:33:33  zet
+npe
+
 Revision 1.20  2003/11/24 08:56:22  lemmster
 fix [Bug #1132] search combo retains duplicates (better solution)
 
