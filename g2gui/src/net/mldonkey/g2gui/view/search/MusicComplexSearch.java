@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.12 2003/09/08 11:54:23 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.13 2003/09/08 12:37:39 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -107,7 +107,7 @@ public class MusicComplexSearch extends ComplexSearch {
 
         /* the bitrate combo */
         gridData = new GridData( GridData.FILL_HORIZONTAL );
-        String[] bitrateItems = { "", "32kb", "64", "96kb", "128kb", "196kb", "265kb" };
+        String[] bitrateItems = { "", "32kb", "64kb", "96kb", "128kb", "196kb", "265kb" };
         this.bitrateCombo = new Combo( aSubComposite2, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
 		this.bitrateCombo.setLayoutData( gridData );
 		this.bitrateCombo.setItems( bitrateItems );
@@ -189,7 +189,7 @@ public class MusicComplexSearch extends ComplexSearch {
         String bitRateString = bitrateCombo.getText();
 		if ( !bitRateString.equals( "" ) ) {
 			int rate = new Integer( bitRateString.substring( 0, bitRateString.length() - 2 ) ).intValue();
-			query.setMp3Bitrate( new Integer( rate * 1024 ).toString() );
+			query.setMp3Bitrate( new Integer( rate * 1000 ).toString() );
 		}
 
 		/* set the remaining input fields and send the query */
@@ -197,13 +197,16 @@ public class MusicComplexSearch extends ComplexSearch {
 
         /* draw the empty search result */
         String aString = inputText.getText() + " " + artistText.getText() + " " + albumText.getText();
-        new SearchResult( aString, tab.getCTabFolder(),
+        new SearchResult( aString.trim(), tab.getCTabFolder(),
         	 core, query.getSearchIdentifier(), this );
     }
 }
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.13  2003/09/08 12:37:39  lemmster
+fix typo
+
 Revision 1.12  2003/09/08 11:54:23  lemmster
 added download button
 
