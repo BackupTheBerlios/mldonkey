@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.30 2003/09/27 00:26:41 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.31 2003/09/27 00:48:11 zet Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
@@ -204,7 +204,7 @@ public class StatisticTab extends GuiTab {
         Graph graph;
 
         public GraphHistoryAction( Graph graph ) {
-            super( "Graph history" );
+            super( "Hourly graph history" );
             this.graph = graph;
         }
 
@@ -242,6 +242,9 @@ public class StatisticTab extends GuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.31  2003/09/27 00:48:11  zet
++word
+
 Revision 1.30  2003/09/27 00:26:41  zet
 put menu back
 
