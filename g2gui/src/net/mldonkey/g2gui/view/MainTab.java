@@ -79,7 +79,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.38 2003/08/17 23:13:42 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.39 2003/08/17 23:52:09 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -659,18 +659,11 @@ public class MainTab implements Listener, Observer, ShellListener {
 			reg.put( shortNames[i] + "Disconnected", createTrans( fileNames[i] + "_disconnected.png" ) );
 			reg.put( shortNames[i] + "Disabled", createTrans( fileNames[i] + "_disabled.png" ) );
 		//	reg.put( shortNames[i] + "BadConnected", createTrans( fileNames[i] + "_badconnected.png" ) );
+			reg.put( shortNames[i] + "ConnectedWhite", createTrans( fileNames[i] + "_connected.png", white ));
 		}
 			
 		reg.put( "MessagesButtonSmallWhite", createTrans( "messages-16.png", white ) );
 		
-		reg.put( "DCConnectedWhite", createTrans( "directconnect_connected.png" , white ) );
-		reg.put( "DKConnectedWhite", createTrans( "edonkey2000_connected.png" , white ) );
-		reg.put( "G1ConnectedWhite", createTrans( "gnutella_connected.png" , white ) );
-		reg.put( "G2ConnectedWhite", createTrans( "gnutella_connected.png" , white ) );
-		reg.put( "FTConnectedWhite", createTrans( "kazaa_connected.png" , white ) );
-		reg.put( "SSConnectedWhite", createTrans( "soulseek_connected.png" , white ) );
-		reg.put( "UnknownConnectedWhite", createTrans( "unknown_connected.png" , white ) );		
-			
 		reg.put( "DownArrow", createTrans( "down.png" ) );
 		reg.put( "UpArrow", createTrans( "down.png" ) );
 		
@@ -717,6 +710,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.39  2003/08/17 23:52:09  zet
+minor
+
 Revision 1.38  2003/08/17 23:13:42  zet
 centralize resources, move images
 
