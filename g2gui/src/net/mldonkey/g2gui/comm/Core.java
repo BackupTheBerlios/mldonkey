@@ -58,7 +58,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.117 2003/11/29 20:16:30 zet Exp $ 
+ * @version $Id: Core.java,v 1.118 2003/11/30 18:49:08 lemmster Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -291,7 +291,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * reconnects to mldonkey after connection-loss
 	 */
 	public void reconnect() {		
-		this.connection = G2Gui.initializeSocket();		
+		this.connection = G2Gui.initializeSocket( pollModeEnabled );		
 		this.connected = true;
 		Thread restarted = new Thread( this );
 		restarted.start();
@@ -665,6 +665,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.118  2003/11/30 18:49:08  lemmster
+better link handling, handle more than one link simultaneously
+
 Revision 1.117  2003/11/29 20:16:30  zet
 stop/start timer on tab (de)activation
 

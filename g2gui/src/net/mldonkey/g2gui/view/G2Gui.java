@@ -26,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -51,7 +53,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.50 2003/11/30 18:14:55 dek Exp $
+ * @version $Id: G2Gui.java,v 1.51 2003/11/30 18:49:08 lemmster Exp $
  *
  */
 public class G2Gui {
@@ -60,10 +62,6 @@ public class G2Gui {
 	// this flag switches debugging output on/off
     public static boolean debug = false;
     
-    // link handling
-	private static String link = "";
-	private static boolean processingLink = false;
-
 	// the mode of the gui
 	private static boolean advancedMode = false;
 
@@ -77,11 +75,10 @@ public class G2Gui {
     private static String password;
     private static int port;
 
-	private static Socket socket;
 	private static CoreCommunication core;
 
-    private static Display display = null;
-    private static Shell shell;
+    private static Display display;
+	private static Shell shell;
     private static ExecConsole execConsole = null;
 
     /**
@@ -90,15 +87,15 @@ public class G2Gui {
      */
     public static void main(String[] args) {
         display = new Display();
-
+        List links = new ArrayList();
+        
 		// parse args
 		int optind;
 		for (optind = 0; optind < args.length; optind++) {
 			if (args[optind].equals("-c")) {
 				PreferenceLoader.setPrefFile(args[++optind]); 
 			} else if (args[optind].equals("-l")) {
-				processingLink = true;
-				link = args[++optind];
+				links.add( args[++optind] );
 			} else if (args[optind].equals("-d")) {
 				debug = true;
 			} else if (args[optind].equals("-h")) {
@@ -119,17 +116,21 @@ public class G2Gui {
 			} else {
 				break;
 			}
-		} 
-
+		}
+		
+		// we received links? -> send them
+		if ( links.size() > 0 ) {
+			launch( links );
+			return;
+		}	
+			
 		G2GuiResources.initialize();
 		PreferenceLoader.initialize();
         preferenceStore = PreferenceLoader.getPreferenceStore();
 
         /*determine wether a new instance of G2gui is allowed: */
-        if (processingLink 
-          || PreferenceLoader.loadBoolean("allowMultipleInstances")
-	      || !PreferenceLoader.loadBoolean("running")
-          || debug ) {
+        if (PreferenceLoader.loadBoolean("allowMultipleInstances")
+	      || !PreferenceLoader.loadBoolean("running") || debug) {
             launch();
         } else {
             MessageBox alreadyRunning = new MessageBox(new Shell(display),
@@ -148,52 +149,48 @@ public class G2Gui {
      */
     private static void launch() {
         /* we are running, so we make this available to other instances */
-    	if (!processingLink) {
-	        PreferenceLoader.getPreferenceStore().setValue("running", true);
-	        PreferenceLoader.saveStore();
-    	}
+        PreferenceLoader.getPreferenceStore().setValue("running", true);
+        PreferenceLoader.saveStore();
 
         Object waiterObject = new Object();
 
-        if (!processingLink) {
-            myPrefs = new Preferences(preferenceStore);
+        myPrefs = new Preferences(preferenceStore);
 
-            /* load the preferences */
-            try {
-                myPrefs.initialize(preferenceStore);
-            } catch (IOException e) {
-                System.err.println("loading the preference file failed");
-            }
-
-			shell = new Shell(display);
-
-			// should the core be spawned by the gui?
-			boolean runCore = false;
-			if (!PreferenceLoader.loadString("coreExecutable").equals(""))
-				runCore = true;
-
-			// create the splash
-            if (PreferenceLoader.loadBoolean("splashScreen"))
-                if ( runCore )
-	                new Splash( display, 7 );
-	            else
-	            	new Splash( display, 5 );    
-
-            // Needed on GTK to dispatch paintEvent.
-            // SWT is idiotic.
-            display.update();
-
-			// launch the core if requested
-			if (runCore) {
-				Splash.increaseSplashBar("launching core");
-	            spawnCore();
-			}
-			
-			Splash.increaseSplashBar("initializing connection");
+        /* load the preferences */
+        try {
+            myPrefs.initialize(preferenceStore);
+        } catch (IOException e) {
+            System.err.println("loading the preference file failed");
         }
 
+        shell = new Shell(display);
+
+        // should the core be spawned by the gui?
+		boolean runCore = false;
+		if (!PreferenceLoader.loadString("coreExecutable").equals(""))
+			runCore = true;
+
+		// create the splash
+        if (PreferenceLoader.loadBoolean("splashScreen"))
+            if ( runCore )
+	            new Splash( display, 7 );
+	        else
+	         	new Splash( display, 5 );    
+
+        // Needed on GTK to dispatch paintEvent.
+        // SWT is idiotic.
+        display.update();
+
+		// launch the core if requested
+		if (runCore) {
+			Splash.increaseSplashBar("launching core");
+	        spawnCore();
+		}
+			
+		Splash.increaseSplashBar("initializing connection");
+
         /* if the gui isnt set up yet launch the preference window */
-        if (!(preferenceStore.getBoolean("initialized")) && !processingLink) {
+        if (!(preferenceStore.getBoolean("initialized"))) {
             preferenceStore.setValue("initialized", true);
             Splash.setVisible(false);
             myPrefs.open(shell, null);
@@ -206,63 +203,28 @@ public class G2Gui {
 			Splash.setVisible(true);
         }
 
-		// read the value as long as no cmd line params were specified
-		if ( port == 0 )
-	        port = preferenceStore.getInt("port");
-		if ( hostname == null )
-	        hostname = preferenceStore.getString("hostname");
-		if ( username == null )
-	        username = preferenceStore.getString("username");
-		if ( password == null )
-	        password = preferenceStore.getString("password");
-		if ( !processingLink )
-			advancedMode = preferenceStore.getBoolean("advancedMode");
+        readParams();
 
-
-        socket = initializeSocket();
+        Socket socket = initializeSocket( false );
 		if (socket == null ) return;
 
-        if ( !processingLink ) PreferenceLoader.saveStore();
+        PreferenceLoader.saveStore();
 
-        /* wait as long till the core tells us to continue */
-        synchronized (waiterObject) {
-            Splash.increaseSplashBar("connecting to the core");
-            core = new Core(socket, username, password, waiterObject, processingLink, advancedMode);
-            core.connect();
-            Thread mldonkey = new Thread(core);
-            mldonkey.setDaemon(true);
-            mldonkey.start();
-            try {
-                waiterObject.wait();
-            } catch (InterruptedException e1) {
-				Thread.currentThread().interrupt();
-            }
-        }
-		core.addObserver( new DisconnectListener( core,shell ) );
-
+        core = startCore( waiterObject, socket, false );
+        
 		// handle some errors the core can cause
 		// connection denied
         if (core.getConnectionDenied()) {
-            if (!processingLink) {
-                connectDeniedHandling();
-            }
+            connectDeniedHandling();
  		// bad password
         } else if (core.getBadPassword()) {
             core.disconnect();
-
-            if (!processingLink) {
-                badPasswordHandling();
-            }
+            badPasswordHandling();
         // connection is setup successfully
         } else {
-            if (!processingLink) {
-				// launch the view
-				Splash.increaseSplashBar("connection to core successfully created");
-                new MainWindow(core, shell);
-            } else {
-				// send just the link
-                sendDownloadLink();
-            }
+			// launch the view
+			Splash.increaseSplashBar("connection to core successfully created");
+            new MainWindow(core, shell);
         }
 
         core.disconnect();
@@ -271,40 +233,112 @@ public class G2Gui {
          * we are not running anymore, so we can allow another instance to
          * be started
          */
-        if ( !processingLink ){
         PreferenceLoader.getPreferenceStore().setValue("running", false);
         PreferenceLoader.saveStore();
-        }
     }
-	/**
-	 * 
-	 *
+    
+    /**
+     * Launch to handle a link
+     * @param aLink The link that should be send to the core
+     */
+    private static void launch( List aLink ) {
+    	Object waiterObject = new Object();
+    	
+    	readParams();
+
+    	Socket socket = initializeSocket( true );
+    	if (socket == null ) return;
+
+    	core = startCore( waiterObject, socket, true );
+    	
+    	// handle some errors the core can cause
+    	// connection denied
+    	if (core.getConnectionDenied()) {
+    		connectDeniedHandling();
+   		// bad password
+    	} else if (core.getBadPassword()) {
+    		core.disconnect();
+    	// connection is setup successfully
+    	} else {
+    		sendDownloadLink( aLink, socket );
+    	}
+    }
+
+    /**
+	 * initialize the socket
 	 */
-    public static Socket initializeSocket() {
+    public static Socket initializeSocket( boolean mode ) {
 		// create the socket connection to the core and handle the errors
-        try {
+        Socket aSocket = null;
+    	try {
             ObjectPool socketPool = new SocketPool(hostname, port);
-            socket = (Socket) socketPool.checkOut();
+            aSocket = (Socket) socketPool.checkOut();
         } catch (UnknownHostException e) {
-        	errorHandling(G2GuiResources.getString("G2_INVALID_ADDRESS"),G2GuiResources.getString("G2_ILLEGAL_ADDRESS"));			
+        	errorHandling(G2GuiResources.getString("G2_INVALID_ADDRESS"),G2GuiResources.getString("G2_ILLEGAL_ADDRESS"), mode);			
             return null;
         } catch (IOException e) {
-			errorHandling(G2GuiResources.getString("G2_IOEXCEPTION"),G2GuiResources.getString("G2_CORE_NOT_RUNNING"));
+			errorHandling(G2GuiResources.getString("G2_IOEXCEPTION"),G2GuiResources.getString("G2_CORE_NOT_RUNNING"), mode);
 			return null;
         }  
-        return socket;  
+        return aSocket;  
 	}
 
+    /**
+     * reads the prefs from the preferenceStore if its not read from the cmd line
+     */
+    private static void readParams() {
+    	// read the value as long as no cmd line params were specified
+    	if ( port == 0 )
+    		port = preferenceStore.getInt("port");
+    	if ( hostname == null )
+    		hostname = preferenceStore.getString("hostname");
+    	if ( username == null )
+    		username = preferenceStore.getString("username");
+    	if ( password == null )
+    		password = preferenceStore.getString("password");
+   		advancedMode = preferenceStore.getBoolean("advancedMode");
+    }
+    
+    /**
+     * Starts the core thread
+     * @param waiterObject The waiterobj we synchronize with
+     * @param aSocket The socket to communicate over
+     * @param mode pull/push mode
+     */
+    private static CoreCommunication startCore( Object waiterObject, Socket aSocket, boolean mode ) {
+    	/* wait as long till the core tells us to continue */
+    	CoreCommunication aCore;
+    	synchronized (waiterObject) {
+    		Splash.increaseSplashBar("connecting to the core");
+    		aCore = new Core(aSocket, username, password, waiterObject, mode, advancedMode);
+    		aCore.connect();
+    		Thread mldonkey = new Thread(aCore);
+    		mldonkey.setDaemon(true);
+    		mldonkey.start();
+    		try {
+    			waiterObject.wait();
+    		} catch (InterruptedException e1) {
+    			Thread.currentThread().interrupt();
+    		}
+    	}
+    	aCore.addObserver( new DisconnectListener( aCore,shell ) );
+    	
+    	return aCore;
+    }
+    
 	/**
      * Send a link - raw socket without a core
      */
-    private static void sendDownloadLink() {
-        EncodeMessage linkMessage = new EncodeMessage(Message.S_DLLINK, link);
-
-        try {
-            Message.writeStream(socket, linkMessage.getHeader(), linkMessage.getContent());
-        } catch (IOException e) {
-            e.printStackTrace();
+    private static void sendDownloadLink( List aLink, Socket aSocket ) {
+        for ( int i = 0; i < aLink.size(); i++ ) {
+			EncodeMessage linkMessage = new EncodeMessage(Message.S_DLLINK, aLink.get(i));
+		    try {
+		        Message.writeStream(aSocket, linkMessage.getHeader(), linkMessage.getContent());
+		    } 
+		    catch (IOException e) {
+		        e.printStackTrace();
+		    }
+		    linkMessage = null;
         }
     }
 
@@ -359,8 +393,8 @@ public class G2Gui {
      * @param errorText
      * @param errorMsg
      */
-    private static void errorHandling(String errorText, String errorMsg) {
-		if (!processingLink) {
+    private static void errorHandling(String errorText, String errorMsg, boolean mode) {
+		if (!mode) {
 			Splash.dispose();
 			MessageBox box = new MessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
 			box.setText(errorText);
@@ -424,6 +458,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.51  2003/11/30 18:49:08  lemmster
+better link handling, handle more than one link simultaneously
+
 Revision 1.50  2003/11/30 18:14:55  dek
 multiple instances are allowed if in debug-mode
 
