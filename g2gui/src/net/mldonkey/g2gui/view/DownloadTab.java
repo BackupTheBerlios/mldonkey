@@ -12,6 +12,9 @@ import net.mldonkey.g2gui.view.download.FileInfoTableLabelProvider;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -21,6 +24,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -40,7 +44,7 @@ public class DownloadTab
 	TableItem popupItem;
 	Menu popupMenu;
 	MenuItem pauseItem,resumeItem,cancelItem,renameItem,linkItem,fakeItem;
-
+	
 	public DownloadTab(Gui gui) {
 		super(gui);
 		toolItem.setText(bundle.getString("TT_Button"));
@@ -101,6 +105,7 @@ public class DownloadTab
 		fakeItem.addSelectionListener(this);		
 		
 		table.getTable().setMenu(popupMenu);
+		parent.addDisposeListener(this);
 	}
 
 	public void mouseDoubleClick(MouseEvent arg0) {}
@@ -132,12 +137,22 @@ public class DownloadTab
 			FileInfo file = (FileInfo)popupItem.getData();
 			if(item==pauseItem) file.setState(EnumFileState.PAUSED);
 			if(item==resumeItem) file.setState(EnumFileState.DOWNLOADING);
-			if(item==cancelItem) file.setState(EnumFileState.CANCELLED);
+//			if(item==cancelItem) file.setState(EnumFileState.CANCELLED);
+			if(item==linkItem) {
+				Clipboard clipBoard = new Clipboard(item.getDisplay());
+				String link = "ed2k://|file|"+file.getName()+"|"+file.getSize()+"|"+file.getMd4()+"|/";
+				clipBoard.setContents(new Object[]{link},new Transfer[] {TextTransfer.getInstance()});
+				clipBoard.dispose();
+			}
+			if(item==fakeItem) {
+				String link = "ed2k://|file|"+file.getName()+"|"+file.getSize()+"|"+file.getMd4()+"|/";
+				Program.findProgram(".htm").execute("http://edonkeyfakes.ath.cx/fakecheck/update/fakecheck.php?ed2k="+link);
+			}
 		}
 	}
 
 	public void widgetDisposed(DisposeEvent arg0) {
-		// TODO store Column positions
+		// TODO store Column position
 	}
 
 	public void widgetSelected(SelectionEvent arg0) {
