@@ -21,6 +21,7 @@
 package net.mldonkey.g2gui.comm;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.model.*;
@@ -29,7 +30,7 @@ import net.mldonkey.g2gui.model.*;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.18 2003/07/02 16:22:41 dek Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.19 2003/07/03 16:05:31 lemmstercvs01 Exp $ 
  *
  */
 public interface CoreCommunication {
@@ -90,4 +91,10 @@ public interface CoreCommunication {
 	  * @param value the value
 	  */
 	void setOption( String name, String value );
+	
+	/**
+	 * Gets the socket the core is conntected through with mldonkey
+	 * @return The socket
+	 */
+	Socket getConnection();
 }
