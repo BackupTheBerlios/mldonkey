@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.8 2003/08/16 13:26:42 vnc Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.9 2003/08/16 13:48:24 vnc Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -202,6 +202,8 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	}
 
 	public void dispose() {
+		unAvailableFileColor.dispose();
+		availableFileColor.dispose();
 		queuedFileColor.dispose();
 		pausedFileColor.dispose();
 		downloadedFileColor.dispose();
@@ -227,6 +229,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.9  2003/08/16 13:48:24  vnc
+dispose() the two new added colors
+
 Revision 1.8  2003/08/16 13:26:42  vnc
 switched client transferring/ranking colors
 
