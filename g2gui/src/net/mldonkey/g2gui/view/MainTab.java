@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.22 2003/07/28 17:41:32 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.23 2003/07/29 09:39:24 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener, Observer {
@@ -60,8 +60,8 @@ public class MainTab implements Listener, Observer {
 	public static List miscToolButtons = new ArrayList();
 	public static List mainToolButtons = new ArrayList();
 	public static boolean toolbarSmallButtons = false;
+	public StatusLine statusline;
 	private boolean coolbarLocked = true;
-	private StatusLine statusline;
 	private CoreCommunication mldonkey;
 	private Composite mainComposite, coolbarComposite, pageContainer;
 	private List registeredTabs;
@@ -291,7 +291,6 @@ public class MainTab implements Listener, Observer {
 			
 		miscTools = new ToolBar( coolbar, (toolbarSmallButtons ? SWT.RIGHT : 0) | SWT.FLAT) ;	
 		miscTools.setMenu(toolmenu);
-				
 	}
 	
 	/**
@@ -601,6 +600,9 @@ public class MainTab implements Listener, Observer {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.23  2003/07/29 09:39:24  lemmstercvs01
+change modifier of statusline
+
 Revision 1.22  2003/07/28 17:41:32  zet
 static prefstore
 
