@@ -1,3 +1,6 @@
+2003/09/29: 
+	*** Release version 0.1.1 ***
+
 2003/09/29: lemmy
 	* Search: Tooltip are now optional (circumvent gtk tooltip bug)
 	
