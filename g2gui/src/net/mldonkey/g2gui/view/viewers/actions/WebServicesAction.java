@@ -22,23 +22,24 @@
  */
 package net.mldonkey.g2gui.view.viewers.actions;
 
-import java.io.IOException;
-
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.jface.action.Action;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import java.io.IOException;
+
 
 /**
  * WebServicesAction
  *
- * @version $Id: WebServicesAction.java,v 1.5 2003/11/27 15:39:02 zet Exp $
+ * @version $Id: WebServicesAction.java,v 1.6 2003/11/27 16:07:40 zet Exp $
  *
  */
 public class WebServicesAction extends Action {
@@ -59,7 +60,7 @@ public class WebServicesAction extends Action {
         this.fileSize = fileSize;
         this.string = string;
 
-		webBrowser = PreferenceLoader.loadString("defaultWebBrowser");
+        webBrowser = PreferenceLoader.loadString("defaultWebBrowser");
 
         switch (type) {
         case JIGLE:
@@ -138,7 +139,7 @@ public class WebServicesAction extends Action {
     private Process openWebBrowser(String href) throws IOException {
         Process p = null;
 
-        if (webBrowser == null || webBrowser.equals("")) {
+        if ((webBrowser == null) || webBrowser.equals("")) {
             try {
                 webBrowser = "mozilla"; //$NON-NLS-1$
                 p = Runtime.getRuntime().exec(webBrowser + "  " + href); //$NON-NLS-1$;
@@ -197,7 +198,8 @@ public class WebServicesAction extends Action {
                     public void run() {
                         try {
                             if (webBrowserOpened &&
-                                    (webBrowser.equals("netscape") || webBrowser.equals("mozilla")))
+                                    (webBrowser.equals("MozillaFirebird") ||
+                                    webBrowser.equals("netscape") || webBrowser.equals("mozilla")))
                                 Runtime.getRuntime().exec(webBrowser + " -remote openURL(" +
                                     localHref + ")");
                             else {
@@ -238,6 +240,9 @@ public class WebServicesAction extends Action {
 
 /*
 $Log: WebServicesAction.java,v $
+Revision 1.6  2003/11/27 16:07:40  zet
+mozfirebird
+
 Revision 1.5  2003/11/27 15:39:02  zet
 bla
 
