@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * ClientDetailDialog
  *
- * @version $Id: ClientDetailDialog.java,v 1.11 2003/11/28 22:37:09 zet Exp $
+ * @version $Id: ClientDetailDialog.java,v 1.12 2003/11/29 13:01:11 lemmster Exp $
  *
  */
 public class ClientDetailDialog extends DetailDialog {
@@ -186,7 +186,7 @@ public class ClientDetailDialog extends DetailDialog {
         updateLabel(clActivity, clientInfo.getClientActivity());
         updateLabel(clKind, clientInfo.getClientConnection());
         updateLabel(clNetwork, clientInfo.getClientnetworkid().getNetworkName());
-        updateLabel(clSockAddr, clientInfo.getClientSockAddr().getString());
+        updateLabel(clSockAddr, clientInfo.getClientSockAddr().toString());
         updateLabel(clSoftware, clientInfo.getClientSoftware());
         updateLabel(clUploaded, clientInfo.getUploadedString());
         updateLabel(clDownloaded, clientInfo.getDownloadedString());
@@ -208,6 +208,9 @@ public class ClientDetailDialog extends DetailDialog {
 
 /*
 $Log: ClientDetailDialog.java,v $
+Revision 1.12  2003/11/29 13:01:11  lemmster
+Addr.getString() renamed to the more natural word name Addr.toString()
+
 Revision 1.11  2003/11/28 22:37:09  zet
 getString
 

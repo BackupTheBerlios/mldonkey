@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * UploadersTableViewer
  *
- * @version $Id: UploadersTableView.java,v 1.5 2003/11/28 22:37:59 zet Exp $
+ * @version $Id: UploadersTableView.java,v 1.6 2003/11/29 13:01:11 lemmster Exp $
  *
  */
 public class UploadersTableView extends GTableView {
@@ -259,7 +259,7 @@ public class UploadersTableView extends GTableView {
                 return clientInfo.getDownloadedString();
 
             case UploadersTableView.SOCK_ADDR:
-                return clientInfo.getClientSockAddr().getString();
+                return clientInfo.getClientSockAddr().toString();
 
             case UploadersTableView.FILENAME:
                 return clientInfo.getUploadFilename();
@@ -378,6 +378,9 @@ public class UploadersTableView extends GTableView {
 
 /*
 $Log: UploadersTableView.java,v $
+Revision 1.6  2003/11/29 13:01:11  lemmster
+Addr.getString() renamed to the more natural word name Addr.toString()
+
 Revision 1.5  2003/11/28 22:37:59  zet
 coalesce addr use
 

@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.enum.EnumState;
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.24 2003/10/28 11:07:32 lemmster Exp $
+ * @version $Id: ServerInfo.java,v 1.25 2003/11/29 13:01:32 lemmster Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -100,12 +100,7 @@ public class ServerInfo extends Parent {
 		if ( this.network.equals( EnumNetwork.DONKEY ) ) {
 			/* |server|ip|port|preference */
 			String aString = "ed2k://|" + this.getNameOfServer();
-
-			if ( this.getServerAddress().hasHostName() )
-				aString += "|" + this.getServerAddress().getHostName();
-			else
-				aString += "|" + this.getServerAddress().getAddress().getHostAddress();	
-
+			aString += "|" + this.getServerAddress().toString();
 			aString += "|" + this.getServerPort();				
 			return aString;
 		}			
@@ -323,7 +318,7 @@ public class ServerInfo extends Parent {
 		StringBuffer result = new StringBuffer();
 		result.append( "ServerID: " + getServerId() + "\n" );
 		result.append( "NetworkID: " + getNetwork() + "\n" );
-		result.append( "ServerAddress: " + getServerAddress().getAddress().toString() + "\n" );
+		result.append( "ServerAddress: " + getServerAddress().toString() + "\n" );
 		result.append( "ServerPort: " + getServerPort() + "\n" );
 		result.append( "ServerScore: " + getServerAddress() + "\n" );
 		result.append( "NumOfUsers: " + getNumOfUsers() + "\n" );
@@ -336,6 +331,9 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.25  2003/11/29 13:01:32  lemmster
+Addr.getString() renamed to the more natural word name Addr.toString()
+
 Revision 1.24  2003/10/28 11:07:32  lemmster
 move NetworkInfo.Enum -> enum.EnumNetwork
 add MaskMatcher for "Enum[]"

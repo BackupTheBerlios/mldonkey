@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.view.server;
 
-import net.mldonkey.g2gui.model.Addr;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ServerInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
@@ -39,7 +38,7 @@ import org.eclipse.swt.graphics.Image;
  * ServerTableLabelProvider
  *
  *
- * @version $Id: ServerTableLabelProvider.java,v 1.10 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ServerTableLabelProvider.java,v 1.11 2003/11/29 13:01:11 lemmster Exp $
  *
  */
 public class ServerTableLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -87,19 +86,7 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
             return server.getDescOfServer();
 
         case ServerTableView.ADDRESS:
-
-            try {
-                Addr addr = server.getServerAddress();
-
-                if (addr.hasHostName()) {
-                    return addr.getHostName();
-                } else {
-                    return addr.getAddress().getHostAddress();
-                }
-            } catch (NullPointerException e) {
-                return "0.0.0.0";
-            }
-
+            return server.getServerAddress().toString();
         case ServerTableView.PORT:
             return "" + server.getServerPort();
 
@@ -171,6 +158,9 @@ public class ServerTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ServerTableLabelProvider.java,v $
+Revision 1.11  2003/11/29 13:01:11  lemmster
+Addr.getString() renamed to the more natural word name Addr.toString()
+
 Revision 1.10  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 

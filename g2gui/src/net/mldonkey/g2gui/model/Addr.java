@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Addr
  * 
  *
- * @version $Id: Addr.java,v 1.17 2003/11/28 22:36:46 zet Exp $
+ * @version $Id: Addr.java,v 1.18 2003/11/29 13:01:11 lemmster Exp $
  */
 public class Addr implements SimpleInformation {
 	/**
@@ -45,7 +45,7 @@ public class Addr implements SimpleInformation {
 	/**
 	 * Host Name
 	 */
-	private String hostName;
+	private String hostName = "";
 
 	/**
 	 * @return direct/true or indirekt/false address
@@ -57,20 +57,20 @@ public class Addr implements SimpleInformation {
 	/**
 	 * @return The address
 	 */
-	public InetAddress getAddress() {
+	private InetAddress getAddress() {
 		return this.address;
 	}
 	/**
 	 * @return The HostName
 	 */
-	public String getHostName() {
+	private String getHostName() {
 		return this.hostName;
 	}
 	
 	/**
 	 * @return String (hostName if available, hostAddress if not)
 	 */
-	public String getString() {
+	public String toString() {
 		return hasHostName() ? getHostName() : getAddress().getHostAddress();
 	}
 
@@ -160,6 +160,9 @@ public class Addr implements SimpleInformation {
 }
 /*
 $Log: Addr.java,v $
+Revision 1.18  2003/11/29 13:01:11  lemmster
+Addr.getString() renamed to the more natural word name Addr.toString()
+
 Revision 1.17  2003/11/28 22:36:46  zet
 getString
 

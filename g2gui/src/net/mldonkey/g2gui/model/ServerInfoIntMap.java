@@ -22,15 +22,10 @@
  */
 package net.mldonkey.g2gui.model;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
-
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntObjectIterator;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +41,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.26 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: ServerInfoIntMap.java,v 1.27 2003/11/29 13:01:11 lemmster Exp $
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -401,29 +396,8 @@ public class ServerInfoIntMap extends InfoIntMap {
      */
     public void addToBlackList( int key ) {
         ServerInfo server = ( ServerInfo ) this.infoIntMap.get( key );
-        String ip = null;
-        if ( server.getServerAddress().hasHostName() ) {
-            try {
-                InetAddress addi = InetAddress.getByName( server.getServerAddress().getHostName() );
-                ip = addi.getHostAddress();
-            }
-            catch ( UnknownHostException e ) {
-                ip = "";
-            }
-        }
-        else {
-            RE regex = null;
-            try {
-                regex = new RE( "/" );
-            }
-            catch ( REException e ) {
-                e.printStackTrace();
-            }
-            ip = regex.substituteAll( server.getServerAddress().getAddress().toString(), "" );
-        }
-        Message message = new EncodeMessage( Message.S_CONSOLEMSG, ip );
+        Message message = new EncodeMessage( Message.S_CONSOLEMSG, server.getServerAddress().toString() );
         message.sendMessage( this.parent );
-        ip = null;
         message = null;
     }
 
@@ -464,6 +438,9 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.27  2003/11/29 13:01:11  lemmster
+Addr.getString() renamed to the more natural word name Addr.toString()
+
 Revision 1.26  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
