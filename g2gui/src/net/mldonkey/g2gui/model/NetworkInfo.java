@@ -35,7 +35,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * NetworkInfo
  *
  *
- * @version $Id: NetworkInfo.java,v 1.35 2004/09/10 17:59:09 dek Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.36 2004/09/10 18:14:27 lemmy Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -46,7 +46,7 @@ public class NetworkInfo extends Parent {
 	/**
 	 * Network name 
 	 */	
-	protected String networkName;
+	protected String networkName = "";
 	/**
 	 *Network activated?
 	 */	
@@ -54,7 +54,7 @@ public class NetworkInfo extends Parent {
 	/**
 	 * Name of network config file 
 	 */	
-	protected String configFile;
+	protected String configFile = "";
 	/**
 	 * Number of bytes uploaded on network 
 	 */	
@@ -432,6 +432,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.36  2004/09/10 18:14:27  lemmy
+avoid a npe when the string is null
+
 Revision 1.35  2004/09/10 17:59:09  dek
 Work-around for core-bug
 
@@ -471,7 +474,7 @@ Revision 1.24  2003/08/23 10:02:02  lemmy
 use supertype where possible
 
 Revision 1.23  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: dek $
+replace $user$ with $Author: lemmy $
 
 Revision 1.22  2003/08/21 13:13:10  lemmy
 cleanup in networkitem

@@ -25,11 +25,11 @@ package net.mldonkey.g2gui.model.enum;
 /**
  * EnumNetwork
  *
- * @version $Id: EnumNetwork.java,v 1.5 2004/09/10 17:59:09 dek Exp $ 
+ * @version $Id: EnumNetwork.java,v 1.6 2004/09/10 18:13:52 lemmy Exp $ 
  *
  */
 public class EnumNetwork extends Enum {
-	private String string;
+	private String string = "";
 	/**
 	 * eDonkey2000
 	 */
@@ -101,6 +101,9 @@ public class EnumNetwork extends Enum {
 
 /*
 $Log: EnumNetwork.java,v $
+Revision 1.6  2004/09/10 18:13:52  lemmy
+avoid a npe when the string is null
+
 Revision 1.5  2004/09/10 17:59:09  dek
 Work-around for core-bug
 
