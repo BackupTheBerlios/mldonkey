@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.*;
 
@@ -29,7 +31,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * State
  *
  * @author markus
- * @version $Id: FileState.java,v 1.5 2003/06/24 09:29:57 lemmstercvs01 Exp $ 
+ * @version $Id: FileState.java,v 1.6 2003/07/03 16:01:51 lemmstercvs01 Exp $ 
  *
  */
 public class FileState implements SimpleInformation {
@@ -43,32 +45,33 @@ public class FileState implements SimpleInformation {
 	 * The reason for state
 	 */
 	private String reason = null;
+	/**
+	 * MessageContent to pause a file
+	 */
+	private static Byte pause = new Byte( ( byte ) 0 );
+	/**
+	 * MessageContent to resume a file
+	 */
+	private static Byte resume = new Byte( ( byte ) 1 );
 
 	/**
-	 * @return a String
+	 * @return The reason for the state
+	 * 			(only if state is ABORTED)
 	 */
 	public String getReason() {
 		return reason;
 	}
-
 	/**
-	 * @return a byte
+	 * @return The file state (downloading,...)
 	 */
 	public Enum getState() {
 		return state;
 	}
 
 	/**
-	 * @param string a String
-	 */
-	public void setReason( String string ) {
-		reason = string;
-	}
-
-	/**
 	 * @param b a byte
 	 */
-	public void setState( byte b ) {
+	private void setState( byte b ) {
 		if ( b == 0 )
 			state = EnumFileState.DOWNLOADING;
 		else if ( b == 1 )
@@ -94,12 +97,41 @@ public class FileState implements SimpleInformation {
 	public void readStream( MessageBuffer messageBuffer ) {
 		this.setState( ( byte ) messageBuffer.readByte() );
 		if ( this.getState() == EnumFileState.ABORTED )
-			this.setReason( messageBuffer.readString() );			
+			this.reason = messageBuffer.readString();			
+	}
+	/**
+	 * @param The new file state (paused,...)
+	 */
+	public void setState( EnumFileState state, int id, CoreCommunication core ) {
+		EncodeMessage sendState = null;
+		Object[] content = new Object[ 2 ];
+		content[ 0 ] = new Integer( id );
+			
+		/* unpause */
+		if ( this.getState() == EnumFileState.PAUSED 
+		&& state == EnumFileState.DOWNLOADING ) {
+			content[ 1 ] = resume;
+			sendState = new EncodeMessage( ( short ) 23, content );
+			sendState.sendMessage( core.getConnection() );
+		}
+		/* pause */
+		else if ( this.getState() == EnumFileState.DOWNLOADING
+			  && state == EnumFileState.PAUSED ){
+			content[ 1 ] = pause;
+			sendState = new EncodeMessage( ( short ) 23, content );
+			sendState.sendMessage( core.getConnection() );
+		}
+		/* little gc by ourself */
+		sendState = null;
+		content = null;
 	}
 }
 
 /*
 $Log: FileState.java,v $
+Revision 1.6  2003/07/03 16:01:51  lemmstercvs01
+setState() works now to set the filestate on the mldonkey side
+
 Revision 1.5  2003/06/24 09:29:57  lemmstercvs01
 Enum more improved
 

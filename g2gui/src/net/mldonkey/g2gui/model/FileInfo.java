@@ -22,16 +22,22 @@
  */
 package net.mldonkey.g2gui.model;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumFileState;
 
 /**
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.10 2003/07/02 16:25:30 dek Exp $ 
+ * @version $Id: FileInfo.java,v 1.11 2003/07/03 16:01:51 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements SimpleInformation {
+	/**
+	 * The CoreCommunication
+	 */
+	private CoreCommunication parent;
 	/**
 	 * File identifier
 	 */
@@ -110,278 +116,129 @@ public class FileInfo implements SimpleInformation {
 	private double perc;
 
 	/**
-	 * @return a String
+	 * @return time when download started
 	 */
 	public String getAge() {
 		return age;
 	}
-
 	/**
-	 * @return a String
+	 * @return The file availibility
 	 */
 	public String getAvail() {
 		return avail;
 	}
-
 	/**
-	 * @return a String[]
+	 * @return last time each chunk has been seen
 	 */
 	public String[] getChunkage() {
 		return chunkage;
 	}
-
 	/**
-	 * @return a String
+	 * @return Chunks
 	 */
 	public String getChunks() {
 		return chunks;
 	}
-
 	/**
-	 * @return an int
+	 * @return Size already downloaded
 	 */
 	public int getDownloaded() {
 		return downloaded;
 	}
-
 	/**
-	 * @return a format object
+	 * @return The file Format
 	 */
 	public Format getFormat() {
 		return format;
 	}
-
 	/**
-	 * @return an int
+	 * @return The file identifier
 	 */
 	public int getId() {
 		return id;
 	}
-
 	/**
-	 * @return a String
+	 * @return The file md4
 	 */
 	public String getMd4() {
 		return md4;
 	}
-
 	/**
-	 * @return a String
+	 * @return The name of this file
 	 */
 	public String getName() {
 		return name;
 	}
-
 	/**
-	 * @return a String[]
+	 * @return Possible names for this file
 	 */
 	public String[] getNames() {
 		return names;
 	}
-
 	/**
-	 * @return an int
+	 * @return File network identifier
 	 */
 	public int getNetwork() {
 		return network;
 	}
-
 	/**
-	 * @return an int
+	 * @return File last seen
 	 */
 	public int getOffset() {
 		return offset;
 	}
-
 	/**
-	 * @return an int
+	 * @return File priority
 	 */
 	public int getPriority() {
 		return priority;
 	}
-
 	/**
-	 * @return a float
+	 * @return The rate this file is downloading
+	 * 			(rounded to two decimal places)
 	 */
 	public float getRate() {
 		return rate;
 	}
-
 	/**
-	 * @return an int
+	 * @return The overall size of this file
 	 */
 	public int getSize() {
 		return size;
 	}
-
 	/**
-	 * @return an int
+	 * @return Number of sources for this file
 	 */
 	public int getSources() {
 		return sources;
 	}
-
 	/**
-	 * @return a state object
+	 * @return File status
 	 */
 	public FileState getState() {
 		return state;
 	}
-
 	/**
-	 * @param string a String
-	 */
-	public void setAge( String string ) {
-		this.age = string;
-	}
-
-	/**
-	 * @param string a String
-	 */
-	public void setAvail( String string ) {
-		this.avail = string;
-	}
-
-	/**
-	 * @param string a String
-	 */
-	public void setChunkage( String[] string ) {
-		this.chunkage = string;
-	}
-
-	/**
-	 * @param string a String
-	 */
-	public void setChunks( String string ) {
-		this.chunks = string;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setDownloaded( int i ) {
-		this.downloaded = i;
-	}
-
-	/**
-	 * @param format a format object
-	 */
-	public void setFormat( Format format ) {
-		this.format = format;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setId( int i ) {
-		this.id = i;
-	}
-
-	/**
-	 * @param string a String
-	 */
-	public void setMd4( String string ) {
-		this.md4 = string;
-	}
-
-	/**
-	 * @param string a String
-	 */
-	public void setName( String string ) {
-		this.name = string;
-	}
-
-	/**
-	 * @param strings a string[]
-	 */
-	public void setNames( String[] strings ) {
-		this.names = strings;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setNetwork( int i ) {
-		this.network = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setOffset( int i ) {
-		this.offset = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setPriority( int i ) {
-		this.priority = i;
-	}
-
-	/**
-	 * @param f a float
-	 */
-	public void setRate( float f ) {
-		this.rate = f;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setSize( int i ) {
-		this.size = i;
-	}
-
-	/**
-	 * @param i an int
-	 */
-	public void setSources( int i ) {
-		this.sources = i;
-	}
-
-	/**
-	 * @param state a state object
-	 */
-	public void setState( FileState state ) {
-		this.state = state;
-	}
-
-	/**
-	 * @return an int
+	 * @return Number of clients receiving this file
 	 */
 	public int getClients() {
 		return clients;
 	}
-
 	/**
-	 * @param i an int
-	 */
-	public void setClients( int i ) {
-		clients = i;
-	}
-	
-	/**
-	 * @return a double
+	 * @return The percent this file is complete
 	 */
 	public double getPerc() {
 		return perc;
 	}
-
 	/**
-	 * @param d a double
+	 * @return The parent corecommunication
 	 */
-	public void setPerc( double d ) {
-		perc = d;
+	private CoreCommunication getParent() {
+		return parent;
 	}
 
-	
-	/**
-	 * @return A string representation of this object
-	 */
-	public String toString() {
-		String result =  new String( this.getName() );
-		return result;
+	public FileInfo( CoreCommunication core ) {
+		this.parent = core;
 	}
 
 	/**
@@ -409,34 +266,34 @@ public class FileInfo implements SimpleInformation {
 		* OffsetTime	File Last Seen 
 		* int32			File Priority 
 		*/ 
-		this.setId( messageBuffer.readInt32() );
-		this.setNetwork( messageBuffer.readInt32() );
-		this.setNames( messageBuffer.readStringList() );
-		this.setMd4( messageBuffer.readBinary( 16 ) );
-		this.setSize( messageBuffer.readInt32() );
-		this.setDownloaded( messageBuffer.readInt32() );
-		this.setSources( messageBuffer.readInt32() );
-		this.setClients( messageBuffer.readInt32() );
+		this.id = messageBuffer.readInt32();
+		this.network = messageBuffer.readInt32();
+		this.names = messageBuffer.readStringList();
+		this.md4 = messageBuffer.readBinary( 16 );
+		this.size = messageBuffer.readInt32();
+		this.downloaded = messageBuffer.readInt32();
+		this.sources = messageBuffer.readInt32();
+		this.clients = messageBuffer.readInt32();
 		
 		/* File State */
 		this.getState().readStream( messageBuffer );
 		
-		this.setChunks( messageBuffer.readString() );
-		this.setAvail( messageBuffer.readString() );
+		this.chunks = messageBuffer.readString();
+		this.avail = messageBuffer.readString();
 		/* translate to kb and round to two digits after comma */
 		double d = new Double( messageBuffer.readString() ).doubleValue() / 1024;
-		this.setRate( ( float ) round( d ) );
-		this.setChunkage( messageBuffer.readStringList() );
-		this.setAge( messageBuffer.readString() );
+		this.rate = ( float ) round( d );
+		this.chunkage = messageBuffer.readStringList();
+		this.age = messageBuffer.readString();
 		
 		/* File Format */
 		this.getFormat().readStream( messageBuffer );
 		
-		this.setName( messageBuffer.readString() );
-		this.setOffset( messageBuffer.readInt32() );
-		this.setPriority( messageBuffer.readInt32() );
-		double d2 = round( ( ( double )this.getDownloaded() / ( double )this.getSize() ) * 100 );
-		this.setPerc( d2 );
+		this.name = messageBuffer.readString();
+		this.offset = messageBuffer.readInt32();
+		this.priority = messageBuffer.readInt32();
+		double d2 = round( ( (double)this.getDownloaded() / (double)this.getSize() ) * 100 );
+		this.perc = d2;
 	}
 	
 	/**
@@ -444,13 +301,13 @@ public class FileInfo implements SimpleInformation {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void update( MessageBuffer messageBuffer ) {
-		this.setDownloaded( messageBuffer.readInt32() );
+		this.downloaded = messageBuffer.readInt32();
 		/* translate to kb and round to two digits after comma */
 		double d = new Double( messageBuffer.readString() ).doubleValue() / 1024;
-		this.setRate( ( float ) round( d ) );
-		this.setOffset( messageBuffer.readInt32() );
-		double d2 = round( ( ( double )this.getDownloaded() / ( double )this.getSize() ) * 100 );
-		this.setPerc( d2 );
+		this.rate = ( float ) round( d );
+		this.offset = messageBuffer.readInt32();
+		double d2 = round( ( (double)this.getDownloaded() / (double)this.getSize() ) * 100 );
+		this.perc = d2;
 	}
 	
 	/**
@@ -475,10 +332,33 @@ public class FileInfo implements SimpleInformation {
 			return false;
 	}
 
+	/**
+	 * @param string The new name for this file
+	 */
+	public void setName( String string, CoreCommunication core ) {
+		// do nothing yet
+	}
+
+	/**
+	 * @param i The new priority for this file
+	 */
+	public void setPriority( int i ) {
+		// do nothing yet
+	}
+
+	/**
+	 * @param state The new state of this file
+	 */
+	public void setState( EnumFileState enum ) {
+		this.getState().setState( enum, this.getId(), this.getParent() );
+	}
 }
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.11  2003/07/03 16:01:51  lemmstercvs01
+setState() works now to set the filestate on the mldonkey side
+
 Revision 1.10  2003/07/02 16:25:30  dek
 Checkstyle
 

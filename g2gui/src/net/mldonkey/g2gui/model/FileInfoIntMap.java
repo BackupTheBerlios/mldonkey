@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.4 2003/07/02 16:26:51 dek Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.5 2003/07/03 16:01:51 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -80,7 +80,7 @@ public class FileInfoIntMap extends InfoIntMap {
 
 		/* insert the new FileInfo objects */
 		for ( int i = 0; i < listElem; i++ ) {
-			FileInfo fileInfo = new FileInfo();
+			FileInfo fileInfo = new FileInfo( this.parent );
 			fileInfo.readStream( messageBuffer );
 			this.put( fileInfo.getId(), fileInfo );
 		}
@@ -107,7 +107,7 @@ public class FileInfoIntMap extends InfoIntMap {
 		if ( this.infoIntMap.containsKey( id ) )
 			this.get( id ).readStream( messageBuffer );
 		else {
-			FileInfo fileInfo = new FileInfo();
+			FileInfo fileInfo = new FileInfo( this.parent );
 			fileInfo.readStream( messageBuffer );
 			this.put( fileInfo.getId(), fileInfo );
 		}
@@ -133,6 +133,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.5  2003/07/03 16:01:51  lemmstercvs01
+setState() works now to set the filestate on the mldonkey side
+
 Revision 1.4  2003/07/02 16:26:51  dek
 minor checkstyle
 
