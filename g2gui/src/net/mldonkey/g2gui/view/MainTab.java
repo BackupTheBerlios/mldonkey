@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.67 2003/09/08 17:28:44 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.69 2003/09/08 18:27:42 zet Exp $ 
  *
  */
 public class MainTab implements ShellListener {
@@ -87,7 +87,6 @@ public class MainTab implements ShellListener {
 		final Shell mainShell = shell;	
 		Display display = shell.getDisplay();
 		shell.addShellListener( this );
-		G2GuiResources.initialize();
 		minimizer = new Minimizer(shell, core, titleBarText);
 		minimizer.setTitleBarText(); 
 		shell.setLayout( new FillLayout() );
@@ -129,7 +128,7 @@ public class MainTab implements ShellListener {
 					Message killCore = new EncodeMessage( Message.S_KILL_CORE );
 					killCore.sendMessage( mldonkey.getConnection() );
 					G2Gui.getCoreConsole().dispose();
-				}
+				} 
 				
 				// disconnect from core
 				( ( CoreCommunication )mldonkey ).disconnect();	
@@ -374,6 +373,12 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.69  2003/09/08 18:27:42  zet
+*** empty log message ***
+
+Revision 1.68  2003/09/08 18:25:37  zet
+init resources in g2gui
+
 Revision 1.67  2003/09/08 17:28:44  zet
 more minimizer stuff
 

@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.93 2003/09/02 10:00:33 lemmster Exp $ 
+ * @version $Id: Core.java,v 1.94 2003/09/08 18:25:16 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -214,12 +214,14 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		}	
 		catch ( SocketException e ) {
 			/* expect the core denies our connection attempt */
+			connected = false;
 			this.connectionDenied = true;
 			synchronized ( waiterObj ) {
 				waiterObj.notify();
 			}
 		}
 		catch ( IOException e ) {
+			connected = false;
 			e.printStackTrace();
 		}		
 	}
@@ -554,6 +556,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.94  2003/09/08 18:25:16  zet
+*** empty log message ***
+
 Revision 1.93  2003/09/02 10:00:33  lemmster
 getDefineSearch()
 
