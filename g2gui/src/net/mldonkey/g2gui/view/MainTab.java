@@ -27,10 +27,13 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.pref.Preferences;
+import net.mldonkey.g2gui.model.ClientStats;
 
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -44,10 +47,10 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.15 2003/07/26 21:43:46 lemmstercvs01 Exp $ 
+ * @version $Id: MainTab.java,v 1.16 2003/07/26 23:10:14 zet Exp $ 
  *
  */
-public class MainTab implements Listener {
+public class MainTab implements Listener, Observer {
 	private ToolBar miscTools;
 	private ToolBar mainTools;
 	private StatusLine statusline;
@@ -58,6 +61,8 @@ public class MainTab implements Listener {
 	private Menu mainMenuBar;	
 	private PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
 	private ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
+	private Shell thisShell = null;
+	private final String titleBarText = "g2gui alpha";
 	/**
 	 * @param core the most important thing of the gui: were do i get my data from
 	 * @param shell were do we live?
@@ -65,7 +70,8 @@ public class MainTab implements Listener {
 	public MainTab( CoreCommunication core, Shell shell ) {
 		this.registeredTabs = new ArrayList();
 		this.mldonkey = core;
-
+		this.mldonkey.addObserver(this);
+		thisShell = shell;
 		final Shell mainShell = shell;	
 		Display display = shell.getDisplay();					
 		shell.setLayout( new FillLayout() );
@@ -110,9 +116,7 @@ public class MainTab implements Listener {
 	private void createContents( Shell parent ) {
 		GridData gridData;	
 		Composite mainComposite = new Composite( parent, SWT.NONE );
-		
-		setTitleBar( parent, "g2gui alpha" );
-		
+				
 		parent.setImage (createTransparentImage ( 
 								new Image(parent.getDisplay(), 
 								"src/icons/mld_logo_48x48.png"),
@@ -400,10 +404,20 @@ public class MainTab implements Listener {
 	 * @param shell The shell to set the title on
 	 * @param title The text to appear in the title-bar
 	 */
-	public void setTitleBar( Shell shell, String title ) {
-		shell.setText( title );
-	} 
-	
+	public void update(Observable arg0, Object receivedInfo) {
+				if (receivedInfo instanceof ClientStats){
+					final ClientStats clientInfo = (ClientStats) receivedInfo;
+					thisShell.getDisplay().asyncExec(new Runnable() {
+						   public void run() {
+								thisShell.setText(
+									"(D:" + String.valueOf(clientInfo.getTcpDownRate()) + ")" +
+									"(U:" + String.valueOf(clientInfo.getTcpUpRate()) + ")" +
+									": " + titleBarText
+									);
+						  }
+					});
+				}
+	}
 	/**
 	 * Reads the preference store file from disk
 	 */
@@ -472,6 +486,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.16  2003/07/26 23:10:14  zet
+update titlebar with rates
+
 Revision 1.15  2003/07/26 21:43:46  lemmstercvs01
 createTransparentImage modifier changed to public
 
