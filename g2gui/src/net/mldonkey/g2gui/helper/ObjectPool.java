@@ -32,7 +32,7 @@ import java.util.List;
  * ObjectPool
  *
  * @author markus
- * @version $Id: ObjectPool.java,v 1.2 2003/08/04 14:38:13 lemmstercvs01 Exp $ 
+ * @version $Id: ObjectPool.java,v 1.3 2003/08/21 10:13:14 dek Exp $ 
  *
  */
 public abstract class ObjectPool {
@@ -100,7 +100,7 @@ public abstract class ObjectPool {
 							this.unused.add( create() );
 						}
 				}
-				/* we´ve done all our work, so leave the while loop */
+				/* we have done all our work, so leave the while loop */
 				break;
 			}
 		}
@@ -129,6 +129,9 @@ public abstract class ObjectPool {
 
 /*
 $Log: ObjectPool.java,v $
+Revision 1.3  2003/08/21 10:13:14  dek
+removed " malformed UTF-8 character" (only in comment)
+
 Revision 1.2  2003/08/04 14:38:13  lemmstercvs01
 splashscreen and error handling added
 
