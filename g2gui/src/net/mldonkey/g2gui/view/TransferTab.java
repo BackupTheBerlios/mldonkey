@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.70 2003/10/16 19:58:12 zet Exp $
+ * @version $Id: TransferTab.java,v 1.71 2003/10/16 20:43:14 zet Exp $
  *
  */
 public class TransferTab extends GuiTab {
@@ -131,7 +131,7 @@ public class TransferTab extends GuiTab {
         downloadViewForm.setContent( downloadComposite );
         createUploads( mainSashForm );
         downloadTableTreeViewer =
-            new DownloadTableTreeViewer( downloadComposite, clientTableViewer.getTableViewer(), mldonkey, this );
+            new DownloadTableTreeViewer( downloadComposite, (clientTableViewer != null ? clientTableViewer.getTableViewer() : null ), mldonkey, this );
         popupMenuDL.addMenuListener( new DownloadPaneMenuListener( downloadTableTreeViewer.getTableTreeViewer(),
                                                                  mldonkey, downloadTableTreeViewer ) );
         mainSashForm.setWeights( new int[] { 1, 1 } );
@@ -406,6 +406,9 @@ public class TransferTab extends GuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.71  2003/10/16 20:43:14  zet
+remove null
+
 Revision 1.70  2003/10/16 19:58:12  zet
 icons
 
