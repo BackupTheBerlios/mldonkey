@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view.search;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -32,12 +33,11 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.model.Download;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.ResultInfoIntMap;
+import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabFolderAdapter;
-import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -77,7 +77,7 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.4 2003/07/27 16:38:41 vnc Exp $ 
+ * @version $Id: SearchResult.java,v 1.5 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
  *
  */
 //TODO search timeout, add resource bundle, add image handle, fake search, real links depending on network								   
@@ -93,13 +93,16 @@ public class SearchResult implements Observer, Runnable {
 	private CTabItem cTabItem;
 	private TableColumn tableColumn;
 	private boolean ascending = false;
+	
+	private ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
+
 	/* if you modify this, change the LayoutProvider and tableWidth */
-	private String[] tableColumns = { "Network", 
-									   "Name",
-									   "Size",
-									   "Format",
-									   "Type",
-									   "Avail" };
+	private String[] tableColumns = { bundle.getString( "SR_NETWORK" ), 
+									   bundle.getString( "SR_NAME" ),
+									   bundle.getString( "SR_SIZE" ),
+									   bundle.getString( "SR_FORMAT" ),
+									   bundle.getString( "SR_MEDIA" ),
+									   bundle.getString( "SR_AVAIL" ), };
 	/* 0 sets the tablewidth dynamcliy */
 	private int[] tableWidth = { 45, 0, 65, 45, 50, 45 };
 		
@@ -144,25 +147,25 @@ public class SearchResult implements Observer, Runnable {
 		/* if the tab is already disposed, dont update */
 		if ( cTabItem.isDisposed() ) return;
 
-			if ( table == null ) {
-				/* remove the old label "searching..." */
-				label.dispose();
-			
-				this.createTable();
-			
-				/* fill the table with content */
-				table.setInput(  this.results.get( searchId ) );
+		if ( table == null ) {
+			/* remove the old label "searching..." */
+			label.dispose();
+		
+			this.createTable();
+		
+			/* fill the table with content */
+			table.setInput(  this.results.get( searchId ) );
+			this.modifiyItems();
+			this.setColumnWidht();
+		} 
+		else {
+			/* has our result changed */
+			int temp = ( ( List ) results.get( searchId ) ).size();
+			if ( table.getTable().getItemCount() != temp ) {
+				table.refresh();
 				this.modifiyItems();
-				this.setColumnWidht();
-			} 
-			else {
-				/* has our result changed */
-				int temp = ( ( List ) results.get( searchId ) ).size();
-				if ( table.getTable().getItemCount() != temp ) {
-					table.refresh();
-					this.modifiyItems();
-				}
 			}
+		}
 	}
 	
 	/**
@@ -180,38 +183,25 @@ public class SearchResult implements Observer, Runnable {
 		/* first we need a CTabFolder item for the search result */
 		cTabItem = new CTabItem( cTabFolder, SWT.FLAT );
 		cTabItem.setText( searchString );
-		cTabItem.setToolTipText( "searching for " + searchString );
+		cTabItem.setToolTipText( bundle.getString( "SR_SEARCHINGFOR" ) + searchString );
 		image = new Image( cTabFolder.getDisplay(), "src/icons/search_small.png" );
-		cTabItem.setImage( image );
-
-		/* add a "X" and listen for close event */
-		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
-			public void itemClosed( CTabFolderEvent event ) {
-				SearchResult.this.dispose();
-				/* close the tab item */
-				if ( event.item != null )
-					event.item.dispose();
-			}
-		} );
-		
-		/* listen for dispose to close all open searches */
-		cTabFolder.addDisposeListener( new DisposeListener() {
-			public void widgetDisposed( DisposeEvent e ) {
-				SearchResult.this.dispose();
-
-				/* dispose the image */
-				if ( image != null )
-					image.dispose();
-			} 
-		} );
+		cTabItem.setImage( MainTab.createTransparentImage( image, cTabItem.getParent() ) );
+		cTabItem.setData( this );
 
 		/* for the search delay, just draw a label */ 
 		label = new Label( cTabFolder, SWT.NONE );
-		label.setText( "searching..." );
+		label.setText( bundle.getString( "SR_SEARCHING" ) );
 		cTabItem.setControl( label );
 		
 		/* sets the tabitem on focus */
 		cTabFolder.setSelection( cTabItem );
+		
+		/* listen for dispose to close this open search */
+		cTabItem.addDisposeListener( new DisposeListener() {
+			public void widgetDisposed( DisposeEvent e ) {
+				( ( SearchResult ) cTabItem.getData() ).dispose();
+			} 
+		} );
 	}
 
 	/**
@@ -288,7 +278,7 @@ public class SearchResult implements Observer, Runnable {
 
 		/* Download */
 		dlItem = new MenuItem( menu, SWT.PUSH );
-		dlItem.setText( "download" );
+		dlItem.setText( bundle.getString( "ST_DOWNLOAD" ) );
 		dlItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
 				TableItem[] currentItems = table.getTable().getSelection();
@@ -308,7 +298,7 @@ public class SearchResult implements Observer, Runnable {
 		
 		/* copy filename */
 		cpFileItem = new MenuItem( menu, SWT.PUSH );
-		cpFileItem.setText( "copy filename to clipboard" );
+		cpFileItem.setText( bundle.getString( "ST_COPYNAME" ) );
 		cpFileItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
 				TableItem[] currentItems = table.getTable().getSelection();
@@ -321,10 +311,10 @@ public class SearchResult implements Observer, Runnable {
 				
 		/* Copy link as */
 		cpLinkItem = new MenuItem( menu, SWT.CASCADE );
-		cpLinkItem.setText( "copy link as..." );
+		cpLinkItem.setText( bundle.getString( "ST_COPYLINK" ) );
 		Menu copy = new Menu( menu );
 			MenuItem copyItem = new MenuItem( copy, SWT.PUSH );
-			copyItem.setText( "as plain" );
+			copyItem.setText( bundle.getString( "ST_ASPLAIN" ) );
 			copyItem.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent e ) {
 					TableItem[] currentItems = table.getTable().getSelection();
@@ -335,7 +325,7 @@ public class SearchResult implements Observer, Runnable {
 				}
 			} );
 			copyItem = new MenuItem( copy, SWT.PUSH );
-			copyItem.setText( "as html" );
+			copyItem.setText( bundle.getString( "ST_ASHTML" ) );
 			copyItem.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent e ) {	
 					TableItem[] currentItems = table.getTable().getSelection();
@@ -353,17 +343,17 @@ public class SearchResult implements Observer, Runnable {
 
 		/* Webservices */
 		webItem = new MenuItem( menu, SWT.CASCADE );
-		webItem.setText( "web services" );
+		webItem.setText( bundle.getString( "ST_WEBSERVICES" ) );
 		Menu web = new Menu( menu );
 			MenuItem webSItem = new MenuItem( web, SWT.PUSH );
-			webSItem.setText( "donkeyfakes (no event yet)" );
+			webSItem.setText( bundle.getString( "ST_WEBSERVICE1" ) );
 			webSItem.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent e ) {
 					//TODO add fake search
 				}
 			} );
 			webSItem = new MenuItem( web, SWT.PUSH );
-			webSItem.setText( "bitzi (no event yet)" );
+			webSItem.setText( bundle.getString( "ST_WEBSERVICE1" ) );
 			webSItem.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent e ) {
 					//TODO add fake search
@@ -375,7 +365,7 @@ public class SearchResult implements Observer, Runnable {
 
 		/* remove this item */
 		rmItem = new MenuItem( menu, SWT.PUSH );
-		rmItem.setText( "remove this item" );
+		rmItem.setText( bundle.getString( "ST_REMOVE" ) );
 		rmItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
 				table.getTable().remove( table.getTable().getSelectionIndices() );
@@ -383,13 +373,14 @@ public class SearchResult implements Observer, Runnable {
 		} );
 
 		/* close this search */
-/*		closeItem = new MenuItem( menu, SWT.PUSH );
-		closeItem.setText( "close this search (no event yet" );
+		closeItem = new MenuItem( menu, SWT.PUSH );
+		closeItem.setText( bundle.getString( "ST_CLOSE" ) );
 		closeItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
+				cTabItem.dispose();
 			}
 		} );
-*/		
+		
 		/* disable some items if currentItems.length > 1 */
 		menu.addListener( SWT.Show, new Listener () {
 			public void handleEvent( Event event ) {
@@ -448,15 +439,16 @@ public class SearchResult implements Observer, Runnable {
 			}
 			
 			/* sets the tooltip text */	
-			String aString = "Filename: " + aResult.getNames()[ 0 ] + "\n";
+			String aString = bundle.getString( "ST_TT_NAME" ) + aResult.getNames()[ 0 ] + "\n";
 			if ( !aResult.getFormat().equals( "" ) )
-				aString = aString + "Format: " + aResult.getFormat() + "\n";
-				aString += "Network: " + aResult.getNetwork().getNetworkName() + "\n";
-				aString += "link: " + aResult.getLink() + "\n";
-				aString += "Size: " + aResult.getStringSize() + "\n";
-				aString += "Sources: " + aResult.getTags()[ 0 ].getValue();
+				aString += bundle.getString( "ST_TT_FORMAT" ) + aResult.getFormat() + "\n";
+				aString += bundle.getString( "ST_TT_LINK" ) + aResult.getLink() + "\n";
+				aString += bundle.getString( "ST_TT_NETWORK" )
+												 + aResult.getNetwork().getNetworkName() + "\n";
+				aString += bundle.getString( "ST_TT_SIZE" ) + aResult.getStringSize() + "\n";
+				aString += bundle.getString( "ST_TT_SOURCES" ) + aResult.getTags()[ 0 ].getValue();
 			if ( !aResult.getHistory() )
-				aString = aString + "You downloaded this file already";
+				aString = aString + "\n" + bundle.getString( "ST_TT_DOWNLOADED" );
 			item.setData( "TIP_TEXT", aString );
 		}
 	}
@@ -484,7 +476,7 @@ public class SearchResult implements Observer, Runnable {
 	/**
 	 * dispose this search result
 	 */
-	private void dispose() {
+	public void dispose() {
 		/* tell the core to forget the search */
 		Object[] temp = { new Integer( searchId ), new Byte( ( byte ) 1 ) };
 		EncodeMessage message = new EncodeMessage( Message.S_CLOSE_SEARCH, temp );
@@ -569,7 +561,13 @@ public class SearchResult implements Observer, Runnable {
 					Table w = ( Table ) widget;
 					widget = w.getItem ( pt );
 
-					if ( widget == tipWidget || widget == null ) return;
+					if ( widget == null ) {
+						tipShell.setVisible( false );
+						tipWidget = null;
+					}
+
+					if ( widget == tipWidget ) return;
+					
 					tipWidget = widget;
 
 					/* get the data from the widget */					
@@ -602,8 +600,10 @@ public class SearchResult implements Observer, Runnable {
 		private void setHoverLocation( Shell shell, Point position ) {
 			Rectangle displayBounds = shell.getDisplay().getBounds();
 			Rectangle shellBounds = shell.getBounds();
-			shellBounds.x = Math.max( Math.min( position.x, displayBounds.width - shellBounds.width ), 0 );
-			shellBounds.y = Math.max( Math.min( position.y + 16, displayBounds.height - shellBounds.height ), 0 );
+			shellBounds.x = Math.max( Math.min( 
+				position.x, displayBounds.width - shellBounds.width ), 0 );
+			shellBounds.y = Math.max( Math.min( 
+				position.y + 16, displayBounds.height - shellBounds.height ), 0 );
 			shell.setBounds( shellBounds );
 		}
 	}
@@ -611,6 +611,9 @@ public class SearchResult implements Observer, Runnable {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.5  2003/07/27 18:45:47  lemmstercvs01
+lots of changes
+
 Revision 1.4  2003/07/27 16:38:41  vnc
 cosmetics in tooltip
 

@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.TabFolder;
  * SimpleSearch
  *
  * @author $user$
- * @version $Id: SimpleSearch.java,v 1.3 2003/07/24 16:20:10 lemmstercvs01 Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.4 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -63,7 +63,7 @@ public class SimpleSearch extends Search {
 	 * @see net.mldonkey.g2gui.view.search.Search#getTabName()
 	 */
 	public String getTabName() {
-		return "SimpleSearch";
+		return bundle.getString( "SS_TITLE" );
 	}
 
 	/* (non-Javadoc)
@@ -82,15 +82,15 @@ public class SimpleSearch extends Search {
 		group.setLayout( gridLayout );
 		group.setLayoutData( gridData );
 			
-			this.createInputBox( group, "Search String" );
-			this.createNetworkBox( group, "Network" );
+			this.createInputBox( group, bundle.getString( "SS_STRING" ) );
+			this.createNetworkBox( group, bundle.getString( "SS_NETWORK" ) );
 			
 			/* media select */
 			gridData = new GridData();
 			gridData.horizontalSpan = 2;
 			all = new Button( group, SWT.RADIO );
 			all.setLayoutData( gridData );
-			all.setText( "All" );
+			all.setText( bundle.getString( "SS_ALL" ) );
 			/* we want a default selection */
 			all.setSelection( true );
 			all.addSelectionListener( new SelectionAdapter() {
@@ -103,7 +103,7 @@ public class SimpleSearch extends Search {
 			gridData.horizontalSpan = 2;
 			audio = new Button( group, SWT.RADIO );
 			audio.setLayoutData( gridData );
-			audio.setText( "Audio" );
+			audio.setText( bundle.getString( "SS_AUDIO" ) );
 			audio.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Audio";
@@ -114,7 +114,7 @@ public class SimpleSearch extends Search {
 			gridData.horizontalSpan = 2;
 			video = new Button( group, SWT.RADIO );
 			video.setLayoutData( gridData );
-			video.setText( "Video" );
+			video.setText( bundle.getString( "SS_VIDEO" ) );
 			video.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Video";
@@ -125,7 +125,7 @@ public class SimpleSearch extends Search {
 			gridData.horizontalSpan = 2;
 			image = new Button( group, SWT.RADIO );
 			image.setLayoutData( gridData );
-			image.setText( "Image" );
+			image.setText( bundle.getString( "SS_IMAGE" ) );
 			image.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Image";
@@ -136,7 +136,7 @@ public class SimpleSearch extends Search {
 			gridData.horizontalSpan = 2;
 			software = new Button( group, SWT.RADIO );
 			software.setLayoutData( gridData );
-			software.setText( "Software" );
+			software.setText( bundle.getString( "SS_Software" ) );
 			software.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					selectedMedia = "Software";
@@ -146,7 +146,7 @@ public class SimpleSearch extends Search {
 			/* search button */
 			ok = new Button( group, SWT.PUSH );
 			ok.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-			ok.setText( "Search" );
+			ok.setText( bundle.getString( "SS_SEARCH" ) );
 			ok.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected( SelectionEvent event ) {
 					performSearch();
@@ -190,6 +190,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.4  2003/07/27 18:45:47  lemmstercvs01
+lots of changes
+
 Revision 1.3  2003/07/24 16:20:10  lemmstercvs01
 lots of changes
 

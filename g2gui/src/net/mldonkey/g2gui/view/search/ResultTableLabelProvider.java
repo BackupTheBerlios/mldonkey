@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.view.search;
 
+import java.util.ResourceBundle;
+
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.Tag;
@@ -34,10 +36,11 @@ import org.eclipse.swt.graphics.Image;
  * ResultTableLabelProvider
  *
  * @author $user$
- * @version $Id: ResultTableLabelProvider.java,v 1.2 2003/07/24 16:20:10 lemmstercvs01 Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.3 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider {
+	private ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#
@@ -78,11 +81,11 @@ public class ResultTableLabelProvider implements ITableLabelProvider {
 		else if ( arg1 == 5 ) { //metadata
 			Tag aTag = resultInfo.getTags()[ 0 ];
 			if ( aTag.getValue() > 20 )
-				return "high";
+				return bundle.getString( "RTLP_HIGH" );
 			else if ( aTag.getValue() > 10 )
-				return "normal";
+				return bundle.getString( "RTLP_NORMAL" );
 			else
-				return "low";
+				return bundle.getString( "RTLP_LOW" );
 		}	
 		return "";
 	}
@@ -115,6 +118,9 @@ public class ResultTableLabelProvider implements ITableLabelProvider {
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.3  2003/07/27 18:45:47  lemmstercvs01
+lots of changes
+
 Revision 1.2  2003/07/24 16:20:10  lemmstercvs01
 lots of changes
 

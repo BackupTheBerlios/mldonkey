@@ -31,12 +31,14 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  * @author $user$
- * @version $Id: ResultTableSorter.java,v 1.1 2003/07/25 22:34:51 lemmstercvs01 Exp $ 
+ * @version $Id: ResultTableSorter.java,v 1.2 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
  *
  */
 public class ResultTableSorter extends ViewerSorter {
-	private int columnIndex;
-	private boolean lastSort;
+	/* set the default column to sort to name */
+	private int columnIndex = 1;
+	/* set the default way to descending */
+	private boolean lastSort = true;
 	
 	/**
 	 * Creates a new viewer sorter
@@ -146,6 +148,9 @@ public class ResultTableSorter extends ViewerSorter {
 
 /*
 $Log: ResultTableSorter.java,v $
+Revision 1.2  2003/07/27 18:45:47  lemmstercvs01
+lots of changes
+
 Revision 1.1  2003/07/25 22:34:51  lemmstercvs01
 lots of changes
 

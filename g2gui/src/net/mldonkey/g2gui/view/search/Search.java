@@ -24,6 +24,7 @@ package net.mldonkey.g2gui.view.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import gnu.trove.TIntObjectIterator;
 
@@ -44,12 +45,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 
-
 /**
  * Search
  *
  * @author $user$
- * @version $Id: Search.java,v 1.4 2003/07/24 16:20:10 lemmstercvs01 Exp $ 
+ * @version $Id: Search.java,v 1.5 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Search {
@@ -61,6 +61,8 @@ public abstract class Search {
 	private Label label;
 	protected Text text;
 	protected Combo combo;
+	
+	protected ResourceBundle bundle = ResourceBundle.getBundle( "g2gui" );
 
 	/**
 	 * 
@@ -141,11 +143,12 @@ public abstract class Search {
 		for ( int i = 0; i < temp.size(); i++ ) {
 			itr.advance();
 			NetworkInfo elem = ( NetworkInfo ) itr.value();
-			if ( elem.isEnabled() )
+			/* exclude disabled and bittorrent (no search in there) */
+			if ( elem.isEnabled() && !elem.getNetworkName().equals( "Bittorrent" ) )
 				items.add( elem.getNetworkName() );
 		}
 		if ( items.size() > 1 )
-			items.add( "All" );
+			items.add( bundle.getString( "S_ALL" ) );
 	
 		Object[] itemsArray = items.toArray();
 		String[] strings = new String[ itemsArray.length ];
@@ -160,6 +163,9 @@ public abstract class Search {
 
 /*
 $Log: Search.java,v $
+Revision 1.5  2003/07/27 18:45:47  lemmstercvs01
+lots of changes
+
 Revision 1.4  2003/07/24 16:20:10  lemmstercvs01
 lots of changes
 

@@ -26,6 +26,9 @@ import java.util.Observable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabFolderAdapter;
+import org.eclipse.swt.custom.CTabFolderEvent;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -41,7 +44,7 @@ import net.mldonkey.g2gui.view.search.*;
  * SearchTab
  *
  * @author $user$
- * @version $Id: SearchTab.java,v 1.2 2003/07/24 16:20:10 lemmstercvs01 Exp $ 
+ * @version $Id: SearchTab.java,v 1.3 2003/07/27 18:45:47 lemmstercvs01 Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -61,7 +64,7 @@ public class SearchTab extends GuiTab {
 		/* associate this tab with the corecommunication */
 		this.core = gui.getCore();
 		/* Set our name on the coolbar */
-		this.toolItem.setText( "Search" );
+		this.toolItem.setText( bundle.getString( "ST_TITLE" ) );
 		/* Set the toolitem image */		
 		inActiveIm = MainTab.createTransparentImage(
 				new Image( toolItem.getParent().getDisplay(),
@@ -124,15 +127,32 @@ public class SearchTab extends GuiTab {
 		cTabFolder.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		cTabFolder.marginWidth = 5;
 		
-		//TODO design: need real colors
-		/*
-		Color fgColor = new Color( cTabFolder.getDisplay(), 10, 10, 10 );
+		/* add a "X" and listen for close event */
+		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
+			public void itemClosed( CTabFolderEvent event ) {
+				SearchResult result = ( SearchResult ) event.item.getData();
+				result.dispose();
+				result = null;
+
+				/* dispose the tabitem image */
+				Image image = ( ( CTabItem ) event.item ).getImage();	
+				if ( image != null )
+					image.dispose();
+
+				/* close the tab item */
+				if ( event.item != null )
+					event.item.dispose();
+			}
+		} );
+
+		//VNC need real colors
+/*		Color fgColor = new Color( cTabFolder.getDisplay(), 10, 10, 10 );
 		Color[] bgColors { };
 		int[] bgPercents = { 1, 2, 3 };
 
 		cTabFolder.setSelectionForeground( fgColor );
 		cTabFolder.setSelectionBackground( bgColors, bgPercents );
-		*/
+*/
 	}
 
 	/* (non-Javadoc)
@@ -146,11 +166,13 @@ public class SearchTab extends GuiTab {
 	public CTabFolder getCTabFolder() {
 		return cTabFolder;
 	}
-
 }
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.3  2003/07/27 18:45:47  lemmstercvs01
+lots of changes
+
 Revision 1.2  2003/07/24 16:20:10  lemmstercvs01
 lots of changes
 
