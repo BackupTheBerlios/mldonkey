@@ -29,7 +29,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * ResultInfo
  *
  * @author $user$
- * @version $Id: ResultInfo.java,v 1.9 2003/07/24 16:07:05 lemmstercvs01 Exp $ 
+ * @version $Id: ResultInfo.java,v 1.10 2003/07/25 22:34:52 lemmstercvs01 Exp $ 
  *
  */
 public class ResultInfo extends Parent {
@@ -273,10 +273,26 @@ public class ResultInfo extends Parent {
 	public String getStringSize() {
 		return stringSize;
 	}
+	
+	/**
+	 * @return This result as a link corresponding to the network
+	 */
+	public String getLink() {
+		if ( this.getNetwork().getNetworkName().equals("Donkey") )
+			return "ed2k://|file|" + this.getNames()[ 0 ] + "|"
+					+ this.getSize() + "|"
+					+ this.getMd4() + "|/";
+		else
+			return "";
+	}
+
 }
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.10  2003/07/25 22:34:52  lemmstercvs01
+lots of changes
+
 Revision 1.9  2003/07/24 16:07:05  lemmstercvs01
 renamed getNetworkID() to getNetwork()
 

@@ -22,8 +22,6 @@
  */
 package net.mldonkey.g2gui.view.search;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -41,11 +39,15 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -60,7 +62,9 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -73,42 +77,42 @@ import org.eclipse.swt.widgets.Widget;
  * SearchResult
  *
  * @author $user$
- * @version $Id: SearchResult.java,v 1.2 2003/07/24 16:20:10 lemmstercvs01 Exp $ 
+ * @version $Id: SearchResult.java,v 1.3 2003/07/25 22:34:51 lemmstercvs01 Exp $ 
  *
  */
-//TODO search timeout, add resource bundle, select importand columns, fake search								   
-//TODO "button 3" copy link to clipboard, copy filename to clipboard, close this tab, copy link as html
+//TODO search timeout, add resource bundle, add image handle, fake search, real links depending on network								   
 public class SearchResult implements Observer, Runnable {
-	private Composite composite;
+	private CTabFolder cTabFolder;
 	private String searchString;
 	private CoreCommunication core;
 	private int searchId;
-	private int lastSortColumn = -1;
-	
 	private ResultInfoIntMap results;
-	private ResultInfo currentResult;
-	
 	private TableViewer table;
 	private Label label;
 	private Image image;
 	private CTabItem cTabItem;
 	private TableColumn tableColumn;
-	/* if you modify this, change the LayoutProvider and ResultComparator as well */
+	private boolean ascending = false;
+	/* if you modify this, change the LayoutProvider and tableWidth */
 	private String[] tableColumns = { "Network", 
 									   "Name",
 									   "Size",
 									   "Format",
 									   "Type",
 									   "Avail" };
+	/* 0 sets the tablewidth dynamcliy */
+	private int[] tableWidth = { 45, 0, 65, 45, 50, 45 };
 		
 	/**
-	 * 
-	 * @param aString
-	 * @param parent
+	 * Creates a new SearchResult to display all the results supplied by mldonkey
+	 * @param aString The SearchString we are searching for
+	 * @param parent The parent TabFolder, where we display our TabItem in
+	 * @param core The core to communicate with
+	 * @param searchId The identifier to this search
 	 */
-	protected SearchResult( String aString, Composite parent, CoreCommunication core, int searchId ) {
+	protected SearchResult( String aString, CTabFolder parent, CoreCommunication core, int searchId ) {
 		this.searchString = aString;
-		this.composite = parent;
+		this.cTabFolder = parent;
 		this.searchId = searchId;
 		this.core = core;
 		
@@ -116,45 +120,6 @@ public class SearchResult implements Observer, Runnable {
 		this.createContent();
 		/* register ourself to the core */
 		this.core.addObserver( this );
-	}
-	
-	/**
-	 * Display the string "searching..." for the time
-	 * we are waiting for the resultinfo
-	 */
-	private void createContent() {
-		/* first we need a CTabFolder item for the search result */
-		cTabItem = new CTabItem( ( CTabFolder ) composite, SWT.FLAT );
-		cTabItem.setText( searchString );
-		cTabItem.setToolTipText( "searching for " + searchString );
-		image = new Image( composite.getDisplay(), "src/icons/search_small.png" );
-		cTabItem.setImage( image );
-
-		( ( CTabFolder ) composite ).addCTabFolderListener( new CTabFolderAdapter() {
-			public void itemClosed( CTabFolderEvent event ) {
-				SearchResult.this.dispose();
-				/* close the tab item */
-				event.item.dispose();
-			}
-		} );
-		
-		/* listen for dispose to close all open searches */
-		composite.addDisposeListener( new DisposeListener() {
-			public void widgetDisposed( DisposeEvent e ) {
-				SearchResult.this.dispose();
-
-				/* dispose the image */
-				image.dispose();
-			} 
-		} );
-
-		/* for the search delay, just draw a label */ 
-		label = new Label( composite, SWT.NONE );
-		label.setText( "searching..." );
-		cTabItem.setControl( label );
-		
-		/* sets the tabitem on focus */
-		( ( CTabFolder ) composite ).setSelection( cTabItem );
 	}
 	
 	/* (non-Javadoc)
@@ -168,7 +133,7 @@ public class SearchResult implements Observer, Runnable {
 		if ( arg instanceof ResultInfoIntMap 
 		&& ( ( ResultInfoIntMap ) arg ).containsKey( searchId ) ) {
 			 	this.results = ( ResultInfoIntMap ) arg;
-				composite.getDisplay().asyncExec( this );
+				cTabFolder.getDisplay().asyncExec( this );
 		}
 	}
 	
@@ -188,6 +153,7 @@ public class SearchResult implements Observer, Runnable {
 				/* fill the table with content */
 				table.setInput(  this.results.get( searchId ) );
 				this.modifiyItems();
+				this.setColumnWidht();
 			} 
 			else {
 				/* has our result changed */
@@ -207,11 +173,53 @@ public class SearchResult implements Observer, Runnable {
 	}
 	
 	/**
+	 * Display the string "searching..." for the time
+	 * we are waiting for the resultinfo
+	 */
+	private void createContent() {
+		/* first we need a CTabFolder item for the search result */
+		cTabItem = new CTabItem( cTabFolder, SWT.FLAT );
+		cTabItem.setText( searchString );
+		cTabItem.setToolTipText( "searching for " + searchString );
+		image = new Image( cTabFolder.getDisplay(), "src/icons/search_small.png" );
+		cTabItem.setImage( image );
+
+		/* add a "X" and listen for close event */
+		cTabFolder.addCTabFolderListener( new CTabFolderAdapter() {
+			public void itemClosed( CTabFolderEvent event ) {
+				SearchResult.this.dispose();
+				/* close the tab item */
+				if ( event.item != null )
+					event.item.dispose();
+			}
+		} );
+		
+		/* listen for dispose to close all open searches */
+		cTabFolder.addDisposeListener( new DisposeListener() {
+			public void widgetDisposed( DisposeEvent e ) {
+				SearchResult.this.dispose();
+
+				/* dispose the image */
+				if ( image != null )
+					image.dispose();
+			} 
+		} );
+
+		/* for the search delay, just draw a label */ 
+		label = new Label( cTabFolder, SWT.NONE );
+		label.setText( "searching..." );
+		cTabItem.setControl( label );
+		
+		/* sets the tabitem on focus */
+		cTabFolder.setSelection( cTabItem );
+	}
+
+	/**
 	 * Build the whole table and the tablecolumns
 	 */
 	private void createTable() {
 		/* create the result table */		
-		table = new TableViewer( composite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
+		table = new TableViewer( cTabFolder, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
 		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		table.getTable().setLinesVisible( false );
 		table.getTable().setHeaderVisible( true );
@@ -219,36 +227,46 @@ public class SearchResult implements Observer, Runnable {
 
 		table.setContentProvider( new ResultTableContentProvider() );
 		table.setLabelProvider( new ResultTableLabelProvider() );
-
-		/* listen for right mouse click on item */
-		table.getTable().addMouseListener( new MouseListener () {
-			public void mouseDown( MouseEvent e ) {
-				if ( e.button == 3 ) {
-					Point pt = new Point( e.x, e.y );
-					/* is a tableitem selected */
-					if ( table.getTable().getItem( pt ) != null )
-						currentResult = ( ResultInfo ) table.getTable().getItem( pt ).getData();
-				}
-			}
-			public void mouseDoubleClick( MouseEvent e ) { }
-			public void mouseUp( MouseEvent e ) { }
-		} );
-				
+		table.setSorter( new ResultTableSorter() );
+		
 		/* create the columns */
 		for ( int i = 0; i < tableColumns.length; i++ ) {
 			tableColumn = new TableColumn( table.getTable(), SWT.LEFT );
 			tableColumn.setText( tableColumns[ i ] );
 			tableColumn.pack();
-	
-			/* listen for table sorting */
+			
+			/* adds a sort listener */
 			final int columnIndex = i;
-			tableColumn.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent e ) {
-					sort( columnIndex );
-				}
+			tableColumn.addListener( SWT.Selection, new Listener() {
+				public void handleEvent( Event e ) {
+					/* set the column to sort */
+					( ( ResultTableSorter ) table.getSorter() ).setColumnIndex( columnIndex );
+					/* set the way to sort (ascending/descending) */
+					( ( ResultTableSorter ) table.getSorter() ).setLastSort( ascending );
+
+					/* get the data for all tableitems */
+					TableItem[] items = table.getTable().getItems();
+					ResultInfo[] temp = new ResultInfo[ items.length ];
+					for ( int i = 0; i < items.length; i++ )
+							temp[ i ] = ( ResultInfo ) items[ i ].getData();
+
+					/* reverse sorting way */
+					ascending = ascending ? false : true;
+
+					table.getSorter().sort( table, temp );
+					table.refresh();
+				}	
 			} );
 		}
 
+		/* add a resize listener */
+		cTabFolder.addControlListener( new ControlAdapter() {
+		public void controlResized( ControlEvent e ) {
+				SearchResult.this.setColumnWidht();
+			}
+		} );
+		
+		
 		final ToolTipHandler tooltip = new ToolTipHandler( table.getTable().getShell() );
 		tooltip.activateHoverHelp( table.getTable() );
 		
@@ -262,20 +280,130 @@ public class SearchResult implements Observer, Runnable {
 	 */
 	private Menu createRightClickMenu() {
 		Shell shell = table.getTable().getShell();
+		final Clipboard cb = new Clipboard( shell.getDisplay() );
 		Menu menu = new Menu( shell , SWT.POP_UP );
 
-		MenuItem menuItem;
+		MenuItem dlItem, rmItem, closeItem;
+		final MenuItem cpFileItem, cpLinkItem, webItem;
+
 		/* Download */
-		menuItem = new MenuItem( menu, SWT.PUSH );
-		menuItem.setText( "download" );
-		menuItem.addSelectionListener( new SelectionAdapter() {
+		dlItem = new MenuItem( menu, SWT.PUSH );
+		dlItem.setText( "download" );
+		dlItem.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected( SelectionEvent e ) {
-				Download download = new Download( core );
-				download.setPossibleNames( currentResult.getNames() );
-				download.setResultID( currentResult.getResultID() );
-				download.setForce( false );
-				download.send();
-				download = null;
+				TableItem[] currentItems = table.getTable().getSelection();
+				for ( int i = 0; i < currentItems.length;	 i ++ ) {
+					ResultInfo result = ( ResultInfo ) currentItems[ i ].getData();
+					Download download = new Download( core );
+					download.setPossibleNames( result.getNames() );	
+					download.setResultID( result.getResultID() );
+					download.setForce( false );
+					download.send();
+					download = null;
+				}
+			}
+		} );
+		
+		new MenuItem( menu, SWT.SEPARATOR );
+		
+		/* copy filename */
+		cpFileItem = new MenuItem( menu, SWT.PUSH );
+		cpFileItem.setText( "copy filename to clipboard" );
+		cpFileItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent e ) {
+				TableItem[] currentItems = table.getTable().getSelection();
+				ResultInfo result = ( ResultInfo ) currentItems[ 0 ].getData();
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				cb.setContents( new Object[] { result.getNames()[ 0 ] },
+								new Transfer[] { textTransfer } );
+			}
+		} );
+				
+		/* Copy link as */
+		cpLinkItem = new MenuItem( menu, SWT.CASCADE );
+		cpLinkItem.setText( "copy link as..." );
+		Menu copy = new Menu( menu );
+			MenuItem copyItem = new MenuItem( copy, SWT.PUSH );
+			copyItem.setText( "as plain" );
+			copyItem.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent e ) {
+					TableItem[] currentItems = table.getTable().getSelection();
+					ResultInfo result = ( ResultInfo ) currentItems[ 0 ].getData();
+					TextTransfer textTransfer = TextTransfer.getInstance();
+					cb.setContents( new Object[] { result.getLink() }, 
+									new Transfer[] { textTransfer } );
+				}
+			} );
+			copyItem = new MenuItem( copy, SWT.PUSH );
+			copyItem.setText( "as html" );
+			copyItem.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent e ) {	
+					TableItem[] currentItems = table.getTable().getSelection();
+					ResultInfo result = ( ResultInfo ) currentItems[ 0 ].getData();
+					String aString = "<a href=\"" + result.getLink() + "\">"
+									 + result.getNames()[ 0 ] + "</a>";
+					TextTransfer textTransfer = TextTransfer.getInstance();
+					cb.setContents( new Object[] { aString }, 
+									new Transfer[] { textTransfer } );
+				}
+			} );
+		cpLinkItem.setMenu( copy );
+
+		new MenuItem( menu, SWT.SEPARATOR );
+
+		/* Webservices */
+		webItem = new MenuItem( menu, SWT.CASCADE );
+		webItem.setText( "web services" );
+		Menu web = new Menu( menu );
+			MenuItem webSItem = new MenuItem( web, SWT.PUSH );
+			webSItem.setText( "donkeyfakes (no event yet)" );
+			webSItem.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent e ) {
+					//TODO add fake search
+				}
+			} );
+			webSItem = new MenuItem( web, SWT.PUSH );
+			webSItem.setText( "bitzi (no event yet)" );
+			webSItem.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected( SelectionEvent e ) {
+					//TODO add fake search
+				}
+			} );
+		webItem.setMenu( web );
+
+		new MenuItem( menu, SWT.SEPARATOR );
+
+		/* remove this item */
+		rmItem = new MenuItem( menu, SWT.PUSH );
+		rmItem.setText( "remove this item" );
+		rmItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent e ) {
+				table.getTable().remove( table.getTable().getSelectionIndices() );
+			}
+		} );
+
+		/* close this search */
+/*		closeItem = new MenuItem( menu, SWT.PUSH );
+		closeItem.setText( "close this search (no event yet" );
+		closeItem.addSelectionListener( new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent e ) {
+			}
+		} );
+*/		
+		/* disable some items if currentItems.length > 1 */
+		menu.addListener( SWT.Show, new Listener () {
+			public void handleEvent( Event event ) {
+				TableItem[] currentItems = table.getTable().getSelection();
+				if ( currentItems.length > 1 ) {
+					cpFileItem.setEnabled( false );
+					cpLinkItem.setEnabled( false );
+					webItem.setEnabled( false );	
+				}
+				else {
+					cpFileItem.setEnabled( true );
+					cpLinkItem.setEnabled( true );
+					webItem.setEnabled( true );	
+				}
 			}
 		} );
 		return menu;
@@ -286,7 +414,6 @@ public class SearchResult implements Observer, Runnable {
 	 * sets some data for the tooltiptext
 	 */
 	private void modifiyItems() {
-
 		TableItem[] items = table.getTable().getItems();
 		for ( int i = 0; i < items.length; i ++ ) {
 			TableItem item = items[ i ];
@@ -297,7 +424,21 @@ public class SearchResult implements Observer, Runnable {
 				item.setForeground( new Color( items[ 0 ].getDisplay(), 41, 174, 57 ) );
 
 			/* sets the tooltip image */
-			Program p = Program.findProgram( aResult.getFormat() );
+			Program p;
+			if ( !aResult.getFormat().equals( "" ) )
+				p = Program.findProgram( aResult.getFormat() );
+			else {
+				String temp = aResult.getNames()[ 0 ];
+				int index = temp.lastIndexOf( "." );
+				try {
+					temp = temp.substring( index );
+				}
+				catch ( Exception e ) {
+					p = null;
+				}
+				p = Program.findProgram( temp );
+			}
+				
 			if ( p != null ) {
 				ImageData data = p.getImageData();
 				if ( data != null ) {
@@ -310,10 +451,10 @@ public class SearchResult implements Observer, Runnable {
 			String aString = "Filename: " + aResult.getNames()[ 0 ] + "\n";
 			if ( !aResult.getFormat().equals( "" ) )
 				aString = aString + "Format: " + aResult.getFormat() + "\n";
-			aString = aString + "ed2k-link: " + "ed2k://|file|" + aResult.getNames()[ 0 ] + "|" + aResult.getSize() + "|" + aResult.getMd4() + "|/\n";
-			aString = aString + "Network: " + aResult.getNetwork().getNetworkName() + "\n";
-			aString = aString + "Size: " + aResult.getStringSize() + "\n";
-			aString = aString + "Sources: " + aResult.getTags()[ 0 ].getValue();
+				aString += "ed2k-link: " + aResult.getLink();
+				aString += "Network: " + aResult.getNetwork().getNetworkName() + "\n";
+				aString += "Size: " + aResult.getStringSize() + "\n";
+				aString += "Sources: " + aResult.getTags()[ 0 ].getValue();
 			if ( !aResult.getHistory() )
 				aString = aString + "You downloaded this file already";
 			item.setData( "TIP_TEXT", aString );
@@ -321,37 +462,24 @@ public class SearchResult implements Observer, Runnable {
 	}
 	
 	/**
-	 * Sort a Column
-	 * @param columnIndex The column to sort
+	 * Sets the size for the columns
 	 */
-	private void sort( int columnIndex ) {
-		if ( table.getTable().getItemCount() <= 1 ) return;
-
-		TableItem[] items = table.getTable().getItems();
-		String[][] data = new String[ items.length ][ table.getTable().getColumnCount() ];
-		for ( int i = 0; i < items.length; i++ ) {
-			for ( int j = 0; j < table.getTable().getColumnCount(); j++ ) {
-				data[ i ][ j ] = items[ i ].getText( j );
+	private void setColumnWidht() {
+		/* the total width of the table */
+		int totalWidth = table.getTable().getSize().x - 25; //why is it 25 to width?
+		/* our tablecolumns */
+		TableColumn[] columns = table.getTable().getColumns();
+		for ( int i = 0; i < tableWidth.length; i++ ) {
+			TableColumn column = columns[ i ];
+			int width = tableWidth[ i ];
+			if ( width != 0 ) {
+				column.setWidth( tableWidth[ i ] );
+				totalWidth -= tableWidth[ i ];
 			}
 		}
-	
-		Arrays.sort( data, new ResultComparator( columnIndex ) );
-	
-		if ( lastSortColumn != columnIndex ) {
-			for ( int i = 0; i < data.length; i++ ) {
-				items[ i ].setText( data[ i ] );
-			}
-			lastSortColumn = columnIndex;
-		} else {
-			// reverse order if the current column is selected again
-			int j = data.length - 1;
-			for ( int i = 0; i < data.length; i++ ) {
-				items[i].setText( data[ j-- ] );
-			}
-			lastSortColumn = -1;
-		}
+		/* sets the size of the name (add each column you want to set dynamicly) */
+		columns[ 1 ].setWidth( totalWidth );
 	}	
-		
 	
 	/**
 	 * dispose this search result
@@ -479,38 +607,13 @@ public class SearchResult implements Observer, Runnable {
 			shell.setBounds( shellBounds );
 		}
 	}
-	
-	/**
-	 * To compare entries (rows) by the given column
-	 */
-	protected static class ResultComparator implements Comparator {
-		private int column;
-
-		/**
-		 * @param columnIndex the column, which is responsible for the search order
-		 */
-		ResultComparator( int columnIndex ) {
-			this.column = columnIndex ;
-		}
-		/**
-		 * Compares two rows (type String[]) using the specified
-		 * column entry.
-		 * @param obj1 First row to compare
-		 * @param obj2 Second row to compare
-		 * @return negative if obj1 less than obj2, positive if
-		 * 			obj1 greater than obj2, and zero if equal.
-		 */
-		public int compare( Object obj1, Object obj2 ) {
-			String[] row1 = ( String[] ) obj1;
-			String[] row2 = ( String[] ) obj2;
-		
-			return row1[ column ].compareTo( row2[ column ] );
-		}
-	}	
 }
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.3  2003/07/25 22:34:51  lemmstercvs01
+lots of changes
+
 Revision 1.2  2003/07/24 16:20:10  lemmstercvs01
 lots of changes
 
