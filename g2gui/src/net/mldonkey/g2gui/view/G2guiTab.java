@@ -33,10 +33,10 @@ import org.eclipse.swt.widgets.ToolItem;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: G2guiTab.java,v 1.5 2003/07/02 16:37:12 dek Exp $ 
+ * @version $Id: G2guiTab.java,v 1.6 2003/07/02 16:37:29 dek Exp $ 
  *
  */
-public abstract class G2guiTab implements Listener{	
+public abstract class G2guiTab implements Listener {	
 	protected Composite content;
 	protected IG2gui mainWindow;
 	protected ToolItem toolItem;
@@ -73,6 +73,9 @@ public abstract class G2guiTab implements Listener{
 }
 /*
 $Log: G2guiTab.java,v $
+Revision 1.6  2003/07/02 16:37:29  dek
+minor checkstyle
+
 Revision 1.5  2003/07/02 16:37:12  dek
 Checkstyle, JavaDocs still have to be added
 

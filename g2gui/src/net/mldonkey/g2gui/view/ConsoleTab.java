@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.8 2003/07/02 16:34:19 dek Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.9 2003/07/02 16:34:55 dek Exp $ 
  *
  */
 public class ConsoleTab extends G2guiTab implements Observer, ControlListener, Runnable {	
@@ -114,7 +114,7 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 	 * @see org.eclipse.swt.events.ControlListener#controlResized( org.eclipse.swt.events.ControlEvent )
 	 */
 	public void controlResized( ControlEvent e ) {
-		if ( ( this.infoDisplay != null ) && ( this.input!=null ) ){
+		if ( ( this.infoDisplay != null ) && ( this.input != null ) ) {
 			Rectangle rect = this.parent.getClientArea ();	
 			int inputheight = this.input.computeSize( SWT.DEFAULT, SWT.DEFAULT, true ).y;		
 			this.infoDisplay.setBounds( 0, 0, rect.width, ( rect.height - inputheight ) );
@@ -146,6 +146,9 @@ public class ConsoleTab extends G2guiTab implements Observer, ControlListener, R
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.9  2003/07/02 16:34:55  dek
+minor checkstyle
+
 Revision 1.8  2003/07/02 16:34:19  dek
 Checkstyle, JavaDocs still have to be added
 
