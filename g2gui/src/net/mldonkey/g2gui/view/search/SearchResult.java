@@ -37,14 +37,12 @@ import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.SearchTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
@@ -53,8 +51,6 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
@@ -68,8 +64,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -79,11 +73,11 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * SearchResult
  *
- * @author $user$
- * @version $Id: SearchResult.java,v 1.20 2003/08/18 01:42:24 zet Exp $ 
+ * @author $Author: lemmster $
+ * @version $Id: SearchResult.java,v 1.21 2003/08/20 10:05:56 lemmster Exp $ 
  *
  */
-//TODO add image handle, fake search, real links depending on network								   
+//TODO fake search, real links depending on network								   
 public class SearchResult implements Observer, Runnable, DisposeListener {	
 	private MainTab mainTab;
 	private CTabFolder cTabFolder;
@@ -147,8 +141,8 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		}
 	}
 	
-	/* (  non-Javadoc  )
-	 * @see java.util.Observer#update(  java.util.Observable, java.lang.Object  )
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void run() {
 		/* if the tab is already disposed, dont update */
@@ -159,17 +153,19 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 				/* remove the old label "searching..." */
 				label.dispose();
 				this.createTable();
-				table.setInput(list);				
+				table.setInput( list );				
 				//this.modifyItems();
 				this.setColumnWidth();
 			} 
 			else {
-				/* has our result changed: 				
-					only refresh the changed items, 
-					look at API for	 refresh(false) */		
-				if (list.size() != table.getTable().getItemCount()) {									
-					table.refresh(true);
-					} 					
+				/*
+				 * has our result changed: 				
+				 * only refresh the changed items, 
+				 * look at API for refresh(false)
+				 */		
+				if ( list.size() != table.getTable().getItemCount() ) {									
+					table.refresh( true );
+				} 					
 					
 			}
 		/* are we active? set the statusline text */
@@ -198,7 +194,7 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		cTabItem = new CTabItem( cTabFolder, SWT.FLAT );
 		cTabItem.setText( searchString );
 		cTabItem.setToolTipText( G2GuiResources.getString( "SR_SEARCHINGFOR" ) + searchString );
-		cTabItem.setImage( G2GuiResources.getImage("SearchSmall") );
+		cTabItem.setImage( G2GuiResources.getImage( "SearchSmall" ) );
 		cTabItem.setData( this );
 
 		/* for the search delay, just draw a label */ 
@@ -228,19 +224,26 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 	 */
 	private void createTable() {
 		/* set a new image for the ctabitem to show we found results */
-		cTabItem.setImage( G2GuiResources.getImage("SearchComplete") );
+		cTabItem.setImage( G2GuiResources.getImage( "SearchComplete" ) );
 		
 		/* create the result table */		
 		table = new TableViewer( cTabFolder, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
 		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		table.getTable().setLinesVisible( true );
 		table.getTable().setHeaderVisible( true );
-		table.getTable().setMenu( createRightClickMenu() );
 
 		table.setUseHashlookup( true );  // more mem, but faster
 		table.setContentProvider( new ResultTableContentProvider() );
 		table.setLabelProvider( new ResultTableLabelProvider() );
 		table.setSorter( resultTableSorter );
+		ResultTableMenuListener tableMenuListener =
+				new ResultTableMenuListener( table, core, cTabItem );
+		table.addSelectionChangedListener( tableMenuListener );
+		MenuManager popupMenu = new MenuManager( "" );
+		popupMenu.setRemoveAllWhenShown( true );
+		popupMenu.addMenuListener( tableMenuListener );
+		table.getTable().setMenu( popupMenu.createContextMenu( table.getTable() ) );
+
 			
 		/* create the columns */
 		for ( int i = 0; i < tableColumns.length; i++ ) {
@@ -272,13 +275,13 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 		} );
 		
 		/*add a mouse-listener to catch double-clicks */
-		table.getTable().addMouseListener(new MouseListener(){
-			public void mouseDoubleClick(MouseEvent e) {
+		table.getTable().addMouseListener( new MouseListener() {
+			public void mouseDoubleClick( MouseEvent e ) {
 				downloadSelected();
 			}
-			public void mouseDown(MouseEvent e) {}
-			public void mouseUp(MouseEvent e) {}}
-			);
+			public void mouseDown( MouseEvent e ) { }
+			public void mouseUp( MouseEvent e ) { }
+		} );
 		
 		final ToolTipHandler tooltip = new ToolTipHandler( table.getTable().getShell() );
 		tooltip.activateHoverHelp( table.getTable() );
@@ -299,136 +302,6 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 			download.send();
 			download = null;
 		}
-	}
-	
-	/**
-	 * Creates the "button 3" menu
-	 * @return The menu added to the table
-	 */
-	private Menu createRightClickMenu() {
-		Shell shell = table.getTable().getShell();
-		final Clipboard cb = new Clipboard( shell.getDisplay() );
-		Menu menu = new Menu( shell , SWT.POP_UP );
-
-		MenuItem dlItem, rmItem, closeItem;
-		final MenuItem cpFileItem, cpLinkItem, webItem;
-
-		/* Download */
-		dlItem = new MenuItem( menu, SWT.PUSH );
-		dlItem.setText( G2GuiResources.getString( "ST_DOWNLOAD" ) );
-		//make it the default-item (bold):
-		menu.setDefaultItem( dlItem );
-		
-		dlItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent e ) {
-				downloadSelected();
-			}
-		} );
-		
-		new MenuItem( menu, SWT.SEPARATOR );
-		
-		/* copy filename */
-		cpFileItem = new MenuItem( menu, SWT.PUSH );
-		cpFileItem.setText( G2GuiResources.getString( "ST_COPYNAME" ) );
-		cpFileItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent e ) {
-				TableItem[] currentItems = table.getTable().getSelection();
-				ResultInfo result = ( ResultInfo ) currentItems[ 0 ].getData();
-				TextTransfer textTransfer = TextTransfer.getInstance();
-				cb.setContents( new Object[] { result.getNames()[ 0 ] },
-								new Transfer[] { textTransfer } );
-			}
-		} );
-				
-		/* Copy link as */
-		cpLinkItem = new MenuItem( menu, SWT.CASCADE );
-		cpLinkItem.setText( G2GuiResources.getString( "ST_COPYLINK" ) );
-		Menu copy = new Menu( menu );
-			MenuItem copyItem = new MenuItem( copy, SWT.PUSH );
-			copyItem.setText( G2GuiResources.getString( "ST_ASPLAIN" ) );
-			copyItem.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent e ) {
-					TableItem[] currentItems = table.getTable().getSelection();
-					ResultInfo result = ( ResultInfo ) currentItems[ 0 ].getData();
-					TextTransfer textTransfer = TextTransfer.getInstance();
-					cb.setContents( new Object[] { result.getLink() }, 
-									new Transfer[] { textTransfer } );
-				}
-			} );
-			copyItem = new MenuItem( copy, SWT.PUSH );
-			copyItem.setText( G2GuiResources.getString( "ST_ASHTML" ) );
-			copyItem.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent e ) {	
-					TableItem[] currentItems = table.getTable().getSelection();
-					ResultInfo result = ( ResultInfo ) currentItems[ 0 ].getData();
-					String aString = "<a href=\"" + result.getLink() + "\">"
-									 + result.getNames()[ 0 ] + "</a>";
-					TextTransfer textTransfer = TextTransfer.getInstance();
-					cb.setContents( new Object[] { aString }, 
-									new Transfer[] { textTransfer } );
-				}
-			} );
-		cpLinkItem.setMenu( copy );
-
-		new MenuItem( menu, SWT.SEPARATOR );
-
-		/* Webservices */
-		webItem = new MenuItem( menu, SWT.CASCADE );
-		webItem.setText( G2GuiResources.getString( "ST_WEBSERVICES" ) );
-		Menu web = new Menu( menu );
-			MenuItem webSItem = new MenuItem( web, SWT.PUSH );
-			webSItem.setText( G2GuiResources.getString( "ST_WEBSERVICE1" ) );
-			webSItem.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent e ) {
-					//TODO add fake search
-				}
-			} );
-			webSItem = new MenuItem( web, SWT.PUSH );
-			webSItem.setText( G2GuiResources.getString( "ST_WEBSERVICE1" ) );
-			webSItem.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected( SelectionEvent e ) {
-					//TODO add fake search
-				}
-			} );
-		webItem.setMenu( web );
-
-		new MenuItem( menu, SWT.SEPARATOR );
-
-		/* remove this item */
-		rmItem = new MenuItem( menu, SWT.PUSH );
-		rmItem.setText( G2GuiResources.getString( "ST_REMOVE" ) );
-		rmItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent e ) {
-				table.getTable().remove( table.getTable().getSelectionIndices() );
-			}
-		} );
-
-		/* close this search */
-		closeItem = new MenuItem( menu, SWT.PUSH );
-		closeItem.setText( G2GuiResources.getString( "ST_CLOSE" ) );
-		closeItem.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected( SelectionEvent e ) {
-				cTabItem.dispose();
-			}
-		} );
-		
-		/* disable some items if currentItems.length > 1 */
-		menu.addListener( SWT.Show, new Listener () {
-			public void handleEvent( Event event ) {
-				TableItem[] currentItems = table.getTable().getSelection();
-				if ( currentItems.length > 1 ) {
-					cpFileItem.setEnabled( false );
-					cpLinkItem.setEnabled( false );
-					webItem.setEnabled( false );	
-				}
-				else {
-					cpFileItem.setEnabled( true );
-					cpLinkItem.setEnabled( true );
-					webItem.setEnabled( true );	
-				}
-			}
-		} );
-		return menu;
 	}
 	
 	/**
@@ -662,6 +535,9 @@ public class SearchResult implements Observer, Runnable, DisposeListener {
 
 /*
 $Log: SearchResult.java,v $
+Revision 1.21  2003/08/20 10:05:56  lemmster
+MenuListener added
+
 Revision 1.20  2003/08/18 01:42:24  zet
 centralize resource bundle
 
