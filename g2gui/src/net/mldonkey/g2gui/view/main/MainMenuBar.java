@@ -22,12 +22,15 @@
  */
 package net.mldonkey.g2gui.view.main;
 
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.view.G2Gui;
 import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.swt.SWT;
-
+import org.eclipse.swt.events.MenuEvent;
+import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.program.Program;
-
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -38,7 +41,7 @@ import org.eclipse.swt.widgets.Shell;
  * MenuBar
  *
  *
- * @version $Id: MainMenuBar.java,v 1.4 2003/08/26 09:46:41 dek Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.5 2003/09/16 01:15:43 zet Exp $ 
  *
  */
 public class MainMenuBar {
@@ -61,6 +64,17 @@ public class MainMenuBar {
 		mItem.setText ( "File" );
 		submenu = new Menu ( shell, SWT.DROP_DOWN );
 		mItem.setMenu ( submenu );
+		
+		final MenuItem killItem = new MenuItem ( submenu, 0 );
+		killItem.addListener ( SWT.Selection, new Listener () {
+			public void handleEvent ( Event e ) {
+				Message killCore = new EncodeMessage( Message.S_KILL_CORE );
+				killCore.sendMessage( mainTab.getCore().getConnection() );
+			} 
+		} );
+		killItem.setText ( "&Kill core" );
+		
+		mItem.setMenu ( submenu );
 		item = new MenuItem ( submenu, 0 );
 		item.addListener ( SWT.Selection, new Listener () {
 			public void handleEvent ( Event e ) {
@@ -69,6 +83,18 @@ public class MainMenuBar {
 		} );
 		item.setText ( "E&xit\tCtrl+W" );
 		item.setAccelerator ( SWT.CTRL + 'W' );
+		
+		submenu.addMenuListener(new MenuListener() {
+			public void menuHidden(MenuEvent e) {}
+			public void menuShown(MenuEvent e) {
+				if ( !mainTab.getCore().isConnected() 
+					|| G2Gui.getCoreConsole() != null) {
+						killItem.setEnabled(false);
+					} else {
+						killItem.setEnabled(true);
+					}
+			}
+		});
 			
 		mItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
 		mItem.setText ( "Tools" );
@@ -86,35 +112,27 @@ public class MainMenuBar {
 	
 		mItem = new MenuItem ( mainMenuBar, SWT.CASCADE );
 		mItem.setText ( "Help" );
-		
 		submenu = new Menu ( shell, SWT.DROP_DOWN );
-		item = new MenuItem( submenu, 0 );
-		item.addListener( SWT.Selection, new Listener() {
-			public void handleEvent ( Event event ) {
-				Program.launch( "https://developer.berlios.de/docman/?group_id=610" );
-			}
-		} );
-		item.setText( "FAQ" );
-		
 		
 		mItem.setMenu( submenu );
 		item = new MenuItem( submenu, 0 );
-		item.addListener( SWT.Selection, new Listener() {
-			public void handleEvent ( Event event ) {
-				Program.launch( "http://mldonkey.berlios.de/modules.php?name=Forums&file=viewforum&f=9" );
-			}
-		} );
+		item.addListener( SWT.Selection, 
+			new URLListener( "http://mldonkey.berlios.de/modules.php?name=Forums&file=viewforum&f=9" )
+		);
 		item.setText( "Feedback Forum" );
 		
+		item = new MenuItem( submenu, 0 );
+		item.addListener( SWT.Selection, 
+			new URLListener( "http://openfacts.berlios.de/index-en.phtml?title=MLdonkey-World,_home_of_G2gui" )
+		);
+		item.setText( "FAQ" );
+		
 		mItem.setMenu( submenu );
 		item = new MenuItem( submenu, 0 );
-		item.addListener( SWT.Selection, new Listener() {
-			public void handleEvent ( Event event ) {
-				Program.launch( "https://developer.berlios.de/bugs/?group_id=610" );
-			}
-		} );
+		item.addListener( SWT.Selection, 
+			new URLListener( "http://developer.berlios.de/bugs/?group_id=610" )
+		);
 		item.setText( "Bugs" );
-		
 
 		item = new MenuItem( submenu, 0 );
 		item.addListener( SWT.Selection, new Listener() {
@@ -127,10 +145,28 @@ public class MainMenuBar {
 		item.setText( "About" );
 		mItem.setMenu( submenu );
 	}	
+	
+	/**
+	 * Small listener class to launch URLs
+	 */
+	public class URLListener implements Listener {
+		String url;
+		public URLListener(String url) {
+			this.url = url;
+		}
+		public void handleEvent ( Event event ) {
+			Program.launch( url );
+		}
+	}
+	
+	
 }
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.5  2003/09/16 01:15:43  zet
+kill core command
+
 Revision 1.4  2003/08/26 09:46:41  dek
 about-dialog is now child of mainShell, instead of creating its own..
 
