@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Control;
  * MLDonkeyOptions
  *
  * @author  $Author: dek $ 
- * @version $Id: MLDonkeyOptions.java,v 1.9 2003/08/17 21:22:21 dek Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.10 2003/08/17 21:24:55 dek Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -79,7 +79,7 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 												temp.getKey(),
 												temp.getDescription(),
 												parent) ;	
-					bool.getLabelControl( parent ).setToolTipText( temp.getKey() );				
+									
 					bool.setPreferenceStore( this.getPreferenceStore() );				
 					addField( bool );
 					bool.fillIntoGrid( parent, 2 );	
@@ -125,6 +125,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.10  2003/08/17 21:24:55  dek
+reworked options, finally, it makes full use of the jFace framework ;-)
+
 Revision 1.9  2003/08/17 21:22:21  dek
 reworked options, finally, it makes full use of the jFace framework ;-)
 
