@@ -37,7 +37,7 @@ import net.mldonkey.g2gui.model.enum.EnumClientType;
  * ClientInfoList
  * 
  * @author ${user}
- * @version $$Id: ClientInfoIntMap.java,v 1.6 2003/08/12 04:10:29 zet Exp $$ 
+ * @version $$Id: ClientInfoIntMap.java,v 1.7 2003/08/14 12:57:03 zet Exp $$ 
  */
 public class ClientInfoIntMap extends InfoIntMap {
 	
@@ -76,18 +76,8 @@ public class ClientInfoIntMap extends InfoIntMap {
 		else
 			clientInfo = new ClientInfo( this.parent );
 		
-		try {
-		
-		clientInfo.readStream( clientID, messageBuffer );  	// nullPointer here.. but why? -z
-															// i've only seen it once.. someone else?
-															// from_gui: exception Not_found for message AddClientFriend
+		clientInfo.readStream( clientID, messageBuffer );  	
 		this.put( clientInfo.getClientid(), clientInfo );
-		
-		} catch (Exception e) {
-				e.printStackTrace();
-		}
-		
-		
 	}
 	
 	/**
@@ -104,8 +94,7 @@ public class ClientInfoIntMap extends InfoIntMap {
 				notifyObservers( value );
 			}
 		} else { 
-			if (friendsList.contains(value)) {
-				friendsList.remove(value);
+			if (friendsList.remove(value)) {
 				setChanged();
 				notifyObservers( value );
 			}
@@ -127,8 +116,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 	 */
 	public void update( MessageBuffer messageBuffer ) {		
 		int key = messageBuffer.readInt32();
-		if ( this.infoIntMap.contains( key ) )
-			( ( ClientInfo ) this.infoIntMap.get( key ) ).update( messageBuffer ); // nullPointer here
+		if ( this.infoIntMap.contains( key ) ) 
+			( ( ClientInfo ) this.infoIntMap.get( key ) ).update( messageBuffer ); 
+	
 	}
 	
 	/**
@@ -140,7 +130,8 @@ public class ClientInfoIntMap extends InfoIntMap {
 		int[] usefulClients = messageBuffer.readInt32List();		
 		for ( int i = 0; i < usefulClients.length; i++ ) {
 			int clientID = usefulClients[i];
-			tempClientInfoList.put( clientID, this.get( clientID ) );			
+			if (this.containsKey( clientID )) // necessary check
+				tempClientInfoList.put( clientID, this.get( clientID ) );			
 		}
 		this.infoIntMap = tempClientInfoList;		
 	}
@@ -155,6 +146,9 @@ public class ClientInfoIntMap extends InfoIntMap {
 }
 /*
 $$Log: ClientInfoIntMap.java,v $
+$Revision 1.7  2003/08/14 12:57:03  zet
+$fix nullpointer in clientInfo, add icons to tables
+$
 $Revision 1.6  2003/08/12 04:10:29  zet
 $try to remove dup clientInfos, add friends/basic messaging
 $

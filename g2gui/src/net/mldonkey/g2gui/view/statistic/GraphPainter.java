@@ -187,9 +187,14 @@ public class GraphPainter {
 		// TOD Auto-generated method stub
 	}
 
+	
+
 }
 /*
 $Log: GraphPainter.java,v $
+Revision 1.23  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.22  2003/08/09 00:42:04  zet
 dispose colors
 

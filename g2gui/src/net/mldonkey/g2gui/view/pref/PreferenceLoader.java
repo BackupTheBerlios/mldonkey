@@ -53,12 +53,18 @@ public class PreferenceLoader {
 	 * @return
 	 */
 	static PreferenceStore setDefaults(PreferenceStore preferenceStore) {
+		preferenceStore.setDefault( "consoleBackground", "0,0,0" );
+		preferenceStore.setDefault( "consoleForeground", "192,192,192" );
+		preferenceStore.setDefault( "consoleHighlight", "255,255,255" );
+		preferenceStore.setDefault( "consoleInputBackground", "0,0,0" );
+		preferenceStore.setDefault( "consoleInputForeground", "192,192,192" );
 		preferenceStore.setDefault( "displayAllServers", true );
-		preferenceStore.setDefault("displayChunkGraphs", true);
-		preferenceStore.setDefault("displayGridLines", true);
-		preferenceStore.setDefault("tableCellEditors", false);
-		preferenceStore.setDefault("displayBuffer", 2);
-		preferenceStore.setDefault("displayHeaderBar", true);
+		preferenceStore.setDefault( "displayChunkGraphs", false );
+		preferenceStore.setDefault( "displayGridLines", true );
+		preferenceStore.setDefault( "tableCellEditors", false );
+		preferenceStore.setDefault( "displayBuffer", 2 );
+		preferenceStore.setDefault( "displayHeaderBar", true );
+		preferenceStore.setDefault( "forceRefresh", false );
 		return preferenceStore;
 	}
 	
@@ -110,6 +116,9 @@ public class PreferenceLoader {
 }
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.4  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.3  2003/08/11 11:27:46  lemmstercvs01
 display only connected servers added
 

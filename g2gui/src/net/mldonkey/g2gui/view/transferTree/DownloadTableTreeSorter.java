@@ -35,15 +35,15 @@ import org.eclipse.jface.viewers.ViewerSorter;
  * ResultTableSorter
  *
  * @author $user$
- * @version $Id: DownloadTableTreeSorter.java,v 1.4 2003/08/11 00:30:10 zet Exp $ 
+ * @version $Id: DownloadTableTreeSorter.java,v 1.5 2003/08/14 12:57:03 zet Exp $ 
  *
  */
 public class DownloadTableTreeSorter extends ViewerSorter {
-	// set the default column to sort to name
-	private int columnIndex = 2;
-	private int lastColumnIndex = 2;
-	// last sort ascending = true
-	private boolean lastSort = true;
+	// set the default sort column to "rate"
+	private int columnIndex = 7;
+	private int lastColumnIndex = 7;
+	// last sort ascending = fase
+	private boolean lastSort = false;
 	private ITableLabelProvider labelProvider;
 	/**
 	 * Creates a new viewer sorter
@@ -263,6 +263,9 @@ public class DownloadTableTreeSorter extends ViewerSorter {
 
 /*
 $Log: DownloadTableTreeSorter.java,v $
+Revision 1.5  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.4  2003/08/11 00:30:10  zet
 show queued files
 

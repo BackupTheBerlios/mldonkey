@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Event;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.34 2003/08/12 04:10:29 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.35 2003/08/14 12:57:03 zet Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {	
@@ -133,6 +133,8 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 	public void loadPreferences() {
 		
 		console.setDisplayFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+		console.setInputFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+		console.setHighlightColor( PreferenceLoader.loadColour( "consoleHighlight" ) );
 		console.setDisplayBackground ( PreferenceLoader.loadColour( "consoleBackground" ) );
 		console.setDisplayForeground ( PreferenceLoader.loadColour( "consoleForeground" ) );
 		console.setInputBackground ( PreferenceLoader.loadColour( "consoleInputBackground" ) );
@@ -165,6 +167,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.35  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.34  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 

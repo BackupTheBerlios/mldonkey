@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Shell;
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkCanvas.java,v 1.10 2003/08/08 23:26:21 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.11 2003/08/14 12:57:03 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -275,18 +275,19 @@ public class ChunkCanvas extends Canvas implements Observer {
 		for ( int i = 0; i < avail.length(); i++ ) {
 					
 			numChunkSources = avail.charAt( i ) ;
-			
-			int colorIntensity = 255 - ( int ) ((float) numChunkSources * factor) * 25;
-			toColor = new Color(null, 0, colorIntensity, 255);	
-				
-			if ( numChunkSources == 0 )		
-				toColor = red;
+			Color intenseColor = null;
 				
 			if ( chunks.charAt( i ) == '2' ) 			
 				toColor = darkGray;
 			else if ( chunks.charAt( i ) == '3' ) 		
 				toColor = yellow;
-						
+			else if (numChunkSources == 0) 
+				toColor = red;
+			else {
+				int colorIntensity = 255 - ( int ) ((float) numChunkSources * factor) * 25;
+				intenseColor = new Color(null, 0, colorIntensity, 255);
+				toColor = intenseColor;
+			}			
 			imageGC.setBackground (toColor);
 			imageGC.setForeground (fromColor);
 			imageGC.fillGradientRectangle(i, 0, 1, initialHeight / 2, true);
@@ -295,6 +296,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 			imageGC.setBackground(fromColor);
 			imageGC.fillGradientRectangle(i, initialHeight / 2, 1, initialHeight / 2, true);	
 			
+			if (intenseColor != null) intenseColor.dispose();
 		}	
 		darkGray.dispose();
 		imageGC.dispose();	
@@ -352,10 +354,14 @@ public class ChunkCanvas extends Canvas implements Observer {
 	
 			// progress bar				
 			if ( type == isFileInfo ) {
+				Color green1 = new Color(null, 15, 136, 0 );
+				Color green2 = new Color(null, 41, 187, 26);
 				int pix =  ( int ) ( ( fileInfo.getPerc() / 100 ) * ( double ) (srcWidth - 1) ) ;
-				bufferGC.setBackground( new Color(null, 15, 136, 0 ));
-				bufferGC.setForeground( new Color(null, 41, 187, 26));
+				bufferGC.setBackground( green1 );
+				bufferGC.setForeground( green2 );
 				bufferGC.fillGradientRectangle(0,0,pix,4,false);
+				green1.dispose();
+				green2.dispose();
 			}
 			// spacer in background colour	
 			bufferGC.setForeground(getParent().getBackground());
@@ -463,6 +469,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.11  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.10  2003/08/08 23:26:21  zet
 dispose of bufferimage
 

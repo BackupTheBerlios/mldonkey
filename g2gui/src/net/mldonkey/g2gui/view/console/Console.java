@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.Observable;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.KeyAdapter;
@@ -41,14 +43,15 @@ import org.eclipse.swt.widgets.Text;
  * ConsoleTab
  *
  * @author 
- * @version $Id: Console.java,v 1.3 2003/08/12 04:10:29 zet Exp $ 
+ * @version $Id: Console.java,v 1.4 2003/08/14 12:57:03 zet Exp $ 
  *
  */
 public class Console extends Observable implements ControlListener  {	
 	private Composite parent;
-	private Text infoDisplay;	
+	private StyledText infoDisplay;	
 	private Text input;
 	private int clientId = 0;
+	private Color highlightColor = null;
 
 	/**
 	 * @param gui the main gui, which takes care of all our tabs
@@ -65,8 +68,7 @@ public class Console extends Observable implements ControlListener  {
 		parent.setLayout( null );
 		parent.addControlListener( this );		
 		/* Adding the Console-Display Text-field */
-		// change to styledtext sometime in the future to differentiate incoming/outgoing text in color
-		infoDisplay = new Text( parent, style | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
+		infoDisplay = new StyledText( parent, style | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
 		input = new Text( parent, SWT.SINGLE | SWT.BORDER );					
 		
 		//Send command 
@@ -83,7 +85,11 @@ public class Console extends Observable implements ControlListener  {
 					infoDisplay.setTopIndex( infoDisplay.getTopIndex() + ( numLinesDisplayed ) );
 				}
 				else if ( e.character == SWT.CR ) {
-					infoDisplay.append( (clientId > 0 ? getTimeStamp() + "> " : "") + input.getText() + getLineDelimiter() );
+					if (clientId > 0) infoDisplay.append( getTimeStamp() + "> " );
+					int start = infoDisplay.getCharCount();
+					String outText = input.getText();
+					infoDisplay.append( outText + getLineDelimiter() );
+					infoDisplay.setStyleRange(new StyleRange(start, outText.length(), highlightColor, infoDisplay.getBackground()));
 					setChanged();
 					notifyObservers( input.getText() );
 					input.setText( "" );
@@ -124,6 +130,9 @@ public class Console extends Observable implements ControlListener  {
 	public void setDisplayFont(Font font) {
 		infoDisplay.setFont(font);
 	}
+	public void setInputFont(Font font) {
+		input.setFont(font);
+	}
 	public void setDisplayForeground(Color color) {
 		infoDisplay.setForeground(color);
 	}
@@ -139,6 +148,9 @@ public class Console extends Observable implements ControlListener  {
 	public void setFocus() {
 		input.setFocus();
 	}
+	public void setHighlightColor(Color color) {
+		highlightColor = color;
+	}
 	public void setClientId(int i) {
 		clientId = i;
 	}
@@ -150,12 +162,25 @@ public class Console extends Observable implements ControlListener  {
 		Date oToday = new Date();
 		return sdFormatter.format(oToday);
 	}
+	public void dispose() {
+		// If these were loaded from the PreferenceLoader, is this necessary? 
+		infoDisplay.getFont().dispose();
+		input.getFont().dispose();
+		infoDisplay.getBackground().dispose();
+		infoDisplay.getForeground().dispose();
+		input.getBackground().dispose();
+		input.getForeground().dispose();
+		highlightColor.dispose();
+	}
 	
 }
 
 
 /*
 $Log: Console.java,v $
+Revision 1.4  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.3  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 

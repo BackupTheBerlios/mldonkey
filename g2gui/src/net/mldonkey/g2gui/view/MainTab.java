@@ -34,6 +34,7 @@ import java.util.ResourceBundle;
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.ClientStats;
+import net.mldonkey.g2gui.model.NetworkInfo.Enum;
 import net.mldonkey.g2gui.view.pref.Preferences;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
@@ -50,6 +51,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -75,7 +77,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.34 2003/08/12 04:10:29 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.35 2003/08/14 12:57:03 zet Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
@@ -279,13 +281,13 @@ public class MainTab implements Listener, Observer, ShellListener {
 	 * @param control where is our image laid in, to check for the background-color
 	 * @return the transparent image
 	 */
-	public static Image createTransparentImage( Image src, Control control ) {
+	public static Image createTransparentImage( Image src, Color color ) {
 		int width = src.getBounds().width;
 		int height = src.getBounds().height;
 		
-		Image result = new Image( control.getDisplay(), new Rectangle( 0, 0, width, height ) );		
+		Image result = new Image( null, new Rectangle( 0, 0, width, height ) );		
 		GC gc = new GC( result );
-		gc.setBackground( control.getBackground(  ) );
+		gc.setBackground( color );
 		gc.fillRectangle( 0, 0, width, height );							
 		gc.drawImage( src, 0, 0 );
 			
@@ -294,6 +296,10 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 		return result;
 	} 
+	public static Image createTransparentImage( Image src, Control control) {
+		return createTransparentImage(src, control.getBackground() );
+	}
+	
 	
 	
 	/**
@@ -626,6 +632,8 @@ public class MainTab implements Listener, Observer, ShellListener {
 	// find something better
 	private void createImageRegistry () {
 		
+		Color white = thisShell.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+		
 		imageRegistry.put("ProgramIcon", createTrans("mld_logo_48x48.png"));
 	
 		imageRegistry.put("PreferencesButton", createTrans("preferences.png"));
@@ -648,13 +656,22 @@ public class MainTab implements Listener, Observer, ShellListener {
 		
 		imageRegistry.put( "MessagesButton", createTrans( "messages.png" ) );
 		imageRegistry.put( "MessagesButtonSmall", createTrans( "messages-16.png" ) );
-			
+		imageRegistry.put( "MessagesButtonSmallWhite", createTrans( "messages-16.png", white ) );
+		
+		imageRegistry.put( "DirectConnectConnectedWhite", createTrans( "directconnect_connected.png" , white ) );
+		imageRegistry.put( "EDonkey2000ConnectedWhite", createTrans( "edonkey2000_connected.png" , white ) );
+		imageRegistry.put( "GnutellaConnectedWhite", createTrans( "gnutella_connected.png" , white ) );
+		imageRegistry.put( "KazaaConnectedWhite", createTrans( "kazaa_connected.png" , white ) );
+		imageRegistry.put( "SoulseekConnectedWhite", createTrans( "soulseek_connected.png" , white ) );
+		imageRegistry.put( "UnknownConnectedWhite", createTrans( "unknown_connected.png" , white ) );	
 	}
-	// transparent pngs on gtk still require this, but it is noticable on win :(
-	// will all buttons require the same background colour as thisShell? not sure yet...
+	// transparent pngs just don't work on swt 
 	private Image createTrans(String filename) {
+		return createTrans( filename, thisShell.getBackground());
+	}
+	private Image createTrans(String filename, Color color) {
 		String imagePath = "icons/";
-		return createTransparentImage( new Image( null, imagePath + filename ), thisShell);
+		return createTransparentImage( new Image( null, imagePath + filename ), color);
 	}
 	public static Image getImageFromRegistry (String key) {
 		if ( key == null ) return null;
@@ -663,6 +680,20 @@ public class MainTab implements Listener, Observer, ShellListener {
 	public static void put( String key, Image image ) {
 		imageRegistry.put( key, image );
 	}	
+	public static Image getNetworkImage(Enum networkType) {
+		if (networkType == Enum.DONKEY)
+			return getImageFromRegistry("EDonkey2000ConnectedWhite");
+		if (networkType == Enum.FT)
+			return getImageFromRegistry("KazaaConnectedWhite");
+		if (networkType == Enum.GNUT)
+			return getImageFromRegistry("GnutellaConnectedWhite");
+		if (networkType == Enum.SOULSEEK)
+			return getImageFromRegistry("SoulseekConnectedWhite");
+		if (networkType == Enum.DC)
+			return getImageFromRegistry("DirectConnectConnectedWhite");
+		return getImageFromRegistry("UnknownConnectedWhite");
+	}	
+	
 	public static Shell getShell() {
 		return thisShell;
 	}
@@ -695,6 +726,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.35  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.34  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 

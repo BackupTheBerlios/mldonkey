@@ -29,6 +29,7 @@ import net.mldonkey.g2gui.model.enum.EnumClientMode;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.model.enum.EnumState;
+import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -40,13 +41,18 @@ import org.eclipse.swt.graphics.Image;
  * DownloadTableTreeLabelProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeLabelProvider.java,v 1.4 2003/08/11 00:30:10 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProvider.java,v 1.5 2003/08/14 12:57:03 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProvider implements ITableLabelProvider, IColorProvider {
 	
-	private Color queuedFileColor = new Color(null, 41, 174, 57);
+	private Color downloadedFileColor = new Color(null, 0,0,255);
+	private Color queuedFileColor = new Color(null, 192,192,192);
 	private Color pausedFileColor = new Color(null, 255, 0, 0);
+	private Color rateAbove20Color = new Color(null, 16, 187 ,3);
+	private Color rateAbove10Color = new Color(null, 23, 147, 3);
+	private Color rateAbove0Color = new Color(null, 13, 92, 2);
+	
 	private CustomTableTreeViewer tableTreeViewer;
 	
 	public Color getBackground (Object arg0) {
@@ -58,16 +64,26 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 			FileInfo fileInfo = (FileInfo) arg0;
 			if (fileInfo.getState().getState() == EnumFileState.QUEUED)
 				return queuedFileColor;
-
 			if (fileInfo.getState().getState() == EnumFileState.PAUSED)
 				return pausedFileColor;
-
+			if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
+				return downloadedFileColor;
+			if (fileInfo.getRate() > 20f) 
+				return rateAbove20Color;
+			if (fileInfo.getRate() > 10f) 
+				return rateAbove10Color;
+			if (fileInfo.getRate() > 0f) 
+				return rateAbove0Color;	
 			return null;
 		}
 		return null;
 	}
 	
 	public Image getColumnImage(Object arg0, int arg1) {
+		if (arg0 instanceof FileInfo && arg1 == 1) {
+			FileInfo fileInfo = (FileInfo) arg0;
+			return MainTab.getNetworkImage( fileInfo.getNetwork().getNetworkType() );
+		}
 		return null;
 	}
 	// The full row is redrawn on each update()/refresh()
@@ -174,6 +190,10 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 	public void dispose() {
 		queuedFileColor.dispose();
 		pausedFileColor.dispose();
+		downloadedFileColor.dispose();
+		rateAbove20Color.dispose();
+		rateAbove10Color.dispose();
+		rateAbove0Color.dispose();
 	}
 
 	public boolean isLabelProperty(Object arg0, String arg1) {
@@ -191,6 +211,9 @@ public class DownloadTableTreeLabelProvider implements ITableLabelProvider, ICol
 
 /*
 $Log: DownloadTableTreeLabelProvider.java,v $
+Revision 1.5  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.4  2003/08/11 00:30:10  zet
 show queued files
 

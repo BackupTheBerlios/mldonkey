@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Table;
  * DownloadTableTreeContentProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.6 2003/08/11 00:30:10 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.7 2003/08/14 12:57:03 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -73,6 +73,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	private int displayBuffer = 2;
 	private int refreshType = 0;
 	private long lastTimeStamp = 0;
+	private boolean forceRefresh = false;
 
 	/*
 	 *  (non-Javadoc)
@@ -342,7 +343,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	public void scheduleUpdate(Object object) {
 		
 		
-		if (object==null) refreshType = 3;
+		if (object==null || forceRefresh) refreshType = 3;
 		
 		if (refreshType != 3 
 			&& object != null
@@ -605,10 +606,16 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	public void setUpdateBuffer(int i) {
 		displayBuffer = i;
 	}
+	public void setForceRefresh(boolean b) {
+		forceRefresh = b;
+	}
 
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.7  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.6  2003/08/11 00:30:10  zet
 show queued files
 

@@ -27,18 +27,19 @@ import java.util.ResourceBundle;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.model.ResultInfo;
 import net.mldonkey.g2gui.model.Tag;
+import net.mldonkey.g2gui.view.MainTab;
 
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * ResultTableLabelProvider
  *
  * @author $user$
- * @version $Id: ResultTableLabelProvider.java,v 1.7 2003/08/14 12:44:44 dek Exp $ 
+ * @version $Id: ResultTableLabelProvider.java,v 1.8 2003/08/14 12:57:03 zet Exp $ 
  *
  */
 public class ResultTableLabelProvider implements ITableLabelProvider, IColorProvider {
@@ -52,6 +53,10 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 	 * getColumnImage(java.lang.Object, int)
 	 */
 	public Image getColumnImage( Object arg0, int arg1 ) {
+		if (arg0 instanceof ResultInfo && arg1 == 0) {
+			ResultInfo resultInfo = ( ResultInfo ) arg0;
+			return MainTab.getNetworkImage( resultInfo.getNetwork().getNetworkType() );
+		}
 		return null;
 	}
 
@@ -78,15 +83,15 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 			switch ( arg1 ) {
 						
 				case 0: // network id
-					return "" + ( ( NetworkInfo ) resultInfo.getNetwork() ).getNetworkName();
+					return " " + ( ( NetworkInfo ) resultInfo.getNetwork() ).getNetworkName();
 				case 1: // name
-					return "" +resultInfo.getNames()[ 0 ];
+					return ""+ resultInfo.getNames()[ 0 ];
 				case 2: // size
-					return "" +resultInfo.getStringSize();
+					return "" + resultInfo.getStringSize();
 				case 3: // format
-					return "" +resultInfo.getFormat();
+					return "" + resultInfo.getFormat();
 				case 4: // type
-					return "" +resultInfo.getType();
+					return "" + resultInfo.getType();
 				case 5: // metadata
 				/* check if we have Tags at all (Fix for strange SWT-exception when searching)*/
 					Tag[] tags = resultInfo.getTags();
@@ -157,6 +162,9 @@ public class ResultTableLabelProvider implements ITableLabelProvider, IColorProv
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.8  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.7  2003/08/14 12:44:44  dek
 searching works now without errors
 

@@ -25,7 +25,6 @@ package net.mldonkey.g2gui.view;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
@@ -47,6 +46,8 @@ import org.eclipse.swt.custom.CTabFolderAdapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -106,12 +107,13 @@ public class MessagesTab extends GuiTab {
 	private void createLeftSash( Composite main ) {
 		friendsComposite = new Composite( main, SWT.BORDER );
 		friendsComposite.setLayout( new FillLayout() );
-		
-		createFriendsList();
+		createFriendsTable();
 	}
 
-	public void createFriendsList() {
-		List friendsArray = core.getClientInfoIntMap().getFriendsList();
+	/**
+	 * 
+	 */
+	public void createFriendsTable() {
 		tableViewer = new TableViewer(friendsComposite, SWT.NONE);
 
 		tableViewer.setContentProvider(new TableContentProvider());
@@ -125,7 +127,7 @@ public class MessagesTab extends GuiTab {
 		tableViewer.getTable().setMenu( popupMenu.createContextMenu( tableViewer.getTable() ) );
 		tableViewer.setSorter(new TableSorter());
 		
-		tableViewer.setInput(friendsArray);
+		tableViewer.setInput(core.getClientInfoIntMap().getFriendsList());
 		setRightLabel();
 		
 	}
@@ -152,11 +154,25 @@ public class MessagesTab extends GuiTab {
 				Composite consoleComposite = (Composite) item.getData("composite");
 				Integer id = (Integer) item.getData("id");
 				openTabs.remove(id);
+				console.dispose();
 				consoleComposite.dispose();
 				item.dispose();
 				setRightLabel();
 			}
 		} );
+		
+		// set the focus to the input line of the console when 
+		// an item is selected
+		cTabFolder.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			
+			public void widgetSelected(SelectionEvent e) {
+				CTabItem cTabItem = (CTabItem) e.item;
+				Console console = (Console) cTabItem.getData("console");
+				console.setFocus();
+			}
+		});
 	}
 
 	/* (non-Javadoc)
@@ -179,6 +195,10 @@ public class MessagesTab extends GuiTab {
 		} 
 	}
 	
+	/**
+	 * @param arg0
+	 * @param arg1
+	 */
 	public void runUpdate(Observable arg0, Object arg1) {
 		if (arg1 instanceof ClientMessage) {
 			messageFromClient((ClientMessage) arg1);
@@ -186,9 +206,11 @@ public class MessagesTab extends GuiTab {
 			tableViewer.refresh();
 			setRightLabel();
 		}
-		
 	}
 	
+	/**
+	 * 
+	 */
 	public void setRightLabel() {
 		setRightLabel("Friends: " + tableViewer.getTable().getItemCount() + ", Tabs: " + openTabs.size());
 	}
@@ -212,7 +234,9 @@ public class MessagesTab extends GuiTab {
 		console.append(textMessage + console.getLineDelimiter());
 	}
 	
-	
+	/**
+	 * @param message
+	 */
 	public void messageFromClient(ClientMessage message) {
 		
 		if (openTabs.containsKey(new Integer(message.getId()))) {
@@ -222,7 +246,7 @@ public class MessagesTab extends GuiTab {
 				textMessage = getTimeStamp() + message.getId() +  ": <unknown>> " + message.getText();
 			else
 				textMessage = getTimeStamp() + message.getId() +  ": " + clientInfo.getClientName() + "> " + message.getText();		
-			sendTabMessage(message.getId(), textMessage );
+				sendTabMessage(message.getId(), textMessage );
 			
 		} else {
 			
@@ -241,27 +265,33 @@ public class MessagesTab extends GuiTab {
 			
 			String tabText;
 			if (clientInfo == null) tabText = "" + message.getId() + ": <unknown>"; 
-			else tabText = "  " + clientInfo.getClientid() + ": " + clientInfo.getClientName();
+			else tabText = "" + clientInfo.getClientid() + ": " + clientInfo.getClientName();
 			
 			String textMessage = getTimeStamp() + tabText + "> " + message.getText();		
 			
-			addCTabItem(message.getId(), tabText);
+			CTabItem cTabItem = addCTabItem(message.getId(), "  " + tabText);
+
+			if (cTabFolder.getItemCount() == 1) {
+				setItemFocus(cTabItem);
+			}
+
 			sendTabMessage(message.getId(), textMessage);
 		}
 	}
 	
-	public void addCTabItem(int id, String tabText) {
+	/**
+	 * @param id
+	 * @param tabText
+	 * @return
+	 */
+	public CTabItem addCTabItem(int id, String tabText) {
 		
 		CTabItem tabItem = new CTabItem(cTabFolder, SWT.NONE);
 		tabItem.setText(tabText);
 		Composite consoleComposite = new Composite(cTabFolder, SWT.BORDER);
 		consoleComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		Console console = new Console(consoleComposite, SWT.WRAP );
-		console.setDisplayFont( PreferenceLoader.loadFont( "consoleFontData" ) );
-		console.setDisplayBackground ( PreferenceLoader.loadColour( "consoleBackground" ) );
-		console.setDisplayForeground ( PreferenceLoader.loadColour( "consoleForeground" ) );
-		console.setInputBackground ( PreferenceLoader.loadColour( "consoleInputBackground" ) );
-		console.setInputForeground ( PreferenceLoader.loadColour( "consoleInputForeground" ) );
+		setPreferences(console);
 		console.setClientId(id);
 		console.addObserver( this );
 		tabItem.setControl( consoleComposite );
@@ -270,24 +300,65 @@ public class MessagesTab extends GuiTab {
 		tabItem.setData("console", console);
 		openTabs.put(new Integer(id), tabItem);
 		setRightLabel();
+		return tabItem;
 	}
 	
+	/**
+	 * @param clientInfo
+	 */
 	public void openTab(ClientInfo clientInfo) {
 		if (!openTabs.containsKey(new Integer(clientInfo.getClientid())))  {
 			String tabText = "  " + clientInfo.getClientid() + ": " + clientInfo.getClientName();
-				addCTabItem(clientInfo.getClientid(), tabText);
+			setItemFocus(addCTabItem(clientInfo.getClientid(), tabText));
+		} else {
+			cTabFolder.setSelection((CTabItem) openTabs.get(new Integer(clientInfo.getClientid())));
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	public String getTimeStamp() {
 		SimpleDateFormat sdFormatter = new SimpleDateFormat("[HH:mm:ss] ");
 		Date oToday = new Date();
 		return sdFormatter.format(oToday);
 	}
+	
+	/**
+	 * @param cTabItem
+	 */
+	public void setItemFocus(CTabItem cTabItem) {
+		cTabFolder.setSelection(cTabItem);
+		Console console = (Console) cTabItem.getData("console");
+		console.setFocus();
+	}
+	
+	public void setActive() {
+		super.setActive();
+		if (cTabFolder.getSelection() != null) {
+			setItemFocus(cTabFolder.getSelection());
+		}
+	}	
+	
+	/**
+	 * @param console
+	 */
+	public void setPreferences(Console console) {
+		console.setDisplayFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+		console.setInputFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+		console.setHighlightColor( PreferenceLoader.loadColour( "consoleHighlight" ) );
+		console.setDisplayBackground ( PreferenceLoader.loadColour( "consoleBackground" ) );
+		console.setDisplayForeground ( PreferenceLoader.loadColour( "consoleForeground" ) );
+		console.setInputBackground ( PreferenceLoader.loadColour( "consoleInputBackground" ) );
+		console.setInputForeground ( PreferenceLoader.loadColour( "consoleInputForeground" ) );
+	}
 
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.2  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.1  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 

@@ -20,9 +20,9 @@ import org.eclipse.swt.layout.*;
 public class G2Gui_Display extends PreferencePage  {
 	private Composite controlshell;
 	private ExtendedColorFieldEditor consoleBackground, consoleForeground,
-				consoleInputBackground, consoleInputForeground;
+				consoleInputBackground, consoleInputForeground, consoleHighlight;
 	private ExtendedFontFieldEditor2 consoleFontData;
-	private BooleanFieldEditor displayChunkGraphs, displayGridLines,
+	private BooleanFieldEditor displayChunkGraphs, displayGridLines, forceRefresh,
 							tableCellEditors, displayHeaderBar, displayAllServers;
 	private IntegerFieldEditor displayBuffer;
 	private int columns = 0;
@@ -52,6 +52,9 @@ public class G2Gui_Display extends PreferencePage  {
 		consoleForeground = new ExtendedColorFieldEditor("consoleForeground", "Console window foreground colour", shell);
 		setupEditor(consoleForeground);
 	
+		consoleHighlight = new ExtendedColorFieldEditor("consoleHighlight", "Console window hightlight colour", shell);
+		setupEditor(consoleHighlight);
+	
 		consoleInputBackground = new ExtendedColorFieldEditor("consoleInputBackground", "Console input background colour", shell);
 		setupEditor(consoleInputBackground);
 			
@@ -61,7 +64,7 @@ public class G2Gui_Display extends PreferencePage  {
 		consoleFontData = new ExtendedFontFieldEditor2("consoleFontData", "Console window font", "Sample",  shell);
 		setupEditor(consoleFontData);
 
-		displayAllServers = new BooleanFieldEditor( "displayAllServers", "Show only connected Servers", shell );
+		displayAllServers = new BooleanFieldEditor( "displayAllServers", "Show only connected servers", shell );
 		setupEditor( displayAllServers );		
 		
 		displayHeaderBar = new BooleanFieldEditor("displayHeaderBar", "Display header bar", shell);
@@ -76,6 +79,9 @@ public class G2Gui_Display extends PreferencePage  {
 		tableCellEditors = new BooleanFieldEditor("tableCellEditors", "Activate table cell editors", shell);
 		setupEditor(tableCellEditors);
 		
+		forceRefresh = new BooleanFieldEditor("forceRefresh", "Force full table refresh at each update (maintains sort order)", shell);
+		setupEditor(forceRefresh);
+				
 		displayBuffer = new IntegerFieldEditor("displayBuffer", "GUI update buffer (0-60 seconds)", shell);
 		displayBuffer.setValidRange(0,60);
 		setupEditor(displayBuffer);
@@ -105,6 +111,7 @@ public class G2Gui_Display extends PreferencePage  {
 	private void arrangeFields() {
 		setHorizontalSpan(consoleForeground);
 		setHorizontalSpan(consoleBackground);
+		setHorizontalSpan(consoleHighlight);
 		setHorizontalSpan(consoleInputForeground);
 		setHorizontalSpan(consoleInputBackground);
 		displayHeaderBar.fillIntoGrid(controlshell, columns);
@@ -112,6 +119,7 @@ public class G2Gui_Display extends PreferencePage  {
 		displayGridLines.fillIntoGrid(controlshell, columns);
 		tableCellEditors.fillIntoGrid(controlshell, columns);
 		displayBuffer.fillIntoGrid(controlshell, columns);
+		forceRefresh.fillIntoGrid(controlshell, columns);
 		consoleFontData.adjustForNumColumns( columns );
 	}
 
@@ -136,6 +144,7 @@ public class G2Gui_Display extends PreferencePage  {
 	 	if (consoleBackground != null) { 
 	 		consoleBackground.store();
 			consoleForeground.store();
+			consoleHighlight.store();
 			consoleInputBackground.store();
 			consoleInputForeground.store();
 			consoleFontData.store();
@@ -144,6 +153,7 @@ public class G2Gui_Display extends PreferencePage  {
 			displayChunkGraphs.store();
 			displayGridLines.store();
 			tableCellEditors.store();
+			forceRefresh.store();
 			displayBuffer.store();
 		}	
 	 	return super.performOk();
@@ -154,6 +164,9 @@ public class G2Gui_Display extends PreferencePage  {
 
 /*
 $Log: G2Gui_Display.java,v $
+Revision 1.8  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.7  2003/08/11 11:27:46  lemmstercvs01
 display only connected servers added
 

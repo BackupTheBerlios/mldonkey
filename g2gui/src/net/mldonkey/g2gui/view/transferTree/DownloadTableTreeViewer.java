@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.5 2003/08/08 20:16:13 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.6 2003/08/14 12:57:03 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -184,6 +184,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		
 		tableTreeContentProvider = new DownloadTableTreeContentProvider();
 		tableTreeContentProvider.setUpdateBuffer( PreferenceLoader.loadInteger("displayBuffer") );
+		tableTreeContentProvider.setForceRefresh( PreferenceLoader.loadBoolean("forceRefresh") );
 		tableTreeViewer.setContentProvider(tableTreeContentProvider);
 		tableTreeViewer.setUseHashlookup(true);
 		
@@ -266,6 +267,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		displayChunkGraphs = newChunkValue;
 		tableTreeContentProvider.updateAllEditors();
 		tableTreeContentProvider.setUpdateBuffer( PreferenceLoader.loadInteger("displayBuffer") );
+		tableTreeContentProvider.setForceRefresh(PreferenceLoader.loadBoolean("forceRefresh"));
 	}
 
 
@@ -274,6 +276,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.6  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.5  2003/08/08 20:16:13  zet
 central PreferenceLoader, abstract Console
 

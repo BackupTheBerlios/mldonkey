@@ -23,6 +23,7 @@
 package net.mldonkey.g2gui.view.friends;
 
 import net.mldonkey.g2gui.model.ClientInfo;
+import net.mldonkey.g2gui.view.MainTab;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -39,8 +40,10 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
 	 */
+	 
+	 // Will transparent .pngs ever work?
 	public Image getColumnImage( Object element, int columnIndex ) {
-		return null;
+		return MainTab.getImageFromRegistry("MessagesButtonSmallWhite");
 	}
 
 	/* (non-Javadoc)
@@ -105,6 +108,9 @@ public class TableLabelProvider implements ITableLabelProvider, IColorProvider {
 
 /*
 $Log: TableLabelProvider.java,v $
+Revision 1.2  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.1  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 

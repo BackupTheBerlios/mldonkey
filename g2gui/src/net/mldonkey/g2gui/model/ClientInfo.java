@@ -35,7 +35,7 @@ import net.mldonkey.g2gui.model.enum.EnumClientType;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.16 2003/08/12 04:10:29 zet Exp $ 
+ * @version $Id: ClientInfo.java,v 1.17 2003/08/14 12:57:03 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -120,7 +120,6 @@ public class ClientInfo extends Parent {
 	 */
 	public int getClientRating() {		
 		return clientRating;
-		
 	}
 	
 	/**
@@ -135,6 +134,10 @@ public class ClientInfo extends Parent {
 		return availability;
 	}
 	
+	/**
+	 * @param fileInfo
+	 * @return int numberOfFullChunks
+	 */
 	public int getNumChunks( FileInfo fileInfo ) {
 		int numChunks = 0;
 		String availability = getFileAvailability ( fileInfo );
@@ -260,6 +263,9 @@ public class ClientInfo extends Parent {
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.17  2003/08/14 12:57:03  zet
+fix nullpointer in clientInfo, add icons to tables
+
 Revision 1.16  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
 
