@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.model.Tag;
  * MessageBuffer
  *
  * @author $user$
- * @version $Id: MessageBuffer.java,v 1.9 2003/06/30 07:20:44 lemmstercvs01 Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.10 2003/07/01 13:28:38 dek Exp $ 
  *
  */
 public class MessageBuffer {
@@ -167,7 +167,10 @@ public class MessageBuffer {
 	 * @return an int[]
 	 */
 	public int[] readInt32List() {
-		short listElem = readInt16();
+		int listElem = readInt16();
+			//check, if this is a big unsigned int, and fix it:
+			if (listElem < 0)
+				listElem = Short.MAX_VALUE*2 + listElem;
 		int[] result = new int[ listElem ];
 		for ( int i = 0; i < listElem; i++ ) {
 			result[ i ] = readInt32(); 
@@ -236,6 +239,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.10  2003/07/01 13:28:38  dek
+fixed negative array-size (was a problem with a (short) Overflow
+
 Revision 1.9  2003/06/30 07:20:44  lemmstercvs01
 readTagList(), readInetAddress() added
 
