@@ -22,16 +22,30 @@
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.helper.SashViewFrame;
+import net.mldonkey.g2gui.view.helper.Spinner;
+import net.mldonkey.g2gui.view.helper.WidgetFactory;
 
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
+
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
 
 /**
  * UploadsViewFrame
  *
- * @version $Id: UploadViewFrame.java,v 1.2 2003/11/28 01:06:21 zet Exp $
+ * @version $Id: UploadViewFrame.java,v 1.3 2003/11/30 03:31:57 zet Exp $
  *
  */
 public class UploadViewFrame extends SashViewFrame {
@@ -41,12 +55,96 @@ public class UploadViewFrame extends SashViewFrame {
 
         gView = new UploadTableView(this);
         createPaneListener(new UploadPaneListener(this));
+        createPaneToolBar();
+    }
+
+    // Temporary - until gui protocol has better access to shared directories
+    public void createPaneToolBar() {
+        super.createPaneToolBar();
+
+        addToolItem("TT_UT_UNSHARE", "minus",
+            new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent s) {
+                    ShareInputDialog shareInputDialog = new ShareInputDialog(gView.getShell(),
+                            "Unshare", "Unshare directory", false, null);
+
+                    if (shareInputDialog.open() == InputDialog.OK) {
+                        if (!shareInputDialog.getValue().equals("")) {
+                            String string = "unshare" + " \"" + shareInputDialog.getValue() + "\"";
+
+                            Message consoleMessage = new EncodeMessage(Message.S_CONSOLEMSG, string);
+                            consoleMessage.sendMessage(getCore());
+                        }
+                    }
+                }
+            });
+        addToolItem("TT_UT_SHARE", "plus",
+            new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent s) {
+                    ShareInputDialog shareInputDialog = new ShareInputDialog(gView.getShell(),
+                            "Share", "Share directory", true, null);
+
+                    if (shareInputDialog.open() == InputDialog.OK) {
+                        if (!shareInputDialog.getValue().equals("")) {
+                            String string = "share " + shareInputDialog.getPriority() + " \"" +
+                                shareInputDialog.getValue() + "\"";
+
+                            Message consoleMessage = new EncodeMessage(Message.S_CONSOLEMSG, string);
+                            consoleMessage.sendMessage(getCore());
+                        }
+                    }
+                }
+            });
+    }
+
+    private class ShareInputDialog extends InputDialog {
+        private int priority;
+        private boolean share;
+        private Spinner spinner;
+
+        public ShareInputDialog(Shell parentShell, String dialogTitle, String dialogMessage,
+            boolean share, IInputValidator validator) {
+            super(parentShell, dialogTitle, dialogMessage, "", validator);
+            this.share = share;
+        }
+
+        protected Control createDialogArea(Composite parent) {
+            Composite composite = (Composite) super.createDialogArea(parent);
+
+            if (share) {
+                Composite priorityComposite = new Composite(composite, SWT.NONE);
+                priorityComposite.setLayout(WidgetFactory.createGridLayout(2, 0, 0, 10, 0, false));
+
+                spinner = new Spinner(priorityComposite, SWT.NONE);
+                spinner.setMaximum(999);
+                spinner.setMinimum(0);
+
+                Label label = new Label(priorityComposite, SWT.NONE);
+                label.setText("Priority");
+            }
+
+            return composite;
+        }
+
+        protected void buttonPressed(int buttonId) {
+            if (share)
+                priority = spinner.getSelection();
+
+            super.buttonPressed(buttonId);
+        }
+
+        public int getPriority() {
+            return priority;
+        }
     }
 }
 
 
 /*
 $Log: UploadViewFrame.java,v $
+Revision 1.3  2003/11/30 03:31:57  zet
+temporary share/unshare dialogs
+
 Revision 1.2  2003/11/28 01:06:21  zet
 not much- slowly expanding viewframe - will continue later
 
