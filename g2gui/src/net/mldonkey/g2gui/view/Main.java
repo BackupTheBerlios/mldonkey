@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.view.pref.Preferences;
  * G2GuiTest
  *
  * @author $user$
- * @version $Id: Main.java,v 1.8 2003/07/02 17:06:29 dek Exp $ 
+ * @version $Id: Main.java,v 1.9 2003/07/13 12:50:01 dek Exp $ 
  *
  */
 public class Main {
@@ -69,6 +69,11 @@ public class Main {
 			
 		Gui g2gui = new Gui( mldonkey, shell );
 		mldonkey.disconnect();
+		try {
+			mldonkey.getConnection().close();
+		} catch (IOException e1) {
+			System.out.println("wasn't able to close socket...");
+		}
 	}
 
 	/**
@@ -81,6 +86,9 @@ public class Main {
 
 /*
 $Log: Main.java,v $
+Revision 1.9  2003/07/13 12:50:01  dek
+now the socket is closed, when application is exited
+
 Revision 1.8  2003/07/02 17:06:29  dek
 Checkstyle, JavaDocs still have to be added
 
