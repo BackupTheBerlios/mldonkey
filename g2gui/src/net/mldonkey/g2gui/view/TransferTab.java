@@ -24,35 +24,26 @@ package net.mldonkey.g2gui.view;
 
 import java.util.Observable;
 
-import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
-import net.mldonkey.g2gui.view.transfer.DownloadPaneMenuListener;
-import net.mldonkey.g2gui.view.transfer.clientTable.ClientPaneListener;
 import net.mldonkey.g2gui.view.transfer.clientTable.ClientTableView;
+import net.mldonkey.g2gui.view.transfer.clientTable.ClientViewFrame;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeView;
-import net.mldonkey.g2gui.view.transfer.uploadTable.UploadPaneListener;
-import net.mldonkey.g2gui.view.transfer.uploadTable.UploadTableView;
-import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
+import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadViewFrame;
+import net.mldonkey.g2gui.view.transfer.uploadTable.UploadViewFrame;
 import net.mldonkey.g2gui.view.viewers.GView;
 
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.94 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: TransferTab.java,v 1.95 2003/11/24 01:33:27 zet Exp $
  *
  */
 public class TransferTab extends TableGuiTab {
-    private boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
     private GView clientTableView = null;
     private GView uploadTableView = null;
 
@@ -85,7 +76,7 @@ public class TransferTab extends TableGuiTab {
      * @param sashForm
      */
     private void createDownloadsViews(SashForm sashForm) {
-        if (advancedMode) {
+        if (PreferenceLoader.loadBoolean("advancedMode")) {
             String sashPrefString = "clientSash";
             SashForm sashForm2 = WidgetFactory.createSashForm(sashForm, sashPrefString);
             createDownloadsView(sashForm2);
@@ -97,16 +88,18 @@ public class TransferTab extends TableGuiTab {
     }
 
     private void createDownloadsView(SashForm sashForm) {
-        gView = new DownloadsViewFrame(sashForm, "TT_Downloads", "TransfersButtonSmall").getGView();
+        gView = new DownloadViewFrame(sashForm, "TT_Downloads", "TransfersButtonSmall", this).getGView();
     }
 
+    // gView must be initialized before this is called
     private void createClientsView(SashForm sashForm) {
-        clientTableView = new ClientsViewFrame(sashForm, "TT_Clients", "TransfersButtonSmall").getGView();
+        clientTableView = new ClientViewFrame(sashForm, "TT_Clients", "TransfersButtonSmall", this,
+                gView).getGView();
         ((DownloadTableTreeView) gView).setClientTableView((ClientTableView) clientTableView);
     }
 
-    public void createUploadsView(SashForm sashForm) {
-        uploadTableView = new UploadsViewFrame(sashForm, "TT_Uploads", "UpArrowBlue").getGView();
+    private void createUploadsView(SashForm sashForm) {
+        uploadTableView = new UploadViewFrame(sashForm, "TT_Uploads", "UpArrowBlue", this).getGView();
     }
 
     /* ( non-Javadoc )
@@ -116,9 +109,8 @@ public class TransferTab extends TableGuiTab {
         gView.updateDisplay();
         uploadTableView.updateDisplay();
 
-        if (clientTableView != null) {
+        if (clientTableView != null)
             clientTableView.updateDisplay();
-        }
 
         super.updateDisplay();
     }
@@ -142,106 +134,14 @@ public class TransferTab extends TableGuiTab {
      */
     public void update(Observable o, Object obj) {
     }
-
-    /**
-     * DownloadsViewFrame
-     */
-    private class DownloadsViewFrame extends ViewFrame {
-        public DownloadsViewFrame(SashForm parentSashForm, String prefString, String prefImageString) {
-            super(parentSashForm, prefString, prefImageString);
-
-            gView = new DownloadTableTreeView(this, core);
-            createPaneListener(new DownloadPaneMenuListener(this, TransferTab.this));
-            createPaneToolBar();
-        }
-
-        public SashForm getParentSashForm() {
-            if (advancedMode) {
-                return (SashForm) super.getParentSashForm().getParent();
-            } else {
-                return super.getParentSashForm();
-            }
-        }
-
-        public Control getControl() {
-            if (advancedMode) {
-                return super.getParentSashForm();
-            } else {
-                return super.getControl();
-            }
-        }
-
-        public void createPaneToolBar() {
-            super.createPaneToolBar();
-
-            addToolItem("TT_D_TT_COMMIT_ALL", "commit",
-                new SelectionAdapter() {
-                    public void widgetSelected(SelectionEvent s) {
-                        core.getFileInfoIntMap().commitAll();
-                    }
-                });
-
-            if (advancedMode) {
-                addToolItem("TT_D_TT_SHOW_CLIENTS", "split-table",
-                    new SelectionAdapter() {
-                        public void widgetSelected(SelectionEvent s) {
-                            ((DownloadTableTreeView) gView).toggleClientsTable();
-                        }
-                    });
-            }
-
-            addToolItem("TT_D_TT_COLLAPSE_ALL", "collapseAll",
-                new SelectionAdapter() {
-                    public void widgetSelected(SelectionEvent s) {
-                        ((CustomTableTreeViewer) gView.getViewer()).collapseAll();
-                    }
-                });
-
-            addToolItem("TT_D_TT_EXPAND_ALL", "expandAll",
-                new SelectionAdapter() {
-                    public void widgetSelected(SelectionEvent s) {
-                        ((CustomTableTreeViewer) gView.getViewer()).expandAll();
-                    }
-                });
-        }
-    }
-
-    /**
-     * ClientsViewFrame
-     */
-    private class ClientsViewFrame extends ViewFrame {
-        public ClientsViewFrame(SashForm parentSashForm, String prefString, String prefImageString) {
-            super(parentSashForm, prefString, prefImageString);
-
-            gView = new ClientTableView(this, core);
-            createPaneListener(new ClientPaneListener(this, TransferTab.this));
-
-            childComposite.addControlListener(new ControlAdapter() {
-                    public void controlResized(ControlEvent e) {
-                        Composite c = (Composite) e.widget;
-                        ((DownloadTableTreeView) TransferTab.this.gView).updateClientsTable((c.getBounds().width > 0) &&
-                            (c.getBounds().height > 0) && (TransferTab.this.gView != null));
-                    }
-                });
-        }
-    }
-
-    /**
-     * UploadsViewFrame
-     */
-    private class UploadsViewFrame extends ViewFrame {
-        public UploadsViewFrame(SashForm parentSashForm, String prefString, String prefImageString) {
-            super(parentSashForm, prefString, prefImageString);
-
-            gView = new UploadTableView(this, core);
-            createPaneListener(new UploadPaneListener(this, TransferTab.this));
-        }
-    }
 }
 
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.95  2003/11/24 01:33:27  zet
+move some classes
+
 Revision 1.94  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
@@ -434,7 +334,7 @@ Revision 1.33  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.32  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.31  2003/08/21 10:12:10  dek
 removed empty expression

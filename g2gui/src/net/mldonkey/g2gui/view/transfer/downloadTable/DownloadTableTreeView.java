@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.helper.WidgetFactory;
@@ -50,7 +49,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * DownloadTableTreeViewer
  *
- * @version $Id: DownloadTableTreeView.java,v 1.7 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: DownloadTableTreeView.java,v 1.8 2003/11/24 01:33:27 zet Exp $
  *
  */
 public class DownloadTableTreeView extends GTableTreeView implements ICellModifier,
@@ -77,7 +76,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
     private CellEditor[] cellEditors = null;
     private CustomTableTreeViewer tableTreeViewer;
     private GView clientView;
-    private ViewFrame viewFrame;
+    private DownloadViewFrame viewFrame;
 
     /**
      * Creates a new Viewer inside the composite parent
@@ -85,9 +84,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      * @param mldonkey
      * @param page
      */
-    public DownloadTableTreeView(ViewFrame viewFrame, CoreCommunication core) {
-        super(viewFrame.getChildComposite(), core);
-        this.viewFrame = viewFrame;
+    public DownloadTableTreeView(ViewFrame viewFrame) {
+        super(viewFrame.getChildComposite(), viewFrame.getCore());
+        this.viewFrame = (DownloadViewFrame) viewFrame;
 
         preferenceString = "download";
         columnLabels = new String[] {
@@ -268,7 +267,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
      */
     public boolean clientsDisplayed() {
         if (clientView != null) {
-            return viewFrame.getSashForm().getMaximizedControl() == null;
+            return viewFrame.getParentSashForm(false).getMaximizedControl() == null;
         } else {
             return false;
         }
@@ -282,7 +281,7 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
             return;
         }
 
-        WidgetFactory.setMaximizedSashFormControl(viewFrame.getSashForm(), viewFrame.getViewForm());
+        WidgetFactory.setMaximizedSashFormControl(viewFrame.getParentSashForm(false), viewFrame.getViewForm());
     }
 
     /* (non-Javadoc)
@@ -312,6 +311,9 @@ public class DownloadTableTreeView extends GTableTreeView implements ICellModifi
 
 /*
 $Log: DownloadTableTreeView.java,v $
+Revision 1.8  2003/11/24 01:33:27  zet
+move some classes
+
 Revision 1.7  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.37 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: GuiTab.java,v 1.38 2003/11/24 01:33:27 zet Exp $
  *
  */
 public abstract class GuiTab implements Listener, Observer {
@@ -191,10 +191,17 @@ public abstract class GuiTab implements Listener, Observer {
         toolButton.resetImage();
         this.mainWindow.getCoolBar().getMainToolButtons().add( toolButton );
     }
+    
+    public MainTab getMainTab() {
+        return gui;
+    }
 }
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.38  2003/11/24 01:33:27  zet
+move some classes
+
 Revision 1.37  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
@@ -241,7 +248,7 @@ Revision 1.24  2003/08/23 01:57:36  zet
 use JFace headerfont
 
 Revision 1.23  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.22  2003/08/18 01:42:24  zet
 centralize resource bundle

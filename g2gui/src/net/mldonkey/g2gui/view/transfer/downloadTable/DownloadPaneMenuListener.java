@@ -20,12 +20,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-package net.mldonkey.g2gui.view.transfer;
+package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumExtension;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
-import net.mldonkey.g2gui.view.PaneGuiTab;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.helper.ViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -52,14 +51,14 @@ import org.eclipse.swt.events.DisposeEvent;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.26 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.1 2003/11/24 01:33:27 zet Exp $
  *
  */
 public class DownloadPaneMenuListener extends ViewFrameListener {
     private Enum[] states;
 
-    public DownloadPaneMenuListener(ViewFrame viewFrame, PaneGuiTab paneGuiTab) {
-        super(viewFrame, paneGuiTab);
+    public DownloadPaneMenuListener(ViewFrame viewFrame) {
+        super(viewFrame);
 
         this.states = new Enum[] {
                 EnumExtension.AUDIO, EnumExtension.VIDEO, EnumExtension.ARCHIVE,
@@ -148,6 +147,9 @@ public class DownloadPaneMenuListener extends ViewFrameListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.1  2003/11/24 01:33:27  zet
+move some classes
+
 Revision 1.26  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

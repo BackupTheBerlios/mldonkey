@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 
-import net.mldonkey.g2gui.view.PaneGuiTab;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.helper.ViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -41,7 +40,7 @@ import org.eclipse.jface.action.Separator;
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadPaneListener.java,v 1.7 2003/11/22 02:24:30 zet Exp $
+ * @version $Id: UploadPaneListener.java,v 1.8 2003/11/24 01:33:27 zet Exp $
  *
  */
 public class UploadPaneListener extends ViewFrameListener {
@@ -51,8 +50,8 @@ public class UploadPaneListener extends ViewFrameListener {
      * @param aSashForm
      * @param aControl
      */
-    public UploadPaneListener(ViewFrame viewFrame, PaneGuiTab paneGuiTab) {
-        super(viewFrame, paneGuiTab);
+    public UploadPaneListener(ViewFrame viewFrame) {
+        super(viewFrame);
     }
 
     public void menuAboutToShow(IMenuManager menuManager) {
@@ -93,6 +92,9 @@ public class UploadPaneListener extends ViewFrameListener {
 
 /*
 $Log: UploadPaneListener.java,v $
+Revision 1.8  2003/11/24 01:33:27  zet
+move some classes
+
 Revision 1.7  2003/11/22 02:24:30  zet
 widgetfactory & save sash postions/states between sessions
 

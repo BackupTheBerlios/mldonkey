@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.ClientStats;
 import net.mldonkey.g2gui.model.SharedFileInfo;
@@ -61,7 +60,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * UploadTableViewer
  *
- * @version $Id: UploadTableView.java,v 1.7 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: UploadTableView.java,v 1.8 2003/11/24 01:33:27 zet Exp $
  *
  */
 public class UploadTableView extends GTableView implements Observer {
@@ -78,8 +77,8 @@ public class UploadTableView extends GTableView implements Observer {
      * @param mldonkey the source of our data
      * @param tab We live on this tab
      */
-    public UploadTableView(ViewFrame viewFrame, CoreCommunication core) {
-        super(viewFrame.getChildComposite(), core);
+    public UploadTableView(ViewFrame viewFrame) {
+        super(viewFrame.getChildComposite(), viewFrame.getCore());
         this.headerCLabel = viewFrame.getCLabel();
 
         preferenceString = "upload";
@@ -371,6 +370,9 @@ public class UploadTableView extends GTableView implements Observer {
 
 /*
 $Log: UploadTableView.java,v $
+Revision 1.8  2003/11/24 01:33:27  zet
+move some classes
+
 Revision 1.7  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 

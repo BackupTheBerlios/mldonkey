@@ -24,7 +24,6 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.PaneGuiTab;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.helper.ViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
@@ -43,7 +42,7 @@ import org.eclipse.jface.action.Separator;
 /**
  * ClientPaneListener
  *
- * @version $Id: ClientPaneListener.java,v 1.8 2003/11/22 02:24:30 zet Exp $
+ * @version $Id: ClientPaneListener.java,v 1.9 2003/11/24 01:33:27 zet Exp $
  *
  */
 public class ClientPaneListener extends ViewFrameListener {
@@ -55,8 +54,8 @@ public class ClientPaneListener extends ViewFrameListener {
      * @param aSashForm
      * @param aControl
      */
-    public ClientPaneListener(ViewFrame viewFrame, PaneGuiTab paneGuiTab) {
-        super(viewFrame, paneGuiTab);
+    public ClientPaneListener(ViewFrame viewFrame) {
+        super(viewFrame);
         this.states = new Enum[] {
                 EnumState.BLACK_LISTED, EnumState.CONNECTED, EnumState.CONNECTED_AND_QUEUED,
                 EnumState.CONNECTED_DOWNLOADING, EnumState.CONNECTED_INITIATING,
@@ -69,7 +68,6 @@ public class ClientPaneListener extends ViewFrameListener {
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
     public void menuAboutToShow(IMenuManager menuManager) {
-
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
         // columnSelector
@@ -109,6 +107,9 @@ public class ClientPaneListener extends ViewFrameListener {
 
 /*
 $Log: ClientPaneListener.java,v $
+Revision 1.9  2003/11/24 01:33:27  zet
+move some classes
+
 Revision 1.8  2003/11/22 02:24:30  zet
 widgetfactory & save sash postions/states between sessions
 

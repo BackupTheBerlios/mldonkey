@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ViewFrameListener
  *
- * @version $Id: ViewFrameListener.java,v 1.1 2003/11/22 02:24:29 zet Exp $
+ * @version $Id: ViewFrameListener.java,v 1.2 2003/11/24 01:33:27 zet Exp $
  *
  */
 public abstract class ViewFrameListener extends GPaneListener {
@@ -40,8 +40,9 @@ public abstract class ViewFrameListener extends GPaneListener {
     protected Control control;
     protected ViewFrame viewFrame;
 
-    public ViewFrameListener(ViewFrame viewFrame, PaneGuiTab paneGuiTab) {
-        super(paneGuiTab, viewFrame.getGView().getCore()); 
+    public ViewFrameListener(ViewFrame viewFrame) {
+        // GPaneListener ? 
+        super((PaneGuiTab) viewFrame.getGuiTab(), viewFrame.getGView().getCore()); 
         this.viewFrame = viewFrame;
         this.sashForm = viewFrame.getParentSashForm();
         this.control = viewFrame.getControl();
@@ -55,6 +56,9 @@ public abstract class ViewFrameListener extends GPaneListener {
 
 /*
 $Log: ViewFrameListener.java,v $
+Revision 1.2  2003/11/24 01:33:27  zet
+move some classes
+
 Revision 1.1  2003/11/22 02:24:29  zet
 widgetfactory & save sash postions/states between sessions
 

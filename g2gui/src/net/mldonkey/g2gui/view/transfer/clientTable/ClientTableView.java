@@ -22,7 +22,6 @@
  */
 package net.mldonkey.g2gui.view.transfer.clientTable;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.viewers.table.GTableView;
@@ -35,7 +34,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * ClientTableViewer
  *
- * @version $Id: ClientTableView.java,v 1.3 2003/11/22 02:24:30 zet Exp $
+ * @version $Id: ClientTableView.java,v 1.4 2003/11/24 01:33:27 zet Exp $
  *
  */
 public class ClientTableView extends GTableView {
@@ -44,8 +43,8 @@ public class ClientTableView extends GTableView {
     public static final int NETWORK = 2;
     public static final int KIND = 3;
 
-    public ClientTableView(ViewFrame viewFrame, CoreCommunication core) {
-        super(viewFrame.getChildComposite(), core);
+    public ClientTableView(ViewFrame viewFrame) {
+        super(viewFrame.getChildComposite(), viewFrame.getCore());
 
         preferenceString = "client";
         columnLabels = new String[] { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
@@ -84,6 +83,9 @@ public class ClientTableView extends GTableView {
 
 /*
 $Log: ClientTableView.java,v $
+Revision 1.4  2003/11/24 01:33:27  zet
+move some classes
+
 Revision 1.3  2003/11/22 02:24:30  zet
 widgetfactory & save sash postions/states between sessions
 
