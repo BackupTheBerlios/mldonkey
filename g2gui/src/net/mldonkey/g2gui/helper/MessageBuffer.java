@@ -22,11 +22,16 @@
  */
 package net.mldonkey.g2gui.helper;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import net.mldonkey.g2gui.model.Tag;
+
 /**
  * MessageBuffer
  *
  * @author $user$
- * @version $Id: MessageBuffer.java,v 1.8 2003/06/16 21:48:09 lemmstercvs01 Exp $ 
+ * @version $Id: MessageBuffer.java,v 1.9 2003/06/30 07:20:44 lemmstercvs01 Exp $ 
  *
  */
 public class MessageBuffer {
@@ -170,6 +175,47 @@ public class MessageBuffer {
 		return result;
 	}
 	
+	/**
+	 * Reads a Tag[] from a MessageBuffer
+	 * @return a Tag[]
+	 */
+	public Tag[] readTagList() {
+		/* read the list of tags */
+		short listElem = this.readInt16();
+		Tag[] result = new Tag[ listElem ];
+		for ( int i = 0; i < listElem; i++ ) {
+			Tag aTag = new Tag();
+			aTag.readStream( this );
+			result[ i ] = aTag;
+		}
+		return result;
+	}
+	
+	/**
+	 * Reads an IP Address from the MessageBuffer
+	 * @return an InetAddress
+	 * @throws UnknownHostException
+	 */
+	public InetAddress readInetAddress() throws UnknownHostException {
+		byte[] temp = new byte[ 4 ];
+		for ( int i = 0; i < 4; i++ ) {
+			temp[ i ] = readByte();
+		}
+		InetAddress result = InetAddress.getByName( numericToText( temp ) );
+		return result;
+	}
+	
+	/**
+	 * Translate a 4 byte obscure ip into a real ip
+	 * @param src four byte[] with obscure ip
+	 * @return a string represantation of the ip
+	 */
+	private String numericToText( byte[] src ) {
+		String result =
+		( src[3] & 0xff ) + "." + ( src[2] & 0xff ) + "." + ( src[1] & 0xff ) + "." + ( src[0] & 0xff );
+		return result;
+	}
+	
 
 	/**
 	 * @return a byte[]
@@ -190,6 +236,9 @@ public class MessageBuffer {
 
 /*
 $Log: MessageBuffer.java,v $
+Revision 1.9  2003/06/30 07:20:44  lemmstercvs01
+readTagList(), readInetAddress() added
+
 Revision 1.8  2003/06/16 21:48:09  lemmstercvs01
 debug statement removed
 
