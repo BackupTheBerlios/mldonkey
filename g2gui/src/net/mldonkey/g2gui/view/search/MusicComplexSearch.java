@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * MusicComplexSearch
  *
- * @version $Id: MusicComplexSearch.java,v 1.18 2003/11/23 19:22:35 lemmster Exp $
+ * @version $Id: MusicComplexSearch.java,v 1.19 2003/11/24 08:37:24 lemmster Exp $
  *
  */
 public class MusicComplexSearch extends ComplexSearch {
@@ -175,21 +175,34 @@ public class MusicComplexSearch extends ComplexSearch {
      * @see net.mldonkey.g2gui.view.search.Search#performSearch()
      */
     public void performSearch() {
-        if ( inputText.getText().equals( "" )
-             && artistText.getText().equals( "" )
-             && albumText.getText().equals( "" ) ) return;
+        String input = this.inputText.getText();
+        String album = this.albumText.getText();
+        String artist = this.artistText.getText();
+    	
+    	if ( input.equals( "" )
+             && artist.equals( "" )
+             && album.equals( "" ) ) return;
 
-		this.inputText.add( this.inputText.getText(), 0 );
-		this.albumText.add( this.albumText.getText(), 0 );
-		this.artistText.add( this.artistText.getText(), 0 );
+    	// set the combo text
+    	if ( this.inputText.indexOf( input ) != -1 )
+    		this.inputText.remove( input );
+    	this.inputText.add( input, 0 );
+
+    	if ( this.albumText.indexOf( album ) != -1 )
+    		this.albumText.remove( album );
+    	this.albumText.add( album, 0 );
+
+    	if ( this.artistText.indexOf( artist ) != -1 )
+    		this.artistText.remove( artist );
+		this.artistText.add( artist, 0 );
 		
 		/* create an empty query */
         query = new SearchQuery( core );
 
 		/* set our input fields */
-        query.setMp3Title( inputText.getText() );
-        query.setMp3Album( albumText.getText() );
-        query.setMp3Artist( artistText.getText() );
+        query.setMp3Title( input );
+        query.setMp3Album( album );
+        query.setMp3Artist( artist );
 
 		/* the bitrate */
         String bitRateString = bitrateCombo.getText();
@@ -202,7 +215,7 @@ public class MusicComplexSearch extends ComplexSearch {
         super.performSearch();
 
         /* draw the empty search result */
-        String aString = inputText.getText() + " " + artistText.getText() + " " + albumText.getText();
+        String aString = input + " " + artist + " " + album;
         new SearchResult( aString.trim(), tab.getCTabFolder(),
         	 core, query.getSearchIdentifier(), this.tab );
     }
@@ -210,6 +223,9 @@ public class MusicComplexSearch extends ComplexSearch {
 
 /*
 $Log: MusicComplexSearch.java,v $
+Revision 1.19  2003/11/24 08:37:24  lemmster
+fix [Bug #1132] search combo retains duplicates
+
 Revision 1.18  2003/11/23 19:22:35  lemmster
 fixed: [ Bug #1119] Search field a combo holding previous searches
 

@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Control;
  * SimpleSearch
  *
  *
- * @version $Id: SimpleSearch.java,v 1.24 2003/11/23 19:22:35 lemmster Exp $ 
+ * @version $Id: SimpleSearch.java,v 1.25 2003/11/24 08:37:24 lemmster Exp $ 
  *
  */
 public class SimpleSearch extends Search {
@@ -96,11 +96,15 @@ public class SimpleSearch extends Search {
 	public void performSearch() {
 		
 		if ( ! inputText.getText().equals( "" ) ) {
-			this.inputText.add( this.inputText.getText(), 0 );
+
+			String aText = this.inputText.getText();
+			if ( this.inputText.indexOf( aText ) != -1 )
+				this.inputText.remove( aText );
+			this.inputText.add( aText, 0 );
 
 			query = new SearchQuery( core );
 			/* the query string */
-			query.setSearchString( inputText.getText() );
+			query.setSearchString( aText );
 					
 			/* get the network id for this query */
 			Object obj = networkCombo.getData( networkCombo.getItem( networkCombo.getSelectionIndex() ) );
@@ -116,7 +120,7 @@ public class SimpleSearch extends Search {
 			query.send();
 						
 			/* draw the empty search result */
-			new SearchResult( inputText.getText(), tab.getCTabFolder(),
+			new SearchResult( aText, tab.getCTabFolder(),
 							  core, query.getSearchIdentifier(), this.tab );	
 
 			inputText.setText( "" );
@@ -128,6 +132,9 @@ public class SimpleSearch extends Search {
 
 /*
 $Log: SimpleSearch.java,v $
+Revision 1.25  2003/11/24 08:37:24  lemmster
+fix [Bug #1132] search combo retains duplicates
+
 Revision 1.24  2003/11/23 19:22:35  lemmster
 fixed: [ Bug #1119] Search field a combo holding previous searches
 
