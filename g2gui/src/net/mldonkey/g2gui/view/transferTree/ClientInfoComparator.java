@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.enum.EnumClientMode;
  * ClientInfoComparator
  *
  * @author $user$
- * @version $Id: ClientInfoComparator.java,v 1.1 2003/07/20 10:31:21 dek Exp $ 
+ * @version $Id: ClientInfoComparator.java,v 1.2 2003/07/20 13:08:23 dek Exp $ 
  *
  */
 class ClientInfoComparator implements Comparator {
@@ -82,7 +82,7 @@ class ClientInfoComparator implements Comparator {
 			case 4 :
 				Integer r14 = numberCompleteChunks( row1 );
 				Integer r24 = numberCompleteChunks( row2 );
-				result = r14.compareTo( r24 );							
+				result = r24.compareTo( r14 );							
 				break;
 			case 5 :				
 				break;
@@ -133,6 +133,9 @@ class ClientInfoComparator implements Comparator {
 
 /*
 $Log: ClientInfoComparator.java,v $
+Revision 1.2  2003/07/20 13:08:23  dek
+chunks are sorted descending , when first sorted, as this "feels more natural"
+
 Revision 1.1  2003/07/20 10:31:21  dek
 done some work on flickering & sorting
 
