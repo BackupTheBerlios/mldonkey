@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Composite;
  * SpeedItem
  *
  *
- * @version $Id: SpeedItem.java,v 1.19 2003/09/17 14:41:50 zet Exp $ 
+ * @version $Id: SpeedItem.java,v 1.20 2003/09/17 14:46:30 zet Exp $ 
  *
  */
 public class SpeedItem implements Observer {	
@@ -144,8 +144,8 @@ public class SpeedItem implements Observer {
 	public void updateDisconnected( IOException e ) {
 		if ( composite.isDisposed() ) return;
 		
-		cLabelDown.setImage( G2GuiResources.getImage("RedCrossSmall") );
-		cLabelDown.setText( "Disconnected" );
+		cLabelDown.setImage( G2GuiResources.getImage( "RedCrossSmall" ) );
+		cLabelDown.setText( G2GuiResources.getString( "MISC_DISCONNECTED" ) );
 		cLabelDown.setToolTipText( "" );
 		
 		cLabelUp.setImage( null );
@@ -160,6 +160,9 @@ public class SpeedItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.20  2003/09/17 14:46:30  zet
+localise
+
 Revision 1.19  2003/09/17 14:41:50  zet
 update on disconnect
 
