@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * MenuBar
  *
  *
- * @version $Id: MainMenuBar.java,v 1.3 2003/08/25 20:28:56 dek Exp $ 
+ * @version $Id: MainMenuBar.java,v 1.4 2003/08/26 09:46:41 dek Exp $ 
  *
  */
 public class MainMenuBar {
@@ -119,7 +119,7 @@ public class MainMenuBar {
 		item = new MenuItem( submenu, 0 );
 		item.addListener( SWT.Selection, new Listener() {
 			public void handleEvent( Event event ) {	
-				About about = new About();
+				About about = new About(shell);
 				about.open();
 			}
 		} );
@@ -131,6 +131,9 @@ public class MainMenuBar {
 
 /*
 $Log: MainMenuBar.java,v $
+Revision 1.4  2003/08/26 09:46:41  dek
+about-dialog is now child of mainShell, instead of creating its own..
+
 Revision 1.3  2003/08/25 20:28:56  dek
 first sketch of an about-dialog, feel free to extend ;-)
 

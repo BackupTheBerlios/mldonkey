@@ -33,22 +33,22 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.2 2003/08/26 09:19:31 dek Exp $ 
+ * @version $Id: About.java,v 1.3 2003/08/26 09:46:41 dek Exp $ 
  *
  */
 public class About {
 	//TODO filling about-Dialog with content
-	private Shell shell;
+	private Shell myShell;
 	
 
 	/**
-	 * @param shell 
+	 * @param shell were this dialog lives
 	 */
-	public About() {
-		this.shell = new Shell( shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL );
-		Composite parent = new Composite( shell, SWT.NONE );
-		shell.setLayout( new FillLayout() );
-		shell.setText( "About" );
+	public About( Shell shell ) {
+		this.myShell = new Shell( shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL );
+		Composite parent = new Composite( myShell, SWT.NONE );
+		myShell.setLayout( new FillLayout() );
+		myShell.setText( "About" );
 		parent.setLayout( new GridLayout( 1, false ) );
 		createContent( parent );
 		parent.layout();
@@ -76,12 +76,15 @@ public class About {
 	 * 
 	 */
 	protected void open() {
-		shell.pack();
-		shell.open();		
+		myShell.pack();
+		myShell.open();		
 	}
 }
 /*
 $Log: About.java,v $
+Revision 1.3  2003/08/26 09:46:41  dek
+about-dialog is now child of mainShell, instead of creating its own..
+
 Revision 1.2  2003/08/26 09:19:31  dek
 added todo-item
 
