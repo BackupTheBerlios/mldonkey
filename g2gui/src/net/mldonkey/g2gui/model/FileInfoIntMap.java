@@ -29,10 +29,13 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.5 2003/07/03 16:01:51 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.6 2003/07/03 19:21:11 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
+	/**
+	 * id of last file changed in the map
+	 */
 	private int id;
 	
 	/**
@@ -123,7 +126,7 @@ public class FileInfoIntMap extends InfoIntMap {
 	}
 	
 	/**
-	 * @return this objects id
+	 * @return The fileinfo id which changed last
 	 */
 	public int getId() {
 		return id;
@@ -133,6 +136,9 @@ public class FileInfoIntMap extends InfoIntMap {
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.6  2003/07/03 19:21:11  lemmstercvs01
+javadoc added
+
 Revision 1.5  2003/07/03 16:01:51  lemmstercvs01
 setState() works now to set the filestate on the mldonkey side
 
