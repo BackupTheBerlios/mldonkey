@@ -30,7 +30,7 @@ import net.mldonkey.g2gui.model.FileInfo;
  * DownloadItemComparator
  *
  * @author $user$
- * @version $Id: FileInfoComparator.java,v 1.10 2003/07/20 10:37:23 dek Exp $ 
+ * @version $Id: FileInfoComparator.java,v 1.11 2003/07/21 17:38:11 dek Exp $ 
  *
  */
 class FileInfoComparator implements Comparator {
@@ -92,13 +92,13 @@ class FileInfoComparator implements Comparator {
 				result = r15.compareTo( r25 );
 				break;
 			case 6 :
-				Integer r16 = new Integer( row1.getDownloaded() );
-				Integer r26 = new Integer( row2.getDownloaded() );
+				Long r16 = new Long( row1.getDownloaded() );
+				Long r26 = new Long( row2.getDownloaded() );
 				result = r16.compareTo( r26 );
 				break;
 			case 7 :
-				Integer r17 = new Integer( row1.getSize() );
-				Integer r27 = new Integer( row2.getSize() );
+				Long r17 = new Long( row1.getSize() );
+				Long r27 = new Long( row2.getSize() );
 				result = r17.compareTo( r27 );
 				break;
 			
@@ -138,6 +138,9 @@ class FileInfoComparator implements Comparator {
 
 /*
 $Log: FileInfoComparator.java,v $
+Revision 1.11  2003/07/21 17:38:11  dek
+filesizes are now long's - this has to be respected
+
 Revision 1.10  2003/07/20 10:37:23  dek
 sorting now chunk-bar of download-item
 
