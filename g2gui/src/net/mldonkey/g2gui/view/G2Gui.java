@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.56 2003/12/23 17:22:18 psy Exp $
+ * @version $Id: G2Gui.java,v 1.57 2003/12/23 17:33:21 psy Exp $
  *
  */
 public class G2Gui {
@@ -178,7 +178,7 @@ public class G2Gui {
     private static void printCommandlineHelp() {
     	System.out.println(
     		"G2gui " + VersionInfo.getVersion() + " (" + VersionCheck.getSWTPlatform() + ")\n" +
-    		"Usage: g2gui [ [-c path/to/pref] | [-H host:port] [-U user] [-P passwd] ] [-l link] [-d]\n" +
+    		"Usage: g2gui [[-c path/to/pref] [-H host:port] [-U user] [-P passwd] [-d]] [-l link]\n" +
     		"\nExample:\n" +
     		"g2gui -l ed2k://...\n" +
     		"g2gui -c /home/user/g2gui.pref -l ed2k://...\n" + 
@@ -517,6 +517,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.57  2003/12/23 17:33:21  psy
+cosmetic
+
 Revision 1.56  2003/12/23 17:22:18  psy
 more commandline handling stuff
 
