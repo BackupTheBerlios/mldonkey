@@ -25,7 +25,6 @@ import java.io.IOException;
 import org.eclipse.jface.preference.*;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.internal.ole.win32.COSERVERINFO;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -36,7 +35,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.14 2003/07/03 10:23:20 dek Exp $ 
+ * @version $Id: G2Gui.java,v 1.15 2003/07/03 16:27:51 lemmstercvs01 Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {	
@@ -202,6 +201,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.15  2003/07/03 16:27:51  lemmstercvs01
+nonsense importer removed
+
 Revision 1.14  2003/07/03 10:23:20  dek
 OK, the font-thing finally works
 
