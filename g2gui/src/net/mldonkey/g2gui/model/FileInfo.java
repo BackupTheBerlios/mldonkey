@@ -51,7 +51,7 @@ import java.util.WeakHashMap;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.72 2003/11/08 22:47:06 zet Exp $
+ * @version $Id: FileInfo.java,v 1.73 2003/11/20 23:30:29 dek Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -302,7 +302,7 @@ public class FileInfo extends Parent implements Observer {
 
         int neededChunks = 0;
         int availChunks = 0;
-
+		
         if ((avail.length() > 0) && (avail.length() == chunks.length())) {
             for (int i = 0; i < avail.length(); i++) {
                 if ((chunks.charAt(i) == '0') || (chunks.charAt(i) == '1')) {
@@ -700,7 +700,7 @@ public class FileInfo extends Parent implements Observer {
      * read a list of int32(networkid) and string(avail)
      */
     private void setAvailability(MessageBuffer messageBuffer) {
-        if (parent.getProtoToUse() > 17) {
+        if (parent.getProtoToUse() > 17) {        	
             int listElem = messageBuffer.readInt16();
             this.avails = new HashMap(listElem);
 
@@ -709,9 +709,9 @@ public class FileInfo extends Parent implements Observer {
                 NetworkInfo network = parent.getNetworkInfoMap().get(networkID);
 
                 /* multinet avail is the overall avail */
-                if (network.getNetworkType() != EnumNetwork.MULTINET) {
-                    String aString = messageBuffer.readString();
-                    this.avails.put(network, aString);
+                if (network.getNetworkType() != EnumNetwork.MULTINET) {					
+					this.avail = messageBuffer.readString();
+                    this.avails.put(network, avail);
                 } else {
                     this.avail = messageBuffer.readString();
                 }
@@ -1137,6 +1137,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.73  2003/11/20 23:30:29  dek
+fixed bug with new core (protoVersion >17)
+
 Revision 1.72  2003/11/08 22:47:06  zet
 update client table header
 
@@ -1239,7 +1242,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)
