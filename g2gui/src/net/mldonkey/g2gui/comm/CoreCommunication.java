@@ -20,7 +20,6 @@
  
 package net.mldonkey.g2gui.comm;
 
-import java.io.IOException;
 import java.net.Socket;
 import java.util.Observer;
 
@@ -36,10 +35,10 @@ import net.mldonkey.g2gui.model.ServerInfoIntMap;
  * CoreCommunication
  *
  * @author $user$
- * @version $Id: CoreCommunication.java,v 1.26 2003/08/02 09:57:46 lemmstercvs01 Exp $ 
+ * @version $Id: CoreCommunication.java,v 1.27 2003/08/04 14:38:13 lemmstercvs01 Exp $ 
  *
  */
-public interface CoreCommunication {
+public interface CoreCommunication extends Runnable {
 	/**
 	 * connect()
 	 * Connects this object to given mldonkey-core @remote 
@@ -57,10 +56,17 @@ public interface CoreCommunication {
 	/**
 	 * run()
 	 * starts the Core-Thread and begins to receive messages
-	 * @throws IOException If read on stream failed 
 	 */	
-	void run() throws IOException;
+	void run();
 	
+	/**
+	 * Sends the password message to the core. 
+	 * used to resend the message if the first try failed
+	 * @param username The username
+	 * @param password The password
+	 */
+	void sendPassword( String username, String password );
+		
 	/**
 	 * 
 	 * @return the ConsoleMessage(-Buffer)
@@ -97,6 +103,12 @@ public interface CoreCommunication {
 	 * @return The socket
 	 */
 	Socket getConnection();
+	
+	/**
+	 * returns true if bad password was received
+	 * @return the boolean for bad password
+	 */
+	boolean getBadPassword();
 	
 	/**
 	 * The protocol version we are talking with the core

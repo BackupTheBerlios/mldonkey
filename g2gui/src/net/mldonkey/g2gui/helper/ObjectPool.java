@@ -22,6 +22,8 @@
  */
 package net.mldonkey.g2gui.helper;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,7 +32,7 @@ import java.util.List;
  * ObjectPool
  *
  * @author markus
- * @version $Id: ObjectPool.java,v 1.1 2003/06/12 13:09:52 lemmstercvs01 Exp $ 
+ * @version $Id: ObjectPool.java,v 1.2 2003/08/04 14:38:13 lemmstercvs01 Exp $ 
  *
  */
 public abstract class ObjectPool {
@@ -68,14 +70,14 @@ public abstract class ObjectPool {
 	 * Creates a new Object
 	 * @return an Object
 	 */
-	protected abstract Object create();
+	protected abstract Object create() throws UnknownHostException, IOException ;
 	
 	
 	/**
 	 * Get a Object from the Pool
 	 * @return an Object 
 	 */
-	public synchronized Object checkOut() {
+	public synchronized Object checkOut() throws UnknownHostException, IOException {
 		Object obj = null;
 		
 		/* iterate over the list to find an obj */
@@ -127,6 +129,9 @@ public abstract class ObjectPool {
 
 /*
 $Log: ObjectPool.java,v $
+Revision 1.2  2003/08/04 14:38:13  lemmstercvs01
+splashscreen and error handling added
+
 Revision 1.1  2003/06/12 13:09:52  lemmstercvs01
 ObjectPool, DownloadPool, GuiMessagePool added;
 class hierarchy under ObjectPool created

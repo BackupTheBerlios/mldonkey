@@ -28,22 +28,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Observable;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
-import net.mldonkey.g2gui.helper.ObjectPool;
-import net.mldonkey.g2gui.helper.SocketPool;
 import net.mldonkey.g2gui.model.*;
 
 /**
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.77 2003/08/03 19:12:47 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.78 2003/08/04 14:38:13 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
+	private boolean initialized;
+	private boolean badPassword = true;
+	/**
+	 * An waiterobj who is waiting for us in the main thread to be notified if a
+	 * specific stage is reached
+	 */
+	private Object waiterObj;
 	/**
 	 * The protocol version we maximal speak
 	 */
@@ -56,10 +60,6 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	 * The protcol version we are using
 	 */
 	private int usingVersion;
-	/**
-	 * 
-	 */
-	private Thread thisThread;
 	/**
 	 * 
 	 */
@@ -96,46 +96,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/**
 	 * 
 	 */
-	private boolean badPassword;
-
-	/**
-	 * 
-	 */
-	private String username, password, hostname;
-	private int port;
+	private String username, password;
 	
-	private ObjectPool socketPool;
-	
-	/**
-	 * Core()
-	 * 
-	 * @param connection the socket, where the whole thing takes place
-	 */
-	public Core( String hostname, int port, String username, String password ) throws UnknownHostException, IOException {
-		this.hostname = hostname;
-		this.port = port;
-		this.username = username;
-		this.password = password;
-		
-		/* get a socket from the socketpool */		
-		socketPool = new SocketPool( this.hostname, this.port );
-		this.connection = ( Socket ) socketPool.checkOut();
-
-		/* send the core protocol version */
-		Object[] temp = new Object[ 1 ];
-		temp[ 0 ] = new Integer( protocolVersion );
-		Message coreProtocol =
-					new EncodeMessage( Message.S_COREPROTOCOL, temp );
-		coreProtocol.sendMessage( connection );
-		coreProtocol = null;
-
-		/* now we can start us */
-		thisThread = new Thread( this );
-		thisThread.setDaemon( true );
-		this.connect();
-		thisThread.start();
-	}
-
 	/**
 	 * connect()
 	 * Connects the Core to mldonkey @remote
@@ -143,6 +105,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public void connect() {		
 		this.connected = true;
 	}
+	
 	/**
 	 * disconnect()
 	 * disConnects the Core from mldonkey @remote	 * 
@@ -157,12 +120,30 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public boolean isConnected() {		
 		return connected;
 	}
+	
+	/**
+	 * Creates a new Core obj
+	 * @param socket
+	 * @param username
+	 * @param password
+	 * @param waiterObj
+	 */
+	public Core( Socket socket, String username, String password, Object waiterObj ) {
+		this.connection = socket;
+		this.username = username;
+		this.password = password;
+		this.waiterObj = waiterObj;
+	}
 
 	/**
 	 * run()
 	 * starts the Core and begin receiving messages	 * 
 	 */
 	public void  run() {
+
+		/* send the initial protocol version */
+		this.sendProtocolVersion();
+		
 		MessageBuffer messageBuffer = new MessageBuffer();		
 		int messageLength;
 		int position = 0;
@@ -219,12 +200,8 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 						this.usingVersion = coreProtocol;
 					else
 						this.usingVersion = protocolVersion;
-						
-					/* send the password/username */
-					String[] aString = { this.password, this.username };
-					Message password = new EncodeMessage( Message.S_PASSWORD, aString );
-					password.sendMessage( connection );
-					password = null;
+					
+					this.sendPassword( this.username, this.password );	
 					
 					break;
 					
@@ -244,6 +221,17 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					
 			case Message.R_OPTIONS_INFO :
 					this.optionsInfoMap.readStream( messageBuffer );
+					/*
+					 * when we first receive this msg,we passed the badPassword msg
+					 * so release the waiterobj that the G2Gui.main() can continue
+					 */
+					if ( !initialized ) {
+						badPassword = false;
+						synchronized ( waiterObj ) {
+							waiterObj.notify();
+						}
+						initialized = true;
+					}
 					break;
 				
 			case Message.R_FILE_UPDATE_AVAILABILITY :
@@ -290,10 +278,12 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					break;		
 					
 			case Message.R_BAD_PASSWORD :
-					this.badPassword = true;
-					this.disconnect();
+					/* tell the master thread to continue */
+					synchronized ( waiterObj ) {
+						waiterObj.notify();
+					}
 					break;
-					
+										
 			case Message.R_SHARED_FILE_INFO :
 					this.sharedFileInfoList.readStream( messageBuffer );
 					break;		
@@ -344,6 +334,19 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					System.out.println( "unknown OP-Code : " + opcode + "!" );
 					break;				
 		}
+	}
+	
+	/**
+	 * Sends our protocol version to the core
+	 */	
+	private void sendProtocolVersion() {
+		/* send the core protocol version */
+		Object[] temp = new Object[ 1 ];
+		temp[ 0 ] = new Integer( protocolVersion );
+		Message coreProtocol =
+					new EncodeMessage( Message.S_COREPROTOCOL, temp );
+		coreProtocol.sendMessage( connection );
+		coreProtocol = null;
 	}
 	
 	/**
@@ -417,10 +420,31 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public ClientStats getClientStats() {
 		return ( ClientStats ) this.clientStats;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#getBadPassword()
+	 */
+	public boolean getBadPassword() {
+		return badPassword;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.comm.CoreCommunication#sendPassword(java.lang.String, java.lang.String)
+	 */
+	public void sendPassword(String username, String password) {
+		/* send the password/username */
+		String[] aString = { password, username };
+		Message message = new EncodeMessage( Message.S_PASSWORD, aString );
+		message.sendMessage( connection );
+		message = null;
+	}
 }
 
 /*
 $Log: Core.java,v $
+Revision 1.78  2003/08/04 14:38:13  lemmstercvs01
+splashscreen and error handling added
+
 Revision 1.77  2003/08/03 19:12:47  lemmstercvs01
 DisposeListener and DisposeEvent removed (needed somewhere?)
 

@@ -24,12 +24,13 @@ package net.mldonkey.g2gui.helper;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  * SocketPool
  *
  * @author ${user}
- * @version $Id: SocketPool.java,v 1.10 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: SocketPool.java,v 1.11 2003/08/04 14:38:13 lemmstercvs01 Exp $ 
  *
  */
 public class SocketPool extends ObjectPool {
@@ -65,7 +66,7 @@ public class SocketPool extends ObjectPool {
 	 * @param username The username for the core account
 	 * @param password The password for the core account
 	 */
-	public SocketPool( String address, int port ) {
+	public SocketPool( String address, int port ) throws UnknownHostException, IOException {
 		super();
 
 		this.address = address;
@@ -82,12 +83,9 @@ public class SocketPool extends ObjectPool {
 	 * @return
 	 * @throws IOException
 	 */
-	protected Object create() {
+	protected Object create() throws UnknownHostException, IOException {
 		Socket socket = null;
-		try {
-			socket = new Socket( this.address, this.port );
-		}
-		catch ( IOException e ) { }
+		socket = new Socket( this.address, this.port );
 		return socket;
 	}
 	
@@ -118,6 +116,9 @@ public class SocketPool extends ObjectPool {
 
 /*
 $Log: SocketPool.java,v $
+Revision 1.11  2003/08/04 14:38:13  lemmstercvs01
+splashscreen and error handling added
+
 Revision 1.10  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 
