@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * CoolBar
  *
  *
- * @version $Id: MainCoolBar.java,v 1.20 2003/11/25 17:06:50 dek Exp $
+ * @version $Id: MainCoolBar.java,v 1.21 2003/11/25 17:17:51 dek Exp $
  *
  */
 public class MainCoolBar {
@@ -77,6 +77,7 @@ public class MainCoolBar {
     private List mainToolButtons;
     protected int[] order = { 0, 1 };
     protected Point[] itemsizes = { new Point( 0, 0 ), new Point( 0, 0 ) };
+	protected boolean layoutChanged = false;
 
 	/**
 	 * @param mainTab 
@@ -342,8 +343,16 @@ public class MainCoolBar {
     		
     	}
     	
-    	p.setValue( "coolBarSizes", sizesBuffer.toString() );	
-    	p.setValue( "coolBarOrder", orderBuffer.toString() );
+    	/*
+    	 * check if items have been moved, if not, don't save, because
+    	 * this would save a 0,0-size for all items, so that they are not visible 
+    	 * the next startup
+    	 */
+    	if ( layoutChanged ) {
+    		p.setValue( "coolBarSizes", sizesBuffer.toString() );	    	
+    		p.setValue( "coolBarOrder", orderBuffer.toString() );
+    	}
+    	
     }
 
     protected void udateLayoutStore() {
@@ -354,21 +363,25 @@ public class MainCoolBar {
 
     private void addListeners() {
     	/*update order on change of order ;-)*/
+    	
     	coolbar.addMouseListener(new MouseListener(){
 
     		public void mouseDoubleClick(MouseEvent e) {
     			order = coolbar.getItemOrder();
-    			itemsizes = coolbar.getItemSizes();	    			
+    			itemsizes = coolbar.getItemSizes();
+    			layoutChanged = true;
     		}
 
     		public void mouseDown(MouseEvent e) {
     			order = coolbar.getItemOrder();
-    			itemsizes = coolbar.getItemSizes();    			
+    			itemsizes = coolbar.getItemSizes();  
+    			layoutChanged = true;
     		}
 
     		public void mouseUp(MouseEvent e) {
     			order = coolbar.getItemOrder();
-    			itemsizes = coolbar.getItemSizes();   			  			
+    			itemsizes = coolbar.getItemSizes(); 
+    			layoutChanged = true;
     		}
 				
 			});
@@ -389,8 +402,13 @@ public class MainCoolBar {
 
 
 $Log: MainCoolBar.java,v $
+Revision 1.21  2003/11/25 17:17:51  dek
+Cool-Bar saving finally works
+
 Revision 1.20  2003/11/25 17:06:50  dek
 yet another test for coolBar
+
+removed some testing-comments, so don't care if they are missing ;-)
 
 Revision 1.12  2003/11/23 17:58:03  lemmster
 removed dead/unused code
