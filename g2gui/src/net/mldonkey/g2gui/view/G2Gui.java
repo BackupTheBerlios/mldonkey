@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.59 2003/12/30 13:48:08 psy Exp $
+ * @version $Id: G2Gui.java,v 1.60 2004/01/13 22:42:15 psy Exp $
  *
  */
 public class G2Gui {
@@ -98,13 +98,19 @@ public class G2Gui {
 		// parse args
 		int optind;
 		for (optind = 0; optind < argv.length; optind++) {
-			if (argv[optind].startsWith("-h") || argv[optind].startsWith("--h")) {
+			if ( argv[optind].startsWith("--help") ) {
 				printCommandlineHelp();
 				System.exit(1);
-			} else if (argv[optind].equals("-d")) {
+			// give additional verbosity/debug
+			} else if (argv[optind].equals("-d") | argv[optind].equals("-v") ) {
 				debug = true;
+			// ed2k/http link for submission
+			} else if (argv[optind].toLowerCase().startsWith("ed2k://") | 
+					argv[optind].toLowerCase().startsWith("http://")) {
+				links.add( argv[optind] );
+			// parameter with a value
 			} else if ( argv.length > optind + 1 )	{
-				// we got a configfile-parameter
+				// configfile-parameter
 				if (argv[optind].equals("-c")) {
 					try {
 						configfile = (String) argv[++optind];
@@ -114,22 +120,26 @@ public class G2Gui {
 					catch (IOException e) {
 						System.err.println(fileNotFound + ": " + configfile);
 					} 
-				// we got a link parameter for submission
+				// a link parameter for submission [deprecated]
 				} else if (argv[optind].equals("-l")) {
 					links.add( argv[++optind] );
-				// hostname and port
-				} else if (argv[optind].equals("-H")) {
+				// hostname and optionally port
+				} else if (argv[optind].equals("-h")) {
 					String[] strings = RegExp.split(argv[++optind], ':');
 					if ( strings.length == 2 ) {
 						hostname = strings[0];
 						port = port = new Integer( strings[1] ).intValue();
+					} else if (strings.length == 1) {
+						hostname = strings[0];
+						port = 4001;
 					}
 				// username
-				} else if (argv[optind].equals("-U")) {
+				} else if (argv[optind].equals("-u")) {
 					username = argv[++optind];
 				// password
-				} else if (argv[optind].equals("-P")) {
+				} else if (argv[optind].equals("-p")) {
 					password = argv[++optind];
+				// ? simply ignore
 				} else if (argv[optind].equals("--")) {
 					optind++;
 					break;
@@ -179,12 +189,21 @@ public class G2Gui {
     private static void printCommandlineHelp() {
     	System.out.println(
     		"G2gui " + VersionInfo.getVersion() + " (" + VersionCheck.getSWTPlatform() + ")\n" +
-    		"Usage: g2gui [[-c path/to/pref] [-H host:port] [-U user] [-P passwd] [-d]] [-l link]\n" +
-    		"\nExample:\n" +
-    		"g2gui -l ed2k://...\n" +
-    		"g2gui -c /home/user/g2gui.pref -l ed2k://...\n" + 
-    		"g2gui -H server:4001 -U admin -p mypassword -l ed2k://...\n" + 
-    		"\nConfig-file values are overridden by -H, -U and -P.");
+    		"Usage: g2gui [params] [links]\n" +
+    		"\n" + 
+    		"   --help	this help\n" +
+			"   -v		increase verbosiveness / debug output\n" +
+			"   -c		use config file\n" +
+			"   -h		host\n" +
+			"   -u		username\n" +
+			"   -p		password\n" +
+			"\n" +
+			"Examples:\n" +
+    		"g2gui ed2k://...\n" +
+    		"g2gui -c /home/user/g2gui/g2gui.pref ed2k://...\n" + 
+    		"g2gui -h server:4001 -u user -p password http://link/to/file.torrent\n\n" + 
+    		"Config-file values are overridden by -h, -u and -p.\n" + 
+			"Multiple links are possible.");
     }
     
     
@@ -241,7 +260,7 @@ public class G2Gui {
         }
 
         readParams();
-        if (debug) System.out.println("Host: " + hostname + " User: " + username);
+        if (debug) System.out.println("Host: " + hostname + ":" + port + " User: " + username);
 
         Socket socket = initializeSocket( false );
 		if (socket == null ) return;
@@ -287,7 +306,7 @@ public class G2Gui {
     	shell = new Shell(display);
     	
     	readParams();
-    	if (debug) System.out.println("Links for launch: " + links.toString());
+    	if (debug) System.out.println("Links for submission: " + links.toString());
     	if (debug) System.out.println("Host: " + hostname + " User: " + username);
     	
     	Socket socket = initializeSocket( false );
@@ -458,7 +477,7 @@ public class G2Gui {
 			MessageBox box = new MessageBox(shell, icon | SWT.OK | SWT.CANCEL);
 			box.setText(errorText);
 			box.setMessage(G2GuiResources.getString("G2_CONNECTION_ERROR_HEADER") + " \"" +
-				username + "@" + hostname + ":" + port + "\":\n\n" + errorMsg);
+				username + "@" + hostname + ":" + port + "\"\n\n" + errorMsg);
 	
 			int rc = box.open();
 	
@@ -518,6 +537,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.60  2004/01/13 22:42:15  psy
+commandline fixes
+
 Revision 1.59  2003/12/30 13:48:08  psy
 connection settings improvement
 
