@@ -1,3 +1,6 @@
+2003/11/05: z
+	* Windows: Created link association preference page (windows registry)
+
 2003/11/04: z
 	* Server: Fix 'Add server by IP' crash
 
