@@ -47,6 +47,8 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -55,11 +57,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.24 2004/03/31 19:13:55 psy Exp $
+ * @version $Id: GView.java,v 1.25 2004/03/31 20:28:58 psy Exp $
  *
  */
 public abstract class GView {
@@ -455,10 +456,17 @@ public abstract class GView {
             allColumns += String.valueOf((char) (ColumnSelector.MAGIC_NUMBER + i));
         
         
-        Table table = getTable();
+        final Table table = getTable();
         table.setLayoutData(new GridData(GridData.FILL_BOTH));
-        //new GridData(GridData.)
-        
+
+        table.addKeyListener( new KeyAdapter() {
+	            public void keyPressed( KeyEvent e ) {
+	                if ( e.keyCode == SWT.ESC ) {
+	                	table.deselectAll();
+	                }
+	            }
+        	} );
+
         createColumns();
         updateDisplay();
 
@@ -553,6 +561,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.25  2004/03/31 20:28:58  psy
+added ESC for deselection
+
 Revision 1.24  2004/03/31 19:13:55  psy
 improved dynamic column handling
 
