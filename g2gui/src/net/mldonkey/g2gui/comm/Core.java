@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.45 2003/07/01 13:33:16 dek Exp $ 
+ * @version $Id: Core.java,v 1.46 2003/07/01 13:42:05 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -287,10 +287,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	public void setOption( String name, String value ) {
 		String[] content = { name, value };			
 		EncodeMessage setOption = new EncodeMessage( Message.S_SET_OPTION, content );
-		setOption.sendMessage( connection );
-		//Doing some typeCast magic to update my optionsInfoMap with the given option/value pair
-		(( OptionsInfo )( ( OptionsInfoMap ) this.optionsInfoMap).get(name)).setValue(value);
-		
+		setOption.sendMessage( connection );		
 	}
 
 	/* returns the actual Console-message Buffer
@@ -335,6 +332,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.46  2003/07/01 13:42:05  dek
+removed someting useless in setOptions
+
 Revision 1.45  2003/07/01 13:33:16  dek
 sending optionslist to observers when changed
 
