@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  *
- * @version $Id: FileInfoIntMap.java,v 1.33 2003/12/04 08:47:25 lemmy Exp $
+ * @version $Id: FileInfoIntMap.java,v 1.34 2004/03/16 17:08:44 dek Exp $
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -195,11 +195,34 @@ public class FileInfoIntMap extends InfoIntMap {
         this.setChanged();
         this.notifyObservers();
     }
+
+	/**
+	 * processes a File_Remove_From_source opCode
+	 * @param messageBuffer
+	 */
+	public void fileRemoveSource(MessageBuffer messageBuffer) {
+		int fileId = messageBuffer.readInt32();
+		int clientId = messageBuffer.readInt32();
+
+		ClientInfoIntMap clientMap = parent.getClientInfoIntMap();
+
+		if (this.infoIntMap.contains(fileId) && clientMap.containsKey(clientId)) {
+			ClientInfo client = clientMap.get(clientId);
+			FileInfo file = get(fileId);
+			file.removeClientInfo(client);
+			this.setChanged();
+			this.notifyObservers();
+		}
+
+	}
     
 }
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.34  2004/03/16 17:08:44  dek
+implemented opCode 50
+
 Revision 1.33  2003/12/04 08:47:25  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
@@ -235,7 +258,7 @@ Revision 1.23  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.22  2003/08/22 21:03:15  lemmy
-replace $user$ with $Author: lemmy $
+replace $user$ with $Author: dek $
 
 Revision 1.21  2003/08/15 22:05:58  zet
 *** empty log message ***

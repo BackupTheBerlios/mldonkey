@@ -58,7 +58,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.124 2004/01/29 08:25:04 lemmy Exp $ 
+ * @version $Id: Core.java,v 1.125 2004/03/16 17:08:43 dek Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -314,6 +314,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 					this.sendPassword();
 					this.modelFactory = ModelFactory.getFactory( this.usingVersion, this );
 					if (G2Gui.debug){
+						System.out.println("core/gui "+coreProtocol+"/"+PROTOCOL_VERSION);
 						System.out.println("GUI Protocol-Version: "+this.usingVersion);
 					}
 					break;
@@ -479,6 +480,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 						this.notifyObservers( clientMessage );
 					}
 					break;
+			case Message.R_FILE_REMOVE_SOURCE :
+					getFileInfoIntMap().fileRemoveSource(messageBuffer);				
+				break;
 
 			default :
 					if ( G2Gui.debug )		
@@ -667,6 +671,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.125  2004/03/16 17:08:43  dek
+implemented opCode 50
+
 Revision 1.124  2004/01/29 08:25:04  lemmy
 removed duplicated code
 
