@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.8 2003/07/23 04:08:07 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.9 2003/07/23 17:06:45 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener {
@@ -314,6 +314,7 @@ public class MainTab implements Listener {
 	 */
 	private void addTabs() {
 		new TransferTab( this );
+		new SearchTab( this );
 		new ConsoleTab( this );
 		new StatisticTab( this );
 		/*setting TransferTab active if registered*/
@@ -454,6 +455,9 @@ public class MainTab implements Listener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.9  2003/07/23 17:06:45  lemmstercvs01
+add new SearchTab(this)
+
 Revision 1.8  2003/07/23 04:08:07  zet
 looks better with icons
 
