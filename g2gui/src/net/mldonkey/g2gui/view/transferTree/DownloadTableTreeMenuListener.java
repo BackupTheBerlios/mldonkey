@@ -71,7 +71,11 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	
 	// move these external some day
 	private static String[] ExtensionNames = {
-		"Audio", "Video", "Archive", "CDImage", "Picture"	
+		res.getString("TT_DOWNLOAD_FILTER_AUDIO"), 
+		res.getString("TT_DOWNLOAD_FILTER_VIDEO"), 
+		res.getString("TT_DOWNLOAD_FILTER_ARCHIVE"), 
+		res.getString("TT_DOWNLOAD_FILTER_CDIMAGE"), 
+		res.getString("TT_DOWNLOAD_FILTER_PICTURE")
 	};
 	
 	private static String[] AudioExtensions = {
@@ -101,7 +105,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		AudioExtensions, VideoExtensions, ArchiveExtensions,
 		CDImageExtensions, PictureExtensions
 	};
-	
 		
 	public DownloadTableTreeMenuListener (TableTreeViewer tableTreeViewer, CoreCommunication mldonkey) {
 
@@ -156,7 +159,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 		if (selectedFile != null) {
 			MenuManager prioritySubMenu =
-				new MenuManager(res.getString("TT_Menu6"));
+				new MenuManager(res.getString("TT_DOWNLOAD_MENU_PRIORITY"));
 			prioritySubMenu.add(new PriorityHighAction());
 			prioritySubMenu.add(new PriorityNormalAction());
 			prioritySubMenu.add(new PriorityLowAction());
@@ -184,7 +187,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		// columns submenu
 		
 		menuManager.add(new Separator());
-		MenuManager columnsSubMenu = new MenuManager("Columns");
+		MenuManager columnsSubMenu = new MenuManager(res.getString("TT_DOWNLOAD_MENU_COLUMNS"));
 		
 		Table table = tableTreeViewer.getTableTree().getTable();
 		for (int i = 0; i < table.getColumnCount(); i++) {
@@ -196,7 +199,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		
 			
 		// filter submenu			
-		MenuManager filterSubMenu = new MenuManager(res.getString("TT_PopupMenu_Filter"));
+		MenuManager filterSubMenu = new MenuManager(res.getString("TT_DOWNLOAD_MENU_FILTER"));
 		AllFiltersAction aFA = new AllFiltersAction();
 		if (tableTreeViewer.getFilters().length == 0) aFA.setChecked(true);
 		filterSubMenu.add(aFA);
@@ -266,7 +269,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	class FileDetailAction extends Action {
 		public FileDetailAction() {
 			super();
-			setText("File details");
+			setText(res.getString("TT_DOWNLOAD_MENU_FILE_DETAILS"));
 		}
 		public void run() {
 			new FileDetailDialog(selectedFile);
@@ -277,20 +280,18 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	class ClientDetailAction extends Action {
 		public ClientDetailAction() {
 			super();
-			setText("Client details");
+			setText(res.getString("TT_DOWNLOAD_MENU_CLIENT_DETAILS"));
 		}
 		public void run() {
 			new ClientDetailDialog(selectedClient.getFileInfo(), selectedClient.getClientInfo());
 		}
 		
 	}	
-	
-	
 		
 	class PauseAction extends Action {
 		public PauseAction() {
 			super();
-			setText(res.getString("TT_Menu0"));
+			setText(res.getString("TT_DOWNLOAD_MENU_PAUSE"));
 		}
 		public void run() {
 			for (int i = 0; i < selectedFiles.size(); i++)	
@@ -301,7 +302,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	class ResumeAction extends Action {
 		public ResumeAction() {
 			super();
-			setText(res.getString("TT_Menu1"));
+			setText(res.getString("TT_DOWNLOAD_MENU_RESUME"));
 		}
 		public void run() {
 			for (int i = 0; i < selectedFiles.size(); i++)	
@@ -313,7 +314,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	class CancelAction extends Action {
 		public CancelAction() {
 			super();
-			setText(res.getString("TT_Menu2"));
+			setText(res.getString("TT_DOWNLOAD_MENU_CANCEL"));
 		}
 		public void run() {
 			MessageBox reallyCancel =
@@ -334,7 +335,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	
 	class PriorityHighAction extends Action {
 		public PriorityHighAction() {
-			super(res.getString("TT_Menu_Prio_High"), Action.AS_CHECK_BOX);
+			super(res.getString("TT_DOWNLOAD_MENU_PRIORITY_HIGH"), Action.AS_CHECK_BOX);
 		}
 		public void run() {
 			for (int i = 0; i < selectedFiles.size(); i++)	
@@ -348,7 +349,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	class PriorityNormalAction extends Action {
 
 		public PriorityNormalAction() {
-			super(res.getString("TT_Menu_Prio_Normal"), Action.AS_CHECK_BOX);
+			super(res.getString("TT_DOWNLOAD_MENU_PRIORITY_NORMAL"), Action.AS_CHECK_BOX);
 					}
 		public void run() {
 			for (int i = 0; i < selectedFiles.size(); i++)	
@@ -361,7 +362,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 	class PriorityLowAction extends Action {
 		public PriorityLowAction() {
-			super(res.getString("TT_Menu_Prio_Low"), Action.AS_CHECK_BOX);
+			super(res.getString("TT_DOWNLOAD_MENU_PRIORITY_LOW"), Action.AS_CHECK_BOX);
 		}
 		public void run() {
 			for (int i = 0; i < selectedFiles.size(); i++)	
@@ -377,9 +378,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		public ExpandCollapseAction(boolean expand) {
 			super();
 			if (expand)
-				setText("ExpandAll");
+				setText(res.getString("TT_DOWNLOAD_MENU_EXPANDALL"));
 			else
-				setText("CollapseAll");
+				setText(res.getString("TT_DOWNLOAD_MENU_COLLAPSEALL"));
 			this.expand = expand;
 		}
 		public void run() {
@@ -394,7 +395,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	
 	class AllFiltersAction extends Action {
 		public AllFiltersAction() {
-			super("All", Action.AS_CHECK_BOX);
+			super(res.getString("TT_DOWNLOAD_MENU_FILTER_ALL"), Action.AS_CHECK_BOX);
 		}
 		public void run() {
 			ViewerFilter[] viewerFilters = tableTreeViewer.getFilters();
@@ -461,7 +462,7 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		public LinkToClipboardAction(boolean useHTML) {
 			super();
 			this.useHTML = useHTML;
-			setText(res.getString("TT_Menu4")
+			setText(res.getString("TT_DOWNLOAD_MENU_LINKTO")
 				+ (useHTML ? " (html)" : ""));
 		}
 		public void run() {
@@ -514,9 +515,6 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 	
 	}
 	
-	
-	
-
 	// Filters	
 		
 	public class NetworkFilter extends ViewerFilter {
@@ -575,6 +573,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.4  2003/08/08 20:51:11  zet
+localise strings
+
 Revision 1.3  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 
