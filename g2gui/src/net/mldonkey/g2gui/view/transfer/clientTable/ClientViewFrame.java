@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.view.GuiTab;
-import net.mldonkey.g2gui.view.helper.ViewFrame;
+import net.mldonkey.g2gui.view.helper.SashViewFrame;
 import net.mldonkey.g2gui.view.transfer.downloadTable.DownloadTableTreeView;
 import net.mldonkey.g2gui.view.viewers.GView;
 
@@ -36,10 +36,10 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * ClientViewFrame
  *
- * @version $Id: ClientViewFrame.java,v 1.1 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: ClientViewFrame.java,v 1.2 2003/11/28 01:06:21 zet Exp $
  *
  */
-public class ClientViewFrame extends ViewFrame {
+public class ClientViewFrame extends SashViewFrame {
     public ClientViewFrame(SashForm parentSashForm, String prefString, String prefImageString,
         GuiTab guiTab, final GView downloadGView) {
         super(parentSashForm, prefString, prefImageString, guiTab);
@@ -60,6 +60,9 @@ public class ClientViewFrame extends ViewFrame {
 
 /*
 $Log: ClientViewFrame.java,v $
+Revision 1.2  2003/11/28 01:06:21  zet
+not much- slowly expanding viewframe - will continue later
+
 Revision 1.1  2003/11/24 01:33:27  zet
 move some classes
 

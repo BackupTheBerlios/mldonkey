@@ -24,8 +24,8 @@ package net.mldonkey.g2gui.view.transfer.clientTable;
 
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumState;
-import net.mldonkey.g2gui.view.helper.ViewFrame;
-import net.mldonkey.g2gui.view.helper.ViewFrameListener;
+import net.mldonkey.g2gui.view.helper.SashViewFrame;
+import net.mldonkey.g2gui.view.helper.SashViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
@@ -42,10 +42,10 @@ import org.eclipse.jface.action.Separator;
 /**
  * ClientPaneListener
  *
- * @version $Id: ClientPaneListener.java,v 1.9 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: ClientPaneListener.java,v 1.10 2003/11/28 01:06:21 zet Exp $
  *
  */
-public class ClientPaneListener extends ViewFrameListener {
+public class ClientPaneListener extends SashViewFrameListener {
     private Enum[] states;
 
     /**
@@ -54,8 +54,8 @@ public class ClientPaneListener extends ViewFrameListener {
      * @param aSashForm
      * @param aControl
      */
-    public ClientPaneListener(ViewFrame viewFrame) {
-        super(viewFrame);
+    public ClientPaneListener(SashViewFrame sashViewFrame) {
+        super(sashViewFrame);
         this.states = new Enum[] {
                 EnumState.BLACK_LISTED, EnumState.CONNECTED, EnumState.CONNECTED_AND_QUEUED,
                 EnumState.CONNECTED_DOWNLOADING, EnumState.CONNECTED_INITIATING,
@@ -107,6 +107,9 @@ public class ClientPaneListener extends ViewFrameListener {
 
 /*
 $Log: ClientPaneListener.java,v $
+Revision 1.10  2003/11/28 01:06:21  zet
+not much- slowly expanding viewframe - will continue later
+
 Revision 1.9  2003/11/24 01:33:27  zet
 move some classes
 

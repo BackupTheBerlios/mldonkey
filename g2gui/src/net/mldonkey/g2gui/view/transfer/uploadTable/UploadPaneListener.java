@@ -22,8 +22,8 @@
  */
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 
-import net.mldonkey.g2gui.view.helper.ViewFrame;
-import net.mldonkey.g2gui.view.helper.ViewFrameListener;
+import net.mldonkey.g2gui.view.helper.SashViewFrame;
+import net.mldonkey.g2gui.view.helper.SashViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
@@ -40,18 +40,18 @@ import org.eclipse.jface.action.Separator;
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadPaneListener.java,v 1.9 2003/11/26 16:02:05 zet Exp $
+ * @version $Id: UploadPaneListener.java,v 1.10 2003/11/28 01:06:21 zet Exp $
  *
  */
-public class UploadPaneListener extends ViewFrameListener {
+public class UploadPaneListener extends SashViewFrameListener {
     /**
      * @param gViewer
      * @param core
      * @param aSashForm
      * @param aControl
      */
-    public UploadPaneListener(ViewFrame viewFrame) {
-        super(viewFrame);
+    public UploadPaneListener(SashViewFrame sashViewFrame) {
+        super(sashViewFrame);
     }
 
     public void menuAboutToShow(IMenuManager menuManager) {
@@ -92,6 +92,9 @@ public class UploadPaneListener extends ViewFrameListener {
 
 /*
 $Log: UploadPaneListener.java,v $
+Revision 1.10  2003/11/28 01:06:21  zet
+not much- slowly expanding viewframe - will continue later
+
 Revision 1.9  2003/11/26 16:02:05  zet
 resString
 

@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view.transfer.uploadTable;
 
 import net.mldonkey.g2gui.view.GuiTab;
-import net.mldonkey.g2gui.view.helper.ViewFrame;
+import net.mldonkey.g2gui.view.helper.SashViewFrame;
 
 import org.eclipse.swt.custom.SashForm;
 
@@ -31,10 +31,10 @@ import org.eclipse.swt.custom.SashForm;
 /**
  * UploadsViewFrame
  *
- * @version $Id: UploadViewFrame.java,v 1.1 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: UploadViewFrame.java,v 1.2 2003/11/28 01:06:21 zet Exp $
  *
  */
-public class UploadViewFrame extends ViewFrame {
+public class UploadViewFrame extends SashViewFrame {
     public UploadViewFrame(SashForm parentSashForm, String prefString, String prefImageString,
         GuiTab guiTab) {
         super(parentSashForm, prefString, prefImageString, guiTab);
@@ -47,6 +47,9 @@ public class UploadViewFrame extends ViewFrame {
 
 /*
 $Log: UploadViewFrame.java,v $
+Revision 1.2  2003/11/28 01:06:21  zet
+not much- slowly expanding viewframe - will continue later
+
 Revision 1.1  2003/11/24 01:33:27  zet
 move some classes
 

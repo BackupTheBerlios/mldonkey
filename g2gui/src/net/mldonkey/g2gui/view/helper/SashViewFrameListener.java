@@ -22,29 +22,41 @@
  */
 package net.mldonkey.g2gui.view.helper;
 
+import net.mldonkey.g2gui.view.PaneGuiTab;
+import net.mldonkey.g2gui.view.viewers.GPaneListener;
+
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.widgets.Control;
 
 
 /**
  * ViewFrameListener
  *
- * @version $Id: ViewFrameListener.java,v 1.3 2003/11/28 01:06:21 zet Exp $
+ * @version $Id: SashViewFrameListener.java,v 1.1 2003/11/28 01:06:21 zet Exp $
  *
  */
-public abstract class ViewFrameListener {
-    protected ViewFrame viewFrame;
+public abstract class SashViewFrameListener extends GPaneListener {
+	protected SashForm sashForm;
+	protected Control control;
+	protected ViewFrame viewFrame;
 
-    public ViewFrameListener(ViewFrame viewFrame) {
-        this.viewFrame = viewFrame;
-    }
+	public SashViewFrameListener(SashViewFrame viewFrame) {
+		// GPaneListener ? 
+		super((PaneGuiTab) viewFrame.getGuiTab(), viewFrame.getGView().getCore()); 
+		this.viewFrame = viewFrame;
+		this.sashForm = viewFrame.getParentSashForm();
+		this.control = viewFrame.getControl();
+		this.gView = viewFrame.getGView();
+	}
 
-    public void menuAboutToShow() {
-    }
+	public void menuAboutToShow() {
+	}
 }
 
 
 /*
-$Log: ViewFrameListener.java,v $
-Revision 1.3  2003/11/28 01:06:21  zet
+$Log: SashViewFrameListener.java,v $
+Revision 1.1  2003/11/28 01:06:21  zet
 not much- slowly expanding viewframe - will continue later
 
 Revision 1.2  2003/11/24 01:33:27  zet

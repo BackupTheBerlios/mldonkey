@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view.transfer.uploadersTable;
 
 import net.mldonkey.g2gui.view.GuiTab;
-import net.mldonkey.g2gui.view.helper.ViewFrame;
+import net.mldonkey.g2gui.view.helper.SashViewFrame;
 
 import org.eclipse.swt.custom.SashForm;
 
@@ -31,10 +31,10 @@ import org.eclipse.swt.custom.SashForm;
 /**
  * UploadsViewFrame
  *
- * @version $Id: UploadersViewFrame.java,v 1.1 2003/11/26 07:43:15 zet Exp $
+ * @version $Id: UploadersViewFrame.java,v 1.2 2003/11/28 01:06:21 zet Exp $
  *
  */
-public class UploadersViewFrame extends ViewFrame {
+public class UploadersViewFrame extends SashViewFrame {
     public UploadersViewFrame(SashForm parentSashForm, String prefString, String prefImageString,
         GuiTab guiTab) {
         super(parentSashForm, prefString, prefImageString, guiTab);
@@ -47,6 +47,9 @@ public class UploadersViewFrame extends ViewFrame {
 
 /*
 $Log: UploadersViewFrame.java,v $
+Revision 1.2  2003/11/28 01:06:21  zet
+not much- slowly expanding viewframe - will continue later
+
 Revision 1.1  2003/11/26 07:43:15  zet
 quick attempt at an uploaders table w/proto 19 - still in progress...
 

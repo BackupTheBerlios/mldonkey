@@ -25,8 +25,8 @@ package net.mldonkey.g2gui.view.transfer.downloadTable;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumExtension;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
-import net.mldonkey.g2gui.view.helper.ViewFrame;
-import net.mldonkey.g2gui.view.helper.ViewFrameListener;
+import net.mldonkey.g2gui.view.helper.SashViewFrame;
+import net.mldonkey.g2gui.view.helper.SashViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
@@ -51,14 +51,14 @@ import org.eclipse.swt.events.DisposeEvent;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.1 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.2 2003/11/28 01:06:21 zet Exp $
  *
  */
-public class DownloadPaneMenuListener extends ViewFrameListener {
+public class DownloadPaneMenuListener extends SashViewFrameListener {
     private Enum[] states;
 
-    public DownloadPaneMenuListener(ViewFrame viewFrame) {
-        super(viewFrame);
+    public DownloadPaneMenuListener(SashViewFrame sashViewFrame) {
+        super(sashViewFrame);
 
         this.states = new Enum[] {
                 EnumExtension.AUDIO, EnumExtension.VIDEO, EnumExtension.ARCHIVE,
@@ -147,6 +147,9 @@ public class DownloadPaneMenuListener extends ViewFrameListener {
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.2  2003/11/28 01:06:21  zet
+not much- slowly expanding viewframe - will continue later
+
 Revision 1.1  2003/11/24 01:33:27  zet
 move some classes
 

@@ -25,12 +25,16 @@ package net.mldonkey.g2gui.view.helper;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.view.GuiTab;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.GView;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
@@ -40,31 +44,35 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * ViewFrame
  *
- * @version $Id: ViewFrame.java,v 1.5 2003/11/28 01:06:21 zet Exp $
+ * @version $Id: SashViewFrame.java,v 1.1 2003/11/28 01:06:21 zet Exp $
  *
  */
-public class ViewFrame {
-    protected GuiTab guiTab;
-    protected ViewForm viewForm;
-    protected CLabel cLabel;
-    protected Composite parent;
-    protected Composite childComposite;
-    protected ToolBar toolBar;
+public class SashViewFrame extends ViewFrame {
+    protected MenuManager menuManager;
+    protected GView gView;
+    protected SashForm parentSashForm;
 
-    public ViewFrame(Composite composite, String prefString, String prefImageString,
+    public SashViewFrame(SashForm parentSashForm, String prefString, String prefImageString,
         GuiTab guiTab) {
-        this.parent = composite;
-        this.guiTab = guiTab;
+        super(parentSashForm, prefString, prefImageString, guiTab);
+        this.parentSashForm = parentSashForm;
+    }
 
-        viewForm = WidgetFactory.createViewForm(parent);
+    /**
+     * @param gPaneListener
+     */
+    public void createPaneListener(SashViewFrameListener sashViewFrameListener) {
+        menuManager = new MenuManager("");
+        menuManager.setRemoveAllWhenShown(true);
+        menuManager.addMenuListener(sashViewFrameListener);
 
-        childComposite = new Composite(viewForm, SWT.NONE);
-        childComposite.setLayout(new FillLayout());
-
-        cLabel = WidgetFactory.createCLabel(viewForm, prefString, prefImageString);
-
-        viewForm.setContent(childComposite);
-        viewForm.setTopLeft(cLabel);
+        cLabel.addMouseListener(new MaximizeSashMouseAdapter(cLabel, menuManager,
+                getParentSashForm(), getControl()));
+        cLabel.addDisposeListener(new DisposeListener() {
+                public void widgetDisposed(DisposeEvent e) {
+                    menuManager.dispose();
+                }
+            });
     }
 
     public void createPaneToolBar() {
@@ -97,12 +105,16 @@ public class ViewFrame {
         return childComposite;
     }
 
-    public Composite getParent() {
-        return parent;
+    public SashForm getParentSashForm() {
+        return parentSashForm;
     }
 
     public CLabel getCLabel() {
         return cLabel;
+    }
+
+    public GView getGView() {
+        return gView;
     }
 
     public ViewForm getViewForm() {
@@ -132,20 +144,10 @@ public class ViewFrame {
 
 
 /*
-$Log: ViewFrame.java,v $
-Revision 1.5  2003/11/28 01:06:21  zet
+$Log: SashViewFrame.java,v $
+Revision 1.1  2003/11/28 01:06:21  zet
 not much- slowly expanding viewframe - will continue later
 
-Revision 1.4  2003/11/27 21:42:33  zet
-integrate ViewFrame a little more.. more to come.
 
-Revision 1.3  2003/11/24 01:33:27  zet
-move some classes
-
-Revision 1.2  2003/11/23 21:53:09  zet
-comment
-
-Revision 1.1  2003/11/22 02:24:29  zet
-widgetfactory & save sash postions/states between sessions
 
 */

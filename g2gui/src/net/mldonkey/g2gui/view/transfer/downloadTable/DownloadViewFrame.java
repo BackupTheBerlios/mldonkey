@@ -23,7 +23,7 @@
 package net.mldonkey.g2gui.view.transfer.downloadTable;
 
 import net.mldonkey.g2gui.view.GuiTab;
-import net.mldonkey.g2gui.view.helper.ViewFrame;
+import net.mldonkey.g2gui.view.helper.SashViewFrame;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.viewers.CustomTableTreeViewer;
 
@@ -36,10 +36,10 @@ import org.eclipse.swt.widgets.Control;
 /**
  * DownloadViewFrame
  *
- * @version $Id: DownloadViewFrame.java,v 1.1 2003/11/24 01:33:27 zet Exp $
+ * @version $Id: DownloadViewFrame.java,v 1.2 2003/11/28 01:06:21 zet Exp $
  *
  */
-public class DownloadViewFrame extends ViewFrame {
+public class DownloadViewFrame extends SashViewFrame {
     private boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
     public DownloadViewFrame(SashForm parentSashForm, String prefString, String prefImageString,
@@ -107,6 +107,9 @@ public class DownloadViewFrame extends ViewFrame {
 
 /*
 $Log: DownloadViewFrame.java,v $
+Revision 1.2  2003/11/28 01:06:21  zet
+not much- slowly expanding viewframe - will continue later
+
 Revision 1.1  2003/11/24 01:33:27  zet
 move some classes
 

@@ -22,31 +22,28 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.RegExp;
 import net.mldonkey.g2gui.model.ConsoleMessage;
 import net.mldonkey.g2gui.view.console.Console;
-import net.mldonkey.g2gui.view.helper.WidgetFactory;
+import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.51 2003/11/23 17:58:03 lemmster Exp $
+ * @version $Id: ConsoleTab.java,v 1.52 2003/11/28 01:06:21 zet Exp $
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {
@@ -68,18 +65,12 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
      * @see net.mldonkey.g2gui.view.widgets.Gui.G2guiTab#createContents( org.eclipse.swt.widgets.Composite )
      */
     protected void createContents(Composite parent) {
-        ViewForm consoleViewForm = WidgetFactory.createViewForm(parent);
-        Composite consoleComposite = new Composite(consoleViewForm, SWT.NONE);
-        consoleComposite.setLayout(new FillLayout());
+        ViewFrame viewFrame = new ViewFrame(parent, "TT_ConsoleButton", "ConsoleButtonSmall", this);
 
-        CLabel consoleCLabel = WidgetFactory.createCLabel(consoleViewForm, "TT_ConsoleButton",
-                "ConsoleButtonSmall");
-        console = new Console(consoleComposite, SWT.NONE);
+        console = new Console(viewFrame.getChildComposite(), SWT.NONE);
         console.addObserver(this);
 
         loadPreferences();
-        consoleViewForm.setContent(consoleComposite);
-        consoleViewForm.setTopLeft(consoleCLabel);
     }
 
     /* (non-Javadoc)
@@ -115,6 +106,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
         }
     }
 
+    /* (non-Javadoc)
+     * @see net.mldonkey.g2gui.view.GuiTab#updateDisplay()
+     */
     public void updateDisplay() {
         loadPreferences();
         super.updateDisplay();
@@ -140,7 +134,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
             (new EncodeMessage(Message.S_CONSOLEMSG, command)).sendMessage(core);
         } else if (o instanceof ConsoleMessage) {
             this.consoleMessage = (ConsoleMessage) arg;
-            content.getDisplay().syncExec(this);
+            content.getDisplay().asyncExec(this);
         }
     }
 
@@ -156,6 +150,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.52  2003/11/28 01:06:21  zet
+not much- slowly expanding viewframe - will continue later
+
 Revision 1.51  2003/11/23 17:58:03  lemmster
 removed dead/unused code
 
@@ -208,7 +205,7 @@ Revision 1.38  2003/08/23 09:56:15  lemmster
 use supertype instead of Core
 
 Revision 1.37  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.36  2003/08/18 01:42:24  zet
 centralize resource bundle
