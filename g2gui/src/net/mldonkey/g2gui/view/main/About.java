@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.8 2003/08/30 22:35:53 dek Exp $ 
+ * @version $Id: About.java,v 1.9 2003/08/31 12:27:31 dek Exp $ 
  *
  */
 public class About {
@@ -60,7 +60,7 @@ public class About {
 	private final Cursor handCursor = new Cursor( Display.getDefault(), SWT.CURSOR_HAND );
 	private List linklist = new ArrayList();	
 	private Shell myShell;
-	private Color background = Display.getCurrent().getShells()[1].getBackground();	
+	private Color background = Display.getCurrent().getSystemColor( SWT.COLOR_WIDGET_BACKGROUND );
 	
 
 	/**
@@ -260,7 +260,7 @@ public class About {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.8 2003/08/30 22:35:53 dek Exp $ 
+	 * @version $Id: About.java,v 1.9 2003/08/31 12:27:31 dek Exp $ 
 	 *
 	 */
 	public class Link {
@@ -312,6 +312,9 @@ public class About {
 }
 /*
 $Log: About.java,v $
+Revision 1.9  2003/08/31 12:27:31  dek
+background color is now still ok, even if one has searched ;-)
+
 Revision 1.8  2003/08/30 22:35:53  dek
 added OK-Button
 
