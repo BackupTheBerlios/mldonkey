@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.26 2003/09/08 19:48:00 lemmster Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.27 2003/09/12 15:08:06 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -210,7 +210,9 @@ public class FileDetailDialog implements Observer {
 		buttonComposite.setLayout(CGridLayout.createGL(3,0,0,5,0,false));
 
 		if (fileInfo.getState().getState() == EnumFileState.PAUSED
-			|| fileInfo.getState().getState() == EnumFileState.DOWNLOADING) {
+			|| fileInfo.getState().getState() == EnumFileState.DOWNLOADING
+			|| fileInfo.getState().getState() == EnumFileState.QUEUED
+			) {
 				
 			fileCancelButton = new Button( buttonComposite, SWT.NONE );	
 			fileCancelButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END));			
@@ -243,12 +245,17 @@ public class FileDetailDialog implements Observer {
 		
 		fileActionButton.setLayoutData(gridData); 
 		
-		if (fileInfo.getState().getState() == EnumFileState.PAUSED)
+		if (fileInfo.getState().getState() == EnumFileState.PAUSED
+			|| fileInfo.getState().getState() == EnumFileState.QUEUED)
 			fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_RESUME" ));
 		else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADING)
 			fileActionButton.setText("  " + G2GuiResources.getString( "TT_DOWNLOAD_MENU_PAUSE" ) + "  ");
 		else if (fileInfo.getState().getState() == EnumFileState.DOWNLOADED)
 			fileActionButton.setText(G2GuiResources.getString( "TT_DOWNLOAD_MENU_COMMIT" ));
+	
+		// until we have an unQueue function..
+		if (fileInfo.getState().getState() == EnumFileState.QUEUED)
+			fileActionButton.setEnabled(false);
 	
 		fileActionButton.addSelectionListener( new SelectionAdapter() {
 			public void widgetSelected (SelectionEvent s) {
@@ -380,6 +387,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.27  2003/09/12 15:08:06  zet
+fix: [ Bug #897 ]
+
 Revision 1.26  2003/09/08 19:48:00  lemmster
 just repaired the log
 
