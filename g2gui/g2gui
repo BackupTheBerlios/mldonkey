@@ -1,0 +1,36 @@
+#!/bin/bash
+# G2gui unix starter, released under GPL
+# this file is to be put in the g2gui directory, renamed to "g2gui".
+# The Makefile should take care of this.
+
+## where do we have our swt-related .so files?
+LIBDIR="lib"
+
+## Export lib-path and go to work-directory
+## this is important for the java-variant as g2gui.jar has classpaths relative to itself
+export LD_LIBRARY_PATH=$LIBDIR
+cd $(dirname $0)
+
+
+## check if font-antialiasing is enabled (affects swt-gtk)
+if [ "$(cat ~/.g2gui/g2gui.pref | grep 'displayFontAA=true')" ]; then
+        export GDK_USE_XFT=1
+else
+        export GDK_USE_XFT=0
+fi
+
+
+## Jar package
+if [ -e $LIBDIR/g2gui.jar ]; then
+        echo "Starting MLdonkey G2gui (java)..."
+        java -Djava.library.path=lib -jar g2gui.jar "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
+## Binary package
+elif [ -e g2gui-bin ]; then
+        echo "Starting MLdonkey G2gui (native)..."
+        ./g2gui-bin "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
+else
+        echo "ERROR: No g2gui-bin or g2gui.jar found! Are you sure they are correctly compiled and in place?"
+fi
+
+
+echo "G2gui terminated."
