@@ -55,7 +55,7 @@ import net.mldonkey.g2gui.helper.RegExp;
  * DownloadSubmit
  *
  * @author $user$
- * @version $Id: DownloadSubmit.java,v 1.5 2004/03/04 17:23:08 psy Exp $ 
+ * @version $Id: DownloadSubmit.java,v 1.6 2004/03/04 17:39:49 psy Exp $ 
  *
  */
 public class DownloadSubmit implements Runnable {
@@ -135,7 +135,7 @@ public class DownloadSubmit implements Runnable {
 
     private String hexDecode(String string) {
     	try {
-			return(URLDecoder.decode( string, "UTF-8" ));
+			return(URLDecoder.decode( string, "ISO-8859-15" ));
 		} catch (UnsupportedEncodingException e) {
 			return(string);
 		}
@@ -145,7 +145,7 @@ public class DownloadSubmit implements Runnable {
     	try {
 			/* decode the string completely and encode it again to prevent
 			 * multiple encoding */
-    		string = URLEncoder.encode( hexDecode(string), "UTF-8" );
+    		string = URLEncoder.encode( hexDecode(string), "ISO-8859-15" );
 
 			/* revert some important parts of the URL */
 			string = RegExp.replaceAll(string, "%3A", ":");
@@ -319,6 +319,9 @@ public class DownloadSubmit implements Runnable {
 
 /*
 $Log: DownloadSubmit.java,v $
+Revision 1.6  2004/03/04 17:39:49  psy
+*** empty log message ***
+
 Revision 1.5  2004/03/04 17:23:08  psy
 fix error when torrent file was in root (/, C:\) directory
 
