@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.TableViewer;
  * TableMenuListener
  *
  *
- * @version $Id: ClientTableMenuListener.java,v 1.4 2003/10/12 15:58:30 zet Exp $
+ * @version $Id: ClientTableMenuListener.java,v 1.5 2003/10/15 18:37:33 zet Exp $
  *
  */
 public class ClientTableMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -107,8 +107,8 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
      */
     private class AddFriendAction extends Action {
         public AddFriendAction() {
-            super();
-            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "MessagesButtonSmallTrans" ) );
         }
 
         public void run() {
@@ -124,8 +124,8 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
      */
     class ClientDetailAction extends Action {
         public ClientDetailAction() {
-            super();
-            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CLIENT_DETAILS" ) );
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CLIENT_DETAILS" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "info" ) );
         }
 
         public void run() {
@@ -137,6 +137,9 @@ public class ClientTableMenuListener implements ISelectionChangedListener, IMenu
 
 /*
 $Log: ClientTableMenuListener.java,v $
+Revision 1.5  2003/10/15 18:37:33  zet
+icons
+
 Revision 1.4  2003/10/12 15:58:30  zet
 rewrite downloads table & more..
 

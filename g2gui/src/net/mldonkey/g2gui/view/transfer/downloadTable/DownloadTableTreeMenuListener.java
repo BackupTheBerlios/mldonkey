@@ -84,7 +84,7 @@ import org.eclipse.swt.widgets.Text;
  *
  * DownloadTableTreeMenuListener
  *
- * @version $Id: DownloadTableTreeMenuListener.java,v 1.15 2003/10/15 04:16:51 zet Exp $
+ * @version $Id: DownloadTableTreeMenuListener.java,v 1.16 2003/10/15 18:33:35 zet Exp $
  *
  */
 public class DownloadTableTreeMenuListener implements ISelectionChangedListener, IMenuListener {
@@ -391,8 +391,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
      */
     private class AddFriendAction extends Action {
         public AddFriendAction() {
-            super();
-            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_ADD_FRIEND" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "MessagesButtonSmallTrans" ) );
         }
 
         public void run() {
@@ -408,8 +408,8 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
      */
     private class ClientDetailAction extends Action {
         public ClientDetailAction() {
-            super();
-            setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CLIENT_DETAILS" ) );
+            super( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CLIENT_DETAILS" ) );
+			setImageDescriptor( G2GuiResources.getImageDescriptor( "info" ) );
         }
 
         public void run() {
@@ -753,6 +753,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.16  2003/10/15 18:33:35  zet
+icons
+
 Revision 1.15  2003/10/15 04:16:51  zet
 add filedonkey lookup
 
