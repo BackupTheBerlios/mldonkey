@@ -49,7 +49,7 @@ public class GraphPainter {
 	{
 		int where = getLastGraphIndex();
 		graphs[where] = graph_;
-		System.out.println("graph added to" +where);
+		//System.out.println("graph added to" +where);
 	}
 	
 	public int getLastGraphIndex()
@@ -93,7 +93,7 @@ public class GraphPainter {
 			int valueY = 0;
 			while ( (k<=width) & (actualPoint.getPrev()!=null))
 			{
-				System.out.println("drawPoint");
+				//System.out.println("drawPoint");
 				valueY = (int)(actualPoint.getValue())/10;
 				if (valueY > maximum) 
 				{
