@@ -22,10 +22,10 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 
@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.comm.Message;
  * MessageVersion
  *
  * @author $user$
- * @version $Id: MessageVersion.java,v 1.1 2003/08/01 13:34:31 lemmstercvs01 Exp $ 
+ * @version $Id: MessageVersion.java,v 1.2 2003/08/02 09:54:17 lemmstercvs01 Exp $ 
  *
  */
 public class MessageVersion implements Sendable {
@@ -44,11 +44,11 @@ public class MessageVersion implements Sendable {
 	 *	and the last one the protocol version to use for that message. 
 	 */
 	private List versions;
-	private Socket socket;
+	private CoreCommunication core;
 		
-	public MessageVersion( Socket socket ) {
+	public MessageVersion( CoreCommunication core ) {
 		this.versions = new ArrayList();
-		this.socket = socket;
+		this.core = core;
 	}
 	 
 	public void add( int opcode, int version, boolean toCore ) {
@@ -72,13 +72,16 @@ public class MessageVersion implements Sendable {
 	 */
 	public void send() {
 		Message message = new EncodeMessage( Message.S_MESSAGE_VERSION, this.versions.toArray() );
-		message.sendMessage( this.socket );
+		message.sendMessage( this.core.getConnection() );
 		message = null;
 	}
 }
 
 /*
 $Log: MessageVersion.java,v $
+Revision 1.2  2003/08/02 09:54:17  lemmstercvs01
+replaced socket with corecommunication
+
 Revision 1.1  2003/08/01 13:34:31  lemmstercvs01
 initial commit
 
