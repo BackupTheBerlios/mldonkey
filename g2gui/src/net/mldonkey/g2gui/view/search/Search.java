@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
  * Search
  *
  *
- * @version $Id: Search.java,v 1.30 2003/09/24 05:53:00 lemmster Exp $
+ * @version $Id: Search.java,v 1.31 2003/10/20 16:23:30 zet Exp $
  *
  */
 public abstract class Search implements Observer {
@@ -282,7 +282,7 @@ public abstract class Search implements Observer {
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable o, Object arg ) {
-        if ( this.networkCombo.isDisposed() ) return;
+        if ( this.networkCombo == null || this.networkCombo.isDisposed() ) return;
         
         this.networkCombo.getDisplay().asyncExec( new Runnable() {
             public void run() {
@@ -306,6 +306,9 @@ public abstract class Search implements Observer {
 
 /*
 $Log: Search.java,v $
+Revision 1.31  2003/10/20 16:23:30  zet
+fix npe
+
 Revision 1.30  2003/09/24 05:53:00  lemmster
 CTabFolder -> Composite
 
