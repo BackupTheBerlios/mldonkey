@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.5 2003/11/02 22:26:25 zet Exp $
+ * @version $Id: ColumnSelector.java,v 1.6 2003/11/02 22:27:32 zet Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -152,7 +152,6 @@ public class ColumnSelector extends Dialog {
         gd.widthHint = widthHint;
 
         leftList = new List(parent, SWT.BORDER | SWT.MULTI);
-        leftList.setData("position", "Left");
         leftList.setLayoutData(gd);
 
         Composite arrowComposite = new Composite(parent, SWT.NONE);
@@ -180,7 +179,6 @@ public class ColumnSelector extends Dialog {
             });
 
         rightList = new List(parent, SWT.BORDER | SWT.MULTI);
-        leftList.setData("position", "Right");
         gd = new GridData(GridData.FILL_BOTH);
         gd.heightHint = heightHint;
         gd.widthHint = widthHint;
@@ -319,6 +317,9 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.6  2003/11/02 22:27:32  zet
+-
+
 Revision 1.5  2003/11/02 22:26:25  zet
 add drag&drop
 
