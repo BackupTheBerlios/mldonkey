@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.view.download.FileInfoTableContentProvider;
 import net.mldonkey.g2gui.view.download.FileInfoTableLabelProvider;
 
@@ -31,6 +32,22 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+// rz,
+// TODO status-field
+// TODO file progress field
+
+/**
+ * 
+ * DownloadTab
+ *
+ * Implements the view-layer for all download-related actions.
+ * 
+ * @author mitch
+ * @version 0.1 
+ * @todo Implement table-sorting, status-fields, progress-bars
+ *
+ */
+
 public class DownloadTab
 	extends G2guiTab
 	implements Observer, Runnable, DisposeListener, SelectionListener, MouseListener {
@@ -43,8 +60,12 @@ public class DownloadTab
 	TableViewer table;
 	TableItem popupItem;
 	Menu popupMenu;
-	MenuItem pauseItem,resumeItem,cancelItem,renameItem,linkItem,fakeItem;
+	MenuItem pauseItem,resumeItem,cancelItem,renameItem,linkItem,fakeItem,prio1Item,prio2Item,prio3Item;
 	
+	/**
+	 * default constructor
+	 * @param gui The GUI-Objekt representing the top-level gui-layer
+	 */
 	public DownloadTab(Gui gui) {
 		super(gui);
 		toolItem.setText(bundle.getString("TT_Button"));
@@ -104,6 +125,21 @@ public class DownloadTab
 		fakeItem.setText(bundle.getString("TT_Menu5"));
 		fakeItem.addSelectionListener(this);		
 		
+		// new as of 1.8
+		MenuItem prioMenuItem = new MenuItem(popupMenu,SWT.CASCADE);
+		Menu prioMenu = new Menu(popupMenu);
+		prioMenuItem.setMenu(prioMenu);
+		prioMenuItem.setText(bundle.getString("TT_Menu6"));
+		prio1Item = new MenuItem(prioMenu,SWT.PUSH);
+		prio1Item.setText(bundle.getString("TT_Menu_Prio_High"));
+		prio1Item.addSelectionListener(this);
+		prio2Item = new MenuItem(prioMenu,SWT.PUSH);
+		prio2Item.setText(bundle.getString("TT_Menu_Prio_Medium"));
+		prio2Item.addSelectionListener(this);
+		prio3Item = new MenuItem(prioMenu,SWT.PUSH);
+		prio3Item.setText(bundle.getString("TT_Menu_Prio_Low"));
+		prio3Item.addSelectionListener(this);
+		
 		table.getTable().setMenu(popupMenu);
 		parent.addDisposeListener(this);
 	}
@@ -132,7 +168,6 @@ public class DownloadTab
 	}
 
 	public void widgetDefaultSelected(SelectionEvent arg0) {
-		// TODO sort-routine
 		if(arg0.widget instanceof MenuItem) {
 			MenuItem item = (MenuItem)arg0.widget;
 			FileInfo file = (FileInfo)popupItem.getData();
@@ -149,6 +184,10 @@ public class DownloadTab
 				String link = "ed2k://|file|"+file.getName()+"|"+file.getSize()+"|"+file.getMd4()+"|/";
 				Program.findProgram(".htm").execute("http://edonkeyfakes.ath.cx/fakecheck/update/fakecheck.php?ed2k="+link);
 			}
+			if(item==prio1Item) file.setPriority(EnumPriority.HIGH);
+			if(item==prio2Item) file.setPriority(EnumPriority.NORMAL);
+			if(item==prio3Item) file.setPriority(EnumPriority.LOW);		
+			
 		}
 	}
 
