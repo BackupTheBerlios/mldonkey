@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.24 2003/09/08 18:26:48 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.25 2003/09/13 22:23:20 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -52,8 +52,9 @@ public class G2GuiResources {
     private G2GuiResources() {
     }
 
-    /**
-     * DOCUMENT ME!
+  
+	/**
+     * Initialize G2GuiResources
      */
     public static void initialize() {
         createImageRegistry();
@@ -192,7 +193,7 @@ public class G2GuiResources {
         Color titlebar = Display.getCurrent().getSystemColor( SWT.COLOR_TITLE_BACKGROUND );
 
 		ImageRegistry reg = G2GuiResources.getImageRegistry();
-		
+
 		reg.put( "splashScreen" , createRawImage( "splash.png") );
         reg.put( "ProgramIcon", createRawImage( "mld_logo_48x48.gif" ) );
         reg.put( "G2GuiLogo", createTrans( "mld_logo_48x48.png" ) );
@@ -362,6 +363,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.25  2003/09/13 22:23:20  zet
+*** empty log message ***
+
 Revision 1.24  2003/09/08 18:26:48  zet
 init in g2gui
 
