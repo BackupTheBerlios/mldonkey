@@ -32,6 +32,7 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
 import net.mldonkey.g2gui.view.viewers.actions.ExtensionFilterAction;
+import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
 import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
 import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
@@ -50,7 +51,7 @@ import org.eclipse.swt.events.DisposeEvent;
  *
  * DownloadPaneMenuListener
  *
- * @version $Id: DownloadPaneMenuListener.java,v 1.4 2003/12/04 08:47:28 lemmy Exp $
+ * @version $Id: DownloadPaneMenuListener.java,v 1.5 2003/12/07 19:40:20 lemmy Exp $
  *
  */
 public class DownloadPaneMenuListener extends SashViewFrameListener {
@@ -76,14 +77,15 @@ public class DownloadPaneMenuListener extends SashViewFrameListener {
             aFilter.add(EnumFileState.PAUSED);
             gView.addFilter(aFilter);
         }
+        int i = PreferenceLoader.getInt( "DownloadPaneListenerBestFit" );
+        if ( i != -1 )
+        	new BestFitColumnAction( gView, i ).run();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
     public void menuAboutToShow(IMenuManager menuManager) {
-        super.menuAboutToShow();
-
         boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
 
         // columnSelector
@@ -93,6 +95,9 @@ public class DownloadPaneMenuListener extends SashViewFrameListener {
 
         // sortMenu for macOS
         createSortByColumnSubMenu(menuManager);
+
+        // my pref column which should be autosized
+        createBestFitColumnSubMenu(menuManager);
 
         // filter submenu			
         MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
@@ -139,12 +144,17 @@ public class DownloadPaneMenuListener extends SashViewFrameListener {
     public void widgetDisposed(DisposeEvent arg0) {
     	PreferenceLoader.setValue("downloadsFilterPaused", FilterAction.isFiltered(gView, EnumFileState.PAUSED));
     	PreferenceLoader.setValue("downloadsFilterQueued", FilterAction.isFiltered(gView, EnumFileState.QUEUED));
+   		if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
+   			PreferenceLoader.setValue( "DownloadPaneListenerBestFit", gView.getColumnControlListenerIsOn() );
     }
 }
 
 
 /*
 $Log: DownloadPaneMenuListener.java,v $
+Revision 1.5  2003/12/07 19:40:20  lemmy
+[Bug #1156] Allow a certain column to be 100% by pref
+
 Revision 1.4  2003/12/04 08:47:28  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.view.helper.ViewFrame;
 import net.mldonkey.g2gui.view.helper.ViewFrameListener;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
 import net.mldonkey.g2gui.view.viewers.filters.AlwaysFalseGViewerFilter;
 import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
 import net.mldonkey.g2gui.view.viewers.table.GTableContentProvider;
@@ -56,11 +57,13 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * GViewer - partial implementation of IGViewer
  *
- * @version $Id: GView.java,v 1.15 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: GView.java,v 1.16 2003/12/07 19:40:45 lemmy Exp $
  *
  */
 public abstract class GView {
-    protected boolean manualDispose;
+    private BestFitColumnAction myCListener;
+	
+	protected boolean manualDispose;
     protected CoreCommunication core;
     protected String[] columnLabels;
     protected int[] columnAlignment;
@@ -127,6 +130,21 @@ public abstract class GView {
      */
     public void addDisposeListener(ViewFrameListener listener) {
         getTable().addDisposeListener(listener);
+    }
+    
+    public void addControlListener( BestFitColumnAction cListener ) {
+    	if ( myCListener != null )
+    		this.getTable().removeControlListener( myCListener );
+
+    	myCListener = cListener;
+    	if ( myCListener != null )
+    		this.getTable().addControlListener( myCListener );
+    }
+    
+    public int getColumnControlListenerIsOn() {
+    	if ( myCListener != null )
+    		return this.myCListener.getColumnId();
+    	return -1;
     }
 
     /**
@@ -287,6 +305,19 @@ public abstract class GView {
         gSorter.setColumnIndex(column);
         refresh();
     }
+    
+    public void setColumnWidth( int columnId ) {
+    	Table table = getTable();
+    	if ( !table.isDisposed() ) {
+    		int totalWidth = table.getSize().x - 25; //why is this needed?
+    		TableColumn[] columns = table.getColumns();
+    		for ( int i = 0; i < columns.length; i++ ) {
+   				if ( i != columnId )
+   					totalWidth -= columns[ i ].getWidth();
+    		}
+    		table.getColumn( columnId ).setWidth( totalWidth );
+    	}
+    }
 
     /**
      * createContents
@@ -393,6 +424,9 @@ public abstract class GView {
 
 /*
 $Log: GView.java,v $
+Revision 1.16  2003/12/07 19:40:45  lemmy
+[Bug #1156] Allow a certain column to be 100% by pref
+
 Revision 1.15  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

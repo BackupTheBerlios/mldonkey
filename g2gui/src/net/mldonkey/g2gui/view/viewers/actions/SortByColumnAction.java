@@ -24,27 +24,22 @@ package net.mldonkey.g2gui.view.viewers.actions;
 
 import net.mldonkey.g2gui.view.viewers.GView;
 
-import org.eclipse.jface.action.Action;
-
-import org.eclipse.swt.widgets.TableColumn;
-
 
 /**
  * SortByColumnAction - for macOS
  *
- * @version $Id: SortByColumnAction.java,v 1.1 2003/11/14 00:46:04 zet Exp $
+ * @version $Id: SortByColumnAction.java,v 1.2 2003/12/07 19:40:19 lemmy Exp $
  *
  */
-public class SortByColumnAction extends Action {
-    GView gView;
-    int column;
-
+public class SortByColumnAction extends ColumnAction {
     public SortByColumnAction(GView gView, int column) {
-        super(((TableColumn) gView.getTable().getColumn(column)).getText());
-        this.gView = gView;
-        this.column = column;
+        super(gView, column);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IAction#run()
+     */
     public void run() {
         gView.sortByColumn(column);
     }
@@ -53,6 +48,9 @@ public class SortByColumnAction extends Action {
 
 /*
 $Log: SortByColumnAction.java,v $
+Revision 1.2  2003/12/07 19:40:19  lemmy
+[Bug #1156] Allow a certain column to be 100% by pref
+
 Revision 1.1  2003/11/14 00:46:04  zet
 sort by column menu item (for macOS)
 

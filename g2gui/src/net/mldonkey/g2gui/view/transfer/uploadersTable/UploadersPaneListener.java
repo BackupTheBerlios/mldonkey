@@ -28,18 +28,20 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
+import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
 import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
 import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.swt.events.DisposeEvent;
 
 
 /**
  * UploadPaneListener
  *
- * @version $Id: UploadersPaneListener.java,v 1.3 2003/11/28 01:06:21 zet Exp $
+ * @version $Id: UploadersPaneListener.java,v 1.4 2003/12/07 19:40:20 lemmy Exp $
  *
  */
 public class UploadersPaneListener extends SashViewFrameListener {
@@ -51,6 +53,10 @@ public class UploadersPaneListener extends SashViewFrameListener {
      */
     public UploadersPaneListener(SashViewFrame sashViewFrame) {
         super(sashViewFrame);
+        
+        int i = PreferenceLoader.getInt( "UploadersPaneListenerBestFit" );
+        if ( i != -1 )
+        	new BestFitColumnAction( gView, i ).run();
     }
 
     public void menuAboutToShow(IMenuManager menuManager) {
@@ -63,6 +69,9 @@ public class UploadersPaneListener extends SashViewFrameListener {
         // for macOS
         createSortByColumnSubMenu(menuManager);
 
+        // my pref column which should be autosized
+        createBestFitColumnSubMenu(menuManager);
+        
         // filter submenu			
         MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
                     "TT_DOWNLOAD_MENU_FILTER"));
@@ -81,11 +90,22 @@ public class UploadersPaneListener extends SashViewFrameListener {
         menuManager.add(new FlipSashAction(this.sashForm));
         menuManager.add(new MaximizeAction(this.sashForm, this.control, "TT_Uploads"));
     }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+     */
+    public void widgetDisposed(DisposeEvent arg0) {
+    	if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
+    		PreferenceLoader.setValue( "UploadersPaneListenerBestFit", gView.getColumnControlListenerIsOn() );
+    }
 }
 
 
 /*
 $Log: UploadersPaneListener.java,v $
+Revision 1.4  2003/12/07 19:40:20  lemmy
+[Bug #1156] Allow a certain column to be 100% by pref
+
 Revision 1.3  2003/11/28 01:06:21  zet
 not much- slowly expanding viewframe - will continue later
 

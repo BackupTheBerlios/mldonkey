@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
+import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
 import net.mldonkey.g2gui.view.viewers.actions.FilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
 import net.mldonkey.g2gui.view.viewers.filters.GViewerFilter;
@@ -43,7 +44,7 @@ import org.eclipse.swt.events.DisposeEvent;
 /**
  * ServerPaneListener
  *
- * @version $Id: ServerPaneListener.java,v 1.13 2003/12/04 08:47:30 lemmy Exp $ 
+ * @version $Id: ServerPaneListener.java,v 1.14 2003/12/07 19:40:19 lemmy Exp $ 
  *
  */
 public class ServerPaneListener extends ViewFrameListener {
@@ -73,14 +74,16 @@ public class ServerPaneListener extends ViewFrameListener {
 		}
 		// just add the filter if we really added enums to it
 		if ( temp ) gView.addFilter( aFilter );
+
+		int i = PreferenceLoader.getInt( "ServerPaneListenerBestFit" );
+		if ( i != -1 )
+			new BestFitColumnAction( gView, i ).run();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
 	 */
 	public void menuAboutToShow(IMenuManager menuManager) {
-		super.menuAboutToShow();
-
 		// columnSelector
 		if ( PreferenceLoader.loadBoolean("advancedMode") )
 			menuManager.add( new ColumnSelectorAction(gView) );
@@ -88,6 +91,9 @@ public class ServerPaneListener extends ViewFrameListener {
 		// for macOS
 		createSortByColumnSubMenu(menuManager);
 		
+		// my pref column which should be autosized
+		createBestFitColumnSubMenu(menuManager);
+
 		// filter submenu			
 		MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TT_DOWNLOAD_MENU_FILTER" ) );
 
@@ -111,6 +117,9 @@ public class ServerPaneListener extends ViewFrameListener {
 	 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
 	 */
 	public void widgetDisposed(DisposeEvent arg0) {
+		if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
+			PreferenceLoader.setValue( "ServerPaneListenerBestFit", gView.getColumnControlListenerIsOn() );
+		
 		for ( int i = 0; i < this.states.length; i++ )
 			PreferenceLoader.setValue( states[ i ].getPrefName(this), FilterAction.isFiltered( gView, states[ i ] ) ); 
 	}
@@ -118,6 +127,9 @@ public class ServerPaneListener extends ViewFrameListener {
 
 /*
 $Log: ServerPaneListener.java,v $
+Revision 1.14  2003/12/07 19:40:19  lemmy
+[Bug #1156] Allow a certain column to be 100% by pref
+
 Revision 1.13  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

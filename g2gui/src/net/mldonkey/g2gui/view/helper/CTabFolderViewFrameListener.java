@@ -28,7 +28,7 @@ import org.eclipse.swt.custom.CTabFolder;
 /**
  * CTabFolderViewFrameListener
  *
- * @version $Id: CTabFolderViewFrameListener.java,v 1.1 2003/11/29 17:02:27 zet Exp $ 
+ * @version $Id: CTabFolderViewFrameListener.java,v 1.2 2003/12/07 19:40:19 lemmy Exp $ 
  *
  */
 public abstract class CTabFolderViewFrameListener extends SashViewFrameListener {
@@ -39,13 +39,13 @@ public abstract class CTabFolderViewFrameListener extends SashViewFrameListener 
 		super(cTabFolderViewFrame);
 		this.cTabFolder = cTabFolderViewFrame.getCTabFolder();
 	}
-
-	public void menuAboutToShow() {
-	}
 }
 
 /*
 $Log: CTabFolderViewFrameListener.java,v $
+Revision 1.2  2003/12/07 19:40:19  lemmy
+[Bug #1156] Allow a certain column to be 100% by pref
+
 Revision 1.1  2003/11/29 17:02:27  zet
 more viewframes.. will continue later.
 

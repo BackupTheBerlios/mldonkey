@@ -28,7 +28,7 @@ import org.eclipse.swt.custom.SashForm;
 /**
  * ViewFrameListener
  *
- * @version $Id: SashViewFrameListener.java,v 1.2 2003/11/29 01:51:53 zet Exp $
+ * @version $Id: SashViewFrameListener.java,v 1.3 2003/12/07 19:40:19 lemmy Exp $
  *
  */
 public abstract class SashViewFrameListener extends ViewFrameListener {
@@ -38,14 +38,14 @@ public abstract class SashViewFrameListener extends ViewFrameListener {
 	    super(sashViewFrame);
 		this.sashForm = sashViewFrame.getParentSashForm();
 	}
-
-	public void menuAboutToShow() {
-	}
 }
 
 
 /*
 $Log: SashViewFrameListener.java,v $
+Revision 1.3  2003/12/07 19:40:19  lemmy
+[Bug #1156] Allow a certain column to be 100% by pref
+
 Revision 1.2  2003/11/29 01:51:53  zet
 a few more viewframe changes.. will continue later.
 

@@ -30,6 +30,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.actions.AllFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.ColumnSelectorAction;
+import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
 import net.mldonkey.g2gui.view.viewers.actions.FlipSashAction;
 import net.mldonkey.g2gui.view.viewers.actions.MaximizeAction;
 import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
@@ -37,12 +38,13 @@ import net.mldonkey.g2gui.view.viewers.actions.StateFilterAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.swt.events.DisposeEvent;
 
 
 /**
  * ClientPaneListener
  *
- * @version $Id: ClientPaneListener.java,v 1.11 2003/12/04 08:47:30 lemmy Exp $
+ * @version $Id: ClientPaneListener.java,v 1.12 2003/12/07 19:40:19 lemmy Exp $
  *
  */
 public class ClientPaneListener extends SashViewFrameListener {
@@ -62,21 +64,26 @@ public class ClientPaneListener extends SashViewFrameListener {
                 EnumState.CONNECTING, EnumState.NEW_HOST, EnumState.NOT_CONNECTED,
                 EnumState.NOT_CONNECTED_WAS_QUEUED
             };
+
+        int i = PreferenceLoader.getInt( "ClientPaneListenerBestFit" );
+        if ( i != -1 )
+        	new BestFitColumnAction( gView, i ).run();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
      */
     public void menuAboutToShow(IMenuManager menuManager) {
-        boolean advancedMode = PreferenceLoader.loadBoolean("advancedMode");
-
         // columnSelector
-        if (advancedMode) {
+        if (PreferenceLoader.loadBoolean("advancedMode")) {
             menuManager.add(new ColumnSelectorAction(gView));
         }
 
         // for macOS
         createSortByColumnSubMenu(menuManager);
+        
+        // my pref column which should be autosized
+        createBestFitColumnSubMenu(menuManager);
 
         // filter submenu			
         MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
@@ -102,11 +109,23 @@ public class ClientPaneListener extends SashViewFrameListener {
         menuManager.add(new FlipSashAction(this.sashForm));
         menuManager.add(new MaximizeAction(this.sashForm, this.control, "TT_Downloads"));
     }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+     */
+    public void widgetDisposed(DisposeEvent arg0) {
+    	if ( gView != null && gView.getColumnControlListenerIsOn() != -1 )
+    		PreferenceLoader.setValue( "ClientPaneListenerBestFit", gView.getColumnControlListenerIsOn() );
+    }
+    
 }
 
 
 /*
 $Log: ClientPaneListener.java,v $
+Revision 1.12  2003/12/07 19:40:19  lemmy
+[Bug #1156] Allow a certain column to be 100% by pref
+
 Revision 1.11  2003/12/04 08:47:30  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 

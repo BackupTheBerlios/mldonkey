@@ -25,6 +25,7 @@ package net.mldonkey.g2gui.view.helper;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.viewers.GView;
+import net.mldonkey.g2gui.view.viewers.actions.BestFitColumnAction;
 import net.mldonkey.g2gui.view.viewers.actions.NetworkFilterAction;
 import net.mldonkey.g2gui.view.viewers.actions.SortByColumnAction;
 
@@ -39,7 +40,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * ViewFrameListener
  *
- * @version $Id: ViewFrameListener.java,v 1.5 2003/11/29 17:02:27 zet Exp $
+ * @version $Id: ViewFrameListener.java,v 1.6 2003/12/07 19:40:19 lemmy Exp $
  *
  */
 public abstract class ViewFrameListener implements IMenuListener, DisposeListener {
@@ -57,9 +58,8 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
 		    this.gView.addDisposeListener(this);
     }
 
-    public void menuAboutToShow() {
-    }
-
+    public abstract void menuAboutToShow(IMenuManager menuManager);
+    
     protected void createNetworkFilterSubMenu(MenuManager menu) {
         NetworkInfo[] networks = viewFrame.getCore().getNetworkInfoMap().getNetworks();
 
@@ -71,7 +71,7 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
         }
     }
 
-    protected void createSortByColumnSubMenu(IMenuManager menuManager) {
+    public void createSortByColumnSubMenu(IMenuManager menuManager) {
         if (viewFrame.getGView() == null) return;
         
         MenuManager sortSubMenu = new MenuManager(G2GuiResources.getString("MISC_SORT"));
@@ -81,6 +81,17 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
 
         menuManager.add(sortSubMenu);
     }
+    
+    protected void createBestFitColumnSubMenu(IMenuManager menuManager) {
+    	if (viewFrame.getGView() == null) return;
+    	
+    	MenuManager favoriteSubMenu = new MenuManager(G2GuiResources.getString("MISC_BESTFIT"));
+
+    	for (int i = 0; i < viewFrame.getGView().getTable().getColumnCount(); i++)
+    		favoriteSubMenu.add(new BestFitColumnAction(viewFrame.getGView(), i));
+
+    	menuManager.add(favoriteSubMenu);
+    }
 
     public void widgetDisposed(DisposeEvent arg0) {
     }
@@ -89,6 +100,9 @@ public abstract class ViewFrameListener implements IMenuListener, DisposeListene
 
 /*
 $Log: ViewFrameListener.java,v $
+Revision 1.6  2003/12/07 19:40:19  lemmy
+[Bug #1156] Allow a certain column to be 100% by pref
+
 Revision 1.5  2003/11/29 17:02:27  zet
 more viewframes.. will continue later.
 

@@ -42,7 +42,7 @@ import org.eclipse.swt.custom.CTabItem;
 /**
  * ResultPaneListener
  *
- * @version $Id: ResultPaneListener.java,v 1.11 2003/12/04 08:47:29 lemmy Exp $
+ * @version $Id: ResultPaneListener.java,v 1.12 2003/12/07 19:40:19 lemmy Exp $
  *
  */
 public class ResultPaneListener extends CTabFolderViewFrameListener {
@@ -81,6 +81,9 @@ public class ResultPaneListener extends CTabFolderViewFrameListener {
                 
 				// for macOS
 				createSortByColumnSubMenu(menuManager);
+				
+				// my pref column which should be autosized
+				createBestFitColumnSubMenu(menuManager);
                 
                 // filter submenu			
                 MenuManager filterSubMenu = new MenuManager(G2GuiResources.getString(
@@ -107,6 +110,9 @@ public class ResultPaneListener extends CTabFolderViewFrameListener {
 
 /*
 $Log: ResultPaneListener.java,v $
+Revision 1.12  2003/12/07 19:40:19  lemmy
+[Bug #1156] Allow a certain column to be 100% by pref
+
 Revision 1.11  2003/12/04 08:47:29  lemmy
 replaced "lemmstercvs01" and "lemmster" with "lemmy"
 
