@@ -6,7 +6,7 @@ package org.eclipse.swt.internal.image;
  * don't mind and please ignore ;-)
  */
 
-import gnu.java.locale.Calendar;
+
 
 public class ForceClassLoader /* not part of eclipse. fixes gcj ld issue */ {
     static
@@ -16,7 +16,8 @@ public class ForceClassLoader /* not part of eclipse. fixes gcj ld issue */ {
         JPEGFileFormat z = new JPEGFileFormat();
         WinBMPFileFormat q = new WinBMPFileFormat();
         WinICOFileFormat p = new WinICOFileFormat();		
-		Calendar du = new Calendar();
+		gnu.java.locale.Calendar du = new gnu.java.locale.Calendar();
+		gnu.java.locale.LocaleInformation li = new gnu.java.locale.LocaleInformation();
 		
     }
 }
