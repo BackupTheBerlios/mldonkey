@@ -36,7 +36,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  * @author $user$
- * @version $Id: SearchQuery.java,v 1.10 2003/07/06 14:13:22 dek Exp $ 
+ * @version $Id: SearchQuery.java,v 1.11 2003/07/21 16:25:10 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -204,7 +204,31 @@ public class SearchQuery implements Sendable {
 	}
 	
 	/**
-	 * Sets the type of this search-query
+	 * Sets the Media-Type of this search-query
+	 * it is 
+	 * <br>Audio (type = 1) or
+	 * <br>Video (type = 2) all other values are ignored: nothing happens
+	 * @param type  Audio (1) or Video (2)
+	 */
+	public void setMedia( int type ) {
+		Query format = new Query();
+		format.setNode( EnumQuery.MEDIA );
+		format.setComment( "Media: " );		
+		/*
+		 * add this query to the list in searchOptions
+		 */		
+		if ( type == 1 ) {		
+			format.setDefaultValue( "Audio" );
+			searchOptions.addQuery( format );
+		}
+		else if ( type == 2 ) {		
+			format.setDefaultValue( "Video" );
+			searchOptions.addQuery( format );
+			}
+	}
+	
+	/**
+	 * Sets the type of this search-query (AND / OR)
 	 * @param enum The Type of this search
 	 */
 	public void setSearchType( EnumQuery enum ) {
@@ -266,6 +290,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.11  2003/07/21 16:25:10  dek
+setMedia(AUDIO | VIDEO) added
+
 Revision 1.10  2003/07/06 14:13:22  dek
 "one-word-searching" now also works, only little bug
 
