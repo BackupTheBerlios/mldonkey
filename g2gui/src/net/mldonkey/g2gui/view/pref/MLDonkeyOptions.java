@@ -40,8 +40,8 @@ import org.eclipse.swt.widgets.Control;
 /**
  * MLDonkeyOptions
  *
- * @author  $Author: dek $ 
- * @version $Id: MLDonkeyOptions.java,v 1.12 2003/08/18 14:51:58 dek Exp $ 
+ * @author  $Author: zet $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.13 2003/08/18 15:48:13 zet Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -116,6 +116,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents( org.eclipse.swt.widgets.Composite )
 	 */
 	protected Control createContents( Composite myparent ) {
+		
+		computeSize();
+		
 		sc = new ScrolledComposite( myparent, SWT.H_SCROLL | SWT.V_SCROLL );
 		sc.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 			sc.setLayout( new FillLayout() );
@@ -143,6 +146,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.13  2003/08/18 15:48:13  zet
+computeSize
+
 Revision 1.12  2003/08/18 14:51:58  dek
 some more jface-work
 
