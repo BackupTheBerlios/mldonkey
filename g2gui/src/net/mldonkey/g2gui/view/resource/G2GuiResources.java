@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.39 2003/10/16 21:22:23 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.40 2003/10/17 03:35:52 zet Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -251,7 +251,8 @@ public class G2GuiResources {
         reg.put( "epRatingGood", createRawMImage( "ep_rating_good.gif" ) );
         reg.put( "epRatingExcellent", createRawMImage( "ep_rating_excellent.gif" ) );
 
-        reg.put( "UpArrowBlue", createRawMImage( "up_blue.gif" ) );
+        reg.put( "UpArrowGreen", createRawMImage( "up_arrow_green.gif" ) );
+        reg.put( "DownArrowGreen", createRawMImage( "down_arrow_green.gif") );
         reg.put( "X", createRawMImage( "x.gif" ) );
 
         reg.put( "Jigle", createRawMImage( "jigle.gif" ) );
@@ -426,6 +427,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.40  2003/10/17 03:35:52  zet
+icons
+
 Revision 1.39  2003/10/16 21:22:23  zet
 icon
 
