@@ -34,7 +34,7 @@ import org.eclipse.swt.layout.GridData;
 /**
  * CClabel - static class to return new CLabels
  *
- * @version $Id: CCLabel.java,v 1.4 2003/10/08 01:12:16 zet Exp $
+ * @version $Id: CCLabel.java,v 1.5 2003/10/16 22:02:33 zet Exp $
  *
  */
 public class CCLabel {
@@ -52,24 +52,32 @@ public class CCLabel {
     public static CLabel createCL( ViewForm parent, String text, String image ) {
         CLabel cLabel = new CLabel( parent, SWT.LEFT );
         cLabel.setText( G2GuiResources.getString( text ) );
-        cLabel.setImage( G2GuiResources.getImage( image ) );
+        
         cLabel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-        cLabel.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
         
         if (PreferenceLoader.loadBoolean( "useGradient" )) {
+			cLabel.setImage( G2GuiResources.getImage( image ) );
+			cLabel.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_TITLE_FOREGROUND ) );
         	cLabel.setBackground( 
         		new Color[] { parent.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ),
         			parent.getBackground() }, new int[] { 100 } );
         } else {
-        	cLabel.setBackground(parent.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND ));
+        	if (image.endsWith("Titlebar")) {
+        		image = image.substring( 0, image.length() - 8 ); 
+        		cLabel.setImage( G2GuiResources.getImage( image ) );
+        	
+        	} else  
+				cLabel.setImage( G2GuiResources.getImage( image ) );
         }
-
         return cLabel;
     }
 }
 
 /*
 $Log: CCLabel.java,v $
+Revision 1.5  2003/10/16 22:02:33  zet
+*** empty log message ***
+
 Revision 1.4  2003/10/08 01:12:16  zet
 useGradient preference
 
