@@ -22,20 +22,21 @@
  */
 package net.mldonkey.g2gui.view.pref;
 
+import java.io.IOException;
+
 import net.mldonkey.g2gui.comm.Core;
 
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * OptionTree2
  *
  * @author $user$
- * @version $Id: Preferences.java,v 1.1 2003/06/24 20:44:54 lemmstercvs01 Exp $ 
+ * @version $Id: Preferences.java,v 1.2 2003/06/25 10:42:36 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -48,8 +49,7 @@ public class Preferences extends PreferenceManager {
 	 * @param mldonkey
 	 * @param display
 	 */
-	public Preferences() {
-		preferenceStore = new PreferenceStore("g2gui.pref");
+	public Preferences(PreferenceStore preferenceStore) {		
 		myprefs = new PreferenceManager();		
 		myprefs.addToRoot(new PreferenceNode("G2gui", new G2Gui(preferenceStore)));
 		myprefs.addToRoot(new PreferenceNode("mldonkey", new General(preferenceStore)));
@@ -58,20 +58,38 @@ public class Preferences extends PreferenceManager {
 		
 	}
 	
-	public void open(Shell shell, Core mldonkey, Display display) {
-
-		prefdialog = new PreferenceDialog(shell, myprefs);
+	public void open(Shell shell, Core mldonkey) {
+		prefdialog = new PreferenceDialog(shell, myprefs){
+			/* (non-Javadoc)
+			 * @see org.eclipse.jface.preference.PreferenceDialog#cancelPressed()
+			 */
+			protected void cancelPressed() {
+				this.getParentShell().dispose();
+			}
+			};
+		
 		prefdialog.create();
-		prefdialog.open();
+		prefdialog.open();	
 		
 		
 	}
-	
+
+	public  void initialize(PreferenceStore preferenceStore) throws IOException {
+		try {			
+			preferenceStore.load();
+		} catch (IOException e) {
+			preferenceStore.save();
+			preferenceStore.load();
+		}
+	}	
 
 }
 
 /*
 $Log: Preferences.java,v $
+Revision 1.2  2003/06/25 10:42:36  dek
+peferenences dialog at first start
+
 Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
 refactored
 

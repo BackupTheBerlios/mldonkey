@@ -21,6 +21,8 @@
  * 
  */
 package net.mldonkey.g2gui.view.pref;
+import java.io.IOException;
+
 import org.eclipse.jface.preference.*;
 
 import org.eclipse.swt.widgets.Composite;
@@ -31,7 +33,7 @@ import org.eclipse.swt.widgets.Control;
  * G2Gui
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.1 2003/06/24 20:44:54 lemmstercvs01 Exp $ 
+ * @version $Id: G2Gui.java,v 1.2 2003/06/25 10:42:36 dek Exp $ 
  *
  */
 public class G2Gui extends PreferencePage  {
@@ -44,48 +46,79 @@ public class G2Gui extends PreferencePage  {
 	public G2Gui(PreferenceStore preferenceStore_) {
 		super("G2gui");		
 		this.preferenceStore = preferenceStore_;
+		preferenceStore.setDefault("hostname","localhost");
+		preferenceStore.setDefault("username","admin");
+		preferenceStore.setDefault("password","");
+		preferenceStore.setDefault("port",(int)4001);
 
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createContents(Composite shell) {
-		
+	protected Control createContents(Composite shell) {		
 				
-		hostname = new StringFieldEditor("hostname", "Hostname",shell);
+		hostname = new StringFieldEditor("hostname", "Hostname",shell);	
+			hostname.setStringValue(preferenceStore.getDefaultString("hostname"));
+			hostname.setStringValue(preferenceStore.getString("hostname"));
+			
 		port = new IntegerFieldEditor("port","Port",shell);
+			port.setStringValue(preferenceStore.getDefaultString("port"));
+			port.setStringValue(preferenceStore.getString("port"));
+
 		username = new StringFieldEditor("username", "Username",shell);
+			username.setStringValue(preferenceStore.getDefaultString("username"));
+			username.setStringValue(preferenceStore.getString("username"));
+
 		password = new StringFieldEditor("password", "Password",shell);
 			password.getTextControl(shell).setEchoChar ('*');			
+			password.setStringValue(preferenceStore.getString("password"));
+
 		return null;
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
-	public boolean performOk() {		
-		return super.performOk();
+	public boolean performOk(){	
+		preferenceStore.setValue("initialized",true);
+		preferenceStore.setValue("hostname",hostname.getStringValue());
+		preferenceStore.setValue("username",username.getStringValue());
+		preferenceStore.setValue("port",port.getIntValue());
+		preferenceStore.setValue("password",password.getStringValue());
+		try {
+			preferenceStore.save();
+		} catch (IOException e) {
+			System.out.println("Saving Preferences failed");
+		}	
+		return super.performOk();		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performCancel()
-	 */
-	public boolean performCancel() {		
-		return super.performCancel();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performApply()
-	 */
+
 	protected void performApply() {		
 		super.performApply();
 		
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#performCancel()
+	 */
+	public boolean performCancel() {
+		System.out.println("cancel");
+		//return super.performCancel();
+		return false;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
 	 */
-	protected void performDefaults() {		
+	protected void performDefaults() {	
+		
+		hostname.setStringValue(preferenceStore.getDefaultString("hostname"));
+		port.setStringValue(preferenceStore.getDefaultString("port"));
+		username.setStringValue(preferenceStore.getDefaultString("username"));
+						
 		super.performDefaults();
 	}
 
@@ -94,6 +127,9 @@ public class G2Gui extends PreferencePage  {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.2  2003/06/25 10:42:36  dek
+peferenences dialog at first start
+
 Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
 refactored
 

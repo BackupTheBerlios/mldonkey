@@ -22,16 +22,23 @@
  */
 package net.mldonkey.g2gui.view;
 
+
+import java.io.IOException;
 import java.net.Socket;
+
+import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import net.mldonkey.g2gui.comm.Core;
 import net.mldonkey.g2gui.helper.SocketPool;
+import net.mldonkey.g2gui.view.pref.Preferences;
 
 /**
  * G2GuiTest
  *
  * @author $user$
- * @version $Id: Main.java,v 1.1 2003/06/24 20:44:54 lemmstercvs01 Exp $ 
+ * @version $Id: Main.java,v 1.2 2003/06/25 10:42:36 dek Exp $ 
  *
  */
 public class Main {
@@ -43,10 +50,23 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int port = 4001;
-		String hostname = "";
-		String username = "admin";
-		String password = "";
+		PreferenceStore preferenceStore = new PreferenceStore("g2gui.pref");
+		Preferences myprefs = new Preferences(preferenceStore);
+		try {
+			myprefs.initialize(preferenceStore);
+		} catch (IOException e) {			
+			System.out.println("initalizing Preferences Dialog failed due to IOException");
+		}		
+		if (!(preferenceStore.getBoolean("initialized"))){
+			Shell myss = new Shell(new Display());
+			myss.open();
+			myprefs.open(myss,null);
+			}
+		int port = preferenceStore.getInt("port");
+		String hostname = preferenceStore.getString("hostname");
+		String username = preferenceStore.getString("username");
+		String password = preferenceStore.getString("password");
+
 	
 		SocketPool socketPool = new SocketPool( hostname, port, username, password );
 		try {
@@ -59,8 +79,9 @@ public class Main {
 			
 		Gui g2gui = new Gui(null);
 		mldonkey.disconnect();
+
 	}
-	
+
 	/**
 	 * @return a Core
 	 */
@@ -72,6 +93,9 @@ public class Main {
 
 /*
 $Log: Main.java,v $
+Revision 1.2  2003/06/25 10:42:36  dek
+peferenences dialog at first start
+
 Revision 1.1  2003/06/24 20:44:54  lemmstercvs01
 refactored
 
