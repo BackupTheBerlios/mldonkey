@@ -52,7 +52,7 @@ import java.util.List;
  * CustomTableTreeViewer
  *
  *
- * @version $Id: CustomTableTreeViewer.java,v 1.5 2003/11/28 20:51:52 zet Exp $
+ * @version $Id: CustomTableTreeViewer.java,v 1.6 2003/11/29 20:37:04 zet Exp $
  *
  */
 public class CustomTableTreeViewer extends TableTreeViewer implements ICustomViewer {
@@ -206,12 +206,11 @@ public class CustomTableTreeViewer extends TableTreeViewer implements ICustomVie
         //                tableTreeEditor.setItem(null);
         //        }
     }
-
-    protected void internalRefresh(Object element, boolean updateLabels) {
-        super.internalRefresh(element, updateLabels);
-
-        if (activeEditors)
-            nudgeColumn();
+    
+    public void refresh() {
+        super.refresh();
+		if (activeEditors)
+			nudgeColumn();
     }
 
     public void expandAll() {
@@ -310,6 +309,9 @@ public class CustomTableTreeViewer extends TableTreeViewer implements ICustomVie
 
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.6  2003/11/29 20:37:04  zet
+try nudge in refresh instead of internalrefresh
+
 Revision 1.5  2003/11/28 20:51:52  zet
 small method move
 
