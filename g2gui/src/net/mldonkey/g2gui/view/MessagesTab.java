@@ -40,9 +40,9 @@ import net.mldonkey.g2gui.view.friends.TableMenuListener;
 import net.mldonkey.g2gui.view.friends.TableSorter;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolderAdapter;
@@ -78,7 +78,7 @@ public class MessagesTab extends GuiTab {
 	private CTabFolder cTabFolder;
 	private Hashtable openTabs = new Hashtable();
 	private Composite friendsComposite;
-	private TableViewer tableViewer;
+	private CustomTableViewer tableViewer;
 	private long lastTime = 0;
 	private boolean mustRefresh;
 	/**
@@ -126,7 +126,7 @@ public class MessagesTab extends GuiTab {
 	 * 
 	 */
 	public void createFriendsTable() {
-		tableViewer = new TableViewer(friendsComposite, SWT.NONE);
+		tableViewer = new CustomTableViewer(friendsComposite, SWT.NONE);
 
 		tableViewer.setContentProvider(new TableContentProvider());
 		tableViewer.setLabelProvider(new TableLabelProvider());
@@ -430,6 +430,9 @@ public class MessagesTab extends GuiTab {
 }
 /*
 $Log: MessagesTab.java,v $
+Revision 1.7  2003/08/20 22:18:56  zet
+Viewer updates
+
 Revision 1.6  2003/08/20 14:58:43  zet
 sources clientinfo viewer
 

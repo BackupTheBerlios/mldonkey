@@ -22,7 +22,13 @@
  */
 package net.mldonkey.g2gui.view.transferTree;
 
+import org.eclipse.jface.viewers.IBaseLabelProvider;
+import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableTreeViewer;
+import org.eclipse.swt.custom.TableTreeItem;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Widget;
@@ -54,4 +60,57 @@ public class CustomTableTreeViewer extends TableTreeViewer {
 	public Item[] getItems(Item item) {
 		return super.getItems(item);
 	}
+	protected void doUpdateItem(Item item, Object element) {
+		// update icon and label
+		// Similar code in TableTreeViewer.doUpdateItem()
+		IBaseLabelProvider prov = getLabelProvider();
+		ITableLabelProvider tprov = null;
+		ILabelProvider lprov = null;
+		if (prov instanceof ITableLabelProvider)
+			tprov = (ITableLabelProvider) prov;
+		else
+			lprov = (ILabelProvider) prov;
+		int columnCount = this.getTableTree().getTable().getColumnCount();
+		TableTreeItem ti = (TableTreeItem) item;
+		// Also enter loop if no columns added.  See 1G9WWGZ: JFUIF:WINNT - TableViewer with 0 columns does not work
+		for (int column = 0; column < columnCount || column == 0; column++) {
+			String text = ""; //$NON-NLS-1$
+			Image image = null;
+			if (tprov != null) {
+				text = tprov.getColumnText(element, column);
+				image = tprov.getColumnImage(element, column);
+			} else {
+				if (column == 0) {
+					text = lprov.getText(element);
+					image = lprov.getImage(element);
+				}
+			}
+			// Only set text if it changes
+			if (!text.equals(ti.getText(column))) 
+				ti.setText(column, text);
+			// Apparently a problem to setImage to null if already null
+			if (ti.getImage(column) != image) 
+				ti.setImage(column, image);
+		}
+		if (prov instanceof IColorProvider) {
+			IColorProvider cprov = (IColorProvider) prov;
+			if (ti.getForeground() != cprov.getForeground(element)
+				&& cprov.getForeground(element) != null) {
+				ti.setForeground(cprov.getForeground(element));
+			}
+			if (ti.getBackground() != cprov.getBackground(element) 
+				&& cprov.getBackground(element) != null) {
+				ti.setBackground(cprov.getBackground(element));
+			}
+		}
+	}
+	
 }
+/*
+$Log: CustomTableTreeViewer.java,v $
+Revision 1.3  2003/08/20 22:18:56  zet
+Viewer updates
+
+
+
+*/

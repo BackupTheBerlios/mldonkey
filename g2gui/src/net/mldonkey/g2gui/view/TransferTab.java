@@ -34,6 +34,7 @@ import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
+import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
 import net.mldonkey.g2gui.view.transferTree.DownloadTableTreeContentProvider;
 import net.mldonkey.g2gui.view.transferTree.DownloadTableTreeViewer;
 import net.mldonkey.g2gui.view.transferTree.clientTable.TableContentProvider;
@@ -42,7 +43,6 @@ import net.mldonkey.g2gui.view.transferTree.clientTable.TableMenuListener;
 import net.mldonkey.g2gui.view.transferTree.clientTable.TableSorter;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
@@ -68,7 +68,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.29 2003/08/20 18:35:16 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.30 2003/08/20 22:18:56 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -79,7 +79,7 @@ public class TransferTab extends GuiTab  {
 	private Font font = new Font(null, "Helvetica", 12, SWT.BOLD); // fix later
 	public static DecimalFormat decimalFormat = new DecimalFormat( "0.0" );
 	private DownloadTableTreeViewer downloadTableTreeViewer = null;
-	private TableViewer clientTableViewer = null;
+	private CustomTableViewer clientTableViewer = null;
 		
 	/**
 	 * @param gui where this tab belongs to
@@ -162,7 +162,7 @@ public class TransferTab extends GuiTab  {
 		final String[] COLUMN_LABELS = { "TT_CT_STATE", "TT_CT_NAME", "TT_CT_NETWORK", "TT_CT_KIND" };
 		final int[] COLUMN_ALIGNMENT = { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
 		final int[] COLUMN_DEFAULT_WIDTHS = { 200, 100, 75, 75 };
-		clientTableViewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI);
+		clientTableViewer = new CustomTableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI);
 		Table table = clientTableViewer.getTable();
 		table.setLayoutData(new GridData(GridData.FILL_BOTH));
 		clientTableViewer.getTable().setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
@@ -288,6 +288,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.30  2003/08/20 22:18:56  zet
+Viewer updates
+
 Revision 1.29  2003/08/20 18:35:16  zet
 uploaders label
 

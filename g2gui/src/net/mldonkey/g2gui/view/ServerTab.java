@@ -36,9 +36,9 @@ import net.mldonkey.g2gui.view.server.TableLabelProvider;
 import net.mldonkey.g2gui.view.server.TableMenuListener;
 import net.mldonkey.g2gui.view.server.TableSorter;
 import net.mldonkey.g2gui.view.server.TableMenuListener.EnumStateFilter;
+import net.mldonkey.g2gui.view.transferTree.CustomTableViewer;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -60,8 +60,8 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * ServerTab
  *
- * @author $Author: lemmster $
- * @version $Id: ServerTab.java,v 1.11 2003/08/20 21:34:22 lemmster Exp $ 
+ * @author $Author: zet $
+ * @version $Id: ServerTab.java,v 1.12 2003/08/20 22:18:56 zet Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -73,7 +73,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	private GridLayout gridLayout;
 	private CoreCommunication core;
 	private ServerInfoIntMap servers;
-	private TableViewer table;
+	private CustomTableViewer table;
 	private Composite composite;
 	private Group group;
 	private String statusText = "";
@@ -150,7 +150,7 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 	 * Creates the table
 	 */
 	private void createTable() {
-		table = new TableViewer( composite, SWT.FULL_SELECTION | SWT.MULTI );
+		table = new CustomTableViewer( composite, SWT.FULL_SELECTION | SWT.MULTI );
 		table.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 		table.getTable().setLinesVisible( true );
 		table.getTable().setHeaderVisible( true );
@@ -383,6 +383,9 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.12  2003/08/20 22:18:56  zet
+Viewer updates
+
 Revision 1.11  2003/08/20 21:34:22  lemmster
 additive filters
 

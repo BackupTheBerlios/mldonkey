@@ -138,9 +138,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 		} else
 			selectedFile = null;
 			
-		if (o instanceof TreeClientInfo) 
+		if (o instanceof TreeClientInfo) {
 			selectedClient = (TreeClientInfo) o;
-		else
+		} else
 			selectedClient = null;
 		
 		selectedClients.clear();
@@ -708,6 +708,9 @@ public class DownloadTableTreeMenuListener implements ISelectionChangedListener,
 
 /*
 $Log: DownloadTableTreeMenuListener.java,v $
+Revision 1.10  2003/08/20 22:18:56  zet
+Viewer updates
+
 Revision 1.9  2003/08/20 14:58:43  zet
 sources clientinfo viewer
 

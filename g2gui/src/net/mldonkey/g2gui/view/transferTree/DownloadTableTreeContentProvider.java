@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Table;
  * DownloadTableTreeContentProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.9 2003/08/17 16:48:08 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.10 2003/08/20 22:18:56 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -211,15 +211,15 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 		if (clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING)
 			return true;
 		 // we are connected to this client and have a queue-rank != 0 and smaller 200
-		else if (clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED
-				&& clientInfo.getState().getRank() != 0
-				&& clientInfo.getState().getRank() < 200)
-			return true;
-		// we were connected to this client but have a queue-rank != 0 and smaller 200
-		else if ( clientInfo.getState().getState() == EnumState.NOT_CONNECTED_WAS_QUEUED
-				&& clientInfo.getState().getRank() != 0
-				&& clientInfo.getState().getRank() < 200)
-			return true;
+//		else if (clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED
+//				&& clientInfo.getState().getRank() != 0
+//				&& clientInfo.getState().getRank() < 200)
+//			return true;
+//		// we were connected to this client but have a queue-rank != 0 and smaller 200
+//		else if ( clientInfo.getState().getState() == EnumState.NOT_CONNECTED_WAS_QUEUED
+//				&& clientInfo.getState().getRank() != 0
+//				&& clientInfo.getState().getRank() < 200)
+//			return true;
 		else
 			return false;
 	}
@@ -311,7 +311,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 						if (items != null) {
 							boolean found = false;
 							for (int i = 0; i < items.length; i++) {
-								TreeClientInfo treeClientInfo = (TreeClientInfo) items[ i ].getData();
+								TreeClientInfo treeClientInfo = (TreeClientInfo) items[ i ].getData(); // is disposed after a sendUpdate
 								if (treeClientInfo != null 
 									&& treeClientInfo.getFileInfo().hashCode() == fileInfo.hashCode()
 									&& treeClientInfo.getClientInfo().hashCode() == clientInfo.hashCode()) {
@@ -620,6 +620,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.10  2003/08/20 22:18:56  zet
+Viewer updates
+
 Revision 1.9  2003/08/17 16:48:08  zet
 prevent rapid tree expansion from triggering double click
 
