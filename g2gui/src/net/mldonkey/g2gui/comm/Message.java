@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.7 2003/06/12 10:45:44 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.8 2003/06/12 18:14:41 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -333,10 +333,18 @@ public abstract class Message {
 	 * @return boolean true/false
 	 */
 	public abstract boolean sendMessage( Socket connection );
+	
+	public abstract void setMessage( short opCode, Object[] content);
+	
+	public abstract void setMessage( short opCode );
+
 }
 
 /*
 $Log: Message.java,v $
+Revision 1.8  2003/06/12 18:14:41  lemmstercvs01
+some abstract methodes added
+
 Revision 1.7  2003/06/12 10:45:44  lemmstercvs01
 R_BAD_PASSWORD added
 
