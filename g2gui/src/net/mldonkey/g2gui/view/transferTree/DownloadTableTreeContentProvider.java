@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Table;
  * DownloadTableTreeContentProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.2 2003/08/06 17:13:58 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.3 2003/08/06 19:29:55 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -231,6 +231,8 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	 */
 	public void update(Observable o, Object arg) {
 
+		if (refreshType == 3) runTableUpdate(null);
+
 		// listen for new FileInfos and Observe them.
 		if (o instanceof FileInfoIntMap) {
 			if (arg instanceof FileInfo) {
@@ -400,7 +402,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 					for (Iterator i = clientsForUpdate.keySet().iterator(); i.hasNext();) {
 						FileInfo fileInfo = (FileInfo)i.next();
 						// if not expanded, don't bother
-						if (tableTreeViewer.getExpandedState(fileInfo)) {
+						if (tableTreeViewer != null && tableTreeViewer.getExpandedState(fileInfo)) {
 							
 							
 							// Unfortunately, getVisibleExpandedElements() only returns FileInfo's...
@@ -651,6 +653,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.3  2003/08/06 19:29:55  zet
+minor
+
 Revision 1.2  2003/08/06 17:13:58  zet
 minor updates
 
