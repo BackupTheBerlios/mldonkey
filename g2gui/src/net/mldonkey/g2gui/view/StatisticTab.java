@@ -9,9 +9,9 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-
-
-
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 // rz,
 // TODO status-field
 // TODO file progress field
@@ -52,11 +52,16 @@ public class StatisticTab
 
 	
 	protected void createContents(Composite parent) {
-		System.out.println(parent.getBounds());
+		// System.out.println(parent.getBounds());
 		
-		graphControl = new GraphControl(parent);
-		 
+		SashForm main = new SashForm( parent, SWT.VERTICAL );
+		Composite top = new Composite( main, SWT.BORDER );
+		top.setLayout( new FillLayout() );
+		Composite bottom = new Composite( main, SWT.BORDER );
+		bottom.setLayout( new FillLayout() );
 		
+		graphControl = new GraphControl(bottom);
+		 		
 	}
 
 	
