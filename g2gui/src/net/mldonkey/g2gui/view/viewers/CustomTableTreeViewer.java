@@ -51,7 +51,7 @@ import java.util.List;
  * CustomTableTreeViewer
  *
  *
- * @version $Id: CustomTableTreeViewer.java,v 1.2 2003/10/31 07:24:01 zet Exp $
+ * @version $Id: CustomTableTreeViewer.java,v 1.3 2003/11/22 20:00:00 zet Exp $
  *
  */
 public class CustomTableTreeViewer extends TableTreeViewer implements ICustomViewer {
@@ -229,7 +229,17 @@ public class CustomTableTreeViewer extends TableTreeViewer implements ICustomVie
         super.collapseAll();
         nudgeColumn();
     }
-
+    
+    public void collapseToLevel(Object element, int level) {
+        super.collapseToLevel(element, level);
+        nudgeColumn();
+    }
+    
+	public void expandToLevel(Object element, int level) {
+	    super.expandToLevel(element, level);
+	    nudgeColumn();
+	}
+    
     // End TTE hack	
     public void setColumnIDs(String string) {
         columnIDs = new int[ string.length() ];
@@ -309,6 +319,9 @@ public class CustomTableTreeViewer extends TableTreeViewer implements ICustomVie
 
 /*
 $Log: CustomTableTreeViewer.java,v $
+Revision 1.3  2003/11/22 20:00:00  zet
+expand/collapseToLevel
+
 Revision 1.2  2003/10/31 07:24:01  zet
 fix: filestate filter - put back important isFilterProperty check
 fix: filestate filter - exclusionary fileinfo filters
