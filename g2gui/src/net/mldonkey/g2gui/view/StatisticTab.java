@@ -57,7 +57,7 @@ import java.util.Observable;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.41 2003/11/15 21:15:29 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.42 2003/11/21 19:17:04 vnc Exp $
  */
 public class StatisticTab extends PaneGuiTab {
     private GraphControl uploadsGraphControl;
@@ -71,7 +71,7 @@ public class StatisticTab extends PaneGuiTab {
      * @param gui object representing the top level gui layer
      */
     public StatisticTab(MainTab gui) {
-        super(gui);
+    	super(gui);
         createButton("StatisticsButton", G2GuiResources.getString("TT_StatisticsButton"),
             G2GuiResources.getString("TT_StatisticsButtonToolTip"));
         createContents(this.subContent);
@@ -82,7 +82,7 @@ public class StatisticTab extends PaneGuiTab {
      * @param parent
      */
     protected void createContents(Composite parent) {
-        SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
+    	SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
         mainSash.setLayout(new FillLayout());
 
         /* Top composite for other stats */
@@ -188,8 +188,10 @@ public class StatisticTab extends PaneGuiTab {
         ClientStats clientStats = (ClientStats) receivedInfo;
         uploadsGraphControl.addPointToGraph(clientStats.getTcpUpRate());
         downloadsGraphControl.addPointToGraph(clientStats.getTcpDownRate());
-        uploadsGraphControl.redraw();
-        downloadsGraphControl.redraw();
+        if ( this.isActive() ) {
+        	uploadsGraphControl.redraw();
+        	downloadsGraphControl.redraw();
+        }
         updateHeaderLabels(clientStats);
     }
 
@@ -235,7 +237,7 @@ public class StatisticTab extends PaneGuiTab {
     }
 
     public void updateDisplay() {
-        super.updateDisplay();
+    	super.updateDisplay();
         uploadsGraphControl.updateDisplay();
         downloadsGraphControl.updateDisplay();
     }
@@ -252,6 +254,9 @@ public class StatisticTab extends PaneGuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.42  2003/11/21 19:17:04  vnc
+big cpu leak: draw statistic graphs only when tab is active
+
 Revision 1.41  2003/11/15 21:15:29  zet
 Label restore action
 
@@ -326,7 +331,7 @@ Revision 1.18  2003/08/23 01:12:43  zet
 remove todos
 
 Revision 1.17  2003/08/22 21:06:48  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: vnc $
 
 Revision 1.16  2003/08/18 01:42:24  zet
 centralize resource bundle
