@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Table;
  * DownloadTableTreeContentProvider
  *
  * @author $user$
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.1 2003/08/04 19:22:08 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.2 2003/08/06 17:13:58 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, ITreeViewerListener, TreeListener {
@@ -72,9 +72,10 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	public List objectsToUpdate = Collections.synchronizedList(new ArrayList());
 	public Map clientsForUpdate = new Hashtable();
 	
+	private int tmpDisplayBuffer = -1;
 	private int displayBuffer = 1;
 	private int refreshType = 0;
-	private long lastTimeStamp;
+	private long lastTimeStamp = 0;
 
 	/*
 	 *  (non-Javadoc)
@@ -119,6 +120,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 					} 
 				}
 			}
+			// barren loins
 			hadChildren.remove(fileInfo);
 			return false;
 		}
@@ -252,9 +254,16 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 					refreshType = 3;
 					runTableUpdate(null);
 				}
-				else
+				// we just started the app, and it already had interesting clients
+				else if ( fileInfo.getRate() > 0 && !hadChildren.contains(fileInfo)) {
+					hasChildren(fileInfo);
+					refreshType = 3;
+					runTableUpdate(null);
+				// update with this new info	
+				} else {				 
 					if (refreshType == 0) refreshType = 1;
 					runTableUpdate(fileInfoArg);
+				}
 				// FileInfo.clientInfos updated
 			} else if (arg instanceof ClientInfo) {
 		
@@ -356,14 +365,24 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 			objectsToUpdate.add(object);
 		}
 
+	
 		if (System.currentTimeMillis() > lastTimeStamp + (1000*displayBuffer)) {
-								
+					
+			// try to prevent initial refresh flood upon first starting the app		
+			if (lastTimeStamp == 0) {
+				tmpDisplayBuffer = displayBuffer;
+				displayBuffer=3;		
+			} else if (tmpDisplayBuffer != -1) {
+				displayBuffer=tmpDisplayBuffer;
+				tmpDisplayBuffer = -1;
+			}
+					
+									
 			lastTimeStamp = System.currentTimeMillis();
 		
 			final int rType = refreshType;
 			refreshType = 0;
-			
-			
+					
 			if (MainTab.getShell().isDisposed()) return;
 	
 			Shell shell = MainTab.getShell();
@@ -554,7 +573,7 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 		} else {  // hope for a fileInfo
 			fileInfo = (FileInfo) tableTreeItem.getData();
 		}
-		chunkCanvas = new ChunkCanvas( table, SWT.NO_BACKGROUND, clientInfo, fileInfo, CHUNKS_COLUMN );
+		chunkCanvas = new ChunkCanvas( table, SWT.NO_BACKGROUND, clientInfo, fileInfo );
 		TableTreeEditor tableTreeEditor = new TableTreeEditor(tableTreeViewer.getTableTree());
 		tableTreeEditor.horizontalAlignment = SWT.LEFT;
 		tableTreeEditor.grabHorizontal = true;
@@ -632,6 +651,9 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.2  2003/08/06 17:13:58  zet
+minor updates
+
 Revision 1.1  2003/08/04 19:22:08  zet
 trial tabletreeviewer
 

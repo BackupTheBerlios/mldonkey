@@ -41,16 +41,15 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * ChunkView
  *
  * @author $user$
- * @version $Id: ChunkCanvas.java,v 1.8 2003/08/05 03:16:43 zet Exp $ 
+ * @version $Id: ChunkCanvas.java,v 1.9 2003/08/06 17:13:07 zet Exp $ 
  *
  */
 public class ChunkCanvas extends Canvas implements Observer {
@@ -60,8 +59,6 @@ public class ChunkCanvas extends Canvas implements Observer {
 	private String chunks;
 
 	private ClientInfo clientInfo;
-
-	private TableColumn column;
 
 	private FileInfo fileInfo;
 
@@ -89,7 +86,6 @@ public class ChunkCanvas extends Canvas implements Observer {
 	
 	
 	private final int initialHeight = 18;
-	private int minWidth = 1;
 	
 	/**
 	 * creates a chunkview-Object for the given clientInfo
@@ -99,10 +95,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 	 * @param fileInfo for this fileInfo we want to display the Information
 	 * @param column the column in which the widget appears
 	 */
-	public ChunkCanvas( Table parent, int style, ClientInfo clientInfo, FileInfo fileInfo, int column ) {			
+	public ChunkCanvas( Composite parent, int style, ClientInfo clientInfo, FileInfo fileInfo ) {			
 		super( parent, style );
-		this.column = parent.getColumn( column );
-		
+			
 		this.clientInfo = clientInfo;
 		this.fileInfo = fileInfo;
 		this.type = (clientInfo == null ? isFileInfo : isClientInfo);
@@ -139,8 +134,8 @@ public class ChunkCanvas extends Canvas implements Observer {
 	 * @param fileInfo  and the source of all the information
 	 * @param column the column in which the widget appears
 	 */
-	public ChunkCanvas( Table parent, int style, final FileInfo fileInfo, int column ) {	
-		this(parent, style, null, fileInfo, column);
+	public ChunkCanvas( Composite parent, int style, final FileInfo fileInfo ) {	
+		this( parent, style, null, fileInfo );
 	}
 
 	private void createImage() {
@@ -171,7 +166,10 @@ public class ChunkCanvas extends Canvas implements Observer {
 		if ( avail != null ) 
 			length = avail.length();
 		
-		if (length == 0) return;
+		if (length == 0) {
+			if (image != null) image.dispose();
+			return;
+		} 
 			
 		Display thisDisplay = MainTab.getShell().getDisplay();
 		
@@ -186,9 +184,8 @@ public class ChunkCanvas extends Canvas implements Observer {
 		Color toColor;
 						
 		if ( image != null ) image.dispose();
-		
-		if ( length > minWidth ) minWidth = length;
-		image = new Image( thisDisplay, minWidth, initialHeight );
+
+		image = new Image( thisDisplay, length, initialHeight );
 		
 		GC imageGC = new GC( image );
 					
@@ -251,6 +248,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 		if ( avail.length() != 0 ) 
 				length = avail.length();
+
+		if (length == 0) return;
+
 				
 		int numChunkSources;	
 		int highestNumSources = 0;
@@ -268,8 +268,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 	
 		if ( image != null ) image.dispose();
 
-		if ( length > minWidth ) minWidth = length;
-		image = new Image( thisDisplay, minWidth, initialHeight );
+		image = new Image( thisDisplay, length, initialHeight );
 		
 		GC imageGC = new GC( image );
 		
@@ -321,12 +320,10 @@ public class ChunkCanvas extends Canvas implements Observer {
 	
 	protected void resizeImage( ControlEvent e ) {
 		if ( image != null && imageData != null ) {
-						
-			if (getClientArea().width > minWidth && getClientArea().height > 0) {
-	
+					
+			if (getClientArea().width > 0 && getClientArea().height > 0) {
 					resizedImageData = imageData.scaledTo(
 						getClientArea().width, getClientArea().height);
-					
 			} 
 	
 		}
@@ -336,26 +333,26 @@ public class ChunkCanvas extends Canvas implements Observer {
 	 * @param e
 	 */
 	protected void paintControl( PaintEvent e ) {
-	
 
 		GC canvasGC = e.gc;
-				
-		if ( image != null ) {
 			
+		// does this help? probably not...	
+		if (canvasGC == null) return;	
+
+		if ( image != null ) {
+		
 			int srcWidth = resizedImageData.width;			
 			int srcHeight = resizedImageData.height;	
 			int destWidth = e.width;
 			int destHeight = e.height;			
-			
+		
 			Image bufferImage = new Image(null, resizedImageData);			
 						
 			GC bufferGC = new GC( bufferImage );
-				
-			int ht = srcHeight - 1;
-			int wt = srcWidth - 1;
+	
 			// progress bar				
 			if ( type == isFileInfo ) {
-				int pix =  ( int ) ( ( fileInfo.getPerc() / 100 ) * ( double ) wt ) ;
+				int pix =  ( int ) ( ( fileInfo.getPerc() / 100 ) * ( double ) (srcWidth - 1) ) ;
 				bufferGC.setBackground( new Color(null, 15, 136, 0 ));
 				bufferGC.setForeground( new Color(null, 41, 187, 26));
 				bufferGC.fillGradientRectangle(0,0,pix,4,false);
@@ -371,6 +368,7 @@ public class ChunkCanvas extends Canvas implements Observer {
 			bufferGC.drawLine(srcWidth-1,srcHeight-1,srcWidth-1,srcHeight-1);	
 			bufferGC.dispose();
 			
+			try {		
 			
 			canvasGC.drawImage(
 				bufferImage,
@@ -382,6 +380,17 @@ public class ChunkCanvas extends Canvas implements Observer {
 				e.y,
 				e.width,
 				e.height );
+			
+			} catch (Exception x) {
+				
+				System.out.println("e.width: " + e.width +
+									" e.height: " + e.height + 
+									" bw: " + bufferImage.getBounds().width +
+									" bh: " + bufferImage.getBounds().height ); 
+				x.printStackTrace();
+				
+			}
+	
 	
 		
 		} else { 
@@ -454,6 +463,9 @@ public class ChunkCanvas extends Canvas implements Observer {
 
 /*
 $Log: ChunkCanvas.java,v $
+Revision 1.9  2003/08/06 17:13:07  zet
+minor updates
+
 Revision 1.8  2003/08/05 03:16:43  zet
 remove double dispose
 
