@@ -34,7 +34,7 @@ import net.mldonkey.g2gui.model.ClientStats;
  * SpeedItem
  *
  * @author $user$
- * @version $Id: SpeedItem.java,v 1.6 2003/06/27 13:37:28 dek Exp $ 
+ * @version $Id: SpeedItem.java,v 1.7 2003/06/28 09:37:18 lemmstercvs01 Exp $ 
  *
  */
 public class SpeedItem extends StatusLineItem implements Observer {	
@@ -47,7 +47,7 @@ public class SpeedItem extends StatusLineItem implements Observer {
 	 * @param i
 	 * @param mldonkey
 	 */
-	public SpeedItem(StatusLine statusline, CoreCommunication mldonkey) {
+	public SpeedItem( StatusLine statusline, CoreCommunication mldonkey ) {
 		super();
 		this.parent = statusline.getStatusline();
 		content = "";
@@ -59,30 +59,19 @@ public class SpeedItem extends StatusLineItem implements Observer {
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
-	public void update(Observable o, Object arg) {
-		/*
-		 * 	private long totalUp;
-			private long totalDown;
-			private long totalShared;
-			private int numOfShare;
-			private float tcpUpRate;
-			private float tcpDownRate;
-			private float udpUpRate;
-			private float udpDownRate;
-			private int numCurrDownload;
-			private int numDownloadFinished;
-			private int[] connectedNetworks;
-		 */
-		if (arg instanceof ClientStats){
-			final ClientStats temp = (ClientStats) arg;
+	public void update( Observable o, Object arg ) {
+		if ( arg instanceof ClientStats ){
+			final ClientStats temp = ( ClientStats ) arg;
 			final float down = temp.getTcpDownRate();
 			final float up   = temp.getTcpUpRate();
-			if (!parent.isDisposed())				
-			parent.getDisplay().syncExec( new Runnable () {
+			if ( !parent.isDisposed() )				
+			parent.getDisplay().asyncExec( new Runnable () {
 				public void run() {
-					statusline.update(position," DL: "+down+"kb/s - UL: "+up+"kb/s");
-					String toolTipText ="UDP-DL: " + temp.getUdpDownRate()+						"\nUDP-UL: " + temp.getUdpUpRate();						
-					statusline.updateTooltip(position,toolTipText);
+					statusline.update( position, " DL: " + down
+										+ "kb/s - UL: " + up + "kb/s" );
+					String toolTipText = "UDP-DL: " + temp.getUdpDownRate()
+									   + "\nUDP-UL: " + temp.getUdpUpRate();						
+					statusline.updateTooltip( position,toolTipText );
 				}
 			});
 		}
@@ -91,6 +80,9 @@ public class SpeedItem extends StatusLineItem implements Observer {
 
 /*
 $Log: SpeedItem.java,v $
+Revision 1.7  2003/06/28 09:37:18  lemmstercvs01
+syncExec() -> asyncExec()
+
 Revision 1.6  2003/06/27 13:37:28  dek
 tooltips added
 
