@@ -30,6 +30,15 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceStore;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
@@ -45,7 +54,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * ColumnSelector
  *
- * @version $Id: ColumnSelector.java,v 1.4 2003/11/02 21:14:21 zet Exp $
+ * @version $Id: ColumnSelector.java,v 1.5 2003/11/02 22:26:25 zet Exp $
  *
  */
 public class ColumnSelector extends Dialog {
@@ -143,6 +152,7 @@ public class ColumnSelector extends Dialog {
         gd.widthHint = widthHint;
 
         leftList = new List(parent, SWT.BORDER | SWT.MULTI);
+        leftList.setData("position", "Left");
         leftList.setLayoutData(gd);
 
         Composite arrowComposite = new Composite(parent, SWT.NONE);
@@ -170,12 +180,15 @@ public class ColumnSelector extends Dialog {
             });
 
         rightList = new List(parent, SWT.BORDER | SWT.MULTI);
-
+        leftList.setData("position", "Right");
         gd = new GridData(GridData.FILL_BOTH);
         gd.heightHint = heightHint;
         gd.widthHint = widthHint;
 
         rightList.setLayoutData(gd);
+
+        setDragDrop(leftList);
+        setDragDrop(rightList);
     }
 
     /**
@@ -205,9 +218,86 @@ public class ColumnSelector extends Dialog {
         list.removeAll();
 
         for (int i = 0; i < string.length(); i++) {
-            int n = string.charAt(i) - 65;
+            int n = string.charAt(i) - MAGIC_NUMBER;
             list.add(G2GuiResources.getString(columnLegend[ n ]));
         }
+    }
+
+    /**
+     * @param b
+     */
+    public void moveItems(boolean b) {
+        List list = (b ? leftList : rightList);
+        String myString = (b ? leftColumnIDs : rightColumnIDs);
+        String otherString = (b ? rightColumnIDs : leftColumnIDs);
+
+        if (list.getSelectionCount() > 0) {
+            int[] ind = list.getSelectionIndices();
+
+            String newString = "";
+            boolean found;
+
+            for (int i = 0; i < myString.length(); i++) {
+                found = false;
+
+                for (int j = 0; j < ind.length; j++) {
+                    if (i == ind[ j ]) {
+                        otherString += myString.charAt(i);
+                        found = true;
+
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    newString += myString.charAt(i);
+                }
+            }
+
+            myString = newString;
+
+            leftColumnIDs = (b ? myString : otherString);
+            rightColumnIDs = (b ? otherString : myString);
+
+            refreshLists();
+        }
+    }
+
+    /**
+     * @param list
+     */
+    public void setDragDrop(final List list) {
+        Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+        int operations = DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_LINK;
+
+        final DragSource source = new DragSource(list, operations);
+        source.setTransfer(types);
+        source.addDragListener(new DragSourceListener() {
+                public void dragStart(DragSourceEvent event) {
+                    event.doit = (list.getSelectionCount() != 0);
+                }
+
+                public void dragSetData(DragSourceEvent event) {
+                    event.data = "DND";
+                }
+
+                public void dragFinished(DragSourceEvent event) {
+                }
+            });
+
+        DropTarget target = new DropTarget(list, operations);
+        target.setTransfer(types);
+        target.addDropListener(new DropTargetAdapter() {
+                public void drop(DropTargetEvent event) {
+                    if (!event.data.equals("DND")) {
+                        event.detail = DND.DROP_NONE;
+
+                        return;
+                    }
+
+                    moveItems(list != leftList);
+                }
+            });
     }
 
     /**
@@ -221,40 +311,7 @@ public class ColumnSelector extends Dialog {
         }
 
         public void widgetSelected(SelectionEvent s) {
-            List list = (b ? leftList : rightList);
-            String myString = (b ? leftColumnIDs : rightColumnIDs);
-            String otherString = (b ? rightColumnIDs : leftColumnIDs);
-
-            if (list.getSelectionCount() > 0) {
-                int[] ind = list.getSelectionIndices();
-
-                String newString = "";
-                boolean found;
-
-                for (int i = 0; i < myString.length(); i++) {
-                    found = false;
-
-                    for (int j = 0; j < ind.length; j++) {
-                        if (i == ind[ j ]) {
-                            otherString += myString.charAt(i);
-                            found = true;
-
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        newString += myString.charAt(i);
-                    }
-                }
-
-                myString = newString;
-
-                leftColumnIDs = (b ? myString : otherString);
-                rightColumnIDs = (b ? otherString : myString);
-
-                refreshLists();
-            }
+            moveItems(b);
         }
     }
 }
@@ -262,6 +319,9 @@ public class ColumnSelector extends Dialog {
 
 /*
 $Log: ColumnSelector.java,v $
+Revision 1.5  2003/11/02 22:26:25  zet
+add drag&drop
+
 Revision 1.4  2003/11/02 21:14:21  zet
 setwidth
 
