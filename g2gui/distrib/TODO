@@ -10,7 +10,7 @@ Things with "!" will be implemented/fixed next
   Alternatively kill the core and restart it?
   * PreferenceLoader.*Relaunching() is a bit sub-optimal
   
-* Fix big memleak when relaunching g2gui after a pref-change. MainWindow does not seem to 
+* Fix memleak when relaunching g2gui after a pref-change. MainWindow does not seem to 
   be disposed properly
 
 * Get the subsearch right
@@ -22,6 +22,9 @@ Things with "!" will be implemented/fixed next
 | Feature Enhancements |
  ----------------------
 ! Implement .torrent proxy
+
+* stop downloads from search results in case you accicently started it from there
+  - use more colors: blue for already downloaded, green for being downloaded
 
 * Implement a global hotkey/command for column-packing
 
