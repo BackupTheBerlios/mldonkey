@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.60 2003/08/24 17:15:47 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.61 2003/08/24 18:06:41 zet Exp $ 
  *
  */
 public class MainTab implements Observer, ShellListener {
@@ -110,6 +110,7 @@ public class MainTab implements Observer, ShellListener {
 				
 				/* save the preferences */
 				PreferenceLoader.saveStore();
+				PreferenceLoader.cleanUp();
 				
 				/* set all tabs to inactive */
 				Iterator itr = registeredTabs.iterator();
@@ -385,6 +386,9 @@ public class MainTab implements Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.61  2003/08/24 18:06:41  zet
+PreferenceLoader.cleanup
+
 Revision 1.60  2003/08/24 17:15:47  zet
 use preferenceloader
 
