@@ -22,7 +22,9 @@
  */
 package net.mldonkey.g2gui.view;
 
-import net.mldonkey.g2gui.comm.CoreCommunication;
+import java.util.Observable;
+import java.util.Observer;
+
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.RegExp;
@@ -35,20 +37,16 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
-import java.util.Observable;
-import java.util.Observer;
-
 
 /**
  * ConsoleTab
  *
  *
- * @version $Id: ConsoleTab.java,v 1.53 2003/11/29 17:01:00 zet Exp $
+ * @version $Id: ConsoleTab.java,v 1.54 2003/11/29 17:21:22 zet Exp $
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, Runnable {
     private ConsoleMessage consoleMessage;
-    private CoreCommunication core;
     private Console console;
 
     /**
@@ -56,9 +54,8 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
      */
     public ConsoleTab(MainWindow gui) {
         super(gui);
-        this.core = gui.getCore();
         createButton("ConsoleButton");
-        createContents(this.subContent);
+        createContents(getContent());
     }
 
     /* ( non-Javadoc )
@@ -77,7 +74,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
      * @see net.mldonkey.g2gui.view.GuiTab#setInActive()
      */
     public void setInActive() {
-        this.core.getConsoleMessage().deleteObserver(this);
+        getCore().getConsoleMessage().deleteObserver(this);
         console.deleteObserver(this);
         super.setInActive();
     }
@@ -87,7 +84,7 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
      */
     public void setActive() {
         console.addObserver(this);
-        this.core.getConsoleMessage().addObserver(this);
+        getCore().getConsoleMessage().addObserver(this);
         super.setActive();
         console.setFocus();
     }
@@ -99,10 +96,10 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
     public void handleEvent(Event event) {
         super.handleEvent(event);
 
-        if (core.isConnected()) {
-            console.append(RegExp.replaceAll(core.getConsoleMessage().getConsoleMessage(), "\n",
+        if (getCore().isConnected()) {
+            console.append(RegExp.replaceAll(getCore().getConsoleMessage().getConsoleMessage(), "\n",
                     console.getLineDelimiter()));
-            core.getConsoleMessage().reset();
+            getCore().getConsoleMessage().reset();
         }
     }
 
@@ -131,10 +128,10 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
         if (o instanceof Console) {
             String[] command = new String[ 1 ];
             command[ 0 ] = (String) arg;
-            (new EncodeMessage(Message.S_CONSOLEMSG, command)).sendMessage(core);
+            (new EncodeMessage(Message.S_CONSOLEMSG, command)).sendMessage(getCore());
         } else if (o instanceof ConsoleMessage) {
             this.consoleMessage = (ConsoleMessage) arg;
-            content.getDisplay().asyncExec(this);
+            getContent().getDisplay().asyncExec(this);
         }
     }
 
@@ -150,6 +147,9 @@ public class ConsoleTab extends GuiTab implements Observer, Runnable {
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.54  2003/11/29 17:21:22  zet
+minor cleanup
+
 Revision 1.53  2003/11/29 17:01:00  zet
 update for mainWindow
 

@@ -25,14 +25,12 @@ package net.mldonkey.g2gui.view;
 import java.util.Observer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
-import net.mldonkey.g2gui.view.helper.WidgetFactory;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -41,7 +39,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  *
- * @version $Id: GuiTab.java,v 1.40 2003/11/29 17:01:00 zet Exp $
+ * @version $Id: GuiTab.java,v 1.41 2003/11/29 17:21:22 zet Exp $
  *
  */
 public abstract class GuiTab implements Listener, Observer {
@@ -53,7 +51,7 @@ public abstract class GuiTab implements Listener, Observer {
     /**
      * The parent Composite
      */
-    protected Composite content;
+    protected Composite contentComposite;
 
     /**
      * The main Window
@@ -64,12 +62,7 @@ public abstract class GuiTab implements Listener, Observer {
      * The ToolItem
      */
     protected ToolButton toolButton;
-
-    /**
-     * The master Gui
-     */
-   // private mainWindow gui;
-    protected Composite subContent;
+   
 
     /**
      * @param gui the gui, to which this tab belongs
@@ -77,18 +70,13 @@ public abstract class GuiTab implements Listener, Observer {
     public GuiTab( MainWindow mainWindow ) {
         this.mainWindow = mainWindow;
 
-        this.content = new Composite( mainWindow.getPageContainer(), SWT.NONE );
-        GridLayout gridLayout = WidgetFactory.createGridLayout( 1, 0, 0, 0, 0, false );
-        this.content.setLayout( gridLayout );
-        this.content.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        this.content.setVisible( false );
-
-        this.subContent = new Composite( content, SWT.NONE );
-        this.subContent.setLayout( new FillLayout() );
-        subContent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-        toolButton = new ToolButton( mainWindow.getCoolBar().getMainTools(), SWT.PUSH );
-        toolButton.addListener( SWT.Selection, this );
+        this.contentComposite = new Composite( mainWindow.getPageContainer(), SWT.NONE );
+        this.contentComposite.setLayout( new FillLayout() );
+        this.contentComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        this.contentComposite.setVisible( false );
+    
+        this.toolButton = new ToolButton( mainWindow.getCoolBar().getMainTools(), SWT.PUSH );
+        this.toolButton.addListener( SWT.Selection, this );
 
         this.mainWindow.registerTab( this );
     }
@@ -163,21 +151,18 @@ public abstract class GuiTab implements Listener, Observer {
      * @return the Composite, where all the Tab is layed out onto
      */
     public Composite getContent() {
-        return content;
+        return contentComposite;
     }
 
-    public Composite getSubContent() {
-        return subContent;
-    }
-
+    /**
+     * updateDisplay
+     */
     public void updateDisplay() {
-        content.layout();
+        getContent().layout();
     }
 
     /**
      * @param buttonName 
-     * @param buttonText 
-     * @param buttonToolTip
      */
     public void createButton( String buttonName ) {
         toolButton.setText( G2GuiResources.getString("TT_" + buttonName) );
@@ -209,6 +194,9 @@ public abstract class GuiTab implements Listener, Observer {
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.41  2003/11/29 17:21:22  zet
+minor cleanup
+
 Revision 1.40  2003/11/29 17:01:00  zet
 update for mainWindow
 

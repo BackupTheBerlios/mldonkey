@@ -41,7 +41,7 @@ import java.util.Observable;
 /**
  * TransferTab.java
  *
- * @version $Id: TransferTab.java,v 1.98 2003/11/29 17:01:00 zet Exp $
+ * @version $Id: TransferTab.java,v 1.99 2003/11/29 17:21:22 zet Exp $
  *
  */
 public class TransferTab extends GViewGuiTab {
@@ -55,7 +55,7 @@ public class TransferTab extends GViewGuiTab {
     public TransferTab(MainWindow gui) {
         super(gui);
         createButton("TransfersButton");
-        createContents(this.subContent);
+        createContents(getContent());
     }
 
     /* ( non-Javadoc )
@@ -174,6 +174,9 @@ public class TransferTab extends GViewGuiTab {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.99  2003/11/29 17:21:22  zet
+minor cleanup
+
 Revision 1.98  2003/11/29 17:01:00  zet
 update for mainWindow
 

@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.Control;
  * SearchTab
  *
  *
- * @version $Id: SearchTab.java,v 1.45 2003/11/29 17:01:00 zet Exp $ 
+ * @version $Id: SearchTab.java,v 1.46 2003/11/29 17:21:22 zet Exp $ 
  *
  */
 public class SearchTab extends GuiTab {
@@ -88,7 +88,7 @@ public class SearchTab extends GuiTab {
 		/* Set our name on the coolbar */
 		createButton( "SearchButton" );
 		/* create the tab content */
-		this.createContents( this.subContent );
+		this.createContents(getContent());
 	}
 
 	/**
@@ -414,6 +414,9 @@ public class SearchTab extends GuiTab {
 
 /*
 $Log: SearchTab.java,v $
+Revision 1.46  2003/11/29 17:21:22  zet
+minor cleanup
+
 Revision 1.45  2003/11/29 17:01:00  zet
 update for mainWindow
 

@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  *
- * @version $Id: MessagesTab.java,v 1.38 2003/11/29 17:01:00 zet Exp $
+ * @version $Id: MessagesTab.java,v 1.39 2003/11/29 17:21:22 zet Exp $
  */
 public class MessagesTab extends GViewGuiTab {
     private CTabFolder cTabFolder;
@@ -65,7 +65,7 @@ public class MessagesTab extends GViewGuiTab {
     public MessagesTab(MainWindow gui) {
         super(gui);
         createButton("MessagesButton");
-        createContents(this.subContent);
+        createContents(getContent());
     }
 
     /* (non-Javadoc)
@@ -363,6 +363,9 @@ public class MessagesTab extends GViewGuiTab {
 
 /*
 $Log: MessagesTab.java,v $
+Revision 1.39  2003/11/29 17:21:22  zet
+minor cleanup
+
 Revision 1.38  2003/11/29 17:01:00  zet
 update for mainWindow
 

@@ -40,7 +40,7 @@ import java.util.Observable;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.51 2003/11/29 17:01:00 zet Exp $
+ * @version $Id: ServerTab.java,v 1.52 2003/11/29 17:21:22 zet Exp $
  *
  */
 public class ServerTab extends GViewGuiTab implements Runnable {
@@ -59,7 +59,7 @@ public class ServerTab extends GViewGuiTab implements Runnable {
         createButton("ServersButton");
 
         /* create the tab content */
-        this.createContents(this.subContent);
+        this.createContents(getContent());
         updateDisplay();
     }
 
@@ -85,7 +85,7 @@ public class ServerTab extends GViewGuiTab implements Runnable {
         if (gView.getTable().isDisposed())
             return;
 
-        this.content.getDisplay().asyncExec(this);
+        getContent().getDisplay().asyncExec(this);
     }
 
     /* (non-Javadoc)
@@ -174,6 +174,9 @@ public class ServerTab extends GViewGuiTab implements Runnable {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.52  2003/11/29 17:21:22  zet
+minor cleanup
+
 Revision 1.51  2003/11/29 17:01:00  zet
 update for mainWindow
 

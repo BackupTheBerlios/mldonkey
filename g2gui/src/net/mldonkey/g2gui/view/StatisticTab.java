@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.46 2003/11/29 17:01:00 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.47 2003/11/29 17:21:22 zet Exp $
  */
 public class StatisticTab extends GuiTab {
     private GraphControl uploadsGraphControl;
@@ -56,7 +56,7 @@ public class StatisticTab extends GuiTab {
     public StatisticTab(MainWindow gui) {
         super(gui);
         createButton("StatisticsButton");
-        createContents(this.subContent);
+        createContents(getContent());
         getCore().getClientStats().addObserver(this);
     }
 
@@ -162,6 +162,9 @@ public class StatisticTab extends GuiTab {
 
 /*
 $Log: StatisticTab.java,v $
+Revision 1.47  2003/11/29 17:21:22  zet
+minor cleanup
+
 Revision 1.46  2003/11/29 17:01:00  zet
 update for mainWindow
 
