@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.60 2004/01/13 22:42:15 psy Exp $
+ * @version $Id: G2Gui.java,v 1.61 2004/01/13 22:57:25 psy Exp $
  *
  */
 public class G2Gui {
@@ -194,7 +194,7 @@ public class G2Gui {
     		"   --help	this help\n" +
 			"   -v		increase verbosiveness / debug output\n" +
 			"   -c		use config file\n" +
-			"   -h		host\n" +
+			"   -h		host[:port]\n" +
 			"   -u		username\n" +
 			"   -p		password\n" +
 			"\n" +
@@ -537,6 +537,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.61  2004/01/13 22:57:25  psy
+*** empty log message ***
+
 Revision 1.60  2004/01/13 22:42:15  psy
 commandline fixes
 
