@@ -23,10 +23,12 @@
 package net.mldonkey.g2gui.view.search;
 
 import java.util.Observable;
+import java.util.StringTokenizer;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.NetworkInfo;
 import net.mldonkey.g2gui.view.SearchTab;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 import org.eclipse.swt.SWT;
@@ -49,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
  * ComplexSearch
  *
  *
- * @version $Id: ComplexSearch.java,v 1.8 2003/09/07 08:21:50 lemmster Exp $
+ * @version $Id: ComplexSearch.java,v 1.9 2003/09/07 19:50:06 zet Exp $
  *
  */
 public abstract class ComplexSearch extends Search implements Listener, MouseListener {
@@ -99,14 +101,42 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
         return null;
     }
 
+	public void addQueryMinMax(Combo combo) {
+
+		String tokenOne = "";
+		String tokenTwo = "MB";
+				
+		StringTokenizer st = new StringTokenizer(combo.getText());
+				
+		tokenOne = st.nextToken();
+		if (st.hasMoreTokens()) {
+			tokenTwo = st.nextToken();
+		}
+	
+		if (combo == minCombo)
+			query.setMinSize( tokenOne, tokenTwo );
+		else 
+			query.setMaxSize( tokenOne, tokenTwo );
+	}
+
+
 	/* (non-Javadoc)
 	 * @see net.mldonkey.g2gui.view.search.Search#performSearch()
 	 */
 	public void performSearch() {
-		if ( !maxText.getText().equals( "" ) )
-			query.setMaxSize( maxText.getText(), maxCombo.getItem( maxCombo.getSelectionIndex() ) );
-		if ( !minText.getText().equals( "" ) )
-			query.setMinSize( minText.getText(), minCombo.getItem( minCombo.getSelectionIndex() ) );
+		
+		if (PreferenceLoader.loadBoolean("useCombo")) {
+			if ( !minCombo.getText().equals( "" ) )  
+				addQueryMinMax(minCombo);
+			if ( !maxCombo.getText().equals( "" ) ) 
+				addQueryMinMax(maxCombo);
+		} else {
+			if ( !maxText.getText().equals( "" ) )
+				query.setMaxSize( maxText.getText(), maxCombo.getItem( maxCombo.getSelectionIndex() ) );
+			if ( !minText.getText().equals( "" ) )
+				query.setMinSize( minText.getText(), minCombo.getItem( minCombo.getSelectionIndex() ) );
+		}		
+		
 		if ( !resultCombo.getItem( resultCombo.getSelectionIndex() ).equals( "" ) )
 			query.setMaxSearchResults( 
 				new Integer( resultCombo.getItem( resultCombo.getSelectionIndex()) ).intValue() );
@@ -249,11 +279,11 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
     }
     
     protected void createMinMaxSizeText( Composite group ) {
-			createSizeText( group, G2GuiResources.getString( "CS_MINSIZE" ), this.minCombo );
-			createSizeText( group, G2GuiResources.getString( "CS_MAXSIZE" ), this.maxCombo );
+			createSizeText( group, G2GuiResources.getString( "CS_MINSIZE" ), 1 );
+			createSizeText( group, G2GuiResources.getString( "CS_MAXSIZE" ), 2 );
     }
     
-    protected void createSizeText ( Composite group, String labelText, Combo aCombo ) {
+    protected void createSizeText ( Composite group, String labelText, int type ) {
 
 		/* the max size label */
 				
@@ -269,7 +299,16 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 	
 		/* the max size combo */
 		gridData = new GridData( GridData.FILL_HORIZONTAL );
-		aCombo = new Combo( group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+		Combo aCombo;
+		
+		if (type==1) {
+			minCombo = new Combo( group, SWT.SINGLE | SWT.BORDER );
+			aCombo = minCombo;	
+		} else {
+			maxCombo = new Combo( group, SWT.SINGLE | SWT.BORDER ); 
+			aCombo = maxCombo;
+    	}
+		
 		aCombo.setLayoutData( gridData );
 		aCombo.setItems( items );
 		aCombo.select( 0 );
@@ -337,6 +376,9 @@ public abstract class ComplexSearch extends Search implements Listener, MouseLis
 }
 /*
 $Log: ComplexSearch.java,v $
+Revision 1.9  2003/09/07 19:50:06  zet
+use min/max combo
+
 Revision 1.8  2003/09/07 08:21:50  lemmster
 resourcebundle added
 
