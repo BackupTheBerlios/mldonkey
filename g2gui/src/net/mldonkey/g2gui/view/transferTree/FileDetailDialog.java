@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
   
@@ -53,7 +54,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.24 2003/08/31 02:35:32 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.25 2003/09/04 18:14:56 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer {
@@ -216,9 +217,19 @@ public class FileDetailDialog implements Observer {
 			fileCancelButton.setText( G2GuiResources.getString( "TT_DOWNLOAD_MENU_CANCEL" ) );
 			fileCancelButton.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected (SelectionEvent s) {
-					fileInfo.setState(EnumFileState.CANCELLED);
-					fileCancelButton.setEnabled(false);
-					fileActionButton.setEnabled(false);
+					
+					MessageBox reallyCancel =
+							new MessageBox( 
+								fileCancelButton.getShell(),
+								SWT.YES | SWT.NO | SWT.ICON_QUESTION );
+			
+					reallyCancel.setMessage( G2GuiResources.getString( "TT_REALLY_CANCEL" ) );
+					int answer = reallyCancel.open();
+					if ( answer == SWT.YES ) {
+						fileInfo.setState(EnumFileState.CANCELLED);
+						fileCancelButton.setEnabled(false);
+						fileActionButton.setEnabled(false);
+					}
 				}	
 			});
 		}
@@ -369,6 +380,9 @@ public class FileDetailDialog implements Observer {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.25  2003/09/04 18:14:56  zet
+cancel messagebox
+
 Revision 1.24  2003/08/31 02:35:32  zet
 setFocus
 
@@ -410,6 +424,9 @@ new todos (name + close button)
 
 Revision 1.10  2003/08/22 21:22:58  lemmster
 fix $Log: FileDetailDialog.java,v $
+fix Revision 1.25  2003/09/04 18:14:56  zet
+fix cancel messagebox
+fix
 fix Revision 1.24  2003/08/31 02:35:32  zet
 fix setFocus
 fix
