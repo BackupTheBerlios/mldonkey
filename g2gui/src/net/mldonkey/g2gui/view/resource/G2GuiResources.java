@@ -22,7 +22,7 @@
  */
 package net.mldonkey.g2gui.view.resource;
 
-import net.mldonkey.g2gui.model.NetworkInfo.Enum;
+import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.MainTab;
 
@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.43 2003/10/22 23:43:13 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.44 2003/10/28 11:07:32 lemmster Exp $
  */
 public class G2GuiResources {
     private static ImageRegistry imageRegistry = null;
@@ -111,22 +111,22 @@ public class G2GuiResources {
      * @param networkType
      * @return Image
      */
-    public static Image getNetworkImage( Enum networkType ) {
-        if ( networkType == Enum.DONKEY ) {
+    public static Image getNetworkImage( EnumNetwork networkType ) {
+        if ( networkType == EnumNetwork.DONKEY ) {
             return getImage( "DKConnectedWhite" );
-        } else if ( networkType == Enum.FT ) {
+        } else if ( networkType == EnumNetwork.FT ) {
             return getImage( "FTConnectedWhite" );
-        } else if ( networkType == Enum.GNUT ) {
+        } else if ( networkType == EnumNetwork.GNUT ) {
             return getImage( "G1ConnectedWhite" );
-        } else if ( networkType == Enum.GNUT2 ) {
+        } else if ( networkType == EnumNetwork.GNUT2 ) {
             return getImage( "G2ConnectedWhite" );
-        } else if ( networkType == Enum.SOULSEEK ) {
+        } else if ( networkType == EnumNetwork.SOULSEEK ) {
             return getImage( "SSConnectedWhite" );
-        } else if ( networkType == Enum.DC ) {
+        } else if ( networkType == EnumNetwork.DC ) {
             return getImage( "DCConnectedWhite" );
-        } else if ( networkType == Enum.BT ) {
+        } else if ( networkType == EnumNetwork.BT ) {
             return getImage( "BTConnectedWhite" );
-        } else if ( networkType == Enum.MULTINET ) {
+        } else if ( networkType == EnumNetwork.MULTINET ) {
             return getImage( "MULTIConnectedWhite" );
         } else {
             return getImage( "UnknownConnectedWhite" );
@@ -433,6 +433,10 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.44  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.43  2003/10/22 23:43:13  zet
 fake graphic
 
@@ -542,7 +546,7 @@ Revision 1.6  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.5  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.4  2003/08/21 11:19:15  lemmster
 added bt and multinet image

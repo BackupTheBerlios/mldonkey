@@ -26,13 +26,14 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumState;
 
 /**
  * ServerInfo
  * 
  *
- * @version $Id: ServerInfo.java,v 1.23 2003/09/24 09:35:57 lemmster Exp $
+ * @version $Id: ServerInfo.java,v 1.24 2003/10/28 11:07:32 lemmster Exp $
  */
 public class ServerInfo extends Parent {
 	/**
@@ -96,7 +97,7 @@ public class ServerInfo extends Parent {
 	 * @return A String with a link for this server
 	 */
 	public String getLink() {
-		if ( this.network.getNetworkType() == NetworkInfo.Enum.DONKEY ) {
+		if ( this.network.equals( EnumNetwork.DONKEY ) ) {
 			/* |server|ip|port|preference */
 			String aString = "ed2k://|" + this.getNameOfServer();
 
@@ -335,6 +336,10 @@ public class ServerInfo extends Parent {
 }
 /*
 $Log: ServerInfo.java,v $
+Revision 1.24  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.23  2003/09/24 09:35:57  lemmster
 serverlink in menulistener
 

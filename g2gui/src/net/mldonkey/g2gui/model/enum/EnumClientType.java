@@ -26,38 +26,43 @@ package net.mldonkey.g2gui.model.enum;
  * EnumClientType
  *
  *
- * @version $Id: EnumClientType.java,v 1.3 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: EnumClientType.java,v 1.4 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
-public class EnumClientType implements Enum {
+public class EnumClientType extends Enum {
 	/**
 	 * Source (value is 0)
 	 */
-	public static EnumClientType SOURCE = new EnumClientType( 0 );
+	public static EnumClientType SOURCE = new EnumClientType( 1 );
 	/**
 	 * Friend (value is 1)
 	 */
-	public static EnumClientType FRIEND = new EnumClientType( 1 );
+	public static EnumClientType FRIEND = new EnumClientType( 2 );
 	/**
 	 * Browsed (value is 2)
 	 */
-	public static EnumClientType BROWSED = new EnumClientType( 2 );
+	public static EnumClientType BROWSED = new EnumClientType( 4 );
 	
 	/**
 	 * Creates a new EnumClientType
 	 * @param anInt The value
 	 */
 	private EnumClientType( int anInt ) {
+		super( anInt );
 	}
 }
 
 /*
 $Log: EnumClientType.java,v $
+Revision 1.4  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
 Enum more improved

@@ -28,6 +28,7 @@ import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
 import net.mldonkey.g2gui.model.enum.Enum;
 import net.mldonkey.g2gui.model.enum.EnumFileState;
+import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumPriority;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
@@ -49,7 +50,7 @@ import java.util.WeakHashMap;
 /**
  * FileInfo
  *
- * @version $Id: FileInfo.java,v 1.69 2003/10/23 05:11:56 zet Exp $
+ * @version $Id: FileInfo.java,v 1.70 2003/10/28 11:07:32 lemmster Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -650,7 +651,7 @@ public class FileInfo extends Parent implements Observer {
                 NetworkInfo network = parent.getNetworkInfoMap().get(networkID);
 
                 /* multinet avail is the overall avail */
-                if (network.getNetworkType() != NetworkInfo.Enum.MULTINET) {
+                if (network.getNetworkType() != EnumNetwork.MULTINET) {
                     String aString = messageBuffer.readString();
                     this.avails.put(network, aString);
                 } else {
@@ -1069,6 +1070,10 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.70  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.69  2003/10/23 05:11:56  zet
 try to fix rare duplicate treeclientinfos
 
@@ -1161,7 +1166,7 @@ Revision 1.40  2003/08/22 23:25:15  zet
 downloadtabletreeviewer: new update methods
 
 Revision 1.39  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.38  2003/08/22 14:28:56  dek
 more failsafe hack ;-)

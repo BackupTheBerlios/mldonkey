@@ -26,42 +26,47 @@ package net.mldonkey.g2gui.model.enum;
  * EnumFormat
  *
  *
- * @version $Id: EnumFormat.java,v 1.3 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: EnumFormat.java,v 1.4 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
-public class EnumFormat implements Enum {
+public class EnumFormat extends Enum {
 	/**
 	 * unknow format (value is 0)
 	 */
-	public static EnumFormat UNKNOWN_FORMAT = new EnumFormat( 0 );
+	public static EnumFormat UNKNOWN_FORMAT = new EnumFormat( 1 );
 	/**
 	 * generic format (value is 1)
 	 */
-	public static EnumFormat GENERIC_FORMAT = new EnumFormat( 1 );
+	public static EnumFormat GENERIC_FORMAT = new EnumFormat( 2 );
 	/**
 	 * avi file (value is 2)
 	 */
-	public static EnumFormat AVI_FILE = new EnumFormat( 2 );
+	public static EnumFormat AVI_FILE = new EnumFormat( 4 );
 	/**
 	 * mp3 file (value is 3)
 	 */
-	public static EnumFormat MP3_FILE = new EnumFormat( 3 );
+	public static EnumFormat MP3_FILE = new EnumFormat( 8 );
 	
 	/**
 	 * Creates a new EnumFormat
 	 * @param anInt
 	 */
 	private EnumFormat( int anInt ) {
+		super( anInt );
 	}
 }
 
 /*
 $Log: EnumFormat.java,v $
+Revision 1.4  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
 Enum more improved

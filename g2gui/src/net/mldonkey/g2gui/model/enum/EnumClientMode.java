@@ -26,34 +26,39 @@ package net.mldonkey.g2gui.model.enum;
  * EnumClientMode
  *
  *
- * @version $Id: EnumClientMode.java,v 1.3 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: EnumClientMode.java,v 1.4 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
-public class EnumClientMode implements Enum {
+public class EnumClientMode extends Enum {
 	/**
 	 * direct (value is 0)
 	 */
-	public static EnumClientMode DIRECT = new EnumClientMode( 0 );
+	public static EnumClientMode DIRECT = new EnumClientMode( 1 );
 	/**
 	 * firewalled (value is 1)
 	 */
-	public static EnumClientMode FIREWALLED = new EnumClientMode( 1 );
+	public static EnumClientMode FIREWALLED = new EnumClientMode( 2 );
 	
 	/**
 	 * Creates a new EnumClientMode
 	 * @param anInt The value
 	 */
 	private EnumClientMode( int anInt ) {
+		super( anInt );
 	}
 }
 
 /*
 $Log: EnumClientMode.java,v $
+Revision 1.4  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
 Enum more improved

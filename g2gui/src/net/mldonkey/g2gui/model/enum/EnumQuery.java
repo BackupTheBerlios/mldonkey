@@ -26,71 +26,72 @@ package net.mldonkey.g2gui.model.enum;
  * EnumQuery
  *
  *
- * @version $Id: EnumQuery.java,v 1.4 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: EnumQuery.java,v 1.5 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
-public class EnumQuery implements Enum {
+public class EnumQuery extends Enum {
 	/**
 	 * 0: And(x,y,...) (value is 0)
 	 */
-	public static EnumQuery AND = new EnumQuery(); 
+	public static EnumQuery AND = new EnumQuery( 1 ); 
 	/**
 	 * 1: Or(x,y,...) (value is 1)
 	 */
-	public static EnumQuery OR = new EnumQuery(); 
+	public static EnumQuery OR = new EnumQuery( 2 ); 
 	/**
 	 * 2: Andnot(x,y)  (value is 2)
 	 */
-	public static EnumQuery AND_NOT = new EnumQuery(); 
+	public static EnumQuery AND_NOT = new EnumQuery( 4 ); 
 	/**
 	 * 3: Module (name, query)  (value is 3)
 	 */
-	public static EnumQuery MODULE = new EnumQuery(); 
+	public static EnumQuery MODULE = new EnumQuery( 8 ); 
 	/**
 	 * 4: Keywords(comment, default) (value is 4)
 	 */
-	public static EnumQuery KEYWORDS = new EnumQuery(); 
+	public static EnumQuery KEYWORDS = new EnumQuery( 16 ); 
 	/**
 	 * 5: Minsize(comment, default)  (value is 5)
 	 */
-	public static EnumQuery MINSIZE = new EnumQuery(); 
+	public static EnumQuery MINSIZE = new EnumQuery( 32 ); 
 	/**
 	 * 6: Maxsize(comment, default) (value is 6)
 	 */
-	public static EnumQuery MAXSIZE = new EnumQuery(); 
+	public static EnumQuery MAXSIZE = new EnumQuery( 64 ); 
 	/**
 	 * 7: Format(comment, default)  (value is 7)
 	 */
-	public static EnumQuery FORMAT = new EnumQuery(); 
+	public static EnumQuery FORMAT = new EnumQuery( 128 ); 
 	/**
 	 * 8: Media(comment, default)  (value is 8)
 	 */
-	public static EnumQuery MEDIA = new EnumQuery(); 
+	public static EnumQuery MEDIA = new EnumQuery( 256 ); 
 	/**
 	 * 9: Mp3 Artist(comment, default) (value is 9)
 	 */
-	public static EnumQuery MP3_ARTIST = new EnumQuery(); 
+	public static EnumQuery MP3_ARTIST = new EnumQuery( 512 ); 
 	/**
 	 * 10: Mp3 Title(comment, default) (value is 10)
 	 */
-	public static EnumQuery MP3_TITLE = new EnumQuery();
+	public static EnumQuery MP3_TITLE = new EnumQuery( 1024 );
 	/**
 	 * 11: Mp3 Album(comment, default) (value is 11)
 	 */
-	public static EnumQuery MP3_ALBUM = new EnumQuery(); 
+	public static EnumQuery MP3_ALBUM = new EnumQuery( 2048 ); 
 	/**
 	 * 12: Mp3 Bitrate(comment, default)  (value is 12)
 	 */
-	public static EnumQuery MP3_BITRATE = new EnumQuery(); 
+	public static EnumQuery MP3_BITRATE = new EnumQuery( 4096 ); 
 	/**
 	 * 13: Hidden(fields) (value is 13)
 	 */
-	public static EnumQuery HIDDEN = new EnumQuery();
+	public static EnumQuery HIDDEN = new EnumQuery( 8192 );
 
 	/**
 	 * Creates a new EnumQuery object
 	 */	
-	private EnumQuery() {
+	private EnumQuery( int anInt ) {
+		super( anInt );
 	}
 	
 	/**
@@ -132,11 +133,15 @@ public class EnumQuery implements Enum {
 
 /*
 $Log: EnumQuery.java,v $
+Revision 1.5  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.3  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.2  2003/07/06 07:45:26  lemmstercvs01
 checkstyle applied

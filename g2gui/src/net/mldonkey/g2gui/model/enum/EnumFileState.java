@@ -26,59 +26,64 @@ package net.mldonkey.g2gui.model.enum;
  * EnumFileState
  *
  *
- * @version $Id: EnumFileState.java,v 1.3 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: EnumFileState.java,v 1.4 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
-public class EnumFileState implements Enum {
+public class EnumFileState extends Enum {
 	/**
 	 * downloading (value is 0)
 	 */
-	public static EnumFileState DOWNLOADING = new EnumFileState( 0 );
+	public static EnumFileState DOWNLOADING = new EnumFileState( 1 );
 	/**
 	 * paused (value is 1)
 	 */
-	public static EnumFileState PAUSED = new EnumFileState( 1 );
+	public static EnumFileState PAUSED = new EnumFileState( 2 );
 	/**
 	 * downloaded (value is 2)
 	 */
-	public static EnumFileState DOWNLOADED = new EnumFileState( 2 );
+	public static EnumFileState DOWNLOADED = new EnumFileState( 4 );
 	/**
 	 * shared (value is 3)
 	 */
-	public static EnumFileState SHARED = new EnumFileState( 3 );
+	public static EnumFileState SHARED = new EnumFileState( 8 );
 	/**
 	 * cancelled (value is 4)
 	 */
-	public static EnumFileState CANCELLED = new EnumFileState( 4 );
+	public static EnumFileState CANCELLED = new EnumFileState( 16 );
 	/**
 	 * new (value is 5)
 	 */
-	public static EnumFileState NEW = new EnumFileState( 5 );
+	public static EnumFileState NEW = new EnumFileState( 32 );
 	/**
 	 * aborted (value is 6)
 	 */
-	public static EnumFileState ABORTED = new EnumFileState( 6 );
+	public static EnumFileState ABORTED = new EnumFileState( 64 );
 	/**
 	 * queued (value is 7)
 	 */
-	public static EnumFileState QUEUED = new EnumFileState( 7 );
+	public static EnumFileState QUEUED = new EnumFileState( 128 );
 	
 	/**
 	 * Creates a new EnumFileState
 	 * @param anInt The value
 	 */
 	private EnumFileState( int anInt ) {
+		super( anInt );
 	}
 
 }
 
 /*
 $Log: EnumFileState.java,v $
+Revision 1.4  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
 Enum more improved

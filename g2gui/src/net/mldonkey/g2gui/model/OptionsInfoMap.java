@@ -26,12 +26,13 @@ import java.util.Iterator;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumNetwork;
 
 /**
  * OptionsInfo
  *
  *
- * @version $Id: OptionsInfoMap.java,v 1.22 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: OptionsInfoMap.java,v 1.23 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
 public class OptionsInfoMap extends InfoMap {
@@ -167,7 +168,7 @@ public class OptionsInfoMap extends InfoMap {
 		if ( network.hasServers() || network.hasSupernodes() ) {
 			OptionsInfo option = null;
 			String prefix = null;
-			if ( network.getNetworkType() == NetworkInfo.Enum.FT ) {
+			if ( network.equals( EnumNetwork.FT ) ) {
 				/* first the option-prefix */
 				option = ( OptionsInfo ) this.infoMap.get( "FT-options_prefix" );
 				prefix = option.getValue();
@@ -175,7 +176,7 @@ public class OptionsInfoMap extends InfoMap {
 				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_ultrapeers" );
 				return new Integer( option.getValue() ).intValue();
 			}
-			if ( network.getNetworkType() == NetworkInfo.Enum.GNUT ) {
+			if ( network.equals( EnumNetwork.GNUT ) ) {
 				/* first the option-prefix */
 				option = ( OptionsInfo ) this.infoMap.get( "GNUT-options_prefix" );
 				prefix = option.getValue();
@@ -183,7 +184,7 @@ public class OptionsInfoMap extends InfoMap {
 				option = ( OptionsInfo ) this.infoMap.get( prefix + "g1_max_ultrapeers" );
 				return new Integer( option.getValue() ).intValue();
 			}
-			if ( network.getNetworkType() == NetworkInfo.Enum.GNUT2 ) {
+			if ( network.equals( EnumNetwork.GNUT2 ) ) {
 				/* first the option-prefix */
 				option = ( OptionsInfo ) this.infoMap.get( "G2-options_prefix" );
 				prefix = option.getValue();
@@ -191,7 +192,7 @@ public class OptionsInfoMap extends InfoMap {
 				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_ultrapeers" );
 				return new Integer( option.getValue() ).intValue();
 			}
-			if ( network.getNetworkType() == NetworkInfo.Enum.DC ) {
+			if ( network.equals( EnumNetwork.DC ) ) {
 				/* first the option-prefix */
 				option = ( OptionsInfo ) this.infoMap.get( "DC-options_prefix" );
 				prefix = option.getValue();
@@ -199,7 +200,7 @@ public class OptionsInfoMap extends InfoMap {
 				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
 				return new Integer( option.getValue() ).intValue();
 			}
-			if ( network.getNetworkType() == NetworkInfo.Enum.OPENNP ) {
+			if ( network.equals( EnumNetwork.OPENNP ) ) {
 				/* first the option-prefix */
 				option = ( OptionsInfo ) this.infoMap.get( "OpenNap-options_prefix" );
 				prefix = option.getValue();
@@ -207,7 +208,7 @@ public class OptionsInfoMap extends InfoMap {
 				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
 				return new Integer( option.getValue() ).intValue();
 			}
-			if ( network.getNetworkType() == NetworkInfo.Enum.SOULSEEK ) {
+			if ( network.equals( EnumNetwork.SOULSEEK ) ) {
 				/* first the option-prefix */
 				option = ( OptionsInfo ) this.infoMap.get( "slsk-options_prefix" );
 				prefix = option.getValue();
@@ -215,7 +216,7 @@ public class OptionsInfoMap extends InfoMap {
 				option = ( OptionsInfo ) this.infoMap.get( prefix + "max_connected_servers" );
 				return new Integer( option.getValue() ).intValue();
 			}
-			if ( network.getNetworkType() == NetworkInfo.Enum.DONKEY ) {
+			if ( network.equals( EnumNetwork.DONKEY ) ) {
 				/* now the max_connected_server/peers */
 				option = ( OptionsInfo ) this.infoMap.get( "max_connected_servers" );
 				return new Integer( option.getValue() ).intValue();
@@ -227,6 +228,10 @@ public class OptionsInfoMap extends InfoMap {
 
 /*
 $Log: OptionsInfoMap.java,v $
+Revision 1.23  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.22  2003/08/23 15:21:37  zet
 remove @author
 

@@ -22,24 +22,101 @@
  */
 package net.mldonkey.g2gui.model.enum;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Enum
  *
  *
- * @version $Id: Enum.java,v 1.3 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: Enum.java,v 1.4 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
-public interface Enum {
+public abstract class Enum {
+	/**
+	 * The intern value of the enum, be sure to never change it!
+	 */
+	protected int field;
 
+	// no instanciation
+	protected Enum( int i ) {
+		field = i;
+	}
+
+	/**
+	 * MaskMatcher Holds a bitmask of a collection of <code>Enum</code>s. 
+	 * You can verify that you Enum is in the collection with matches(Enum anEnum).
+	 */
+	public static class MaskMatcher {
+		/**
+		 * Containing the Enums. 
+		 */
+		private List enumList;
+		/**
+		 * Representing the mask of the Enum. (2^x for each Enum)
+		 */
+		private int enumMask;
+		/**
+		 * Creates a new MaskMatcher obj
+		 */		
+		public MaskMatcher() {
+			this.enumList = new ArrayList();
+		}
+		/**
+		 * Adds an new <code>Enum</code> to the EnumMask
+  		 * @param enum
+		 */
+		public boolean add( Enum enum ) {
+			if ( !this.enumList.contains( enum ) ) {
+				this.enumList.add( enum );
+				this.enumMask += enum.field;
+				return true;				
+			}
+			return false;
+		}
+		/**
+		 * Removes an <code>Enum</code> from the EnumMask
+ 		 * @param enum
+		 */
+		public boolean remove( Enum enum ) {
+			if ( this.enumList.contains( enum ) ) {
+				this.enumList.remove( enum );
+				this.enumMask -= enum.field;
+				return true;				
+			}
+			return false;
+		}
+		/**
+		 * @return The number of Enums in this obj
+		 */
+		public int count() {
+			return this.enumList.size();
+		}
+		/**
+		 * Does the supported <code>Enum<code> belongs to our Enum collection
+		 * @param enum The Enum to use
+		 * @return true for match
+		 */
+		public boolean matches( Enum enum ) {
+			int result = this.enumMask & enum.field;
+			if ( result != 0 )
+				return true;
+			return false;
+		}
+	}
 }
 
 /*
 $Log: Enum.java,v $
+Revision 1.4  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
 Enum more improved

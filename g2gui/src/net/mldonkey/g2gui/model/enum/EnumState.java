@@ -28,57 +28,58 @@ import net.mldonkey.g2gui.view.resource.G2GuiResources;
  * EnumState
  *
  *
- * @version $Id: EnumState.java,v 1.8 2003/09/18 09:18:01 lemmster Exp $ 
+ * @version $Id: EnumState.java,v 1.9 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
-public class EnumState implements Enum {
+public class EnumState extends Enum {
 	private String state;
 	/**
 	 * not connected
 	 */
-	public static EnumState NOT_CONNECTED = new EnumState( G2GuiResources.getString( "ENS_NOT_CONNECTED" ) );
+	public static EnumState NOT_CONNECTED = new EnumState( 1, G2GuiResources.getString( "ENS_NOT_CONNECTED" ) );
 	/**
 	 * connecting
 	 */
-	public static EnumState CONNECTING =  new EnumState( G2GuiResources.getString( "ENS_CONNECTING" ) );
+	public static EnumState CONNECTING =  new EnumState( 2, G2GuiResources.getString( "ENS_CONNECTING" ) );
 	/**
 	 * connected initiating
 	 */
-	public static EnumState CONNECTED_INITIATING = new EnumState( G2GuiResources.getString( "ENS_CONNECTED_INITIATING" ) );
+	public static EnumState CONNECTED_INITIATING = new EnumState( 4, G2GuiResources.getString( "ENS_CONNECTED_INITIATING" ) );
 	/**
 	 * connected downloading
 	 */
-	public static EnumState CONNECTED_DOWNLOADING = new EnumState( G2GuiResources.getString( "ENS_CONNECTED_DOWNLOADING" ) );
+	public static EnumState CONNECTED_DOWNLOADING = new EnumState( 8, G2GuiResources.getString( "ENS_CONNECTED_DOWNLOADING" ) );
 	/**
 	 * connected
 	 */
-	public static EnumState CONNECTED = new EnumState( G2GuiResources.getString( "ENS_CONNECTED" ) );
+	public static EnumState CONNECTED = new EnumState( 16, G2GuiResources.getString( "ENS_CONNECTED" ) );
 	/**
 	 * connected and queued
 	 */
-	public static EnumState CONNECTED_AND_QUEUED = new EnumState( G2GuiResources.getString( "ENS_CONNECTED_AND_QUEUED" ) );
+	public static EnumState CONNECTED_AND_QUEUED = new EnumState( 32, G2GuiResources.getString( "ENS_CONNECTED_AND_QUEUED" ) );
 	/**
 	 * new host
 	 */
-	public static EnumState NEW_HOST = new EnumState( G2GuiResources.getString( "ENS_NEW_HOST" ) );
+	public static EnumState NEW_HOST = new EnumState( 64, G2GuiResources.getString( "ENS_NEW_HOST" ) );
 	/**
 	 * remove host
 	 */
-	public static EnumState REMOVE_HOST = new EnumState( G2GuiResources.getString( "ENS_REMOVE_HOST" ) );
+	public static EnumState REMOVE_HOST = new EnumState( 128, G2GuiResources.getString( "ENS_REMOVE_HOST" ) );
 	/**
 	 * black listed
 	 */
-	public static EnumState BLACK_LISTED = new EnumState( G2GuiResources.getString( "ENS_BLACK_LISTED" ) );
+	public static EnumState BLACK_LISTED = new EnumState( 256, G2GuiResources.getString( "ENS_BLACK_LISTED" ) );
 	/**
 	 * not connected was queued
 	 */
-	public static EnumState NOT_CONNECTED_WAS_QUEUED = new EnumState( G2GuiResources.getString( "ENS_NOT_CONNECTED_WAS_QUEUED" ) );
+	public static EnumState NOT_CONNECTED_WAS_QUEUED = new EnumState( 512, G2GuiResources.getString( "ENS_NOT_CONNECTED_WAS_QUEUED" ) );
 	
 	/**
 	 * Creates a new EnumState
 	 * @param aString The value
 	 */
-	private EnumState( String aString ) {
+	private EnumState( int anInt, String aString ) {
+		super( anInt );
 		state = aString;
 	}
 	/**
@@ -100,6 +101,10 @@ public class EnumState implements Enum {
 
 /*
 $Log: EnumState.java,v $
+Revision 1.9  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.8  2003/09/18 09:18:01  lemmster
 checkstyle
 

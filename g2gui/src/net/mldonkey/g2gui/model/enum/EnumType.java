@@ -26,43 +26,48 @@ package net.mldonkey.g2gui.model.enum;
  * EnumType
  *
  *
- * @version $Id: EnumType.java,v 1.3 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: EnumType.java,v 1.4 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
-public class EnumType implements Enum {
+public class EnumType extends Enum {
 
 	/**
 	 * unsigned int (value is 0)
 	 */
-	public static EnumType UNSIGNED_INT = new EnumType( 0 );
+	public static EnumType UNSIGNED_INT = new EnumType( 1 );
 	/**
 	 * signed int (value is 1)
 	 */
-	public static EnumType SIGNED_INT = new EnumType( 1 );
+	public static EnumType SIGNED_INT = new EnumType( 2 );
 	/**
 	 * string (value is 2)
 	 */
-	public static EnumType STRING = new EnumType( 2 );
+	public static EnumType STRING = new EnumType( 4 );
 	/**
 	 * ip address (value is 3)
 	 */
-	public static EnumType IPADDRESS = new EnumType( 3 );
+	public static EnumType IPADDRESS = new EnumType( 8 );
 	
 	/**
 	 * Creates a new EnumType
 	 * @param anInt The value
 	 */
 	private EnumType( int anInt ) {
+		super( anInt );
 	}
 }
 
 /*
 $Log: EnumType.java,v $
+Revision 1.4  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.3  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.2  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.1  2003/06/24 09:29:33  lemmstercvs01
 Enum more improved

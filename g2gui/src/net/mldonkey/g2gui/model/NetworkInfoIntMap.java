@@ -25,12 +25,13 @@ package net.mldonkey.g2gui.model;
 import gnu.trove.TIntObjectIterator;
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumNetwork;
 
 /**
  * OptionsInfo
  *
  *
- * @version $Id: NetworkInfoIntMap.java,v 1.15 2003/09/19 17:51:39 lemmster Exp $ 
+ * @version $Id: NetworkInfoIntMap.java,v 1.16 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
 public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
@@ -106,14 +107,14 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 	 * @param enum The NetworkInfo.Enum to search for
 	 * @return The corresponding NetworkInfo
 	 */
-	public NetworkInfo getByEnum( NetworkInfo.Enum enum ) {
+	public NetworkInfo getByEnum( EnumNetwork enum ) {
 		TIntObjectIterator itr = this.infoIntMap.iterator();
 		int size = this.infoIntMap.size();
 		synchronized ( this ) { 
 			for ( ; size > 0; size-- ) {
 				itr.advance();
 				NetworkInfo elem = ( NetworkInfo ) itr.value();
-				if ( elem.getNetworkType() == enum ) {
+				if ( elem.equals( enum ) ) {
 					return elem;
 				}
 			}
@@ -160,6 +161,10 @@ public class NetworkInfoIntMap extends InfoIntMap implements InfoCollection {
 
 /*
 $Log: NetworkInfoIntMap.java,v $
+Revision 1.16  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.15  2003/09/19 17:51:39  lemmster
 minor bugfix
 

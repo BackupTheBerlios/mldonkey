@@ -38,6 +38,7 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.model.enum.EnumState;
 import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
@@ -45,7 +46,7 @@ import net.mldonkey.g2gui.view.pref.PreferenceLoader;
  * ServerInfoList
  *
  *
- * @version $Id: ServerInfoIntMap.java,v 1.24 2003/09/18 15:29:25 zet Exp $
+ * @version $Id: ServerInfoIntMap.java,v 1.25 2003/10/28 11:07:32 lemmster Exp $
  *
  */
 public class ServerInfoIntMap extends InfoIntMap {
@@ -335,11 +336,11 @@ public class ServerInfoIntMap extends InfoIntMap {
      * use it to clean the serverlist if a network gets disabled
      * @param enum The networkinfo.enum
      */
-    public void remove( NetworkInfo.Enum enum ) {
+    public void remove( EnumNetwork enum ) {
         Object[] servers = this.infoIntMap.getValues();
         for ( int i = 0; i < servers.length; i++ ) {
             ServerInfo server = ( ServerInfo ) servers[ i ];
-            if ( server.getNetwork().getNetworkType() == enum ) {
+            if ( server.getNetwork().equals( enum ) ) {
                 synchronized ( this ) {
                     this.infoIntMap.remove( server.getServerId() );
                 }
@@ -463,6 +464,10 @@ public class ServerInfoIntMap extends InfoIntMap {
 
 /*
 $Log: ServerInfoIntMap.java,v $
+Revision 1.25  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.24  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away

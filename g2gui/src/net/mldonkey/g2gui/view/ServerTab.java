@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Composite;
  * ServerTab
  *
  *
- * @version $Id: ServerTab.java,v 1.41 2003/10/22 01:36:59 zet Exp $ 
+ * @version $Id: ServerTab.java,v 1.42 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
 public class ServerTab extends GuiTab implements Runnable, DisposeListener {
@@ -143,15 +143,14 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 		if ( PreferenceLoader.loadBoolean( "displayAllServers" )
 		&& this.servers.getConnected() != itemCount ) {
 			ViewerFilter[] filters = ourTableViewer.getTableViewer().getFilters();
-			for ( int i = 0; i < filters.length; i++ )
-				if ( filters[ i ] instanceof ServerTableMenuListener.EnumStateFilter ) {
-					TableMenuListener.EnumStateFilter filter =
-						( TableMenuListener.EnumStateFilter ) filters[ i ];
-					for ( int j = 0; j < filter.getEnumState().size(); j++ ) {
-						if ( filter.getEnumState().get( j ) == EnumState.CONNECTED )
-							ourTableViewer.getTableViewer().refresh();
-					}
+			for ( int i = 0; i < filters.length; i++ ) {
+				if ( filters[ i ] instanceof ServerTableMenuListener.EnumStateViewerFilter ) {
+					TableMenuListener.EnumStateViewerFilter filter =
+						( TableMenuListener.EnumStateViewerFilter ) filters[ i ];
+					if ( filter.matches( EnumState.CONNECTED ) )
+						ourTableViewer.getTableViewer().refresh();
 				}
+			}	
 		}
 	}
 	
@@ -219,6 +218,10 @@ public class ServerTab extends GuiTab implements Runnable, DisposeListener {
 
 /*
 $Log: ServerTab.java,v $
+Revision 1.42  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.41  2003/10/22 01:36:59  zet
 add column selector to server/search (might not be finished yet..)
 

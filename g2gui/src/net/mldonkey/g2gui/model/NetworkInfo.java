@@ -28,13 +28,14 @@ import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
 import net.mldonkey.g2gui.comm.Message;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.EnumNetwork;
 import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 /**
  * NetworkInfo
  *
  *
- * @version $Id: NetworkInfo.java,v 1.29 2003/09/18 15:29:25 zet Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.30 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -65,7 +66,7 @@ public class NetworkInfo extends Parent {
 	/**
 	 * Represents the network type
 	 */
-	private Enum networkType;
+	private EnumNetwork networkType;
 
 	/* all fields below are for gui proto >=18 */
 
@@ -229,8 +230,8 @@ public class NetworkInfo extends Parent {
 			return this.hasRooms();
 
 		/* proto < 18, soulseek and directconnect have rooms */
-		if ( this.networkType == Enum.SOULSEEK
-		|| this.networkType == Enum.DC ) 
+		if ( this.networkType == EnumNetwork.SOULSEEK
+		|| this.networkType == EnumNetwork.DC ) 
 			return true;
 		return false;		
 	}
@@ -250,8 +251,8 @@ public class NetworkInfo extends Parent {
 		if ( parent.getProtoToUse() >= 18 )
 			return this.networkHasChat;
 
-		if ( this.networkType == Enum.DONKEY
-		|| this.networkType == Enum.OV )
+		if ( this.networkType == EnumNetwork.DONKEY
+		|| this.networkType == EnumNetwork.OV )
 			return true;
 		return false;
 	}
@@ -263,9 +264,9 @@ public class NetworkInfo extends Parent {
 		if ( parent.getProtoToUse() >= 18 )
 			return this.networkHasSupernodes;
 		/* proto < 18 */
-		if ( this.networkType == Enum.FT
-		|| this.networkType == Enum.GNUT
-		|| this.networkType == Enum.GNUT2 )
+		if ( this.networkType == EnumNetwork.FT
+		|| this.networkType == EnumNetwork.GNUT
+		|| this.networkType == EnumNetwork.GNUT2 )
 			return true;
 		return false;	
 	}
@@ -276,11 +277,11 @@ public class NetworkInfo extends Parent {
 		if ( parent.getProtoToUse() >= 18 )
 			return this.networkHasUpload;
 			
-		if ( this.networkType == Enum.DONKEY
-		|| this.networkType == Enum.OV
-		|| this.networkType == Enum.BT
-		|| this.networkType == Enum.GNUT
-		|| this.networkType == Enum.DC )
+		if ( this.networkType == EnumNetwork.DONKEY
+		|| this.networkType == EnumNetwork.OV
+		|| this.networkType == EnumNetwork.BT
+		|| this.networkType == EnumNetwork.GNUT
+		|| this.networkType == EnumNetwork.DC )
 			return true;
 		return false;	
 	}
@@ -294,9 +295,9 @@ public class NetworkInfo extends Parent {
 
 		/* proto < 18 */
 		/* have no servers */
-		if ( this.networkType == Enum.BT
-		|| this.networkType == Enum.FT
-		|| this.networkType == Enum.GNUT ) 
+		if ( this.networkType == EnumNetwork.BT
+		|| this.networkType == EnumNetwork.FT
+		|| this.networkType == EnumNetwork.GNUT ) 
 			return false;
 		/* all others do */	
 		return true;	
@@ -310,7 +311,7 @@ public class NetworkInfo extends Parent {
 		if ( parent.getProtoToUse() >= 18 )
 			return this.networkHasSearch;
 		/* proto < 18 */
-		if ( this.networkType == Enum.BT )
+		if ( this.networkType == EnumNetwork.BT )
 			return false;
 		return true;
 	}
@@ -333,25 +334,25 @@ public class NetworkInfo extends Parent {
 	 * @return a short represantation of the networkname
 	 */
 	public String getNetworkShortName() {
-		if ( this.networkType == Enum.DONKEY )
+		if ( this.networkType == EnumNetwork.DONKEY )
 			return "DK";
-		else if ( this.networkType == Enum.FT )
+		else if ( this.networkType == EnumNetwork.FT )
 			return "FT";
-		else if ( this.networkType == Enum.SOULSEEK )
+		else if ( this.networkType == EnumNetwork.SOULSEEK )
 			return "SS";
-		else if ( this.networkType == Enum.BT )
+		else if ( this.networkType == EnumNetwork.BT )
 			return "BT";
-		else if ( this.networkType == Enum.OV )
+		else if ( this.networkType == EnumNetwork.OV )
 			return "OV";
-		else if ( this.networkType == Enum.GNUT )
+		else if ( this.networkType == EnumNetwork.GNUT )
 			return "G1";
-		else if ( this.networkType == Enum.GNUT2 )
+		else if ( this.networkType == EnumNetwork.GNUT2 )
 			return "G2";
-		else if ( this.networkType == Enum.DC )
+		else if ( this.networkType == EnumNetwork.DC )
 			return "DC";
-		else if ( this.networkType == Enum.OPENNP )
+		else if ( this.networkType == EnumNetwork.OPENNP )
 			return "ONP";
-		else if ( this.networkType == Enum.MULTINET )
+		else if ( this.networkType == EnumNetwork.MULTINET )
 			return "MULTI"; 
 		else
 			return "";	
@@ -409,7 +410,7 @@ public class NetworkInfo extends Parent {
 	/**
 	 * @return The type of this network
 	 */
-	public Enum getNetworkType() {
+	public EnumNetwork getNetworkType() {
 		return networkType;
 	}
 
@@ -418,25 +419,25 @@ public class NetworkInfo extends Parent {
 	 */
 	private void setNetworkType( String string ) {
 		if ( string.equals( "Donkey" ) )
-			networkType = Enum.DONKEY;
+			networkType = EnumNetwork.DONKEY;
 		else if ( string.equals( "Fasttrack" ) )
-			networkType = Enum.FT;
+			networkType = EnumNetwork.FT;
 		else if ( string.equals( "Soulseek" ) )
-			networkType = Enum.SOULSEEK;
+			networkType = EnumNetwork.SOULSEEK;
 		else if ( string.equals( "BitTorrent" ) )
-			networkType = Enum.BT;
+			networkType = EnumNetwork.BT;
 		else if ( string.equals( "Overnet" ) )
-			networkType = Enum.OV;
+			networkType = EnumNetwork.OV;
 		else if ( string.equals( "Gnutella" ) )
-			networkType = Enum.GNUT;
+			networkType = EnumNetwork.GNUT;
 		else if ( string.equals( "Gnutella2" ) )
-			networkType = Enum.GNUT2;	
+			networkType = EnumNetwork.GNUT2;	
 		else if ( string.equals( "Direct Connect" ) )
-			networkType = Enum.DC;
+			networkType = EnumNetwork.DC;
 		else if ( string.equals( "Open Napster" ) )
-			networkType = Enum.OPENNP;
+			networkType = EnumNetwork.OPENNP;
 		else if ( string.equals( "MultiNet" ) )
-			networkType = Enum.MULTINET;	
+			networkType = EnumNetwork.MULTINET;	
 	}
 	
 	/**
@@ -492,67 +493,40 @@ public class NetworkInfo extends Parent {
 	}
 	
 	/**
-	 * Creates a new EnumNetwork obj to differ each network
+	 * Compares this object with a NetworkInfo.Enum obj
+	 * @param enum The NetworkInfo.Enum to compare with
+	 * @return true on equals, false otherwise
 	 */
-	public static class Enum {
-		/**
-		 * eDonkey2000
-		 */
-		public static Enum DONKEY = new Enum();
-		/**
-		 * SoulSeek
-		 */
-		public static Enum SOULSEEK = new Enum();
-		/**
-		 * Gnutella 1
-		 */
-		public static Enum GNUT = new Enum();
-		/**
-		 * Gnutella 2
-		 */
-		public static Enum GNUT2 = new Enum();
-		/**
-		 * Overnet
-		 */
-		public static Enum OV = new Enum();
-		/**
-		 * Bittorrent
-		 */
-		public static Enum BT = new Enum();
-		/**
-		 * Fasttrack
-		 */
-		public static Enum FT = new Enum();
-		/**
-		 * OpenNapster
-		 */
-		public static Enum OPENNP = new Enum();
-		/**
-		 * DirectConnect
-		 */
-		public static Enum DC  = new Enum();
-		/**
-		 * MultiNet
-		 */
-		public static Enum MULTINET = new Enum();
-		
-		/**
-		 * Creates a new EnumNetwork
-		 */
-		private Enum() { }
+	public boolean equals( EnumNetwork enum ) {
+		if ( this.getNetworkType() == enum )
+			return true;
+		return false;
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return networkName;
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */	
+	public boolean equals( Object obj ) {
+		NetworkInfo aNetworkInfo;
+		if ( obj instanceof NetworkInfo )
+			aNetworkInfo = ( NetworkInfo ) obj;
+		else
+			return false;
 		
+		if ( this.equals( aNetworkInfo.getNetworkType() ) )
+			return true;
+		else 
+			return false;
 	}
 }
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.30  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.29  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
@@ -573,7 +547,7 @@ Revision 1.24  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.23  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.22  2003/08/21 13:13:10  lemmster
 cleanup in networkitem

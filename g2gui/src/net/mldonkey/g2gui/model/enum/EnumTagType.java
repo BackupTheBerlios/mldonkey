@@ -26,65 +26,70 @@ package net.mldonkey.g2gui.model.enum;
  * EnumTagType
  *
  *
- * @version $Id: EnumTagType.java,v 1.4 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: EnumTagType.java,v 1.5 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
-public class EnumTagType implements Enum {
+public class EnumTagType extends Enum {
 	/**
 	 * display an int
 	 */
-	public static EnumTagType INT = new EnumTagType();
+	public static EnumTagType INT = new EnumTagType( 1 );
 	/**
 	 * string (value is 0)
 	 */	
-	public static EnumTagType	STRING = new EnumTagType();
+	public static EnumTagType	STRING = new EnumTagType( 2 );
 	/**
 	 * bool (value is 1)
 	 */
-	public static EnumTagType BOOL = new EnumTagType();
+	public static EnumTagType BOOL = new EnumTagType( 4 );
 	/**
 	 * file (value is 2)
 	 */
-	public static EnumTagType FILE = new EnumTagType();
+	public static EnumTagType FILE = new EnumTagType( 8 );
 	/**
 	 * display an ip list
 	 */
-	public static EnumTagType IP_LIST = new EnumTagType();
+	public static EnumTagType IP_LIST = new EnumTagType( 16 );
 	/**
 	 * display an ip
 	 */
-	public static EnumTagType IP = new EnumTagType();
+	public static EnumTagType IP = new EnumTagType( 32 );
 	/**
 	 * display an address
 	 */
-	public static EnumTagType ADDR = new EnumTagType();
+	public static EnumTagType ADDR = new EnumTagType( 64 );
 	/**
 	 * display a float
 	 */
-	public static EnumTagType FLOAT = new EnumTagType();
+	public static EnumTagType FLOAT = new EnumTagType( 128 );
 	/**
 	 * display a md4
 	 */
-	public static EnumTagType MD4 = new EnumTagType();
+	public static EnumTagType MD4 = new EnumTagType( 256 );
 	/**
 	 * display a sha1
 	 */
-	public static EnumTagType SHA1 = new EnumTagType();
+	public static EnumTagType SHA1 = new EnumTagType( 512 );
 	/**
 	 * Creates a new EnumTagType
 	 * @param anInt The value
 	 */
-	private EnumTagType() {
+	private EnumTagType( int anInt ) {
+		super( anInt );
 	}
 }
 
 /*
 $Log: EnumTagType.java,v $
+Revision 1.5  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.3  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.2  2003/08/02 09:27:39  lemmstercvs01
 added support for proto > 16

@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.Shell;
  * ServerTableMenuListener
  *
  *
- * @version $Id: ServerTableMenuListener.java,v 1.11 2003/10/22 01:37:55 zet Exp $
+ * @version $Id: ServerTableMenuListener.java,v 1.12 2003/10/28 11:07:32 lemmster Exp $
  *
  */
 public class ServerTableMenuListener extends TableMenuListener { 
@@ -151,23 +151,30 @@ public class ServerTableMenuListener extends TableMenuListener {
         super.menuAboutToShow( menuManager );
         // filter submenu (select network to display)			
         MenuManager filterSubMenu = new MenuManager( G2GuiResources.getString( "TML_FILTER" ) );
+
+		// all fiter
         AllFiltersAction aFA = new AllFiltersAction();
         if ( tableViewer.getFilters().length == 0 )
             aFA.setChecked( true );
         filterSubMenu.add( aFA );
         filterSubMenu.add( new Separator() );
-        NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
-        for ( int i = 0; i < networks.length; i++ ) {
-            NetworkInfo network = networks[ i ];
-            if ( network.isEnabled() && network.hasServers() ) {
-                NetworkFilterAction nFA =
-                    new NetworkFilterAction( network.getNetworkName(), network.getNetworkType() );
-                if ( isFiltered( network.getNetworkType() ) )
-                    nFA.setChecked( true );
-                filterSubMenu.add( nFA );
-            }
-        }
+
+		// network filter
+		NetworkInfo[] networks = core.getNetworkInfoMap().getNetworks();
+		for ( int i = 0; i < networks.length; i++ ) {
+			NetworkInfo network = networks[ i ];
+			if ( network.isEnabled() && network.isSearchable() ) {
+				NetworkFilterAction nFA =
+					new NetworkFilterAction( network.getNetworkName(), network.getNetworkType() );
+				if ( isFiltered( network ) )
+					nFA.setChecked( true );
+				filterSubMenu.add( nFA );
+			}
+		}
+
         filterSubMenu.add( new Separator() );
+
+		// state filter
         EnumState[] states = { EnumState.BLACK_LISTED, EnumState.CONNECTED, 
         					   EnumState.CONNECTED_AND_QUEUED, EnumState.CONNECTED_DOWNLOADING,
         					   EnumState.CONNECTED_INITIATING, EnumState.CONNECTING,
@@ -574,6 +581,10 @@ public class ServerTableMenuListener extends TableMenuListener {
 
 /*
 $Log: ServerTableMenuListener.java,v $
+Revision 1.12  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.11  2003/10/22 01:37:55  zet
 add column selector to server/search (might not be finished yet..)
 

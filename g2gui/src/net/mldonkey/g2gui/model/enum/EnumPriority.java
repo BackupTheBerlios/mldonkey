@@ -26,39 +26,44 @@ package net.mldonkey.g2gui.model.enum;
  * EnumPriority
  *
  *
- * @version $Id: EnumPriority.java,v 1.5 2003/10/12 19:42:59 zet Exp $ 
+ * @version $Id: EnumPriority.java,v 1.6 2003/10/28 11:07:32 lemmster Exp $ 
  *
  */
-public class EnumPriority implements Enum {
+public class EnumPriority extends Enum {
 	/**
 	 * Very Low priority (value is -20)
 	 */
-	public static EnumPriority VERY_LOW = new EnumPriority( -20 );
+	public static EnumPriority VERY_LOW = new EnumPriority( 1 );
 	/**
 	 * Low priority (value is -10)
 	 */
-	public static EnumPriority LOW = new EnumPriority( -10 );
+	public static EnumPriority LOW = new EnumPriority( 2 );
 	/**
 	 * Normal priority (value is 0)
 	 */
-	public static EnumPriority NORMAL = new EnumPriority( 0 );
+	public static EnumPriority NORMAL = new EnumPriority( 4 );
 	/**
 	 * High priority (value is 10)
 	 */
-	public static EnumPriority HIGH = new EnumPriority( 10 );
+	public static EnumPriority HIGH = new EnumPriority( 8 );
 	/**
 	 * Very High priority (value is 20)
 	 */
-	public static EnumPriority VERY_HIGH = new EnumPriority( 20 );
+	public static EnumPriority VERY_HIGH = new EnumPriority( 16 );
 	/**
 	 * @param i the int
 	 */
-	private EnumPriority( int i ) {
+	private EnumPriority( int anInt ) {
+		super( anInt );
 	}
 }
 
 /*
 $Log: EnumPriority.java,v $
+Revision 1.6  2003/10/28 11:07:32  lemmster
+move NetworkInfo.Enum -> enum.EnumNetwork
+add MaskMatcher for "Enum[]"
+
 Revision 1.5  2003/10/12 19:42:59  zet
 very high & low priorities
 
@@ -66,7 +71,7 @@ Revision 1.4  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.3  2003/08/22 21:04:27  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.2  2003/07/04 11:41:49  lemmstercvs01
 bugfix
