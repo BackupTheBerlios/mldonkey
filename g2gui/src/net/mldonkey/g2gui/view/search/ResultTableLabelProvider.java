@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Display;
  * ResultTableLabelProvider
  *
  *
- * @version $Id: ResultTableLabelProvider.java,v 1.24 2003/10/31 16:02:57 zet Exp $
+ * @version $Id: ResultTableLabelProvider.java,v 1.25 2003/11/10 08:35:13 lemmster Exp $
  *
  */
 public class ResultTableLabelProvider extends GTableLabelProvider implements IColorProvider {
@@ -66,7 +66,7 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
             }
 
         case ResultTableView.AVAILABILITY:
-            return G2GuiResources.getRatingImage(resultInfo.containsFake() ? -1 : resultInfo.getAvail());
+            return resultInfo.getRatingImage();
 
         default:
             return null;
@@ -97,7 +97,7 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
             return resultInfo.getType();
 
         case ResultTableView.AVAILABILITY:
-            return G2GuiResources.getRatingString(resultInfo.getAvail());
+            return resultInfo.getRatingString();
 
         default:
             return "";
@@ -137,6 +137,9 @@ public class ResultTableLabelProvider extends GTableLabelProvider implements ICo
 
 /*
 $Log: ResultTableLabelProvider.java,v $
+Revision 1.25  2003/11/10 08:35:13  lemmster
+move getRating... into ResultInfo
+
 Revision 1.24  2003/10/31 16:02:57  zet
 use the better 'View' (instead of awkward 'Page') appellation to follow eclipse design
 
@@ -177,7 +180,7 @@ Revision 1.15  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.14  2003/08/22 21:10:57  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.13  2003/08/20 14:58:43  zet
 sources clientinfo viewer

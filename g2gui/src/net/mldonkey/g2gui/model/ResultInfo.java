@@ -27,14 +27,19 @@ import gnu.regexp.REException;
 
 import java.text.DecimalFormat;
 
+import org.eclipse.swt.graphics.Image;
+
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.helper.MessageBuffer;
+import net.mldonkey.g2gui.model.enum.Enum;
+import net.mldonkey.g2gui.model.enum.EnumRating;
+import net.mldonkey.g2gui.view.resource.G2GuiResources;
 
 /**
  * ResultInfo
  *
  *
- * @version $Id: ResultInfo.java,v 1.25 2003/10/22 23:42:57 zet Exp $
+ * @version $Id: ResultInfo.java,v 1.26 2003/11/10 08:35:13 lemmster Exp $
  *
  */
 public class ResultInfo extends Parent {
@@ -476,6 +481,69 @@ public class ResultInfo extends Parent {
     public void setDownloading( boolean bool ) {
         downloading = bool;
     }
+    
+	/**
+	 * Get the String depending on the availability
+	 * @return
+	 */
+    public String getRatingString() {
+    	// use StringBuffer, concat with "+" is slow and this method is called often
+		StringBuffer result = new StringBuffer();
+
+		if (this.getRating() == EnumRating.EXCELLENT)
+			result.append( G2GuiResources.getString("RTLP_EXCELLENT") );
+		else if (this.getRating() == EnumRating.VERYHIGH)
+			result.append( G2GuiResources.getString("RTLP_VERYHIGH") );
+		else if (this.getRating() == EnumRating.HIGH)
+			result.append( G2GuiResources.getString("RTLP_HIGH") );
+		else if (this.getRating() == EnumRating.NORMAL)
+			result.append( G2GuiResources.getString("RTLP_NORMAL") );
+		else
+			result.append( G2GuiResources.getString("RTLP_LOW") );
+
+		// append the exact avail
+		result.append( "(" );
+		result.append( this.getAvail() );
+		result.append( ")" );
+		
+		return result.toString();
+    }
+    
+    /**
+     * Get the Image depending on the availability
+     * @return an Image
+     */
+    public Image getRatingImage() {
+    	if (this.containsFake())
+    		return G2GuiResources.getImage("epRatingFake");
+		else if (this.getRating() == EnumRating.EXCELLENT)
+			return G2GuiResources.getImage("epRatingExcellent");
+		else if (this.getRating() == EnumRating.VERYHIGH)
+			return G2GuiResources.getImage("epRatingExcellent");
+		else if (this.getRating() == EnumRating.HIGH)
+			return G2GuiResources.getImage("epRatingGood");
+		else if (this.getRating() == EnumRating.NORMAL)
+			return G2GuiResources.getImage("epRatingFair");
+		else
+			return G2GuiResources.getImage("epRatingPoor");
+    }
+    
+    /**
+     * The rating for this resultinfo
+     * @return
+     */
+    public Enum getRating() {
+		if (this.getAvail() > 100)
+			return EnumRating.EXCELLENT;
+		else if (this.getAvail() > 50)
+			return EnumRating.VERYHIGH;
+		else if (this.getAvail() > 10)
+			return EnumRating.HIGH;
+		else if (this.getAvail() > 5)
+			return EnumRating.NORMAL;
+		else
+			return EnumRating.LOW;
+    }
 
     /**
      * Compares this resultInfo to the specified object.
@@ -501,6 +569,9 @@ public class ResultInfo extends Parent {
 
 /*
 $Log: ResultInfo.java,v $
+Revision 1.26  2003/11/10 08:35:13  lemmster
+move getRating... into ResultInfo
+
 Revision 1.25  2003/10/22 23:42:57  zet
 fake regexp
 
@@ -538,7 +609,7 @@ Revision 1.14  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.13  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: lemmster $
 
 Revision 1.12  2003/08/14 12:45:46  dek
 searching works now without errors
