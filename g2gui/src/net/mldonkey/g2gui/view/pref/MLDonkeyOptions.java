@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Control;
  * MLDonkeyOptions
  *
  * @author  $Author: zet $ 
- * @version $Id: MLDonkeyOptions.java,v 1.18 2003/08/19 16:54:29 zet Exp $ 
+ * @version $Id: MLDonkeyOptions.java,v 1.19 2003/08/19 22:06:56 zet Exp $ 
  *
  */
 public class MLDonkeyOptions extends FieldEditorPreferencePage {
@@ -125,10 +125,7 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 		
 		sc = new ScrolledComposite( myparent, SWT.H_SCROLL | SWT.V_SCROLL );
 		
-		// cheating...
-		GridData gd = new GridData( GridData.FILL_HORIZONTAL);
-		gd.heightHint = 350;
-		sc.setLayoutData( gd );
+		sc.setLayoutData( new GridData(GridData.FILL_BOTH) );
 			sc.setLayout( new FillLayout() );
 		
 		Composite parent = ( Composite ) super.createContents( sc );
@@ -166,6 +163,9 @@ public class MLDonkeyOptions extends FieldEditorPreferencePage {
 }
 /*
 $Log: MLDonkeyOptions.java,v $
+Revision 1.19  2003/08/19 22:06:56  zet
+with the new options, heighthint doesn't seem to be needed
+
 Revision 1.18  2003/08/19 16:54:29  zet
 limit string length so long option strings fit on screen
 
