@@ -23,82 +23,229 @@
 package net.mldonkey.g2gui.view;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.net.UnknownHostException;
+
+import net.mldonkey.g2gui.comm.Core;
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.helper.ObjectPool;
+import net.mldonkey.g2gui.helper.SocketPool;
+import net.mldonkey.g2gui.view.pref.Preferences;
 
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
-import net.mldonkey.g2gui.comm.Core;
-import net.mldonkey.g2gui.view.pref.Preferences;
 
 /**
  * Starts the hole thing
  *
  * @author $user$
- * @version $Id: G2Gui.java,v 1.5 2003/08/03 19:09:51 lemmstercvs01 Exp $ 
+ * @version $Id: G2Gui.java,v 1.6 2003/08/04 14:38:55 lemmstercvs01 Exp $ 
  *
  */
 public class G2Gui {
-	private static Core mldonkey;
-	private static MessageBox box;
-	private static Shell shell;
+	private static Process p;
+	private static Thread mldonkey;
+	private static Object waiterObject;
+	private static ObjectPool socketPool;
+	private static CoreCommunication core;
 	private static PreferenceStore preferenceStore;
 	private static Preferences myPrefs;
-	private static String hostname, username, password;
+	private static String aString, hostname, username, password;
 	private static int port;
+	private static int[] count;
+	private static MessageBox box;
+	private static Display display;
+	private static Shell shell, splashShell;
+	private static ProgressBar progressBar;
+	private static FormLayout formLayout;
+	private static FormData formData;
+	private static Rectangle shellRect, displayRect;
+	private static Label label;
+	private static Image image;
 	
 	/**
 	 * Starts a new Core and launch the Gui
 	 * @param args Nothing to put inside
 	 */
 	public static void main( String[] args ) {
-		shell = new Shell( new Display() );
+		/* initializing */
+		display = new Display();
+		shell = new Shell( display );
+		splashShell = new Shell( display, SWT.ON_TOP );
 		preferenceStore = new PreferenceStore( "g2gui.pref" );
 		myPrefs = new Preferences( preferenceStore );
+		waiterObject = new Object();
+		box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
+		progressBar = new ProgressBar( splashShell, SWT.NONE );
+		count = new int[] { 2 };
+
+		/* build the splash */
+		progressBar.setMaximum( count[0] );
+		image = new Image( display, "icons/splash.png" );
+		label = new Label( splashShell, SWT.NONE );
+		label.setImage( image );
+		FormLayout layout = new FormLayout();
+		splashShell.setLayout( layout );
+		formData = new FormData ();
+		formData.right = new FormAttachment( 100, 0 );
+		formData.bottom = new FormAttachment( 100, 0 );
+		label.setLayoutData( formData );
+		formData = new FormData();
+		formData.left = new FormAttachment( 0, 5 );
+		formData.right = new FormAttachment( 100, -5 );
+		formData.bottom = new FormAttachment( 100, -5 );
+		progressBar.setLayoutData( formData );
+		splashShell.pack();
+		shellRect = splashShell.getBounds();
+		displayRect = display.getBounds();
+		int x = ( displayRect.width - shellRect.width ) / 2;
+		int y = ( displayRect.height - shellRect.height ) / 2;
+		splashShell.setLocation( x, y );
+		splashShell.open();
+
+		increaseBar( "Starting the model" );
+
+		/* load the preferences */
 		try {
 			myPrefs.initialize( preferenceStore );
 		}
 		catch ( IOException e ) { }		
+	
+		/* if the gui isnt set up yet launch the preference window */
 		if ( !( preferenceStore.getBoolean( "initialized" ) ) ) {					
+			splashShell.setVisible( false );
 			myPrefs.open( shell, null );
+			splashShell.setVisible( true );
 		}
+		
 		port = preferenceStore.getInt( "port" );
 		hostname = preferenceStore.getString( "hostname" );
 		username = preferenceStore.getString( "username" );
 		password = preferenceStore.getString( "password" );
-
+		
+		/* create the socket connection to the core */
+		Socket socket = null;
 		try {
-			mldonkey  = new Core( hostname, port, username, password );
+			socketPool = new SocketPool( hostname, port );
+			socket = ( Socket ) socketPool.checkOut();
 		}
-		catch ( UnknownHostException e1 ) {
-			box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
+		catch ( UnknownHostException e ) {
 			box.setText( "Invalid Host Address" );
 			box.setMessage( "Illegal Host Address" );
 			box.open();
+			myPrefs.open( shell, null );
 		}
-		catch ( IOException e1 ) {
-			box = new MessageBox( shell, SWT.ICON_ERROR | SWT.OK );
+		catch ( IOException e ) {
 			box.setText( "IOException" );
 			box.setMessage( "Core is not running on this Host/Port" );
 			box.open();
+			myPrefs.open( shell, null );
 		}
-			
-		MainTab g2gui = new MainTab( mldonkey, shell );
-		mldonkey.disconnect();
+		
+		/* launch the model */
+		core = new Core( socket, username, password, waiterObject );
+		core.connect();
+		mldonkey = new Thread( core );
+		mldonkey.setDaemon( true );
+		mldonkey.start();
+		
+		while ( true ) {
+			/* wait as long as the core tells us to continue */
+			synchronized ( waiterObject ) {
+				try {
+					waiterObject.wait();
+				}
+				catch ( InterruptedException e1 ) { }
+			}
+			/* did the core receive "bad password" */
+			if ( core.getBadPassword() ) {
+				badPasswordHandling();
+			}
+			/* user/pass was valid, leave the loop */
+			else
+				break;
+		}
+		
+		increaseBar( "Starting the view" ); 
+		
+		/* launch the view */	
+		MainTab g2gui = new MainTab( core, shell );
+		core.disconnect();
+	}
+	
+	
+	/**
+	 * Raise an messagebox on badpassword exception
+	 * and send the password again
+	 */
+	public static void badPasswordHandling() {
+		splashShell.dispose();
+		image.dispose();
+		
+//		splashShell.setVisible( false );
+		/* raise a warning msg */
+		box = new MessageBox( shell, SWT.ICON_WARNING | SWT.OK );
+		box.setText( "Login invalid" );
+		box.setMessage( "Username or Password incorrect" );
+		box.open();
+		/* dont launch the gui but launch the password box */
+		myPrefs.open( shell, null );
+		/* fetch the username and password from the pref again */
+		username = preferenceStore.getString( "username" );
+		password = preferenceStore.getString( "password" );
+		/* send the password again */
+		core.sendPassword( username, password );
+//		splashShell.setVisible( true );		
 	}
 
 	/**
+	 * Increse the ProgressBar and updates the label text
+	 * @param aString The new label text
+	 */	
+	private static void increaseBar( final String aString ) {
+		display.syncExec( new Runnable() {
+			public void run() {
+				int selection = progressBar.getSelection();
+				progressBar.setSelection( selection + 1 );
+			}	
+		} );
+	}
+
+	/**
+	 * @return The splashShell image
+	 */
+	public static Image getImage() {
+		return image;
+	}
+	/**
+	 * @return The splashShell
+	 */
+	public static Shell getSplashShell() {
+		return splashShell;
+	}
+	/**
 	 * @return The parent CoreCommuncation obj
 	 */
-	public static Core getMldonkey() {
-		return mldonkey;
+	public static CoreCommunication getMldonkey() {
+		return core;
 	}
 }
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.6  2003/08/04 14:38:55  lemmstercvs01
+splashscreen and error handling added (resending on badpassword doenst work atm)
+
 Revision 1.5  2003/08/03 19:09:51  lemmstercvs01
 better error handling
 

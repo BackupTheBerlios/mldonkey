@@ -51,29 +51,30 @@ import org.eclipse.swt.widgets.*;
  * Gui
  *
  * @author $user$
- * @version $Id: MainTab.java,v 1.27 2003/08/02 17:19:22 zet Exp $ 
+ * @version $Id: MainTab.java,v 1.28 2003/08/04 14:38:55 lemmstercvs01 Exp $ 
  *
  */
 public class MainTab implements Listener, Observer, ShellListener {
-	private CoolBar coolbar;
-	private ToolBar miscTools;
-	private ToolBar mainTools;
+	private Object waiterObject;
+	private static Shell thisShell = null;
+	private static PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
+	private static ImageRegistry imageRegistry = new ImageRegistry();
+	private static ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
 	public static List miscToolButtons = new ArrayList();
 	public static List mainToolButtons = new ArrayList();
 	public static boolean toolbarSmallButtons = false;
+	public static final DecimalFormat decimalFormat = new DecimalFormat( "#.#" );
 	public StatusLine statusline;
+
+	private final String titleBarText = "g2gui alpha";
 	private boolean coolbarLocked = true;
 	private CoreCommunication mldonkey;
 	private Composite mainComposite, coolbarComposite, pageContainer;
 	private List registeredTabs;
 	private GuiTab activeTab;
 	private Menu mainMenuBar;	
-	private static PreferenceStore internalPrefStore = new PreferenceStore( "g2gui-internal.pref" );
-	private static ImageRegistry imageRegistry = new ImageRegistry();
-	private ResourceBundle bundle = ResourceBundle.getBundle("g2gui");
-	private static Shell thisShell = null;
-	private final String titleBarText = "g2gui alpha";
-	public static final DecimalFormat decimalFormat = new DecimalFormat( "#.#" );
+	private CoolBar coolbar;
+	private ToolBar miscTools, mainTools;
 	
 	/**
 	 * @param core the most important thing of the gui: were do i get my data from
@@ -96,6 +97,10 @@ public class MainTab implements Listener, Observer, ShellListener {
 		createContents( shell );
 					
 		shell.pack ();
+		/* close the splashShell from G2Gui.java */
+		G2Gui.getSplashShell().dispose();
+		G2Gui.getImage().dispose();
+		
 		/* set the old size of this window - must be after pack() */
 		setSizeLocation( shell );
 		shell.open ();
@@ -623,6 +628,9 @@ public class MainTab implements Listener, Observer, ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.28  2003/08/04 14:38:55  lemmstercvs01
+splashscreen and error handling added (resending on badpassword doenst work atm)
+
 Revision 1.27  2003/08/02 17:19:22  zet
 only print stats in titlebar while minimized (stats overkill)
 
