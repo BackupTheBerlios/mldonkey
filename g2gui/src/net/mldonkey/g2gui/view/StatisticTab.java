@@ -36,13 +36,15 @@ public class StatisticTab
 	 */
 	public StatisticTab(MainTab gui) {
 		super(gui);
-		toolItem.setText(bundle.getString("TT_StatisticButton"));
-		toolItem.setImage(
-			MainTab.createTransparentImage(
-				new Image(
-					toolItem.getParent().getDisplay(),
-					"src/icons/statistics.png"),
-				toolItem.getParent()));
+		activeIm = 
+		inActiveIm = MainTab.createTransparentImage ( 
+						new Image(toolItem.getParent().getDisplay(), 
+						"src/icons/statistics.png"),
+					toolItem.getParent());
+				
+		toolItem.setText(bundle.getString("TT_StatisticsButton"));
+		toolItem.setToolTipText(bundle.getString("TT_StatisticsButtonToolTip"));
+		toolItem.setImage(inActiveIm); 
 		createContents(this.content);
 		
 
