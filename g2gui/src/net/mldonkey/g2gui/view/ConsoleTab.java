@@ -22,38 +22,35 @@
  */
 package net.mldonkey.g2gui.view;
 
-// import java.io.IOException;
-import java.util.regex.Pattern;
-
 import java.util.Observable;
 import java.util.Observer;
+import java.util.regex.Pattern;
+// change to gnu.regex for win compile?
 
-import net.mldonkey.g2gui.comm.*;
-import net.mldonkey.g2gui.model.*;
+import net.mldonkey.g2gui.comm.Core;
+import net.mldonkey.g2gui.comm.CoreCommunication;
+import net.mldonkey.g2gui.comm.EncodeMessage;
+import net.mldonkey.g2gui.comm.Message;
+import net.mldonkey.g2gui.model.ConsoleMessage;
+import net.mldonkey.g2gui.view.console.Console;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
-import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.widgets.*;
-
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 
 /**
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.29 2003/08/08 02:46:31 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.30 2003/08/08 20:16:13 zet Exp $ 
  *
  */
-public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
+public class ConsoleTab extends GuiTab implements Observer, Runnable {	
 	private String[] consoleFont;
-	private PreferenceStore preferenceStore;
 	private ConsoleMessage consoleMessage;
 	private CoreCommunication core;
 	private Composite parent;
-	private Text infoDisplay;	
-	private Text input;
-	private Font font;
+	private Console console;
 
 	/**
 	 * @param gui the main gui, which takes care of all our tabs
@@ -72,68 +69,32 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 	 */
 	protected void createContents( Composite parent ) {	
 		this.parent = parent;		
+		
+		console = new Console ( parent );
+		console.addObserver( this );
+		
 		parent.setLayout( null );
-		parent.addControlListener( this );		
-		/* Adding the Console-Display Text-field, and creating the saved font */
-		infoDisplay = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY );
-		infoDisplay.setFont( loadFont2("consoleFontData") );
-				
-		input = new Text( parent, SWT.SINGLE | SWT.BORDER );					
-		//Send command to core
-		input.addKeyListener( new KeyAdapter() {
-			public void keyPressed( KeyEvent e ) {
-				int numLinesDisplayed = infoDisplay.getClientArea().height / infoDisplay.getLineHeight();
-				if (e.keyCode == SWT.PAGE_UP) {
-					if ( infoDisplay.getTopIndex() > numLinesDisplayed )  
-						infoDisplay.setTopIndex( infoDisplay.getTopIndex() - ( numLinesDisplayed ) );
-					else
-						infoDisplay.setTopIndex(0);
-				}
-				else if (e.keyCode == SWT.PAGE_DOWN) {
-					infoDisplay.setTopIndex( infoDisplay.getTopIndex() + ( numLinesDisplayed ) );
-				}
-				else if ( e.character == SWT.CR ) {
-					infoDisplay.append( input.getText() );
-					String[] command = new String[ 1 ] ;
-					command[ 0 ] = input.getText();
-					( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage( ( ( Core ) core ).getConnection() );
-					input.setText( "" );
-				}
-		  	}		
-		} );	
 		updateDisplay();
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.GuiTab#setInActive()
+	 */
 	public void setInActive() {
 		this.core.getConsoleMessage().deleteObserver( this );
+		console.deleteObserver( this );
 		super.setInActive();
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.mldonkey.g2gui.view.GuiTab#setActive()
+	 */
 	public void setActive() {
+		console.addObserver( this );
 		this.core.getConsoleMessage().addObserver( this );
 		super.setActive();
 	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	/*private Font loadFont() {
-		this.preferenceStore = new PreferenceStore( "g2gui.pref" );
-			try { preferenceStore.load(); } catch ( IOException e ) { }		
-		this.consoleFont = preferenceStore.getString( "consoleFont" ).split( ":" );			
-		if ( preferenceStore.getString( "consoleFont" ).equals( "" ) )
-			consoleFont = null;						
-		if ( consoleFont != null ) {
-			font = new Font( null,
-					 new FontData( consoleFont[ 0 ], 
-					 		Integer.parseInt( consoleFont[ 1 ] ), 
-					 		Integer.parseInt( consoleFont[ 2 ] ) ) ) ;
-		}
-		else font = infoDisplay.getFont();
-		return font;
-	} */
-	
+		
 	/**
 	 * what to do, if this tab becomes active
 	 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
@@ -141,69 +102,51 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 	public void handleEvent( Event event ) {
 		super.handleEvent( event );	
 		if ( core.isConnected() ) {
-			
-			infoDisplay.append( Pattern.compile( "\n" ).matcher( core.getConsoleMessage().getConsoleMessage() ).
-				replaceAll( infoDisplay.getLineDelimiter() ) );
-			// workaround for GTK2 bug, to focus the bottom
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=40800
-			infoDisplay.setSelection( infoDisplay.getCharCount() );
-			infoDisplay.showSelection();
-
+			console.append( 
+				Pattern.compile( "\n" ).matcher( core.getConsoleMessage().getConsoleMessage() ).
+				replaceAll( console.getLineDelimiter() ) 
+			);
 			core.getConsoleMessage().reset();
 		}
 	}
 	
 	public void updateDisplay() {
-		infoDisplay.setFont( loadFont2( "consoleFontData" ) );
-		infoDisplay.setBackground ( loadColour( "consoleBackground" ) );
-		infoDisplay.setForeground ( loadColour( "consoleForeground" ) );
-		input.setBackground ( loadColour( "consoleInputBackground" ) );
-		input.setForeground ( loadColour( "consoleInputForeground" ) );
+		console.setDisplayFont( PreferenceLoader.loadFont( "consoleFontData" ) );
+		console.setDisplayBackground ( PreferenceLoader.loadColour( "consoleBackground" ) );
+		console.setDisplayForeground ( PreferenceLoader.loadColour( "consoleForeground" ) );
+		console.setInputBackground ( PreferenceLoader.loadColour( "consoleInputBackground" ) );
+		console.setInputForeground ( PreferenceLoader.loadColour( "consoleInputForeground" ) );
 		super.updateDisplay();
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.ControlListener#controlMoved( org.eclipse.swt.events.ControlEvent )
-	 */
-	public void controlMoved( ControlEvent e ) { }
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.ControlListener#controlResized( org.eclipse.swt.events.ControlEvent )
-	 */
-	public void controlResized( ControlEvent e ) {
-		if ( ( this.infoDisplay != null ) && ( this.input != null ) ) {
-			Rectangle rect = this.parent.getClientArea ();	
-			int inputheight = this.input.computeSize( SWT.DEFAULT, SWT.DEFAULT, true ).y;		
-			this.infoDisplay.setBounds( 0, 0, rect.width, ( rect.height - inputheight ) );
-			this.input.setBounds( 0, ( rect.height - inputheight ), rect.width, inputheight );			
-		}
-	}
-
+	
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update( java.util.Observable, java.lang.Object )
 	 */
 	public void update( Observable o, Object arg ) {
-		this.consoleMessage = ( ConsoleMessage ) arg;
-		content.getDisplay().syncExec( this );
+		if (o instanceof Console) {
+			String[] command = new String[ 1 ] ;
+			command[ 0 ] = (String) arg ;
+			( new EncodeMessage( Message.S_CONSOLEMSG, command ) ).sendMessage( ( ( Core ) core ).getConnection() );
+		} else if (o instanceof ConsoleMessage) {
+			this.consoleMessage = ( ConsoleMessage ) arg;
+			content.getDisplay().syncExec( this );
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */
-	public void run() {				
-		String message = consoleMessage.getConsoleMessage();	
+	public void run() {		
+		console.append(consoleMessage.getConsoleMessage());	
 		consoleMessage.reset();	
-		infoDisplay.append( message );
-		infoDisplay.update();			
-		// workaround for GTK2 bug, to focus the bottom
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=40800
-		infoDisplay.setSelection(infoDisplay.getCharCount());
-		infoDisplay.showSelection();
 	}
 }
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.30  2003/08/08 20:16:13  zet
+central PreferenceLoader, abstract Console
+
 Revision 1.29  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 

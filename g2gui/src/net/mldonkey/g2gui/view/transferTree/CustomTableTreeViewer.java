@@ -34,24 +34,24 @@ import org.eclipse.swt.widgets.Widget;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class CustomTableTreeViewer extends TableTreeViewer {
-	
-		public CustomTableTreeViewer(Composite parent, int style) {
-			super (parent, style);
-		}
-	
-		public Widget objectToItem(Object element) {
-			return findItem(element);
-		}
-		
-		public Item getParentItem(Item item) {
-			return super.getParentItem(item);
-		}
-	
-		public void updatePlus(Item item, Object element) {
-			super.updatePlus(item, element);
-		}
-		
-		public Item[] getItems(Item item) {
-			return super.getItems(item);
-		}
+
+	public CustomTableTreeViewer(Composite parent, int style) {
+		super(parent, style);
+	}
+
+	public Widget objectToItem(Object element) {
+		return findItem(element);
+	}
+
+	public Item getParentItem(Item item) {
+		return super.getParentItem(item);
+	}
+
+	public void updatePlus(Item item, Object element) {
+		super.updatePlus(item, element);
+	}
+
+	public Item[] getItems(Item item) {
+		return super.getItems(item);
+	}
 }

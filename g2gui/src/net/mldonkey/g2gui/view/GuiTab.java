@@ -22,14 +22,12 @@
  */
 package net.mldonkey.g2gui.view;
 
-import java.io.IOException;
 import java.util.Observer;
 import java.util.ResourceBundle;
 
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 import net.mldonkey.g2gui.view.toolbar.ToolButton;
 
-import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
@@ -47,7 +45,7 @@ import org.eclipse.swt.widgets.Listener;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: GuiTab.java,v 1.15 2003/08/08 08:26:37 dek Exp $ 
+ * @version $Id: GuiTab.java,v 1.16 2003/08/08 20:16:13 zet Exp $ 
  *
  */
 public abstract class GuiTab implements Listener, Observer {	
@@ -110,7 +108,7 @@ public abstract class GuiTab implements Listener, Observer {
 		
 		this.pageHeaderPlaceHolder.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		createHeader( pageHeaderPlaceHolder, loadBoolean("displayHeaderBar") );
+		createHeader( pageHeaderPlaceHolder, PreferenceLoader.loadBoolean("displayHeaderBar") );
 					
 		this.subContent = new Composite( content , SWT.NONE);
 		this.subContent.setLayout( new FillLayout());
@@ -198,25 +196,9 @@ public abstract class GuiTab implements Listener, Observer {
 		return subContent;
 	}
 	
-	static Font loadFont2( String preferenceString ) {
-		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
-		try { preferenceStore.load(); } catch ( IOException e ) { }		
-	
-		if (preferenceStore.contains( preferenceString )) 	
-			return new Font (null, PreferenceConverter.getFontDataArray( preferenceStore, preferenceString ) ); 
-		return null;
-	}
-	static Color loadColour (String preferenceString ) {
-			PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
-				try { preferenceStore.load(); } catch ( IOException e ) { }		
-		
-		if (preferenceStore.contains( preferenceString ))
-			return new Color( null, PreferenceConverter.getColor(preferenceStore, preferenceString ) );
-		return null;
-	}
 
 	public void updateDisplay() {
-		if (headerBar != loadBoolean("displayHeaderBar")) {
+		if (headerBar != PreferenceLoader.loadBoolean("displayHeaderBar")) {
 			pageHeader.dispose();
 			headerBar = !headerBar;
 			createHeader( pageHeaderPlaceHolder, headerBar );
@@ -252,6 +234,9 @@ public abstract class GuiTab implements Listener, Observer {
 	
 		Color backgroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
 		Color foregroundColor = MainTab.getShell().getDisplay().getSystemColor(SWT.COLOR_WHITE);
+		
+		// what do these labels do? is this different than marginheight? 
+		// I see no difference on my display.
 		
 		Label row1 = new Label(thisContent,SWT.SEPARATOR|SWT.HORIZONTAL);
 			row1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -308,27 +293,14 @@ public abstract class GuiTab implements Listener, Observer {
 			rightLabel.getParent().layout();
 		}
 	}
-	
-	// preference loading has to be centralized in the future
-	static boolean loadBoolean(String preferenceString) {
-		PreferenceStore preferenceStore = new PreferenceStore("g2gui.pref");
-		try {
-			preferenceStore.load();
-		} catch (IOException e) {
-		}
 
-		preferenceStore.setDefault("displayHeaderBar", true);
-	
-		if (preferenceStore.contains(preferenceString))
-			return preferenceStore.getBoolean(preferenceString);
-		return true;
-	}
-	
-	
 }
 
 /*
 $Log: GuiTab.java,v $
+Revision 1.16  2003/08/08 20:16:13  zet
+central PreferenceLoader, abstract Console
+
 Revision 1.15  2003/08/08 08:26:37  dek
 i think, the Tab-Caption looks better this way, don't you?
 

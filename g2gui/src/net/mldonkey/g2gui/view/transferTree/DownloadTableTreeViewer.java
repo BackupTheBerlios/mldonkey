@@ -22,16 +22,15 @@
  */
 package net.mldonkey.g2gui.view.transferTree;
 
-import java.io.IOException;
 import java.util.ResourceBundle;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.model.FileInfo;
 import net.mldonkey.g2gui.view.MainTab;
 import net.mldonkey.g2gui.view.TransferTab;
+import net.mldonkey.g2gui.view.pref.PreferenceLoader;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -52,7 +51,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  * @author $user$
- * @version $Id: DownloadTableTreeViewer.java,v 1.4 2003/08/08 02:46:31 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.5 2003/08/08 20:16:13 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -120,7 +119,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	{
 		this.shell = parent.getShell();
 		this.mldonkey = mldonkey;
-		displayChunkGraphs = loadBoolean("displayChunkGraphs");
+		displayChunkGraphs = PreferenceLoader.loadBoolean("displayChunkGraphs");
 				
 		for (int i = 0; i < COLUMN_LABELS.length ; i++)
 			MainTab.getStore().setDefault(COLUMN_LABELS[ i ], COLUMN_DEFAULT_WIDTHS[ i ]);
@@ -137,7 +136,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		tableTree.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
 		
 		tableTreeViewer.setColumnProperties(COLUMN_LABELS);
-		table.setLinesVisible( loadBoolean("displayGridLines") );
+		table.setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
 		table.setHeaderVisible( true );
 		
 		cellEditors = new CellEditor[COLUMN_LABELS.length];
@@ -184,7 +183,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		
 		
 		tableTreeContentProvider = new DownloadTableTreeContentProvider();
-		tableTreeContentProvider.setUpdateBuffer( loadInteger("displayBuffer") );
+		tableTreeContentProvider.setUpdateBuffer( PreferenceLoader.loadInteger("displayBuffer") );
 		tableTreeViewer.setContentProvider(tableTreeContentProvider);
 		tableTreeViewer.setUseHashlookup(true);
 		
@@ -207,23 +206,32 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		mldonkey.getFileInfoIntMap().addObserver( tableTreeContentProvider );
 		tableTreeContentProvider.updateAllEditors();
 		
-		if (loadBoolean("tableCellEditors")) {
+		if (PreferenceLoader.loadBoolean("tableCellEditors")) {
 			tableTreeViewer.setCellEditors(cellEditors);
 			tableTreeViewer.setCellModifier(this);
 		}		
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
+	 */
 	public boolean canModify(Object element, String property) {
 		if (element instanceof FileInfo) 
 			return true;
 		return false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
+	 */
 	public Object getValue(Object element, String property) {
 		FileInfo fileInfo = (FileInfo) element;
 		return fileInfo.getName();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
+	 */
 	public void modify(Object element, String property, Object value) {
 		
 		TableTreeItem item = (TableTreeItem) element;
@@ -240,36 +248,12 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	public static int getChunksColumn() {
 		return CHUNKS_COLUMN;
 	}
-	
-	static boolean loadBoolean (String preferenceString ) {
-		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
-			try { preferenceStore.load(); } catch ( IOException e ) { }		
-		
-		
-		preferenceStore.setDefault("displayGridLines", true);
-		preferenceStore.setDefault("tableCellEditors", false);
-				
-		if (preferenceStore.contains( preferenceString ))
-			return preferenceStore.getBoolean( preferenceString );
-		return true;
-	}	
-	
-	static int  loadInteger(String preferenceString ) {
-		PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
-			try { preferenceStore.load(); } catch ( IOException e ) { }		
-	
-		preferenceStore.setDefault("displayBuffer", 2);
-		
-		if (preferenceStore.contains( preferenceString ))
-			return preferenceStore.getInt( preferenceString );
-		return 0;
-	}
 
 	public void updateDisplay() {
-		table.setLinesVisible( loadBoolean("displayGridLines") );
-		boolean newChunkValue = loadBoolean("displayChunkGraphs");
+		table.setLinesVisible( PreferenceLoader.loadBoolean("displayGridLines") );
+		boolean newChunkValue = PreferenceLoader.loadBoolean("displayChunkGraphs");
 		
-		if (loadBoolean("tableCellEditors")) {
+		if (PreferenceLoader.loadBoolean("tableCellEditors")) {
 			tableTreeViewer.setCellEditors(cellEditors);
 			tableTreeViewer.setCellModifier(this);
 		} else {
@@ -281,7 +265,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		tableTreeViewer.refresh();
 		displayChunkGraphs = newChunkValue;
 		tableTreeContentProvider.updateAllEditors();
-		tableTreeContentProvider.setUpdateBuffer( loadInteger("displayBuffer") );
+		tableTreeContentProvider.setUpdateBuffer( PreferenceLoader.loadInteger("displayBuffer") );
 	}
 
 
@@ -290,6 +274,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.5  2003/08/08 20:16:13  zet
+central PreferenceLoader, abstract Console
+
 Revision 1.4  2003/08/08 02:46:31  zet
 header bar, clientinfodetails, redo tabletreeviewer
 
