@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.comm.Message;
  * SocketPool
  *
  * @author ${user}
- * @version $Id: SocketPool.java,v 1.8 2003/06/14 12:47:51 lemmstercvs01 Exp $ 
+ * @version $Id: SocketPool.java,v 1.9 2003/06/19 08:41:21 lemmstercvs01 Exp $ 
  *
  */
 public class SocketPool extends ObjectPool {
@@ -56,12 +56,12 @@ public class SocketPool extends ObjectPool {
 	/**
 	 * Amount of Socket Connections to initial create
 	 */
-	protected short initial = 3;
+	protected short initial = 1;
 	
 	/**
 	 * Maximum amount of Socket Connections to hold
 	 */
-	protected short max = 6;
+	protected short max = 1;
 	
 	/**
 	 * Amount of Sockets minimal in the Pool
@@ -152,6 +152,9 @@ public class SocketPool extends ObjectPool {
 
 /*
 $Log: SocketPool.java,v $
+Revision 1.9  2003/06/19 08:41:21  lemmstercvs01
+just one socket is opened at start
+
 Revision 1.8  2003/06/14 12:47:51  lemmstercvs01
 checkstyle applied
 
