@@ -31,7 +31,7 @@ import gnu.trove.TIntArrayList;
 /**
  * Graph
  *
- * @version $Id: Graph.java,v 1.16 2003/09/20 22:08:41 zet Exp $
+ * @version $Id: Graph.java,v 1.17 2003/09/25 16:32:47 zet Exp $
  */
 public class Graph implements Runnable {
     public static final short MAX_POINTS = 1600;
@@ -200,6 +200,9 @@ public class Graph implements Runnable {
     }
 
     public void clearHistory(  ) {
+		sumValue = 0;
+		graphType = avgValue = maxValue = 0;
+		insertAt = 0;
         maxList.clear(  );
         avgList.clear(  );
     }
@@ -208,6 +211,9 @@ public class Graph implements Runnable {
 
 /*
 $Log: Graph.java,v $
+Revision 1.17  2003/09/25 16:32:47  zet
+clear both graphs (history & current)
+
 Revision 1.16  2003/09/20 22:08:41  zet
 basic graph hourly history
 
