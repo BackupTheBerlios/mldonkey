@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.6 2003/08/30 18:02:24 dek Exp $ 
+ * @version $Id: About.java,v 1.7 2003/08/30 18:20:50 dek Exp $ 
  *
  */
 public class About {
@@ -99,7 +99,7 @@ public class About {
 	}
 
 	private void createLowerPart( Composite parent ) {
-		parent.setLayoutData( new GridData(GridData.BEGINNING));
+		parent.setLayoutData( new GridData( GridData.BEGINNING ) );
 		StyledText about = new StyledText( parent, SWT.MULTI | SWT.READ_ONLY );
 		about.setCaret( null );
 		about.setBackground( background );
@@ -111,36 +111,36 @@ public class About {
 		String contributors = "housetier, mitch, vaste\n\n";
 		
 		String thankHeader = "We thank following projects for code and libs:\n";
-		String thank =" * The KDE project for icons (GPL)\n"
-		+ " * The creator of the Noia KDE icon set for his/her icons (GPL)\n"
-		+ " * The creator of the lush KDE icon set for his/her icons (GPL)\n"
-		+ " * The creator of the Nuvola KDE icon set for his/her icons (GPL)\n"
-		+ " * The emule-plus project for icons (CCL)\n"
-		+ " * The Gnu/Trove and Regex project (GPL)\n"
-		+ " * The whole Eclipse and SWT team (CPL)\n\n";
+		String thank = "  * The KDE project for icons (GPL)\n"
+		+ "  * The creator of the Noia KDE icon set for his/her icons (GPL)\n"
+		+ "  * The creator of the lush KDE icon set for his/her icons (GPL)\n"
+		+ "  * The creator of the Nuvola KDE icon set for his/her icons (GPL)\n"
+		+ "  * The emule-plus project for icons (CCL)\n"
+		+ "  * The Gnu/Trove and Regex project (GPL)\n"
+		+ "  * The whole Eclipse and SWT team (CPL)\n\n";
 		
 		String moreThanksHeader = "We thank furthermore:\n";
-		String moreThanks =" * The dude who made the java ssh2 for use in eclipse\n"
-		+ " * The dude who invented Wikis and the creator of phpWiki\n"
-		+ " * The Freenode IRC network\n\n";
+		String moreThanks = " * The dude who made the java ssh2 for use in eclipse\n"
+		+ "  * The dude who invented Wikis and the creator of phpWiki\n"
+		+ "  * The Freenode IRC network\n\n";
 
 		
 		Color fg = parent.getForeground();
 		Color bg = parent.getBackground();		
 		StyleRange[] ranges = 
-		{	new StyleRange(0,
-				develHeader.length(),fg,bg,SWT.BOLD),			
-			new StyleRange(develHeader.length()+devels.length(),
-				contributorHeader.length(), fg, bg, SWT.BOLD ),
-			new StyleRange(develHeader.length()+devels.length()+contributorHeader.length()+contributors.length(),
-				thankHeader.length(),fg,bg,SWT.BOLD),
-			new StyleRange(develHeader.length()+devels.length()+contributorHeader.length()+contributors.length()+thankHeader.length()+thank.length(),
-				moreThanksHeader.length(),fg,bg,SWT.BOLD)	
+		{	new StyleRange( 0, 
+				develHeader.length(), fg, bg, SWT.BOLD ), 			
+			new StyleRange( develHeader.length() + devels.length(), 
+				contributorHeader.length(), fg, bg, SWT.BOLD ), 
+			new StyleRange( develHeader.length() + devels.length() + contributorHeader.length() + contributors.length(), 
+				thankHeader.length(), fg, bg, SWT.BOLD ), 
+			new StyleRange( develHeader.length() + devels.length() + contributorHeader.length() + contributors.length() + thankHeader.length() + thank.length(), 
+				moreThanksHeader.length(), fg, bg, SWT.BOLD )	
 		};
-		about.setText(  develHeader+devels+
-						contributorHeader+contributors+
-						thankHeader+thank+
-						moreThanksHeader+moreThanks);	
+		about.setText(  develHeader + devels  
+						+ contributorHeader + contributors  
+						+ thankHeader + thank  
+						+ moreThanksHeader + moreThanks );	
 
 		
 		about.setStyleRanges( ranges );
@@ -151,7 +151,7 @@ public class About {
 		
 		CLabel icon = new CLabel( parent, SWT.NONE );
 			icon.setImage( G2GuiResources.getImage( "G2GuiLogo" ) );
-		icon.setLayoutData( new GridData( GridData.BEGINNING ) );
+		icon.setLayoutData( new GridData( GridData.CENTER ) );
 		
 		StyledText info = new StyledText( parent, SWT.MULTI | SWT.READ_ONLY );
 		info.setCaret( null );		
@@ -160,7 +160,7 @@ public class About {
 		GridData gd = new GridData( GridData.FILL_BOTH );
 			gd.grabExcessHorizontalSpace = true;
 			gd.verticalAlignment = GridData.CENTER;
-			gd.horizontalAlignment = GridData.BEGINNING;
+			gd.horizontalAlignment = GridData.CENTER;
 		info.setLayoutData( gd );		
 		info.setText(  "G2gui is (c) 2003 by G2gui team, \n" 
 					 + "all of our own java code is released under \n" 
@@ -225,7 +225,7 @@ public class About {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.6 2003/08/30 18:02:24 dek Exp $ 
+	 * @version $Id: About.java,v 1.7 2003/08/30 18:20:50 dek Exp $ 
 	 *
 	 */
 	public class Link {
@@ -277,6 +277,9 @@ public class About {
 }
 /*
 $Log: About.java,v $
+Revision 1.7  2003/08/30 18:20:50  dek
+minor changes & checkstyle
+
 Revision 1.6  2003/08/30 18:02:24  dek
 nearly finished
 
