@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * About
  *
- * @version $Id: About.java,v 1.14 2003/09/01 14:44:36 dek Exp $ 
+ * @version $Id: About.java,v 1.15 2003/09/02 14:27:03 dek Exp $ 
  *
  */
 public class About extends Dialog {
@@ -121,14 +121,16 @@ public class About extends Dialog {
 		StyledText about = new StyledText( parent, SWT.MULTI | SWT.READ_ONLY );
 		about.setCaret( null );
 		about.setBackground( background );
+		G2GuiResources.getString( "ABOUT_DEVEL" );
 		
-		String develHeader = "Original developers ( code & icons ):\n";
-		String devels = "Dek, lemmy, VNC, and z\n\n";
-		
-		String contributorHeader = "Other contributors and testers:\n";
+		String develHeader = G2GuiResources.getString( "ABOUT_DEVEL" ) + "\n";
+		String devels = "Dek, lemmy, VNC and z\n\n";
+
+		String contributorHeader = G2GuiResources.getString( "ABOUT_CONTRIB" ) + "\n";
 		String contributors = "housetier, mitch, and vaste\n\n";
 		
-		String thankHeader = "We thank the following projects for code and libs:\n";
+		
+		String thankHeader = G2GuiResources.getString( "ABOUT_THANK" ) + "\n";
 		String thank = 
 		  "  * The mldonkey core developers! (GPL)\n"
 		+ "  * The KDE project for icons (GPL)\n"
@@ -139,12 +141,13 @@ public class About extends Dialog {
 		+ "  * The Gnu/Trove and Regex project (GPL)\n"
 		+ "  * The whole Eclipse and SWT team (CPL)\n\n";
 		
-		String moreThanksHeader = "We also thank:\n";
+		
+		String moreThanksHeader = G2GuiResources.getString( "ABOUT_MORE_THANK" ) + "\n";
 		String moreThanks = 
 		  "  * The dude who made the java ssh2 for use in eclipse\n"
 		+ "  * The dude who invented Wikis and the creator of phpWiki\n"
-		+ "  * The Freenode IRC network";
-
+		+ "  * The Freenode IRC network";		
+		
 		
 		Color fg = parent.getForeground();
 		Color bg = parent.getBackground();		
@@ -214,7 +217,7 @@ public class About extends Dialog {
 	
 	
 	protected void createButtonsForButtonBar( Composite parent ) {
-		createButton( parent, IDialogConstants.OK_ID, "Back to GUI", true );
+		createButton( parent, IDialogConstants.OK_ID, G2GuiResources.getString( "ABOUT_LEAVE" ), true );
 	}
 
 	
@@ -243,7 +246,7 @@ public class About extends Dialog {
 	 * Link
 	 *
 	 * @author $user$
-	 * @version $Id: About.java,v 1.14 2003/09/01 14:44:36 dek Exp $ 
+	 * @version $Id: About.java,v 1.15 2003/09/02 14:27:03 dek Exp $ 
 	 *
 	 */
 	public class Link {
@@ -295,6 +298,9 @@ public class About extends Dialog {
 }
 /*
 $Log: About.java,v $
+Revision 1.15  2003/09/02 14:27:03  dek
+i18n of About Dialog (only bold headers, as i want other stuff hardcoded)
+
 Revision 1.14  2003/09/01 14:44:36  dek
 has now icon in upper-left-corner
 
