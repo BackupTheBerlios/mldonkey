@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * ConsoleTab
  *
  * @author $user$
- * @version $Id: ConsoleTab.java,v 1.22 2003/07/25 14:48:28 zet Exp $ 
+ * @version $Id: ConsoleTab.java,v 1.23 2003/07/25 22:01:23 vnc Exp $ 
  *
  */
 public class ConsoleTab extends GuiTab implements Observer, ControlListener, Runnable {	
@@ -132,6 +132,11 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 		if (core.isConnected()) {
 			
 			infoDisplay.append( Pattern.compile("\n").matcher(core.getConsoleMessage().getConsoleMessage()).replaceAll(infoDisplay.getLineDelimiter()) );
+			// workaround for GTK2 bug, to focus the bottom
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=40800
+			infoDisplay.setSelection(infoDisplay.getCharCount());
+			infoDisplay.showSelection();
+
 			core.getConsoleMessage().reset();
 		}
 	}
@@ -180,11 +185,18 @@ public class ConsoleTab extends GuiTab implements Observer, ControlListener, Run
 		consoleMessage.reset();	
 		infoDisplay.append( message );
 		infoDisplay.update();			
+		// workaround for GTK2 bug, to focus the bottom
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=40800
+		infoDisplay.setSelection(infoDisplay.getCharCount());
+		infoDisplay.showSelection();
 	}
 }
 
 /*
 $Log: ConsoleTab.java,v $
+Revision 1.23  2003/07/25 22:01:23  vnc
+added workaround for eclipse-bug 40800 (focus bottom on GTK2)
+
 Revision 1.22  2003/07/25 14:48:28  zet
 replace string.split/replaceAll
 
