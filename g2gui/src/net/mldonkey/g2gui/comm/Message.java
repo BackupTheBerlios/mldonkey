@@ -22,15 +22,15 @@
  */
 package net.mldonkey.g2gui.comm;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 
 /**
  * Message
  *
- * @version $Id: Message.java,v 1.37 2003/09/18 15:29:25 zet Exp $
+ * @version $Id: Message.java,v 1.38 2003/09/18 23:24:07 zet Exp $
  *
  */
 public abstract class Message {
@@ -394,7 +394,7 @@ public abstract class Message {
      *
      * Read the stream, return byte[] of length.  Create an IOException on failure.
      */
-    public static byte[] readStream( InputStream inputStream, int length ) throws IOException {
+    public static byte[] readStream( BufferedInputStream inputStream, int length ) throws IOException {
         byte[] b = new byte[ length ];
         int result;
         int pos = 0;
@@ -414,7 +414,7 @@ public abstract class Message {
      * @throws IOException
      * Read an in32 from InputStream
      */
-    public static int readInt32( InputStream inputStream ) throws IOException {
+    public static int readInt32( BufferedInputStream inputStream ) throws IOException {
         byte[] b = readStream( inputStream, 4 );
         
         return ( ( ( int ) b[ 0 ] ) & 0xFF )
@@ -432,6 +432,10 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.38  2003/09/18 23:24:07  zet
+use bufferedinputstream 
+& mods for the annoying gcj project
+
 Revision 1.37  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away

@@ -24,8 +24,8 @@ package net.mldonkey.g2gui.comm;
 
 import gnu.trove.TIntObjectHashMap;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.100 2003/09/18 15:29:25 zet Exp $ 
+ * @version $Id: Core.java,v 1.101 2003/09/18 23:24:07 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -187,9 +187,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		int messageLength;
 		int position = 0;
 		short opCode;		
-		InputStream i;
+		BufferedInputStream i;
 		try {
-			i = connection.getInputStream();
+			i = new BufferedInputStream( connection.getInputStream() );
 		
 			byte[] messageContent;
 			
@@ -591,6 +591,10 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.101  2003/09/18 23:24:07  zet
+use bufferedinputstream 
+& mods for the annoying gcj project
+
 Revision 1.100  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away

@@ -23,13 +23,11 @@
 package net.mldonkey.g2gui.comm;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 /**
  * EncodeMessage
  *
- * @version $Id: EncodeMessage.java,v 1.11 2003/09/18 15:29:25 zet Exp $
+ * @version $Id: EncodeMessage.java,v 1.12 2003/09/18 23:24:07 zet Exp $
  *
  */
 public class EncodeMessage extends Message {
@@ -104,14 +102,13 @@ public class EncodeMessage extends Message {
 	 * 
 	 * Create and return the header based on the content size
 	 */
-	public byte[] createHeader() {
-
-		ByteBuffer messageHeader = ByteBuffer.allocate( 6 );
-		messageHeader.order( ByteOrder.LITTLE_ENDIAN );
-		messageHeader.putInt( this.length ).putShort( this.opCode );
-		return messageHeader.array();
-
-	}	
+	private byte[] createHeader() {
+		byte[] byteBuffer = new byte[6];
+		
+		byteBuffer = toBytes( new Integer(this.length), byteBuffer, 0 );
+		byteBuffer = toBytes( new Short( this.opCode), byteBuffer, 4 );
+		return byteBuffer;
+	}
 
     /**
      * Creates the message payload from a given object array
@@ -166,25 +163,50 @@ public class EncodeMessage extends Message {
      * Append a number to the content in LITTLE_ENDIAN
      * must be one of: Short, Integer, or Long
      */
-    private void appendNumber( Number number ) {
-        ByteBuffer byteBuffer;
-        if ( number instanceof Short ) {
-            byteBuffer = ByteBuffer.allocate( 2 );
-            byteBuffer.order( ByteOrder.LITTLE_ENDIAN );
-            byteBuffer.putShort( ( ( Short ) number ).shortValue() );
-        }
-        else if ( number instanceof Integer ) {
-            byteBuffer = ByteBuffer.allocate( 4 );
-            byteBuffer.order( ByteOrder.LITTLE_ENDIAN );
-            byteBuffer.putInt( ( ( Integer ) number ).intValue() );
-        }
-        else {
-            byteBuffer = ByteBuffer.allocate( 8 );
-            byteBuffer.order( ByteOrder.LITTLE_ENDIAN );
-            byteBuffer.putLong( ( ( Long ) number ).longValue() );
-        }
-        this.byteArray.write( byteBuffer.array(), 0, byteBuffer.capacity() );
+    private void appendNumber ( Number number ) {
+    	byte[] byteBuffer;
+    	
+    	if ( number instanceof Short ) {
+    		byteBuffer = new byte[2];
+			byteBuffer = toBytes( (Short) number, byteBuffer, 0 );
+		}
+		else if ( number instanceof Integer ) {
+			byteBuffer = new byte[4];
+			byteBuffer = toBytes( (Integer) number, byteBuffer, 0 );
+		}
+		else {
+			byteBuffer = new byte[8];
+			byteBuffer = toBytes( (Long) number, byteBuffer, 0 );
+		}
+    	
+		this.byteArray.write( byteBuffer, 0, byteBuffer.length );
     }
+    
+    // for gcj
+	private static byte[] toBytes( Short aShort, byte[] byteBuffer, int offset ) {
+		 short value = aShort.shortValue();
+		 for ( int j = 0; j < 2; j++ ) {
+			  byteBuffer[ j + offset ] = ( byte ) ( value % 256 );
+			  value = ( short ) ( value / 256 );
+		 }
+		 return byteBuffer;
+	}
+	private static byte[] toBytes( Integer i, byte[] byteBuffer, int offset ) {
+		 int anInt = i.intValue();
+		 byteBuffer[ 0 + offset ] = (byte) (anInt & 0xFF);
+		 byteBuffer[ 1 + offset ] = (byte) ((anInt & 0xFFFF) >> 8);
+		 byteBuffer[ 2 + offset ] = (byte) ((anInt & 0xFFFFFF) >> 16);
+		 byteBuffer[ 3 + offset ] = (byte) ((anInt & 0x7FFFFFFF) >> 24);
+		 return byteBuffer;
+	}
+	private static byte[] toBytes( Long aLong, byte[] byteBuffer, int offset  ) {
+		 long temp = aLong.longValue();
+		 for ( int j = 0; j < 8; j++ ) {
+			  byteBuffer[ j + offset ] = ( byte ) ( temp % 256 );
+			  temp = temp / 256;
+		 }
+		 return byteBuffer;
+	}
    
 	/**
 	 * @return header
@@ -205,6 +227,10 @@ public class EncodeMessage extends Message {
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.12  2003/09/18 23:24:07  zet
+use bufferedinputstream 
+& mods for the annoying gcj project
+
 Revision 1.11  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
