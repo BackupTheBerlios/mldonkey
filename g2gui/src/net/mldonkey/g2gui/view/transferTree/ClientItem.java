@@ -26,12 +26,13 @@ import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.enum.EnumState;
 
 import org.eclipse.swt.custom.TableTreeItem;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * ClientItem
  *
  * @author $user$
- * @version $Id: ClientItem.java,v 1.1 2003/07/12 13:50:01 dek Exp $ 
+ * @version $Id: ClientItem.java,v 1.2 2003/07/12 21:49:36 dek Exp $ 
  *
  */
 public class ClientItem extends TableTreeItem {
@@ -81,9 +82,10 @@ public class ClientItem extends TableTreeItem {
 			state = "NOT_CONNECTED_WAS_QUEUED";	
 		if ( clientInfo.getState().getState() == EnumState.REMOVE_HOST )
 			state = "removeHost";				
-					
+		if ( availability==null )	availability="";	
 		setText( 3, state );
-		setText( 5, "avail: "+availability );
+		setText( 6, availability );		
+		
 		//setText( 6, String.valueOf( clientInfo.getState() ) );
 		
 	}
@@ -96,6 +98,9 @@ public class ClientItem extends TableTreeItem {
 
 /*
 $Log: ClientItem.java,v $
+Revision 1.2  2003/07/12 21:49:36  dek
+transferring and queued clients shown
+
 Revision 1.1  2003/07/12 13:50:01  dek
 nothing to do, so i do senseless idle-working
 

@@ -39,7 +39,7 @@ import org.eclipse.swt.custom.TableTreeItem;
  * DownloadItem
  *
  * @author $user$
- * @version $Id: DownloadItem.java,v 1.3 2003/07/12 16:20:36 dek Exp $ 
+ * @version $Id: DownloadItem.java,v 1.4 2003/07/12 21:49:36 dek Exp $ 
  *
  */
 public class DownloadItem extends TableTreeItem {
@@ -65,15 +65,18 @@ public class DownloadItem extends TableTreeItem {
 		setText( 4, String.valueOf( fileInfo.getSize() ) );
 		setText( 5, String.valueOf( fileInfo.getPerc() ) );
 		setText( 6, String.valueOf( fileInfo.getState() ) );
-		try {
-		Iterator it = fileInfo.getClientInfos().iterator();
-			while ( it.hasNext() ) {		
-				ClientInfo clientInfo = ( ClientInfo ) it.next();
+		
+//		Iterator it = fileInfo.getClientInfos().iterator();
+//			while ( it.hasNext() ) {		
+//				ClientInfo clientInfo = ( ClientInfo ) it.next();
+		Object[] temp = fileInfo.getClientInfos().toArray();
+		for (int i = 0; i < temp.length; i++) {	
+			ClientInfo clientInfo =  (ClientInfo) temp[ i ];
 	//			Here comes the question, wether we want to add this clientInfo, or not?? at the moment,
 	//			all clientInfos are accepted
 				
 					if (( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )
-					
+						|| ( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED )	
 							 
 					){				
 							if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
@@ -94,10 +97,7 @@ public class DownloadItem extends TableTreeItem {
 						
 					}		
 			}
-		} catch (RuntimeException e) {
-						// TODO Auto-generated catch block
-						//System.out.println("da ging was schief, im konstruktor");
-					}
+
 		
 	}
 	
@@ -108,14 +108,20 @@ public class DownloadItem extends TableTreeItem {
 		setText( 3, String.valueOf( fileInfo.getDownloaded() ) );
 		setText( 4, String.valueOf( fileInfo.getSize() ) );
 		setText( 5, String.valueOf( fileInfo.getPerc() ) );
-		setText( 6, fileInfo.getChunks() );
-		Iterator it = fileInfo.getClientInfos().iterator();
-			while ( it.hasNext() ) {			
-				try {
-					ClientInfo clientInfo = ( ClientInfo ) it.next();
+		setText( 6, fileInfo.getChunks() );	
+			
+		Object[] temp =  fileInfo.getClientInfos().toArray();
+		for (int i = 0; i < temp.length; i++) {	
+			ClientInfo clientInfo =  (ClientInfo) temp[ i ];
+			
+		//Iterator it = fileInfo.getClientInfos().iterator();
+		//while ( it.hasNext() ) {		
+		//ClientInfo clientInfo = ( ClientInfo ) it.next();
+
 		// Here comes the question, wether we want to add this clientInfo, or not?? at the moment,
 		// all clientInfos are accepted
-						if (( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )										 
+						if (( clientInfo.getState().getState() == EnumState.CONNECTED_DOWNLOADING )	
+						|| ( clientInfo.getState().getState() == EnumState.CONNECTED_AND_QUEUED )								 
 						){				
 							if ( namedclients.containsKey( clientInfo.getClientid() ) ) {
 								namedclients.get( clientInfo.getClientid() );
@@ -134,9 +140,7 @@ public class DownloadItem extends TableTreeItem {
 						namedclients.remove( clientInfo.getClientid() );
 					
 					}
-				} catch (RuntimeException e) {
-					//System.out.println("da ging was schief");
-				}
+				
 			}
 		
 	}
@@ -180,6 +184,9 @@ public class DownloadItem extends TableTreeItem {
 
 /*
 $Log: DownloadItem.java,v $
+Revision 1.4  2003/07/12 21:49:36  dek
+transferring and queued clients shown
+
 Revision 1.3  2003/07/12 16:20:36  dek
 *** empty log message ***
 
