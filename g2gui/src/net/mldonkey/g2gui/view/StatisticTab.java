@@ -53,6 +53,7 @@ public class StatisticTab
 	
 	protected void createContents(Composite parent) {
 		System.out.println(parent.getBounds());
+		
 		graphControl = new GraphControl(parent);
 		 
 		
@@ -72,6 +73,7 @@ public class StatisticTab
 			
 			graphControl.addPointToUploadGraph(clientInfo.getTcpUpRate());
 			graphControl.addPointToDownloadGraph(clientInfo.getTcpDownRate());
+			graphControl.redraw();
 			
 			
 			//graphControl.setGraph((int)(clientInfo.getTcpUpRate()*10));
