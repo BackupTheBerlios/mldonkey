@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Shell;
  * Main
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.22 2003/08/04 19:22:08 zet Exp $ 
+ * @version $Id: TransferTab.java,v 1.23 2003/08/06 17:10:50 zet Exp $ 
  *
  */
 public class TransferTab extends GuiTab  {
@@ -175,7 +175,7 @@ public class TransferTab extends GuiTab  {
 	public void runLabelUpdate(final String text) 
 		{
 			Shell shell = MainTab.getShell();
-			if(shell !=null && shell.getDisplay()!=null) {
+			if(!shell.isDisposed() && shell !=null && shell.getDisplay()!=null) {
 				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (!label.isDisposed()) {
@@ -199,6 +199,9 @@ public class TransferTab extends GuiTab  {
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.23  2003/08/06 17:10:50  zet
+check for shell.isdisposed
+
 Revision 1.22  2003/08/04 19:22:08  zet
 trial tabletreeviewer
 
