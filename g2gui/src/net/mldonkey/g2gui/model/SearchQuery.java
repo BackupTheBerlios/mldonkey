@@ -40,7 +40,7 @@ import net.mldonkey.g2gui.model.enum.EnumQuery;
  * When complete, it can be sent with this.send().
  *
  *
- * @version $Id: SearchQuery.java,v 1.18 2003/08/23 15:21:37 zet Exp $ 
+ * @version $Id: SearchQuery.java,v 1.19 2003/09/04 12:35:57 dek Exp $ 
  *
  */
 public class SearchQuery implements Sendable {
@@ -141,7 +141,7 @@ public class SearchQuery implements Sendable {
 	 */
 	public void setSearchString( String searchString ) {
 		this.searchString = searchString;
-		String[] patterns = split(searchString,' ');
+		String[] patterns = split( searchString, ' ' );
 		/* now we have to generate a query-Object for each search pattern */
 		Query newQuery;
 		
@@ -168,6 +168,66 @@ public class SearchQuery implements Sendable {
 		 * add this query to the list in searchOptions
 		 */
 		searchOptions.addQuery( maxSize );
+	}
+
+	/**
+	 * Setting the Bitrate of the MP3-File for the search
+	 * @param bitrate of the mp3-file
+	 */
+	public void setMp3Bitrate( String bitrate ) {
+		Query bitrateQuery = new Query();
+		bitrateQuery.setNode( EnumQuery.MP3_BITRATE );
+		bitrateQuery.setComment( "MP3-Bitrate" );
+		bitrateQuery.setDefaultValue( bitrate );
+		/*
+		 * add this query to the list in searchOptions
+		 */
+		searchOptions.addQuery( bitrateQuery );
+	}
+	
+	/**
+	 * Setting the Artist of the MP3-File for the search
+	 * @param artist of the mp3-file
+	 */
+	public void setMp3Artist( String artist ) {
+		Query artistQuery = new Query();
+		artistQuery.setNode( EnumQuery.MP3_ARTIST );
+		artistQuery.setComment( "MP3-Artist" );
+		artistQuery.setDefaultValue( artist );
+		/*
+		 * add this query to the list in searchOptions
+		 */
+		searchOptions.addQuery( artistQuery );
+	}
+	
+	/**
+	 * Setting the Album of the search
+	 * @param album of the mp3-file
+	 */
+	public void setMp3Album( String album ) {
+		Query albumQuery = new Query();
+		albumQuery.setNode( EnumQuery.MP3_TITLE );
+		albumQuery.setComment( "MP3-Album" );
+		albumQuery.setDefaultValue( album );
+		/*
+		 * add this query to the list in searchOptions
+		 */
+		searchOptions.addQuery( albumQuery );
+	}
+	
+	/**
+	 * Setting the MP3-Title of the search
+	 * @param title of the mp3-file
+	 */
+	public void setMp3Title( String title ) {
+		Query titleQuery = new Query();
+		titleQuery.setNode( EnumQuery.MP3_TITLE );
+		titleQuery.setComment( "MP3-Title" );
+		titleQuery.setDefaultValue( title );
+		/*
+		 * add this query to the list in searchOptions
+		 */
+		searchOptions.addQuery( titleQuery );
 	}
 
 	/**
@@ -212,7 +272,7 @@ public class SearchQuery implements Sendable {
 	 * it is 
 	 * <br>Audio (type = 1) or
 	 * <br>Video (type = 2) all other values are ignored: nothing happens
-	 * @param type  Audio (1) or Video (2)
+	 * @param aString  Audio / Video / ...
 	 */
 	public void setMedia( String aString ) {
 		Query format = new Query();
@@ -320,6 +380,9 @@ public class SearchQuery implements Sendable {
 
 /*
 $Log: SearchQuery.java,v $
+Revision 1.19  2003/09/04 12:35:57  dek
+added setter
+
 Revision 1.18  2003/08/23 15:21:37  zet
 remove @author
 
@@ -327,7 +390,7 @@ Revision 1.17  2003/08/23 10:02:02  lemmster
 use supertype where possible
 
 Revision 1.16  2003/08/22 21:03:14  lemmster
-replace $user$ with $Author: zet $
+replace $user$ with $Author: dek $
 
 Revision 1.15  2003/08/09 15:32:45  dek
 removed unused import
