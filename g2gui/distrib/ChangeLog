@@ -1,3 +1,8 @@
+2003/10/22: z
+	* Search: Fix null pointer crash on stop/continue (possibly bug #1022)
+	* Search: Identify files that contain the string "fake" in any 
+				associated filenames/comments with a different color(red)
+
 2003/10/21: z
 	* Server, Search: Add column selector, save last sort
 	* Transfer, Search: Add ShareReactor Fakecheck link
