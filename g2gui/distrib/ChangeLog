@@ -1,3 +1,6 @@
+2004/03/28: vnc
+	* Mozilla G2submit.xpi updated to work better with newer versions of G2Gui
+
 2004/03/26: vnc
 	* Preferences: Fixed re-launching memleak
 
