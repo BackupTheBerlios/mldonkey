@@ -72,7 +72,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.15 2004/03/19 18:31:27 dek Exp $
+ * @version $Id: MainWindow.java,v 1.16 2004/03/25 20:37:31 psy Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText;
@@ -118,6 +118,7 @@ public class MainWindow implements ShellListener {
         /* set the old size of this window - must be after pack() */
         setSizeLocation(shell);
 
+        System.out.println("Mainwindow opened shell");
         shell.open();
 
         /* things we should do if we dispose */
@@ -150,18 +151,19 @@ public class MainWindow implements ShellListener {
                     mldonkey.disconnect();
                     
                     /* save preferences */
+                    PreferenceLoader.setValue("running", false);
                     PreferenceLoader.saveStore();
                     
-                    /* do not call cleanup here yet
-                    PreferenceLoader.cleanUp(); */ 
+                    // do not call cleanup here yet
+                    PreferenceLoader.cleanUp(); 
+                    //System.out.println("*** Dispose complete");
                 }
             });
         if ( SWT.getPlatform().equals("win32") )
         	trayMenu = new SystemTray(this);
 
-
         try {
-            while (!shell.isDisposed()) {
+            while (!shell.isDisposed() | !PreferenceLoader.isRelaunching()) {
                 if (!display.readAndDispatch())
                     display.sleep();
             }
@@ -179,8 +181,6 @@ public class MainWindow implements ShellListener {
                 errorDialog.open(); 
             } 
         }
-        
-       
 
     }
 
@@ -510,6 +510,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.16  2004/03/25 20:37:31  psy
+try to make dispose better
+
 Revision 1.15  2004/03/19 18:31:27  dek
 Shell has same icon as Tray
 

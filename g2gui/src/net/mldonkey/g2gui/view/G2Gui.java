@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.74 2004/03/25 18:07:25 dek Exp $
+ * @version $Id: G2Gui.java,v 1.75 2004/03/25 20:37:31 psy Exp $
  *
  */
 public class G2Gui {
@@ -316,19 +316,10 @@ public class G2Gui {
 			// launch the view
 			Splash.increaseSplashBar("connection to core successfully created");
             new MainWindow(core, shell);
+            System.out.println("*** Mainwindow EXIT in G2GUI.java");
             // we're done - disconnect from the core
             core.disconnect();
         }
-
-        /*
-         * we are not running anymore, so we can allow another instance to
-         * be started
-         */
-        PreferenceLoader.setValue("running", false);
-
-        /* save our preferences */
-        PreferenceLoader.saveStore();
-        if (debug) System.out.println("G2gui shut down.");
     }
     
     /**
@@ -656,6 +647,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.75  2004/03/25 20:37:31  psy
+try to make dispose better
+
 Revision 1.74  2004/03/25 18:07:25  dek
 profiling
 
