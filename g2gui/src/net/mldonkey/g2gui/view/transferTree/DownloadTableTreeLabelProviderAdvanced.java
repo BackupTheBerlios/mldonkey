@@ -33,7 +33,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * DownloadtableTreeLabelProviderAdvanced
  *
- * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.5 2003/09/14 03:37:43 zet Exp $ 
+ * @version $Id: DownloadTableTreeLabelProviderAdvanced.java,v 1.6 2003/09/15 22:10:32 zet Exp $ 
  *
  */
 public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLabelProvider {
@@ -79,8 +79,10 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 			case 5: // percent
 				return ""+dfp.format(fileInfo.getPerc()) + "%";
 			case 6: // # sources  
-				return ""+fileInfo.getSources();		
-			case 7: // rate
+				return ""+fileInfo.getSources();	
+			case 7: // Relative availability %
+				return ""+fileInfo.getRelativeAvail() + "%";		
+			case 8: // rate
 				if (fileInfo.getState().getState() == EnumFileState.PAUSED)
 					return G2GuiResources.getString( "TT_Paused" );
 				else if (fileInfo.getState().getState() == EnumFileState.QUEUED)
@@ -89,15 +91,15 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 					return G2GuiResources.getString( "TT_Downloaded" );	
 				else 
 					return "" + df.format(fileInfo.getRate() / 1000f);
-			case 8: // chunks
+			case 9: // chunks
 				return ""+fileInfo.getNumChunks();
-			case 9: // eta
+			case 10: // eta
 				return ""+getFileETA(fileInfo);
-			case 10: // priority
+			case 11: // priority
 				return fileInfo.getStringPriority();
-			case 11: // last
+			case 12: // last
 				return fileInfo.getStringOffset();
-			case 12: // age
+			case 13: // age
 				return fileInfo.getStringAge();
 			default: 
 				return "";
@@ -130,6 +132,9 @@ public class DownloadTableTreeLabelProviderAdvanced	extends DownloadTableTreeLab
 }
 /*
 $Log: DownloadTableTreeLabelProviderAdvanced.java,v $
+Revision 1.6  2003/09/15 22:10:32  zet
+add availability %, refresh delay option
+
 Revision 1.5  2003/09/14 03:37:43  zet
 changedProperties
 

@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Text;
  * FileDetailDialog
  *
  *
- * @version $Id: FileDetailDialog.java,v 1.30 2003/09/14 22:22:46 zet Exp $ 
+ * @version $Id: FileDetailDialog.java,v 1.31 2003/09/15 22:10:32 zet Exp $ 
  *
  */
 public class FileDetailDialog implements Observer, DisposeListener {
@@ -74,7 +74,7 @@ public class FileDetailDialog implements Observer, DisposeListener {
 	private Button fileActionButton, fileCancelButton;
 	protected DecimalFormat df = new DecimalFormat( "0.0" );
 	private CLabel clFileName, clHash, clSize, clAge,
-				clSources, clChunks, clTransferred, clPercent,
+				clSources, clChunks, clTransferred, clRelativeAvail,
 				clLast, clPriority, clRate, clETA;
 	
 	int leftColumn = 100;
@@ -194,7 +194,7 @@ public class FileDetailDialog implements Observer, DisposeListener {
 		clSources = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_SOURCES"), false);
 		clChunks = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_CHUNKS"), false);
 		clTransferred = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_TRANSFERRED"), false);
-		clPercent = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_PERCENT"), false);
+		clRelativeAvail = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_REL_AVAIL"), false);
 		clLast = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_LAST"), false);
 		clPriority = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_PRIORITY"), false);
 		clRate = createLine(fileTransfer, G2GuiResources.getString("TT_DOWNLOAD_FD_RATE"), false);
@@ -427,23 +427,24 @@ public class FileDetailDialog implements Observer, DisposeListener {
 	 * Update the labels
 	 */
 	public void updateLabels() {
-		
 		updateLabel(clFileName, fileInfo.getName());
 		updateLabel(clHash, fileInfo.getMd4().toUpperCase());
 		updateLabel(clSize, fileInfo.getStringSize());
 		updateLabel(clAge, fileInfo.getStringAge());
-	
 		updateLabel(clSources, Integer.toString(fileInfo.getSources()));
 		updateLabel(clChunks, Integer.toString(fileInfo.getNumChunks())
 							+ " / " + Integer.toString(fileInfo.getChunks().length()));
 		updateLabel(clTransferred, fileInfo.getStringDownloaded());
-		updateLabel(clPercent, Double.toString(fileInfo.getPerc()) + "%");
+		updateLabel(clRelativeAvail, fileInfo.getRelativeAvail() + "%");
 		updateLabel(clLast, fileInfo.getStringOffset());
 		updateLabel(clPriority, fileInfo.getStringPriority());
-		if (fileInfo.getState().getState() == EnumFileState.PAUSED)
+		if (fileInfo.getState().getState() == EnumFileState.PAUSED) {
 			updateLabel(clRate, G2GuiResources.getString( "TT_Paused" ));
-		else 
+		} else if (fileInfo.getState().getState() == EnumFileState.QUEUED) {
+			updateLabel(clRate, G2GuiResources.getString( "TT_Queued" ));
+		} else { 
 			updateLabel(clRate, df.format(fileInfo.getRate() / 1000f) + " KB/s");
+		}
 		updateLabel(clETA, fileInfo.getStringETA());
 		
 		
@@ -490,6 +491,9 @@ public class FileDetailDialog implements Observer, DisposeListener {
 }
 /*
 $Log: FileDetailDialog.java,v $
+Revision 1.31  2003/09/15 22:10:32  zet
+add availability %, refresh delay option
+
 Revision 1.30  2003/09/14 22:22:46  zet
 use console font
 

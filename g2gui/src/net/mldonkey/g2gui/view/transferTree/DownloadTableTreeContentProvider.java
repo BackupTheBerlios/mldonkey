@@ -26,12 +26,14 @@ import gnu.trove.TIntObjectIterator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import net.mldonkey.g2gui.model.ClientInfo;
 import net.mldonkey.g2gui.model.FileInfo;
@@ -52,7 +54,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * DownloadTableTreeContentProvider
  *
- * @version $Id: DownloadTableTreeContentProvider.java,v 1.23 2003/09/14 16:23:56 zet Exp $ 
+ * @version $Id: DownloadTableTreeContentProvider.java,v 1.24 2003/09/15 22:10:32 zet Exp $ 
  *
  */
 public class DownloadTableTreeContentProvider implements ITreeContentProvider, Observer, TreeListener {
@@ -60,10 +62,22 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 	private final static int CHUNKS_COLUMN = DownloadTableTreeViewer.getChunksColumn();
 	private final static Object[] EMPTY_ARRAY = new Object[0];	
 	
-	public CustomTableTreeViewer tableTreeViewer = null;
-	public Map parentChildrenMap = new Hashtable();
-	public List tableTreeEditorList = Collections.synchronizedList(new ArrayList());
+	private CustomTableTreeViewer tableTreeViewer = null;
+	private Map parentChildrenMap = new Hashtable();
+	private Set delayedFileInfoSet = new HashSet();
+	private List tableTreeEditorList = Collections.synchronizedList(new ArrayList());
 	private DownloadTableTreeViewer downloadTableTreeViewer = null;
+	private int updateDelay = 2;
+	private long lastUpdateTimeStamp = 0;
+	
+	private static final String[] allProperties = {
+		FileInfo.CHANGED_RATE,
+		FileInfo.CHANGED_DOWNLOADED,
+		FileInfo.CHANGED_PERCENT,
+		FileInfo.CHANGED_AVAIL,
+		FileInfo.CHANGED_ETA,
+		FileInfo.CHANGED_LAST
+	};
 
 	/*
 	 *  (non-Javadoc)
@@ -246,9 +260,14 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 			// updated fileInfo
 			if (arg instanceof String[]) {
 				FileInfo fileInfo = (FileInfo) o;
-				if (isInteresting(fileInfo)) {	
-					tableTreeViewer.update(fileInfo, (String[]) arg);
-					updateAllEditors();
+				if (isInteresting(fileInfo)) {
+					if (updateDelay == 0) {
+						tableTreeViewer.update(fileInfo, (String[]) arg);
+						updateAllEditors();
+					} else {
+						delayedUpdate(fileInfo, (String[]) arg);	
+					}
+					
 				} else {
 					tableTreeViewer.remove(fileInfo);
 					updateAllEditors();
@@ -284,8 +303,25 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 						updateAllEditors();
 					}
 				} 
-				
 			}
+		}
+	}
+
+	/**
+	 * @param fileInfo
+	 * @param properties
+	 * 
+	 * Delay the update if desired
+	 * 
+	 */
+	public void delayedUpdate(FileInfo fileInfo, String[] properties) {
+		if ( System.currentTimeMillis() > lastUpdateTimeStamp + ( updateDelay * 1000 ) ) {
+			tableTreeViewer.update( delayedFileInfoSet.toArray(),allProperties );
+			delayedFileInfoSet.clear();
+			updateAllEditors();
+			lastUpdateTimeStamp = System.currentTimeMillis();
+		} else {
+			delayedFileInfoSet.add( fileInfo );
 		}
 	}
 
@@ -512,9 +548,16 @@ public class DownloadTableTreeContentProvider implements ITreeContentProvider, O
 		downloadTableTreeViewer = v;
 	}
 
+	public void setUpdateDelay(int i) {
+		updateDelay = i;
+	}
+
 }
 /*
 $Log: DownloadTableTreeContentProvider.java,v $
+Revision 1.24  2003/09/15 22:10:32  zet
+add availability %, refresh delay option
+
 Revision 1.23  2003/09/14 16:23:56  zet
 multi network avails
 

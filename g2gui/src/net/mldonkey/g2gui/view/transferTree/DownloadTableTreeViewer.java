@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * DownloadTable
  *
  *
- * @version $Id: DownloadTableTreeViewer.java,v 1.22 2003/08/31 00:08:59 zet Exp $ 
+ * @version $Id: DownloadTableTreeViewer.java,v 1.23 2003/09/15 22:10:32 zet Exp $ 
  *
  */
 public class DownloadTableTreeViewer implements ICellModifier {
@@ -84,6 +84,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			"TT_Download_Downloaded", 
 			"TT_Download_%",
 			"TT_Download_Sources",
+			"TT_Download_Avail",
 			"TT_Download_Rate",
 			"TT_Download_Chunks",
 			"TT_Download_ETA",
@@ -103,7 +104,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 	private int[] COLUMN_DEFAULT_WIDTHS;
 	private final int[] COLUMN_DEFAULT_WIDTHS_ADVANCED =
-		{ 50, 50, 250, 75, 75, 50, 50, 50, 75, 75, 50, 75, 75};
+		{ 50, 50, 250, 75, 75, 50, 50, 50, 50, 75, 75, 50, 75, 75};
 	private final int[] COLUMN_DEFAULT_WIDTHS_BASIC =
 		{ 50, 50, 250, 75, 50, 75, 75 };	
 
@@ -111,7 +112,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 	private final int[] COLUMN_ALIGNMENT_ADVANCED =
 		{
 			SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, 
-			SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT
+			SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT
 		};
 		
 	private final int[] COLUMN_ALIGNMENT_BASIC =
@@ -119,7 +120,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT, SWT.RIGHT
 		};	
 		
-	private static int CHUNKS_COLUMN = 8;
+	private static int CHUNKS_COLUMN = 9;
 		
 	/**
 	 * 
@@ -227,6 +228,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 		tableTreeViewer.setLabelProvider(treeLabelProvider);
 		
 		tableTreeContentProvider = new DownloadTableTreeContentProvider();
+		tableTreeContentProvider.setUpdateDelay(PreferenceLoader.loadInteger("updateDelay"));
 		tableTreeContentProvider.setDownloadTableTreeViewer(this);
 		tableTreeViewer.setContentProvider(tableTreeContentProvider);
 		tableTreeViewer.setUseHashlookup(true);
@@ -316,6 +318,7 @@ public class DownloadTableTreeViewer implements ICellModifier {
 			displayChunkGraphs = PreferenceLoader.loadBoolean("displayChunkGraphs");
 		}
 		tableTreeViewer.refresh();
+		tableTreeContentProvider.setUpdateDelay(PreferenceLoader.loadInteger("updateDelay"));
 		tableTreeContentProvider.updateAllEditors();
 		if (tableTreeViewer.getSorter() != null)
 			((DownloadTableTreeSorter) tableTreeViewer.getSorter()).setMaintainSortOrder( PreferenceLoader.loadBoolean("maintainSortOrder"));
@@ -329,6 +332,9 @@ public class DownloadTableTreeViewer implements ICellModifier {
 
 /*
 $Log: DownloadTableTreeViewer.java,v $
+Revision 1.23  2003/09/15 22:10:32  zet
+add availability %, refresh delay option
+
 Revision 1.22  2003/08/31 00:08:59  zet
 add buttons
 
