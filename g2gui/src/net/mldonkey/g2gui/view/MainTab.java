@@ -59,13 +59,12 @@ import org.eclipse.swt.widgets.Shell;
  * Gui
  *
  *
- * @version $Id: MainTab.java,v 1.74 2003/09/25 00:51:23 zet Exp $
+ * @version $Id: MainTab.java,v 1.75 2003/09/25 01:03:24 zet Exp $
  *
  */
 public class MainTab implements ShellListener {
     private String titleBarText = "g2gui alpha";
     private StatusLine statusline;
-    private Object waiterObject;
     private Shell shell;
     private CoreCommunication mldonkey;
     private Composite mainComposite;
@@ -360,6 +359,9 @@ public class MainTab implements ShellListener {
 
 /*
 $Log: MainTab.java,v $
+Revision 1.75  2003/09/25 01:03:24  zet
+remove unused waiterObject
+
 Revision 1.74  2003/09/25 00:51:23  zet
 not much
 
