@@ -29,7 +29,6 @@ import net.mldonkey.g2gui.model.FileInfoIntMap;
 import net.mldonkey.g2gui.view.download.FileInfoTableContentProvider;
 import net.mldonkey.g2gui.view.download.FileInfoTableLabelProvider;
 import net.mldonkey.g2gui.view.download.FileInfoTableViewerSorter;
-
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -42,7 +41,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * Transfertab
  *
  * @author $user$
- * @version $Id: TransferTab.java,v 1.7 2003/06/27 11:07:52 lemmstercvs01 Exp $ 
+ * @version $Id: TransferTab.java,v 1.8 2003/06/27 17:40:19 lemmstercvs01 Exp $ 
  *
  */
 public class TransferTab extends G2guiTab implements Observer {
@@ -97,17 +96,26 @@ public class TransferTab extends G2guiTab implements Observer {
 		if ( arg instanceof FileInfoIntMap )
 			table.getTable().getDisplay().asyncExec( new Runnable() {
 				public void run() {
-					if ( table.getInput() instanceof FileInfoIntMap ) 
-						table.refresh();
-					else
+					FileInfoIntMap fileInfo = ( FileInfoIntMap ) arg;
+					int tableCount = table.getTable().getItemCount();
+					if ( tableCount == 0 ) 
 						table.setInput( arg );
-			}
-		});			
+					else if ( tableCount != fileInfo.size() ) {
+						table.refresh();
+					}
+					else if ( fileInfo.contains( fileInfo.getId() ) ) {
+						table.update( fileInfo.get( fileInfo.getId() ), null );
+					}
+				}
+			});			
 	}
 }
 
 /*
 $Log: TransferTab.java,v $
+Revision 1.8  2003/06/27 17:40:19  lemmstercvs01
+foobar
+
 Revision 1.7  2003/06/27 11:07:52  lemmstercvs01
 CoreCommunications implements addObserver(Observer)
 
