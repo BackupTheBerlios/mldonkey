@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
  * NetworkItem
  *
  * @author $user$
- * @version $Id: NetworkItem.java,v 1.11 2003/08/03 17:38:54 zet Exp $ 
+ * @version $Id: NetworkItem.java,v 1.12 2003/08/04 19:22:08 zet Exp $ 
  *
  */
 public class NetworkItem implements Observer {
@@ -160,7 +160,7 @@ public class NetworkItem implements Observer {
 
 				/* find the corresponding label */	
 				cLabel = getLabelByNetwork( controls, network );
-				cLabel.getImage().dispose(); // dispose the old image
+				cLabel.getImage().dispose(); // dispose the old image // nullpointer on this
 				cLabel.setToolTipText( network.getNetworkName() + " " + new Boolean( network.isEnabled() ).toString() );
 
 				if ( core.getProtoToUse() >= 18 ) {
@@ -498,6 +498,9 @@ public class NetworkItem implements Observer {
 
 /*
 $Log: NetworkItem.java,v $
+Revision 1.12  2003/08/04 19:22:08  zet
+trial tabletreeviewer
+
 Revision 1.11  2003/08/03 17:38:54  zet
 check instanceof
 

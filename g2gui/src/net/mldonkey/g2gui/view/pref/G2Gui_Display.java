@@ -22,11 +22,17 @@ public class G2Gui_Display extends PreferencePage  {
 	private ExtendedColorFieldEditor consoleBackground, consoleForeground,
 				consoleInputBackground, consoleInputForeground;
 	private ExtendedFontFieldEditor2 consoleFontData;
+	private BooleanFieldEditor displayChunkGraphs, displayGridLines;
+	private IntegerFieldEditor displayBuffer;
 	private int columns = 0;
 	
 	public G2Gui_Display(PreferenceStore preferenceStore, boolean connected) {
 		super( "Display" );
 		setPreferenceStore(preferenceStore);
+		
+		preferenceStore.setDefault("displayChunkGraphs", true);
+		preferenceStore.setDefault("displayGridLines", true);
+		preferenceStore.setDefault("displayBuffer", 0);
 	}
 	
 	protected void setupEditor(FieldEditor e) {
@@ -37,6 +43,7 @@ public class G2Gui_Display extends PreferencePage  {
 	}
 	
 	protected Control createContents( Composite shell ) {	
+
 		this.controlshell = shell;			
 						
 		consoleBackground = new ExtendedColorFieldEditor("consoleBackground", "Console window background colour", shell);
@@ -53,6 +60,16 @@ public class G2Gui_Display extends PreferencePage  {
 	
 		consoleFontData = new ExtendedFontFieldEditor2("consoleFontData", "Console window font", "Sample",  shell);
 		setupEditor(consoleFontData);
+		
+		displayChunkGraphs = new BooleanFieldEditor("displayChunkGraphs", "Display chunk graphs", shell);
+		setupEditor(displayChunkGraphs);
+		
+		displayGridLines = new BooleanFieldEditor("displayGridLines", "Display grid lines", shell);
+		setupEditor(displayGridLines);
+		
+		displayBuffer = new IntegerFieldEditor("displayBuffer", "GUI update buffer (0-60 seconds)", shell);
+		displayBuffer.setValidRange(0,60);
+		setupEditor(displayBuffer);
 		
 		arrangeFields();
 		return null;
@@ -81,6 +98,9 @@ public class G2Gui_Display extends PreferencePage  {
 		setHorizontalSpan(consoleBackground);
 		setHorizontalSpan(consoleInputForeground);
 		setHorizontalSpan(consoleInputBackground);
+		displayChunkGraphs.fillIntoGrid(controlshell, columns);
+		displayGridLines.fillIntoGrid(controlshell, columns);
+		displayBuffer.fillIntoGrid(controlshell, columns);
 		consoleFontData.adjustForNumColumns( columns );
 	}
 
@@ -108,6 +128,9 @@ public class G2Gui_Display extends PreferencePage  {
 			consoleInputBackground.store();
 			consoleInputForeground.store();
 			consoleFontData.store();
+			displayChunkGraphs.store();
+			displayGridLines.store();
+			displayBuffer.store();
 		}	
 	 	return super.performOk();
 	 	 	

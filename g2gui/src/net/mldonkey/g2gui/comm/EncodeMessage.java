@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author ${user}
- * @version $Id: EncodeMessage.java,v 1.4 2003/07/24 10:33:13 lemmstercvs01 Exp $ 
+ * @version $Id: EncodeMessage.java,v 1.5 2003/08/04 19:22:21 zet Exp $ 
  *
  */
 public class EncodeMessage extends Message {
@@ -97,7 +97,7 @@ public class EncodeMessage extends Message {
 	 */
 	public boolean sendMessage( Socket connection ) {
 		try {
-			
+			// null pointer on this when no core running
 			BufferedOutputStream bOut = new BufferedOutputStream( connection.getOutputStream() );
 			
 			byte[] temp = Message.merge( Message.toBytes( this.length ), 
@@ -280,6 +280,9 @@ public class EncodeMessage extends Message {
 
 /*
 $Log: EncodeMessage.java,v $
+Revision 1.5  2003/08/04 19:22:21  zet
+trial tabletreeviewer
+
 Revision 1.4  2003/07/24 10:33:13  lemmstercvs01
 bugfix in msglength calc of a String[]
 

@@ -22,11 +22,11 @@
  */
 package net.mldonkey.g2gui.model;
 
+import gnu.trove.TIntObjectIterator;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import gnu.trove.TIntObjectIterator;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -38,7 +38,7 @@ import net.mldonkey.g2gui.model.enum.EnumFileState;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoIntMap.java,v 1.18 2003/08/01 17:21:19 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoIntMap.java,v 1.19 2003/08/04 19:21:52 zet Exp $ 
  *
  */
 public class FileInfoIntMap extends InfoIntMap {
@@ -46,7 +46,7 @@ public class FileInfoIntMap extends InfoIntMap {
 	 * id of last file changed in the map
 	 */
 	private List ids = new ArrayList();
-	
+
 	/**
 	 * @param communication my parent
 	 */
@@ -90,17 +90,17 @@ public class FileInfoIntMap extends InfoIntMap {
 			this.put( fileInfo.getId(), fileInfo );
 		}
 		this.setChanged();
-		this.notifyObservers( this );
+		this.notifyObservers();
 	}
 	
 	/**
 	 * Update a specific element in the List
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
-	public void update( MessageBuffer messageBuffer ) {
+	public void update(MessageBuffer messageBuffer) {
 		int id = messageBuffer.readInt32();
-		if ( this.infoIntMap.containsKey( id ) ) {
-			this.get( id ).update( messageBuffer );
+		if (this.infoIntMap.containsKey(id)) {
+			this.get(id).update(messageBuffer);
 			this.setChanged();
 			this.notifyObservers( this );
 		}
@@ -116,18 +116,37 @@ public class FileInfoIntMap extends InfoIntMap {
 			synchronized ( this.ids ) {
 				this.ids.add( new Integer( id ) );
 			}
+		
 			/* go 4bytes back in the MessageBuffer */
 			messageBuffer.setIterator( messageBuffer.getIterator() - 4 );
-			if ( this.infoIntMap.containsKey( id ) )
-				this.get( id ).readStream( messageBuffer );
-			else {
+			if ( this.infoIntMap.containsKey( id ) ) {
+				FileInfo fileInfo = (FileInfo) this.get( id );
+				EnumFileState oldFileState = (EnumFileState) fileInfo.getState().getState();
+				fileInfo.readStream( messageBuffer );
+				
+				EnumFileState newFileState = (EnumFileState) fileInfo.getState().getState();
+				if ((oldFileState == EnumFileState.QUEUED 
+					|| newFileState == EnumFileState.QUEUED
+					|| newFileState == EnumFileState.CANCELLED
+					|| newFileState == EnumFileState.ABORTED
+					) && oldFileState != newFileState) {
+					this.setChanged();
+					this.notifyObservers();
+				} else {
+					this.setChanged();
+					this.notifyObservers( this );
+				}
+				
+									
+			} else {
 				FileInfo fileInfo = new FileInfo( this.parent );
 				fileInfo.readStream( messageBuffer );
 				this.put( fileInfo.getId(), fileInfo );
+				this.setChanged();
+				this.notifyObservers ( fileInfo );
 			}
+			
 		}
-		this.setChanged();
-		this.notifyObservers( this );
 	}
 	
 	/**
@@ -157,7 +176,7 @@ public class FileInfoIntMap extends InfoIntMap {
 			this.ids.clear();
 		}
 	}
-	
+
 	/**
 	 * Adds a new download to this map
 	 * @param url The url of the new download
@@ -175,6 +194,8 @@ public class FileInfoIntMap extends InfoIntMap {
 	 */
 	public void remove( int key ) {
 		this.get( key ).setState( EnumFileState.CANCELLED );
+		this.setChanged();
+		this.notifyObservers( this );
 	}
 	
 	/**
@@ -202,11 +223,16 @@ public class FileInfoIntMap extends InfoIntMap {
 				this.infoIntMap.remove( ( ( Integer ) itr2.next() ).intValue() );
 			}
 		}
+		this.setChanged();
+		this.notifyObservers();
 	}
 }
 
 /*
 $Log: FileInfoIntMap.java,v $
+Revision 1.19  2003/08/04 19:21:52  zet
+trial tabletreeviewer
+
 Revision 1.18  2003/08/01 17:21:19  lemmstercvs01
 reworked observer/observable design, added multiversion support
 

@@ -22,12 +22,14 @@
  */
 package net.mldonkey.g2gui.model;
 
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
-import java.text.DecimalFormat;
 
 import net.mldonkey.g2gui.comm.CoreCommunication;
 import net.mldonkey.g2gui.comm.EncodeMessage;
@@ -41,10 +43,10 @@ import net.mldonkey.g2gui.model.enum.EnumPriority;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.29 2003/08/04 16:56:16 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.30 2003/08/04 19:21:52 zet Exp $ 
  *
  */
-public class FileInfo extends Parent {
+public class FileInfo extends Parent implements Observer {
 	/**
 	 * File identifier
 	 */
@@ -81,6 +83,7 @@ public class FileInfo extends Parent {
 	 * Chunks
 	 */
 	private String chunks;
+	private int numChunks;
 	/**
 	 * Availibility
 	 */
@@ -94,6 +97,7 @@ public class FileInfo extends Parent {
 	 * Download rate
 	 */
 	private float rate;
+	private float rawRate;
 	/**
 	 * File name
 	 */
@@ -133,6 +137,9 @@ public class FileInfo extends Parent {
 
 	private String stringSize;
 	private String stringDownloaded;
+	private String stringETA;
+	private long etaSeconds;
+
 	
 	/**
 	 * @return time when download started
@@ -158,6 +165,10 @@ public class FileInfo extends Parent {
 	public String getChunks() {
 		return chunks;
 	}
+	public int getNumChunks() {
+		return numChunks;
+	}
+	
 	/**
 	 * @return Size already downloaded
 	 */
@@ -314,6 +325,13 @@ public class FileInfo extends Parent {
 		this.getState().readStream( messageBuffer );
 		
 		this.chunks = messageBuffer.readString();
+		
+		int cnt = 0;
+		for (int i = 0; i < chunks.length(); i++) {
+			if (chunks.charAt(i) == '2' || chunks.charAt(i) == '3')
+				cnt++;
+		}
+		numChunks = cnt;
 
 		/* read a list of int32(networkid) and string(avail) */
 		if ( parent.getProtoToUse() > 17 ) {
@@ -331,8 +349,9 @@ public class FileInfo extends Parent {
 			this.avail = messageBuffer.readString();
 	
 		/* translate to kb and round to two digits after comma */
-		double d = new Double( messageBuffer.readString() ).doubleValue() / 1024;
-		this.rate = ( float ) round( d );
+		double d = new Double( messageBuffer.readString() ).doubleValue();
+		this.rate = ( float ) round( d / 1024 );
+		this.rawRate = ( float ) d;
 		this.chunkage = messageBuffer.readStringList();
 		this.age = messageBuffer.readString();
 		
@@ -347,6 +366,19 @@ public class FileInfo extends Parent {
 	
 		this.stringSize = calcStringSize( this.size );
 		this.stringDownloaded = calcStringSize( this.downloaded );
+
+		if (rawRate == 0) this.etaSeconds = Long.MAX_VALUE;
+		else this.etaSeconds = (long) ((getSize() - getDownloaded()) / (rawRate + 1));
+		
+		this.stringETA = calcStringETA ();
+			
+		if (this.state.getState() == EnumFileState.DOWNLOADING
+			|| this.state.getState() == EnumFileState.PAUSED) {
+				this.setChanged();
+				this.notifyObservers( this );
+		}
+		
+	
 	}
 	
 	/**
@@ -362,14 +394,18 @@ public class FileInfo extends Parent {
 		double d2 = round( ( ( double ) this.getDownloaded() / ( double ) this.getSize() ) * 100 );
 		this.perc = d2;
 	}
-	
+
 	/**
 	 * Put the client into this list of clientinfos
 	 * @param clientInfo The clientInfo to put into this map
 	 * @return true if adding is successful
 	 */
 	public boolean addClientInfo( ClientInfo clientInfo ) {
-		return this.clientInfos.add( clientInfo );
+		boolean result = this.clientInfos.add( clientInfo );
+		clientInfo.addObserver( this );
+		this.setChanged();
+		this.notifyObservers( clientInfo );
+		return result;
 	}
 	
 	/**
@@ -378,7 +414,11 @@ public class FileInfo extends Parent {
 	 * @return true if removing is successful
 	 */
 	public boolean removeClientInfo( ClientInfo clientInfo ) {
-		return this.clientInfos.remove( clientInfo );
+		boolean result = this.clientInfos.remove( clientInfo );
+		clientInfo.deleteObserver( this );
+		this.setChanged();
+		this.notifyObservers( clientInfo );
+		return result;
 	}
 	
 	/**
@@ -504,11 +544,50 @@ public class FileInfo extends Parent {
 	public String getStringDownloaded () {
 		return stringDownloaded;
 	}
+	private String calcStringETA () {
+			
+		long remainingSeconds = this.etaSeconds;
+		
+		if (remainingSeconds < 1) return "";
+				
+		long days = remainingSeconds / 60 / 60 / 24;
+		long rest = remainingSeconds - days * 60 * 60 * 24;
+		long hours = rest / 60 / 60;
+		rest = rest - hours * 60 * 60;
+		long minutes = rest / 60;
+		long seconds = rest - minutes * 60;
+		
+		if (days > 100) return "";
+		if (days > 0) return "" + days + "d";
+		if (hours > 0) return "" + hours + "h" + (minutes > 0 ? " " + minutes + "m" : "");
+		return "" + minutes + "m" + (seconds > 0 ? " " + seconds + "s" : "");
+	}
+	public String getStringETA () {
+		return stringETA;
+	}
+	
+	public long getETA() {
+		return etaSeconds;
+	}
+	
+	// hack
+	public void update (Observable o, Object obj) {
+		if (o instanceof ClientInfo) {
+			
+			ClientInfo clientInfo = (ClientInfo) o;
+			this.setChanged();
+			this.notifyObservers( clientInfo );
+			
+		}
+	}
 	
 }	
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.30  2003/08/04 19:21:52  zet
+trial tabletreeviewer
+
 Revision 1.29  2003/08/04 16:56:16  lemmstercvs01
 use the correct opcode for msg sending
 

@@ -32,7 +32,7 @@ import net.mldonkey.g2gui.model.enum.*;
  * ClientInfo
  *
  * @author markus
- * @version $Id: ClientInfo.java,v 1.13 2003/08/03 17:34:45 zet Exp $ 
+ * @version $Id: ClientInfo.java,v 1.14 2003/08/04 19:21:52 zet Exp $ 
  *
  */
 public class ClientInfo extends Parent {
@@ -211,12 +211,14 @@ public class ClientInfo extends Parent {
 		( ( TIntObjectHashMap ) this.avail ).put( fileId, avail );
 		this.setChanged();
 		this.notifyObservers( this );
-	
 	}
 }
 
 /*
 $Log: ClientInfo.java,v $
+Revision 1.14  2003/08/04 19:21:52  zet
+trial tabletreeviewer
+
 Revision 1.13  2003/08/03 17:34:45  zet
 notify observers
 
