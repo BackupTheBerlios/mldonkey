@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Statistic Tab
  *
- * @version $Id: StatisticTab.java,v 1.22 2003/08/29 22:11:47 zet Exp $
+ * @version $Id: StatisticTab.java,v 1.23 2003/08/29 22:13:44 zet Exp $
  */
 
 public class StatisticTab extends GuiTab {
@@ -108,7 +108,7 @@ public class StatisticTab extends GuiTab {
 		ViewForm downloadsGraphViewForm = new ViewForm( graphSash, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		ViewForm uploadsGraphViewForm = new ViewForm( graphSash, SWT.BORDER | (PreferenceLoader.loadBoolean("flatInterface") ? SWT.FLAT : SWT.NONE) );
 		
-		CLabel downloadsCLabel = CCLabel.createCL(downloadsGraphViewForm, "TT_Downloads", "TT_Downloads" );	
+		CLabel downloadsCLabel = CCLabel.createCL(downloadsGraphViewForm, "TT_Downloads", "StatisticsButtonSmallTitlebar" );	
 		CLabel uploadsCLabel = CCLabel.createCL(uploadsGraphViewForm, "TT_Uploads", "StatisticsButtonSmallTitlebar");
 						
 		downloadsGraphControl = new GraphControl( downloadsGraphViewForm, downloadsGraphName, 
@@ -152,6 +152,9 @@ public class StatisticTab extends GuiTab {
 }
 /*
 $Log: StatisticTab.java,v $
+Revision 1.23  2003/08/29 22:13:44  zet
+fix icon
+
 Revision 1.22  2003/08/29 22:11:47  zet
 add CCLabel helper class
 
