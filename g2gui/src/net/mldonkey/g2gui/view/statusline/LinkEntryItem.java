@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * LinkEntryItem
  *
- * @version $Id: LinkEntryItem.java,v 1.3 2003/09/18 11:37:24 lemmster Exp $
+ * @version $Id: LinkEntryItem.java,v 1.4 2003/09/20 01:36:19 zet Exp $
  *
  */
 public class LinkEntryItem {
@@ -47,10 +47,10 @@ public class LinkEntryItem {
     private boolean linkEntryToggle = false;
 
 	/**
-	 * DOCUMENT ME!
+	 * 
 	 *  
-	 * @param statusLine DOCUMENT ME!
-	 * @param mldonkey DOCUMENT ME!
+	 * @param statusLine 
+	 * @param mldonkey 
 	 */
     public LinkEntryItem( StatusLine statusLine, CoreCommunication mldonkey ) {
         this.linkEntryComposite = statusLine.getLinkEntryComposite();
@@ -58,10 +58,7 @@ public class LinkEntryItem {
         this.composite = statusLine.getStatusline();
         createContents();
     }
-
-    /**
-     * DOCUMENT ME!
-     */
+    
     public void createContents() {
         Composite linkComposite = new Composite( composite, SWT.BORDER );
         linkComposite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
@@ -87,12 +84,15 @@ public class LinkEntryItem {
 
                 public void mouseDoubleClick( MouseEvent e ) {
                 }
-            } );
+       	});
     }
 }
 
 /*
 $Log: LinkEntryItem.java,v $
+Revision 1.4  2003/09/20 01:36:19  zet
+*** empty log message ***
+
 Revision 1.3  2003/09/18 11:37:24  lemmster
 checkstyle
 

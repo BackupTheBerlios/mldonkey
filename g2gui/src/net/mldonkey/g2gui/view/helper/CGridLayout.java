@@ -27,7 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 /**
  * CGridLayout - static class to return new GridLayouts
  *
- * @version $Id: CGridLayout.java,v 1.2 2003/09/18 10:04:57 lemmster Exp $
+ * @version $Id: CGridLayout.java,v 1.3 2003/09/20 01:34:08 zet Exp $
  *
  */
 public class CGridLayout {
@@ -36,16 +36,14 @@ public class CGridLayout {
     }
 
     /**
-     * DOCUMENT ME!
+     * @param numColumns 
+     * @param marginWidth 
+     * @param marginHeight 
+     * @param horizontalSpacing 
+     * @param verticalSpacing 
+     * @param makeColumnsEqualWidth 
      *
-     * @param numColumns DOCUMENT ME!
-     * @param marginWidth DOCUMENT ME!
-     * @param marginHeight DOCUMENT ME!
-     * @param horizontalSpacing DOCUMENT ME!
-     * @param verticalSpacing DOCUMENT ME!
-     * @param makeColumnsEqualWidth DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @return 
      */
     public static GridLayout createGL( int numColumns, int marginWidth, int marginHeight,
                                        int horizontalSpacing, int verticalSpacing,
@@ -63,6 +61,9 @@ public class CGridLayout {
 
 /*
 $Log: CGridLayout.java,v $
+Revision 1.3  2003/09/20 01:34:08  zet
+*** empty log message ***
+
 Revision 1.2  2003/09/18 10:04:57  lemmster
 checkstyle
 

@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * PreferenceLoader
  *
  *
- * @version $Id: PreferenceLoader.java,v 1.24 2003/09/19 14:25:55 zet Exp $
+ * @version $Id: PreferenceLoader.java,v 1.25 2003/09/20 01:29:21 zet Exp $
  */
 public class PreferenceLoader {
     private static PreferenceStore preferenceStore = new PreferenceStore( "g2gui.pref" );
@@ -113,12 +113,6 @@ public class PreferenceLoader {
         return preferenceStore;
     }
 
-	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param preferenceString DOCUMENT ME!
-	 * @return DOCUMENT ME!
-	 */
 	public static Font loadFont( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) ) {
             Font newFont =
@@ -140,13 +134,7 @@ public class PreferenceLoader {
         }
         return null;
     }
-
-    /**
-     * DOCUMENT ME!
-     * 
-     * @param preferenceString DOCUMENT ME!
-     * @return DOCUMENT ME!
-     */
+ 
 	public static Color loadColour( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) ) {
             Color newColor =
@@ -168,67 +156,34 @@ public class PreferenceLoader {
         return null;
     }
 
-    /**
-     * DOCUMENT ME!
-     * 
-     * @param preferenceString DOCUMENT ME!
-     * @return DOCUMENT ME!
-     */
 	public static Rectangle loadRectangle( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) )
             return PreferenceConverter.getRectangle( preferenceStore, preferenceString );
         return null;
     }
 
-    /**
-     * DOCUMENT ME!
-     * 
-     * @param preferenceString DOCUMENT ME!
-     * @return DOCUMENT ME!
-     */
 	public static boolean loadBoolean( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) )
             return preferenceStore.getBoolean( preferenceString );
         return true;
     }
-
-    /**
-     * DOCUMENT ME!
-     * 
-     * @param preferenceString DOCUMENT ME!
-     * @return DOCUMENT ME!
-     */
+   
 	public static int loadInteger( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) )
             return preferenceStore.getInt( preferenceString );
         return 0;
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param preferenceString DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+  
 	public static String loadString( String preferenceString ) {
         if ( preferenceStore.contains( preferenceString ) )
             return preferenceStore.getString( preferenceString );
         return "";
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
 	public static PreferenceStore getPreferenceStore() {
         return preferenceStore;
     }
-
-    /**
-     * DOCUMENT ME!
-     */
+   
     public static void saveStore() {
         try {
             preferenceStore.save();
@@ -236,28 +191,15 @@ public class PreferenceLoader {
         catch ( IOException e2 ) {
         }
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param preferenceString DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+   
 	public static boolean contains( String preferenceString ) {
         return preferenceStore.contains( preferenceString );
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public static void initialize() {
         loadStore();
     }
-
-    /**
-     * DOCUMENT ME!
-     */
+    
 	public static void cleanUp() {
         Iterator fonts = fontArray.iterator();
         while ( fonts.hasNext() )
@@ -270,6 +212,9 @@ public class PreferenceLoader {
 
 /*
 $Log: PreferenceLoader.java,v $
+Revision 1.25  2003/09/20 01:29:21  zet
+*** empty log message ***
+
 Revision 1.24  2003/09/19 14:25:55  zet
 min to systray option
 

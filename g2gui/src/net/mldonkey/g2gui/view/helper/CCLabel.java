@@ -33,7 +33,7 @@ import org.eclipse.swt.layout.GridData;
 /**
  * CClabel - static class to return new CLabels
  *
- * @version $Id: CCLabel.java,v 1.2 2003/09/18 10:04:57 lemmster Exp $
+ * @version $Id: CCLabel.java,v 1.3 2003/09/20 01:34:08 zet Exp $
  *
  */
 public class CCLabel {
@@ -42,13 +42,11 @@ public class CCLabel {
     }
 
     /**
-     * DOCUMENT ME!
+     * @param parent 
+     * @param text 
+     * @param image 
      *
-     * @param parent DOCUMENT ME!
-     * @param text DOCUMENT ME!
-     * @param image DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @return 
      */
     public static CLabel createCL( ViewForm parent, String text, String image ) {
         CLabel cLabel = new CLabel( parent, SWT.LEFT );
@@ -65,6 +63,9 @@ public class CCLabel {
 
 /*
 $Log: CCLabel.java,v $
+Revision 1.3  2003/09/20 01:34:08  zet
+*** empty log message ***
+
 Revision 1.2  2003/09/18 10:04:57  lemmster
 checkstyle
 

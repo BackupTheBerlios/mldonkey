@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * CoreConsoleItem
  *
- * @version $Id: CoreConsoleItem.java,v 1.2 2003/09/18 11:37:24 lemmster Exp $
+ * @version $Id: CoreConsoleItem.java,v 1.3 2003/09/20 01:36:19 zet Exp $
  *
  */
 public class CoreConsoleItem {
@@ -47,10 +47,8 @@ public class CoreConsoleItem {
     private boolean linkEntryToggle = false;
 
 	/**
-	 * DOCUMENT ME!
-	 *  
-	 * @param statusLine DOCUMENT ME!
-	 * @param mldonkey DOCUMENT ME!
+	 * @param statusLine 
+	 * @param mldonkey 
 	 */
     public CoreConsoleItem( StatusLine statusLine, CoreCommunication mldonkey ) {
         this.statusLine = statusLine;
@@ -58,9 +56,6 @@ public class CoreConsoleItem {
         createContents();
     }
 
-    /**
-     * DOCUMENT ME!
-     */
     public void createContents() {
         Composite linkComposite = new Composite( composite, SWT.BORDER );
         linkComposite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
@@ -84,6 +79,9 @@ public class CoreConsoleItem {
 
 /*
 $Log: CoreConsoleItem.java,v $
+Revision 1.3  2003/09/20 01:36:19  zet
+*** empty log message ***
+
 Revision 1.2  2003/09/18 11:37:24  lemmster
 checkstyle
 

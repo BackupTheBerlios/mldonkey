@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
  * LinkEntry
  *
- * @version $Id: LinkEntry.java,v 1.13 2003/09/18 15:30:17 zet Exp $
+ * @version $Id: LinkEntry.java,v 1.14 2003/09/20 01:36:19 zet Exp $
  *
  */
 public class LinkEntry {
@@ -57,11 +57,9 @@ public class LinkEntry {
     private StatusLine statusLine;
 
 	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @param statusLine DOCUMENT ME!
-	 * @param core DOCUMENT ME!
-	 * @param parent DOCUMENT ME!
+	 * @param statusLine 
+	 * @param core 
+	 * @param parent 
 	 */
     public LinkEntry( StatusLine statusLine, CoreCommunication core, Composite parent ) {
         this.statusLine = statusLine;
@@ -70,9 +68,7 @@ public class LinkEntry {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param parent DOCUMENT ME!
+     * @param parent 
      */
     public void createContents( Composite parent ) {
         ViewForm linkEntryViewForm =
@@ -101,9 +97,7 @@ public class LinkEntry {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param linkEntryText DOCUMENT ME!
+     * @param linkEntryText 
      */
     public void enterLinks( Text linkEntryText ) {
         String input = linkEntryText.getText();
@@ -132,13 +126,11 @@ public class LinkEntry {
     }
 
     /**
-     * DOCUMENT ME!
+     * @param input 
+     * @param toBeReplaced 
+     * @param replaceWith 
      *
-     * @param input DOCUMENT ME!
-     * @param toBeReplaced DOCUMENT ME!
-     * @param replaceWith DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @return String
      */
     private String replaceAll( String input, String toBeReplaced, String replaceWith ) {
         RE regex = null;
@@ -155,6 +147,9 @@ public class LinkEntry {
 
 /*
 $Log: LinkEntry.java,v $
+Revision 1.14  2003/09/20 01:36:19  zet
+*** empty log message ***
+
 Revision 1.13  2003/09/18 15:30:17  zet
 centralize writeStream in core
 handle IOException rather than throwing it away

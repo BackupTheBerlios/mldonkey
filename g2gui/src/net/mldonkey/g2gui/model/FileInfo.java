@@ -47,7 +47,7 @@ import net.mldonkey.g2gui.view.transferTree.TreeClientInfo;
  * Download
  *
  *
- * @version $Id: FileInfo.java,v 1.57 2003/09/18 15:29:25 zet Exp $
+ * @version $Id: FileInfo.java,v 1.58 2003/09/20 01:31:36 zet Exp $
  *
  */
 public class FileInfo extends Parent implements Observer {
@@ -224,12 +224,7 @@ public class FileInfo extends Parent implements Observer {
     public String getChunks() {
         return chunks;
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+   
     public int getNumChunks() {
         return numChunks;
     }
@@ -457,7 +452,7 @@ public class FileInfo extends Parent implements Observer {
     }
 
     /**
-     *        notify tableviewer of the changed properties
+     * notify tableviewer of the changed properties
      */
     public void notifyChangedProperties() {
         String[] changed = new String[ changedProperties.size() ];
@@ -708,31 +703,14 @@ public class FileInfo extends Parent implements Observer {
             return new String( size + "" );
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public String getStringSize() {
         return stringSize;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public String getStringDownloaded() {
         return stringDownloaded;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param inSeconds DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     private static String calcStringOfSeconds( long inSeconds ) {
         if ( inSeconds < 1 )
             return "0m";
@@ -750,48 +728,25 @@ public class FileInfo extends Parent implements Observer {
             return "" + hours + "h" + ( ( minutes > 0 ) ? ( " " + minutes + "m" ) : "" );
         return "" + minutes + "m";
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+ 
     public String getStringETA() {
         return stringETA;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public String getStringOffset() {
         return stringOffset;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
     public String getStringAge() {
         return stringAge;
     }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
+ 
     public long getETA() {
         return etaSeconds;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param o DOCUMENT ME!
-     * @param obj DOCUMENT ME!
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update( Observable o, Object obj ) {
         if ( o instanceof ClientInfo ) {
@@ -808,6 +763,9 @@ public class FileInfo extends Parent implements Observer {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.58  2003/09/20 01:31:36  zet
+*** empty log message ***
+
 Revision 1.57  2003/09/18 15:29:25  zet
 centralize writeStream in core
 handle IOException rather than throwing it away
