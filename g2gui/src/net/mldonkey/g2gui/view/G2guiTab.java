@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * G2guiTab
  *
  * @author $user$
- * @version $Id: G2guiTab.java,v 1.6 2003/07/02 16:37:29 dek Exp $ 
+ * @version $Id: G2guiTab.java,v 1.7 2003/07/02 19:14:10 dek Exp $ 
  *
  */
 public abstract class G2guiTab implements Listener {	
@@ -53,8 +53,8 @@ public abstract class G2guiTab implements Listener {
 		this.content.setVisible( false );
 		toolItem = new ToolItem( ( ( Gui )gui ).getMainTools(), SWT.PUSH );		
 		this.toolItem.addListener( SWT.Selection, this );
-		gui.registerTab( this );		
-		mainWindow.setActive( this );
+		gui.registerTab( this );
+		
 	}
 		
 	protected abstract void createContents( Composite parent );
@@ -73,6 +73,9 @@ public abstract class G2guiTab implements Listener {
 }
 /*
 $Log: G2guiTab.java,v $
+Revision 1.7  2003/07/02 19:14:10  dek
+default-window is now transfer-Tab
+
 Revision 1.6  2003/07/02 16:37:29  dek
 minor checkstyle
 
