@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * G2GuiWinReg - associate link types with the application in the windows registry
  *
- * @version $Id: G2GuiWinReg.java,v 1.3 2003/11/09 16:44:13 zet Exp $
+ * @version $Id: G2GuiWinReg.java,v 1.4 2003/11/09 17:11:45 zet Exp $
  *
  */
 public class G2GuiWinReg extends PreferencePage {
@@ -215,9 +215,9 @@ public class G2GuiWinReg extends PreferencePage {
             group.setLayout(CGridLayout.createGL(1, 5, 5, 5, 5, false));
             group.setText(text + "://");
 
-            createButton(group, G2GuiResources.getString("BTN_NO_CHANGE"), true, NO_CHANGE);
-            createButton(group, G2GuiResources.getString("BTN_REGISTER"), false, REGISTER);
-            createButton(group, G2GuiResources.getString("BTN_UNREGISTER"), false, UNREGISTER);
+            createButton(group, G2GuiResources.getString("BTN_NO_CHANGE"), NO_CHANGE);
+            createButton(group, G2GuiResources.getString("BTN_REGISTER"), REGISTER);
+            createButton(group, G2GuiResources.getString("BTN_UNREGISTER"), UNREGISTER);
         }
 
         /**
@@ -226,11 +226,11 @@ public class G2GuiWinReg extends PreferencePage {
          * @param select
          * @param type
          */
-        private void createButton(Group group, String text, boolean select, final int type) {
+        private void createButton(Group group, String text, final int type) {
             Button button = new Button(group, SWT.RADIO);
             button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             button.setText(text);
-            button.setSelection(select);
+            button.setSelection(type == NO_CHANGE);
             button.addSelectionListener(new SelectionAdapter() {
                     public void widgetSelected(SelectionEvent e) {
                         selection = type;
@@ -257,6 +257,9 @@ public class G2GuiWinReg extends PreferencePage {
 
 /*
 $Log: G2GuiWinReg.java,v $
+Revision 1.4  2003/11/09 17:11:45  zet
+minor
+
 Revision 1.3  2003/11/09 16:44:13  zet
 silent
 
