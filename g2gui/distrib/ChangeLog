@@ -1,5 +1,5 @@
 2003/11/23: vnc
-	* Configure/Makefile process now supports fox, motif and gtk2
+	* Configure/Makefile process now supports --with-fox and --with-motif
 
 2003/11/22: z
 	* Search: Fix columnSelector option on search tab 
