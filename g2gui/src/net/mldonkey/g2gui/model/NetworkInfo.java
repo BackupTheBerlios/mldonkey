@@ -31,7 +31,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.17 2003/08/06 09:45:52 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.18 2003/08/10 10:19:58 lemmstercvs01 Exp $ 
  *
  */
 public class NetworkInfo extends Parent {
@@ -178,7 +178,7 @@ public class NetworkInfo extends Parent {
 		else if ( this.networkType == Enum.DC )
 			return "DC";
 		else if ( this.networkType == Enum.OPENNP )
-			return "OFT";
+			return "ONP";
 		else
 			return "";	
 	}
@@ -320,6 +320,9 @@ public class NetworkInfo extends Parent {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.18  2003/08/10 10:19:58  lemmstercvs01
+return ONP instead of OFT in getNetworkShortName()
+
 Revision 1.17  2003/08/06 09:45:52  lemmstercvs01
 remove servers from serverinfointmap if network switches to off
 
