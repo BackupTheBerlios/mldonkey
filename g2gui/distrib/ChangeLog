@@ -1,3 +1,6 @@
+2003709/29: vnc
+	* Added new startup splash with border
+
 2003709/28: Dek
 	* Added Option, wether multiple Instances of G2Gui are allowed or not[bug #867]
 	
