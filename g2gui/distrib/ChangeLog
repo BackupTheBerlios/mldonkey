@@ -1,9 +1,11 @@
+2004/09/11: Dek
+	*g2gui starter exe can now also handle pathnames with " " inside
+
 2004/09/10: Dek
 	* fixed bug #1449 (Splash always on top)
 	* fixed bugs #2200 #1088  #2251 #2292 #2319 (crash while searching)
 		Not really a bugfix, but a workaround for core-bug
-		
-		
+				
 2004/04/06: vnc
 	* reduced CPU-usage a lot when in tray/minimized
 
