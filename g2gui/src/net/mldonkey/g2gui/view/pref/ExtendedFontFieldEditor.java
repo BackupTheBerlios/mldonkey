@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.*;
  * ExtendedFontFieldEditor
  *
  * @author $user$
- * @version $Id: ExtendedFontFieldEditor.java,v 1.5 2003/07/03 10:14:56 dek Exp $ 
+ * @version $Id: ExtendedFontFieldEditor.java,v 1.6 2003/07/03 10:23:20 dek Exp $ 
  *
  */
 public class ExtendedFontFieldEditor extends FieldEditor {
@@ -156,10 +156,22 @@ public class ExtendedFontFieldEditor extends FieldEditor {
 		return result;
 	}
 
+	/**
+	 * @param font
+	 */
+	public void setFont(Font font) {
+		this.font = font;
+		fontSample.setFont(font);
+		fontSample.setSize( fontSample.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+	}
+
 }
 
 /*
 $Log: ExtendedFontFieldEditor.java,v $
+Revision 1.6  2003/07/03 10:23:20  dek
+OK, the font-thing finally works
+
 Revision 1.5  2003/07/03 10:14:56  dek
 saving font now works
 
