@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
  * G2GuiResources
  *
  *
- * @version $Id: G2GuiResources.java,v 1.19 2003/09/01 00:44:21 zet Exp $
+ * @version $Id: G2GuiResources.java,v 1.20 2003/09/01 00:51:49 zet Exp $
  */
 public class G2GuiResources {
 	
@@ -231,7 +231,6 @@ public class G2GuiResources {
 	}
 		
 	/**
-	 * Convert an image to grayscale, excluding the color specified
 	 * 
 	 * @param src
 	 * @param color
@@ -284,6 +283,9 @@ public class G2GuiResources {
 
 /*
 $Log: G2GuiResources.java,v $
+Revision 1.20  2003/09/01 00:51:49  zet
+*** empty log message ***
+
 Revision 1.19  2003/09/01 00:44:21  zet
 use hotimage
 
