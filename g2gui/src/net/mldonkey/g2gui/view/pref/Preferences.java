@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Shell;
  * OptionTree2
  *
  *
- * @version $Id: Preferences.java,v 1.24 2003/08/24 11:30:57 dek Exp $ 
+ * @version $Id: Preferences.java,v 1.25 2003/08/24 11:33:19 dek Exp $ 
  *
  */
 public class Preferences extends PreferenceManager {	
@@ -73,13 +73,7 @@ public class Preferences extends PreferenceManager {
 			} catch ( IOException e ) {
 				System.out.println( "initalizing Preferences Dialog failed due to IOException" );
 			}
-		prefdialog = new PreferenceDialog( shell, this ) {
-				/* ( non-Javadoc )
-				 * @see org.eclipse.jface.preference.PreferenceDialog#cancelPressed()
-				 */
-					protected void cancelPressed() {				
-						prefdialog.close();
-					}
+		prefdialog = new PreferenceDialog( shell, this ) {				
 				/* (non-Javadoc)
 				 * @see org.eclipse.jface.window.Window#setShellStyle(int)
 				 */
@@ -226,6 +220,10 @@ public class Preferences extends PreferenceManager {
 
 /*
 $Log: Preferences.java,v $
+Revision 1.25  2003/08/24 11:33:19  dek
+removed cancelpsressed handler, which is not needed anymore, because
+we use this superb FieldEditorPrefPages ;-)
+
 Revision 1.24  2003/08/24 11:30:57  dek
 prefDialog is not resizable any more, and we have IntEditors for int-values
 
