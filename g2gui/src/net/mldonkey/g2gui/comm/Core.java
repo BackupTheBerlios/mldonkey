@@ -33,7 +33,7 @@ import net.mldonkey.g2gui.model.*;
  * Core
  *
  * @author $user$
- * @version $Id: Core.java,v 1.13 2003/06/14 23:03:26 lemmstercvs01 Exp $ 
+ * @version $Id: Core.java,v 1.14 2003/06/15 09:58:30 lemmstercvs01 Exp $ 
  *
  */
 public class Core extends Thread {
@@ -62,8 +62,9 @@ public class Core extends Thread {
 	 */
 	private InfoList clientInfoList = new ClientInfoList(),
 					 fileInfoList = new FileInfoList(),
-					 serverInfoList = new ServerInfoList();
-	
+					 serverInfoList = new ServerInfoList(),
+					 addSectionOptionList = new AddSomeOptionList(),
+					 addPluginOptionList = new AddSomeOptionList();	
 	/**
 	 * 
 	 */
@@ -163,6 +164,14 @@ public class Core extends Thread {
 			case Message.R_CLIENT_INFO :
 					this.clientInfoList.readStream( messageBuffer );
 					break;
+			
+			case Message.R_ADD_SECTION_OPTION :
+					this.addSectionOptionList.readStream( messageBuffer );
+					break;
+					
+			case Message.R_ADD_PLUGIN_OPTION :
+					this.addPluginOptionList.readStream( messageBuffer );
+					break;		
 					
 			case Message.R_CLIENT_STATE :
 					this.clientInfoList.update( messageBuffer );
@@ -223,6 +232,9 @@ public class Core extends Thread {
 
 /*
 $Log: Core.java,v $
+Revision 1.14  2003/06/15 09:58:30  lemmstercvs01
+some opcodes added
+
 Revision 1.13  2003/06/14 23:03:26  lemmstercvs01
 added opcode 1
 

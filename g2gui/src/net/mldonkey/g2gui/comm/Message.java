@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  * @author markus
- * @version $Id: Message.java,v 1.13 2003/06/14 19:30:50 lemmstercvs01 Exp $ 
+ * @version $Id: Message.java,v 1.14 2003/06/15 09:58:30 lemmstercvs01 Exp $ 
  *
  */
 public abstract class Message {
@@ -91,6 +91,14 @@ public abstract class Message {
 	 * Receive Server Info (value is 26)
 	 */
 	public static final short R_SERVER_INFO = 26;
+	/**
+	 * Receive Add Section Option (value is 36)
+	 */
+	public static final short R_ADD_SECTION_OPTION = 36;
+	/**
+	 * Receive Add Plugin Option (value is 38)
+	 */
+	public static final short R_ADD_PLUGIN_OPTION = 38;
 	/**
 	 * Receive Bad Password (value is 45)
 	 */
@@ -246,6 +254,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.14  2003/06/15 09:58:30  lemmstercvs01
+some opcodes added
+
 Revision 1.13  2003/06/14 19:30:50  lemmstercvs01
 some opcodes added
 
