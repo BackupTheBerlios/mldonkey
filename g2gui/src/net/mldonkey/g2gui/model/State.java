@@ -28,20 +28,24 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * State
  *
  * @author markus
- * @version $Id: State.java,v 1.4 2003/06/14 12:47:27 lemmstercvs01 Exp $ 
+ * @version $Id: State.java,v 1.5 2003/06/14 17:41:03 lemmstercvs01 Exp $ 
  *
  */
 public class State implements Information {
-
-	private byte state;
-
-	private String reason = null;
-
 	/**
-	 * @return a String
+	 * Connections State
 	 */
-	public String getReason() {
-		return reason;
+	private byte state;
+	/**
+	 * Client Rank
+	 */
+	private int rank;
+	
+	/**
+	 * @return an int
+	 */
+	public int getRank() {
+		return rank;
 	}
 
 	/**
@@ -52,10 +56,10 @@ public class State implements Information {
 	}
 
 	/**
-	 * @param string a String
+	 * @param i an int
 	 */
-	public void setReason( String string ) {
-		reason = string;
+	public void setRank( int i ) {
+		rank = i;
 	}
 
 	/**
@@ -66,28 +70,27 @@ public class State implements Information {
 	}
 	
 	/**
-	 * Reads a State from a MessageBuffer
-	 * @param messageBuffer MessageBuffer to read from
+	 *  Reads a State object from a MessageBuffer
+	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
-		this.setState( ( byte ) messageBuffer.readByte() );
-		if ( this.getState() == 6 )
-			this.setReason( messageBuffer.readString() );			
+		this.setState( messageBuffer.readByte() );
+		if ( this.getState() == 5 || this.getState() == 9 )
+			this.setRank( messageBuffer.readInt32() );
+	}
+	
+	/**
+	 * Updates the state of this object
+	 * @param messageBuffer The MessageBuffer to read from
+	 */
+	public void update( MessageBuffer messageBuffer ) {
+		this.readStream( messageBuffer );
 	}
 }
 
 /*
 $Log: State.java,v $
-Revision 1.4  2003/06/14 12:47:27  lemmstercvs01
-checkstyle applied
-
-Revision 1.3  2003/06/13 11:03:41  lemmstercvs01
-changed InputStream to MessageBuffer
-
-Revision 1.2  2003/06/12 22:23:06  lemmstercvs01
-lots of changes
-
-Revision 1.1  2003/06/11 12:54:43  lemmstercvs01
-initial commit
+Revision 1.5  2003/06/14 17:41:03  lemmstercvs01
+foobar
 
 */

@@ -28,12 +28,10 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * NetworkInfo
  *
  * @author $user$
- * @version $Id: NetworkInfo.java,v 1.2 2003/06/14 12:47:27 lemmstercvs01 Exp $ 
+ * @version $Id: NetworkInfo.java,v 1.3 2003/06/14 17:41:03 lemmstercvs01 Exp $ 
  *
  */
-public class NetworkInfo {
-
-	
+public class NetworkInfo implements Information {
 	/**
 	 * File network identifier
 	 */
@@ -173,6 +171,9 @@ public class NetworkInfo {
 
 /*
 $Log: NetworkInfo.java,v $
+Revision 1.3  2003/06/14 17:41:03  lemmstercvs01
+foobar
+
 Revision 1.2  2003/06/14 12:47:27  lemmstercvs01
 checkstyle applied
 

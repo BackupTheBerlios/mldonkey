@@ -28,7 +28,7 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * Download
  *
  * @author markus
- * @version $Id: FileInfo.java,v 1.4 2003/06/14 12:47:40 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfo.java,v 1.5 2003/06/14 17:41:03 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfo implements Information {
@@ -103,7 +103,7 @@ public class FileInfo implements Information {
 	/**
 	 * File State object
 	 */
-	private State state = new State();
+	private FileState state = new FileState();
 
 	/**
 	 * @return a String
@@ -220,7 +220,7 @@ public class FileInfo implements Information {
 	/**
 	 * @return a state object
 	 */
-	public State getState() {
+	public FileState getState() {
 		return state;
 	}
 
@@ -339,7 +339,7 @@ public class FileInfo implements Information {
 	/**
 	 * @param state a state object
 	 */
-	public void setState( State state ) {
+	public void setState( FileState state ) {
 		this.state = state;
 	}
 
@@ -410,6 +410,9 @@ public class FileInfo implements Information {
 
 /*
 $Log: FileInfo.java,v $
+Revision 1.5  2003/06/14 17:41:03  lemmstercvs01
+foobar
+
 Revision 1.4  2003/06/14 12:47:40  lemmstercvs01
 update() added
 

@@ -22,9 +22,8 @@
  */
 package net.mldonkey.g2gui.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectIterator;
 
 import net.mldonkey.g2gui.helper.MessageBuffer;
 
@@ -32,20 +31,20 @@ import net.mldonkey.g2gui.helper.MessageBuffer;
  * FileInfoList
  *
  * @author markus
- * @version $Id: FileInfoList.java,v 1.4 2003/06/14 12:47:40 lemmstercvs01 Exp $ 
+ * @version $Id: FileInfoList.java,v 1.5 2003/06/14 17:41:03 lemmstercvs01 Exp $ 
  *
  */
 public class FileInfoList implements Information {
 	/**
 	 * 
 	 */
-	private List fileInfoList;
+	private TIntObjectHashMap fileInfoList;
 	
 	/**
 	 * Generates a empty FileInfoList object
 	 */
 	public FileInfoList() {
-		this.fileInfoList = new ArrayList();
+		this.fileInfoList = new TIntObjectHashMap();
 	}
 
 	/**
@@ -53,21 +52,17 @@ public class FileInfoList implements Information {
 	 * @param messageBuffer The MessageBuffer to read from
 	 */
 	public void readStream( MessageBuffer messageBuffer ) {
+		/* get the element count from the MessageBuffer */
 		short listElem = messageBuffer.readInt16();
 
-		/* trim the list to a correct size */		
-		if ( this.fileInfoList.size() < listElem ) {
-			while ( listElem > this.fileInfoList.size() ) 
-				this.fileInfoList.add( new FileInfo() );
-		}
-		else {
-			int i = 0;
-			while ( listElem < this.fileInfoList.size() )
-				this.fileInfoList.remove( i++ );
-		}
-		
+		/* clear the list */
+		this.fileInfoList.clear();
+
+		/* insert the new FileInfo objects */
 		for ( int i = 0; i < listElem; i++ ) {
-			( ( FileInfo ) this.fileInfoList.get( i ) ).readStream( messageBuffer );
+			FileInfo fileInfo = new FileInfo();
+			fileInfo.readStream( messageBuffer );
+			this.fileInfoList.put( fileInfo.getId(), fileInfo );
 		}
 	}
 	
@@ -82,31 +77,26 @@ public class FileInfoList implements Information {
 	/**
 	 * Get a FileInfo object from this object by there id
 	 * @param id The FileInfo id
-	 * @return The FileInfo object, or null if not available
+	 * @return The FileInfo object
 	 */
 	public FileInfo get( int id ) {
-		Iterator itr = this.fileInfoList.iterator();
-		while ( itr.hasNext() ) {
-			FileInfo elem = ( FileInfo ) itr.next();
-			if ( elem.getId() == id )
-				return elem;
-		}
-		return null;
+		return ( FileInfo ) this.fileInfoList.get( id );
 	}
 	
 	/**
-	 * Creates a new iterator for the FileInfoList
+	 * Get an Iterator
 	 * @return an Iterator
 	 */
-	public Iterator iterator() {
-		Iterator itr = this.fileInfoList.iterator();
-		return itr;
+	public TIntObjectIterator iterator() {
+		return this.fileInfoList.iterator();
 	}
-
 }
 
 /*
 $Log: FileInfoList.java,v $
+Revision 1.5  2003/06/14 17:41:03  lemmstercvs01
+foobar
+
 Revision 1.4  2003/06/14 12:47:40  lemmstercvs01
 update() added
 
