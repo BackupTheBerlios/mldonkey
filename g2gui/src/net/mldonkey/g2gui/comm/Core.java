@@ -54,7 +54,7 @@ import net.mldonkey.g2gui.model.UserInfo;
  * Core
  *
  *
- * @version $Id: Core.java,v 1.95 2003/09/14 16:22:58 zet Exp $ 
+ * @version $Id: Core.java,v 1.96 2003/09/16 01:18:31 zet Exp $ 
  *
  */
 public class Core extends Observable implements Runnable, CoreCommunication {
@@ -152,7 +152,7 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 	/** (non-Javadoc)
 	 * @see net.mldonkey.g2gui.comm.CoreCommunication#isConnected()
 	 */
-	public boolean isConnected() {		
+	public boolean isConnected() {	
 		return connected;
 	}
 	
@@ -191,21 +191,16 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 		try {
 			i = connection.getInputStream();
 		
-			byte[] content;
+			byte[] messageContent;
 			
 			while ( connected ) {	
 				/* getting length of message */
 				messageLength = Message.readInt32( i );
-				content = new byte[messageLength];
-				position = 0;
-				/* read out the message from stream, re-read if no bytes are waiting, 
-				 * untill message is completly read (thx to Jmoule for this idea ;-)
-				 */ 
-				while ( position < messageLength )
-					position += i.read( content, position, ( int ) messageLength - position );
+
+				// get message content
+				messageContent = Message.readStream( i, messageLength );
 			
-				position = 0;					
-				messageBuffer.setBuffer( content );
+				messageBuffer.setBuffer( messageContent );
 				opCode = messageBuffer.readInt16();		
 				
 				/* decode the message content */			
@@ -221,8 +216,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 			}
 		}
 		catch ( IOException e ) {
+			// we disconnect.. now what?
 			connected = false;
-			e.printStackTrace();
+			//e.printStackTrace();
 		}		
 	}
 					
@@ -557,6 +553,9 @@ public class Core extends Observable implements Runnable, CoreCommunication {
 
 /*
 $Log: Core.java,v $
+Revision 1.96  2003/09/16 01:18:31  zet
+try to handle socket disconnection in a central location
+
 Revision 1.95  2003/09/14 16:22:58  zet
 null check
 

@@ -30,7 +30,7 @@ import java.net.Socket;
  * Message
  *
  *
- * @version $Id: Message.java,v 1.32 2003/09/02 09:24:36 lemmster Exp $ 
+ * @version $Id: Message.java,v 1.33 2003/09/16 01:18:31 zet Exp $ 
  *
  */
 public abstract class Message {
@@ -299,19 +299,37 @@ public abstract class Message {
 	public static final short R_DOWNLOADED_LIST = 54;
 
 	/**
-	 * Reads an int32 from an InputStream
-	 * @param inputStream Stream to read the int32 from
-	 * @return int
-	 * @throws IOException Error if read on inputStream failed
+	 * @param inputStream
+	 * @param length
+	 * @return byte[]
+	 * @throws IOException
+	 * 
+	 * Read the stream, return byte[] of length.  Create an IOException on failure.
+	 */
+	public static byte[] readStream( InputStream inputStream, int length ) throws IOException {
+		byte[] b = new byte[ length ];
+		
+		int result, pos = 0;
+		while ( pos < length ) {
+			result = inputStream.read( b, pos, length - pos ); 
+			if (result <= 0) {
+				// we disconnect, or...
+				throw new IOException();
+			}
+			pos += result;
+		}
+		return b;
+	}
+	
+	/**
+	 * @param inputStream
+	 * @return
+	 * @throws IOException
+	 * @throws SocketException
+	 * Read an in32 from InputStream
 	 */
 	public static int readInt32( InputStream inputStream ) throws IOException {
-		byte[] b = new byte[ 4 ];
-		
-		/* be sure that 4 bytes are in the stream */
-		int pos = 0;
-		while ( pos < 4 ) {
-			pos += inputStream.read( b, pos, ( int ) 4 - pos ); 
-		}
+		byte[] b = readStream( inputStream, 4 );
 		
 		return ( ( ( int ) b[ 0 ] ) & 0xFF ) 
 			+  ( ( ( ( int ) b[ 1 ] ) & 0xFF ) << 8 )
@@ -434,6 +452,9 @@ public abstract class Message {
 
 /*
 $Log: Message.java,v $
+Revision 1.33  2003/09/16 01:18:31  zet
+try to handle socket disconnection in a central location
+
 Revision 1.32  2003/09/02 09:24:36  lemmster
 checkstyle
 
@@ -445,7 +466,7 @@ Revision 1.30  2003/08/23 15:21:37  zet
 remove @author
 
 Revision 1.29  2003/08/22 21:03:15  lemmster
-replace $user$ with $Author: lemmster $
+replace $user$ with $Author: zet $
 
 Revision 1.28  2003/08/12 04:10:29  zet
 try to remove dup clientInfos, add friends/basic messaging
