@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.MessageBox;
 /**
  * MainTab
  *
- * @version $Id: MainWindow.java,v 1.10 2004/02/17 22:49:58 psy Exp $
+ * @version $Id: MainWindow.java,v 1.11 2004/02/29 17:36:31 psy Exp $
  */
 public class MainWindow implements ShellListener {
     private String titleBarText;
@@ -123,7 +123,7 @@ public class MainWindow implements ShellListener {
         /* things we should do if we dispose */
         shell.addDisposeListener(new DisposeListener() {
                 public synchronized void widgetDisposed(DisposeEvent e) {
-                    System.out.println("Disposing MainWindow");
+                    if (G2Gui.debug) System.out.println("Disposing MainWindow");
                     /* save the size of this window */
                     saveSizeLocation(shell);
 
@@ -136,10 +136,14 @@ public class MainWindow implements ShellListener {
                     }
 
                     /* If we have created the core, kill it only if we _really_ shutdown */
-                    if (G2Gui.getCoreConsole() != null && !PreferenceLoader.isRelaunching()) {
+                    if ( (G2Gui.runLocalCore() && !PreferenceLoader.isRelaunching() ) || 
+                    		(G2Gui.runLocalCore() &&
+                    		PreferenceLoader.loadString("coreExecutable").equals("") ) ) {
                         Message killCore = new EncodeMessage(Message.S_KILL_CORE);
                         killCore.sendMessage(mldonkey);
-                        G2Gui.getCoreConsole().dispose();
+                        /* make sure to kill the CoreConsole, if we started one */
+                        if ( G2Gui.getCoreConsole() != null )
+							G2Gui.getCoreConsole().dispose();
                     }
 
                     /* disconnect from core */
@@ -491,6 +495,9 @@ public class MainWindow implements ShellListener {
 
 /*
 $Log: MainWindow.java,v $
+Revision 1.11  2004/02/29 17:36:31  psy
+improved local core handling
+
 Revision 1.10  2004/02/17 22:49:58  psy
 added more VM/OS/Version debug- and crash-info
 

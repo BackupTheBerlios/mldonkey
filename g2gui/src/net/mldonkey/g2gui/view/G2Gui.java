@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * Starts the whole thing
  *
  *
- * @version $Id: G2Gui.java,v 1.66 2004/02/17 22:49:58 psy Exp $
+ * @version $Id: G2Gui.java,v 1.67 2004/02/29 17:36:31 psy Exp $
  *
  */
 public class G2Gui {
@@ -81,6 +81,7 @@ public class G2Gui {
     // list of links for submission
     private static List links;
     
+    private static boolean runLocalCore = false;
 	private static CoreCommunication core;
 
     private static Display display;
@@ -174,7 +175,7 @@ public class G2Gui {
 		
         /*determine wether a new instance of G2gui is allowed: */
         if (PreferenceLoader.loadBoolean("allowMultipleInstances")
-	      || !PreferenceLoader.loadBoolean("running") || debug) {
+        		|| !PreferenceLoader.loadBoolean("running") || debug) {
             launch();
         } else {
             MessageBox alreadyRunning = new MessageBox(new Shell(display),
@@ -218,29 +219,28 @@ public class G2Gui {
      * Launch
      */
     private static void launch() {
+        // create our main shell for displaying stuff
+    	shell = new Shell(display);
+    	//if (getCoreConsole() != null) getCoreConsole().setShell(shell);
+    	
     	/* we are running, so we make this available to other instances */
         PreferenceLoader.setValue("running", true);
         PreferenceLoader.saveStore();
-
-        Object waiterObject = new Object();
-
+ 
         myPrefs = new Preferences(PreferenceLoader.getPreferenceStore());
 
-        // create our main shell for displaying stuff
-        shell = new Shell(display);
-        
         // should the core be spawned by the gui?
         // if yes, set hostname to localhost
-		boolean runCore = false;
+		runLocalCore = false;
 		if (!PreferenceLoader.loadString("coreExecutable").equals("")) {
 			if (debug) System.out.println("A coreExecutable has been given");
-			runCore = true;
-			//PreferenceLoader.setValue("hostname", "localhost");
+			runLocalCore = true;
+			PreferenceLoader.setValue("hostname", "localhost");
 		}
-			
-		// create the splash
+        
+        // create the splash
         if (PreferenceLoader.loadBoolean("splashScreen"))
-            if ( runCore )
+            if ( runLocalCore )
 	            new Splash( display, 7 );
 	        else
 	         	new Splash( display, 5 );    
@@ -248,14 +248,6 @@ public class G2Gui {
         // Needed on GTK to dispatch paintEvent.
         // SWT is idiotic.
         display.update();
-
-		// launch the core if requested
-		if (runCore) {
-			Splash.increaseSplashBar("launching core");
-	        spawnCore();
-		}
-			
-		Splash.increaseSplashBar("initializing connection");
 
         /* if the gui isnt set up yet launch the preference window */
         if (!(PreferenceLoader.getBoolean("initialized"))) {
@@ -276,35 +268,29 @@ public class G2Gui {
         readParams();
         if (debug) System.out.println("Host: " + hostname + ":" + port + " User: " + username);
 
-        Socket socket = initializeSocket( false );
-		if (socket == null ) return;
+		// launch the core if requested
+		if (runLocalCore && !probeHost("localhost", 4001) ) {
+			Splash.increaseSplashBar("launching core");
+	        spawnCore();
+		} else if (runLocalCore) {
+			Splash.increaseSplashBar("using running core");
+			if (debug) System.out.println("Using existing local core");
+		}
+		Splash.increaseSplashBar("initializing connection");
 
-		// we're almost done with restarting, so set it to false
+
+        // we're almost done with restarting, so set it to false
 		PreferenceLoader.setRelaunching(false);
-		
         PreferenceLoader.saveStore();
-
-        core = startCore( waiterObject, socket, false );
         
-		// handle some errors the core can cause
-		// connection denied
-        if (core.getConnectionDenied()) {
-        	core.disconnect();
-        	connectDeniedHandling();
- 		// bad password
-        } else if (core.getBadPassword()) {
-            core.disconnect();
-            badPasswordHandling();
-        // connection is setup successfully
-        } else {
+        if ( connectCore(false) ) {
 			// launch the view
 			Splash.increaseSplashBar("connection to core successfully created");
             new MainWindow(core, shell);
+            // we're done - disconnect from the core
+            core.disconnect();
         }
 
-        // disconnect the core
-        core.disconnect();
-        
         /*
          * we are not running anymore, so we can allow another instance to
          * be started
@@ -321,8 +307,7 @@ public class G2Gui {
      * @param aLink The link that should be send to the core
      */
     private static void launch( List aLink ) {
-    	
-    	Object waiterObject = new Object();
+
     	myPrefs = new Preferences(PreferenceLoader.getPreferenceStore());
     	shell = new Shell(display);
     	
@@ -330,27 +315,51 @@ public class G2Gui {
     	if (debug) System.out.println("Links for submission: " + links.toString());
     	if (debug) System.out.println("Host: " + hostname + " User: " + username);
     	
-    	Socket socket = initializeSocket( false );
-    	if ( socket == null ) return;
-
-    	core = startCore( waiterObject, socket, true );
-    	
     	// handle some errors the core can cause
     	// connection denied
-    	if (core.getConnectionDenied()) {
-    		core.disconnect();
-    		connectDeniedHandling();
-   		// bad password
-    	} else if (core.getBadPassword()) {
-    		core.disconnect();
-    		badPasswordHandling();
-    	// connection is setup successfully
-    	} else {
+    	if ( connectCore(true) ) {
     		System.out.println("Connection fine, sending links!");
-    		sendDownloadLink( aLink, socket );
+    		sendDownloadLink( aLink, core.getConnection() );
     	}
     }
 
+    /**
+     * This method tries to establish a connection to the mldonkey core
+     * @param mode true is pull-mode, false is push-mode
+     * @return true if the connection and login is successful, false if not
+     */
+    private static boolean connectCore(boolean mode) {
+        Object waiterObject = new Object();
+
+        Socket socket = initializeSocket( false );
+		if (socket == null ) return false;
+
+        core = startCore( waiterObject, socket, mode );
+        
+		// handle some errors the core can cause
+		// connection denied
+        if (core.getConnectionDenied()) {
+        	core.disconnect();
+        	connectDeniedHandling();
+ 		// bad password
+        } else if (core.getBadPassword()) {
+            core.disconnect();
+            badPasswordHandling();
+        // connection is setup successfully
+        } else {
+        	return true;
+        }
+        return false;
+    }
+    
+    /**
+     * This method returns the local core-handler status
+     * @return true if we want to manage the local core, false if not
+     */
+    public static boolean runLocalCore() {
+    	return runLocalCore;
+    }
+    
     /**
 	 * initialize the socket (push or poll mode)
 	 */
@@ -403,7 +412,7 @@ public class G2Gui {
      * Starts the core thread
      * @param waiterObject The waiterobj we synchronize with
      * @param aSocket The socket to communicate over
-     * @param mode pull/push mode
+     * @param mode: true is pull-mode, false is push-mode
      */
     private static CoreCommunication startCore( Object waiterObject, Socket aSocket, boolean mode ) {
     	/* wait as long till the core tells us to continue */
@@ -446,7 +455,11 @@ public class G2Gui {
      * relaunch the launch method with killing the old one
      */
     public static void relaunchSelf() {
-    	//getCoreConsole()
+    	if (getCoreConsole() != null) { 
+    		getCoreConsole().dispose();
+    		execConsole = null;
+    	}
+
     	shell.dispose();
     	PreferenceLoader.cleanUp();
     	
@@ -557,24 +570,7 @@ public class G2Gui {
 			boolean connected = false;
 			while (!connected & counter++ < 20) {
 				/* try to establish a connection to the core-port */
-				try {
-					Socket socket = new Socket(InetAddress.getByName("localhost"), 4001);
-					connected = true;
-					/* close the socket again directly after successful connect */
-					try {
-						socket.close();
-					} catch (IOException e1) {
-						if (debug) System.out.println("While closing probesocket: " + e1);
-					}
-				/* if no core has been found, we catch the exception and sleep 1 second */
-				} catch (IOException e2) {
-					System.out.println("trying...");
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e3) {
-						if (debug) System.out.println("Interrupted sleep: " + e3);
-					}
-				}
+				connected = probeHost("localhost", 4001);
 			}
 			if (debug) {
 				if (connected) System.out.println("Local core successfully started.");
@@ -583,6 +579,34 @@ public class G2Gui {
 		}
 	}
 
+	/**
+	 * This method checks if someone is listening on a certain host:port
+	 * @param hostname the hostname which should be probed
+	 * @param port the port which should be probed
+	 * @return true is probe was successful
+	 */
+	private static boolean probeHost(String hostname, int port) {
+		boolean connected = false;
+		try {
+			Socket socket = new Socket(InetAddress.getByName(hostname), port);
+			connected = true;
+			/* close the socket again directly after successful connect */
+			try {
+				socket.close();
+			} catch (IOException e1) {
+				if (debug) System.out.println("While closing probesocket: " + e1);
+			}
+		/* if no core has been found, we catch the exception and sleep 1 second */
+		} catch (IOException e2) {
+			System.out.println("trying...");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e3) {
+				if (debug) System.out.println("Interrupted sleep: " + e3);
+			}
+		}
+		return connected;
+	}
     /**
      * closeApp
      */
@@ -616,6 +640,9 @@ public class G2Gui {
 
 /*
 $Log: G2Gui.java,v $
+Revision 1.67  2004/02/29 17:36:31  psy
+improved local core handling
+
 Revision 1.66  2004/02/17 22:49:58  psy
 added more VM/OS/Version debug- and crash-info
 
