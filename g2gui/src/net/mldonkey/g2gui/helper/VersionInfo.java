@@ -25,7 +25,7 @@ package net.mldonkey.g2gui.helper;
 /**
  * VersionInfo returns just a String with our current g2gui version number.
  *
- * @version $Id: VersionInfo.java,v 1.2 2003/11/04 16:16:55 vnc Exp $ 
+ * @version $Id: VersionInfo.java,v 1.3 2003/11/11 17:02:58 zet Exp $ 
  *
  */
 public class VersionInfo {
@@ -33,12 +33,15 @@ public class VersionInfo {
 	 * @return Our version number
 	 */
 	public static String getVersion() {
-		return "0.1.1+ CVS";
+		return "0.2.0";
 	}
 }
 
 /*
 $Log: VersionInfo.java,v $
+Revision 1.3  2003/11/11 17:02:58  zet
+ver
+
 Revision 1.2  2003/11/04 16:16:55  vnc
 little version update
 
